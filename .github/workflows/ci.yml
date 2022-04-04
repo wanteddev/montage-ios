@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Remove DerivedData
+        run: |
+          rm -rf ./DerivedData
+
+      - name: Run Tests
+        run: |
+          xcodebuild clean build test \
+            -scheme Montage \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=iPhone 13,OS=latest" \
+            -enableCodeCoverage YES \
+            -derivedDataPath "./DerivedData" \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcbeautify;
