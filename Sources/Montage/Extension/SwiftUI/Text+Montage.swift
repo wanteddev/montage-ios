@@ -8,15 +8,15 @@
 import SwiftUI
 
 public extension Text {
-    func designSystem(
+    func montage(
         ofSize size: CGFloat,
-        weight: DesignSystem.FontType.Weight,
-        color: DesignSystem.Color? = nil
+        weight: Montage.Typography.Weight,
+        color: Montage.Color.Global? = nil
     ) -> Text {
-        let text = font(.designSystem(size: size, weight: weight))
+        let text = font(.montage(size: size, weight: weight))
 
         if let color = color {
-            return text.foregroundColor(.designSystem(color))
+            return text.foregroundColor(.atomic(color))
         } else {
             return text
         }

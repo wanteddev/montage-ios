@@ -6,9 +6,20 @@
 //
 
 import UIKit
+import Pretendard
 
 public extension UIFont {
-    static func designSystem(size: CGFloat, weight: DesignSystem.FontType.Weight) -> UIFont {
-        .systemFont(ofSize: size, weight: weight.uiFontWeight)
+    static func montage(size: CGFloat, weight: Montage.Typography.Weight) -> UIFont? {
+        UIFont(name: weight.pretendardWeight.fontName, size: size)
+    }
+    
+    static func sementic(
+        varient: Montage.Typography.Variant,
+        weight: Montage.Typography.Weight,
+        size: Montage.Typography.Size
+    ) -> UIFont? {
+        let sementicWeight = Montage.Typography.getSementicWeight(varient: varient, weight: weight)
+        let sementicSize = Montage.Typography.getSementicSize(varient: varient, size: size)
+        return UIFont(name: sementicWeight.fontName, size: sementicSize)
     }
 }

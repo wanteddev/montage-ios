@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension DesignSystem {
+public extension Montage {
     enum Icon: String {
         // 12x12
         case fillBookmark12
