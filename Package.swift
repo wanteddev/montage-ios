@@ -21,7 +21,7 @@ let package = Package(
                 .product(name: "Pretendard", package: "pretendard-ios")
             ],
             resources: [
-                .copy("Asset")
+                .process("Asset")
             ]
         ),
         .testTarget(

@@ -9,6 +9,4 @@
 
 import Foundation
 
-public class Montage {
-    static let bundle = Bundle(for: Montage.self)
-}
+public class Montage {}

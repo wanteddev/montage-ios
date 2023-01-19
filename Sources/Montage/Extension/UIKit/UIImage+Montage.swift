@@ -9,7 +9,7 @@ import UIKit
 
 extension UIImage {
     private static func load(name: String) -> UIImage {
-        UIImage(named: name, in: Montage.bundle, with: nil) ?? UIImage()
+        UIImage(named: name, in: Bundle.module, with: nil) ?? UIImage()
     }
 
     public static func montage(_ type: Montage.Icon) -> UIImage {

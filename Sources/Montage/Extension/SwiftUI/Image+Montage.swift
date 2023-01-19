@@ -9,7 +9,7 @@ import SwiftUI
 
 extension Image {
     private static func load(name: String) -> Image {
-        Image(name, bundle: Montage.bundle)
+        Image(name, bundle: Bundle.module)
     }
 
     public static func montage(_ type: Montage.Icon) -> Image {

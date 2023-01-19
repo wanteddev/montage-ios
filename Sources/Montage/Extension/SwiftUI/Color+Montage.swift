@@ -10,7 +10,7 @@ import UIKit
 
 extension Color {
     private static func load(name: String) -> Color {
-        Color(UIColor(named: name, in: Montage.bundle, compatibleWith: nil)!)
+        Color(UIColor(named: name, in: Bundle.module, compatibleWith: nil)!)
     }
 
     public static func atomic(_ type: Montage.Color.Global) -> Color {

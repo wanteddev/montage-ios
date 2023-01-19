@@ -121,6 +121,81 @@ public extension Montage {
             case globalOrange10
             case globalOrange0
             
+            // LIME
+            case globalLime100
+            case globalLime99
+            case globalLime95
+            case globalLime90
+            case globalLime80
+            case globalLime70
+            case globalLime60
+            case globalLime50
+            case globalLime40
+            case globalLime30
+            case globalLime20
+            case globalLime10
+            case globalLime0
+            
+            // CYAN
+            case globalCyan100
+            case globalCyan99
+            case globalCyan95
+            case globalCyan90
+            case globalCyan80
+            case globalCyan70
+            case globalCyan60
+            case globalCyan50
+            case globalCyan40
+            case globalCyan30
+            case globalCyan20
+            case globalCyan10
+            case globalCyan0
+            
+            // LIGHT BLUE
+            case globalLightBlue100
+            case globalLightBlue99
+            case globalLightBlue95
+            case globalLightBlue90
+            case globalLightBlue80
+            case globalLightBlue70
+            case globalLightBlue60
+            case globalLightBlue50
+            case globalLightBlue40
+            case globalLightBlue30
+            case globalLightBlue20
+            case globalLightBlue10
+            case globalLightBlue0
+            
+            // VIOLET
+            case globalViolet100
+            case globalViolet99
+            case globalViolet95
+            case globalViolet90
+            case globalViolet80
+            case globalViolet70
+            case globalViolet60
+            case globalViolet50
+            case globalViolet40
+            case globalViolet30
+            case globalViolet20
+            case globalViolet10
+            case globalViolet0
+            
+            // PINK
+            case globalPink100
+            case globalPink99
+            case globalPink95
+            case globalPink90
+            case globalPink80
+            case globalPink70
+            case globalPink60
+            case globalPink50
+            case globalPink40
+            case globalPink30
+            case globalPink20
+            case globalPink10
+            case globalPink0
+            
             public var name: String { rawValue }
         }
         
@@ -236,6 +311,31 @@ public extension Montage {
             case statusNegative
             
             ///
+            /// color-alias-support-lime
+            ///
+            case supportLime
+
+            ///
+            /// color-alias-support-cyan
+            ///
+            case supportCyan
+
+            ///
+            /// color-alias-support-lightBlue
+            ///
+            case supportLightBlue
+
+            ///
+            /// color-alias-support-violet
+            ///
+            case supportViolet
+
+            ///
+            /// color-alias-support-pink
+            ///
+            case supportPink
+            
+            ///
             /// color-alias-inverse-primary
             ///
             case inversePrimary
@@ -299,6 +399,16 @@ public extension Montage {
                     globalType = style == .dark ? .globalOrange60 : .globalOrange50
                 case .statusNegative:
                     globalType = style == .dark ? .globalRed60 : .globalRed50
+                case .supportLime:
+                    globalType = style == .dark ? .globalLime60 : .globalLime50
+                case .supportCyan:
+                    globalType = style == .dark ? .globalCyan60 : .globalCyan50
+                case .supportLightBlue:
+                    globalType = style == .dark ? .globalLightBlue60 : .globalLightBlue50
+                case .supportViolet:
+                    globalType = style == .dark ? .globalViolet60 : .globalViolet50
+                case .supportPink:
+                    globalType = style == .dark ? .globalPink60 : .globalPink50
                 case .inversePrimary:
                     globalType = style == .dark ? .globalBlue50 : .globalBlue60
                 case .inverseBackground:
