@@ -22,7 +22,7 @@ public extension NSAttributedString {
             .paragraphStyle: {
                 let style = NSMutableParagraphStyle()
                 style.alignment = .left
-                style.lineSpacing = Montage.Typography.getLineSpacing(varient: varient)
+                style.lineSpacing = varient.lineSpacing
                 return style
             }()
         ])
