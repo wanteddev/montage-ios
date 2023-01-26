@@ -9,16 +9,15 @@ import SwiftUI
 
 public extension Text {
     func montage(
-        ofSize size: CGFloat,
-        weight: Montage.Typography.Weight,
-        color: Montage.Color.Global? = nil
+        varient: Montage.Typography.Variant,
+        size: Montage.Typography.Size = .small,
+        weight: Montage.Typography.Weight = .regular,
+        color: Montage.Color.Alias = .labelNormal
     ) -> Text {
-        let text = font(.montage(size: size, weight: weight))
-
-        if let color = color {
-            return text.foregroundColor(.atomic(color))
-        } else {
-            return text
-        }
+        font(
+            .sementic(varient: varient, weight: weight, size: size)
+        ).foregroundColor(
+            .alias(color)
+        )
     }
 }

@@ -9,17 +9,14 @@ import UIKit
 
 public extension UILabel {
     static func montage(
-        size: CGFloat,
-        weight: Montage.Typography.Weight,
-        color: Montage.Color.Global? = nil
+        _ string: String,
+        varient: Montage.Typography.Variant,
+        size: Montage.Typography.Size = .small,
+        weight: Montage.Typography.Weight = .regular,
+        color: Montage.Color.Alias = .labelNormal
     ) -> UILabel {
         let label = UIKit.UILabel()
-        label.font = .montage(size: size, weight: weight)
-
-        if let color = color {
-            label.textColor = .atomic(color)
-        }
-
+        label.attributedText = .montage(string, varient: varient, size: size, weight: weight, color: color)
         return label
     }
 }

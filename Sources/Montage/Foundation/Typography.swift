@@ -105,4 +105,71 @@ public extension Montage.Typography {
             return 11
         }
     }
+    
+    static func getKern(varient: Variant, size: Size) -> CGFloat {
+        let sementicSize = getSementicSize(varient: varient, size: size)
+        let letterSpacingEm: CGFloat
+        
+        switch varient {
+        case .display:
+            letterSpacingEm = size == .small ? -0.027 : -0.0319
+        case .title1:
+            letterSpacingEm = size == .small ? -0.0246 : -0.0282
+        case .title2:
+            letterSpacingEm = size == .small ? -0.023 : -0.0246
+        case .heading1:
+            letterSpacingEm = size == .small ? -0.02 : -0.0194
+        case .heading2:
+            letterSpacingEm = size == .small ? -0.027 : -0.002
+        case .body1:
+            letterSpacingEm = 0.0057
+        case .body1Reading:
+            letterSpacingEm = 0.0057
+        case .body2:
+            letterSpacingEm = 0.0096
+        case .body2Reading:
+            letterSpacingEm = 0.0096
+        case .label1:
+            letterSpacingEm = 0.0145
+        case .label2:
+            letterSpacingEm = 0.0194
+        case .caption1:
+            letterSpacingEm = 0.0252
+        case .caption2:
+            letterSpacingEm = 0.0311
+        }
+        
+        return sementicSize / 100 * letterSpacingEm
+    }
+
+    static func getLineSpacing(varient: Variant) -> CGFloat {
+        switch varient {
+        case .display:
+            return 5
+        case .title1:
+            return 4.6667
+        case .title2:
+            return 3.3333
+        case .heading1:
+            return 2
+        case .heading2:
+            return 1.6667
+        case .body1:
+            return 5
+        case .body1Reading:
+            return 7
+        case .body2:
+            return 4
+        case .body2Reading:
+            return 6
+        case .label1:
+            return 3.3333
+        case .label2:
+            return 3.3333
+        case .caption1:
+            return 1.6667
+        case .caption2:
+            return 1
+        }
+    }
 }
