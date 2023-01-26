@@ -311,29 +311,29 @@ public extension Montage {
             case statusNegative
             
             ///
-            /// color-alias-support-lime
+            /// color-alias-accent-lime
             ///
-            case supportLime
+            case accentLime
 
             ///
-            /// color-alias-support-cyan
+            /// color-alias-accent-cyan
             ///
-            case supportCyan
+            case accentCyan
 
             ///
-            /// color-alias-support-lightBlue
+            /// color-alias-accent-lightBlue
             ///
-            case supportLightBlue
+            case accentLightBlue
 
             ///
-            /// color-alias-support-violet
+            /// color-alias-accent-violet
             ///
-            case supportViolet
+            case accentViolet
 
             ///
-            /// color-alias-support-pink
+            /// color-alias-accent-pink
             ///
-            case supportPink
+            case accentPink
             
             ///
             /// color-alias-inverse-primary
@@ -399,15 +399,15 @@ public extension Montage {
                     globalType = style == .dark ? .globalOrange60 : .globalOrange50
                 case .statusNegative:
                     globalType = style == .dark ? .globalRed60 : .globalRed50
-                case .supportLime:
+                case .accentLime:
                     globalType = style == .dark ? .globalLime60 : .globalLime50
-                case .supportCyan:
+                case .accentCyan:
                     globalType = style == .dark ? .globalCyan60 : .globalCyan50
-                case .supportLightBlue:
+                case .accentLightBlue:
                     globalType = style == .dark ? .globalLightBlue60 : .globalLightBlue50
-                case .supportViolet:
+                case .accentViolet:
                     globalType = style == .dark ? .globalViolet60 : .globalViolet50
-                case .supportPink:
+                case .accentPink:
                     globalType = style == .dark ? .globalPink60 : .globalPink50
                 case .inversePrimary:
                     globalType = style == .dark ? .globalBlue50 : .globalBlue60
