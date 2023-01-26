@@ -139,7 +139,7 @@ public extension Montage.Typography {
             letterSpacingEm = 0.0311
         }
         
-        return sementicSize / 100 * letterSpacingEm
+        return sementicSize * letterSpacingEm
     }
 
     static func getLineSpacing(varient: Variant) -> CGFloat {
