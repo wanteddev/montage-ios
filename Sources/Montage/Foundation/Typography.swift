@@ -141,9 +141,11 @@ public extension Montage.Typography {
         
         return sementicSize * letterSpacingEm
     }
+}
 
-    static func getLineSpacing(varient: Variant) -> CGFloat {
-        switch varient {
+public extension Montage.Typography.Variant {
+    var lineSpacing: CGFloat {
+        switch self {
         case .display:
             return 5
         case .title1:
@@ -171,5 +173,9 @@ public extension Montage.Typography {
         case .caption2:
             return 1
         }
+    }
+    
+    var padding: CGFloat {
+        lineSpacing / 2
     }
 }

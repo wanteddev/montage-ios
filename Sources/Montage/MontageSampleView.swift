@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Pretendard
 
 public struct MontageSampleView: View {
     public var dismiss: (() -> Void)?
@@ -15,18 +16,23 @@ public struct MontageSampleView: View {
             List {
                 Group {
                     Text("Typography")
+                        .montage(varient: .body1, weight: .bold)
                     Text("Color")
+                        .montage(varient: .body1, weight: .bold)
                 }
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Montage")
-            .navigationBarItems(
-                trailing: Button("닫기") { dismiss?() }
-            )
         }
     }
     
-    public init() {}
+    public init() {
+        do {
+            try Pretendard.registerFonts()
+        } catch {
+            debugPrint(error)
+        }
+    }
 }
 
 struct MontageSampleView_Previews: PreviewProvider {
