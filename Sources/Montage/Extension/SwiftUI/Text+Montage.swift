@@ -14,7 +14,7 @@ public extension Text {
         weight: Montage.Typography.Weight = .regular,
         color: Montage.Color.Alias = .labelNormal
     ) -> some View {
-        font(.sementic(varient: varient, weight: weight, size: size))
+        font(.montage(varient: varient, weight: weight, size: size))
             .foregroundColor(.alias(color))
             .lineSpacing(varient.lineSpacing)
             .padding(.vertical, varient.padding)

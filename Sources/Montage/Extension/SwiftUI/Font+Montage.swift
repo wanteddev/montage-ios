@@ -12,7 +12,7 @@ public extension Font {
         .custom(weight.pretendardWeight.fontName, size: size)
     }
     
-    static func sementic(
+    static func montage(
         varient: Montage.Typography.Variant = .body1,
         weight: Montage.Typography.Weight = .regular,
         size: Montage.Typography.Size = .small

@@ -16,7 +16,7 @@ public extension NSAttributedString {
         color: Montage.Color.Alias = .labelNormal
     ) -> NSAttributedString {
         .init(string: string, attributes: [
-            .font: UIFont.sementic(varient: varient, weight: weight, size: size),
+            .font: UIFont.montage(varient: varient, weight: weight, size: size),
             .foregroundColor: UIColor.alias(color),
             .kern: Montage.Typography.getKern(varient: varient, size: size),
             .paragraphStyle: {
