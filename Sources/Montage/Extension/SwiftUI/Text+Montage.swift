@@ -9,7 +9,7 @@ import SwiftUI
 
 public extension Text {
     func montage(
-        varient: Montage.Typography.Variant,
+        varient: Montage.Typography.Variant = .body1,
         size: Montage.Typography.Size = .small,
         weight: Montage.Typography.Weight = .regular,
         color: Montage.Color.Alias = .labelNormal

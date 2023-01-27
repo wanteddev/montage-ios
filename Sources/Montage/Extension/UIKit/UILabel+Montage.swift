@@ -10,7 +10,7 @@ import UIKit
 public extension UILabel {
     static func montage(
         _ string: String,
-        varient: Montage.Typography.Variant,
+        varient: Montage.Typography.Variant = .body1,
         size: Montage.Typography.Size = .small,
         weight: Montage.Typography.Weight = .regular,
         color: Montage.Color.Alias = .labelNormal
