@@ -53,7 +53,6 @@ public extension Montage {
         case documentPerson
         case documentPersonFill
         case download
-        case empty
         case exclamation
         case externalLink
         case faceSmile
