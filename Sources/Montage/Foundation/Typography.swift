@@ -106,7 +106,7 @@ public extension Montage.Typography {
         }
     }
     
-    static func getKern(varient: Variant, size: Size) -> CGFloat {
+    static func getTracking(varient: Variant, size: Size) -> CGFloat {
         let sementicSize = getSementicSize(varient: varient, size: size)
         let letterSpacingEm: CGFloat
         
