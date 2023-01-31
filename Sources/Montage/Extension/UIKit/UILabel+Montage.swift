@@ -8,18 +8,15 @@
 import UIKit
 
 public extension UILabel {
-    static func designSystem(
-        size: CGFloat,
-        weight: DesignSystem.FontType.Weight,
-        color: DesignSystem.Color? = nil
+    static func montage(
+        _ string: String,
+        varient: Montage.Typography.Variant = .body1,
+        size: Montage.Typography.Size = .small,
+        weight: Montage.Typography.Weight = .regular,
+        color: Montage.Color.Alias = .labelNormal
     ) -> UILabel {
         let label = UIKit.UILabel()
-        label.font = .designSystem(size: size, weight: weight)
-
-        if let color = color {
-            label.textColor = .designSystem(color)
-        }
-
+        label.attributedText = .montage(string, varient: varient, size: size, weight: weight, color: color)
         return label
     }
 }

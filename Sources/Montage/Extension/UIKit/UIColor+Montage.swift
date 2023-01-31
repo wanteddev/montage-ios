@@ -8,11 +8,15 @@
 import UIKit
 
 extension UIColor {
-    private static func load(name: String) -> UIColor {
-        UIColor(named: name, in: DesignSystem.bundle, compatibleWith: nil) ?? .clear
+    static func load(name: String) -> UIColor {
+        .init(named: name, in: Bundle.module, compatibleWith: nil) ?? .clear
     }
-
-    public static func designSystem(_ type: DesignSystem.Color) -> UIColor {
+    
+    public static func atomic(_ type: Montage.Color.Global) -> UIColor {
         load(name: type.name)
+    }
+    
+    public static func alias(_ type: Montage.Color.Alias) -> UIColor {
+        .init(dynamicProvider: type.convert)
     }
 }

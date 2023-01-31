@@ -10,10 +10,14 @@ import UIKit
 
 extension Color {
     private static func load(name: String) -> Color {
-        Color(UIColor(named: name, in: DesignSystem.bundle, compatibleWith: nil)!)
+        Color(UIColor(named: name, in: Bundle.module, compatibleWith: nil)!)
     }
 
-    public static func designSystem(_ type: DesignSystem.Color) -> Color {
+    public static func atomic(_ type: Montage.Color.Global) -> Color {
         load(name: type.name)
+    }
+    
+    public static func alias(_ type: Montage.Color.Alias) -> Color {
+        .init(UIColor.alias(type))
     }
 }

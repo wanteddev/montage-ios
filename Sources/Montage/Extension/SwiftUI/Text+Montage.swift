@@ -8,17 +8,15 @@
 import SwiftUI
 
 public extension Text {
-    func designSystem(
-        ofSize size: CGFloat,
-        weight: DesignSystem.FontType.Weight,
-        color: DesignSystem.Color? = nil
-    ) -> Text {
-        let text = font(.designSystem(size: size, weight: weight))
-
-        if let color = color {
-            return text.foregroundColor(.designSystem(color))
-        } else {
-            return text
-        }
+    func montage(
+        varient: Montage.Typography.Variant = .body1,
+        size: Montage.Typography.Size = .small,
+        weight: Montage.Typography.Weight = .regular,
+        color: Montage.Color.Alias = .labelNormal
+    ) -> some View {
+        font(.montage(varient: varient, weight: weight, size: size))
+            .foregroundColor(.alias(color))
+            .lineSpacing(varient.lineSpacing)
+            .padding(.vertical, varient.padding)
     }
 }
