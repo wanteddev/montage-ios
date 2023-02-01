@@ -141,6 +141,37 @@ public extension Montage.Typography {
         
         return sementicSize * letterSpacingEm
     }
+    
+    static func getLineHeight(varient: Variant, size: Size) -> CGFloat {
+        switch varient {
+        case .display:
+            return size == .small ? 48 : 72
+        case .title1:
+            return size == .small ? 38 : 52
+        case .title2:
+            return size == .small ? 32 : 38
+        case .heading1:
+            return size == .small ? 26 : 28
+        case .heading2:
+            return size == .small ? 24 : 26
+        case .body1:
+            return 24
+        case .body1Reading:
+            return 26
+        case .body2:
+            return 22
+        case .body2Reading:
+            return 24
+        case .label1:
+            return 20
+        case .label2:
+            return 18
+        case .caption1:
+            return 16
+        case .caption2:
+            return 14
+        }
+    }
 }
 
 public extension Montage.Typography.Variant {
