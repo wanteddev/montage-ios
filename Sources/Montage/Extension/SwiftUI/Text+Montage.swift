@@ -16,6 +16,7 @@ public extension Text {
     ) -> some View {
         font(.montage(varient: varient, weight: weight, size: size))
             .foregroundColor(.alias(color))
+            .tracking(Montage.Typography.getTracking(varient: varient, size: size))
             .lineSpacing(varient.lineSpacing)
             .padding(.vertical, varient.padding)
     }
