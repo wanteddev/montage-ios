@@ -18,7 +18,7 @@ public extension NSAttributedString {
         .init(string: string, attributes: [
             .font: UIFont.montage(varient: varient, weight: weight, size: size),
             .foregroundColor: UIColor.alias(color),
-            .kern: Montage.Typography.getKern(varient: varient, size: size),
+            .tracking: Montage.Typography.getTracking(varient: varient, size: size),
             .paragraphStyle: {
                 let style = NSMutableParagraphStyle()
                 style.alignment = .left
