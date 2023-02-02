@@ -101,7 +101,7 @@ public extension Montage {
         case setting
         case share
         case squareHangul
-        case squareHanji
+        case squareHan
         case squareKana
         case squareLatin
         case squareMore
