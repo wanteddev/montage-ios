@@ -120,7 +120,7 @@ public extension Montage.Typography {
         case .heading1:
             letterSpacingEm = size == .small ? -0.012 : -0.0194
         case .heading2:
-            letterSpacingEm = 0
+            letterSpacingEm = -0.001
         case .body1:
             letterSpacingEm = 0.0057
         case .body1Reading:
