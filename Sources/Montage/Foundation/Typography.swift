@@ -118,9 +118,9 @@ public extension Montage.Typography {
         case .title2:
             letterSpacingEm = size == .small ? -0.023 : -0.0246
         case .heading1:
-            letterSpacingEm = size == .small ? -0.02 : -0.0194
+            letterSpacingEm = size == .small ? -0.012 : -0.0194
         case .heading2:
-            letterSpacingEm = size == .small ? -0.027 : -0.002
+            letterSpacingEm = 0
         case .body1:
             letterSpacingEm = 0.0057
         case .body1Reading:
