@@ -372,7 +372,7 @@ public extension Montage {
                 case .labelStrong:
                     globalType = style == .dark ? .globalCommon100 : .globalCommon0
                 case .labelAlternative:
-                    globalType = style == .dark ? .globalNeutral50 : .globalNeutral90
+                    globalType = style == .dark ? .globalNeutral50 : .globalNeutral60
                 case .labelAssistive:
                     globalType = style == .dark ? .globalNeutral30 : .globalNeutral90
                 case .labelDisable:
