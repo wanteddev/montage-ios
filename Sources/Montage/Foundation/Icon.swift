@@ -118,6 +118,11 @@ public extension Montage {
         case verifiedStar
         case verifiedStarFill
         
+        // added on v0.1.2
+        case dot
+        case lineHorizontalThick
+        case lineHorizontal
+        
         public var name: String { rawValue }
     }
 }
