@@ -420,5 +420,14 @@ public extension Montage {
                 return .load(name: globalType.name)
             }
         }
+        
+        enum Component: String {
+            case fillNormal
+            case fillStrong
+            case fillAlternative
+            case materialDimmer
+            
+            public var name: String { rawValue }
+        }
     }
 }

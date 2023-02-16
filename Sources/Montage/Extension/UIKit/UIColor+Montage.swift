@@ -19,4 +19,8 @@ extension UIColor {
     public static func alias(_ type: Montage.Color.Alias) -> UIColor {
         .init(dynamicProvider: type.convert)
     }
+    
+    static func component(_ type: Montage.Color.Component) -> UIColor {
+        load(name: type.name)
+    }
 }
