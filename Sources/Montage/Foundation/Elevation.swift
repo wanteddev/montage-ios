@@ -9,6 +9,7 @@ import UIKit
 
 extension Montage {
     public enum Elevation: Equatable {
+        case none
         case shadowNormal
         case shadowEmphasize
         case shadowStrong
@@ -20,7 +21,7 @@ extension Montage.Elevation {
     struct Descriptor {
         let offset: CGSize
         let blur: CGFloat
-        let color: UIColor
+        let color: UIColor?
         let alpha: CGFloat
     }
     
@@ -28,6 +29,8 @@ extension Montage.Elevation {
         let shadowColor = UIColor.alias(.staticBlack)
         
         switch self {
+        case .none:
+            return .init(offset: .init(width: 0, height: -3), blur: 0, color: nil, alpha: 0)
         case .shadowNormal:
             return .init(offset: .init(width: 0, height: 1), blur: 2, color: shadowColor, alpha: 0.16)
         case .shadowEmphasize:

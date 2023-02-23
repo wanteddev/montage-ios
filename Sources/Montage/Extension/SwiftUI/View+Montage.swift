@@ -10,10 +10,19 @@ import SwiftUI
 public extension View {
     public func elevation(_ elevation: Montage.Elevation) -> Self {
         var currentView = self
+        
+        guard elevation != .none else {
+            return currentView
+        }
+        
         var descriptor = elevation.descriptor
         
+        guard let color = descriptor.color else {
+            return currentView
+        }
+        
         currentView.shadow(
-            color: Color(descriptor.color.withAlphaComponent(descriptor.alpha)),
+            color: Color(color.withAlphaComponent(descriptor.alpha)),
             radius: descriptor.blur,
             x: descriptor.offset.width,
             y: descriptor.offset.height
