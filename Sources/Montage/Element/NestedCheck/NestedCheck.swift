@@ -31,7 +31,7 @@ public extension Montage {
             let view = UIImageView()
             view.isUserInteractionEnabled = false
             view.tintColor = .alias(.labelAssistive)
-            view.image = .montage(.check)
+            view.image = .montage(.checkThick)
             return view
         }()
         

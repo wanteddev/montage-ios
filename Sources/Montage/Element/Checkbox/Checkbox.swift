@@ -103,11 +103,11 @@ extension Montage.Checkbox {
         case .checked:
             boxView.layer.backgroundColor = UIColor.alias(.primaryNormal).cgColor
             boxView.layer.borderColor = UIColor.alias(.primaryNormal).cgColor
-            imageView.image = .montage(.check)
+            imageView.image = .montage(.checkThick)
         case .partial:
             boxView.layer.backgroundColor = UIColor.alias(.primaryNormal).cgColor
             boxView.layer.borderColor = UIColor.alias(.primaryNormal).cgColor
-            imageView.image = .montage(.lineHorizontal)
+            imageView.image = .montage(.lineHorizontalThick)
         }
     }
     
