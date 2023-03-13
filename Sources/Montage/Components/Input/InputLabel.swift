@@ -61,6 +61,10 @@ extension Montage {
             setupViews()
             bindEvent()
         }
+        
+        override public var intrinsicContentSize: CGSize {
+            .init(width: UIScreen.main.bounds.width, height: Const.inputSize.height)
+        }
     }
 }
 

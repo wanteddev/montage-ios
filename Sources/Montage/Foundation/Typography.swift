@@ -63,6 +63,14 @@ public extension Montage.Typography.Weight {
         case .bold: return .semibold
         }
     }
+    
+    var failbackWeight: UIFont.Weight {
+        switch self {
+        case .regular: return .regular
+        case .medium: return .medium
+        case .bold: return .semibold
+        }
+    }
 }
 
 public extension Montage.Typography {
@@ -72,6 +80,15 @@ public extension Montage.Typography {
             return .bold
         default:
             return weight.pretendardWeight
+        }
+    }
+    
+    static func getFailbackWeight(varient: Variant, weight: Weight) -> UIFont.Weight {
+        switch (varient, weight) {
+        case (.display, .bold), (.title1, .bold), (.title2, .bold):
+            return .bold
+        default:
+            return weight.failbackWeight
         }
     }
     

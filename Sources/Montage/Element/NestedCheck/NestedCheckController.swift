@@ -5,12 +5,11 @@
 //  Created by Euigyom Kim on 2023/03/02.
 //
 
-import Foundation
 import SwiftUI
 
 public extension Montage {
     struct NestedCheckController: UIViewRepresentable {
-        @Binding public var state: MontageInputState
+        @State public var state: MontageInputState
         
         public typealias UIViewType = Montage.NestedCheck
         
@@ -20,6 +19,15 @@ public extension Montage {
         
         public func updateUIView(_ uiView: Montage.NestedCheck, context: Context) {
             uiView.state = state
+        }
+    }
+}
+
+struct MontageNestedCheckController_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            Montage.NestedCheckController(state: .checked)
+                .frame(width: 24, height: 24)
         }
     }
 }

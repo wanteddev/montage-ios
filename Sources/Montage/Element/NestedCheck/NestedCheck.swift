@@ -56,6 +56,10 @@ public extension Montage {
                 updateViews()
             }
         }
+        
+        override public var intrinsicContentSize: CGSize {
+            Const.wrapperBoxSize
+        }
     }
 }
 
