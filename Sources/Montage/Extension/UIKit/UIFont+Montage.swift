@@ -19,7 +19,9 @@ public extension UIFont {
         size: Montage.Typography.Size = .small
     ) -> UIFont {
         let sementicWeight = Montage.Typography.getSementicWeight(varient: varient, weight: weight)
+        let failbackWeight = Montage.Typography.getFailbackWeight(varient: varient, weight: weight)
         let sementicSize = Montage.Typography.getSementicSize(varient: varient, size: size)
-        return UIFont(name: sementicWeight.fontName, size: sementicSize)!
+        return UIFont(name: sementicWeight.fontName, size: sementicSize) ??
+            .systemFont(ofSize: sementicSize, weight: failbackWeight)
     }
 }

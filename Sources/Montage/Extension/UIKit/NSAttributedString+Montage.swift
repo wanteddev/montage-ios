@@ -15,14 +15,22 @@ public extension NSAttributedString {
         weight: Montage.Typography.Weight = .regular,
         color: Montage.Color.Alias = .labelNormal
     ) -> NSAttributedString {
-        .init(string: string, attributes: [
-            .font: UIFont.montage(varient: varient, weight: weight, size: size),
-            .foregroundColor: UIColor.alias(color),
-            .tracking: Montage.Typography.getTracking(varient: varient, size: size),
+        let font = UIFont.montage(varient: varient, weight: weight, size: size)
+        let lineHeight = Montage.Typography.getLineHeight(varient: varient, size: size)
+        // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/
+        let baselineOffset = (lineHeight - font.lineHeight) / 2 / 2
+        let foregroundColor = UIColor.alias(color)
+        let tracking = Montage.Typography.getTracking(varient: varient, size: size)
+        
+        return .init(string: string, attributes: [
+            .font: font,
+            .tracking: tracking,
+            .baselineOffset: baselineOffset,
+            .foregroundColor: foregroundColor,
             .paragraphStyle: {
                 let style = NSMutableParagraphStyle()
                 style.alignment = .left
-                style.minimumLineHeight = Montage.Typography.getLineHeight(varient: varient, size: size)
+                style.minimumLineHeight = lineHeight
                 return style
             }()
         ])
