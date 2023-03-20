@@ -54,29 +54,29 @@ public extension CGFloat {
         case .p005:
             return 0.05
         case .p010:
-            return 0.10
+            return 0.08
         case .p015:
-            return 0.15
+            return 0.12
         case .p020:
-            return 0.20
+            return 0.16
         case .p030:
-            return 0.30
+            return 0.22
         case .p040:
-            return 0.40
+            return 0.28
         case .p050:
-            return 0.50
+            return 0.35
         case .p060:
-            return 0.60
+            return 0.43
         case .p070:
-            return 0.70
+            return 0.52
         case .p080:
-            return 0.80
+            return 0.61
         case .p090:
-            return 0.90
+            return 0.74
         case .p095:
-            return 0.95
+            return 0.88
         case .p099:
-            return 0.99
+            return 0.97
         case .p100:
             return 1
         }
