@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Montage {
-    enum Opacity: String, CaseIterable {
+    enum Opacity {
         case p000
         case p005
         case p010
