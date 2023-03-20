@@ -46,4 +46,39 @@ public extension CGFloat {
             return 80
         }
     }
+    
+    static func opacity(_ opacityComponent: Montage.Opacity) -> CGFloat {
+        switch opacityComponent {
+        case .p000:
+            return 0
+        case .p005:
+            return 0.05
+        case .p010:
+            return 0.08
+        case .p015:
+            return 0.12
+        case .p020:
+            return 0.16
+        case .p030:
+            return 0.22
+        case .p040:
+            return 0.28
+        case .p050:
+            return 0.35
+        case .p060:
+            return 0.43
+        case .p070:
+            return 0.52
+        case .p080:
+            return 0.61
+        case .p090:
+            return 0.74
+        case .p095:
+            return 0.88
+        case .p099:
+            return 0.97
+        case .p100:
+            return 1
+        }
+    }
 }

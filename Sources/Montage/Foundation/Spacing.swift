@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Montage {
-    enum Spacing: String, CaseIterable {
+    enum Spacing {
         case pt01
         case pt02
         case pt04
