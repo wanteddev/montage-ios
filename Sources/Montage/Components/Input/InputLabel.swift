@@ -8,7 +8,7 @@
 import UIKit
 
 extension Montage {
-    /// Input 요소들의 필수 요건을 정의한 프로토콜입니다.
+    /// Control Element와 텍스트 라벨을 함께 담고 있는 컴포넌트입니다.
     public class InputLabel: UIView {
         private enum Const {
             static let inputSize: CGSize = .init(width: 24, height: 24)
@@ -62,6 +62,7 @@ extension Montage {
             bindEvent()
         }
         
+        /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
             .init(width: UIScreen.main.bounds.width, height: Const.inputSize.height)
         }
@@ -116,6 +117,7 @@ extension Montage.InputLabel {
     }
 }
 
+/// 디자인시스템의 Input 요소들이 공통으로 가질 수 있는 프로퍼티를 정의한 프로토콜입니다.
 public protocol MontageInput: UIView {
     var state: MontageInputState { get set }
 }
@@ -129,5 +131,7 @@ public enum MontageInputState {
 
 /// Input 요소들의 이벤트를 받을 수 있는 Delegate 프로토콜입니다.
 public protocol MontageInputDelegate: AnyObject {
+    /// 터치가 발생하였을 때 호출되는 메소드입니다.
+    /// - Parameter input: 터치가 발생한 객체
     func inputDidSelected(_ input: Montage.InputLabel)
 }

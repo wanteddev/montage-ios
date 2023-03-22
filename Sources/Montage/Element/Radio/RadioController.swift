@@ -8,6 +8,7 @@
 import SwiftUI
 
 public extension Montage {
+    /// ``Montage/Radio``를 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
     struct RadioController: UIViewRepresentable {
         @State public var state: MontageInputState
         

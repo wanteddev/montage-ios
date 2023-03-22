@@ -8,6 +8,7 @@
 import SwiftUI
 
 public extension Montage {
+    /// ``Montage/InputLabel``을 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
     struct InputLabelController: UIViewRepresentable {
         @State public var inputView: MontageInput
         @State public var state: MontageInputState

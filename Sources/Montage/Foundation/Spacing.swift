@@ -8,6 +8,7 @@
 import Foundation
 
 public extension Montage {
+    /// UI 요소간의 간격을 정의하는 Enum 타입입니다.
     enum Spacing {
         case pt01
         case pt02

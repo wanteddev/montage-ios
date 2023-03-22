@@ -9,4 +9,5 @@
 
 import Foundation
 
+/// 원티드랩의 디자인 시스템 요소를 모아 둔 Namespace
 public class Montage {}

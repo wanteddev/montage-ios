@@ -7,11 +7,15 @@
 
 import UIKit
 
+/// ``Montage/Checkbox``의 터치 이벤트를 받을 수 있는 Delegate입니다.
 public protocol MontageCheckboxDelegate: AnyObject {
+    /// 터치가 발생하였을 때 호출되는 메소드입니다.
+    /// - Parameter checkbox: 터치가 발생한 객체
     func didTappedCheckbox(_ checkbox: Montage.Checkbox)
 }
 
 public extension Montage {
+    /// 박스로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageInputState``의 모든 상태를 표현할 수 있습니다.
     class Checkbox: UIView, MontageInput {
         private enum Const {
             static let wrapperBoxSize: CGSize = .init(width: 24, height: 24)
@@ -26,24 +30,23 @@ public extension Montage {
             return view
         }()
         
+        /// Control Element의 모양을 표현하기 위한 상태값입니다.
         public var state: MontageInputState = .unchecked {
             didSet {
                 updateViews()
             }
         }
         
-        public var canMultipleSelect: Bool = false {
-            didSet {
-                updateViews()
-            }
-        }
+        private var tapRecognizer: UITapGestureRecognizer?
         
-        private var tapRecognizer = UITapGestureRecognizer()
+        private weak var delegate: MontageCheckboxDelegate?
         
-        public weak var delegate: MontageCheckboxDelegate?
-        
-        override public init(frame: CGRect) {
-            super.init(frame: frame)
+        /// Checkbox 객체를 생성합니다.
+        /// - Parameter delegate: Checkbox 버튼을 Element 단독으로 사용할 경우 이벤트를 받을 delegate 객체입니다.
+        public init(delegate: MontageCheckboxDelegate? = nil) {
+            super.init(frame: .zero)
+            self.delegate = delegate
+            
             setupViews()
             bindEvent()
         }
@@ -60,6 +63,7 @@ public extension Montage {
             }
         }
         
+        /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
             Const.wrapperBoxSize
         }
@@ -91,8 +95,11 @@ extension Montage.Checkbox {
     }
     
     private func bindEvent() {
-        tapRecognizer.addTarget(self, action: #selector(tapped))
-        addGestureRecognizer(tapRecognizer)
+        guard delegate != nil else { return }
+        let recognizer = UITapGestureRecognizer()
+        recognizer.addTarget(self, action: #selector(tapped))
+        addGestureRecognizer(recognizer)
+        tapRecognizer = recognizer
     }
     
     private func updateViews() {

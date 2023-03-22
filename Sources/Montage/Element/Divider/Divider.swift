@@ -8,6 +8,7 @@
 import UIKit
 
 public extension Montage {
+    /// 구획을 나누기 위해 사용되는 Element입니다.
     class Divider: UIView {
         public enum Weight {
             case thick, normal
@@ -16,6 +17,10 @@ public extension Montage {
         var weight: Weight
         var isVertical: Bool
         
+        /// 새로운 Divider를 생성합니다.
+        /// - Parameters:
+        ///   - weight: Divider의 두께를 결정합니다.
+        ///   - isVertical: Divider의 축을 결정합니다. true일 경우 세로 방향으로 폭에 대한 제약 조건이 설정됩니다. false일 경우 가로 방향으로 높이에 대한 제약 조건이 설정됩니다.
         public init(weight: Weight = .normal, isVertical: Bool = false) {
             self.weight = weight
             self.isVertical = isVertical
