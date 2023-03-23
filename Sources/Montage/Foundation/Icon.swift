@@ -8,6 +8,7 @@
 import Foundation
 
 public extension Montage {
+    /// Montage 번들 내에 포함된 아이콘들의 이름들입니다.
     enum Icon: String, CaseIterable {
         case apps
         case arrowUp

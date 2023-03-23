@@ -8,6 +8,7 @@
 import UIKit
 
 public extension Montage {
+    /// 디자인시스템에서 미리 정의된 컬러들입니다.
     enum Color {
         ///
         /// 디자인시스템에서 정의된 Atomic 컬러 파렛트입니다.
@@ -206,147 +207,147 @@ public extension Montage {
         ///
         public enum Alias: String {
             ///
-            /// color-alias-static-white
+            /// Figma상의 `.color-alias-static-white` 토큰과 대응되는 값입니다.
             ///
             case staticWhite
             
             ///
-            /// color-alias-static-black
+            /// Figma상의 `.color-alias-static-black` 토큰과 대응되는 값입니다.
             ///
             case staticBlack
             
             ///
-            /// color-alias-primary-normal
+            /// Figma상의 `.color-alias-primary-normal` 토큰과 대응되는 값입니다.
             ///
             case primaryNormal
             
             ///
-            /// color-alias-primary-strong
+            /// Figma상의 `.color-alias-primary-strong` 토큰과 대응되는 값입니다.
             ///
             case primaryStrong
             
             ///
-            /// color-alias-primary-heavy
+            /// Figma상의 `.color-alias-primary-heavy` 토큰과 대응되는 값입니다.
             ///
             case primaryHeavy
             
             ///
-            /// color-alias-label-normal
+            /// Figma상의 `.color-alias-label-normal` 토큰과 대응되는 값입니다.
             ///
             case labelNormal
             
             ///
-            /// color-alias-label-strong
+            /// Figma상의 `.color-alias-label-strong` 토큰과 대응되는 값입니다.
             ///
             case labelStrong
             
             ///
-            /// color-alias-label-alternative
+            /// Figma상의 `.color-alias-label-alternative` 토큰과 대응되는 값입니다.
             ///
             case labelAlternative
             
             ///
-            /// color-alias-label-assistive
+            /// Figma상의 `.color-alias-label-assistive` 토큰과 대응되는 값입니다.
             ///
             case labelAssistive
             
             ///
-            /// color-alias-label-disable
+            /// Figma상의 `.color-alias-label-disable` 토큰과 대응되는 값입니다.
             ///
             case labelDisable
             
             ///
-            /// color-alias-background-normal-normal
+            /// Figma상의 `.color-alias-background-normal-normal` 토큰과 대응되는 값입니다.
             ///
             case backgroundNormal
             
             ///
-            /// color-alias-background-normal-alternative
+            /// Figma상의 `.color-alias-background-normal-alternative` 토큰과 대응되는 값입니다.
             ///
             case backgroundNormalAlternative
             
             ///
-            /// color-alias-background-elevated-normal
+            /// Figma상의 `.color-alias-background-elevated-normal` 토큰과 대응되는 값입니다.
             ///
             case backgroundElevated
             
             ///
-            /// color-alias-background-elevated-alternative
+            /// Figma상의 `.color-alias-background-elevated-alternative` 토큰과 대응되는 값입니다.
             ///
             case backgroundElevatedAlternative
             
             ///
-            /// color-alias-interaction-inactive
+            /// Figma상의 `.color-alias-interaction-inactive` 토큰과 대응되는 값입니다.
             ///
             case interactionInactive
             
             ///
-            /// color-alias-interaction-disable
+            /// Figma상의 `.color-alias-interaction-disable` 토큰과 대응되는 값입니다.
             ///
             case interactionDisable
             
             ///
-            /// color-alias-line-normal
+            /// Figma상의 `.color-alias-line-normal` 토큰과 대응되는 값입니다.
             ///
             case lineNormal
             
             ///
-            /// color-alias-line-alternative
+            /// Figma상의 `.color-alias-line-alternative` 토큰과 대응되는 값입니다.
             ///
             case lineAlternative
             
             ///
-            /// color-alias-status-positive
+            /// Figma상의 `.color-alias-status-positive` 토큰과 대응되는 값입니다.
             ///
             case statusPositive
             
             ///
-            /// color-alias-status-cautionary
+            /// Figma상의 `.color-alias-status-cautionary` 토큰과 대응되는 값입니다.
             ///
             case statusCautionary
             
             ///
-            /// color-alias-status-negative
+            /// Figma상의 `.color-alias-status-negative` 토큰과 대응되는 값입니다.
             ///
             case statusNegative
             
             ///
-            /// color-alias-accent-lime
+            /// Figma상의 `.color-alias-accent-lime` 토큰과 대응되는 값입니다.
             ///
             case accentLime
 
             ///
-            /// color-alias-accent-cyan
+            /// Figma상의 `.color-alias-accent-cyan` 토큰과 대응되는 값입니다.
             ///
             case accentCyan
 
             ///
-            /// color-alias-accent-lightBlue
+            /// Figma상의 `.color-alias-accent-lightBlue` 토큰과 대응되는 값입니다.
             ///
             case accentLightBlue
 
             ///
-            /// color-alias-accent-violet
+            /// Figma상의 `.color-alias-accent-violet` 토큰과 대응되는 값입니다.
             ///
             case accentViolet
 
             ///
-            /// color-alias-accent-pink
+            /// Figma상의 `.color-alias-accent-pink` 토큰과 대응되는 값입니다.
             ///
             case accentPink
             
             ///
-            /// color-alias-inverse-primary
+            /// Figma상의 `.color-alias-inverse-primary` 토큰과 대응되는 값입니다.
             ///
             case inversePrimary
             
             ///
-            /// color-alias-inverse-background
+            /// Figma상의 `.color-alias-inverse-background` 토큰과 대응되는 값입니다.
             ///
             case inverseBackground
             
             ///
-            /// color-alias-inverse-label
+            /// Figma상의 `.color-alias-inverse-label` 토큰과 대응되는 값입니다.
             ///
             case inverseLabel
             

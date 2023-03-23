@@ -11,12 +11,16 @@ import Pretendard
 
 extension Montage {
     public enum Typography {
+        /// 타이포의 굵기를 정의하는 파라미터입니다.
+        /// Varient와 조합하여 어떤 폰트 Weight를 사용할 지 결정합니다.
         public enum Weight: CaseIterable {
             case regular
             case medium
             case bold
         }
         
+        /// 타이포의 용도를 정의하는 파라미터입니다.
+        /// 기본값은 .body1을 사용하고 있습니다.
         public enum Variant: CaseIterable {
             case display
             case title1
@@ -33,6 +37,8 @@ extension Montage {
             case caption2
         }
         
+        /// 타이포의 크기를 정의하는 파라미터입니다.
+        /// 모바일 환경에서는 `.small`이 기본값이며, 특별한 언급이 없는 한 `.large`를 사용하지 않습니다.
         public enum Size: CaseIterable {
             case small, large
         }

@@ -8,6 +8,7 @@
 import Foundation
 
 public extension Montage {
+    /// 색상의 투명도를 정의한 Enum 타입입니다.
     enum Opacity {
         case p000
         case p005
