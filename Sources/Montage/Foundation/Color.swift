@@ -353,7 +353,7 @@ public extension Montage {
             
             public var name: String { rawValue }
             
-            func convert(_ traitCollection: UITraitCollection) -> UIColor {
+            func resolve(_ traitCollection: UITraitCollection) -> UIColor {
                 let style = traitCollection.userInterfaceStyle
                 let globalType: Montage.Color.Global
                 
@@ -422,13 +422,58 @@ public extension Montage {
             }
         }
         
-        enum Component: String {
+        ///
+        /// 디자인시스템에서 정의된 Component 컬러 파렛트를 바라보는 레퍼런스 컬러 값입니다. 컬러 모드에 따라 실제로는 다른 값을 가질 수 있습니다.
+        ///
+        /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
+        ///
+        public enum Component: String {
+            ///
+            /// Figma상의 `.color-component-fill-normal` 토큰과 대응되는 값입니다.
+            ///
             case fillNormal
+            
+            ///
+            /// Figma상의 `.color-component-fill-strong` 토큰과 대응되는 값입니다.
+            ///
             case fillStrong
+            
+            ///
+            /// Figma상의 `.color-component-fill-alternative` 토큰과 대응되는 값입니다.
+            ///
             case fillAlternative
+            
+            ///
+            /// Figma상의 `.color-component-material-dimmer` 토큰과 대응되는 값입니다.
+            ///
             case materialDimmer
             
             public var name: String { rawValue }
+            
+            func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+                let style = traitCollection.userInterfaceStyle
+                
+                let baseColor: UIColor
+                let alpha: CGFloat
+                
+                switch self {
+                case .fillNormal:
+                    baseColor = .load(name: Global.globalCoolNeutral50.name)
+                    alpha = style == .dark ? 0.22 : 0.08
+                case .fillStrong:
+                    baseColor = .load(name: Global.globalCoolNeutral50.name)
+                    alpha = style == .dark ? 0.28 : 0.16
+                case .fillAlternative:
+                    baseColor = .load(name: Global.globalCoolNeutral50.name)
+                    alpha = style == .dark ? 0.12 : 0.05
+                case .materialDimmer:
+                    let gColor = style == .dark ? Global.globalCoolNeutral5 : Global.globalCoolNeutral10
+                    baseColor = .load(name: gColor.name)
+                    alpha = style == .dark ? 0.74 : 0.52
+                }
+                
+                return baseColor.withAlphaComponent(alpha)
+            }
         }
     }
 }

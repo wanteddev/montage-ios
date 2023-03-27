@@ -20,4 +20,8 @@ extension Color {
     public static func alias(_ type: Montage.Color.Alias) -> Color {
         .init(UIColor.alias(type))
     }
+    
+    public static func component(_ type: Montage.Color.Component) -> Color {
+        .init(UIColor.component(type))
+    }
 }
