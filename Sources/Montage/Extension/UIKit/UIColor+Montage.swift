@@ -17,10 +17,10 @@ extension UIColor {
     }
     
     public static func alias(_ type: Montage.Color.Alias) -> UIColor {
-        .init(dynamicProvider: type.convert)
+        .init(dynamicProvider: type.resolve)
     }
     
-    static func component(_ type: Montage.Color.Component) -> UIColor {
-        load(name: type.name)
+    public static func component(_ type: Montage.Color.Component) -> UIColor {
+        .init(dynamicProvider: type.resolve)
     }
 }
