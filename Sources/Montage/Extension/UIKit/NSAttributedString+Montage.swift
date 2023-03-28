@@ -13,7 +13,8 @@ public extension NSAttributedString {
         varient: Montage.Typography.Variant = .body1,
         size: Montage.Typography.Size = .small,
         weight: Montage.Typography.Weight = .regular,
-        color: Montage.Color.Alias = .labelNormal
+        color: Montage.Color.Alias = .labelNormal,
+        lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         let font = UIFont.montage(varient: varient, weight: weight, size: size)
         let lineHeight = Montage.Typography.getLineHeight(varient: varient, size: size)
@@ -31,6 +32,7 @@ public extension NSAttributedString {
                 let style = NSMutableParagraphStyle()
                 style.alignment = .left
                 style.minimumLineHeight = lineHeight
+                style.lineBreakMode = lineBreakMode
                 return style
             }()
         ])
