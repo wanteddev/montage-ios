@@ -12,7 +12,7 @@ extension UIImage {
         UIImage(named: name, in: Bundle.module, with: nil) ?? UIImage()
     }
 
-    public static func montage(_ type: Montage.Icon) -> UIImage {
+    public static func montage(_ type: Icon) -> UIImage {
         load(name: type.name)
     }
 }

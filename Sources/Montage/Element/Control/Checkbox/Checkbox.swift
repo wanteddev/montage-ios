@@ -8,69 +8,67 @@
 import UIKit
 
 /// ``Montage/Checkbox``의 터치 이벤트를 받을 수 있는 Delegate입니다.
-public protocol MontageCheckboxDelegate: AnyObject {
+public protocol CheckboxControlDelegate: AnyObject {
     /// 터치가 발생하였을 때 호출되는 메소드입니다.
     /// - Parameter checkbox: 터치가 발생한 객체
-    func didTappedCheckbox(_ checkbox: Montage.Checkbox)
+    func didTappedCheckbox(_ checkbox: Checkbox)
 }
 
-public extension Montage {
-    /// 박스로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageInputState``의 모든 상태를 표현할 수 있습니다.
-    class Checkbox: UIView, MontageInput {
-        private enum Const {
-            static let wrapperBoxSize: CGSize = .init(width: 24, height: 24)
+/// 박스로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageInputState``의 모든 상태를 표현할 수 있습니다.
+public class Checkbox: UIView, MontageInput {
+    private enum Const {
+        static let wrapperBoxSize: CGSize = .init(width: 24, height: 24)
+    }
+    
+    private lazy var boxView = UIView()
+    
+    private lazy var imageView: UIImageView = {
+        let view = UIImageView()
+        view.isUserInteractionEnabled = false
+        view.tintColor = .alias(.staticWhite)
+        return view
+    }()
+    
+    /// Control Element의 모양을 표현하기 위한 상태값입니다.
+    public var state: MontageInputState = .unchecked {
+        didSet {
+            updateViews()
         }
+    }
+    
+    private var tapRecognizer: UITapGestureRecognizer?
+    
+    private weak var delegate: CheckboxControlDelegate?
+    
+    /// Checkbox 객체를 생성합니다.
+    /// - Parameter delegate: Checkbox 버튼을 Element 단독으로 사용할 경우 이벤트를 받을 delegate 객체입니다.
+    public init(delegate: CheckboxControlDelegate? = nil) {
+        super.init(frame: .zero)
+        self.delegate = delegate
         
-        private lazy var boxView = UIView()
-        
-        private lazy var imageView: UIImageView = {
-            let view = UIImageView()
-            view.isUserInteractionEnabled = false
-            view.tintColor = .alias(.staticWhite)
-            return view
-        }()
-        
-        /// Control Element의 모양을 표현하기 위한 상태값입니다.
-        public var state: MontageInputState = .unchecked {
-            didSet {
-                updateViews()
-            }
+        setupViews()
+        bindEvent()
+    }
+    
+    override public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupViews()
+        bindEvent()
+    }
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            updateViews()
         }
-        
-        private var tapRecognizer: UITapGestureRecognizer?
-        
-        private weak var delegate: MontageCheckboxDelegate?
-        
-        /// Checkbox 객체를 생성합니다.
-        /// - Parameter delegate: Checkbox 버튼을 Element 단독으로 사용할 경우 이벤트를 받을 delegate 객체입니다.
-        public init(delegate: MontageCheckboxDelegate? = nil) {
-            super.init(frame: .zero)
-            self.delegate = delegate
-            
-            setupViews()
-            bindEvent()
-        }
-        
-        override public required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setupViews()
-            bindEvent()
-        }
-        
-        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-                updateViews()
-            }
-        }
-        
-        /// Element의 기본적인 사이즈를 정의합니다.
-        override public var intrinsicContentSize: CGSize {
-            Const.wrapperBoxSize
-        }
+    }
+    
+    /// Element의 기본적인 사이즈를 정의합니다.
+    override public var intrinsicContentSize: CGSize {
+        Const.wrapperBoxSize
     }
 }
 
-extension Montage.Checkbox {
+extension Checkbox {
     private func setupViews() {
         addSubview(boxView)
         boxView.addSubview(imageView)

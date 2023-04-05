@@ -8,7 +8,7 @@
 import Foundation
 
 public extension CGFloat {
-    static func spacing(_ spacingComponent: Montage.Spacing) -> CGFloat {
+    static func spacing(_ spacingComponent: Spacing) -> CGFloat {
         switch spacingComponent {
         case .pt01:
             return 1
@@ -47,7 +47,7 @@ public extension CGFloat {
         }
     }
     
-    static func opacity(_ opacityComponent: Montage.Opacity) -> CGFloat {
+    static func opacity(_ opacityComponent: Opacity) -> CGFloat {
         switch opacityComponent {
         case .p000:
             return 0

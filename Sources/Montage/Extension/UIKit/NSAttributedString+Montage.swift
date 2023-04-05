@@ -10,18 +10,18 @@ import UIKit
 public extension NSAttributedString {
     static func montage(
         _ string: String,
-        varient: Montage.Typography.Variant = .body1,
-        size: Montage.Typography.Size = .small,
-        weight: Montage.Typography.Weight = .regular,
-        color: Montage.Color.Alias = .labelNormal,
+        varient: Typography.Variant = .body1,
+        size: Typography.Size = .small,
+        weight: Typography.Weight = .regular,
+        color: Color.Alias = .labelNormal,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         let font = UIFont.montage(varient: varient, weight: weight, size: size)
-        let lineHeight = Montage.Typography.getLineHeight(varient: varient, size: size)
+        let lineHeight = Typography.getLineHeight(varient: varient, size: size)
         // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/
         let baselineOffset = (lineHeight - font.lineHeight) / 2 / 2
         let foregroundColor = UIColor.alias(color)
-        let tracking = Montage.Typography.getTracking(varient: varient, size: size)
+        let tracking = Typography.getTracking(varient: varient, size: size)
         
         return .init(string: string, attributes: [
             .font: font,

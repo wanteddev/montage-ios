@@ -8,7 +8,7 @@
 import UIKit
 
 public extension UIView {
-    func setElevation(_ elevation: Montage.Elevation?)  {
+    func setElevation(_ elevation: Elevation?)  {
         let elevation = elevation ?? .none
         let descriptor = elevation.descriptor
         
