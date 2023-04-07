@@ -7,45 +7,45 @@
 
 import UIKit
 
-public final class Interaction: UIView {
-    public enum State {
-        case normal, hovered, focused, pressed
-    }
-    
-    var state: State {
-        didSet {
-            debugPrint(">>> new state: \(String(describing: state))")
-            updateView()
+extension Decorate {
+    public final class Interaction: UIView {
+        public enum State {
+            case normal, hovered, focused, pressed
         }
-    }
-    
-    var color: Color.Alias {
-        didSet {
-            debugPrint(">>> new color: \(String(describing: color))")
-            updateView()
+        
+        var state: State {
+            didSet {
+                updateView()
+            }
         }
-    }
-    
-    init(state: State = .normal, color: Color.Alias = .labelNormal) {
-        self.state = state
-        self.color = color
         
-        super.init(frame: .zero)
+        var color: Color.Alias {
+            didSet {
+                updateView()
+            }
+        }
         
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        self.state = .normal
-        self.color = .labelNormal
+        init(state: State = .normal, color: Color.Alias = .labelNormal) {
+            self.state = state
+            self.color = color
+            
+            super.init(frame: .zero)
+            
+            setupView()
+        }
         
-        super.init(coder: coder)
-        
-        setupView()
+        required init?(coder: NSCoder) {
+            self.state = .normal
+            self.color = .labelNormal
+            
+            super.init(coder: coder)
+            
+            setupView()
+        }
     }
 }
 
-extension Interaction {
+extension Decorate.Interaction {
     private func setupView() {
         isUserInteractionEnabled = false
         alpha = state.alpha
@@ -64,7 +64,7 @@ extension Interaction {
     }
 }
 
-extension Interaction.State {
+extension Decorate.Interaction.State {
     var alpha: CGFloat {
         switch self {
         case .normal:
