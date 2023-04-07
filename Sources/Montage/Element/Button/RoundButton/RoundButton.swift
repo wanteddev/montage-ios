@@ -16,7 +16,6 @@ public protocol RoundButtonDelegate: AnyObject {
 
 /// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
 /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
-
 public class RoundButton: UIView {
     /// 버튼의 외관을 결정하는 열거형입니다.
     public enum Varient {
@@ -26,11 +25,6 @@ public class RoundButton: UIView {
     /// 버튼의 사이즈를 결정하는 열거형입니다.
     public enum Size {
         case large, medium, small
-    }
-    
-    /// 버튼의 인터렉션 요소를 결정하는 열거형입니다.
-    public enum Interaction {
-        case normal, hovered, focused, pressed
     }
     
     /// 버튼의 외관입니다.
@@ -49,8 +43,8 @@ public class RoundButton: UIView {
         }
     }
     
-    /// 사용자와의 인터렉션을 표현합니다.
-    public var interaction: Interaction = .normal {
+    /// 사용자와의 인터렉션 상태를 표현합니다.
+    public var state: Interaction.State = .normal {
         didSet {
             updateViews()
         }
@@ -84,6 +78,8 @@ public class RoundButton: UIView {
     private lazy var textLabel = UILabel()
     
     private lazy var rightIconView = UIImageView()
+    
+    private lazy var interaction = Interaction()
     
     private var tapRecognizer: UITapGestureRecognizer?
     
@@ -126,8 +122,10 @@ public class RoundButton: UIView {
 extension RoundButton {
     private func setupViews() {
         addSubview(stackView)
+        addSubview(interaction)
         
         setupStackView()
+        setupInteractionContraints()
         setupUpdateableConstraints()
         
         updateViews()
@@ -164,6 +162,13 @@ extension RoundButton {
         setupLayer()
     }
     
+    private func setupInteractionContraints() {
+        interaction.translatesAutoresizingMaskIntoConstraints = false
+        
+        interaction.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        interaction.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        interaction.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        interaction.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     private func setupIconViewConstraints() {
@@ -203,6 +208,7 @@ extension RoundButton {
     
     private func setupLayer() {
         layer.cornerRadius = frame.height / 2
+        layer.masksToBounds = true
     }
 }
 
@@ -253,15 +259,13 @@ extension RoundButton {
     }
     
     @objc private func longPressed() {
-        UIView.animate(withDuration: 0.15) { [self] in
-            switch self.longPressRecognizer?.state {
-            case .began:
-                self.backgroundColor = .alias(.statusPositive)
-            case .ended:
-                self.backgroundColor = .alias(.primaryNormal)
-            default:
-                break
-            }
+        switch self.longPressRecognizer?.state {
+        case .began:
+            self.interaction.state = .pressed
+        case .ended:
+            self.interaction.state = .normal
+        default:
+            break
         }
     }
 }
