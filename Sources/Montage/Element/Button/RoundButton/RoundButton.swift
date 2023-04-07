@@ -44,7 +44,7 @@ public class RoundButton: UIView {
     /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
     public var size: Size = .large {
         didSet {
-            setupConstraints()
+            setupUpdateableConstraints()
             updateViews()
         }
     }
@@ -89,6 +89,10 @@ public class RoundButton: UIView {
     
     private var longPressRecognizer: UILongPressGestureRecognizer?
     
+    private var iconViewContraints: [NSLayoutConstraint] = []
+    
+    private var stackViewConstraints: [NSLayoutConstraint] = []
+    
     private weak var delegate: RoundButtonDelegate?
     
     /// RoundButton 객체를 생성합니다.
@@ -124,8 +128,7 @@ extension RoundButton {
         addSubview(stackView)
         
         setupStackView()
-        setupConstraints()
-        setupLayer()
+        setupUpdateableConstraints()
         
         updateViews()
     }
@@ -154,36 +157,48 @@ extension RoundButton {
         stackView.addArrangedSubview(rightIconView)
     }
     
-    private func setupConstraints() {
+    private func setupUpdateableConstraints() {
         setupIconViewConstraints()
         setupStackViewConstraints()
-        setupLayer()
         updateConstraints()
+        setupLayer()
+    }
+    
     }
     
     private func setupIconViewConstraints() {
-        leftIconView.removeConstraints(leftIconView.constraints)
-        rightIconView.removeConstraints(rightIconView.constraints)
+        NSLayoutConstraint.deactivate(iconViewContraints)
         
         leftIconView.translatesAutoresizingMaskIntoConstraints = false
         rightIconView.translatesAutoresizingMaskIntoConstraints = false
         
-        leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width).isActive = true
-        leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height).isActive = true
-        rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width).isActive = true
-        rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height).isActive = true
+        let constraints = [
+            leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
+            leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
+            rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
+            rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        iconViewContraints = constraints
     }
     
     private func setupStackViewConstraints() {
-        removeConstraints(constraints)
+        NSLayoutConstraint.deactivate(stackViewConstraints)
+        
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         let insets = size.edgeInsets
         
-        stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left).isActive = true
-        stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right).isActive = true
-        stackView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom).isActive = true
+        let constraints = [
+            stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
+            stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        stackViewConstraints = constraints
     }
     
     private func setupLayer() {
