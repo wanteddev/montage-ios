@@ -21,7 +21,7 @@ public class InputLabel: UIView {
         static let textVarient: Typography.Variant = .body2
     }
     
-    private var elementView: MontageInput
+    private var elementView: MontageControl
     
     private var textWrapperView = UIView()
     
@@ -32,7 +32,7 @@ public class InputLabel: UIView {
     }()
     
     /// Input 요소의 외관을 결정짓는 State 입니다.
-    public var state: MontageInputState {
+    public var state: MontageControlState {
         get { elementView.state }
         set { elementView.state = newValue }
     }
@@ -52,7 +52,7 @@ public class InputLabel: UIView {
     
     private var tapRecognizer: UITapGestureRecognizer?
     
-    public init(with input: MontageInput) {
+    public init(with input: MontageControl) {
         self.elementView = input
         super.init(frame: .zero)
         
@@ -61,7 +61,7 @@ public class InputLabel: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.elementView = Radio()
+        self.elementView = Control.Radio()
         super.init(coder: coder)
         
         setupViews()
@@ -80,7 +80,7 @@ extension InputLabel {
         let textTopInset = (lineHeight - Const.inputSize.height) / 2
         let elementSpacing: CGFloat
         
-        if elementView is NestedCheck {
+        if elementView is Control.Check {
             elementSpacing = .spacing(.pt04)
         } else {
             elementSpacing = .spacing(.pt08)
@@ -123,12 +123,12 @@ extension InputLabel {
 }
 
 /// 디자인시스템의 Input 요소들이 공통으로 가질 수 있는 프로퍼티를 정의한 프로토콜입니다.
-public protocol MontageInput: UIView {
-    var state: MontageInputState { get set }
+public protocol MontageControl: UIView {
+    var state: MontageControlState { get set }
 }
 
 /// Input 요소들에서 사용할 수 있는 State를 정의합니다.
-public enum MontageInputState {
+public enum MontageControlState {
     case unchecked
     case checked
     case partial

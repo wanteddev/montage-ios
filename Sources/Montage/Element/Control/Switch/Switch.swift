@@ -11,29 +11,31 @@ import UIKit
 public protocol SwitchControlDelegate: AnyObject {
     /// 터치가 발생하였을 때 호출되는 메소드입니다.
     /// - Parameter switch: 터치가 발생한 객체
-    func didValueChangedSwitch(_ switch: Switch)
+    func didValueChangedSwitch(_ switch: Control.Switch)
 }
 
-/// ON/OFF 상태를 표시하는 Control Element 입니다. `UISwitch`를 오버라이딩하여 디자인시스템에 맞도록 색상을 변경하고 이벤트를 추가하였습니다.
-public final class Switch: UISwitch {
-    public weak var delegate: SwitchControlDelegate?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+extension Control {
+    /// ON/OFF 상태를 표시하는 Control Element 입니다. `UISwitch`를 오버라이딩하여 디자인시스템에 맞도록 색상을 변경하고 이벤트를 추가하였습니다.
+    public final class Switch: UISwitch {
+        public weak var delegate: SwitchControlDelegate?
         
-        setupViews()
-        bindEvent()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            
+            setupViews()
+            bindEvent()
+        }
         
-        setupViews()
-        bindEvent()
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            
+            setupViews()
+            bindEvent()
+        }
     }
 }
 
-extension Switch {
+extension Control.Switch {
     private func setupViews() {
         tintColor = .component(.fillNormal)
         onTintColor = .alias(.primaryNormal)

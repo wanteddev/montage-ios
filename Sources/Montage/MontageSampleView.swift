@@ -9,8 +9,8 @@ import SwiftUI
 import Pretendard
 
 public struct MontageSampleView: View {
-    @State var inputView: MontageInput
-    @State var inputState: MontageInputState
+    @State var inputState: MontageControlState
+    @State var inputView: MontageControl
     @State var inputLabelText: String
     @State var isOn: Bool
     
@@ -33,7 +33,7 @@ public struct MontageSampleView: View {
     }
     
     public init() {
-        self.inputView = Checkbox()
+        self.inputView = Control.Checkbox()
         self.inputState = .checked
         self.inputLabelText = "체크해주세용"
         self.isOn = true

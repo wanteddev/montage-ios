@@ -47,7 +47,7 @@ public extension CGFloat {
         }
     }
     
-    static func opacity(_ opacityComponent: Opacity) -> CGFloat {
+    static func opacity(_ opacityComponent: Decorate.Opacity) -> CGFloat {
         switch opacityComponent {
         case .p000:
             return 0

@@ -1,18 +1,18 @@
 //
-//  CheckboxController.swift
+//  CheckController.swift
 //  Montage
 //
-//  Created by Euigyom Kim on 2023/02/28.
+//  Created by Euigyom Kim on 2023/03/02.
 //
 
 import SwiftUI
 
 extension Control {
-    /// ``Montage/Checkbox``를 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
-    public struct CheckboxController: UIViewRepresentable {
+    /// ``Montage/Check``를 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
+    public struct CheckController: UIViewRepresentable {
         @State public var state: MontageControlState
         
-        public typealias UIViewType = Checkbox
+        public typealias UIViewType = Check
         
         public func makeUIView(context: Context) -> UIViewType {
             .init()
@@ -24,10 +24,11 @@ extension Control {
     }
 }
 
-struct CheckboxController_Previews: PreviewProvider {
+struct MontageCheckController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.CheckboxController(state: .checked)
+            Control.CheckController(state: .checked)
+                .frame(width: 24, height: 24)
         }
     }
 }
