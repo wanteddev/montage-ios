@@ -44,7 +44,7 @@ public class RoundButton: UIView {
     }
     
     /// 사용자와의 인터렉션 상태를 표현합니다.
-    public var state: Interaction.State = .normal {
+    public var state: Decorate.Interaction.State = .normal {
         didSet {
             updateViews()
         }
@@ -79,7 +79,7 @@ public class RoundButton: UIView {
     
     private lazy var rightIconView = UIImageView()
     
-    private lazy var interaction = Interaction()
+    private lazy var interaction = Decorate.Interaction()
     
     private var tapRecognizer: UITapGestureRecognizer?
     
