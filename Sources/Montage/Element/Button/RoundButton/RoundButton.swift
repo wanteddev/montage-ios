@@ -11,115 +11,124 @@ import UIKit
 public protocol RoundButtonDelegate: AnyObject {
     /// 터치가 발생하였을 때 호출되는 메소드입니다.
     /// - Parameter checkbox: 터치가 발생한 객체
-    func didTappedRoundButton(_ roundButton: RoundButton)
+    func didTappedRoundButton(_ roundButton: Button.RoundButton)
 }
 
-/// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
-/// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
-public class RoundButton: UIView {
-    /// 버튼의 외관을 결정하는 열거형입니다.
-    public enum Varient {
-        case primary, secondary, alternative, assistive
-    }
-    
-    /// 버튼의 사이즈를 결정하는 열거형입니다.
-    public enum Size {
-        case large, medium, small
-    }
-    
-    /// 버튼의 외관입니다.
-    public var varient: Varient = .primary {
-        didSet {
-            updateViews()
+extension Button {
+    /// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
+    /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
+    public class RoundButton: UIView {
+        /// 버튼의 외관을 결정하는 열거형입니다.
+        public enum Varient {
+            case primary, secondary, alternative, assistive
         }
-    }
-    
-    /// 버튼의 사이즈입니다.
-    /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
-    public var size: Size = .large {
-        didSet {
-            setupUpdateableConstraints()
-            updateViews()
-        }
-    }
-    
-    /// 사용자와의 인터렉션 상태를 표현합니다.
-    public var state: Decorate.Interaction.State = .normal {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    /// 텍스트의 좌측에 표현될 아이콘입니다.
-    public var leftIcon: Icon? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    /// 텍스트의 우측에 표현될 아이콘입니다.
-    public var rightIcon: Icon? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    /// 버튼에서 표현될 텍스트입니다.
-    public var text: String = "" {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    private lazy var stackView = UIStackView()
-    
-    private lazy var leftIconView = UIImageView()
-    
-    private lazy var textLabel = UILabel()
-    
-    private lazy var rightIconView = UIImageView()
-    
-    private lazy var interaction = Decorate.Interaction()
-    
-    private var tapRecognizer: UITapGestureRecognizer?
-    
-    private var longPressRecognizer: UILongPressGestureRecognizer?
-    
-    private var iconViewContraints: [NSLayoutConstraint] = []
-    
-    private var stackViewConstraints: [NSLayoutConstraint] = []
-    
-    private weak var delegate: RoundButtonDelegate?
-    
-    /// RoundButton 객체를 생성합니다.
-    public init() {
-        super.init(frame: .zero)
         
-        setupViews()
-        bindEvent()
-    }
-    
-    override public required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        /// 버튼의 사이즈를 결정하는 열거형입니다.
+        public enum Size {
+            case large, medium, small
+        }
         
-        setupViews()
-        bindEvent()
-    }
-    
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
+        /// 버튼의 외관입니다.
+        public var varient: Varient = .primary {
+            didSet {
+                updateViews()
+            }
+        }
         
-        updateViews()
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
+        /// 버튼의 사이즈입니다.
+        /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
+        public var size: Size = .large {
+            didSet {
+                setupUpdateableConstraints()
+                updateViews()
+            }
+        }
         
-        setupLayer()
+        /// 사용자와의 인터렉션 상태를 표현합니다.
+        public var state: Decorate.Interaction.State = .normal {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 텍스트의 좌측에 표현될 아이콘입니다.
+        public var leftIcon: Icon? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 텍스트의 우측에 표현될 아이콘입니다.
+        public var rightIcon: Icon? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 버튼에서 표현될 텍스트입니다.
+        public var text: String = "" {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 버튼의 활성화 여부입니다.
+        public var disable: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        private lazy var stackView = UIStackView()
+        
+        private lazy var leftIconView = UIImageView()
+        
+        private lazy var textLabel = UILabel()
+        
+        private lazy var rightIconView = UIImageView()
+        
+        private lazy var interaction = Decorate.Interaction()
+        
+        private var tapRecognizer: UITapGestureRecognizer?
+        
+        private var longPressRecognizer: UILongPressGestureRecognizer?
+        
+        private var iconViewContraints: [NSLayoutConstraint] = []
+        
+        private var stackViewConstraints: [NSLayoutConstraint] = []
+        
+        private weak var delegate: RoundButtonDelegate?
+        
+        /// RoundButton 객체를 생성합니다.
+        public init() {
+            super.init(frame: .zero)
+            
+            setupViews()
+            bindEvent()
+        }
+        
+        override public required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            
+            setupViews()
+            bindEvent()
+        }
+        
+        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            
+            updateViews()
+        }
+        
+        public override func layoutSubviews() {
+            super.layoutSubviews()
+            
+            setupLayer()
+        }
     }
 }
 
-extension RoundButton {
+extension Button.RoundButton {
     private func setupViews() {
         addSubview(stackView)
         addSubview(interaction)
@@ -212,19 +221,22 @@ extension RoundButton {
     }
 }
 
-extension RoundButton {
+extension Button.RoundButton {
     private func updateViews() {
+        isUserInteractionEnabled = false == disable
+        
         updateColors()
         updateIconView()
         updateTextLabel()
     }
     
     private func updateColors() {
-        backgroundColor = varient.backgroundColor
+        backgroundColor = disable ? varient.inactiveBackgroundColor : varient.activeBackgroundColor
         layer.borderColor = varient.borderColor.cgColor
         layer.borderWidth = varient.borderWidth
-        leftIconView.tintColor = .alias(varient.textColor)
-        rightIconView.tintColor = .alias(varient.textColor)
+        leftIconView.tintColor = .alias(disable ? varient.inactiveTextColor : varient.activeTextColor)
+        rightIconView.tintColor = .alias(disable ? varient.inactiveTextColor : varient.activeTextColor)
+        interaction.color = varient.interactionColor
     }
     
     private func updateIconView() {
@@ -248,12 +260,12 @@ extension RoundButton {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: varient.textColor
+            color: disable ? varient.inactiveTextColor : varient.activeTextColor
         )
     }
 }
 
-extension RoundButton {
+extension Button.RoundButton {
     @objc private func tapped() {
         delegate?.didTappedRoundButton(self)
     }
@@ -270,7 +282,7 @@ extension RoundButton {
     }
 }
 
-extension RoundButton: UIGestureRecognizerDelegate {
+extension Button.RoundButton: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
@@ -279,8 +291,8 @@ extension RoundButton: UIGestureRecognizerDelegate {
     }
 }
 
-extension RoundButton.Varient {
-    var backgroundColor: UIColor {
+extension Button.RoundButton.Varient {
+    var activeBackgroundColor: UIColor {
         switch self {
         case .primary:
             return .alias(.primaryNormal)
@@ -289,7 +301,16 @@ extension RoundButton.Varient {
         }
     }
     
-    var textColor: Color.Alias {
+    var inactiveBackgroundColor: UIColor {
+        switch self {
+        case .primary:
+            return .alias(.interactionDisable)
+        case .secondary, .alternative, .assistive:
+            return .alias(.backgroundNormal)
+        }
+    }
+    
+    var activeTextColor: Color.Alias {
         switch self {
         case .primary:
             return .staticWhite
@@ -297,6 +318,15 @@ extension RoundButton.Varient {
             return .primaryNormal
         case .assistive:
             return .labelNormal
+        }
+    }
+    
+    var inactiveTextColor: Color.Alias {
+        switch self {
+        case .primary:
+            return .labelAssistive
+        case .secondary, .alternative, .assistive:
+            return .labelDisable
         }
     }
     
@@ -319,9 +349,18 @@ extension RoundButton.Varient {
             return .alias(.primaryNormal)
         }
     }
+    
+    var interactionColor: Color.Alias {
+        switch self {
+        case .primary, .secondary, .assistive:
+            return .labelNormal
+        case .alternative:
+            return .primaryNormal
+        }
+    }
 }
 
-extension RoundButton.Size {
+extension Button.RoundButton.Size {
     var iconSize: CGSize {
         switch self {
         case .large:
