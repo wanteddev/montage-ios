@@ -7,13 +7,6 @@
 
 import UIKit
 
-/// ``RoundButton``의 터치 이벤트를 받을 수 있는 Delegate입니다.
-public protocol RoundButtonDelegate: AnyObject {
-    /// 터치가 발생하였을 때 호출되는 메소드입니다.
-    /// - Parameter checkbox: 터치가 발생한 객체
-    func didTappedRoundButton(_ roundButton: Button.RoundButton)
-}
-
 extension Button {
     /// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
@@ -79,6 +72,9 @@ extension Button {
             }
         }
         
+        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
+        public var handler: (() -> Void)?
+        
         private lazy var stackView = UIStackView()
         
         private lazy var leftIconView = UIImageView()
@@ -89,15 +85,11 @@ extension Button {
         
         private lazy var interaction = Decorate.Interaction()
         
-        private var tapRecognizer: UITapGestureRecognizer?
-        
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
         private var iconViewContraints: [NSLayoutConstraint] = []
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
-        
-        private weak var delegate: RoundButtonDelegate?
         
         /// RoundButton 객체를 생성합니다.
         public init() {
@@ -147,12 +139,6 @@ extension Button.RoundButton {
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
         self.longPressRecognizer = longPressRecognizer
-        
-        let tapGestureRecognizer = UITapGestureRecognizer()
-        tapGestureRecognizer.delegate = self
-        tapGestureRecognizer.addTarget(self, action: #selector(tapped))
-        addGestureRecognizer(tapGestureRecognizer)
-        self.tapRecognizer = tapGestureRecognizer
     }
     
     private func setupStackView() {
@@ -266,16 +252,17 @@ extension Button.RoundButton {
 }
 
 extension Button.RoundButton {
-    @objc private func tapped() {
-        delegate?.didTappedRoundButton(self)
-    }
-    
     @objc private func longPressed() {
-        switch self.longPressRecognizer?.state {
+        guard let recognizer = longPressRecognizer else { return }
+        
+        switch recognizer.state {
         case .began:
-            self.interaction.state = .pressed
+            interaction.state = .pressed
         case .ended:
-            self.interaction.state = .normal
+            if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
+                handler?()
+            }
+            interaction.state = .normal
         default:
             break
         }
