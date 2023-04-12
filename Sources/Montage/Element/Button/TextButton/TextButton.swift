@@ -197,12 +197,14 @@ extension Button.TextButton {
         let insets = size.edgeInsets
         
         let constraints = [
-            stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
-            stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right),
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
+            stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: insets.left),
+            stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -insets.right),
+            stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets.top),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets.bottom),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ]
         
+        constraints.forEach({ $0.priority = .defaultLow })
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
     }
