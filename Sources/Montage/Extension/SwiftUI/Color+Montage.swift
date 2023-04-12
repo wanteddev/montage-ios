@@ -8,20 +8,20 @@
 import SwiftUI
 import UIKit
 
-extension Color {
-    private static func load(name: String) -> Color {
-        Color(UIColor(named: name, in: Bundle.module, compatibleWith: nil)!)
+extension SwiftUI.Color {
+    private static func load(name: String) -> SwiftUI.Color {
+        .init(UIColor(named: name, in: Bundle.module, compatibleWith: nil)!)
     }
 
-    public static func atomic(_ type: Montage.Color.Global) -> Color {
+    public static func atomic(_ type: Color.Global) -> SwiftUI.Color {
         load(name: type.name)
     }
     
-    public static func alias(_ type: Montage.Color.Alias) -> Color {
-        .init(UIColor.alias(type))
+    public static func alias(_ type: Color.Alias) -> SwiftUI.Color {
+        SwiftUI.Color(UIColor.alias(type))
     }
     
-    public static func component(_ type: Montage.Color.Component) -> Color {
-        .init(UIColor.component(type))
+    public static func component(_ type: Color.Component) -> SwiftUI.Color {
+        SwiftUI.Color(UIColor.component(type))
     }
 }

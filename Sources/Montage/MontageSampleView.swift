@@ -9,6 +9,11 @@ import SwiftUI
 import Pretendard
 
 public struct MontageSampleView: View {
+    @State var inputState: MontageControlState
+    @State var inputView: MontageControl
+    @State var inputLabelText: String
+    @State var isOn: Bool
+    
     public var dismiss: (() -> Void)?
     
     public var body: some View {
@@ -19,6 +24,7 @@ public struct MontageSampleView: View {
                         .montage(varient: .body1, weight: .bold)
                     Text("Color")
                         .montage(varient: .body1, weight: .bold)
+                        .foregroundColor(.alias(.primaryNormal))
                 }
             }
             .listStyle(GroupedListStyle())
@@ -27,6 +33,11 @@ public struct MontageSampleView: View {
     }
     
     public init() {
+        self.inputView = Control.Checkbox()
+        self.inputState = .checked
+        self.inputLabelText = "체크해주세용"
+        self.isOn = true
+        
         do {
             try Pretendard.registerFonts()
         } catch {

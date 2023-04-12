@@ -7,9 +7,9 @@
 
 import UIKit
 
-public extension Montage {
+extension Basic {
     /// 구획을 나누기 위해 사용되는 Element입니다.
-    class Divider: UIView {
+    public class Divider: UIView {
         public enum Weight {
             case thick, normal
         }
@@ -41,7 +41,7 @@ public extension Montage {
     }
 }
 
-extension Montage.Divider {
+extension Basic.Divider {
     private func setupView() {
         if isVertical {
             widthAnchor.constraint(equalToConstant: 1).isActive = true

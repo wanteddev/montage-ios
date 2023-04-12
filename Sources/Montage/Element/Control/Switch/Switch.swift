@@ -8,16 +8,16 @@
 import UIKit
 
 /// ``Montage/Switch``의 터치 이벤트를 받을 수 있는 Delegate입니다.
-public protocol MontageSwitchDelegate: AnyObject {
+public protocol SwitchControlDelegate: AnyObject {
     /// 터치가 발생하였을 때 호출되는 메소드입니다.
     /// - Parameter switch: 터치가 발생한 객체
-    func didValueChangedSwitch(_ switch: Montage.Switch)
+    func didValueChangedSwitch(_ switch: Control.Switch)
 }
 
-public extension Montage {
+extension Control {
     /// ON/OFF 상태를 표시하는 Control Element 입니다. `UISwitch`를 오버라이딩하여 디자인시스템에 맞도록 색상을 변경하고 이벤트를 추가하였습니다.
-    final class Switch: UISwitch {
-        public weak var delegate: MontageSwitchDelegate?
+    public final class Switch: UISwitch {
+        public weak var delegate: SwitchControlDelegate?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -35,7 +35,7 @@ public extension Montage {
     }
 }
 
-extension Montage.Switch {
+extension Control.Switch {
     private func setupViews() {
         tintColor = .component(.fillNormal)
         onTintColor = .alias(.primaryNormal)

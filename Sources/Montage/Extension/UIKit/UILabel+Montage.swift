@@ -10,10 +10,10 @@ import UIKit
 public extension UILabel {
     static func montage(
         _ string: String,
-        varient: Montage.Typography.Variant = .body1,
-        size: Montage.Typography.Size = .small,
-        weight: Montage.Typography.Weight = .regular,
-        color: Montage.Color.Alias = .labelNormal
+        varient: Typography.Variant = .body1,
+        size: Typography.Size = .small,
+        weight: Typography.Weight = .regular,
+        color: Color.Alias = .labelNormal
     ) -> UILabel {
         let label = UIKit.UILabel()
         label.attributedText = .montage(string, varient: varient, size: size, weight: weight, color: color)
