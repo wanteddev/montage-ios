@@ -14,6 +14,7 @@ extension Button {
         @State public var leftIcon: Icon
         @State public var rightIcon: Icon
         @State public var text: String
+        @State public var state: Decorate.Interaction.State
         @State public var disable: Bool
         
         public typealias UIViewType = RoundButton
@@ -28,6 +29,7 @@ extension Button {
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon
             uiView.text = text
+            uiView.state = state
             uiView.disable = disable
         }
     }
