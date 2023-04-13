@@ -99,7 +99,7 @@ extension Button {
             bindEvent()
         }
         
-        override public required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             super.init(coder: coder)
             
             setupViews()
@@ -116,6 +116,19 @@ extension Button {
             super.layoutSubviews()
             
             setupLayer()
+        }
+        
+        /// Element의 기본적인 사이즈를 정의합니다.
+        override public var intrinsicContentSize: CGSize {
+            let textSize = getAttributedText().size()
+            let iconSize = size.iconSize
+            let edgeInsets = size.edgeInsets
+            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            
+            return .init(
+                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
+                height: max(iconSize.height, textSize.height) + edgeInsets.vertical
+            )
         }
     }
 }
@@ -244,7 +257,11 @@ extension Button.RoundButton {
     }
     
     private func updateTextLabel() {
-        textLabel.attributedText = .montage(
+        textLabel.attributedText = getAttributedText()
+    }
+    
+    private func getAttributedText() -> NSAttributedString {
+        .montage(
             text,
             varient: size.typoVarient,
             weight: .bold,

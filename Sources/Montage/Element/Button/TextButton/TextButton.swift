@@ -16,7 +16,7 @@ public protocol TextButtonDelegate: AnyObject {
 
 
 extension Button {
-    /// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
+    /// 텍스트 및 아이콘으로 이루어진 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class TextButton: UIView {
         private enum Const {
@@ -97,7 +97,7 @@ extension Button {
         
         private weak var delegate: TextButtonDelegate?
         
-        /// RoundButton 객체를 생성합니다.
+        /// TextButton 객체를 생성합니다.
         public init() {
             super.init(frame: .zero)
             
@@ -105,7 +105,7 @@ extension Button {
             bindEvent()
         }
         
-        override public required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             super.init(coder: coder)
             
             setupViews()
@@ -122,6 +122,19 @@ extension Button {
             super.layoutSubviews()
             
             setupLayer()
+        }
+        
+        /// Element의 기본적인 사이즈를 정의합니다.
+        override public var intrinsicContentSize: CGSize {
+            let textSize = getAttributedText().size()
+            let iconSize = size.iconSize
+            let edgeInsets = size.edgeInsets
+            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            
+            return .init(
+                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
+                height: max(iconSize.height, textSize.height) + edgeInsets.vertical
+            )
         }
     }
 }
@@ -247,7 +260,11 @@ extension Button.TextButton {
     }
     
     private func updateTextLabel() {
-        textLabel.attributedText = .montage(
+        textLabel.attributedText = getAttributedText()
+    }
+    
+    private func getAttributedText() -> NSAttributedString {
+        .montage(
             text,
             varient: size.typoVarient,
             weight: .bold,
