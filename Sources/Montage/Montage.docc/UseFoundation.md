@@ -82,8 +82,8 @@ imageView.image = iconImage
 struct CustomView: View {
     public var body: some View {
         VStack {
-            /// Title1/Bold
-            Text("hello, world").montage(varient: .title1, weight: .bold)
+            /// Image with Icon
+            Image.montage(.bell)
         }
     }
 }

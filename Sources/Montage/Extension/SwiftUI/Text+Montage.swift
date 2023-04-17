@@ -9,14 +9,14 @@ import SwiftUI
 
 public extension Text {
     func montage(
-        varient: Montage.Typography.Variant = .body1,
-        size: Montage.Typography.Size = .small,
-        weight: Montage.Typography.Weight = .regular,
-        color: Montage.Color.Alias = .labelNormal
+        varient: Typography.Variant = .body1,
+        size: Typography.Size = .small,
+        weight: Typography.Weight = .regular,
+        color: Color.Alias = .labelNormal
     ) -> some View {
         font(.montage(varient: varient, weight: weight, size: size))
             .foregroundColor(.alias(color))
-            .tracking(Montage.Typography.getTracking(varient: varient, size: size))
+            .tracking(Typography.getTracking(varient: varient, size: size))
             .lineSpacing(varient.lineSpacing)
             .padding(.vertical, varient.padding)
     }

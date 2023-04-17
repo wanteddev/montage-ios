@@ -7,9 +7,9 @@
 
 import Foundation
 
-public extension Montage {
+extension Decorate {
     /// 색상의 투명도를 정의한 Enum 타입입니다.
-    enum Opacity {
+    public enum Opacity {
         case p000
         case p005
         case p010

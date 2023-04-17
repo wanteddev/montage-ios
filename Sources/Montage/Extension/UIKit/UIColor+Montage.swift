@@ -12,15 +12,15 @@ extension UIColor {
         .init(named: name, in: Bundle.module, compatibleWith: nil) ?? .clear
     }
     
-    public static func atomic(_ type: Montage.Color.Global) -> UIColor {
+    public static func atomic(_ type: Color.Global) -> UIColor {
         load(name: type.name)
     }
     
-    public static func alias(_ type: Montage.Color.Alias) -> UIColor {
+    public static func alias(_ type: Color.Alias) -> UIColor {
         .init(dynamicProvider: type.resolve)
     }
     
-    public static func component(_ type: Montage.Color.Component) -> UIColor {
+    public static func component(_ type: Color.Component) -> UIColor {
         .init(dynamicProvider: type.resolve)
     }
 }

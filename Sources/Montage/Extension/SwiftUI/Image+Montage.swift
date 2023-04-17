@@ -12,7 +12,7 @@ extension Image {
         Image(name, bundle: Bundle.module)
     }
 
-    public static func montage(_ type: Montage.Icon) -> Image {
+    public static func montage(_ type: Icon) -> Image {
         load(name: type.name)
     }
 }

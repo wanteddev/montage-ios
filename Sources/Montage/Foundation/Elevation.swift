@@ -7,19 +7,17 @@
 
 import UIKit
 
-extension Montage {
-    /// 높낮이의 차이를 표현하기 위한 그림자 타입입니다.
-    /// `UIView.setElevation(_:)`을 사용하여 레이어에 그림자를 적용할 수 있습니다.
-    public enum Elevation: Equatable {
-        case none
-        case shadowNormal
-        case shadowEmphasize
-        case shadowStrong
-        case shadowHeavy
-    }
+/// 높낮이의 차이를 표현하기 위한 그림자 타입입니다.
+/// `UIView.setElevation(_:)`을 사용하여 레이어에 그림자를 적용할 수 있습니다.
+public enum Elevation: Equatable {
+    case none
+    case shadowNormal
+    case shadowEmphasize
+    case shadowStrong
+    case shadowHeavy
 }
 
-extension Montage.Elevation {
+extension Elevation {
     struct Descriptor {
         let offset: CGSize
         let blur: CGFloat
