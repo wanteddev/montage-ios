@@ -11,8 +11,8 @@ extension Button {
     public struct IconButtonController: UIViewRepresentable {
         @State public var varient: IconButton.Varient
         @State public var icon: Icon
-        @State public var state: Decorate.Interaction.State
-        @State public var disable: Bool
+        @State public var state: Decorate.Interaction.State = .normal
+        @State public var disable: Bool = false
         
         public typealias UIViewType = IconButton
         
@@ -25,6 +25,16 @@ extension Button {
             uiView.icon = icon
             uiView.state = state
             uiView.disable = disable
+        }
+    }
+}
+
+struct IconButtonController_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            Button.IconButtonController(varient: .normal, icon: .apps).fixedSize()
+            Button.IconButtonController(varient: .background, icon: .apps).fixedSize()
+            Button.IconButtonController(varient: .outlined(size: .normal), icon: .apps).fixedSize()
         }
     }
 }

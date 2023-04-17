@@ -8,7 +8,7 @@
 import UIKit
 
 extension Button {
-    /// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
+    /// 단일 아이콘을 배경 또는 외곽선으로 감싸는 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class IconButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
@@ -62,7 +62,7 @@ extension Button {
         
         private var insetConstraints: [NSLayoutConstraint] = []
         
-        /// RoundButton 객체를 생성합니다.
+        /// IconButton 객체를 생성합니다.
         public init(icon: Icon = .dot) {
             self.icon = icon
             
@@ -72,7 +72,7 @@ extension Button {
             bindEvent()
         }
         
-        override public required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             self.icon = .dot
             
             super.init(coder: coder)
@@ -91,6 +91,14 @@ extension Button {
             super.layoutSubviews()
             
             setupLayer()
+        }
+        
+        /// Element의 기본적인 사이즈를 정의합니다.
+        override public var intrinsicContentSize: CGSize {
+            .init(
+                width: varient.iconSize.width + varient.inset * 2,
+                height: varient.iconSize.height + varient.inset * 2
+            )
         }
     }
 }

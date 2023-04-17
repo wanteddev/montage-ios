@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public extension View {
+extension View {
     public func elevation(_ elevation: Elevation) -> Self {
         var currentView = self
         
