@@ -123,5 +123,8 @@ public enum Icon: String, CaseIterable {
     case lineHorizontalThick
     case lineHorizontal
     
+    // added on v0.3
+    case compass
+    
     public var name: String { rawValue }
 }
