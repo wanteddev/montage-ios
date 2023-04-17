@@ -25,6 +25,7 @@ public struct MontageSampleView: View {
                     Text("Color")
                         .montage(varient: .body1, weight: .bold)
                         .foregroundColor(.alias(.primaryNormal))
+                    Image.montage(.apps)
                 }
             }
             .listStyle(GroupedListStyle())
