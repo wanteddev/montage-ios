@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Pretendard
 
 extension Button {
     public struct RoundButtonController: UIViewRepresentable {
@@ -46,7 +47,10 @@ struct RoundButtonController_Previews: PreviewProvider {
                     varient: .primary,
                     size: .large,
                     text: "안녕하세요"
-                ).fixedSize()
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
             }
             
             VStack(alignment: .leading) {
@@ -96,6 +100,9 @@ struct RoundButtonController_Previews: PreviewProvider {
                     disable: true
                 ).fixedSize()
             }
+        }
+        .onAppear {
+            try! Pretendard.registerFonts()
         }
     }
 }

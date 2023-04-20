@@ -27,7 +27,7 @@ extension Control {
 struct RadioController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.RadioController(state: .checked).frame(width: 24, height: 24)
+            Control.RadioController(state: .checked).fixedSize()
         }
     }
 }
