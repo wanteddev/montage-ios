@@ -13,6 +13,7 @@ extension Button {
         @State public var icon: Icon
         @State public var state: Decorate.Interaction.State = .normal
         @State public var disable: Bool = false
+        @State public var handler: (() -> Void)?
         
         public typealias UIViewType = IconButton
         
@@ -25,6 +26,7 @@ extension Button {
             uiView.icon = icon
             uiView.state = state
             uiView.disable = disable
+            uiView.handler = handler
         }
     }
 }

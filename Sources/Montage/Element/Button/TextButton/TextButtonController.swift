@@ -15,6 +15,7 @@ extension Button {
         @State public var rightIcon: Icon?
         @State public var text: String
         @State public var disable: Bool = false
+        @State public var handler: (() -> Void)?
         
         public typealias UIViewType = TextButton
         
@@ -27,6 +28,7 @@ extension Button {
             uiView.rightIcon = rightIcon
             uiView.text = text
             uiView.disable = disable
+            uiView.handler = handler
         }
     }
 }

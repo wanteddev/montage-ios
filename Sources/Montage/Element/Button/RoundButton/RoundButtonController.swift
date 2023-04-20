@@ -16,6 +16,7 @@ extension Button {
         @State public var text: String
         @State public var state: Decorate.Interaction.State = .normal
         @State public var disable: Bool = false
+        @State public var handler: (() -> Void)?
         
         public typealias UIViewType = RoundButton
         
@@ -31,6 +32,7 @@ extension Button {
             uiView.text = text
             uiView.state = state
             uiView.disable = disable
+            uiView.handler = handler
         }
     }
 }
