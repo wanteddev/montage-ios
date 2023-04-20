@@ -229,6 +229,8 @@ extension Button.RoundButton {
         updateColors()
         updateIconView()
         updateTextLabel()
+        
+        invalidateIntrinsicContentSize()
     }
     
     private func updateColors() {

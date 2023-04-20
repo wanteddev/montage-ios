@@ -235,6 +235,8 @@ extension Button.TextButton {
         updateColor()
         updateIconView()
         updateTextLabel()
+        
+        invalidateIntrinsicContentSize()
     }
     
     private func updateColor() {
