@@ -10,6 +10,10 @@ import UIKit
 extension Chip {
     /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
     public class Action: UIView {
+        private enum Const {
+            static var iconSpacing: CGFloat = .spacing(.pt04)
+        }
+        
         /// 칩의 외관을 결정하는 열거형입니다.
         public enum Varient {
             case filled, outlined
@@ -27,7 +31,7 @@ extension Chip {
             }
         }
         
-        /// 버튼의 사이즈입니다.
+        /// 칩의 사이즈입니다.
         public var size: Size = .medium {
             didSet {
                 setupUpdateableConstraints()
@@ -56,14 +60,14 @@ extension Chip {
             }
         }
         
-        /// 버튼에서 표현될 텍스트입니다.
+        /// 칩에서 표현될 텍스트입니다.
         public var text: String = "" {
             didSet {
                 updateViews()
             }
         }
         
-        /// 버튼의 활성화 여부입니다.
+        /// 칩의 활성화 여부입니다.
         public var disable: Bool = false {
             didSet {
                 updateViews()
@@ -120,9 +124,11 @@ extension Chip {
             let iconSize = size.iconSize
             let edgeInsets = size.edgeInsets
             let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            let iconWidths = iconSize.width * CGFloat(iconCount)
+            let spacings = Const.iconSpacing * CGFloat(iconCount)
             
             return .init(
-                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
+                width: iconWidths + spacings + textSize.width + edgeInsets.horizontal,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
@@ -143,7 +149,9 @@ extension Chip.Action {
     
     private func bindEvent() {
         let longPressRecognizer = UILongPressGestureRecognizer()
+        longPressRecognizer.delegate = self
         longPressRecognizer.minimumPressDuration = 0
+        longPressRecognizer.cancelsTouchesInView = false
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
         self.longPressRecognizer = longPressRecognizer
@@ -152,7 +160,7 @@ extension Chip.Action {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = .spacing(.pt04)
+        stackView.spacing = Const.iconSpacing
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
@@ -281,6 +289,15 @@ extension Chip.Action {
         default:
             break
         }
+    }
+}
+
+extension Chip.Action: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return true
     }
 }
 
