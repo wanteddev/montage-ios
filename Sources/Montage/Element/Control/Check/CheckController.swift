@@ -27,8 +27,7 @@ extension Control {
 struct MontageCheckController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.CheckController(state: .checked)
-                .frame(width: 24, height: 24)
+            Control.CheckController(state: .checked).fixedSize()
         }
     }
 }

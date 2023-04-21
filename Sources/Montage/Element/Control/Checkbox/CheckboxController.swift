@@ -27,7 +27,7 @@ extension Control {
 struct CheckboxController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.CheckboxController(state: .checked)
+            Control.CheckboxController(state: .checked).fixedSize()
         }
     }
 }
