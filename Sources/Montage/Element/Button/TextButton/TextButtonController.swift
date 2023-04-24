@@ -34,22 +34,61 @@ extension Button {
     }
 }
 
-struct TextButtonController_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
+var textButtonControllerPreview: some View {
+    VStack(alignment: .leading, spacing: .spacing(.pt20)) {
+        Text("Size").montage(varient: .heading2)
+        
+        HStack {
             Button.TextButtonController(
                 text: "안녕하세요"
-            ) {
-                debugPrint(">>> hello world!")
-            }
-            .fixedSize()
-            Button.TextButtonController(size: .small, text: "안녕하세요").fixedSize()
-            Button.TextButtonController(leftIcon: .bubbleFill, text: "안녕하세요").fixedSize()
-            Button.TextButtonController(rightIcon: .circleClose, text: "안녕하세요").fixedSize()
-            Button.TextButtonController(size: .small, text: "안녕하세요", disable: true).fixedSize()
+            ).fixedSize()
+            
+            Button.TextButtonController(
+                size: .small,
+                text: "안녕하세요"
+            ).fixedSize()
         }
-        .onAppear {
-            try! Pretendard.registerFonts()
+        
+        Text("Icon").montage(varient: .heading2)
+        
+        HStack {
+            Button.TextButtonController(
+                leftIcon: .bubbleFill,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.TextButtonController(
+                rightIcon: .circleClose,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.TextButtonController(
+                leftIcon: .bubbleFill,
+                rightIcon: .circleClose,
+                text: "안녕하세요"
+            ).fixedSize()
         }
+        
+        Text("State").montage(varient: .heading2)
+        
+        HStack {
+            Button.TextButtonController(
+                text: "안녕하세요",
+                disable: false
+            ).fixedSize()
+            
+            Button.TextButtonController(
+                text: "안녕하세요",
+                disable: true
+            ).fixedSize()
+        }
+    }
+}
+
+struct TextButtonController_Previews: PreviewProvider {
+    static var previews: some View {
+        textButtonControllerPreview
+            .padding()
+            .previewLayout(.sizeThatFits)
     }
 }
