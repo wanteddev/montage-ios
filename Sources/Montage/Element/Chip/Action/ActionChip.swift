@@ -149,7 +149,6 @@ extension Chip.Action {
     
     private func bindEvent() {
         let longPressRecognizer = UILongPressGestureRecognizer()
-        longPressRecognizer.delegate = self
         longPressRecognizer.minimumPressDuration = 0
         longPressRecognizer.cancelsTouchesInView = false
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
@@ -238,10 +237,10 @@ extension Chip.Action {
     
     private func updateColors() {
         backgroundColor = varient.backgroundColor
-        layer.borderColor = varient.borderColor.cgColor
+        layer.borderColor = decideCurrentLineColor()
         layer.borderWidth = varient.borderWidth
-        leftIconView.tintColor = .alias(disable ? varient.inactiveTextColor : varient.activeTextColor)
-        rightIconView.tintColor = .alias(disable ? varient.inactiveTextColor : varient.activeTextColor)
+        leftIconView.tintColor = .alias(decideCurrentTextColor())
+        rightIconView.tintColor = .alias(decideCurrentTextColor())
     }
     
     private func updateIconView() {
@@ -269,8 +268,24 @@ extension Chip.Action {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: disable ? varient.inactiveTextColor : varient.activeTextColor
+            color: decideCurrentTextColor()
         )
+    }
+    
+    private func decideCurrentTextColor() -> Color.Alias {
+        if disable {
+            return varient == .outlined ? .labelDisable : .labelAssistive
+        } else {
+            return .labelNormal
+        }
+    }
+    
+    private func decideCurrentLineColor() -> CGColor {
+        if disable {
+            return UIColor.alias(.lineAlternative).cgColor
+        } else {
+            return UIColor.alias(.lineNormal).cgColor
+        }
     }
 }
 
@@ -292,15 +307,6 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action: UIGestureRecognizerDelegate {
-    public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
-        return true
-    }
-}
-
 extension Chip.Action.Varient {
     var backgroundColor: UIColor {
         switch self {
@@ -311,29 +317,12 @@ extension Chip.Action.Varient {
         }
     }
     
-    var activeTextColor: Color.Alias {
-        .labelNormal
-    }
-    
-    var inactiveTextColor: Color.Alias {
-        .labelAlternative
-    }
-    
     var borderWidth: CGFloat {
         switch self {
         case .filled:
             return 0
         case .outlined:
             return 1
-        }
-    }
-    
-    var borderColor: UIColor {
-        switch self {
-        case .filled:
-            return .clear
-        case .outlined:
-            return .alias(.lineNormal)
         }
     }
 }

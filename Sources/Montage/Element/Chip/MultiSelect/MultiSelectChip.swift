@@ -18,10 +18,6 @@ extension Chip {
             case medium, large
         }
         
-        public enum State: Equatable {
-            case normal, selected, disabled
-        }
-        
         /// 칩의 사이즈입니다.
         public var size: Size = .medium {
             didSet {
@@ -30,14 +26,22 @@ extension Chip {
             }
         }
         
-        public var state: State = .normal {
+        /// 칩의 선택 여부입니다.
+        public var active: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 칩의 활성화 여부입니다.
+        public var disable: Bool = false {
             didSet {
                 updateViews()
             }
         }
         
         /// 사용자와의 인터렉션 상태를 표현합니다.
-        public var interactionState: Decorate.Interaction.State = .normal {
+        public var state: Decorate.Interaction.State = .normal {
             didSet {
                 updateViews()
             }
@@ -192,7 +196,7 @@ extension Chip.MultiSelect {
 
 extension Chip.MultiSelect {
     private func updateViews() {
-        isUserInteractionEnabled = state == .disabled
+        isUserInteractionEnabled = false == disable
         
         updateColors()
         updateIconView()
@@ -203,9 +207,9 @@ extension Chip.MultiSelect {
     
     private func updateColors() {
         backgroundColor = .clear
-        layer.borderColor = state.borderColor.cgColor
+        layer.borderColor = decideCurrentLineColor()
         layer.borderWidth = 1
-        iconView.tintColor = .alias(state.textColor)
+        iconView.tintColor = .alias(decideCurrentTextColor())
     }
     
     private func updateIconView() {
@@ -217,7 +221,27 @@ extension Chip.MultiSelect {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, varient: size.typoVarient, weight: .bold, color: state.textColor)
+        .montage(text, varient: size.typoVarient, weight: .bold, color: decideCurrentTextColor())
+    }
+    
+    private func decideCurrentTextColor() -> Color.Alias {
+        if disable {
+            return .labelDisable
+        } else if active {
+            return .primaryNormal
+        } else {
+            return .labelAlternative
+        }
+    }
+    
+    private func decideCurrentLineColor() -> CGColor {
+        if disable {
+            return UIColor.alias(.lineAlternative).cgColor
+        } else if active {
+            return UIColor.alias(.primaryNormal).cgColor
+        } else {
+            return UIColor.alias(.lineNormal).cgColor
+        }
     }
 }
 
@@ -235,30 +259,6 @@ extension Chip.MultiSelect {
             interaction.state = .normal
         default:
             break
-        }
-    }
-}
-
-extension Chip.MultiSelect.State {
-    var textColor: Color.Alias {
-        switch self {
-        case .normal:
-            return .labelAlternative
-        case .selected:
-            return .primaryNormal
-        case .disabled:
-            return .labelDisable
-        }
-    }
-    
-    var borderColor: UIColor {
-        switch self {
-        case .normal:
-            return .alias(.lineNormal)
-        case .selected:
-            return .alias(.primaryNormal)
-        case .disabled:
-            return .alias(.lineAlternative)
         }
     }
 }
