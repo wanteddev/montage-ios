@@ -1,19 +1,19 @@
 //
-//  RoundButton.swift
+//  OutlinedButton.swift
 //  Montage
 //
-//  Created by Euigyom Kim on 2023/04/05.
+//  Created by Euigyom Kim on 2023/04/25.
 //
 
 import UIKit
 
 extension Button {
-    /// 외곽선 또는 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
+    /// 외곽선으로 둘러 싸인 곡선 모서리 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
-    public class RoundButton: UIView {
+    public class OutlinedButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
         public enum Varient {
-            case primary, secondary, alternative, assistive
+            case primary, secondary, assistive
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
@@ -91,7 +91,7 @@ extension Button {
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
-        /// RoundButton 객체를 생성합니다.
+        /// SolidButton 객체를 생성합니다.
         public init() {
             super.init(frame: .zero)
             
@@ -133,7 +133,7 @@ extension Button {
     }
 }
 
-extension Button.RoundButton {
+extension Button.OutlinedButton {
     private func setupViews() {
         addSubview(stackView)
         addSubview(interaction)
@@ -222,7 +222,7 @@ extension Button.RoundButton {
     }
 }
 
-extension Button.RoundButton {
+extension Button.OutlinedButton {
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
@@ -234,11 +234,11 @@ extension Button.RoundButton {
     }
     
     private func updateColors() {
-        backgroundColor = disable ? varient.inactiveBackgroundColor : varient.activeBackgroundColor
-        layer.borderColor = varient.borderColor.cgColor
-        layer.borderWidth = varient.borderWidth
-        leftIconView.tintColor = .alias(disable ? varient.inactiveTextColor : varient.activeTextColor)
-        rightIconView.tintColor = .alias(disable ? varient.inactiveTextColor : varient.activeTextColor)
+        backgroundColor = .alias(.backgroundNormal)
+        layer.borderColor = (disable ? .alias(.lineNormal) : varient.borderColor).cgColor
+        layer.borderWidth = 1.0
+        leftIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
+        rightIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
         interaction.color = varient.interactionColor
     }
     
@@ -267,12 +267,12 @@ extension Button.RoundButton {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: disable ? varient.inactiveTextColor : varient.activeTextColor
+            color: disable ? .labelDisable : varient.textColor
         )
     }
 }
 
-extension Button.RoundButton {
+extension Button.OutlinedButton {
     @objc private func longPressed() {
         guard let recognizer = longPressRecognizer else { return }
         
@@ -290,7 +290,7 @@ extension Button.RoundButton {
     }
 }
 
-extension Button.RoundButton: UIGestureRecognizerDelegate {
+extension Button.OutlinedButton: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
@@ -299,51 +299,13 @@ extension Button.RoundButton: UIGestureRecognizerDelegate {
     }
 }
 
-extension Button.RoundButton.Varient {
-    var activeBackgroundColor: UIColor {
+extension Button.OutlinedButton.Varient {
+    var textColor: Color.Alias {
         switch self {
-        case .primary:
-            return .alias(.primaryNormal)
-        case .secondary, .alternative, .assistive:
-            return .alias(.backgroundNormal)
-        }
-    }
-    
-    var inactiveBackgroundColor: UIColor {
-        switch self {
-        case .primary:
-            return .alias(.interactionDisable)
-        case .secondary, .alternative, .assistive:
-            return .alias(.backgroundNormal)
-        }
-    }
-    
-    var activeTextColor: Color.Alias {
-        switch self {
-        case .primary:
-            return .staticWhite
-        case .secondary, .alternative:
+        case .primary, .secondary:
             return .primaryNormal
         case .assistive:
             return .labelNormal
-        }
-    }
-    
-    var inactiveTextColor: Color.Alias {
-        switch self {
-        case .primary:
-            return .labelAssistive
-        case .secondary, .alternative, .assistive:
-            return .labelDisable
-        }
-    }
-    
-    var borderWidth: CGFloat {
-        switch self {
-        case .primary:
-            return 0
-        default:
-            return 1
         }
     }
     
@@ -353,22 +315,20 @@ extension Button.RoundButton.Varient {
             return .alias(.primaryNormal)
         case .secondary, .assistive:
             return .alias(.lineNormal)
-        case .alternative:
-            return .alias(.primaryNormal)
         }
     }
     
     var interactionColor: Color.Alias {
         switch self {
-        case .primary, .secondary, .assistive:
-            return .labelNormal
-        case .alternative:
+        case .primary:
             return .primaryNormal
+        case .secondary, .assistive:
+            return .labelNormal
         }
     }
 }
 
-extension Button.RoundButton.Size {
+extension Button.OutlinedButton.Size {
     var iconSize: CGSize {
         switch self {
         case .large:
