@@ -207,9 +207,9 @@ extension Chip.MultiSelect {
     
     private func updateColors() {
         backgroundColor = .clear
-        layer.borderColor = decideCurrentLineColor()
+        layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = 1
-        iconView.tintColor = .alias(decideCurrentTextColor())
+        iconView.tintColor = .alias(resolveCurrentTextColor())
     }
     
     private func updateIconView() {
@@ -221,10 +221,12 @@ extension Chip.MultiSelect {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, varient: size.typoVarient, weight: .bold, color: decideCurrentTextColor())
+        .montage(text, varient: size.typoVarient, weight: .bold, color: resolveCurrentTextColor())
     }
-    
-    private func decideCurrentTextColor() -> Color.Alias {
+}
+
+extension Chip.MultiSelect {
+    private func resolveCurrentTextColor() -> Color.Alias {
         if disable {
             return .labelDisable
         } else if active {
@@ -234,7 +236,7 @@ extension Chip.MultiSelect {
         }
     }
     
-    private func decideCurrentLineColor() -> CGColor {
+    private func resolveCurrentLineColor() -> CGColor {
         if disable {
             return UIColor.alias(.lineAlternative).cgColor
         } else if active {

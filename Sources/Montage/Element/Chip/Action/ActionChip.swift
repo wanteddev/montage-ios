@@ -237,10 +237,10 @@ extension Chip.Action {
     
     private func updateColors() {
         backgroundColor = varient.backgroundColor
-        layer.borderColor = decideCurrentLineColor()
+        layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = varient.borderWidth
-        leftIconView.tintColor = .alias(decideCurrentTextColor())
-        rightIconView.tintColor = .alias(decideCurrentTextColor())
+        leftIconView.tintColor = .alias(resolveCurrentTextColor())
+        rightIconView.tintColor = .alias(resolveCurrentTextColor())
     }
     
     private func updateIconView() {
@@ -268,11 +268,13 @@ extension Chip.Action {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: decideCurrentTextColor()
+            color: resolveCurrentTextColor()
         )
     }
-    
-    private func decideCurrentTextColor() -> Color.Alias {
+}
+
+extension Chip.Action {
+    private func resolveCurrentTextColor() -> Color.Alias {
         if disable {
             return varient == .outlined ? .labelDisable : .labelAssistive
         } else {
@@ -280,7 +282,7 @@ extension Chip.Action {
         }
     }
     
-    private func decideCurrentLineColor() -> CGColor {
+    private func resolveCurrentLineColor() -> CGColor {
         if disable {
             return UIColor.alias(.lineAlternative).cgColor
         } else {
