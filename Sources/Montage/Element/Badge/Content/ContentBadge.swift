@@ -28,8 +28,8 @@ extension Badge {
         }
         
         /// 뱃지의 색상을 결정하는 열거형입니다.
-        public enum ColorStyle {
-            case neutral, accent
+        public enum ColorStyle: Equatable {
+            case neutral, accent(Color.Accent)
         }
         
         /// 뱃지의 외관입니다.
@@ -48,7 +48,7 @@ extension Badge {
         }
         
         /// 뱃지에 사용될 색상 스타일입니다.
-        public var color: ColorStyle = .neutral {
+        public var colorStyle: ColorStyle = .neutral {
             didSet {
                 updateViews()
             }
@@ -210,8 +210,8 @@ extension Badge.Content {
         backgroundColor = varient == .filled ? resolveCurrentEncloseColor() : .alias(.backgroundNormal)
         layer.borderWidth = varient == .filled ? 0 : 1
         layer.borderColor = varient == .filled ? nil : resolveCurrentEncloseColor().cgColor
-        leftIconView.tintColor = .alias(color.textColor)
-        rightIconView.tintColor = .alias(color.textColor)
+        leftIconView.tintColor = .alias(colorStyle.mainColor)
+        rightIconView.tintColor = .alias(colorStyle.mainColor)
     }
     
     private func updateIconView() {
@@ -235,21 +235,18 @@ extension Badge.Content {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, varient: size.typoVarient, weight: .bold, color: color.textColor)
+        .montage(text, varient: size.typoVarient, weight: .bold, color: colorStyle.mainColor)
     }
 }
 
 extension Badge.Content {
     private func resolveCurrentEncloseColor() -> UIColor {
-        switch varient {
-        case .filled:
-            return color == .neutral
-                ? .component(.fillNormal)
-                : .alias(.accentCyan).withAlphaComponent(.opacity(.p010))
-        case .outlined:
-            return color == .neutral
-                ? .alias(.lineNormal)
-                : .alias(.accentCyan).withAlphaComponent(.opacity(.p010))
+        switch colorStyle {
+        case .neutral:
+            return varient == .filled ? .component(.fillNormal) : .alias(.lineNormal)
+        case .accent(let colorStyle):
+            let opacity: CGFloat = varient == .filled ? .opacity(.p010) : .opacity(.p060)
+            return colorStyle.resolveAsUIColor().withAlphaComponent(opacity)
         }
     }
 }
@@ -284,12 +281,12 @@ extension Badge.Content.Size {
 }
 
 extension Badge.Content.ColorStyle {
-    var textColor: Color.Alias {
+    var mainColor: Color.Alias {
         switch self {
         case .neutral:
             return .labelAlternative
-        case .accent:
-            return .accentCyan
+        case .accent(let color):
+            return color.resolveAsAlias()
         }
     }
 }

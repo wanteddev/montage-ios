@@ -37,7 +37,7 @@ extension Badge {
         public func updateUIView(_ uiView: UIViewType, context: Context) {
             uiView.varient = varient
             uiView.size = size
-            uiView.color = color
+            uiView.colorStyle = color
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon
             uiView.text = text
@@ -50,26 +50,123 @@ var contentBadgeControllerPreview: some View {
         Text("Varient").montage(varient: .heading2)
         
         HStack {
-            Badge.ContentBadgeController(varient: .filled, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .outlined, text: "안녕하세요").fixedSize()
+            Badge.ContentBadgeController(
+                varient: .filled, text: "안녕하세요"
+            ).fixedSize()
+            
+            Badge.ContentBadgeController(
+                varient: .outlined, text: "안녕하세요"
+            ).fixedSize()
         }
         
         Text("Size").montage(varient: .heading2)
         
         HStack {
-            Badge.ContentBadgeController(varient: .filled, size: .xsmall, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .outlined, size: .xsmall, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .filled, size: .small, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .outlined, size: .small, text: "안녕하세요").fixedSize()
+            Badge.ContentBadgeController(
+                varient: .filled, size: .xsmall, text: "안녕하세요"
+            ).fixedSize()
+            
+            Badge.ContentBadgeController(
+                varient: .outlined, size: .xsmall, text: "안녕하세요"
+            ).fixedSize()
+            
+            Badge.ContentBadgeController(
+                varient: .filled, size: .small, text: "안녕하세요"
+            ).fixedSize()
+            
+            Badge.ContentBadgeController(
+                varient: .outlined, size: .small, text: "안녕하세요"
+            ).fixedSize()
         }
         
-        Text("Color Style").montage(varient: .heading2)
+        Text("Accents").montage(varient: .heading2)
         
-        HStack {
-            Badge.ContentBadgeController(varient: .filled, color: .neutral, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .filled, color: .accent, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .outlined, color: .neutral, text: "안녕하세요").fixedSize()
-            Badge.ContentBadgeController(varient: .outlined, color: .accent, text: "안녕하세요").fixedSize()
+        Text("Filled").montage(varient: .body2)
+        
+        VStack(alignment: .leading) {
+            HStack {
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.primary), text: "중요"
+                ).fixedSize()
+        
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.positive), text: "긍정"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.cautionary), text: "경고"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.negative), text: "에러"
+                ).fixedSize()
+            }
+            
+            HStack {
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.lime), text: "라임"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.cyan), text: "시안"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.lightBlue), text: "라이트 블루"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.violet), text: "바이올렛"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .filled, color: .accent(.pink), text: "핑크"
+                ).fixedSize()
+            }
+        }
+        
+        Text("Outlined").montage(varient: .body2)
+        
+        VStack(alignment: .leading) {
+            HStack {
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.primary), text: "중요"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.positive), text: "긍정"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.cautionary), text: "경고"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.negative), text: "에러"
+                ).fixedSize()
+            }
+            
+            HStack {
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.lime), text: "라임"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.cyan), text: "시안"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.lightBlue), text: "라이트 블루"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.violet), text: "바이올렛"
+                ).fixedSize()
+                
+                Badge.ContentBadgeController(
+                    varient: .outlined, color: .accent(.pink), text: "핑크"
+                ).fixedSize()
+            }
         }
     }
 }
@@ -78,6 +175,7 @@ struct ContentBadgeController_Previews: PreviewProvider {
     static var previews: some View {
         contentBadgeControllerPreview
             .padding()
+            .background(SwiftUI.Color(.alias(.backgroundNormal)))
             .previewLayout(.sizeThatFits)
     }
 }
