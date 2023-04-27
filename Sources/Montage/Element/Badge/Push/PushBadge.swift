@@ -13,12 +13,14 @@ extension Badge {
     public class Push: UIView {
         private enum Const {
             static let defaultDotSize: CGSize = .init(width: 4, height: 4)
+            static let defaultNumberLimit: Int = 1000
         }
         
         public enum Varient: Equatable {
             case dot, new, number(Int)
         }
         
+        /// 뱃지의 외관 값을 가져오거나 설정합니다.
         public var varient: Varient = .dot {
             didSet {
                 setupUpdateableConstraints()
@@ -31,7 +33,7 @@ extension Badge {
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
-        /// Push 뱃지 객체를 생성합니다.
+        /// 객체를 생성합니다.
         public init() {
             super.init(frame: .zero)
             
@@ -154,7 +156,8 @@ extension Badge.Push {
         case .new:
             return .init(string: "N", attributes: attribute)
         case .number(let number):
-            return .init(string: "\(number)", attributes: attribute)
+            let numberStr = number >= Const.defaultNumberLimit ? "999+" : "\(number)"
+            return .init(string: numberStr, attributes: attribute)
         }
     }
 }
