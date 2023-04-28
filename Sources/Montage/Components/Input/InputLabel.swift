@@ -37,10 +37,23 @@ public class InputLabel: UIView {
         set { elementView.state = newValue }
     }
     
+    public var bold: Bool = false {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    public var disable: Bool = false {
+        didSet {
+            updateViews()
+        }
+    }
+    
     /// Input 요소를 설명하는 텍스트입니다.
     public var text: String? {
-        get { textLabel.attributedText?.string }
-        set { textLabel.attributedText = .montage(newValue ?? "", varient: Const.textVarient) }
+        didSet {
+            updateViews()
+        }
     }
     
     /// Input 요소에서 발생하는 이벤트를 수신하는 delegate 객체입니다.
@@ -122,9 +135,23 @@ extension InputLabel {
     }
 }
 
+extension InputLabel {
+    private func updateViews() {
+        isUserInteractionEnabled = false == disable
+        
+        elementView.disable = disable
+        textLabel.attributedText = .montage(
+            text ?? "",
+            varient: Const.textVarient,
+            color: disable ? .labelDisable : .labelNormal
+        )
+    }
+}
+
 /// 디자인시스템의 Input 요소들이 공통으로 가질 수 있는 프로퍼티를 정의한 프로토콜입니다.
 public protocol MontageControl: UIView {
     var state: MontageControlState { get set }
+    var disable: Bool { get set }
 }
 
 /// Input 요소들에서 사용할 수 있는 State를 정의합니다.

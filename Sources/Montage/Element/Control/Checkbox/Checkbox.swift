@@ -37,6 +37,12 @@ extension Control {
             }
         }
         
+        public var disable: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
         private var tapRecognizer: UITapGestureRecognizer?
         
         private weak var delegate: CheckboxControlDelegate?
@@ -103,6 +109,8 @@ extension Control.Checkbox {
     }
     
     private func updateViews() {
+        isUserInteractionEnabled = false == disable
+        
         boxView.layer.cornerRadius = 3.0
         boxView.layer.borderWidth = 1.5
         
@@ -119,6 +127,10 @@ extension Control.Checkbox {
             boxView.layer.backgroundColor = UIColor.alias(.primaryNormal).cgColor
             boxView.layer.borderColor = UIColor.alias(.primaryNormal).cgColor
             imageView.image = .montage(.lineHorizontalThick)
+        }
+        
+        if disable {
+            imageView.tintColor = imageView.tintColor.withAlphaComponent(.opacity(.p060))
         }
     }
     
