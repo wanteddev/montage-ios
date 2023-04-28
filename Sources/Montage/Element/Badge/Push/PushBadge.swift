@@ -140,12 +140,13 @@ extension Badge.Push {
 extension Badge.Push {
     private func getAttributedText() -> NSAttributedString? {
         let attribute: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 9.0, weight: .bold),
+            .font: UIFont.pretendard(ofSize: 9, weight: .bold),
             .foregroundColor: UIColor.alias(.staticWhite),
             .kern: 0.28,
             .paragraphStyle: {
                 let style = NSMutableParagraphStyle()
                 style.lineHeightMultiple = 1.07
+                style.alignment = .center
                 return style
             }()
         ]
