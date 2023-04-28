@@ -241,6 +241,11 @@ public enum Color {
         case labelStrong
         
         ///
+        /// Figma상의 `.color-alias-label-neutral` 토큰과 대응되는 값입니다.
+        ///
+        case labelNeutral
+        
+        ///
         /// Figma상의 `.color-alias-label-alternative` 토큰과 대응되는 값입니다.
         ///
         case labelAlternative
@@ -371,6 +376,8 @@ public enum Color {
                 globalType = style == .dark ? .globalNeutral99 : .globalNeutral10
             case .labelStrong:
                 globalType = style == .dark ? .globalCommon100 : .globalCommon0
+            case .labelNeutral:
+                globalType = style == .dark ? .globalNeutral80 : .globalNeutral30
             case .labelAlternative:
                 globalType = style == .dark ? .globalNeutral50 : .globalNeutral60
             case .labelAssistive:
