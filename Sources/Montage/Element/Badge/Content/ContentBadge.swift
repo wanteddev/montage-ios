@@ -89,7 +89,7 @@ extension Badge {
         
         private weak var delegate: TextButtonDelegate?
         
-        /// TextButton 객체를 생성합니다.
+        /// 객체를 생성합니다.
         public init() {
             super.init(frame: .zero)
             
