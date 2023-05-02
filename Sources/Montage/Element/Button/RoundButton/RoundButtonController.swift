@@ -38,71 +38,123 @@ extension Button {
     }
 }
 
-struct RoundButtonController_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            VStack(alignment: .leading) {
-                Text("Primary").montage()
+var roundButtonControllerPreview: some View {
+    VStack(alignment: .leading, spacing: .spacing(.pt20)) {
+        Text("Varient").montage()
+        
+        VStack(alignment: .leading, spacing: .spacing(.pt16)) {
+            HStack {
                 Button.RoundButtonController(
                     varient: .primary,
-                    size: .large,
+                    size: .medium,
                     text: "안녕하세요"
                 ) {
                     debugPrint(">>> hello world!")
                 }
                 .fixedSize()
-            }
-            
-            VStack(alignment: .leading) {
-                Text("Alternative").montage()
+                
                 Button.RoundButtonController(
                     varient: .alternative,
                     size: .medium,
                     text: "안녕하세요"
                 ).fixedSize()
-            }
-            
-            VStack(alignment: .leading) {
-                Text("Secondary").montage()
+                
                 Button.RoundButtonController(
                     varient: .secondary,
-                    size: .small,
+                    size: .medium,
                     text: "안녕하세요"
                 ).fixedSize()
             }
             
-            VStack(alignment: .leading) {
-                Text("Assistive").montage()
+            HStack {
                 Button.RoundButtonController(
                     varient: .assistive,
-                    size: .small,
-                    text: "안녕하세요"
-                ).fixedSize()
-            }
-            
-            VStack(alignment: .leading) {
-                Text("Primary with left icon").montage()
-                Button.RoundButtonController(
-                    varient: .primary,
-                    size: .large,
-                    leftIcon: .apps,
-                    text: "안녕하세요"
-                ).fixedSize()
-            }
-            
-            VStack(alignment: .leading) {
-                Text("Primary with right icon").montage()
-                Button.RoundButtonController(
-                    varient: .primary,
                     size: .medium,
-                    rightIcon: .chevronRightThick,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.RoundButtonController(
+                    varient: .assistive,
+                    size: .medium,
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
             }
         }
-        .onAppear {
-            try! Pretendard.registerFonts()
+        
+        Text("Size").montage()
+        
+        HStack {
+            Button.RoundButtonController(
+                varient: .secondary,
+                size: .small,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.RoundButtonController(
+                varient: .secondary,
+                size: .medium,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.RoundButtonController(
+                varient: .secondary,
+                size: .large,
+                text: "안녕하세요"
+            ).fixedSize()
         }
+        
+        Text("Icon").montage()
+        
+        HStack {
+            Button.RoundButtonController(
+                varient: .secondary,
+                size: .small,
+                leftIcon: .apps,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.RoundButtonController(
+                varient: .secondary,
+                size: .small,
+                rightIcon: .apps,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.RoundButtonController(
+                varient: .secondary,
+                size: .small,
+                leftIcon: .apps,
+                rightIcon: .apps,
+                text: "안녕하세요"
+            ).fixedSize()
+        }
+        
+        Text("State").montage()
+        
+        HStack {
+            Button.RoundButtonController(
+                varient: .primary,
+                size: .medium,
+                rightIcon: .chevronRightThick,
+                text: "안녕하세요"
+            ).fixedSize()
+            
+            Button.RoundButtonController(
+                varient: .primary,
+                size: .medium,
+                rightIcon: .chevronRightThick,
+                text: "안녕하세요",
+                disable: true
+            ).fixedSize()
+        }
+    }
+}
+
+struct RoundButtonController_Previews: PreviewProvider {
+    static var previews: some View {
+        roundButtonControllerPreview
+            .padding()
+            .previewLayout(.sizeThatFits)
     }
 }

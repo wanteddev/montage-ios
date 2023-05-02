@@ -31,28 +31,34 @@ extension Button {
     }
 }
 
+var iconButtonControllerPreview: some View {
+    HStack {
+        Button.IconButtonController(
+            varient: .normal,
+            icon: .apps
+        ) {
+            debugPrint(">>> hello world!")
+        }
+        .fixedSize()
+        
+        Button.IconButtonController(
+            varient: .background,
+            icon: .apps
+        )
+        .fixedSize()
+        
+        Button.IconButtonController(
+            varient: .outlined(size: .normal),
+            icon: .apps
+        )
+        .fixedSize()
+    }
+}
+
 struct IconButtonController_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            Button.IconButtonController(
-                varient: .normal,
-                icon: .apps
-            ) {
-                debugPrint(">>> hello world!")
-            }
-            .fixedSize()
-            
-            Button.IconButtonController(
-                varient: .background,
-                icon: .apps
-            )
-            .fixedSize()
-            
-            Button.IconButtonController(
-                varient: .outlined(size: .normal),
-                icon: .apps
-            )
-            .fixedSize()
-        }
+        iconButtonControllerPreview
+            .padding()
+            .previewLayout(.sizeThatFits)
     }
 }
