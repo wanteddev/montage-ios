@@ -20,9 +20,17 @@ struct Button_Previews: PreviewProvider {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Round Button").montage(varient: .heading1, weight: .bold)
+                    Text("Solid Button").montage(varient: .heading1, weight: .bold)
                     
                     roundButtonControllerPreview
+                }
+                
+                Divider()
+                
+                VStack(alignment: .leading, spacing: .spacing(.pt20)) {
+                    Text("Outlined Button").montage(varient: .heading1, weight: .bold)
+                    
+                    outlinedButtonControllerPreview
                 }
                 
                 Divider()

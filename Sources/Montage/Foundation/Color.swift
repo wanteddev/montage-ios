@@ -474,4 +474,44 @@ public enum Color {
             return baseColor.withAlphaComponent(alpha)
         }
     }
+    
+    /// 장식 요소를 위해 사용할 수 있는 색상들을 나열하는 값입니다.
+    public enum Accent: Equatable {
+        case primary
+        case positive
+        case cautionary
+        case negative
+        case lime
+        case cyan
+        case lightBlue
+        case violet
+        case pink
+        
+        func resolveAsAlias() -> Alias {
+            switch self {
+            case .primary:
+                return .primaryNormal
+            case .positive:
+                return .statusPositive
+            case .cautionary:
+                return .statusCautionary
+            case .negative:
+                return .statusNegative
+            case .lime:
+                return .accentLime
+            case .cyan:
+                return .accentCyan
+            case .lightBlue:
+                return .accentLightBlue
+            case .violet:
+                return .accentViolet
+            case .pink:
+                return .accentPink
+            }
+        }
+        
+        func resolveAsUIColor() -> UIColor {
+            .alias(resolveAsAlias())
+        }
+    }
 }

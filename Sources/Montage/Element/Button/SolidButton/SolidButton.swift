@@ -1,41 +1,34 @@
 //
-//  MultiSelectChip.swift
+//  SolidButton.swift
 //  Montage
 //
-//  Created by Euigyom Kim on 2023/04/20.
+//  Created by Euigyom Kim on 2023/04/05.
 //
 
 import UIKit
 
-extension Chip {
-    final public class MultiSelect: UIView {
+extension Button {
+    /// 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
+    /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
+    public class SolidButton: UIView {
         private enum Const {
-            static var iconSpacing: CGFloat = .spacing(.pt04)
+            static var activeBackgroundColor: Color.Alias = .primaryNormal
+            static var inactiveBackgroundColor: Color.Alias = .interactionDisable
+            static var activeTextColor: Color.Alias = .staticWhite
+            static var inactiveTextColor: Color.Alias = .labelAssistive
+            static var interactionColor: Color.Alias = .labelNormal
         }
         
-        /// 칩의 사이즈를 결정하는 열거형입니다.
+        /// 버튼의 사이즈를 결정하는 열거형입니다.
         public enum Size {
-            case medium, large
+            case large, medium, small
         }
         
-        /// 칩의 사이즈입니다.
-        public var size: Size = .medium {
+        /// 버튼의 사이즈입니다.
+        /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
+        public var size: Size = .large {
             didSet {
                 setupUpdateableConstraints()
-                updateViews()
-            }
-        }
-        
-        /// 칩의 선택 여부입니다.
-        public var active: Bool = false {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 칩의 활성화 여부입니다.
-        public var disable: Bool = false {
-            didSet {
                 updateViews()
             }
         }
@@ -47,20 +40,44 @@ extension Chip {
             }
         }
         
-        /// 칩에서 표현될 텍스트입니다.
+        /// 텍스트의 좌측에 표현될 아이콘입니다.
+        public var leftIcon: Icon? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 텍스트의 우측에 표현될 아이콘입니다.
+        public var rightIcon: Icon? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 버튼에서 표현될 텍스트입니다.
         public var text: String = "" {
             didSet {
                 updateViews()
             }
         }
         
+        /// 버튼의 활성화 여부입니다.
+        public var disable: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
         public var handler: (() -> Void)?
         
         private lazy var stackView = UIStackView()
         
-        private lazy var iconView = UIImageView()
+        private lazy var leftIconView = UIImageView()
         
         private lazy var textLabel = UILabel()
+        
+        private lazy var rightIconView = UIImageView()
         
         private lazy var interaction = Decorate.Interaction()
         
@@ -70,6 +87,7 @@ extension Chip {
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
+        /// SolidButton 객체를 생성합니다.
         public init() {
             super.init(frame: .zero)
             
@@ -77,7 +95,7 @@ extension Chip {
             bindEvent()
         }
         
-        required init?(coder: NSCoder) {
+        public required init?(coder: NSCoder) {
             super.init(coder: coder)
             
             setupViews()
@@ -101,16 +119,17 @@ extension Chip {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
             let edgeInsets = size.edgeInsets
+            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
             
             return .init(
-                width: iconSize.width + Const.iconSpacing + textSize.width + edgeInsets.horizontal,
+                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
     }
 }
 
-extension Chip.MultiSelect {
+extension Button.SolidButton {
     private func setupViews() {
         addSubview(stackView)
         addSubview(interaction)
@@ -124,6 +143,7 @@ extension Chip.MultiSelect {
     
     private func bindEvent() {
         let longPressRecognizer = UILongPressGestureRecognizer()
+        longPressRecognizer.delegate = self
         longPressRecognizer.minimumPressDuration = 0
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
@@ -133,9 +153,10 @@ extension Chip.MultiSelect {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = Const.iconSpacing
-        stackView.addArrangedSubview(iconView)
+        stackView.spacing = .spacing(.pt04)
+        stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
+        stackView.addArrangedSubview(rightIconView)
     }
     
     private func setupUpdateableConstraints() {
@@ -157,11 +178,14 @@ extension Chip.MultiSelect {
     private func setupIconViewConstraints() {
         NSLayoutConstraint.deactivate(iconViewContraints)
         
-        iconView.translatesAutoresizingMaskIntoConstraints = false
+        leftIconView.translatesAutoresizingMaskIntoConstraints = false
+        rightIconView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            iconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            iconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
+            leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
+            leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
+            rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
+            rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -194,7 +218,7 @@ extension Chip.MultiSelect {
     }
 }
 
-extension Chip.MultiSelect {
+extension Button.SolidButton {
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
@@ -206,14 +230,26 @@ extension Chip.MultiSelect {
     }
     
     private func updateColors() {
-        backgroundColor = .clear
-        layer.borderColor = resolveCurrentLineColor()
-        layer.borderWidth = 1
-        iconView.tintColor = .alias(resolveCurrentTextColor())
+        backgroundColor = .alias(disable ? Const.inactiveBackgroundColor : Const.activeBackgroundColor)
+        leftIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
+        rightIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
+        interaction.color = Const.interactionColor
     }
     
     private func updateIconView() {
-        iconView.image = .montage(.checkThick)
+        if let leftIcon {
+            leftIconView.isHidden = false
+            leftIconView.image = .montage(leftIcon)
+        } else {
+            leftIconView.isHidden = true
+        }
+        
+        if let rightIcon {
+            rightIconView.isHidden = false
+            rightIconView.image = .montage(rightIcon)
+        } else {
+            rightIconView.isHidden = true
+        }
     }
     
     private func updateTextLabel() {
@@ -221,33 +257,16 @@ extension Chip.MultiSelect {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, varient: size.typoVarient, weight: .bold, color: resolveCurrentTextColor())
+        .montage(
+            text,
+            varient: size.typoVarient,
+            weight: .bold,
+            color: disable ? Const.inactiveTextColor : Const.activeTextColor
+        )
     }
 }
 
-extension Chip.MultiSelect {
-    private func resolveCurrentTextColor() -> Color.Alias {
-        if disable {
-            return .labelDisable
-        } else if active {
-            return .primaryNormal
-        } else {
-            return .labelAlternative
-        }
-    }
-    
-    private func resolveCurrentLineColor() -> CGColor {
-        if disable {
-            return UIColor.alias(.lineAlternative).cgColor
-        } else if active {
-            return UIColor.alias(.primaryNormal).cgColor
-        } else {
-            return UIColor.alias(.lineNormal).cgColor
-        }
-    }
-}
-
-extension Chip.MultiSelect {
+extension Button.SolidButton {
     @objc private func longPressed() {
         guard let recognizer = longPressRecognizer else { return }
         
@@ -265,21 +284,34 @@ extension Chip.MultiSelect {
     }
 }
 
-extension Chip.MultiSelect.Size {
+extension Button.SolidButton: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return true
+    }
+}
+
+extension Button.SolidButton.Size {
     var iconSize: CGSize {
         switch self {
         case .large:
-            return .init(width: 16, height: 16)
+            return .init(width: 20, height: 20)
         case .medium:
-            return .init(width: 14, height: 14)
+            return .init(width: 18, height: 18)
+        case .small:
+            return .init(width: 16, height: 16)
         }
     }
     
     var typoVarient: Typography.Variant {
         switch self {
         case .large:
-            return .body2
+            return .body1
         case .medium:
+            return .body2
+        case .small:
             return .label1
         }
     }
@@ -287,10 +319,11 @@ extension Chip.MultiSelect.Size {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .large:
-            return .init(top: 9, left: 16, bottom: 9, right: 16)
+            return .init(top: 12, left: 28, bottom: 12, right: 28)
         case .medium:
-            return .init(top: 6, left: 12, bottom: 6, right: 12)
+            return .init(top: 9, left: 20, bottom: 9, right: 20)
+        case .small:
+            return .init(top: 7, left: 12, bottom: 7, right: 12)
         }
     }
 }
-

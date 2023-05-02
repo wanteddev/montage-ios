@@ -220,9 +220,9 @@ extension Chip.Filter {
     
     private func updateColors() {
         backgroundColor = .clear
-        layer.borderColor = decideCurrentLineColor()
+        layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = 1
-        arrowIconView.tintColor = .alias(decideCurrentTextColor())
+        arrowIconView.tintColor = .alias(resolveCurrentTextColor())
     }
     
     private func updateIconView() {
@@ -239,11 +239,13 @@ extension Chip.Filter {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: decideCurrentTextColor()
+            color: resolveCurrentTextColor()
         )
     }
-    
-    private func decideCurrentTextColor() -> Color.Alias {
+}
+
+extension Chip.Filter {
+    private func resolveCurrentTextColor() -> Color.Alias {
         if disable {
             return .labelDisable
         } else if active {
@@ -253,7 +255,7 @@ extension Chip.Filter {
         }
     }
     
-    private func decideCurrentLineColor() -> CGColor {
+    private func resolveCurrentLineColor() -> CGColor {
         if disable {
             return UIColor.alias(.lineAlternative).cgColor
         } else if active {
