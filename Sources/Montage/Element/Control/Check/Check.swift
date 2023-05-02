@@ -33,6 +33,12 @@ extension Control {
             }
         }
         
+        public var disable: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
         private lazy var imageView: UIImageView = {
             let view = UIImageView()
             view.isUserInteractionEnabled = false
@@ -100,11 +106,17 @@ extension Control.Check {
     }
     
     private func updateViews() {
+        isUserInteractionEnabled = false == disable
+        
         switch state {
         case .unchecked:
             imageView.tintColor = .alias(.labelAssistive)
         case .checked, .partial:
             imageView.tintColor = .alias(.primaryNormal)
+        }
+        
+        if disable {
+            imageView.tintColor = imageView.tintColor.withAlphaComponent(.opacity(.p060))
         }
     }
     

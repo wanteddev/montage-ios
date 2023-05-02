@@ -34,6 +34,12 @@ extension Control {
             }
         }
         
+        public var disable: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
         private lazy var boxView = UIView()
         
         private lazy var imageView: UIImageView = {
@@ -119,6 +125,8 @@ extension Control.Radio {
     }
     
     private func updateViews() {
+        isUserInteractionEnabled = false == disable
+        
         boxView.layer.cornerRadius = (Const.wrapperBoxSize.width - (Const.boxInset * 2)) / 2
         boxView.layer.borderWidth = 1.5
         
@@ -131,6 +139,10 @@ extension Control.Radio {
             boxView.layer.backgroundColor = UIColor.alias(.primaryNormal).cgColor
             boxView.layer.borderColor = UIColor.alias(.primaryNormal).cgColor
             imageView.image = .montage(.dot)
+        }
+        
+        if disable {
+            imageView.tintColor = imageView.tintColor.withAlphaComponent(.opacity(.p060))
         }
     }
     

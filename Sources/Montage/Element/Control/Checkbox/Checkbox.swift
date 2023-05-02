@@ -37,6 +37,12 @@ extension Control {
             }
         }
         
+        public var disable: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
         private var tapRecognizer: UITapGestureRecognizer?
         
         private weak var delegate: CheckboxControlDelegate?
@@ -103,26 +109,51 @@ extension Control.Checkbox {
     }
     
     private func updateViews() {
+        isUserInteractionEnabled = false == disable
+        
         boxView.layer.cornerRadius = 3.0
         boxView.layer.borderWidth = 1.5
-        
-        switch state {
-        case .unchecked:
-            boxView.layer.backgroundColor = nil
-            boxView.layer.borderColor = UIColor.alias(.lineNormal).cgColor
-            imageView.image = nil
-        case .checked:
-            boxView.layer.backgroundColor = UIColor.alias(.primaryNormal).cgColor
-            boxView.layer.borderColor = UIColor.alias(.primaryNormal).cgColor
-            imageView.image = .montage(.checkThick)
-        case .partial:
-            boxView.layer.backgroundColor = UIColor.alias(.primaryNormal).cgColor
-            boxView.layer.borderColor = UIColor.alias(.primaryNormal).cgColor
-            imageView.image = .montage(.lineHorizontalThick)
-        }
+        boxView.layer.backgroundColor = resolveCurrentBackgroundColor()
+        boxView.layer.borderColor = resolveCurrentBorderColor()
+        imageView.image = resolveCurrentImage()
     }
     
     @objc private func tapped() {
         delegate?.didTappedCheckbox(self)
+    }
+}
+
+extension Control.Checkbox {
+    private func resolveCurrentBackgroundColor() -> CGColor? {
+        let opacity: CGFloat = .opacity(disable ? .p060 : .p100)
+        
+        switch state {
+        case .unchecked:
+            return nil
+        case .checked, .partial:
+            return UIColor.alias(.primaryNormal).withAlphaComponent(opacity).cgColor
+        }
+    }
+    
+    private func resolveCurrentBorderColor() -> CGColor {
+        let opacity: CGFloat = .opacity(disable ? .p060 : .p100)
+        
+        switch state {
+        case .unchecked:
+            return UIColor.alias(.lineNormal).withAlphaComponent(opacity).cgColor
+        case .checked, .partial:
+            return UIColor.alias(.primaryNormal).withAlphaComponent(opacity).cgColor
+        }
+    }
+    
+    private func resolveCurrentImage() -> UIImage? {
+        switch state {
+        case .unchecked:
+            return nil
+        case .checked:
+            return .montage(.checkThick)
+        case .partial:
+            return .montage(.lineHorizontalThick)
+        }
     }
 }

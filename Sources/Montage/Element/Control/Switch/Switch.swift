@@ -19,6 +19,12 @@ extension Control {
     public final class Switch: UISwitch {
         public weak var delegate: SwitchControlDelegate?
         
+        public var disable: Bool = false {
+            didSet {
+                self.isEnabled = false == disable
+            }
+        }
+        
         override init(frame: CGRect) {
             super.init(frame: frame)
             
