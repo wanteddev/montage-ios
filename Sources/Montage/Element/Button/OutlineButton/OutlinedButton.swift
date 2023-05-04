@@ -124,9 +124,11 @@ extension Button {
             let iconSize = size.iconSize
             let edgeInsets = size.edgeInsets
             let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            let iconWidths = iconSize.width * CGFloat(iconCount)
+            let spacings = size.gap * CGFloat(iconCount)
             
             return .init(
-                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
+                width: iconWidths + spacings + textSize.width + edgeInsets.horizontal,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
@@ -157,7 +159,7 @@ extension Button.OutlinedButton {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = .spacing(.pt04)
+        stackView.spacing = size.gap
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
@@ -166,6 +168,7 @@ extension Button.OutlinedButton {
     private func setupUpdateableConstraints() {
         setupIconViewConstraints()
         setupStackViewConstraints()
+        stackView.spacing = size.gap
         updateConstraints()
         setupLayer()
     }
@@ -358,7 +361,18 @@ extension Button.OutlinedButton.Size {
         case .medium:
             return .init(top: 9, left: 20, bottom: 9, right: 20)
         case .small:
-            return .init(top: 7, left: 12, bottom: 7, right: 12)
+            return .init(top: 7, left: 14, bottom: 7, right: 14)
+        }
+    }
+    
+    var gap: CGFloat {
+        switch self {
+        case .large:
+            return 6.0
+        case .medium:
+            return 5.0
+        case .small:
+            return 4.0
         }
     }
 }
