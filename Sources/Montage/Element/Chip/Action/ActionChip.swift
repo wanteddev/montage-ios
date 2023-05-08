@@ -10,10 +10,6 @@ import UIKit
 extension Chip {
     /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
     public class Action: UIView {
-        private enum Const {
-            static var iconSpacing: CGFloat = .spacing(.pt04)
-        }
-        
         /// 칩의 외관을 결정하는 열거형입니다.
         public enum Varient {
             case filled, outlined
@@ -125,7 +121,7 @@ extension Chip {
             let edgeInsets = size.edgeInsets
             let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
             let iconWidths = iconSize.width * CGFloat(iconCount)
-            let spacings = Const.iconSpacing * CGFloat(iconCount)
+            let spacings = size.gap * CGFloat(iconCount)
             
             return .init(
                 width: iconWidths + spacings + textSize.width + edgeInsets.horizontal,
@@ -159,7 +155,7 @@ extension Chip.Action {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = Const.iconSpacing
+        stackView.spacing = size.gap
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
@@ -168,6 +164,7 @@ extension Chip.Action {
     private func setupUpdateableConstraints() {
         setupIconViewConstraints()
         setupStackViewConstraints()
+        stackView.spacing = size.gap
         updateConstraints()
         setupLayer()
     }
@@ -359,7 +356,16 @@ extension Chip.Action.Size {
         case .medium:
             return .init(top: 6, left: 12, bottom: 6, right: 12)
         case .small:
-            return .init(top: 4, left: 8, bottom: 4, right: 8)
+            return .init(top: 4, left: 9, bottom: 4, right: 9)
+        }
+    }
+    
+    var gap: CGFloat {
+        switch self {
+        case .large:
+            return 5.0
+        case .medium, .small:
+            return 4.0
         }
     }
 }

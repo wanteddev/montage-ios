@@ -9,10 +9,6 @@ import UIKit
 
 extension Chip {
     final public class MultiSelect: UIView {
-        private enum Const {
-            static var iconSpacing: CGFloat = .spacing(.pt04)
-        }
-        
         /// 칩의 사이즈를 결정하는 열거형입니다.
         public enum Size {
             case medium, large
@@ -101,9 +97,10 @@ extension Chip {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
             let edgeInsets = size.edgeInsets
+            let spacings = size.gap
             
             return .init(
-                width: iconSize.width + Const.iconSpacing + textSize.width + edgeInsets.horizontal,
+                width: iconSize.width + spacings + textSize.width + edgeInsets.horizontal,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
@@ -133,7 +130,7 @@ extension Chip.MultiSelect {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = Const.iconSpacing
+        stackView.spacing = size.gap
         stackView.addArrangedSubview(iconView)
         stackView.addArrangedSubview(textLabel)
     }
@@ -141,6 +138,7 @@ extension Chip.MultiSelect {
     private func setupUpdateableConstraints() {
         setupIconViewConstraints()
         setupStackViewConstraints()
+        stackView.spacing = size.gap
         updateConstraints()
         setupLayer()
     }
@@ -290,6 +288,15 @@ extension Chip.MultiSelect.Size {
             return .init(top: 9, left: 16, bottom: 9, right: 16)
         case .medium:
             return .init(top: 6, left: 12, bottom: 6, right: 12)
+        }
+    }
+    
+    var gap: CGFloat {
+        switch self {
+        case .large:
+            return 5.0
+        case .medium:
+            return 4.0
         }
     }
 }
