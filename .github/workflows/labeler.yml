@@ -2,9 +2,9 @@ name: Labeler
 
 on:
   pull_request:
-	types: [synchronize]
+    types: [synchronize]
   pull_request_review:
-	types: [submitted]
+    types: [submitted]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,12 +12,12 @@ concurrency:
 
 jobs:
   labeler:
-	timeout-minutes: 3
-	runs-on: [self-hosted, utility]
-	steps:
-	  - uses: jsryudev/pr-review-labeler@v0.2.2
-		with:
-		  repo-token: ${{ secrets.GITHUB_TOKEN }}
-		  target-approved-count: 2
-		  label-to-be-added: "accepted"
-		  label-to-be-removed: "in review"
+    timeout-minutes: 3
+    runs-on: [self-hosted, utility]
+    steps:
+      - uses: jsryudev/pr-review-labeler@v0.2.2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          target-approved-count: 2
+          label-to-be-added: "accepted"
+          label-to-be-removed: "in review"
