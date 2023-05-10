@@ -10,13 +10,13 @@ import Pretendard
 
 extension Button {
     public struct SolidButtonController: UIViewRepresentable {
-        @State public var size: SolidButton.Size = .medium
-        @State public var leftIcon: Icon?
-        @State public var rightIcon: Icon?
-        @State public var text: String
-        @State public var state: Decorate.Interaction.State = .normal
-        @State public var disable: Bool = false
-        @State public var handler: (() -> Void)?
+        public var size: SolidButton.Size = .medium
+        public var leftIcon: Icon?
+        public var rightIcon: Icon?
+        public var text: String
+        public var state: Decorate.Interaction.State = .normal
+        public var disable: Bool = false
+        public var handler: (() -> Void)?
         
         public typealias UIViewType = SolidButton
         
@@ -54,75 +54,77 @@ extension Button {
     }
 }
 
-var roundButtonControllerPreview: some View {
-    VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-        Text("State").montage()
-        
-        HStack {
-            Button.SolidButtonController(
-                size: .medium,
-                rightIcon: .chevronRightThick,
-                text: "안녕하세요"
-            ) {
-                debugPrint(">>> hello world!")
+struct SolidButtonControllerPreview: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: .spacing(.pt20)) {
+            Text("State").montage()
+            
+            HStack {
+                Button.SolidButtonController(
+                    size: .medium,
+                    rightIcon: .chevronRightThick,
+                    text: "안녕하세요"
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .medium,
+                    rightIcon: .chevronRightThick,
+                    text: "안녕하세요",
+                    disable: true
+                ).fixedSize()
             }
-            .fixedSize()
             
-            Button.SolidButtonController(
-                size: .medium,
-                rightIcon: .chevronRightThick,
-                text: "안녕하세요",
-                disable: true
-            ).fixedSize()
-        }
-        
-        Text("Size").montage()
-        
-        HStack {
-            Button.SolidButtonController(
-                size: .small,
-                text: "안녕하세요"
-            ).fixedSize()
+            Text("Size").montage()
             
-            Button.SolidButtonController(
-                size: .medium,
-                text: "안녕하세요"
-            ).fixedSize()
+            HStack {
+                Button.SolidButtonController(
+                    size: .small,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .medium,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .large,
+                    text: "안녕하세요"
+                ).fixedSize()
+            }
             
-            Button.SolidButtonController(
-                size: .large,
-                text: "안녕하세요"
-            ).fixedSize()
-        }
-        
-        Text("Icon").montage()
-        
-        HStack {
-            Button.SolidButtonController(
-                size: .small,
-                leftIcon: .apps,
-                text: "안녕하세요"
-            ).fixedSize()
+            Text("Icon").montage()
             
-            Button.SolidButtonController(
-                size: .small,
-                rightIcon: .apps,
-                text: "안녕하세요"
-            ).fixedSize()
-            
-            Button.SolidButtonController(
-                size: .small,
-                leftIcon: .apps,
-                rightIcon: .apps,
-                text: "안녕하세요"
-            ).fixedSize()
+            HStack {
+                Button.SolidButtonController(
+                    size: .small,
+                    leftIcon: .apps,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .small,
+                    rightIcon: .apps,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .small,
+                    leftIcon: .apps,
+                    rightIcon: .apps,
+                    text: "안녕하세요"
+                ).fixedSize()
+            }
         }
     }
 }
 
 struct RoundButtonController_Previews: PreviewProvider {
     static var previews: some View {
-        roundButtonControllerPreview
+        SolidButtonControllerPreview()
             .padding()
             .previewLayout(.sizeThatFits)
     }

@@ -10,13 +10,13 @@ import Pretendard
 
 extension Chip {
     public struct FilterChipController: UIViewRepresentable {
-        @State public var varient: Filter.Varient = .normal
-        @State public var size: Filter.Size = .medium
-        @State public var text: String = ""
-        @State public var state: Decorate.Interaction.State = .normal
-        @State public var active: Bool = false
-        @State public var disable: Bool = false
-        @State public var handler: (() -> Void)?
+        public var varient: Filter.Varient = .normal
+        public var size: Filter.Size = .medium
+        public var text: String = ""
+        public var state: Decorate.Interaction.State = .normal
+        public var active: Bool = false
+        public var disable: Bool = false
+        public var handler: (() -> Void)?
         
         public typealias UIViewType = Filter
         

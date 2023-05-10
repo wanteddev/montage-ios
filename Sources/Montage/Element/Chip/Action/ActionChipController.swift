@@ -10,14 +10,14 @@ import Pretendard
 
 extension Chip {
     public struct ActionChipController: UIViewRepresentable {
-        @State public var varient: Action.Varient = .filled
-        @State public var size: Action.Size = .medium
-        @State public var leftIcon: Icon?
-        @State public var rightIcon: Icon?
-        @State public var text: String = ""
-        @State public var state: Decorate.Interaction.State = .normal
-        @State public var disable: Bool = false
-        @State public var handler: (() -> Void)?
+        public var varient: Action.Varient = .filled
+        public var size: Action.Size = .medium
+        public var leftIcon: Icon?
+        public var rightIcon: Icon?
+        public var text: String = ""
+        public var state: Decorate.Interaction.State = .normal
+        public var disable: Bool = false
+        public var handler: (() -> Void)?
         
         public typealias UIViewType = Action
         
