@@ -20,6 +20,22 @@ extension Button {
         
         public typealias UIViewType = TextButton
         
+        public init(
+            size: TextButton.Size = .medium,
+            leftIcon: Icon? = nil,
+            rightIcon: Icon? = nil,
+            text: String,
+            disable: Bool = false,
+            handler: (() -> Void)? = nil
+        ) {
+            self.size = size
+            self.leftIcon = leftIcon
+            self.rightIcon = rightIcon
+            self.text = text
+            self.disable = disable
+            self.handler = handler
+        }
+        
         public func makeUIView(context: Context) -> UIViewType {
             .init()
         }

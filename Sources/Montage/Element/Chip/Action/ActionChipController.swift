@@ -17,8 +17,29 @@ extension Chip {
         @State public var text: String = ""
         @State public var state: Decorate.Interaction.State = .normal
         @State public var disable: Bool = false
+        @State public var handler: (() -> Void)?
         
         public typealias UIViewType = Action
+        
+        public init(
+            varient: Action.Varient = .filled,
+            size: Action.Size = .medium,
+            leftIcon: Icon? = nil,
+            rightIcon: Icon? = nil,
+            text: String,
+            state: Decorate.Interaction.State = .normal,
+            disable: Bool = false,
+            handler: (() -> Void)? = nil
+        ) {
+            self.varient = varient
+            self.size = size
+            self.leftIcon = leftIcon
+            self.rightIcon = rightIcon
+            self.text = text
+            self.state = state
+            self.disable = disable
+            self.handler = handler
+        }
         
         public func makeUIView(context: Context) -> UIViewType {
             .init()

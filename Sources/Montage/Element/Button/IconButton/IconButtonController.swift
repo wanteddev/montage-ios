@@ -17,6 +17,20 @@ extension Button {
         
         public typealias UIViewType = IconButton
         
+        public init(
+            varient: IconButton.Varient,
+            icon: Icon,
+            state: Decorate.Interaction.State = .normal,
+            disable: Bool = false,
+            handler: (() -> Void)? = nil
+        ) {
+            self.varient = varient
+            self.icon = icon
+            self.state = state
+            self.disable = disable
+            self.handler = handler
+        }
+        
         public func makeUIView(context: Context) -> UIViewType {
             .init()
         }

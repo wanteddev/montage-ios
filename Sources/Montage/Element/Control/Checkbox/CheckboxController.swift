@@ -14,6 +14,10 @@ extension Control {
         
         public typealias UIViewType = Checkbox
         
+        public init(state: MontageControlState) {
+            self.state = state
+        }
+        
         public func makeUIView(context: Context) -> UIViewType {
             .init()
         }

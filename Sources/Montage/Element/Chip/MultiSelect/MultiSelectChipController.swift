@@ -15,8 +15,25 @@ extension Chip {
         @State public var state: Decorate.Interaction.State = .normal
         @State public var active: Bool = false
         @State public var disable: Bool = false
+        @State public var handler: (() -> Void)?
         
         public typealias UIViewType = MultiSelect
+        
+        public init(
+            size: MultiSelect.Size = .medium,
+            text: String,
+            state: Decorate.Interaction.State = .normal,
+            active: Bool = false,
+            disable: Bool = false,
+            handler: (() -> Void)? = nil
+        ) {
+            self.size = size
+            self.text = text
+            self.state = state
+            self.active = active
+            self.disable = disable
+            self.handler = handler
+        }
         
         public func makeUIView(context: Context) -> UIViewType {
             .init()
@@ -28,6 +45,7 @@ extension Chip {
             uiView.state = state
             uiView.active = active
             uiView.disable = disable
+            uiView.handler = handler
         }
     }
 }

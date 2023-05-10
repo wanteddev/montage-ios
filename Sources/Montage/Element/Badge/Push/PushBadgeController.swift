@@ -11,9 +11,13 @@ import Pretendard
 extension Badge {
     public struct PushBadgeController: UIViewRepresentable {
         /// 뱃지의 외관입니다.
-        @State public var varient: Badge.Push.Varient = .dot
+        @State public var varient: Badge.Push.Varient
         
         public typealias UIViewType = Badge.Push
+        
+        public init(varient: Badge.Push.Varient) {
+            self.varient = varient
+        }
         
         public func makeUIView(context: Context) -> UIViewType {
             .init()

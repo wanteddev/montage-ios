@@ -23,6 +23,26 @@ extension Button {
         
         public typealias UIViewType = OutlinedButton
         
+        public init(
+            varient: OutlinedButton.Varient = .primary,
+            size: OutlinedButton.Size = .medium,
+            leftIcon: Icon? = nil,
+            rightIcon: Icon? = nil,
+            text: String,
+            state: Decorate.Interaction.State = .normal,
+            disable: Bool = false,
+            handler: (() -> Void)? = nil
+        ) {
+            self.varient = varient
+            self.size = size
+            self.leftIcon = leftIcon
+            self.rightIcon = rightIcon
+            self.text = text
+            self.state = state
+            self.disable = disable
+            self.handler = handler
+        }
+        
         public func makeUIView(context: Context) -> UIViewType {
             .init()
         }
