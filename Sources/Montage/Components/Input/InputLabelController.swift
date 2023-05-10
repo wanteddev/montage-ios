@@ -15,6 +15,12 @@ struct InputLabelController: UIViewRepresentable {
 
     public typealias UIViewType = InputLabel
 
+    public init(inputView: MontageControl, state: MontageControlState, text: String) {
+        self.inputView = inputView
+        self.state = state
+        self.text = text
+    }
+    
     public func makeUIView(context: Context) -> UIViewType {
         .init(with: inputView)
     }

@@ -30,6 +30,22 @@ extension Badge {
         
         public typealias UIViewType = Badge.Content
         
+        public init(
+            varient: Badge.Content.Varient = .filled,
+            size: Badge.Content.Size = .small,
+            color: Badge.Content.ColorStyle = .neutral,
+            leftIcon: Icon? = nil,
+            rightIcon: Icon? = nil,
+            text: String
+        ) {
+            self.varient = varient
+            self.size = size
+            self.color = color
+            self.leftIcon = leftIcon
+            self.rightIcon = rightIcon
+            self.text = text
+        }
+        
         public func makeUIView(context: Context) -> UIViewType {
             .init()
         }
