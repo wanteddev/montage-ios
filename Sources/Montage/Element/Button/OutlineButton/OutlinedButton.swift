@@ -350,7 +350,7 @@ extension Button.OutlinedButton.Size {
         case .medium:
             return .body2
         case .small:
-            return .label1
+            return .label2
         }
     }
     
