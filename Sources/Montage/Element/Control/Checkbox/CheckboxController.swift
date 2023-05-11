@@ -10,7 +10,7 @@ import SwiftUI
 extension Control {
     /// ``Montage/Checkbox``를 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
     public struct CheckboxController: UIViewRepresentable {
-        @State public var state: MontageControlState
+        public var state: MontageControlState
         
         public typealias UIViewType = Checkbox
         

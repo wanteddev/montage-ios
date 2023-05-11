@@ -9,9 +9,9 @@ import SwiftUI
 
 /// ``Montage/InputLabel``을 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
 struct InputLabelController: UIViewRepresentable {
-    @State public var inputView: MontageControl
-    @State public var state: MontageControlState
-    @State public var text: String
+    public var inputView: MontageControl
+    public var state: MontageControlState
+    public var text: String
 
     public typealias UIViewType = InputLabel
 

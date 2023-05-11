@@ -9,11 +9,11 @@ import SwiftUI
 
 extension Button {
     public struct IconButtonController: UIViewRepresentable {
-        @State public var varient: IconButton.Varient
-        @State public var icon: Icon
-        @State public var state: Decorate.Interaction.State = .normal
-        @State public var disable: Bool = false
-        @State public var handler: (() -> Void)?
+        public var varient: IconButton.Varient
+        public var icon: Icon
+        public var state: Decorate.Interaction.State = .normal
+        public var disable: Bool = false
+        public var handler: (() -> Void)?
         
         public typealias UIViewType = IconButton
         
@@ -45,33 +45,35 @@ extension Button {
     }
 }
 
-var iconButtonControllerPreview: some View {
-    HStack {
-        Button.IconButtonController(
-            varient: .normal,
-            icon: .apps
-        ) {
-            debugPrint(">>> hello world!")
+struct IconButtonControllerPreview: View {
+    var body: some View {
+        HStack {
+            Button.IconButtonController(
+                varient: .normal,
+                icon: .apps
+            ) {
+                debugPrint(">>> hello world!")
+            }
+            .fixedSize()
+            
+            Button.IconButtonController(
+                varient: .background,
+                icon: .apps
+            )
+            .fixedSize()
+            
+            Button.IconButtonController(
+                varient: .outlined(size: .normal),
+                icon: .apps
+            )
+            .fixedSize()
         }
-        .fixedSize()
-        
-        Button.IconButtonController(
-            varient: .background,
-            icon: .apps
-        )
-        .fixedSize()
-        
-        Button.IconButtonController(
-            varient: .outlined(size: .normal),
-            icon: .apps
-        )
-        .fixedSize()
     }
 }
 
 struct IconButtonController_Previews: PreviewProvider {
     static var previews: some View {
-        iconButtonControllerPreview
+        IconButtonControllerPreview()
             .padding()
             .previewLayout(.sizeThatFits)
     }

@@ -11,12 +11,12 @@ import Pretendard
 
 extension Button {
     public struct TextButtonController: UIViewRepresentable {
-        @State public var size: TextButton.Size = .medium
-        @State public var leftIcon: Icon?
-        @State public var rightIcon: Icon?
-        @State public var text: String
-        @State public var disable: Bool = false
-        @State public var handler: (() -> Void)?
+        public var size: TextButton.Size = .medium
+        public var leftIcon: Icon?
+        public var rightIcon: Icon?
+        public var text: String
+        public var disable: Bool = false
+        public var handler: (() -> Void)?
         
         public typealias UIViewType = TextButton
         
@@ -50,60 +50,62 @@ extension Button {
     }
 }
 
-var textButtonControllerPreview: some View {
-    VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-        Text("Size").montage(varient: .heading2)
-        
-        HStack {
-            Button.TextButtonController(
-                text: "안녕하세요"
-            ).fixedSize()
+struct TextButtonControllerPreview: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: .spacing(.pt20)) {
+            Text("Size").montage(varient: .heading2)
             
-            Button.TextButtonController(
-                size: .small,
-                text: "안녕하세요"
-            ).fixedSize()
-        }
-        
-        Text("Icon").montage(varient: .heading2)
-        
-        HStack {
-            Button.TextButtonController(
-                leftIcon: .bubbleFill,
-                text: "안녕하세요"
-            ).fixedSize()
+            HStack {
+                Button.TextButtonController(
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    size: .small,
+                    text: "안녕하세요"
+                ).fixedSize()
+            }
             
-            Button.TextButtonController(
-                rightIcon: .circleClose,
-                text: "안녕하세요"
-            ).fixedSize()
+            Text("Icon").montage(varient: .heading2)
             
-            Button.TextButtonController(
-                leftIcon: .bubbleFill,
-                rightIcon: .circleClose,
-                text: "안녕하세요"
-            ).fixedSize()
-        }
-        
-        Text("State").montage(varient: .heading2)
-        
-        HStack {
-            Button.TextButtonController(
-                text: "안녕하세요",
-                disable: false
-            ).fixedSize()
+            HStack {
+                Button.TextButtonController(
+                    leftIcon: .bubbleFill,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    rightIcon: .circleClose,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    leftIcon: .bubbleFill,
+                    rightIcon: .circleClose,
+                    text: "안녕하세요"
+                ).fixedSize()
+            }
             
-            Button.TextButtonController(
-                text: "안녕하세요",
-                disable: true
-            ).fixedSize()
+            Text("State").montage(varient: .heading2)
+            
+            HStack {
+                Button.TextButtonController(
+                    text: "안녕하세요",
+                    disable: false
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    text: "안녕하세요",
+                    disable: true
+                ).fixedSize()
+            }
         }
     }
 }
 
 struct TextButtonController_Previews: PreviewProvider {
     static var previews: some View {
-        textButtonControllerPreview
+        TextButtonControllerPreview()
             .padding()
             .previewLayout(.sizeThatFits)
     }

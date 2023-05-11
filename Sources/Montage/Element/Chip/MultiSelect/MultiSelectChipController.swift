@@ -10,12 +10,12 @@ import Pretendard
 
 extension Chip {
     public struct MultiSelectChipController: UIViewRepresentable {
-        @State public var size: MultiSelect.Size = .medium
-        @State public var text: String = ""
-        @State public var state: Decorate.Interaction.State = .normal
-        @State public var active: Bool = false
-        @State public var disable: Bool = false
-        @State public var handler: (() -> Void)?
+        public var size: MultiSelect.Size = .medium
+        public var text: String = ""
+        public var state: Decorate.Interaction.State = .normal
+        public var active: Bool = false
+        public var disable: Bool = false
+        public var handler: (() -> Void)?
         
         public typealias UIViewType = MultiSelect
         
