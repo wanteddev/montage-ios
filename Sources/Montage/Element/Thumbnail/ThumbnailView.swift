@@ -26,17 +26,18 @@ public class ThumbnailView: UIView {
     
     public var image: UIImage? {
         didSet {
-            imageView.image = image ?? UIImage(named: Const.defaultImageName, in: Bundle.module, with: nil)
+            updateImage(image)
         }
     }
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: Const.defaultImageName, in: Bundle.module, with: nil)
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
     private var viewContraints: [NSLayoutConstraint] = []
+    private var imageRatioContraint: NSLayoutConstraint?
     
     public init(ratio: Ratio, portrait: Bool = false) {
         self.ratio = ratio
@@ -46,6 +47,7 @@ public class ThumbnailView: UIView {
         super.init(frame: .zero)
         
         setupViews()
+        updateImage(nil)
     }
     
     public required init?(coder: NSCoder) {
@@ -56,6 +58,7 @@ public class ThumbnailView: UIView {
         super.init(coder: coder)
         
         setupViews()
+        updateImage(nil)
     }
 }
 
@@ -89,7 +92,6 @@ extension ThumbnailView {
                 imageView.leftAnchor.constraint(lessThanOrEqualTo: leftAnchor),
                 imageView.rightAnchor.constraint(greaterThanOrEqualTo: rightAnchor),
                 imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-                imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
                 widthAnchor.constraint(equalTo: heightAnchor, multiplier: calculatedThumbnailRatio())
             ])
         } else {
@@ -99,13 +101,44 @@ extension ThumbnailView {
                 imageView.leftAnchor.constraint(equalTo: leftAnchor),
                 imageView.rightAnchor.constraint(equalTo: rightAnchor),
                 imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
                 heightAnchor.constraint(equalTo: widthAnchor, multiplier: calculatedThumbnailRatio())
             ])
         }
         
         NSLayoutConstraint.activate(constraints)
+        
         viewContraints = constraints
+    }
+    
+    private func updateImage(_ image: UIImage?) {
+        guard
+            let image = image ?? UIImage(
+                named: Const.defaultImageName,
+                in: Bundle.module,
+                with: nil
+            )
+        else {
+            return
+        }
+        
+        imageRatioContraint?.isActive = false
+        imageView.image = image
+        
+        let imageRatio = image.size.height / image.size.width
+        
+        if portrait {
+            imageRatioContraint = imageView.widthAnchor.constraint(
+                lessThanOrEqualTo: heightAnchor,
+                multiplier: imageRatio
+            )
+        } else {
+            imageRatioContraint = imageView.heightAnchor.constraint(
+                lessThanOrEqualTo: widthAnchor,
+                multiplier: imageRatio
+            )
+        }
+        
+        imageRatioContraint?.isActive = true
     }
     
     private func calculatedThumbnailRatio() -> CGFloat {
