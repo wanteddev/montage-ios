@@ -10,18 +10,25 @@ import SwiftUI
 public struct Thumbnail: View {
     @State public var ratio: Ratio
     @State public var portrait: Bool
+    @State public var image: UIImage
+    
+    public init(ratio: Ratio, portrait: Bool, image: UIImage?) {
+        self.ratio = ratio
+        self.portrait = portrait
+        self.image = image ?? UIImage(named: "placeholder", in: Bundle.module, with: nil)!
+    }
     
     public var body: some View {
         ZStack {
             GeometryReader { proxy in
-                Image("placeholder", bundle: Bundle.module)
+                Image(uiImage: image)
                     .resizable()
-                    .aspectRatio(.init(width: 1, height: 1), contentMode: .fill)
-                    .frame(width: proxy.size.width, height: proxy.size.height, alignment: .center)
+                    .scaledToFill()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
                     .clipped()
             }
         }
-        .aspectRatio(resolvedRatioSize(), contentMode: .fill)
+        .aspectRatio(resolvedRatioSize(), contentMode: portrait ? .fill : .fit)
     }
     
     private func resolvedRatioSize() -> CGSize {
@@ -32,11 +39,8 @@ public struct Thumbnail: View {
 struct ThumbnailControllerPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Thumbnail(ratio: .r16x10, portrait: true)
-            Thumbnail(ratio: .r1x1, portrait: false)
-            Thumbnail(ratio: .r3x2, portrait: false)
-            Thumbnail(ratio: .r3x2, portrait: false)
-            Thumbnail(ratio: .r3x2, portrait: true)
+            Thumbnail(ratio: .r3x2, portrait: true, image: nil)
+            Thumbnail(ratio: .r1x1, portrait: false, image: nil)
         }
     }
 }
@@ -45,6 +49,7 @@ struct ThumbnailController_Previews: PreviewProvider {
     static var previews: some View {
         ThumbnailControllerPreview()
             .padding()
+            .frame(width: 400)
             .previewLayout(.sizeThatFits)
     }
 }
