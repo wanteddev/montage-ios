@@ -127,13 +127,13 @@ extension ThumbnailView {
         let imageRatio = image.size.height / image.size.width
         
         if portrait {
-            imageRatioContraint = imageView.widthAnchor.constraint(
-                lessThanOrEqualTo: heightAnchor,
+            imageRatioContraint = imageView.heightAnchor.constraint(
+                equalTo: imageView.widthAnchor,
                 multiplier: imageRatio
             )
         } else {
             imageRatioContraint = imageView.heightAnchor.constraint(
-                lessThanOrEqualTo: widthAnchor,
+                equalTo: imageView.widthAnchor,
                 multiplier: imageRatio
             )
         }
