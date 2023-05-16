@@ -125,7 +125,7 @@ extension Control.Checkbox {
 
 extension Control.Checkbox {
     private func resolveCurrentBackgroundColor() -> CGColor? {
-        let opacity: CGFloat = .opacity(disable ? .p060 : .p100)
+        let opacity: CGFloat = .opacity(disable ? .p043 : .p100)
         
         switch state {
         case .unchecked:
@@ -136,7 +136,7 @@ extension Control.Checkbox {
     }
     
     private func resolveCurrentBorderColor() -> CGColor {
-        let opacity: CGFloat = .opacity(disable ? .p060 : .p100)
+        let opacity: CGFloat = .opacity(disable ? .p043 : .p100)
         
         switch state {
         case .unchecked:

@@ -245,7 +245,7 @@ extension Badge.Content {
         case .neutral:
             return varient == .filled ? .component(.fillNormal) : .alias(.lineNormal)
         case .accent(let colorStyle):
-            let opacity: CGFloat = varient == .filled ? .opacity(.p010) : .opacity(.p060)
+            let opacity: CGFloat = varient == .filled ? .opacity(.p008) : .opacity(.p043)
             return colorStyle.resolveAsUIColor().withAlphaComponent(opacity)
         }
     }
