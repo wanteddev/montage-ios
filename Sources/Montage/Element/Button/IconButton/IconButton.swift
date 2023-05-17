@@ -108,7 +108,7 @@ extension Button.IconButton {
         addSubview(iconView)
         addSubview(interaction)
         
-        setupInteractionContraints()
+        setupInteraction()
         setupUpdateableConstraints()
         
         updateViews()
@@ -121,6 +121,12 @@ extension Button.IconButton {
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
         self.longPressRecognizer = longPressRecognizer
+    }
+    
+    private func setupInteraction() {
+        interaction.varient = varient.interactionVarient
+        
+        setupInteractionContraints()
     }
     
     private func setupUpdateableConstraints() {
@@ -193,6 +199,7 @@ extension Button.IconButton {
         layer.borderWidth = varient.borderWidth
         iconView.tintColor = .alias(disable ? varient.inactiveColor : varient.activeColor)
         interaction.color = varient.interactionColor
+        interaction.varient = varient.interactionVarient
     }
     
     private func updateIconView() {
@@ -284,6 +291,10 @@ extension Button.IconButton.Varient {
     
     var interactionColor: Color.Alias {
         return .labelNormal
+    }
+    
+    var interactionVarient: Decorate.Interaction.Varient {
+        return .light
     }
     
     var iconSize: CGSize {

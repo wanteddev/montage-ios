@@ -13,6 +13,10 @@ extension Decorate {
             case normal, hovered, focused, pressed
         }
         
+        public enum Varient {
+            case normal, light, strong
+        }
+        
         var state: State {
             didSet {
                 updateView()
@@ -25,9 +29,16 @@ extension Decorate {
             }
         }
         
-        init(state: State = .normal, color: Color.Alias = .labelNormal) {
+        var varient: Varient {
+            didSet {
+                updateView()
+            }
+        }
+        
+        init(state: State = .normal, color: Color.Alias = .labelNormal, varient: Varient = .normal) {
             self.state = state
             self.color = color
+            self.varient = varient
             
             super.init(frame: .zero)
             
@@ -37,6 +48,7 @@ extension Decorate {
         required init?(coder: NSCoder) {
             self.state = .normal
             self.color = .labelNormal
+            self.varient = .normal
             
             super.init(coder: coder)
             
@@ -48,7 +60,7 @@ extension Decorate {
 extension Decorate.Interaction {
     private func setupView() {
         isUserInteractionEnabled = false
-        alpha = state.alpha
+        alpha = state.alpha * varient.weight
         backgroundColor = .alias(self.color)
     }
     
@@ -58,7 +70,7 @@ extension Decorate.Interaction {
             delay: 0,
             options: [.beginFromCurrentState, .curveEaseInOut]
         ) { [self] in
-            self.alpha = state.alpha
+            self.alpha = state.alpha * varient.weight
             self.backgroundColor = .alias(color)
         }
     }
@@ -75,6 +87,19 @@ extension Decorate.Interaction.State {
             return 0.08
         case .pressed:
             return 0.12
+        }
+    }
+}
+
+extension Decorate.Interaction.Varient {
+    var weight: CGFloat {
+        switch self {
+        case .normal:
+            return 1
+        case .light:
+            return 0.75
+        case .strong:
+            return 1.5
         }
     }
 }
