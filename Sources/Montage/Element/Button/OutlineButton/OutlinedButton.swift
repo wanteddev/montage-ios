@@ -141,7 +141,7 @@ extension Button.OutlinedButton {
         addSubview(interaction)
         
         setupStackView()
-        setupInteractionContraints()
+        setupInteraction()
         setupUpdateableConstraints()
         
         updateViews()
@@ -163,6 +163,12 @@ extension Button.OutlinedButton {
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
+    }
+    
+    private func setupInteraction() {
+        interaction.varient = varient.interactionVarient
+        
+        setupInteractionContraints()
     }
     
     private func setupUpdateableConstraints() {
@@ -243,6 +249,7 @@ extension Button.OutlinedButton {
         leftIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
         rightIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
         interaction.color = varient.interactionColor
+        interaction.varient = varient.interactionVarient
     }
     
     private func updateIconView() {
@@ -327,6 +334,15 @@ extension Button.OutlinedButton.Varient {
             return .primaryNormal
         case .secondary, .assistive:
             return .labelNormal
+        }
+    }
+    
+    var interactionVarient: Decorate.Interaction.Varient {
+        switch self {
+        case .primary:
+            return .normal
+        case .secondary, .assistive:
+            return .light
         }
     }
 }

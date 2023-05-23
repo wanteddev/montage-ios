@@ -137,7 +137,7 @@ extension Button.SolidButton {
         addSubview(interaction)
         
         setupStackView()
-        setupInteractionContraints()
+        setupInteraction()
         setupUpdateableConstraints()
         
         updateViews()
@@ -159,6 +159,12 @@ extension Button.SolidButton {
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
+    }
+    
+    private func setupInteraction() {
+        interaction.varient = .strong
+        
+        setupInteractionContraints()
     }
     
     private func setupUpdateableConstraints() {
