@@ -12,18 +12,18 @@ extension Decorate {
     public enum Opacity {
         case p000
         case p005
-        case p010
-        case p015
-        case p020
-        case p030
-        case p040
-        case p050
-        case p060
-        case p070
-        case p080
-        case p090
-        case p095
-        case p099
+        case p008
+        case p012
+        case p016
+        case p022
+        case p028
+        case p035
+        case p043
+        case p052
+        case p061
+        case p074
+        case p088
+        case p097
         case p100
     }
 }

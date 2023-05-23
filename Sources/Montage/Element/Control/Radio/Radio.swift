@@ -142,7 +142,7 @@ extension Control.Radio {
         }
         
         if disable {
-            imageView.tintColor = imageView.tintColor.withAlphaComponent(.opacity(.p060))
+            imageView.tintColor = imageView.tintColor.withAlphaComponent(.opacity(.p043))
         }
     }
     
