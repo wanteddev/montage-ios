@@ -53,6 +53,7 @@ extension Chip {
             uiView.text = text
             uiView.state = state
             uiView.disable = disable
+            uiView.handler = handler
         }
     }
 }
