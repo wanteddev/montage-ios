@@ -42,6 +42,7 @@ public extension NSAttributedString {
                 style.alignment = .left
                 style.minimumLineHeight = lineHeight
                 style.lineBreakMode = lineBreakMode
+                style.lineBreakStrategy = .hangulWordPriority
                 return style
             }()
         ])
