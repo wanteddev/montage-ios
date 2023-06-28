@@ -391,7 +391,7 @@ public enum Color {
             case .labelAssistive:
                 globalType = style == .dark ? .globalNeutral30 : .globalNeutral90
             case .labelDisable:
-                globalType = style == .dark ? .globalNeutral20 : .globalNeutral95
+                globalType = style == .dark ? .globalNeutral22 : .globalNeutral95
             case .backgroundNormal:
                 globalType = style == .dark ? .globalCoolNeutral15 : .globalCommon100
             case .backgroundNormalAlternative:
