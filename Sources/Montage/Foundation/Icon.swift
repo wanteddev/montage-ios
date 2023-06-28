@@ -126,5 +126,16 @@ public enum Icon: String, CaseIterable {
     // added on v0.3
     case compass
     
+    // added on v0.6
+    case add
+    case bellTemp
+    case bubbleTemp
+    case heartFillTemp
+    case heartTemp
+    case keyboard
+    case moreVerticalTight
+    case shareTemp
+    case viewCheck
+    
     public var name: String { rawValue }
 }
