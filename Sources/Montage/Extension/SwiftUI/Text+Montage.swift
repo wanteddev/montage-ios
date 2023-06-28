@@ -13,11 +13,9 @@ public extension Text {
         size: Typography.Size = .small,
         weight: Typography.Weight = .regular,
         color: Color.Alias = .labelNormal
-    ) -> some View {
+    ) -> Text {
         font(.montage(varient: varient, weight: weight, size: size))
-            .foregroundColor(.alias(color))
             .tracking(Typography.getTracking(varient: varient, size: size))
-            .lineSpacing(varient.lineSpacing)
-            .padding(.vertical, varient.padding)
+            .foregroundColor(.alias(color))
     }
 }

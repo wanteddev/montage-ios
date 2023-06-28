@@ -31,6 +31,7 @@ public enum Typography {
         case body2
         case body2Reading
         case label1
+        case label1Reading
         case label2
         case caption1
         case caption2
@@ -118,6 +119,8 @@ public extension Typography {
             return 15
         case .label1:
             return 14
+        case .label1Reading:
+            return 14
         case .label2:
             return 13
         case .caption1:
@@ -152,6 +155,8 @@ public extension Typography {
             letterSpacingEm = 0.0096
         case .label1:
             letterSpacingEm = 0.0145
+        case .label1Reading:
+            letterSpacingEm = 0.0145
         case .label2:
             letterSpacingEm = 0.0194
         case .caption1:
@@ -185,6 +190,8 @@ public extension Typography {
             return 24
         case .label1:
             return 20
+        case .label1Reading:
+            return 22
         case .label2:
             return 18
         case .caption1:
@@ -218,6 +225,8 @@ public extension Typography.Variant {
             return 6
         case .label1:
             return 3.3333
+        case .label1Reading:
+            return 5.3333
         case .label2:
             return 3.3333
         case .caption1:
