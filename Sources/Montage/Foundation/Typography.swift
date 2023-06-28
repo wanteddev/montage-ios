@@ -226,7 +226,7 @@ public extension Typography.Variant {
         case .label1:
             return 3.3333
         case .label1Reading:
-            return 5
+            return 5.3333
         case .label2:
             return 3.3333
         case .caption1:
