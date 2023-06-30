@@ -30,6 +30,7 @@ public enum Color {
         case globalNeutral50
         case globalNeutral40
         case globalNeutral30
+        case globalNeutral22
         case globalNeutral20
         case globalNeutral15
         case globalNeutral10
@@ -40,6 +41,7 @@ public enum Color {
         case globalCoolNeutral100
         case globalCoolNeutral99
         case globalCoolNeutral98
+        case globalCoolNeutral97
         case globalCoolNeutral96
         case globalCoolNeutral95
         case globalCoolNeutral90
@@ -50,6 +52,7 @@ public enum Color {
         case globalCoolNeutral40
         case globalCoolNeutral30
         case globalCoolNeutral25
+        case globalCoolNeutral23
         case globalCoolNeutral22
         case globalCoolNeutral20
         case globalCoolNeutral17
@@ -296,6 +299,11 @@ public enum Color {
         case lineNormal
         
         ///
+        /// Figma상의 `.color-alias-line-neutral` 토큰과 대응되는 값입니다.
+        ///
+        case lineNeutral
+        
+        ///
         /// Figma상의 `.color-alias-line-alternative` 토큰과 대응되는 값입니다.
         ///
         case lineAlternative
@@ -383,7 +391,7 @@ public enum Color {
             case .labelAssistive:
                 globalType = style == .dark ? .globalNeutral30 : .globalNeutral90
             case .labelDisable:
-                globalType = style == .dark ? .globalNeutral20 : .globalNeutral95
+                globalType = style == .dark ? .globalNeutral22 : .globalNeutral95
             case .backgroundNormal:
                 globalType = style == .dark ? .globalCoolNeutral15 : .globalCommon100
             case .backgroundNormalAlternative:
@@ -398,6 +406,8 @@ public enum Color {
                 globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
             case .lineNormal:
                 globalType = style == .dark ? .globalCoolNeutral25 : .globalCoolNeutral96
+            case .lineNeutral:
+                globalType = style == .dark ? .globalCoolNeutral23 : .globalCoolNeutral97
             case .lineAlternative:
                 globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
             case .statusPositive:
