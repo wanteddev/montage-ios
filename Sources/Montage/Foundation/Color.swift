@@ -368,6 +368,7 @@ public enum Color {
         func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             let style = traitCollection.userInterfaceStyle
             let globalType: Color.Global
+            let opacity: Decorate.Opacity
             
             switch self {
             case .staticWhite:
@@ -389,9 +390,9 @@ public enum Color {
             case .labelAlternative:
                 globalType = style == .dark ? .globalNeutral50 : .globalNeutral60
             case .labelAssistive:
-                globalType = style == .dark ? .globalNeutral30 : .globalNeutral90
+                globalType = style == .dark ? .globalNeutral80 : .globalNeutral20
             case .labelDisable:
-                globalType = style == .dark ? .globalNeutral22 : .globalNeutral95
+                globalType = style == .dark ? .globalNeutral70 : .globalNeutral22
             case .backgroundNormal:
                 globalType = style == .dark ? .globalCoolNeutral15 : .globalCommon100
             case .backgroundNormalAlternative:
@@ -434,7 +435,16 @@ public enum Color {
                 globalType = style == .dark ? .globalNeutral10 : .globalNeutral99
             }
             
-            return .load(name: globalType.name)
+            switch self {
+            case .labelAssistive:
+                opacity = .p028
+            case .labelDisable:
+                opacity = .p016
+            default:
+                opacity = .p100
+            }
+            
+            return .load(name: globalType.name).withAlphaComponent(.opacity(opacity))
         }
     }
     
