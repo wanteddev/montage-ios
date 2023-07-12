@@ -264,7 +264,7 @@ extension Chip.Action {
         .montage(
             text,
             varient: size.typoVarient,
-            weight: .bold,
+            weight: .medium,
             color: resolveCurrentTextColor()
         )
     }
