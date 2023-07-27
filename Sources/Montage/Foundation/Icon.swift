@@ -47,6 +47,10 @@ public enum Icon: String, CaseIterable {
     case chevronRightThick
     case chevronRightTight
     case chevronRightTightThick
+    case chevronRightSmall
+    case chevronRightThickSmall
+    case chevronRightTightSmall
+    case chevronRightTightThickSmall
     case chevronUp
     case chevronUpThick
     case circleCheck
