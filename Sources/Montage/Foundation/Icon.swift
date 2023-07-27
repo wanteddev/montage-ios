@@ -33,8 +33,8 @@ public enum Icon: String, CaseIterable {
     case chevronDownTightThick
     case chevronDownSmall
     case chevronDownThickSmall
-    case chevronDownThightSmall
-    case chevronDownThightThickSmall
+    case chevronDownTightSmall
+    case chevronDownTightThickSmall
     case chevronLeft
     case chevronLeftThick
     case chevronLeftTight
@@ -53,12 +53,12 @@ public enum Icon: String, CaseIterable {
     case chevronRightTightThickSmall
     case chevronUp
     case chevronUpThick
-    case chevronUpThight
-    case chevronUpThightThick
+    case chevronUpTight
+    case chevronUpTightThick
     case chevronUpSmall
     case chevronUpThickSmall
-    case chevronUpThightSmall
-    case chevronUpThightThickSmall
+    case chevronUpTightSmall
+    case chevronUpTightThickSmall
     case circleCheck
     case circleClose
     case circleExclamation
