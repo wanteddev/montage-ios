@@ -29,6 +29,12 @@ public enum Icon: String, CaseIterable {
     case checkThick
     case chevronDown
     case chevronDownThick
+    case chevronDownTight
+    case chevronDownTightThick
+    case chevronDownSmall
+    case chevronDownThickSmall
+    case chevronDownThightSmall
+    case chevronDownThightThickSmall
     case chevronLeft
     case chevronLeftThick
     case chevronLeftTight
