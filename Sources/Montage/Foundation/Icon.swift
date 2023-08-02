@@ -29,16 +29,36 @@ public enum Icon: String, CaseIterable {
     case checkThick
     case chevronDown
     case chevronDownThick
+    case chevronDownTight
+    case chevronDownTightThick
+    case chevronDownSmall
+    case chevronDownThickSmall
+    case chevronDownTightSmall
+    case chevronDownTightThickSmall
     case chevronLeft
     case chevronLeftThick
     case chevronLeftTight
     case chevronLeftTightThick
+    case chevronLeftSmall
+    case chevronLeftThickSmall
+    case chevronLeftTightSmall
+    case chevronLeftTightThickSmall
     case chevronRight
     case chevronRightThick
     case chevronRightTight
     case chevronRightTightThick
+    case chevronRightSmall
+    case chevronRightThickSmall
+    case chevronRightTightSmall
+    case chevronRightTightThickSmall
     case chevronUp
     case chevronUpThick
+    case chevronUpTight
+    case chevronUpTightThick
+    case chevronUpSmall
+    case chevronUpThickSmall
+    case chevronUpTightSmall
+    case chevronUpTightThickSmall
     case circleCheck
     case circleClose
     case circleExclamation
