@@ -19,11 +19,18 @@ extension Button {
     /// 텍스트 및 아이콘으로 이루어진 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class TextButton: UIView {
-        private enum Const {
-            static var defaultActiveColor: Color.Alias = .primaryNormal
-            static var defaultInactiveColor: Color.Alias = .labelDisable
-            static var defaultInteractionColor: Color.Alias = .primaryNormal
-            static var defaultInteractionRadius: CGFloat = 5.0
+        
+        /// 버튼의 외관을 결정하는 열거형입니다.
+        public enum Varient {
+            case primary
+            case assistive
+        }
+        
+        /// 버튼의 외관입니다.
+        public var varient: Varient = .primary {
+            didSet {
+                updateViews()
+            }
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
@@ -223,7 +230,7 @@ extension Button.TextButton {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = Const.defaultInteractionRadius
+        layer.cornerRadius = varient.interactionRadius
         layer.masksToBounds = true
     }
 }
@@ -240,9 +247,9 @@ extension Button.TextButton {
     }
     
     private func updateColor() {
-        interaction.color = Const.defaultInteractionColor
-        leftIconView.tintColor = .alias(disable ? Const.defaultInactiveColor : Const.defaultActiveColor)
-        rightIconView.tintColor = .alias(disable ? Const.defaultInactiveColor : Const.defaultActiveColor)
+        interaction.color = varient.interactionColor
+        leftIconView.tintColor = .alias(disable ? varient.inactiveColor : varient.activeColor)
+        rightIconView.tintColor = .alias(disable ? varient.inactiveColor : varient.activeColor)
     }
     
     private func updateIconView() {
@@ -270,7 +277,7 @@ extension Button.TextButton {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: disable ? Const.defaultInactiveColor : Const.defaultActiveColor
+            color: disable ? varient.inactiveColor : varient.activeColor
         )
     }
 }
@@ -302,6 +309,30 @@ extension Button.TextButton: UIGestureRecognizerDelegate {
     }
 }
 
+extension Button.TextButton.Varient {
+    var activeColor: Color.Alias {
+        switch self {
+        case .primary: return .primaryNormal
+        case .assistive: return .labelAssistive
+        }
+    }
+    
+    var inactiveColor: Color.Alias {
+        .labelDisable
+    }
+    
+    var interactionColor: Color.Alias {
+        switch self {
+        case .primary: return .primaryNormal
+        case .assistive: return .labelAssistive
+        }
+    }
+    
+    var interactionRadius: CGFloat {
+        5.0
+    }
+}
+
 extension Button.TextButton.Size {
     var iconSize: CGSize {
         switch self {
@@ -330,4 +361,3 @@ extension Button.TextButton.Size {
         }
     }
 }
-

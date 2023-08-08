@@ -11,6 +11,7 @@ import Pretendard
 
 extension Button {
     public struct TextButtonController: UIViewRepresentable {
+        public var varient: TextButton.Varient = .primary
         public var size: TextButton.Size = .medium
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -21,6 +22,7 @@ extension Button {
         public typealias UIViewType = TextButton
         
         public init(
+            varient: TextButton.Varient = .primary,
             size: TextButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -28,6 +30,7 @@ extension Button {
             disable: Bool = false,
             handler: (() -> Void)? = nil
         ) {
+            self.varient = varient
             self.size = size
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
@@ -64,6 +67,17 @@ struct TextButtonControllerPreview: View {
                     size: .small,
                     text: "안녕하세요"
                 ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
+                    size: .small,
+                    text: "안녕하세요"
+                ).fixedSize()
             }
             
             Text("Icon").montage(varient: .heading2)
@@ -84,6 +98,25 @@ struct TextButtonControllerPreview: View {
                     rightIcon: .circleClose,
                     text: "안녕하세요"
                 ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
+                    leftIcon: .bubbleFill,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
+                    rightIcon: .circleClose,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
+                    leftIcon: .bubbleFill,
+                    rightIcon: .circleClose,
+                    text: "안녕하세요"
+                ).fixedSize()
             }
             
             Text("State").montage(varient: .heading2)
@@ -95,6 +128,18 @@ struct TextButtonControllerPreview: View {
                 ).fixedSize()
                 
                 Button.TextButtonController(
+                    text: "안녕하세요",
+                    disable: true
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
+                    text: "안녕하세요",
+                    disable: false
+                ).fixedSize()
+                
+                Button.TextButtonController(
+                    varient: .assistive,
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
