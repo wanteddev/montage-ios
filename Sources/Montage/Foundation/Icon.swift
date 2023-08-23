@@ -157,6 +157,7 @@ public enum Icon: String, CaseIterable {
     case shareTemp
     case viewCheck
     case change
+    case pencilFill
     
     public var name: String { rawValue }
 }
