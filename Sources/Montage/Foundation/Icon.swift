@@ -146,7 +146,7 @@ public enum Icon: String, CaseIterable {
     // added on v0.3
     case compass
     
-    // added on v0.6
+    // added on v0.6.x
     case add
     case bellTemp
     case bubbleTemp
@@ -156,6 +156,7 @@ public enum Icon: String, CaseIterable {
     case moreVerticalTight
     case shareTemp
     case viewCheck
+    case change
     
     public var name: String { rawValue }
 }
