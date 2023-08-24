@@ -44,6 +44,8 @@ extension Button {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
+            uiView.varient = varient
+            uiView.size = size
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon
             uiView.text = text
