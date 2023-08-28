@@ -24,11 +24,23 @@ extension Button {
             case large, medium, small
         }
         
+        /// 버튼 모서리의 곡률 스타일을 결정하는 열거형입니다.
+        public enum CornerStyle {
+            case legacy, `default`
+        }
+        
         /// 버튼의 사이즈입니다.
         /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
         public var size: Size = .large {
             didSet {
                 setupUpdateableConstraints()
+                updateViews()
+            }
+        }
+        
+        /// 버튼의 모서리 곡률을 결정하는 스타일입니다.
+        public var cornerStyle: CornerStyle = .default {
+            didSet {
                 updateViews()
             }
         }
@@ -222,7 +234,7 @@ extension Button.SolidButton {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = frame.height / 2
+        layer.cornerRadius = cornerStyle == .legacy ? frame.height / 2 : size.cornerRadius
         layer.masksToBounds = true
     }
 }
@@ -344,6 +356,15 @@ extension Button.SolidButton.Size {
             return 5.0
         case .small:
             return 4.0
+        }
+    }
+    
+    var cornerRadius: CGFloat {
+        switch self {
+        case .large, .medium:
+            return 10.0
+        case .small:
+            return 6.0
         }
     }
 }
