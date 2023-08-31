@@ -313,7 +313,7 @@ extension Button.TextButton.Varient {
     var activeColor: Color.Alias {
         switch self {
         case .primary: return .primaryNormal
-        case .assistive: return .labelAssistive
+        case .assistive: return .labelAlternative
         }
     }
     
@@ -324,7 +324,7 @@ extension Button.TextButton.Varient {
     var interactionColor: Color.Alias {
         switch self {
         case .primary: return .primaryNormal
-        case .assistive: return .labelAssistive
+        case .assistive: return .labelNormal
         }
     }
     
