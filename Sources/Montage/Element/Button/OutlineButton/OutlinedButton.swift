@@ -406,8 +406,10 @@ extension Button.OutlinedButton.Size {
     
     var cornerRadius: CGFloat {
         switch self {
-        case .large, .medium:
+        case .large:
             return 10.0
+        case .medium:
+            return 8.0
         case .small:
             return 6.0
         }
