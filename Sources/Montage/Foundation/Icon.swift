@@ -9,11 +9,19 @@ import Foundation
 
 /// Montage 번들 내에 포함된 아이콘들의 이름들입니다.
 public enum Icon: String, CaseIterable {
+    case add
     case apps
+    case arrowDown
+    case arrowLeft
+    case arrowRight
     case arrowUp
     case bell
+    case bellFill
     case bellPlus
+    case blank
     case block
+    case book
+    case bookFill
     case bookmark
     case bookmarkFill
     case bubble
@@ -25,53 +33,59 @@ public enum Icon: String, CaseIterable {
     case cameraFill
     case caretDown
     case caretUp
+    case change
     case check
     case checkThick
     case chevronDown
-    case chevronDownThick
-    case chevronDownTight
-    case chevronDownTightThick
     case chevronDownSmall
+    case chevronDownThick
     case chevronDownThickSmall
-    case chevronDownTightSmall
-    case chevronDownTightThickSmall
     case chevronLeft
-    case chevronLeftThick
-    case chevronLeftTight
-    case chevronLeftTightThick
     case chevronLeftSmall
+    case chevronLeftThick
     case chevronLeftThickSmall
+    case chevronLeftTight
     case chevronLeftTightSmall
+    case chevronLeftTightThick
     case chevronLeftTightThickSmall
     case chevronRight
-    case chevronRightThick
-    case chevronRightTight
-    case chevronRightTightThick
     case chevronRightSmall
+    case chevronRightThick
     case chevronRightThickSmall
+    case chevronRightTight
     case chevronRightTightSmall
+    case chevronRightTightThick
     case chevronRightTightThickSmall
     case chevronUp
-    case chevronUpThick
-    case chevronUpTight
-    case chevronUpTightThick
     case chevronUpSmall
+    case chevronUpThick
     case chevronUpThickSmall
-    case chevronUpTightSmall
-    case chevronUpTightThickSmall
+    case circle
     case circleCheck
+    case circleCheckFill
     case circleClose
     case circleExclamation
+    case circleExclamationFill
+    case circleFill
     case circleInfo
+    case circleInfoFill
     case circlePlus
+    case circlePlusFill
+    case circlePoint
     case circleQuestion
+    case circleQuestionFill
     case close
     case closeThick
+    case coins
+    case coinsFill
     case company
+    case compass
+    case compassFill
     case copy
     case document
     case documentPerson
     case documentPersonFill
+    case dot
     case download
     case exclamation
     case externalLink
@@ -88,27 +102,52 @@ public enum Icon: String, CaseIterable {
     case home
     case homeFill
     case image
+    case keyboard
     case like
     case likeFill
+    case lineHorizontal
+    case lineHorizontalThick
     case link
+    case list
+    case listCategory
     case location
+    case locationFill
     case lock
+    case lockFill
     case lockOpen
+    case lockOpenFill
+    case logoApple
+    case logoFacebook
+    case logoGooglePlay
+    case logoInstagram
+    case logoLinkedIn
+    case logoNaverBlog
+    case logoYoutube
     case mail
     case menu
     case menuStar
+    case menuThick
     case message
     case messageFill
-    case messageText
-    case messageTextFill
     case moreHorizontal
     case moreVertical
+    case moreVerticalTight
+    case navigationCareer
+    case navigationMenu
+    case navigationMypage
+    case navigationRecruit
+    case navigationSocial
     case pause
     case pencil
+    case pencilFill
     case person
     case personFill
     case personPlus
+    case personPlusFill
+    case persons
+    case personsFill
     case pin
+    case pinFill
     case play
     case plus
     case plusThick
@@ -120,44 +159,32 @@ public enum Icon: String, CaseIterable {
     case sendFill
     case setting
     case share
-    case squareHangul
+    case shareIos
     case squareHan
+    case squareHangul
     case squareKana
     case squareLatin
     case squareMore
     case star
     case starFill
+    case template
+    case templateFill
+    case thumbnail
     case thunder
     case thunderFill
     case trash
     case triangleExclamation
+    case triangleExclamationFill
     case tune
     case upload
     case verifiedCheck
     case verifiedCheckFill
     case verifiedStar
     case verifiedStarFill
-    
-    // added on v0.1.2
-    case dot
-    case lineHorizontalThick
-    case lineHorizontal
-    
-    // added on v0.3
-    case compass
-    
-    // added on v0.6.x
-    case add
-    case bellTemp
-    case bubbleTemp
-    case heartFillTemp
-    case heartTemp
-    case keyboard
-    case moreVerticalTight
-    case shareTemp
-    case viewCheck
-    case change
-    case pencilFill
+    case view
+    case viewFill
+    case viewSlash
+    case viewSlashFill
     
     public var name: String { rawValue }
 }
