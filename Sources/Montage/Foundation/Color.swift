@@ -199,6 +199,21 @@ public enum Color {
         case globalPink10
         case globalPink0
         
+        // Red Orange
+        case globalRedOrange100
+        case globalRedOrange99
+        case globalRedOrange95
+        case globalRedOrange90
+        case globalRedOrange80
+        case globalRedOrange70
+        case globalRedOrange60
+        case globalRedOrange50
+        case globalRedOrange40
+        case globalRedOrange30
+        case globalRedOrange20
+        case globalRedOrange10
+        case globalRedOrange0
+        
         public var name: String { rawValue }
     }
     

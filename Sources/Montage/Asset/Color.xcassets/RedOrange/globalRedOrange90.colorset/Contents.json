@@ -1,0 +1,17 @@
+{
+  "colors": [
+    {
+      "color": {
+        "alpha": 1.0,
+        "red": "0xFE",
+        "green": "0xDB",
+        "blue": "0xC6"
+      },
+      "idiom": "universal"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
