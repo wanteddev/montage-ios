@@ -451,10 +451,20 @@ public enum Color {
             }
             
             switch self {
+            case .labelNeutral:
+                opacity = .p088
+            case .labelAlternative:
+                opacity = .p061
             case .labelAssistive:
                 opacity = .p028
             case .labelDisable:
                 opacity = .p016
+            case .lineNormal:
+                opacity = style == .dark ? .p032 : .p022
+            case .lineNeutral:
+                opacity = style == .dark ? .p028 : .p016
+            case .lineAlternative:
+                opacity = style == .dark ? .p022 : .p008
             default:
                 opacity = .p100
             }
