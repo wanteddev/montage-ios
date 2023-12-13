@@ -66,7 +66,7 @@ fileprivate struct Preview: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Varient").montage(varient: .heading2)
+            Text("Varient").montage(varient: .headline2)
 
             HStack {
                 Badge.ContentBadgeController(
@@ -78,7 +78,7 @@ fileprivate struct Preview: View {
                 ).fixedSize()
             }
 
-            Text("Size").montage(varient: .heading2)
+            Text("Size").montage(varient: .headline2)
 
             HStack {
                 Badge.ContentBadgeController(
@@ -98,7 +98,7 @@ fileprivate struct Preview: View {
                 ).fixedSize()
             }
     
-            Text("Accents").montage(varient: .heading2)
+            Text("Accents").montage(varient: .headline2)
     
             Text("Filled").montage(varient: .body2)
     

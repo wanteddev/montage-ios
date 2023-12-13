@@ -61,7 +61,7 @@ extension Chip {
 var actionChipControllerPreview: some View {
     VStack(alignment: .leading, spacing: .spacing(.pt20)) {
         VStack(alignment: .leading) {
-            Text("Varient").montage(varient: .heading2)
+            Text("Varient").montage(varient: .headline2)
             HStack {
                 Chip.ActionChipController(
                     varient: .filled,
@@ -76,7 +76,7 @@ var actionChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("State").montage(varient: .heading2)
+            Text("State").montage(varient: .headline2)
             HStack {
                 Chip.ActionChipController(
                     varient: .filled,
@@ -106,7 +106,7 @@ var actionChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("Size").montage(varient: .heading2)
+            Text("Size").montage(varient: .headline2)
             HStack(alignment: .center) {
                 Chip.ActionChipController(
                     varient: .filled,

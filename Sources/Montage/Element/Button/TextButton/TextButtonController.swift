@@ -58,7 +58,7 @@ extension Button {
 struct TextButtonControllerPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Size").montage(varient: .heading2)
+            Text("Size").montage(varient: .headline2)
             
             HStack {
                 Button.TextButtonController(
@@ -82,7 +82,7 @@ struct TextButtonControllerPreview: View {
                 ).fixedSize()
             }
             
-            Text("Icon").montage(varient: .heading2)
+            Text("Icon").montage(varient: .headline2)
             
             HStack {
                 Button.TextButtonController(
@@ -121,7 +121,7 @@ struct TextButtonControllerPreview: View {
                 ).fixedSize()
             }
             
-            Text("State").montage(varient: .heading2)
+            Text("State").montage(varient: .headline2)
             
             HStack {
                 Button.TextButtonController(
