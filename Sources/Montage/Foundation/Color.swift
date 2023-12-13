@@ -417,17 +417,17 @@ public enum Color {
             case .primaryHeavy:
                 globalType = style == .dark ? .globalBlue50 : .globalBlue40
             case .labelNormal:
-                globalType = style == .dark ? .globalNeutral99 : .globalNeutral10
+                globalType = style == .dark ? .globalCoolNeutral99 : .globalCoolNeutral10
             case .labelStrong:
                 globalType = style == .dark ? .globalCommon100 : .globalCommon0
             case .labelNeutral:
-                globalType = style == .dark ? .globalNeutral80 : .globalNeutral30
+                globalType = style == .dark ? .globalCoolNeutral90 : .globalCoolNeutral22
             case .labelAlternative:
-                globalType = style == .dark ? .globalNeutral50 : .globalNeutral60
+                globalType = style == .dark ? .globalCoolNeutral80 : .globalCoolNeutral25
             case .labelAssistive:
-                globalType = style == .dark ? .globalNeutral80 : .globalNeutral20
+                globalType = style == .dark ? .globalCoolNeutral80 : .globalCoolNeutral25
             case .labelDisable:
-                globalType = style == .dark ? .globalNeutral70 : .globalNeutral22
+                globalType = style == .dark ? .globalCoolNeutral70 : .globalCoolNeutral25
             case .backgroundNormal:
                 globalType = style == .dark ? .globalCoolNeutral15 : .globalCommon100
             case .backgroundNormalAlternative:
@@ -440,11 +440,13 @@ public enum Color {
                 globalType = style == .dark ? .globalCoolNeutral40 : .globalCoolNeutral70
             case .interactionDisable:
                 globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
-            case .lineNormal, .lineSolidNormal:
+            case .lineNormal, .lineNeutral, .lineAlternative:
+                globalType = .globalCoolNeutral50
+            case .lineSolidNormal:
                 globalType = style == .dark ? .globalCoolNeutral25 : .globalCoolNeutral96
-            case .lineNeutral, .lineSolidNeutral:
+            case .lineSolidNeutral:
                 globalType = style == .dark ? .globalCoolNeutral23 : .globalCoolNeutral97
-            case .lineAlternative, .lineSolidAlternative:
+            case .lineSolidAlternative:
                 globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
             case .statusPositive:
                 globalType = style == .dark ? .globalGreen60 : .globalGreen50
