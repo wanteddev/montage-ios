@@ -228,9 +228,9 @@ public extension Typography.Variant {
     var lineSpacing: CGFloat {
         switch self {
         case .display1:
-            return 0
+            return 5
         case .display2:
-            return 0
+            return 4.6667
         case .title1:
             return 5
         case .title2:

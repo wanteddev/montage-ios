@@ -14,11 +14,10 @@ public extension Font {
     
     static func montage(
         varient: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        size: Typography.Size = .small
+        weight: Typography.Weight = .regular
     ) -> Font? {
         let sementicWeight = Typography.getSementicWeight(varient: varient, weight: weight)
-        let sementicSize = Typography.getSementicSize(varient: varient, size: size)
+        let sementicSize = Typography.getSementicSize(varient: varient)
         return .custom(sementicWeight.fontName, size: sementicSize)
     }
 }

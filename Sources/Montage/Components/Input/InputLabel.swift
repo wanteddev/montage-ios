@@ -89,7 +89,7 @@ public class InputLabel: UIView {
 
 extension InputLabel {
     private func setupViews() {
-        let lineHeight = Typography.getLineHeight(varient: Const.textVarient, size: .small)
+        let lineHeight = Typography.getLineHeight(varient: Const.textVarient)
         let textTopInset = (lineHeight - Const.inputSize.height) / 2
         let elementSpacing: CGFloat
         
