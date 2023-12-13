@@ -199,6 +199,21 @@ public enum Color {
         case globalPink10
         case globalPink0
         
+        // Red Orange
+        case globalRedOrange100
+        case globalRedOrange99
+        case globalRedOrange95
+        case globalRedOrange90
+        case globalRedOrange80
+        case globalRedOrange70
+        case globalRedOrange60
+        case globalRedOrange50
+        case globalRedOrange40
+        case globalRedOrange30
+        case globalRedOrange20
+        case globalRedOrange10
+        case globalRedOrange0
+        
         public var name: String { rawValue }
     }
     
@@ -309,6 +324,21 @@ public enum Color {
         case lineAlternative
         
         ///
+        /// Figma상의 `.color-alias-line-solid-normal` 토큰과 대응되는 값입니다.
+        ///
+        case lineSolidNormal
+        
+        ///
+        /// Figma상의 `.color-alias-line-solid-neutral` 토큰과 대응되는 값입니다.
+        ///
+        case lineSolidNeutral
+        
+        ///
+        /// Figma상의 `.color-alias-line-solid-alternative` 토큰과 대응되는 값입니다.
+        ///
+        case lineSolidAlternative
+        
+        ///
         /// Figma상의 `.color-alias-status-positive` 토큰과 대응되는 값입니다.
         ///
         case statusPositive
@@ -342,6 +372,11 @@ public enum Color {
         /// Figma상의 `.color-alias-accent-violet` 토큰과 대응되는 값입니다.
         ///
         case accentViolet
+        
+        ///
+        /// Figma상의 `.color-alias-accent-redOrange` 토큰과 대응되는 값입니다.
+        ///
+        case accentRedOrange
 
         ///
         /// Figma상의 `.color-alias-accent-pink` 토큰과 대응되는 값입니다.
@@ -405,11 +440,11 @@ public enum Color {
                 globalType = style == .dark ? .globalCoolNeutral40 : .globalCoolNeutral70
             case .interactionDisable:
                 globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
-            case .lineNormal:
+            case .lineNormal, .lineSolidNormal:
                 globalType = style == .dark ? .globalCoolNeutral25 : .globalCoolNeutral96
-            case .lineNeutral:
+            case .lineNeutral, .lineSolidNeutral:
                 globalType = style == .dark ? .globalCoolNeutral23 : .globalCoolNeutral97
-            case .lineAlternative:
+            case .lineAlternative, .lineSolidAlternative:
                 globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
             case .statusPositive:
                 globalType = style == .dark ? .globalGreen60 : .globalGreen50
@@ -427,6 +462,8 @@ public enum Color {
                 globalType = style == .dark ? .globalViolet60 : .globalViolet50
             case .accentPink:
                 globalType = style == .dark ? .globalPink60 : .globalPink50
+            case .accentRedOrange:
+                globalType = style == .dark ? .globalRedOrange60 : .globalRedOrange50
             case .inversePrimary:
                 globalType = style == .dark ? .globalBlue50 : .globalBlue60
             case .inverseBackground:
@@ -436,10 +473,20 @@ public enum Color {
             }
             
             switch self {
+            case .labelNeutral:
+                opacity = .p088
+            case .labelAlternative:
+                opacity = .p061
             case .labelAssistive:
                 opacity = .p028
             case .labelDisable:
                 opacity = .p016
+            case .lineNormal:
+                opacity = style == .dark ? .p032 : .p022
+            case .lineNeutral:
+                opacity = style == .dark ? .p028 : .p016
+            case .lineAlternative:
+                opacity = style == .dark ? .p022 : .p008
             default:
                 opacity = .p100
             }

@@ -17,6 +17,7 @@ extension Decorate {
         case p016
         case p022
         case p028
+        case p032
         case p035
         case p043
         case p052

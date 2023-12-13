@@ -12,7 +12,7 @@ struct Button_Previews: PreviewProvider {
         HStack {
             VStack(alignment: .leading, spacing: .spacing(.pt20)) {
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Icon Button").montage(varient: .heading1, weight: .bold)
+                    Text("Icon Button").montage(varient: .heading2, weight: .bold)
                     
                     IconButtonControllerPreview()
                 }
@@ -20,7 +20,7 @@ struct Button_Previews: PreviewProvider {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Solid Button").montage(varient: .heading1, weight: .bold)
+                    Text("Solid Button").montage(varient: .heading2, weight: .bold)
                     
                     SolidButtonControllerPreview()
                 }
@@ -28,7 +28,7 @@ struct Button_Previews: PreviewProvider {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Outlined Button").montage(varient: .heading1, weight: .bold)
+                    Text("Outlined Button").montage(varient: .heading2, weight: .bold)
                     
                     OutlinedButtonControllerPreview()
                 }
@@ -36,7 +36,7 @@ struct Button_Previews: PreviewProvider {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Text Button").montage(varient: .heading1, weight: .bold)
+                    Text("Text Button").montage(varient: .heading2, weight: .bold)
                     
                     TextButtonControllerPreview()
                 }

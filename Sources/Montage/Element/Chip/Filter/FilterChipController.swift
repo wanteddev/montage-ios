@@ -57,7 +57,7 @@ extension Chip {
 var filterChipControllerPreview: some View {
     VStack(alignment: .leading, spacing: .spacing(.pt20)) {
         VStack(alignment: .leading) {
-            Text("Varient").montage(varient: .heading2)
+            Text("Varient").montage(varient: .headline2)
             HStack {
                 Chip.FilterChipController(
                     varient: .normal,
@@ -72,7 +72,7 @@ var filterChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("State").montage(varient: .heading2)
+            Text("State").montage(varient: .headline2)
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     varient: .normal,
@@ -97,7 +97,7 @@ var filterChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("Size").montage(varient: .heading2)
+            Text("Size").montage(varient: .headline2)
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     varient: .normal,

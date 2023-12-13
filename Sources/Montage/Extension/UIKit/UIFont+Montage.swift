@@ -15,12 +15,11 @@ public extension UIFont {
     
     static func montage(
         varient: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        size: Typography.Size = .small
+        weight: Typography.Weight = .regular
     ) -> UIFont {
         let sementicWeight = Typography.getSementicWeight(varient: varient, weight: weight)
         let failbackWeight = Typography.getFailbackWeight(varient: varient, weight: weight)
-        let sementicSize = Typography.getSementicSize(varient: varient, size: size)
+        let sementicSize = Typography.getSementicSize(varient: varient)
         return UIFont(name: sementicWeight.fontName, size: sementicSize) ??
             .systemFont(ofSize: sementicSize, weight: failbackWeight)
     }

@@ -21,11 +21,15 @@ public enum Typography {
     /// 타이포의 용도를 정의하는 파라미터입니다.
     /// 기본값은 .body1을 사용하고 있습니다.
     public enum Variant: CaseIterable {
-        case display
+        case display1
+        case display2
         case title1
         case title2
+        case title3
         case heading1
         case heading2
+        case headline1
+        case headline2
         case body1
         case body1Reading
         case body2
@@ -35,12 +39,6 @@ public enum Typography {
         case label2
         case caption1
         case caption2
-    }
-    
-    /// 타이포의 크기를 정의하는 파라미터입니다.
-    /// 모바일 환경에서는 `.small`이 기본값이며, 특별한 언급이 없는 한 `.large`를 사용하지 않습니다.
-    public enum Size: CaseIterable {
-        case small, large
     }
 }
 
@@ -81,7 +79,7 @@ public extension Typography.Weight {
 public extension Typography {
     static func getSementicWeight(varient: Variant, weight: Weight) -> Pretendard.Weight {
         switch (varient, weight) {
-        case (.display, .bold), (.title1, .bold), (.title2, .bold):
+        case (.title1, .bold), (.title2, .bold), (.title3, .bold):
             return .bold
         default:
             return weight.pretendardWeight
@@ -90,25 +88,33 @@ public extension Typography {
     
     static func getFailbackWeight(varient: Variant, weight: Weight) -> UIFont.Weight {
         switch (varient, weight) {
-        case (.display, .bold), (.title1, .bold), (.title2, .bold):
+        case (.title1, .bold), (.title2, .bold), (.title3, .bold):
             return .bold
         default:
             return weight.failbackWeight
         }
     }
     
-    static func getSementicSize(varient: Variant, size: Size) -> CGFloat {
+    static func getSementicSize(varient: Variant) -> CGFloat {
         switch varient {
-        case .display:
-            return size == .small ? 36 : 56
+        case .display1:
+            return 56
+        case .display2:
+            return 40
         case .title1:
-            return size == .small ? 28 : 40
+            return 36
         case .title2:
-            return size == .small ? 24 : 28
+            return 28
+        case .title3:
+            return 24
         case .heading1:
-            return size == .small ? 20 : 22
+            return 22
         case .heading2:
-            return size == .small ? 17 : 18
+            return 20
+        case .headline1:
+            return 18
+        case .headline2:
+            return 17
         case .body1:
             return 16
         case .body1Reading:
@@ -130,20 +136,28 @@ public extension Typography {
         }
     }
     
-    static func getTracking(varient: Variant, size: Size) -> CGFloat {
-        let sementicSize = getSementicSize(varient: varient, size: size)
+    static func getTracking(varient: Variant) -> CGFloat {
+        let sementicSize = getSementicSize(varient: varient)
         let letterSpacingEm: CGFloat
         
         switch varient {
-        case .display:
-            letterSpacingEm = size == .small ? -0.027 : -0.0319
+        case .display1:
+            letterSpacingEm = -0.0319
+        case .display2:
+            letterSpacingEm = -0.0282
         case .title1:
-            letterSpacingEm = size == .small ? -0.0246 : -0.0282
+            letterSpacingEm = -0.027
         case .title2:
-            letterSpacingEm = size == .small ? -0.023 : -0.0246
+            letterSpacingEm = -0.0246
+        case .title3:
+            letterSpacingEm = -0.023
         case .heading1:
-            letterSpacingEm = size == .small ? -0.012 : -0.0194
+            letterSpacingEm = -0.0194
         case .heading2:
+            letterSpacingEm = -0.012
+        case .headline1:
+            letterSpacingEm = -0.001
+        case .headline2:
             letterSpacingEm = -0.001
         case .body1:
             letterSpacingEm = 0.0057
@@ -168,18 +182,26 @@ public extension Typography {
         return sementicSize * letterSpacingEm
     }
     
-    static func getLineHeight(varient: Variant, size: Size) -> CGFloat {
+    static func getLineHeight(varient: Variant) -> CGFloat {
         switch varient {
-        case .display:
-            return size == .small ? 48 : 72
+        case .display1:
+            return 72
+        case .display2:
+            return 52
         case .title1:
-            return size == .small ? 38 : 52
+            return 48
         case .title2:
-            return size == .small ? 32 : 38
+            return 38
+        case .title3:
+            return 32
         case .heading1:
-            return size == .small ? 26 : 28
+            return 28
         case .heading2:
-            return size == .small ? 24 : 26
+            return 26
+        case .headline1:
+            return 26
+        case .headline2:
+            return 24
         case .body1:
             return 24
         case .body1Reading:
@@ -205,15 +227,23 @@ public extension Typography {
 public extension Typography.Variant {
     var lineSpacing: CGFloat {
         switch self {
-        case .display:
+        case .display1:
             return 5
-        case .title1:
+        case .display2:
             return 4.6667
+        case .title1:
+            return 5
         case .title2:
+            return 4.6667
+        case .title3:
             return 3.3333
         case .heading1:
             return 2
         case .heading2:
+            return 2
+        case .headline2:
+            return 1.6667
+        case .headline1:
             return 1.6667
         case .body1:
             return 5
