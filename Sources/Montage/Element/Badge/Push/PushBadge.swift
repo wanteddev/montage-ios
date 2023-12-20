@@ -28,9 +28,11 @@ extension Badge {
             }
         }
         
+        private lazy var backgroundColorView = UIView()
         private lazy var stackView = UIStackView()
         private lazy var textLabel = UILabel()
         
+        private var backgroundViewConstraints: [NSLayoutConstraint] = []
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
         /// 객체를 생성합니다.
@@ -60,14 +62,22 @@ extension Badge {
         
         /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
-            guard let text = getAttributedText() else { return Const.defaultDotSize }
+            guard let text = getAttributedText() else { 
+                return .init(
+                    width: Const.defaultDotSize.width + varient.edgeInsets.horizontal,
+                    height: Const.defaultDotSize.height + varient.edgeInsets.vertical
+                )
+            }
             
             let textSize = text.size()
             let edgeInsets = varient.edgeInsets
             
+            let width = textSize.width + edgeInsets.horizontal
+            let height = textSize.height + edgeInsets.vertical
+
             return .init(
-                width: textSize.width + edgeInsets.horizontal,
-                height: textSize.height + edgeInsets.vertical
+                width:  width < 20 ? 20 : width,
+                height: height < 20 ? 20 : height
             )
         }
     }
@@ -75,6 +85,7 @@ extension Badge {
 
 extension Badge.Push {
     private func setupViews() {
+        addSubview(backgroundColorView)
         addSubview(stackView)
         
         setupStackView()
@@ -90,9 +101,27 @@ extension Badge.Push {
     }
     
     private func setupUpdateableConstraints() {
+        setupBackgroundColorViewConstraints()
         setupStackViewConstraints()
         updateConstraints()
         setupLayer()
+    }
+    
+    private func setupBackgroundColorViewConstraints() {
+        NSLayoutConstraint.deactivate(backgroundViewConstraints)
+        backgroundColorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let insets = varient == .dot ? varient.edgeInsets : .zero
+        
+        let constraints = [
+            backgroundColorView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
+            backgroundColorView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right),
+            backgroundColorView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
+            backgroundColorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom),
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        backgroundViewConstraints = constraints
     }
     
     private func setupStackViewConstraints() {
@@ -100,23 +129,35 @@ extension Badge.Push {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
+        var constraints: [NSLayoutConstraint]
         let insets = varient.edgeInsets
         
-        let constraints = [
-            stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
-            stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right),
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom),
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ]
+        switch varient {
+        case .dot, .new:
+            constraints = [
+                stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
+                stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right),
+                stackView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
+                stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom),
+                stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
+            ]
+        case .number:
+            constraints = [
+                stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: insets.left),
+                stackView.rightAnchor.constraint(greaterThanOrEqualTo: rightAnchor, constant: -insets.right),
+                stackView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
+                stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom),
+                stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
+            ]
+        }
         
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
     }
     
     private func setupLayer() {
-        layer.cornerRadius = frame.height / 2
-        layer.masksToBounds = true
+        backgroundColorView.layer.cornerRadius = backgroundColorView.frame.height / 2
+        backgroundColorView.layer.masksToBounds = true
     }
 }
 
@@ -128,7 +169,7 @@ extension Badge.Push {
     }
     
     private func updateColor() {
-        backgroundColor = .alias(.primaryNormal)
+        backgroundColorView.backgroundColor = .alias(.primaryNormal)
     }
     
     private func updateTextLabel() {
@@ -138,28 +179,44 @@ extension Badge.Push {
 }
 
 extension Badge.Push {
+    private func getText() -> String? {
+        switch varient {
+        case .dot: return nil
+        case .new: return "N"
+        case .number(let number):
+            return number >= Const.defaultNumberLimit ? "999+" : "\(number)"
+        }
+    }
+    
     private func getAttributedText() -> NSAttributedString? {
-        let attribute: [NSAttributedString.Key: Any] = [
-            .font: UIFont.pretendard(ofSize: 9, weight: .bold),
-            .foregroundColor: UIColor.alias(.staticWhite),
-            .kern: 0.28,
+        guard let text = getText() else { return nil }
+    
+        let font = UIFont.montage(varient: .caption2, weight: .bold)
+        let lineHeight = Typography.getLineHeight(varient: .caption2)
+        
+        let baselineOffset: CGFloat
+        if #available(iOS 16.4, *) {
+            baselineOffset = (lineHeight - font.lineHeight) / 2
+        } else {
+            baselineOffset = (lineHeight - font.lineHeight) / 2 / 2
+        }
+        
+        let foregroundColor = UIColor.alias(.staticWhite)
+        let tracking = Typography.getTracking(varient: .caption2)
+        
+        return .init(string: text, attributes: [
+            .font: font,
+            .tracking: tracking,
+            .baselineOffset: baselineOffset,
+            .foregroundColor: foregroundColor,
             .paragraphStyle: {
                 let style = NSMutableParagraphStyle()
-                style.lineHeightMultiple = 1.07
                 style.alignment = .center
+                style.minimumLineHeight = lineHeight
+                style.lineBreakStrategy = .hangulWordPriority
                 return style
             }()
-        ]
-        
-        switch varient {
-        case .dot:
-            return nil
-        case .new:
-            return .init(string: "N", attributes: attribute)
-        case .number(let number):
-            let numberStr = number >= Const.defaultNumberLimit ? "999+" : "\(number)"
-            return .init(string: numberStr, attributes: attribute)
-        }
+        ])
     }
 }
 
@@ -167,11 +224,11 @@ extension Badge.Push.Varient {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .dot:
-            return .init(top: 2, left: 2, bottom: 2, right: 2)
+            return .init(top: 6, left: 6, bottom: 6, right: 6)
         case .number:
-            return .init(top: 2, left: 5.5, bottom: 2, right: 5.5)
+            return .init(top: 3, left: 6, bottom: 3, right: 6)
         case .new:
-            return .init(top: 2, left: 4.5, bottom: 2, right: 4.5)
+            return .init(top: 3, left: 6, bottom: 3, right: 6)
         }
     }
 }
