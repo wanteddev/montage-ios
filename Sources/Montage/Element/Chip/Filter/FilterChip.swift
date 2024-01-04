@@ -200,7 +200,7 @@ extension Chip.Filter {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = frame.height / 2
+        layer.cornerRadius = size.cornerRadius
         layer.masksToBounds = true
     }
 }
@@ -327,6 +327,15 @@ extension Chip.Filter.Size {
             return 5.0
         case .medium:
             return 4.0
+        }
+    }
+    
+    var cornerRadius: CGFloat {
+        switch self {
+        case .large:
+            return 8.0
+        case .medium:
+            return 6.0
         }
     }
 }
