@@ -187,7 +187,7 @@ extension Chip.MultiSelect {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = frame.height / 2
+        layer.cornerRadius = size.cornerRadius
         layer.masksToBounds = true
     }
 }
@@ -297,6 +297,15 @@ extension Chip.MultiSelect.Size {
             return 5.0
         case .medium:
             return 4.0
+        }
+    }
+    
+    var cornerRadius: CGFloat {
+        switch self {
+        case .large:
+            return 8.0
+        case .medium:
+            return 6.0
         }
     }
 }
