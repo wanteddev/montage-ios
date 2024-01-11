@@ -83,6 +83,8 @@ public enum Icon: String, CaseIterable {
     case compass
     case compassFill
     case copy
+    case crown
+    case crownFill
     case document
     case documentPerson
     case documentPersonFill
@@ -96,6 +98,7 @@ public enum Icon: String, CaseIterable {
     case filterFill
     case full
     case globe
+    case graduation
     case handle
     case heart
     case heartFill
@@ -103,6 +106,7 @@ public enum Icon: String, CaseIterable {
     case home
     case homeFill
     case image
+    case jobFile
     case keyboard
     case like
     case likeFill
@@ -120,16 +124,20 @@ public enum Icon: String, CaseIterable {
     case logoApple
     case logoFacebook
     case logoGooglePlay
+    case logoKakao
     case logoInstagram
     case logoLinkedIn
     case logoNaverBlog
     case logoYoutube
     case mail
+    case magicWand
     case menu
     case menuStar
     case menuThick
     case message
     case messageFill
+    case mobile
+    case mobileFill
     case moreHorizontal
     case moreVertical
     case moreVerticalTight
@@ -186,6 +194,7 @@ public enum Icon: String, CaseIterable {
     case viewFill
     case viewSlash
     case viewSlashFill
+    case write
     
     public var name: String { rawValue }
 }
