@@ -310,7 +310,7 @@ extension Button.SolidButton: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
-        return true
+        return false
     }
 }
 
