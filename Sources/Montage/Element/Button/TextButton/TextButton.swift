@@ -305,7 +305,7 @@ extension Button.TextButton: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
-        return true
+        return false
     }
 }
 
