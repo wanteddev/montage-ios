@@ -145,6 +145,7 @@ extension Chip.Action {
     
     private func bindEvent() {
         let longPressRecognizer = UILongPressGestureRecognizer()
+        longPressRecognizer.delegate = self
         longPressRecognizer.minimumPressDuration = 0
         longPressRecognizer.cancelsTouchesInView = false
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
@@ -295,7 +296,10 @@ extension Chip.Action {
         switch recognizer.state {
         case .began:
             interaction.state = .pressed
+        case .changed:
+            interaction.state = .normal
         case .ended:
+            guard interaction.state == .pressed else { return }
             if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
                 handler?()
             }
@@ -303,6 +307,15 @@ extension Chip.Action {
         default:
             break
         }
+    }
+}
+
+extension Chip.Action: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return true
     }
 }
 
