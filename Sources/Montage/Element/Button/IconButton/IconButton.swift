@@ -214,7 +214,10 @@ extension Button.IconButton {
         switch recognizer.state {
         case .began:
             interaction.state = .pressed
+        case .changed:
+            interaction.state = .normal
         case .ended:
+            guard interaction.state == .pressed else { return }
             if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
                 handler?()
             }
@@ -230,7 +233,7 @@ extension Button.IconButton: UIGestureRecognizerDelegate {
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
-        return false
+        return true
     }
 }
 
