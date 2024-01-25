@@ -294,10 +294,7 @@ extension Button.SolidButton {
         switch recognizer.state {
         case .began:
             interaction.state = .pressed
-        case .changed:
-            interaction.state = .normal
         case .ended:
-            guard interaction.state == .pressed else { return }
             if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
                 handler?()
             }
