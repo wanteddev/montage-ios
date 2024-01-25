@@ -295,7 +295,11 @@ extension Button.SolidButton {
         case .began:
             interaction.state = .pressed
         case .changed:
-            interaction.state = .normal
+            // 스크롤 시 버튼이 눌리지 않도록 state를 normal로 변경
+            // 3D touch 모델은 스크롤 하지 않아도 changed가 실행되서 적용하지 않음
+            if traitCollection.forceTouchCapability != UIForceTouchCapability.available {
+                interaction.state = .normal
+            }
         case .ended:
             guard interaction.state == .pressed else { return }
             if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
