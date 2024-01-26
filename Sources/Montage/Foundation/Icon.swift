@@ -80,6 +80,10 @@ public enum Icon: String, CaseIterable {
     case coins
     case coinsFill
     case company
+    case companyCheck
+    case companyCheckFill
+    case companyPlus
+    case companyPlusFill
     case compass
     case compassFill
     case copy
@@ -184,6 +188,8 @@ public enum Icon: String, CaseIterable {
     case trash
     case triangleExclamation
     case triangleExclamationFill
+    case trophy
+    case trophyFill
     case tune
     case upload
     case verifiedCheck
