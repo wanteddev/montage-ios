@@ -195,9 +195,9 @@ public extension Typography {
         case .title3:
             return 32
         case .heading1:
-            return 28
+            return 30
         case .heading2:
-            return 26
+            return 28
         case .headline1:
             return 26
         case .headline2:
@@ -238,9 +238,9 @@ public extension Typography.Variant {
         case .title3:
             return 3.3333
         case .heading1:
-            return 2
+            return 3.6667
         case .heading2:
-            return 2
+            return 4
         case .headline2:
             return 1.6667
         case .headline1:
