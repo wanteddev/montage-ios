@@ -148,7 +148,7 @@ public extension Typography {
         case .title1:
             letterSpacingEm = -0.027
         case .title2:
-            letterSpacingEm = -0.0246
+            letterSpacingEm = -0.0236
         case .title3:
             letterSpacingEm = -0.023
         case .heading1:
@@ -156,9 +156,9 @@ public extension Typography {
         case .heading2:
             letterSpacingEm = -0.012
         case .headline1:
-            letterSpacingEm = -0.001
+            letterSpacingEm = -0.002
         case .headline2:
-            letterSpacingEm = -0.001
+            letterSpacingEm = 0
         case .body1:
             letterSpacingEm = 0.0057
         case .body1Reading:
@@ -195,9 +195,9 @@ public extension Typography {
         case .title3:
             return 32
         case .heading1:
-            return 28
+            return 30
         case .heading2:
-            return 26
+            return 28
         case .headline1:
             return 26
         case .headline2:
@@ -238,9 +238,9 @@ public extension Typography.Variant {
         case .title3:
             return 3.3333
         case .heading1:
-            return 2
+            return 3.6667
         case .heading2:
-            return 2
+            return 4
         case .headline2:
             return 1.6667
         case .headline1:
