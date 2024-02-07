@@ -148,7 +148,7 @@ public extension Typography {
         case .title1:
             letterSpacingEm = -0.027
         case .title2:
-            letterSpacingEm = -0.0246
+            letterSpacingEm = -0.0236
         case .title3:
             letterSpacingEm = -0.023
         case .heading1:
@@ -156,9 +156,9 @@ public extension Typography {
         case .heading2:
             letterSpacingEm = -0.012
         case .headline1:
-            letterSpacingEm = -0.001
+            letterSpacingEm = -0.002
         case .headline2:
-            letterSpacingEm = -0.001
+            letterSpacingEm = 0
         case .body1:
             letterSpacingEm = 0.0057
         case .body1Reading:
