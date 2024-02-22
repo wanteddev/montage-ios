@@ -9,8 +9,6 @@ import Foundation
 
 /// Montage 번들 내에 포함된 아이콘들의 이름들입니다.
 public enum Icon: String, CaseIterable {
-    case add
-    case addFill
     case android
     case apps
     case arrowDown
@@ -21,7 +19,6 @@ public enum Icon: String, CaseIterable {
     case bellFill
     case bellPlus
     case blank
-    case block
     case book
     case bookFill
     case bookmark
@@ -65,6 +62,7 @@ public enum Icon: String, CaseIterable {
     case chevronUpThick
     case chevronUpThickSmall
     case circle
+    case circleBlock
     case circleCheck
     case circleCheckFill
     case circleClose
@@ -83,9 +81,9 @@ public enum Icon: String, CaseIterable {
     case coins
     case coinsFill
     case company
-    case companyFill
     case companyCheck
     case companyCheckFill
+    case companyFill
     case companyPlus
     case companyPlusFill
     case compass
@@ -95,9 +93,9 @@ public enum Icon: String, CaseIterable {
     case crownFill
     case desktop
     case desktopFill
-    case document
     case documentPerson
     case documentPersonFill
+    case documentText
     case dot
     case download
     case exclamation
@@ -106,6 +104,8 @@ public enum Icon: String, CaseIterable {
     case faceSmileFill
     case filter
     case filterFill
+    case folderJobFill
+    case folderStar
     case full
     case globe
     case graduation
@@ -116,7 +116,6 @@ public enum Icon: String, CaseIterable {
     case home
     case homeFill
     case image
-    case jobFile
     case keyboard
     case like
     case likeFill
@@ -134,15 +133,14 @@ public enum Icon: String, CaseIterable {
     case logoApple
     case logoFacebook
     case logoGooglePlay
-    case logoKakao
     case logoInstagram
+    case logoKakao
     case logoLinkedIn
     case logoNaverBlog
     case logoYoutube
-    case mail
     case magicWand
+    case mail
     case menu
-    case menuStar
     case menuThick
     case message
     case messageFill
@@ -186,6 +184,8 @@ public enum Icon: String, CaseIterable {
     case squareKana
     case squareLatin
     case squareMore
+    case squarePlus
+    case squarePlusFill
     case star
     case starFill
     case template
