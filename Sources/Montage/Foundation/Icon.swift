@@ -93,9 +93,12 @@ public enum Icon: String, CaseIterable {
     case crownFill
     case desktop
     case desktopFill
+    case document
+    case documentFill
     case documentPerson
     case documentPersonFill
     case documentText
+    case documentTextFill
     case dot
     case download
     case exclamation
@@ -104,8 +107,12 @@ public enum Icon: String, CaseIterable {
     case faceSmileFill
     case filter
     case filterFill
+    case folder
+    case folderFill
+    case folderJob
     case folderJobFill
     case folderStar
+    case folderStarFill
     case full
     case globe
     case graduation
@@ -144,6 +151,8 @@ public enum Icon: String, CaseIterable {
     case menuThick
     case message
     case messageFill
+    case minus
+    case minusThick
     case mobile
     case mobileFill
     case moreHorizontal
@@ -194,8 +203,10 @@ public enum Icon: String, CaseIterable {
     case thunder
     case thunderFill
     case trash
+    case triangle
     case triangleExclamation
     case triangleExclamationFill
+    case triangleFill
     case trophy
     case trophyFill
     case tune
