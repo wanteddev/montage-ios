@@ -101,6 +101,10 @@ public enum Icon: String, CaseIterable {
     case documentTextFill
     case dot
     case download
+    case eye
+    case eyeFill
+    case eyeSlash
+    case eyeSlashFill
     case exclamation
     case externalLink
     case faceSmile
@@ -215,10 +219,6 @@ public enum Icon: String, CaseIterable {
     case verifiedCheckFill
     case verifiedStar
     case verifiedStarFill
-    case view
-    case viewFill
-    case viewSlash
-    case viewSlashFill
     case write
     
     public var name: String { rawValue }
