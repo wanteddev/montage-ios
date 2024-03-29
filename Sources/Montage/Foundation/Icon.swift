@@ -109,12 +109,12 @@ public enum Icon: String, CaseIterable {
     case documentTextFill
     case dot
     case download
+    case exclamation
+    case externalLink
     case eye
     case eyeFill
     case eyeSlash
     case eyeSlashFill
-    case exclamation
-    case externalLink
     case faceSmile
     case faceSmileFill
     case filter
