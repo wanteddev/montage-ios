@@ -562,6 +562,7 @@ public enum Color {
         case lightBlue
         case violet
         case pink
+        case redOrange
         
         func resolveAsAlias() -> Alias {
             switch self {
@@ -583,6 +584,8 @@ public enum Color {
                 return .accentViolet
             case .pink:
                 return .accentPink
+            case .redOrange:
+                return .accentRedOrange
             }
         }
         
