@@ -184,6 +184,21 @@ public enum Color {
         case globalViolet10
         case globalViolet0
         
+        // PURPLE
+        case globalPurple100
+        case globalPurple99
+        case globalPurple95
+        case globalPurple90
+        case globalPurple80
+        case globalPurple70
+        case globalPurple60
+        case globalPurple50
+        case globalPurple40
+        case globalPurple30
+        case globalPurple20
+        case globalPurple10
+        case globalPurple0
+        
         // PINK
         case globalPink100
         case globalPink99
@@ -374,6 +389,11 @@ public enum Color {
         case accentViolet
         
         ///
+        /// Figma상의 `.color-alias-accent-purple` 토큰과 대응되는 값입니다.
+        ///
+        case accentPurple
+        
+        ///
         /// Figma상의 `.color-alias-accent-redOrange` 토큰과 대응되는 값입니다.
         ///
         case accentRedOrange
@@ -462,6 +482,8 @@ public enum Color {
                 globalType = style == .dark ? .globalLightBlue60 : .globalLightBlue50
             case .accentViolet:
                 globalType = style == .dark ? .globalViolet60 : .globalViolet50
+            case .accentPurple:
+                globalType = style == .dark ? .globalPurple60 : .globalPurple50
             case .accentPink:
                 globalType = style == .dark ? .globalPink60 : .globalPink50
             case .accentRedOrange:
@@ -561,7 +583,9 @@ public enum Color {
         case cyan
         case lightBlue
         case violet
+        case purple
         case pink
+        case redOrange
         
         func resolveAsAlias() -> Alias {
             switch self {
@@ -581,8 +605,12 @@ public enum Color {
                 return .accentLightBlue
             case .violet:
                 return .accentViolet
+            case .purple:
+                return .accentPurple
             case .pink:
                 return .accentPink
+            case .redOrange:
+                return .accentRedOrange
             }
         }
         
