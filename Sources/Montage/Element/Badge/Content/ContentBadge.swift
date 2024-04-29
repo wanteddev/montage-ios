@@ -23,7 +23,7 @@ extension Badge {
         
         /// 뱃지의 사이즈를 결정하는 열거형입니다.
         public enum Size {
-            case xsmall, small
+            case xsmall, small, medium
         }
         
         /// 뱃지의 색상을 결정하는 열거형입니다.
@@ -257,6 +257,8 @@ extension Badge.Content.Size {
             return .init(width: 12, height: 12)
         case .small:
             return .init(width: 16, height: 16)
+        case .medium:
+            return .init(width: 20, height: 20)
         }
     }
     
@@ -266,6 +268,8 @@ extension Badge.Content.Size {
             return .caption2
         case .small:
             return .caption1
+        case .medium:
+            return .label1
         }
     }
     
@@ -275,6 +279,8 @@ extension Badge.Content.Size {
             return .init(top: 3, left: 4, bottom: 3, right: 4)
         case .small:
             return .init(top: 4, left: 8, bottom: 4, right: 8)
+        case .medium:
+            return .init(top: 6, left: 12, bottom: 6, right: 12)
         }
     }
 
@@ -284,6 +290,8 @@ extension Badge.Content.Size {
             return 4.0
         case .small:
             return 6.0
+        case .medium:
+            return 8.0
         }
     }
 }
