@@ -342,8 +342,10 @@ extension Button.OutlinedButton.Varient {
         switch self {
         case .primary:
             return .alias(.primaryNormal)
-        case .secondary, .assistive:
+        case .secondary:
             return .alias(.lineNormal)
+        case .assistive:
+            return .alias(.lineNeutral)
         }
     }
     
@@ -414,11 +416,11 @@ extension Button.OutlinedButton.Size {
     var cornerRadius: CGFloat {
         switch self {
         case .large:
-            return 10.0
+            return 12.0
         case .medium:
-            return 8.0
+            return 10.0
         case .small:
-            return 6.0
+            return 8.0
         }
     }
 }
