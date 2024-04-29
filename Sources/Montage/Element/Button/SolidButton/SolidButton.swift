@@ -369,11 +369,11 @@ extension Button.SolidButton.Size {
     var cornerRadius: CGFloat {
         switch self {
         case .large:
-            return 10.0
+            return 12.0
         case .medium:
-            return 8.0
+            return 10.0
         case .small:
-            return 6.0
+            return 8.0
         }
     }
 }
