@@ -14,7 +14,6 @@ extension Badge {
             static var defaultActiveColor: Color.Alias = .primaryNormal
             static var defaultInactiveColor: Color.Alias = .labelDisable
             static var defaultInteractionColor: Color.Alias = .primaryNormal
-            static var defaultInteractionRadius: CGFloat = 4.0
         }
         
         /// 뱃지의 외관을 결정하는 열거형 타입입니다.
@@ -192,7 +191,7 @@ extension Badge.Content {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = Const.defaultInteractionRadius
+        layer.cornerRadius = size.cornerRadius
         layer.masksToBounds = true
     }
 }
@@ -276,6 +275,15 @@ extension Badge.Content.Size {
             return .init(top: 3, left: 4, bottom: 3, right: 4)
         case .small:
             return .init(top: 4, left: 8, bottom: 4, right: 8)
+        }
+    }
+
+    var cornerRadius: CGFloat {
+        switch self {
+        case .xsmall:
+            return 4.0
+        case .small:
+            return 6.0
         }
     }
 }
