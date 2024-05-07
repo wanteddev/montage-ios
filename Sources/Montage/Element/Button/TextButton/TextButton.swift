@@ -336,7 +336,7 @@ extension Button.TextButton.Varient {
     }
     
     var interactionRadius: CGFloat {
-        5.0
+        6.0
     }
 }
 
