@@ -12,13 +12,18 @@ public enum Icon: String, CaseIterable {
     case android
     case apps
     case arrowDown
+    case arrowDownThick
     case arrowLeft
+    case arrowLeftThick
     case arrowRight
+    case arrowRightThick
     case arrowUp
+    case arrowUpThick
     case bell
     case bellFill
     case bellPlus
     case blank
+    case bold
     case book
     case bookFill
     case bookmark
@@ -35,6 +40,7 @@ public enum Icon: String, CaseIterable {
     case caretDown
     case caretUp
     case change
+    case chat
     case check
     case checkThick
     case chevronDoubleLeft
@@ -86,6 +92,7 @@ public enum Icon: String, CaseIterable {
     case circleQuestionFill
     case close
     case closeThick
+    case code
     case coins
     case coinsFill
     case company
@@ -143,6 +150,7 @@ public enum Icon: String, CaseIterable {
     case link
     case list
     case listCategory
+    case listOrdered
     case location
     case locationFill
     case lock
@@ -159,6 +167,7 @@ public enum Icon: String, CaseIterable {
     case logoYoutube
     case magicWand
     case mail
+    case mailOpen
     case menu
     case menuThick
     case message
@@ -170,11 +179,6 @@ public enum Icon: String, CaseIterable {
     case moreHorizontal
     case moreVertical
     case moreVerticalTight
-    case navigationCareer
-    case navigationMenu
-    case navigationMypage
-    case navigationRecruit
-    case navigationSocial
     case pause
     case pencil
     case pencilFill
@@ -184,12 +188,15 @@ public enum Icon: String, CaseIterable {
     case personPlusFill
     case persons
     case personsFill
+    case phone
+    case phoneFill
     case pin
     case pinFill
     case play
     case plus
     case plusThick
     case question
+    case quote
     case refresh
     case search
     case searchThick
@@ -209,6 +216,7 @@ public enum Icon: String, CaseIterable {
     case squarePlusFill
     case star
     case starFill
+    case strikethrough
     case template
     case templateFill
     case thumbnail
@@ -222,6 +230,7 @@ public enum Icon: String, CaseIterable {
     case trophy
     case trophyFill
     case tune
+    case underline
     case upload
     case verifiedCheck
     case verifiedCheckFill
