@@ -14,6 +14,8 @@ extension Button {
         public var leftIcon: Icon?
         public var rightIcon: Icon?
         public var text: String
+        public var uniqueIcon: Icon?
+        public var iconOnly: Bool = false
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
         public var handler: (() -> Void)?
@@ -25,6 +27,8 @@ extension Button {
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
             text: String,
+            uniqueIcon: Icon? = nil,
+            iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
             handler: (() -> Void)? = nil
@@ -33,6 +37,8 @@ extension Button {
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
             self.text = text
+            self.uniqueIcon = uniqueIcon
+            self.iconOnly = iconOnly
             self.state = state
             self.disable = disable
             self.handler = handler
@@ -47,6 +53,8 @@ extension Button {
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon
             uiView.text = text
+            uiView.uniqueIcon = uniqueIcon
+            uiView.iconOnly = iconOnly
             uiView.state = state
             uiView.disable = disable
             uiView.handler = handler
@@ -93,6 +101,13 @@ struct SolidButtonControllerPreview: View {
                 Button.SolidButtonController(
                     size: .large,
                     text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .large,
+                    text: "안녕하세요",
+                    uniqueIcon: .apps,
+                    iconOnly: true
                 ).fixedSize()
             }
             
