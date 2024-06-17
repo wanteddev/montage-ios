@@ -11,12 +11,9 @@ extension Button {
     /// 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class SolidButton: UIView {
-        private enum Const {
-            static var activeBackgroundColor: Color.Alias = .primaryNormal
-            static var inactiveBackgroundColor: Color.Alias = .interactionDisable
-            static var activeTextColor: Color.Alias = .staticWhite
-            static var inactiveTextColor: Color.Alias = .labelAssistive
-            static var interactionColor: Color.Alias = .labelNormal
+        /// 버튼의 외관을 결정하는 열거형입니다.
+        public enum Varient {
+            case primary, assistive
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
@@ -27,6 +24,13 @@ extension Button {
         /// 버튼 모서리의 곡률 스타일을 결정하는 열거형입니다.
         public enum CornerStyle {
             case legacy, `default`
+        }
+        
+        /// 버튼의 외관입니다.
+        public var varient: Varient = .primary {
+            didSet {
+                updateViews()
+            }
         }
         
         /// 버튼의 사이즈입니다.
@@ -195,7 +199,7 @@ extension Button.SolidButton {
     }
     
     private func setupInteraction() {
-        interaction.varient = .strong
+        interaction.varient = varient.interactionVarient
         
         setupInteractionContraints()
     }
@@ -277,11 +281,11 @@ extension Button.SolidButton {
     }
     
     private func updateColors() {
-        backgroundColor = .alias(disable ? Const.inactiveBackgroundColor : Const.activeBackgroundColor)
-        leftIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
-        rightIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
-        uniqueIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
-        interaction.color = Const.interactionColor
+        backgroundColor = disable ? .alias(.interactionDisable) : varient.backgroundColor
+        leftIconView.tintColor = .alias(disable ? .labelAssistive : varient.textColor)
+        rightIconView.tintColor = .alias(disable ? .labelAssistive : varient.textColor)
+        uniqueIconView.tintColor = .alias(disable ? .labelAssistive : varient.textColor)
+        interaction.color = varient.interactionColor
     }
     
     private func updateIconView() {
@@ -326,7 +330,7 @@ extension Button.SolidButton {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: disable ? Const.inactiveTextColor : Const.activeTextColor
+            color: disable ? .labelAssistive : varient.textColor
         )
     }
 }
@@ -363,6 +367,39 @@ extension Button.SolidButton: UIGestureRecognizerDelegate {
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         return true
+    }
+}
+
+extension Button.SolidButton.Varient {
+    var textColor: Color.Alias {
+        switch self {
+        case .primary:
+            return .staticWhite
+        case .assistive:
+            return .labelNeutral
+        }
+    }
+    
+    var backgroundColor: UIColor {
+        switch self {
+        case .primary:
+            return .alias(.primaryNormal)
+        case .assistive:
+            return .component(.fillNormal)
+        }
+    }
+    
+    var interactionColor: Color.Alias {
+        .labelNormal
+    }
+
+    var interactionVarient: Decorate.Interaction.Varient {
+        switch self {
+        case .primary:
+            return .strong
+        case .assistive:
+            return .normal
+        }
     }
 }
 
