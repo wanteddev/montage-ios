@@ -8,11 +8,11 @@
 import UIKit
 
 public extension NSAttributedString {
-    static func montage(
+    private static func _montage(
         _ string: String,
         varient: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        color: Color.Alias = .labelNormal,
+        color: UIColor,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         let font = UIFont.montage(varient: varient, weight: weight)
@@ -28,7 +28,7 @@ public extension NSAttributedString {
             baselineOffset = (lineHeight - font.lineHeight) / 2 / 2
         }
         
-        let foregroundColor = UIColor.alias(color)
+        let foregroundColor = color
         let tracking = Typography.getTracking(varient: varient)
         
         return .init(string: string, attributes: [
@@ -45,6 +45,87 @@ public extension NSAttributedString {
                 return style
             }()
         ])
+    }
+    
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular,
+        colorResolver: ColorResolvable,
+        lineBreakMode: NSLineBreakMode = .byWordWrapping
+    ) -> NSAttributedString {
+        _montage(
+            string,
+            varient: varient,
+            weight: weight,
+            color: colorResolver.resolve(.current),
+            lineBreakMode: lineBreakMode
+        )
+    }
+    
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular,
+        alias: Color.Alias = .labelNormal,
+        lineBreakMode: NSLineBreakMode = .byWordWrapping
+    ) -> NSAttributedString {
+        montage(
+            string,
+            varient: varient,
+            weight: weight,
+            colorResolver: alias,
+            lineBreakMode: lineBreakMode
+        )
+    }
+
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular,
+        component: Color.Component = .fillNormal,
+        lineBreakMode: NSLineBreakMode = .byWordWrapping
+    ) -> NSAttributedString {
+        montage(
+            string,
+            varient: varient,
+            weight: weight,
+            colorResolver: component,
+            lineBreakMode: lineBreakMode
+        )
+    }
+
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular,
+        global: Color.Global = .globalRed0,
+        lineBreakMode: NSLineBreakMode = .byWordWrapping
+    ) -> NSAttributedString {
+        montage(
+            string,
+            varient: varient,
+            weight: weight,
+            colorResolver: global,
+            lineBreakMode: lineBreakMode
+        )
+    }
+
+    @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:varient:weight:alias:lineBreakMode:) 사용을 권장합니다.")
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular,
+        color: Color.Alias = .labelNormal,
+        lineBreakMode: NSLineBreakMode = .byWordWrapping
+    ) -> NSAttributedString {
+        _montage(
+            string,
+            varient: varient,
+            weight: weight,
+            color: .alias(color),
+            lineBreakMode: lineBreakMode
+        )
     }
 }
 

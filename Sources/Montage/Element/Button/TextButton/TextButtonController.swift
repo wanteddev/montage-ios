@@ -17,6 +17,8 @@ extension Button {
         public var rightIcon: Icon?
         public var text: String
         public var disable: Bool = false
+        public var contentColorResolver: ColorResolvable? = nil
+        public var fontSize: Typography.Variant? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = TextButton
@@ -28,6 +30,8 @@ extension Button {
             rightIcon: Icon? = nil,
             text: String,
             disable: Bool = false,
+            contentColorResolver: ColorResolvable? = nil,
+            fontSize: Typography.Variant? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.varient = varient
@@ -36,6 +40,8 @@ extension Button {
             self.rightIcon = rightIcon
             self.text = text
             self.disable = disable
+            self.contentColorResolver = contentColorResolver
+            self.fontSize = fontSize
             self.handler = handler
         }
         
@@ -50,6 +56,8 @@ extension Button {
             uiView.rightIcon = rightIcon
             uiView.text = text
             uiView.disable = disable
+            uiView.contentColorResolver = contentColorResolver
+            uiView.fontSize = fontSize
             uiView.handler = handler
         }
     }
@@ -84,41 +92,45 @@ struct TextButtonControllerPreview: View {
             
             Text("Icon").montage(varient: .headline2)
             
-            HStack {
-                Button.TextButtonController(
-                    leftIcon: .bubbleFill,
-                    text: "안녕하세요"
-                ).fixedSize()
+            VStack(alignment: .leading) {
+                HStack {
+                    Button.TextButtonController(
+                        leftIcon: .bubbleFill,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButtonController(
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButtonController(
+                        leftIcon: .bubbleFill,
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                }
                 
-                Button.TextButtonController(
-                    rightIcon: .circleClose,
-                    text: "안녕하세요"
-                ).fixedSize()
-                
-                Button.TextButtonController(
-                    leftIcon: .bubbleFill,
-                    rightIcon: .circleClose,
-                    text: "안녕하세요"
-                ).fixedSize()
-                
-                Button.TextButtonController(
-                    varient: .assistive,
-                    leftIcon: .bubbleFill,
-                    text: "안녕하세요"
-                ).fixedSize()
-                
-                Button.TextButtonController(
-                    varient: .assistive,
-                    rightIcon: .circleClose,
-                    text: "안녕하세요"
-                ).fixedSize()
-                
-                Button.TextButtonController(
-                    varient: .assistive,
-                    leftIcon: .bubbleFill,
-                    rightIcon: .circleClose,
-                    text: "안녕하세요"
-                ).fixedSize()
+                HStack {
+                    Button.TextButtonController(
+                        varient: .assistive,
+                        leftIcon: .bubbleFill,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButtonController(
+                        varient: .assistive,
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButtonController(
+                        varient: .assistive,
+                        leftIcon: .bubbleFill,
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                }
             }
             
             Text("State").montage(varient: .headline2)
@@ -145,6 +157,40 @@ struct TextButtonControllerPreview: View {
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
+            }
+            
+            Text("Custom").montage(varient: .headline2)
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Button.TextButtonController(
+                        text: "accentCyan",
+                        disable: false,
+                        contentColorResolver: Color.Alias.accentCyan
+                    ).fixedSize()
+                    
+                    Button.TextButtonController(
+                        text: "globalBlue40",
+                        disable: false,
+                        contentColorResolver: Color.Global.globalBlue40
+                    ).fixedSize()
+                }
+                
+                HStack {
+                    Button.TextButtonController(
+                        text: "body1",
+                        disable: false,
+                        contentColorResolver: Color.Alias.accentCyan,
+                        fontSize: .body1
+                    ).fixedSize()
+                    
+                    Button.TextButtonController(
+                        text: "heading1",
+                        disable: false,
+                        contentColorResolver: Color.Global.globalBlue40,
+                        fontSize: .heading1
+                    ).fixedSize()
+                }
             }
         }
     }

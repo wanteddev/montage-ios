@@ -19,6 +19,8 @@ extension Button {
         public var iconOnly: Bool = false
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
+        public var contentColorResolver: ColorResolvable? = nil
+        public var backgroundColorResolver: ColorResolvable? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = SolidButton
@@ -33,6 +35,8 @@ extension Button {
             iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
+            contentColorResolver: ColorResolvable? = nil,
+            backgroundColorResolver: ColorResolvable? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.varient = varient
@@ -44,6 +48,8 @@ extension Button {
             self.iconOnly = iconOnly
             self.state = state
             self.disable = disable
+            self.contentColorResolver = contentColorResolver
+            self.backgroundColorResolver = backgroundColorResolver
             self.handler = handler
         }
         
@@ -61,6 +67,8 @@ extension Button {
             uiView.iconOnly = iconOnly
             uiView.state = state
             uiView.disable = disable
+            uiView.contentColorResolver = contentColorResolver
+            uiView.backgroundColorResolver = backgroundColorResolver
             uiView.handler = handler
         }
     }
@@ -116,6 +124,9 @@ struct SolidButtonControllerPreview: View {
                         text: "안녕하세요"
                     ).fixedSize()
                     
+                }
+                
+                HStack {
                     Button.SolidButtonController(
                         size: .large,
                         text: "안녕하세요"
@@ -197,6 +208,22 @@ struct SolidButtonControllerPreview: View {
                     leftIcon: .apps,
                     rightIcon: .apps,
                     text: "안녕하세요"
+                ).fixedSize()
+            }
+            
+            Text("Custom").montage()
+            
+            HStack {
+                Button.SolidButtonController(
+                    size: .small,
+                    text: "content",
+                    contentColorResolver: Color.Alias.accentRedOrange
+                ).fixedSize()
+                
+                Button.SolidButtonController(
+                    size: .small,
+                    text: "background",
+                    backgroundColorResolver: Color.Alias.accentPurple
                 ).fixedSize()
             }
         }

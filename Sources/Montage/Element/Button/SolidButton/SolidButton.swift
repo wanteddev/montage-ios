@@ -102,6 +102,22 @@ extension Button {
             }
         }
         
+        /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var contentColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
+        /// 커스텀 가능한 배경색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var backgroundColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
         /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
         public var handler: (() -> Void)?
         
@@ -109,7 +125,11 @@ extension Button {
         
         private lazy var leftIconView = UIImageView()
         
-        private lazy var textLabel = UILabel()
+        private lazy var textLabel: UILabel = {
+            let label = UILabel()
+            label.numberOfLines = 0
+            return label
+        }()
         
         private lazy var rightIconView = UIImageView()
         
@@ -281,10 +301,31 @@ extension Button.SolidButton {
     }
     
     private func updateColors() {
-        backgroundColor = disable ? .alias(.interactionDisable) : varient.backgroundColor
-        leftIconView.tintColor = .alias(disable ? .labelAssistive : varient.textColor)
-        rightIconView.tintColor = .alias(disable ? .labelAssistive : varient.textColor)
-        uniqueIconView.tintColor = .alias(disable ? .labelAssistive : varient.textColor)
+        backgroundColor = {
+            if disable {
+                .alias(.interactionDisable)
+            } else {
+                if let backgroundColorResolver {
+                    backgroundColorResolver.resolve(.current)
+                } else {
+                    varient.backgroundColor
+                }
+            }
+        }()
+        let contentColor: UIColor = {
+            if disable {
+                .alias(.labelAssistive)
+            } else {
+                if let contentColorResolver {
+                    contentColorResolver.resolve(.current)
+                } else {
+                    .alias(varient.textColor)
+                }
+            }
+        }()
+        leftIconView.tintColor = contentColor
+        rightIconView.tintColor = contentColor
+        uniqueIconView.tintColor = contentColor
         interaction.color = varient.interactionColor
     }
     
@@ -330,7 +371,17 @@ extension Button.SolidButton {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: disable ? .labelAssistive : varient.textColor
+            colorResolver: {
+                if disable {
+                    Color.Alias.labelAssistive
+                } else {
+                    if let contentColorResolver {
+                        contentColorResolver
+                    } else {
+                        varient.textColor
+                    }
+                }
+            }()
         )
     }
 }

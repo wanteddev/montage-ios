@@ -102,6 +102,30 @@ extension Button {
             }
         }
         
+        /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var contentColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
+        /// 커스텀 가능한 배경색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var backgroundColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
+        /// 커스텀 가능한 테두리색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var borderColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
         /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
         public var handler: (() -> Void)?
         
@@ -109,7 +133,11 @@ extension Button {
         
         private lazy var leftIconView = UIImageView()
         
-        private lazy var textLabel = UILabel()
+        private lazy var textLabel: UILabel = {
+            let label = UILabel()
+            label.numberOfLines = 0
+            return label
+        }()
         
         private lazy var rightIconView = UIImageView()
         
@@ -281,12 +309,43 @@ extension Button.OutlinedButton {
     }
     
     private func updateColors() {
-        backgroundColor = .alias(.backgroundNormal)
-        layer.borderColor = (disable ? .alias(.lineNormal) : varient.borderColor).cgColor
+        backgroundColor = {
+            if disable {
+                .alias(.labelDisable)
+            } else {
+                if let backgroundColorResolver {
+                    backgroundColorResolver.resolve(.current)
+                } else {
+                    .alias(.backgroundNormal)
+                }
+            }
+        }()
+        layer.borderColor = {
+            if disable {
+                UIColor.alias(.lineNormal).cgColor
+            } else {
+                if let borderColorResolver {
+                    borderColorResolver.resolve(.current).cgColor
+                } else {
+                    varient.borderColor.cgColor
+                }
+            }
+        }()
         layer.borderWidth = 1.0
-        leftIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
-        rightIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
-        uniqueIconView.tintColor = .alias(disable ? .labelDisable : varient.textColor)
+        let contentColor: UIColor = {
+            if disable {
+                .alias(.labelDisable)
+            } else {
+                if let contentColorResolver {
+                    contentColorResolver.resolve(.current)
+                } else {
+                    .alias(varient.textColor)
+                }
+            }
+        }()
+        leftIconView.tintColor = contentColor
+        rightIconView.tintColor = contentColor
+        uniqueIconView.tintColor = contentColor
         interaction.color = varient.interactionColor
         interaction.varient = varient.interactionVarient
     }
@@ -333,7 +392,17 @@ extension Button.OutlinedButton {
             text,
             varient: size.typoVarient,
             weight: .bold,
-            color: disable ? .labelDisable : varient.textColor
+            colorResolver: {
+                if disable {
+                    Color.Alias.labelDisable
+                } else {
+                    if let contentColorResolver {
+                        contentColorResolver
+                    } else {
+                        varient.textColor
+                    }
+                }
+            }()
         )
     }
 }

@@ -21,6 +21,9 @@ extension Button {
         public var iconOnly: Bool = false
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
+        public var contentColorResolver: ColorResolvable? = nil
+        public var backgroundColorResolver: ColorResolvable? = nil
+        public var borderColorResolver: ColorResolvable? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = OutlinedButton
@@ -35,6 +38,9 @@ extension Button {
             iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
+            contentColorResolver: ColorResolvable? = nil,
+            backgroundColorResolver: ColorResolvable? = nil,
+            borderColorResolver: ColorResolvable? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.varient = varient
@@ -46,6 +52,9 @@ extension Button {
             self.uniqueIcon = uniqueIcon
             self.iconOnly = iconOnly
             self.disable = disable
+            self.contentColorResolver = contentColorResolver
+            self.backgroundColorResolver = backgroundColorResolver
+            self.borderColorResolver = borderColorResolver
             self.handler = handler
         }
         
@@ -63,6 +72,9 @@ extension Button {
             uiView.iconOnly = iconOnly
             uiView.state = state
             uiView.disable = disable
+            uiView.contentColorResolver = contentColorResolver
+            uiView.backgroundColorResolver = backgroundColorResolver
+            uiView.borderColorResolver = borderColorResolver
             uiView.handler = handler
         }
     }
@@ -127,7 +139,6 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                 }
             }
-            
             
             Text("State").montage()
             
@@ -226,6 +237,23 @@ struct OutlinedButtonControllerPreview: View {
                     leftIcon: .apps,
                     rightIcon: .apps,
                     text: "안녕하세요"
+                ).fixedSize()
+            }
+            
+            Text("Custom").montage()
+            
+            HStack {
+                Button.OutlinedButtonController(
+                    size: .small,
+                    text: "border&content",
+                    contentColorResolver: Color.Alias.accentLime,
+                    borderColorResolver: Color.Alias.accentLime
+                ).fixedSize()
+                
+                Button.OutlinedButtonController(
+                    size: .small,
+                    text: "background",
+                    backgroundColorResolver: Color.Alias.accentPink
                 ).fixedSize()
             }
         }

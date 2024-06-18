@@ -13,6 +13,7 @@ extension Button {
         public var icon: Icon
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
+        public var contentColorResolver: ColorResolvable? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = IconButton
@@ -22,12 +23,14 @@ extension Button {
             icon: Icon,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
+            contentColorResolver: ColorResolvable? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.varient = varient
             self.icon = icon
             self.state = state
             self.disable = disable
+            self.contentColorResolver = contentColorResolver
             self.handler = handler
         }
         
@@ -40,6 +43,7 @@ extension Button {
             uiView.icon = icon
             uiView.state = state
             uiView.disable = disable
+            uiView.contentColorResolver = contentColorResolver
             uiView.handler = handler
         }
     }
@@ -47,26 +51,57 @@ extension Button {
 
 struct IconButtonControllerPreview: View {
     var body: some View {
-        HStack {
-            Button.IconButtonController(
-                varient: .normal,
-                icon: .apps
-            ) {
-                debugPrint(">>> hello world!")
+        VStack(alignment: .leading) {
+            Text("varient").montage()
+            
+            HStack {
+                Button.IconButtonController(
+                    varient: .normal,
+                    icon: .apps
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.IconButtonController(
+                    varient: .background,
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButtonController(
+                    varient: .outlined(size: .normal),
+                    icon: .apps
+                )
+                .fixedSize()
             }
-            .fixedSize()
             
-            Button.IconButtonController(
-                varient: .background,
-                icon: .apps
-            )
-            .fixedSize()
+            Text("custom").montage()
             
-            Button.IconButtonController(
-                varient: .outlined(size: .normal),
-                icon: .apps
-            )
-            .fixedSize()
+            HStack {
+                Button.IconButtonController(
+                    varient: .normal,
+                    icon: .apps,
+                    contentColorResolver: Color.Alias.accentLightBlue
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.IconButtonController(
+                    varient: .background,
+                    icon: .apps,
+                    contentColorResolver: Color.Alias.accentPink
+                )
+                .fixedSize()
+                
+                Button.IconButtonController(
+                    varient: .outlined(size: .normal),
+                    icon: .apps,
+                    contentColorResolver: Color.Alias.accentRedOrange
+                )
+                .fixedSize()
+            }
         }
     }
 }

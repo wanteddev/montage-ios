@@ -49,6 +49,14 @@ extension Button {
             }
         }
         
+        /// 커스텀 가능한 아이콘 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var contentColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
         /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
         public var handler: (() -> Void)?
         
@@ -197,7 +205,17 @@ extension Button.IconButton {
         backgroundColor = disable ? varient.inactiveBackgroundColor : varient.activeBackgroundColor
         layer.borderColor = varient.borderColor.cgColor
         layer.borderWidth = varient.borderWidth
-        iconView.tintColor = .alias(disable ? varient.inactiveColor : varient.activeColor)
+        iconView.tintColor = {
+            if disable {
+                varient.inactiveColor.resolve(.current)
+            } else {
+                if let contentColorResolver {
+                    contentColorResolver.resolve(.current)
+                } else {
+                    varient.activeColor.resolve(.current)
+                }
+            }
+        }()
         interaction.color = varient.interactionColor
         interaction.varient = varient.interactionVarient
     }
