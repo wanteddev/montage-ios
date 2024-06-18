@@ -24,4 +24,8 @@ extension SwiftUI.Color {
     public static func component(_ type: Color.Component) -> SwiftUI.Color {
         SwiftUI.Color(UIColor.component(type))
     }
+    
+    public static func montage(_ type: ColorResolvable) -> SwiftUI.Color {
+        SwiftUI.Color(UIColor.montage(type))
+    }
 }
