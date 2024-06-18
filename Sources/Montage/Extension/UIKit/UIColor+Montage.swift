@@ -23,4 +23,8 @@ extension UIColor {
     public static func component(_ type: Color.Component) -> UIColor {
         .init(dynamicProvider: type.resolve)
     }
+    
+    public static func montage(_ type: ColorResolvable) -> UIColor {
+        .init(dynamicProvider: type.resolve)
+    }
 }

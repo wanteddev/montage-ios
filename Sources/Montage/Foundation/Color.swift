@@ -14,7 +14,7 @@ public enum Color {
     ///
     /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Palettes (New)](https://www.figma.com/file/r0LXCzm4slyOAhR7jVp1DM/Color---Palettes-(New)?node-id=19%3A2&t=VRHF3ebMufBEkKtL-1) 를 참고하세요.
     ///
-    public enum Global: String {
+    public enum Global: String, ColorResolvable {
         // COMMON
         case globalCommon100
         case globalCommon0
@@ -230,6 +230,10 @@ public enum Color {
         case globalRedOrange0
         
         public var name: String { rawValue }
+        
+        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+            .load(name: name)
+        }
     }
     
     ///
@@ -237,7 +241,7 @@ public enum Color {
     ///
     /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
     ///
-    public enum Alias: String {
+    public enum Alias: String, ColorResolvable {
         ///
         /// Figma상의 `.color-alias-static-white` 토큰과 대응되는 값입니다.
         ///
@@ -420,7 +424,7 @@ public enum Color {
         
         public var name: String { rawValue }
         
-        func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             let style = traitCollection.userInterfaceStyle
             let globalType: Color.Global
             let opacity: Decorate.Opacity
@@ -524,7 +528,7 @@ public enum Color {
     ///
     /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
     ///
-    public enum Component: String {
+    public enum Component: String, ColorResolvable {
         ///
         /// Figma상의 `.color-component-fill-normal` 토큰과 대응되는 값입니다.
         ///
@@ -547,7 +551,7 @@ public enum Color {
         
         public var name: String { rawValue }
         
-        func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             let style = traitCollection.userInterfaceStyle
             
             let baseColor: UIColor
@@ -574,7 +578,7 @@ public enum Color {
     }
     
     /// 장식 요소를 위해 사용할 수 있는 색상들을 나열하는 값입니다.
-    public enum Accent: Equatable {
+    public enum Accent: Equatable, ColorResolvable {
         case primary
         case positive
         case cautionary
@@ -617,5 +621,13 @@ public enum Color {
         func resolveAsUIColor() -> UIColor {
             .alias(resolveAsAlias())
         }
+        
+        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+            .alias(resolveAsAlias())
+        }
     }
+}
+
+public protocol ColorResolvable {
+    func resolve(_ traitCollection: UITraitCollection) -> UIColor
 }
