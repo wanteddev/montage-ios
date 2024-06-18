@@ -30,7 +30,7 @@ extension Button {
             size: OutlinedButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
-            text: String,
+            text: String = "",
             uniqueIcon: Icon? = nil,
             iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
@@ -43,6 +43,8 @@ extension Button {
             self.rightIcon = rightIcon
             self.text = text
             self.state = state
+            self.uniqueIcon = uniqueIcon
+            self.iconOnly = iconOnly
             self.disable = disable
             self.handler = handler
         }
@@ -71,31 +73,61 @@ struct OutlinedButtonControllerPreview: View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
             Text("Varient").montage()
             
-            HStack {
-                Button.OutlinedButtonController(
-                    varient: .primary,
-                    size: .small,
-                    rightIcon: .chevronRightThick,
-                    text: "안녕하세요"
-                )
-                .fixedSize()
+            VStack(alignment: .leading) {
+                HStack {
+                    Button.OutlinedButtonController(
+                        varient: .primary,
+                        size: .small,
+                        rightIcon: .chevronRightThick,
+                        text: "안녕하세요"
+                    )
+                    .fixedSize()
+                    
+                    Button.OutlinedButtonController(
+                        varient: .secondary,
+                        size: .small,
+                        rightIcon: .chevronRightThick,
+                        text: "안녕하세요"
+                    )
+                    .fixedSize()
+                    
+                    Button.OutlinedButtonController(
+                        varient: .assistive,
+                        size: .small,
+                        rightIcon: .chevronRightThick,
+                        text: "안녕하세요"
+                    )
+                    .fixedSize()
+                }
                 
-                Button.OutlinedButtonController(
-                    varient: .secondary,
-                    size: .small,
-                    rightIcon: .chevronRightThick,
-                    text: "안녕하세요"
-                )
-                .fixedSize()
-                
-                Button.OutlinedButtonController(
-                    varient: .assistive,
-                    size: .small,
-                    rightIcon: .chevronRightThick,
-                    text: "안녕하세요"
-                )
-                .fixedSize()
+                HStack {
+                    Button.OutlinedButtonController(
+                        varient: .primary,
+                        size: .large,
+                        uniqueIcon: .android,
+                        iconOnly: true
+                    )
+                    .fixedSize()
+                    
+                    Button.OutlinedButtonController(
+                        varient: .assistive,
+                        size: .medium,
+                        uniqueIcon: .android,
+                        iconOnly: true
+                    )
+                    .fixedSize()
+                    
+                    Button.OutlinedButtonController(
+                        varient: .primary,
+                        size: .small,
+                        uniqueIcon: .android,
+                        iconOnly: true,
+                        disable: true
+                    )
+                    .fixedSize()
+                }
             }
+            
             
             Text("State").montage()
             

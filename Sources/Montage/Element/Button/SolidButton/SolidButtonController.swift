@@ -28,7 +28,7 @@ extension Button {
             size: SolidButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
-            text: String,
+            text: String = "",
             uniqueIcon: Icon? = nil,
             iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
@@ -87,32 +87,94 @@ struct SolidButtonControllerPreview: View {
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
+                
+                Button.SolidButtonController(
+                    uniqueIcon: .android,
+                    iconOnly: true
+                )
+                .fixedSize()
+                
+                Button.SolidButtonController(
+                    uniqueIcon: .android,
+                    iconOnly: true,
+                    disable: true
+                )
+                .fixedSize()
             }
             
             Text("Size").montage()
             
-            HStack {
-                Button.SolidButtonController(
-                    size: .small,
-                    text: "안녕하세요"
-                ).fixedSize()
+            VStack(alignment: .leading) {
+                HStack {
+                    Button.SolidButtonController(
+                        size: .small,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .medium,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .large,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .large,
+                        text: "안녕하세요",
+                        uniqueIcon: .apps,
+                        iconOnly: true
+                    ).fixedSize()
+                }
                 
-                Button.SolidButtonController(
-                    size: .medium,
-                    text: "안녕하세요"
-                ).fixedSize()
-                
-                Button.SolidButtonController(
-                    size: .large,
-                    text: "안녕하세요"
-                ).fixedSize()
-                
-                Button.SolidButtonController(
-                    size: .large,
-                    text: "안녕하세요",
-                    uniqueIcon: .apps,
-                    iconOnly: true
-                ).fixedSize()
+                HStack {
+                    Button.SolidButtonController(
+                        size: .large,
+                        uniqueIcon: .chat,
+                        iconOnly: true
+                    )
+                    .fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .medium,
+                        uniqueIcon: .chat,
+                        iconOnly: true
+                    )
+                    .fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .small,
+                        uniqueIcon: .chat,
+                        iconOnly: true
+                    )
+                    .fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .large,
+                        uniqueIcon: .eye,
+                        iconOnly: true,
+                        disable: true
+                    )
+                    .fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .medium,
+                        uniqueIcon: .eye,
+                        iconOnly: true,
+                        disable: true
+                    )
+                    .fixedSize()
+                    
+                    Button.SolidButtonController(
+                        size: .small,
+                        uniqueIcon: .eye,
+                        iconOnly: true,
+                        disable: true
+                    )
+                    .fixedSize()
+                }
             }
             
             Text("Icon").montage()

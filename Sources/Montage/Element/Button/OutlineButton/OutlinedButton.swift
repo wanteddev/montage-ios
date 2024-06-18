@@ -80,8 +80,10 @@ extension Button {
         
         /// uniqueIcon 노출 여부입니다.
         /// > text와 leftIcon, rightIcon은 표현되지 않습니다.
+        /// > 설정 시 constraint가 업데이트 됩니다.
         public var iconOnly: Bool = false {
             didSet {
+                setupUpdateableConstraints()
                 updateViews()
             }
         }
