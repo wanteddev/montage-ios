@@ -85,7 +85,7 @@ extension Button {
         /// montage의 모든 컬러를 사용할 수 있습니다.
         public var contentColorResolver: ColorResolvable? {
             didSet {
-                updateColor()
+                updateViews()
             }
         }
         
@@ -265,12 +265,12 @@ extension Button.TextButton {
         
         let contentColor: UIColor = {
             if disable {
-                varient.inactiveColor.resolve(.current)
+                varient.inactiveColor
             } else {
                 if let contentColorResolver {
                     contentColorResolver.resolve(.current)
                 } else {
-                    varient.activeColor.resolve(.current)
+                    varient.activeColor
                 }
             }
         }()
@@ -299,7 +299,7 @@ extension Button.TextButton {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
             varient: {
                 if let fontSize {
@@ -309,12 +309,12 @@ extension Button.TextButton {
                 }
             }(),
             weight: .bold,
-            colorResolver: {
+            color: {
                 if disable {
                     varient.inactiveColor
                 } else {
                     if let contentColorResolver {
-                        contentColorResolver
+                        contentColorResolver.resolve(.current)
                     } else {
                         varient.activeColor
                     }
@@ -360,15 +360,15 @@ extension Button.TextButton: UIGestureRecognizerDelegate {
 }
 
 extension Button.TextButton.Varient {
-    var activeColor: Color.Alias {
+    var activeColor: UIColor {
         switch self {
-        case .primary: return .primaryNormal
-        case .assistive: return .labelAlternative
+        case .primary: .alias(.primaryNormal)
+        case .assistive: .alias(.labelAlternative).withAlphaComponent(0.61)
         }
     }
     
-    var inactiveColor: Color.Alias {
-        .labelDisable
+    var inactiveColor: UIColor {
+        .alias(.labelDisable).withAlphaComponent(0.16)
     }
     
     var interactionColor: Color.Alias {
