@@ -242,7 +242,11 @@ extension Button.IconButton {
             case .normal, .background:
                 variant.inset
             case .outlined, .solid:
-                variant.inset + padding
+                if padding != .zero {
+                    padding
+                } else {
+                    variant.inset
+                }
             }
         }()
         
@@ -370,10 +374,17 @@ extension Button.IconButton {
                 height: variant.iconSize.height + variant.inset * 2
             )
         case .outlined, .solid:
-            .init(
-                width: variant.iconSize.width + variant.inset + padding * 2,
-                height: variant.iconSize.height + variant.inset + padding * 2
-            )
+            if padding != .zero {
+                .init(
+                    width: variant.iconSize.width + padding * 2,
+                    height: variant.iconSize.height + padding * 2
+                )
+            } else {
+                .init(
+                    width: variant.iconSize.width + variant.inset * 2,
+                    height: variant.iconSize.height + variant.inset * 2
+                )
+            }
         }
     }
 }
