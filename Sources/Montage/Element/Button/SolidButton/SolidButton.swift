@@ -106,7 +106,7 @@ extension Button {
         /// montage의 모든 컬러를 사용할 수 있습니다.
         public var contentColorResolver: ColorResolvable? {
             didSet {
-                updateColors()
+                updateViews()
             }
         }
         
@@ -319,7 +319,7 @@ extension Button.SolidButton {
                 if let contentColorResolver {
                     contentColorResolver.resolve(.current)
                 } else {
-                    .alias(varient.textColor)
+                    varient.textColor
                 }
             }
         }()
@@ -367,16 +367,16 @@ extension Button.SolidButton {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
             varient: size.typoVarient,
             weight: .bold,
-            colorResolver: {
+            color: {
                 if disable {
-                    Color.Alias.labelAssistive
+                    Color.Alias.labelAssistive.resolve(.current)
                 } else {
                     if let contentColorResolver {
-                        contentColorResolver
+                        contentColorResolver.resolve(.current)
                     } else {
                         varient.textColor
                     }
@@ -422,12 +422,12 @@ extension Button.SolidButton: UIGestureRecognizerDelegate {
 }
 
 extension Button.SolidButton.Varient {
-    var textColor: Color.Alias {
+    var textColor: UIColor {
         switch self {
         case .primary:
-            return .staticWhite
+            return .alias(.staticWhite)
         case .assistive:
-            return .labelNeutral
+            return .alias(.labelNeutral).withAlphaComponent(0.88)
         }
     }
     
@@ -436,7 +436,7 @@ extension Button.SolidButton.Varient {
         case .primary:
             return .alias(.primaryNormal)
         case .assistive:
-            return .component(.fillNormal)
+            return .component(.fillNormal).withAlphaComponent(0.08)
         }
     }
     
