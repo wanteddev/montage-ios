@@ -106,7 +106,7 @@ extension Button {
         /// montage의 모든 컬러를 사용할 수 있습니다.
         public var contentColorResolver: ColorResolvable? {
             didSet {
-                updateColors()
+                updateViews()
             }
         }
         
@@ -310,14 +310,10 @@ extension Button.OutlinedButton {
     
     private func updateColors() {
         backgroundColor = {
-            if disable {
-                .alias(.labelDisable)
+            if let backgroundColorResolver {
+                backgroundColorResolver.resolve(.current)
             } else {
-                if let backgroundColorResolver {
-                    backgroundColorResolver.resolve(.current)
-                } else {
-                    .alias(.backgroundNormal)
-                }
+                .clear
             }
         }()
         layer.borderColor = {
@@ -388,18 +384,18 @@ extension Button.OutlinedButton {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
             varient: size.typoVarient,
             weight: .bold,
-            colorResolver: {
+            color: {
                 if disable {
-                    Color.Alias.labelDisable
+                    Color.Alias.labelDisable.resolve(.current)
                 } else {
                     if let contentColorResolver {
-                        contentColorResolver
+                        contentColorResolver.resolve(.current)
                     } else {
-                        varient.textColor
+                        varient.textColor.resolve(.current)
                     }
                 }
             }()
@@ -457,9 +453,9 @@ extension Button.OutlinedButton.Varient {
         case .primary:
             return .alias(.primaryNormal)
         case .secondary:
-            return .alias(.lineNormal)
+            return .alias(.lineNeutral).withAlphaComponent(0.16)
         case .assistive:
-            return .alias(.lineNeutral)
+            return .alias(.lineNeutral).withAlphaComponent(0.16)
         }
     }
     
