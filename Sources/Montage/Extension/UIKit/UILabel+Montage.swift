@@ -46,6 +46,31 @@ public extension UILabel {
         montage(string, varient: varient, weight: weight, colorResolver: global)
     }
     
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular
+    ) -> UILabel {
+        montage(
+            string,
+            varient: varient,
+            weight: weight,
+            alias: .labelNormal
+        )
+    }
+    
+    static func montage(
+        _ string: String
+    ) -> UILabel {
+        montage(
+            string,
+            varient: .body1,
+            weight: .regular,
+            alias: .labelNormal
+        )
+    }
+
+    
     @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:varient:weight:alias:) 사용을 권장합니다.")
     static func montage(
         _ string: String,

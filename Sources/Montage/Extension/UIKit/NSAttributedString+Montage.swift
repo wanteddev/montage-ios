@@ -7,8 +7,8 @@
 
 import UIKit
 
-public extension NSAttributedString {
-    private static func _montage(
+extension NSAttributedString {
+    static func _montage(
         _ string: String,
         varient: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
@@ -46,7 +46,9 @@ public extension NSAttributedString {
             }()
         ])
     }
-    
+}
+
+public extension NSAttributedString {
     static func montage(
         _ string: String,
         varient: Typography.Variant = .body1,
@@ -67,7 +69,7 @@ public extension NSAttributedString {
         _ string: String,
         varient: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        alias: Color.Alias = .labelNormal,
+        alias: Color.Alias,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
@@ -83,7 +85,7 @@ public extension NSAttributedString {
         _ string: String,
         varient: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        component: Color.Component = .fillNormal,
+        component: Color.Component,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
@@ -99,7 +101,7 @@ public extension NSAttributedString {
         _ string: String,
         varient: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        global: Color.Global = .globalRed0,
+        global: Color.Global,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
@@ -108,6 +110,32 @@ public extension NSAttributedString {
             weight: weight,
             colorResolver: global,
             lineBreakMode: lineBreakMode
+        )
+    }
+    
+    static func montage(
+        _ string: String,
+        varient: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular
+    ) -> NSAttributedString {
+        montage(
+            string,
+            varient: varient,
+            weight: weight,
+            alias: .labelNormal,
+            lineBreakMode: .byWordWrapping
+        )
+    }
+    
+    static func montage(
+        _ string: String
+    ) -> NSAttributedString {
+        montage(
+            string,
+            varient: .body1,
+            weight: .regular,
+            alias: .labelNormal,
+            lineBreakMode: .byWordWrapping
         )
     }
 
