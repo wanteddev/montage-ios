@@ -12,7 +12,7 @@ import Pretendard
 
 extension Button {
     public struct OutlinedButtonController: UIViewRepresentable {
-        public var varient: OutlinedButton.Varient = .primary
+        public var varient: OutlinedButton.Variant = .primary
         public var size: OutlinedButton.Size = .medium
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -29,7 +29,7 @@ extension Button {
         public typealias UIViewType = OutlinedButton
         
         public init(
-            varient: OutlinedButton.Varient = .primary,
+            varient: OutlinedButton.Variant = .primary,
             size: OutlinedButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -63,7 +63,7 @@ extension Button {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.varient = varient
+            uiView.variant = varient
             uiView.size = size
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon

@@ -12,7 +12,7 @@ extension Button {
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class OutlinedButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
-        public enum Varient {
+        public enum Variant {
             case primary, secondary, assistive
         }
         
@@ -27,7 +27,7 @@ extension Button {
         }
         
         /// 버튼의 외관입니다.
-        public var varient: Varient = .primary {
+        public var variant: Variant = .primary {
             didSet {
                 updateViews()
             }
@@ -227,7 +227,7 @@ extension Button.OutlinedButton {
     }
     
     private func setupInteraction() {
-        interaction.varient = varient.interactionVarient
+        interaction.varient = variant.interactionVarient
         
         setupInteractionContraints()
     }
@@ -323,7 +323,7 @@ extension Button.OutlinedButton {
                 if let borderColorResolver {
                     borderColorResolver.resolve(.current).cgColor
                 } else {
-                    varient.borderColor.cgColor
+                    variant.borderColor.cgColor
                 }
             }
         }()
@@ -335,15 +335,15 @@ extension Button.OutlinedButton {
                 if let contentColorResolver {
                     contentColorResolver.resolve(.current)
                 } else {
-                    .alias(varient.textColor)
+                    .alias(variant.textColor)
                 }
             }
         }()
         leftIconView.tintColor = contentColor
         rightIconView.tintColor = contentColor
         uniqueIconView.tintColor = contentColor
-        interaction.color = varient.interactionColor
-        interaction.varient = varient.interactionVarient
+        interaction.color = variant.interactionColor
+        interaction.varient = variant.interactionVarient
     }
     
     private func updateIconView() {
@@ -387,7 +387,7 @@ extension Button.OutlinedButton {
         ._montage(
             text,
             varient: size.typoVarient,
-            weight: .bold,
+            weight: variant.typoWeight,
             color: {
                 if disable {
                     Color.Alias.labelDisable.resolve(.current)
@@ -395,7 +395,7 @@ extension Button.OutlinedButton {
                     if let contentColorResolver {
                         contentColorResolver.resolve(.current)
                     } else {
-                        varient.textColor.resolve(.current)
+                        variant.textColor.resolve(.current)
                     }
                 }
             }()
@@ -438,13 +438,20 @@ extension Button.OutlinedButton: UIGestureRecognizerDelegate {
     }
 }
 
-extension Button.OutlinedButton.Varient {
+extension Button.OutlinedButton.Variant {
     var textColor: Color.Alias {
         switch self {
         case .primary, .secondary:
             return .primaryNormal
         case .assistive:
             return .labelNormal
+        }
+    }
+    
+    var typoWeight: Typography.Weight {
+        switch self {
+        case .primary, .secondary: return .bold
+        case .assistive: return .medium
         }
     }
     

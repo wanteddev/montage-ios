@@ -12,7 +12,7 @@ extension Button {
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class SolidButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
-        public enum Varient {
+        public enum Variant {
             case primary, assistive
         }
         
@@ -27,7 +27,7 @@ extension Button {
         }
         
         /// 버튼의 외관입니다.
-        public var varient: Varient = .primary {
+        public var variant: Variant = .primary {
             didSet {
                 updateViews()
             }
@@ -219,7 +219,7 @@ extension Button.SolidButton {
     }
     
     private func setupInteraction() {
-        interaction.varient = varient.interactionVarient
+        interaction.varient = variant.interactionVarient
         
         setupInteractionContraints()
     }
@@ -308,7 +308,7 @@ extension Button.SolidButton {
                 if let backgroundColorResolver {
                     backgroundColorResolver.resolve(.current)
                 } else {
-                    varient.backgroundColor
+                    variant.backgroundColor
                 }
             }
         }()
@@ -319,14 +319,14 @@ extension Button.SolidButton {
                 if let contentColorResolver {
                     contentColorResolver.resolve(.current)
                 } else {
-                    varient.textColor
+                    variant.textColor
                 }
             }
         }()
         leftIconView.tintColor = contentColor
         rightIconView.tintColor = contentColor
         uniqueIconView.tintColor = contentColor
-        interaction.color = varient.interactionColor
+        interaction.color = variant.interactionColor
     }
     
     private func updateIconView() {
@@ -370,7 +370,7 @@ extension Button.SolidButton {
         ._montage(
             text,
             varient: size.typoVarient,
-            weight: .bold,
+            weight: variant.typoWeight,
             color: {
                 if disable {
                     Color.Alias.labelAssistive.resolve(.current)
@@ -378,7 +378,7 @@ extension Button.SolidButton {
                     if let contentColorResolver {
                         contentColorResolver.resolve(.current)
                     } else {
-                        varient.textColor
+                        variant.textColor
                     }
                 }
             }()
@@ -421,13 +421,20 @@ extension Button.SolidButton: UIGestureRecognizerDelegate {
     }
 }
 
-extension Button.SolidButton.Varient {
+extension Button.SolidButton.Variant {
     var textColor: UIColor {
         switch self {
         case .primary:
             return .alias(.staticWhite)
         case .assistive:
             return .alias(.labelNeutral).withAlphaComponent(0.88)
+        }
+    }
+    
+    var typoWeight: Typography.Weight {
+        switch self {
+        case .primary: return .bold
+        case .assistive: return .medium
         }
     }
     
