@@ -457,7 +457,7 @@ extension Button.IconButton.Variant {
         case .normal, .outlined: .alias(.labelNormal)
         case .background(_, let isAlternative):
             if isAlternative {
-               .alias(.staticWhite)
+                .alias(.staticWhite).withAlphaComponent(0.88)
             } else {
                 .atomic(.globalCoolNeutral50).withAlphaComponent(0.74)
             }
@@ -470,7 +470,7 @@ extension Button.IconButton.Variant {
         case .normal, .outlined, .solid:
             return .alias(.labelDisable).withAlphaComponent(0.16)
         case .background:
-            return .atomic(.globalCoolNeutral50)
+            return .atomic(.globalCoolNeutral50).withAlphaComponent(0.22)
         }
     }
     
