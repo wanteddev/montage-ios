@@ -10,13 +10,13 @@ import UIKit
 extension NSAttributedString {
     static func _montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: UIColor,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
-        let font = UIFont.montage(varient: varient, weight: weight)
-        let lineHeight = Typography.getLineHeight(varient: varient)
+        let font = UIFont.montage(variant: variant, weight: weight)
+        let lineHeight = Typography.getLineHeight(varient: variant)
         
         // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/
         let baselineOffset: CGFloat
@@ -29,7 +29,7 @@ extension NSAttributedString {
         }
         
         let foregroundColor = color
-        let tracking = Typography.getTracking(varient: varient)
+        let tracking = Typography.getTracking(varient: variant)
         
         return .init(string: string, attributes: [
             .font: font,
@@ -51,14 +51,14 @@ extension NSAttributedString {
 public extension NSAttributedString {
     static func montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         colorResolver: ColorResolvable,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         _montage(
             string,
-            varient: varient,
+            variant: variant,
             weight: weight,
             color: colorResolver.resolve(.current),
             lineBreakMode: lineBreakMode
@@ -67,14 +67,14 @@ public extension NSAttributedString {
     
     static func montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         alias: Color.Alias,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
             string,
-            varient: varient,
+            variant: variant,
             weight: weight,
             colorResolver: alias,
             lineBreakMode: lineBreakMode
@@ -83,14 +83,14 @@ public extension NSAttributedString {
 
     static func montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         component: Color.Component,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
             string,
-            varient: varient,
+            variant: variant,
             weight: weight,
             colorResolver: component,
             lineBreakMode: lineBreakMode
@@ -99,14 +99,14 @@ public extension NSAttributedString {
 
     static func montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         global: Color.Global,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
             string,
-            varient: varient,
+            variant: variant,
             weight: weight,
             colorResolver: global,
             lineBreakMode: lineBreakMode
@@ -115,12 +115,12 @@ public extension NSAttributedString {
     
     static func montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
     ) -> NSAttributedString {
         montage(
             string,
-            varient: varient,
+            variant: variant,
             weight: weight,
             alias: .labelNormal,
             lineBreakMode: .byWordWrapping
@@ -132,14 +132,14 @@ public extension NSAttributedString {
     ) -> NSAttributedString {
         montage(
             string,
-            varient: .body1,
+            variant: .body1,
             weight: .regular,
             alias: .labelNormal,
             lineBreakMode: .byWordWrapping
         )
     }
 
-    @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:varient:weight:alias:lineBreakMode:) 사용을 권장합니다.")
+    @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:variant:weight:alias:lineBreakMode:) 사용을 권장합니다.")
     static func montage(
         _ string: String,
         varient: Typography.Variant = .body1,
@@ -149,7 +149,7 @@ public extension NSAttributedString {
     ) -> NSAttributedString {
         _montage(
             string,
-            varient: varient,
+            variant: varient,
             weight: weight,
             color: .alias(color),
             lineBreakMode: lineBreakMode

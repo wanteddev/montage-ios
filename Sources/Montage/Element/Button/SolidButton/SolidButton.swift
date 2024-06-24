@@ -369,7 +369,7 @@ extension Button.SolidButton {
     private func getAttributedText() -> NSAttributedString {
         ._montage(
             text,
-            varient: size.typoVarient,
+            variant: size.typoVarient,
             weight: variant.typoWeight,
             color: {
                 if disable {

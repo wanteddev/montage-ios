@@ -21,13 +21,13 @@ extension Button {
     public class TextButton: UIView {
         
         /// 버튼의 외관을 결정하는 열거형입니다.
-        public enum Varient {
+        public enum Variant {
             case primary
             case assistive
         }
         
         /// 버튼의 외관입니다.
-        public var varient: Varient = .primary {
+        public var variant: Variant = .primary {
             didSet {
                 updateViews()
             }
@@ -244,7 +244,7 @@ extension Button.TextButton {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = varient.interactionRadius
+        layer.cornerRadius = variant.interactionRadius
         layer.masksToBounds = true
     }
 }
@@ -261,16 +261,16 @@ extension Button.TextButton {
     }
     
     private func updateColor() {
-        interaction.color = varient.interactionColor
+        interaction.color = variant.interactionColor
         
         let contentColor: UIColor = {
             if disable {
-                varient.inactiveColor
+                variant.inactiveColor
             } else {
                 if let contentColorResolver {
                     contentColorResolver.resolve(.current)
                 } else {
-                    varient.activeColor
+                    variant.activeColor
                 }
             }
         }()
@@ -301,7 +301,7 @@ extension Button.TextButton {
     private func getAttributedText() -> NSAttributedString {
         ._montage(
             text,
-            varient: {
+            variant: {
                 if let fontSize {
                     fontSize
                 } else {
@@ -311,12 +311,12 @@ extension Button.TextButton {
             weight: .bold,
             color: {
                 if disable {
-                    varient.inactiveColor
+                    variant.inactiveColor
                 } else {
                     if let contentColorResolver {
                         contentColorResolver.resolve(.current)
                     } else {
-                        varient.activeColor
+                        variant.activeColor
                     }
                 }
             }()
@@ -359,7 +359,7 @@ extension Button.TextButton: UIGestureRecognizerDelegate {
     }
 }
 
-extension Button.TextButton.Varient {
+extension Button.TextButton.Variant {
     var activeColor: UIColor {
         switch self {
         case .primary: .alias(.primaryNormal)

@@ -15,7 +15,7 @@ public extension UILabel {
         colorResolver: ColorResolvable
     ) -> UILabel {
         let label = UIKit.UILabel()
-        label.attributedText = .montage(string, varient: varient, weight: weight, colorResolver: colorResolver)
+        label.attributedText = .montage(string, variant: varient, weight: weight, colorResolver: colorResolver)
         return label
     }
     

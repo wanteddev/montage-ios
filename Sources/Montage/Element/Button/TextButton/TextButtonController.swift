@@ -11,7 +11,7 @@ import Pretendard
 
 extension Button {
     public struct TextButtonController: UIViewRepresentable {
-        public var varient: TextButton.Varient = .primary
+        public var variant: TextButton.Variant = .primary
         public var size: TextButton.Size = .medium
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -24,7 +24,7 @@ extension Button {
         public typealias UIViewType = TextButton
         
         public init(
-            varient: TextButton.Varient = .primary,
+            varient: TextButton.Variant = .primary,
             size: TextButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -34,7 +34,7 @@ extension Button {
             fontSize: Typography.Variant? = nil,
             handler: (() -> Void)? = nil
         ) {
-            self.varient = varient
+            self.variant = varient
             self.size = size
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
@@ -50,7 +50,7 @@ extension Button {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.varient = varient
+            uiView.variant = variant
             uiView.size = size
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon

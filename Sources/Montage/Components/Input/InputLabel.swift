@@ -18,7 +18,7 @@ public protocol InputDelegate: AnyObject {
 public class InputLabel: UIView {
     private enum Const {
         static let inputSize: CGSize = .init(width: 24, height: 24)
-        static let textVarient: Typography.Variant = .body2
+        static let textVariant: Typography.Variant = .body2
     }
     
     private var elementView: MontageControl
@@ -89,7 +89,7 @@ public class InputLabel: UIView {
 
 extension InputLabel {
     private func setupViews() {
-        let lineHeight = Typography.getLineHeight(varient: Const.textVarient)
+        let lineHeight = Typography.getLineHeight(varient: Const.textVariant)
         let textTopInset = (lineHeight - Const.inputSize.height) / 2
         let elementSpacing: CGFloat
         
@@ -142,8 +142,8 @@ extension InputLabel {
         elementView.disable = disable
         textLabel.attributedText = .montage(
             text ?? "",
-            varient: Const.textVarient,
-            color: disable ? .labelDisable : .labelNormal
+            variant: Const.textVariant,
+            alias: disable ? .labelDisable : .labelNormal
         )
     }
 }
