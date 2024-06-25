@@ -219,7 +219,7 @@ extension Button.SolidButton {
     }
     
     private func setupInteraction() {
-        interaction.varient = variant.interactionVarient
+        interaction.variant = variant.interactionVariant
         
         setupInteractionContraints()
     }
@@ -451,7 +451,7 @@ extension Button.SolidButton.Variant {
         .labelNormal
     }
 
-    var interactionVarient: Decorate.Interaction.Varient {
+    var interactionVariant: Decorate.Interaction.Variant {
         switch self {
         case .primary:
             return .strong
