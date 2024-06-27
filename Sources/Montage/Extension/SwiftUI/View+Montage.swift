@@ -41,3 +41,9 @@ extension View {
         self.modifier(ToastModifier(model: model))
     }
 }
+
+extension View {
+    public func snackBar(_ model: Binding<SnackBar.Model?>) -> some View {
+        self.modifier(SnackBarModifier(model: model))
+    }
+}
