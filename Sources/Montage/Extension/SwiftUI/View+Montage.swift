@@ -31,7 +31,7 @@ extension View {
         return currentView
     }
     
-    public func paragraph(varient: Typography.Variant) -> some View {
-        lineSpacing(varient.lineSpacing).padding(.vertical, varient.padding)
+    public func paragraph(variant: Typography.Variant) -> some View {
+        lineSpacing(variant.lineSpacing).padding(.vertical, variant.padding)
     }
 }

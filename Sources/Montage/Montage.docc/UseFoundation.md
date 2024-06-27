@@ -42,7 +42,7 @@ Typography에서 정의한 파라미터는 크게 세가지로, 각각의 용도
 | Parameter | Description |
 | --------- | ----------- |
 | ``Montage/Typography/Variant`` | 타이포의 용도를 정의하는 파라미터입니다. 기본값은 `.body1`을 사용하고 있습니다. | 
-| ``Montage/Typography/Weight`` | 타이포의 굵기를 정의하는 파라미터입니다. Varient와 조합하여 어떤 폰트 Weight를 사용할 지 결정합니다. | 
+| ``Montage/Typography/Weight`` | 타이포의 굵기를 정의하는 파라미터입니다. Variant와 조합하여 어떤 폰트 Weight를 사용할 지 결정합니다. | 
 | ``Montage/Typography/Size`` | 타이포의 크기를 정의하는 파라미터입니다. 모바일 환경에서는 `.small`이 기본값이며, 특별한 언급이 없는 한 `.large`를 사용하지 않습니다. |
 
 일반적으로 사용할 때는 Montage에서 구현한 `NSAttributedString`의 Extension을 통해 새로운 Attributed String을 생성하여 사용하시면 됩니다. SwiftUI에서는 `Text`의 Extension인 `.montage` 속성을 사용하실 수 있습니다.
@@ -57,7 +57,7 @@ struct CustomView: View {
     public var body: some View {
         VStack {
             /// Title1/Bold
-            Text("hello, world").montage(varient: .title1, weight: .bold)
+            Text("hello, world").montage(variant: .title1, weight: .bold)
 
             /// Body1/Regular
             Text("hello, world").montage()

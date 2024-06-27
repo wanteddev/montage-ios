@@ -10,7 +10,7 @@ import Pretendard
 
 extension Chip {
     public struct ActionChipController: UIViewRepresentable {
-        public var varient: Action.Varient = .filled
+        public var variant: Action.Variant = .filled
         public var size: Action.Size = .medium
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -22,7 +22,7 @@ extension Chip {
         public typealias UIViewType = Action
         
         public init(
-            varient: Action.Varient = .filled,
+            variant: Action.Variant = .filled,
             size: Action.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -31,7 +31,7 @@ extension Chip {
             disable: Bool = false,
             handler: (() -> Void)? = nil
         ) {
-            self.varient = varient
+            self.variant = variant
             self.size = size
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
@@ -46,7 +46,7 @@ extension Chip {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.varient = varient
+            uiView.variant = variant
             uiView.size = size
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon
@@ -61,44 +61,44 @@ extension Chip {
 var actionChipControllerPreview: some View {
     VStack(alignment: .leading, spacing: .spacing(.pt20)) {
         VStack(alignment: .leading) {
-            Text("Varient").montage(varient: .headline2)
+            Text("Variant").montage(variant: .headline2)
             HStack {
                 Chip.ActionChipController(
-                    varient: .filled,
+                    variant: .filled,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    varient: .outlined,
+                    variant: .outlined,
                     text: "안녕하세요"
                 ).fixedSize()
             }
         }
         
         VStack(alignment: .leading) {
-            Text("State").montage(varient: .headline2)
+            Text("State").montage(variant: .headline2)
             HStack {
                 Chip.ActionChipController(
-                    varient: .filled,
+                    variant: .filled,
                     text: "안녕하세요",
                     disable: false
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    varient: .filled,
+                    variant: .filled,
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
             }
             HStack {
                 Chip.ActionChipController(
-                    varient: .outlined,
+                    variant: .outlined,
                     text: "안녕하세요",
                     disable: false
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    varient: .outlined,
+                    variant: .outlined,
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
@@ -106,22 +106,22 @@ var actionChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("Size").montage(varient: .headline2)
+            Text("Size").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.ActionChipController(
-                    varient: .filled,
+                    variant: .filled,
                     size: .small,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    varient: .filled,
+                    variant: .filled,
                     size: .medium,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    varient: .filled,
+                    variant: .filled,
                     size: .large,
                     text: "안녕하세요"
                 ).fixedSize()

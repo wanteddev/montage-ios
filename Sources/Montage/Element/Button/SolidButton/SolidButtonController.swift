@@ -10,7 +10,7 @@ import Pretendard
 
 extension Button {
     public struct SolidButtonController: UIViewRepresentable {
-        public var varient: SolidButton.Variant = .primary
+        public var variant: SolidButton.Variant = .primary
         public var size: SolidButton.Size = .medium
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -26,7 +26,7 @@ extension Button {
         public typealias UIViewType = SolidButton
         
         public init(
-            varient: SolidButton.Variant = .primary,
+            variant: SolidButton.Variant = .primary,
             size: SolidButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -39,7 +39,7 @@ extension Button {
             backgroundColorResolver: ColorResolvable? = nil,
             handler: (() -> Void)? = nil
         ) {
-            self.varient = varient
+            self.variant = variant
             self.size = size
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
@@ -58,7 +58,7 @@ extension Button {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.variant = varient
+            uiView.variant = variant
             uiView.size = size
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon

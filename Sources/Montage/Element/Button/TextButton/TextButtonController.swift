@@ -24,7 +24,7 @@ extension Button {
         public typealias UIViewType = TextButton
         
         public init(
-            varient: TextButton.Variant = .primary,
+            variant: TextButton.Variant = .primary,
             size: TextButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -34,7 +34,7 @@ extension Button {
             fontSize: Typography.Variant? = nil,
             handler: (() -> Void)? = nil
         ) {
-            self.variant = varient
+            self.variant = variant
             self.size = size
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
@@ -66,7 +66,7 @@ extension Button {
 struct TextButtonControllerPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Size").montage(varient: .headline2)
+            Text("Size").montage(variant: .headline2)
             
             HStack {
                 Button.TextButtonController(
@@ -79,18 +79,18 @@ struct TextButtonControllerPreview: View {
                 ).fixedSize()
                 
                 Button.TextButtonController(
-                    varient: .assistive,
+                    variant: .assistive,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Button.TextButtonController(
-                    varient: .assistive,
+                    variant: .assistive,
                     size: .small,
                     text: "안녕하세요"
                 ).fixedSize()
             }
             
-            Text("Icon").montage(varient: .headline2)
+            Text("Icon").montage(variant: .headline2)
             
             VStack(alignment: .leading) {
                 HStack {
@@ -113,19 +113,19 @@ struct TextButtonControllerPreview: View {
                 
                 HStack {
                     Button.TextButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         leftIcon: .bubbleFill,
                         text: "안녕하세요"
                     ).fixedSize()
                     
                     Button.TextButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         rightIcon: .circleClose,
                         text: "안녕하세요"
                     ).fixedSize()
                     
                     Button.TextButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         leftIcon: .bubbleFill,
                         rightIcon: .circleClose,
                         text: "안녕하세요"
@@ -133,7 +133,7 @@ struct TextButtonControllerPreview: View {
                 }
             }
             
-            Text("State").montage(varient: .headline2)
+            Text("State").montage(variant: .headline2)
             
             HStack {
                 Button.TextButtonController(
@@ -147,19 +147,19 @@ struct TextButtonControllerPreview: View {
                 ).fixedSize()
                 
                 Button.TextButtonController(
-                    varient: .assistive,
+                    variant: .assistive,
                     text: "안녕하세요",
                     disable: false
                 ).fixedSize()
                 
                 Button.TextButtonController(
-                    varient: .assistive,
+                    variant: .assistive,
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
             }
             
-            Text("Custom").montage(varient: .headline2)
+            Text("Custom").montage(variant: .headline2)
             
             VStack(alignment: .leading) {
                 HStack {

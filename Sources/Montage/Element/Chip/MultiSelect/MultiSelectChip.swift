@@ -219,7 +219,7 @@ extension Chip.MultiSelect {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, varient: size.typoVarient, weight: .bold, color: resolveCurrentTextColor())
+        .montage(text, variant: size.typoVariant, weight: .bold, color: resolveCurrentTextColor())
     }
 }
 
@@ -273,7 +273,7 @@ extension Chip.MultiSelect.Size {
         }
     }
     
-    var typoVarient: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .large:
             return .body2

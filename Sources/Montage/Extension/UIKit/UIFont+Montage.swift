@@ -17,9 +17,9 @@ public extension UIFont {
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
     ) -> UIFont {
-        let sementicWeight = Typography.getSementicWeight(varient: variant, weight: weight)
-        let failbackWeight = Typography.getFailbackWeight(varient: variant, weight: weight)
-        let sementicSize = Typography.getSementicSize(varient: variant)
+        let sementicWeight = Typography.getSementicWeight(variant: variant, weight: weight)
+        let failbackWeight = Typography.getFailbackWeight(variant: variant, weight: weight)
+        let sementicSize = Typography.getSementicSize(variant: variant)
         return UIFont(name: sementicWeight.fontName, size: sementicSize) ??
             .systemFont(ofSize: sementicSize, weight: failbackWeight)
     }

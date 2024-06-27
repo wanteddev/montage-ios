@@ -11,7 +11,7 @@ extension Chip {
     /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
     public class Action: UIView {
         /// 칩의 외관을 결정하는 열거형입니다.
-        public enum Varient {
+        public enum Variant {
             case filled, outlined
         }
         
@@ -21,7 +21,7 @@ extension Chip {
         }
         
         /// 칩의 외관입니다.
-        public var varient: Varient = .filled {
+        public var variant: Variant = .filled {
             didSet {
                 updateViews()
             }
@@ -234,9 +234,9 @@ extension Chip.Action {
     }
     
     private func updateColors() {
-        backgroundColor = varient.backgroundColor
+        backgroundColor = variant.backgroundColor
         layer.borderColor = resolveCurrentLineColor()
-        layer.borderWidth = varient.borderWidth
+        layer.borderWidth = variant.borderWidth
         leftIconView.tintColor = .alias(resolveCurrentTextColor())
         rightIconView.tintColor = .alias(resolveCurrentTextColor())
     }
@@ -264,7 +264,7 @@ extension Chip.Action {
     private func getAttributedText() -> NSAttributedString {
         .montage(
             text,
-            varient: size.typoVarient,
+            variant: size.typoVariant,
             weight: .medium,
             color: resolveCurrentTextColor()
         )
@@ -274,7 +274,7 @@ extension Chip.Action {
 extension Chip.Action {
     private func resolveCurrentTextColor() -> Color.Alias {
         if disable {
-            return varient == .outlined ? .labelDisable : .labelAssistive
+            return variant == .outlined ? .labelDisable : .labelAssistive
         } else {
             return .labelNormal
         }
@@ -323,7 +323,7 @@ extension Chip.Action: UIGestureRecognizerDelegate {
     }
 }
 
-extension Chip.Action.Varient {
+extension Chip.Action.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .filled:
@@ -355,7 +355,7 @@ extension Chip.Action.Size {
         }
     }
     
-    var typoVarient: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .large:
             return .body2

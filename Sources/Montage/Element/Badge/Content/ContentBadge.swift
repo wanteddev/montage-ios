@@ -17,7 +17,7 @@ extension Badge {
         }
         
         /// 뱃지의 외관을 결정하는 열거형 타입입니다.
-        public enum Varient {
+        public enum Variant {
             case filled, outlined
         }
         
@@ -32,7 +32,7 @@ extension Badge {
         }
         
         /// 뱃지의 외관입니다.
-        public var varient: Varient = .filled {
+        public var variant: Variant = .filled {
             didSet {
                 updateViews()
             }
@@ -206,9 +206,9 @@ extension Badge.Content {
     }
     
     private func updateColor() {
-        backgroundColor = varient == .filled ? resolveCurrentEncloseColor() : .alias(.backgroundNormal)
-        layer.borderWidth = varient == .filled ? 0 : 1
-        layer.borderColor = varient == .filled ? nil : resolveCurrentEncloseColor().cgColor
+        backgroundColor = variant == .filled ? resolveCurrentEncloseColor() : .alias(.backgroundNormal)
+        layer.borderWidth = variant == .filled ? 0 : 1
+        layer.borderColor = variant == .filled ? nil : resolveCurrentEncloseColor().cgColor
         leftIconView.tintColor = .alias(colorStyle.mainColor)
         rightIconView.tintColor = .alias(colorStyle.mainColor)
     }
@@ -234,7 +234,7 @@ extension Badge.Content {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, varient: size.typoVarient, weight: .bold, color: colorStyle.mainColor)
+        .montage(text, variant: size.typoVariant, weight: .bold, color: colorStyle.mainColor)
     }
 }
 
@@ -242,9 +242,9 @@ extension Badge.Content {
     private func resolveCurrentEncloseColor() -> UIColor {
         switch colorStyle {
         case .neutral:
-            return varient == .filled ? .component(.fillNormal) : .alias(.lineNormal)
+            return variant == .filled ? .component(.fillNormal) : .alias(.lineNormal)
         case .accent(let colorStyle):
-            let opacity: CGFloat = varient == .filled ? .opacity(.p008) : .opacity(.p043)
+            let opacity: CGFloat = variant == .filled ? .opacity(.p008) : .opacity(.p043)
             return colorStyle.resolveAsUIColor().withAlphaComponent(opacity)
         }
     }
@@ -262,7 +262,7 @@ extension Badge.Content.Size {
         }
     }
     
-    var typoVarient: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .xsmall:
             return .caption2

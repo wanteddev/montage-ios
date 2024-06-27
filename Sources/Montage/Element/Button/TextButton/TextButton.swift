@@ -305,7 +305,7 @@ extension Button.TextButton {
                 if let fontSize {
                     fontSize
                 } else {
-                    size.typoVarient
+                    size.typoVariant
                 }
             }(),
             weight: .bold,
@@ -393,7 +393,7 @@ extension Button.TextButton.Size {
         }
     }
     
-    var typoVarient: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .medium:
             return .body1

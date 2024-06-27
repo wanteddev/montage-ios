@@ -12,7 +12,7 @@ struct Chip_Previews: PreviewProvider {
         HStack {
             VStack(alignment: .leading, spacing: .spacing(.pt20)) {
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Action Chip").montage(varient: .heading2, weight: .bold)
+                    Text("Action Chip").montage(variant: .heading2, weight: .bold)
                     
                     actionChipControllerPreview
                 }
@@ -20,7 +20,7 @@ struct Chip_Previews: PreviewProvider {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("Filter Chip").montage(varient: .heading2, weight: .bold)
+                    Text("Filter Chip").montage(variant: .heading2, weight: .bold)
                     
                     filterChipControllerPreview
                 }
@@ -28,7 +28,7 @@ struct Chip_Previews: PreviewProvider {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("MultiSelect Chip").montage(varient: .heading2, weight: .bold)
+                    Text("MultiSelect Chip").montage(variant: .heading2, weight: .bold)
                     
                     multiSelectChipControllerPreview
                 }

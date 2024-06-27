@@ -53,7 +53,7 @@ extension Chip {
 var multiSelectChipControllerPreview: some View {
     VStack(alignment: .leading, spacing: .spacing(.pt20)) {
         VStack(alignment: .leading) {
-            Text("State").montage(varient: .headline2)
+            Text("State").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.MultiSelectChipController(
                     size: .medium,
@@ -75,7 +75,7 @@ var multiSelectChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("Size").montage(varient: .headline2)
+            Text("Size").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.MultiSelectChipController(
                     size: .medium,

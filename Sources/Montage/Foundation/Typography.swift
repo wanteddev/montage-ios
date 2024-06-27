@@ -11,7 +11,7 @@ import Pretendard
 
 public enum Typography {
     /// 타이포의 굵기를 정의하는 파라미터입니다.
-    /// Varient와 조합하여 어떤 폰트 Weight를 사용할 지 결정합니다.
+    /// variant와 조합하여 어떤 폰트 Weight를 사용할 지 결정합니다.
     public enum Weight: CaseIterable {
         case regular
         case medium
@@ -77,8 +77,8 @@ public extension Typography.Weight {
 }
 
 public extension Typography {
-    static func getSementicWeight(varient: Variant, weight: Weight) -> Pretendard.Weight {
-        switch (varient, weight) {
+    static func getSementicWeight(variant: Variant, weight: Weight) -> Pretendard.Weight {
+        switch (variant, weight) {
         case (.title1, .bold), (.title2, .bold), (.title3, .bold):
             return .bold
         default:
@@ -86,8 +86,8 @@ public extension Typography {
         }
     }
     
-    static func getFailbackWeight(varient: Variant, weight: Weight) -> UIFont.Weight {
-        switch (varient, weight) {
+    static func getFailbackWeight(variant: Variant, weight: Weight) -> UIFont.Weight {
+        switch (variant, weight) {
         case (.title1, .bold), (.title2, .bold), (.title3, .bold):
             return .bold
         default:
@@ -95,8 +95,8 @@ public extension Typography {
         }
     }
     
-    static func getSementicSize(varient: Variant) -> CGFloat {
-        switch varient {
+    static func getSementicSize(variant: Variant) -> CGFloat {
+        switch variant {
         case .display1:
             return 56
         case .display2:
@@ -136,11 +136,11 @@ public extension Typography {
         }
     }
     
-    static func getTracking(varient: Variant) -> CGFloat {
-        let sementicSize = getSementicSize(varient: varient)
+    static func getTracking(variant: Variant) -> CGFloat {
+        let sementicSize = getSementicSize(variant: variant)
         let letterSpacingEm: CGFloat
         
-        switch varient {
+        switch variant {
         case .display1:
             letterSpacingEm = -0.0319
         case .display2:
@@ -182,8 +182,8 @@ public extension Typography {
         return sementicSize * letterSpacingEm
     }
     
-    static func getLineHeight(varient: Variant) -> CGFloat {
-        switch varient {
+    static func getLineHeight(variant: Variant) -> CGFloat {
+        switch variant {
         case .display1:
             return 72
         case .display2:
