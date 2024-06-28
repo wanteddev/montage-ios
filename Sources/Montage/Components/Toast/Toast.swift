@@ -123,12 +123,12 @@ public struct Toast: View {
     }
 
     private struct BackgroundView: View {
+        @Environment(\.colorScheme) private var colorScheme
+
         var body: some View {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(SwiftUI.Color.alias(.primaryNormal).opacity(0.05))
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(SwiftUI.Color.alias(.inverseBackground).opacity(0.52))
+                SwiftUI.Color.alias(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
+                SwiftUI.Color.alias(.primaryNormal).opacity(0.05)
             }
             .background(
                 .ultraThinMaterial
