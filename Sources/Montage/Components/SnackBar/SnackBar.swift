@@ -201,7 +201,10 @@ public struct SnackBarModifier: ViewModifier {
                 description: model.description,
                 extraContents: model.extraContents,
                 action: model.action,
-                handler: model.handler
+                handler: {
+                    model.handler()
+                    self.model = nil
+                }
             )
         }
     }
