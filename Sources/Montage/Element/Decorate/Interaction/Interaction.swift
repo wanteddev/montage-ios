@@ -13,7 +13,7 @@ extension Decorate {
             case normal, hovered, focused, pressed
         }
         
-        public enum Varient {
+        public enum Variant {
             case normal, light, strong
         }
         
@@ -29,16 +29,16 @@ extension Decorate {
             }
         }
         
-        var varient: Varient {
+        var variant: Variant {
             didSet {
                 updateView()
             }
         }
         
-        init(state: State = .normal, color: Color.Alias = .labelNormal, varient: Varient = .normal) {
+        init(state: State = .normal, color: Color.Alias = .labelNormal, variant: Variant = .normal) {
             self.state = state
             self.color = color
-            self.varient = varient
+            self.variant = variant
             
             super.init(frame: .zero)
             
@@ -48,7 +48,7 @@ extension Decorate {
         required init?(coder: NSCoder) {
             self.state = .normal
             self.color = .labelNormal
-            self.varient = .normal
+            self.variant = .normal
             
             super.init(coder: coder)
             
@@ -60,7 +60,7 @@ extension Decorate {
 extension Decorate.Interaction {
     private func setupView() {
         isUserInteractionEnabled = false
-        alpha = state.alpha * varient.weight
+        alpha = state.alpha * variant.weight
         backgroundColor = .alias(self.color)
     }
     
@@ -70,7 +70,7 @@ extension Decorate.Interaction {
             delay: 0,
             options: [.beginFromCurrentState, .curveEaseInOut]
         ) { [self] in
-            self.alpha = state.alpha * varient.weight
+            self.alpha = state.alpha * variant.weight
             self.backgroundColor = .alias(color)
         }
     }
@@ -91,7 +91,7 @@ extension Decorate.Interaction.State {
     }
 }
 
-extension Decorate.Interaction.Varient {
+extension Decorate.Interaction.Variant {
     var weight: CGFloat {
         switch self {
         case .normal:

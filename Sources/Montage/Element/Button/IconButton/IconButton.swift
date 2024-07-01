@@ -196,7 +196,7 @@ extension Button.IconButton {
     }
     
     private func setupInteraction() {
-        interaction.varient = variant.interactionVarient
+        interaction.variant = variant.interactionVariant
         
         setupInteractionContraints()
     }
@@ -352,7 +352,7 @@ extension Button.IconButton {
             }
         }()
         interaction.color = variant.interactionColor
-        interaction.varient = variant.interactionVarient
+        interaction.variant = variant.interactionVariant
     }
     
     private func updateIconView() {
@@ -492,7 +492,7 @@ extension Button.IconButton.Variant {
         .labelNormal
     }
     
-    var interactionVarient: Decorate.Interaction.Varient {
+    var interactionVariant: Decorate.Interaction.Variant {
         switch self {
         case .normal, .outlined: .light
         case .background(_, let isAlternative):

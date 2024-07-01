@@ -227,7 +227,7 @@ extension Button.OutlinedButton {
     }
     
     private func setupInteraction() {
-        interaction.varient = variant.interactionVarient
+        interaction.variant = variant.interactionVariant
         
         setupInteractionContraints()
     }
@@ -343,7 +343,7 @@ extension Button.OutlinedButton {
         rightIconView.tintColor = contentColor
         uniqueIconView.tintColor = contentColor
         interaction.color = variant.interactionColor
-        interaction.varient = variant.interactionVarient
+        interaction.variant = variant.interactionVariant
     }
     
     private func updateIconView() {
@@ -475,7 +475,7 @@ extension Button.OutlinedButton.Variant {
         }
     }
     
-    var interactionVarient: Decorate.Interaction.Varient {
+    var interactionVariant: Decorate.Interaction.Variant {
         switch self {
         case .primary:
             return .normal
