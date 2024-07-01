@@ -21,13 +21,13 @@ extension Button {
     public class TextButton: UIView {
         
         /// 버튼의 외관을 결정하는 열거형입니다.
-        public enum Varient {
+        public enum Variant {
             case primary
             case assistive
         }
         
         /// 버튼의 외관입니다.
-        public var varient: Varient = .primary {
+        public var variant: Variant = .primary {
             didSet {
                 updateViews()
             }
@@ -78,6 +78,20 @@ extension Button {
         public var disable: Bool = false {
             didSet {
                 updateViews()
+            }
+        }
+        
+        /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var contentColorResolver: ColorResolvable? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        public var fontSize: Typography.Variant? {
+            didSet {
+                updateTextLabel()
             }
         }
         
@@ -230,7 +244,7 @@ extension Button.TextButton {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = varient.interactionRadius
+        layer.cornerRadius = variant.interactionRadius
         layer.masksToBounds = true
     }
 }
@@ -247,9 +261,21 @@ extension Button.TextButton {
     }
     
     private func updateColor() {
-        interaction.color = varient.interactionColor
-        leftIconView.tintColor = .alias(disable ? varient.inactiveColor : varient.activeColor)
-        rightIconView.tintColor = .alias(disable ? varient.inactiveColor : varient.activeColor)
+        interaction.color = variant.interactionColor
+        
+        let contentColor: UIColor = {
+            if disable {
+                variant.inactiveColor
+            } else {
+                if let contentColorResolver {
+                    contentColorResolver.resolve(.current)
+                } else {
+                    variant.activeColor
+                }
+            }
+        }()
+        leftIconView.tintColor = contentColor
+        rightIconView.tintColor = contentColor
     }
     
     private func updateIconView() {
@@ -273,11 +299,27 @@ extension Button.TextButton {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
-            varient: size.typoVarient,
+            variant: {
+                if let fontSize {
+                    fontSize
+                } else {
+                    size.typoVarient
+                }
+            }(),
             weight: .bold,
-            color: disable ? varient.inactiveColor : varient.activeColor
+            color: {
+                if disable {
+                    variant.inactiveColor
+                } else {
+                    if let contentColorResolver {
+                        contentColorResolver.resolve(.current)
+                    } else {
+                        variant.activeColor
+                    }
+                }
+            }()
         )
     }
 }
@@ -317,16 +359,16 @@ extension Button.TextButton: UIGestureRecognizerDelegate {
     }
 }
 
-extension Button.TextButton.Varient {
-    var activeColor: Color.Alias {
+extension Button.TextButton.Variant {
+    var activeColor: UIColor {
         switch self {
-        case .primary: return .primaryNormal
-        case .assistive: return .labelAlternative
+        case .primary: .alias(.primaryNormal)
+        case .assistive: .alias(.labelAlternative).withAlphaComponent(0.61)
         }
     }
     
-    var inactiveColor: Color.Alias {
-        .labelDisable
+    var inactiveColor: UIColor {
+        .alias(.labelDisable).withAlphaComponent(0.16)
     }
     
     var interactionColor: Color.Alias {

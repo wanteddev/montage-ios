@@ -11,12 +11,9 @@ extension Button {
     /// 배경으로 둘러 싸인 곡선 모서리 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
     public class SolidButton: UIView {
-        private enum Const {
-            static var activeBackgroundColor: Color.Alias = .primaryNormal
-            static var inactiveBackgroundColor: Color.Alias = .interactionDisable
-            static var activeTextColor: Color.Alias = .staticWhite
-            static var inactiveTextColor: Color.Alias = .labelAssistive
-            static var interactionColor: Color.Alias = .labelNormal
+        /// 버튼의 외관을 결정하는 열거형입니다.
+        public enum Variant {
+            case primary, assistive
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
@@ -29,8 +26,16 @@ extension Button {
             case legacy, `default`
         }
         
+        /// 버튼의 외관입니다.
+        public var variant: Variant = .primary {
+            didSet {
+                updateViews()
+            }
+        }
+        
         /// 버튼의 사이즈입니다.
         /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
+        /// > 설정 시 constraint가 업데이트 됩니다.
         public var size: Size = .large {
             didSet {
                 setupUpdateableConstraints()
@@ -73,10 +78,43 @@ extension Button {
             }
         }
         
+        /// iconOnly인 경우 표현될 아이콘입니다.
+        public var uniqueIcon: Icon? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// uniqueIcon 노출 여부입니다.
+        /// > text와 leftIcon, rightIcon은 표현되지 않습니다.
+        /// > 설정 시 constraint가 업데이트 됩니다.
+        public var iconOnly: Bool = false {
+            didSet {
+                setupUpdateableConstraints()
+                updateViews()
+            }
+        }
+        
         /// 버튼의 활성화 여부입니다.
         public var disable: Bool = false {
             didSet {
                 updateViews()
+            }
+        }
+        
+        /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var contentColorResolver: ColorResolvable? {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 커스텀 가능한 배경색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var backgroundColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
             }
         }
         
@@ -87,9 +125,15 @@ extension Button {
         
         private lazy var leftIconView = UIImageView()
         
-        private lazy var textLabel = UILabel()
+        private lazy var textLabel: UILabel = {
+            let label = UILabel()
+            label.numberOfLines = 0
+            return label
+        }()
         
         private lazy var rightIconView = UIImageView()
+        
+        private lazy var uniqueIconView = UIImageView()
         
         private lazy var interaction = Decorate.Interaction()
         
@@ -129,11 +173,11 @@ extension Button {
         /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
             let textSize = getAttributedText().size()
-            let iconSize = size.iconSize
-            let edgeInsets = size.edgeInsets
-            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            let iconSize = size.iconSize(iconOnly)
+            let edgeInsets = size.edgeInsets(iconOnly)
+            let iconCount = [leftIcon, rightIcon, uniqueIcon].filter({ $0 != nil }).count
             let iconWidths = iconSize.width * CGFloat(iconCount)
-            let spacings = size.gap * CGFloat(iconCount)
+            let spacings = iconOnly ? .zero : size.gap * CGFloat(iconCount)
             
             return .init(
                 width: iconWidths + spacings + textSize.width + edgeInsets.horizontal,
@@ -171,10 +215,11 @@ extension Button.SolidButton {
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
+        stackView.addArrangedSubview(uniqueIconView)
     }
     
     private func setupInteraction() {
-        interaction.varient = .strong
+        interaction.varient = variant.interactionVarient
         
         setupInteractionContraints()
     }
@@ -201,12 +246,17 @@ extension Button.SolidButton {
         
         leftIconView.translatesAutoresizingMaskIntoConstraints = false
         rightIconView.translatesAutoresizingMaskIntoConstraints = false
+        uniqueIconView.translatesAutoresizingMaskIntoConstraints = false
         
+        let iconSize = size.iconSize(iconOnly)
+
         let constraints = [
-            leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
-            rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
+            leftIconView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            leftIconView.heightAnchor.constraint(equalToConstant: iconSize.height),
+            rightIconView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            rightIconView.heightAnchor.constraint(equalToConstant: iconSize.height),
+            uniqueIconView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            uniqueIconView.heightAnchor.constraint(equalToConstant: iconSize.height)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -218,7 +268,7 @@ extension Button.SolidButton {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        let insets = size.edgeInsets
+        let insets = size.edgeInsets(iconOnly)
         
         let constraints = [
             stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: insets.left),
@@ -251,38 +301,87 @@ extension Button.SolidButton {
     }
     
     private func updateColors() {
-        backgroundColor = .alias(disable ? Const.inactiveBackgroundColor : Const.activeBackgroundColor)
-        leftIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
-        rightIconView.tintColor = .alias(disable ? Const.inactiveTextColor : Const.activeTextColor)
-        interaction.color = Const.interactionColor
+        backgroundColor = {
+            if disable {
+                .alias(.interactionDisable)
+            } else {
+                if let backgroundColorResolver {
+                    backgroundColorResolver.resolve(.current)
+                } else {
+                    variant.backgroundColor
+                }
+            }
+        }()
+        let contentColor: UIColor = {
+            if disable {
+                .alias(.labelAssistive)
+            } else {
+                if let contentColorResolver {
+                    contentColorResolver.resolve(.current)
+                } else {
+                    variant.textColor
+                }
+            }
+        }()
+        leftIconView.tintColor = contentColor
+        rightIconView.tintColor = contentColor
+        uniqueIconView.tintColor = contentColor
+        interaction.color = variant.interactionColor
     }
     
     private func updateIconView() {
-        if let leftIcon {
-            leftIconView.isHidden = false
-            leftIconView.image = .montage(leftIcon)
+        if iconOnly {
+            if let uniqueIcon {
+                leftIconView.isHidden = true
+                rightIconView.isHidden = true
+                
+                uniqueIconView.isHidden = false
+                uniqueIconView.image = .montage(uniqueIcon)
+            }
         } else {
-            leftIconView.isHidden = true
-        }
-        
-        if let rightIcon {
-            rightIconView.isHidden = false
-            rightIconView.image = .montage(rightIcon)
-        } else {
-            rightIconView.isHidden = true
+            if let leftIcon {
+                leftIconView.isHidden = false
+                leftIconView.image = .montage(leftIcon)
+            } else {
+                leftIconView.isHidden = true
+            }
+            
+            if let rightIcon {
+                rightIconView.isHidden = false
+                rightIconView.image = .montage(rightIcon)
+            } else {
+                rightIconView.isHidden = true
+            }
+            
+            uniqueIconView.isHidden = true
         }
     }
     
     private func updateTextLabel() {
-        textLabel.attributedText = getAttributedText()
+        if iconOnly {
+            textLabel.isHidden = true
+        } else {
+            textLabel.isHidden = false
+            textLabel.attributedText = getAttributedText()
+        }
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
-            varient: size.typoVarient,
-            weight: .bold,
-            color: disable ? Const.inactiveTextColor : Const.activeTextColor
+            variant: size.typoVarient,
+            weight: variant.typoWeight,
+            color: {
+                if disable {
+                    Color.Alias.labelAssistive.resolve(.current)
+                } else {
+                    if let contentColorResolver {
+                        contentColorResolver.resolve(.current)
+                    } else {
+                        variant.textColor
+                    }
+                }
+            }()
         )
     }
 }
@@ -322,15 +421,55 @@ extension Button.SolidButton: UIGestureRecognizerDelegate {
     }
 }
 
+extension Button.SolidButton.Variant {
+    var textColor: UIColor {
+        switch self {
+        case .primary:
+            return .alias(.staticWhite)
+        case .assistive:
+            return .alias(.labelNeutral).withAlphaComponent(0.88)
+        }
+    }
+    
+    var typoWeight: Typography.Weight {
+        switch self {
+        case .primary: return .bold
+        case .assistive: return .medium
+        }
+    }
+    
+    var backgroundColor: UIColor {
+        switch self {
+        case .primary:
+            return .alias(.primaryNormal)
+        case .assistive:
+            return .component(.fillNormal).withAlphaComponent(0.08)
+        }
+    }
+    
+    var interactionColor: Color.Alias {
+        .labelNormal
+    }
+
+    var interactionVarient: Decorate.Interaction.Varient {
+        switch self {
+        case .primary:
+            return .strong
+        case .assistive:
+            return .normal
+        }
+    }
+}
+
 extension Button.SolidButton.Size {
-    var iconSize: CGSize {
+    func iconSize(_ isIconOnly: Bool = false) -> CGSize {
         switch self {
         case .large:
-            return .init(width: 20, height: 20)
+            return isIconOnly ? .init(width: 24, height: 24) : .init(width: 20, height: 20)
         case .medium:
-            return .init(width: 18, height: 18)
+            return isIconOnly ? .init(width: 20, height: 20) : .init(width: 18, height: 18)
         case .small:
-            return .init(width: 16, height: 16)
+            return isIconOnly ? .init(width: 18, height: 18) : .init(width: 16, height: 16)
         }
     }
     
@@ -345,14 +484,14 @@ extension Button.SolidButton.Size {
         }
     }
     
-    var edgeInsets: UIEdgeInsets {
+    func edgeInsets(_ isIconOnly: Bool = false) -> UIEdgeInsets {
         switch self {
         case .large:
-            return .init(top: 12, left: 28, bottom: 12, right: 28)
+            return isIconOnly ? .init(top: 12, left: 12, bottom: 12, right: 12) : .init(top: 12, left: 28, bottom: 12, right: 28)
         case .medium:
-            return .init(top: 9, left: 20, bottom: 9, right: 20)
+            return isIconOnly ? .init(top: 10, left: 10, bottom: 10, right: 10) : .init(top: 9, left: 20, bottom: 9, right: 20)
         case .small:
-            return .init(top: 7, left: 14, bottom: 7, right: 14)
+            return isIconOnly ? .init(top: 7, left: 7, bottom: 7, right: 7) : .init(top: 7, left: 14, bottom: 7, right: 14)
         }
     }
     

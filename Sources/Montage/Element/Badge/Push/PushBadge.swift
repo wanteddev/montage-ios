@@ -191,7 +191,7 @@ extension Badge.Push {
     private func getAttributedText() -> NSAttributedString? {
         guard let text = getText() else { return nil }
     
-        let font = UIFont.montage(varient: .caption2, weight: .bold)
+        let font = UIFont.montage(variant: .caption2, weight: .bold)
         let lineHeight = Typography.getLineHeight(varient: .caption2)
         
         let baselineOffset: CGFloat
