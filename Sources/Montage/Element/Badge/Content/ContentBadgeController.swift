@@ -11,7 +11,7 @@ import Pretendard
 extension Badge {
     public struct ContentBadgeController: UIViewRepresentable {
         /// 뱃지의 외관입니다.
-        public var varient: Badge.Content.Varient
+        public var variant: Badge.Content.Variant
         
         /// 뱃지의 사이즈입니다.
         public var size: Badge.Content.Size
@@ -31,14 +31,14 @@ extension Badge {
         public typealias UIViewType = Badge.Content
         
         public init(
-            varient: Badge.Content.Varient = .filled,
+            variant: Badge.Content.Variant = .filled,
             size: Badge.Content.Size = .small,
             color: Badge.Content.ColorStyle = .neutral,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
             text: String
         ) {
-            self.varient = varient
+            self.variant = variant
             self.size = size
             self.color = color
             self.leftIcon = leftIcon
@@ -51,7 +51,7 @@ extension Badge {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.varient = varient
+            uiView.variant = variant
             uiView.size = size
             uiView.colorStyle = color
             uiView.leftIcon = leftIcon
@@ -66,124 +66,124 @@ fileprivate struct Preview: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Varient").montage(varient: .headline2)
+            Text("Variant").montage(variant: .headline2)
 
             HStack {
                 Badge.ContentBadgeController(
-                    varient: .filled, text: text
+                    variant: .filled, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    varient: .outlined, text: text
+                    variant: .outlined, text: text
                 ).fixedSize()
             }
 
-            Text("Size").montage(varient: .headline2)
+            Text("Size").montage(variant: .headline2)
 
             HStack {
                 Badge.ContentBadgeController(
-                    varient: .filled, size: .xsmall, text: text
+                    variant: .filled, size: .xsmall, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    varient: .outlined, size: .xsmall, text: text
+                    variant: .outlined, size: .xsmall, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    varient: .filled, size: .small, text: text
+                    variant: .filled, size: .small, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    varient: .outlined, size: .small, text: text
+                    variant: .outlined, size: .small, text: text
                 ).fixedSize()
             }
     
-            Text("Accents").montage(varient: .headline2)
+            Text("Accents").montage(variant: .headline2)
     
-            Text("Filled").montage(varient: .body2)
+            Text("Filled").montage(variant: .body2)
     
             VStack(alignment: .leading) {
                 HStack {
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.primary), text: "중요"
+                        variant: .filled, color: .accent(.primary), text: "중요"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.positive), text: "긍정"
+                        variant: .filled, color: .accent(.positive), text: "긍정"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.cautionary), text: "경고"
+                        variant: .filled, color: .accent(.cautionary), text: "경고"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.negative), text: "에러"
+                        variant: .filled, color: .accent(.negative), text: "에러"
                     ).fixedSize()
                 }
     
                 HStack {
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.lime), text: "라임"
+                        variant: .filled, color: .accent(.lime), text: "라임"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.cyan), text: "시안"
+                        variant: .filled, color: .accent(.cyan), text: "시안"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.lightBlue), text: "라이트 블루"
+                        variant: .filled, color: .accent(.lightBlue), text: "라이트 블루"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.violet), text: "바이올렛"
+                        variant: .filled, color: .accent(.violet), text: "바이올렛"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        varient: .filled, color: .accent(.pink), text: "핑크"
+                        variant: .filled, color: .accent(.pink), text: "핑크"
                     ).fixedSize()
                 }
             }
     
-            Text("Outlined").montage(varient: .body2)
+            Text("Outlined").montage(variant: .body2)
     
             VStack(alignment: .leading) {
                 HStack {
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.primary), text: "중요"
+                        variant: .outlined, color: .accent(.primary), text: "중요"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.positive), text: "긍정"
+                        variant: .outlined, color: .accent(.positive), text: "긍정"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.cautionary), text: "경고"
+                        variant: .outlined, color: .accent(.cautionary), text: "경고"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.negative), text: "에러"
+                        variant: .outlined, color: .accent(.negative), text: "에러"
                     ).fixedSize()
                 }
                 
                 HStack {
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.lime), text: "라임"
+                        variant: .outlined, color: .accent(.lime), text: "라임"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.cyan), text: "시안"
+                        variant: .outlined, color: .accent(.cyan), text: "시안"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.lightBlue), text: "라이트 블루"
+                        variant: .outlined, color: .accent(.lightBlue), text: "라이트 블루"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.violet), text: "바이올렛"
+                        variant: .outlined, color: .accent(.violet), text: "바이올렛"
                     ).fixedSize()
                     
                     Badge.ContentBadgeController(
-                        varient: .outlined, color: .accent(.pink), text: "핑크"
+                        variant: .outlined, color: .accent(.pink), text: "핑크"
                     ).fixedSize()
                 }
             }

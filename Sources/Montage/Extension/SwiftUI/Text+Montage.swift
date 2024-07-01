@@ -9,12 +9,12 @@ import SwiftUI
 
 public extension Text {
     func montage(
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: Color.Alias = .labelNormal
     ) -> Text {
-        font(.montage(varient: varient, weight: weight))
-            .tracking(Typography.getTracking(varient: varient))
+        font(.montage(variant: variant, weight: weight))
+            .tracking(Typography.getTracking(variant: variant))
             .foregroundColor(.alias(color))
     }
 }

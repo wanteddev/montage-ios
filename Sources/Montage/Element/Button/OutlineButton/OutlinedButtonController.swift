@@ -12,7 +12,7 @@ import Pretendard
 
 extension Button {
     public struct OutlinedButtonController: UIViewRepresentable {
-        public var varient: OutlinedButton.Variant = .primary
+        public var variant: OutlinedButton.Variant = .primary
         public var size: OutlinedButton.Size = .medium
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -29,7 +29,7 @@ extension Button {
         public typealias UIViewType = OutlinedButton
         
         public init(
-            varient: OutlinedButton.Variant = .primary,
+            variant: OutlinedButton.Variant = .primary,
             size: OutlinedButton.Size = .medium,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -43,7 +43,7 @@ extension Button {
             borderColorResolver: ColorResolvable? = nil,
             handler: (() -> Void)? = nil
         ) {
-            self.varient = varient
+            self.variant = variant
             self.size = size
             self.leftIcon = leftIcon
             self.rightIcon = rightIcon
@@ -63,7 +63,7 @@ extension Button {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.variant = varient
+            uiView.variant = variant
             uiView.size = size
             uiView.leftIcon = leftIcon
             uiView.rightIcon = rightIcon
@@ -83,12 +83,12 @@ extension Button {
 struct OutlinedButtonControllerPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Varient").montage()
+            Text("Variant").montage()
             
             VStack(alignment: .leading) {
                 HStack {
                     Button.OutlinedButtonController(
-                        varient: .primary,
+                        variant: .primary,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
@@ -96,7 +96,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .secondary,
+                        variant: .secondary,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
@@ -104,7 +104,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
@@ -114,7 +114,7 @@ struct OutlinedButtonControllerPreview: View {
                 
                 HStack {
                     Button.OutlinedButtonController(
-                        varient: .primary,
+                        variant: .primary,
                         size: .large,
                         uniqueIcon: .android,
                         iconOnly: true
@@ -122,7 +122,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         size: .medium,
                         uniqueIcon: .android,
                         iconOnly: true
@@ -130,7 +130,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .primary,
+                        variant: .primary,
                         size: .small,
                         uniqueIcon: .android,
                         iconOnly: true,
@@ -145,7 +145,7 @@ struct OutlinedButtonControllerPreview: View {
             VStack(alignment: .leading, spacing: .spacing(.pt16)) {
                 HStack {
                     Button.OutlinedButtonController(
-                        varient: .primary,
+                        variant: .primary,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
@@ -153,7 +153,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .secondary,
+                        variant: .secondary,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
@@ -161,7 +161,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
@@ -170,7 +170,7 @@ struct OutlinedButtonControllerPreview: View {
                 }
                 HStack {
                     Button.OutlinedButtonController(
-                        varient: .primary,
+                        variant: .primary,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요",
@@ -179,7 +179,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .secondary,
+                        variant: .secondary,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요",
@@ -188,7 +188,7 @@ struct OutlinedButtonControllerPreview: View {
                     .fixedSize()
                     
                     Button.OutlinedButtonController(
-                        varient: .assistive,
+                        variant: .assistive,
                         size: .small,
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요",

@@ -11,12 +11,12 @@ import Pretendard
 extension Badge {
     public struct PushBadgeController: UIViewRepresentable {
         /// 뱃지의 외관입니다.
-        public var varient: Badge.Push.Varient
+        public var variant: Badge.Push.Variant
         
         public typealias UIViewType = Badge.Push
         
-        public init(varient: Badge.Push.Varient) {
-            self.varient = varient
+        public init(variant: Badge.Push.Variant) {
+            self.variant = variant
         }
         
         public func makeUIView(context: Context) -> UIViewType {
@@ -24,7 +24,7 @@ extension Badge {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.varient = varient
+            uiView.variant = variant
         }
     }
 }
@@ -32,13 +32,13 @@ extension Badge {
 fileprivate struct Preview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Badge.PushBadgeController(varient: .dot).fixedSize()
+            Badge.PushBadgeController(variant: .dot).fixedSize()
             
-            Badge.PushBadgeController(varient: .new).fixedSize()
+            Badge.PushBadgeController(variant: .new).fixedSize()
             
-            Badge.PushBadgeController(varient: .number(1)).fixedSize()
+            Badge.PushBadgeController(variant: .number(1)).fixedSize()
             
-            Badge.PushBadgeController(varient: .number(999)).fixedSize()
+            Badge.PushBadgeController(variant: .number(999)).fixedSize()
         }
     }
 }

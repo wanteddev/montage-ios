@@ -11,7 +11,7 @@ extension Chip {
     /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
     public class Filter: UIView {
         /// 칩의 외관을 결정하는 열거형입니다.
-        public enum Varient {
+        public enum Variant {
             case normal, expand
         }
         
@@ -21,7 +21,7 @@ extension Chip {
         }
         
         /// 칩의 외관입니다.
-        public var varient: Varient = .normal {
+        public var variant: Variant = .normal {
             didSet {
                 updateViews()
             }
@@ -225,7 +225,7 @@ extension Chip.Filter {
     
     private func updateIconView() {
         arrowIconView.isHidden = false
-        arrowIconView.image = .montage(varient.icon)
+        arrowIconView.image = .montage(variant.icon)
     }
     
     private func updateTextLabel() {
@@ -235,7 +235,7 @@ extension Chip.Filter {
     private func getAttributedText() -> NSAttributedString {
         .montage(
             text,
-            varient: size.typoVarient,
+            variant: size.typoVariant,
             weight: .bold,
             color: resolveCurrentTextColor()
         )
@@ -282,7 +282,7 @@ extension Chip.Filter {
     }
 }
 
-extension Chip.Filter.Varient {
+extension Chip.Filter.Variant {
     var icon: Icon {
         switch self {
         case .normal:
@@ -303,7 +303,7 @@ extension Chip.Filter.Size {
         }
     }
     
-    var typoVarient: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .large:
             return .body2

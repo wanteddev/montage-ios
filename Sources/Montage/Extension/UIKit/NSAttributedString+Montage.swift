@@ -16,7 +16,7 @@ extension NSAttributedString {
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         let font = UIFont.montage(variant: variant, weight: weight)
-        let lineHeight = Typography.getLineHeight(varient: variant)
+        let lineHeight = Typography.getLineHeight(variant: variant)
         
         // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/
         let baselineOffset: CGFloat
@@ -29,7 +29,7 @@ extension NSAttributedString {
         }
         
         let foregroundColor = color
-        let tracking = Typography.getTracking(varient: variant)
+        let tracking = Typography.getTracking(variant: variant)
         
         return .init(string: string, attributes: [
             .font: font,
@@ -142,14 +142,14 @@ public extension NSAttributedString {
     @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:variant:weight:alias:lineBreakMode:) 사용을 권장합니다.")
     static func montage(
         _ string: String,
-        varient: Typography.Variant = .body1,
+        variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: Color.Alias = .labelNormal,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         _montage(
             string,
-            variant: varient,
+            variant: variant,
             weight: weight,
             color: .alias(color),
             lineBreakMode: lineBreakMode

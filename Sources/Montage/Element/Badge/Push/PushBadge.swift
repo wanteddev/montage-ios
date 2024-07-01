@@ -16,12 +16,12 @@ extension Badge {
             static let defaultNumberLimit: Int = 1000
         }
         
-        public enum Varient: Equatable {
+        public enum Variant: Equatable {
             case dot, new, number(Int)
         }
         
         /// 뱃지의 외관 값을 가져오거나 설정합니다.
-        public var varient: Varient = .dot {
+        public var variant: Variant = .dot {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -64,13 +64,13 @@ extension Badge {
         override public var intrinsicContentSize: CGSize {
             guard let text = getAttributedText() else { 
                 return .init(
-                    width: Const.defaultDotSize.width + varient.edgeInsets.horizontal,
-                    height: Const.defaultDotSize.height + varient.edgeInsets.vertical
+                    width: Const.defaultDotSize.width + variant.edgeInsets.horizontal,
+                    height: Const.defaultDotSize.height + variant.edgeInsets.vertical
                 )
             }
             
             let textSize = text.size()
-            let edgeInsets = varient.edgeInsets
+            let edgeInsets = variant.edgeInsets
             
             let width = textSize.width + edgeInsets.horizontal
             let height = textSize.height + edgeInsets.vertical
@@ -111,7 +111,7 @@ extension Badge.Push {
         NSLayoutConstraint.deactivate(backgroundViewConstraints)
         backgroundColorView.translatesAutoresizingMaskIntoConstraints = false
         
-        let insets = varient == .dot ? varient.edgeInsets : .zero
+        let insets = variant == .dot ? variant.edgeInsets : .zero
         
         let constraints = [
             backgroundColorView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
@@ -130,9 +130,9 @@ extension Badge.Push {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         var constraints: [NSLayoutConstraint]
-        let insets = varient.edgeInsets
+        let insets = variant.edgeInsets
         
-        switch varient {
+        switch variant {
         case .dot, .new:
             constraints = [
                 stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
@@ -173,14 +173,14 @@ extension Badge.Push {
     }
     
     private func updateTextLabel() {
-        textLabel.isHidden = varient == .dot
+        textLabel.isHidden = variant == .dot
         textLabel.attributedText = getAttributedText()
     }
 }
 
 extension Badge.Push {
     private func getText() -> String? {
-        switch varient {
+        switch variant {
         case .dot: return nil
         case .new: return "N"
         case .number(let number):
@@ -192,7 +192,7 @@ extension Badge.Push {
         guard let text = getText() else { return nil }
     
         let font = UIFont.montage(variant: .caption2, weight: .bold)
-        let lineHeight = Typography.getLineHeight(varient: .caption2)
+        let lineHeight = Typography.getLineHeight(variant: .caption2)
         
         let baselineOffset: CGFloat
         if #available(iOS 16.4, *) {
@@ -202,7 +202,7 @@ extension Badge.Push {
         }
         
         let foregroundColor = UIColor.alias(.staticWhite)
-        let tracking = Typography.getTracking(varient: .caption2)
+        let tracking = Typography.getTracking(variant: .caption2)
         
         return .init(string: text, attributes: [
             .font: font,
@@ -220,7 +220,7 @@ extension Badge.Push {
     }
 }
 
-extension Badge.Push.Varient {
+extension Badge.Push.Variant {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .dot:

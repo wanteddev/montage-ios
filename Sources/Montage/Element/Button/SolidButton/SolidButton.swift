@@ -34,7 +34,7 @@ extension Button {
         }
         
         /// 버튼의 사이즈입니다.
-        /// > Important: Varient이 Assistive일 경우 .large를 사용할 수 없습니다.
+        /// > Important: Variant이 Assistive일 경우 .large를 사용할 수 없습니다.
         /// > 설정 시 constraint가 업데이트 됩니다.
         public var size: Size = .large {
             didSet {
@@ -369,7 +369,7 @@ extension Button.SolidButton {
     private func getAttributedText() -> NSAttributedString {
         ._montage(
             text,
-            variant: size.typoVarient,
+            variant: size.typoVariant,
             weight: variant.typoWeight,
             color: {
                 if disable {
@@ -473,7 +473,7 @@ extension Button.SolidButton.Size {
         }
     }
     
-    var typoVarient: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .large:
             return .body1

@@ -21,9 +21,9 @@ public struct MontageSampleView: View {
             List {
                 Group {
                     Text("Typography")
-                        .montage(varient: .body1, weight: .bold)
+                        .montage(variant: .body1, weight: .bold)
                     Text("Color")
-                        .montage(varient: .body1, weight: .bold)
+                        .montage(variant: .body1, weight: .bold)
                         .foregroundColor(.alias(.primaryNormal))
                     Image.montage(.apps)
                 }

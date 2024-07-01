@@ -10,7 +10,7 @@ import Pretendard
 
 extension Chip {
     public struct FilterChipController: UIViewRepresentable {
-        public var varient: Filter.Varient = .normal
+        public var variant: Filter.Variant = .normal
         public var size: Filter.Size = .medium
         public var text: String = ""
         public var state: Decorate.Interaction.State = .normal
@@ -21,7 +21,7 @@ extension Chip {
         public typealias UIViewType = Filter
         
         public init(
-            varient: Filter.Varient = .normal,
+            variant: Filter.Variant = .normal,
             size: Filter.Size = .medium,
             text: String,
             state: Decorate.Interaction.State = .normal,
@@ -29,7 +29,7 @@ extension Chip {
             disable: Bool = false,
             handler: (() -> Void)? = nil
         ) {
-            self.varient = varient
+            self.variant = variant
             self.size = size
             self.text = text
             self.state = state
@@ -43,7 +43,7 @@ extension Chip {
         }
         
         public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.varient = varient
+            uiView.variant = variant
             uiView.size = size
             uiView.text = text
             uiView.state = state
@@ -57,38 +57,38 @@ extension Chip {
 var filterChipControllerPreview: some View {
     VStack(alignment: .leading, spacing: .spacing(.pt20)) {
         VStack(alignment: .leading) {
-            Text("Varient").montage(varient: .headline2)
+            Text("Variant").montage(variant: .headline2)
             HStack {
                 Chip.FilterChipController(
-                    varient: .normal,
+                    variant: .normal,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.FilterChipController(
-                    varient: .expand,
+                    variant: .expand,
                     text: "안녕하세요"
                 ).fixedSize()
             }
         }
         
         VStack(alignment: .leading) {
-            Text("State").montage(varient: .headline2)
+            Text("State").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.FilterChipController(
-                    varient: .normal,
+                    variant: .normal,
                     size: .medium,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.FilterChipController(
-                    varient: .normal,
+                    variant: .normal,
                     size: .medium,
                     text: "안녕하세요",
                     active: true
                 ).fixedSize()
                 
                 Chip.FilterChipController(
-                    varient: .normal,
+                    variant: .normal,
                     size: .medium,
                     text: "안녕하세요",
                     disable: true
@@ -97,16 +97,16 @@ var filterChipControllerPreview: some View {
         }
         
         VStack(alignment: .leading) {
-            Text("Size").montage(varient: .headline2)
+            Text("Size").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.FilterChipController(
-                    varient: .normal,
+                    variant: .normal,
                     size: .medium,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.FilterChipController(
-                    varient: .normal,
+                    variant: .normal,
                     size: .large,
                     text: "안녕하세요"
                 ).fixedSize()
