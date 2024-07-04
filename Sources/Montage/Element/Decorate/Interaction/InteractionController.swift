@@ -12,10 +12,9 @@ extension Decorate {
         public var state: Interaction.State = .normal
         public var variant: Interaction.Variant = .normal
         public var color: Color.Alias = .labelNormal
-        
+
         public typealias UIViewType = Interaction
-        
-        
+
         public init(
             state: Interaction.State = .normal,
             variant: Interaction.Variant = .normal,
@@ -45,11 +44,8 @@ extension Decorate {
 #Preview {
     HStack {
         Decorate.InteractionController()
-            .background(SwiftUI.Color.cyan)
-        
         Decorate.InteractionController(
             state: .pressed
         )
-        .background(SwiftUI.Color.red)
     }
 }

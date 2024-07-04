@@ -35,3 +35,15 @@ extension View {
         lineSpacing(variant.lineSpacing).padding(.vertical, variant.padding)
     }
 }
+
+extension View {
+    public func toast(_ model: Binding<Toast.Model?>) -> some View {
+        self.modifier(ToastModifier(model: model))
+    }
+}
+
+extension View {
+    public func snackBar(_ model: Binding<SnackBar.Model?>) -> some View {
+        self.modifier(SnackBarModifier(model: model))
+    }
+}
