@@ -47,3 +47,64 @@ extension View {
         self.modifier(SnackBar.SnackBarModifier(model: model))
     }
 }
+
+extension View {
+    public func tooltip(
+        config: TooltipConfigurable,
+        show: Binding<Bool>,
+        content: String
+    ) -> some View {
+        modifier(
+            Tooltip.TooltipModifier(
+                config: config,
+                show: show,
+                content: content
+            )
+        )
+    }
+    
+    public func tooltip(
+        variant: Tooltip.Variant = .extended,
+        position: Tooltip.Position,
+        show: Binding<Bool>,
+        inverse: Bool = false,
+        showCloseButton: Bool = false,
+        content: String,
+        action: (() -> Void)? = nil
+    ) -> some View {
+        tooltip(
+            config: Tooltip.DefaultTooltipConfig(
+                variant: variant,
+                position: position,
+                inverse: inverse,
+                showCloseButton: showCloseButton,
+                action: action
+            ),
+            show: show,
+            content: content
+        )
+    }
+    
+    public func tooltip(
+        position: Tooltip.Position,
+        show: Binding<Bool>,
+        content: String
+    ) -> some View {
+        tooltip(
+            config: Tooltip.DefaultTooltipConfig(position: position),
+            show: show,
+            content: content
+        )
+    }
+    
+    public func tooltip(
+        show: Binding<Bool>,
+        content: String
+    ) -> some View {
+        tooltip(
+            config: Tooltip.DefaultTooltipConfig(),
+            show: show,
+            content: content
+        )
+    }
+}
