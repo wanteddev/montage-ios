@@ -53,7 +53,7 @@ public struct SnackBar: View {
     public var body: some View {
         VStack {
             Spacer()
-            Content(
+            Contents(
                 heading: heading,
                 description: description,
                 extraContents: extraContents,
@@ -65,7 +65,7 @@ public struct SnackBar: View {
         
     }
     
-    fileprivate struct Content: View {
+    fileprivate struct Contents: View {
         private var heading: String?
         private var description: String?
         private var extraContents: (any View)?
@@ -175,37 +175,37 @@ public struct SnackBar: View {
             )
         }
     }
-}
-
-public struct SnackBarModifier: ViewModifier {
-    @Binding var model: SnackBar.Model?
-
-    public func body(content: Content) -> some View {
-        GeometryReader { proxy in
-            content
-                .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
-                .overlay(
-                    snackBar()
-                        .onAppear {
-                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        }
-                )
-        }
-    }
     
-    @ViewBuilder
-    private func snackBar() -> some View {
-        if let model {
-            SnackBar(
-                heading: model.heading,
-                description: model.description,
-                extraContents: model.extraContents,
-                action: model.action,
-                handler: {
-                    model.handler()
-                    self.model = nil
-                }
-            )
+    public struct SnackBarModifier: ViewModifier {
+        @Binding var model: SnackBar.Model?
+
+        public func body(content: Content) -> some View {
+            GeometryReader { proxy in
+                content
+                    .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
+                    .overlay(
+                        snackBar()
+                            .onAppear {
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            }
+                    )
+            }
+        }
+        
+        @ViewBuilder
+        private func snackBar() -> some View {
+            if let model {
+                SnackBar(
+                    heading: model.heading,
+                    description: model.description,
+                    extraContents: model.extraContents,
+                    action: model.action,
+                    handler: {
+                        model.handler()
+                        self.model = nil
+                    }
+                )
+            }
         }
     }
 }

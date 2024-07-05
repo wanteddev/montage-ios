@@ -39,12 +39,12 @@ public struct Toast: View {
     public var body: some View {
         VStack {
             Spacer()
-            Content(variant, message)
+            Contents(variant, message)
                 .padding(.horizontal, 20)
         }
     }
     
-    fileprivate struct Content: View {
+    fileprivate struct Contents: View {
         private let variant: Variant
         private let message: String
         
@@ -137,57 +137,59 @@ public struct Toast: View {
     }
 }
 
-public struct ToastModifier: ViewModifier {
-    @Binding var model: Toast.Model?
-    @State private var animationWorkItem: DispatchWorkItem?
-    
-    public func body(content: Content) -> some View {
-        GeometryReader { proxy in
-            content
-                .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
-                .overlay {
-                    toast()
-                }
-                .onChange(
-                    of: model
-                ) { toastModel in
-                    guard toastModel != nil else { return }
-                    showToast()
-                }
-        }
-    }
-    
-    @ViewBuilder
-    private func toast() -> some View {
-        if let model {
-            Toast(model.variant, message: model.message)
-        }
-    }
-    
-    private func showToast() {
-        animationWorkItem?.cancel()
+extension Toast {
+    public struct ToastModifier: ViewModifier {
+        @Binding var model: Toast.Model?
+        @State private var animationWorkItem: DispatchWorkItem?
         
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        
-        let task = DispatchWorkItem {
-            dismissToast()
+        public func body(content: Content) -> some View {
+            GeometryReader { proxy in
+                content
+                    .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
+                    .overlay {
+                        toast()
+                    }
+                    .onChange(
+                        of: model
+                    ) { toastModel in
+                        guard toastModel != nil else { return }
+                        showToast()
+                    }
+            }
         }
         
-        animationWorkItem = task
-        
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 2.0,
-            execute: task
-        )
-    }
-    
-    private func dismissToast() {
-        withAnimation {
-            model = nil
+        @ViewBuilder
+        private func toast() -> some View {
+            if let model {
+                Toast(model.variant, message: model.message)
+            }
         }
         
-        animationWorkItem?.cancel()
-        animationWorkItem = nil
+        private func showToast() {
+            animationWorkItem?.cancel()
+            
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            
+            let task = DispatchWorkItem {
+                dismissToast()
+            }
+            
+            animationWorkItem = task
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 2.0,
+                execute: task
+            )
+        }
+        
+        private func dismissToast() {
+            withAnimation {
+                model = nil
+            }
+            
+            animationWorkItem?.cancel()
+            animationWorkItem = nil
+        }
     }
 }
 
@@ -197,9 +199,9 @@ public struct ToastModifier: ViewModifier {
 
 #Preview {
     VStack {
-        Toast.Content(.message, "hello world!")
-        Toast.Content(.success, "메세지에 마침표를 찍어요.")
-        Toast.Content(.warning, "메세지에 마침표를 찍어요.")
-        Toast.Content(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
+        Toast.Contents(.message, "hello world!")
+        Toast.Contents(.success, "메세지에 마침표를 찍어요.")
+        Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
+        Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
     }
 }

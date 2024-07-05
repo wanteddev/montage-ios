@@ -38,12 +38,12 @@ extension View {
 
 extension View {
     public func toast(_ model: Binding<Toast.Model?>) -> some View {
-        self.modifier(ToastModifier(model: model))
+        self.modifier(Toast.ToastModifier(model: model))
     }
 }
 
 extension View {
     public func snackBar(_ model: Binding<SnackBar.Model?>) -> some View {
-        self.modifier(SnackBarModifier(model: model))
+        self.modifier(SnackBar.SnackBarModifier(model: model))
     }
 }
