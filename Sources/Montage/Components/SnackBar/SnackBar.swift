@@ -210,13 +210,15 @@ public struct SnackBar: View {
     }
 }
 
-#Preview {
-    VStack {
-        SnackBar(heading: "메시지에 마침표를 찍어요.", description: "설명은 필요할 때만 써요.", action: "텍스트") { }
-        SnackBar(description: "메시지가 두 줄 이상 길어지는 경우 예외적으로 사용해요.", action: "텍스트") { }
-        SnackBar(description: "메시지에 마침표를 찍어요.", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
-        SnackBar(heading: "메시지에 마침표를 찍어요.", description: "설명은 필요할 때만 써요.", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
-        SnackBar(heading: "흠", description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
-        
+struct SnackBar_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            SnackBar(heading: "메시지에 마침표를 찍어요.", description: "설명은 필요할 때만 써요.", action: "텍스트") { }
+            SnackBar(description: "메시지가 두 줄 이상 길어지는 경우 예외적으로 사용해요.", action: "텍스트") { }
+            SnackBar(description: "메시지에 마침표를 찍어요.", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
+            SnackBar(heading: "메시지에 마침표를 찍어요.", description: "설명은 필요할 때만 써요.", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
+            SnackBar(heading: "흠", description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
+            
+        }
     }
 }
