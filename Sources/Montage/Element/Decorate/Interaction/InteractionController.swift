@@ -41,11 +41,13 @@ extension Decorate {
     }
 }
 
-#Preview {
-    HStack {
-        Decorate.InteractionController()
-        Decorate.InteractionController(
-            state: .pressed
-        )
+struct Interaction_Previews: PreviewProvider {
+    static var previews: some View {
+        HStack {
+            Decorate.InteractionController()
+            Decorate.InteractionController(
+                state: .pressed
+            )
+        }
     }
 }

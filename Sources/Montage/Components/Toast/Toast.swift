@@ -193,15 +193,14 @@ extension Toast {
     }
 }
 
-#Preview {
-    Toast(.message, message: "메세지에 마침표를 찍어요.")
-}
-
-#Preview {
-    VStack {
-        Toast.Contents(.message, "hello world!")
-        Toast.Contents(.success, "메세지에 마침표를 찍어요.")
-        Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
-        Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
+struct Toast_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            Toast(.message, message: "메세지에 마침표를 찍어요.")
+            Toast.Contents(.message, "hello world!")
+            Toast.Contents(.success, "메세지에 마침표를 찍어요.")
+            Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
+            Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
+        }
     }
 }
