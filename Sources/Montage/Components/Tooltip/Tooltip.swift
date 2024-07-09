@@ -411,6 +411,7 @@ public enum Tooltip {
                                     show = false
                                 }
                                 .frame(width: 16, height: 16)
+                                .padding([.leading, .top], 2)
                                 .fixedSize()
                                 .opacity(0.61)
                             }
@@ -466,43 +467,20 @@ public enum Tooltip {
     }
 }
 
-#Preview {
-    VStack {
-        Text("Say...")
-            .frame(width: 64, height: 64)
-            .background(SwiftUI.Color.teal)
-            .tooltip(
-                config: Tooltip.DefaultTooltipConfig(
-                    position: .top,
-                    showCloseButton: true
-                ),
-                show: .constant(true),
-                content: "긴 내용이 필요한 경우 이 영역을 써요. 이 텍스트는 본래 내용이 입력되기 전까지 공간을 차지하고, 배치를 확인하기 위한 텍스트입니다"
-            )
-        Text("Say...")
-            .frame(width: 64, height: 64)
-            .background(SwiftUI.Color.teal)
-            .tooltip(
-                config: Tooltip.DefaultTooltipConfig(
-                    variant: .extended,
-                    position: .rightBottom,
-                    action: {
-                        print("더알아보기")
-                    }
-                ),
-                show: .constant(true),
-                content: "Something nice!"
-            )
-        Text("Say...")
-            .frame(width: 64, height: 64)
-            .background(SwiftUI.Color.teal)
-            .tooltip(
-                config: Tooltip.DefaultTooltipConfig(
-                    variant: .compact,
-                    position: .leftBottom
-                ),
-                show: .constant(true),
-                content: "a"
-            )
+struct Tooltip_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            Text("Text")
+                .padding()
+                .background(SwiftUI.Color.teal)
+                .tooltip(
+                    config: Tooltip.DefaultTooltipConfig(
+                        position: .top,
+                        showCloseButton: true
+                    ),
+                    show: .constant(true),
+                    content: "긴 내용이 필요한 경우 이 영역을 써요. 이 텍스트는 본래 내용이 입력되기 전까지 공간을 차지하고, 배치를 확인하기 위한 텍스트입니다"
+                )
+        }
     }
 }
