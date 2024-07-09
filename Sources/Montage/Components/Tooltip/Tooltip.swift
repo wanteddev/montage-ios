@@ -92,7 +92,9 @@ public enum Tooltip {
             self.action = action
         }
     }
-    
+}
+
+extension Tooltip {
     struct TooltipModifier: ViewModifier {
         // MARK: - Local state
 
