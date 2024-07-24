@@ -155,7 +155,7 @@ extension Chip.Filter {
         addSubview(interaction)
         
         setupStackView()
-        setupInteractionContraints()
+        setupInteraction()
         setupUpdateableConstraints()
         
         updateViews()
@@ -175,6 +175,12 @@ extension Chip.Filter {
         stackView.spacing = size.gap
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(arrowIconView)
+    }
+    
+    private func setupInteraction() {
+        interaction.variant = .normal
+        
+        setupInteractionContraints()
     }
     
     private func setupUpdateableConstraints() {
@@ -250,6 +256,7 @@ extension Chip.Filter {
         layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = variant.borderWidth
         arrowIconView.tintColor = resolveArrowIconTintColor()
+        interaction.color = resolveInteractionColor()
     }
     
     private func updateIconView() {
@@ -298,9 +305,7 @@ extension Chip.Filter {
     
     private func resolveCurrentLineColor() -> CGColor {
         guard variant == .outlined else { return UIColor.clear.cgColor }
-        if disable {
-            return UIColor.alias(.lineAlternative).cgColor
-        } else if active {
+        if active {
             return UIColor.alias(.primaryNormal).cgColor
         } else {
             return UIColor.alias(.lineNeutral).cgColor
@@ -318,6 +323,14 @@ extension Chip.Filter {
             } else {
                 return .alias(.labelNormal)
             }
+        }
+    }
+    
+    private func resolveInteractionColor() -> Color.Alias {
+        if active, variant == .outlined {
+            return .primaryNormal
+        } else {
+            return .labelNormal
         }
     }
 }

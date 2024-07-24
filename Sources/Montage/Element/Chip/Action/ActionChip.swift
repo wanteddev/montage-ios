@@ -176,7 +176,7 @@ extension Chip.Action {
         addSubview(interaction)
         
         setupStackView()
-        setupInteractionContraints()
+        setupInteraction()
         setupUpdateableConstraints()
         
         updateViews()
@@ -199,6 +199,12 @@ extension Chip.Action {
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
+    }
+    
+    private func setupInteraction() {
+        interaction.variant = .normal
+        
+        setupInteractionContraints()
     }
     
     private func setupUpdateableConstraints() {
@@ -278,6 +284,7 @@ extension Chip.Action {
         layer.borderWidth = variant.borderWidth
         leftIconView.tintColor = resolveCurrentIconColor()
         rightIconView.tintColor = resolveCurrentIconColor()
+        interaction.color = resolveInteractionColor()
     }
     
     private func updateIconView() {
@@ -345,9 +352,7 @@ extension Chip.Action {
     
     private func resolveCurrentLineColor() -> CGColor {
         guard variant == .outlined else { return UIColor.clear.cgColor }
-        if disable {
-            return UIColor.alias(.lineAlternative).cgColor
-        } else if active {
+        if active {
             return UIColor.alias(.primaryNormal).withAlphaComponent(0.43).cgColor
         } else {
             return UIColor.alias(.lineNeutral).cgColor
@@ -359,6 +364,14 @@ extension Chip.Action {
             return iconColorResolver.resolve(.current)
         } else {
             return .alias(.labelAlternative)
+        }
+    }
+    
+    private func resolveInteractionColor() -> Color.Alias {
+        if active, variant == .outlined {
+            return .primaryNormal
+        } else {
+            return .labelNormal
         }
     }
 }
