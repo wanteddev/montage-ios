@@ -568,7 +568,7 @@ extension Bar.TopNavigation {
             GeometryReader { proxy in
                 SwiftUI.Color.clear
                     .onAppear {
-                        navigationHeight = proxy.size.height
+                        bottomActionHeight = proxy.size.height
                     }
                     .onChange(of: variant) { _ in
                         bottomActionHeight = proxy.size.height
