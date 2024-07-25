@@ -26,12 +26,6 @@ struct Chip_Previews: PreviewProvider {
                 }
                 
                 Divider()
-                
-                VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-                    Text("MultiSelect Chip").montage(variant: .heading2, weight: .bold)
-                    
-                    multiSelectChipControllerPreview
-                }
             }
             
             Spacer()
