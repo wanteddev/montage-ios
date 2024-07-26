@@ -108,3 +108,39 @@ extension View {
         )
     }
 }
+
+extension View {
+    public func topNavigation(
+        variant: Bar.TopNavigation.Variant = .normal,
+        title: String,
+        left: Bar.TopNavigation.Resource.Left? = nil,
+        actions: [Bar.TopNavigation.Resource.Action] = []
+    ) -> some View {
+        modifier(
+            Bar.TopNavigation.TopNavigationModifier(
+                variant: variant,
+                title: title,
+                left: left,
+                actions: actions
+            )
+        )
+    }
+    
+    public func topNavigation(
+        variant: Bar.TopNavigation.Variant = .normal,
+        title: String,
+        left: Bar.TopNavigation.Resource.Left? = nil,
+        actions: [Bar.TopNavigation.Resource.Action] = [],
+        withBottom model: ActionArea.Bottom.Model<AnyView>
+    ) -> some View {
+        modifier(
+            Bar.TopNavigation.TopNavigationModifier(
+                variant: variant,
+                title: title,
+                left: left,
+                actions: actions,
+                model: model
+            )
+        )
+    }
+}

@@ -176,7 +176,7 @@ extension ActionArea {
                         if let sub {
                             if let option = sub.buttonOption {
                                 button(option: option, text: sub.text, action: sub.action)
-                                    .fixedSize()
+                                    .fixedSize(horizontal: false, vertical: true)
                             } else {
                                 Button.TextButtonController(
                                     variant: .assistive,
@@ -184,7 +184,7 @@ extension ActionArea {
                                     text: sub.text,
                                     handler: sub.action
                                 )
-                                .fixedSize()
+                                .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     }
