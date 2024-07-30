@@ -17,7 +17,7 @@ extension Chip {
         
         /// 칩의 사이즈를 결정하는 열거형입니다.
         public enum Size {
-            case small, medium, large
+            case normal, xsmall, small, large
         }
         
         /// 칩의 외관입니다.
@@ -28,7 +28,7 @@ extension Chip {
         }
         
         /// 칩의 사이즈입니다.
-        public var size: Size = .medium {
+        public var size: Size = .normal {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -63,13 +63,52 @@ extension Chip {
             }
         }
         
-        /// 칩의 활성화 여부입니다.
+        /// 칩의 터치 활성화 여부입니다.
         public var disable: Bool = false {
             didSet {
                 updateViews()
             }
         }
+
+        /// 칩의 선택 여부 입니다.
+        public var active: Bool = false {
+            didSet {
+                updateColors()
+            }
+        }
         
+        /// 커스텀 가능한 아이콘 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var iconColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
+        /// 커스텀 가능한 배경색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var backgroundColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
+        /// 커스텀 가능한 텍스트 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var fontColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+        
+        /// 커스텀 가능한 선택 시 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        public var activeColorResolver: ColorResolvable? {
+            didSet {
+                updateColors()
+            }
+        }
+
         public var handler: (() -> Void)?
         
         private lazy var stackView = UIStackView()
@@ -137,7 +176,7 @@ extension Chip.Action {
         addSubview(interaction)
         
         setupStackView()
-        setupInteractionContraints()
+        setupInteraction()
         setupUpdateableConstraints()
         
         updateViews()
@@ -160,6 +199,12 @@ extension Chip.Action {
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
+    }
+    
+    private func setupInteraction() {
+        interaction.variant = .normal
+        
+        setupInteractionContraints()
     }
     
     private func setupUpdateableConstraints() {
@@ -234,11 +279,12 @@ extension Chip.Action {
     }
     
     private func updateColors() {
-        backgroundColor = variant.backgroundColor
+        backgroundColor = resolveBackgroundColor()
         layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = variant.borderWidth
-        leftIconView.tintColor = .alias(resolveCurrentTextColor())
-        rightIconView.tintColor = .alias(resolveCurrentTextColor())
+        leftIconView.tintColor = resolveCurrentIconColor()
+        rightIconView.tintColor = resolveCurrentIconColor()
+        interaction.color = resolveInteractionColor()
     }
     
     private func updateIconView() {
@@ -266,25 +312,66 @@ extension Chip.Action {
             text,
             variant: size.typoVariant,
             weight: .medium,
-            color: resolveCurrentTextColor()
+            colorResolver: currentTextColorResolverable()
         )
     }
 }
 
 extension Chip.Action {
-    private func resolveCurrentTextColor() -> Color.Alias {
+    private func resolveBackgroundColor() -> UIColor {
         if disable {
-            return variant == .outlined ? .labelDisable : .labelAssistive
+            return variant.disableBackgroundColor
+        } else if active {
+            if let activeColorResolver {
+                return activeColorResolver.resolve(.current)
+            } else {
+                return variant.activeBackgroundColor
+            }
         } else {
-            return .labelNormal
+            if let backgroundColorResolver {
+                return backgroundColorResolver.resolve(.current)
+            } else {
+               return  variant.backgroundColor
+            }
+        }
+    }
+    
+    private func currentTextColorResolverable() -> ColorResolvable {
+        if disable {
+            return Color.Alias.labelDisable
+        } else if active {
+            return variant.activeTextColorResolverable
+        } else {
+            if let fontColorResolver {
+                return fontColorResolver
+            } else {
+                return Color.Alias.labelNormal
+            }
         }
     }
     
     private func resolveCurrentLineColor() -> CGColor {
-        if disable {
-            return UIColor.alias(.lineAlternative).cgColor
+        guard variant == .outlined else { return UIColor.clear.cgColor }
+        if active {
+            return UIColor.alias(.primaryNormal).withAlphaComponent(0.43).cgColor
         } else {
-            return UIColor.alias(.lineNormal).cgColor
+            return UIColor.alias(.lineNeutral).cgColor
+        }
+    }
+    
+    private func resolveCurrentIconColor() -> UIColor {
+        if let iconColorResolver {
+            return iconColorResolver.resolve(.current)
+        } else {
+            return .alias(.labelAlternative)
+        }
+    }
+    
+    private func resolveInteractionColor() -> Color.Alias {
+        if active, variant == .outlined {
+            return .primaryNormal
+        } else {
+            return .labelNormal
         }
     }
 }
@@ -329,7 +416,7 @@ extension Chip.Action.Variant {
         case .filled:
             return .component(.fillAlternative)
         case .outlined:
-            return .alias(.backgroundNormal)
+            return .clear
         }
     }
     
@@ -341,6 +428,33 @@ extension Chip.Action.Variant {
             return 1
         }
     }
+    
+    var disableBackgroundColor: UIColor {
+        switch self {
+        case .filled:
+            return .alias(.interactionDisable)
+        case .outlined:
+            return .clear
+        }
+    }
+    
+    var activeBackgroundColor: UIColor {
+        switch self {
+        case .filled:
+            return .alias(.inverseBackground)
+        case .outlined:
+            return .alias(.primaryNormal).withAlphaComponent(0.05)
+        }
+    }
+    
+    var activeTextColorResolverable: ColorResolvable {
+        switch self {
+        case .filled:
+            return Color.Alias.inverseLabel
+        case .outlined:
+            return Color.Alias.primaryNormal
+        }
+    }
 }
 
 extension Chip.Action.Size {
@@ -348,9 +462,11 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             return .init(width: 16, height: 16)
-        case .medium:
+        case .normal:
             return .init(width: 14, height: 14)
         case .small:
+            return .init(width: 14, height: 14)
+        case .xsmall:
             return .init(width: 12, height: 12)
         }
     }
@@ -359,9 +475,11 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             return .body2
-        case .medium:
+        case .normal:
             return .label1
         case .small:
+            return .label1
+        case .xsmall:
             return .caption1
         }
     }
@@ -369,31 +487,39 @@ extension Chip.Action.Size {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .large:
-            return .init(top: 9, left: 16, bottom: 9, right: 16)
-        case .medium:
-            return .init(top: 6, left: 12, bottom: 6, right: 12)
+            return .init(top: 9, left: 12, bottom: 9, right: 12)
+        case .normal:
+            return .init(top: 7, left: 12, bottom: 7, right: 12)
         case .small:
-            return .init(top: 4, left: 9, bottom: 4, right: 9)
+            return .init(top: 6, left: 10, bottom: 6, right: 10)
+        case .xsmall:
+            return .init(top: 4, left: 6, bottom: 4, right: 6)
         }
     }
     
     var gap: CGFloat {
         switch self {
         case .large:
-            return 5.0
-        case .medium, .small:
-            return 4.0
+            return 6
+        case .normal:
+            return 4
+        case .small:
+            return 4
+        case .xsmall:
+            return 4
         }
     }
     
     var cornerRadius: CGFloat {
         switch self {
         case .large:
+            return 10.0
+        case .normal:
             return 8.0
-        case .medium:
-            return 6.0
         case .small:
-            return 4.0
+            return 8.0
+        case .xsmall:
+            return 6.0
         }
     }
 }
