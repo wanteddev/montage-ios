@@ -306,7 +306,7 @@ extension Chip.Filter {
     private func resolveCurrentLineColor() -> CGColor {
         guard variant == .outlined else { return UIColor.clear.cgColor }
         if active {
-            return UIColor.alias(.primaryNormal).cgColor
+            return UIColor.alias(.primaryNormal).withAlphaComponent(0.43).cgColor
         } else {
             return UIColor.alias(.lineNeutral).cgColor
         }

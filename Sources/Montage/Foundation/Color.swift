@@ -14,7 +14,7 @@ public enum Color {
     ///
     /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Palettes (New)](https://www.figma.com/file/r0LXCzm4slyOAhR7jVp1DM/Color---Palettes-(New)?node-id=19%3A2&t=VRHF3ebMufBEkKtL-1) 를 참고하세요.
     ///
-    public enum Global: String, ColorResolvable {
+    public enum Global: String, CaseIterable, ColorResolvable {
         // COMMON
         case globalCommon100
         case globalCommon0
@@ -241,7 +241,7 @@ public enum Color {
     ///
     /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
     ///
-    public enum Alias: String, ColorResolvable {
+    public enum Alias: String, CaseIterable, ColorResolvable {
         ///
         /// Figma상의 `.color-alias-static-white` 토큰과 대응되는 값입니다.
         ///
@@ -528,7 +528,7 @@ public enum Color {
     ///
     /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
     ///
-    public enum Component: String, ColorResolvable {
+    public enum Component: String, CaseIterable, ColorResolvable {
         ///
         /// Figma상의 `.color-component-fill-normal` 토큰과 대응되는 값입니다.
         ///
@@ -578,7 +578,7 @@ public enum Color {
     }
     
     /// 장식 요소를 위해 사용할 수 있는 색상들을 나열하는 값입니다.
-    public enum Accent: Equatable, ColorResolvable {
+    public enum Accent: Equatable, ColorResolvable, CaseIterable {
         case primary
         case positive
         case cautionary
