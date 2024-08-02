@@ -22,8 +22,8 @@ extension Button {
             
             case normal(size: Int)
             case background(size: Int, isAlternative: Bool = false)
-            case outlined(size: Size)
-            case solid(size: Size)
+            case outlined(size: Variant.Size)
+            case solid(size: Variant.Size)
             
             /// normal(size: 24)의 기본 variant입니다.
             public static let `default` = Self.normal(size: 24)
