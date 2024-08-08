@@ -97,7 +97,7 @@ extension ActionArea {
                         VStack(spacing: .zero) {
                             if let caption = model.caption, enableCaption {
                                 Text(caption)
-                                    .montage(variant: .label2, color: .labelAlternative)
+                                    .montage(variant: .label2, alias: .labelAlternative)
                                     .paragraph(variant: .label2)
                                     .padding(.bottom, 16)
                                     .background(
@@ -178,7 +178,7 @@ extension ActionArea {
                                 button(option: option, text: sub.text, action: sub.action)
                                     .fixedSize(horizontal: false, vertical: true)
                             } else {
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     variant: .assistive,
                                     size: .small,
                                     text: sub.text,
@@ -316,7 +316,7 @@ extension ActionArea {
                             handler: action
                         )
                     case .text(let variant):
-                        Button.TextButtonController(
+                        Button.TextButton(
                             variant: variant,
                             text: text,
                             handler: action

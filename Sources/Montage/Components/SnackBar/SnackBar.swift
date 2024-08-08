@@ -98,12 +98,12 @@ public struct SnackBar: View {
                         VStack(alignment: .leading, spacing: .zero) {
                             if let heading {
                                 Text(heading)
-                                    .montage(variant: .body2, weight: .bold, color: .staticWhite)
+                                    .montage(variant: .body2, weight: .bold, alias: .staticWhite)
                                     .paragraph(variant: .body2)
                             }
                             if let description {
                                 Text(description)
-                                    .montage(variant: .label2, weight: .regular, color: .staticWhite)
+                                    .montage(variant: .label2, weight: .regular, alias: .staticWhite)
                                     .paragraph(variant: .label2)
                                     .lineLimit(2)
                             }
@@ -138,7 +138,7 @@ public struct SnackBar: View {
         
         var body: some View {
             Text(action)
-                .montage(variant: .body2, weight: .bold, color: .staticWhite)
+                .montage(variant: .body2, weight: .bold, alias: .staticWhite)
                 .paragraph(variant: .body2)
                 .background(
                     Decorate.InteractionController(

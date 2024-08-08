@@ -400,7 +400,7 @@ extension Tooltip {
                                 .montage(
                                     variant: .label1,
                                     weight: .medium,
-                                    color: contentColor
+                                    alias: contentColor
                                 )
                                 .paragraph(variant: .label1)
                                 .padding(.horizontal, 2)
@@ -426,7 +426,7 @@ extension Tooltip {
                                     .montage(
                                         variant: .label1,
                                         weight: .bold,
-                                        color: .inverseLabel
+                                        alias: .inverseLabel
                                     )
                                     .paragraph(variant: .label1)
                                     .opacity(0.61)

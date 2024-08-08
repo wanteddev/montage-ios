@@ -148,7 +148,7 @@ extension Bar {
                                 )
                         }
                         Text(title)
-                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, color: .labelStrong)
+                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
                             .paragraph(variant: variant.typoVaraint)
                             .lineLimit(1)
                             .frame(width: titleSize)
@@ -164,7 +164,7 @@ extension Bar {
                         .padding(.top, 2)
                         HStack {
                             Text(title)
-                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, color: .labelStrong)
+                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
                                 .paragraph(variant: variant.typoVaraint)
                                 .lineLimit(1)
                                 .frame(alignment: variant.textAlignment)
@@ -208,7 +208,7 @@ extension Bar {
                             }
                             .fixedSize()
                         case let .text(t, action):
-                            Button.TextButtonController(
+                            Button.TextButton(
                                 text: t,
                                 contentColorResolver: Color.Alias.labelNormal
                             ) {
@@ -246,7 +246,7 @@ extension Bar {
                                 }
                                 .fixedSize()
                             case let .text(t, action):
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     text: t,
                                     contentColorResolver: Color.Alias.labelNormal
                                 ) {
@@ -286,7 +286,7 @@ extension Bar {
                             }
                             .fixedSize()
                         case let .text(t, action):
-                            Button.TextButtonController(
+                            Button.TextButton(
                                 text: t,
                                 contentColorResolver: Color.Alias.labelNormal
                             ) {
@@ -320,7 +320,7 @@ extension Bar {
                                 .fixedSize()
                                 .padding(.trailing, 8)
                             case let .text(t, action):
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     text: t,
                                     contentColorResolver: Color.Alias.labelNormal
                                 ) {
@@ -370,7 +370,7 @@ extension Bar {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, color: .staticWhite)
+                                        .montage(variant: .body2, weight: .medium, alias: .staticWhite)
                                         .paragraph(variant: .body2)
                                         .opacity(0.88)
                                         .padding(.vertical, 5)
@@ -409,7 +409,7 @@ extension Bar {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, color: .labelAlternative)
+                                        .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
                                         .paragraph(variant: .body2)
                                         .blendMode(.plusDarker)
                                         .padding(.vertical, 5)
@@ -451,7 +451,7 @@ extension Bar {
                                 .fixedSize()
                             case let .text(t, action):
                                 if alternative {
-                                    Button.TextButtonController(
+                                    Button.TextButton(
                                         text: t,
                                         contentColorResolver: Color.Alias.staticWhite
                                     ) {
@@ -462,7 +462,7 @@ extension Bar {
                                     .background(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
                                     .clipShape(RoundedRectangle(cornerRadius: 1000))
                                 } else {
-                                    Button.TextButtonController(
+                                    Button.TextButton(
                                         text: t,
                                         contentColorResolver: Color.Alias.labelAlternative
                                     ) {
