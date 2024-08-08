@@ -151,8 +151,8 @@ extension Button {
 
 extension Button.UITextButton {
     private func setupViews() {
-        layer.addSublayer(interactionLayer)
         addSubview(stackView)
+        layer.addSublayer(interactionLayer)
         
         setupInteraction()
         setupStackView()
@@ -256,6 +256,7 @@ extension Button.UITextButton {
         }()
         leftIconView.tintColor = contentColor
         rightIconView.tintColor = contentColor
+        interaction.variant = variant.interactionVariant
         interaction.color = variant.interactionColor
     }
     

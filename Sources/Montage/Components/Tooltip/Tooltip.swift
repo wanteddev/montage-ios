@@ -405,7 +405,7 @@ extension Tooltip {
                                 .paragraph(variant: .label1)
                                 .padding(.horizontal, 2)
                             if showCloseButton {
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .normal(size: 16),
                                     icon: .close,
                                     iconColorResolver: Color.Alias.inverseLabel

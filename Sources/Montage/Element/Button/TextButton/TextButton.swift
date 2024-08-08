@@ -167,6 +167,7 @@ extension Button {
                     }
                 }
             )
+            .allowsHitTesting(disable == false)
         }
     }
 }

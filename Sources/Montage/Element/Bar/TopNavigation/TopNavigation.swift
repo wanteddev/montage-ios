@@ -198,12 +198,12 @@ extension Bar {
                     Group {
                         switch left {
                         case .back(let action):
-                            Button.IconButtonController(icon: .chevronLeft) {
+                            Button.IconButton(icon: .chevronLeft) {
                                 action()
                             }
                             .fixedSize()
                         case let .icon(i, action):
-                            Button.IconButtonController(icon: i) {
+                            Button.IconButton(icon: i) {
                                 action()
                             }
                             .fixedSize()
@@ -241,7 +241,7 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(icon: i, showPushBadge: s) {
+                                Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
                                 .fixedSize()
@@ -276,12 +276,12 @@ extension Bar {
                     Group {
                         switch left {
                         case .back(let action):
-                            Button.IconButtonController(icon: .chevronLeft) {
+                            Button.IconButton(icon: .chevronLeft) {
                                 action()
                             }
                             .fixedSize()
                         case let .icon(i, action):
-                            Button.IconButtonController(icon: i) {
+                            Button.IconButton(icon: i) {
                                 action()
                             }
                             .fixedSize()
@@ -314,7 +314,7 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(icon: i, showPushBadge: s) {
+                                Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
                                 .fixedSize()
@@ -350,7 +350,7 @@ extension Bar {
                         if alternative {
                             switch left {
                             case .back(let action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: .chevronLeftThick
                                 ) {
@@ -358,7 +358,7 @@ extension Bar {
                                 }
                                 .fixedSize()
                             case let .icon(i, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i
                                 ) {
@@ -385,7 +385,7 @@ extension Bar {
                         } else {
                             switch left {
                             case .back(let action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: .chevronLeftThick
                                 ) {
@@ -395,7 +395,7 @@ extension Bar {
                                 .clipShape(Circle())
                                 .fixedSize()
                             case let .icon(i, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i
                                 ) {
@@ -441,7 +441,7 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i,
                                     showPushBadge: s
