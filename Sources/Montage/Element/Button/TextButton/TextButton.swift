@@ -59,6 +59,9 @@ extension Button.TextButton.Variant {
         case .assistive: .labelNormal
         }
     }
+
+    var interactionVerticalOffset: CGFloat { 4 }
+    var interactionHorizontalOffset: CGFloat { 7 }
 }
 
 extension Button.TextButton.Size {
@@ -88,7 +91,7 @@ extension Button.TextButton.Size {
 extension Button {
     public struct TextButton: View {
         @State private var isPressed = false
-        
+
         public let variant: TextButton.Variant
         public let size: TextButton.Size
         public let leftIcon: Icon?
@@ -98,7 +101,6 @@ extension Button {
         public let contentColorResolver: ColorResolvable?
         public let fontSize: Typography.Variant?
         public let handler: (() -> Void)?
-        
         
         public init(
             variant: TextButton.Variant = .primary,
@@ -142,7 +144,6 @@ extension Button {
                         weight: size.typoWeight,
                         color: typoColor
                     )
-                    .padding(.vertical, 4)
             }
             .overlay {
                 Decorate.InteractionController(
@@ -151,7 +152,8 @@ extension Button {
                     color: variant.interactionColor
                 )
                 .clipShape(RoundedRectangle(cornerRadius: variant.interactionRadius))
-                .padding(.horizontal, -7)
+                .padding(.vertical, -variant.interactionVerticalOffset)
+                .padding(.horizontal, -variant.interactionHorizontalOffset)
             }
             .onLongPressGesture(
                 minimumDuration: 2.0,

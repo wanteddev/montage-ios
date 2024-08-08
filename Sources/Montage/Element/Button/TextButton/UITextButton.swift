@@ -86,9 +86,8 @@ extension Button {
         
         private lazy var rightIconView = UIImageView()
         
-        private lazy var interaction = UIView()
-        
-        private var tapRecognizer: UITapGestureRecognizer?
+        private lazy var interaction = Decorate.Interaction()
+        private lazy var interactionLayer = interaction.layer
         
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
@@ -99,7 +98,8 @@ extension Button {
         private weak var delegate: TextButtonDelegate?
         
         /// TextButton 객체를 생성합니다.
-        public init() {
+        public init(text: String) {
+            self.text = text
             super.init(frame: .zero)
             
             setupViews()
@@ -131,14 +131,19 @@ extension Button {
             let iconSize = size.iconSize
             let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
             
-            return .init(
+            let size = CGSize(
                 width: iconSize.width * CGFloat(iconCount) + textSize.width,
                 height: max(iconSize.height, textSize.height)
             )
+
+            updateInteractionlayer(size)
+
+            return size
         }
         
+        /// Element의 터치 가능 영역을 조절합니다.
         public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-            let biggerFrame = bounds.insetBy(dx: -15, dy: -15)
+            let biggerFrame = bounds.insetBy(dx: -12, dy: -12)
             return biggerFrame.contains(point)
         }
     }
@@ -146,11 +151,11 @@ extension Button {
 
 extension Button.UITextButton {
     private func setupViews() {
-        addSubview(interaction)
-        interaction.addSubview(stackView)
+        layer.addSublayer(interactionLayer)
+        addSubview(stackView)
         
+        setupInteraction()
         setupStackView()
-        setupInteractionContraints()
         setupUpdateableConstraints()
         
         updateViews()
@@ -163,6 +168,11 @@ extension Button.UITextButton {
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
         self.longPressRecognizer = longPressRecognizer
+    }
+    
+    private func setupInteraction() {
+        interaction.layer.cornerRadius = variant.interactionRadius
+        updateInteractionlayer(frame.size)
     }
     
     private func setupStackView() {
@@ -180,16 +190,7 @@ extension Button.UITextButton {
         updateConstraints()
         setupLayer()
     }
-    
-    private func setupInteractionContraints() {
-        interaction.translatesAutoresizingMaskIntoConstraints = false
-        
-        interaction.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        interaction.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        interaction.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        interaction.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    }
-    
+
     private func setupIconViewConstraints() {
         NSLayoutConstraint.deactivate(iconViewContraints)
         
@@ -213,10 +214,10 @@ extension Button.UITextButton {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor),
-            stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor),
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
+            stackView.leftAnchor.constraint(equalTo: leftAnchor),
+            stackView.rightAnchor.constraint(equalTo: rightAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ]
         
@@ -227,7 +228,6 @@ extension Button.UITextButton {
     
     private func setupLayer() {
         layer.cornerRadius = variant.interactionRadius
-        layer.masksToBounds = true
     }
 }
 
@@ -256,6 +256,7 @@ extension Button.UITextButton {
         }()
         leftIconView.tintColor = contentColor
         rightIconView.tintColor = contentColor
+        interaction.color = variant.interactionColor
     }
     
     private func updateIconView() {
@@ -276,6 +277,19 @@ extension Button.UITextButton {
     
     private func updateTextLabel() {
         textLabel.attributedText = getAttributedText()
+    }
+    
+    private func updateInteractionlayer(_ size: CGSize) {
+        interactionLayer.frame = CGRect(
+            origin: .init(
+                x: -variant.interactionHorizontalOffset,
+                y: -variant.interactionVerticalOffset
+            ),
+            size: .init(
+                width: size.width + variant.interactionHorizontalOffset * 2,
+                height: size.height + variant.interactionVerticalOffset * 2
+            )
+        )
     }
     
     private func getAttributedText() -> NSAttributedString {
@@ -310,19 +324,19 @@ extension Button.UITextButton {
         
         switch recognizer.state {
         case .began:
-            interaction.layer.opacity = .opacity(.p022)
+            interactionLayer.opacity = .opacity(.p022)
         case .changed:
             // 스크롤 시 버튼이 눌리지 않도록 state를 normal로 변경
             // 3D touch 모델은 스크롤 하지 않아도 changed가 실행되서 적용하지 않음
             if traitCollection.forceTouchCapability != UIForceTouchCapability.available
                 && traitCollection.forceTouchCapability != UIForceTouchCapability.unavailable {
-                interaction.layer.opacity = .opacity(.p100)
+                interactionLayer.opacity = .opacity(.p100)
             }
         case .ended:
             if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
                 handler?()
             }
-            interaction.layer.opacity = .opacity(.p100)
+            interactionLayer.opacity = .opacity(.p000)
         default:
             break
         }
