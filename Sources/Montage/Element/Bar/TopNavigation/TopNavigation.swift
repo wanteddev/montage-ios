@@ -16,6 +16,7 @@ extension Bar {
         private let title: String
         private let scrollOffset: CGPoint
         private let left: Resource.Left?
+        private let backgroundColorResolvable: ColorResolvable?
         private let actions: [Resource.Action]
         
         // MARK: - Computed properties
@@ -28,16 +29,22 @@ extension Bar {
             case .extended: return false
             }
         }
-        private var backgroundOpacity: CGFloat {
-            if (scrollOffset.y / -32) > 1 {
-                return 0.88
+        
+        private var needMaterial: Bool {
+            scrolled && isFloatingVariant == false && (scrollOffset.y / -33) > 1
+        }
+        
+        private var backgroundColor: SwiftUI.Color {
+            if let backgroundColorResolvable {
+                return .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
             } else {
-                if (scrollOffset.y / -32) >= 0.88 {
-                    return 0.88
-                } else {
-                    return (scrollOffset.y / -32)
-                }
+                return SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
             }
+        }
+        
+        private var backgroundOpacity: CGFloat {
+            let ratio = (scrollOffset.y / -32)
+            return ratio > 1 ? 1 : ratio
         }
         
         private var screenWidthMeasurer: some View {
@@ -56,12 +63,14 @@ extension Bar {
             title: String = "",
             scrollOffset: CGPoint = .zero,
             left: Resource.Left? = nil,
+            backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action] = []
         ) {
             self.variant = variant
             self.title = title
             self.scrollOffset = scrollOffset
             self.left = left
+            self.backgroundColorResolvable = backgroundColorResolvable
             self.actions = Array(actions.prefix(3))
         }
         
@@ -75,15 +84,18 @@ extension Bar {
                     actions: actions
                 )
                 .background(
-                    (scrolled && isFloatingVariant == false) ? SwiftUI.Color.alias(.backgroundNormal).opacity(backgroundOpacity) : .clear
+                    (scrolled && isFloatingVariant == false) ? backgroundColor.opacity(backgroundOpacity) : .clear
+                )
+                .background(
+                    .ultraThinMaterial.opacity(backgroundOpacity)
                 )
                 .background(
                     screenWidthMeasurer
                 )
                 if scrolled && isFloatingVariant == false {
-                    Divider()
-                        .frame(height: 0.5)
-                        .background(SwiftUI.Color.alias(.lineNeutral).opacity(0.5))
+                    Rectangle()
+                        .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
+                        .frame(width: screenWidth, height: 0.5)
                 }
             }
         }
@@ -99,7 +111,7 @@ extension Bar {
             var actions: [Resource.Action]
 
             private var titleSize: CGFloat {
-                screenWidth - (max(leftSize.width, actionSize.width) * 2) - 20
+                max(screenWidth - (max(leftSize.width, actionSize.width) * 2) - 20, 0)
             }
             
             private var leftSizeMeasuerer: some View {
@@ -551,6 +563,7 @@ extension Bar.TopNavigation {
         private let showIndicator: Bool
         private let left: Resource.Left?
         private let actions: [Resource.Action]
+        private let backgroundColorResolvable: ColorResolvable?
         private let model: ActionArea.Bottom.Model<AnyView>?
         
         private var navigationSizeMeasurer: some View {
@@ -582,12 +595,20 @@ extension Bar.TopNavigation {
                 []
             }
         }
+        private var backgroundColor: SwiftUI.Color {
+            if let backgroundColorResolvable {
+                return .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
+            } else {
+                return SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
+            }
+        }
         
         public init(
             variant: Variant,
             title: String,
             showIndicator: Bool = true,
             left: Resource.Left?,
+            backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action],
             model: ActionArea.Bottom.Model<AnyView>? = nil
         ) {
@@ -595,6 +616,7 @@ extension Bar.TopNavigation {
             self.title = title
             self.showIndicator = showIndicator
             self.left = left
+            self.backgroundColorResolvable = backgroundColorResolvable
             self.actions = actions
             self.model = model
         }
@@ -612,8 +634,6 @@ extension Bar.TopNavigation {
                     }
                     .frame(width: 0, height: 0)
                     VStack(alignment: .leading, spacing: .zero) {
-                        Spacer()
-                            .frame(height: navigationHeight)
                         content
                         if model != nil {
                             Spacer()
@@ -621,6 +641,10 @@ extension Bar.TopNavigation {
                         }
                     }
                 }
+                .padding(.top, navigationHeight)
+                .background(
+                    backgroundColor
+                )
                 .coordinateSpace(name: "ScrollViewOrigin")
                 .onPreferenceChange(
                     OffsetPreferenceKey.self,
@@ -632,6 +656,7 @@ extension Bar.TopNavigation {
                         title: title,
                         scrollOffset: scrollOffset,
                         left: left,
+                        backgroundColorResolvable: backgroundColorResolvable,
                         actions: actions
                     )
                     .background(

@@ -114,6 +114,7 @@ extension View {
         variant: Bar.TopNavigation.Variant = .normal,
         title: String,
         left: Bar.TopNavigation.Resource.Left? = nil,
+        backgroundColorResolvable: ColorResolvable? = nil,
         actions: [Bar.TopNavigation.Resource.Action] = []
     ) -> some View {
         modifier(
@@ -121,6 +122,7 @@ extension View {
                 variant: variant,
                 title: title,
                 left: left,
+                backgroundColorResolvable: backgroundColorResolvable,
                 actions: actions
             )
         )
@@ -130,6 +132,7 @@ extension View {
         variant: Bar.TopNavigation.Variant = .normal,
         title: String,
         left: Bar.TopNavigation.Resource.Left? = nil,
+        backgroundColorResolvable: ColorResolvable? = nil,
         actions: [Bar.TopNavigation.Resource.Action] = [],
         withBottom model: ActionArea.Bottom.Model<AnyView>
     ) -> some View {
@@ -138,6 +141,7 @@ extension View {
                 variant: variant,
                 title: title,
                 left: left,
+                backgroundColorResolvable: backgroundColorResolvable,
                 actions: actions,
                 model: model
             )
