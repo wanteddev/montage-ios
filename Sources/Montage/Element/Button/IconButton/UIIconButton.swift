@@ -309,12 +309,12 @@ extension Button.UIIconButton {
     private func updateInteractionlayer(_ size: CGSize) {
         interactionLayer.frame = CGRect(
             origin: .init(
-                x: -variant.interactionOffset,
-                y: -variant.interactionOffset
+                x: -interactionOffset,
+                y: -interactionOffset
             ),
             size: .init(
-                width: size.width + variant.interactionOffset * 2,
-                height: size.height + variant.interactionOffset * 2
+                width: size.width + interactionOffset * 2,
+                height: size.height + interactionOffset * 2
             )
         )
     }
@@ -341,6 +341,10 @@ extension Button.UIIconButton {
                 )
             }
         }
+    }
+    
+    private var interactionOffset: CGFloat {
+        variant.interactionOffset + padding
     }
 }
 

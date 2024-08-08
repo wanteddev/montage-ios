@@ -106,10 +106,10 @@ public struct TextArea: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .montage(variant: .label1, weight: .bold, color: .labelNeutral)
+                        .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
                     if requiredBadge {
                         Text("*")
-                            .montage(variant: .label1, weight: .medium, color: .statusNegative)
+                            .montage(variant: .label1, weight: .medium, alias: .statusNegative)
                     }
                 }
             }
@@ -128,7 +128,7 @@ public struct TextArea: View {
                 Text(description)
                     .montage(
                         variant: .caption1,
-                        color: variant == .normal ? .labelAlternative : .statusNegative
+                        alias: variant == .normal ? .labelAlternative : .statusNegative
                     )
             }
         }
@@ -254,7 +254,7 @@ public struct TextArea: View {
                     }
                     if $text.wrappedValue.isEmpty && textEditorFocusState == false, let placeholder {
                         Text(placeholder)
-                            .montage(variant: .body1Reading, color: .labelAssistive)
+                            .montage(variant: .body1Reading, alias: .labelAssistive)
                             .paragraph(variant: .body1Reading)
                             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                             .allowsHitTesting(false)
@@ -335,7 +335,7 @@ public struct TextArea: View {
                                 component(rightResource)
                             }
                         } else {
-                            Button.IconButtonController(
+                            Button.IconButton(
                                 icon: .circleExclamationFill,
                                 iconColorResolver:
                                     disable ? Color.Alias.labelDisable : Color.Alias.statusNegative
@@ -353,16 +353,16 @@ public struct TextArea: View {
                 case .characterCount(let limit):
                     HStack(spacing: .zero) {
                         Text("\(typedCharacters)")
-                            .montage(variant: .label2, weight: .medium, color: disable ? .labelDisable : .labelAlternative)
+                            .montage(variant: .label2, weight: .medium, alias: disable ? .labelDisable : .labelAlternative)
                             .paragraph(variant: .label2)
                         if limit != .zero {
                             Text("/\(String(limit))")
-                                .montage(variant: .label2, weight: .medium, color: disable ? .labelDisable : .labelAssistive)
+                                .montage(variant: .label2, weight: .medium, alias: disable ? .labelDisable : .labelAssistive)
                                 .paragraph(variant: .label2)
                         }
                     }
                 case let .textButton(placement, variant, title, handler):
-                    Button.TextButtonController(
+                    Button.TextButton(
                         variant: {
                             if let variant {
                                 return variant
@@ -379,7 +379,7 @@ public struct TextArea: View {
                     )
                     .fixedSize()
                 case let .iconButton(placement, variant, icon, handler):
-                    Button.IconButtonController(
+                    Button.IconButton(
                         variant: {
                             if let variant {
                                 return variant

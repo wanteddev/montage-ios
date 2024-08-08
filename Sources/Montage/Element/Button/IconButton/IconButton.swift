@@ -120,8 +120,7 @@ extension Button.IconButton.Variant {
     var interactionOffset: CGFloat {
         switch self {
         case .normal: 8
-        case .background(_, _): 6
-        case .outlined(_), .solid(_): 10
+        case .background(_, _), .outlined(_), .solid(_): backgroundOffset
         }
     }
     
@@ -146,23 +145,44 @@ extension Button {
     public struct IconButton: View {
         @State private var isPressed = false
         
-        public var variant: IconButton.Variant
-        public var icon: Icon
-        public var state: Decorate.Interaction.State = .normal
-        public var disable: Bool = false
-        public var showPushBadge: Bool = false
-        public var padding: CGFloat = .zero
-        public var iconColorResolver: ColorResolvable? = nil
-        public var backgroundColorResolver: ColorResolvable? = nil
-        public var borderColorResolver: ColorResolvable? = nil
-        public var handler: (() -> Void)?
+        /// 버튼의 외관입니다.
+        private let variant: IconButton.Variant
         
-        public typealias UIViewType = UIIconButton
+        /// 버튼에 표시될 아이콘입니다.
+        private let icon: Icon
+
+        /// 버튼의 활성화 여부입니다.
+        private let disable: Bool
+        
+        /// 버튼 우측 상단의 푸시 뱃지 노출 여부입니다.
+        /// > normal variant에서만 사용 가능합니다.
+        private let showPushBadge: Bool
+        
+        /// 커스텀 가능한 패딩 입니다.
+        /// > 설정 시 constraint가 업데이트 됩니다.
+        /// > outlined, soild variant에서만 사용 가능합니다.
+        private let padding: CGFloat
+        
+        /// 커스텀 가능한 아이콘 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        private let iconColorResolver: ColorResolvable?
+        
+        /// 커스텀 가능한 배경색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        /// > outlined, soild variant에서만 사용 가능합니다.
+        private let backgroundColorResolver: ColorResolvable?
+        
+        /// 커스텀 가능한 테두리색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        /// > outlined 에서만 사용 가능합니다.
+        private let borderColorResolver: ColorResolvable?
+        
+        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
+        private let handler: (() -> Void)?
         
         public init(
             variant: IconButton.Variant = .default,
             icon: Icon,
-            state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
             showPushBadge: Bool = false,
             padding: CGFloat = .zero,
@@ -173,37 +193,88 @@ extension Button {
         ) {
             self.variant = variant
             self.icon = icon
-            self.state = state
             self.disable = disable
-            self.showPushBadge = showPushBadge
-            self.padding = padding
+            self.showPushBadge = {
+                guard case .normal(_) = variant else { return false }
+                return showPushBadge
+            }()
+            self.padding = {
+                switch variant {
+                case .normal, .background: .zero
+                case .outlined, .solid: padding
+                }
+            }()
             self.iconColorResolver = iconColorResolver
-            self.backgroundColorResolver = backgroundColorResolver
-            self.borderColorResolver = borderColorResolver
+            self.backgroundColorResolver = {
+                switch variant {
+                case .normal, .background: nil
+                case .outlined, .solid: backgroundColorResolver
+                }
+            }()
+            self.borderColorResolver = {
+                guard case .outlined(_) = variant else { return nil }
+                return borderColorResolver
+            }()
             self.handler = handler
         }
         
+        // MARK: Private Computed Property
+        
+        private var iconColor: SwiftUI.Color {
+            if disable {
+                return SwiftUI.Color(uiColor: variant.inactiveColor)
+            } else {
+                if let iconColorResolver {
+                    return SwiftUI.Color(uiColor: iconColorResolver.resolve(.current))
+                } else {
+                    return SwiftUI.Color(uiColor: variant.activeColor)
+                }
+            }
+        }
+        
+        private var strokeColor: SwiftUI.Color {
+            if case .outlined(_) = variant, let borderColorResolver {
+                return SwiftUI.Color(uiColor: borderColorResolver.resolve(.current))
+            } else {
+                return SwiftUI.Color(uiColor: variant.borderColor)
+            }
+        }
+        
+        private var backgroundColor: SwiftUI.Color {
+            if disable {
+                return SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
+            } else {
+                if let backgroundColorResolver {
+                    return SwiftUI.Color(uiColor: backgroundColorResolver.resolve(.current))
+                } else {
+                    return SwiftUI.Color(uiColor: variant.activeBackgroundColor)
+                }
+            }
+        }
+        
+        private var interactionOffset: CGFloat {
+            variant.interactionOffset + padding
+        }
+
         public var body: some View {
             SwiftUI.Button {} label: {
-                Image.montage(icon)
-                    .resizable()
-                    .frame(
-                        width: variant.iconSize.width + padding,
-                        height: variant.iconSize.height + padding
-                    )
-                    .foregroundStyle(
-                        {
-                            if disable {
-                                return SwiftUI.Color(uiColor: variant.inactiveColor)
-                            } else {
-                                if let iconColorResolver {
-                                    return SwiftUI.Color(uiColor: iconColorResolver.resolve(.current))
-                                } else {
-                                    return SwiftUI.Color(uiColor: variant.activeColor)
-                                }
-                            }
-                        }()
-                    )
+                ZStack {
+                    Image.montage(icon)
+                        .resizable()
+                        .frame(
+                            width: variant.iconSize.width,
+                            height: variant.iconSize.height
+                        )
+                        .foregroundStyle(iconColor)
+                    if showPushBadge {
+                        Badge.PushBadgeController(variant: .dot)
+                            .fixedSize()
+                            .offset(
+                                x: Badge.Push.Variant.dot.dotOffset,
+                                y: -Badge.Push.Variant.dot.dotOffset
+                            )
+                    }
+                }
             }
             .overlay {
                 Decorate.InteractionController(
@@ -212,27 +283,16 @@ extension Button {
                     color: variant.interactionColor
                 )
                 .clipShape(Circle())
-                .padding(.vertical, -variant.interactionOffset)
-                .padding(.horizontal, -variant.interactionOffset)
+                .padding(.vertical, -interactionOffset)
+                .padding(.horizontal, -interactionOffset)
             }
-            .padding(.all, variant.backgroundOffset)
+            .padding(.all, variant.backgroundOffset + padding)
             .background(
                 ZStack {
                     Circle()
-                        .fill(
-                            disable ? SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)  : SwiftUI.Color(uiColor: variant.activeBackgroundColor)
-                        )
+                        .fill(backgroundColor)
                     Circle()
-                        .stroke(
-                            {
-                                if case .outlined(_) = variant, let borderColorResolver {
-                                    return SwiftUI.Color(uiColor: borderColorResolver.resolve(.current))
-                                } else {
-                                    return SwiftUI.Color(uiColor: variant.borderColor)
-                                }
-                            }(),
-                            lineWidth: variant.borderWidth
-                        )
+                        .stroke(strokeColor, lineWidth: variant.borderWidth)
                 }
                     
             )
@@ -249,8 +309,8 @@ extension Button {
                 }
             )
             .frame(
-                width: variant.iconSize.width + variant.backgroundOffset,
-                height: variant.iconSize.height + variant.backgroundOffset
+                width: variant.iconSize.width + variant.backgroundOffset + padding,
+                height: variant.iconSize.height + variant.backgroundOffset + padding
             )
             .allowsHitTesting(disable == false)
         }
@@ -279,7 +339,7 @@ struct IconButtonControllerPreview: View {
                 .fixedSize()
                 
                 Button.IconButton(
-                    icon: .bell,
+                    icon: .bookmark,
                     showPushBadge: true
                 ) {
                     debugPrint(">>> hello world!")
@@ -391,6 +451,13 @@ struct IconButtonControllerPreview: View {
             Text("custom").montage()
             
             HStack {
+                Button.IconButton(
+                    variant: .background(size: 10, isAlternative: false),
+                    icon: .chat,
+                    iconColorResolver: Color.Global.globalBlue50
+                )
+                .fixedSize()
+                
                 Button.IconButton(
                     icon: .apps,
                     iconColorResolver: Color.Alias.accentLightBlue

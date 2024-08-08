@@ -92,15 +92,34 @@ extension Button {
     public struct TextButton: View {
         @State private var isPressed = false
 
-        public let variant: TextButton.Variant
-        public let size: TextButton.Size
-        public let leftIcon: Icon?
-        public let rightIcon: Icon?
-        public let text: String
-        public let disable: Bool
-        public let contentColorResolver: ColorResolvable?
-        public let fontSize: Typography.Variant?
-        public let handler: (() -> Void)?
+        /// 버튼의 외관입니다.
+        private let variant: TextButton.Variant
+        
+        /// 버튼의 사이즈입니다.
+        private let size: TextButton.Size
+        
+        /// 텍스트의 좌측에 표현될 아이콘입니다.
+        private let leftIcon: Icon?
+        
+        /// 텍스트의 우측에 표현될 아이콘입니다.
+        private let rightIcon: Icon?
+        
+        /// 버튼에서 표현될 텍스트입니다.
+        private let text: String
+        
+        /// 버튼의 활성화 여부입니다.
+        private let disable: Bool
+        
+        /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        private let contentColorResolver: ColorResolvable?
+        
+        /// 커스텀 가능한 텍스트 사이즈입니다.
+        /// montage의 모든 Typography.Variant를 사용할 수 있습니다.
+        private let fontSize: Typography.Variant?
+        
+        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
+        private let handler: (() -> Void)?
         
         public init(
             variant: TextButton.Variant = .primary,
@@ -124,6 +143,8 @@ extension Button {
             self.handler = handler
         }
         
+        // MARK: Private Computed Property
+        
         private var typoColor: SwiftUI.Color {
             if disable {
                 variant.inactiveColor
@@ -136,14 +157,34 @@ extension Button {
             }
         }
         
+        private var iconColor: SwiftUI.Color {
+            if disable {
+                variant.inactiveColor
+            } else {
+                if let contentColorResolver {
+                    SwiftUI.Color(uiColor: contentColorResolver.resolve(.current))
+                } else {
+                    variant.activeColor
+                }
+            }
+        }
+        
         public var body: some View {
             SwiftUI.Button {} label: {
-                Text(text)
-                    .montage(
-                        variant: size.typoVariant,
-                        weight: size.typoWeight,
-                        color: typoColor
-                    )
+                HStack(alignment: .center, spacing: 4) {
+                    if let leftIcon {
+                        icon(leftIcon)
+                    }
+                    Text(text)
+                        .montage(
+                            variant: size.typoVariant,
+                            weight: size.typoWeight,
+                            color: typoColor
+                        )
+                    if let rightIcon {
+                        icon(rightIcon)
+                    }
+                }
             }
             .overlay {
                 Decorate.InteractionController(
@@ -168,6 +209,16 @@ extension Button {
                 }
             )
             .allowsHitTesting(disable == false)
+        }
+        
+        private func icon(_ i: Icon) -> some View {
+            Image.montage(i)
+                .resizable()
+                .frame(
+                    width: size.iconSize.width,
+                    height: size.iconSize.height
+                )
+                .foregroundStyle(iconColor)
         }
     }
 }

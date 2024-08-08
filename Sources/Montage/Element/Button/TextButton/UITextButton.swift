@@ -69,6 +69,8 @@ extension Button {
             }
         }
         
+        /// 커스텀 가능한 텍스트 사이즈입니다.
+        /// montage의 모든 Typography.Variant를 사용할 수 있습니다.
         public var fontSize: Typography.Variant? {
             didSet {
                 updateTextLabel()
