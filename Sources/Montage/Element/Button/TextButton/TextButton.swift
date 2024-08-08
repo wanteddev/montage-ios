@@ -2,35 +2,19 @@
 //  TextButton.swift
 //  Montage
 //
-//  Created by Euigyom Kim on 2023/04/10.
+//  Created by Euigyom Kim on 2023/04/11.
 //
 
-import UIKit
+import SwiftUI
 
-/// ``TextButton``의 터치 이벤트를 받을 수 있는 Delegate입니다.
-public protocol TextButtonDelegate: AnyObject {
-    /// 터치가 발생하였을 때 호출되는 메소드입니다.
-    /// - Parameter checkbox: 터치가 발생한 객체
-    func didTappedRoundButton(_ roundButton: Button.TextButton)
-}
-
+import Pretendard
 
 extension Button {
-    /// 텍스트 및 아이콘으로 이루어진 버튼입니다.
-    /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
-    public class TextButton: UIView {
-        
+    public struct TextButton: View {
         /// 버튼의 외관을 결정하는 열거형입니다.
         public enum Variant {
             case primary
             case assistive
-        }
-        
-        /// 버튼의 외관입니다.
-        public var variant: Variant = .primary {
-            didSet {
-                updateViews()
-            }
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
@@ -38,376 +22,223 @@ extension Button {
             case medium, small
         }
         
-        /// 버튼의 사이즈입니다.
-        public var size: Size = .medium {
-            didSet {
-                setupUpdateableConstraints()
-                updateViews()
+        @State private var isPressed = false
+        
+        public let variant: TextButton.Variant
+        public let size: TextButton.Size
+        public let leftIcon: Icon?
+        public let rightIcon: Icon?
+        public let text: String
+        public let disable: Bool
+        public let contentColorResolver: ColorResolvable?
+        public let fontSize: Typography.Variant?
+        public let handler: (() -> Void)?
+        
+        
+        public init(
+            variant: TextButton.Variant = .primary,
+            size: TextButton.Size = .medium,
+            leftIcon: Icon? = nil,
+            rightIcon: Icon? = nil,
+            text: String,
+            disable: Bool = false,
+            contentColorResolver: ColorResolvable? = nil,
+            fontSize: Typography.Variant? = nil,
+            handler: (() -> Void)? = nil
+        ) {
+            self.variant = variant
+            self.size = size
+            self.leftIcon = leftIcon
+            self.rightIcon = rightIcon
+            self.text = text
+            self.disable = disable
+            self.contentColorResolver = contentColorResolver
+            self.fontSize = fontSize
+            self.handler = handler
+        }
+        
+        private var typoColor: SwiftUI.Color {
+            if disable {
+                variant.inactiveColor
+            } else {
+                if let contentColorResolver {
+                    .init(uiColor: contentColorResolver.resolve(.current))
+                } else {
+                    variant.activeColor
+                }
             }
         }
         
-        /// 사용자와의 인터렉션 상태를 표현합니다.
-        public var state: Decorate.Interaction.State = .normal {
-            didSet {
-                updateViews()
+        public var body: some View {
+            SwiftUI.Button {} label: {
+                Text(text)
+                    .montage(
+                        variant: size.typoVariant,
+                        weight: size.typoWeight,
+                        color: typoColor
+                    )
+                    .padding(.vertical, 4)
             }
-        }
-        
-        /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: Icon? {
-            didSet {
-                updateViews()
+            .overlay {
+                Decorate.InteractionController(
+                    state: isPressed ? .pressed : .normal,
+                    variant: variant.interactionVariant,
+                    color: variant.interactionColor
+                )
+                .clipShape(RoundedRectangle(cornerRadius: variant.interactionRadius))
+                .padding(.horizontal, -7)
             }
-        }
-        
-        /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: Icon? {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 버튼에서 표현될 텍스트입니다.
-        public var text: String = "" {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 버튼의 활성화 여부입니다.
-        public var disable: Bool = false {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var contentColorResolver: ColorResolvable? {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        public var fontSize: Typography.Variant? {
-            didSet {
-                updateTextLabel()
-            }
-        }
-        
-        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
-        public var handler: (() -> Void)?
-        
-        private lazy var stackView = UIStackView()
-        
-        private lazy var leftIconView = UIImageView()
-        
-        private lazy var textLabel = UILabel()
-        
-        private lazy var rightIconView = UIImageView()
-        
-        private lazy var interaction = Decorate.Interaction()
-        
-        private var tapRecognizer: UITapGestureRecognizer?
-        
-        private var longPressRecognizer: UILongPressGestureRecognizer?
-        
-        private var iconViewContraints: [NSLayoutConstraint] = []
-        
-        private var stackViewConstraints: [NSLayoutConstraint] = []
-        
-        private weak var delegate: TextButtonDelegate?
-        
-        /// TextButton 객체를 생성합니다.
-        public init() {
-            super.init(frame: .zero)
-            
-            setupViews()
-            bindEvent()
-        }
-        
-        public required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            
-            setupViews()
-            bindEvent()
-        }
-        
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            
-            updateViews()
-        }
-        
-        public override func layoutSubviews() {
-            super.layoutSubviews()
-            
-            setupLayer()
-        }
-        
-        /// Element의 기본적인 사이즈를 정의합니다.
-        override public var intrinsicContentSize: CGSize {
-            let textSize = getAttributedText().size()
-            let iconSize = size.iconSize
-            let edgeInsets = size.edgeInsets
-            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
-            
-            return .init(
-                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
-                height: max(iconSize.height, textSize.height) + edgeInsets.vertical
+            .onLongPressGesture(
+                minimumDuration: 2.0,
+                perform: {
+                    isPressed = true
+                },
+                onPressingChanged: { state in
+                    isPressed = state
+                    if state == false {
+                        handler?()
+                    }
+                }
             )
         }
     }
 }
 
-extension Button.TextButton {
-    private func setupViews() {
-        addSubview(stackView)
-        addSubview(interaction)
-        
-        setupStackView()
-        setupInteractionContraints()
-        setupUpdateableConstraints()
-        
-        updateViews()
-    }
-    
-    private func bindEvent() {
-        let longPressRecognizer = UILongPressGestureRecognizer()
-        longPressRecognizer.delegate = self
-        longPressRecognizer.minimumPressDuration = 0
-        longPressRecognizer.addTarget(self, action: #selector(longPressed))
-        addGestureRecognizer(longPressRecognizer)
-        self.longPressRecognizer = longPressRecognizer
-    }
-    
-    private func setupStackView() {
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.spacing = .spacing(.pt04)
-        stackView.addArrangedSubview(leftIconView)
-        stackView.addArrangedSubview(textLabel)
-        stackView.addArrangedSubview(rightIconView)
-    }
-    
-    private func setupUpdateableConstraints() {
-        setupIconViewConstraints()
-        setupStackViewConstraints()
-        updateConstraints()
-        setupLayer()
-    }
-    
-    private func setupInteractionContraints() {
-        interaction.translatesAutoresizingMaskIntoConstraints = false
-        
-        interaction.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        interaction.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        interaction.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        interaction.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    }
-    
-    private func setupIconViewConstraints() {
-        NSLayoutConstraint.deactivate(iconViewContraints)
-        
-        leftIconView.translatesAutoresizingMaskIntoConstraints = false
-        rightIconView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints = [
-            leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
-            rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-        iconViewContraints = constraints
-    }
-    
-    private func setupStackViewConstraints() {
-        NSLayoutConstraint.deactivate(stackViewConstraints)
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let insets = size.edgeInsets
-        
-        let constraints = [
-            stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: insets.left),
-            stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -insets.right),
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets.top),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets.bottom),
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ]
-        
-        constraints.forEach({ $0.priority = .defaultLow })
-        NSLayoutConstraint.activate(constraints)
-        stackViewConstraints = constraints
-    }
-    
-    private func setupLayer() {
-        layer.cornerRadius = variant.interactionRadius
-        layer.masksToBounds = true
+struct TextButton_Previews: PreviewProvider {
+    static var previews: some View {
+        TextButtonPreview()
     }
 }
 
-extension Button.TextButton {
-    private func updateViews() {
-        isUserInteractionEnabled = false == disable
-        
-        updateColor()
-        updateIconView()
-        updateTextLabel()
-        
-        invalidateIntrinsicContentSize()
-    }
-    
-    private func updateColor() {
-        interaction.color = variant.interactionColor
-        
-        let contentColor: UIColor = {
-            if disable {
-                variant.inactiveColor
-            } else {
-                if let contentColorResolver {
-                    contentColorResolver.resolve(.current)
-                } else {
-                    variant.activeColor
+struct TextButtonPreview: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: .spacing(.pt20)) {
+            Text("Size").montage(variant: .headline2)
+            
+            HStack {
+                Button.TextButton(
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButton(
+                    size: .small,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButton(
+                    variant: .assistive,
+                    text: "안녕하세요"
+                ).fixedSize()
+                
+                Button.TextButton(
+                    variant: .assistive,
+                    size: .small,
+                    text: "안녕하세요"
+                ).fixedSize()
+            }
+            
+            Text("Icon").montage(variant: .headline2)
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Button.TextButton(
+                        leftIcon: .bubbleFill,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButton(
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButton(
+                        leftIcon: .bubbleFill,
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                }
+                
+                HStack {
+                    Button.TextButton(
+                        variant: .assistive,
+                        leftIcon: .bubbleFill,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButton(
+                        variant: .assistive,
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
+                    
+                    Button.TextButton(
+                        variant: .assistive,
+                        leftIcon: .bubbleFill,
+                        rightIcon: .circleClose,
+                        text: "안녕하세요"
+                    ).fixedSize()
                 }
             }
-        }()
-        leftIconView.tintColor = contentColor
-        rightIconView.tintColor = contentColor
-    }
-    
-    private func updateIconView() {
-        if let leftIcon {
-            leftIconView.isHidden = false
-            leftIconView.image = .montage(leftIcon)
-        } else {
-            leftIconView.isHidden = true
-        }
-        
-        if let rightIcon {
-            rightIconView.isHidden = false
-            rightIconView.image = .montage(rightIcon)
-        } else {
-            rightIconView.isHidden = true
-        }
-    }
-    
-    private func updateTextLabel() {
-        textLabel.attributedText = getAttributedText()
-    }
-    
-    private func getAttributedText() -> NSAttributedString {
-        ._montage(
-            text,
-            variant: {
-                if let fontSize {
-                    fontSize
-                } else {
-                    size.typoVariant
-                }
-            }(),
-            weight: .bold,
-            color: {
-                if disable {
-                    variant.inactiveColor
-                } else {
-                    if let contentColorResolver {
-                        contentColorResolver.resolve(.current)
-                    } else {
-                        variant.activeColor
-                    }
-                }
-            }()
-        )
-    }
-}
-
-extension Button.TextButton {
-    @objc private func longPressed() {
-        guard let recognizer = longPressRecognizer else { return }
-        
-        switch recognizer.state {
-        case .began:
-            interaction.state = .pressed
-        case .changed:
-            // 스크롤 시 버튼이 눌리지 않도록 state를 normal로 변경
-            // 3D touch 모델은 스크롤 하지 않아도 changed가 실행되서 적용하지 않음
-            if traitCollection.forceTouchCapability != UIForceTouchCapability.available
-                && traitCollection.forceTouchCapability != UIForceTouchCapability.unavailable {
-                interaction.state = .normal
+            
+            Text("State").montage(variant: .headline2)
+            
+            HStack {
+                Button.TextButton(
+                    text: "안녕하세요",
+                    disable: false
+                ).fixedSize()
+                
+                Button.TextButton(
+                    text: "안녕하세요",
+                    disable: true
+                ).fixedSize()
+                
+                Button.TextButton(
+                    variant: .assistive,
+                    text: "안녕하세요",
+                    disable: false
+                ).fixedSize()
+                
+                Button.TextButton(
+                    variant: .assistive,
+                    text: "안녕하세요",
+                    disable: true
+                ).fixedSize()
             }
-        case .ended:
-            guard interaction.state == .pressed else { return }
-            if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
-                handler?()
+            
+            Text("Custom").montage(variant: .headline2)
+            
+            VStack(alignment: .leading) {
+                HStack {
+                    Button.TextButton(
+                        text: "accentCyan",
+                        disable: false,
+                        contentColorResolver: Color.Alias.accentCyan
+                    ).fixedSize()
+                    
+                    Button.TextButton(
+                        text: "globalBlue40",
+                        disable: false,
+                        contentColorResolver: Color.Global.globalBlue40
+                    ).fixedSize()
+                }
+                
+                HStack {
+                    Button.TextButton(
+                        text: "body1",
+                        disable: false,
+                        contentColorResolver: Color.Alias.accentCyan,
+                        fontSize: .body1
+                    ).fixedSize()
+                    
+                    Button.TextButton(
+                        text: "heading1",
+                        disable: false,
+                        contentColorResolver: Color.Global.globalBlue40,
+                        fontSize: .heading1
+                    ).fixedSize()
+                }
             }
-            interaction.state = .normal
-        default:
-            break
-        }
-    }
-}
-
-extension Button.TextButton: UIGestureRecognizerDelegate {
-    public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
-        return true
-    }
-}
-
-extension Button.TextButton.Variant {
-    var activeColor: UIColor {
-        switch self {
-        case .primary: .alias(.primaryNormal)
-        case .assistive: .alias(.labelAlternative).withAlphaComponent(0.61)
-        }
-    }
-    
-    var inactiveColor: UIColor {
-        .alias(.labelDisable).withAlphaComponent(0.16)
-    }
-    
-    var interactionColor: Color.Alias {
-        switch self {
-        case .primary: return .primaryNormal
-        case .assistive: return .labelNormal
-        }
-    }
-    
-    var interactionRadius: CGFloat {
-        6.0
-    }
-}
-
-extension Button.TextButton.Size {
-    var iconSize: CGSize {
-        switch self {
-        case .medium:
-            return .init(width: 20, height: 20)
-        case .small:
-            return .init(width: 16, height: 16)
-        }
-    }
-    
-    var typoVariant: Typography.Variant {
-        switch self {
-        case .medium:
-            return .body1
-        case .small:
-            return .label1
-        }
-    }
-    
-    var edgeInsets: UIEdgeInsets {
-        switch self {
-        case .medium:
-            return .init(top: 4, left: 7, bottom: 4, right: 7)
-        case .small:
-            return .init(top: 4, left: 6, bottom: 4, right: 6)
         }
     }
 }
