@@ -9,19 +9,84 @@ import SwiftUI
 
 import Pretendard
 
+extension Button.TextButton {
+    /// 버튼의 외관을 결정하는 열거형입니다.
+    public enum Variant {
+        case primary
+        case assistive
+    }
+    
+    /// 버튼의 사이즈를 결정하는 열거형입니다.
+    public enum Size {
+        case medium, small
+    }
+}
+
+extension Button.TextButton.Variant {
+    var activeUIColor: UIColor {
+        switch self {
+        case .primary: .alias(.primaryNormal)
+        case .assistive: .alias(.labelAlternative).withAlphaComponent(0.61)
+        }
+    }
+    
+    var activeColor: SwiftUI.Color {
+        .init(uiColor: activeUIColor)
+    }
+    
+    var inactiveUIColor: UIColor {
+        .alias(.labelDisable).withAlphaComponent(0.16)
+    }
+    
+    var inactiveColor: SwiftUI.Color {
+        .init(uiColor: inactiveUIColor)
+    }
+
+    var interactionRadius: CGFloat {
+        6.0
+    }
+    
+    var interactionVariant: Decorate.Interaction.Variant {
+        switch self {
+        case .primary: .normal
+        case .assistive: .light
+        }
+    }
+    
+    var interactionColor: Color.Alias {
+        switch self {
+        case .primary: .primaryNormal
+        case .assistive: .labelNormal
+        }
+    }
+}
+
+extension Button.TextButton.Size {
+    var iconSize: CGSize {
+        switch self {
+        case .medium:
+            return .init(width: 20, height: 20)
+        case .small:
+            return .init(width: 16, height: 16)
+        }
+    }
+    
+    var typoVariant: Typography.Variant {
+        switch self {
+        case .medium:
+            return .body1
+        case .small:
+            return .label1
+        }
+    }
+    
+    var typoWeight: Typography.Weight {
+        return .bold
+    }
+}
+
 extension Button {
     public struct TextButton: View {
-        /// 버튼의 외관을 결정하는 열거형입니다.
-        public enum Variant {
-            case primary
-            case assistive
-        }
-        
-        /// 버튼의 사이즈를 결정하는 열거형입니다.
-        public enum Size {
-            case medium, small
-        }
-        
         @State private var isPressed = false
         
         public let variant: TextButton.Variant
