@@ -210,7 +210,7 @@ extension Bar {
                         case let .text(t, action):
                             Button.TextButton(
                                 text: t,
-                                contentColorResolver: Color.Alias.labelNormal
+                                contentColor: .alias(.labelNormal)
                             ) {
                                 action()
                             }
@@ -248,7 +248,7 @@ extension Bar {
                             case let .text(t, action):
                                 Button.TextButton(
                                     text: t,
-                                    contentColorResolver: Color.Alias.labelNormal
+                                    contentColor: .alias(.labelNormal)
                                 ) {
                                     action()
                                 }
@@ -288,7 +288,7 @@ extension Bar {
                         case let .text(t, action):
                             Button.TextButton(
                                 text: t,
-                                contentColorResolver: Color.Alias.labelNormal
+                                contentColor: .alias(.labelNormal)
                             ) {
                                 action()
                             }
@@ -322,7 +322,7 @@ extension Bar {
                             case let .text(t, action):
                                 Button.TextButton(
                                     text: t,
-                                    contentColorResolver: Color.Alias.labelNormal
+                                    contentColor: .alias(.labelNormal)
                                 ) {
                                     action()
                                 }
@@ -453,7 +453,7 @@ extension Bar {
                                 if alternative {
                                     Button.TextButton(
                                         text: t,
-                                        contentColorResolver: Color.Alias.staticWhite
+                                        contentColor: .alias(.staticWhite)
                                     ) {
                                         action()
                                     }
@@ -464,7 +464,7 @@ extension Bar {
                                 } else {
                                     Button.TextButton(
                                         text: t,
-                                        contentColorResolver: Color.Alias.labelAlternative
+                                        contentColor: .alias(.labelAlternative)
                                     ) {
                                         action()
                                     }

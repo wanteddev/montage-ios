@@ -18,10 +18,10 @@ extension Chip {
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
         public var active: Bool = false
-        public var iconColorResolver: ColorResolvable? = nil
-        public var backgroundColorResolver: ColorResolvable? = nil
-        public var fontColorResolver: ColorResolvable? = nil
-        public var activeColorResolver: ColorResolvable? = nil
+        public var iconColor: SwiftUI.Color? = nil
+        public var backgroundColor: SwiftUI.Color? = nil
+        public var fontColor: SwiftUI.Color? = nil
+        public var activeColor: SwiftUI.Color? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = Action
@@ -35,10 +35,10 @@ extension Chip {
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
             active: Bool = false,
-            iconColorResolver: ColorResolvable? = nil,
-            backgroundColorResolver: ColorResolvable? = nil,
-            fontColorResolver: ColorResolvable? = nil,
-            activeColorResolver: ColorResolvable? = nil,
+            iconColor: SwiftUI.Color? = nil,
+            backgroundColor: SwiftUI.Color? = nil,
+            fontColor: SwiftUI.Color? = nil,
+            activeColor: SwiftUI.Color? = nil,
             handler: ( () -> Void)? = nil
         ) {
             self.variant = variant
@@ -49,10 +49,10 @@ extension Chip {
             self.state = state
             self.disable = disable
             self.active = active
-            self.iconColorResolver = iconColorResolver
-            self.backgroundColorResolver = backgroundColorResolver
-            self.fontColorResolver = fontColorResolver
-            self.activeColorResolver = activeColorResolver
+            self.iconColor = iconColor
+            self.backgroundColor = backgroundColor
+            self.fontColor = fontColor
+            self.activeColor = activeColor
             self.handler = handler
         }
         
@@ -69,10 +69,26 @@ extension Chip {
             uiView.state = state
             uiView.disable = disable
             uiView.active = active
-            uiView.iconColorResolver = iconColorResolver
-            uiView.backgroundColorResolver = backgroundColorResolver
-            uiView.fontColorResolver = fontColorResolver
-            uiView.activeColorResolver = activeColorResolver
+            if let iconColor {
+                uiView.iconUIColor = iconColor.uiColor
+            } else {
+                uiView.iconUIColor = nil
+            }
+            if let backgroundColor {
+                uiView.backgroundUIColor = backgroundColor.uiColor
+            } else {
+                uiView.backgroundUIColor = nil
+            }
+            if let fontColor {
+                uiView.fontUIColor = fontColor.uiColor
+            } else {
+                uiView.fontUIColor = nil
+            }
+            if let activeColor {
+                uiView.activeUIColor = activeColor.uiColor
+            } else {
+                uiView.activeUIColor = nil
+            }
             uiView.handler = handler
         }
     }
@@ -254,7 +270,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요",
-                    iconColorResolver: Color.Alias.accentViolet
+                    iconColor: .alias(.accentViolet)
                 ).fixedSize()
                 
                 Chip.ActionChipController(
@@ -263,7 +279,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요",
-                    backgroundColorResolver: Color.Alias.accentRedOrange
+                    backgroundColor: .alias(.accentRedOrange)
                 ).fixedSize()
             }
             HStack(alignment: .center) {
@@ -273,7 +289,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요",
-                    fontColorResolver: Color.Alias.accentLightBlue
+                    fontColor: .alias(.accentLightBlue)
                 ).fixedSize()
                 
                 Chip.ActionChipController(
@@ -282,9 +298,9 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요",
-                    iconColorResolver: Color.Alias.accentRedOrange,
-                    backgroundColorResolver: Color.Alias.accentLime,
-                    fontColorResolver: Color.Alias.accentLightBlue
+                    iconColor: .alias(.accentRedOrange),
+                    backgroundColor: .alias(.accentLime),
+                    fontColor: .alias(.accentLightBlue)
                 ).fixedSize()
             }
             HStack(alignment: .center) {
@@ -296,7 +312,7 @@ var actionChipControllerPreview: some View {
                     variant: .filled,
                     text: "안녕하세요",
                     active: true,
-                    activeColorResolver: Color.Alias.accentCyan
+                    activeColor: .alias(.accentCyan)
                 ).fixedSize()
             }
         }

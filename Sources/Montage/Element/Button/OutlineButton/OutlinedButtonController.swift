@@ -21,9 +21,9 @@ extension Button {
         public var iconOnly: Bool = false
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
-        public var contentColorResolver: ColorResolvable? = nil
-        public var backgroundColorResolver: ColorResolvable? = nil
-        public var borderColorResolver: ColorResolvable? = nil
+        public var contentColor: SwiftUI.Color? = nil
+        public var backgroundColor: SwiftUI.Color? = nil
+        public var borderColor: SwiftUI.Color? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = OutlinedButton
@@ -38,9 +38,9 @@ extension Button {
             iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
-            contentColorResolver: ColorResolvable? = nil,
-            backgroundColorResolver: ColorResolvable? = nil,
-            borderColorResolver: ColorResolvable? = nil,
+            contentColor: SwiftUI.Color? = nil,
+            backgroundColor: SwiftUI.Color? = nil,
+            borderColor: SwiftUI.Color? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.variant = variant
@@ -52,9 +52,9 @@ extension Button {
             self.uniqueIcon = uniqueIcon
             self.iconOnly = iconOnly
             self.disable = disable
-            self.contentColorResolver = contentColorResolver
-            self.backgroundColorResolver = backgroundColorResolver
-            self.borderColorResolver = borderColorResolver
+            self.contentColor = contentColor
+            self.backgroundColor = backgroundColor
+            self.borderColor = borderColor
             self.handler = handler
         }
         
@@ -72,9 +72,21 @@ extension Button {
             uiView.iconOnly = iconOnly
             uiView.state = state
             uiView.disable = disable
-            uiView.contentColorResolver = contentColorResolver
-            uiView.backgroundColorResolver = backgroundColorResolver
-            uiView.borderColorResolver = borderColorResolver
+            if let contentColor {
+                uiView.contentUIColor = contentColor.uiColor
+            } else {
+                uiView.contentUIColor = nil
+            }
+            if let backgroundColor {
+                uiView.backgroundUIColor = backgroundColor.uiColor
+            } else {
+                uiView.backgroundUIColor = nil
+            }
+            if let borderColor {
+                uiView.borderUIColor = borderColor.uiColor
+            } else {
+                uiView.borderUIColor = nil
+            }
             uiView.handler = handler
         }
     }
@@ -246,14 +258,14 @@ struct OutlinedButtonControllerPreview: View {
                 Button.OutlinedButtonController(
                     size: .small,
                     text: "border&content",
-                    contentColorResolver: Color.Alias.accentLime,
-                    borderColorResolver: Color.Alias.accentLime
+                    contentColor: .alias(.accentLime),
+                    borderColor: .alias(.accentLime)
                 ).fixedSize()
                 
                 Button.OutlinedButtonController(
                     size: .small,
                     text: "background",
-                    backgroundColorResolver: Color.Alias.accentPink
+                    backgroundColor: .alias(.accentPink)
                 ).fixedSize()
             }
         }

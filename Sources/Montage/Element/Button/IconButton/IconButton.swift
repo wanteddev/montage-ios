@@ -165,17 +165,17 @@ extension Button {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        private let iconColorResolver: ColorResolvable?
+        private let iconColor: SwiftUI.Color?
         
         /// 커스텀 가능한 배경색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
         /// > outlined, soild variant에서만 사용 가능합니다.
-        private let backgroundColorResolver: ColorResolvable?
+        private let backgroundColor: SwiftUI.Color?
         
         /// 커스텀 가능한 테두리색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
         /// > outlined 에서만 사용 가능합니다.
-        private let borderColorResolver: ColorResolvable?
+        private let borderColor: SwiftUI.Color?
         
         /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
         private let handler: (() -> Void)?
@@ -186,9 +186,9 @@ extension Button {
             disable: Bool = false,
             showPushBadge: Bool = false,
             padding: CGFloat = .zero,
-            iconColorResolver: ColorResolvable? = nil,
-            backgroundColorResolver: ColorResolvable? = nil,
-            borderColorResolver: ColorResolvable? = nil,
+            iconColor: SwiftUI.Color? = nil,
+            backgroundColor: SwiftUI.Color? = nil,
+            borderColor: SwiftUI.Color? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.variant = variant
@@ -204,48 +204,57 @@ extension Button {
                 case .outlined, .solid: padding
                 }
             }()
-            self.iconColorResolver = iconColorResolver
-            self.backgroundColorResolver = {
+            if let iconColor {
+                self.iconColor = iconColor
+            } else {
+                self.iconColor = nil
+            }
+            self.backgroundColor = {
                 switch variant {
                 case .normal, .background: nil
-                case .outlined, .solid: backgroundColorResolver
+                case .outlined, .solid: 
+                    if let backgroundColor {
+                        backgroundColor
+                    } else {
+                        nil
+                    }
                 }
             }()
-            self.borderColorResolver = {
-                guard case .outlined(_) = variant else { return nil }
-                return borderColorResolver
+            self.borderColor = {
+                guard case .outlined(_) = variant, let borderColor else { return nil }
+                return borderColor
             }()
             self.handler = handler
         }
         
         // MARK: Private Computed Property
         
-        private var iconColor: SwiftUI.Color {
+        private var _iconColor: SwiftUI.Color {
             if disable {
                 return SwiftUI.Color(uiColor: variant.inactiveColor)
             } else {
-                if let iconColorResolver {
-                    return SwiftUI.Color(uiColor: iconColorResolver.resolve(.current))
+                if let iconColor {
+                    return iconColor
                 } else {
                     return SwiftUI.Color(uiColor: variant.activeColor)
                 }
             }
         }
         
-        private var strokeColor: SwiftUI.Color {
-            if case .outlined(_) = variant, let borderColorResolver {
-                return SwiftUI.Color(uiColor: borderColorResolver.resolve(.current))
+        private var _strokeColor: SwiftUI.Color {
+            if case .outlined(_) = variant, let borderColor {
+                return borderColor
             } else {
                 return SwiftUI.Color(uiColor: variant.borderColor)
             }
         }
         
-        private var backgroundColor: SwiftUI.Color {
+        private var _backgroundColor: SwiftUI.Color {
             if disable {
                 return SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
             } else {
-                if let backgroundColorResolver {
-                    return SwiftUI.Color(uiColor: backgroundColorResolver.resolve(.current))
+                if let backgroundColor {
+                    return backgroundColor
                 } else {
                     return SwiftUI.Color(uiColor: variant.activeBackgroundColor)
                 }
@@ -265,7 +274,7 @@ extension Button {
                             width: variant.iconSize.width,
                             height: variant.iconSize.height
                         )
-                        .foregroundStyle(iconColor)
+                        .foregroundStyle(_iconColor)
                     if showPushBadge {
                         Badge.PushBadgeController(variant: .dot)
                             .fixedSize()
@@ -290,9 +299,9 @@ extension Button {
             .background(
                 ZStack {
                     Circle()
-                        .fill(backgroundColor)
+                        .fill(_backgroundColor)
                     Circle()
-                        .stroke(strokeColor, lineWidth: variant.borderWidth)
+                        .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
                     
             )
@@ -454,13 +463,13 @@ struct IconButtonControllerPreview: View {
                 Button.IconButton(
                     variant: .background(size: 10, isAlternative: false),
                     icon: .chat,
-                    iconColorResolver: Color.Global.globalBlue50
+                    iconColor: .atomic(.globalBlue50)
                 )
                 .fixedSize()
                 
                 Button.IconButton(
                     icon: .apps,
-                    iconColorResolver: Color.Alias.accentLightBlue
+                    iconColor: .alias(.accentLightBlue)
                 ) {
                     debugPrint(">>> hello world!")
                 }
@@ -469,14 +478,14 @@ struct IconButtonControllerPreview: View {
                 Button.IconButton(
                     variant: .background(size: 20),
                     icon: .apps,
-                    iconColorResolver: Color.Alias.accentPink
+                    iconColor: .alias(.accentPink)
                 )
                 .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps,
-                    iconColorResolver: Color.Alias.accentRedOrange
+                    iconColor: .alias(.accentRedOrange)
                 )
                 .fixedSize()
                 
@@ -491,22 +500,22 @@ struct IconButtonControllerPreview: View {
                     variant: .outlined(size: .normal),
                     icon: .apps,
                     padding: 3,
-                    borderColorResolver: Color.Alias.primaryHeavy
+                    borderColor: .alias(.primaryHeavy)
                 )
                 .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
-                    iconColorResolver: Color.Alias.accentRedOrange,
-                    backgroundColorResolver: Color.Alias.accentLime
+                    iconColor: .alias(.accentRedOrange),
+                    borderColor: .alias(.accentLime)
                 )
                 .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
-                    backgroundColorResolver: Color.Alias.accentLime
+                    borderColor: .alias(.accentLime)
                 )
                 .fixedSize()
             }

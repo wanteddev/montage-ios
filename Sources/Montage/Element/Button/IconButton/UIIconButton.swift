@@ -59,7 +59,7 @@ extension Button {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var iconColorResolver: ColorResolvable? {
+        public var iconUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -68,7 +68,7 @@ extension Button {
         /// 커스텀 가능한 배경색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
         /// > outlined, soild variant에서만 사용 가능합니다.
-        public var backgroundColorResolver: ColorResolvable? {
+        public var backgroundUIColor: UIColor? {
             didSet {
                 switch variant {
                 case .outlined, .solid:
@@ -82,7 +82,7 @@ extension Button {
         /// 커스텀 가능한 테두리색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
         /// > outlined 에서만 사용 가능합니다.
-        public var borderColorResolver: ColorResolvable? {
+        public var borderUIColor: UIColor? {
             didSet {
                 switch variant {
                 case .outlined:
@@ -266,8 +266,8 @@ extension Button.UIIconButton {
                 case .normal, .background:
                     variant.activeBackgroundColor
                 case .outlined, .solid:
-                    if let backgroundColorResolver {
-                        backgroundColorResolver.resolve(.current)
+                    if let backgroundUIColor{
+                        backgroundUIColor
                     } else {
                         variant.activeBackgroundColor
                     }
@@ -275,8 +275,8 @@ extension Button.UIIconButton {
             }
         }()
         layer.borderColor = {
-            if case .outlined(_) = variant, let borderColorResolver {
-                borderColorResolver.resolve(.current).cgColor
+            if case .outlined(_) = variant, let borderUIColor {
+                borderUIColor.cgColor
             } else {
                 variant.borderColor.cgColor
             }
@@ -286,8 +286,8 @@ extension Button.UIIconButton {
             if disable {
                 variant.inactiveColor
             } else {
-                if let iconColorResolver {
-                    iconColorResolver.resolve(.current)
+                if let iconUIColor {
+                    iconUIColor
                 } else {
                     variant.activeColor
                 }

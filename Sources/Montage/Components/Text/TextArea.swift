@@ -337,8 +337,8 @@ public struct TextArea: View {
                         } else {
                             Button.IconButton(
                                 icon: .circleExclamationFill,
-                                iconColorResolver:
-                                    disable ? Color.Alias.labelDisable : Color.Alias.statusNegative
+                                iconColor:
+                                    disable ? .alias(.labelDisable) : .alias(.statusNegative)
                             )
                             .fixedSize()
                         }

@@ -63,7 +63,7 @@ extension Button {
         
         /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var contentColorResolver: ColorResolvable? {
+        public var contentUIColor: UIColor? {
             didSet {
                 updateViews()
             }
@@ -249,8 +249,8 @@ extension Button.UITextButton {
             if disable {
                 variant.inactiveUIColor
             } else {
-                if let contentColorResolver {
-                    contentColorResolver.resolve(.current)
+                if let contentUIColor {
+                    contentUIColor
                 } else {
                     variant.activeUIColor
                 }
@@ -310,8 +310,8 @@ extension Button.UITextButton {
                 if disable {
                     variant.inactiveUIColor
                 } else {
-                    if let contentColorResolver {
-                        contentColorResolver.resolve(.current)
+                    if let contentUIColor {
+                        contentUIColor
                     } else {
                         variant.activeUIColor
                     }
