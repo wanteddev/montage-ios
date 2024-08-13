@@ -5,7 +5,7 @@
 //  Created by Eunyeong Kim on 2021/04/12.
 //
 
-import UIKit
+import SwiftUI
 
 extension UIColor {
     static func load(name: String) -> UIColor {
