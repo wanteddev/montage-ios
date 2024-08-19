@@ -77,7 +77,7 @@ extension Select {
                 if variant == .normal {
                     focus ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
                 } else {
-                   .alias(.statusNegative).opacity(0.43)
+                   .alias(.statusNegative).opacity(0.28)
                 }
             } else {
                 .alias(.lineNeutral)
@@ -156,6 +156,7 @@ extension Select {
                     ) {
                         onTap?()
                     }
+                    .padding(.trailing, 4)
                 }
                 .padding(.all, 12)
                 .background(
@@ -163,23 +164,15 @@ extension Select {
                         .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                 )
                 .overlay {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .inset(by: focus ? 2 : 1)
-                            .stroke(strokeColor, lineWidth: focus ? 2 : 1)
-                        
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundStyle(.clear)
-                            .background(.black.opacity(0))
-                            .shadow(
-                                color: .black.opacity(0.03),
-                                radius: 1,
-                                x: 0,
-                                y: 1
-                            )
-                            .blur(radius: 2)
-                    }
+                    RoundedRectangle(cornerRadius: 12)
+                        .inset(by: focus ? 2 : 1)
+                        .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                 }
+                .shadow(
+                    color: .alias(.staticBlack).opacity(0.03),
+                    radius: 2,
+                    x: 0, y: 1
+                )
             }
             .onChange(of: text, perform: { newValue in
                 active = (newValue.isEmpty == false)
@@ -197,7 +190,7 @@ struct NormalSelect_Preview: PreviewProvider {
     static var previews: some View {
         Select.Normal(
             text: "",
-            focus: .constant(true),
+            focus: .constant(false),
             variant: .negative,
             placeholder: "선택해주세요.",
             disable: false,

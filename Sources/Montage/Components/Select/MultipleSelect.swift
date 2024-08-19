@@ -116,7 +116,7 @@ extension Select {
                 if variant == .normal {
                     focus ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
                 } else {
-                   .alias(.statusNegative).opacity(0.43)
+                    .alias(.statusNegative).opacity(0.28)
                 }
             } else {
                 .alias(.lineNeutral)
@@ -197,6 +197,7 @@ extension Select {
                     ) {
                         onTap?()
                     }
+                    .padding(.horizontal, 4)
                 }
                 .padding(.all, 12)
                 .background(
@@ -204,23 +205,15 @@ extension Select {
                         .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                 )
                 .overlay {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 12)
-                            .inset(by: focus ? 2 : 1)
-                            .stroke(strokeColor, lineWidth: focus ? 2 : 1)
-                        
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundStyle(.clear)
-                            .background(.black.opacity(0))
-                            .shadow(
-                                color: .black.opacity(0.03),
-                                radius: 1,
-                                x: 0,
-                                y: 1
-                            )
-                            .blur(radius: 2)
-                    }
+                    RoundedRectangle(cornerRadius: 12)
+                        .inset(by: focus ? 2 : 1)
+                        .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                 }
+                .shadow(
+                    color: .alias(.staticBlack).opacity(0.03),
+                    radius: 2,
+                    x: 0, y: 1
+                )
             }
             .onChange(of: items, perform: { newValue in
                 active = (newValue.isEmpty == false)
@@ -235,7 +228,7 @@ extension Select {
             var items: [Select.Multiple.Item]
             var disable: Bool
             var onTapItem: ((Select.Multiple.Item) -> Void)?
-            
+
             var body: some View {
                 HStack {
                     ForEach(Array(items.indices), id: \.self) {
@@ -244,7 +237,7 @@ extension Select {
                             variant:.filled,
                             size: .xsmall,
                             leftIcon: item.icon,
-                            rightIcon: .close,
+                            rightIcon: .closeThick,
                             text: item.text,
                             iconColor: iconColor(item),
                             backgroundColor: backgroundColor(item),
@@ -258,7 +251,7 @@ extension Select {
                     }
                 }
             }
-            
+
             private func iconColor(_ item: Select.Multiple.Item) -> SwiftUI.Color {
                 guard disable == false else { return .alias(.labelDisable) }
                 switch item.state {
