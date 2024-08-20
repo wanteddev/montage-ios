@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Montage.List {
+extension List {
     /// 셀 형태를 가진 리스트입니다.
     public struct Cell: View {
         /// List/Cell의 상하 여백을 나타내는 열거형입니다.
@@ -35,7 +35,7 @@ extension Montage.List {
         private let paddingInset: Bool
 
         /// List/Element의 외형입니다.
-        private let variant: Montage.List.Element.Variant
+        private let variant: List.Element.Variant
         
         /// List/Element의 제목입니다.
         private let title: String
@@ -61,10 +61,10 @@ extension Montage.List {
         private let divider: Bool
         
         /// List/Element의 좌측 영역에 표시될 요소입니다.
-        private let leftContent: Montage.List.Element.LeftContent?
+        private let leftContent: List.Element.LeftContent?
 
         /// List/Element의 우측 영역에 표시될 요소입니다.
-        private let rightContent: Montage.List.Element.RightContent?
+        private let rightContent: List.Element.RightContent?
         
         /// List/Cell의 handler입니다.
         private let handler: (() -> Void)?
@@ -72,14 +72,14 @@ extension Montage.List {
         public init(
             padding: Padding = .normal,
             paddingInset: Bool = false,
-            variant: Montage.List.Element.Variant = .normal,
+            variant: List.Element.Variant = .normal,
             title: String,
             caption: String? = nil,
             bold: Bool = false,
             disable: Bool = false,
             divider: Bool = false,
-            leftContent: Montage.List.Element.LeftContent? = nil,
-            rightContent: Montage.List.Element.RightContent? = nil,
+            leftContent: List.Element.LeftContent? = nil,
+            rightContent: List.Element.RightContent? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.padding = padding
@@ -162,7 +162,7 @@ extension Montage.List {
     }
 }
 
-extension Montage.List.Cell {
+extension List.Cell {
     public struct Configration {
         public let padding: Padding
         public let paddingInset: Bool
@@ -182,27 +182,27 @@ extension Montage.List.Cell {
     public struct CellModel {
         public let padding: Padding
         public let paddingInset: Bool
-        public let variant: Montage.List.Element.Variant
+        public let variant: List.Element.Variant
         public let title: String
         public let caption: String?
         public let bold: Bool
         public let disable: Bool
         public let divider: Bool
-        public let leftContent: Montage.List.Element.LeftContent?
-        public let rightContent: Montage.List.Element.RightContent?
+        public let leftContent: List.Element.LeftContent?
+        public let rightContent: List.Element.RightContent?
         public let handler: (() -> Void)?
         
         public init(
             padding: Padding = .normal,
             paddingInset: Bool = false,
-            variant: Montage.List.Element.Variant = .normal,
+            variant: List.Element.Variant = .normal,
             title: String,
             caption: String? = nil,
             bold: Bool = false,
             disable: Bool = false,
             divider: Bool = false,
-            leftContent: Montage.List.Element.LeftContent? = nil,
-            rightContent: Montage.List.Element.RightContent? = nil,
+            leftContent: List.Element.LeftContent? = nil,
+            rightContent: List.Element.RightContent? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.padding = padding
@@ -220,7 +220,7 @@ extension Montage.List.Cell {
 
         public init(
             configuration: Configration,
-            elementModel: Montage.List.Element.ElementModel
+            elementModel: List.Element.ElementModel
         ) {
             self.init(
                 padding: configuration.padding,

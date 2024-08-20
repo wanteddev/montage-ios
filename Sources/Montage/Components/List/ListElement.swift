@@ -107,7 +107,7 @@ extension Montage.List {
                                     .montage(
                                         variant: .body1,
                                         weight: bold ? .bold : .regular,
-                                        color: normalTitleColor
+                                        alias: normalTitleColor
                                     )
                                     .paragraph(variant: .body1)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -116,7 +116,7 @@ extension Montage.List {
                                     Text(caption)
                                         .montage(
                                             variant: .label2,
-                                            color: disable ? .labelDisable : .labelAlternative
+                                            alias: disable ? .labelDisable : .labelAlternative
                                         )
                                         .paragraph(variant: .label2)
                                         .frame(maxWidth: .infinity,alignment: .leading)
@@ -126,7 +126,7 @@ extension Montage.List {
                                 Text(title)
                                     .montage(
                                         variant: .body1,
-                                        color: disable ? .labelDisable : .primaryNormal
+                                        alias: disable ? .labelDisable : .primaryNormal
                                     )
                                     .paragraph(variant: .body1)
                                     .frame(maxWidth: .infinity, alignment: .center)
@@ -170,7 +170,7 @@ extension Montage.List {
                     Text(text)
                         .montage(
                             variant: .body1,
-                            color: .labelAlternative
+                            alias: .labelAlternative
                         )
                         .paragraph(variant: .body1)
                     Image.montage(.chevronRightTightSmall)
@@ -178,14 +178,14 @@ extension Montage.List {
                         .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
                 }
             case let .iconButton(variant, icon):
-                Button.IconButtonController(
+                Button.IconButton(
                     variant: variant,
                     icon: icon,
-                    iconColorResolver: Montage.Color.Alias.labelAlternative
+                    iconColor: .alias(.labelAlternative)
                 )
                 .fixedSize()
             case let .textButton(variant, size, text):
-                Button.TextButtonController(
+                Button.TextButton(
                     variant: variant,
                     size: size,
                     text: text
