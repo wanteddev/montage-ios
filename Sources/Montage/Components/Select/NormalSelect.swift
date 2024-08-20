@@ -164,15 +164,12 @@ extension Select {
                         .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                 )
                 .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .inset(by: focus ? 2 : 1)
-                        .stroke(strokeColor, lineWidth: focus ? 2 : 1)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .inset(by: -0.5)
+                            .stroke(strokeColor, lineWidth: focus ? 2 : 1)
+                    }
                 }
-                .shadow(
-                    color: .alias(.staticBlack).opacity(0.03),
-                    radius: 2,
-                    x: 0, y: 1
-                )
             }
             .onChange(of: text, perform: { newValue in
                 active = (newValue.isEmpty == false)

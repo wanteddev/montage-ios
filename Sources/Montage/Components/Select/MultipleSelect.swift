@@ -112,14 +112,14 @@ extension Select {
         }
 
         private var strokeColor: SwiftUI.Color {
-            if disable == false {
+            if disable {
+                .alias(.lineNeutral)
+            } else {
                 if variant == .normal {
                     focus ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
                 } else {
                     .alias(.statusNegative).opacity(0.28)
                 }
-            } else {
-                .alias(.lineNeutral)
             }
         }
 
@@ -206,7 +206,7 @@ extension Select {
                 )
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
-                        .inset(by: focus ? 2 : 1)
+                        .inset(by: -0.5)
                         .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                 }
                 .shadow(
