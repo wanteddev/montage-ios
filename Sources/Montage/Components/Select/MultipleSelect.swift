@@ -74,6 +74,12 @@ extension Select {
         /// > 기본값은 false입니다.
         private let requiredBadge: Bool
         
+        /// MultipleSelect의 shadow 배경색입니다.
+        /// > 기본값은 systemBackgroundColor 입니다.
+        /// >
+        /// > shadow 배경색 변경이 필요할때 사용합니다.
+        private let shadowBackgroundColor: SwiftUI.Color
+
         /// MultipleSelect의 왼쪽 컨텐츠입니다.
         /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
         private var leftContent: (() -> any View)?
@@ -94,6 +100,7 @@ extension Select {
             disable: Bool = false,
             heading: String? = nil,
             requiredBadge: Bool = false,
+            backgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground),
             leftContent: (() -> any View)? = nil,
             onTapItem: ((Select.Multiple.Item) -> Void)? = nil,
             onTap: (() -> Void)? = nil
@@ -106,6 +113,7 @@ extension Select {
             self.disable = disable
             self.heading = heading
             self.requiredBadge = requiredBadge
+            self.shadowBackgroundColor = backgroundColor
             self.leftContent = leftContent
             self.onTapItem = onTapItem
             self.onTap = onTap
@@ -144,76 +152,86 @@ extension Select {
                     }
                 }
                 
-                HStack(spacing: 8) {
-                    if let leftContent {
-                        AnyView(leftContent())
-                    }
-                    
-                    ZStack {
-                        HStack {
-                            if items.isEmpty {
-                                Text(placeholder)
-                                    .montage(
-                                        variant: .body1,
-                                        weight: .regular,
-                                        alias: disable ? .labelDisable : .labelAlternative
-                                    )
-                                    .paragraph(variant: .body1)
-                            } else {
-                                if render == .normal {
-                                    Text(items.map { $0.text }.joined(separator: ", "))
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(shadowBackgroundColor)
+                        .shadow(
+                            color: .alias(.staticBlack).opacity(0.03),
+                            radius: 2,
+                            x: 0, y: 1
+                        )
+
+                    HStack(spacing: 8) {
+                        if let leftContent {
+                            AnyView(leftContent())
+                        }
+                        
+                        ZStack {
+                            HStack {
+                                if items.isEmpty {
+                                    Text(placeholder)
                                         .montage(
                                             variant: .body1,
                                             weight: .regular,
-                                            alias: disable ? .labelDisable :
-                                                    .labelNormal
+                                            alias: disable ? .labelDisable : .labelAlternative
                                         )
                                         .paragraph(variant: .body1)
                                 } else {
-                                    Chip(
-                                        items: items,
-                                        disable: disable,
-                                        onTapItem: onTapItem
-                                    )
+                                    if render == .normal {
+                                        Text(items.map { $0.text }.joined(separator: ", "))
+                                            .montage(
+                                                variant: .body1,
+                                                weight: .regular,
+                                                alias: disable ? .labelDisable :
+                                                        .labelNormal
+                                            )
+                                            .paragraph(variant: .body1)
+                                    } else {
+                                        Chip(
+                                            items: items,
+                                            disable: disable,
+                                            onTapItem: onTapItem
+                                        )
+                                    }
                                 }
+                                Spacer()
                             }
-                            Spacer()
+                            .padding(.horizontal, 4)
+                            .contentShape(Rectangle())
+                        }
+                        
+                        if active, variant == .negative {
+                            Image.montage(.circleExclamationFill)
+                                .resizable()
+                                .frame(width: 22, height: 22)
+                                .foregroundStyle(SwiftUI.Color.alias(.statusNegative))
+                        }
+                        
+                        Button.IconButton(
+                            variant: .normal(size: 16),
+                            icon: .chevronDownThickSmall,
+                            iconColor: disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelAlternative)
+                        ) {
+                            onTap?()
                         }
                         .padding(.horizontal, 4)
-                        .contentShape(Rectangle())
                     }
-                                    
-                    if active, variant == .negative {
-                        Image.montage(.circleExclamationFill)
-                            .resizable()
-                            .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.alias(.statusNegative))
+                    .padding(.all, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .inset(by: 0.5)
+                            .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                     }
-                    
-                    Button.IconButton(
-                        variant: .normal(size: 16),
-                        icon: .chevronDownThickSmall,
-                        iconColor: disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelAlternative)
-                    ) {
-                        onTap?()
-                    }
-                    .padding(.horizontal, 4)
+                    .shadow(
+                        color: .alias(.staticBlack).opacity(0.03),
+                        radius: 2,
+                        x: 0, y: 1
+                    )
                 }
-                .padding(.all, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                )
-                .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .inset(by: -0.5)
-                        .stroke(strokeColor, lineWidth: focus ? 2 : 1)
-                }
-                .shadow(
-                    color: .alias(.staticBlack).opacity(0.03),
-                    radius: 2,
-                    x: 0, y: 1
-                )
             }
             .onChange(of: items, perform: { newValue in
                 active = (newValue.isEmpty == false)

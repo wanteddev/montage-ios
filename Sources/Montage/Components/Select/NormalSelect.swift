@@ -47,6 +47,12 @@ extension Select {
         /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
         private let icon: Icon?
         
+        /// NormalSelect의 shadow 배경색입니다.
+        /// > 기본값은 systemBackgroundColor 입니다.
+        /// >
+        /// > shadow 배경색 변경이 필요할때 사용합니다.
+        private let shadowBackgroundColor: SwiftUI.Color
+        
         /// NormalSelect Tap에 대한 handler 입니다.
         private var onTap: (() -> Void)?
 
@@ -59,6 +65,7 @@ extension Select {
             heading: String? = nil,
             requiredBadge: Bool = false,
             icon: Icon? = nil,
+            backgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground),
             onTap: (() -> Void)? = nil
         ) {
             self.text = text
@@ -69,6 +76,7 @@ extension Select {
             self.heading = heading
             self.requiredBadge = requiredBadge
             self.icon = icon
+            self.shadowBackgroundColor = backgroundColor
             self.onTap = onTap
         }
 
@@ -105,68 +113,76 @@ extension Select {
                     }
                 }
                 
-                HStack(spacing: 8) {
-                    if let icon {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(shadowBackgroundColor)
+                        .shadow(
+                            color: .alias(.staticBlack).opacity(0.03),
+                            radius: 2,
+                            x: 0, y: 1
+                        )
+                    
+                    HStack(spacing: 8) {
+                        if let icon {
+                            ZStack {
+                                Image.montage(icon)
+                                    .resizable()
+                                    .frame(width: 22, height: 22)
+                                    .padding(.all, 1)
+                                    .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) :  SwiftUI.Color.alias(.labelAlternative))
+                            }
+                        }
+                        
                         ZStack {
-                            Image.montage(icon)
+                            HStack {
+                                if text.isEmpty {
+                                    Text(placeholder)
+                                        .montage(
+                                            variant: .body1,
+                                            weight: .regular,
+                                            alias: disable ? .labelDisable : .labelAlternative
+                                        )
+                                        .paragraph(variant: .body1)
+                                } else {
+                                    Text(text)
+                                        .montage(
+                                            variant: .body1,
+                                            weight: .regular,
+                                            alias: disable ? .labelDisable :
+                                                    .labelNormal
+                                        )
+                                        .paragraph(variant: .body1)
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal, 4)
+                            .contentShape(Rectangle())
+                        }
+                        
+                        if active, variant == .negative {
+                            Image.montage(.circleExclamationFill)
                                 .resizable()
                                 .frame(width: 22, height: 22)
-                                .padding(.all, 1)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) :  SwiftUI.Color.alias(.labelAlternative))
+                                .foregroundStyle(SwiftUI.Color.alias(.statusNegative))
                         }
-                    }
-                    
-                    ZStack {
-                        HStack {
-                            if text.isEmpty {
-                                Text(placeholder)
-                                    .montage(
-                                        variant: .body1,
-                                        weight: .regular,
-                                        alias: disable ? .labelDisable : .labelAlternative
-                                    )
-                                    .paragraph(variant: .body1)
-                            } else {
-                                Text(text)
-                                    .montage(
-                                        variant: .body1,
-                                        weight: .regular,
-                                        alias: disable ? .labelDisable :
-                                                .labelNormal
-                                    )
-                                    .paragraph(variant: .body1)
-                            }
-                            Spacer()
+                        
+                        Button.IconButton(
+                            variant: .normal(size: 16),
+                            icon: .chevronDownThickSmall,
+                            iconColor: disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelAlternative)
+                        ) {
+                            onTap?()
                         }
-                        .padding(.horizontal, 4)
-                        .contentShape(Rectangle())
+                        .padding(.trailing, 4)
                     }
-                    
-                    if active, variant == .negative {
-                        Image.montage(.circleExclamationFill)
-                            .resizable()
-                            .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.alias(.statusNegative))
-                    }
-
-                    Button.IconButton(
-                        variant: .normal(size: 16),
-                        icon: .chevronDownThickSmall,
-                        iconColor: disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelAlternative)
-                    ) {
-                        onTap?()
-                    }
-                    .padding(.trailing, 4)
-                }
-                .padding(.all, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                )
-                .overlay {
-                    ZStack {
+                    .padding(.all, 12)
+                    .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .inset(by: -0.5)
+                            .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .inset(by: 0.5)
                             .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                     }
                 }
