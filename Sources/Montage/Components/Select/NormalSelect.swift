@@ -43,9 +43,9 @@ extension Select {
         /// > 기본값은 false입니다.
         private let requiredBadge: Bool
         
-        /// NormalSelect의 왼쪽 아이콘 입니다.
+        /// NormalSelect의 왼쪽 컨텐츠입니다.
         /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-        private let icon: Icon?
+        private var leftContent: (() -> any View)?
         
         /// NormalSelect의 shadow 배경색입니다.
         /// > 기본값은 systemBackgroundColor 입니다.
@@ -64,7 +64,7 @@ extension Select {
             disable: Bool = false,
             heading: String? = nil,
             requiredBadge: Bool = false,
-            icon: Icon? = nil,
+            leftContent: (() -> any View)? = nil,
             backgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground),
             onTap: (() -> Void)? = nil
         ) {
@@ -75,7 +75,7 @@ extension Select {
             self.disable = disable
             self.heading = heading
             self.requiredBadge = requiredBadge
-            self.icon = icon
+            self.leftContent = leftContent
             self.shadowBackgroundColor = backgroundColor
             self.onTap = onTap
         }
@@ -123,14 +123,8 @@ extension Select {
                         )
                     
                     HStack(spacing: 8) {
-                        if let icon {
-                            ZStack {
-                                Image.montage(icon)
-                                    .resizable()
-                                    .frame(width: 22, height: 22)
-                                    .padding(.all, 1)
-                                    .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) :  SwiftUI.Color.alias(.labelAlternative))
-                            }
+                        if let leftContent {
+                            AnyView(leftContent())
                         }
                         
                         ZStack {
@@ -209,7 +203,7 @@ struct NormalSelect_Preview: PreviewProvider {
             disable: false,
             heading: "주제",
             requiredBadge: true,
-            icon: nil
+            leftContent: nil
         )
     }
 }
