@@ -34,9 +34,29 @@ extension ActionArea {
             private var showExtraContents: Bool { model.extraContents != nil }
             private var gradient: [SwiftUI.Color] {
                 if showExtraContents {
-                    [.clear, .alias(.backgroundElevated)]
+                    [
+                        .clear,
+                        .alias(.backgroundElevated).opacity(0.14),
+                        .alias(.backgroundElevated).opacity(0.29),
+                        .alias(.backgroundElevated).opacity(0.34),
+                        .alias(.backgroundElevated).opacity(0.40),
+                        .alias(.backgroundElevated).opacity(0.54),
+                        .alias(.backgroundElevated).opacity(0.74),
+                        .alias(.backgroundElevated).opacity(0.86),
+                        .alias(.backgroundElevated)
+                    ]
                 } else {
-                    [.clear, .alias(.backgroundNormal)]
+                    [
+                        .clear,
+                        .alias(.backgroundNormal).opacity(0.14),
+                        .alias(.backgroundNormal).opacity(0.29),
+                        .alias(.backgroundNormal).opacity(0.34),
+                        .alias(.backgroundNormal).opacity(0.40),
+                        .alias(.backgroundNormal).opacity(0.54),
+                        .alias(.backgroundNormal).opacity(0.74),
+                        .alias(.backgroundNormal).opacity(0.86),
+                        .alias(.backgroundNormal)
+                    ]
                 }
             }
             private var backgroundColor: SwiftUI.Color {
@@ -71,7 +91,7 @@ extension ActionArea {
             public var body: some View {
                 ZStack(alignment: .top) {
                     VStack(spacing: .zero) {
-                        if model.sticky, showExtraContents == false {
+                        if model.sticky || showExtraContents {
                             ZStack(alignment: .bottom) {
                                 backgroundColor
                                     .frame(height: 20)
@@ -83,10 +103,12 @@ extension ActionArea {
                                 .frame(height: 40)
                                 .offset(y: -20)
                             }
+                            backgroundColor
+                                .frame(height: 48)
                         }
-                        backgroundColor
                     }
                     .frame(height: height + captionHeight)
+                    
                     VStack(spacing: .zero) {
                         if let extraContents = model.extraContents {
                             extraContents
@@ -104,20 +126,29 @@ extension ActionArea {
                                         captionSizeMeasurer
                                     )
                             }
+                            
                             ActionView(model.priority)
-                                .background(
-                                    backgroundColor
-                                )
                         }
                         .padding([.top, .horizontal], 20)
                     }
-                    .padding(.bottom, safeAreaInsets.bottom)
+                    .padding(.bottom, 20)
+                    
                     if showExtraContents {
                         Divider()
                             .background(SwiftUI.Color.alias(.lineNeutral))
                     }
                 }
                 .background(sizeMeasurer)
+                .padding(.bottom, safeAreaInsets.bottom != .zero ? 14 : .zero)
+                .overlay {
+                    if model.sticky, showExtraContents == false {
+                        VStack {
+                            Spacer()
+                            backgroundColor
+                                .frame(height: safeAreaInsets.bottom != .zero ? 14 : .zero)
+                        }
+                    }
+                }
             }
             
             private struct ActionView: View {
@@ -402,15 +433,22 @@ extension ActionArea.Bottom {
 struct Bottom_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            SwiftUI.Color.red
-            ActionArea.Bottom.Component<AnyView>(
-                model: .init(
-                    variant: .normal,
-                    priority: .single(
-                        main: .init(text: "메인", buttonOption: .outline(.assistive), action: {})
+            ScrollView {
+                SwiftUI.Color.red.frame(height: 1050)
+            }
+            VStack {
+                Spacer()
+                ActionArea.Bottom.Component<AnyView>(
+                    model: .init(
+                        variant: .normal,
+                        priority: .single(
+                            main: .init(text: "메인", buttonOption: .soild(.primary), action: {})
+                        ),
+                        sticky: false
                     )
                 )
-            )
+            }
         }
+        .ignoresSafeArea()
     }
 }
