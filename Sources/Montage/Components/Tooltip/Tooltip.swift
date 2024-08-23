@@ -265,12 +265,14 @@ extension Tooltip {
             case .topLeft, .bottomLeft:
                 (
                     contentWidth / 2
-                    - originSize.width / 2
+                    - config.arrowWidth
+                    - arrowHorizontalPadding
                 )
             case .topRight, .bottomRight:
                 -(
                     contentWidth / 2
-                    - originSize.width / 2
+                    - config.arrowWidth
+                    - arrowHorizontalPadding
                 )
             }
         }
@@ -281,12 +283,16 @@ extension Tooltip {
                     .zero
             case .leftTop, .rightTop:
                 (
-                    contentHeight - originSize.height
-                ) / 2
+                    contentHeight / 2
+                    - config.arrowWidth / 2
+                    - arrowHorizontalPadding
+                )
             case .leftBottom, .rightBottom:
                 -(
-                    contentHeight - originSize.height
-                ) / 2
+                    contentHeight / 2
+                    - config.arrowWidth / 2
+                    - arrowHorizontalPadding
+                )
             case .top, .topLeft, .topRight:
                 -(
                     contentHeight / 2
@@ -348,10 +354,10 @@ extension Tooltip {
 
         private func arrowShape(degree: Double) -> some View {
             ZStack {
-                Arrow()
+                Tooltip.Arrow()
                     .rotation(Angle(degrees: degree))
                     .foregroundStyle(underLayerColor)
-                Arrow()
+                Tooltip.Arrow()
                     .rotation(Angle(degrees: degree))
                     .foregroundStyle(upperLayerColor)
             }
