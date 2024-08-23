@@ -64,7 +64,7 @@ extension View {
     }
     
     public func tooltip(
-        variant: Tooltip.Variant = .extended,
+        variant: Tooltip.Variant = .extended(),
         position: Tooltip.Position,
         show: Binding<Bool>,
         inverse: Bool = false,

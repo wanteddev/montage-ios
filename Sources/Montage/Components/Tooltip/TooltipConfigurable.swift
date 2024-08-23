@@ -23,6 +23,4 @@ public protocol TooltipConfigurable {
     var arrowHeight: CGFloat { get set }
     
     var showCloseButton: Bool { get set }
-    var actionTitle: String? { get set }
-    var action: (() -> Void)? { get set }
 }
