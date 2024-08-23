@@ -19,13 +19,9 @@ public enum Tooltip {
             default: false
             }
         }
-
-        public var showArrow: Bool {
-            self != .compact
-        }
         
-        public var showCloseButton: Bool {
-            self != .compact
+        public var isExtended: Bool {
+            self == .compact
         }
     }
     
@@ -142,8 +138,8 @@ extension Tooltip {
 
         // MARK: - Computed properties
 
-        private var showArrow: Bool { config.variant.showArrow && config.showArrow }
-        private var showCloseButton: Bool { config.variant.showCloseButton && config.showCloseButton }
+        private var showArrow: Bool { config.variant.isExtended && config.showArrow }
+        private var showCloseButton: Bool { config.variant.isExtended && config.showCloseButton }
 
         private var actualArrowHeight: CGFloat { self.showArrow ? config.arrowHeight : 0 }
         private let arrowVerticalPadding: CGFloat = 1
