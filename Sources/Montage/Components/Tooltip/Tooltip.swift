@@ -74,6 +74,7 @@ public enum Tooltip {
         public var arrowHeight: CGFloat = Tooltip.Size.Arrow.height
         
         public var showCloseButton: Bool = false
+        public var actionTitle: String? = nil
         public var action: (() -> Void)? = nil
         
         public init(
@@ -82,6 +83,7 @@ public enum Tooltip {
             inverse: Bool = false,
             showArrow: Bool = true,
             showCloseButton: Bool = false,
+            actionTitle: String? = nil,
             action: (() -> Void)? = nil
         ) {
             self.variant = variant
@@ -89,6 +91,7 @@ public enum Tooltip {
             self.inverse = inverse
             self.showArrow = showArrow
             self.showCloseButton = showCloseButton
+            self.actionTitle = actionTitle
             self.action = action
         }
     }
@@ -424,11 +427,14 @@ extension Tooltip {
                                 .opacity(0.61)
                             }
                         }
-                        if config.variant == .extended, let action = config.action {
+                        if config.variant == .extended,
+                           let actionTitle = config.actionTitle,
+                           let action = config.action
+                        {
                             SwiftUI.Button(action: {
                                 action()
                             }){
-                                Text("더 알아보기")
+                                Text(actionTitle)
                                     .montage(
                                         variant: .label1,
                                         weight: .bold,
