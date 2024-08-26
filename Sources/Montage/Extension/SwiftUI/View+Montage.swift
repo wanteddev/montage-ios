@@ -64,12 +64,13 @@ extension View {
     }
     
     public func tooltip(
-        variant: Tooltip.Variant = .extended,
+        variant: Tooltip.Variant = .extended(),
         position: Tooltip.Position,
         show: Binding<Bool>,
         inverse: Bool = false,
         showCloseButton: Bool = false,
         content: String,
+        actionTitle: String? = nil,
         action: (() -> Void)? = nil
     ) -> some View {
         tooltip(
@@ -78,6 +79,7 @@ extension View {
                 position: position,
                 inverse: inverse,
                 showCloseButton: showCloseButton,
+                actionTitle: actionTitle,
                 action: action
             ),
             show: show,
