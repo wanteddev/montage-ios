@@ -110,7 +110,7 @@ extension ActionArea {
                     .frame(height: height + captionHeight)
                     
                     VStack(spacing: .zero) {
-                        if let extraContents = model.extraContents {
+                        if model.variant == .extra, let extraContents = model.extraContents {
                             extraContents
                                 .background(SwiftUI.Color.alias(.backgroundElevated))
                                 .padding([.top, .horizontal], 20)
