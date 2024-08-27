@@ -9,7 +9,7 @@ import SwiftUI
 
 extension ActionArea {
     public enum Bottom {
-        public struct Component<ExtraContents: View>: View {
+        public struct Component: View {
             // MARK: - Environment
             
             @Environment(\.safeAreaInsets) private var safeAreaInsets
@@ -21,7 +21,7 @@ extension ActionArea {
             
             // MARK: - Uninitialised properties
             
-            private let model: ActionArea.Bottom.Model<ExtraContents>
+            private let model: ActionArea.Bottom.Model
             
             // MARK: - Computed properties
             
@@ -84,7 +84,7 @@ extension ActionArea {
             
             // MARK: - Initialisers
            
-            public init(model: ActionArea.Bottom.Model<ExtraContents>) {
+            public init(model: ActionArea.Bottom.Model) {
                 self.model = model
             }
             
@@ -111,10 +111,12 @@ extension ActionArea {
                     
                     VStack(spacing: .zero) {
                         if model.variant == .extra, let extraContents = model.extraContents {
-                            extraContents
-                                .background(SwiftUI.Color.alias(.backgroundElevated))
-                                .padding([.top, .horizontal], 20)
-                                .padding(.bottom, 4)
+                            AnyView(
+                                extraContents()
+                            )
+                            .background(SwiftUI.Color.alias(.backgroundElevated))
+                            .padding([.top, .horizontal], 20)
+                            .padding(.bottom, 4)
                         }
                         VStack(spacing: .zero) {
                             if let caption = model.caption, enableCaption {
@@ -394,25 +396,25 @@ extension ActionArea.Bottom {
         case text(Button.TextButton.Variant = .assistive)
     }
     
-    public struct Model<ExtraContents: View> {
+    public struct Model {
         let variant: Variant
         let priority: Priority
         let sticky: Bool
         var caption: String?
-        var extraContents: ExtraContents?
+        var extraContents: (() -> any View)?
         
         public init(
             variant: Variant = .normal,
             priority: Priority,
             sticky: Bool = false,
             caption: String? = nil,
-            @ViewBuilder extraContents: () -> ExtraContents?
+            extraContents: (() -> any View)?
         ) {
             self.variant = variant
             self.priority = priority
             self.sticky = sticky
             self.caption = caption
-            self.extraContents = extraContents()
+            self.extraContents = extraContents
         }
         
         public init(
@@ -438,7 +440,7 @@ struct Bottom_Previews: PreviewProvider {
             }
             VStack {
                 Spacer()
-                ActionArea.Bottom.Component<AnyView>(
+                ActionArea.Bottom.Component(
                     model: .init(
                         variant: .normal,
                         priority: .single(

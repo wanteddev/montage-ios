@@ -134,7 +134,7 @@ extension View {
         left: Bar.TopNavigation.Resource.Left? = nil,
         backgroundColorResolvable: ColorResolvable? = nil,
         actions: [Bar.TopNavigation.Resource.Action] = [],
-        withBottom model: ActionArea.Bottom.Model<AnyView>
+        withBottom model: ActionArea.Bottom.Model
     ) -> some View {
         modifier(
             Bar.TopNavigation.TopNavigationModifier(
