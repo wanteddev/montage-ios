@@ -334,24 +334,27 @@ extension ActionArea {
                     action: @escaping (() -> Void)
                 ) -> some View {
                     switch option {
-                    case .soild(let variant):
+                    case let .soild(variant, disable):
                         Button.SolidButtonController(
                             variant: variant,
                             size: .large,
                             text: text,
+                            disable: disable,
                             handler: action
                         )
-                    case .outline(let variant):
+                    case let .outline(variant, disable):
                         Button.OutlinedButtonController(
                             variant: variant,
                             size: .large,
                             text: text,
+                            disable: disable,
                             handler: action
                         )
-                    case .text(let variant):
+                    case let .text(variant, disable):
                         Button.TextButtonController(
                             variant: variant,
                             text: text,
+                            disable: disable,
                             handler: action
                         )
                     }
@@ -391,9 +394,9 @@ extension ActionArea.Bottom {
     }
     
     public enum ButtonOption {
-        case soild(Button.SolidButton.Variant = .primary)
-        case outline(Button.OutlinedButton.Variant = .assistive)
-        case text(Button.TextButton.Variant = .assistive)
+        case soild(Button.SolidButton.Variant = .primary, disable: Bool = false)
+        case outline(Button.OutlinedButton.Variant = .assistive, disable: Bool = false)
+        case text(Button.TextButton.Variant = .assistive, disable: Bool = false)
     }
     
     public struct Model {
@@ -445,8 +448,7 @@ struct Bottom_Previews: PreviewProvider {
                         variant: .normal,
                         priority: .single(
                             main: .init(text: "메인", buttonOption: .soild(.primary), action: {})
-                        ),
-                        sticky: false
+                        )
                     )
                 )
             }
