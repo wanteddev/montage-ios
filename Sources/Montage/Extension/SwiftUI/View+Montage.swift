@@ -71,18 +71,14 @@ extension View {
         show: Binding<Bool>,
         inverse: Bool = false,
         showCloseButton: Bool = false,
-        content: String,
-        actionTitle: String? = nil,
-        action: (() -> Void)? = nil
+        content: String
     ) -> some View {
         tooltip(
             config: Tooltip.DefaultTooltipConfig(
                 variant: variant,
                 position: position,
                 inverse: inverse,
-                showCloseButton: showCloseButton,
-                actionTitle: actionTitle,
-                action: action
+                showCloseButton: showCloseButton
             ),
             show: show,
             content: content
