@@ -10,7 +10,14 @@ import SwiftUI
 extension Bar {
     public struct TopNavigation: View {
         // MARK: - Uninitialised properties
-        @State private var screenWidth: CGFloat = .zero
+        
+        /// TopNavigation이 노출될 screenWidth입니다.
+        @State private var screenWidth: CGFloat = {
+            let scenes = UIApplication.shared.connectedScenes
+            let windowScene = scenes.first as? UIWindowScene
+            let window = windowScene?.windows.first
+            return window?.screen.bounds.width ?? .zero
+        }()
         
         private let variant: Variant
         private let title: String
@@ -46,16 +53,7 @@ extension Bar {
             let ratio = (scrollOffset / -32)
             return ratio > 1 ? 1 : ratio
         }
-        
-        private var screenWidthMeasurer: some View {
-            GeometryReader { proxy in
-                Text("")
-                    .onAppear {
-                        screenWidth = proxy.size.width
-                    }
-            }
-        }
-        
+
         // MARK: - Initialisers
        
         public init(
@@ -89,9 +87,7 @@ extension Bar {
                 .background(
                     .ultraThinMaterial.opacity(backgroundOpacity)
                 )
-                .background(
-                    screenWidthMeasurer
-                )
+                .readSize(onChange: { screenWidth = $0.width })
                 if scrolled && isFloatingVariant == false {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
