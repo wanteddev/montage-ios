@@ -580,7 +580,7 @@ extension Bar.TopNavigation {
         private let left: Resource.Left?
         private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
-        private let model: ActionArea.Bottom.Model<AnyView>?
+        private let model: ActionArea.Bottom.Model?
         
         /// TopNavigation의 사이즈를 측정하는 View입니다.
         private var navigationSizeMeasurer: some View {
@@ -648,7 +648,7 @@ extension Bar.TopNavigation {
             left: Resource.Left?,
             backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action],
-            model: ActionArea.Bottom.Model<AnyView>? = nil
+            model: ActionArea.Bottom.Model? = nil
         ) {
             self.variant = variant
             self.title = title
@@ -706,13 +706,13 @@ extension Bar.TopNavigation {
                 if let model {
                     VStack(alignment: .leading, spacing: .zero) {
                         Spacer()
-                        ActionArea.Bottom.Component<AnyView>(
+                        ActionArea.Bottom.Component(
                             model: .init(
                                 variant: model.variant,
                                 priority: model.priority,
                                 sticky: bottomActionSticky,
                                 caption: model.caption,
-                                extraContents: { model.extraContents }
+                                extraContents: model.extraContents
                             )
                         )
                         .animation(.easeInOut, value: bottomActionSticky)
