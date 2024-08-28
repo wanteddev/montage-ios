@@ -21,7 +21,7 @@ public enum Tooltip {
         }
         
         public var isExtended: Bool {
-            self == .compact
+            self != .compact
         }
     }
     
