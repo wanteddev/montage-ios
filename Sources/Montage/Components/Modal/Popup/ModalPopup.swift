@@ -10,17 +10,31 @@ import SwiftUI
 extension Modal {
     /// Modal/Popup Component입니다.
     ///
+    ///
+    ///
     /// .fullScreenCover(isPresented:content:)와 함께 사용하며 content안쪽에 Component를 위치시킵니다.
     /// ```
     /// .fullScreenCover(
     ///   isPresented: Binding<Bool>,
     ///   content: {
     ///       Modal.Popup(
-    ///           topNavigation: {...},
+    ///           navigation: {...},
     ///           content: {...},
     ///           actionArea: {...}
     ///       )
     /// })
+    /// ```
+    ///
+    /// Content에 ScrollView가 들어가는 경우, ScrollView가 가질 height을 지정해주어야 합니다.
+    /// ```
+    /// Modal.Popup(
+    ///  navigation: {...},
+    ///  content: {
+    ///    ScrollView {...}
+    ///     .frame(height: 300)
+    ///  },
+    ///  actionArea: {...}
+    /// )
     /// ```
     ///
     /// 코드를 통해 transaction animation을 제거해야 animation이 정상적으로 작동합니다.
@@ -34,16 +48,16 @@ extension Modal {
     public struct Popup: View {
         @State private var opacity: CGFloat = .zero
         
-        private let topNavigation: (() -> Montage.Bar.TopNavigation)
+        private let navigation: (() -> Montage.Modal.Navigation)
         private let content: (() -> any View)
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
         
         public init(
-            topNavigation: @escaping () -> Montage.Bar.TopNavigation,
+            navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
             actionArea: (() -> Montage.ActionArea.Bottom.Component)?
         ) {
-            self.topNavigation = topNavigation
+            self.navigation = navigation
             self.content = content
             self.actionArea = actionArea
         }
@@ -53,7 +67,7 @@ extension Modal {
                 ZStack {
                     VStack(spacing: .zero) {
                         AnyView(
-                            topNavigation()
+                            navigation()
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         )
                         AnyView(content())
@@ -83,7 +97,7 @@ extension Modal {
                 ZStack {
                     VStack(spacing: .zero) {
                         AnyView(
-                            topNavigation()
+                            navigation()
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                         )
                         AnyView(content())
@@ -154,8 +168,8 @@ private struct ModalPopupPreivew: View {
             isPresented: $show,
             content: {
                 Modal.Popup(
-                    topNavigation: {
-                        Bar.TopNavigation(
+                    navigation: {
+                        Modal.Navigation(
                             variant: .normal,
                             title: "제목",
                             scrollOffset: scrollOffset,
@@ -166,16 +180,6 @@ private struct ModalPopupPreivew: View {
                         )
                     },
                     content: {
-                        /*
-                        VStack {
-                            Text("스크롤뷰")
-                            Text("스크롤뷰")
-                            Text("스크롤뷰")
-                            Text("스크롤뷰")
-                            Text("스크롤뷰")
-                        }
-                         */
-                        
                         ScrollView {
                             GeometryReader { proxy in
                                 SwiftUI.Color.clear.preference(
@@ -209,7 +213,6 @@ private struct ModalPopupPreivew: View {
                             )
                         )
                     }
-                    // actionArea: nil
                 )
             })
         .transaction { transaction in

@@ -10,6 +10,10 @@ import SwiftUI
 extension Modal {
     /// Modal/Bottom Component입니다.
     ///
+    /// > iOS 15 이하에서는 BottomSheet 형태가 아닌 FullScreen 형태로 표시됩니다.
+    /// >
+    /// > iOS 16.4 이하에서는 handle이 표시되지 않습니다.
+    ///
     /// .sheet(isPresented:content:)와 함께 사용하며 content안쪽에 Component를 위치시킵니다.
     /// ```
     /// .sheet(
@@ -18,33 +22,17 @@ extension Modal {
     ///       Modal.Bottom(
     ///           handle: Bool,
     ///           resize: Modal.Bottom.Resize,
-    ///           topNavigation: {...},
+    ///           withScrollView: Bool,
+    ///           navigation: {...},
     ///           content: {...},
     ///           actionArea: {...}
     ///       )
     /// })
     /// ```
     ///
-    /// handle을 사용하여 Component 확장시에 TopNavigation과 ActionArea/Bottom 사이가 늘어나길 원하신다면
-    /// Content 전달 시 Spacer를 포함한 VStack을 전달하면 됩니다.
-    /// ```
-    /// .sheet(
-    ///   isPresented: Binding<Bool>,
-    ///   content: {
-    ///       Modal.Bottom(
-    ///           handle: true,
-    ///           topNavigation: {...},
-    ///           content: {
-    ///            VStack {
-    ///              ...
-    ///              Spacer()
-    ///            },
-    ///           actionArea: {...}
-    ///       )
-    /// })
-    /// ```
-    ///
     /// - Parameters:
+    ///     - handle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 false입니다.
+    ///     - resize: Content가 표시될 영역의 사이즈 입니다. 기본값은 .hug입니다.
     ///     - withScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
     public struct Bottom: View {
         /// Modal/Bottom의 사이즈를 나타내는 열거형입니다.
@@ -53,12 +41,13 @@ extension Modal {
             case fill
         }
         
+        @Environment(\.safeAreaInsets) private var safeAreaInsets
         @State private var contentSize: CGSize = .zero
 
         private let handle: Bool
         private let resize: Modal.Bottom.Resize
         private let withScollView: Bool
-        private let topNavigation: (() -> Montage.Bar.TopNavigation)
+        private let navigation: (() -> Montage.Modal.Navigation)
         private let content: (() -> any View)
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
         
@@ -74,7 +63,7 @@ extension Modal {
         
         /// Modal/Bottom의 dentents입니다
         ///
-        /// ContentView에 Scroll이 있는 경우, [.fractoin(0.35), .medium, .max]로 제한됩니다.
+        /// ContentView에 ScrollView가 있는 경우, [.fractoin(0.35), .medium, .max]로 제한됩니다.
         ///
         /// handle을 사용하는 경우 최대높이(화면 최상단 - 10) 까지 확장 가능하며,
         /// handle이 없는 경우에는 resize에 따라 최대높이가 결정됩니다.
@@ -93,14 +82,14 @@ extension Modal {
             handle: Bool = false,
             resize: Modal.Bottom.Resize = .hug,
             withScrollView: Bool = false,
-            topNavigation: @escaping () -> Montage.Bar.TopNavigation,
+            navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
             actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
         ) {
             self.handle = handle
             self.resize = resize
             self.withScollView = withScrollView
-            self.topNavigation = topNavigation
+            self.navigation = navigation
             self.content = content
             self.actionArea = actionArea
         }
@@ -112,31 +101,31 @@ extension Modal {
                         Spacer()
                             .frame(height: 10)
                     }
-                    AnyView(topNavigation())
+                    AnyView(navigation())
                     AnyView(content())
                     if let actionArea {
                         AnyView(actionArea())
                     }
                 }
-                .ignoresSafeArea(.container, edges: .bottom)
                 .background(contentSizeMeasurer)
                 .presentationDetents(detents)
                 .presentationDragIndicator(handle ? .visible : .hidden)
                 .presentationContentInteraction(withScollView ? .resizes : .automatic)
+                .padding(.bottom, -safeAreaInsets.bottom)
             } else {
                 VStack(spacing: .zero) {
                     if handle {
                         Spacer()
                             .frame(height: 10)
                     }
-                    AnyView(topNavigation())
+                    AnyView(navigation())
                     AnyView(content())
                     if let actionArea {
                         AnyView(actionArea())
                     }
                 }
-                .ignoresSafeArea(.container, edges: .bottom)
                 .background(contentSizeMeasurer)
+                .padding(.bottom, -safeAreaInsets.bottom)
             }
         }
     }
@@ -170,11 +159,11 @@ private struct ModalBottomPreivew: View {
             isPresented: $show,
             content: {
                 Modal.Bottom(
-                    handle: true,
+                    handle: false,
                     resize: .hug,
-                    withScrollView: true, // 스크롤뷰와 함께 쓰일때 사용
-                    topNavigation: {
-                        Bar.TopNavigation(
+                    withScrollView: false, // 스크롤뷰와 함께 쓰일때 사용
+                    navigation: {
+                        Modal.Navigation(
                             variant: .normal,
                             title: "제목",
                             scrollOffset: scrollOffset,
@@ -185,31 +174,13 @@ private struct ModalBottomPreivew: View {
                         )
                     },
                     content: {
-                        //VStack {
-                        //    Text("스크롤뷰")
-                        //    Text("스크롤뷰")
-                        //    Text("스크롤뷰")
-                        //    Text("스크롤뷰")
-                        //    Text("스크롤뷰")
-                        //}
-
-                        ScrollView {
-                            GeometryReader { proxy in
-                                SwiftUI.Color.clear.preference(
-                                    key: OffsetPreferenceKey.self,
-                                    value: proxy.frame(
-                                        in: .named("ScrollViewOrigin")
-                                    ).origin
-                                )
-                                .frame(width: 0, height: 0)
-                            }
-                            VStack { SwiftUI.Color.red.frame(height: 500) }
+                        VStack {
+                            Text("텍스트입니다")
+                            Text("텍스트입니다")
+                            Text("텍스트입니다")
+                            Text("텍스트입니다")
+                            Text("텍스트입니다")
                         }
-                        .coordinateSpace(name: "ScrollViewOrigin")
-                        .onPreferenceChange(
-                            OffsetPreferenceKey.self,
-                            perform: { scrollOffset = $0.y }
-                        )
                     },
                     actionArea: {
                         ActionArea.Bottom.Component(
@@ -223,7 +194,6 @@ private struct ModalBottomPreivew: View {
                             )
                         )
                     }
-                    //actionArea: nil
                 )
         })
     }

@@ -16,7 +16,7 @@ extension Modal {
     ///   isPresented: Binding<Bool>,
     ///   content: {
     ///       Modal.Full(
-    ///           topNavigation: {...},
+    ///           navigation: {...},
     ///           content: {...},
     ///           actionArea: {...}
     ///       )
@@ -26,30 +26,32 @@ extension Modal {
     /// Modal/Popup과 다르게 transaction을 통해 animation을 제거할 필요가 없습니다.
     ///
     public struct Full: View {
-        private let topNavigation: (() -> Montage.Bar.TopNavigation)
+        @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+        private let navigation: (() -> Montage.Modal.Navigation)
         private let content: (() -> any View)
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
         
         public init(
-            topNavigation: @escaping () -> Montage.Bar.TopNavigation,
+            navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
             actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
         ) {
-            self.topNavigation = topNavigation
+            self.navigation = navigation
             self.content = content
             self.actionArea = actionArea
         }
 
         public var body: some View {
             VStack(spacing: .zero) {
-                AnyView(topNavigation())
+                AnyView(navigation())
                 AnyView(content())
                 Spacer()
                 if let actionArea {
                     AnyView(actionArea())
                 } else {
                     Spacer()
-                        .frame(height: 34)
+                        .frame(height: safeAreaInsets.bottom)
                 }
             }
             .ignoresSafeArea(.container, edges: .bottom)
@@ -73,8 +75,8 @@ private struct ModalFullPreivew: View {
             isPresented: $show,
             content: {
                 Modal.Full(
-                    topNavigation: {
-                        Bar.TopNavigation(
+                    navigation: {
+                        Modal.Navigation(
                             variant: .normal,
                             title: "제목",
                             left: nil,
@@ -91,40 +93,8 @@ private struct ModalFullPreivew: View {
                             Text("텍스트")
                             Text("텍스트")
                         }
-                        
-//                        ScrollView {
-//                            GeometryReader { proxy in
-//                                SwiftUI.Color.clear.preference(
-//                                    key: OffsetPreferenceKey.self,
-//                                    value: proxy.frame(
-//                                        in: .named("ScrollViewOrigin")
-//                                    ).origin
-//                                )
-//                                .frame(width: 0, height: 0)
-//                            }
-//                            VStack {
-//                                SwiftUI.Color.red.frame(height: 1050)
-//                            }
-//                        }
-//                        .coordinateSpace(name: "ScrollViewOrigin")
-//                        .onPreferenceChange(
-//                            OffsetPreferenceKey.self,
-//                            perform: { scrollOffset = $0.y }
-//                        )
                     },
-                    actionArea: {
-                        ActionArea.Bottom.Component(
-                            model: .init(
-                                variant: .normal,
-                                priority: .single(main: .init(text: "눌러봐요", action: {
-                                    show = false
-                                })),
-                                sticky: false,
-                                caption: nil
-                            )
-                        )
-                    }
-                    //actionArea: nil
+                    actionArea: nil
                 )
             }
         )
