@@ -92,9 +92,7 @@ public enum Tooltip {
             position: Tooltip.Position = .top,
             inverse: Bool = false,
             showArrow: Bool = true,
-            showCloseButton: Bool = false,
-            actionTitle: String? = nil,
-            action: (() -> Void)? = nil
+            showCloseButton: Bool = false
         ) {
             self.variant = variant
             self.position = position
