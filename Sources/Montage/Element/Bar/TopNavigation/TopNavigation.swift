@@ -148,7 +148,7 @@ extension Bar {
                                 )
                         }
                         Text(title)
-                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, color: .labelStrong)
+                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
                             .paragraph(variant: variant.typoVaraint)
                             .lineLimit(1)
                             .frame(width: titleSize)
@@ -164,7 +164,7 @@ extension Bar {
                         .padding(.top, 2)
                         HStack {
                             Text(title)
-                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, color: .labelStrong)
+                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
                                 .paragraph(variant: variant.typoVaraint)
                                 .lineLimit(1)
                                 .frame(alignment: variant.textAlignment)
@@ -198,17 +198,17 @@ extension Bar {
                     Group {
                         switch left {
                         case .back(let action):
-                            Button.IconButtonController(icon: .chevronLeft) {
+                            Button.IconButton(icon: .chevronLeft) {
                                 action()
                             }
                             .fixedSize()
                         case let .icon(i, action):
-                            Button.IconButtonController(icon: i) {
+                            Button.IconButton(icon: i) {
                                 action()
                             }
                             .fixedSize()
                         case let .text(t, action):
-                            Button.TextButtonController(
+                            Button.TextButton(
                                 text: t,
                                 contentColorResolver: Color.Alias.labelNormal
                             ) {
@@ -241,12 +241,12 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(icon: i, showPushBadge: s) {
+                                Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
                                 .fixedSize()
                             case let .text(t, action):
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     text: t,
                                     contentColorResolver: Color.Alias.labelNormal
                                 ) {
@@ -276,17 +276,17 @@ extension Bar {
                     Group {
                         switch left {
                         case .back(let action):
-                            Button.IconButtonController(icon: .chevronLeft) {
+                            Button.IconButton(icon: .chevronLeft) {
                                 action()
                             }
                             .fixedSize()
                         case let .icon(i, action):
-                            Button.IconButtonController(icon: i) {
+                            Button.IconButton(icon: i) {
                                 action()
                             }
                             .fixedSize()
                         case let .text(t, action):
-                            Button.TextButtonController(
+                            Button.TextButton(
                                 text: t,
                                 contentColorResolver: Color.Alias.labelNormal
                             ) {
@@ -314,13 +314,13 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(icon: i, showPushBadge: s) {
+                                Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
                                 .fixedSize()
                                 .padding(.trailing, 8)
                             case let .text(t, action):
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     text: t,
                                     contentColorResolver: Color.Alias.labelNormal
                                 ) {
@@ -350,7 +350,7 @@ extension Bar {
                         if alternative {
                             switch left {
                             case .back(let action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: .chevronLeftThick
                                 ) {
@@ -358,7 +358,7 @@ extension Bar {
                                 }
                                 .fixedSize()
                             case let .icon(i, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i
                                 ) {
@@ -370,7 +370,7 @@ extension Bar {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, color: .staticWhite)
+                                        .montage(variant: .body2, weight: .medium, alias: .staticWhite)
                                         .paragraph(variant: .body2)
                                         .opacity(0.88)
                                         .padding(.vertical, 5)
@@ -385,7 +385,7 @@ extension Bar {
                         } else {
                             switch left {
                             case .back(let action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: .chevronLeftThick
                                 ) {
@@ -395,7 +395,7 @@ extension Bar {
                                 .clipShape(Circle())
                                 .fixedSize()
                             case let .icon(i, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i
                                 ) {
@@ -409,7 +409,7 @@ extension Bar {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, color: .labelAlternative)
+                                        .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
                                         .paragraph(variant: .body2)
                                         .blendMode(.plusDarker)
                                         .padding(.vertical, 5)
@@ -441,7 +441,7 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i,
                                     showPushBadge: s
@@ -451,7 +451,7 @@ extension Bar {
                                 .fixedSize()
                             case let .text(t, action):
                                 if alternative {
-                                    Button.TextButtonController(
+                                    Button.TextButton(
                                         text: t,
                                         contentColorResolver: Color.Alias.staticWhite
                                     ) {
@@ -462,7 +462,7 @@ extension Bar {
                                     .background(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
                                     .clipShape(RoundedRectangle(cornerRadius: 1000))
                                 } else {
-                                    Button.TextButtonController(
+                                    Button.TextButton(
                                         text: t,
                                         contentColorResolver: Color.Alias.labelAlternative
                                     ) {

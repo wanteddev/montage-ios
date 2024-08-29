@@ -9,19 +9,19 @@ import SwiftUI
 
 extension View {
     public func elevation(_ elevation: Elevation) -> Self {
-        var currentView = self
+        let currentView = self
         
         guard elevation != .none else {
             return currentView
         }
         
-        var descriptor = elevation.descriptor
+        let descriptor = elevation.descriptor
         
         guard let color = descriptor.color else {
             return currentView
         }
         
-        currentView.shadow(
+        let _ = currentView.shadow(
             color: SwiftUI.Color(color.withAlphaComponent(descriptor.alpha)),
             radius: descriptor.blur,
             x: descriptor.offset.width,
@@ -35,6 +35,8 @@ extension View {
         lineSpacing(variant.lineSpacing).padding(.vertical, variant.padding)
     }
 }
+
+// MARK: - Component
 
 extension View {
     public func toast(_ model: Binding<Toast.Model?>) -> some View {

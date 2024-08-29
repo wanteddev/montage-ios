@@ -1,0 +1,340 @@
+//
+//  TextInput.swift
+//  Montage
+//
+//  Created by ahn sanghoon on 8/1/24.
+//
+
+import SwiftUI
+
+public struct TextInput: View {
+    /// TextInput의 외관을 결정하는 열거형입니다.
+    public enum Variant {
+        case normal
+        case positive
+        case negative
+    }
+    
+    @Binding private var text: String
+    @State private var active: Bool = false
+    
+    /// TextInput의 외관입니다.
+    public var variant: Variant
+
+    /// TextInput의 사용가능 여부입니다.
+    public var disable: Bool
+    
+    /// TextInput의 제목입니다.
+    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+    public var heading: String?
+    
+    /// TextInput의 필수 표시 노출 여부입니다.
+    public var requiredBadge: Bool
+    
+    /// TextInput의 설명입니다.
+    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+    public var description: TextInput.Description?
+    
+    /// TextInput에 입력된 텍스트가 없을 때 노출되는 placeholder입니다.
+    ///  > 값을 지정하지 않으면 노출되지 않습니다.
+    public var placeholder: String? = nil
+
+    /// TextInput의 왼쪽 아이콘입니다.
+    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+    public var icon: Icon?
+    
+    /// TextInput의 오른쪽 버튼입니다.
+    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+    public var rightButton: Resource.Button?
+    
+    /// TextInput의 오른쪽 컨텐츠입니다.
+    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+    /// >
+    /// > rightButton과 함께 사용하는 경우 rightContent가 무시됩니다.
+    public var rightContent: (() -> any View)?
+    
+    /// TextInput의 onCommit시 실행될 내용입니다.
+    public var onCommit: (() -> Void)?
+    
+    public init(
+        text: Binding<String>,
+        variant: Variant = .normal,
+        disable: Bool = false,
+        heading: String? = nil,
+        requiredBadge: Bool = false,
+        description: TextInput.Description? = nil,
+        placeholder: String? = nil,
+        icon: Icon? = nil,
+        rightButton: Resource.Button? = nil,
+        rightContent: (() -> any View)? = nil,
+        onCommit: (() -> Void)? = nil
+    ) {
+        self._text = text
+        self.variant = variant
+        self.disable = disable
+        self.heading = heading
+        self.requiredBadge = requiredBadge
+        self.description = description
+        self.placeholder = placeholder
+        self.icon = icon
+        self.rightButton = rightButton
+        self.rightContent = rightButton == nil ? rightContent : nil
+        self.onCommit = onCommit
+    }
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let heading {
+                HStack(spacing: 4) {
+                    Text(heading)
+                        .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
+                        .paragraph(variant: .label1)
+                    if requiredBadge {
+                        Text("*")
+                            .montage(variant: .label1, weight: .medium, alias: .statusNegative)
+                    }
+                }
+            }
+            Field(
+                text: $text,
+                active: $active,
+                variant: variant,
+                disable: disable,
+                placeholder: placeholder,
+                icon: icon,
+                rightButton: rightButton,
+                rightContent: rightContent
+            )
+            if let description {
+                let message: String = {
+                    if variant == .positive {
+                        return description.positive ?? description.normal
+                    } else if variant == .negative {
+                        return description.negative ?? description.normal
+                    } else {
+                        return description.normal
+                    }
+                }()
+                if message.isEmpty == false {
+                    Text(message)
+                        .montage(
+                            variant: .caption1,
+                            alias: variant == .negative ? .statusNegative : .labelAlternative
+                        )
+                        .paragraph(variant: .caption1)
+                }
+            }
+        }
+        .onChange(of: text) { newValue in
+            active = (newValue.isEmpty == false)
+        }
+    }
+    
+    private struct Field: View {
+        @FocusState var textFieldFocusState: Bool
+
+        @Binding var text: String
+        @Binding var active: Bool
+        
+        var variant: Variant
+        var disable: Bool
+        var placeholder: String?
+        var icon: Icon?
+        var rightButton: Resource.Button?
+        var rightContent: (() -> any View)?
+
+        var fieldStrokeColor: SwiftUI.Color {
+            if textFieldFocusState {
+                switch variant {
+                case .normal, .positive:
+                    return .alias(.primaryNormal).opacity(0.43)
+                case .negative:
+                    return .alias(.statusNegative).opacity(0.43)
+                }
+            } else {
+                switch variant {
+                case .normal, .positive:
+                    return .alias(.lineNeutral)
+                case .negative:
+                    return .alias(.statusNegative).opacity(0.43)
+                }
+            }
+        }
+        
+        var body: some View {
+            HStack(spacing: .zero) {
+                ZStack {
+                    HStack(spacing: 9) {
+                        if let icon {
+                            Image.montage(icon)
+                                .resizable()
+                                .frame(width: 22, height: 22)
+                                .foregroundStyle(SwiftUI.Color.alias(.labelAlternative))
+                        }
+                        TextField(
+                            "",
+                            text: $text,
+                            prompt: {
+                                if let placeholder {
+                                    return Text(placeholder).montage(variant: .body1, weight: .regular, alias: .labelAlternative)
+                                } else {
+                                    return nil
+                                }
+                            }()
+                        )
+                        .font(.montage(variant: .body1, weight: .regular))
+                        .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelNormal))
+                        .focused($textFieldFocusState)
+                        .frame(height: 24)
+                        .padding(.horizontal, 4)
+
+                        if active, textFieldFocusState {
+                            Image.montage(.circleClose)
+                                .frame(width: 22, height: 22)
+                                .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
+                                .onTapGesture { text = "" }
+                        } else {
+                            if variant == .positive || variant == .negative {
+                                Image.montage(variant == .positive ? .circleCheckFill : .circleExclamationFill)
+                                    .resizable()
+                                    .frame(width: 22, height: 22)
+                                    .foregroundStyle(variant == .positive ? SwiftUI.Color.alias(.primaryNormal) : .alias(.statusNegative))
+                            }
+                        }
+                        
+                        if let rightContent {
+                            AnyView(rightContent())
+                        }
+                    }
+                    .padding(.all, 12)
+                    
+                    if rightButton == nil {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
+                            .padding(.all, textFieldFocusState ? 2 : 1)
+                    } else {
+                        RoundedCorner(radius: 12, corners: [.topLeft, .bottomLeft])
+                            .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
+                            .padding([.top, .bottom, .leading], textFieldFocusState ? 2 : 1)
+                    }
+                }
+                
+                if case let .button(variant, title, handler) = rightButton {
+                    ZStack {
+                        FieldButton(
+                            variant: variant,
+                            title: title,
+                            handler: handler
+                        )
+                        RoundedCorner(radius: 12, corners: [ .topRight, .bottomRight])
+                            .stroke(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
+                            .padding([.top, .trailing, .bottom], textFieldFocusState ? 1.5 : 1)
+                            .padding(.top, 0.2) // Texfield의 boder 영역과 높낮이를 맞추기 위함
+                            .clipShape(
+                                Rectangle()
+                                    .offset(x: textFieldFocusState ? 1 : 0.7, y: .zero)
+                            )
+                    }
+                    .fixedSize()
+                }
+            }
+            .frame(height: 48)
+            .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
+            .allowsHitTesting(disable == false)
+        }
+    }
+    
+    private struct FieldButton: View {
+        @State private var isPressed = false
+        
+        let variant: Button.OutlinedButton.Variant
+        let title: String
+        let handler: (() -> Void)?
+        
+        var body: some View {
+            Text(title)
+                .montage(variant: .body1, weight: variant.typoWeight, alias: variant.textColor)
+                .paragraph(variant: .body1)
+                .background(
+                    Decorate.InteractionController(
+                        state: isPressed ? .pressed : .normal,
+                        variant: .light,
+                        color: .backgroundNormal
+                    )
+                    .padding(.horizontal, -7)
+                    .padding(.vertical, -4)
+                )
+                .onLongPressGesture(
+                    minimumDuration: 2.0,
+                    perform: {},
+                    onPressingChanged: { state in
+                        isPressed = state
+                        if state == false {
+                            handler?()
+                        }
+                    }
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(SwiftUI.Color.clear)
+                }
+                .padding(.horizontal, 19)
+                .padding(.vertical, 12)
+        }
+    }
+}
+
+extension TextInput {
+    public struct Description {
+        var normal: String
+        var positive: String?
+        var negative: String?
+        
+        public init(
+            normal: String = "",
+            positive: String? = nil,
+            negative: String? = nil
+        ) {
+            self.normal = normal
+            self.positive = positive
+            self.negative = negative
+        }
+    }
+}
+
+extension TextInput {
+    public enum Resource {
+        public enum Button {
+            case button(
+                variant: Montage.Button.OutlinedButton.Variant,
+                title: String,
+                handler: (() -> Void)? = nil
+            )
+        }
+    }
+}
+
+struct TextInput_Preview: PreviewProvider {
+    static var previews: some View {
+        TextInput(
+            text: .constant("값"),
+            variant: .normal,
+            disable: false,
+            heading: "주제",
+            requiredBadge: true,
+            description: .init(
+                normal: "메세지에 마침표를 찍어요.",
+                positive: "성공 메세지를 나타내요.",
+                negative: "실패 메세지를 나타내요."
+            ),
+            icon: .apps,
+            rightButton: .button(variant: .primary, title: "텍스트", handler: {}),
+            rightContent: {
+                Text("히히")
+            }
+        )
+    }
+}

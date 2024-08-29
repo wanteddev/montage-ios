@@ -5,422 +5,25 @@
 //  Created by Euigyom Kim on 2023/04/11.
 //
 
-import UIKit
-
-extension Button {
-    /// 단일 아이콘을 배경 또는 외곽선으로 감싸는 버튼입니다.
-    /// [Figma](https://www.figma.com/design/7RHtWV3Pw6I98UEDjbx5V1/0-Component?node-id=14854-45453) 에서 모양을 미리 확인할 수 있습니다.
-    public class IconButton: UIView {
-        /// 버튼의 외관을 결정하는 열거형입니다.
-        public enum Variant {
-            /// 버튼 사이즈를 결정하는 열거형입니다.
-            public enum Size {
-                case normal
-                case small
-                case custom(size: Int)
-            }
-            
-            case normal(size: Int)
-            case background(size: Int, isAlternative: Bool = false)
-            case outlined(size: Size)
-            case solid(size: Size)
-            
-            /// normal(size: 24)의 기본 variant입니다.
-            public static let `default` = Self.normal(size: 24)
-        }
-        
-        /// 버튼의 외관입니다.
-        public var variant: Variant = .default {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 사용자와의 인터렉션 상태를 표현합니다.
-        public var state: Decorate.Interaction.State = .normal {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 버튼에 표시될 아이콘입니다.
-        public var icon: Icon {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 버튼의 활성화 여부입니다.
-        public var disable: Bool = false {
-            didSet {
-                updateViews()
-            }
-        }
-
-        /// 버튼 우측 상단의 푸시 뱃지 노출 여부입니다.
-        /// > normal variant에서만 사용 가능합니다.
-        public var showPushBadge: Bool = false {
-            didSet {
-                guard case .normal(_) = variant else { return }
-                updateViews()
-            }
-        }
-        
-        /// 커스텀 가능한 패딩 입니다.
-        /// > 설정 시 constraint가 업데이트 됩니다.
-        /// > outlined, soild variant에서만 사용 가능합니다.
-        public var padding: CGFloat = .zero {
-            didSet {
-                switch variant {
-                case .outlined, .solid:
-                    setupUpdateableConstraints()
-                    updateViews()
-                case .normal, .background:
-                    return
-                }
-            }
-        }
-        
-        /// 커스텀 가능한 아이콘 컬러 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var iconColorResolver: ColorResolvable? {
-            didSet {
-                updateColors()
-            }
-        }
-        
-        /// 커스텀 가능한 배경색 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
-        /// > outlined, soild variant에서만 사용 가능합니다.
-        public var backgroundColorResolver: ColorResolvable? {
-            didSet {
-                switch variant {
-                case .outlined, .solid:
-                    updateColors()
-                case .normal, .background:
-                    return
-                }
-            }
-        }
-        
-        /// 커스텀 가능한 테두리색 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
-        /// > outlined 에서만 사용 가능합니다.
-        public var borderColorResolver: ColorResolvable? {
-            didSet {
-                switch variant {
-                case .outlined:
-                    updateColors()
-                default:
-                    return
-                }
-            }
-        }
-        
-        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
-        public var handler: (() -> Void)?
-        
-        private lazy var iconView = UIImageView()
-        
-        private lazy var pushBadge = Badge.Push()
-        
-        private lazy var interaction = Decorate.Interaction()
-        
-        private var longPressRecognizer: UILongPressGestureRecognizer?
-        
-        private var sizeContraints: [NSLayoutConstraint] = []
-        
-        private var insetConstraints: [NSLayoutConstraint] = []
-        
-        private var pushBadgeConstraints: [NSLayoutConstraint] = []
-        
-        private var visualEffectView: UIVisualEffectView?
-        
-        /// IconButton 객체를 생성합니다.
-        public init(icon: Icon = .dot) {
-            self.icon = icon
-            
-            super.init(frame: .zero)
-            
-            setupViews()
-            bindEvent()
-        }
-        
-        public required init?(coder: NSCoder) {
-            self.icon = .dot
-            
-            super.init(coder: coder)
-            
-            setupViews()
-            bindEvent()
-        }
-        
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            
-            updateViews()
-        }
-        
-        public override func layoutSubviews() {
-            super.layoutSubviews()
-            
-            setupLayer()
-        }
-        
-        /// Element의 기본적인 사이즈를 정의합니다.
-        override public var intrinsicContentSize: CGSize {
-            size
-        }
-    }
-}
+import SwiftUI
 
 extension Button.IconButton {
-    private func setupViews() {
-        addSubview(iconView)
-        addSubview(pushBadge)
-        addSubview(interaction)
-        
-        setupInteraction()
-        setupUpdateableConstraints()
-        
-        updateViews()
-    }
-    
-    private func bindEvent() {
-        let longPressRecognizer = UILongPressGestureRecognizer()
-        longPressRecognizer.delegate = self
-        longPressRecognizer.minimumPressDuration = 0
-        longPressRecognizer.addTarget(self, action: #selector(longPressed))
-        addGestureRecognizer(longPressRecognizer)
-        self.longPressRecognizer = longPressRecognizer
-    }
-    
-    private func setupInteraction() {
-        interaction.variant = variant.interactionVariant
-        
-        setupInteractionContraints()
-    }
-    
-    private func setupUpdateableConstraints() {
-        setupIconViewSizeConstraints()
-        setupIconViewInsetConstraints()
-        setupPushBadgeConstraints()
-        updateConstraints()
-        setupLayer()
-    }
-    
-    private func setupInteractionContraints() {
-        interaction.translatesAutoresizingMaskIntoConstraints = false
-        
-        interaction.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        interaction.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        interaction.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        interaction.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-    }
-    
-    private func setupIconViewSizeConstraints() {
-        NSLayoutConstraint.deactivate(sizeContraints)
-        
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints = [
-            iconView.widthAnchor.constraint(equalToConstant: variant.iconSize.width),
-            iconView.heightAnchor.constraint(equalToConstant: variant.iconSize.height)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-        sizeContraints = constraints
-    }
-    
-    private func setupIconViewInsetConstraints() {
-        NSLayoutConstraint.deactivate(insetConstraints)
-        
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constant: CGFloat = {
-            switch variant {
-            case .normal, .background:
-                variant.inset
-            case .outlined, .solid:
-                if padding != .zero {
-                    padding
-                } else {
-                    variant.inset
-                }
-            }
-        }()
-        
-        let constraints = [
-            iconView.leftAnchor.constraint(equalTo: leftAnchor, constant: constant),
-            iconView.rightAnchor.constraint(equalTo: rightAnchor, constant: -constant),
-            iconView.topAnchor.constraint(equalTo: topAnchor, constant: constant),
-            iconView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -constant)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-        insetConstraints = constraints
-    }
-    
-    private func setupPushBadgeConstraints() {
-        NSLayoutConstraint.deactivate(pushBadgeConstraints)
-        
-        pushBadge.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints = [
-            pushBadge.topAnchor.constraint(equalTo: iconView.topAnchor, constant: -6),
-            pushBadge.trailingAnchor.constraint(equalTo: iconView.trailingAnchor, constant: 6)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-        pushBadgeConstraints = constraints
-    }
-    
-    private func setupLayer() {
-        layer.cornerRadius = frame.height / 2
-        layer.masksToBounds = true
-    }
-}
-
-extension Button.IconButton {
-    private func updateViews() {
-        isUserInteractionEnabled = false == disable
-        
-        updateBlur()
-        updateColors()
-        updateIconView()
-        updatePushBadgeView()
-        
-        setupIconViewSizeConstraints()
-        setupIconViewInsetConstraints()
-        setupPushBadgeConstraints()
-        updateConstraints()
-    }
-    
-    private func updateBlur() {
-        if case let .background(_, isAlternative) = variant, isAlternative == false, disable == false {
-            if visualEffectView == nil {
-                let blurEffect = UIBlurEffect(style: .systemMaterial)
-                let initializedVisualEffectView = UIVisualEffectView(effect: blurEffect)
-                initializedVisualEffectView.frame = .init(
-                    origin: .zero,
-                    size: size
-                )
-                visualEffectView = initializedVisualEffectView
-            }
-            guard let visualEffectView else { return }
-            addSubview(visualEffectView)
-            sendSubviewToBack(visualEffectView)
-        } else {
-            visualEffectView?.removeFromSuperview()
+    /// 버튼의 외관을 결정하는 열거형입니다.
+    public enum Variant {
+        /// 버튼 사이즈를 결정하는 열거형입니다.
+        public enum Size {
+            case normal
+            case small
+            case custom(size: Int)
         }
-    }
-    
-    private func updateColors() {
-        backgroundColor = {
-            if disable {
-                variant.inactiveBackgroundColor
-            } else {
-                switch variant {
-                case .normal, .background:
-                    variant.activeBackgroundColor
-                case .outlined, .solid:
-                    if let backgroundColorResolver {
-                        backgroundColorResolver.resolve(.current)
-                    } else {
-                        variant.activeBackgroundColor
-                    }
-                }
-            }
-        }()
-        layer.borderColor = {
-            if case .outlined(_) = variant, let borderColorResolver {
-                borderColorResolver.resolve(.current).cgColor
-            } else {
-                variant.borderColor.cgColor
-            }
-        }()
-        layer.borderWidth = variant.borderWidth
-        iconView.tintColor = {
-            if disable {
-                variant.inactiveColor
-            } else {
-                if let iconColorResolver {
-                    iconColorResolver.resolve(.current)
-                } else {
-                    variant.activeColor
-                }
-            }
-        }()
-        interaction.color = variant.interactionColor
-        interaction.variant = variant.interactionVariant
-    }
-    
-    private func updateIconView() {
-        iconView.image = .montage(icon)
-    }
-    
-    private func updatePushBadgeView() {
-        guard case .normal(_) = variant else { return }
-        pushBadge.isHidden = !showPushBadge
-    }
-}
-
-extension Button.IconButton {
-    private var size: CGSize {
-        switch variant {
-        case .normal, .background:
-            .init(
-                width: variant.iconSize.width + variant.inset * 2,
-                height: variant.iconSize.height + variant.inset * 2
-            )
-        case .outlined, .solid:
-            if padding != .zero {
-                .init(
-                    width: variant.iconSize.width + padding * 2,
-                    height: variant.iconSize.height + padding * 2
-                )
-            } else {
-                .init(
-                    width: variant.iconSize.width + variant.inset * 2,
-                    height: variant.iconSize.height + variant.inset * 2
-                )
-            }
-        }
-    }
-}
-
-extension Button.IconButton {
-    @objc private func longPressed() {
-        guard let recognizer = longPressRecognizer else { return }
         
-        switch recognizer.state {
-        case .began:
-            interaction.state = .pressed
-        case .changed:
-            // 스크롤 시 버튼이 눌리지 않도록 state를 normal로 변경
-            // 3D touch 모델은 스크롤 하지 않아도 changed가 실행되서 적용하지 않음
-            if traitCollection.forceTouchCapability != UIForceTouchCapability.available
-                && traitCollection.forceTouchCapability != UIForceTouchCapability.unavailable {
-                interaction.state = .normal
-            }
-        case .ended:
-            guard interaction.state == .pressed else { return }
-            if let view = recognizer.view, view.bounds.contains(recognizer.location(in: recognizer.view)) {
-                handler?()
-            }
-            interaction.state = .normal
-        default:
-            break
-        }
-    }
-}
-
-extension Button.IconButton: UIGestureRecognizerDelegate {
-    public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
-        true
+        case normal(size: Int)
+        case background(size: Int, isAlternative: Bool = false)
+        case outlined(size: Size)
+        case solid(size: Size)
+        
+        /// normal(size: 24)의 기본 variant입니다.
+        public static let `default` = Self.normal(size: 24)
     }
 }
 
@@ -501,6 +104,26 @@ extension Button.IconButton.Variant {
         }
     }
     
+    var backgroundOffset: CGFloat {
+        switch self {
+        case .normal: .zero
+        case .background(_, _): 6
+        case let .outlined(size), let .solid(size):
+            switch size {
+            case .normal: 10
+            case .small: 7
+            case .custom(_): 6
+            }
+        }
+    }
+    
+    var interactionOffset: CGFloat {
+        switch self {
+        case .normal: 8
+        case .background(_, _), .outlined(_), .solid(_): backgroundOffset
+        }
+    }
+    
     var iconSize: CGSize {
         switch self {
         case .normal(let size): .init(width: size, height: size)
@@ -516,16 +139,376 @@ extension Button.IconButton.Variant {
             }
         }
     }
-    
-    var inset: CGFloat {
-        switch self {
-        case .normal: 8.0
-        case .background: 6.0
-        case .outlined(let variant), .solid(let variant):
-            switch variant {
-            case .normal: 10.0
-            case .small: 7.0
-            case .custom: 6.0
+}
+
+extension Button {
+    public struct IconButton: View {
+        @State private var isPressed = false
+        
+        /// 버튼의 외관입니다.
+        private let variant: IconButton.Variant
+        
+        /// 버튼에 표시될 아이콘입니다.
+        private let icon: Icon
+
+        /// 버튼의 활성화 여부입니다.
+        private let disable: Bool
+        
+        /// 버튼 우측 상단의 푸시 뱃지 노출 여부입니다.
+        /// > normal variant에서만 사용 가능합니다.
+        private let showPushBadge: Bool
+        
+        /// 커스텀 가능한 패딩 입니다.
+        /// > 설정 시 constraint가 업데이트 됩니다.
+        /// > outlined, soild variant에서만 사용 가능합니다.
+        private let padding: CGFloat
+        
+        /// 커스텀 가능한 아이콘 컬러 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        private let iconColorResolver: ColorResolvable?
+        
+        /// 커스텀 가능한 배경색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        /// > outlined, soild variant에서만 사용 가능합니다.
+        private let backgroundColorResolver: ColorResolvable?
+        
+        /// 커스텀 가능한 테두리색 입니다.
+        /// montage의 모든 컬러를 사용할 수 있습니다.
+        /// > outlined 에서만 사용 가능합니다.
+        private let borderColorResolver: ColorResolvable?
+        
+        /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
+        private let handler: (() -> Void)?
+        
+        public init(
+            variant: IconButton.Variant = .default,
+            icon: Icon,
+            disable: Bool = false,
+            showPushBadge: Bool = false,
+            padding: CGFloat = .zero,
+            iconColorResolver: ColorResolvable? = nil,
+            backgroundColorResolver: ColorResolvable? = nil,
+            borderColorResolver: ColorResolvable? = nil,
+            handler: (() -> Void)? = nil
+        ) {
+            self.variant = variant
+            self.icon = icon
+            self.disable = disable
+            self.showPushBadge = {
+                guard case .normal(_) = variant else { return false }
+                return showPushBadge
+            }()
+            self.padding = {
+                switch variant {
+                case .normal, .background: .zero
+                case .outlined, .solid: padding
+                }
+            }()
+            self.iconColorResolver = iconColorResolver
+            self.backgroundColorResolver = {
+                switch variant {
+                case .normal, .background: nil
+                case .outlined, .solid: backgroundColorResolver
+                }
+            }()
+            self.borderColorResolver = {
+                guard case .outlined(_) = variant else { return nil }
+                return borderColorResolver
+            }()
+            self.handler = handler
+        }
+        
+        // MARK: Private Computed Property
+        
+        private var iconColor: SwiftUI.Color {
+            if disable {
+                return SwiftUI.Color(uiColor: variant.inactiveColor)
+            } else {
+                if let iconColorResolver {
+                    return SwiftUI.Color(uiColor: iconColorResolver.resolve(.current))
+                } else {
+                    return SwiftUI.Color(uiColor: variant.activeColor)
+                }
+            }
+        }
+        
+        private var strokeColor: SwiftUI.Color {
+            if case .outlined(_) = variant, let borderColorResolver {
+                return SwiftUI.Color(uiColor: borderColorResolver.resolve(.current))
+            } else {
+                return SwiftUI.Color(uiColor: variant.borderColor)
+            }
+        }
+        
+        private var backgroundColor: SwiftUI.Color {
+            if disable {
+                return SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
+            } else {
+                if let backgroundColorResolver {
+                    return SwiftUI.Color(uiColor: backgroundColorResolver.resolve(.current))
+                } else {
+                    return SwiftUI.Color(uiColor: variant.activeBackgroundColor)
+                }
+            }
+        }
+        
+        private var interactionOffset: CGFloat {
+            variant.interactionOffset + padding
+        }
+
+        public var body: some View {
+            SwiftUI.Button {} label: {
+                ZStack {
+                    Image.montage(icon)
+                        .resizable()
+                        .frame(
+                            width: variant.iconSize.width,
+                            height: variant.iconSize.height
+                        )
+                        .foregroundStyle(iconColor)
+                    if showPushBadge {
+                        Badge.PushBadgeController(variant: .dot)
+                            .fixedSize()
+                            .offset(
+                                x: Badge.Push.Variant.dot.dotOffset,
+                                y: -Badge.Push.Variant.dot.dotOffset
+                            )
+                    }
+                }
+            }
+            .overlay {
+                Decorate.InteractionController(
+                    state: isPressed ? .pressed : .normal,
+                    variant: variant.interactionVariant,
+                    color: variant.interactionColor
+                )
+                .clipShape(Circle())
+                .padding(.vertical, -interactionOffset)
+                .padding(.horizontal, -interactionOffset)
+            }
+            .padding(.all, variant.backgroundOffset + padding)
+            .background(
+                ZStack {
+                    Circle()
+                        .fill(backgroundColor)
+                    Circle()
+                        .stroke(strokeColor, lineWidth: variant.borderWidth)
+                }
+                    
+            )
+            .onLongPressGesture(
+                minimumDuration: 2.0,
+                perform: {
+                    isPressed = true
+                },
+                onPressingChanged: { state in
+                    isPressed = state
+                    if state == false {
+                        handler?()
+                    }
+                }
+            )
+            .frame(
+                width: variant.iconSize.width + variant.backgroundOffset + padding,
+                height: variant.iconSize.height + variant.backgroundOffset + padding
+            )
+            .allowsHitTesting(disable == false)
+        }
+    }
+}
+
+struct IconButtonController_Previews: PreviewProvider {
+    static var previews: some View {
+        IconButtonControllerPreview()
+            .padding()
+            .previewLayout(.sizeThatFits)
+    }
+}
+
+struct IconButtonControllerPreview: View {
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("variant").montage()
+            
+            HStack {
+                Button.IconButton(
+                    icon: .apps
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.IconButton(
+                    icon: .bookmark,
+                    showPushBadge: true
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+
+                Button.IconButton(
+                    variant: .background(size: 20),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .background(size: 20, isAlternative: true),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .normal),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .solid(size: .normal),
+                    icon: .apps
+                )
+                .fixedSize()
+            }
+            
+            Text("size").montage()
+            
+            HStack {
+                Button.IconButton(
+                    variant: .normal(size: 28),
+                    icon: .apps
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .background(size: 36),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .normal),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .small),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .custom(size: 12)),
+                    icon: .apps
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .solid(size: .custom(size: 12)),
+                    icon: .apps
+                )
+                .fixedSize()
+            }
+            
+            
+            Text("disable").montage()
+            
+            HStack {
+                Button.IconButton(
+                    variant: .normal(size: 28),
+                    icon: .apps,
+                    disable: true
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .background(size: 36),
+                    icon: .apps,
+                    disable: true
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .custom(size: 12)),
+                    icon: .apps,
+                    disable: true
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .solid(size: .custom(size: 12)),
+                    icon: .apps,
+                    disable: true
+                )
+                .fixedSize()
+            }
+            
+            Text("custom").montage()
+            
+            HStack {
+                Button.IconButton(
+                    variant: .background(size: 10, isAlternative: false),
+                    icon: .chat,
+                    iconColorResolver: Color.Global.globalBlue50
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    icon: .apps,
+                    iconColorResolver: Color.Alias.accentLightBlue
+                ) {
+                    debugPrint(">>> hello world!")
+                }
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .background(size: 20),
+                    icon: .apps,
+                    iconColorResolver: Color.Alias.accentPink
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .normal),
+                    icon: .apps,
+                    iconColorResolver: Color.Alias.accentRedOrange
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .normal),
+                    icon: .apps,
+                    padding: 3
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .outlined(size: .normal),
+                    icon: .apps,
+                    padding: 3,
+                    borderColorResolver: Color.Alias.primaryHeavy
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .solid(size: .small),
+                    icon: .apps,
+                    iconColorResolver: Color.Alias.accentRedOrange,
+                    backgroundColorResolver: Color.Alias.accentLime
+                )
+                .fixedSize()
+                
+                Button.IconButton(
+                    variant: .solid(size: .small),
+                    icon: .apps,
+                    backgroundColorResolver: Color.Alias.accentLime
+                )
+                .fixedSize()
             }
         }
     }

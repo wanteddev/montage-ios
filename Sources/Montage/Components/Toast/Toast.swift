@@ -58,7 +58,7 @@ public struct Toast: View {
                 HStack(alignment: .center, spacing: 8) {
                     Icon(variant)
                     Text(message)
-                        .montage(variant: .body2, weight: .bold, color: .staticWhite)
+                        .montage(variant: .body2, weight: .bold, alias: .staticWhite)
                         .paragraph(variant: .body2)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
