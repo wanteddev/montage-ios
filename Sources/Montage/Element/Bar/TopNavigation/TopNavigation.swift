@@ -14,14 +14,14 @@ extension Bar {
         
         private let variant: Variant
         private let title: String
-        private let scrollOffset: CGPoint
+        private let scrollOffset: CGFloat
         private let left: Resource.Left?
         private let backgroundColorResolvable: ColorResolvable?
         private let actions: [Resource.Action]
         
         // MARK: - Computed properties
         
-        private var scrolled: Bool { scrollOffset.y < .zero }
+        private var scrolled: Bool { scrollOffset < .zero }
         private var isFloatingVariant: Bool {
             switch variant {
             case .floating: return true
@@ -31,7 +31,7 @@ extension Bar {
         }
         
         private var needMaterial: Bool {
-            scrolled && isFloatingVariant == false && (scrollOffset.y / -33) > 1
+            scrolled && isFloatingVariant == false && (scrollOffset / -33) > 1
         }
         
         private var backgroundColor: SwiftUI.Color {
@@ -43,7 +43,7 @@ extension Bar {
         }
         
         private var backgroundOpacity: CGFloat {
-            let ratio = (scrollOffset.y / -32)
+            let ratio = (scrollOffset / -32)
             return ratio > 1 ? 1 : ratio
         }
         
@@ -61,7 +61,7 @@ extension Bar {
         public init(
             variant: Variant = .normal,
             title: String = "",
-            scrollOffset: CGPoint = .zero,
+            scrollOffset: CGFloat = .zero,
             left: Resource.Left? = nil,
             backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action] = []
@@ -494,21 +494,34 @@ extension Bar {
 }
 
 extension Bar.TopNavigation {
+    /// TopNavigation의 외관을 결정하는 열거형입니다.
     public enum Variant: Equatable {
         case normal
         case extended
         case floating(alternative: Bool = false)
     }
     
+    /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
     public enum Resource {
+        /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
         public enum Left {
             case back(action: (()-> Void))
             case icon(Icon, action: (()-> Void))
             case text(String, action: (()-> Void))
         }
-
+        
+        
+        
+        /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
         public enum Action: Hashable {
+            /// icon 형태의 Action입니다.
+            /// - Parameters:
+            ///  - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
+            ///  - action: icon 클릭시 동작할 action입니다.
             case icon(Icon, showPushBadge: Bool = false, action: (()-> Void))
+            /// text 형태의 Action입니다.
+            /// - Parameters:
+            ///  - action: text 클릭시 동작할 action입니다.
             case text(String, action: (()-> Void))
             
             public func hash(into hasher: inout Hasher) {
@@ -555,17 +568,21 @@ extension Bar.TopNavigation.Variant {
 
 extension Bar.TopNavigation {
     public struct TopNavigationModifier: ViewModifier {
-        @State private var scrollOffset: CGPoint = .zero
+        @State private var scrollOffset: CGFloat = .zero
+        @State private var containerSize: CGSize = .zero
+        @State private var innerContentSize: CGSize = .zero
         @State private var navigationHeight: CGFloat = .zero
         @State private var bottomActionHeight: CGFloat = .zero
+
         private let variant: Variant
         private let title: String
         private let showIndicator: Bool
         private let left: Resource.Left?
         private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
-        private let model: ActionArea.Bottom.Model<AnyView>?
+        private let model: ActionArea.Bottom.Model?
         
+        /// TopNavigation의 사이즈를 측정하는 View입니다.
         private var navigationSizeMeasurer: some View {
             GeometryReader { proxy in
                 SwiftUI.Color.clear
@@ -577,6 +594,7 @@ extension Bar.TopNavigation {
                     }
             }
         }
+        /// ActionArea/Bottom의 사이즈를 측정하는 View입니다.
         private var bottomActionSizeMeasurer: some View {
             GeometryReader { proxy in
                 SwiftUI.Color.clear
@@ -588,18 +606,38 @@ extension Bar.TopNavigation {
                     }
             }
         }
+        /// 무시할 SafeAreaEdge입니다.
+        /// > ActionArea/Bottom이 존재하는 경우에 bottom SafeArea를 무시합니다.
         private var ignoreSafeAreaEdge: Edge.Set {
-            if model != nil {
-                .bottom
-            } else {
-                []
-            }
+            model != nil ? .bottom : []
         }
+        /// Scroll 영역 전체에 삽입될 background 입니다.
+        /// > backgroundColorResolvable을 전달한 경우에 해당 컬러가 background에 적용되며,
+        /// > backgroundColorResolvable가 없는 경우 .clear 컬러가 적용됩니다.
         private var backgroundColor: SwiftUI.Color {
             if let backgroundColorResolvable {
-                return .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
+                return .init(uiColor: backgroundColorResolvable.resolve(.current))
             } else {
-                return SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
+                return .clear
+            }
+        }
+        /// ActionArea/Bottom의 sticky 속성을 결정하는 Property입니다.
+        /// > 기본적으로 스크롤이 컨텐츠의 끝(전체 컨텐츠 크기 - offset)에 도달했을 때 sticky를 사용하지 않습니다.
+        private var bottomActionSticky: Bool {
+            let contentHeightOffset: CGFloat = (model?.variant == .extra) ? 70 : 20
+            let totalContentHeight = innerContentSize.height + bottomActionHeight
+            let currentScrollOffset = containerSize.height + abs(scrollOffset)
+            return totalContentHeight - contentHeightOffset >= currentScrollOffset
+        }
+        /// Scroll 영역이 가지는 bottom padding입니다.
+        ///
+        /// Scroll 영역이 ActionArea/Bottom에 가려지는것을 방지하기 위해 사용합니다.
+        /// > ActionArea/Bottom과 함께 사용하는 경우에 ActionArea/Bottom의 variant에 의해 결정됩니다.
+        private var scrolLViewBottomPadding: CGFloat {
+            if model != nil {
+                return bottomActionHeight + (model?.variant == .extra ? +10 : .zero)
+            } else {
+                return .zero
             }
         }
         
@@ -610,7 +648,7 @@ extension Bar.TopNavigation {
             left: Resource.Left?,
             backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action],
-            model: ActionArea.Bottom.Model<AnyView>? = nil
+            model: ActionArea.Bottom.Model? = nil
         ) {
             self.variant = variant
             self.title = title
@@ -633,22 +671,23 @@ extension Bar.TopNavigation {
                         )
                     }
                     .frame(width: 0, height: 0)
-                    VStack(alignment: .leading, spacing: .zero) {
+                    VStack(
+                        alignment: .leading,
+                        spacing: .zero
+                    ) {
                         content
-                        if model != nil {
-                            Spacer()
-                                .frame(height: bottomActionHeight)
-                        }
                     }
+                    .readSize { innerContentSize = $0 }
                 }
                 .padding(.top, navigationHeight)
+                .padding(.bottom, scrolLViewBottomPadding)
                 .background(
                     backgroundColor
                 )
                 .coordinateSpace(name: "ScrollViewOrigin")
                 .onPreferenceChange(
                     OffsetPreferenceKey.self,
-                    perform: { scrollOffset = $0 }
+                    perform: { scrollOffset = $0.y - navigationHeight }
                 )
                 VStack(alignment: .leading, spacing: .zero) {
                     Bar.TopNavigation(
@@ -667,9 +706,16 @@ extension Bar.TopNavigation {
                 if let model {
                     VStack(alignment: .leading, spacing: .zero) {
                         Spacer()
-                        ActionArea.Bottom.Component<AnyView>(
-                            model: model
+                        ActionArea.Bottom.Component(
+                            model: .init(
+                                variant: model.variant,
+                                priority: model.priority,
+                                sticky: bottomActionSticky,
+                                caption: model.caption,
+                                extraContents: model.extraContents
+                            )
                         )
+                        .animation(.easeInOut, value: bottomActionSticky)
                         .background(
                             bottomActionSizeMeasurer
                         )
@@ -677,14 +723,8 @@ extension Bar.TopNavigation {
                 }
             }
             .ignoresSafeArea(.container, edges: ignoreSafeAreaEdge)
+            .readSize { containerSize = $0 }
         }
-    }
-    
-    // MARK: - OffsetPreferenceKey
-
-    private struct OffsetPreferenceKey: PreferenceKey {
-        static var defaultValue: CGPoint = .zero
-        static func reduce(value _: inout CGPoint, nextValue _: () -> CGPoint) {}
     }
 }
 

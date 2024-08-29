@@ -66,21 +66,19 @@ extension View {
     }
     
     public func tooltip(
-        variant: Tooltip.Variant = .extended,
+        variant: Tooltip.Variant = .extended(),
         position: Tooltip.Position,
         show: Binding<Bool>,
         inverse: Bool = false,
         showCloseButton: Bool = false,
-        content: String,
-        action: (() -> Void)? = nil
+        content: String
     ) -> some View {
         tooltip(
             config: Tooltip.DefaultTooltipConfig(
                 variant: variant,
                 position: position,
                 inverse: inverse,
-                showCloseButton: showCloseButton,
-                action: action
+                showCloseButton: showCloseButton
             ),
             show: show,
             content: content
@@ -136,7 +134,7 @@ extension View {
         left: Bar.TopNavigation.Resource.Left? = nil,
         backgroundColorResolvable: ColorResolvable? = nil,
         actions: [Bar.TopNavigation.Resource.Action] = [],
-        withBottom model: ActionArea.Bottom.Model<AnyView>
+        withBottom model: ActionArea.Bottom.Model
     ) -> some View {
         modifier(
             Bar.TopNavigation.TopNavigationModifier(

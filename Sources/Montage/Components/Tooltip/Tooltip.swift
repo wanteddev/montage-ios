@@ -8,9 +8,21 @@
 import SwiftUI
 
 public enum Tooltip {
-    public enum Variant {
-        case extended
+    public enum Variant: Equatable {
+        case extended(title: String? = nil, action: (() -> Void)? = nil)
         case compact
+        
+        public static func == (lhs: Tooltip.Variant, rhs: Tooltip.Variant) -> Bool {
+            switch (lhs, rhs) {
+            case let (.extended(t1, _), .extended(t2, _)): t1 == t2
+            case (.compact, .compact): true
+            default: false
+            }
+        }
+        
+        public var isExtended: Bool {
+            self != .compact
+        }
     }
     
     public enum Position {
@@ -74,22 +86,19 @@ public enum Tooltip {
         public var arrowHeight: CGFloat = Tooltip.Size.Arrow.height
         
         public var showCloseButton: Bool = false
-        public var action: (() -> Void)? = nil
-        
+
         public init(
-            variant: Tooltip.Variant = .extended,
+            variant: Tooltip.Variant = .extended(),
             position: Tooltip.Position = .top,
             inverse: Bool = false,
             showArrow: Bool = true,
-            showCloseButton: Bool = false,
-            action: (() -> Void)? = nil
+            showCloseButton: Bool = false
         ) {
             self.variant = variant
             self.position = position
             self.inverse = inverse
             self.showArrow = showArrow
             self.showCloseButton = showCloseButton
-            self.action = action
         }
     }
 }
@@ -127,8 +136,8 @@ extension Tooltip {
 
         // MARK: - Computed properties
 
-        private var showArrow: Bool { config.variant == .extended && config.showArrow }
-        private var showCloseButton: Bool { config.variant == .extended && config.showCloseButton }
+        private var showArrow: Bool { config.variant.isExtended && config.showArrow }
+        private var showCloseButton: Bool { config.variant.isExtended && config.showCloseButton }
 
         private var actualArrowHeight: CGFloat { self.showArrow ? config.arrowHeight : 0 }
         private let arrowVerticalPadding: CGFloat = 1
@@ -265,12 +274,14 @@ extension Tooltip {
             case .topLeft, .bottomLeft:
                 (
                     contentWidth / 2
-                    - originSize.width / 2
+                    - config.arrowWidth
+                    - arrowHorizontalPadding
                 )
             case .topRight, .bottomRight:
                 -(
                     contentWidth / 2
-                    - originSize.width / 2
+                    - config.arrowWidth
+                    - arrowHorizontalPadding
                 )
             }
         }
@@ -281,12 +292,16 @@ extension Tooltip {
                     .zero
             case .leftTop, .rightTop:
                 (
-                    contentHeight - originSize.height
-                ) / 2
+                    contentHeight / 2
+                    - config.arrowWidth / 2
+                    - arrowHorizontalPadding
+                )
             case .leftBottom, .rightBottom:
                 -(
-                    contentHeight - originSize.height
-                ) / 2
+                    contentHeight / 2
+                    - config.arrowWidth / 2
+                    - arrowHorizontalPadding
+                )
             case .top, .topLeft, .topRight:
                 -(
                     contentHeight / 2
@@ -348,10 +363,10 @@ extension Tooltip {
 
         private func arrowShape(degree: Double) -> some View {
             ZStack {
-                Arrow()
+                Tooltip.Arrow()
                     .rotation(Angle(degrees: degree))
                     .foregroundStyle(underLayerColor)
-                Arrow()
+                Tooltip.Arrow()
                     .rotation(Angle(degrees: degree))
                     .foregroundStyle(upperLayerColor)
             }
@@ -418,11 +433,13 @@ extension Tooltip {
                                 .opacity(0.61)
                             }
                         }
-                        if config.variant == .extended, let action = config.action {
+                        if case let .extended(title, action) = config.variant,
+                           let title = title, let action = action
+                        {
                             SwiftUI.Button(action: {
                                 action()
                             }){
-                                Text("더 알아보기")
+                                Text(title)
                                     .montage(
                                         variant: .label1,
                                         weight: .bold,
