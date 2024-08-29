@@ -12,12 +12,7 @@ extension Bar {
         // MARK: - Uninitialised properties
         
         /// TopNavigation이 노출될 screenWidth입니다.
-        @State private var screenWidth: CGFloat = {
-            let scenes = UIApplication.shared.connectedScenes
-            let windowScene = scenes.first as? UIWindowScene
-            let window = windowScene?.windows.first
-            return window?.screen.bounds.width ?? .zero
-        }()
+        @State private var screenWidth: CGFloat = .zero
         
         private let variant: Variant
         private let title: String
@@ -28,6 +23,15 @@ extension Bar {
         
         // MARK: - Computed properties
         
+        private var screenWidthMeasurer: some View {
+            GeometryReader { proxy in
+                SwiftUI.Color.clear
+                    .onAppear {
+                        screenWidth = proxy.size.width
+                    }
+            }
+        }
+
         private var scrolled: Bool { scrollOffset < .zero }
         private var isFloatingVariant: Bool {
             switch variant {
@@ -89,7 +93,9 @@ extension Bar {
                 .background(
                     .ultraThinMaterial.opacity(backgroundOpacity)
                 )
-                .readSize(onChange: { screenWidth = $0.width })
+                .background(
+                    screenWidthMeasurer
+                )
                 if scrolled && isFloatingVariant == false {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
@@ -544,6 +550,8 @@ extension Bar.TopNavigation.Variant {
 
 extension Bar.TopNavigation {
     public struct TopNavigationModifier: ViewModifier {
+        @Environment(\.safeAreaInsets) private var safeAreaInsets
+
         @State private var scrollOffset: CGFloat = .zero
         @State private var containerSize: CGSize = .zero
         @State private var innerContentSize: CGSize = .zero
@@ -609,7 +617,7 @@ extension Bar.TopNavigation {
         ///
         /// Scroll 영역이 ActionArea/Bottom에 가려지는것을 방지하기 위해 사용합니다.
         /// > ActionArea/Bottom과 함께 사용하는 경우에 ActionArea/Bottom의 variant에 의해 결정됩니다.
-        private var scrolLViewBottomPadding: CGFloat {
+        private var scrollViewBottomPadding: CGFloat {
             if model != nil {
                 return bottomActionHeight + (model?.variant == .extra ? +10 : .zero)
             } else {
@@ -647,23 +655,20 @@ extension Bar.TopNavigation {
                         )
                     }
                     .frame(width: 0, height: 0)
-                    VStack(
-                        alignment: .leading,
-                        spacing: .zero
-                    ) {
-                        content
-                    }
-                    .readSize { innerContentSize = $0 }
+                    content
+                        .readSize { innerContentSize = $0 }
+                        .padding(.top, navigationHeight)
                 }
-                .padding(.top, navigationHeight)
-                .padding(.bottom, scrolLViewBottomPadding)
+                .padding(.bottom, scrollViewBottomPadding)
                 .background(
                     backgroundColor
                 )
                 .coordinateSpace(name: "ScrollViewOrigin")
                 .onPreferenceChange(
                     OffsetPreferenceKey.self,
-                    perform: { scrollOffset = $0.y - navigationHeight }
+                    perform: {
+                        scrollOffset = $0.y + (safeAreaInsets.top - navigationHeight)
+                    }
                 )
                 VStack(alignment: .leading, spacing: .zero) {
                     Bar.TopNavigation(

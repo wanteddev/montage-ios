@@ -10,8 +10,6 @@ import SwiftUI
 extension Modal {
     /// Modal/Popup Component입니다.
     ///
-    ///
-    ///
     /// .fullScreenCover(isPresented:content:)와 함께 사용하며 content안쪽에 Component를 위치시킵니다.
     /// ```
     /// .fullScreenCover(

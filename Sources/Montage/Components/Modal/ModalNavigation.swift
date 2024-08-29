@@ -17,12 +17,7 @@ extension Modal {
         }
 
         /// ModalNavigation이 노출될 screenWidth입니다.
-        @State private var screenWidth: CGFloat = {
-            let scenes = UIApplication.shared.connectedScenes
-            let windowScene = scenes.first as? UIWindowScene
-            let window = windowScene?.windows.first
-            return window?.screen.bounds.width ?? .zero
-        }()
+        @State private var screenWidth: CGFloat = .zero
         
         private let variant: Variant
         private let title: String
@@ -33,6 +28,15 @@ extension Modal {
         
         // MARK: - Computed properties
         
+        private var screenWidthMeasurer: some View {
+            GeometryReader { proxy in
+                SwiftUI.Color.clear
+                    .onAppear {
+                        screenWidth = proxy.size.width
+                    }
+            }
+        }
+
         private var scrolled: Bool { scrollOffset < .zero }
         private var isFloatingVariant: Bool {
             switch variant {
@@ -95,13 +99,15 @@ extension Modal {
                 .background(
                     .ultraThinMaterial.opacity(backgroundOpacity)
                 )
-                .readSize(onChange: { screenWidth = $0.width })
                 if scrolled && isFloatingVariant == false {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
                         .frame(width: screenWidth, height: 0.5)
                 }
             }
+            .background(
+                screenWidthMeasurer
+            )
         }
         
         private struct Contents: View {
