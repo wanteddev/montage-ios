@@ -285,6 +285,7 @@ extension Chip.Action {
         leftIconView.tintColor = resolveCurrentIconColor()
         rightIconView.tintColor = resolveCurrentIconColor()
         interaction.color = resolveInteractionColor()
+        updateTextLabel()
     }
     
     private func updateIconView() {

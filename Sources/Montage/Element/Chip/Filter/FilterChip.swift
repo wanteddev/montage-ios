@@ -257,6 +257,7 @@ extension Chip.Filter {
         layer.borderWidth = variant.borderWidth
         arrowIconView.tintColor = resolveArrowIconTintColor()
         interaction.color = resolveInteractionColor()
+        updateTextLabel()
     }
     
     private func updateIconView() {

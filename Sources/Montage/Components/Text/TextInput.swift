@@ -210,6 +210,7 @@ public struct TextInput: View {
                     
                     if rightButton == nil {
                         RoundedRectangle(cornerRadius: 12)
+                            .inset(by: 0.5)
                             .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                             .padding(.all, textFieldFocusState ? 2 : 1)
                     } else {

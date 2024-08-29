@@ -274,7 +274,6 @@ public struct TextArea: View {
             .padding(.all, 12)
             .overlay {
                 RoundedRectangle(cornerRadius: 12)
-                    .inset(by: textEditorFocusState ? 2 : 1)
                     .stroke(editorStrokeColor, lineWidth: textEditorFocusState ? 2 : 1)
             }
             .background(
