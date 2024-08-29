@@ -408,7 +408,7 @@ extension Tooltip {
                                 Button.IconButton(
                                     variant: .normal(size: 16),
                                     icon: .close,
-                                    iconColorResolver: Color.Alias.inverseLabel
+                                    iconColor: .alias(.inverseLabel)
                                 ) {
                                     show = false
                                 }

@@ -104,7 +104,7 @@ extension Button {
         
         /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var contentColorResolver: ColorResolvable? {
+        public var contentUIColor: UIColor? {
             didSet {
                 updateViews()
             }
@@ -112,7 +112,7 @@ extension Button {
         
         /// 커스텀 가능한 배경색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var backgroundColorResolver: ColorResolvable? {
+        public var backgroundUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -120,7 +120,7 @@ extension Button {
         
         /// 커스텀 가능한 테두리색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var borderColorResolver: ColorResolvable? {
+        public var borderUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -310,8 +310,8 @@ extension Button.OutlinedButton {
     
     private func updateColors() {
         backgroundColor = {
-            if let backgroundColorResolver {
-                backgroundColorResolver.resolve(.current)
+            if let backgroundUIColor {
+                backgroundUIColor
             } else {
                 .clear
             }
@@ -320,8 +320,8 @@ extension Button.OutlinedButton {
             if disable {
                 UIColor.alias(.lineNormal).cgColor
             } else {
-                if let borderColorResolver {
-                    borderColorResolver.resolve(.current).cgColor
+                if let borderUIColor {
+                    borderUIColor.cgColor
                 } else {
                     variant.borderColor.cgColor
                 }
@@ -332,8 +332,8 @@ extension Button.OutlinedButton {
             if disable {
                 .alias(.labelDisable)
             } else {
-                if let contentColorResolver {
-                    contentColorResolver.resolve(.current)
+                if let contentUIColor {
+                    contentUIColor
                 } else {
                     .alias(variant.textColor)
                 }
@@ -390,10 +390,10 @@ extension Button.OutlinedButton {
             weight: variant.typoWeight,
             color: {
                 if disable {
-                    Color.Alias.labelDisable.resolve(.current)
+                    .alias(.labelDisable)
                 } else {
-                    if let contentColorResolver {
-                        contentColorResolver.resolve(.current)
+                    if let contentUIColor {
+                        contentUIColor
                     } else {
                         variant.textColor.resolve(.current)
                     }

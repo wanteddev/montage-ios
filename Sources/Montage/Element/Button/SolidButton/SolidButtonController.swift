@@ -19,8 +19,8 @@ extension Button {
         public var iconOnly: Bool = false
         public var state: Decorate.Interaction.State = .normal
         public var disable: Bool = false
-        public var contentColorResolver: ColorResolvable? = nil
-        public var backgroundColorResolver: ColorResolvable? = nil
+        public var contentColor: SwiftUI.Color? = nil
+        public var backgroundColor: SwiftUI.Color? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = SolidButton
@@ -35,8 +35,8 @@ extension Button {
             iconOnly: Bool = false,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
-            contentColorResolver: ColorResolvable? = nil,
-            backgroundColorResolver: ColorResolvable? = nil,
+            contentColor: SwiftUI.Color? = nil,
+            backgroundColor: SwiftUI.Color? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.variant = variant
@@ -48,8 +48,8 @@ extension Button {
             self.iconOnly = iconOnly
             self.state = state
             self.disable = disable
-            self.contentColorResolver = contentColorResolver
-            self.backgroundColorResolver = backgroundColorResolver
+            self.contentColor = contentColor
+            self.backgroundColor = backgroundColor
             self.handler = handler
         }
         
@@ -67,8 +67,16 @@ extension Button {
             uiView.iconOnly = iconOnly
             uiView.state = state
             uiView.disable = disable
-            uiView.contentColorResolver = contentColorResolver
-            uiView.backgroundColorResolver = backgroundColorResolver
+            if let contentColor {
+                uiView.contentUIColor = contentColor.uiColor
+            } else {
+                uiView.contentUIColor = nil
+            }
+            if let backgroundColor {
+                uiView.backgroundUIColor = backgroundColor.uiColor
+            } else {
+                uiView.backgroundUIColor = nil
+            }
             uiView.handler = handler
         }
     }
@@ -217,13 +225,13 @@ struct SolidButtonControllerPreview: View {
                 Button.SolidButtonController(
                     size: .small,
                     text: "content",
-                    contentColorResolver: Color.Alias.accentRedOrange
+                    contentColor: .alias(.accentRedOrange)
                 ).fixedSize()
                 
                 Button.SolidButtonController(
                     size: .small,
                     text: "background",
-                    backgroundColorResolver: Color.Alias.accentPurple
+                    backgroundColor: .alias(.accentPurple)
                 ).fixedSize()
             }
         }

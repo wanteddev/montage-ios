@@ -17,8 +17,8 @@ extension Chip {
         public var interactionState: Decorate.Interaction.State = .normal
         public var active: Bool = false
         public var disable: Bool = false
-        public var iconColorResolver: ColorResolvable? = nil
-        public var fontColorResolver: ColorResolvable? = nil
+        public var iconColor: SwiftUI.Color? = nil
+        public var fontColor: SwiftUI.Color? = nil
         public var handler: (() -> Void)?
         
         public typealias UIViewType = Filter
@@ -31,8 +31,8 @@ extension Chip {
             interactionState: Decorate.Interaction.State = .normal,
             active: Bool = false,
             disable: Bool = false,
-            iconColorResolver: ColorResolvable? = nil,
-            fontColorResolver: ColorResolvable? = nil,
+            iconColor: SwiftUI.Color? = nil,
+            fontColor: SwiftUI.Color? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.variant = variant
@@ -42,8 +42,8 @@ extension Chip {
             self.interactionState = interactionState
             self.active = active
             self.disable = disable
-            self.iconColorResolver = iconColorResolver
-            self.fontColorResolver = fontColorResolver
+            self.iconColor = iconColor
+            self.fontColor = fontColor
             self.handler = handler
         }
         
@@ -59,8 +59,16 @@ extension Chip {
             uiView.interactionState = interactionState
             uiView.active = active
             uiView.disable = disable
-            uiView.iconColorResolver = iconColorResolver
-            uiView.fontColorResolver = fontColorResolver
+            if let iconColor {
+                uiView.iconUIColor = iconColor.uiColor
+            } else {
+                uiView.iconUIColor = nil
+            }
+            if let fontColor {
+                uiView.fontUIColor = fontColor.uiColor
+            } else {
+                uiView.fontUIColor = nil
+            }
             uiView.handler = handler
         }
     }
@@ -225,20 +233,20 @@ var filterChipControllerPreview: some View {
                 Chip.FilterChipController(
                     variant: .filled,
                     text: "안녕하세요",
-                    iconColorResolver: Color.Alias.accentLime
+                    iconColor: .alias(.accentLime)
                 ).fixedSize()
                 Chip.FilterChipController(
                     variant: .filled,
                     text: "안녕하세요",
-                    fontColorResolver: Color.Alias.accentPink
+                    fontColor: .alias(.accentPink)
                 ).fixedSize()
             }
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요",
-                    iconColorResolver: Color.Alias.accentViolet,
-                    fontColorResolver: Color.Alias.accentRedOrange
+                    iconColor: .alias(.accentViolet),
+                    fontColor: .alias(.accentRedOrange)
                 ).fixedSize()
             }
         }

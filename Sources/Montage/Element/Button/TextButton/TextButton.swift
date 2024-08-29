@@ -112,7 +112,7 @@ extension Button {
         
         /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        private let contentColorResolver: ColorResolvable?
+        private let contentColor: SwiftUI.Color?
         
         /// 커스텀 가능한 텍스트 사이즈입니다.
         /// montage의 모든 Typography.Variant를 사용할 수 있습니다.
@@ -128,7 +128,7 @@ extension Button {
             rightIcon: Icon? = nil,
             text: String,
             disable: Bool = false,
-            contentColorResolver: ColorResolvable? = nil,
+            contentColor: SwiftUI.Color? = nil,
             fontSize: Typography.Variant? = nil,
             handler: (() -> Void)? = nil
         ) {
@@ -138,7 +138,7 @@ extension Button {
             self.rightIcon = rightIcon
             self.text = text
             self.disable = disable
-            self.contentColorResolver = contentColorResolver
+            self.contentColor = contentColor
             self.fontSize = fontSize
             self.handler = handler
         }
@@ -149,8 +149,8 @@ extension Button {
             if disable {
                 variant.inactiveColor
             } else {
-                if let contentColorResolver {
-                    .init(uiColor: contentColorResolver.resolve(.current))
+                if let contentColor {
+                    contentColor
                 } else {
                     variant.activeColor
                 }
@@ -161,8 +161,8 @@ extension Button {
             if disable {
                 variant.inactiveColor
             } else {
-                if let contentColorResolver {
-                    SwiftUI.Color(uiColor: contentColorResolver.resolve(.current))
+                if let contentColor {
+                    contentColor
                 } else {
                     variant.activeColor
                 }
@@ -332,13 +332,13 @@ struct TextButtonPreview: View {
                     Button.TextButton(
                         text: "accentCyan",
                         disable: false,
-                        contentColorResolver: Color.Alias.accentCyan
+                        contentColor: .alias(.accentCyan)
                     ).fixedSize()
                     
                     Button.TextButton(
                         text: "globalBlue40",
                         disable: false,
-                        contentColorResolver: Color.Global.globalBlue40
+                        contentColor: .atomic(.globalBlue40)
                     ).fixedSize()
                 }
                 
@@ -346,14 +346,14 @@ struct TextButtonPreview: View {
                     Button.TextButton(
                         text: "body1",
                         disable: false,
-                        contentColorResolver: Color.Alias.accentCyan,
+                        contentColor: .alias(.accentCyan),
                         fontSize: .body1
                     ).fixedSize()
                     
                     Button.TextButton(
                         text: "heading1",
                         disable: false,
-                        contentColorResolver: Color.Global.globalBlue40,
+                        contentColor: .atomic(.globalBlue40),
                         fontSize: .heading1
                     ).fixedSize()
                 }

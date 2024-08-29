@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 extension SwiftUI.Color {
     private static func load(name: String) -> SwiftUI.Color {
@@ -27,5 +26,11 @@ extension SwiftUI.Color {
     
     public static func montage(_ type: ColorResolvable) -> SwiftUI.Color {
         SwiftUI.Color(UIColor.montage(type))
+    }
+}
+
+extension SwiftUI.Color {
+    public var uiColor: UIColor {
+        UIColor(self)
     }
 }
