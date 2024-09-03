@@ -236,7 +236,7 @@ extension ActionArea {
                                     .fixedSize()
                             } else {
                                 Button.OutlinedButtonController(
-                                    variant: .secondary,
+                                    variant: .assistive,
                                     size: .large,
                                     text: sub.text,
                                     handler: sub.action
