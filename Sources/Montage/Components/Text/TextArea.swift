@@ -187,7 +187,7 @@ public struct TextArea: View {
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
-                                .frame(minHeight: 36, maxHeight: 250)
+                                .frame(minHeight: 36, maxHeight: 320)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .onChange(of: text) { result in
                                     typedCharacters = text.count
@@ -202,7 +202,7 @@ public struct TextArea: View {
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
-                                .frame(minHeight: 36, maxHeight: 250)
+                                .frame(minHeight: 36, maxHeight: 320)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .onChange(of: text) { result in
                                     typedCharacters = text.count
