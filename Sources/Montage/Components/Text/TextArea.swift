@@ -199,6 +199,13 @@ public struct TextArea: View {
                 return textEditorFocusState ? SwiftUI.Color.alias(.primaryNormal).opacity(0.43) : SwiftUI.Color.alias(.lineNormal)
             }
         }
+        private var editorTextColor: SwiftUI.Color {
+            if disable {
+                text.isEmpty ? .alias(.labelDisable) : .alias(.labelAlternative)
+            } else {
+                .alias(.labelNormal)
+            }
+        }
         
         var body: some View {
             VStack(spacing: 12) {
@@ -207,6 +214,7 @@ public struct TextArea: View {
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
                                 .font(.montage(variant: .body1Reading))
+                                .foregroundStyle(editorTextColor)
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: 36, maxHeight: 320)
@@ -221,6 +229,7 @@ public struct TextArea: View {
                                 .padding(.bottom, -6)
                         } else {
                             TextEditor(text: $text)
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -240,7 +249,7 @@ public struct TextArea: View {
                     } else {
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -256,7 +265,7 @@ public struct TextArea: View {
                                 .padding(.bottom, -6)
                         } else {
                             TextEditor(text: $text)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -276,7 +285,7 @@ public struct TextArea: View {
                     }
                     if $text.wrappedValue.isEmpty && textEditorFocusState == false, let placeholder {
                         Text(placeholder)
-                            .montage(variant: .body1Reading, alias: .labelAssistive)
+                            .montage(variant: .body1Reading, alias: disable ? .labelDisable : .labelAssistive)
                             .paragraph(variant: .body1Reading)
                             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                             .allowsHitTesting(false)
@@ -414,7 +423,7 @@ public struct TextArea: View {
                     )
                     .frame(maxHeight: 24)
                     .padding(.horizontal, 4)
-                case let .iconButton(placement, variant, icon, handler):
+                case let .iconButton(placement, variant, icon, tintColor, handler):
                     Button.IconButton(
                         variant: {
                             if let variant {
@@ -427,12 +436,14 @@ public struct TextArea: View {
                             }
                         }(),
                         icon: icon,
+                        iconColor: tintColor,
                         handler: handler
                     )
-                case let .icon(icon):
+                case let .icon(icon, tintColor):
                     Image.montage(icon)
                         .resizable()
-                        .frame(width: 24, height: 24)
+                        .foregroundColor(tintColor)
+                        .frame(width: 22, height: 22)
                 case let .actionChip(variant, title, handler):
                     Chip.ActionChipController(
                         variant: variant,
@@ -483,9 +494,13 @@ extension TextArea {
             placement: Placement = .left,
             variant: Button.IconButton.Variant? = .solid(size: .small),
             icon: Icon,
+            tintColor: SwiftUI.Color = .alias(.labelAlternative),
             handler: (() -> Void)? = nil
         )
-        case icon(Icon)
+        case icon(
+            Icon,
+            tintColor: SwiftUI.Color = .alias(.labelAssistive)
+        )
         case actionChip(
             Chip.Action.Variant = .filled,
             title: String,
@@ -513,11 +528,11 @@ struct TextArea_Previews: PreviewProvider {
             disable: false,
             heading: "주제",
             requiredBadge: true,
-            bottom: false,
-            description: "?",
-            placeholder: "??",
-            leftResource: .textButton(title: "텍스트", handler: {}),
-            rightResource: .textButton(title: "텍스트", handler: {})
+            bottom: true,
+            description: "메세지에 마침표를 찍어요.",
+            placeholder: "텍스트를 입력해 주세요.",
+            leftResource: [.badge(title: "텍스트")],
+            rightResource: [.textButton(title: "텍스트", handler: {})]
         )
     }
 }
