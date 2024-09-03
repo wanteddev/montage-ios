@@ -405,6 +405,14 @@ public struct TextArea: View {
                         handler: handler
                     )
                     .fixedSize()
+                case let .badge(variant, title):
+                    Badge.ContentBadgeController(
+                        variant: variant,
+                        size: .medium,
+                        color: .neutral,
+                        text: title
+                    )
+                    .fixedSize()
                 }
             }
         }
@@ -443,6 +451,10 @@ extension TextArea {
             Chip.Filter.Variant = .filled,
             title: String,
             handler: (() -> Void)? = nil
+        )
+        case badge(
+            Badge.Content.Variant = .filled,
+            title: String
         )
     }
 }
