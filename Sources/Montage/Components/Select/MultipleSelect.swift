@@ -50,6 +50,9 @@ extension Select {
         
         /// MultipleSelect의 활성화(=값이 있는지) 여부입니다.
         @State private var active: Bool = true
+
+        /// MultipleSelect의 텍스트와 외곽선을 포함하는 영역의 사이즈입니다.
+        @State private var contentSize: CGSize = .zero
         
         /// MultipleSelect의 표시될 내용의 형태입니다.
         private let render: Render
@@ -73,6 +76,10 @@ extension Select {
         /// MultipleSelect의 필수 표시 노출 여부입니다.
         /// > 기본값은 false입니다.
         private let requiredBadge: Bool
+        
+        /// MultipleSelect의 설명입니다.
+        /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+        private let description: String?
         
         /// MultipleSelect의 shadow 배경색입니다.
         /// > 기본값은 systemBackgroundColor 입니다.
@@ -100,6 +107,7 @@ extension Select {
             disable: Bool = false,
             heading: String? = nil,
             requiredBadge: Bool = false,
+            description: String? = nil,
             backgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground),
             leftContent: (() -> any View)? = nil,
             onTapItem: ((Select.Multiple.Item) -> Void)? = nil,
@@ -113,6 +121,7 @@ extension Select {
             self.disable = disable
             self.heading = heading
             self.requiredBadge = requiredBadge
+            self.description = description
             self.shadowBackgroundColor = backgroundColor
             self.leftContent = leftContent
             self.onTapItem = onTapItem
@@ -132,7 +141,7 @@ extension Select {
         }
 
         public var body: some View {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
                 if let heading {
                     HStack(spacing: 4) {
                         Text(heading)
@@ -159,6 +168,10 @@ extension Select {
                             color: .alias(.staticBlack).opacity(0.03),
                             radius: 2,
                             x: 0, y: 1
+                        )
+                        .frame(
+                            width: contentSize.width,
+                            height: contentSize.height
                         )
 
                     HStack(spacing: 8) {
@@ -231,6 +244,15 @@ extension Select {
                         radius: 2,
                         x: 0, y: 1
                     )
+                }
+                
+                if let description {
+                    Text(description)
+                        .montage(
+                            variant: .caption1,
+                            weight: .regular,
+                            alias: .labelAlternative
+                        )
                 }
             }
             .onChange(of: items, perform: { newValue in
@@ -318,6 +340,7 @@ struct MultipleSelect_Preview: PreviewProvider {
             disable: false,
             heading: "제목",
             requiredBadge: true,
+            description: "메세지에 마침표를 찍어요.",
             leftContent: nil,
             onTapItem: { _ in print("아이템 터치") }
         ) {
