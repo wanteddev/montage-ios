@@ -294,15 +294,6 @@ public struct TextArea: View {
             private let leftResource: TextArea.Resource?
             private let rightResource: TextArea.Resource?
             
-            private var leadingOffset: CGFloat {
-                if let leftResource {
-                    guard case .textButton(_, _, _, _) = leftResource else { return .zero }
-                    return 6
-                } else {
-                    return .zero
-                }
-            }
-            
             init(
                 typedCharacters: Binding<Int>,
                 _ variant: Variant,
@@ -318,7 +309,7 @@ public struct TextArea: View {
             }
 
             var body: some View {
-                HStack(spacing: 16) {
+                HStack {
                     if let leftResource {
                         component(leftResource)
                     }
@@ -343,7 +334,6 @@ public struct TextArea: View {
                         }
                     }
                 }
-                .padding(.leading, 6 - leadingOffset)
             }
 
             @ViewBuilder
@@ -360,6 +350,7 @@ public struct TextArea: View {
                                 .paragraph(variant: .label2)
                         }
                     }
+                    .padding(.horizontal, 4)
                 case let .textButton(placement, variant, title, handler):
                     Button.TextButton(
                         variant: {
@@ -376,7 +367,8 @@ public struct TextArea: View {
                         text: title,
                         handler: handler
                     )
-                    .fixedSize()
+                    .frame(maxHeight: 24)
+                    .padding(.horizontal, 4)
                 case let .iconButton(placement, variant, icon, handler):
                     Button.IconButton(
                         variant: {
