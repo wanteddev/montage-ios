@@ -392,7 +392,7 @@ public struct TextArea: View {
                 case let .actionChip(variant, title, handler):
                     Chip.ActionChipController(
                         variant: variant,
-                        size: .xsmall,
+                        size: .small,
                         text: title,
                         handler: handler
                     )
@@ -400,7 +400,7 @@ public struct TextArea: View {
                 case let .filterChip(variant, title, handler):
                     Chip.FilterChipController(
                         variant: variant,
-                        size: .xsmall,
+                        size: .small,
                         text: title,
                         handler: handler
                     )
