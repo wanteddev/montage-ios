@@ -32,41 +32,51 @@ public struct TextArea: View {
     // MARK: - Uninitialised properties
     
     /// TextArea의 resize 여부 입니다.
-    public var resize: Resize = .normal
+    public let resize: Resize
     
     /// TextArea의 외관입니다.
-    public var variant: Variant = .normal
+    public let variant: Variant
     
     /// TextArea의 포커싱 여부입니다.
-    public var focus: Bool = false
+    public let focus: Bool
     
     /// TextArea의 사용가능 여부입니다.
-    public var disable: Bool = false
+    public let disable: Bool
     
     /// TextArea의 제목입니다.
     /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var heading: String? = nil
+    public let heading: String?
     
     /// TextArea의 필수 표시 노출 여부입니다.
-    public var requiredBadge: Bool = false
+    public let requiredBadge: Bool
     
     /// TextArea의 하단 영역 노출 여부입니다.
     /// - 하단 영역 : 글자수 / 제한 글자수 / 버튼
-    public var bottom: Bool = false
+    public let bottom: Bool
     
     /// TextArea 하단 설명입니다.
     /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var description: String? = nil
+    public let description: String?
     
     /// TextArea에 입력된 텍스트가 없을 때 노출되는 placeholder입니다.
     ///  > 값을 지정하지 않으면 노출되지 않습니다.
-    public var placeholder: String? = nil
+    public let placeholder: String?
     
     /// TextArea 하단 좌측의 컴포넌트입니다.
-    public var leftResource: Resource? = nil
+    /// > 최대 3개까지 사용할 수 있습니다.
+    public let leftResource: [Resource]
+    
+    /// TextArea 하단 좌측의 컴포넌트들의 여백입니다.
+    /// > 기본값은 24입니다.
+    public let leftResourceSpacing: CGFloat
     
     /// TextArea 하단 우측의 컴포넌트입니다.
-    public var rightResource: Resource? = nil
+    /// > 최대 3개까지 사용할 수 있습니다.
+    public let rightResource: [Resource]
+    
+    /// TextArea 하단 우측의 컴포넌트들의 여백입니다.
+    /// > 기본값은 24입니다.
+    public let rightResourceSpacing: CGFloat
     
     public init(
         text: Binding<String>,
@@ -79,8 +89,10 @@ public struct TextArea: View {
         bottom: Bool = false,
         description: String? = nil,
         placeholder: String? = nil,
-        leftResource: Resource? = nil,
-        rightResource: Resource? = nil
+        leftResource: [Resource] = [],
+        leftResourceSpacing: CGFloat = 24,
+        rightResource: [Resource] = [],
+        rightResourceSpacing: CGFloat = 24
     ) {
         self._text = text
         self.resize = resize
@@ -92,8 +104,10 @@ public struct TextArea: View {
         self.bottom = bottom
         self.description = description
         self.placeholder = placeholder
-        self.leftResource = leftResource
-        self.rightResource = rightResource
+        self.leftResource = Array(leftResource.prefix(3))
+        self.leftResourceSpacing = leftResourceSpacing
+        self.rightResource = Array(rightResource.prefix(3))
+        self.rightResourceSpacing = rightResourceSpacing
     }
     
     // MARK: - Computed properties
@@ -122,7 +136,9 @@ public struct TextArea: View {
                 placeholder,
                 bottom,
                 leftResource,
-                rightResource
+                leftResourceSpacing,
+                rightResource,
+                rightResourceSpacing
             )
             if let description {
                 Text(description)
@@ -145,8 +161,10 @@ public struct TextArea: View {
         private let disable: Bool
         private let placeholder: String?
         private let bottom: Bool
-        private let leftResource: TextArea.Resource?
-        private let rightResource: TextArea.Resource?
+        private let leftResource: [TextArea.Resource]
+        private let leftResourceSpacing: CGFloat
+        private let rightResource: [TextArea.Resource]
+        private let rightResourceSpacing: CGFloat
         
         init(
             _ text: Binding<String>,
@@ -156,8 +174,10 @@ public struct TextArea: View {
             _ disable: Bool,
             _ placeholder: String?,
             _ bottom: Bool,
-            _ leftResource: TextArea.Resource? = nil,
-            _ rightResource: TextArea.Resource? = nil
+            _ leftResource: [TextArea.Resource],
+            _ leftResourceSpacing: CGFloat,
+            _ rightResource: [TextArea.Resource],
+            _ rightResourceSpacing: CGFloat
         ) {
             self._text = text
             self.resize = resize
@@ -167,7 +187,9 @@ public struct TextArea: View {
             self.placeholder = placeholder
             self.bottom = bottom
             self.leftResource = leftResource
+            self.leftResourceSpacing = leftResourceSpacing
             self.rightResource = rightResource
+            self.rightResourceSpacing = rightResourceSpacing
         }
 
         private var editorStrokeColor: SwiftUI.Color {
@@ -267,7 +289,9 @@ public struct TextArea: View {
                         variant,
                         disable,
                         leftResource,
-                        rightResource
+                        leftResourceSpacing,
+                        rightResource,
+                        rightResourceSpacing
                     )
                 }
             }
@@ -291,46 +315,67 @@ public struct TextArea: View {
             
             private let variant: Variant
             private let disable: Bool
-            private let leftResource: TextArea.Resource?
-            private let rightResource: TextArea.Resource?
+            private let leftResources: [TextArea.Resource]
+            private let leftResourceSpacing: CGFloat
+            private let rightResources: [TextArea.Resource]
+            private let rightResourceSpacing: CGFloat
             
             init(
                 typedCharacters: Binding<Int>,
                 _ variant: Variant,
                 _ disable: Bool,
-                _ leftResource: TextArea.Resource? = nil,
-                _ rightResource: TextArea.Resource? = nil
+                _ leftResources: [TextArea.Resource],
+                _ leftResourceSpacing: CGFloat,
+                _ rightResources: [TextArea.Resource],
+                _ rightResourceSpacing: CGFloat
             ) {
                 self._typedCharacters = typedCharacters
                 self.variant = variant
                 self.disable = disable
-                self.leftResource = leftResource
-                self.rightResource = rightResource
+                self.leftResources = leftResources
+                self.leftResourceSpacing = leftResourceSpacing
+                self.rightResources = rightResources
+                self.rightResourceSpacing = rightResourceSpacing
             }
 
             var body: some View {
                 HStack {
-                    if let leftResource {
-                        component(leftResource)
+                    if leftResources.isEmpty == false {
+                        HStack(spacing: leftResourceSpacing) {
+                            ForEach(leftResources.indices, id: \.self) { index in
+                                component(leftResources[index])
+                            }
+                        }
                     }
                     Spacer()
-                    if let rightResource {
-                        if variant == .normal {
-                            if 
-                                case .characterCount(_) = leftResource,
-                                case .characterCount(_) = rightResource
-                            {
-                                EmptyView()
-                            } else {
-                                component(rightResource)
+                    if rightResources.isEmpty == false {
+                        HStack(spacing: rightResourceSpacing) {
+                            ForEach(rightResources.indices, id: \.self) { index in
+                                if variant == .normal {
+                                    let rightResource = rightResources[index]
+                                    if
+                                        leftResources.contains(where: { leftResource in
+                                            if case .characterCount(_) = leftResource {
+                                                return true
+                                            } else {
+                                                return false
+                                            }
+                                        }),
+                                        case .characterCount(_) = rightResource
+                                    {
+                                        EmptyView()
+                                    } else {
+                                        component(rightResource)
+                                    }
+                                } else {
+                                    Button.IconButton(
+                                        icon: .circleExclamationFill,
+                                        iconColor:
+                                            disable ? .alias(.labelDisable) : .alias(.statusNegative)
+                                    )
+                                    .fixedSize()
+                                }
                             }
-                        } else {
-                            Button.IconButton(
-                                icon: .circleExclamationFill,
-                                iconColor:
-                                    disable ? .alias(.labelDisable) : .alias(.statusNegative)
-                            )
-                            .fixedSize()
                         }
                     }
                 }
@@ -384,7 +429,6 @@ public struct TextArea: View {
                         icon: icon,
                         handler: handler
                     )
-                    .fixedSize()
                 case let .icon(icon):
                     Image.montage(icon)
                         .resizable()
