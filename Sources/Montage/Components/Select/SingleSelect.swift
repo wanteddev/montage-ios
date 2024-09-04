@@ -1,5 +1,5 @@
 //
-//  NormalSelect.swift
+//  SingleSelect.swift
 //  Montage
 //
 //  Created by ahn sanghoon on 8/9/24.
@@ -9,51 +9,58 @@ import SwiftUI
 
 extension Select {
     /// 드롭다운(dropdown) 메뉴와 같이 옵션을 확인하고 고르는 용도로 사용합니다.
-    public struct Normal: View {
-        /// NormalSelect의 외관을 결정하는 열거형입니다.
+    public struct Single: View {
+        /// SingleSelect의 외관을 결정하는 열거형입니다.
         public enum Variant {
             case normal
             case negative
         }
         
-        /// NormalSelect의 포커싱 여부입니다.
+        /// SingleSelect의 포커싱 여부입니다.
         /// 외부에서 포커싱 여부를 변경할 수 있습니다.
         @Binding var focus: Bool
         
-        /// NormalSelect의 활성화(=값이 있는지) 여부입니다.
+        /// SingleSelect의 활성화(=값이 있는지) 여부입니다.
         @State private var active: Bool = true
         
-        /// NormalSelect에 표시될 텍스트입니다.
+        /// SingleSelect의 텍스트와 외곽선을 포함하는 영역의 사이즈입니다.
+        @State private var contentSize: CGSize = .zero
+        
+        /// SingleSelect에 표시될 텍스트입니다.
         private let text: String
         
-        /// NormalSelect의 외관입니다.
+        /// SingleSelect의 외관입니다.
         private let variant: Variant
         
-        /// NormalSelect의 텍스트가 없는 경우 나타낼 placeholder입니다.
+        /// SingleSelect의 텍스트가 없는 경우 나타낼 placeholder입니다.
         private let placeholder: String
         
-        /// NormalSelect의 사용가능 여부입니다.
+        /// SingleSelect의 사용가능 여부입니다.
         private let disable: Bool
         
-        /// NormalSelect의 제목입니다.
+        /// SingleSelect의 제목입니다.
         /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
         private let heading: String?
         
-        /// NormalSelect의 필수 표시 노출 여부입니다.
+        /// SingleSelect의 필수 표시 노출 여부입니다.
         /// > 기본값은 false입니다.
         private let requiredBadge: Bool
         
-        /// NormalSelect의 왼쪽 컨텐츠입니다.
+        /// SingleSelect의 설명입니다.
+        /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
+        private let description: String?
+        
+        /// SingleSelect의 왼쪽 컨텐츠입니다.
         /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
         private var leftContent: (() -> any View)?
         
-        /// NormalSelect의 shadow 배경색입니다.
+        /// SingleSelect의 shadow 배경색입니다.
         /// > 기본값은 systemBackgroundColor 입니다.
         /// >
         /// > shadow 배경색 변경이 필요할때 사용합니다.
         private let shadowBackgroundColor: SwiftUI.Color
         
-        /// NormalSelect Tap에 대한 handler 입니다.
+        /// SingleSelect Tap에 대한 handler 입니다.
         private var onTap: (() -> Void)?
 
         public init(
@@ -64,6 +71,7 @@ extension Select {
             disable: Bool = false,
             heading: String? = nil,
             requiredBadge: Bool = false,
+            description: String? = nil,
             leftContent: (() -> any View)? = nil,
             backgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground),
             onTap: (() -> Void)? = nil
@@ -75,6 +83,7 @@ extension Select {
             self.disable = disable
             self.heading = heading
             self.requiredBadge = requiredBadge
+            self.description = description
             self.leftContent = leftContent
             self.shadowBackgroundColor = backgroundColor
             self.onTap = onTap
@@ -93,7 +102,7 @@ extension Select {
         }
 
         public var body: some View {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
                 if let heading {
                     HStack(spacing: 4) {
                         Text(heading)
@@ -121,6 +130,7 @@ extension Select {
                             radius: 2,
                             x: 0, y: 1
                         )
+                        .frame(width: contentSize.width, height: contentSize.height)
                     
                     HStack(spacing: 8) {
                         if let leftContent {
@@ -180,6 +190,16 @@ extension Select {
                             .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                     }
                 }
+                .readSize { contentSize = $0 }
+                
+                if let description {
+                    Text(description)
+                        .montage(
+                            variant: .caption1,
+                            weight: .regular,
+                            alias: .labelAlternative
+                        )
+                }
             }
             .onChange(of: text, perform: { newValue in
                 active = (newValue.isEmpty == false)
@@ -193,9 +213,9 @@ extension Select {
 
 }
 
-struct NormalSelect_Preview: PreviewProvider {
+struct SingleSelect_Preview: PreviewProvider {
     static var previews: some View {
-        Select.Normal(
+        Select.Single(
             text: "",
             focus: .constant(false),
             variant: .negative,
@@ -203,6 +223,7 @@ struct NormalSelect_Preview: PreviewProvider {
             disable: false,
             heading: "주제",
             requiredBadge: true,
+            description: "메세지에 마침표를 찍어요.",
             leftContent: nil
         )
     }
