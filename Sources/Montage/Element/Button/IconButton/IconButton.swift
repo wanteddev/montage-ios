@@ -300,6 +300,10 @@ extension Button {
                 ZStack {
                     Circle()
                         .fill(_backgroundColor)
+                    if case let .background(_, alternative) = variant, alternative == false {
+                        Circle()
+                            .fill(.regularMaterial)
+                    }
                     Circle()
                         .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
