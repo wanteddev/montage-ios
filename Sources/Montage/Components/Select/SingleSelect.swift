@@ -144,7 +144,7 @@ extension Select {
                                         .montage(
                                             variant: .body1,
                                             weight: .regular,
-                                            alias: disable ? .labelDisable : .labelAlternative
+                                            alias: disable ? .labelDisable : .labelAssistive
                                         )
                                         .paragraph(variant: .body1)
                                 } else {

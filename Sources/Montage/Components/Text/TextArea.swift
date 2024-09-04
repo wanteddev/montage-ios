@@ -326,7 +326,10 @@ public struct TextArea: View {
                     }
                     if $text.wrappedValue.isEmpty && textEditorFocusState == false, let placeholder {
                         Text(placeholder)
-                            .montage(variant: .body1Reading, alias: disable ? .labelDisable : .labelAssistive)
+                            .montage(
+                                variant: .body1Reading,
+                                alias: disable ? .labelDisable : .labelAssistive
+                            )
                             .paragraph(variant: .body1Reading)
                             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                             .allowsHitTesting(false)

@@ -161,6 +161,7 @@ public struct TextInput: View {
             }
         }
         
+        
         var body: some View {
             HStack(spacing: .zero) {
                 ZStack {
@@ -176,7 +177,12 @@ public struct TextInput: View {
                             text: $text,
                             prompt: {
                                 if let placeholder {
-                                    return Text(placeholder).montage(variant: .body1, weight: .regular, alias: .labelAlternative)
+                                    return Text(placeholder)
+                                        .montage(
+                                            variant: .body1,
+                                            weight: .regular,
+                                            alias: disable ? .labelDisable : .labelAssistive
+                                        )
                                 } else {
                                     return nil
                                 }
