@@ -10,8 +10,8 @@ import SwiftUI
 // MARK: - OffsetPreferenceKey
 
 struct OffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGPoint = .zero
-    static func reduce(value _: inout CGPoint, nextValue _: () -> CGPoint) {}
+    public static var defaultValue: CGPoint = .zero
+    public static func reduce(value _: inout CGPoint, nextValue _: () -> CGPoint) {}
 }
 
 // MARK: - SizePreferenceKey

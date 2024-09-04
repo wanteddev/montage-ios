@@ -1,5 +1,5 @@
 //
-//  Bottom.swift
+//  ActionAreaBottom.swift
 //  Montage
 //
 //  Created by Ahn Sang Hoon on 7/9/24.
