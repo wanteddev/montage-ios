@@ -32,41 +32,51 @@ public struct TextArea: View {
     // MARK: - Uninitialised properties
     
     /// TextArea의 resize 여부 입니다.
-    public var resize: Resize = .normal
+    public let resize: Resize
     
     /// TextArea의 외관입니다.
-    public var variant: Variant = .normal
+    public let variant: Variant
     
     /// TextArea의 포커싱 여부입니다.
-    public var focus: Bool = false
+    public let focus: Bool
     
     /// TextArea의 사용가능 여부입니다.
-    public var disable: Bool = false
+    public let disable: Bool
     
     /// TextArea의 제목입니다.
     /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var heading: String? = nil
+    public let heading: String?
     
     /// TextArea의 필수 표시 노출 여부입니다.
-    public var requiredBadge: Bool = false
+    public let requiredBadge: Bool
     
     /// TextArea의 하단 영역 노출 여부입니다.
     /// - 하단 영역 : 글자수 / 제한 글자수 / 버튼
-    public var bottom: Bool = false
+    public let bottom: Bool
     
     /// TextArea 하단 설명입니다.
     /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var description: String? = nil
+    public let description: String?
     
     /// TextArea에 입력된 텍스트가 없을 때 노출되는 placeholder입니다.
     ///  > 값을 지정하지 않으면 노출되지 않습니다.
-    public var placeholder: String? = nil
+    public let placeholder: String?
     
     /// TextArea 하단 좌측의 컴포넌트입니다.
-    public var leftResource: Resource? = nil
+    /// > 최대 3개까지 사용할 수 있습니다.
+    public let leftResource: [Resource]
+    
+    /// TextArea 하단 좌측의 컴포넌트들의 여백입니다.
+    /// > 기본값은 24입니다.
+    public let leftResourceSpacing: CGFloat
     
     /// TextArea 하단 우측의 컴포넌트입니다.
-    public var rightResource: Resource? = nil
+    /// > 최대 3개까지 사용할 수 있습니다.
+    public let rightResource: [Resource]
+    
+    /// TextArea 하단 우측의 컴포넌트들의 여백입니다.
+    /// > 기본값은 24입니다.
+    public let rightResourceSpacing: CGFloat
     
     public init(
         text: Binding<String>,
@@ -79,8 +89,10 @@ public struct TextArea: View {
         bottom: Bool = false,
         description: String? = nil,
         placeholder: String? = nil,
-        leftResource: Resource? = nil,
-        rightResource: Resource? = nil
+        leftResource: [Resource] = [],
+        leftResourceSpacing: CGFloat = 24,
+        rightResource: [Resource] = [],
+        rightResourceSpacing: CGFloat = 24
     ) {
         self._text = text
         self.resize = resize
@@ -92,8 +104,10 @@ public struct TextArea: View {
         self.bottom = bottom
         self.description = description
         self.placeholder = placeholder
-        self.leftResource = leftResource
-        self.rightResource = rightResource
+        self.leftResource = Array(leftResource.prefix(3))
+        self.leftResourceSpacing = leftResourceSpacing
+        self.rightResource = Array(rightResource.prefix(3))
+        self.rightResourceSpacing = rightResourceSpacing
     }
     
     // MARK: - Computed properties
@@ -122,7 +136,9 @@ public struct TextArea: View {
                 placeholder,
                 bottom,
                 leftResource,
-                rightResource
+                leftResourceSpacing,
+                rightResource,
+                rightResourceSpacing
             )
             if let description {
                 Text(description)
@@ -145,8 +161,10 @@ public struct TextArea: View {
         private let disable: Bool
         private let placeholder: String?
         private let bottom: Bool
-        private let leftResource: TextArea.Resource?
-        private let rightResource: TextArea.Resource?
+        private let leftResource: [TextArea.Resource]
+        private let leftResourceSpacing: CGFloat
+        private let rightResource: [TextArea.Resource]
+        private let rightResourceSpacing: CGFloat
         
         init(
             _ text: Binding<String>,
@@ -156,8 +174,10 @@ public struct TextArea: View {
             _ disable: Bool,
             _ placeholder: String?,
             _ bottom: Bool,
-            _ leftResource: TextArea.Resource? = nil,
-            _ rightResource: TextArea.Resource? = nil
+            _ leftResource: [TextArea.Resource],
+            _ leftResourceSpacing: CGFloat,
+            _ rightResource: [TextArea.Resource],
+            _ rightResourceSpacing: CGFloat
         ) {
             self._text = text
             self.resize = resize
@@ -167,7 +187,9 @@ public struct TextArea: View {
             self.placeholder = placeholder
             self.bottom = bottom
             self.leftResource = leftResource
+            self.leftResourceSpacing = leftResourceSpacing
             self.rightResource = rightResource
+            self.rightResourceSpacing = rightResourceSpacing
         }
 
         private var editorStrokeColor: SwiftUI.Color {
@@ -175,6 +197,13 @@ public struct TextArea: View {
                 return SwiftUI.Color.alias(.statusNegative).opacity(0.43)
             } else {
                 return textEditorFocusState ? SwiftUI.Color.alias(.primaryNormal).opacity(0.43) : SwiftUI.Color.alias(.lineNormal)
+            }
+        }
+        private var editorTextColor: SwiftUI.Color {
+            if disable {
+                text.isEmpty ? .alias(.labelDisable) : .alias(.labelAlternative)
+            } else {
+                .alias(.labelNormal)
             }
         }
         
@@ -185,9 +214,10 @@ public struct TextArea: View {
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
                                 .font(.montage(variant: .body1Reading))
+                                .foregroundStyle(editorTextColor)
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
-                                .frame(minHeight: 36, maxHeight: 250)
+                                .frame(minHeight: 36, maxHeight: 320)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .onChange(of: text) { result in
                                     typedCharacters = text.count
@@ -199,10 +229,11 @@ public struct TextArea: View {
                                 .padding(.bottom, -6)
                         } else {
                             TextEditor(text: $text)
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
-                                .frame(minHeight: 36, maxHeight: 250)
+                                .frame(minHeight: 36, maxHeight: 320)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .onChange(of: text) { result in
                                     typedCharacters = text.count
@@ -218,7 +249,7 @@ public struct TextArea: View {
                     } else {
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -234,7 +265,7 @@ public struct TextArea: View {
                                 .padding(.bottom, -6)
                         } else {
                             TextEditor(text: $text)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -254,7 +285,7 @@ public struct TextArea: View {
                     }
                     if $text.wrappedValue.isEmpty && textEditorFocusState == false, let placeholder {
                         Text(placeholder)
-                            .montage(variant: .body1Reading, alias: .labelAssistive)
+                            .montage(variant: .body1Reading, alias: disable ? .labelDisable : .labelAssistive)
                             .paragraph(variant: .body1Reading)
                             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                             .allowsHitTesting(false)
@@ -267,7 +298,9 @@ public struct TextArea: View {
                         variant,
                         disable,
                         leftResource,
-                        rightResource
+                        leftResourceSpacing,
+                        rightResource,
+                        rightResourceSpacing
                     )
                 }
             }
@@ -291,59 +324,70 @@ public struct TextArea: View {
             
             private let variant: Variant
             private let disable: Bool
-            private let leftResource: TextArea.Resource?
-            private let rightResource: TextArea.Resource?
-            
-            private var leadingOffset: CGFloat {
-                if let leftResource {
-                    guard case .textButton(_, _, _, _) = leftResource else { return .zero }
-                    return 6
-                } else {
-                    return .zero
-                }
-            }
+            private let leftResources: [TextArea.Resource]
+            private let leftResourceSpacing: CGFloat
+            private let rightResources: [TextArea.Resource]
+            private let rightResourceSpacing: CGFloat
             
             init(
                 typedCharacters: Binding<Int>,
                 _ variant: Variant,
                 _ disable: Bool,
-                _ leftResource: TextArea.Resource? = nil,
-                _ rightResource: TextArea.Resource? = nil
+                _ leftResources: [TextArea.Resource],
+                _ leftResourceSpacing: CGFloat,
+                _ rightResources: [TextArea.Resource],
+                _ rightResourceSpacing: CGFloat
             ) {
                 self._typedCharacters = typedCharacters
                 self.variant = variant
                 self.disable = disable
-                self.leftResource = leftResource
-                self.rightResource = rightResource
+                self.leftResources = leftResources
+                self.leftResourceSpacing = leftResourceSpacing
+                self.rightResources = rightResources
+                self.rightResourceSpacing = rightResourceSpacing
             }
 
             var body: some View {
-                HStack(spacing: 16) {
-                    if let leftResource {
-                        component(leftResource)
+                HStack {
+                    if leftResources.isEmpty == false {
+                        HStack(spacing: leftResourceSpacing) {
+                            ForEach(leftResources.indices, id: \.self) { index in
+                                component(leftResources[index])
+                            }
+                        }
                     }
                     Spacer()
-                    if let rightResource {
-                        if variant == .normal {
-                            if 
-                                case .characterCount(_) = leftResource,
-                                case .characterCount(_) = rightResource
-                            {
-                                EmptyView()
-                            } else {
-                                component(rightResource)
+                    if rightResources.isEmpty == false {
+                        HStack(spacing: rightResourceSpacing) {
+                            ForEach(rightResources.indices, id: \.self) { index in
+                                if variant == .normal {
+                                    let rightResource = rightResources[index]
+                                    if
+                                        leftResources.contains(where: { leftResource in
+                                            if case .characterCount(_) = leftResource {
+                                                return true
+                                            } else {
+                                                return false
+                                            }
+                                        }),
+                                        case .characterCount(_) = rightResource
+                                    {
+                                        EmptyView()
+                                    } else {
+                                        component(rightResource)
+                                    }
+                                } else {
+                                    Button.IconButton(
+                                        icon: .circleExclamationFill,
+                                        iconColor:
+                                            disable ? .alias(.labelDisable) : .alias(.statusNegative)
+                                    )
+                                    .fixedSize()
+                                }
                             }
-                        } else {
-                            Button.IconButton(
-                                icon: .circleExclamationFill,
-                                iconColor:
-                                    disable ? .alias(.labelDisable) : .alias(.statusNegative)
-                            )
-                            .fixedSize()
                         }
                     }
                 }
-                .padding(.leading, 6 - leadingOffset)
             }
 
             @ViewBuilder
@@ -360,6 +404,7 @@ public struct TextArea: View {
                                 .paragraph(variant: .label2)
                         }
                     }
+                    .padding(.horizontal, 4)
                 case let .textButton(placement, variant, title, handler):
                     Button.TextButton(
                         variant: {
@@ -376,8 +421,9 @@ public struct TextArea: View {
                         text: title,
                         handler: handler
                     )
-                    .fixedSize()
-                case let .iconButton(placement, variant, icon, handler):
+                    .frame(maxHeight: 24)
+                    .padding(.horizontal, 4)
+                case let .iconButton(placement, variant, icon, tintColor, handler):
                     Button.IconButton(
                         variant: {
                             if let variant {
@@ -390,17 +436,18 @@ public struct TextArea: View {
                             }
                         }(),
                         icon: icon,
+                        iconColor: tintColor,
                         handler: handler
                     )
-                    .fixedSize()
-                case let .icon(icon):
+                case let .icon(icon, tintColor):
                     Image.montage(icon)
                         .resizable()
-                        .frame(width: 24, height: 24)
+                        .foregroundColor(tintColor)
+                        .frame(width: 22, height: 22)
                 case let .actionChip(variant, title, handler):
                     Chip.ActionChipController(
                         variant: variant,
-                        size: .xsmall,
+                        size: .small,
                         text: title,
                         handler: handler
                     )
@@ -408,9 +455,17 @@ public struct TextArea: View {
                 case let .filterChip(variant, title, handler):
                     Chip.FilterChipController(
                         variant: variant,
-                        size: .xsmall,
+                        size: .small,
                         text: title,
                         handler: handler
+                    )
+                    .fixedSize()
+                case let .badge(variant, title):
+                    Badge.ContentBadgeController(
+                        variant: variant,
+                        size: .medium,
+                        color: .neutral,
+                        text: title
                     )
                     .fixedSize()
                 }
@@ -439,9 +494,13 @@ extension TextArea {
             placement: Placement = .left,
             variant: Button.IconButton.Variant? = .solid(size: .small),
             icon: Icon,
+            tintColor: SwiftUI.Color = .alias(.labelAlternative),
             handler: (() -> Void)? = nil
         )
-        case icon(Icon)
+        case icon(
+            Icon,
+            tintColor: SwiftUI.Color = .alias(.labelAssistive)
+        )
         case actionChip(
             Chip.Action.Variant = .filled,
             title: String,
@@ -451,6 +510,10 @@ extension TextArea {
             Chip.Filter.Variant = .filled,
             title: String,
             handler: (() -> Void)? = nil
+        )
+        case badge(
+            Badge.Content.Variant = .filled,
+            title: String
         )
     }
 }
@@ -465,11 +528,11 @@ struct TextArea_Previews: PreviewProvider {
             disable: false,
             heading: "주제",
             requiredBadge: true,
-            bottom: false,
-            description: "?",
-            placeholder: "??",
-            leftResource: .textButton(title: "텍스트", handler: {}),
-            rightResource: .textButton(title: "텍스트", handler: {})
+            bottom: true,
+            description: "메세지에 마침표를 찍어요.",
+            placeholder: "텍스트를 입력해 주세요.",
+            leftResource: [.badge(title: "텍스트")],
+            rightResource: [.textButton(title: "텍스트", handler: {})]
         )
     }
 }
