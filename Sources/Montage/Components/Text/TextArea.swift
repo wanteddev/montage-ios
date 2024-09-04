@@ -10,13 +10,15 @@ import SwiftUI
 public struct TextArea: View {
     // MARK: - Environment
     
-    /// TextArea의 Resize 여부에 관한 열거형입니다.
+    /// TextArea의 텍스트 영역 Resize 관한 열거형입니다.
     /// - normal : 줄 수 제한이 없으며, 줄 수에 따라 영역이 늘어납니다.
     /// - limit : 최대 8줄 노출되며 초과 영역은 Scrollable 합니다.
+    /// - fixed: 텍스트가 표시될 영역을 지정합니다. 초과 영역은 Scrollable 합니다.
     /// > iOS 15에서는 normal 인 경우에도 영역이 늘어나지 않는 현상이 있으니 사용시 주의하시기 바랍니다.
     public enum Resize {
         case normal
         case limit
+        case fixed(min: CGFloat, max: CGFloat)
     }
     
     /// TextArea의 외관을 결정하는 열거형입니다.
@@ -210,7 +212,44 @@ public struct TextArea: View {
         var body: some View {
             VStack(spacing: 12) {
                 ZStack(alignment: .topLeading) {
-                    if resize == .limit {
+                    switch resize {
+                    case .normal:
+                        if #available(iOS 16, *) {
+                            TextEditor(text: $text)
+                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .font(.montage(variant: .body1Reading))
+                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                .focused($textEditorFocusState)
+                                .frame(minHeight: 36)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .onChange(of: text) { result in
+                                    typedCharacters = text.count
+                                }
+                                .scrollContentBackground(.hidden)
+                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                .padding([.horizontal], -4.5)
+                                .padding(.top, -4)
+                                .padding(.bottom, -6)
+                        } else {
+                            TextEditor(text: $text)
+                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .font(.montage(variant: .body1Reading))
+                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                .focused($textEditorFocusState)
+                                .frame(minHeight: 36)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .onChange(of: text) { result in
+                                    typedCharacters = text.count
+                                }
+                                .onAppear {
+                                    UITextView.appearance().backgroundColor = .clear
+                                }
+                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                .padding([.horizontal], -4.5)
+                                .padding(.top, -4)
+                                .padding(.bottom, -6)
+                        }
+                    case .limit:
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
                                 .font(.montage(variant: .body1Reading))
@@ -246,14 +285,16 @@ public struct TextArea: View {
                                 .padding(.top, -4)
                                 .padding(.bottom, -6)
                         }
-                    } else {
+                    case let .fixed(minimum, maximum):
+                        let min = min(minimum, maximum)
+                        let max = max(minimum, maximum)
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
                                 .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
-                                .frame(minHeight: 36)
+                                .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .onChange(of: text) { result in
                                     typedCharacters = text.count
@@ -269,7 +310,7 @@ public struct TextArea: View {
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
-                                .frame(minHeight: 36)
+                                .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .onChange(of: text) { result in
                                     typedCharacters = text.count
