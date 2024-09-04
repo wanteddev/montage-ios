@@ -415,15 +415,15 @@ extension Tooltip {
                                 .montage(
                                     variant: .label1,
                                     weight: .medium,
-                                    color: contentColor
+                                    alias: contentColor
                                 )
                                 .paragraph(variant: .label1)
                                 .padding(.horizontal, 2)
                             if showCloseButton {
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .normal(size: 16),
                                     icon: .close,
-                                    iconColorResolver: Color.Alias.inverseLabel
+                                    iconColor: .alias(.inverseLabel)
                                 ) {
                                     show = false
                                 }
@@ -443,7 +443,7 @@ extension Tooltip {
                                     .montage(
                                         variant: .label1,
                                         weight: .bold,
-                                        color: .inverseLabel
+                                        alias: .inverseLabel
                                     )
                                     .paragraph(variant: .label1)
                                     .opacity(0.61)

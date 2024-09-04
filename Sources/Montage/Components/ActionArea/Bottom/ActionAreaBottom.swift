@@ -1,5 +1,5 @@
 //
-//  Bottom.swift
+//  ActionAreaBottom.swift
 //  Montage
 //
 //  Created by Ahn Sang Hoon on 7/9/24.
@@ -121,7 +121,7 @@ extension ActionArea {
                         VStack(spacing: .zero) {
                             if let caption = model.caption, enableCaption {
                                 Text(caption)
-                                    .montage(variant: .label2, color: .labelAlternative)
+                                    .montage(variant: .label2, alias: .labelAlternative)
                                     .paragraph(variant: .label2)
                                     .padding(.bottom, 16)
                                     .background(
@@ -180,8 +180,8 @@ extension ActionArea {
                     _ alternative: Bottom.Action?
                 ) -> some View {
                     VStack(spacing: 8) {
-                        if let option = main.buttonOption {
-                            button(option: option, text: main.text, action: main.action)
+                        if let customButton = main.custom {
+                            AnyView(customButton())
                                 .fixedSize(horizontal: false, vertical: true)
                         } else {
                             Button.SolidButtonController(
@@ -193,8 +193,8 @@ extension ActionArea {
                             .fixedSize(horizontal: false, vertical: true)
                         }
                         if let alternative {
-                            if let option = alternative.buttonOption {
-                                button(option: option, text: alternative.text, action: alternative.action)
+                            if let customButton = alternative.custom {
+                                AnyView(customButton())
                                     .fixedSize(horizontal: false, vertical: true)
                             } else {
                                 Button.OutlinedButtonController(
@@ -207,11 +207,11 @@ extension ActionArea {
                             }
                         }
                         if let sub {
-                            if let option = sub.buttonOption {
-                                button(option: option, text: sub.text, action: sub.action)
+                            if let customButton = sub.custom {
+                                AnyView(customButton())
                                     .fixedSize(horizontal: false, vertical: true)
                             } else {
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     variant: .assistive,
                                     size: .small,
                                     text: sub.text,
@@ -231,12 +231,11 @@ extension ActionArea {
                 ) -> some View {
                     HStack(spacing: 12) {
                         if let sub {
-                            if let option = sub.buttonOption {
-                                button(option: option, text: sub.text, action: sub.action)
-                                    .fixedSize()
+                            if let customButton = sub.custom {
+                                AnyView(customButton())
                             } else {
                                 Button.OutlinedButtonController(
-                                    variant: .secondary,
+                                    variant: .assistive,
                                     size: .large,
                                     text: sub.text,
                                     handler: sub.action
@@ -245,8 +244,8 @@ extension ActionArea {
                             }
                         }
                         if let alternative {
-                            if let option = alternative.buttonOption {
-                                button(option: option, text: alternative.text, action: alternative.action)
+                            if let customButton = alternative.custom {
+                                AnyView(customButton())
                                     .fixedSize(horizontal: false, vertical: true)
                             } else {
                                 Button.OutlinedButtonController(
@@ -258,8 +257,8 @@ extension ActionArea {
                                 .fixedSize(horizontal: false, vertical: true)
                             }
                         }
-                        if let option = main.buttonOption {
-                            button(option: option, text: main.text, action: main.action)
+                        if let customButton = main.custom {
+                            AnyView(customButton())
                                 .fixedSize(horizontal: false, vertical: true)
                         } else {
                             Button.SolidButtonController(
@@ -281,12 +280,12 @@ extension ActionArea {
                     HStack(spacing: 12) {
                         Spacer()
                         if let sub {
-                            if let option = sub.buttonOption {
-                                button(option: option, text: sub.text, action: sub.action)
+                            if let customButton = sub.custom {
+                                AnyView(customButton())
                                     .fixedSize()
                             } else {
                                 Button.OutlinedButtonController(
-                                    variant: .secondary,
+                                    variant: .assistive,
                                     size: .large,
                                     text: sub.text,
                                     handler: sub.action
@@ -294,8 +293,8 @@ extension ActionArea {
                                 .fixedSize()
                             }
                         }
-                        if let option = main.buttonOption {
-                            button(option: option, text: main.text, action: main.action)
+                        if let customButton = main.custom {
+                            AnyView(customButton())
                                 .fixedSize()
                         } else {
                             Button.SolidButtonController(
@@ -313,8 +312,8 @@ extension ActionArea {
                 private func single(
                     _ main: Bottom.Action
                 ) -> some View {
-                    if let option = main.buttonOption {
-                        button(option: option, text: main.text, action: main.action)
+                    if let customButton = main.custom {
+                        AnyView(customButton())
                             .fixedSize(horizontal: false, vertical: true)
                     } else {
                         Button.OutlinedButtonController(
@@ -324,39 +323,6 @@ extension ActionArea {
                             handler: main.action
                         )
                         .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                
-                @ViewBuilder
-                private func button(
-                    option: Bottom.ButtonOption,
-                    text: String,
-                    action: @escaping (() -> Void)
-                ) -> some View {
-                    switch option {
-                    case let .soild(variant, disable):
-                        Button.SolidButtonController(
-                            variant: variant,
-                            size: .large,
-                            text: text,
-                            disable: disable,
-                            handler: action
-                        )
-                    case let .outline(variant, disable):
-                        Button.OutlinedButtonController(
-                            variant: variant,
-                            size: .large,
-                            text: text,
-                            disable: disable,
-                            handler: action
-                        )
-                    case let .text(variant, disable):
-                        Button.TextButtonController(
-                            variant: variant,
-                            text: text,
-                            disable: disable,
-                            handler: action
-                        )
                     }
                 }
             }
@@ -379,24 +345,33 @@ extension ActionArea.Bottom {
     
     public struct Action {
         let text: String
-        var buttonOption: ButtonOption?
         let action: (() -> Void)
+        let custom: (() -> any View)?
         
+        /// ActionArea/Bottom의 항목을 기본값으로 생성합니다.
+        /// - Parameters:
+        ///   - text: 기본 컴포넌트에 나타날 텍스트입니다.
+        ///   - action: 기본 컴포넌트 클릭시 동작할 내용입니다.
         public init(
             text: String,
-            buttonOption: ButtonOption? = nil,
-            action: @escaping () -> Void
+            action: @escaping (() -> Void)
         ) {
             self.text = text
-            self.buttonOption = buttonOption
             self.action = action
+            self.custom = nil
         }
-    }
-    
-    public enum ButtonOption {
-        case soild(Button.SolidButton.Variant = .primary, disable: Bool = false)
-        case outline(Button.OutlinedButton.Variant = .assistive, disable: Bool = false)
-        case text(Button.TextButton.Variant = .assistive, disable: Bool = false)
+        
+        /// ActionArea/Bottom의 항목을 커스텀하여 생성합니다.
+        /// - Parameter custom: 커스텀 Montage/Button 컴포넌트입니다.
+        /// > Component 사용하는 과정에서 fixedSize를 내부에서 지정하기 때문에
+        /// > 전달하는 Button 컴포넌트는 fixedSize를 지정하여 전달하면 안됩니다.
+        public init(
+            custom: @escaping (() -> any View)
+        ) {
+            self.text = ""
+            self.action = {}
+            self.custom = custom
+        }
     }
     
     public struct Model {
@@ -446,8 +421,11 @@ struct Bottom_Previews: PreviewProvider {
                 ActionArea.Bottom.Component(
                     model: .init(
                         variant: .normal,
-                        priority: .single(
-                            main: .init(text: "메인", buttonOption: .soild(.primary), action: {})
+                        priority: .compact(
+                            main: .init(
+                                text: "메인",
+                                action: {}
+                            )
                         )
                     )
                 )

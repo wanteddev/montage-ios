@@ -224,11 +224,17 @@ extension Badge.Push.Variant {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .dot:
-            return .init(top: 6, left: 6, bottom: 6, right: 6)
+            return .init(top: 8, left: 8, bottom: 8, right: 8)
         case .number:
             return .init(top: 3, left: 6, bottom: 3, right: 6)
         case .new:
             return .init(top: 3, left: 6, bottom: 3, right: 6)
         }
+    }
+    
+    /// PushBadge/Dot을 위치시킬 때 필요한 Offset입니다.
+    /// > edgeInsets + (size / 2)
+    var dotOffset: CGFloat {
+        edgeInsets.insets.leading + (Badge.Push.Const.defaultDotSize.width / 2)
     }
 }

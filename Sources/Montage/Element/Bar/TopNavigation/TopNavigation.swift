@@ -10,6 +10,8 @@ import SwiftUI
 extension Bar {
     public struct TopNavigation: View {
         // MARK: - Uninitialised properties
+        
+        /// TopNavigation이 노출될 screenWidth입니다.
         @State private var screenWidth: CGFloat = .zero
         
         private let variant: Variant
@@ -21,6 +23,15 @@ extension Bar {
         
         // MARK: - Computed properties
         
+        private var screenWidthMeasurer: some View {
+            GeometryReader { proxy in
+                SwiftUI.Color.clear
+                    .onAppear {
+                        screenWidth = proxy.size.width
+                    }
+            }
+        }
+
         private var scrolled: Bool { scrollOffset < .zero }
         private var isFloatingVariant: Bool {
             switch variant {
@@ -46,16 +57,7 @@ extension Bar {
             let ratio = (scrollOffset / -32)
             return ratio > 1 ? 1 : ratio
         }
-        
-        private var screenWidthMeasurer: some View {
-            GeometryReader { proxy in
-                Text("")
-                    .onAppear {
-                        screenWidth = proxy.size.width
-                    }
-            }
-        }
-        
+
         // MARK: - Initialisers
        
         public init(
@@ -83,6 +85,8 @@ extension Bar {
                     left: left,
                     actions: actions
                 )
+                .padding(.vertical, 10)
+                .padding(.horizontal, 16)
                 .background(
                     (scrolled && isFloatingVariant == false) ? backgroundColor.opacity(backgroundOpacity) : .clear
                 )
@@ -100,7 +104,7 @@ extension Bar {
             }
         }
         
-        private struct Contents: View {
+        struct Contents: View {
             @State private var leftSize: CGSize = .zero
             @State private var actionSize: CGSize = .zero
             @Binding var screenWidth: CGFloat
@@ -111,7 +115,11 @@ extension Bar {
             var actions: [Resource.Action]
 
             private var titleSize: CGFloat {
-                max(screenWidth - (max(leftSize.width, actionSize.width) * 2) - 20, 0)
+                let componentSize: CGFloat = max(leftSize.width, actionSize.width)
+                let componentWitdh: CGFloat = componentSize * 2
+                let horizontalPadding: CGFloat = 16 * 2
+                let titleHorizontalPadding: CGFloat = 4 * 2
+                return max(screenWidth - (componentWitdh + horizontalPadding + titleHorizontalPadding), 0)
             }
             
             private var leftSizeMeasuerer: some View {
@@ -148,39 +156,35 @@ extension Bar {
                                 )
                         }
                         Text(title)
-                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, color: .labelStrong)
+                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
                             .paragraph(variant: variant.typoVaraint)
                             .lineLimit(1)
-                            .frame(width: titleSize)
-                            .padding(.vertical, 2)
+                            .frame(width: titleSize, height: 24)
                     }
                 case .extended:
-                    VStack {
+                    VStack(spacing: 20) {
                         HStack {
                             ExtendedLeft(left)
                             Spacer()
                             ExtendedAction(actions)
                         }
-                        .padding(.top, 2)
                         HStack {
                             Text(title)
-                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, color: .labelStrong)
+                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
                                 .paragraph(variant: variant.typoVaraint)
                                 .lineLimit(1)
                                 .frame(alignment: variant.textAlignment)
                             Spacer()
                         }
-                        .padding(.leading, 20)
-                        .padding(.bottom, 4)
+                        .padding(.horizontal, 4)
                     }
                 case .floating(let alternative):
-                    VStack {
+                    ZStack {
                         HStack(spacing: .zero) {
                             FloatingLeft(left, alternative)
                             Spacer()
                             FloatingAction(actions, alternative)
                         }
-                        .padding(.vertical, 3.5)
                     }
                 }
             }
@@ -198,32 +202,28 @@ extension Bar {
                     Group {
                         switch left {
                         case .back(let action):
-                            Button.IconButtonController(icon: .chevronLeft) {
+                            Button.IconButton(icon: .chevronLeft) {
                                 action()
                             }
-                            .fixedSize()
+                            .frame(width: 24, height: 24)
                         case let .icon(i, action):
-                            Button.IconButtonController(icon: i) {
+                            Button.IconButton(icon: i) {
                                 action()
                             }
-                            .fixedSize()
+                            .frame(width: 24, height: 24)
                         case let .text(t, action):
-                            Button.TextButtonController(
+                            Button.TextButton(
                                 text: t,
-                                contentColorResolver: Color.Alias.labelNormal
+                                contentColor: .alias(.labelNormal)
                             ) {
                                 action()
                             }
-                            .fixedSize()
-                            .padding(.vertical, 4)
+                            .frame(height: 24)
                         }
                     }
-                    .padding(.leading, 8)
-                    .padding(.vertical, 2)
                 } else {
                     SwiftUI.Color.clear
-                        .frame(width: 40, height: 40)
-                        .padding(.leading, 8)
+                        .frame(width: 24, height: 24)
                 }
             }
         }
@@ -241,22 +241,21 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(icon: i, showPushBadge: s) {
+                                Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
-                                .fixedSize()
+                                .frame(width: 24, height: 24)
                             case let .text(t, action):
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     text: t,
-                                    contentColorResolver: Color.Alias.labelNormal
+                                    contentColor: .alias(.labelNormal)
                                 ) {
                                     action()
                                 }
-                                .fixedSize()
+                                .frame(height: 24)
                             }
                         }
                     }
-                    .padding(.trailing, 8)
                 } else {
                     SwiftUI.Color.clear
                         .frame(width: 24, height: 24)
@@ -264,7 +263,7 @@ extension Bar {
             }
         }
         
-        private struct ExtendedLeft: View {
+        struct ExtendedLeft: View {
             let left: Resource.Left?
             
             init(_ left: Resource.Left?) {
@@ -276,32 +275,30 @@ extension Bar {
                     Group {
                         switch left {
                         case .back(let action):
-                            Button.IconButtonController(icon: .chevronLeft) {
+                            Button.IconButton(icon: .chevronLeft) {
                                 action()
                             }
-                            .fixedSize()
+                            .frame(width: 24, height: 24)
                         case let .icon(i, action):
-                            Button.IconButtonController(icon: i) {
+                            Button.IconButton(icon: i) {
                                 action()
                             }
-                            .fixedSize()
+                            .frame(width: 24, height: 24)
                         case let .text(t, action):
-                            Button.TextButtonController(
+                            Button.TextButton(
                                 text: t,
-                                contentColorResolver: Color.Alias.labelNormal
+                                contentColor: .alias(.labelNormal)
                             ) {
                                 action()
                             }
-                            .fixedSize()
                             .padding(.vertical, 4)
                         }
                     }
-                    .padding(.leading, 8)
                 }
             }
         }
         
-        private struct ExtendedAction: View {
+        struct ExtendedAction: View {
             private let actions: [Resource.Action]
             
             init(_ actions: [Resource.Action]) {
@@ -314,20 +311,16 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(icon: i, showPushBadge: s) {
+                                Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
-                                .fixedSize()
-                                .padding(.trailing, 8)
                             case let .text(t, action):
-                                Button.TextButtonController(
+                                Button.TextButton(
                                     text: t,
-                                    contentColorResolver: Color.Alias.labelNormal
+                                    contentColor: .alias(.labelNormal)
                                 ) {
                                     action()
                                 }
-                                .fixedSize()
-                                .padding(.trailing, 7)
                             }
                         }
                     }
@@ -350,27 +343,25 @@ extension Bar {
                         if alternative {
                             switch left {
                             case .back(let action):
-                                Button.IconButtonController(
-                                    variant: .background(size: 20, isAlternative: alternative),
+                                Button.IconButton(
+                                    variant: .background(size: 24, isAlternative: alternative),
                                     icon: .chevronLeftThick
                                 ) {
                                     action()
                                 }
-                                .fixedSize()
                             case let .icon(i, action):
-                                Button.IconButtonController(
-                                    variant: .background(size: 20, isAlternative: alternative),
+                                Button.IconButton(
+                                    variant: .background(size: 24, isAlternative: alternative),
                                     icon: i
                                 ) {
                                     action()
                                 }
-                                .fixedSize()
                             case let .text(t, action):
                                 SwiftUI.Button {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, color: .staticWhite)
+                                        .montage(variant: .body2, weight: .medium, alias: .staticWhite)
                                         .paragraph(variant: .body2)
                                         .opacity(0.88)
                                         .padding(.vertical, 5)
@@ -380,12 +371,11 @@ extension Bar {
                                     SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
                                 )
                                 .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                .fixedSize()
                             }
                         } else {
                             switch left {
                             case .back(let action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: .chevronLeftThick
                                 ) {
@@ -393,9 +383,8 @@ extension Bar {
                                 }
                                 .background(.regularMaterial)
                                 .clipShape(Circle())
-                                .fixedSize()
                             case let .icon(i, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i
                                 ) {
@@ -403,13 +392,12 @@ extension Bar {
                                 }
                                 .background(.thickMaterial)
                                 .clipShape(Circle())
-                                .fixedSize()
                             case let .text(t, action):
                                 SwiftUI.Button {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, color: .labelAlternative)
+                                        .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
                                         .paragraph(variant: .body2)
                                         .blendMode(.plusDarker)
                                         .padding(.vertical, 5)
@@ -417,11 +405,9 @@ extension Bar {
                                 }
                                 .background(.regularMaterial)
                                 .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                .fixedSize()
                             }
                         }
                     }
-                    .padding(.leading, 12)
                 }
             }
         }
@@ -441,34 +427,31 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButtonController(
+                                Button.IconButton(
                                     variant: .background(size: 20, isAlternative: alternative),
                                     icon: i,
                                     showPushBadge: s
                                 ) {
                                     action()
                                 }
-                                .fixedSize()
                             case let .text(t, action):
                                 if alternative {
-                                    Button.TextButtonController(
+                                    Button.TextButton(
                                         text: t,
-                                        contentColorResolver: Color.Alias.staticWhite
+                                        contentColor: .alias(.staticWhite)
                                     ) {
                                         action()
                                     }
-                                    .fixedSize()
                                     .padding(.horizontal, 5)
                                     .background(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
                                     .clipShape(RoundedRectangle(cornerRadius: 1000))
                                 } else {
-                                    Button.TextButtonController(
+                                    Button.TextButton(
                                         text: t,
-                                        contentColorResolver: Color.Alias.labelAlternative
+                                        contentColor: .alias(.labelAlternative)
                                     ) {
                                         action()
                                     }
-                                    .fixedSize()
                                     .padding(.horizontal, 5)
                                     .background(
                                         ZStack {
@@ -484,7 +467,6 @@ extension Bar {
                             }
                         }
                     }
-                    .padding(.trailing, 8)
                 } else {
                     EmptyView()
                 }
@@ -568,6 +550,8 @@ extension Bar.TopNavigation.Variant {
 
 extension Bar.TopNavigation {
     public struct TopNavigationModifier: ViewModifier {
+        @Environment(\.safeAreaInsets) private var safeAreaInsets
+
         @State private var scrollOffset: CGFloat = .zero
         @State private var containerSize: CGSize = .zero
         @State private var innerContentSize: CGSize = .zero
@@ -633,7 +617,7 @@ extension Bar.TopNavigation {
         ///
         /// Scroll 영역이 ActionArea/Bottom에 가려지는것을 방지하기 위해 사용합니다.
         /// > ActionArea/Bottom과 함께 사용하는 경우에 ActionArea/Bottom의 variant에 의해 결정됩니다.
-        private var scrolLViewBottomPadding: CGFloat {
+        private var scrollViewBottomPadding: CGFloat {
             if model != nil {
                 return bottomActionHeight + (model?.variant == .extra ? +10 : .zero)
             } else {
@@ -671,23 +655,20 @@ extension Bar.TopNavigation {
                         )
                     }
                     .frame(width: 0, height: 0)
-                    VStack(
-                        alignment: .leading,
-                        spacing: .zero
-                    ) {
-                        content
-                    }
-                    .readSize { innerContentSize = $0 }
+                    content
+                        .readSize { innerContentSize = $0 }
+                        .padding(.top, navigationHeight)
                 }
-                .padding(.top, navigationHeight)
-                .padding(.bottom, scrolLViewBottomPadding)
+                .padding(.bottom, scrollViewBottomPadding)
                 .background(
                     backgroundColor
                 )
                 .coordinateSpace(name: "ScrollViewOrigin")
                 .onPreferenceChange(
                     OffsetPreferenceKey.self,
-                    perform: { scrollOffset = $0.y - navigationHeight }
+                    perform: {
+                        scrollOffset = $0.y + (safeAreaInsets.top - navigationHeight)
+                    }
                 )
                 VStack(alignment: .leading, spacing: .zero) {
                     Bar.TopNavigation(
@@ -735,16 +716,20 @@ struct TopNavigation_Previews: PreviewProvider {
                 title: "제목"
             )
             Divider()
+            
             Bar.TopNavigation(
                 title: "제목",
-                left: .back(action: {})
+                left: .text("행동", action: {})
             )
+            .background(SwiftUI.Color.teal)
             Divider()
+            
             Bar.TopNavigation(
                 title: "제목",
                 left: .back(action: {})
             )
             .background(SwiftUI.Color.green)
+            
             Bar.TopNavigation(
                 variant: .floating(),
                 title: "제목",
@@ -755,6 +740,7 @@ struct TopNavigation_Previews: PreviewProvider {
                 ]
             )
             .background(SwiftUI.Color.red)
+            
             Bar.TopNavigation(
                 variant: .floating(),
                 title: "제목",
@@ -764,8 +750,8 @@ struct TopNavigation_Previews: PreviewProvider {
                     .text("행동", action: {}),
                 ]
             )
-            .background(SwiftUI.Color.yellow)
             Divider()
+            
             Bar.TopNavigation(
                 title: "제목",
                 left: .back(action: {}),
@@ -790,6 +776,7 @@ struct TopNavigation_Previews: PreviewProvider {
                 title: "제목",
                 left: .back(action: {})
             )
+            .background(SwiftUI.Color.yellow)
             Bar.TopNavigation(
                 variant: .extended,
                 title: "제목dasfsdasdasdhadjahshdashdkahkjhfajsadhhkfjash",

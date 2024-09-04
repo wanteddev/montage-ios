@@ -38,7 +38,7 @@ struct Button_Previews: PreviewProvider {
                 VStack(alignment: .leading, spacing: .spacing(.pt20)) {
                     Text("Text Button").montage(variant: .heading2, weight: .bold)
                     
-                    TextButtonControllerPreview()
+                    TextButtonPreview()
                 }
             }
         }

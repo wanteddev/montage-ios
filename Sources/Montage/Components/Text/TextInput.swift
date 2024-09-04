@@ -87,11 +87,11 @@ public struct TextInput: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .montage(variant: .label1, weight: .bold, color: .labelNeutral)
+                        .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
                         .paragraph(variant: .label1)
                     if requiredBadge {
                         Text("*")
-                            .montage(variant: .label1, weight: .medium, color: .statusNegative)
+                            .montage(variant: .label1, weight: .medium, alias: .statusNegative)
                     }
                 }
             }
@@ -119,7 +119,7 @@ public struct TextInput: View {
                     Text(message)
                         .montage(
                             variant: .caption1,
-                            color: variant == .negative ? .statusNegative : .labelAlternative
+                            alias: variant == .negative ? .statusNegative : .labelAlternative
                         )
                         .paragraph(variant: .caption1)
                 }
@@ -176,7 +176,7 @@ public struct TextInput: View {
                             text: $text,
                             prompt: {
                                 if let placeholder {
-                                    return Text(placeholder).montage(variant: .body1, weight: .regular, color: .labelAlternative)
+                                    return Text(placeholder).montage(variant: .body1, weight: .regular, alias: .labelAlternative)
                                 } else {
                                     return nil
                                 }
@@ -210,6 +210,7 @@ public struct TextInput: View {
                     
                     if rightButton == nil {
                         RoundedRectangle(cornerRadius: 12)
+                            .inset(by: 0.5)
                             .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                             .padding(.all, textFieldFocusState ? 2 : 1)
                     } else {
@@ -256,7 +257,7 @@ public struct TextInput: View {
         
         var body: some View {
             Text(title)
-                .montage(variant: .body1, weight: variant.typoWeight, color: variant.textColor)
+                .montage(variant: .body1, weight: variant.typoWeight, alias: variant.textColor)
                 .paragraph(variant: .body1)
                 .background(
                     Decorate.InteractionController(

@@ -78,7 +78,7 @@ extension Chip {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var iconColorResolver: ColorResolvable? {
+        public var iconUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -86,7 +86,7 @@ extension Chip {
         
         /// 커스텀 가능한 텍스트 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var fontColorResolver: ColorResolvable? {
+        public var fontUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -257,6 +257,7 @@ extension Chip.Filter {
         layer.borderWidth = variant.borderWidth
         arrowIconView.tintColor = resolveArrowIconTintColor()
         interaction.color = resolveInteractionColor()
+        updateTextLabel()
     }
     
     private func updateIconView() {
@@ -269,11 +270,11 @@ extension Chip.Filter {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
             variant: size.typoVariant,
             weight: .medium,
-            colorResolver: currentTextColorResolverable()
+            color: currentTextUIColor()
         )
     }
 }
@@ -289,16 +290,16 @@ extension Chip.Filter {
         }
     }
 
-    private func currentTextColorResolverable() -> ColorResolvable {
+    private func currentTextUIColor() -> UIColor {
         if disable {
-            return Color.Alias.labelDisable
+            return .alias(.labelDisable)
         } else if active {
-            return variant.activeTextColorResolverable
+            return variant.activeTextUIColor
         } else {
-            if let fontColorResolver {
-                return fontColorResolver
+            if let fontUIColor {
+                return fontUIColor
             } else {
-                return Color.Alias.labelNormal
+                return .alias(.labelNormal)
             }
         }
     }
@@ -318,8 +319,8 @@ extension Chip.Filter {
         } else if active {
             return variant.activeArrowColor
         } else {
-            if let iconColorResolver {
-                return iconColorResolver.resolve(.current)
+            if let iconUIColor {
+                return iconUIColor
             } else {
                 return .alias(.labelNormal)
             }
@@ -390,12 +391,12 @@ extension Chip.Filter.Variant {
         }
     }
     
-    var activeTextColorResolverable: ColorResolvable {
+    var activeTextUIColor: UIColor {
         switch self {
         case .filled:
-            return Color.Alias.inverseLabel
+            return .alias(.inverseLabel)
         case .outlined:
-            return Color.Alias.primaryNormal
+            return .alias(.primaryNormal)
         }
     }
     

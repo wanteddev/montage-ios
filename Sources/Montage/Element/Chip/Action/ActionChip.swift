@@ -79,7 +79,7 @@ extension Chip {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var iconColorResolver: ColorResolvable? {
+        public var iconUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -87,7 +87,7 @@ extension Chip {
         
         /// 커스텀 가능한 배경색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var backgroundColorResolver: ColorResolvable? {
+        public var backgroundUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -95,7 +95,7 @@ extension Chip {
         
         /// 커스텀 가능한 텍스트 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var fontColorResolver: ColorResolvable? {
+        public var fontUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -103,7 +103,7 @@ extension Chip {
         
         /// 커스텀 가능한 선택 시 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var activeColorResolver: ColorResolvable? {
+        public var activeUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -285,6 +285,7 @@ extension Chip.Action {
         leftIconView.tintColor = resolveCurrentIconColor()
         rightIconView.tintColor = resolveCurrentIconColor()
         interaction.color = resolveInteractionColor()
+        updateTextLabel()
     }
     
     private func updateIconView() {
@@ -308,11 +309,11 @@ extension Chip.Action {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(
+        ._montage(
             text,
             variant: size.typoVariant,
             weight: .medium,
-            colorResolver: currentTextColorResolverable()
+            color: currentTextUIColor()
         )
     }
 }
@@ -322,30 +323,30 @@ extension Chip.Action {
         if disable {
             return variant.disableBackgroundColor
         } else if active {
-            if let activeColorResolver {
-                return activeColorResolver.resolve(.current)
+            if let activeUIColor {
+                return activeUIColor
             } else {
                 return variant.activeBackgroundColor
             }
         } else {
-            if let backgroundColorResolver {
-                return backgroundColorResolver.resolve(.current)
+            if let backgroundUIColor {
+                return backgroundUIColor
             } else {
                return  variant.backgroundColor
             }
         }
     }
     
-    private func currentTextColorResolverable() -> ColorResolvable {
+    private func currentTextUIColor() -> UIColor {
         if disable {
-            return Color.Alias.labelDisable
+            return .alias(.labelDisable)
         } else if active {
-            return variant.activeTextColorResolverable
+            return variant.activeTextUIColor
         } else {
-            if let fontColorResolver {
-                return fontColorResolver
+            if let fontUIColor {
+                return fontUIColor
             } else {
-                return Color.Alias.labelNormal
+                return .alias(.labelNormal)
             }
         }
     }
@@ -360,8 +361,8 @@ extension Chip.Action {
     }
     
     private func resolveCurrentIconColor() -> UIColor {
-        if let iconColorResolver {
-            return iconColorResolver.resolve(.current)
+        if let iconUIColor {
+            return iconUIColor
         } else {
             return .alias(.labelAlternative)
         }
@@ -447,12 +448,12 @@ extension Chip.Action.Variant {
         }
     }
     
-    var activeTextColorResolverable: ColorResolvable {
+    var activeTextUIColor: UIColor {
         switch self {
         case .filled:
-            return Color.Alias.inverseLabel
+            return .alias(.inverseLabel)
         case .outlined:
-            return Color.Alias.primaryNormal
+            return .alias(.primaryNormal)
         }
     }
 }
