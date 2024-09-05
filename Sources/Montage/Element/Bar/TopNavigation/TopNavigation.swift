@@ -85,13 +85,14 @@ extension Bar {
                     left: left,
                     actions: actions
                 )
-                .padding(.vertical, 10)
-                .padding(.horizontal, 16)
+                .padding(.all, 16)
                 .background(
                     (scrolled && isFloatingVariant == false) ? backgroundColor.opacity(backgroundOpacity) : .clear
                 )
                 .background(
-                    .ultraThinMaterial.opacity(backgroundOpacity)
+                    (scrolled && isFloatingVariant == false) ?
+                    Material.ultraThinMaterial.opacity(backgroundOpacity)
+                    : Material.ultraThinMaterial.opacity(.zero)
                 )
                 .background(
                     screenWidthMeasurer
@@ -179,13 +180,12 @@ extension Bar {
                         .padding(.horizontal, 4)
                     }
                 case let .floating(alternative, background):
-                    ZStack {
-                        HStack(spacing: .zero) {
-                            FloatingLeft(left, alternative, background)
-                            Spacer()
-                            FloatingAction(actions, alternative, background)
-                        }
+                    HStack(spacing: .zero) {
+                        FloatingLeft(left, alternative, background)
+                        Spacer()
+                        FloatingAction(actions, alternative, background)
                     }
+                    .frame(height: 24)
                 }
             }
         }
@@ -237,7 +237,7 @@ extension Bar {
             
             var body: some View {
                 if actions.isEmpty == false {
-                    HStack(alignment: .center, spacing: .zero) {
+                    HStack(alignment: .center, spacing: 16) {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
@@ -383,29 +383,24 @@ extension Bar {
                                 switch left {
                                 case .back(let action):
                                     Button.IconButton(
-                                        variant: .background(size: 20, isAlternative: alternative),
+                                        variant: .background(size: 24, isAlternative: alternative),
                                         icon: .chevronLeftThick
                                     ) {
                                         action()
                                     }
-                                    .background(.regularMaterial)
-                                    .clipShape(Circle())
                                 case let .icon(i, action):
                                     Button.IconButton(
-                                        variant: .background(size: 20, isAlternative: alternative),
+                                        variant: .background(size: 24, isAlternative: alternative),
                                         icon: i
                                     ) {
                                         action()
                                     }
-                                    .background(.thickMaterial)
-                                    .clipShape(Circle())
                                 case let .text(t, action):
                                     SwiftUI.Button {
                                         action()
                                     } label: {
                                         Text(t)
                                             .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
-                                            .paragraph(variant: .body2)
                                             .blendMode(.plusDarker)
                                             .padding(.vertical, 5)
                                             .padding(.horizontal, 10)
@@ -436,7 +431,6 @@ extension Bar {
                                 } label: {
                                     Text(t)
                                         .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
-                                        .paragraph(variant: .headline2)
                                 }
                             }
                         }
@@ -459,60 +453,20 @@ extension Bar {
                 self.alternative = alternative
                 self.background = background
             }
-            
+
             var body: some View {
                 if actions.isEmpty == false {
-                    HStack(alignment: .center, spacing: 8) {
+                    HStack(alignment: .center, spacing: 16) {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                if background {
-                                    Button.IconButton(
-                                        variant: .background(size: 20, isAlternative: alternative),
-                                        icon: i,
-                                        showPushBadge: s
-                                    ) {
-                                        action()
-                                    }
-                                } else {
-                                    Button.IconButton(
-                                        variant: .default,
-                                        icon: i,
-                                        showPushBadge: s
-                                    ) {
-                                        action()
-                                    }
-                                }
+                                ActionIcon(i, s, alternative, background, action)
                             case let .text(t, action):
                                 if background {
-                                    if alternative {
-                                        Button.TextButton(
-                                            text: t,
-                                            contentColor: .alias(.staticWhite)
-                                        ) {
-                                            action()
-                                        }
-                                        .padding(.horizontal, 5)
-                                        .background(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
-                                        .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                    } else {
-                                        Button.TextButton(
-                                            text: t,
-                                            contentColor: .alias(.labelAlternative)
-                                        ) {
-                                            action()
-                                        }
-                                        .padding(.horizontal, 5)
-                                        .background(
-                                            ZStack {
-                                                SwiftUI.Color.alias(.staticBlack)
-                                                    .opacity(0.05)
-                                                SwiftUI.Color.alias(.staticWhite)
-                                                    .opacity(0.35)
-                                            }
-                                        )
-                                        .background(.thinMaterial)
-                                        .clipShape(RoundedRectangle(cornerRadius: 1000))
+                                    SwiftUI.Button {
+                                        action()
+                                    } label: {
+                                        ActionText(t, alternative)
                                     }
                                 } else {
                                     SwiftUI.Button {
@@ -520,7 +474,6 @@ extension Bar {
                                     } label: {
                                         Text(t)
                                             .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
-                                            .paragraph(variant: .headline2)
                                     }
                                 }
                             }
@@ -528,6 +481,87 @@ extension Bar {
                     }
                 } else {
                     EmptyView()
+                }
+            }
+            
+            private struct ActionIcon: View {
+                let i: Icon
+                let showPushBadge: Bool
+                let alternative: Bool
+                let background: Bool
+                let action: (() -> Void)
+                
+                init(
+                    _ i: Icon,
+                    _ showPushBadge: Bool,
+                    _ alternative: Bool,
+                    _ background: Bool,
+                    _ action: @escaping (() -> Void)
+                ) {
+                    self.i = i
+                    self.showPushBadge = showPushBadge
+                    self.alternative = alternative
+                    self.background = background
+                    self.action = action
+                }
+                
+                private var variant: Button.IconButton.Variant {
+                    background ? .background(size: 24, isAlternative: alternative) : .default
+                }
+                
+                var body: some View {
+                    Button.IconButton(
+                        variant: variant,
+                        icon: i,
+                        showPushBadge: showPushBadge
+                    ) {
+                        action()
+                    }
+                }
+            }
+            
+            private struct ActionText: View {
+                let t: String
+                let alternative: Bool
+                
+                init(_ t: String, _ alternative: Bool) {
+                    self.t = t
+                    self.alternative = alternative
+                }
+
+                var body: some View {
+                    Group {
+                        if alternative {
+                            text()
+                                .background(
+                                    SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
+                                )
+                        } else {
+                            text()
+                                .background(
+                                    ZStack {
+                                        SwiftUI.Color.alias(.staticBlack)
+                                            .opacity(0.05)
+                                        SwiftUI.Color.alias(.staticWhite)
+                                            .opacity(0.35)
+                                    }
+                                )
+                                .background(.thinMaterial)
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 1000))
+                }
+                
+                @ViewBuilder
+                private func text() -> some View {
+                    Text(t)
+                        .montage(
+                            variant: .body2,
+                            weight: .medium,
+                            alias: alternative ? .staticWhite : .labelAlternative
+                        )
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
                 }
             }
         }
