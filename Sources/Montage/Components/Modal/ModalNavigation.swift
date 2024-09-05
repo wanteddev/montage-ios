@@ -193,12 +193,13 @@ private extension Modal.Navigation.Variant {
     }
 }
 
-#Preview {
-    Modal.Navigation(
-        variant: .emphasized,
-        title: "주의해주세요",
-//        left: nil,
-        left: .back(action: {}),
-        actions: [.icon(.close, showPushBadge: false, action: {})]
-    )
+struct ModalNavigation_Preview: PreviewProvider {
+    static var previews: some View {
+        Modal.Navigation(
+            variant: .emphasized,
+            title: "주의해주세요",
+            left: .back(action: {}),
+            actions: [.icon(.close, showPushBadge: false, action: {})]
+        )
+    }
 }
