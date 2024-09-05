@@ -143,7 +143,7 @@ public struct TextInput: View {
         var rightButton: Resource.Button?
         var rightContent: (() -> any View)?
 
-        var fieldStrokeColor: SwiftUI.Color {
+        private var fieldStrokeColor: SwiftUI.Color {
             if textFieldFocusState {
                 switch variant {
                 case .normal, .positive:
@@ -160,7 +160,13 @@ public struct TextInput: View {
                 }
             }
         }
+        private var placeholderTextColor: SwiftUI.Color {
+            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        }
         
+        private var fieldTextColor: SwiftUI.Color {
+            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
+        }
         
         var body: some View {
             HStack(spacing: .zero) {
@@ -181,7 +187,7 @@ public struct TextInput: View {
                                         .montage(
                                             variant: .body1,
                                             weight: .regular,
-                                            alias: disable ? .labelDisable : .labelAssistive
+                                            color: placeholderTextColor
                                         )
                                 } else {
                                     return nil
@@ -189,7 +195,7 @@ public struct TextInput: View {
                             }()
                         )
                         .font(.montage(variant: .body1, weight: .regular))
-                        .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelNormal))
+                        .foregroundStyle(fieldTextColor)
                         .focused($textFieldFocusState)
                         .frame(height: 24)
                         .padding(.horizontal, 4)
