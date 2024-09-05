@@ -178,12 +178,12 @@ extension Bar {
                         }
                         .padding(.horizontal, 4)
                     }
-                case .floating(let alternative):
+                case let .floating(alternative, background):
                     ZStack {
                         HStack(spacing: .zero) {
-                            FloatingLeft(left, alternative)
+                            FloatingLeft(left, alternative, background)
                             Spacer()
-                            FloatingAction(actions, alternative)
+                            FloatingAction(actions, alternative, background)
                         }
                     }
                 }
@@ -331,80 +331,113 @@ extension Bar {
         private struct FloatingLeft: View {
             let left: Resource.Left?
             let alternative: Bool
+            let background: Bool
             
-            init(_ left: Resource.Left?, _ alternative: Bool) {
+            init(
+                _ left: Resource.Left?,
+                _ alternative: Bool,
+                _ background: Bool
+            ) {
                 self.left = left
                 self.alternative = alternative
+                self.background = background
             }
             
             var body: some View {
                 if let left {
                     Group {
-                        if alternative {
-                            switch left {
-                            case .back(let action):
-                                Button.IconButton(
-                                    variant: .background(size: 24, isAlternative: alternative),
-                                    icon: .chevronLeftThick
-                                ) {
-                                    action()
+                        if background {
+                            if alternative {
+                                switch left {
+                                case .back(let action):
+                                    Button.IconButton(
+                                        variant: .background(size: 24, isAlternative: alternative),
+                                        icon: .chevronLeftThick
+                                    ) {
+                                        action()
+                                    }
+                                case let .icon(i, action):
+                                    Button.IconButton(
+                                        variant: .background(size: 24, isAlternative: alternative),
+                                        icon: i
+                                    ) {
+                                        action()
+                                    }
+                                case let .text(t, action):
+                                    SwiftUI.Button {
+                                        action()
+                                    } label: {
+                                        Text(t)
+                                            .montage(variant: .body2, weight: .medium, alias: .staticWhite)
+                                            .paragraph(variant: .body2)
+                                            .opacity(0.88)
+                                            .padding(.vertical, 5)
+                                            .padding(.horizontal, 10)
+                                    }
+                                    .background(
+                                        SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
+                                    )
+                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
                                 }
-                            case let .icon(i, action):
-                                Button.IconButton(
-                                    variant: .background(size: 24, isAlternative: alternative),
-                                    icon: i
-                                ) {
-                                    action()
+                            } else {
+                                switch left {
+                                case .back(let action):
+                                    Button.IconButton(
+                                        variant: .background(size: 20, isAlternative: alternative),
+                                        icon: .chevronLeftThick
+                                    ) {
+                                        action()
+                                    }
+                                    .background(.regularMaterial)
+                                    .clipShape(Circle())
+                                case let .icon(i, action):
+                                    Button.IconButton(
+                                        variant: .background(size: 20, isAlternative: alternative),
+                                        icon: i
+                                    ) {
+                                        action()
+                                    }
+                                    .background(.thickMaterial)
+                                    .clipShape(Circle())
+                                case let .text(t, action):
+                                    SwiftUI.Button {
+                                        action()
+                                    } label: {
+                                        Text(t)
+                                            .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
+                                            .paragraph(variant: .body2)
+                                            .blendMode(.plusDarker)
+                                            .padding(.vertical, 5)
+                                            .padding(.horizontal, 10)
+                                    }
+                                    .background(.regularMaterial)
+                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
                                 }
-                            case let .text(t, action):
-                                SwiftUI.Button {
-                                    action()
-                                } label: {
-                                    Text(t)
-                                        .montage(variant: .body2, weight: .medium, alias: .staticWhite)
-                                        .paragraph(variant: .body2)
-                                        .opacity(0.88)
-                                        .padding(.vertical, 5)
-                                        .padding(.horizontal, 10)
-                                }
-                                .background(
-                                    SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 1000))
                             }
                         } else {
                             switch left {
                             case .back(let action):
                                 Button.IconButton(
-                                    variant: .background(size: 20, isAlternative: alternative),
+                                    variant: .default,
                                     icon: .chevronLeftThick
                                 ) {
                                     action()
                                 }
-                                .background(.regularMaterial)
-                                .clipShape(Circle())
                             case let .icon(i, action):
                                 Button.IconButton(
-                                    variant: .background(size: 20, isAlternative: alternative),
+                                    variant: .default,
                                     icon: i
                                 ) {
                                     action()
                                 }
-                                .background(.thickMaterial)
-                                .clipShape(Circle())
                             case let .text(t, action):
                                 SwiftUI.Button {
                                     action()
                                 } label: {
                                     Text(t)
-                                        .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
-                                        .paragraph(variant: .body2)
-                                        .blendMode(.plusDarker)
-                                        .padding(.vertical, 5)
-                                        .padding(.horizontal, 10)
+                                        .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
+                                        .paragraph(variant: .headline2)
                                 }
-                                .background(.regularMaterial)
-                                .clipShape(RoundedRectangle(cornerRadius: 1000))
                             }
                         }
                     }
@@ -415,10 +448,16 @@ extension Bar {
         private struct FloatingAction: View {
             let actions: [Resource.Action]
             let alternative: Bool
+            let background: Bool
             
-            init(_ actions: [Resource.Action], _ alternative: Bool) {
+            init(
+                _ actions: [Resource.Action],
+                _ alternative: Bool,
+                _ background: Bool
+            ) {
                 self.actions = actions
                 self.alternative = alternative
+                self.background = background
             }
             
             var body: some View {
@@ -427,42 +466,62 @@ extension Bar {
                         ForEach(actions, id: \.self) {
                             switch $0 {
                             case let .icon(i, s, action):
-                                Button.IconButton(
-                                    variant: .background(size: 20, isAlternative: alternative),
-                                    icon: i,
-                                    showPushBadge: s
-                                ) {
-                                    action()
+                                if background {
+                                    Button.IconButton(
+                                        variant: .background(size: 20, isAlternative: alternative),
+                                        icon: i,
+                                        showPushBadge: s
+                                    ) {
+                                        action()
+                                    }
+                                } else {
+                                    Button.IconButton(
+                                        variant: .default,
+                                        icon: i,
+                                        showPushBadge: s
+                                    ) {
+                                        action()
+                                    }
                                 }
                             case let .text(t, action):
-                                if alternative {
-                                    Button.TextButton(
-                                        text: t,
-                                        contentColor: .alias(.staticWhite)
-                                    ) {
-                                        action()
-                                    }
-                                    .padding(.horizontal, 5)
-                                    .background(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
-                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                } else {
-                                    Button.TextButton(
-                                        text: t,
-                                        contentColor: .alias(.labelAlternative)
-                                    ) {
-                                        action()
-                                    }
-                                    .padding(.horizontal, 5)
-                                    .background(
-                                        ZStack {
-                                            SwiftUI.Color.alias(.staticBlack)
-                                                .opacity(0.05)
-                                            SwiftUI.Color.alias(.staticWhite)
-                                                .opacity(0.35)
+                                if background {
+                                    if alternative {
+                                        Button.TextButton(
+                                            text: t,
+                                            contentColor: .alias(.staticWhite)
+                                        ) {
+                                            action()
                                         }
-                                    )
-                                    .background(.thinMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
+                                        .padding(.horizontal, 5)
+                                        .background(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
+                                        .clipShape(RoundedRectangle(cornerRadius: 1000))
+                                    } else {
+                                        Button.TextButton(
+                                            text: t,
+                                            contentColor: .alias(.labelAlternative)
+                                        ) {
+                                            action()
+                                        }
+                                        .padding(.horizontal, 5)
+                                        .background(
+                                            ZStack {
+                                                SwiftUI.Color.alias(.staticBlack)
+                                                    .opacity(0.05)
+                                                SwiftUI.Color.alias(.staticWhite)
+                                                    .opacity(0.35)
+                                            }
+                                        )
+                                        .background(.thinMaterial)
+                                        .clipShape(RoundedRectangle(cornerRadius: 1000))
+                                    }
+                                } else {
+                                    SwiftUI.Button {
+                                        action()
+                                    } label: {
+                                        Text(t)
+                                            .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
+                                            .paragraph(variant: .headline2)
+                                    }
                                 }
                             }
                         }
@@ -480,7 +539,7 @@ extension Bar.TopNavigation {
     public enum Variant: Equatable {
         case normal
         case extended
-        case floating(alternative: Bool = false)
+        case floating(alternative: Bool = false, background: Bool = true)
     }
     
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
