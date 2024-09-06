@@ -201,12 +201,13 @@ public struct TextArea: View {
                 return textEditorFocusState ? SwiftUI.Color.alias(.primaryNormal).opacity(0.43) : SwiftUI.Color.alias(.lineNormal)
             }
         }
+        
+        private var placeholderTextColor: SwiftUI.Color {
+            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        }
+        
         private var editorTextColor: SwiftUI.Color {
-            if disable {
-                text.isEmpty ? .alias(.labelDisable) : .alias(.labelAlternative)
-            } else {
-                .alias(.labelNormal)
-            }
+            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
         }
         
         var body: some View {
@@ -216,7 +217,7 @@ public struct TextArea: View {
                     case .normal:
                         if #available(iOS 16, *) {
                             TextEditor(text: $text)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -232,7 +233,7 @@ public struct TextArea: View {
                                 .padding(.bottom, -6)
                         } else {
                             TextEditor(text: $text)
-                                .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : SwiftUI.Color.alias(.labelNormal))
+                                .foregroundStyle(editorTextColor)
                                 .font(.montage(variant: .body1Reading))
                                 .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                                 .focused($textEditorFocusState)
@@ -326,7 +327,10 @@ public struct TextArea: View {
                     }
                     if $text.wrappedValue.isEmpty && textEditorFocusState == false, let placeholder {
                         Text(placeholder)
-                            .montage(variant: .body1Reading, alias: disable ? .labelDisable : .labelAssistive)
+                            .montage(
+                                variant: .body1Reading,
+                                color: placeholderTextColor
+                            )
                             .paragraph(variant: .body1Reading)
                             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                             .allowsHitTesting(false)

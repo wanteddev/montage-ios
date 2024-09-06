@@ -100,6 +100,14 @@ extension Select {
                 .alias(.lineNeutral)
             }
         }
+        
+        private var placeholderTextColor: SwiftUI.Color {
+            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        }
+        
+        private var textColor: SwiftUI.Color {
+            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
+        }
 
         public var body: some View {
             VStack(alignment: .leading, spacing: 8) {
@@ -144,7 +152,7 @@ extension Select {
                                         .montage(
                                             variant: .body1,
                                             weight: .regular,
-                                            alias: disable ? .labelDisable : .labelAlternative
+                                            color: placeholderTextColor
                                         )
                                         .paragraph(variant: .body1)
                                 } else {
@@ -152,8 +160,7 @@ extension Select {
                                         .montage(
                                             variant: .body1,
                                             weight: .regular,
-                                            alias: disable ? .labelDisable :
-                                                    .labelNormal
+                                            color: textColor
                                         )
                                         .paragraph(variant: .body1)
                                 }

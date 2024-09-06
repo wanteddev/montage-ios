@@ -143,7 +143,7 @@ public struct TextInput: View {
         var rightButton: Resource.Button?
         var rightContent: (() -> any View)?
 
-        var fieldStrokeColor: SwiftUI.Color {
+        private var fieldStrokeColor: SwiftUI.Color {
             if textFieldFocusState {
                 switch variant {
                 case .normal, .positive:
@@ -159,6 +159,13 @@ public struct TextInput: View {
                     return .alias(.statusNegative).opacity(0.43)
                 }
             }
+        }
+        private var placeholderTextColor: SwiftUI.Color {
+            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        }
+        
+        private var fieldTextColor: SwiftUI.Color {
+            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
         }
         
         var body: some View {
@@ -176,14 +183,19 @@ public struct TextInput: View {
                             text: $text,
                             prompt: {
                                 if let placeholder {
-                                    return Text(placeholder).montage(variant: .body1, weight: .regular, alias: .labelAlternative)
+                                    return Text(placeholder)
+                                        .montage(
+                                            variant: .body1,
+                                            weight: .regular,
+                                            color: placeholderTextColor
+                                        )
                                 } else {
                                     return nil
                                 }
                             }()
                         )
                         .font(.montage(variant: .body1, weight: .regular))
-                        .foregroundStyle(disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelNormal))
+                        .foregroundStyle(fieldTextColor)
                         .focused($textFieldFocusState)
                         .frame(height: 24)
                         .padding(.horizontal, 4)
