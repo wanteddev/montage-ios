@@ -11,6 +11,10 @@ import Foundation
 public enum Icon: String, CaseIterable {
     case android
     case apps
+    case alignCenter
+    case alignJustify
+    case alignLeft
+    case alignRight
     case arrowDown
     case arrowDownThick
     case arrowLeft
@@ -19,6 +23,7 @@ public enum Icon: String, CaseIterable {
     case arrowRightThick
     case arrowUp
     case arrowUpThick
+    case megaphone
     case bell
     case bellFill
     case bellPlus
@@ -32,6 +37,7 @@ public enum Icon: String, CaseIterable {
     case bubbleFill
     case bubblePlus
     case bubblePlusFill
+    case bulb
     case businessBag
     case businessBagFill
     case calendar
@@ -90,6 +96,7 @@ public enum Icon: String, CaseIterable {
     case circlePoint
     case circleQuestion
     case circleQuestionFill
+    case clock
     case close
     case closeThick
     case code
@@ -219,6 +226,7 @@ public enum Icon: String, CaseIterable {
     case strikethrough
     case template
     case templateFill
+    case textVariable
     case thumbnail
     case thunder
     case thunderFill
