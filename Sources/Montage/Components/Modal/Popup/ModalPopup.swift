@@ -203,7 +203,7 @@ private struct ModalPopupPreivew: View {
                         ActionArea.Bottom.Component(
                             model: .init(
                                 variant: .normal,
-                                priority: .single(main: .init(text: "눌러봐요", action: {
+                                priority: .cancel(main: .init(text: "눌러봐요", action: {
                                     show = false
                                 })),
                                 sticky: false,
