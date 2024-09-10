@@ -97,11 +97,13 @@ public enum Icon: String, CaseIterable {
     case circleQuestion
     case circleQuestionFill
     case clock
+    case clockFill
     case close
     case closeThick
     case code
     case coins
     case coinsFill
+    case column
     case company
     case companyCheck
     case companyCheckFill
