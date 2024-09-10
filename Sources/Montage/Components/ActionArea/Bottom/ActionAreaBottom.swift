@@ -168,7 +168,7 @@ extension ActionArea {
                         neutral(main, sub, alternative)
                     case let .compact(main, sub):
                         compact(main, sub)
-                    case let .single(main):
+                    case let .cancel(main):
                         single(main)
                     }
                 }
@@ -340,7 +340,7 @@ extension ActionArea.Bottom {
         case strong(main: Action, sub: Action? = nil, alternative: Action? = nil)
         case neutral(main: Action, sub: Action? = nil, alternative: Action? = nil)
         case compact(main: Action, sub: Action? = nil)
-        case single(main: Action)
+        case cancel(main: Action)
     }
     
     public struct Action {
