@@ -508,7 +508,7 @@ public struct TextArea: View {
                 case let .badge(variant, title):
                     Badge.ContentBadgeController(
                         variant: variant,
-                        size: .medium,
+                        size: .large,
                         color: .neutral,
                         text: title
                     )
