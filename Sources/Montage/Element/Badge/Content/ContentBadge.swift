@@ -256,9 +256,9 @@ extension Badge.Content.Size {
         case .normal:
             return .init(width: 12, height: 12)
         case .medium:
-            return .init(width: 16, height: 16)
+            return .init(width: 14, height: 14)
         case .large:
-            return .init(width: 20, height: 20)
+            return .init(width: 16, height: 16)
         }
     }
     
@@ -269,7 +269,7 @@ extension Badge.Content.Size {
         case .medium:
             return .caption1
         case .large:
-            return .label1
+            return .label2
         }
     }
     
@@ -280,7 +280,7 @@ extension Badge.Content.Size {
         case .medium:
             return .init(top: 4, left: 6, bottom: 4, right: 6)
         case .large:
-            return .init(top: 7, left: 8, bottom: 7, right: 8)
+            return .init(top: 5, left: 8, bottom: 5, right: 8)
         }
     }
 
