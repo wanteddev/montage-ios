@@ -23,12 +23,12 @@ extension Badge {
         
         /// 뱃지의 사이즈를 결정하는 열거형입니다.
         public enum Size {
-            case xsmall, small, medium
+            case normal, medium, large
         }
         
         /// 뱃지의 색상을 결정하는 열거형입니다.
         public enum ColorStyle: Equatable {
-            case neutral, accent(Color.Accent)
+            case neutral, accent(_ content: Color.Accent, background: Color.Accent? = nil)
         }
         
         /// 뱃지의 외관입니다.
@@ -39,7 +39,7 @@ extension Badge {
         }
         
         /// 뱃지의 사이즈입니다.
-        public var size: Size = .small {
+        public var size: Size = .medium {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -141,7 +141,7 @@ extension Badge.Content {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = .spacing(.pt02)
+        stackView.spacing = size.spacing
         stackView.addArrangedSubview(leftIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(rightIconView)
@@ -206,11 +206,11 @@ extension Badge.Content {
     }
     
     private func updateColor() {
-        backgroundColor = variant == .filled ? resolveCurrentEncloseColor() : .alias(.backgroundNormal)
+        backgroundColor = variant == .filled ? enclosureColor : .alias(.backgroundNormal)
         layer.borderWidth = variant == .filled ? 0 : 1
-        layer.borderColor = variant == .filled ? nil : resolveCurrentEncloseColor().cgColor
-        leftIconView.tintColor = .alias(colorStyle.mainColor)
-        rightIconView.tintColor = .alias(colorStyle.mainColor)
+        layer.borderColor = variant == .filled ? nil : enclosureColor.cgColor
+        leftIconView.tintColor = .alias(colorStyle.contentColor)
+        rightIconView.tintColor = .alias(colorStyle.contentColor)
     }
     
     private func updateIconView() {
@@ -234,18 +234,18 @@ extension Badge.Content {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, variant: size.typoVariant, weight: .bold, color: colorStyle.mainColor)
+        .montage(text, variant: size.typoVariant, weight: .bold, color: colorStyle.contentColor)
     }
 }
 
 extension Badge.Content {
-    private func resolveCurrentEncloseColor() -> UIColor {
+    private var enclosureColor: UIColor {
         switch colorStyle {
         case .neutral:
             return variant == .filled ? .component(.fillNormal) : .alias(.lineNormal)
-        case .accent(let colorStyle):
+        case let .accent(contentColor, enclosureColor):
             let opacity: CGFloat = variant == .filled ? .opacity(.p008) : .opacity(.p043)
-            return colorStyle.resolveAsUIColor().withAlphaComponent(opacity)
+            return (enclosureColor ?? contentColor).resolveAsUIColor().withAlphaComponent(opacity)
         }
     }
 }
@@ -253,56 +253,67 @@ extension Badge.Content {
 extension Badge.Content.Size {
     var iconSize: CGSize {
         switch self {
-        case .xsmall:
+        case .normal:
             return .init(width: 12, height: 12)
-        case .small:
-            return .init(width: 16, height: 16)
         case .medium:
-            return .init(width: 20, height: 20)
+            return .init(width: 14, height: 14)
+        case .large:
+            return .init(width: 16, height: 16)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
-        case .xsmall:
+        case .normal:
             return .caption2
-        case .small:
-            return .caption1
         case .medium:
-            return .label1
+            return .caption1
+        case .large:
+            return .label2
         }
     }
     
     var edgeInsets: UIEdgeInsets {
         switch self {
-        case .xsmall:
-            return .init(top: 3, left: 4, bottom: 3, right: 4)
-        case .small:
-            return .init(top: 4, left: 8, bottom: 4, right: 8)
+        case .normal:
+            return .init(top: 3, left: 6, bottom: 3, right: 6)
         case .medium:
-            return .init(top: 6, left: 12, bottom: 6, right: 12)
+            return .init(top: 4, left: 6, bottom: 4, right: 6)
+        case .large:
+            return .init(top: 5, left: 8, bottom: 5, right: 8)
         }
     }
 
     var cornerRadius: CGFloat {
         switch self {
-        case .xsmall:
-            return 4.0
-        case .small:
+        case .normal:
             return 6.0
         case .medium:
+            return 6.0
+        case .large:
             return 8.0
+        }
+    }
+    
+    var spacing: CGFloat {
+        switch self {
+        case .normal:
+            2
+        case .medium:
+            3
+        case .large:
+            4
         }
     }
 }
 
 extension Badge.Content.ColorStyle {
-    var mainColor: Color.Alias {
+    var contentColor: Color.Alias {
         switch self {
         case .neutral:
             return .labelAlternative
-        case .accent(let color):
-            return color.resolveAsAlias()
+        case let .accent(contentColor, _):
+            return contentColor.resolveAsAlias()
         }
     }
 }

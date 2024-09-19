@@ -32,7 +32,7 @@ extension Badge {
         
         public init(
             variant: Badge.Content.Variant = .filled,
-            size: Badge.Content.Size = .small,
+            size: Badge.Content.Size = .medium,
             color: Badge.Content.ColorStyle = .neutral,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -82,19 +82,19 @@ fileprivate struct Preview: View {
 
             HStack {
                 Badge.ContentBadgeController(
-                    variant: .filled, size: .xsmall, text: text
+                    variant: .filled, size: .normal, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    variant: .outlined, size: .xsmall, text: text
+                    variant: .outlined, size: .normal, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    variant: .filled, size: .small, text: text
+                    variant: .filled, size: .medium, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    variant: .outlined, size: .small, text: text
+                    variant: .outlined, size: .medium, text: text
                 ).fixedSize()
             }
     
