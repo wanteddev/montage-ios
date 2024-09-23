@@ -101,6 +101,8 @@ public enum Icon: String, CaseIterable {
     case clockFill
     case close
     case closeThick
+    case coffee
+    case coffeeFill
     case code
     case coins
     case coinsFill
