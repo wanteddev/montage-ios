@@ -31,7 +31,7 @@ extension Badge {
         public typealias UIViewType = Badge.Content
         
         public init(
-            variant: Badge.Content.Variant = .filled,
+            variant: Badge.Content.Variant = .solid,
             size: Badge.Content.Size = .medium,
             color: Badge.Content.ColorStyle = .neutral,
             leftIcon: Icon? = nil,
@@ -70,7 +70,7 @@ fileprivate struct Preview: View {
 
             HStack {
                 Badge.ContentBadgeController(
-                    variant: .filled, text: text
+                    variant: .solid, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
@@ -82,7 +82,7 @@ fileprivate struct Preview: View {
 
             HStack {
                 Badge.ContentBadgeController(
-                    variant: .filled, size: .normal, text: text
+                    variant: .solid, size: .normal, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
@@ -90,7 +90,7 @@ fileprivate struct Preview: View {
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
-                    variant: .filled, size: .medium, text: text
+                    variant: .solid, size: .medium, text: text
                 ).fixedSize()
 
                 Badge.ContentBadgeController(
@@ -100,46 +100,46 @@ fileprivate struct Preview: View {
     
             Text("Accents").montage(variant: .headline2)
     
-            Text("Filled").montage(variant: .body2)
+            Text("Solid").montage(variant: .body2)
     
             VStack(alignment: .leading) {
                 HStack {
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.primary), text: "중요"
+                        variant: .solid, color: .accent(.primary), text: "중요"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.positive), text: "긍정"
+                        variant: .solid, color: .accent(.positive), text: "긍정"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.cautionary), text: "경고"
+                        variant: .solid, color: .accent(.cautionary), text: "경고"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.negative), text: "에러"
+                        variant: .solid, color: .accent(.negative), text: "에러"
                     ).fixedSize()
                 }
     
                 HStack {
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.lime), text: "라임"
+                        variant: .solid, color: .accent(.lime), text: "라임"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.cyan), text: "시안"
+                        variant: .solid, color: .accent(.cyan), text: "시안"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.lightBlue), text: "라이트 블루"
+                        variant: .solid, color: .accent(.lightBlue), text: "라이트 블루"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.violet), text: "바이올렛"
+                        variant: .solid, color: .accent(.violet), text: "바이올렛"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .filled, color: .accent(.pink), text: "핑크"
+                        variant: .solid, color: .accent(.pink), text: "핑크"
                     ).fixedSize()
                 }
             }

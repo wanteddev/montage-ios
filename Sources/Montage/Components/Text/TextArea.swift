@@ -547,17 +547,17 @@ extension TextArea {
             tintColor: SwiftUI.Color = .alias(.labelAssistive)
         )
         case actionChip(
-            Chip.Action.Variant = .filled,
+            Chip.Action.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         case filterChip(
-            Chip.Filter.Variant = .filled,
+            Chip.Filter.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         case badge(
-            Badge.Content.Variant = .filled,
+            Badge.Content.Variant = .solid,
             title: String
         )
     }
