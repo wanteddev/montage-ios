@@ -17,14 +17,9 @@ public protocol RoundCheckboxControlDelegate: AnyObject {
 extension Control {
     /// 원형으로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageControl``의 모든 상태를 표현할 수 있습니다.
     public class RoundCheckbox: UIView, MontageControl {
-        /// 체크박스의 사이즈를 결정하는 열거형입니다.
-        public enum Size {
-            case normal, small
-        }
+        private let boxView = UIView()
         
-        private lazy var boxView = UIView()
-        
-        private lazy var imageView: UIImageView = {
+        private let imageView: UIImageView = {
             let view = UIImageView()
             view.isUserInteractionEnabled = false
             view.tintColor = .alias(.staticWhite)
@@ -38,35 +33,29 @@ extension Control {
             }
         }
         
-        public var size: Size = .normal {
-            didSet {
-                updateViews()
-            }
-        }
-        
         public var disable: Bool = false {
             didSet {
                 updateViews()
             }
         }
         
+        private let size: MontageControlSize
         private let interactionView = Decorate.Interaction()
 
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
         public weak var delegate: RoundCheckboxControlDelegate?
         
-        public init() {
+        public init(size: MontageControlSize) {
+            self.size = size
             super.init(frame: .zero)
             
             setupViews()
             bindEvent()
         }
         
-        override public required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setupViews()
-            bindEvent()
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
         
         override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -77,7 +66,7 @@ extension Control {
         
         /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
-            size.containerSize
+            containerSize
         }
     }
 }
@@ -93,23 +82,23 @@ extension Control.RoundCheckbox {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         interactionView.translatesAutoresizingMaskIntoConstraints = false
         
-        widthAnchor.constraint(equalToConstant: size.containerSize.width).isActive = true
-        heightAnchor.constraint(equalToConstant: size.containerSize.height).isActive = true
+        widthAnchor.constraint(equalToConstant: containerSize.width).isActive = true
+        heightAnchor.constraint(equalToConstant: containerSize.height).isActive = true
 
-        boxView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.boxInsets.left).isActive = true
-        boxView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.boxInsets.right).isActive = true
-        boxView.topAnchor.constraint(equalTo: topAnchor, constant: size.boxInsets.top).isActive = true
-        boxView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -size.boxInsets.bottom).isActive = true
+        boxView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: boxInsets.left).isActive = true
+        boxView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -boxInsets.right).isActive = true
+        boxView.topAnchor.constraint(equalTo: topAnchor, constant: boxInsets.top).isActive = true
+        boxView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -boxInsets.bottom).isActive = true
         
-        imageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: size.imageInsets.left).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -size.imageInsets.right).isActive = true
-        imageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: size.imageInsets.top).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -size.imageInsets.bottom).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: imageInsets.left).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -imageInsets.right).isActive = true
+        imageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: imageInsets.top).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -imageInsets.bottom).isActive = true
         
         interactionView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         interactionView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        interactionView.widthAnchor.constraint(equalToConstant: size.interactionSize.width).isActive = true
-        interactionView.heightAnchor.constraint(equalToConstant: size.interactionSize.height).isActive = true
+        interactionView.widthAnchor.constraint(equalToConstant: interactionSize.width).isActive = true
+        interactionView.heightAnchor.constraint(equalToConstant: interactionSize.height).isActive = true
         
         updateViews()
     }
@@ -117,13 +106,14 @@ extension Control.RoundCheckbox {
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
-        boxView.layer.cornerRadius = size.cornerRadius
+        boxView.layer.cornerRadius = cornerRadius
         boxView.layer.borderWidth = 1.5
         boxView.layer.backgroundColor = resolveCurrentBackgroundColor()
         boxView.layer.borderColor = resolveCurrentBorderColor()
+        boxView.layer.opacity = .opacity(disable ? .p043 : .p100)
         imageView.image = resolveCurrentImage()
         interactionView.variant = .normal
-        interactionView.layer.cornerRadius = size.interactionSize.width / 2
+        interactionView.layer.cornerRadius = interactionSize.width / 2
     }
     
     private func bindEvent() {
@@ -151,6 +141,10 @@ extension Control.RoundCheckbox {
         case .ended:
             guard interactionView.state == .pressed else { return }
             interactionView.state = .normal
+            state = switch state {
+            case .checked: .unchecked
+            case .partial, .unchecked: .checked
+            }
             delegate?.didTappedCheckbox(self)
         default:
             break
@@ -160,24 +154,20 @@ extension Control.RoundCheckbox {
 
 extension Control.RoundCheckbox {
     private func resolveCurrentBackgroundColor() -> CGColor? {
-        let opacity: CGFloat = .opacity(disable ? .p043 : .p100)
-        
         switch state {
         case .unchecked:
             return nil
         case .checked, .partial:
-            return UIColor.alias(.primaryNormal).withAlphaComponent(opacity).cgColor
+            return UIColor.alias(.primaryNormal).cgColor
         }
     }
     
     private func resolveCurrentBorderColor() -> CGColor {
-        let opacity: CGFloat = .opacity(disable ? .p043 : .p100)
-        
         switch state {
         case .unchecked:
-            return UIColor.alias(.lineNormal).withAlphaComponent(opacity).cgColor
+            return UIColor.alias(.lineNormal).cgColor
         case .checked, .partial:
-            return UIColor.clear.cgColor
+            return UIColor.alias(.primaryNormal).cgColor
         }
     }
     
@@ -193,13 +183,13 @@ extension Control.RoundCheckbox {
     }
 }
 
-extension Control.RoundCheckbox.Size {
+extension Control.RoundCheckbox {
     var containerSize: CGSize {
-        switch self {
+        switch size {
         case .normal:
-            return .init(width: 20, height: 20)
+            return .init(width: 24, height: 24)
         case .small:
-            return .init(width: 16, height: 16)
+            return .init(width: 20, height: 20)
         }
     }
     
@@ -208,7 +198,13 @@ extension Control.RoundCheckbox.Size {
     }
     
     var imageInsets: UIEdgeInsets {
-        .init(top: 1, left: 1, bottom: 1, right: 1)
+        switch size {
+        case .normal:
+            return .init(top: 2, left: 2, bottom: 2, right: 2)
+        case .small:
+            return .init(top: 1, left: 1, bottom: 1, right: 1)
+        }
+        
     }
     
     var cornerRadius: CGFloat {
@@ -216,7 +212,7 @@ extension Control.RoundCheckbox.Size {
     }
     
     var interactionSize: CGSize {
-        switch self {
+        switch size {
         case .normal:
             return .init(width: 32, height: 32)
         case .small:
