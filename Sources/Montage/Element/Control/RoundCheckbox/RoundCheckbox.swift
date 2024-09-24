@@ -177,7 +177,7 @@ extension Control.RoundCheckbox {
         case .unchecked:
             return UIColor.alias(.lineNormal).withAlphaComponent(opacity).cgColor
         case .checked, .partial:
-            return UIColor.alias(.primaryNormal).withAlphaComponent(opacity).cgColor
+            return UIColor.clear.cgColor
         }
     }
     
