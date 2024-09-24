@@ -160,3 +160,8 @@ public enum MontageControlState {
     case checked
     case partial
 }
+
+public enum MontageControlSize {
+    case normal
+    case small
+}
