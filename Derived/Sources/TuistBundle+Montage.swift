@@ -9,7 +9,7 @@ private class BundleFinder {}
 
 extension Foundation.Bundle {
     /// Since Montage is a staticFramework, the bundle containing the resources is copied into the final product.
-    static let module: Bundle = {
+    static var module: Bundle = {
         let bundleName = "Montage_Montage"
 
         let candidates = [
@@ -32,9 +32,9 @@ extension Foundation.Bundle {
 
 @objc
 public class MontageResources: NSObject {
-    @objc public class var bundle: Bundle {
-        return .module
-    }
+   @objc public class var bundle: Bundle {
+         return .module
+   }
 }
 // swiftlint:enable all
 // swiftformat:enable all

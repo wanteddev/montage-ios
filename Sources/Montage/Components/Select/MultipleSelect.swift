@@ -281,7 +281,7 @@ extension Select {
                     ForEach(Array(items.indices), id: \.self) {
                         let item = items[$0]
                         Montage.Chip.ActionChipController(
-                            variant:.filled,
+                            variant:.solid,
                             size: .xsmall,
                             leftIcon: item.icon,
                             rightIcon: .closeThick,

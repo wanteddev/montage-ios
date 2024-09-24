@@ -10,7 +10,7 @@ import Pretendard
 
 extension Chip {
     public struct ActionChipController: UIViewRepresentable {
-        public var variant: Action.Variant = .filled
+        public var variant: Action.Variant = .solid
         public var size: Action.Size = .normal
         public var leftIcon: Icon?
         public var rightIcon: Icon?
@@ -27,7 +27,7 @@ extension Chip {
         public typealias UIViewType = Action
         
         public init(
-            variant: Action.Variant = .filled,
+            variant: Action.Variant = .solid,
             size: Action.Size = .normal,
             leftIcon: Icon? = nil,
             rightIcon: Icon? = nil,
@@ -100,7 +100,7 @@ var actionChipControllerPreview: some View {
             Text("Variant").montage(variant: .headline2)
             HStack {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요"
                 ).fixedSize()
                 
@@ -115,13 +115,13 @@ var actionChipControllerPreview: some View {
             Text("Disable").montage(variant: .headline2)
             HStack {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요",
                     disable: false
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요",
                     disable: true
                 ).fixedSize()
@@ -145,12 +145,12 @@ var actionChipControllerPreview: some View {
             Text("Active").montage(variant: .headline2)
             HStack {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요",
                     active: true
                 ).fixedSize()
@@ -173,25 +173,25 @@ var actionChipControllerPreview: some View {
             Text("Size").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .xsmall,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .small,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .normal,
                     text: "안녕하세요"
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .large,
                     text: "안녕하세요"
                 ).fixedSize()
@@ -227,7 +227,7 @@ var actionChipControllerPreview: some View {
             Text("Icon").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .xsmall,
                     leftIcon: .bell,
                     rightIcon: .apps,
@@ -235,7 +235,7 @@ var actionChipControllerPreview: some View {
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .small,
                     leftIcon: .bell,
                     rightIcon: .apps,
@@ -265,7 +265,7 @@ var actionChipControllerPreview: some View {
             Text("Customize").montage(variant: .headline2)
             HStack(alignment: .center) {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .xsmall,
                     leftIcon: .bell,
                     rightIcon: .apps,
@@ -274,7 +274,7 @@ var actionChipControllerPreview: some View {
                 ).fixedSize()
                 
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     size: .small,
                     leftIcon: .bell,
                     rightIcon: .apps,
@@ -305,11 +305,11 @@ var actionChipControllerPreview: some View {
             }
             HStack(alignment: .center) {
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요"
                 ).fixedSize()
                 Chip.ActionChipController(
-                    variant: .filled,
+                    variant: .solid,
                     text: "안녕하세요",
                     active: true,
                     activeColor: .alias(.accentCyan)

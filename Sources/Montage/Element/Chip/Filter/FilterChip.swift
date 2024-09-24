@@ -12,7 +12,7 @@ extension Chip {
     public class Filter: UIView {
         /// 칩의 외관을 결정하는 열거형입니다.
         public enum Variant {
-            case filled, outlined
+            case solid, outlined
         }
         
         /// 칩의 확장 상태를 나타내는 열거형입니다.
@@ -27,7 +27,7 @@ extension Chip {
         }
         
         /// 칩의 외관입니다.
-        public var variant: Variant = .filled {
+        public var variant: Variant = .solid {
             didSet {
                 updateViews()
             }
@@ -357,7 +357,7 @@ extension Chip.Filter {
 extension Chip.Filter.Variant {
     var backgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .component(.fillAlternative)
         case .outlined:
             return .clear
@@ -366,7 +366,7 @@ extension Chip.Filter.Variant {
 
     var borderWidth: CGFloat {
         switch self {
-        case .filled:
+        case .solid:
             return .zero
         case .outlined:
             return 1
@@ -375,7 +375,7 @@ extension Chip.Filter.Variant {
     
     var disableBackgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.interactionDisable)
         case .outlined:
             return .clear
@@ -384,7 +384,7 @@ extension Chip.Filter.Variant {
     
     var activeBackgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseBackground)
         case .outlined:
             return .alias(.primaryNormal).withAlphaComponent(0.05)
@@ -393,7 +393,7 @@ extension Chip.Filter.Variant {
     
     var activeTextUIColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseLabel)
         case .outlined:
             return .alias(.primaryNormal)
@@ -402,7 +402,7 @@ extension Chip.Filter.Variant {
     
     var activeArrowColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseLabel)
         case .outlined:
             return .alias(.labelNormal)

@@ -18,7 +18,7 @@ extension Badge {
         
         /// 뱃지의 외관을 결정하는 열거형 타입입니다.
         public enum Variant {
-            case filled, outlined
+            case solid, outlined
         }
         
         /// 뱃지의 사이즈를 결정하는 열거형입니다.
@@ -32,7 +32,7 @@ extension Badge {
         }
         
         /// 뱃지의 외관입니다.
-        public var variant: Variant = .filled {
+        public var variant: Variant = .solid {
             didSet {
                 updateViews()
             }
@@ -206,9 +206,9 @@ extension Badge.Content {
     }
     
     private func updateColor() {
-        backgroundColor = variant == .filled ? enclosureColor : .alias(.backgroundNormal)
-        layer.borderWidth = variant == .filled ? 0 : 1
-        layer.borderColor = variant == .filled ? nil : enclosureColor.cgColor
+        backgroundColor = variant == .solid ? enclosureColor : .alias(.backgroundNormal)
+        layer.borderWidth = variant == .solid ? 0 : 1
+        layer.borderColor = variant == .solid ? nil : enclosureColor.cgColor
         leftIconView.tintColor = .alias(colorStyle.contentColor)
         rightIconView.tintColor = .alias(colorStyle.contentColor)
     }
@@ -242,9 +242,9 @@ extension Badge.Content {
     private var enclosureColor: UIColor {
         switch colorStyle {
         case .neutral:
-            return variant == .filled ? .component(.fillNormal) : .alias(.lineNormal)
+            return variant == .solid ? .component(.fillNormal) : .alias(.lineNormal)
         case let .accent(contentColor, enclosureColor):
-            let opacity: CGFloat = variant == .filled ? .opacity(.p008) : .opacity(.p043)
+            let opacity: CGFloat = variant == .solid ? .opacity(.p008) : .opacity(.p043)
             return (enclosureColor ?? contentColor).resolveAsUIColor().withAlphaComponent(opacity)
         }
     }

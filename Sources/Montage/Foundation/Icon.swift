@@ -138,6 +138,7 @@ public enum Icon: String, CaseIterable {
     case faceSmileFill
     case filter
     case filterFill
+    case flipBackward
     case folder
     case folderFill
     case folderJob
@@ -148,6 +149,7 @@ public enum Icon: String, CaseIterable {
     case globe
     case graduation
     case handle
+    case handleDesktop
     case heart
     case heartFill
     case history
@@ -189,6 +191,7 @@ public enum Icon: String, CaseIterable {
     case minusThick
     case mobile
     case mobileFill
+    case moon
     case moreHorizontal
     case moreVertical
     case moreVerticalTight
@@ -208,6 +211,7 @@ public enum Icon: String, CaseIterable {
     case play
     case plus
     case plusThick
+    case printer
     case question
     case quote
     case refresh
@@ -230,6 +234,7 @@ public enum Icon: String, CaseIterable {
     case star
     case starFill
     case strikethrough
+    case sun
     case template
     case templateFill
     case textVariable
