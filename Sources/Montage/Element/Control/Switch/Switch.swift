@@ -19,24 +19,38 @@ extension Control {
     public final class Switch: UISwitch {
         public weak var delegate: SwitchControlDelegate?
         
+        public enum Size {
+            case normal, small
+        }
+        
         public var disable: Bool = false {
             didSet {
                 self.isEnabled = false == disable
             }
         }
         
-        override init(frame: CGRect) {
-            super.init(frame: frame)
+        public override var isEnabled: Bool {
+            didSet {
+                print("didSet \(isEnabled)")
+            }
+        }
+        
+        private let size: Size
+        public init(size: Size = .normal) {
+            self.size = size
+            super.init(frame: .zero)
             
             setupViews()
             bindEvent()
         }
         
         required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            
-            setupViews()
-            bindEvent()
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        /// Element의 기본적인 사이즈를 정의합니다.
+        override public var intrinsicContentSize: CGSize {
+            containerSize
         }
     }
 }
@@ -45,6 +59,10 @@ extension Control.Switch {
     private func setupViews() {
         tintColor = .component(.fillNormal)
         onTintColor = .alias(.primaryNormal)
+        
+        transform = CGAffineTransform(scaleX: containerSize.width / bounds.width, y: containerSize.height / bounds.height)
+        widthAnchor.constraint(equalToConstant: containerSize.width).isActive = true
+        heightAnchor.constraint(equalToConstant: containerSize.height).isActive = true
     }
     
     private func bindEvent() {
@@ -53,5 +71,16 @@ extension Control.Switch {
     
     @objc private func valueChanged() {
         delegate?.didValueChangedSwitch(self)
+    }
+}
+
+extension Control.Switch {
+    var containerSize: CGSize {
+        switch size {
+        case .normal:
+            return .init(width: 52, height: 32)
+        case .small:
+            return .init(width: 39, height: 24)
+        }
     }
 }
