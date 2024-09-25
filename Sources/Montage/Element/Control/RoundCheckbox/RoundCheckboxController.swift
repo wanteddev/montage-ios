@@ -17,13 +17,13 @@ extension Control {
         
         public typealias UIViewType = RoundCheckbox
         
-        public init(_ state: Binding<MontageControlState>, size: MontageControlSize, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(_ state: Binding<MontageControlState>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = state
             self.size = size
             self.onTap = onTap
         }
         
-        public init(state: MontageControlState, size: MontageControlSize, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(state: MontageControlState, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = .constant(state)
             self.size = size
             self.onTap = onTap
@@ -60,6 +60,7 @@ extension Control {
             }
             
             public func didTappedCheckbox(_ checkbox: Control.RoundCheckbox) {
+                state = checkbox.state
                 onTap(checkbox)
             }
         }
@@ -69,7 +70,7 @@ extension Control {
 struct RoundCheckboxController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.RoundCheckboxController(state: .checked, size: .normal)
+            Control.RoundCheckboxController(state: .checked)
                 .fixedSize()
         }
     }

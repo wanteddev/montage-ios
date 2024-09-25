@@ -46,7 +46,7 @@ extension Control {
         
         public weak var delegate: CheckboxControlDelegate?
         
-        public init(size: MontageControlSize) {
+        public init(size: MontageControlSize = .normal) {
             self.size = size
             super.init(frame: .zero)
             

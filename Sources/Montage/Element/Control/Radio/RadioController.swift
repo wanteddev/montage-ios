@@ -17,13 +17,13 @@ extension Control {
         
         public typealias UIViewType = Radio
         
-        public init(_ state: Binding<MontageControlState>, size: MontageControlSize, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(_ state: Binding<MontageControlState>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = state
             self.size = size
             self.onTap = onTap
         }
         
-        public init(state: MontageControlState, size: MontageControlSize, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(state: MontageControlState, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = .constant(state)
             self.size = size
             self.onTap = onTap
@@ -60,6 +60,7 @@ extension Control {
             }
             
             public func didTappedRadio(_ radio: UIViewType) {
+                state = radio.state
                 onTap(radio)
             }
         }
@@ -69,7 +70,7 @@ extension Control {
 struct RadioController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.RadioController(state: .checked, size: .normal).fixedSize()
+            Control.RadioController(state: .checked).fixedSize()
         }
     }
 }

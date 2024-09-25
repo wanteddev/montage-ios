@@ -53,7 +53,7 @@ extension Control {
         
         /// Radio 객체를 생성합니다.
         /// - Parameter delegate: Radio 버튼을 Element 단독으로 사용할 경우 이벤트를 받을 delegate 객체입니다.
-        public init(size: MontageControlSize) {
+        public init(size: MontageControlSize = .normal) {
             self.size = size
             super.init(frame: .zero)
             

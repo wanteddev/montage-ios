@@ -52,7 +52,7 @@ extension Control {
         
         public weak var delegate: CheckControlDelegate?
         
-        public init(size: MontageControlSize) {
+        public init(size: MontageControlSize = .normal) {
             self.size = size
             super.init(frame: .zero)
             
