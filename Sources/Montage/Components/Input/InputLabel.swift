@@ -158,7 +158,7 @@ public protocol MontageControl: UIView {
 public enum MontageControlState {
     case unchecked
     case checked
-    case partial
+    case indeterminate
 }
 
 public enum MontageControlSize {

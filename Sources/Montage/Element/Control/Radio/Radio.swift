@@ -27,11 +27,11 @@ extension Control {
         }()
         
         /// Control Element의 모양을 표현하기 위한 상태값입니다.
-        /// `.partial` 상태는 지원하지 않으며, 해당 상태로 설정할 경우 자동으로 `.checked` 상태로 변경후 설정됩니다.
+        /// `.indeterminate` 상태는 지원하지 않으며, 해당 상태로 설정할 경우 자동으로 `.checked` 상태로 변경후 설정됩니다.
         public var state: MontageControlState = .unchecked {
             didSet {
-                if state == .partial {
-                    #warning("Can't use .partial type on Radio element. Must use .checked type.")
+                if state == .indeterminate {
+                    #warning("Can't use .indeterminate type on Radio element. Must use .checked type.")
                     state = .checked
                 }
                 updateViews()
@@ -150,7 +150,7 @@ extension Control.Radio {
             interactionView.state = .normal
             state = switch state {
             case .checked: .unchecked
-            case .partial, .unchecked: .checked
+            case .indeterminate, .unchecked: .checked
             }
             delegate?.didTappedRadio(self)
         default:
@@ -164,7 +164,7 @@ extension Control.Radio {
         switch state {
         case .unchecked:
             return nil
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return UIColor.alias(.primaryNormal).cgColor
         }
     }
@@ -173,7 +173,7 @@ extension Control.Radio {
         switch state {
         case .unchecked:
             return UIColor.alias(.lineNormal).cgColor
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return UIColor.alias(.primaryNormal).cgColor
         }
     }
@@ -182,7 +182,7 @@ extension Control.Radio {
         switch state {
         case .unchecked:
             return nil
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return .montage(.dot)
         }
     }

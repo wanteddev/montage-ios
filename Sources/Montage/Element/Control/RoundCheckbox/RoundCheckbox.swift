@@ -143,7 +143,7 @@ extension Control.RoundCheckbox {
             interactionView.state = .normal
             state = switch state {
             case .checked: .unchecked
-            case .partial, .unchecked: .checked
+            case .indeterminate, .unchecked: .checked
             }
             delegate?.didTappedCheckbox(self)
         default:
@@ -157,7 +157,7 @@ extension Control.RoundCheckbox {
         switch state {
         case .unchecked:
             return nil
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return UIColor.alias(.primaryNormal).cgColor
         }
     }
@@ -166,7 +166,7 @@ extension Control.RoundCheckbox {
         switch state {
         case .unchecked:
             return UIColor.alias(.lineNormal).cgColor
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return UIColor.alias(.primaryNormal).cgColor
         }
     }
@@ -177,7 +177,7 @@ extension Control.RoundCheckbox {
             return nil
         case .checked:
             return .montage(.checkThick)
-        case .partial:
+        case .indeterminate:
             return .montage(.lineHorizontalThick)
         }
     }

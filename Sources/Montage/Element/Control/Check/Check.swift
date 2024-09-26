@@ -28,11 +28,11 @@ extension Control {
         }()
         
         /// Control Element의 모양을 표현하기 위한 상태값입니다.
-        /// `.partial` 상태는 지원하지 않으며, 해당 상태로 설정할 경우 자동으로 `.checked` 상태로 변경후 설정됩니다.
+        /// `.indeterminate` 상태는 지원하지 않으며, 해당 상태로 설정할 경우 자동으로 `.checked` 상태로 변경후 설정됩니다.
         public var state: MontageControlState = .unchecked {
             didSet {
-                if state == .partial {
-                    #warning("Can't use .partial type on NestedCheck element. Must use .checked type.")
+                if state == .indeterminate {
+                    #warning("Can't use .indeterminate type on NestedCheck element. Must use .checked type.")
                     state = .checked
                 }
                 updateViews()
@@ -117,7 +117,7 @@ extension Control.Check {
         switch state {
         case .unchecked:
             imageView.tintColor = .alias(.labelAssistive)
-        case .checked, .partial:
+        case .checked, .indeterminate:
             imageView.tintColor = .alias(.primaryNormal)
         }
         
@@ -152,7 +152,7 @@ extension Control.Check {
             interactionView.state = .normal
             state = switch state {
             case .checked: .unchecked
-            case .partial, .unchecked: .checked
+            case .indeterminate, .unchecked: .checked
             }
             delegate?.didTappedCheck(self)
         default:
