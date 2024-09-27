@@ -44,7 +44,7 @@ extension Control {
             }
         }
         
-        private let size: MontageControlSize
+        public let size: MontageControlSize
         private let interactionView = Decorate.Interaction()
                 
         private var longPressRecognizer: UILongPressGestureRecognizer?

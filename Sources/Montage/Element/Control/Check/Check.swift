@@ -16,7 +16,7 @@ public protocol CheckControlDelegate: AnyObject {
 
 extension Control {
     /// 체크 이미지를 표현하는 Control Element 입니다. ``MontageControl``의 일부만을 표현할 수 있습니다.
-    public class Check: UIView, MontageControl {
+    public final class Check: UIView, MontageControl {
         private let boxView = UIView()
         
         private lazy var imageView: UIImageView = {
@@ -45,7 +45,7 @@ extension Control {
             }
         }
         
-        private let size: MontageControlSize
+        public let size: MontageControlSize
         private let interactionView = Decorate.Interaction()
                 
         private var longPressRecognizer: UILongPressGestureRecognizer?

@@ -29,12 +29,6 @@ extension Control {
             }
         }
         
-        public override var isEnabled: Bool {
-            didSet {
-                print("didSet \(isEnabled)")
-            }
-        }
-        
         private let size: Size
         public init(size: Size = .normal) {
             self.size = size
