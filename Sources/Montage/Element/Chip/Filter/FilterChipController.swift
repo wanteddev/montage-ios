@@ -16,6 +16,7 @@ extension Chip {
         public var state: Filter.State = .normal
         public var interactionState: Decorate.Interaction.State = .normal
         public var active: Bool = false
+        public var activeLabel: String? = nil
         public var disable: Bool = false
         public var iconColor: SwiftUI.Color? = nil
         public var fontColor: SwiftUI.Color? = nil
@@ -30,6 +31,7 @@ extension Chip {
             state: Filter.State = .normal,
             interactionState: Decorate.Interaction.State = .normal,
             active: Bool = false,
+            activeLabel: String? = nil,
             disable: Bool = false,
             iconColor: SwiftUI.Color? = nil,
             fontColor: SwiftUI.Color? = nil,
@@ -41,6 +43,7 @@ extension Chip {
             self.state = state
             self.interactionState = interactionState
             self.active = active
+            self.activeLabel = activeLabel
             self.disable = disable
             self.iconColor = iconColor
             self.fontColor = fontColor
@@ -58,6 +61,7 @@ extension Chip {
             uiView.state = state
             uiView.interactionState = interactionState
             uiView.active = active
+            uiView.activeLabel = activeLabel
             uiView.disable = disable
             if let iconColor {
                 uiView.iconUIColor = iconColor.uiColor
