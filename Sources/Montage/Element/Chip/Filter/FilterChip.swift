@@ -69,6 +69,14 @@ extension Chip {
             }
         }
         
+        /// 칩 선택시 표시될 텍스트입니다.
+        /// 값이 있는 경우에 표시되며 기본값은 칩의 텍스트가 표현됩니다.
+        public var activeLabel: String? = nil {
+            didSet {
+                updateViews()
+            }
+        }
+        
         /// 칩의 활성화 여부입니다.
         public var disable: Bool = false {
             didSet {
@@ -270,12 +278,21 @@ extension Chip.Filter {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        ._montage(
-            text,
-            variant: size.typoVariant,
-            weight: .medium,
-            color: currentTextUIColor()
-        )
+        if active, let activeLabel {
+            return ._montage(
+                activeLabel,
+                variant: size.typoVariant,
+                weight: .medium,
+                color: currentTextUIColor()
+            )
+        } else {
+            ._montage(
+                text,
+                variant: size.typoVariant,
+                weight: .medium,
+                color: currentTextUIColor()
+            )
+        }
     }
 }
 
