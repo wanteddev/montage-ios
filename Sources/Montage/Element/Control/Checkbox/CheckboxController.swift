@@ -17,13 +17,13 @@ extension Control {
         
         public typealias UIViewType = Checkbox
         
-        public init(_ state: Binding<MontageControlState>, size: MontageControlSize, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(_ state: Binding<MontageControlState>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = state
             self.size = size
             self.onTap = onTap
         }
         
-        public init(state: MontageControlState, size: MontageControlSize, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(state: MontageControlState, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = .constant(state)
             self.size = size
             self.onTap = onTap
@@ -60,6 +60,7 @@ extension Control {
             }
             
             public func didTappedCheckbox(_ checkbox: UIViewType) {
+                state = checkbox.state
                 onTap(checkbox)
             }
         }

@@ -16,7 +16,7 @@ public protocol CheckboxControlDelegate: AnyObject {
 
 extension Control {
     /// 박스로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageControl``의 모든 상태를 표현할 수 있습니다.
-    public class Checkbox: UIView, MontageControl {
+    public final class Checkbox: UIView, MontageControl {
         private let boxView = UIView()
         
         private let imageView: UIImageView = {
@@ -39,14 +39,14 @@ extension Control {
             }
         }
         
-        private let size: MontageControlSize
+        public let size: MontageControlSize
         private let interactionView = Decorate.Interaction()
                 
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
         public weak var delegate: CheckboxControlDelegate?
         
-        public init(size: MontageControlSize) {
+        public init(size: MontageControlSize = .normal) {
             self.size = size
             super.init(frame: .zero)
             
@@ -143,7 +143,7 @@ extension Control.Checkbox {
             interactionView.state = .normal
             state = switch state {
             case .checked: .unchecked
-            case .partial, .unchecked: .checked
+            case .indeterminate, .unchecked: .checked
             }
             delegate?.didTappedCheckbox(self)
         default:
@@ -157,7 +157,7 @@ extension Control.Checkbox {
         switch state {
         case .unchecked:
             return nil
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return UIColor.alias(.primaryNormal).cgColor
         }
     }
@@ -166,7 +166,7 @@ extension Control.Checkbox {
         switch state {
         case .unchecked:
             return UIColor.alias(.lineNormal).cgColor
-        case .checked, .partial:
+        case .checked, .indeterminate:
             return UIColor.alias(.primaryNormal).cgColor
         }
     }
@@ -177,7 +177,7 @@ extension Control.Checkbox {
             return nil
         case .checked:
             return .montage(.checkThick)
-        case .partial:
+        case .indeterminate:
             return .montage(.lineHorizontalThick)
         }
     }
