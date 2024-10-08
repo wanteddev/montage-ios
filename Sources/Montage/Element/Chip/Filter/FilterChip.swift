@@ -286,7 +286,7 @@ extension Chip.Filter {
                 color: currentTextUIColor()
             )
         } else {
-            ._montage(
+            return ._montage(
                 text,
                 variant: size.typoVariant,
                 weight: .medium,
