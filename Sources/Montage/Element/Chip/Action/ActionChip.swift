@@ -12,7 +12,7 @@ extension Chip {
     public class Action: UIView {
         /// 칩의 외관을 결정하는 열거형입니다.
         public enum Variant {
-            case filled, outlined
+            case solid, outlined
         }
         
         /// 칩의 사이즈를 결정하는 열거형입니다.
@@ -21,7 +21,7 @@ extension Chip {
         }
         
         /// 칩의 외관입니다.
-        public var variant: Variant = .filled {
+        public var variant: Variant = .solid {
             didSet {
                 updateViews()
             }
@@ -414,7 +414,7 @@ extension Chip.Action: UIGestureRecognizerDelegate {
 extension Chip.Action.Variant {
     var backgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .component(.fillAlternative)
         case .outlined:
             return .clear
@@ -423,7 +423,7 @@ extension Chip.Action.Variant {
     
     var borderWidth: CGFloat {
         switch self {
-        case .filled:
+        case .solid:
             return 0
         case .outlined:
             return 1
@@ -432,7 +432,7 @@ extension Chip.Action.Variant {
     
     var disableBackgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.interactionDisable)
         case .outlined:
             return .clear
@@ -441,7 +441,7 @@ extension Chip.Action.Variant {
     
     var activeBackgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseBackground)
         case .outlined:
             return .alias(.primaryNormal).withAlphaComponent(0.05)
@@ -450,7 +450,7 @@ extension Chip.Action.Variant {
     
     var activeTextUIColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseLabel)
         case .outlined:
             return .alias(.primaryNormal)

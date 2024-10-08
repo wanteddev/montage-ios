@@ -16,19 +16,10 @@ public protocol RoundCheckboxControlDelegate: AnyObject {
 
 extension Control {
     /// 원형으로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageControl``의 모든 상태를 표현할 수 있습니다.
-    public class RoundCheckbox: UIView, MontageControl {
-        private enum Const {
-            static let wrapperBoxSize: CGSize = .init(width: 24, height: 24)
-        }
+    public final class RoundCheckbox: UIView, MontageControl {
+        private let boxView = UIView()
         
-        /// 체크박스의 사이즈를 결정하는 열거형입니다.
-        public enum Size {
-            case normal, small
-        }
-        
-        private lazy var boxView = UIView()
-        
-        private lazy var imageView: UIImageView = {
+        private let imageView: UIImageView = {
             let view = UIImageView()
             view.isUserInteractionEnabled = false
             view.tintColor = .alias(.staticWhite)
@@ -42,40 +33,29 @@ extension Control {
             }
         }
         
-        public var size: Size = .normal {
-            didSet {
-                updateViews()
-            }
-        }
-        
         public var disable: Bool = false {
             didSet {
                 updateViews()
             }
         }
         
-        private var containerConstraints: [NSLayoutConstraint] = []
+        public let size: MontageControlSize
+        private let interactionView = Decorate.Interaction()
+
+        private var longPressRecognizer: UILongPressGestureRecognizer?
         
-        private var boxViewConstraints: [NSLayoutConstraint] = []
+        public weak var delegate: RoundCheckboxControlDelegate?
         
-        private var tapRecognizer: UITapGestureRecognizer?
-        
-        private weak var delegate: RoundCheckboxControlDelegate?
-        
-        /// Checkbox 객체를 생성합니다.
-        /// - Parameter delegate: Checkbox 버튼을 Element 단독으로 사용할 경우 이벤트를 받을 delegate 객체입니다.
-        public init(delegate: RoundCheckboxControlDelegate? = nil) {
+        public init(size: MontageControlSize = .normal) {
+            self.size = size
             super.init(frame: .zero)
-            self.delegate = delegate
             
             setupViews()
             bindEvent()
         }
         
-        override public required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setupViews()
-            bindEvent()
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
         
         override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -86,7 +66,7 @@ extension Control {
         
         /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
-            Const.wrapperBoxSize
+            containerSize
         }
     }
 }
@@ -94,97 +74,100 @@ extension Control {
 extension Control.RoundCheckbox {
     private func setupViews() {
         addSubview(boxView)
+        addSubview(interactionView)
+        
         boxView.addSubview(imageView)
         
         boxView.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        interactionView.translatesAutoresizingMaskIntoConstraints = false
         
-        setupContainerConstraints()
-        setupBoxViewConstraints()
+        widthAnchor.constraint(equalToConstant: containerSize.width).isActive = true
+        heightAnchor.constraint(equalToConstant: containerSize.height).isActive = true
+
+        boxView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: boxInsets.left).isActive = true
+        boxView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -boxInsets.right).isActive = true
+        boxView.topAnchor.constraint(equalTo: topAnchor, constant: boxInsets.top).isActive = true
+        boxView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -boxInsets.bottom).isActive = true
         
-        imageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 2).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -2).isActive = true
-        imageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 2).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -2).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: imageInsets.left).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -imageInsets.right).isActive = true
+        imageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: imageInsets.top).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -imageInsets.bottom).isActive = true
+        
+        interactionView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        interactionView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        interactionView.widthAnchor.constraint(equalToConstant: interactionSize.width).isActive = true
+        interactionView.heightAnchor.constraint(equalToConstant: interactionSize.height).isActive = true
         
         updateViews()
-    }
-    
-    private func setupUpdateableConstraints() {
-        setupContainerConstraints()
-        setupBoxViewConstraints()
-        updateConstraints()
-    }
-    
-    private func setupContainerConstraints() {
-        NSLayoutConstraint.deactivate(containerConstraints)
-        
-        let constraints = [
-            widthAnchor.constraint(equalToConstant: size.containerSize.width),
-            heightAnchor.constraint(equalToConstant: size.containerSize.height)
-        ]
-        
-        containerConstraints = constraints
-        NSLayoutConstraint.activate(constraints)
-    }
-    
-    private func setupBoxViewConstraints() {
-        NSLayoutConstraint.deactivate(boxViewConstraints)
-        
-        let constraints = [
-            boxView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: size.boxInsets.left),
-            boxView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -size.boxInsets.right),
-            boxView.topAnchor.constraint(equalTo: topAnchor, constant: size.boxInsets.top),
-            boxView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -size.boxInsets.bottom)
-        ]
-        
-        boxViewConstraints = constraints
-        NSLayoutConstraint.activate(constraints)
-    }
-    
-    private func bindEvent() {
-        guard delegate != nil else { return }
-        let recognizer = UITapGestureRecognizer()
-        recognizer.addTarget(self, action: #selector(tapped))
-        addGestureRecognizer(recognizer)
-        tapRecognizer = recognizer
     }
     
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
-        boxView.layer.cornerRadius = size.cornerRadius
+        boxView.layer.cornerRadius = cornerRadius
         boxView.layer.borderWidth = 1.5
         boxView.layer.backgroundColor = resolveCurrentBackgroundColor()
         boxView.layer.borderColor = resolveCurrentBorderColor()
+        boxView.layer.opacity = .opacity(disable ? .p043 : .p100)
         imageView.image = resolveCurrentImage()
+        interactionView.variant = .normal
+        interactionView.layer.cornerRadius = interactionSize.width / 2
     }
     
-    @objc private func tapped() {
-        delegate?.didTappedCheckbox(self)
+    private func bindEvent() {
+        let longPressRecognizer = UILongPressGestureRecognizer()
+        longPressRecognizer.delegate = self
+        longPressRecognizer.minimumPressDuration = 0
+        longPressRecognizer.cancelsTouchesInView = false
+        longPressRecognizer.addTarget(self, action: #selector(longPressed))
+        addGestureRecognizer(longPressRecognizer)
+        self.longPressRecognizer = longPressRecognizer
+    }
+    
+    @objc private func longPressed() {
+        guard let recognizer = longPressRecognizer else { return }
+        
+        switch recognizer.state {
+        case .began:
+            interactionView.state = .pressed
+        case .changed:
+            // 스크롤 시 버튼이 눌리지 않도록 state를 normal로 변경
+            // 3D touch 모델은 스크롤 하지 않아도 changed가 실행되서 적용하지 않음
+            if traitCollection.forceTouchCapability != UIForceTouchCapability.available {
+                interactionView.state = .normal
+            }
+        case .ended:
+            guard interactionView.state == .pressed else { return }
+            interactionView.state = .normal
+            state = switch state {
+            case .checked: .unchecked
+            case .indeterminate, .unchecked: .checked
+            }
+            delegate?.didTappedCheckbox(self)
+        default:
+            break
+        }
     }
 }
 
 extension Control.RoundCheckbox {
     private func resolveCurrentBackgroundColor() -> CGColor? {
-        let opacity: CGFloat = .opacity(disable ? .p043 : .p100)
-        
         switch state {
         case .unchecked:
             return nil
-        case .checked, .partial:
-            return UIColor.alias(.primaryNormal).withAlphaComponent(opacity).cgColor
+        case .checked, .indeterminate:
+            return UIColor.alias(.primaryNormal).cgColor
         }
     }
     
     private func resolveCurrentBorderColor() -> CGColor {
-        let opacity: CGFloat = .opacity(disable ? .p043 : .p100)
-        
         switch state {
         case .unchecked:
-            return UIColor.alias(.lineNormal).withAlphaComponent(opacity).cgColor
-        case .checked, .partial:
-            return UIColor.alias(.primaryNormal).withAlphaComponent(opacity).cgColor
+            return UIColor.alias(.lineNormal).cgColor
+        case .checked, .indeterminate:
+            return UIColor.alias(.primaryNormal).cgColor
         }
     }
     
@@ -194,15 +177,15 @@ extension Control.RoundCheckbox {
             return nil
         case .checked:
             return .montage(.checkThick)
-        case .partial:
+        case .indeterminate:
             return .montage(.lineHorizontalThick)
         }
     }
 }
 
-extension Control.RoundCheckbox.Size {
+extension Control.RoundCheckbox {
     var containerSize: CGSize {
-        switch self {
+        switch size {
         case .normal:
             return .init(width: 24, height: 24)
         case .small:
@@ -211,15 +194,38 @@ extension Control.RoundCheckbox.Size {
     }
     
     var boxInsets: UIEdgeInsets {
-        switch self {
+        .init(top: 2, left: 2, bottom: 2, right: 2)
+    }
+    
+    var imageInsets: UIEdgeInsets {
+        switch size {
         case .normal:
             return .init(top: 2, left: 2, bottom: 2, right: 2)
         case .small:
             return .init(top: 1, left: 1, bottom: 1, right: 1)
         }
+        
     }
     
     var cornerRadius: CGFloat {
         (containerSize.width - boxInsets.horizontal) / 2
+    }
+    
+    var interactionSize: CGSize {
+        switch size {
+        case .normal:
+            return .init(width: 32, height: 32)
+        case .small:
+            return .init(width: 28, height: 28)
+        }
+    }
+}
+
+extension Control.RoundCheckbox: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return true
     }
 }

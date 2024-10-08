@@ -16,11 +16,6 @@ public protocol InputDelegate: AnyObject {
 
 /// Control Element와 텍스트 라벨을 함께 담고 있는 컴포넌트입니다.
 public class InputLabel: UIView {
-    private enum Const {
-        static let inputSize: CGSize = .init(width: 24, height: 24)
-        static let textVariant: Typography.Variant = .body2
-    }
-    
     private var elementView: MontageControl
     
     private var textWrapperView = UIView()
@@ -74,23 +69,19 @@ public class InputLabel: UIView {
     }
     
     required init?(coder: NSCoder) {
-        self.elementView = Control.Radio()
-        super.init(coder: coder)
-        
-        setupViews()
-        bindEvent()
+        fatalError("init(coder:) has not been implemented")
     }
     
     /// Element의 기본적인 사이즈를 정의합니다.
     override public var intrinsicContentSize: CGSize {
-        .init(width: UIScreen.main.bounds.width, height: Const.inputSize.height)
+        .init(width: UIScreen.main.bounds.width, height: elementView.intrinsicContentSize.height)
     }
 }
 
 extension InputLabel {
     private func setupViews() {
-        let lineHeight = Typography.getLineHeight(variant: Const.textVariant)
-        let textTopInset = (lineHeight - Const.inputSize.height) / 2
+        let lineHeight = Typography.getLineHeight(variant: textVariant)
+        let textTopInset = (lineHeight - elementView.intrinsicContentSize.height) / 2
         let elementSpacing: CGFloat
         
         if elementView is Control.Check {
@@ -142,21 +133,40 @@ extension InputLabel {
         elementView.disable = disable
         textLabel.attributedText = .montage(
             text ?? "",
-            variant: Const.textVariant,
+            variant: textVariant,
+            weight: bold ? .bold : .regular,
             alias: disable ? .labelDisable : .labelNormal
         )
+    }
+}
+
+extension InputLabel {
+    var textVariant: Typography.Variant {
+        switch elementView.size {
+        case .normal:
+            return .body2
+        case .small:
+            return .label1
+        }
     }
 }
 
 /// 디자인시스템의 Input 요소들이 공통으로 가질 수 있는 프로퍼티를 정의한 프로토콜입니다.
 public protocol MontageControl: UIView {
     var state: MontageControlState { get set }
+    var size: MontageControlSize { get }
     var disable: Bool { get set }
+    var intrinsicContentSize: CGSize { get }
 }
 
 /// Input 요소들에서 사용할 수 있는 State를 정의합니다.
 public enum MontageControlState {
     case unchecked
     case checked
-    case partial
+    case indeterminate
+}
+
+public enum MontageControlSize {
+    case normal
+    case small
 }

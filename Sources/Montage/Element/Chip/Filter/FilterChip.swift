@@ -12,7 +12,7 @@ extension Chip {
     public class Filter: UIView {
         /// 칩의 외관을 결정하는 열거형입니다.
         public enum Variant {
-            case filled, outlined
+            case solid, outlined
         }
         
         /// 칩의 확장 상태를 나타내는 열거형입니다.
@@ -27,7 +27,7 @@ extension Chip {
         }
         
         /// 칩의 외관입니다.
-        public var variant: Variant = .filled {
+        public var variant: Variant = .solid {
             didSet {
                 updateViews()
             }
@@ -64,6 +64,14 @@ extension Chip {
         
         /// 칩의 선택 여부입니다.
         public var active: Bool = false {
+            didSet {
+                updateViews()
+            }
+        }
+        
+        /// 칩 선택시 표시될 텍스트입니다.
+        /// 값이 있는 경우에 표시되며 기본값은 칩의 텍스트가 표현됩니다.
+        public var activeLabel: String? = nil {
             didSet {
                 updateViews()
             }
@@ -270,12 +278,21 @@ extension Chip.Filter {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        ._montage(
-            text,
-            variant: size.typoVariant,
-            weight: .medium,
-            color: currentTextUIColor()
-        )
+        if active, let activeLabel {
+            return ._montage(
+                activeLabel,
+                variant: size.typoVariant,
+                weight: .medium,
+                color: currentTextUIColor()
+            )
+        } else {
+            return ._montage(
+                text,
+                variant: size.typoVariant,
+                weight: .medium,
+                color: currentTextUIColor()
+            )
+        }
     }
 }
 
@@ -357,7 +374,7 @@ extension Chip.Filter {
 extension Chip.Filter.Variant {
     var backgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .component(.fillAlternative)
         case .outlined:
             return .clear
@@ -366,7 +383,7 @@ extension Chip.Filter.Variant {
 
     var borderWidth: CGFloat {
         switch self {
-        case .filled:
+        case .solid:
             return .zero
         case .outlined:
             return 1
@@ -375,7 +392,7 @@ extension Chip.Filter.Variant {
     
     var disableBackgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.interactionDisable)
         case .outlined:
             return .clear
@@ -384,7 +401,7 @@ extension Chip.Filter.Variant {
     
     var activeBackgroundColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseBackground)
         case .outlined:
             return .alias(.primaryNormal).withAlphaComponent(0.05)
@@ -393,7 +410,7 @@ extension Chip.Filter.Variant {
     
     var activeTextUIColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseLabel)
         case .outlined:
             return .alias(.primaryNormal)
@@ -402,7 +419,7 @@ extension Chip.Filter.Variant {
     
     var activeArrowColor: UIColor {
         switch self {
-        case .filled:
+        case .solid:
             return .alias(.inverseLabel)
         case .outlined:
             return .alias(.labelNormal)
