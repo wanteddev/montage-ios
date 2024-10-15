@@ -121,7 +121,7 @@ extension Badge {
             let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
             
             return .init(
-                width: iconSize.width * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
+                width: iconSize.width * CGFloat(iconCount) + size.spacing * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
