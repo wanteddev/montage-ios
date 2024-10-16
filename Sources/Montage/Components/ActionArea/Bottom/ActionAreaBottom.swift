@@ -8,7 +8,35 @@
 import SwiftUI
 
 extension ActionArea {
-    public enum Bottom {
+    /// ActionArea/Bottom Component입니다.
+    ///
+    /// - Parameters:
+    ///     - model: 하단 영역에 노출될 Component에 대한 configuration입니다.
+    ///     - content: 하단 영역을 제외하고 노출될 내용 입니다.
+    public struct Bottom: View {
+        @State private var bottomActionHeight: CGFloat = .zero
+        private let model: ActionArea.Bottom.Model
+        private let content: () -> any View
+     
+        public init(
+            model: ActionArea.Bottom.Model,
+            content: @escaping () -> any View
+        ) {
+            self.model = model
+            self.content = content
+        }
+        
+        public var body: some View {
+            VStack(spacing: .zero) {
+                AnyView(content())
+                    .padding(.bottom, -20)
+                Component(model: model)
+                    .readSize { bottomActionHeight = $0.height }
+            }
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+        
+        /// 하단 영역에 노출될 Gradient, Button들이 집합된 Component입니다.
         public struct Component: View {
             // MARK: - Environment
             
@@ -412,23 +440,20 @@ extension ActionArea.Bottom {
     }
 }
 
-struct Bottom_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            ScrollView {
-                SwiftUI.Color.red.frame(height: 1400)
-            }
-            VStack {
-                Spacer()
-                ActionArea.Bottom.Component(
-                    model: .init(
-                        variant: .normal,
-                        priority: .cancel(main: .init(text: "텍스트", action: {})),
-                        sticky: true
-                    )
-                )
-            }
+#Preview {
+    ActionArea.Bottom(
+        model: .init(
+            variant: .normal,
+            priority: .strong(
+                main: .init(text: "메인", action: {}),
+                sub: .init(text: "서브", action: {}),
+                alternative: .init(text: "대안", action: {})
+            ),
+            sticky: true
+        )
+    ) {
+        ScrollView {
+            SwiftUI.Color.red.frame(height: 1400)
         }
-        .ignoresSafeArea()
     }
 }
