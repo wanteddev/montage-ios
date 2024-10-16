@@ -59,6 +59,7 @@ extension ActionArea {
                     ]
                 }
             }
+            private let gradientHeight: CGFloat = 40
             private var backgroundColor: SwiftUI.Color {
                 showExtraContents ? .alias(.backgroundElevated) : .alias(.backgroundNormal)
             }
@@ -67,6 +68,7 @@ extension ActionArea {
                     Text("")
                         .onAppear {
                             height = proxy.size.height
+                            print(height)
                         }
                 }
             }
@@ -100,11 +102,11 @@ extension ActionArea {
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
-                                .frame(height: 40)
+                                .frame(height: gradientHeight)
                                 .offset(y: -20)
                             }
                             backgroundColor
-                                .frame(height: 48)
+                                .frame(height: height - gradientHeight)
                         }
                     }
                     .frame(height: height + captionHeight)
@@ -414,19 +416,15 @@ struct Bottom_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             ScrollView {
-                SwiftUI.Color.red.frame(height: 1050)
+                SwiftUI.Color.red.frame(height: 1400)
             }
             VStack {
                 Spacer()
                 ActionArea.Bottom.Component(
                     model: .init(
                         variant: .normal,
-                        priority: .compact(
-                            main: .init(
-                                text: "메인",
-                                action: {}
-                            )
-                        )
+                        priority: .cancel(main: .init(text: "텍스트", action: {})),
+                        sticky: true
                     )
                 )
             }
