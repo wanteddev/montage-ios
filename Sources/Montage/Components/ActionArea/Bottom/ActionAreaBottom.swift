@@ -133,7 +133,7 @@ extension ActionArea {
                                 .offset(y: -20)
                             }
                             backgroundColor
-                                .frame(height: height - gradientHeight)
+                                .frame(height: height + captionHeight - gradientHeight)
                         }
                     }
                     .frame(height: height + captionHeight)
