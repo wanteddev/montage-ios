@@ -96,7 +96,6 @@ extension ActionArea {
                     Text("")
                         .onAppear {
                             height = proxy.size.height
-                            print(height)
                         }
                 }
             }
