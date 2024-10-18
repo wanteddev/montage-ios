@@ -8,7 +8,35 @@
 import SwiftUI
 
 extension ActionArea {
-    public enum Bottom {
+    /// ActionArea/Bottom Component입니다.
+    ///
+    /// - Parameters:
+    ///     - model: 하단 영역에 노출될 Component에 대한 configuration입니다.
+    ///     - content: 하단 영역을 제외하고 노출될 내용 입니다.
+    public struct Bottom: View {
+        @State private var bottomActionHeight: CGFloat = .zero
+        private let model: ActionArea.Bottom.Model
+        private let content: () -> any View
+     
+        public init(
+            model: ActionArea.Bottom.Model,
+            content: @escaping () -> any View
+        ) {
+            self.model = model
+            self.content = content
+        }
+        
+        public var body: some View {
+            VStack(spacing: .zero) {
+                AnyView(content())
+                    .padding(.bottom, -20)
+                Component(model: model)
+                    .readSize { bottomActionHeight = $0.height }
+            }
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+        
+        /// 하단 영역에 노출될 Gradient, Button들이 집합된 Component입니다.
         public struct Component: View {
             // MARK: - Environment
             
@@ -59,6 +87,7 @@ extension ActionArea {
                     ]
                 }
             }
+            private let gradientHeight: CGFloat = 40
             private var backgroundColor: SwiftUI.Color {
                 showExtraContents ? .alias(.backgroundElevated) : .alias(.backgroundNormal)
             }
@@ -100,11 +129,11 @@ extension ActionArea {
                                     startPoint: .top,
                                     endPoint: .bottom
                                 )
-                                .frame(height: 40)
+                                .frame(height: gradientHeight)
                                 .offset(y: -20)
                             }
                             backgroundColor
-                                .frame(height: 48)
+                                .frame(height: height + captionHeight - gradientHeight)
                         }
                     }
                     .frame(height: height + captionHeight)
@@ -410,27 +439,20 @@ extension ActionArea.Bottom {
     }
 }
 
-struct Bottom_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            ScrollView {
-                SwiftUI.Color.red.frame(height: 1050)
-            }
-            VStack {
-                Spacer()
-                ActionArea.Bottom.Component(
-                    model: .init(
-                        variant: .normal,
-                        priority: .compact(
-                            main: .init(
-                                text: "메인",
-                                action: {}
-                            )
-                        )
-                    )
-                )
-            }
+#Preview {
+    ActionArea.Bottom(
+        model: .init(
+            variant: .normal,
+            priority: .strong(
+                main: .init(text: "메인", action: {}),
+                sub: .init(text: "서브", action: {}),
+                alternative: .init(text: "대안", action: {})
+            ),
+            sticky: true
+        )
+    ) {
+        ScrollView {
+            SwiftUI.Color.red.frame(height: 1400)
         }
-        .ignoresSafeArea()
     }
 }
