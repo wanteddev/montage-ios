@@ -117,6 +117,8 @@ extension Chip {
         
         private lazy var textLabel = UILabel()
         
+        private let textLabelWrapperView = UIView()
+        
         private lazy var rightIconView = UIImageView()
         
         private lazy var interaction = Decorate.Interaction()
@@ -126,6 +128,8 @@ extension Chip {
         private var iconViewContraints: [NSLayoutConstraint] = []
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
+        
+        private var textLabelWrapperViewConstraints: [NSLayoutConstraint] = []
         
         public init() {
             super.init(frame: .zero)
@@ -157,13 +161,14 @@ extension Chip {
         override public var intrinsicContentSize: CGSize {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
-            let edgeInsets = size.edgeInsets
+            let edgeInsets = size.contentsEdgeInsets
             let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
             let iconWidths = iconSize.width * CGFloat(iconCount)
-            let spacings = size.gap * CGFloat(iconCount)
+            let spacings = size.contentsGap * CGFloat(iconCount)
+            let textLabelPaddings = size.textLabelPadding * 2
             
             return .init(
-                width: iconWidths + spacings + textSize.width + edgeInsets.horizontal,
+                width: iconWidths + spacings + textSize.width + edgeInsets.horizontal + textLabelPaddings,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
@@ -195,10 +200,12 @@ extension Chip.Action {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = size.gap
+        stackView.spacing = size.contentsGap
         stackView.addArrangedSubview(leftIconView)
-        stackView.addArrangedSubview(textLabel)
+        stackView.addArrangedSubview(textLabelWrapperView)
         stackView.addArrangedSubview(rightIconView)
+        
+        textLabelWrapperView.addSubview(textLabel)
     }
     
     private func setupInteraction() {
@@ -210,7 +217,8 @@ extension Chip.Action {
     private func setupUpdateableConstraints() {
         setupIconViewConstraints()
         setupStackViewConstraints()
-        stackView.spacing = size.gap
+        setupTextLabelConstraints()
+        stackView.spacing = size.contentsGap
         updateConstraints()
         setupLayer()
     }
@@ -246,7 +254,7 @@ extension Chip.Action {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        let insets = size.edgeInsets
+        let insets = size.contentsEdgeInsets
         
         let constraints = [
             stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: insets.left),
@@ -259,6 +267,24 @@ extension Chip.Action {
         constraints.forEach({ $0.priority = .defaultLow })
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
+    }
+    
+    private func setupTextLabelConstraints() {
+        NSLayoutConstraint.deactivate(textLabelWrapperViewConstraints)
+        
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let padding = size.textLabelPadding
+        
+        let constraints = [
+            textLabel.leftAnchor.constraint(equalTo: textLabelWrapperView.leftAnchor, constant: padding),
+            textLabel.rightAnchor.constraint(equalTo: textLabelWrapperView.rightAnchor, constant: -padding),
+            textLabel.topAnchor.constraint(equalTo: textLabelWrapperView.topAnchor),
+            textLabel.bottomAnchor.constraint(equalTo: textLabelWrapperView.bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        textLabelWrapperViewConstraints = constraints
     }
     
     private func setupLayer() {
@@ -485,29 +511,38 @@ extension Chip.Action.Size {
         }
     }
     
-    var edgeInsets: UIEdgeInsets {
+    var contentsEdgeInsets: UIEdgeInsets {
         switch self {
         case .large:
             return .init(top: 9, left: 12, bottom: 9, right: 12)
         case .normal:
-            return .init(top: 7, left: 12, bottom: 7, right: 12)
+            return .init(top: 7, left: 11, bottom: 7, right: 11)
         case .small:
-            return .init(top: 6, left: 10, bottom: 6, right: 10)
+            return .init(top: 6, left: 8, bottom: 6, right: 8)
         case .xsmall:
-            return .init(top: 4, left: 6, bottom: 4, right: 6)
+            return .init(top: 4, left: 7, bottom: 4, right: 7)
         }
     }
     
-    var gap: CGFloat {
+    var contentsGap: CGFloat {
         switch self {
         case .large:
-            return 6
+            return 3
         case .normal:
-            return 4
+            return 3
         case .small:
-            return 4
+            return 2
         case .xsmall:
-            return 4
+            return 2
+        }
+    }
+    
+    var textLabelPadding: CGFloat {
+        switch self {
+        case .large: 2.0
+        case .normal: 2.0
+        case .small: 2.0
+        case .xsmall: 1.0
         }
     }
     
