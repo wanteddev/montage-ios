@@ -102,6 +102,8 @@ extension Chip {
 
         public var handler: (() -> Void)?
         
+        private let contentsWrapperView = UIView()
+        
         private lazy var stackView = UIStackView()
         
         private lazy var textLabel = UILabel()
@@ -113,6 +115,8 @@ extension Chip {
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
         private var iconViewContraints: [NSLayoutConstraint] = []
+        
+        private var contentsWrapperViewConstraints: [NSLayoutConstraint] = []
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
@@ -146,11 +150,12 @@ extension Chip {
         override public var intrinsicContentSize: CGSize {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
-            let edgeInsets = size.edgeInsets
-            let spacings = size.gap
+            let edgeInsets = size.contentsEdgeInsets
+            let spacings = size.contentsGap
+            let paddings = size.contentsPadding * 2
             
             return .init(
-                width: iconSize.width + spacings + textSize.width + edgeInsets.horizontal,
+                width: iconSize.width + spacings + textSize.width + edgeInsets.horizontal + paddings,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
@@ -159,8 +164,9 @@ extension Chip {
 
 extension Chip.Filter {
     private func setupViews() {
-        addSubview(stackView)
+        addSubview(contentsWrapperView)
         addSubview(interaction)
+        contentsWrapperView.addSubview(stackView)
         
         setupStackView()
         setupInteraction()
@@ -180,7 +186,7 @@ extension Chip.Filter {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = size.gap
+        stackView.spacing = size.contentsGap
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(arrowIconView)
     }
@@ -192,9 +198,10 @@ extension Chip.Filter {
     }
     
     private func setupUpdateableConstraints() {
-        setupIconViewConstraints()
+        setupContentsWrapperViewConstraints()
         setupStackViewConstraints()
-        stackView.spacing = size.gap
+        setupIconViewConstraints()
+        stackView.spacing = size.contentsGap
         updateConstraints()
         setupLayer()
     }
@@ -222,22 +229,39 @@ extension Chip.Filter {
         iconViewContraints = constraints
     }
     
+    private func setupContentsWrapperViewConstraints() {
+        NSLayoutConstraint.deactivate(contentsWrapperViewConstraints)
+        
+        contentsWrapperView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let insets = size.contentsEdgeInsets
+        
+        let constraints = [
+            contentsWrapperView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
+            contentsWrapperView.rightAnchor.constraint(equalTo: rightAnchor, constant: -insets.right),
+            contentsWrapperView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
+            contentsWrapperView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
+        ]
+        
+        constraints.forEach({ $0.priority = .defaultLow })
+        NSLayoutConstraint.activate(constraints)
+        contentsWrapperViewConstraints = constraints
+    }
+    
     private func setupStackViewConstraints() {
         NSLayoutConstraint.deactivate(stackViewConstraints)
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        let insets = size.edgeInsets
+        let contentsPadding = size.contentsPadding
         
         let constraints = [
-            stackView.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: insets.left),
-            stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -insets.right),
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets.top),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -insets.bottom),
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
+            stackView.leftAnchor.constraint(equalTo: contentsWrapperView.leftAnchor, constant: contentsPadding),
+            stackView.rightAnchor.constraint(equalTo: contentsWrapperView.rightAnchor, constant: -contentsPadding),
+            stackView.topAnchor.constraint(equalTo: contentsWrapperView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentsWrapperView.bottomAnchor)
         ]
         
-        constraints.forEach({ $0.priority = .defaultLow })
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
     }
@@ -465,29 +489,38 @@ extension Chip.Filter.Size {
         }
     }
     
-    var edgeInsets: UIEdgeInsets {
+    var contentsEdgeInsets: UIEdgeInsets {
         switch self {
         case .large:
-            return .init(top: 9, left: 12, bottom: 9, right: 8)
+            return .init(top: 9, left: 12, bottom: 9, right: 10)
         case .normal:
-            return .init(top: 7, left: 12, bottom: 7, right: 8)
+            return .init(top: 7, left: 11, bottom: 7, right: 9)
         case .small:
-            return .init(top: 6, left: 10, bottom: 6, right: 8)
+            return .init(top: 6, left: 8, bottom: 6, right: 6)
         case .xsmall:
-            return .init(top: 4, left: 8, bottom: 4, right: 6)
+            return .init(top: 4, left: 7, bottom: 4, right: 5)
         }
     }
     
-    var gap: CGFloat {
+    var contentsGap: CGFloat {
         switch self {
         case .large:
-            return 5.0
-        case .normal:
-            return 5.0
-        case .small:
-            return 4.0
-        case .xsmall:
             return 2.0
+        case .normal:
+            return 2.0
+        case .small:
+            return 1.0
+        case .xsmall:
+            return 1.0
+        }
+    }
+    
+    var contentsPadding: CGFloat {
+        switch self {
+        case .normal: 2.0
+        case .small: 2.0
+        case .large: 2.0
+        case .xsmall: 1.0
         }
     }
     
