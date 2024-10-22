@@ -45,8 +45,8 @@ extension View {
 }
 
 extension View {
-    public func snackBar(_ model: Binding<SnackBar.Model?>) -> some View {
-        self.modifier(SnackBar.SnackBarModifier(model: model))
+    public func snackBar(_ model: Binding<SnackBar.Model?>, handler: @escaping () -> Void) -> some View {
+        self.modifier(SnackBar.SnackBarModifier(model: model, handler: handler))
     }
 }
 

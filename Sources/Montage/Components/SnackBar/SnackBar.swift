@@ -13,20 +13,17 @@ public struct SnackBar: View {
         var description: String? = nil
         var extraContents: (any View)? = nil
         let action: String
-        let handler: (() -> Void)
         
         public init(
             heading: String? = nil,
             description: String? = nil,
             extraContents: (any View)? = nil,
-            action: String,
-            handler: @escaping () -> Void
+            action: String
         ) {
             self.heading = heading
             self.description = description
             self.extraContents = extraContents
             self.action = action
-            self.handler = handler
         }
     }
     
@@ -178,6 +175,7 @@ public struct SnackBar: View {
     
     public struct SnackBarModifier: ViewModifier {
         @Binding var model: SnackBar.Model?
+        let handler: (() -> Void)
 
         public func body(content: Content) -> some View {
             GeometryReader { proxy in
@@ -201,7 +199,7 @@ public struct SnackBar: View {
                     extraContents: model.extraContents,
                     action: model.action,
                     handler: {
-                        model.handler()
+                        handler()
                         self.model = nil
                     }
                 )
