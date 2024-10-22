@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+// MARK: - Internal
+
+extension View {
+    @ViewBuilder
+    public func `if`<Content: View>(
+        _ condition: Bool,
+        transform: (Self) -> Content
+    ) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    public func `if`(_ condition: Bool) -> some View {
+        if condition {
+            self
+        }
+    }
+}
+
 extension View {
     public func elevation(_ elevation: Elevation) -> Self {
         let currentView = self
@@ -145,6 +168,39 @@ extension View {
                 actions: actions,
                 model: model
             )
+        )
+    }
+}
+
+extension View {
+    public func skeleton(
+        shape: Skeleton.ShapeType,
+        show: Binding<Bool>,
+        model: Skeleton.Model = .init(),
+        configuration: Skeleton.Configuration = .init()
+    ) -> some View {
+        modifier(
+            Skeleton.SkeletonShapeModifier(
+                shape: shape,
+                show: show,
+                model: model,
+                configuration: configuration
+            )
+        )
+    }
+
+    public func skeleton(
+        show: Binding<Bool>,
+        model: Skeleton.Model = .init(),
+        configuration: Skeleton.Configuration = .init()
+    ) -> some View {
+        modifier(
+            Skeleton
+                .SkeletonTextModifier(
+                    show: show,
+                    model: model,
+                    configuration: configuration
+                )
         )
     }
 }
