@@ -1,6 +1,6 @@
 //
 //  SnackBar.swift
-//
+//  Montage
 //
 //  Created by Ahn Sang Hoon on 6/25/24.
 //
@@ -8,35 +8,50 @@
 import SwiftUI
 
 public struct SnackBar: View {
-    public struct Model {
+    /// SnackBar가 자동으로 사라지는 시간
+    public enum Duration: Double {
+        case short = 4.0
+        case long = 16.0
+    }
+
+    public struct Model: Equatable {
+        let duration: Duration
         var heading: String? = nil
         var description: String? = nil
-        var extraContents: (any View)? = nil
+        var extraContents: (() -> any View)? = nil
         let action: String
         
         public init(
+            duration: Duration = .short,
             heading: String? = nil,
             description: String? = nil,
-            extraContents: (any View)? = nil,
+            extraContents: (() -> any View)? = nil,
             action: String
         ) {
+            self.duration = duration
             self.heading = heading
             self.description = description
             self.extraContents = extraContents
             self.action = action
         }
+        
+        public static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.heading == rhs.heading
+            && lhs.description == rhs.description
+            && lhs.action == rhs.action
+        }
     }
     
     private var heading: String?
     private var description: String?
-    private var extraContents: (any View)?
+    private var extraContents: (() -> any View)?
     private let action: String
     private let handler: (() -> Void)
     
     init(
         heading: String? = nil,
         description: String? = nil,
-        extraContents: (any View)? = nil,
+        extraContents: (() -> any View)? = nil,
         action: String,
         handler: @escaping () -> Void
     ) {
@@ -65,14 +80,14 @@ public struct SnackBar: View {
     fileprivate struct Contents: View {
         private var heading: String?
         private var description: String?
-        private var extraContents: (any View)?
+        private var extraContents: (() -> any View)?
         private let action: String
         private let handler: (() -> Void)
         
         public init(
             heading: String? = nil,
             description: String? = nil,
-            extraContents: (any View)? = nil,
+            extraContents: (() -> any View)? = nil,
             action: String,
             handler: @escaping () -> Void
         ) {
@@ -87,7 +102,7 @@ public struct SnackBar: View {
             ZStack {
                 HStack(alignment: .center, spacing: .zero) {
                     if let extraContents {
-                        AnyView(extraContents)
+                        AnyView(extraContents())
                         Spacer()
                             .frame(width: 12)
                     }
@@ -175,6 +190,8 @@ public struct SnackBar: View {
     
     public struct SnackBarModifier: ViewModifier {
         @Binding var model: SnackBar.Model?
+        @State private var animationWorkItem: DispatchWorkItem?
+
         let handler: (() -> Void)
 
         public func body(content: Content) -> some View {
@@ -183,10 +200,13 @@ public struct SnackBar: View {
                     .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
                     .overlay(
                         snackBar()
-                            .onAppear {
-                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                            }
                     )
+                    .onChange(
+                        of: model
+                    ) { newValue in
+                        guard newValue != nil else { return }
+                        showSnackBar()
+                    }
             }
         }
         
@@ -205,17 +225,71 @@ public struct SnackBar: View {
                 )
             }
         }
+        
+        private func showSnackBar(){
+            animationWorkItem?.cancel()
+            
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            
+            let task = DispatchWorkItem {
+                dismissSnackBar()
+            }
+            
+            animationWorkItem = task
+            
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + (model?.duration.rawValue ?? 4.0),
+                execute: task
+            )
+        }
+        
+        private func dismissSnackBar() {
+            withAnimation {
+                model = nil
+            }
+            
+            animationWorkItem?.cancel()
+            animationWorkItem = nil
+        }
     }
 }
 
 struct SnackBar_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            SnackBar(heading: "메시지에 마침표를 찍어요.", description: "설명은 필요할 때만 써요.", action: "텍스트") { }
-            SnackBar(description: "메시지가 두 줄 이상 길어지는 경우 예외적으로 사용해요.", action: "텍스트") { }
-            SnackBar(description: "메시지에 마침표를 찍어요.", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
-            SnackBar(heading: "메시지에 마침표를 찍어요.", description: "설명은 필요할 때만 써요.", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
-            SnackBar(heading: "흠", description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방", extraContents: Image.montage(.android).resizable().frame(width: 32, height: 32), action: "텍스트") { }
+            SnackBar(
+                heading: "메시지에 마침표를 찍어요.",
+                description: "설명은 필요할 때만 써요.",
+                action: "텍스트"
+            ) { 
+            }
+            SnackBar(
+                description: "메시지가 두 줄 이상 길어지는 경우 예외적으로 사용해요.",
+                action: "텍스트"
+            ) { }
+            SnackBar(
+                description: "메시지에 마침표를 찍어요.",
+                extraContents: {
+                    Image.montage(.android).resizable().frame(width: 32, height: 32)
+                },
+                action: "텍스트"
+            ) { }
+            SnackBar(
+                heading: "메시지에 마침표를 찍어요.",
+                description: "설명은 필요할 때만 써요.",
+                extraContents: {
+                    Image.montage(.android).resizable().frame(width: 32, height: 32)
+                },
+                action: "텍스트"
+            ) { }
+            SnackBar(
+                heading: "흠",
+                description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방",
+                extraContents: {
+                    Image.montage(.android).resizable().frame(width: 32, height: 32)
+                },
+                action: "텍스트"
+            ) { }
             
         }
     }
