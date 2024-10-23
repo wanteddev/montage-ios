@@ -8,25 +8,25 @@
 import SwiftUI
 
 public final class SnackBarController: UIHostingController<SnackBar> {
-    public convenience init(_ model: SnackBar.Model) {
+    public convenience init(_ model: SnackBar.Model, handler: @escaping () -> Void) {
         self.init(rootView: SnackBar(
             heading: model.heading,
             description: model.description,
             extraContents: model.extraContents,
             action: model.action,
-            handler: model.handler
+            handler: handler
         ))
         self.view.isHidden = true
         self.view.backgroundColor = .clear
     }
     
-    public func update(_ model: SnackBar.Model) {
+    public func update(_ model: SnackBar.Model, handler: @escaping () -> Void) {
         self.rootView = SnackBar(
             heading: model.heading,
             description: model.description,
             extraContents: model.extraContents,
             action: model.action,
-            handler: model.handler
+            handler: handler
         )
     }
     
