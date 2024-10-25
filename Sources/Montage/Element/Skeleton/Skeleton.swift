@@ -20,7 +20,7 @@ public enum Skeleton {
         }
     }
     
-    public enum Position {
+    public enum Align {
         case left
         case center
         case right
@@ -48,16 +48,16 @@ public enum Skeleton {
     
     public struct Model {
         let variant: Skeleton.Variant
-        let position: Skeleton.Position
+        let align: Skeleton.Align
         let length: Skeleton.Length
         
         public init(
             variant: Skeleton.Variant = .normal,
-            position: Skeleton.Position = .left,
+            align: Skeleton.Align = .left,
             length: Skeleton.Length = ._100
         ) {
             self.variant = variant
-            self.position = position
+            self.align = align
             self.length = length
         }
     }
