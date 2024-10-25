@@ -10,7 +10,7 @@ import SwiftUI
 extension Skeleton {
     private struct Text: View {
         private var variant: Skeleton.Variant
-        private var position: Skeleton.Position
+        private var position: Skeleton.Align
         private var length: Skeleton.Length
         
         private var configuration: Skeleton.Configuration? = nil
@@ -52,7 +52,7 @@ extension Skeleton {
         
         init(
             variant: Skeleton.Variant,
-            position: Skeleton.Position,
+            position: Skeleton.Align,
             length: Skeleton.Length,
             configuration: Skeleton.Configuration?,
             originalSize: Binding<CGSize>
@@ -103,10 +103,10 @@ extension Skeleton {
                 .opacity(show == false ? 1 : .zero)
                 .readSize(onChange: { originalSize = $0 })
                 .if(show) {
-                    $0.overlay(alignment: model.position.alignment) {
+                    $0.overlay(alignment: model.align.alignment) {
                         Skeleton.Text(
                             variant: model.variant,
-                            position: model.position,
+                            position: model.align,
                             length: model.length,
                             configuration: configuration,
                             originalSize: $originalSize
@@ -127,7 +127,7 @@ extension Skeleton {
                     show: .constant(true),
                     model: .init(
                         variant: .normal,
-                        position: .center,
+                        align: .center,
                         length: ._100
                     ),
                     configuration: .init(
