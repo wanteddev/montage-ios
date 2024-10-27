@@ -77,6 +77,7 @@ extension Skeleton {
                 case .rectangle:
                     RoundedRectangle(cornerRadius: cornerRadius)
                         .foregroundStyle(foregroundColor)
+                        .opacity(variant == .white ? 0.28 : 1)
                 case .ellipse:
                     Ellipse()
                         .foregroundStyle(foregroundColor)
