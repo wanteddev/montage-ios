@@ -15,7 +15,7 @@ public enum Skeleton {
         var foregroundColor: SwiftUI.Color {
             switch self {
             case .normal: .component(.fillNormal)
-            case .white: .alias(.staticWhite).opacity(0.28)
+            case .white: .alias(.staticWhite)
             }
         }
     }
