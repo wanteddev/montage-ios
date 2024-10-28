@@ -19,7 +19,7 @@ extension Card {
         private let topContent: (() -> TC)
         private let bottomContent: (() -> BC)
         
-        private let overlay: OverlayModel
+        @State var overlay: OverlayModel = .init()
         
         public init(
             skeleton: Binding<Bool>,
@@ -30,8 +30,7 @@ extension Card {
             @ViewBuilder caption: @escaping (() -> C) = { EmptyView() },
             @ViewBuilder extraCpation: @escaping (() -> EC) = { EmptyView() },
             @ViewBuilder topContent: @escaping (() -> TC) = { EmptyView() },
-            @ViewBuilder bottomContent: @escaping (() -> BC) = { EmptyView() },
-            overlay: OverlayModel = .init()
+            @ViewBuilder bottomContent: @escaping (() -> BC) = { EmptyView() }
         ) {
             self._skeleton = skeleton
             self.imageRatio = imageRatio
@@ -42,7 +41,6 @@ extension Card {
             self.extraCaption = extraCpation
             self.topContent = topContent
             self.bottomContent = bottomContent
-            self.overlay = overlay
         }
 
         public var body: some View {
@@ -204,6 +202,14 @@ extension Card.Normal {
     }
 }
 
+extension Card.Normal {
+    /// Card Normal의 overlay를 표시합니다.
+    public func overlay(_ model: OverlayModel) -> Self {
+        self.overlay = model
+        return self
+    }
+}
+
 import Pretendard
 
 #Preview {
@@ -220,7 +226,7 @@ import Pretendard
                         .resizable()
                         .scaledToFill()
                 } else {
-                    Image(uiImage: UIImage(named: "placeholder")!)
+                    Image(uiImage: .init(resource: .placeholder))
                         .resizable()
                         .scaledToFill()
                 }
@@ -262,13 +268,13 @@ import Pretendard
                 Badge.ContentBadgeController(text: "텍스트")
                     .fixedSize()
             }
-        },
-        overlay: .init(
-            caption: "캡션",
-            toggleIsOn: true,
-            toggleIcon: (.bookmarkFill, .bookmark),
-            onToggleTap: { print("hello") }
-        )
+        }
     )
+    .overlay(.init(
+        caption: "캡션",
+        toggleIsOn: true,
+        toggleIcon: (.bookmarkFill, .bookmark),
+        onToggleTap: { print("hello") }
+    ))
 }
 
