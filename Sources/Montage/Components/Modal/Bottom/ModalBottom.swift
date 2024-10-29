@@ -207,10 +207,7 @@ private struct ModalBottomPreivew: View {
             content: {
                 Modal.Bottom(
                     navigation: {
-                        .init(
-                            title: "타이틀",
-                            actions: []
-                        )
+                        Modal.Navigation(title: "제목")
                     },
                     content: {
                         VStack {

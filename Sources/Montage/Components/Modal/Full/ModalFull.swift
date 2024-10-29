@@ -76,14 +76,10 @@ private struct ModalFullPreivew: View {
             content: {
                 Modal.Full(
                     navigation: {
-                        Modal.Navigation(
-                            variant: .normal,
-                            title: "제목",
-                            left: nil,
-                            actions: [
-                                .icon(.close, action: { show = false })
-                            ]
-                        )
+                        Modal.Navigation(title: "제목")
+                        .actions([
+                            .icon(.close, action: { show = false })
+                        ])
                     },
                     content: {
                         VStack {
