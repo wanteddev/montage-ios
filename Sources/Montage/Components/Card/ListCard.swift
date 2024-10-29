@@ -80,11 +80,11 @@ extension Card {
                         title()
                             .skeleton(show: $skeleton)
                         
-                        extraCaption()
+                        caption()
                             .skeleton(show: $skeleton)
                             .padding(.top, 4)
-
-                        caption()
+                        
+                        extraCaption()
                             .skeleton(show: $skeleton)
                             .padding(.top, 4)
                     }
