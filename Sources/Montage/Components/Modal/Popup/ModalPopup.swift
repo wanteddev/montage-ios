@@ -168,14 +168,12 @@ private struct ModalPopupPreivew: View {
                 Modal.Popup(
                     navigation: {
                         Modal.Navigation(
-                            variant: .normal,
-                            title: "제목",
-                            scrollOffset: scrollOffset,
-                            left: nil,
-                            actions: [
-                                .icon(.close, action: { show = false })
-                            ]
+                            title: "제목"
                         )
+                        .scrollOffset($scrollOffset)
+                        .actions([
+                            .icon(.close, action: { show = false })
+                        ])
                     },
                     content: {
                         ScrollView {
