@@ -1,16 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Pretendard",
-        "repositoryURL": "https://github.com/wanteddev/pretendard-ios",
-        "state": {
-          "branch": null,
-          "revision": "d5053acbffff52628576c40138d7719953d9a0b9",
-          "version": "0.5.0"
-        }
+  "pins" : [
+    {
+      "identity" : "lottie-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-ios",
+      "state" : {
+        "revision" : "b04b773957e3e359730590c2e7c16d8c3874ec50",
+        "version" : "3.4.1"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "pretendard-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wanteddev/pretendard-ios",
+      "state" : {
+        "revision" : "d5053acbffff52628576c40138d7719953d9a0b9",
+        "version" : "0.5.0"
+      }
+    }
+  ],
+  "version" : 2
 }
