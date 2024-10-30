@@ -19,12 +19,12 @@ extension Modal {
         /// ModalNavigation이 노출될 screenWidth입니다.
         @State private var screenWidth: CGFloat = .zero
         
-        private let variant: Variant
+        private var variant: Variant = .normal
         private let title: String
-        private let scrollOffset: CGFloat
-        private let left: Bar.TopNavigation.Resource.Left?
-        private let backgroundColorResolvable: ColorResolvable?
-        private let actions: [Bar.TopNavigation.Resource.Action]
+        @Binding private var scrollOffset: CGFloat
+        private var left: Bar.TopNavigation.Resource.Left? = nil
+        private var backgroundColor: SwiftUI.Color? = nil
+        private var actions: [Bar.TopNavigation.Resource.Action] = []
         
         // MARK: - Computed properties
         
@@ -51,9 +51,9 @@ extension Modal {
             scrolled && isFloatingVariant == false && (scrollOffset / -33) > 1
         }
         
-        private var backgroundColor: SwiftUI.Color {
-            if let backgroundColorResolvable {
-                return .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
+        private var _backgroundColor: SwiftUI.Color {
+            if let backgroundColor {
+                return backgroundColor.opacity(0.88)
             } else {
                 return SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
             }
@@ -65,20 +65,25 @@ extension Modal {
         }
 
         // MARK: - Initialisers
+        
+        public init(title: String) {
+            self.title = title
+            self._scrollOffset = .constant(.zero)
+        }
        
-        public init(
-            variant: Variant = .normal,
-            title: String = "",
-            scrollOffset: CGFloat = .zero,
-            left: Bar.TopNavigation.Resource.Left? = nil,
-            backgroundColorResolvable: ColorResolvable? = nil,
-            actions: [Bar.TopNavigation.Resource.Action] = []
+        fileprivate init(
+            variant: Variant,
+            title: String,
+            scrollOffset: Binding<CGFloat>,
+            left: Bar.TopNavigation.Resource.Left?,
+            backgroundColor: SwiftUI.Color?,
+            actions: [Bar.TopNavigation.Resource.Action]
         ) {
             self.variant = variant
             self.title = title
-            self.scrollOffset = scrollOffset
+            self._scrollOffset = scrollOffset
             self.left = left
-            self.backgroundColorResolvable = backgroundColorResolvable
+            self.backgroundColor = backgroundColor
             self.actions = Array(actions.prefix(3))
         }
         
@@ -94,7 +99,7 @@ extension Modal {
                 .padding(.vertical, 20)
                 .padding(.horizontal, 16)
                 .background(
-                    (scrolled && isFloatingVariant == false) ? backgroundColor.opacity(backgroundOpacity) : .clear
+                    (scrolled && isFloatingVariant == false) ? _backgroundColor.opacity(backgroundOpacity) : .clear
                 )
                 .background(
                     .ultraThinMaterial.opacity(backgroundOpacity)
@@ -193,13 +198,70 @@ private extension Modal.Navigation.Variant {
     }
 }
 
+extension Modal.Navigation {
+    public func variant(_ variant: Variant) -> Self {
+        .init(
+            variant: variant,
+            title: title,
+            scrollOffset: $scrollOffset,
+            left: left,
+            backgroundColor: backgroundColor,
+            actions: actions
+        )
+    }
+    
+    public func scrollOffset(_ scrollOffset: Binding<CGFloat>) -> Self {
+        .init(
+            variant: variant,
+            title: title,
+            scrollOffset: scrollOffset,
+            left: left,
+            backgroundColor: backgroundColor,
+            actions: actions
+        )
+    }
+    
+    public func left(_ left: Bar.TopNavigation.Resource.Left) -> Self {
+        .init(
+            variant: variant,
+            title: title,
+            scrollOffset: $scrollOffset,
+            left: left,
+            backgroundColor: backgroundColor,
+            actions: actions
+        )
+    }
+    
+    public func backgroundColor(_ backgroundColor: SwiftUI.Color) -> Self {
+        .init(
+            variant: variant,
+            title: title,
+            scrollOffset: $scrollOffset,
+            left: left,
+            backgroundColor: backgroundColor,
+            actions: actions
+        )
+    }
+    
+    public func actions(_ actions: [Bar.TopNavigation.Resource.Action]) -> Self {
+        .init(
+            variant: variant,
+            title: title,
+            scrollOffset: $scrollOffset,
+            left: left,
+            backgroundColor: backgroundColor,
+            actions: actions
+        )
+    }
+}
+
 struct ModalNavigation_Preview: PreviewProvider {
     static var previews: some View {
         Modal.Navigation(
-            variant: .emphasized,
-            title: "주의해주세요",
-            left: .back(action: {}),
-            actions: [.icon(.close, showPushBadge: false, action: {})]
+            title: "주의해주세요"
         )
+        .variant(.emphasized)
+        .left(.back(action: {}))
+        .actions([.icon(.close, showPushBadge: false, action: {})])
     }
 }
