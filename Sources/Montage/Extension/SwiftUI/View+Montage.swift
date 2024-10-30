@@ -61,17 +61,23 @@ extension View {
 
 // MARK: - Component
 
+// MARK: Toast
+
 extension View {
     public func toast(_ model: Binding<Toast.Model?>) -> some View {
         self.modifier(Toast.ToastModifier(model: model))
     }
 }
 
+// MARK: snackBar
+
 extension View {
     public func snackBar(_ model: Binding<SnackBar.Model?>, handler: @escaping () -> Void) -> some View {
         self.modifier(SnackBar.SnackBarModifier(model: model, handler: handler))
     }
 }
+
+// MARK: Tooltip
 
 extension View {
     public func tooltip(
@@ -132,6 +138,8 @@ extension View {
     }
 }
 
+// MARK: TopNavigation
+
 extension View {
     public func topNavigation(
         variant: Bar.TopNavigation.Variant = .normal,
@@ -171,6 +179,8 @@ extension View {
         )
     }
 }
+
+// MARK: Skeleton
 
 extension View {
     public func skeleton(
