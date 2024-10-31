@@ -9,7 +9,6 @@ import SwiftUI
 
 extension Skeleton {
     private struct Text: View {
-        private var variant: Skeleton.Variant
         private var position: Skeleton.Align
         private var length: Skeleton.Length
         
@@ -46,18 +45,16 @@ extension Skeleton {
             if let c = configuration?.color {
                 return c
             } else {
-                return variant.foregroundColor
+                return .component(.fillNormal)
             }
         }
         
         init(
-            variant: Skeleton.Variant,
             position: Skeleton.Align,
             length: Skeleton.Length,
             configuration: Skeleton.Configuration?,
             originalSize: Binding<CGSize>
         ) {
-            self.variant = variant
             self.position = position
             self.length = length
             self.configuration = configuration
@@ -105,7 +102,6 @@ extension Skeleton {
                 .if(show) {
                     $0.overlay(alignment: model.align.alignment) {
                         Skeleton.Text(
-                            variant: model.variant,
                             position: model.align,
                             length: model.length,
                             configuration: configuration,
@@ -126,7 +122,6 @@ extension Skeleton {
                 .skeleton(
                     show: .constant(true),
                     model: .init(
-                        variant: .normal,
                         align: .center,
                         length: ._100
                     ),
