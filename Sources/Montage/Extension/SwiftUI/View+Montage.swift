@@ -11,7 +11,7 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    public func `if`<Content: View>(
+    func `if`<Content: View>(
         _ condition: Bool,
         transform: (Self) -> Content
     ) -> some View {
@@ -23,7 +23,7 @@ extension View {
     }
 
     @ViewBuilder
-    public func `if`(_ condition: Bool) -> some View {
+    func `if`(_ condition: Bool) -> some View {
         if condition {
             self
         }
