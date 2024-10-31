@@ -10,7 +10,6 @@ import SwiftUI
 extension Skeleton {
     struct Shape: View {
         private var shape: Skeleton.ShapeType
-        private var variant: Skeleton.Variant
         private var position: Skeleton.Align
         private var length: Skeleton.Length
         
@@ -48,23 +47,21 @@ extension Skeleton {
             } else {
                 switch shape {
                 case .rectangle:
-                    return variant == .normal ? .component(.fillAlternative) : .alias(.staticWhite)
-                case .ellipse:
-                    return variant.foregroundColor
+                    return .component(.fillAlternative)
+                case .circle:
+                    return .component(.fillNormal)
                 }
             }
         }
         
         init(
             shape: ShapeType,
-            variant: Skeleton.Variant,
             position: Skeleton.Align,
             length: Skeleton.Length,
             configuration: Skeleton.Configuration?,
             originalSize: Binding<CGSize>
         ) {
             self.shape = shape
-            self.variant = variant
             self.position = position
             self.length = length
             self.configuration = configuration
@@ -77,9 +74,8 @@ extension Skeleton {
                 case .rectangle:
                     RoundedRectangle(cornerRadius: cornerRadius)
                         .foregroundStyle(foregroundColor)
-                        .opacity(variant == .white ? 0.28 : 1)
-                case .ellipse:
-                    Ellipse()
+                case .circle:
+                    Circle()
                         .foregroundStyle(foregroundColor)
                 }
             }
@@ -119,7 +115,6 @@ extension Skeleton {
                     $0.overlay(alignment: model.align.alignment) {
                         Skeleton.Shape(
                             shape: shape,
-                            variant: model.variant,
                             position: model.align,
                             length: model.length,
                             configuration: configuration,

@@ -8,18 +8,6 @@
 import SwiftUI
 
 public enum Skeleton {
-    public enum Variant {
-        case normal
-        case white
-        
-        var foregroundColor: SwiftUI.Color {
-            switch self {
-            case .normal: .component(.fillNormal)
-            case .white: .alias(.staticWhite)
-            }
-        }
-    }
-    
     public enum Align {
         case left
         case center
@@ -43,20 +31,17 @@ public enum Skeleton {
     
     public enum ShapeType {
         case rectangle
-        case ellipse
+        case circle
     }
     
     public struct Model {
-        let variant: Skeleton.Variant
         let align: Skeleton.Align
         let length: Skeleton.Length
         
         public init(
-            variant: Skeleton.Variant = .normal,
             align: Skeleton.Align = .left,
             length: Skeleton.Length = ._100
         ) {
-            self.variant = variant
             self.align = align
             self.length = length
         }
