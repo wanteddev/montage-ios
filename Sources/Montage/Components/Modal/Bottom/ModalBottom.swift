@@ -20,9 +20,6 @@ extension Modal {
     ///   isPresented: Binding<Bool>,
     ///   content: {
     ///       Modal.Bottom(
-    ///           handle: Bool,
-    ///           resize: Modal.Bottom.Resize,
-    ///           withScrollView: Bool,
     ///           navigation: {...},
     ///           content: {...},
     ///           actionArea: {...}
@@ -33,7 +30,7 @@ extension Modal {
     /// - Parameters:
     ///     - handle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 false입니다.
     ///     - resize: Content가 표시될 영역의 사이즈 입니다. 기본값은 .hug입니다.
-    ///     - withScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
+    ///     - containScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
     public struct Bottom: View {
         /// Modal/Bottom의 사이즈를 나타내는 열거형입니다.
         public enum Resize {
@@ -44,10 +41,11 @@ extension Modal {
         @Environment(\.safeAreaInsets) private var safeAreaInsets
         @State private var contentSize: CGSize = .zero
 
-        private let handle: Bool
-        private let resize: Modal.Bottom.Resize
-        private let withScollView: Bool
-        private let navigation: (() -> Montage.Modal.Navigation)
+        private var handle: Bool = false
+        private var resize: Modal.Bottom.Resize = .hug
+        private var containScrollView: Bool = false
+        
+        private let navigation: (() -> Montage.Modal.Navigation)?
         private let content: (() -> any View)
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
         
@@ -69,7 +67,7 @@ extension Modal {
         /// handle이 없는 경우에는 resize에 따라 최대높이가 결정됩니다.
         @available(iOS 16.0, *)
         private var detents: Set<PresentationDetent> {
-            if withScollView {
+            if containScrollView {
                  [ .fraction(0.35), .medium, .max ]
             } else if handle {
                 [ .height(contentSize.height), .max ]
@@ -79,16 +77,26 @@ extension Modal {
         }
         
         public init(
+            navigation: (() -> Montage.Modal.Navigation)? = nil,
+            content: @escaping () -> any View,
+            actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
+        ) {
+            self.navigation = navigation
+            self.content = content
+            self.actionArea = actionArea
+        }
+        
+        fileprivate init(
             handle: Bool = false,
             resize: Modal.Bottom.Resize = .hug,
-            withScrollView: Bool = false,
-            navigation: @escaping () -> Montage.Modal.Navigation,
+            containScrollView: Bool = false,
+            navigation: (() -> Montage.Modal.Navigation)? = nil,
             content: @escaping () -> any View,
             actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
         ) {
             self.handle = handle
             self.resize = resize
-            self.withScollView = withScrollView
+            self.containScrollView = containScrollView
             self.navigation = navigation
             self.content = content
             self.actionArea = actionArea
@@ -101,7 +109,9 @@ extension Modal {
                         Spacer()
                             .frame(height: 10)
                     }
-                    AnyView(navigation())
+                    if let navigation {
+                        navigation()
+                    }
                     AnyView(content())
                     if let actionArea {
                         AnyView(actionArea())
@@ -110,7 +120,7 @@ extension Modal {
                 .background(contentSizeMeasurer)
                 .presentationDetents(detents)
                 .presentationDragIndicator(handle ? .visible : .hidden)
-                .presentationContentInteraction(withScollView ? .resizes : .automatic)
+                .presentationContentInteraction(containScrollView ? .resizes : .automatic)
                 .padding(.bottom, -safeAreaInsets.bottom)
             } else {
                 VStack(spacing: .zero) {
@@ -118,7 +128,9 @@ extension Modal {
                         Spacer()
                             .frame(height: 10)
                     }
-                    AnyView(navigation())
+                    if let navigation {
+                        navigation()
+                    }
                     AnyView(content())
                     if let actionArea {
                         AnyView(actionArea())
@@ -128,6 +140,41 @@ extension Modal {
                 .padding(.bottom, -safeAreaInsets.bottom)
             }
         }
+    }
+}
+
+extension Modal.Bottom {
+    public func needHandle(_ need: Bool) -> Self {
+        return Modal.Bottom(
+            handle: need,
+            resize: resize,
+            containScrollView: containScrollView,
+            navigation: navigation,
+            content: content,
+            actionArea: actionArea
+        )
+    }
+
+    public func resize(_ type: Modal.Bottom.Resize) -> Self {
+        return Modal.Bottom(
+            handle: handle,
+            resize: type,
+            containScrollView: containScrollView,
+            navigation: navigation,
+            content: content,
+            actionArea: actionArea
+        )
+    }
+    
+    public func containScrollView(_ isContain: Bool) -> Self {
+        return Modal.Bottom(
+            handle: handle,
+            resize: resize,
+            containScrollView: isContain,
+            navigation: navigation,
+            content: content,
+            actionArea: actionArea
+        )
     }
 }
 
@@ -159,19 +206,8 @@ private struct ModalBottomPreivew: View {
             isPresented: $show,
             content: {
                 Modal.Bottom(
-                    handle: false,
-                    resize: .hug,
-                    withScrollView: false, // 스크롤뷰와 함께 쓰일때 사용
                     navigation: {
-                        Modal.Navigation(
-                            variant: .normal,
-                            title: "제목",
-                            scrollOffset: scrollOffset,
-                            left: nil,
-                            actions: [
-                                .icon(.close, action: { show = false })
-                            ]
-                        )
+                        Modal.Navigation(title: "제목")
                     },
                     content: {
                         VStack {
@@ -195,6 +231,9 @@ private struct ModalBottomPreivew: View {
                         )
                     }
                 )
+                .needHandle(true)
+                .resize(.hug)
+                .containScrollView(false) // 스크롤뷰와 함께 쓰일때 사용
         })
     }
 }

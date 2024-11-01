@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+// MARK: - Internal
+
+extension View {
+    @ViewBuilder
+    func `if`<Content: View>(
+        _ condition: Bool,
+        transform: (Self) -> Content
+    ) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    func `if`(_ condition: Bool) -> some View {
+        if condition {
+            self
+        }
+    }
+}
+
 extension View {
     public func elevation(_ elevation: Elevation) -> Self {
         let currentView = self
@@ -38,17 +61,23 @@ extension View {
 
 // MARK: - Component
 
+// MARK: Toast
+
 extension View {
     public func toast(_ model: Binding<Toast.Model?>) -> some View {
         self.modifier(Toast.ToastModifier(model: model))
     }
 }
 
+// MARK: snackBar
+
 extension View {
     public func snackBar(_ model: Binding<SnackBar.Model?>, handler: @escaping () -> Void) -> some View {
         self.modifier(SnackBar.SnackBarModifier(model: model, handler: handler))
     }
 }
+
+// MARK: Tooltip
 
 extension View {
     public func tooltip(
@@ -109,6 +138,8 @@ extension View {
     }
 }
 
+// MARK: TopNavigation
+
 extension View {
     public func topNavigation(
         variant: Bar.TopNavigation.Variant = .normal,
@@ -145,6 +176,41 @@ extension View {
                 actions: actions,
                 model: model
             )
+        )
+    }
+}
+
+// MARK: Skeleton
+
+extension View {
+    public func skeleton(
+        shape: Skeleton.ShapeType,
+        show: Binding<Bool>,
+        model: Skeleton.Model = .init(),
+        configuration: Skeleton.Configuration = .init()
+    ) -> some View {
+        modifier(
+            Skeleton.SkeletonShapeModifier(
+                shape: shape,
+                show: show,
+                model: model,
+                configuration: configuration
+            )
+        )
+    }
+
+    public func skeleton(
+        show: Binding<Bool>,
+        model: Skeleton.Model = .init(),
+        configuration: Skeleton.Configuration = .init()
+    ) -> some View {
+        modifier(
+            Skeleton
+                .SkeletonTextModifier(
+                    show: show,
+                    model: model,
+                    configuration: configuration
+                )
         )
     }
 }

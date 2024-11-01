@@ -6,19 +6,24 @@ let package = Package(
     name: "Montage",
     platforms: [.iOS(.v16)],
     products: [
-        .library(name: "Montage", targets: ["Montage"])
+        .library(name: "Montage", targets: ["Montage"]),
     ],
     dependencies: [
         .package(
             url: "https://github.com/wanteddev/pretendard-ios",
             "0.1.0" ..< "1.0.0"
+        ),
+        .package(
+            url: "https://github.com/airbnb/lottie-ios",
+            exact: "4.5.0"
         )
     ],
     targets: [
         .target(
             name: "Montage",
             dependencies: [
-                .product(name: "Pretendard", package: "pretendard-ios")
+                .product(name: "Pretendard", package: "pretendard-ios"),
+                .product(name: "Lottie", package: "lottie-ios")
             ],
             resources: [
                 .process("Asset")
