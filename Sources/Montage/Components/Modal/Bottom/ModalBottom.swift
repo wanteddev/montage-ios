@@ -49,16 +49,6 @@ extension Modal {
         private let content: (() -> any View)
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
         
-        /// Modal의 내부에 표시될 내용의 대한 SizeMeasurer입니다.
-        private var contentSizeMeasurer: some View {
-            GeometryReader(content: { proxy in
-                SwiftUI.Color.clear
-                    .onAppear {
-                        contentSize = proxy.size
-                    }
-            })
-        }
-        
         /// Modal/Bottom의 dentents입니다
         ///
         /// ContentView에 ScrollView가 있는 경우, [.fractoin(0.35), .medium, .max]로 제한됩니다.
@@ -117,7 +107,7 @@ extension Modal {
                         AnyView(actionArea())
                     }
                 }
-                .background(contentSizeMeasurer)
+                .readSize { contentSize = $0 }
                 .presentationDetents(detents)
                 .presentationDragIndicator(handle ? .visible : .hidden)
                 .presentationContentInteraction(containScrollView ? .resizes : .automatic)
@@ -136,7 +126,7 @@ extension Modal {
                         AnyView(actionArea())
                     }
                 }
-                .background(contentSizeMeasurer)
+                .readSize { contentSize = $0 }
                 .padding(.bottom, -safeAreaInsets.bottom)
             }
         }
