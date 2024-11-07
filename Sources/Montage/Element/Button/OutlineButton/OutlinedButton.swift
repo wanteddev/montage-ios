@@ -146,6 +146,7 @@ extension Button {
         private lazy var interaction = Decorate.Interaction()
         
         private var longPressRecognizer: UILongPressGestureRecognizer?
+        private var panRecognizer: UIPanGestureRecognizer?
         
         private var iconViewContraints: [NSLayoutConstraint] = []
         
@@ -214,6 +215,11 @@ extension Button.OutlinedButton {
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
         self.longPressRecognizer = longPressRecognizer
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.delegate = self
+        panRecognizer.addTarget(self, action: #selector(panned))
+        self.panRecognizer = panRecognizer
+        addGestureRecognizer(panRecognizer)
     }
     
     private func setupStackView() {
@@ -425,6 +431,25 @@ extension Button.OutlinedButton {
             interaction.state = .normal
         default:
             break
+        }
+    }
+    
+    @objc private func panned() {
+        guard let recognizer = panRecognizer else { return }
+        
+        switch recognizer.state {
+        case .changed:
+            let translation = recognizer.translation(in: self).y
+            let height = frame.height
+            let location = recognizer.location(in: self).y
+            
+            if (translation >= 0 && height - location < translation)
+                || (translation < 0 && location < -translation)
+                || !frame.contains(recognizer.location(in: self))
+            {
+                interaction.state = .normal
+            }
+        default: break
         }
     }
 }

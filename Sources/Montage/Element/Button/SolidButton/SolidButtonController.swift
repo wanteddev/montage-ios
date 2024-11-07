@@ -67,16 +67,8 @@ extension Button {
             uiView.iconOnly = iconOnly
             uiView.state = state
             uiView.disable = disable
-            if let contentColor {
-                uiView.contentUIColor = contentColor.uiColor
-            } else {
-                uiView.contentUIColor = nil
-            }
-            if let backgroundColor {
-                uiView.backgroundUIColor = backgroundColor.uiColor
-            } else {
-                uiView.backgroundUIColor = nil
-            }
+            uiView.contentUIColor = contentColor?.uiColor
+            uiView.backgroundUIColor = backgroundColor?.uiColor
             uiView.handler = handler
         }
     }
