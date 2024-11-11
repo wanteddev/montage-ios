@@ -10,15 +10,15 @@ import SwiftUI
 public struct Cell: View {
     /// Cell의 상하 여백을 나타내는 열거형입니다.
     public enum Padding {
-        case normal
-        case small
-        case medium
+        case pt8
+        case pt12
+        case pt16
         
         public var length: CGFloat {
             switch self {
-            case .normal: 12
-            case .small: 8
-            case .medium: 16
+            case .pt8: 8
+            case .pt12: 12
+            case .pt16: 16
             }
         }
     }
@@ -62,8 +62,8 @@ public struct Cell: View {
     @State private var contentSize: CGSize = .zero
     
     private let title: String
-    private var padding: Padding = .normal
-    private var paddingInset: Bool = false
+    private var padding: Padding = .pt12
+    private var fillWidth: Bool = false
     private var caption: String? = nil
     private var bold: Bool = false
     private var disable: Bool = false
@@ -125,7 +125,7 @@ public struct Cell: View {
                     handler?()
                 }
                 .readSize { contentSize = $0 }
-                .padding(.horizontal, paddingInset ? 20 : 12)
+                .padding(.horizontal, fillWidth ? 12 : 20)
                 .padding(.vertical, padding.length)
                 
                 if divider {
@@ -159,9 +159,9 @@ extension Cell {
     }
     
     /// 좌우 여백 여부를 조정합니다.
-    public func paddingInset(_ paddingInset: Bool = true) -> Self {
+    public func fillWidth(_ fillWidth: Bool = true) -> Self {
         var zelf = self
-        zelf.paddingInset = paddingInset
+        zelf.fillWidth = fillWidth
         return zelf
     }
     
@@ -314,8 +314,8 @@ struct Cell_Previews: PreviewProvider {
         }
         .caption("캡션")
         .bold()
-        .padding(.normal)
-        .paddingInset()
+        .padding(.pt12)
+        .fillWidth()
         .active()
         .disable(false)
         .divider(false)

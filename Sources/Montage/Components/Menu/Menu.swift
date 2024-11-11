@@ -139,8 +139,8 @@ struct Menu_Previews: PreviewProvider {
                 Cell(title: data.title) {
                     print("section: \(section), index: \(index)")
                 }
-                .padding(.normal)
-                .paddingInset(false)
+                .padding(.pt12)
+                .fillWidth(false)
                 .divider(false)
                 .bold(false)
                 .disable(false)
