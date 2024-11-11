@@ -307,20 +307,160 @@ extension Cell {
     }
 }
 
+import Pretendard
 struct Cell_Previews: PreviewProvider {
     static var previews: some View {
-        Cell(title: "텍스트") {
-            print("helloworld")
+        _ = try? Pretendard.registerFonts()
+        return
+        ZStack {
+            SwiftUI.Color(UIColor.alias(.backgroundElevatedAlternative))
+                .ignoresSafeArea()
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("default")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("caption")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .caption("캡션")
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("bold")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .bold()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("padding 8pt")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .padding(.pt8)
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("padding 16pt")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .padding(.pt16)
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("fillWidth")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .fillWidth()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("active")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .active()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("disable")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .disable()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("divider")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .divider()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent active")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .active()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("leftContent radio")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .leftContent(.radio(true))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("leftContent check")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .leftContent(.check(true))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("leftContent icon")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .leftContent(.icon(.star))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent badge")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.badge(.solid, size: .normal, color: .neutral, text: "뱃지", leftIcon: nil, rightIcon: nil))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent chevron")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.chevron(text: "이쪽으로"))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent iconButton")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.iconButton(.normal(size: 18), icon: .apps))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent switch")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.switch(true))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent textButton")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.textButton(.primary, size: .medium, text: "버튼"))
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent check")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.check)
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                    
+                    Text("rightContent check active")
+                    Cell(title: "텍스트") {
+                        print("helloworld")
+                    }
+                    .rightContent(.check)
+                    .active()
+                    .background(SwiftUI.Color(UIColor.alias(.backgroundNormal)))
+                }
+            }
+            .font(.caption2)
         }
-        .caption("캡션")
-        .bold()
-        .padding(.pt12)
-        .fillWidth()
-        .active()
-        .disable(false)
-        .divider(false)
-        .leftContent(.icon(.star))
-        .rightContent(.check)
-//        .border(SwiftUI.Color.red, width: 1)
     }
 }
