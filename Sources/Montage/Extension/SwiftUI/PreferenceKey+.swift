@@ -39,7 +39,7 @@ private struct FramePreferenceKey: PreferenceKey {
 }
 
 extension View {
-    public func readFrame(_ frame: Binding<CGRect>) -> some View {
+    func readFrame(_ frame: Binding<CGRect>) -> some View {
         background(
             GeometryReader { geometry in
                 SwiftUI.Color.clear
