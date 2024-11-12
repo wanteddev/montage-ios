@@ -32,3 +32,24 @@ extension View {
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
     }
 }
+
+private struct FramePreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value _: inout CGRect, nextValue _: () -> CGRect) {}
+}
+
+extension View {
+    func readFrame(_ frame: Binding<CGRect>) -> some View {
+        background(
+            GeometryReader { geometry in
+                SwiftUI.Color.clear
+                    .preference(key: FramePreferenceKey.self, value: geometry.frame(in: .global))
+            }
+        )
+        .onPreferenceChange(FramePreferenceKey.self, perform: {
+            frame.wrappedValue = $0
+        })
+    }
+}
+
+

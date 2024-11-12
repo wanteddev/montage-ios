@@ -104,6 +104,7 @@ extension Button {
         private lazy var interactionLayer = interaction.layer
         
         private var longPressRecognizer: UILongPressGestureRecognizer?
+        private var panRecognizer: UIPanGestureRecognizer?
         
         private var sizeContraints: [NSLayoutConstraint] = []
         
@@ -175,6 +176,11 @@ extension Button.UIIconButton {
         longPressRecognizer.addTarget(self, action: #selector(longPressed))
         addGestureRecognizer(longPressRecognizer)
         self.longPressRecognizer = longPressRecognizer
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.delegate = self
+        panRecognizer.addTarget(self, action: #selector(panned))
+        self.panRecognizer = panRecognizer
+        addGestureRecognizer(panRecognizer)
     }
     
     private func setupInteaction() {
@@ -369,6 +375,25 @@ extension Button.UIIconButton {
             interactionLayer.opacity = .opacity(.p000)
         default:
             break
+        }
+    }
+    
+    @objc private func panned() {
+        guard let recognizer = panRecognizer else { return }
+        
+        switch recognizer.state {
+        case .changed:
+            let translation = recognizer.translation(in: self).y
+            let height = frame.height
+            let location = recognizer.location(in: self).y
+            
+            if (translation >= 0 && height - location < translation)
+                || (translation < 0 && location < -translation)
+                || !frame.contains(recognizer.location(in: self))
+            {
+                interaction.state = .normal
+            }
+        default: break
         }
     }
 }
