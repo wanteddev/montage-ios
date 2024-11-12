@@ -45,7 +45,9 @@ public struct SegmentControl: View {
             ForEach(data.indices, id: \.self) { index in
                 SwiftUI.Button {
                     guard selectedIndex != index else { return }
-                    selectedIndex = index
+                    withAnimation(.timingCurve(0.25, 1.25, 0.4, 0.99, duration: 0.5)) {
+                        selectedIndex = index
+                    }
                 } label: {
                     HStack(spacing: 4) {
                         data[index].image?
@@ -62,7 +64,7 @@ public struct SegmentControl: View {
                             .paragraph(variant: buttonTitleFont)
                     }
                     .padding(buttonInsets)
-                    .frame(width: max(0, (frameSize.width - (insets.leading + insets.trailing)) / CGFloat(data.count)))
+                    .frame(width: max(0, buttonWidth))
                     .frame(maxHeight: .infinity)
                     .background {
                         Group {
@@ -70,7 +72,8 @@ public struct SegmentControl: View {
                             case .solid:
                                 RoundedRectangle(cornerRadius: buttonCornerRadius)
                                     .foregroundStyle(SwiftUI.Color.alias(.backgroundElevated))
-                                    .if(selectedIndex == index)
+                                    .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
+                                    .if(index == 0)
                             case .outlined:
                                 ZStack {
                                     UnevenRoundedRectangle(
@@ -169,6 +172,10 @@ extension SegmentControl {
         }
     }
     
+    private var buttonWidth: CGFloat {
+        (frameSize.width - (insets.leading + insets.trailing)) / CGFloat(data.count)
+    }
+    
     private var buttonTitleFont: Typography.Variant {
         switch size {
         case .large:
@@ -236,34 +243,34 @@ struct SegmentControl_Previews: PreviewProvider {
         return VStack {
             SegmentControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "ETC")],
+                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onChangeDataSource: { _ in }
             )
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "ETC")],
+                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onChangeDataSource: { _ in }
             )
             .size(.medium)
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "ETC")],
+                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onChangeDataSource: { _ in }
             )
             .size(.small)
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "ETC")],
+                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onChangeDataSource: { _ in }
             )
             .variant(.outlined)
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "ETC")],
+                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onChangeDataSource: { _ in }
             )
             .variant(.outlined)
@@ -271,7 +278,7 @@ struct SegmentControl_Previews: PreviewProvider {
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "ETC")],
+                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onChangeDataSource: { _ in }
             )
             .variant(.outlined)
