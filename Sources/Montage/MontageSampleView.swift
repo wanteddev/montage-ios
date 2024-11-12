@@ -18,7 +18,7 @@ public struct MontageSampleView: View {
     
     public var body: some View {
         NavigationView {
-            List {
+            SwiftUI.List {
                 Group {
                     Text("Typography")
                         .montage(variant: .body1, weight: .bold)
