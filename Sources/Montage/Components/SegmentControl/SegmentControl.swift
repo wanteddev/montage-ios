@@ -32,10 +32,10 @@ public struct SegmentControl: View {
     private var size: Size = .large
     private let onSelect: (Int) -> Void
     
-    public init(selectedIndex: Binding<Int>, data: [Data], onChangeDataSource: @escaping (Int) -> Void) {
+    public init(selectedIndex: Binding<Int>, data: [Data], onSelect: @escaping (Int) -> Void) {
         _selectedIndex = selectedIndex
         self.data = data
-        self.onSelect = onChangeDataSource
+        self.onSelect = onSelect
     }
     
     @State private var frameSize: CGSize = .zero
@@ -52,6 +52,8 @@ public struct SegmentControl: View {
                     HStack(spacing: 4) {
                         data[index].image?
                             .resizable()
+                            .renderingMode(.template)
+                            .foregroundStyle(buttonForegroundColor(isSelected: selectedIndex == index))
                             .frame(width: buttonIconSize.width, height: buttonIconSize.height)
                             .padding(.vertical, 2)
                         
@@ -59,7 +61,7 @@ public struct SegmentControl: View {
                             .montage(
                                 variant: buttonTitleFont,
                                 weight: .medium,
-                                alias: selectedIndex == index ? .labelNormal : .labelAlternative
+                                color: buttonForegroundColor(isSelected: selectedIndex == index)
                             )
                             .paragraph(variant: buttonTitleFont)
                     }
@@ -70,10 +72,14 @@ public struct SegmentControl: View {
                         Group {
                             switch variant {
                             case .solid:
-                                RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                    .foregroundStyle(SwiftUI.Color.alias(.backgroundElevated))
-                                    .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
-                                    .if(index == 0)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: buttonCornerRadius)
+                                        .foregroundStyle(SwiftUI.Color.alias(.backgroundElevated))
+                                    RoundedRectangle(cornerRadius: buttonCornerRadius)
+                                        .foregroundStyle(SwiftUI.Color.alias(.staticWhite).opacity(0.28))
+                                }
+                                .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
+                                .if(index == 0)
                             case .outlined:
                                 ZStack {
                                     UnevenRoundedRectangle(
@@ -220,6 +226,13 @@ extension SegmentControl {
         }
     }
     
+    private func buttonForegroundColor(isSelected: Bool) -> SwiftUI.Color {
+        switch variant {
+        case .solid: .alias(isSelected ? .labelNormal : .labelAlternative)
+        case .outlined: .alias(isSelected ? .primaryNormal : .labelAlternative)
+        }
+    }
+    
     private func buttonBackgroundColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
         case .solid: .clear
@@ -244,34 +257,34 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentControl(
                 selectedIndex: $selectedIndex,
                 data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
-                onChangeDataSource: { _ in }
+                onSelect: { _ in }
             )
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
                 data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
-                onChangeDataSource: { _ in }
+                onSelect: { _ in }
             )
             .size(.medium)
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
                 data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
-                onChangeDataSource: { _ in }
+                onSelect: { _ in }
             )
             .size(.small)
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
                 data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
-                onChangeDataSource: { _ in }
+                onSelect: { _ in }
             )
             .variant(.outlined)
             
             SegmentControl(
                 selectedIndex: $selectedIndex,
                 data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
-                onChangeDataSource: { _ in }
+                onSelect: { _ in }
             )
             .variant(.outlined)
             .size(.medium)
@@ -279,7 +292,7 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentControl(
                 selectedIndex: $selectedIndex,
                 data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
-                onChangeDataSource: { _ in }
+                onSelect: { _ in }
             )
             .variant(.outlined)
             .size(.small)
