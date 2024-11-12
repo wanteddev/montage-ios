@@ -120,7 +120,7 @@ import Pretendard
                         .resizable()
                         .scaledToFill()
                 } else {
-                    Image(uiImage: .init(resource: .placeholder))
+                    Image("placeholder", bundle: .module)
                         .resizable()
                         .scaledToFill()
                 }
