@@ -78,6 +78,7 @@ public struct SegmentControl: View {
                                     RoundedRectangle(cornerRadius: buttonCornerRadius)
                                         .foregroundStyle(SwiftUI.Color.alias(.staticWhite).opacity(0.28))
                                 }
+                                .shadow(color: .alias(.staticBlack).opacity(0.08), radius: buttonCornerRadius)
                                 .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
                                 .if(index == 0)
                             case .outlined:
