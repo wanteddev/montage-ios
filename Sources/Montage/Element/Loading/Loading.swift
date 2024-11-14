@@ -10,7 +10,7 @@ import SwiftUI
 import Lottie
 
 public struct Loading: View {
-    public enum `Type` {
+    public enum Kind {
         case wanted
         case circular
         
@@ -24,17 +24,16 @@ public struct Loading: View {
     
     @Environment(\.colorScheme)  private var colorScheme
     
-    private let subdirectory: String = Loading.subdirectory
-    private let type: `Type`
+    private let kind: Kind
     private let size: CGSize?
 
-    public init(type: `Type`, size: CGSize? = nil) {
-        self.type = type
+    public init(kind: Kind, size: CGSize? = nil) {
+        self.kind = kind
         self.size = size
     }
     
     public var body: some View {
-        LottieView(animation: .named(type.resourceName(colorScheme), subdirectory: subdirectory))
+        LottieView(animation: .named(kind.resourceName(colorScheme), bundle: .module))
             .playing(loopMode: .loop)
             .if(size != nil) {
                 $0.resizable()

@@ -214,3 +214,91 @@ extension View {
         )
     }
 }
+
+// MARK: Loading
+
+extension View {
+    public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) -> some View {
+        modifier(LoadingViewModifier(isLoading, type: type, dimmingNeeded: dimmingNeeded))
+    }
+}
+
+struct LoadingViewModifier: ViewModifier {
+    @Binding var isLoading: Bool
+    let type: Loading.Kind
+    let dimmingNeeded: Bool
+    
+    init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) {
+        self._isLoading = isLoading
+        self.type = type
+        self.dimmingNeeded = dimmingNeeded
+    }
+    
+    @State var opacity: CGFloat = 0
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+                .interactionDisabled(isLoading)
+            SwiftUI.Color.white.opacity(0.5)
+                .opacity(opacity)
+                .ignoresSafeArea()
+                .if(dimmingNeeded)
+            Loading(kind: type)
+                .if(isLoading)
+        }
+        .onChange(of: isLoading, perform: { newValue in
+            opacity = newValue ? 0 : 1
+            withAnimation {
+                opacity = newValue ? 1 : 0
+            }
+        })
+    }
+}
+
+// MARK: Interaction Disabling
+
+extension View {
+    public func interactionDisabled(_ disabled: Bool) -> some View {
+        ZStack {
+            modifier(InteractionDisablingViewModifier(disabled: disabled))
+        }
+    }
+}
+
+struct InteractionDisablingViewModifier: ViewModifier {
+    let disabled: Bool
+    
+    func body(content: Content) -> some View {
+        content
+            .allowsHitTesting(!disabled)
+            .disableSwipeBack(disabled)
+    }
+}
+
+// MARK: Disable SwipeBack
+
+extension View {
+    public func disableSwipeBack(_ disabled: Bool) -> some View {
+        self.background(
+            DisableSwipeBackView(disabled: disabled)
+        )
+    }
+}
+
+struct DisableSwipeBackView: UIViewControllerRepresentable {
+    private let disabled: Bool
+
+    init(disabled: Bool) {
+        self.disabled = disabled
+    }
+    
+    func makeUIViewController(context: Context) -> UIViewController {
+        UIViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        uiViewController.navigationController?.interactivePopGestureRecognizer?.isEnabled = !disabled
+        uiViewController.navigationController?.navigationBar.isUserInteractionEnabled = !disabled
+    }
+}
