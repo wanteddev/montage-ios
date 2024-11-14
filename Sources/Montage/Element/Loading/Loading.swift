@@ -24,7 +24,6 @@ public struct Loading: View {
     
     @Environment(\.colorScheme)  private var colorScheme
     
-    private let subdirectory: String = Loading.subdirectory
     private let kind: Kind
     private let size: CGSize?
 
