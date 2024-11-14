@@ -53,8 +53,8 @@ public struct Cell: View {
             size: Badge.Content.Size,
             color: Badge.Content.ColorStyle,
             text: String,
-            leftIcon: Icon? = nil,
-            rightIcon: Icon? = nil
+            leftIcon: Image? = nil,
+            rightIcon: Image? = nil
         )
     }
     
