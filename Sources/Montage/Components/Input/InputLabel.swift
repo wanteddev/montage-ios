@@ -74,7 +74,7 @@ public class InputLabel: UIView {
     
     /// Element의 기본적인 사이즈를 정의합니다.
     override public var intrinsicContentSize: CGSize {
-        .init(width: UIScreen.main.bounds.width, height: elementView.intrinsicContentSize.height)
+        .init(width: elementView.intrinsicContentSize.width + elementSpacing + textLabel.intrinsicContentSize.width, height: elementView.intrinsicContentSize.height)
     }
 }
 
@@ -82,13 +82,6 @@ extension InputLabel {
     private func setupViews() {
         let lineHeight = Typography.getLineHeight(variant: textVariant)
         let textTopInset = (lineHeight - elementView.intrinsicContentSize.height) / 2
-        let elementSpacing: CGFloat
-        
-        if elementView is Control.Check {
-            elementSpacing = .spacing(.pt04)
-        } else {
-            elementSpacing = .spacing(.pt08)
-        }
         
         addSubview(elementView)
         addSubview(textLabel)
@@ -111,6 +104,14 @@ extension InputLabel {
             .constraint(equalTo: bottomAnchor).isActive = true
         
         elementView.isUserInteractionEnabled = false
+    }
+    
+    var elementSpacing: CGFloat {
+        if elementView is Control.Check {
+            .spacing(.pt04)
+        } else {
+            .spacing(.pt08)
+        }
     }
     
     private func bindEvent() {
