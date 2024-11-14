@@ -54,14 +54,14 @@ extension Badge {
         }
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: Icon? {
+        public var leftIcon: UIImage? {
             didSet {
                 updateViews()
             }
         }
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: Icon? {
+        public var rightIcon: UIImage? {
             didSet {
                 updateViews()
             }
@@ -216,14 +216,14 @@ extension Badge.Content {
     private func updateIconView() {
         if let leftIcon {
             leftIconView.isHidden = false
-            leftIconView.image = .montage(leftIcon)
+            leftIconView.image = leftIcon.withRenderingMode(.alwaysTemplate)
         } else {
             leftIconView.isHidden = true
         }
         
         if let rightIcon {
             rightIconView.isHidden = false
-            rightIconView.image = .montage(rightIcon)
+            rightIconView.image = rightIcon.withRenderingMode(.alwaysTemplate)
         } else {
             rightIconView.isHidden = true
         }

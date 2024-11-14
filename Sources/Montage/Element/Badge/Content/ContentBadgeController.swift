@@ -20,10 +20,10 @@ extension Badge {
         public var color: Badge.Content.ColorStyle
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: Icon?
+        public var leftIcon: Image?
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: Icon?
+        public var rightIcon: Image?
         
         /// 버튼에서 표현될 텍스트입니다.
         public var text: String
@@ -34,8 +34,8 @@ extension Badge {
             variant: Badge.Content.Variant = .solid,
             size: Badge.Content.Size = .medium,
             color: Badge.Content.ColorStyle = .neutral,
-            leftIcon: Icon? = nil,
-            rightIcon: Icon? = nil,
+            leftIcon: Image? = nil,
+            rightIcon: Image? = nil,
             text: String
         ) {
             self.variant = variant
@@ -54,8 +54,8 @@ extension Badge {
             uiView.variant = variant
             uiView.size = size
             uiView.colorStyle = color
-            uiView.leftIcon = leftIcon
-            uiView.rightIcon = rightIcon
+            uiView.leftIcon = ImageRenderer(content: leftIcon).uiImage
+            uiView.rightIcon = ImageRenderer(content: rightIcon).uiImage
             uiView.text = text
         }
     }
@@ -105,41 +105,41 @@ fileprivate struct Preview: View {
             VStack(alignment: .leading) {
                 HStack {
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.primary), text: "중요"
+                        variant: .solid, color: .accent(.primary), leftIcon: .montage(.circleInfoFill), text: "중요"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.positive), text: "긍정"
+                        variant: .solid, color: .accent(.positive), leftIcon: .montage(.circleCheckFill), text: "긍정"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.cautionary), text: "경고"
+                        variant: .solid, color: .accent(.cautionary), leftIcon: .montage(.circleExclamationFill), text: "경고"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.negative), text: "에러"
+                        variant: .solid, color: .accent(.negative), leftIcon: .montage(.circleClose), text: "에러"
                     ).fixedSize()
                 }
     
                 HStack {
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.lime), text: "라임"
+                        variant: .solid, color: .accent(.lime), rightIcon: Image(systemName: "rectangle.fill"), text: "라임"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.cyan), text: "시안"
+                        variant: .solid, color: .accent(.cyan), rightIcon: Image(systemName: "rectangle.fill"), text: "시안"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.lightBlue), text: "라이트 블루"
+                        variant: .solid, color: .accent(.lightBlue), rightIcon: Image(systemName: "rectangle.fill"), text: "라이트 블루"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.violet), text: "바이올렛"
+                        variant: .solid, color: .accent(.violet), rightIcon: Image(systemName: "rectangle.fill"), text: "바이올렛"
                     ).fixedSize()
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.pink), text: "핑크"
+                        variant: .solid, color: .accent(.pink), rightIcon: Image(systemName: "rectangle.fill"), text: "핑크"
                     ).fixedSize()
                 }
             }
