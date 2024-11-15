@@ -1,5 +1,5 @@
 //
-//  SegmentControl.swift
+//  SegmentedControl.swift
 //  Montage
 //
 //  Created by 김삼열 on 11/11/24.
@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-public struct SegmentControl: View {
-    public struct Data {
+public struct SegmentedControl: View {
+    // MARK: - Types
+    public struct Item {
         let image: Image?
         let title: String
         
@@ -26,23 +27,23 @@ public struct SegmentControl: View {
         case large, medium, small
     }
     
+    // MARK: - Initializer
     @Binding private var selectedIndex: Int
-    private let data: [Data]
-    private var variant: Variant = .solid
-    private var size: Size = .large
+    private let items: [Item]
     private let onSelect: (Int) -> Void
     
-    public init(selectedIndex: Binding<Int>, data: [Data], onSelect: @escaping (Int) -> Void) {
+    public init(selectedIndex: Binding<Int>, items: [Item], onSelect: @escaping (Int) -> Void) {
         _selectedIndex = selectedIndex
-        self.data = data
+        self.items = items
         self.onSelect = onSelect
     }
     
+    // MARK: - Body
     @State private var frameSize: CGSize = .zero
     
     public var body: some View {
         HStack(spacing: 0) {
-            ForEach(data.indices, id: \.self) { index in
+            ForEach(items.indices, id: \.self) { index in
                 SwiftUI.Button {
                     guard selectedIndex != index else { return }
                     withAnimation(.timingCurve(0.25, 1.25, 0.4, 0.99, duration: 0.5)) {
@@ -50,14 +51,14 @@ public struct SegmentControl: View {
                     }
                 } label: {
                     HStack(spacing: 4) {
-                        data[index].image?
+                        items[index].image?
                             .resizable()
                             .renderingMode(.template)
                             .foregroundStyle(buttonForegroundColor(isSelected: selectedIndex == index))
                             .frame(width: buttonIconSize.width, height: buttonIconSize.height)
                             .padding(.vertical, 2)
                         
-                        Text(data[index].title)
+                        Text(items[index].title)
                             .montage(
                                 variant: buttonTitleFont,
                                 weight: .medium,
@@ -86,15 +87,15 @@ public struct SegmentControl: View {
                                     UnevenRoundedRectangle(
                                         topLeadingRadius: index == 0 ? buttonCornerRadius : 0,
                                         bottomLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomTrailingRadius: index == data.count - 1 ? buttonCornerRadius : 0,
-                                        topTrailingRadius: index == data.count - 1 ? buttonCornerRadius : 0
+                                        bottomTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0,
+                                        topTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0
                                     )
                                     .foregroundStyle(buttonBackgroundColor(isSelected: selectedIndex == index))
                                     UnevenRoundedRectangle(
                                         topLeadingRadius: index == 0 ? buttonCornerRadius : 0,
                                         bottomLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomTrailingRadius: index == data.count - 1 ? buttonCornerRadius : 0,
-                                        topTrailingRadius: index == data.count - 1 ? buttonCornerRadius : 0
+                                        bottomTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0,
+                                        topTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0
                                     )
                                     .stroke(buttonBorderColor(isSelected: selectedIndex == index))
                                 }
@@ -122,6 +123,10 @@ public struct SegmentControl: View {
         }
     }
     
+    // MARK: - Modifiers
+    private var variant: Variant = .solid
+    private var size: Size = .large
+    
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
         zelf.variant = variant
@@ -135,7 +140,8 @@ public struct SegmentControl: View {
     }
 }
 
-extension SegmentControl {
+// MARK: - Private
+extension SegmentedControl {
     private var backgroundColor: SwiftUI.Color {
         switch variant {
         case .solid: .component(.fillNormal)
@@ -180,7 +186,7 @@ extension SegmentControl {
     }
     
     private var buttonWidth: CGFloat {
-        (frameSize.width - (insets.leading + insets.trailing)) / CGFloat(data.count)
+        (frameSize.width - (insets.leading + insets.trailing)) / CGFloat(items.count)
     }
     
     private var buttonTitleFont: Typography.Variant {
@@ -255,44 +261,44 @@ struct SegmentControl_Previews: PreviewProvider {
     static var previews: some View {
         _ = try? Pretendard.registerFonts()
         return VStack {
-            SegmentControl(
+            SegmentedControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onSelect: { _ in }
             )
             
-            SegmentControl(
+            SegmentedControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onSelect: { _ in }
             )
             .size(.medium)
             
-            SegmentControl(
+            SegmentedControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onSelect: { _ in }
             )
             .size(.small)
             
-            SegmentControl(
+            SegmentedControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onSelect: { _ in }
             )
             .variant(.outlined)
             
-            SegmentControl(
+            SegmentedControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onSelect: { _ in }
             )
             .variant(.outlined)
             .size(.medium)
             
-            SegmentControl(
+            SegmentedControl(
                 selectedIndex: $selectedIndex,
-                data: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
                 onSelect: { _ in }
             )
             .variant(.outlined)
