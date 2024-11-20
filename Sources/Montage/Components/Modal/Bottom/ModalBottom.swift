@@ -28,7 +28,7 @@ extension Modal {
     /// ```
     ///
     /// - Parameters:
-    ///     - handle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 false입니다.
+    ///     - handle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 true입니다.
     ///     - resize: Content가 표시될 영역의 사이즈 입니다. 기본값은 .hug입니다.
     ///     - containScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
     public struct Bottom: View {
@@ -41,7 +41,7 @@ extension Modal {
         @Environment(\.safeAreaInsets) private var safeAreaInsets
         @State private var contentSize: CGSize = .zero
 
-        private var handle: Bool = false
+        private var handle: Bool = true
         private var resize: Modal.Bottom.Resize = .hug
         private var containScrollView: Bool = false
         
@@ -60,7 +60,7 @@ extension Modal {
             if containScrollView {
                  [ .fraction(0.35), .medium, .max ]
             } else if handle {
-                [ .height(contentSize.height), .max ]
+                [ .height(contentSize.height) ]
             } else {
                 resize == .fill ? [ .max ] : [ .height(contentSize.height) ]
             }
@@ -111,6 +111,7 @@ extension Modal {
                 .presentationDetents(detents)
                 .presentationDragIndicator(handle ? .visible : .hidden)
                 .presentationContentInteraction(containScrollView ? .resizes : .automatic)
+                .presentationCornerRadius(12)
                 .padding(.bottom, -safeAreaInsets.bottom)
             } else {
                 VStack(spacing: .zero) {
