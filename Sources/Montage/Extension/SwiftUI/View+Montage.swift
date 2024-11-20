@@ -302,3 +302,63 @@ struct DisableSwipeBackView: UIViewControllerRepresentable {
         uiViewController.navigationController?.navigationBar.isUserInteractionEnabled = !disabled
     }
 }
+
+// MARK: Auto Scroll
+
+extension View {
+    public func scrollable(_ axis: Axis.Set, contentOffset: Binding<CGPoint>) -> some View {
+        modifier(AutoScrollModifier(axis: axis, contentOffset: contentOffset))
+    }
+}
+
+struct AutoScrollModifier: ViewModifier {
+    private let axis: Axis.Set
+    @Binding private var contentOffset: CGPoint
+    
+    init(axis: Axis.Set, contentOffset: Binding<CGPoint>) {
+        self.axis = axis
+        self._contentOffset = contentOffset
+    }
+    
+    @State private var contentSize: CGSize = .zero
+    @State private var scrollViewSize: CGSize = .zero
+    
+    func body(content: Content) -> some View {
+        Group {
+            if scrollNotNeeded {
+                contentView(content)
+            } else {
+                OffsettableScrollView {
+                    contentView(content)
+                } onOffsetChanged: {
+                    contentOffset = $0
+                }
+                .axis(axis)
+                .showIndicators(false)
+                .readSize(onChange: {
+                    scrollViewSize = $0
+                })
+            }
+        }
+    }
+    
+    // MARK: - private
+    
+    private func contentView(_ content: Content) -> some View {
+        content
+            .readSize(onChange: {
+                contentSize = $0
+            })
+    }
+    
+    private var scrollNotNeeded: Bool {
+        switch axis {
+        case .horizontal:
+            contentSize.width <= scrollViewSize.width
+        case .vertical:
+            contentSize.height <= scrollViewSize.height
+        default:
+            true
+        }
+    }
+}
