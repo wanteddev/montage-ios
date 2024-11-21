@@ -29,6 +29,7 @@ public struct Tab: View {
     ) {
         _selectedIndex = selectedIndex
         self.items = items
+        self.itemWidths = .init(repeating: 0, count: items.count)
         self.actions = actions
     }
     
@@ -38,6 +39,7 @@ public struct Tab: View {
     @State private var scrollViewWidth: CGFloat = .zero
     @State private var needsLeftGradient = false
     @State private var needsRightGradient = false
+    @State private var itemWidths: [CGFloat] = []
     
     private let gradientColors = {
         [1.0, 0.86, 0.73, 0.62 ,0.52, 0.43, 0.35, 0.29, 0.23, 0.18, 0.14, 0.1, 0.07, 0.04, 0.02, 0.0].map {
@@ -45,30 +47,51 @@ public struct Tab: View {
         }
     }()
     private let gradientWidth: CGFloat = 48
+    private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
     public var body: some View {
         ZStack(alignment: .bottom) {
             HStack(spacing: 0) {
                 ScrollViewReader { reader in
-                    HStack(spacing: 20) {
+                    HStack(spacing: 0) {
                         HStack(spacing: 0) {
-                            HStack(spacing: resize == .normal ? 24 : 0) {
-                                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                                    ItemView(
-                                        resize: resize,
-                                        size: size,
-                                        isSelected: index == selectedIndex,
-                                        title: item
-                                    )
-                                    .onTapGesture {
-                                        selectedIndex = index
-                                        actions(index)
+                            ZStack(alignment: .bottomLeading) {
+                                HStack(spacing: resize == .normal ? 24 : 0) {
+                                    ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                                        ItemView(
+                                            resize: resize,
+                                            size: size,
+                                            isSelected: index == selectedIndex,
+                                            title: item
+                                        )
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            withAnimation(animation) {
+                                                selectedIndex = index
+                                            }
+                                            actions(index)
+                                        }
+                                        .readSize(onChange: {
+                                            if itemWidths.count > index {
+                                                itemWidths[index] = $0.width
+                                            }
+                                        })
                                     }
-                                    .id(index)
                                 }
+                                Divider()
+                                    .frame(width: itemWidths[safe: selectedIndex] ?? 0, height: 2)
+                                    .background(SwiftUI.Color.alias(.labelStrong))
+                                    .offset(x: itemWidths.enumerated()
+                                        .filter { $0.offset < selectedIndex }
+                                        .reduce(0) { $0 + $1.element + (resize == .normal ? 24 : 0) }
+                                    )
                             }
                             Spacer(minLength: 0)
                                 .if(resize == .normal)
+                        }
+                        .if(resize == .normal) {
+                            $0.padding(.leading, padding ? 20 : 0)
+                                .padding(.trailing, padding || icon != nil ? 20 : 0)
                         }
                         .readSize(onChange: {
                             contentWidth = $0.width
@@ -79,14 +102,17 @@ public struct Tab: View {
                         })
                         .mask {
                             gradientEdge()
+                                .if(resize == .normal) {
+                                    $0.padding(.trailing, icon != nil ? 20 : 0)
+                                }
                         }
                         .onChange(of: selectedIndex) { index in
-                            withAnimation {
+                            withAnimation(animation) {
                                 reader.scrollTo(index, anchor: .center)
                             }
                         }
                         .onChange(of: contentOffset) { _ in
-                            withAnimation(.easeInOut(duration: 0.2)) {
+                            withAnimation(animation) {
                                 setNeedsGradientIfNeeded()
                             }
                         }
@@ -94,17 +120,17 @@ public struct Tab: View {
                             setNeedsGradientIfNeeded()
                         }
                     
-                        if let icon, let iconButtonAction {
+                        if resize == .normal, let icon, let iconButtonAction {
                             Button.IconButton(icon: icon) {
                                 iconButtonAction()
                             }
                             .fixedSize()
+                            .padding(.trailing, padding ? 16 : 0)
                         }
                     }
-                    .padding(.leading, padding ? 20 : 0)
-                    .padding(.trailing, padding ? (icon == nil ? 20 : 16) : 0)
                 }
             }
+            
             Rectangle()
                 .fill(SwiftUI.Color.alias(.lineAlternative))
                 .frame(height: 1)
@@ -156,6 +182,11 @@ public struct Tab: View {
             needsLeftGradient = true
         } else {
             needsLeftGradient = false
+        }
+        
+        if padding {
+            needsLeftGradient = false
+            needsRightGradient = needsRightGradient && (icon != nil)
         }
     }
     
@@ -214,10 +245,8 @@ public struct Tab: View {
                         itemWidth = $0.width
                     })
                     .frame(height: itemHeight)
-                Divider()
-                    .frame(height: 2)
-                    .background(SwiftUI.Color.alias(.labelStrong))
-                    .opacity(isSelected ? 1.0 : 0.0)
+                
+                SwiftUI.Color.clear
                     .if(resize == .normal) {
                         $0.frame(width: itemWidth)
                     }

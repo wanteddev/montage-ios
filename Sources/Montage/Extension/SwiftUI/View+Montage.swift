@@ -219,40 +219,7 @@ extension View {
 
 extension View {
     public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) -> some View {
-        modifier(LoadingViewModifier(isLoading, type: type, dimmingNeeded: dimmingNeeded))
-    }
-}
-
-struct LoadingViewModifier: ViewModifier {
-    @Binding var isLoading: Bool
-    let type: Loading.Kind
-    let dimmingNeeded: Bool
-    
-    init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) {
-        self._isLoading = isLoading
-        self.type = type
-        self.dimmingNeeded = dimmingNeeded
-    }
-    
-    @State var opacity: CGFloat = 0
-
-    func body(content: Content) -> some View {
-        ZStack {
-            content
-                .interactionDisabled(isLoading)
-            SwiftUI.Color.white.opacity(0.5)
-                .opacity(opacity)
-                .ignoresSafeArea()
-                .if(dimmingNeeded)
-            Loading(kind: type)
-                .if(isLoading)
-        }
-        .onChange(of: isLoading, perform: { newValue in
-            opacity = newValue ? 0 : 1
-            withAnimation {
-                opacity = newValue ? 1 : 0
-            }
-        })
+        modifier(Loading.LoadingViewModifier(isLoading, type: type, dimmingNeeded: dimmingNeeded))
     }
 }
 
@@ -266,16 +233,6 @@ extension View {
     }
 }
 
-struct InteractionDisablingViewModifier: ViewModifier {
-    let disabled: Bool
-    
-    func body(content: Content) -> some View {
-        content
-            .allowsHitTesting(!disabled)
-            .disableSwipeBack(disabled)
-    }
-}
-
 // MARK: Disable SwipeBack
 
 extension View {
@@ -286,79 +243,10 @@ extension View {
     }
 }
 
-struct DisableSwipeBackView: UIViewControllerRepresentable {
-    private let disabled: Bool
-
-    init(disabled: Bool) {
-        self.disabled = disabled
-    }
-    
-    func makeUIViewController(context: Context) -> UIViewController {
-        UIViewController()
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-        uiViewController.navigationController?.interactivePopGestureRecognizer?.isEnabled = !disabled
-        uiViewController.navigationController?.navigationBar.isUserInteractionEnabled = !disabled
-    }
-}
-
 // MARK: Auto Scroll
 
 extension View {
     public func scrollable(_ axis: Axis.Set, contentOffset: Binding<CGPoint>) -> some View {
         modifier(AutoScrollModifier(axis: axis, contentOffset: contentOffset))
-    }
-}
-
-struct AutoScrollModifier: ViewModifier {
-    private let axis: Axis.Set
-    @Binding private var contentOffset: CGPoint
-    
-    init(axis: Axis.Set, contentOffset: Binding<CGPoint>) {
-        self.axis = axis
-        self._contentOffset = contentOffset
-    }
-    
-    @State private var contentSize: CGSize = .zero
-    @State private var scrollViewSize: CGSize = .zero
-    
-    func body(content: Content) -> some View {
-        Group {
-            if scrollNotNeeded {
-                contentView(content)
-            } else {
-                OffsettableScrollView {
-                    contentView(content)
-                } onOffsetChanged: {
-                    contentOffset = $0
-                }
-                .axis(axis)
-                .showIndicators(false)
-                .readSize(onChange: {
-                    scrollViewSize = $0
-                })
-            }
-        }
-    }
-    
-    // MARK: - private
-    
-    private func contentView(_ content: Content) -> some View {
-        content
-            .readSize(onChange: {
-                contentSize = $0
-            })
-    }
-    
-    private var scrollNotNeeded: Bool {
-        switch axis {
-        case .horizontal:
-            contentSize.width <= scrollViewSize.width
-        case .vertical:
-            contentSize.height <= scrollViewSize.height
-        default:
-            true
-        }
     }
 }
