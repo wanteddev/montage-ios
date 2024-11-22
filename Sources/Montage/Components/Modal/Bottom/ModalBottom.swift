@@ -41,9 +41,9 @@ extension Modal {
         @Environment(\.safeAreaInsets) private var safeAreaInsets
         @State private var contentSize: CGSize = .zero
 
-        private var handle: Bool = true
-        private var resize: Modal.Bottom.Resize = .hug
-        private var containScrollView: Bool = false
+        private var handle: Bool
+        private var resize: Modal.Bottom.Resize
+        private var containScrollView: Bool
         
         private let navigation: (() -> Montage.Modal.Navigation)?
         private let content: (() -> any View)
@@ -77,7 +77,7 @@ extension Modal {
         }
         
         fileprivate init(
-            handle: Bool = false,
+            handle: Bool = true,
             resize: Modal.Bottom.Resize = .hug,
             containScrollView: Bool = false,
             navigation: (() -> Montage.Modal.Navigation)? = nil,
