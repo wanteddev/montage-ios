@@ -23,6 +23,16 @@ extension Control {
             self.onTap = onTap
         }
         
+        public init(_ state: Binding<Bool>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+            _state = Binding(get: {
+                state.wrappedValue ? .checked : .unchecked
+            }, set: { value in
+                state.wrappedValue = value == .checked ? true : false
+            })
+            self.size = size
+            self.onTap = onTap
+        }
+        
         public init(state: MontageControlState, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = .constant(state)
             self.size = size

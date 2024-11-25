@@ -9,10 +9,12 @@ import SwiftUI
 
 public struct Tab: View {
     // MARK: - Types
+    /// 탭 아이템 너비를 결정하는 열거형입니다.
     public enum Resize {
         case normal, fill
     }
     
+    /// 탭 아이템의 크기를 결정하는 열거형입니다.
     public enum Size {
         case small, meidum, large
     }

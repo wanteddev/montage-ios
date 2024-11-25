@@ -8,6 +8,22 @@
 import SwiftUI
 
 public struct Cell: View {
+    // MARK: - Types
+    /// Cell의 좌우 컨텐츠 크기를 나타내는 열거형입니다.
+    public enum ContentHeight {
+        case pt24
+        case pt40
+        case pt56
+        
+        public var maxHeight: CGFloat {
+            switch self {
+            case .pt24: 24
+            case .pt40: 40
+            case .pt56: 56
+            }
+        }
+    }
+    
     /// Cell의 상하 여백을 나타내는 열거형입니다.
     public enum Padding {
         case pt8
@@ -23,106 +39,143 @@ public struct Cell: View {
         }
     }
     
-    @State private var isPressed: Bool = false
-    @State private var contentSize: CGSize = .zero
+    // MARK: - Initializer
     
     private let title: String
-    private var padding: Padding = .pt12
-    private var fillWidth: Bool = false
-    private var caption: String? = nil
-    private var bold: Bool = false
-    private var disable: Bool = false
-    private var active: Bool = false
-    private var divider: Bool = false
-    private var leftContent: (() -> AnyView)?
-    private var rightContent: (() -> AnyView)?
-    private let handler: (() -> Void)?
+    private let onTap: (() -> Void)?
     
     public init(
         title: String,
-        handler: (() -> Void)? = nil
+        onTap: (() -> Void)? = nil
     ) {
         self.title = title
-        self.handler = handler
+        self.onTap = onTap
     }
+    
+    // MARK: - Body
+    @State private var isPressed: Bool = false
     
     public var body: some View {
         SwiftUI.Button {
-            handler?()
+            onTap?()
         } label: {
             ZStack(alignment: .bottom) {
                 ZStack {
-                    HStack(alignment: .center, spacing: 8) {
-                        HStack(alignment: .top, spacing: 8) {
-                            leftContent?()
-                            
-                            VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: textEllipsis ? .center : .top, spacing: 8) {
+                        leftContent()
+                            .frame(
+                                height: extraContentMaxHeight.maxHeight
+                            )
+                            .clipped()
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Group {
                                 Text(title)
                                     .montage(
-                                        variant: .body1,
-                                        weight: bold ? .bold : .regular,
+                                        variant: titleTypography.variant,
+                                        weight: titleTypography.weight,
                                         alias: normalTitleColor
                                     )
-                                    .paragraph(variant: .body1)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                if let caption {
-                                    Text(caption)
-                                        .montage(
-                                            variant: .label2,
-                                            alias: disable ? .labelDisable : .labelAlternative
-                                        )
-                                        .paragraph(variant: .label2)
-                                        .frame(maxWidth: .infinity,alignment: .leading)
-                                }
+                                    .paragraph(variant: titleTypography.variant)
+                            }
+                            .if(textEllipsis) {
+                                $0.lineLimit(1)
+                            }
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            if let caption {
+                                Text(caption)
+                                    .montage(
+                                        variant: .label2,
+                                        alias: disable ? .labelDisable : .labelAlternative
+                                    )
+                                    .paragraph(variant: .label2)
+                                    .frame(maxWidth: .infinity,alignment: .leading)
                             }
                         }
                         
-                        rightContent?()
+                        rightContent()
+                            .frame(
+                                height: extraContentMaxHeight.maxHeight
+                            )
+                            .clipped()
+                        
+                        VStack {
+                            Image.montage(.chevronRightTightSmall)
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
+                                .frame(width: 8, height: 16)
+                                .padding(.vertical, 4)
+                        }
+                        .frame(maxHeight: .infinity)
+                        .if(chevron)
                     }
                 }
-                .allowsHitTesting(disable == false)
-                .onTapGesture {
-                    handler?()
-                }
-                .readSize { contentSize = $0 }
-                .padding(.horizontal, fillWidth ? 12 : 20)
                 .padding(.vertical, padding.length)
                 
-                if divider {
-                    Rectangle()
-                        .frame(width: contentSize.width, height: 1)
-                        .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
-                        .background()
-                }
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
+                    .background()
+                    .if(divider)
             }
-            .overlay(
-                Decorate.InteractionController(
-                    state: isPressed ? .pressed : .normal,
-                    variant: .light,
-                    color: .labelNormal
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            )
+            .padding(.horizontal, fillWidth ? 12 : 20)
+            .contentShape(Rectangle())
         }
-        .buttonStyle(ButtonStyleForCellInteraction())
+        .buttonStyle(InteractiveCellStyle(fillWidth: fillWidth, interactionPadding: interactionPadding))
         .allowsHitTesting(disable == false)
     }
-}
-
-// MARK: - modifiers
-extension Cell {
-    /// 상하 여백의 크기를 조정합니다.
+    
+    // MARK: - Modifiers
+    
+    private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight) = (.body1, .regular)
+    private var padding: Padding = .pt12
+    private var fillWidth: Bool = false
+    private var textEllipsis: Bool = false
+    private var caption: String? = nil
+    private var disable: Bool = false
+    private var active: Bool = false
+    private var divider: Bool = false
+    private var chevron = false
+    private var extraContentMaxHeight: ContentHeight = .pt24
+    private var leftContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var rightContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var interactionPadding: CGFloat = 12
+    
+    /// 타이틀 텍스트의 `variant` 속성을 조정합니다. 기본값은 `.body1`입니다.
+    public func titleVariant(_ variant: Typography.Variant) -> Self {
+        var zelf = self
+        zelf.titleTypography.variant = variant
+        return zelf
+    }
+    
+    /// 타이틀 텍스트의 `weight` 속성을 조정합니다. 기본값은 `.regular`입니다.
+    public func titleWeight(_ weight: Typography.Weight) -> Self {
+        var zelf = self
+        zelf.titleTypography.weight = weight
+        return zelf
+    }
+    
+    /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
     public func padding(_ padding: Padding) -> Self {
         var zelf = self
         zelf.padding = padding
         return zelf
     }
     
-    /// 좌우 여백 여부를 조정합니다.
+    /// 좌우 여백 여부를 조정합니다. 기본값은 `false`입니다.
     public func fillWidth(_ fillWidth: Bool = true) -> Self {
         var zelf = self
         zelf.fillWidth = fillWidth
+        return zelf
+    }
+    
+    /// 텍스트의 생략 여부를 조정합니다. 기본값은 `false`입니다. `false`인 경우 죄우 컨텐츠는 상단 정렬됩니다.
+    public func textEllipsis(_ textEllipsis: Bool = true) -> Self {
+        var zelf = self
+        zelf.textEllipsis = textEllipsis
         return zelf
     }
     
@@ -133,59 +186,80 @@ extension Cell {
         return zelf
     }
     
-    /// 타이틀의 bold 스타일 여부를 조정합니다.
-    public func bold(_ bold: Bool = true) -> Self {
-        var zelf = self
-        zelf.bold = bold
-        return zelf
-    }
-    
-    /// Cell의 비활성화 여부를 조정합니다.
+    /// Cell의 비활성화 여부를 조정합니다. 기본값은 `false`입니다.
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
         zelf.disable = disable
         return zelf
     }
 
-    /// Cell을 active 상태로 만듭니다. title을 primaryNormal로 변경하고 rightContent를 .check로 설정한 경우 check 상태를 활성화합니다.
+    /// Cell을 활성화 상태로 만듭니다. 타이틀 텍스트의 색상을 `primaryNormal`로 변경하고 `rightContent(_ contents: @escaping (Bool) -> some View)`의 입력 클로져의 파라메터로 활성화 여부를 받을 수 있습니다.
     public func active(_ active: Bool = true) -> Self {
         var zelf = self
         zelf.active = active
         return zelf
     }
     
-    /// Cell 아래에 Cell 구분선을 추가합니다.
+    /// Cell 아래에 구분선을 추가합니다. 기본값은 `false`입니다.
     public func divider(_ divider: Bool = true) -> Self {
         var zelf = self
         zelf.divider = divider
         return zelf
     }
     
-    /// Cell의 왼쪽영역에 표시될 컨텐츠를 추가합니다.
-    public func leftContent(_ leftContent: @escaping () -> AnyView) -> Self {
+    /// Cell 우측에 chevron 을 추가합니다.
+    public func chevron(_ chevron: Bool = true) -> Self {
         var zelf = self
-        zelf.leftContent = leftContent
+        zelf.chevron = chevron
         return zelf
     }
     
-    /// Cell의 오른쪽영역에 표시될 컨텐츠를 추가합니다.
-    public func rightContent(_ rightContent: @escaping () -> AnyView) -> Self {
+    /// Cell 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.pt24`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
+    public func contentHeight(_ contentHeight: ContentHeight) -> Self {
         var zelf = self
-        zelf.rightContent = rightContent
+        zelf.extraContentMaxHeight = contentHeight
+        return zelf
+    }
+    
+    /// Cell의 좌측 컨텐츠를 지정합니다.
+    public func leftContent(_ contents: @escaping () -> some View) -> Self {
+        var zelf = self
+        zelf.leftContent = { AnyView(contents()) }
+        return zelf
+    }
+    
+    /// Cell의 우측 컨텐츠를 지정합니다.
+    public func rightContent(_ contents: @escaping (Bool) -> some View) -> Self {
+        var zelf = self
+        zelf.rightContent = { AnyView(contents(active)) }
+        return zelf
+    }
+    
+    /// 인터랙션 효과의 좌우 패딩을 조정합니다. 기본값은 12입니다.
+    public func interactionPadding(_ padding: CGFloat) -> Self {
+        var zelf = self
+        zelf.interactionPadding = padding
         return zelf
     }
 }
 
+// MARK: - Private
 extension Cell {
-    private struct ButtonStyleForCellInteraction: ButtonStyle {
+    struct InteractiveCellStyle: ButtonStyle {
+        let fillWidth: Bool
+        let interactionPadding: CGFloat
+        @State private var labelSize: CGSize = .zero
+        
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
+                .readSize { labelSize = $0 }
                 .overlay(
                     Decorate.InteractionController(
                         state: configuration.isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .labelNormal
                     )
+                    .frame(width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2), height: labelSize.height)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 )
         }
@@ -195,7 +269,6 @@ extension Cell {
         if disable {
             return .labelDisable
         } else {
-            print("\(active)")
             return active ? .primaryNormal : .labelNormal
         }
     }
