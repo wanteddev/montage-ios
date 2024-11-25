@@ -50,6 +50,10 @@ extension Control {
             uiView.disable = isDisable
         }
         
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
+        
         public func disable(_ isDisable: Bool = true) -> Self {
             var view = self
             view.isDisable = isDisable
@@ -80,7 +84,7 @@ extension Control {
 struct RadioController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.RadioController(state: .checked).fixedSize()
+            Control.RadioController(state: .checked)
         }
     }
 }

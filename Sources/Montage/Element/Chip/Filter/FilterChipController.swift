@@ -75,6 +75,10 @@ extension Chip {
             }
             uiView.handler = handler
         }
+        
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
     }
 }
 
@@ -86,12 +90,12 @@ var filterChipControllerPreview: some View {
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
         }
 
@@ -102,48 +106,48 @@ var filterChipControllerPreview: some View {
                     variant: .solid,
                     size: .xsmall,
                     text: "텍스트"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .solid,
                     size: .small,
                     text: "텍스트"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "텍스트"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .solid,
                     size: .large,
                     text: "텍스트"
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     variant: .outlined,
                     size: .xsmall,
                     text: "텍스트"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     size: .small,
                     text: "텍스트"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "텍스트"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     size: .large,
                     text: "텍스트"
-                ).fixedSize()
+                )
             }
         }
         
@@ -153,25 +157,25 @@ var filterChipControllerPreview: some View {
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     state: .expand
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요",
                     state: .expand
-                ).fixedSize()
+                )
             }
         }
         
@@ -181,25 +185,25 @@ var filterChipControllerPreview: some View {
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     active: true
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요",
                     active: true
-                ).fixedSize()
+                )
             }
         }
 
@@ -209,25 +213,25 @@ var filterChipControllerPreview: some View {
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.FilterChipController(
                     variant: .outlined,
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
             }
         }
         
@@ -238,12 +242,12 @@ var filterChipControllerPreview: some View {
                     variant: .solid,
                     text: "안녕하세요",
                     iconColor: .alias(.accentLime)
-                ).fixedSize()
+                )
                 Chip.FilterChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     fontColor: .alias(.accentPink)
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.FilterChipController(
@@ -251,7 +255,7 @@ var filterChipControllerPreview: some View {
                     text: "안녕하세요",
                     iconColor: .alias(.accentViolet),
                     fontColor: .alias(.accentRedOrange)
-                ).fixedSize()
+                )
             }
         }
     }

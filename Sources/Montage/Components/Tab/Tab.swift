@@ -126,7 +126,6 @@ public struct Tab: View {
                             Button.IconButton(icon: icon) {
                                 iconButtonAction()
                             }
-                            .fixedSize()
                             .padding(.trailing, padding ? 16 : 0)
                         }
                     }

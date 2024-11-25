@@ -290,7 +290,6 @@ extension Select {
                             backgroundColor: backgroundColor(item),
                             fontColor: fontColor(item)
                         )
-                        .fixedSize()
                         .contentShape(Rectangle())
                         .onTapGesture {
                             onTapItem?(item)

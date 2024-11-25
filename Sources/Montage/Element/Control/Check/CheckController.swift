@@ -50,6 +50,10 @@ extension Control {
             uiView.disable = isDisable
         }
         
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
+        
         public func disable(_ isDisable: Bool = true) -> Self {
             var view = self
             view.isDisable = isDisable
@@ -81,7 +85,6 @@ struct MontageCheckController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             Control.CheckController(state: .checked, size: .small)
-                .fixedSize()
         }
     }
 }

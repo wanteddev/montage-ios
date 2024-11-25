@@ -268,7 +268,6 @@ extension ActionArea {
                                     text: sub.text,
                                     handler: sub.action
                                 )
-                                .fixedSize()
                             }
                         }
                         if let alternative {
@@ -310,7 +309,6 @@ extension ActionArea {
                         if let sub {
                             if let customButton = sub.custom {
                                 AnyView(customButton())
-                                    .fixedSize()
                             } else {
                                 Button.OutlinedButtonController(
                                     variant: .assistive,
@@ -318,12 +316,10 @@ extension ActionArea {
                                     text: sub.text,
                                     handler: sub.action
                                 )
-                                .fixedSize()
                             }
                         }
                         if let customButton = main.custom {
                             AnyView(customButton())
-                                .fixedSize()
                         } else {
                             Button.SolidButtonController(
                                 variant: .primary,
@@ -331,7 +327,6 @@ extension ActionArea {
                                 text: main.text,
                                 handler: main.action
                             )
-                            .fixedSize()
                         }
                     }
                 }

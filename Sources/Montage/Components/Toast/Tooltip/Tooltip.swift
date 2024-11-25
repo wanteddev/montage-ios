@@ -429,7 +429,6 @@ extension Tooltip {
                                 }
                                 .frame(width: 16, height: 16)
                                 .padding([.leading, .top], 2)
-                                .fixedSize()
                                 .opacity(0.61)
                             }
                         }

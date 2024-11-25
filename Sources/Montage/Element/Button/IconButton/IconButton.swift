@@ -281,7 +281,6 @@ extension Button {
                         .foregroundStyle(_iconColor)
                     if showPushBadge {
                         Badge.PushBadgeController(variant: .dot)
-                            .fixedSize()
                             .offset(
                                 x: Badge.Push.Variant.dot.dotOffset,
                                 y: -Badge.Push.Variant.dot.dotOffset
@@ -368,7 +367,6 @@ struct IconButtonControllerPreview: View {
                 ) {
                     debugPrint(">>> hello world!")
                 }
-                .fixedSize()
                 
                 Button.IconButton(
                     icon: .bookmark,
@@ -376,31 +374,26 @@ struct IconButtonControllerPreview: View {
                 ) {
                     debugPrint(">>> hello world!")
                 }
-                .fixedSize()
 
                 Button.IconButton(
                     variant: .background(size: 20),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .background(size: 20, isAlternative: true),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .normal),
                     icon: .apps
                 )
-                .fixedSize()
             }
             
             Text("size").montage()
@@ -412,37 +405,31 @@ struct IconButtonControllerPreview: View {
                 ) {
                     debugPrint(">>> hello world!")
                 }
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .background(size: 36),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .small),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .custom(size: 12)),
                     icon: .apps
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .custom(size: 12)),
                     icon: .apps
                 )
-                .fixedSize()
             }
             
             
@@ -456,28 +443,24 @@ struct IconButtonControllerPreview: View {
                 ) {
                     debugPrint(">>> hello world!")
                 }
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .background(size: 36),
                     icon: .apps,
                     disable: true
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .custom(size: 12)),
                     icon: .apps,
                     disable: true
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .custom(size: 12)),
                     icon: .apps,
                     disable: true
                 )
-                .fixedSize()
             }
             
             Text("custom").montage()
@@ -488,7 +471,6 @@ struct IconButtonControllerPreview: View {
                     icon: .chat,
                     iconColor: .atomic(.globalBlue50)
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     icon: .apps,
@@ -496,28 +478,24 @@ struct IconButtonControllerPreview: View {
                 ) {
                     debugPrint(">>> hello world!")
                 }
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .background(size: 20),
                     icon: .apps,
                     iconColor: .alias(.accentPink)
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps,
                     iconColor: .alias(.accentRedOrange)
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps,
                     padding: 3
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
@@ -525,7 +503,6 @@ struct IconButtonControllerPreview: View {
                     padding: 3,
                     borderColor: .alias(.primaryHeavy)
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
@@ -533,14 +510,12 @@ struct IconButtonControllerPreview: View {
                     iconColor: .alias(.accentRedOrange),
                     borderColor: .alias(.accentLime)
                 )
-                .fixedSize()
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
                     borderColor: .alias(.accentLime)
                 )
-                .fixedSize()
             }
         }
     }
