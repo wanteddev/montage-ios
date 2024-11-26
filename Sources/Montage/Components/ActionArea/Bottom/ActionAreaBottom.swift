@@ -170,7 +170,6 @@ extension ActionArea {
                     }
                 }
                 .background(sizeMeasurer)
-                .padding(.bottom, safeAreaInsets.bottom != .zero ? 14 : .zero)
                 .overlay {
                     if model.sticky, showExtraContents == false {
                         VStack {
