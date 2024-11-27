@@ -260,7 +260,7 @@ extension Cell {
                         color: .labelNormal
                     )
                     .frame(width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2), height: labelSize.height)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: fillWidth ? 0 : 12))
                 )
         }
     }
