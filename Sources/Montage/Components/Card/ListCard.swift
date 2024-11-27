@@ -144,28 +144,20 @@ import Pretendard
         topContent: {
             HStack {
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
             }
         },
         bottomContent: {
             HStack {
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
                 Badge.ContentBadgeController(text: "텍스트")
-                    .fixedSize()
             }
         },
         leftContent: {
             Control.CheckboxController(state: .unchecked)
-                .fixedSize()
         },
         rightContent: {
             Image.montage(.chevronRight)

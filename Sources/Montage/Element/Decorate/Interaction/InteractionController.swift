@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Decorate {
-    public struct InteractionController: UIViewRepresentable {
+    public struct InteractionController: View {
         public var state: Interaction.State = .normal
         public var variant: Interaction.Variant = .normal
         public var color: Color.Alias = .labelNormal
@@ -25,18 +25,10 @@ extension Decorate {
             self.color = color
         }
         
-        public func makeUIView(context: Context) -> UIViewType {
-            .init(
-                state: state,
-                color: color,
-                variant: variant
-            )
-        }
-        
-        public func updateUIView(_ uiView: UIViewType, context: Context) {
-            uiView.state = state
-            uiView.variant = variant
-            uiView.color = color
+        public var body: some View {
+            Rectangle()
+                .foregroundStyle(SwiftUI.Color.alias(color))
+                .opacity(state.alpha * variant.weight)
         }
     }
 }

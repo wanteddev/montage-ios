@@ -82,6 +82,5 @@ public struct EmptyState<V: View, C: View>: View {
         description: "상황에 대한 설명이 들어fdsasdasfasdasfasdasf asdasfasdafasd가요.\n설명은 최대 두 줄로 작성해요."
     ) {
         Button.OutlinedButtonController(text: "텍스트")
-            .fixedSize()
     }
 }

@@ -91,6 +91,10 @@ extension Chip {
             }
             uiView.handler = handler
         }
+        
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
     }
 }
 
@@ -102,12 +106,12 @@ var actionChipControllerPreview: some View {
                 Chip.ActionChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
         }
         
@@ -118,26 +122,26 @@ var actionChipControllerPreview: some View {
                     variant: .solid,
                     text: "안녕하세요",
                     disable: false
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
             }
             HStack {
                 Chip.ActionChipController(
                     variant: .outlined,
                     text: "안녕하세요",
                     disable: false
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
             }
         }
         
@@ -147,25 +151,25 @@ var actionChipControllerPreview: some View {
                 Chip.ActionChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     active: true
-                ).fixedSize()
+                )
             }
             HStack {
                 Chip.ActionChipController(
                     variant: .outlined,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
                     text: "안녕하세요",
                     active: true
-                ).fixedSize()
+                )
             }
         }
         
@@ -176,50 +180,50 @@ var actionChipControllerPreview: some View {
                     variant: .solid,
                     size: .xsmall,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
                     size: .small,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
                     size: .normal,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
                     size: .large,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.ActionChipController(
                     variant: .outlined,
                     size: .xsmall,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
                     size: .small,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
                     size: .normal,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
                     size: .large,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
         }
         
@@ -232,7 +236,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
@@ -240,7 +244,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.ActionChipController(
@@ -249,7 +253,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
@@ -257,7 +261,7 @@ var actionChipControllerPreview: some View {
                     leftIcon: .bell,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
         }
         
@@ -271,7 +275,7 @@ var actionChipControllerPreview: some View {
                     rightIcon: .apps,
                     text: "안녕하세요",
                     iconColor: .alias(.accentViolet)
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .solid,
@@ -280,7 +284,7 @@ var actionChipControllerPreview: some View {
                     rightIcon: .apps,
                     text: "안녕하세요",
                     backgroundColor: .alias(.accentRedOrange)
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.ActionChipController(
@@ -290,7 +294,7 @@ var actionChipControllerPreview: some View {
                     rightIcon: .apps,
                     text: "안녕하세요",
                     fontColor: .alias(.accentLightBlue)
-                ).fixedSize()
+                )
                 
                 Chip.ActionChipController(
                     variant: .outlined,
@@ -301,19 +305,19 @@ var actionChipControllerPreview: some View {
                     iconColor: .alias(.accentRedOrange),
                     backgroundColor: .alias(.accentLime),
                     fontColor: .alias(.accentLightBlue)
-                ).fixedSize()
+                )
             }
             HStack(alignment: .center) {
                 Chip.ActionChipController(
                     variant: .solid,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 Chip.ActionChipController(
                     variant: .solid,
                     text: "안녕하세요",
                     active: true,
                     activeColor: .alias(.accentCyan)
-                ).fixedSize()
+                )
             }
         }
     }

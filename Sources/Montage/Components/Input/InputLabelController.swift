@@ -34,6 +34,10 @@ public struct InputLabelController: UIViewRepresentable {
         uiView.text = text
     }
     
+    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        uiView.intrinsicContentSize
+    }
+    
     public func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
     }
@@ -54,8 +58,8 @@ public struct InputLabelController: UIViewRepresentable {
 struct MontageInputLabelController_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            InputLabelController(inputView: Control.Radio(), state: .checked, text: "체크해주세요!") {}.fixedSize()
-            InputLabelController(inputView: Control.Radio(), state: .unchecked, text: "체크해주세요!") {}.fixedSize()
+            InputLabelController(inputView: Control.Radio(), state: .checked, text: "체크해주세요!") {}
+            InputLabelController(inputView: Control.Radio(), state: .unchecked, text: "체크해주세요!") {}
         }
     }
 }

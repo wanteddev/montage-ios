@@ -71,6 +71,10 @@ extension Button {
             uiView.backgroundUIColor = backgroundColor?.uiColor
             uiView.handler = handler
         }
+        
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
     }
 }
 
@@ -87,27 +91,24 @@ struct SolidButtonControllerPreview: View {
                 ) {
                     debugPrint(">>> hello world!")
                 }
-                .fixedSize()
                 
                 Button.SolidButtonController(
                     size: .medium,
                     rightIcon: .chevronRightThick,
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
                 
                 Button.SolidButtonController(
                     uniqueIcon: .android,
                     iconOnly: true
                 )
-                .fixedSize()
                 
                 Button.SolidButtonController(
                     uniqueIcon: .android,
                     iconOnly: true,
                     disable: true
                 )
-                .fixedSize()
             }
             
             Text("Size").montage()
@@ -117,12 +118,12 @@ struct SolidButtonControllerPreview: View {
                     Button.SolidButtonController(
                         size: .small,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                     Button.SolidButtonController(
                         size: .medium,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                 }
                 
@@ -130,14 +131,14 @@ struct SolidButtonControllerPreview: View {
                     Button.SolidButtonController(
                         size: .large,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                     Button.SolidButtonController(
                         size: .large,
                         text: "안녕하세요",
                         uniqueIcon: .apps,
                         iconOnly: true
-                    ).fixedSize()
+                    )
                 }
                 
                 HStack {
@@ -146,21 +147,18 @@ struct SolidButtonControllerPreview: View {
                         uniqueIcon: .chat,
                         iconOnly: true
                     )
-                    .fixedSize()
                     
                     Button.SolidButtonController(
                         size: .medium,
                         uniqueIcon: .chat,
                         iconOnly: true
                     )
-                    .fixedSize()
                     
                     Button.SolidButtonController(
                         size: .small,
                         uniqueIcon: .chat,
                         iconOnly: true
                     )
-                    .fixedSize()
                     
                     Button.SolidButtonController(
                         size: .large,
@@ -168,7 +166,6 @@ struct SolidButtonControllerPreview: View {
                         iconOnly: true,
                         disable: true
                     )
-                    .fixedSize()
                     
                     Button.SolidButtonController(
                         size: .medium,
@@ -176,7 +173,6 @@ struct SolidButtonControllerPreview: View {
                         iconOnly: true,
                         disable: true
                     )
-                    .fixedSize()
                     
                     Button.SolidButtonController(
                         size: .small,
@@ -184,7 +180,6 @@ struct SolidButtonControllerPreview: View {
                         iconOnly: true,
                         disable: true
                     )
-                    .fixedSize()
                 }
             }
             
@@ -195,20 +190,20 @@ struct SolidButtonControllerPreview: View {
                     size: .small,
                     leftIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.SolidButtonController(
                     size: .small,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.SolidButtonController(
                     size: .small,
                     leftIcon: .apps,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
             
             Text("Custom").montage()
@@ -218,13 +213,13 @@ struct SolidButtonControllerPreview: View {
                     size: .small,
                     text: "content",
                     contentColor: .alias(.accentRedOrange)
-                ).fixedSize()
+                )
                 
                 Button.SolidButtonController(
                     size: .small,
                     text: "background",
                     backgroundColor: .alias(.accentPurple)
-                ).fixedSize()
+                )
             }
         }
     }

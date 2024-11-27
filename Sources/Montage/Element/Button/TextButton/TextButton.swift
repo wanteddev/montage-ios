@@ -256,23 +256,23 @@ struct TextButtonPreview: View {
             HStack {
                 Button.TextButton(
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.TextButton(
                     size: .small,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.TextButton(
                     variant: .assistive,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.TextButton(
                     variant: .assistive,
                     size: .small,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
             
             Text("Icon").montage(variant: .headline2)
@@ -282,18 +282,18 @@ struct TextButtonPreview: View {
                     Button.TextButton(
                         leftIcon: .bubbleFill,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                     Button.TextButton(
                         rightIcon: .circleClose,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                     Button.TextButton(
                         leftIcon: .bubbleFill,
                         rightIcon: .circleClose,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                 }
                 
                 HStack {
@@ -301,20 +301,20 @@ struct TextButtonPreview: View {
                         variant: .assistive,
                         leftIcon: .bubbleFill,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                     Button.TextButton(
                         variant: .assistive,
                         rightIcon: .circleClose,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                     
                     Button.TextButton(
                         variant: .assistive,
                         leftIcon: .bubbleFill,
                         rightIcon: .circleClose,
                         text: "안녕하세요"
-                    ).fixedSize()
+                    )
                 }
             }
             
@@ -324,24 +324,24 @@ struct TextButtonPreview: View {
                 Button.TextButton(
                     text: "안녕하세요",
                     disable: false
-                ).fixedSize()
+                )
                 
                 Button.TextButton(
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
                 
                 Button.TextButton(
                     variant: .assistive,
                     text: "안녕하세요",
                     disable: false
-                ).fixedSize()
+                )
                 
                 Button.TextButton(
                     variant: .assistive,
                     text: "안녕하세요",
                     disable: true
-                ).fixedSize()
+                )
             }
             
             Text("Custom").montage(variant: .headline2)
@@ -352,13 +352,13 @@ struct TextButtonPreview: View {
                         text: "accentCyan",
                         disable: false,
                         contentColor: .alias(.accentCyan)
-                    ).fixedSize()
+                    )
                     
                     Button.TextButton(
                         text: "globalBlue40",
                         disable: false,
                         contentColor: .atomic(.globalBlue40)
-                    ).fixedSize()
+                    )
                 }
                 
                 HStack {
@@ -367,14 +367,14 @@ struct TextButtonPreview: View {
                         disable: false,
                         contentColor: .alias(.accentCyan),
                         fontSize: .body1
-                    ).fixedSize()
+                    )
                     
                     Button.TextButton(
                         text: "heading1",
                         disable: false,
                         contentColor: .atomic(.globalBlue40),
                         fontSize: .heading1
-                    ).fixedSize()
+                    )
                 }
             }
         }

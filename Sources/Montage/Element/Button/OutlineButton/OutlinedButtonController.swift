@@ -77,6 +77,10 @@ extension Button {
             uiView.borderUIColor = borderColor?.uiColor
             uiView.handler = handler
         }
+        
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
     }
 }
 
@@ -93,7 +97,6 @@ struct OutlinedButtonControllerPreview: View {
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .secondary,
@@ -101,7 +104,6 @@ struct OutlinedButtonControllerPreview: View {
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .assistive,
@@ -109,7 +111,6 @@ struct OutlinedButtonControllerPreview: View {
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
                     )
-                    .fixedSize()
                 }
                 
                 HStack {
@@ -119,7 +120,6 @@ struct OutlinedButtonControllerPreview: View {
                         uniqueIcon: .android,
                         iconOnly: true
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .assistive,
@@ -127,7 +127,6 @@ struct OutlinedButtonControllerPreview: View {
                         uniqueIcon: .android,
                         iconOnly: true
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .primary,
@@ -136,7 +135,6 @@ struct OutlinedButtonControllerPreview: View {
                         iconOnly: true,
                         disable: true
                     )
-                    .fixedSize()
                 }
             }
             
@@ -150,7 +148,6 @@ struct OutlinedButtonControllerPreview: View {
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .secondary,
@@ -158,7 +155,6 @@ struct OutlinedButtonControllerPreview: View {
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .assistive,
@@ -166,7 +162,6 @@ struct OutlinedButtonControllerPreview: View {
                         rightIcon: .chevronRightThick,
                         text: "안녕하세요"
                     )
-                    .fixedSize()
                 }
                 HStack {
                     Button.OutlinedButtonController(
@@ -176,7 +171,6 @@ struct OutlinedButtonControllerPreview: View {
                         text: "안녕하세요",
                         disable: true
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .secondary,
@@ -185,7 +179,6 @@ struct OutlinedButtonControllerPreview: View {
                         text: "안녕하세요",
                         disable: true
                     )
-                    .fixedSize()
                     
                     Button.OutlinedButtonController(
                         variant: .assistive,
@@ -194,7 +187,6 @@ struct OutlinedButtonControllerPreview: View {
                         text: "안녕하세요",
                         disable: true
                     )
-                    .fixedSize()
                 }
             }
             
@@ -204,17 +196,17 @@ struct OutlinedButtonControllerPreview: View {
                 Button.OutlinedButtonController(
                     size: .small,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.OutlinedButtonController(
                     size: .medium,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.OutlinedButtonController(
                     size: .large,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
             
             Text("Icon").montage()
@@ -224,20 +216,20 @@ struct OutlinedButtonControllerPreview: View {
                     size: .small,
                     leftIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.OutlinedButtonController(
                     size: .small,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
                 
                 Button.OutlinedButtonController(
                     size: .small,
                     leftIcon: .apps,
                     rightIcon: .apps,
                     text: "안녕하세요"
-                ).fixedSize()
+                )
             }
             
             Text("Custom").montage()
@@ -248,13 +240,13 @@ struct OutlinedButtonControllerPreview: View {
                     text: "border&content",
                     contentColor: .alias(.accentLime),
                     borderColor: .alias(.accentLime)
-                ).fixedSize()
+                )
                 
                 Button.OutlinedButtonController(
                     size: .small,
                     text: "background",
                     backgroundColor: .alias(.accentPink)
-                ).fixedSize()
+                )
             }
         }
     }

@@ -427,7 +427,6 @@ public struct TextArea: View {
                                         iconColor:
                                             disable ? .alias(.labelDisable) : .alias(.statusNegative)
                                     )
-                                    .fixedSize()
                                 }
                             }
                         }
@@ -496,7 +495,6 @@ public struct TextArea: View {
                         text: title,
                         handler: handler
                     )
-                    .fixedSize()
                 case let .filterChip(variant, title, handler):
                     Chip.FilterChipController(
                         variant: variant,
@@ -504,7 +502,6 @@ public struct TextArea: View {
                         text: title,
                         handler: handler
                     )
-                    .fixedSize()
                 case let .badge(variant, title):
                     Badge.ContentBadgeController(
                         variant: variant,
@@ -512,7 +509,6 @@ public struct TextArea: View {
                         color: .neutral,
                         text: title
                     )
-                    .fixedSize()
                 }
             }
         }

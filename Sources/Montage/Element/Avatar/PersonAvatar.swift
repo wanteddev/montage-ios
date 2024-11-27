@@ -83,7 +83,6 @@ extension Avatar {
                 
                 if showPushBadge {
                     Badge.PushBadgeController(variant: .dot)
-                        .fixedSize()
                         .offset(
                             x: size.componentSize.width / 2,
                             y: -size.componentSize.height / 2

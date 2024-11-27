@@ -23,6 +23,16 @@ extension Control {
             self.onTap = onTap
         }
         
+        public init(_ state: Binding<Bool>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+            _state = Binding(get: {
+                state.wrappedValue ? .checked : .unchecked
+            }, set: { value in
+                state.wrappedValue = value == .checked ? true : false
+            })
+            self.size = size
+            self.onTap = onTap
+        }
+        
         public init(state: MontageControlState, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
             _state = .constant(state)
             self.size = size
@@ -38,6 +48,10 @@ extension Control {
         public func updateUIView(_ uiView: UIViewType, context: Context) {
             uiView.state = state
             uiView.disable = isDisable
+        }
+        
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
         }
         
         public func disable(_ isDisable: Bool = true) -> Self {
@@ -71,7 +85,6 @@ struct CheckboxController_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             Control.CheckboxController(state: .checked, size: .small)
-                .fixedSize()
         }
     }
 }

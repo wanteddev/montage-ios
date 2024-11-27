@@ -26,19 +26,23 @@ extension Badge {
         public func updateUIView(_ uiView: UIViewType, context: Context) {
             uiView.variant = variant
         }
+        
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: Badge.Push, context: Context) -> CGSize? {
+            uiView.intrinsicContentSize
+        }
     }
 }
 
 fileprivate struct Preview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Badge.PushBadgeController(variant: .dot).fixedSize()
+            Badge.PushBadgeController(variant: .dot)
             
-            Badge.PushBadgeController(variant: .new).fixedSize()
+            Badge.PushBadgeController(variant: .new)
             
-            Badge.PushBadgeController(variant: .number(1)).fixedSize()
+            Badge.PushBadgeController(variant: .number(1))
             
-            Badge.PushBadgeController(variant: .number(999)).fixedSize()
+            Badge.PushBadgeController(variant: .number(999))
         }
     }
 }
