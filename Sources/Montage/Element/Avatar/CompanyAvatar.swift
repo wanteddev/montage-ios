@@ -75,7 +75,7 @@ extension Avatar {
                 .overlay {
                     RoundedRectangle(cornerRadius: 6)
                         .inset(by: 0.5)
-                        .stroke(SwiftUI.Color.alias(.lineAlternative).opacity(0.08), lineWidth: 1)
+                        .stroke(SwiftUI.Color.alias(.lineAlternative), lineWidth: 1)
                 }
         }
         

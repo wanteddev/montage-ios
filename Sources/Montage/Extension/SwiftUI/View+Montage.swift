@@ -218,8 +218,40 @@ extension View {
 // MARK: Loading
 
 extension View {
-    public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) -> some View {
-        modifier(Loading.LoadingViewModifier(isLoading, type: type, dimmingNeeded: dimmingNeeded))
+    public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color = .clear) -> some View {
+        modifier(LoadingViewModifier(isLoading, type: type, dimmedColor: dimmedColor))
+    }
+}
+
+struct LoadingViewModifier: ViewModifier {
+    @Binding var isLoading: Bool
+    let type: Loading.Kind
+    let dimmedColor: SwiftUI.Color
+    
+    init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) {
+        self._isLoading = isLoading
+        self.type = type
+        self.dimmedColor = dimmedColor
+    }
+    
+    @State var opacity: CGFloat = 0
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+                .interactionDisabled(isLoading)
+            dimmedColor
+                .opacity(opacity)
+                .ignoresSafeArea()
+            Loading(kind: type)
+                .if(isLoading)
+        }
+        .onChange(of: isLoading, perform: { newValue in
+            opacity = newValue ? 0 : 1
+            withAnimation {
+                opacity = newValue ? 1 : 0
+            }
+        })
     }
 }
 
