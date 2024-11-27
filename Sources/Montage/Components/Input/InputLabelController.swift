@@ -34,10 +34,6 @@ public struct InputLabelController: UIViewRepresentable {
         uiView.text = text
     }
     
-    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
-        uiView.intrinsicContentSize
-    }
-    
     public func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
     }
@@ -52,6 +48,22 @@ public struct InputLabelController: UIViewRepresentable {
         public func inputDidSelected(_ input: InputLabel) {
             parent.onSelect()
         }
+    }
+    
+    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        CGSize(
+            width: fillWidth ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
+            height: fillHeight ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
+        )
+    }
+    
+    private var fillWidth: Bool = false
+    private var fillHeight: Bool = false
+    public func fill(width fillWidth: Bool, height fillHeight: Bool) -> Self {
+        var zelf = self
+        zelf.fillWidth = fillWidth
+        zelf.fillHeight = fillHeight
+        return zelf
     }
 }
 

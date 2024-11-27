@@ -27,8 +27,20 @@ extension Badge {
             uiView.variant = variant
         }
         
-        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: Badge.Push, context: Context) -> CGSize? {
-            uiView.intrinsicContentSize
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+            CGSize(
+                width: fillWidth ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
+                height: fillHeight ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
+            )
+        }
+        
+        private var fillWidth: Bool = false
+        private var fillHeight: Bool = false
+        public func fill(width fillWidth: Bool, height fillHeight: Bool) -> Self {
+            var zelf = self
+            zelf.fillWidth = fillWidth
+            zelf.fillHeight = fillHeight
+            return zelf
         }
     }
 }
