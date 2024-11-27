@@ -115,9 +115,9 @@ public struct SegmentedControl: View {
         }
         .frame(height: frameHeight)
         .frame(maxWidth: .infinity)
-        .readSize(onChange: {
+        .onGeometryChange(for: CGSize.self, of: { $0.size }) {
             frameSize = $0
-        })
+        }
         .onChange(of: selectedIndex) { index in
             onSelect(index)
         }

@@ -26,6 +26,6 @@ public struct ProgressIndicator: View {
         }
         .frame(height: 2)
         .frame(maxWidth: .infinity)
-        .readSize(onChange: { size = $0 })
+        .onGeometryChange(for: CGSize.self, of: { $0.size }) { size = $0 }
     }
 }

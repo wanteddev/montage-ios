@@ -34,9 +34,7 @@ struct AutoScrollModifier: ViewModifier {
                 contentView(content)
             }
         }
-        .readSize(onChange: {
-            scrollViewSize = $0
-        })
+        .onGeometryChange(for: CGSize.self, of: { $0.size }) { scrollViewSize = $0 }
         .onAppear {
             scrollNotNeeded = switch axis {
             case .horizontal:
@@ -53,8 +51,6 @@ struct AutoScrollModifier: ViewModifier {
     
     private func contentView(_ content: Content) -> some View {
         content
-            .readSize(onChange: {
-                contentSize = $0
-            })
+            .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
     }
 }

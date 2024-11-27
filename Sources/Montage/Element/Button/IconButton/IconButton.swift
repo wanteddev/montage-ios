@@ -312,7 +312,7 @@ extension Button {
                 }
                     
             )
-            .readFrame($frame)
+            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { frame = $0 }
             .onLongPressGesture(perform: {}, onPressingChanged: {
                 isLongPressSessionActive = $0 // 스크롤로 인해 버튼 frame이 변경되면 longPress 세션이 종료됨
                 guard isPressed != $0, !isDragging else { return }

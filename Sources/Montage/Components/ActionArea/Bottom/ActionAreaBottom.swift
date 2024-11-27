@@ -31,7 +31,9 @@ extension ActionArea {
                 AnyView(content())
                     .padding(.bottom, -20)
                 Component(model: model)
-                    .readSize { bottomActionHeight = $0.height }
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }) {
+                        bottomActionHeight = $0.height
+                    }
             }
             .ignoresSafeArea(.container, edges: .bottom)
         }
