@@ -44,12 +44,12 @@ public struct Loading: View {
     struct LoadingViewModifier: ViewModifier {
         @Binding var isLoading: Bool
         let type: Loading.Kind
-        let dimmingNeeded: Bool
+        let dimmedColor: SwiftUI.Color
         
-        init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) {
+        init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) {
             self._isLoading = isLoading
             self.type = type
-            self.dimmingNeeded = dimmingNeeded
+            self.dimmedColor = dimmedColor
         }
         
         @State var opacity: CGFloat = 0
@@ -58,10 +58,9 @@ public struct Loading: View {
             ZStack {
                 content
                     .interactionDisabled(isLoading)
-                SwiftUI.Color.white.opacity(0.5)
+                dimmedColor
                     .opacity(opacity)
                     .ignoresSafeArea()
-                    .if(dimmingNeeded)
                 Loading(kind: type)
                     .if(isLoading)
             }

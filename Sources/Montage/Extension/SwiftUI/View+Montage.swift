@@ -218,8 +218,8 @@ extension View {
 // MARK: Loading
 
 extension View {
-    public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) -> some View {
-        modifier(Loading.LoadingViewModifier(isLoading, type: type, dimmingNeeded: dimmingNeeded))
+    public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color = .clear) -> some View {
+        modifier(Loading.LoadingViewModifier(isLoading, type: type, dimmedColor: dimmedColor))
     }
 }
 

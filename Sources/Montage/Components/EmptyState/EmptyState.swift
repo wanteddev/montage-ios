@@ -35,34 +35,32 @@ public struct EmptyState<V: View, C: View>: View {
         VStack(alignment: .center, spacing: .zero) {
             Spacer()
             
-            if let image = image() {
-                image
-                    .padding(.bottom, 8)
-            }
+            image()
             
-            VStack(spacing: 12) {
-                if let title {
+            VStack(spacing: 24) {
+                VStack(spacing: 12) {
+                    if let title {
+                        HStack {
+                            Spacer()
+                            Text(title)
+                                .montage(variant: .headline1, weight: .bold)
+                                .multilineTextAlignment(.center)
+                            Spacer()
+                        }
+                    }
+                    
                     HStack {
                         Spacer()
-                        Text(title)
-                            .montage(variant: .headline1, weight: .bold)
+                        Text(description)
+                            .montage(variant: .body2, alias: .labelAlternative)
+                            .paragraph(variant: .body2)
                             .multilineTextAlignment(.center)
+                            .lineLimit(2)
                         Spacer()
                     }
                 }
                 
-                HStack {
-                    Spacer()
-                    Text(description)
-                        .montage(variant: .body2, alias: .labelAlternative)
-                        .paragraph(variant: .body2)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                    Spacer()
-                }
-                
                 button()
-                    .padding(.top, 12)
             }
             .padding(.vertical, 12)
             

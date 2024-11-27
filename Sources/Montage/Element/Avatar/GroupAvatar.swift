@@ -15,9 +15,9 @@ extension Avatar {
     /// 기본값은 backgroundNormal 입니다.
     public struct Group: View {
         public enum Variant {
-            case person([Image?])
-            case company([Image?])
-            case academic([Image?])
+            case person([Avatar.Variant])
+            case company([Avatar.Variant])
+            case academic([Avatar.Variant])
         }
         
         public enum Size {
@@ -55,14 +55,8 @@ extension Avatar {
                 switch variant {
                 case .person(let array):
                     ForEach(Array(array.indices).reversed(), id: \.self) { index in
-                        let v: Avatar.Person.Variant = {
-                            if let item = array[index] {
-                                return .image(item)
-                            } else {
-                                return .icon
-                            }
-                        }()
-                        let s: Avatar.Person.Size = {
+                        let v: Avatar.Variant = array[index]
+                        let s: Avatar.Size = {
                             self.size == .xsmall ? .xsmall : .small
                         }()
                         Avatar.Person(
@@ -84,14 +78,8 @@ extension Avatar {
                     }
                 case .company(let array):
                     ForEach(Array(array.indices).reversed(), id: \.self) { index in
-                        let v: Avatar.Company.Variant = {
-                            if let item = array[index] {
-                                return .image(item)
-                            } else {
-                                return .icon
-                            }
-                        }()
-                        let s: Avatar.Company.Size = {
+                        let v: Avatar.Variant = array[index]
+                        let s: Avatar.Size = {
                             self.size == .xsmall ? .xsmall : .small
                         }()
                         Avatar.Company(
@@ -113,14 +101,8 @@ extension Avatar {
                     }
                 case .academic(let array):
                     ForEach(Array(array.indices).reversed(), id: \.self) { index in
-                        let v: Avatar.Academic.Variant = {
-                            if let item = array[index] {
-                                return .image(item)
-                            } else {
-                                return .icon
-                            }
-                        }()
-                        let s: Avatar.Academic.Size = {
+                        let v: Avatar.Variant = array[index]
+                        let s: Avatar.Size = {
                             self.size == .xsmall ? .xsmall : .small
                         }()
                         Avatar.Academic(
@@ -148,5 +130,5 @@ extension Avatar {
 }
 
 #Preview {
-    Avatar.Group(variant: .academic([nil, nil, nil]), size: .small)
+    Avatar.Group(variant: .academic([.icon, .icon, .icon]), size: .small)
 }
