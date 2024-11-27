@@ -98,7 +98,7 @@ extension Skeleton {
         public func body(content: Content) -> some View {
             content
                 .opacity(show == false ? 1 : .zero)
-                .readSize(onChange: { originalSize = $0 })
+                .onGeometryChange(for: CGSize.self, of: { $0.size }) { originalSize = $0 }
                 .if(show) {
                     $0.overlay(alignment: model.align.alignment) {
                         Skeleton.Text(

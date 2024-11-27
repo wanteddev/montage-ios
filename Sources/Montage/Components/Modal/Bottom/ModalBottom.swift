@@ -107,7 +107,7 @@ extension Modal {
                         AnyView(actionArea())
                     }
                 }
-                .readSize { contentSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
                 .presentationDetents(detents)
                 .presentationDragIndicator(handle ? .visible : .hidden)
                 .presentationContentInteraction(containScrollView ? .resizes : .automatic)
@@ -127,7 +127,7 @@ extension Modal {
                         AnyView(actionArea())
                     }
                 }
-                .readSize { contentSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
                 .padding(.bottom, -safeAreaInsets.bottom)
             }
         }

@@ -197,7 +197,7 @@ extension Select {
                             .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                     }
                 }
-                .readSize { contentSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
                 
                 if let description {
                     Text(description)

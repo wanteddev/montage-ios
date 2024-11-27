@@ -73,11 +73,11 @@ public struct Tab: View {
                                             }
                                             actions(index)
                                         }
-                                        .readSize(onChange: {
+                                        .onGeometryChange(for: CGSize.self, of: { $0.size }) {
                                             if itemWidths.count > index {
                                                 itemWidths[index] = $0.width
                                             }
-                                        })
+                                        }
                                     }
                                 }
                                 Divider()
@@ -95,13 +95,9 @@ public struct Tab: View {
                             $0.padding(.leading, padding ? 20 : 0)
                                 .padding(.trailing, padding || icon != nil ? 20 : 0)
                         }
-                        .readSize(onChange: {
-                            contentWidth = $0.width
-                        })
+                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentWidth = $0.width })
                         .scrollable(.horizontal, contentOffset: $contentOffset)
-                        .readSize(onChange: {
-                            scrollViewWidth = $0.width
-                        })
+                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { scrollViewWidth = $0.width })
                         .mask {
                             gradientEdge()
                                 .if(resize == .normal) {
@@ -242,9 +238,9 @@ public struct Tab: View {
                     )
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
-                    .readSize(onChange: {
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }) {
                         itemWidth = $0.width
-                    })
+                    }
                     .frame(height: itemHeight)
                 
                 SwiftUI.Color.clear

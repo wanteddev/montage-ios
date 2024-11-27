@@ -749,7 +749,7 @@ extension Bar.TopNavigation {
                     }
                     .frame(width: 0, height: 0)
                     content
-                        .readSize { innerContentSize = $0 }
+                        .onGeometryChange(for: CGSize.self, of: { $0.size }) { innerContentSize = $0 }
                         .padding(.top, navigationHeight)
                 }
                 .padding(.bottom, scrollViewBottomPadding)
@@ -797,7 +797,7 @@ extension Bar.TopNavigation {
                 }
             }
             .ignoresSafeArea(.container, edges: ignoreSafeAreaEdge)
-            .readSize { containerSize = $0 }
+            .onGeometryChange(for: CGSize.self, of: { $0.size }) { containerSize = $0 }
         }
     }
 }

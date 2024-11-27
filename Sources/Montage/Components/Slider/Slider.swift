@@ -327,7 +327,7 @@ extension Montage.Slider {
                             + configuraiton.labelConfiguration.unit
                         )
                         .montage(variant: .label1, weight: .medium, alias: configuraiton.disable ? .interactionDisable : .labelNormal)
-                        .readSize(onChange: { textSize = $0 })
+                        .onGeometryChange(for: CGSize.self, of: { $0.size }) { textSize = $0 }
                         .position(
                             x: configuraiton.currentLocation.x,
                             y: configuraiton.currentLocation.y + 8 + textSize.height

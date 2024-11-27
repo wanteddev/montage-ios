@@ -252,7 +252,7 @@ extension Cell {
         
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .readSize { labelSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }) { labelSize = $0 }
                 .overlay(
                     Decorate.InteractionController(
                         state: configuration.isPressed ? .pressed : .normal,
