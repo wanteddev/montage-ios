@@ -40,8 +40,37 @@ public struct Loading: View {
                     .frame(width: size?.width, height: size?.height)
             }
     }
-}
+    
+    struct LoadingViewModifier: ViewModifier {
+        @Binding var isLoading: Bool
+        let type: Loading.Kind
+        let dimmingNeeded: Bool
+        
+        init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmingNeeded: Bool) {
+            self._isLoading = isLoading
+            self.type = type
+            self.dimmingNeeded = dimmingNeeded
+        }
+        
+        @State var opacity: CGFloat = 0
 
-extension Loading {
-    static var subdirectory: String { "montage-ios/Sources/Montage/Asset/Lottie" }
+        func body(content: Content) -> some View {
+            ZStack {
+                content
+                    .interactionDisabled(isLoading)
+                SwiftUI.Color.white.opacity(0.5)
+                    .opacity(opacity)
+                    .ignoresSafeArea()
+                    .if(dimmingNeeded)
+                Loading(kind: type)
+                    .if(isLoading)
+            }
+            .onChange(of: isLoading, perform: { newValue in
+                opacity = newValue ? 0 : 1
+                withAnimation {
+                    opacity = newValue ? 1 : 0
+                }
+            })
+        }
+    }
 }
