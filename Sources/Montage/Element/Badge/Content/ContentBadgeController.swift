@@ -61,17 +61,17 @@ extension Badge {
         
         public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
             CGSize(
-                width: fillWidth ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
-                height: fillHeight ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
+                width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
+                height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
             )
         }
         
-        private var fillWidth: Bool = false
-        private var fillHeight: Bool = false
-        public func fill(width fillWidth: Bool, height fillHeight: Bool) -> Self {
+        private var fillHorizontal: Bool = false
+        private var fillVertical: Bool = false
+        public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
-            zelf.fillWidth = fillWidth
-            zelf.fillHeight = fillHeight
+            zelf.fillHorizontal = fillHorizontal
+            zelf.fillVertical = fillVertical
             return zelf
         }
     }

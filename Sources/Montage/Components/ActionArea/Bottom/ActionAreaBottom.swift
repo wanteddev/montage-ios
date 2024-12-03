@@ -217,7 +217,7 @@ extension ActionArea {
                                 text: main.text,
                                 handler: main.action
                             )
-                            .fill(width: true, height: false)
+                            .fill(horizontal: true, vertical: false)
                         }
                         if let alternative {
                             if let customButton = alternative.custom {
@@ -229,7 +229,7 @@ extension ActionArea {
                                     text: alternative.text,
                                     handler: alternative.action
                                 )
-                                .fill(width: true, height: false)
+                                .fill(horizontal: true, vertical: false)
                             }
                         }
                         if let sub {
@@ -276,7 +276,7 @@ extension ActionArea {
                                     text: alternative.text,
                                     handler: alternative.action
                                 )
-                                .fill(width: true, height: false)
+                                .fill(horizontal: true, vertical: false)
                             }
                         }
                         if let customButton = main.custom {
@@ -288,7 +288,7 @@ extension ActionArea {
                                 text: main.text,
                                 handler: main.action
                             )
-                            .fill(width: true, height: false)
+                            .fill(horizontal: true, vertical: false)
                         }
                     }
                 }
@@ -338,7 +338,7 @@ extension ActionArea {
                             text: main.text,
                             handler: main.action
                         )
-                        .fill(width: true, height: false)
+                        .fill(horizontal: true, vertical: false)
                     }
                 }
             }
