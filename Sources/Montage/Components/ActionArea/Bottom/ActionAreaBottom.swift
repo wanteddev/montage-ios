@@ -212,7 +212,6 @@ extension ActionArea {
                     VStack(spacing: 8) {
                         if let customButton = main.custom {
                             AnyView(customButton())
-                                .fixedSize(horizontal: false, vertical: true)
                         } else {
                             Button.SolidButtonController(
                                 variant: .primary,
@@ -220,12 +219,11 @@ extension ActionArea {
                                 text: main.text,
                                 handler: main.action
                             )
-                            .fixedSize(horizontal: false, vertical: true)
+                            .fill(horizontal: true, vertical: false)
                         }
                         if let alternative {
                             if let customButton = alternative.custom {
                                 AnyView(customButton())
-                                    .fixedSize(horizontal: false, vertical: true)
                             } else {
                                 Button.OutlinedButtonController(
                                     variant: .secondary,
@@ -233,13 +231,12 @@ extension ActionArea {
                                     text: alternative.text,
                                     handler: alternative.action
                                 )
-                                .fixedSize(horizontal: false, vertical: true)
+                                .fill(horizontal: true, vertical: false)
                             }
                         }
                         if let sub {
                             if let customButton = sub.custom {
                                 AnyView(customButton())
-                                    .fixedSize(horizontal: false, vertical: true)
                             } else {
                                 Button.TextButton(
                                     variant: .assistive,
@@ -247,7 +244,6 @@ extension ActionArea {
                                     text: sub.text,
                                     handler: sub.action
                                 )
-                                .fixedSize(horizontal: false, vertical: true)
                             }
                         }
                     }
@@ -275,7 +271,6 @@ extension ActionArea {
                         if let alternative {
                             if let customButton = alternative.custom {
                                 AnyView(customButton())
-                                    .fixedSize(horizontal: false, vertical: true)
                             } else {
                                 Button.OutlinedButtonController(
                                     variant: .secondary,
@@ -283,12 +278,11 @@ extension ActionArea {
                                     text: alternative.text,
                                     handler: alternative.action
                                 )
-                                .fixedSize(horizontal: false, vertical: true)
+                                .fill(horizontal: true, vertical: false)
                             }
                         }
                         if let customButton = main.custom {
                             AnyView(customButton())
-                                .fixedSize(horizontal: false, vertical: true)
                         } else {
                             Button.SolidButtonController(
                                 variant: .primary,
@@ -296,7 +290,7 @@ extension ActionArea {
                                 text: main.text,
                                 handler: main.action
                             )
-                            .fixedSize(horizontal: false, vertical: true)
+                            .fill(horizontal: true, vertical: false)
                         }
                     }
                 }
@@ -339,7 +333,6 @@ extension ActionArea {
                 ) -> some View {
                     if let customButton = main.custom {
                         AnyView(customButton())
-                            .fixedSize(horizontal: false, vertical: true)
                     } else {
                         Button.OutlinedButtonController(
                             variant: .assistive,
@@ -347,7 +340,7 @@ extension ActionArea {
                             text: main.text,
                             handler: main.action
                         )
-                        .fixedSize(horizontal: false, vertical: true)
+                        .fill(horizontal: true, vertical: false)
                     }
                 }
             }
@@ -435,7 +428,7 @@ extension ActionArea.Bottom {
     }
 }
 
-#Preview {
+#Preview("strong") {
     ActionArea.Bottom(
         model: .init(
             variant: .normal,
@@ -443,6 +436,57 @@ extension ActionArea.Bottom {
                 main: .init(text: "메인", action: {}),
                 sub: .init(text: "서브", action: {}),
                 alternative: .init(text: "대안", action: {})
+            ),
+            sticky: true
+        )
+    ) {
+        ScrollView {
+            SwiftUI.Color.red.frame(height: 1400)
+        }
+    }
+}
+
+#Preview("neutral") {
+    ActionArea.Bottom(
+        model: .init(
+            variant: .normal,
+            priority: .neutral(
+                main: .init(text: "메인", action: {}),
+                sub: .init(text: "서브", action: {}),
+                alternative: .init(text: "대안", action: {})
+            ),
+            sticky: true
+        )
+    ) {
+        ScrollView {
+            SwiftUI.Color.red.frame(height: 1400)
+        }
+    }
+}
+
+#Preview("compact") {
+    ActionArea.Bottom(
+        model: .init(
+            variant: .normal,
+            priority: .compact(
+                main: .init(text: "메인", action: {}),
+                sub: .init(text: "서브", action: {})
+            ),
+            sticky: true
+        )
+    ) {
+        ScrollView {
+            SwiftUI.Color.red.frame(height: 1400)
+        }
+    }
+}
+
+#Preview("cancel") {
+    ActionArea.Bottom(
+        model: .init(
+            variant: .normal,
+            priority: .cancel(
+                main: .init(text: "메인", action: {})
             ),
             sticky: true
         )

@@ -51,13 +51,10 @@ extension Control {
         }
         
         public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
-            uiView.intrinsicContentSize
-        }
-        
-        public func disable(_ isDisable: Bool = true) -> Self {
-            var view = self
-            view.isDisable = isDisable
-            return view
+            CGSize(
+                width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
+                height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
+            )
         }
         
         public func makeCoordinator() -> Coordinator {
@@ -77,6 +74,21 @@ extension Control {
                 state = radio.state
                 onTap(radio)
             }
+        }
+        
+        private var fillHorizontal: Bool = false
+        private var fillVertical: Bool = false
+        public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
+            var zelf = self
+            zelf.fillHorizontal = fillHorizontal
+            zelf.fillVertical = fillVertical
+            return zelf
+        }
+        
+        public func disable(_ isDisable: Bool = true) -> Self {
+            var view = self
+            view.isDisable = isDisable
+            return view
         }
     }
 }
