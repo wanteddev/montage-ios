@@ -325,7 +325,7 @@ public struct TextArea: View {
                                 .padding(.bottom, -6)
                         }
                     }
-                    if $text.wrappedValue.isEmpty && textEditorFocusState == false, let placeholder {
+                    if $text.wrappedValue.isEmpty, let placeholder {
                         Text(placeholder)
                             .montage(
                                 variant: .body1Reading,
