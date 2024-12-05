@@ -31,9 +31,11 @@ extension ActionArea {
                 AnyView(content())
                     .padding(.bottom, -20)
                 Component(model: model)
-                    .onGeometryChange(for: CGSize.self, of: { $0.size }) {
-                        bottomActionHeight = $0.height
-                    }
+                    .onGeometryChange(
+                        for: CGSize.self,
+                        of: { $0.size },
+                        action: { bottomActionHeight = $0.height }
+                    )
             }
             .ignoresSafeArea(.container, edges: .bottom)
         }
@@ -61,6 +63,7 @@ extension ActionArea {
                 default: false
                 }
             }
+
             private var showExtraContents: Bool { model.extraContents != nil }
             private var gradient: [SwiftUI.Color] {
                 if showExtraContents {
@@ -89,10 +92,12 @@ extension ActionArea {
                     ]
                 }
             }
+
             private let gradientHeight: CGFloat = 40
             private var backgroundColor: SwiftUI.Color {
                 showExtraContents ? .alias(.backgroundElevated) : .alias(.backgroundNormal)
             }
+
             private var sizeMeasurer: some View {
                 GeometryReader { proxy in
                     Text("")
@@ -101,6 +106,7 @@ extension ActionArea {
                         }
                 }
             }
+
             private var captionSizeMeasurer: some View {
                 GeometryReader { proxy in
                     Text("")
@@ -363,7 +369,7 @@ extension ActionArea.Bottom {
     
     public struct Action {
         let text: String
-        let action: (() -> Void)
+        let action: () -> Void
         let custom: (() -> any View)?
         
         /// ActionArea/Bottom의 항목을 기본값으로 생성합니다.
@@ -376,7 +382,7 @@ extension ActionArea.Bottom {
         ) {
             self.text = text
             self.action = action
-            self.custom = nil
+            custom = nil
         }
         
         /// ActionArea/Bottom의 항목을 커스텀하여 생성합니다.
@@ -386,8 +392,8 @@ extension ActionArea.Bottom {
         public init(
             custom: @escaping (() -> any View)
         ) {
-            self.text = ""
-            self.action = {}
+            text = ""
+            action = {}
             self.custom = custom
         }
     }
@@ -423,7 +429,7 @@ extension ActionArea.Bottom {
             self.priority = priority
             self.sticky = sticky
             self.caption = caption
-            self.extraContents = nil
+            extraContents = nil
         }
     }
 }

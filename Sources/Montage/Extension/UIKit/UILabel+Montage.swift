@@ -15,7 +15,12 @@ public extension UILabel {
         colorResolver: ColorResolvable
     ) -> UILabel {
         let label = UIKit.UILabel()
-        label.attributedText = .montage(string, variant: variant, weight: weight, colorResolver: colorResolver)
+        label.attributedText = .montage(
+            string,
+            variant: variant,
+            weight: weight,
+            colorResolver: colorResolver
+        )
         return label
     }
     
@@ -70,8 +75,11 @@ public extension UILabel {
         )
     }
 
-    
-    @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:variant:weight:alias:) 사용을 권장합니다.")
+    @available(
+        swift,
+        deprecated: 1.0,
+        message: "alias color 사용 시 montage(_:variant:weight:alias:) 사용을 권장합니다."
+    )
     static func montage(
         _ string: String,
         variant: Typography.Variant = .body1,

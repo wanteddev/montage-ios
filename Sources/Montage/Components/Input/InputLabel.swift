@@ -32,13 +32,13 @@ public class InputLabel: UIView {
         set { elementView.state = newValue }
     }
     
-    public var bold: Bool = false {
+    public var bold = false {
         didSet {
             updateViews()
         }
     }
     
-    public var disable: Bool = false {
+    public var disable = false {
         didSet {
             updateViews()
         }
@@ -61,20 +61,24 @@ public class InputLabel: UIView {
     private var tapRecognizer: UITapGestureRecognizer?
     
     public init(with input: MontageControl) {
-        self.elementView = input
+        elementView = input
         super.init(frame: .zero)
         
         setupViews()
         bindEvent()
     }
     
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// Element의 기본적인 사이즈를 정의합니다.
     override public var intrinsicContentSize: CGSize {
-        .init(width: elementView.intrinsicContentSize.width + elementSpacing + textLabel.intrinsicContentSize.width, height: elementView.intrinsicContentSize.height)
+        .init(
+            width: elementView.intrinsicContentSize.width + elementSpacing + textLabel.intrinsicContentSize
+                .width,
+            height: elementView.intrinsicContentSize.height
+        )
     }
 }
 
@@ -145,9 +149,9 @@ extension InputLabel {
     var textVariant: Typography.Variant {
         switch elementView.size {
         case .normal:
-            return .body2
+            .body2
         case .small:
-            return .label1
+            .label1
         }
     }
 }

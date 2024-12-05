@@ -16,7 +16,7 @@ extension Avatar {
         private let size: Avatar.Size
         private let onTap: (() -> Void)?
         
-        @State private var isPressed: Bool = false
+        @State private var isPressed = false
         
         public init(
             variant: Avatar.Variant,
@@ -31,7 +31,10 @@ extension Avatar {
         public var body: some View {
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
-                    .foregroundStyle(SwiftUI.Color(red: 140/255, green: 145/255, blue: 150/255).opacity(0.205))
+                    .foregroundStyle(
+                        SwiftUI.Color(red: 140 / 255, green: 145 / 255, blue: 150 / 255)
+                            .opacity(0.205)
+                    )
                 
                 processedImage()
             }
@@ -60,14 +63,14 @@ extension Avatar {
         }
         
         private func basicImage() -> some View {
-            return Image.montage(.graduation)
+            Image.montage(.graduation)
                 .resizable()
                 .frame(width: size.imageSize.width, height: size.imageSize.height)
                 .foregroundStyle(SwiftUI.Color.alias(.staticWhite))
         }
         
         private func borderedImage(_ image: Image) -> some View {
-            return image
+            image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: size.componentSize.width, height: size.componentSize.height)

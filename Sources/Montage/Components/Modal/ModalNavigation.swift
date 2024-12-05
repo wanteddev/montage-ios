@@ -53,9 +53,9 @@ extension Modal {
         
         private var _backgroundColor: SwiftUI.Color {
             if let backgroundColor {
-                return backgroundColor.opacity(0.88)
+                backgroundColor.opacity(0.88)
             } else {
-                return SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
+                SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
             }
         }
         
@@ -68,7 +68,7 @@ extension Modal {
         
         public init(title: String) {
             self.title = title
-            self._scrollOffset = .constant(.zero)
+            _scrollOffset = .constant(.zero)
         }
        
         fileprivate init(
@@ -81,7 +81,7 @@ extension Modal {
         ) {
             self.variant = variant
             self.title = title
-            self._scrollOffset = scrollOffset
+            _scrollOffset = scrollOffset
             self.left = left
             self.backgroundColor = backgroundColor
             self.actions = Array(actions.prefix(3))
@@ -99,7 +99,8 @@ extension Modal {
                 .padding(.vertical, 20)
                 .padding(.horizontal, 16)
                 .background(
-                    (scrolled && isFloatingVariant == false) ? _backgroundColor.opacity(backgroundOpacity) : .clear
+                    (scrolled && isFloatingVariant == false) ? _backgroundColor
+                        .opacity(backgroundOpacity) : .clear
                 )
                 .background(
                     .ultraThinMaterial.opacity(backgroundOpacity)
@@ -170,6 +171,7 @@ private extension Modal.Navigation.Variant {
         case .emphasized: .normal
         }
     }
+
     var typoVaraint: Typography.Variant {
         switch self {
         case .normal: .headline2

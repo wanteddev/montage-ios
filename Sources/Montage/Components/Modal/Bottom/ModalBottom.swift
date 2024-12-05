@@ -37,18 +37,18 @@ extension Modal {
             case hug
             case fill
         }
-        
+
         @Environment(\.safeAreaInsets) private var safeAreaInsets
         @State private var contentSize: CGSize = .zero
 
-        private var handle: Bool = true
+        private var handle = true
         private var resize: Modal.Bottom.Resize = .hug
-        private var containScrollView: Bool = false
-        
+        private var containScrollView = false
+
         private let navigation: (() -> Montage.Modal.Navigation)?
-        private let content: (() -> any View)
+        private let content: () -> any View
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
-        
+
         /// Modal/Bottom의 dentents입니다
         ///
         /// ContentView에 ScrollView가 있는 경우, [.fractoin(0.35), .medium, .max]로 제한됩니다.
@@ -58,14 +58,14 @@ extension Modal {
         @available(iOS 16.0, *)
         private var detents: Set<PresentationDetent> {
             if containScrollView {
-                 [ .fraction(0.35), .medium, .max ]
+                [ .fraction(0.35), .medium, .max ]
             } else if handle {
                 [ .height(contentSize.height) ]
             } else {
                 resize == .fill ? [ .max ] : [ .height(contentSize.height) ]
             }
         }
-        
+
         public init(
             navigation: (() -> Montage.Modal.Navigation)? = nil,
             content: @escaping () -> any View,
@@ -75,7 +75,7 @@ extension Modal {
             self.content = content
             self.actionArea = actionArea
         }
-        
+
         fileprivate init(
             handle: Bool = true,
             resize: Modal.Bottom.Resize = .hug,
@@ -107,7 +107,7 @@ extension Modal {
                         AnyView(actionArea())
                     }
                 }
-                .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                 .presentationDetents(detents)
                 .presentationDragIndicator(handle ? .visible : .hidden)
                 .presentationContentInteraction(containScrollView ? .resizes : .automatic)
@@ -127,7 +127,7 @@ extension Modal {
                         AnyView(actionArea())
                     }
                 }
-                .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                 .padding(.bottom, -safeAreaInsets.bottom)
             }
         }
@@ -136,7 +136,7 @@ extension Modal {
 
 extension Modal.Bottom {
     public func needHandle(_ need: Bool) -> Self {
-        return Modal.Bottom(
+        Modal.Bottom(
             handle: need,
             resize: resize,
             containScrollView: containScrollView,
@@ -147,7 +147,7 @@ extension Modal.Bottom {
     }
 
     public func resize(_ type: Modal.Bottom.Resize) -> Self {
-        return Modal.Bottom(
+        Modal.Bottom(
             handle: handle,
             resize: type,
             containScrollView: containScrollView,
@@ -156,9 +156,9 @@ extension Modal.Bottom {
             actionArea: actionArea
         )
     }
-    
+
     public func containScrollView(_ isContain: Bool) -> Self {
-        return Modal.Bottom(
+        Modal.Bottom(
             handle: handle,
             resize: resize,
             containScrollView: isContain,
@@ -182,7 +182,7 @@ private struct MontageModalMaxDentent: CustomPresentationDetent {
 }
 
 private struct ModalBottomPreivew: View {
-    @State private var show: Bool = false
+    @State private var show = false
     @State private var scrollOffset: CGFloat = .zero
 
     var body: some View {
@@ -225,7 +225,8 @@ private struct ModalBottomPreivew: View {
                 .needHandle(true)
                 .resize(.hug)
                 .containScrollView(false) // 스크롤뷰와 함께 쓰일때 사용
-        })
+            }
+        )
     }
 }
 

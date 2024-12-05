@@ -13,10 +13,10 @@ struct AutoScrollModifier: ViewModifier {
     
     init(axis: Axis.Set, contentOffset: Binding<CGPoint>) {
         self.axis = axis
-        self._contentOffset = contentOffset
+        _contentOffset = contentOffset
     }
     
-    @State private var scrollNotNeeded: Bool = false
+    @State private var scrollNotNeeded = false
     @State private var contentSize: CGSize = .zero
     @State private var scrollViewSize: CGSize = .zero
     
@@ -34,7 +34,7 @@ struct AutoScrollModifier: ViewModifier {
                 contentView(content)
             }
         }
-        .onGeometryChange(for: CGSize.self, of: { $0.size }) { scrollViewSize = $0 }
+        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { scrollViewSize = $0 })
         .onAppear {
             scrollNotNeeded = switch axis {
             case .horizontal:
@@ -51,6 +51,6 @@ struct AutoScrollModifier: ViewModifier {
     
     private func contentView(_ content: Content) -> some View {
         content
-            .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
+            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
     }
 }

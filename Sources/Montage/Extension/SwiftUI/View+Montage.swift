@@ -33,27 +33,27 @@ extension View {
 extension View {
     public func elevation(_ elevation: Elevation) -> Self {
         let currentView = self
-        
+
         guard elevation != .none else {
             return currentView
         }
-        
+
         let descriptor = elevation.descriptor
-        
+
         guard let color = descriptor.color else {
             return currentView
         }
-        
+
         let _ = currentView.shadow(
             color: SwiftUI.Color(color.withAlphaComponent(descriptor.alpha)),
             radius: descriptor.blur,
             x: descriptor.offset.width,
             y: descriptor.offset.height
         )
-        
+
         return currentView
     }
-    
+
     public func paragraph(variant: Typography.Variant) -> some View {
         lineSpacing(variant.lineSpacing).padding(.vertical, variant.padding)
     }
@@ -65,7 +65,7 @@ extension View {
 
 extension View {
     public func toast(_ model: Binding<Toast.Model?>) -> some View {
-        self.modifier(Toast.ToastModifier(model: model))
+        modifier(Toast.ToastModifier(model: model))
     }
 }
 
@@ -73,7 +73,7 @@ extension View {
 
 extension View {
     public func snackBar(_ model: Binding<SnackBar.Model?>, handler: @escaping () -> Void) -> some View {
-        self.modifier(SnackBar.SnackBarModifier(model: model, handler: handler))
+        modifier(SnackBar.SnackBarModifier(model: model, handler: handler))
     }
 }
 
@@ -93,7 +93,7 @@ extension View {
             )
         )
     }
-    
+
     public func tooltip(
         variant: Tooltip.Variant = .extended(),
         position: Tooltip.Position,
@@ -113,7 +113,7 @@ extension View {
             content: content
         )
     }
-    
+
     public func tooltip(
         position: Tooltip.Position,
         show: Binding<Bool>,
@@ -125,7 +125,7 @@ extension View {
             content: content
         )
     }
-    
+
     public func tooltip(
         show: Binding<Bool>,
         content: String
@@ -158,7 +158,7 @@ extension View {
             )
         )
     }
-    
+
     public func topNavigation(
         variant: Bar.TopNavigation.Variant = .normal,
         title: String,
@@ -218,7 +218,11 @@ extension View {
 // MARK: Loading
 
 extension View {
-    public func loading(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color = .clear) -> some View {
+    public func loading(
+        _ isLoading: Binding<Bool>,
+        type: Loading.Kind,
+        dimmedColor: SwiftUI.Color = .clear
+    ) -> some View {
         modifier(Loading.LoadingViewModifier(isLoading, type: type, dimmedColor: dimmedColor))
     }
 }
@@ -237,7 +241,7 @@ extension View {
 
 extension View {
     public func disableSwipeBack(_ disabled: Bool) -> some View {
-        self.background(
+        background(
             DisableSwipeBackView(disabled: disabled)
         )
     }

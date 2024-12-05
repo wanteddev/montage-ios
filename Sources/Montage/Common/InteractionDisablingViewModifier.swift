@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InteractionDisablingViewModifier: ViewModifier {
     let disabled: Bool
-    
+
     func body(content: Content) -> some View {
         content
             .allowsHitTesting(!disabled)

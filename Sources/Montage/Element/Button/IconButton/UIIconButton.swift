@@ -11,7 +11,6 @@ extension Button {
     /// 단일 아이콘을 배경 또는 외곽선으로 감싸는 버튼입니다.
     /// [Figma](https://www.figma.com/design/7RHtWV3Pw6I98UEDjbx5V1/0-Component?node-id=14854-45453) 에서 모양을 미리 확인할 수 있습니다.
     public class UIIconButton: UIView {
-        
         /// 버튼의 외관입니다.
         public var variant: Button.IconButton.Variant = .default {
             didSet {
@@ -27,7 +26,7 @@ extension Button {
         }
         
         /// 버튼의 활성화 여부입니다.
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
@@ -35,7 +34,7 @@ extension Button {
 
         /// 버튼 우측 상단의 푸시 뱃지 노출 여부입니다.
         /// > normal variant에서만 사용 가능합니다.
-        public var showPushBadge: Bool = false {
+        public var showPushBadge = false {
             didSet {
                 guard case .normal(_) = variant else { return }
                 updateViews()
@@ -123,7 +122,7 @@ extension Button {
         }
         
         public required init?(coder: NSCoder) {
-            self.icon = .dot
+            icon = .dot
             
             super.init(coder: coder)
             
@@ -131,13 +130,13 @@ extension Button {
             bindEvent()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -150,7 +149,7 @@ extension Button {
         }
         
         /// Element의 터치 가능 영역을 조절합니다.
-        public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        override public func point(inside point: CGPoint, with _: UIEvent?) -> Bool {
             let biggerFrame = bounds.insetBy(dx: -12, dy: -12)
             return biggerFrame.contains(point)
         }
@@ -272,7 +271,7 @@ extension Button.UIIconButton {
                 case .normal, .background:
                     variant.activeBackgroundColor
                 case .outlined, .solid:
-                    if let backgroundUIColor{
+                    if let backgroundUIColor {
                         backgroundUIColor
                     } else {
                         variant.activeBackgroundColor
@@ -389,8 +388,7 @@ extension Button.UIIconButton {
             
             if (translation >= 0 && height - location < translation)
                 || (translation < 0 && location < -translation)
-                || !frame.contains(recognizer.location(in: self))
-            {
+                || !frame.contains(recognizer.location(in: self)) {
                 interaction.state = .normal
             }
         default: break
@@ -400,8 +398,8 @@ extension Button.UIIconButton {
 
 extension Button.UIIconButton: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        _: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
     ) -> Bool {
         true
     }

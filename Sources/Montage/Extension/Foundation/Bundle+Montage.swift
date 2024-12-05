@@ -1,11 +1,10 @@
 //
-//  BundleFinder.swift
+//  Bundle+Montage.swift
 //  Views
 //
 //  Created by 김삼열 on 12/5/24.
 //  Copyright © 2024 WantedLab Inc. All rights reserved.
 //
-
 
 // swiftlint:disable all
 // swift-format-ignore-file

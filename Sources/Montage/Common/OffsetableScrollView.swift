@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct OffsettableScrollView<T: View>: View {
-    
     // MARK: - Initializer
     private let content: () -> T
     private let onOffsetChanged: (CGPoint) -> Void
@@ -41,10 +40,10 @@ struct OffsettableScrollView<T: View>: View {
             perform: onOffsetChanged
         )
     }
-    
+
     // MARK: - Modifiers
     private var axis: Axis.Set = .vertical
-    private var showsIndicators: Bool = true
+    private var showsIndicators = true
     private var onRefresh: (() -> Void)?
 
     func axis(_ axis: Axis.Set) -> Self {
@@ -52,13 +51,13 @@ struct OffsettableScrollView<T: View>: View {
         zelf.axis = axis
         return zelf
     }
-    
+
     func showIndicators(_ showsIndicators: Bool = true) -> Self {
         var zelf = self
         zelf.showsIndicators = showsIndicators
         return zelf
     }
-    
+
     func refreshable(_ onRefresh: () -> Void) -> Self {
         var zelf = self
         zelf.refreshable { onRefresh() }

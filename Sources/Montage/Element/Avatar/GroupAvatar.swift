@@ -47,7 +47,7 @@ extension Avatar {
         ) {
             self.variant = variant
             self.size = size
-            self.separateBorderColor = backgroundColor
+            separateBorderColor = backgroundColor
         }
         
         public var body: some View {
@@ -57,7 +57,7 @@ extension Avatar {
                     ForEach(Array(array.indices).reversed(), id: \.self) { index in
                         let v: Avatar.Variant = array[index]
                         let s: Avatar.Size = {
-                            self.size == .xsmall ? .xsmall : .small
+                            size == .xsmall ? .xsmall : .small
                         }()
                         Avatar.Person(
                             variant: v,
@@ -66,9 +66,15 @@ extension Avatar {
                         .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
                         .background {
                             Circle()
-                                .foregroundStyle(separateBorderColor ?? SwiftUI.Color.alias(.backgroundNormal))
+                                .foregroundStyle(
+                                    separateBorderColor ?? SwiftUI.Color
+                                        .alias(.backgroundNormal)
+                                )
                                 .scaleEffect(1.1)
-                                .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
+                                .offset(
+                                    x: s.componentSize
+                                        .width * CGFloat(index) - (size.space * CGFloat(index))
+                                )
                         }
                         .task {
                             let count = CGFloat(array.count)
@@ -80,7 +86,7 @@ extension Avatar {
                     ForEach(Array(array.indices).reversed(), id: \.self) { index in
                         let v: Avatar.Variant = array[index]
                         let s: Avatar.Size = {
-                            self.size == .xsmall ? .xsmall : .small
+                            size == .xsmall ? .xsmall : .small
                         }()
                         Avatar.Company(
                             variant: v,
@@ -89,9 +95,15 @@ extension Avatar {
                         .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
                         .background {
                             RoundedRectangle(cornerRadius: 6)
-                                .foregroundStyle(separateBorderColor ?? SwiftUI.Color.alias(.backgroundNormal))
+                                .foregroundStyle(
+                                    separateBorderColor ?? SwiftUI.Color
+                                        .alias(.backgroundNormal)
+                                )
                                 .scaleEffect(1.1)
-                                .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
+                                .offset(
+                                    x: s.componentSize
+                                        .width * CGFloat(index) - (size.space * CGFloat(index))
+                                )
                         }
                         .task {
                             let count = CGFloat(array.count)
@@ -103,7 +115,7 @@ extension Avatar {
                     ForEach(Array(array.indices).reversed(), id: \.self) { index in
                         let v: Avatar.Variant = array[index]
                         let s: Avatar.Size = {
-                            self.size == .xsmall ? .xsmall : .small
+                            size == .xsmall ? .xsmall : .small
                         }()
                         Avatar.Academic(
                             variant: v,
@@ -112,9 +124,15 @@ extension Avatar {
                         .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
                         .background {
                             RoundedRectangle(cornerRadius: 6)
-                                .foregroundStyle(separateBorderColor ?? SwiftUI.Color.alias(.backgroundNormal))
+                                .foregroundStyle(
+                                    separateBorderColor ?? SwiftUI.Color
+                                        .alias(.backgroundNormal)
+                                )
                                 .scaleEffect(1.1)
-                                .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
+                                .offset(
+                                    x: s.componentSize
+                                        .width * CGFloat(index) - (size.space * CGFloat(index))
+                                )
                         }
                         .task {
                             let count = CGFloat(array.count)

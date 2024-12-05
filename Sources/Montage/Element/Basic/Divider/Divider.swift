@@ -31,8 +31,8 @@ extension Basic {
         }
         
         required init?(coder: NSCoder) {
-            self.weight = .normal
-            self.isVertical = false
+            weight = .normal
+            isVertical = false
             
             super.init(coder: coder)
             

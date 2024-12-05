@@ -31,27 +31,27 @@ extension Button.IconButton.Variant {
     var activeBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
-            return .clear
+            .clear
         case .background(_, let isAlternative):
             if isAlternative {
-                return .atomic(.globalCoolNeutral30).withAlphaComponent(0.61)
+                .atomic(.globalCoolNeutral30).withAlphaComponent(0.61)
             } else {
                 // material이 적용되어 있기 때문에 값에 무관
-                return .clear
+                .clear
             }
         case .solid:
-            return .alias(.primaryNormal)
+            .alias(.primaryNormal)
         }
     }
     
     var inactiveBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
-            return .clear
+            .clear
         case .background:
-            return .component(.fillAlternative).withAlphaComponent(0.05)
+            .component(.fillAlternative).withAlphaComponent(0.05)
         case .solid:
-            return .component(.fillNormal).withAlphaComponent(0.08)
+            .component(.fillNormal).withAlphaComponent(0.08)
         }
     }
     
@@ -71,9 +71,9 @@ extension Button.IconButton.Variant {
     var inactiveColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
-            return .alias(.labelDisable).withAlphaComponent(0.16)
+            .alias(.labelDisable).withAlphaComponent(0.16)
         case .background:
-            return .atomic(.globalCoolNeutral50).withAlphaComponent(0.22)
+            .atomic(.globalCoolNeutral50).withAlphaComponent(0.22)
         }
     }
     
@@ -147,7 +147,7 @@ extension Button {
         @State private var isLongPressSessionActive = false
         @State private var frame: CGRect = .zero
         @State private var startingFrame: CGRect = .zero
-        @State private var isDragging: Bool = false
+        @State private var isDragging = false
         
         /// 버튼의 외관입니다.
         private let variant: IconButton.Variant
@@ -235,32 +235,32 @@ extension Button {
         
         private var _iconColor: SwiftUI.Color {
             if disable {
-                return SwiftUI.Color(uiColor: variant.inactiveColor)
+                SwiftUI.Color(uiColor: variant.inactiveColor)
             } else {
                 if let iconColor {
-                    return iconColor
+                    iconColor
                 } else {
-                    return SwiftUI.Color(uiColor: variant.activeColor)
+                    SwiftUI.Color(uiColor: variant.activeColor)
                 }
             }
         }
         
         private var _strokeColor: SwiftUI.Color {
             if case .outlined(_) = variant, let borderColor {
-                return borderColor
+                borderColor
             } else {
-                return SwiftUI.Color(uiColor: variant.borderColor)
+                SwiftUI.Color(uiColor: variant.borderColor)
             }
         }
         
         private var _backgroundColor: SwiftUI.Color {
             if disable {
-                return SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
+                SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
             } else {
                 if let backgroundColor {
-                    return backgroundColor
+                    backgroundColor
                 } else {
-                    return SwiftUI.Color(uiColor: variant.activeBackgroundColor)
+                    SwiftUI.Color(uiColor: variant.activeBackgroundColor)
                 }
             }
         }
@@ -310,9 +310,8 @@ extension Button {
                     Circle()
                         .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
-                    
             )
-            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { frame = $0 }
+            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }, action: { frame = $0 })
             .onLongPressGesture(perform: {}, onPressingChanged: {
                 isLongPressSessionActive = $0 // 스크롤로 인해 버튼 frame이 변경되면 longPress 세션이 종료됨
                 guard isPressed != $0, !isDragging else { return }
@@ -431,7 +430,6 @@ struct IconButtonControllerPreview: View {
                     icon: .apps
                 )
             }
-            
             
             Text("disable").montage()
             

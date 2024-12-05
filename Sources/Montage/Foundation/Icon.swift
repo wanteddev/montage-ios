@@ -260,6 +260,6 @@ public enum Icon: String, CaseIterable {
     case verifiedStar
     case verifiedStarFill
     case write
-    
+
     public var name: String { rawValue }
 }

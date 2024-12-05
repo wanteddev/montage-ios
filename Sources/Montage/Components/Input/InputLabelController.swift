@@ -16,49 +16,58 @@ public struct InputLabelController: UIViewRepresentable {
 
     public typealias UIViewType = InputLabel
 
-    public init(inputView: MontageControl, state: MontageControlState, text: String, onSelect: @escaping () -> Void) {
+    public init(
+        inputView: MontageControl,
+        state: MontageControlState,
+        text: String,
+        onSelect: @escaping () -> Void
+    ) {
         self.inputView = inputView
         self.state = state
         self.text = text
         self.onSelect = onSelect
     }
-    
+
     public func makeUIView(context: Context) -> UIViewType {
         let uiView = UIViewType(with: inputView)
         uiView.delegate = context.coordinator
         return uiView
     }
 
-    public func updateUIView(_ uiView: UIViewType, context: Context) {
+    public func updateUIView(_ uiView: UIViewType, context _: Context) {
         uiView.state = state
         uiView.text = text
     }
-    
+
     public func makeCoordinator() -> Coordinator {
         Coordinator(parent: self)
     }
-    
+
     public class Coordinator: NSObject, InputDelegate {
         let parent: InputLabelController
-        
+
         init(parent: InputLabelController) {
             self.parent = parent
         }
-        
-        public func inputDidSelected(_ input: InputLabel) {
+
+        public func inputDidSelected(_: InputLabel) {
             parent.onSelect()
         }
     }
-    
-    public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+
+    public func sizeThatFits(
+        _ proposal: ProposedViewSize,
+        uiView: UIViewType,
+        context _: Context
+    ) -> CGSize? {
         CGSize(
             width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
             height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
         )
     }
-    
-    private var fillHorizontal: Bool = false
-    private var fillVertical: Bool = false
+
+    private var fillHorizontal = false
+    private var fillVertical = false
     public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
         var zelf = self
         zelf.fillHorizontal = fillHorizontal
@@ -75,4 +84,3 @@ struct MontageInputLabelController_Previews: PreviewProvider {
         }
     }
 }
-

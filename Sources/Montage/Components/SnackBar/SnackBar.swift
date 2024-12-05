@@ -37,8 +37,8 @@ public struct SnackBar: View {
         
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.heading == rhs.heading
-            && lhs.description == rhs.description
-            && lhs.action == rhs.action
+                && lhs.description == rhs.description
+                && lhs.action == rhs.action
         }
     }
     
@@ -46,7 +46,7 @@ public struct SnackBar: View {
     private var description: String?
     private var extraContents: (() -> any View)?
     private let action: String
-    private let handler: (() -> Void)
+    private let handler: () -> Void
     
     init(
         heading: String? = nil,
@@ -74,7 +74,6 @@ public struct SnackBar: View {
             )
             .padding(.horizontal, 20)
         }
-        
     }
     
     fileprivate struct Contents: View {
@@ -82,7 +81,7 @@ public struct SnackBar: View {
         private var description: String?
         private var extraContents: (() -> any View)?
         private let action: String
-        private let handler: (() -> Void)
+        private let handler: () -> Void
         
         public init(
             heading: String? = nil,
@@ -141,7 +140,7 @@ public struct SnackBar: View {
         @State private var interaction: Decorate.Interaction.State = .normal
         
         private let action: String
-        private let handler: (() -> Void)
+        private let handler: () -> Void
         
         init(_ action: String, _ handler: @escaping () -> Void) {
             self.action = action
@@ -192,7 +191,7 @@ public struct SnackBar: View {
         @Binding var model: SnackBar.Model?
         @State private var animationWorkItem: DispatchWorkItem?
 
-        let handler: (() -> Void)
+        let handler: () -> Void
 
         public func body(content: Content) -> some View {
             GeometryReader { proxy in
@@ -226,7 +225,7 @@ public struct SnackBar: View {
             }
         }
         
-        private func showSnackBar(){
+        private func showSnackBar() {
             animationWorkItem?.cancel()
             
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -260,37 +259,40 @@ struct SnackBar_Previews: PreviewProvider {
             SnackBar(
                 heading: "메시지에 마침표를 찍어요.",
                 description: "설명은 필요할 때만 써요.",
-                action: "텍스트"
-            ) { 
-            }
+                action: "텍스트",
+                handler: {}
+            )
             SnackBar(
                 description: "메시지가 두 줄 이상 길어지는 경우 예외적으로 사용해요.",
-                action: "텍스트"
-            ) { }
+                action: "텍스트",
+                handler: {}
+            )
             SnackBar(
                 description: "메시지에 마침표를 찍어요.",
                 extraContents: {
                     Image.montage(.android).resizable().frame(width: 32, height: 32)
                 },
-                action: "텍스트"
-            ) { }
+                action: "텍스트",
+                handler: {}
+            )
             SnackBar(
                 heading: "메시지에 마침표를 찍어요.",
                 description: "설명은 필요할 때만 써요.",
                 extraContents: {
                     Image.montage(.android).resizable().frame(width: 32, height: 32)
                 },
-                action: "텍스트"
-            ) { }
+                action: "텍스트",
+                handler: {}
+            )
             SnackBar(
                 heading: "흠",
                 description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방",
                 extraContents: {
                     Image.montage(.android).resizable().frame(width: 32, height: 32)
                 },
-                action: "텍스트"
-            ) { }
-            
+                action: "텍스트",
+                handler: {}
+            )
         }
     }
 }

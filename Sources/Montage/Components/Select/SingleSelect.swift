@@ -21,7 +21,7 @@ extension Select {
         @Binding var focus: Bool
         
         /// SingleSelect의 활성화(=값이 있는지) 여부입니다.
-        @State private var active: Bool = true
+        @State private var active = true
         
         /// SingleSelect의 텍스트와 외곽선을 포함하는 영역의 사이즈입니다.
         @State private var contentSize: CGSize = .zero
@@ -77,7 +77,7 @@ extension Select {
             onTap: (() -> Void)? = nil
         ) {
             self.text = text
-            self._focus = focus
+            _focus = focus
             self.variant = variant
             self.placeholder = placeholder
             self.disable = disable
@@ -85,7 +85,7 @@ extension Select {
             self.requiredBadge = requiredBadge
             self.description = description
             self.leftContent = leftContent
-            self.shadowBackgroundColor = backgroundColor
+            shadowBackgroundColor = backgroundColor
             self.onTap = onTap
         }
 
@@ -94,7 +94,7 @@ extension Select {
                 if variant == .normal {
                     focus ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
                 } else {
-                   .alias(.statusNegative).opacity(0.28)
+                    .alias(.statusNegative).opacity(0.28)
                 }
             } else {
                 .alias(.lineNeutral)
@@ -136,7 +136,8 @@ extension Select {
                         .shadow(
                             color: .alias(.staticBlack).opacity(0.03),
                             radius: 2,
-                            x: 0, y: 1
+                            x: 0,
+                            y: 1
                         )
                         .frame(width: contentSize.width, height: contentSize.height)
                     
@@ -180,7 +181,8 @@ extension Select {
                         Button.IconButton(
                             variant: .normal(size: 16),
                             icon: .chevronDownThickSmall,
-                            iconColor: disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelAlternative)
+                            iconColor: disable ? SwiftUI.Color
+                                .alias(.labelDisable) : .alias(.labelAlternative)
                         ) {
                             onTap?()
                         }
@@ -197,7 +199,7 @@ extension Select {
                             .stroke(strokeColor, lineWidth: focus ? 2 : 1)
                     }
                 }
-                .onGeometryChange(for: CGSize.self, of: { $0.size }) { contentSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                 
                 if let description {
                     Text(description)
@@ -217,7 +219,6 @@ extension Select {
             }
         }
     }
-
 }
 
 struct SingleSelect_Preview: PreviewProvider {

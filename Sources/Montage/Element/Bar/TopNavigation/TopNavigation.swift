@@ -47,9 +47,9 @@ extension Bar {
         
         private var backgroundColor: SwiftUI.Color {
             if let backgroundColorResolvable {
-                return .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
+                .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
             } else {
-                return SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
+                SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
             }
         }
         
@@ -87,12 +87,13 @@ extension Bar {
                 )
                 .padding(.all, 16)
                 .background(
-                    (scrolled && isFloatingVariant == false) ? backgroundColor.opacity(backgroundOpacity) : .clear
+                    (scrolled && isFloatingVariant == false) ? backgroundColor
+                        .opacity(backgroundOpacity) : .clear
                 )
                 .background(
                     (scrolled && isFloatingVariant == false) ?
-                    Material.ultraThinMaterial.opacity(backgroundOpacity)
-                    : Material.ultraThinMaterial.opacity(.zero)
+                        Material.ultraThinMaterial.opacity(backgroundOpacity)
+                        : Material.ultraThinMaterial.opacity(.zero)
                 )
                 .background(
                     screenWidthMeasurer
@@ -157,7 +158,11 @@ extension Bar {
                                 )
                         }
                         Text(title)
-                            .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
+                            .montage(
+                                variant: variant.typoVaraint,
+                                weight: variant.typoWeight,
+                                alias: .labelStrong
+                            )
                             .paragraph(variant: variant.typoVaraint)
                             .lineLimit(1)
                             .frame(width: titleSize, height: 24)
@@ -171,7 +176,11 @@ extension Bar {
                         }
                         HStack {
                             Text(title)
-                                .montage(variant: variant.typoVaraint, weight: variant.typoWeight, alias: .labelStrong)
+                                .montage(
+                                    variant: variant.typoVaraint,
+                                    weight: variant.typoWeight,
+                                    alias: .labelStrong
+                                )
                                 .paragraph(variant: variant.typoVaraint)
                                 .lineLimit(1)
                                 .frame(alignment: variant.textAlignment)
@@ -400,7 +409,11 @@ extension Bar {
                                         action()
                                     } label: {
                                         Text(t)
-                                            .montage(variant: .body2, weight: .medium, alias: .labelAlternative)
+                                            .montage(
+                                                variant: .body2,
+                                                weight: .medium,
+                                                alias: .labelAlternative
+                                            )
                                             .blendMode(.plusDarker)
                                             .padding(.vertical, 5)
                                             .padding(.horizontal, 10)
@@ -473,7 +486,11 @@ extension Bar {
                                         action()
                                     } label: {
                                         Text(t)
-                                            .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
+                                            .montage(
+                                                variant: .headline2,
+                                                weight: .medium,
+                                                alias: .labelNormal
+                                            )
                                     }
                                 }
                             }
@@ -489,7 +506,7 @@ extension Bar {
                 let showPushBadge: Bool
                 let alternative: Bool
                 let background: Bool
-                let action: (() -> Void)
+                let action: () -> Void
                 
                 init(
                     _ i: Icon,
@@ -580,12 +597,10 @@ extension Bar.TopNavigation {
     public enum Resource {
         /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
         public enum Left {
-            case back(action: (()-> Void))
-            case icon(Icon, action: (()-> Void))
-            case text(String, action: (()-> Void))
+            case back(action: () -> Void)
+            case icon(Icon, action: () -> Void)
+            case text(String, action: () -> Void)
         }
-        
-        
         
         /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
         public enum Action: Hashable {
@@ -593,11 +608,11 @@ extension Bar.TopNavigation {
             /// - Parameters:
             ///  - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
             ///  - action: icon 클릭시 동작할 action입니다.
-            case icon(Icon, showPushBadge: Bool = false, action: (()-> Void))
+            case icon(Icon, showPushBadge: Bool = false, action: () -> Void)
             /// text 형태의 Action입니다.
             /// - Parameters:
             ///  - action: text 클릭시 동작할 action입니다.
-            case text(String, action: (()-> Void))
+            case text(String, action: () -> Void)
             
             public func hash(into hasher: inout Hasher) {
                 switch self {
@@ -608,7 +623,10 @@ extension Bar.TopNavigation {
                 }
             }
             
-            public static func == (lhs: Bar.TopNavigation.Resource.Action, rhs: Bar.TopNavigation.Resource.Action) -> Bool {
+            public static func == (
+                lhs: Bar.TopNavigation.Resource.Action,
+                rhs: Bar.TopNavigation.Resource.Action
+            ) -> Bool {
                 lhs.hashValue == rhs.hashValue
             }
         }
@@ -671,6 +689,7 @@ extension Bar.TopNavigation {
                     }
             }
         }
+
         /// ActionArea/Bottom의 사이즈를 측정하는 View입니다.
         private var bottomActionSizeMeasurer: some View {
             GeometryReader { proxy in
@@ -683,21 +702,24 @@ extension Bar.TopNavigation {
                     }
             }
         }
+
         /// 무시할 SafeAreaEdge입니다.
         /// > ActionArea/Bottom이 존재하는 경우에 bottom SafeArea를 무시합니다.
         private var ignoreSafeAreaEdge: Edge.Set {
             model != nil ? .bottom : []
         }
+
         /// Scroll 영역 전체에 삽입될 background 입니다.
         /// > backgroundColorResolvable을 전달한 경우에 해당 컬러가 background에 적용되며,
         /// > backgroundColorResolvable가 없는 경우 .clear 컬러가 적용됩니다.
         private var backgroundColor: SwiftUI.Color {
             if let backgroundColorResolvable {
-                return .init(uiColor: backgroundColorResolvable.resolve(.current))
+                .init(uiColor: backgroundColorResolvable.resolve(.current))
             } else {
-                return .clear
+                .clear
             }
         }
+
         /// ActionArea/Bottom의 sticky 속성을 결정하는 Property입니다.
         /// > 기본적으로 스크롤이 컨텐츠의 끝(전체 컨텐츠 크기 - offset)에 도달했을 때 sticky를 사용하지 않습니다.
         private var bottomActionSticky: Bool {
@@ -706,15 +728,16 @@ extension Bar.TopNavigation {
             let currentScrollOffset = containerSize.height + abs(scrollOffset)
             return totalContentHeight - contentHeightOffset >= currentScrollOffset
         }
+
         /// Scroll 영역이 가지는 bottom padding입니다.
         ///
         /// Scroll 영역이 ActionArea/Bottom에 가려지는것을 방지하기 위해 사용합니다.
         /// > ActionArea/Bottom과 함께 사용하는 경우에 ActionArea/Bottom의 variant에 의해 결정됩니다.
         private var scrollViewBottomPadding: CGFloat {
             if model != nil {
-                return bottomActionHeight + (model?.variant == .extra ? +10 : .zero)
+                bottomActionHeight + (model?.variant == .extra ? +10 : .zero)
             } else {
-                return .zero
+                .zero
             }
         }
         
@@ -749,7 +772,11 @@ extension Bar.TopNavigation {
                     }
                     .frame(width: 0, height: 0)
                     content
-                        .onGeometryChange(for: CGSize.self, of: { $0.size }) { innerContentSize = $0 }
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { innerContentSize = $0 }
+                        )
                         .padding(.top, navigationHeight)
                 }
                 .padding(.bottom, scrollViewBottomPadding)
@@ -797,7 +824,7 @@ extension Bar.TopNavigation {
                 }
             }
             .ignoresSafeArea(.container, edges: ignoreSafeAreaEdge)
-            .onGeometryChange(for: CGSize.self, of: { $0.size }) { containerSize = $0 }
+            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { containerSize = $0 })
         }
     }
 }

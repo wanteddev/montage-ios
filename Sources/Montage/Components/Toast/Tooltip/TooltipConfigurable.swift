@@ -9,7 +9,7 @@ import SwiftUI
 
 public protocol TooltipConfigurable {
     var variant: Tooltip.Variant { get set }
-    
+
     var position: Tooltip.Position { get set }
     var margin: CGFloat { get set }
 
@@ -21,6 +21,6 @@ public protocol TooltipConfigurable {
     var showArrow: Bool { get set }
     var arrowWidth: CGFloat { get set }
     var arrowHeight: CGFloat { get set }
-    
+
     var showCloseButton: Bool { get set }
 }

@@ -48,14 +48,14 @@ extension Button {
         }
         
         /// 버튼에서 표현될 텍스트입니다.
-        public var text: String = "" {
+        public var text = "" {
             didSet {
                 updateViews()
             }
         }
         
         /// 버튼의 활성화 여부입니다.
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
@@ -116,13 +116,13 @@ extension Button {
             bindEvent()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -132,7 +132,7 @@ extension Button {
         override public var intrinsicContentSize: CGSize {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
-            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            let iconCount = [leftIcon, rightIcon].filter { $0 != nil }.count
             
             let size = CGSize(
                 width: iconSize.width * CGFloat(iconCount) + textSize.width,
@@ -145,7 +145,7 @@ extension Button {
         }
         
         /// Element의 터치 가능 영역을 조절합니다.
-        public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        override public func point(inside point: CGPoint, with _: UIEvent?) -> Bool {
             let biggerFrame = bounds.insetBy(dx: -12, dy: -12)
             return biggerFrame.contains(point)
         }
@@ -229,7 +229,7 @@ extension Button.UITextButton {
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ]
         
-        constraints.forEach({ $0.priority = .defaultLow })
+        constraints.forEach { $0.priority = .defaultLow }
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
     }
@@ -362,8 +362,7 @@ extension Button.UITextButton {
             
             if (translation >= 0 && height - location < translation)
                 || (translation < 0 && location < -translation)
-                || !frame.contains(recognizer.location(in: self))
-            {
+                || !frame.contains(recognizer.location(in: self)) {
                 interaction.state = .normal
             }
         default: break
@@ -373,9 +372,9 @@ extension Button.UITextButton {
 
 extension Button.UITextButton: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        _: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
     ) -> Bool {
-        return true
+        true
     }
 }

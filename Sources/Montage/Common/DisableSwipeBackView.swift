@@ -13,12 +13,12 @@ struct DisableSwipeBackView: UIViewControllerRepresentable {
     init(disabled: Bool) {
         self.disabled = disabled
     }
-    
-    func makeUIViewController(context: Context) -> UIViewController {
+
+    func makeUIViewController(context _: Context) -> UIViewController {
         UIViewController()
     }
-    
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+
+    func updateUIViewController(_ uiViewController: UIViewController, context _: Context) {
         uiViewController.navigationController?.interactivePopGestureRecognizer?.isEnabled = !disabled
         uiViewController.navigationController?.navigationBar.isUserInteractionEnabled = !disabled
     }

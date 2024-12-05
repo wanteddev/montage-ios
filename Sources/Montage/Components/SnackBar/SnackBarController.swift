@@ -16,12 +16,12 @@ public final class SnackBarController: UIHostingController<SnackBar> {
             action: model.action,
             handler: handler
         ))
-        self.view.isHidden = true
-        self.view.backgroundColor = .clear
+        view.isHidden = true
+        view.backgroundColor = .clear
     }
     
     public func update(_ model: SnackBar.Model, handler: @escaping () -> Void) {
-        self.rootView = SnackBar(
+        rootView = SnackBar(
             heading: model.heading,
             description: model.description,
             extraContents: model.extraContents,
@@ -40,10 +40,14 @@ public final class SnackBarController: UIHostingController<SnackBar> {
     }
     
     public func hide() {
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.view.alpha = 0
-        }) { [weak self] _ in
-            self?.view.isHidden = true
-        }
+        UIView.animate(
+            withDuration: 0.3,
+            animations: { [weak self] in
+                self?.view.alpha = 0
+            },
+            completion: { [weak self] _ in
+                self?.view.isHidden = true
+            }
+        )
     }
 }

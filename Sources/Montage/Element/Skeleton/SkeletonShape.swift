@@ -19,37 +19,37 @@ extension Skeleton {
         
         private var cornerRadius: CGFloat {
             if let r = configuration?.borderRadius {
-                return r
+                r
             } else {
-                return .zero
+                .zero
             }
         }
         
         private var width: CGFloat {
             if let w = configuration?.width {
-                return w
+                w
             } else {
-                return originalSize.width * length.rawValue
+                originalSize.width * length.rawValue
             }
         }
         
         private var height: CGFloat {
             if let h = configuration?.height {
-                return h
+                h
             } else {
-                return originalSize.height
+                originalSize.height
             }
         }
         
         private var foregroundColor: SwiftUI.Color {
             if let c = configuration?.color {
-                return c
+                c
             } else {
                 switch shape {
                 case .rectangle:
-                    return .component(.fillAlternative)
+                    .component(.fillAlternative)
                 case .circle:
-                    return .component(.fillNormal)
+                    .component(.fillNormal)
                 }
             }
         }
@@ -65,7 +65,7 @@ extension Skeleton {
             self.position = position
             self.length = length
             self.configuration = configuration
-            self._originalSize = originalSize
+            _originalSize = originalSize
         }
 
         var body: some View {
@@ -102,7 +102,7 @@ extension Skeleton {
             configuration: Skeleton.Configuration? = nil
         ) {
             self.shape = shape
-            self._show = show
+            _show = show
             self.model = model
             self.configuration = configuration
         }
@@ -110,7 +110,7 @@ extension Skeleton {
         public func body(content: Content) -> some View {
             content
                 .opacity(show == false ? 1 : .zero)
-                .onGeometryChange(for: CGSize.self, of: { $0.size }) { originalSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { originalSize = $0 })
                 .if(show) {
                     $0.overlay(alignment: model.align.alignment) {
                         Skeleton.Shape(

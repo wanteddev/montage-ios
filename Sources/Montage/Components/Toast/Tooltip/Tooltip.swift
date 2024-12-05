@@ -11,7 +11,7 @@ public enum Tooltip {
     public enum Variant: Equatable {
         case extended(title: String? = nil, action: (() -> Void)? = nil)
         case compact
-        
+
         public static func == (lhs: Tooltip.Variant, rhs: Tooltip.Variant) -> Bool {
             switch (lhs, rhs) {
             case let (.extended(t1, _), .extended(t2, _)): t1 == t2
@@ -19,12 +19,12 @@ public enum Tooltip {
             default: false
             }
         }
-        
+
         public var isExtended: Bool {
             self != .compact
         }
     }
-    
+
     public enum Position {
         case left, leftTop, leftBottom
         case right, rightTop, rightBottom
@@ -34,17 +34,17 @@ public enum Tooltip {
         func getArrowAngleDegree() -> Double {
             switch self {
             case .left, .leftTop, .leftBottom:
-                return 90
+                90
             case .right, .rightTop, .rightBottom:
-                return -90
+                -90
             case .top, .topLeft, .topRight:
-                return 180
+                180
             case .bottom, .bottomLeft, .bottomRight:
-                return 0
+                0
             }
         }
     }
-    
+
     public enum Size {
         public enum Arrow {
             public static let width: CGFloat = 12
@@ -52,12 +52,12 @@ public enum Tooltip {
         }
 
         public static let margin: CGFloat = 4
-        
+
         public static let width: CGFloat = 10
         public static let height: CGFloat = 10
         public static let borderRadius: CGFloat = 8
     }
-    
+
     private struct Arrow: Shape {
         public func path(in rect: CGRect) -> Path {
             var path = Path()
@@ -69,10 +69,10 @@ public enum Tooltip {
             return path
         }
     }
-    
+
     public struct DefaultTooltipConfig: TooltipConfigurable {
         public var variant: Tooltip.Variant
-        
+
         public var position: Tooltip.Position
         public var margin: CGFloat = Tooltip.Size.margin
 
@@ -81,11 +81,11 @@ public enum Tooltip {
         public var height: CGFloat?
         public var borderRadius: CGFloat = Tooltip.Size.borderRadius
 
-        public var showArrow: Bool = true
+        public var showArrow = true
         public var arrowWidth: CGFloat = Tooltip.Size.Arrow.width
         public var arrowHeight: CGFloat = Tooltip.Size.Arrow.height
-        
-        public var showCloseButton: Bool = false
+
+        public var showCloseButton = false
 
         public init(
             variant: Tooltip.Variant = .extended(),
@@ -110,15 +110,15 @@ extension Tooltip {
         @State private var originSize: CGSize = .zero
         @State private var contentWidth: CGFloat = 10
         @State private var contentHeight: CGFloat = 10
-        
+
         @Binding private var show: Bool
-        
+
         // MARK: - Environment
-        
+
         @Environment(\.colorScheme) private var colorScheme
-        
+
         // MARK: - Uninitialised properties
-        
+
         private var config: TooltipConfigurable
         private var content: String
 
@@ -130,7 +130,7 @@ extension Tooltip {
             content: String
         ) {
             self.config = config
-            self._show = show
+            _show = show
             self.content = content
         }
 
@@ -139,10 +139,10 @@ extension Tooltip {
         private var showArrow: Bool { config.variant.isExtended && config.showArrow }
         private var showCloseButton: Bool { config.variant.isExtended && config.showCloseButton }
 
-        private var actualArrowHeight: CGFloat { self.showArrow ? config.arrowHeight : 0 }
+        private var actualArrowHeight: CGFloat { showArrow ? config.arrowHeight : 0 }
         private let arrowVerticalPadding: CGFloat = 1
         private let arrowHorizontalPadding: CGFloat = 12
-        
+
         private var underLayerColor: SwiftUI.Color {
             if config.variant == .compact, config.inverse {
                 SwiftUI.Color.alias(.lineNeutral)
@@ -150,6 +150,7 @@ extension Tooltip {
                 SwiftUI.Color.alias(.primaryNormal).opacity(0.05)
             }
         }
+
         private var upperLayerColor: SwiftUI.Color {
             if config.variant == .compact, config.inverse {
                 SwiftUI.Color.alias(.backgroundElevated).opacity(0.88)
@@ -157,6 +158,7 @@ extension Tooltip {
                 SwiftUI.Color.alias(.inverseBackground).opacity(0.88)
             }
         }
+
         private var contentColor: Color.Alias {
             if config.variant == .compact, config.inverse {
                 .labelNeutral
@@ -164,6 +166,7 @@ extension Tooltip {
                 .inverseLabel
             }
         }
+
         private var borderColor: SwiftUI.Color {
             if config.inverse {
                 SwiftUI.Color.alias(.lineNeutral)
@@ -171,6 +174,7 @@ extension Tooltip {
                 .clear
             }
         }
+
         private var borderWidth: CGFloat {
             if config.inverse {
                 1
@@ -182,66 +186,65 @@ extension Tooltip {
         private var arrowOffsetX: CGFloat {
             switch config.position {
             case .left, .leftTop, .leftBottom:
-                (
-                    contentWidth / 2
+
+                contentWidth / 2
                     + config.arrowHeight / 2
                     - 0.3
-                )
+
             case .right, .rightTop, .rightBottom:
                 -(
                     contentWidth / 2
-                    + config.arrowHeight / 2
-                    - 0.3
+                        + config.arrowHeight / 2
+                        - 0.3
                 )
             case .top:
-                    .zero
+                .zero
             case .topLeft:
                 -(
                     contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
                 )
             case .topRight:
-                (
-                    contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
-                )
+
+                contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
+
             case .bottom:
-                    .zero
+                .zero
             case .bottomLeft:
                 -(
                     contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
                 )
             case .bottomRight:
-                (
-                    contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
-                )
+
+                contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
             }
         }
 
         private var arrowOffsetY: CGFloat {
             switch config.position {
             case .left:
-                    .zero
+                .zero
             case .leftTop:
                 -(
                     contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
                 )
             case .leftBottom:
-                (
-                    contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
-                )
+
+                contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
+
             case .right:
-                    .zero
+                .zero
             case .rightTop:
                 -(
                     contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
                 )
             case .rightBottom:
-                (
-                    contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
-                )
+
+                contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
+
             case .top, .topLeft, .topRight:
-                (
-                    contentHeight / 2 + actualArrowHeight / 2
-                )
+
+                contentHeight / 2 + actualArrowHeight / 2
+
             case .bottom, .bottomLeft, .bottomRight:
                 -(
                     contentHeight / 2 + actualArrowHeight / 2
@@ -256,32 +259,32 @@ extension Tooltip {
             case .left, .leftTop, .leftBottom:
                 -(
                     originSize.width / 2
-                    + contentWidth / 2
-                    + actualArrowHeight
-                    + arrowVerticalPadding
-                    + config.margin
+                        + contentWidth / 2
+                        + actualArrowHeight
+                        + arrowVerticalPadding
+                        + config.margin
                 )
             case .right, .rightTop, .rightBottom:
-                (
-                    originSize.width / 2
+
+                originSize.width / 2
                     + contentWidth / 2
                     + actualArrowHeight
                     + arrowVerticalPadding
                     + config.margin
-                )
+
             case .top, .bottom:
-                    .zero
+                .zero
             case .topLeft, .bottomLeft:
-                (
-                    contentWidth / 2
+
+                contentWidth / 2
                     - config.arrowWidth
                     - arrowHorizontalPadding
-                )
+
             case .topRight, .bottomRight:
                 -(
                     contentWidth / 2
-                    - config.arrowWidth
-                    - arrowHorizontalPadding
+                        - config.arrowWidth
+                        - arrowHorizontalPadding
                 )
             }
         }
@@ -289,35 +292,34 @@ extension Tooltip {
         private func offsetVertical() -> CGFloat {
             switch config.position {
             case .left, .right:
-                    .zero
+                .zero
             case .leftTop, .rightTop:
-                (
-                    contentHeight / 2
+
+                contentHeight / 2
                     - config.arrowWidth / 2
                     - arrowHorizontalPadding
-                )
+
             case .leftBottom, .rightBottom:
                 -(
                     contentHeight / 2
-                    - config.arrowWidth / 2
-                    - arrowHorizontalPadding
+                        - config.arrowWidth / 2
+                        - arrowHorizontalPadding
                 )
             case .top, .topLeft, .topRight:
                 -(
                     contentHeight / 2
-                    + originSize.height / 2
-                    + actualArrowHeight
-                    + arrowVerticalPadding
-                    + config.margin
+                        + originSize.height / 2
+                        + actualArrowHeight
+                        + arrowVerticalPadding
+                        + config.margin
                 )
             case .bottom, .bottomLeft, .bottomRight:
-                (
-                    contentHeight / 2
+
+                contentHeight / 2
                     + originSize.height / 2
                     + actualArrowHeight
                     + arrowVerticalPadding
                     + config.margin
-                )
             }
         }
 
@@ -327,12 +329,12 @@ extension Tooltip {
             GeometryReader { proxy in
                 Text("")
                     .onAppear {
-                        self.contentWidth = config.width ?? proxy.size.width
-                        self.contentHeight = config.height ?? proxy.size.height
+                        contentWidth = config.width ?? proxy.size.width
+                        contentHeight = config.height ?? proxy.size.height
                     }
             }
         }
-        
+
         private var originSizeMeasurer: some View {
             GeometryReader { proxy in
                 Text("")
@@ -377,15 +379,17 @@ extension Tooltip {
                 Rectangle()
                     .frame(
                         width: config.arrowWidth,
-                        height: config.arrowHeight)
+                        height: config.arrowHeight
+                    )
                     .rotationEffect(
                         Angle(
                             degrees: config.position.getArrowAngleDegree()
                         )
                     )
                     .offset(
-                        x: self.arrowOffsetX,
-                        y: self.arrowOffsetY)
+                        x: arrowOffsetX,
+                        y: arrowOffsetY
+                    )
                     .foregroundStyle(.black)
             }
             .compositingGroup()
@@ -433,11 +437,10 @@ extension Tooltip {
                             }
                         }
                         if case let .extended(title, action) = config.variant,
-                           let title = title, let action = action
-                        {
+                           let title = title, let action = action {
                             SwiftUI.Button(action: {
                                 action()
-                            }){
+                            }, label: {
                                 Text(title)
                                     .montage(
                                         variant: .label1,
@@ -448,13 +451,13 @@ extension Tooltip {
                                     .opacity(0.61)
                                     .frame(height: 20)
                                     .padding(.horizontal, 2)
-                            }
+                            })
                         }
                     }
                     .padding(.all, 10)
                 }
-                .background(self.contentSizeMeasurer)
-                .background(self.arrowView)
+                .background(contentSizeMeasurer)
+                .background(arrowView)
                 .frame(
                     minWidth: 64,
                     maxWidth: 280
@@ -475,7 +478,7 @@ extension Tooltip {
         func body(content: Content) -> some View {
             content
                 .background(
-                    self.originSizeMeasurer
+                    originSizeMeasurer
                 )
                 .overlay(
                     show ? tooltipBody : nil

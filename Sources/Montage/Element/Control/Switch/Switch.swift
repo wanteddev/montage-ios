@@ -23,9 +23,9 @@ extension Control {
             case normal, small
         }
         
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
-                self.isEnabled = false == disable
+                isEnabled = false == disable
             }
         }
         
@@ -38,7 +38,7 @@ extension Control {
             bindEvent()
         }
         
-        required init?(coder: NSCoder) {
+        required init?(coder _: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
         
@@ -54,7 +54,10 @@ extension Control.Switch {
         tintColor = .component(.fillNormal)
         onTintColor = .alias(.primaryNormal)
         
-        transform = CGAffineTransform(scaleX: containerSize.width / bounds.width, y: containerSize.height / bounds.height)
+        transform = CGAffineTransform(
+            scaleX: containerSize.width / bounds.width,
+            y: containerSize.height / bounds.height
+        )
         widthAnchor.constraint(equalToConstant: containerSize.width).isActive = true
         heightAnchor.constraint(equalToConstant: containerSize.height).isActive = true
     }
@@ -72,9 +75,9 @@ extension Control.Switch {
     var containerSize: CGSize {
         switch size {
         case .normal:
-            return .init(width: 52, height: 32)
+            .init(width: 52, height: 32)
         case .small:
-            return .init(width: 39, height: 24)
+            .init(width: 39, height: 24)
         }
     }
 }

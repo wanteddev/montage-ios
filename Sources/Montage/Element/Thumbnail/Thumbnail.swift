@@ -9,7 +9,7 @@ import UIKit
 
 public class Thumbnail: UIView {
     private enum Const {
-        static var defaultImageName: String = "placeholder"
+        static var defaultImageName = "placeholder"
     }
     
     public var ratio: Ratio {
@@ -18,7 +18,7 @@ public class Thumbnail: UIView {
         }
     }
     
-    public var portrait: Bool = false {
+    public var portrait = false {
         didSet {
             setupUpdateableConstraints()
         }
@@ -42,7 +42,7 @@ public class Thumbnail: UIView {
     public init(ratio: Ratio, portrait: Bool = false) {
         self.ratio = ratio
         self.portrait = portrait
-        self.image = nil
+        image = nil
         
         super.init(frame: .zero)
         
@@ -51,9 +51,9 @@ public class Thumbnail: UIView {
     }
     
     public required init?(coder: NSCoder) {
-        self.ratio = .r1x1
-        self.portrait = false
-        self.image = nil
+        ratio = .r1x1
+        portrait = false
+        image = nil
         
         super.init(coder: coder)
         

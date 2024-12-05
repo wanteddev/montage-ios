@@ -5,8 +5,8 @@
 //  Created by Euigyom Kim on 2023/04/18.
 //
 
-import SwiftUI
 import Pretendard
+import SwiftUI
 
 extension Chip {
     public struct ActionChipController: UIViewRepresentable {
@@ -14,10 +14,10 @@ extension Chip {
         public var size: Action.Size = .normal
         public var leftIcon: Icon?
         public var rightIcon: Icon?
-        public var text: String = ""
+        public var text = ""
         public var state: Decorate.Interaction.State = .normal
-        public var disable: Bool = false
-        public var active: Bool = false
+        public var disable = false
+        public var active = false
         public var iconColor: SwiftUI.Color? = nil
         public var backgroundColor: SwiftUI.Color? = nil
         public var fontColor: SwiftUI.Color? = nil
@@ -56,11 +56,11 @@ extension Chip {
             self.handler = handler
         }
         
-        public func makeUIView(context: Context) -> UIViewType {
+        public func makeUIView(context _: Context) -> UIViewType {
             .init()
         }
         
-        public func updateUIView(_ uiView: UIViewType, context: Context) {
+        public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.variant = variant
             uiView.size = size
             uiView.leftIcon = leftIcon
@@ -92,15 +92,19 @@ extension Chip {
             uiView.handler = handler
         }
         
-        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        public func sizeThatFits(
+            _ proposal: ProposedViewSize,
+            uiView: UIViewType,
+            context _: Context
+        ) -> CGSize? {
             CGSize(
                 width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
                 height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
             )
         }
         
-        private var fillHorizontal: Bool = false
-        private var fillVertical: Bool = false
+        private var fillHorizontal = false
+        private var fillVertical = false
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
             zelf.fillHorizontal = fillHorizontal

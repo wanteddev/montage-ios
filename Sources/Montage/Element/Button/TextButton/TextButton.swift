@@ -68,23 +68,23 @@ extension Button.TextButton.Size {
     var iconSize: CGSize {
         switch self {
         case .medium:
-            return .init(width: 20, height: 20)
+            .init(width: 20, height: 20)
         case .small:
-            return .init(width: 16, height: 16)
+            .init(width: 16, height: 16)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
         case .medium:
-            return .body1
+            .body1
         case .small:
-            return .label1
+            .label1
         }
     }
     
     var typoWeight: Typography.Weight {
-        return .bold
+        .bold
     }
 }
 
@@ -94,7 +94,7 @@ extension Button {
         @State private var isLongPressSessionActive = false
         @State private var frame: CGRect = .zero
         @State private var startingFrame: CGRect = .zero
-        @State private var isDragging: Bool = false
+        @State private var isDragging = false
 
         /// 버튼의 외관입니다.
         private let variant: TextButton.Variant
@@ -200,7 +200,7 @@ extension Button {
                 .padding(.vertical, -variant.interactionVerticalOffset)
                 .padding(.horizontal, -variant.interactionHorizontalOffset)
             }
-            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { frame = $0 }
+            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }, action: { frame = $0 })
             .onLongPressGesture(perform: {}, onPressingChanged: {
                 isLongPressSessionActive = $0 // 스크롤로 인해 버튼 frame이 변경되면 longPress 세션이 종료됨
                 guard isPressed != $0, !isDragging else { return }

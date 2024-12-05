@@ -9,13 +9,13 @@ import SwiftUI
 
 public struct ProgressIndicator: View {
     @Binding private var percentage: CGFloat
-    
+
     public init(percentage: Binding<CGFloat>) {
-        self._percentage = percentage
+        _percentage = percentage
     }
-    
+
     @State private var size: CGSize = .zero
-    
+
     public var body: some View {
         ZStack(alignment: .leading) {
             Rectangle()
@@ -26,6 +26,6 @@ public struct ProgressIndicator: View {
         }
         .frame(height: 2)
         .frame(maxWidth: .infinity)
-        .onGeometryChange(for: CGSize.self, of: { $0.size }) { size = $0 }
+        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
     }
 }

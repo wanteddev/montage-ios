@@ -15,15 +15,15 @@ extension SwiftUI.Color {
     public static func atomic(_ type: Color.Global) -> SwiftUI.Color {
         load(name: type.name)
     }
-    
+
     public static func alias(_ type: Color.Alias) -> SwiftUI.Color {
         SwiftUI.Color(UIColor.alias(type))
     }
-    
+
     public static func component(_ type: Color.Component) -> SwiftUI.Color {
         SwiftUI.Color(UIColor.component(type))
     }
-    
+
     public static func montage(_ type: ColorResolvable) -> SwiftUI.Color {
         SwiftUI.Color(UIColor.montage(type))
     }

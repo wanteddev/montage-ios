@@ -28,10 +28,10 @@ extension Modal {
     public struct Full: View {
         @Environment(\.safeAreaInsets) private var safeAreaInsets
 
-        private let navigation: (() -> Montage.Modal.Navigation)
-        private let content: (() -> any View)
+        private let navigation: () -> Montage.Modal.Navigation
+        private let content: () -> any View
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
-        
+
         public init(
             navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
@@ -60,7 +60,7 @@ extension Modal {
 }
 
 private struct ModalFullPreivew: View {
-    @State private var show: Bool = false
+    @State private var show = false
     @State private var scrollOffset: CGFloat = .zero
 
     var body: some View {
@@ -77,9 +77,9 @@ private struct ModalFullPreivew: View {
                 Modal.Full(
                     navigation: {
                         Modal.Navigation(title: "제목")
-                        .actions([
-                            .icon(.close, action: { show = false })
-                        ])
+                            .actions([
+                                .icon(.close, action: { show = false })
+                            ])
                     },
                     content: {
                         VStack {

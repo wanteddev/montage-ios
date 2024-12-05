@@ -5,17 +5,17 @@
 //  Created by Euigyom Kim on 2023/01/16.
 //
 
-import SwiftUI
 import Pretendard
+import SwiftUI
 
 public struct MontageSampleView: View {
     @State var inputState: MontageControlState
     @State var inputView: MontageControl
     @State var inputLabelText: String
     @State var isOn: Bool
-    
+
     public var dismiss: (() -> Void)?
-    
+
     public var body: some View {
         NavigationView {
             SwiftUI.List {
@@ -32,13 +32,13 @@ public struct MontageSampleView: View {
             .navigationBarTitle("Montage")
         }
     }
-    
+
     public init() {
-        self.inputView = Control.Checkbox()
-        self.inputState = .checked
-        self.inputLabelText = "체크해주세용"
-        self.isOn = true
-        
+        inputView = Control.Checkbox()
+        inputState = .checked
+        inputLabelText = "체크해주세용"
+        isOn = true
+
         do {
             try Pretendard.registerFonts()
         } catch {

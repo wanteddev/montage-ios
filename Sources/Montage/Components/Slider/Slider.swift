@@ -19,7 +19,11 @@ public struct Slider: View {
         VStack(spacing: .zero) {
             if configuration.showHeading {
                 Text(configuration.headingLabel)
-                    .montage(variant: .headline2, weight: .bold, alias: configuration.disable ? .interactionDisable : .labelNormal)
+                    .montage(
+                        variant: .headline2,
+                        weight: .bold,
+                        alias: configuration.disable ? .interactionDisable : .labelNormal
+                    )
                     .padding(.bottom, 32)
             }
             RoundedRectangle(cornerRadius: configuration.height)
@@ -48,7 +52,7 @@ public struct Slider: View {
                     }
                 )
             let showLabel = configuration.lowKnobConfiguration.labelConfiguration.show &&
-            configuration.highKnobConfiguration.labelConfiguration.show
+                configuration.highKnobConfiguration.labelConfiguration.show
             Spacer()
                 .frame(height: showLabel ? 28 : 8)
         }
@@ -134,16 +138,16 @@ extension Montage.Slider {
             start: Double,
             end: Double
         ) {
-            self.width = UIScreen.main.bounds.width - 40
-            self.height = 4
-            self.showHeading = false
+            width = UIScreen.main.bounds.width - 40
+            height = 4
+            showHeading = false
             valueStart = start
             valueEnd = end
-            self.disable = false
+            disable = false
             
             highKnobConfiguration = KnobConfiguration(
-                sliderWidth: self.width,
-                sliderHeight: self.height,
+                sliderWidth: width,
+                sliderHeight: height,
                 sliderValueStart: valueStart,
                 sliderValueEnd: valueEnd,
                 disable: disable,
@@ -152,8 +156,8 @@ extension Montage.Slider {
             )
             
             lowKnobConfiguration = KnobConfiguration(
-                sliderWidth: self.width,
-                sliderHeight: self.height,
+                sliderWidth: width,
+                sliderHeight: height,
                 sliderValueStart: valueStart,
                 sliderValueEnd: valueEnd,
                 disable: disable,
@@ -280,7 +284,7 @@ extension Montage.Slider {
         var value: Double
         
         init(wrappedValue: Double) {
-            self.value = wrappedValue
+            value = wrappedValue
         }
         
         var wrappedValue: Double {
@@ -308,10 +312,12 @@ extension Montage.Slider {
                 .clipShape(Circle())
                 .position(x: configuraiton.currentLocation.x, y: configuraiton.currentLocation.y)
                 
-                
                 Circle()
                     .frame(width: configuraiton.diameter, height: configuraiton.diameter)
-                    .foregroundStyle(configuraiton.disable ? SwiftUI.Color.alias(.interactionDisable) : configuraiton.color)
+                    .foregroundStyle(
+                        configuraiton.disable ? SwiftUI.Color
+                            .alias(.interactionDisable) : configuraiton.color
+                    )
                     .contentShape(Rectangle())
                     .overlay(
                         Circle()
@@ -324,10 +330,14 @@ extension Montage.Slider {
                     if configuraiton.labelConfiguration.show {
                         Text(
                             String(format: "%.f", configuraiton.currentValue)
-                            + configuraiton.labelConfiguration.unit
+                                + configuraiton.labelConfiguration.unit
                         )
-                        .montage(variant: .label1, weight: .medium, alias: configuraiton.disable ? .interactionDisable : .labelNormal)
-                        .onGeometryChange(for: CGSize.self, of: { $0.size }) { textSize = $0 }
+                        .montage(
+                            variant: .label1,
+                            weight: .medium,
+                            alias: configuraiton.disable ? .interactionDisable : .labelNormal
+                        )
+                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { textSize = $0 })
                         .position(
                             x: configuraiton.currentLocation.x,
                             y: configuraiton.currentLocation.y + 8 + textSize.height
@@ -381,7 +391,7 @@ extension Montage.Slider {
             self.sliderWidth = sliderWidth
             self.sliderHeight = sliderHeight
             self.sliderValueStart = sliderValueStart
-            self.sliderValueRange = sliderValueEnd - sliderValueStart
+            sliderValueRange = sliderValueEnd - sliderValueStart
             
             self.color = color
             self.backgroundColor = backgroundColor
@@ -389,13 +399,16 @@ extension Montage.Slider {
             
             self.labelConfiguration = labelConfiguration
             
-            let startLocation = CGPoint(x: (CGFloat(startPercentage.wrappedValue)/1.0)*sliderWidth, y: sliderHeight/2)
+            let startLocation = CGPoint(
+                x: (CGFloat(startPercentage.wrappedValue) / 1.0) * sliderWidth,
+                y: sliderHeight / 2
+            )
             
             self.startLocation = startLocation
-            self.currentLocation = startLocation
-            self.currentPercentage = startPercentage
+            currentLocation = startLocation
+            currentPercentage = startPercentage
             
-            self.onDrag = false
+            onDrag = false
         }
         
         lazy var sliderDragGesture: _EndedGesture<_ChangedGesture<DragGesture>> = DragGesture()
@@ -421,8 +434,8 @@ extension Montage.Slider {
         }
         
         private func calcSliderBtnLocation(_ dragLocation: CGPoint) {
-            if dragLocation.y != sliderHeight/2 {
-                currentLocation = CGPoint(x: dragLocation.x, y: sliderHeight/2)
+            if dragLocation.y != sliderHeight / 2 {
+                currentLocation = CGPoint(x: dragLocation.x, y: sliderHeight / 2)
             } else {
                 currentLocation = dragLocation
             }

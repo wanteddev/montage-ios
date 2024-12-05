@@ -13,17 +13,25 @@ extension Control {
         @Binding private var state: MontageControlState
         private let size: MontageControlSize
         private let onTap: (UIViewType) -> Void
-        private var isDisable: Bool = false
+        private var isDisable = false
         
         public typealias UIViewType = RoundCheckbox
         
-        public init(_ state: Binding<MontageControlState>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(
+            _ state: Binding<MontageControlState>,
+            size: MontageControlSize = .normal,
+            onTap: @escaping (UIViewType) -> Void = { _ in }
+        ) {
             _state = state
             self.size = size
             self.onTap = onTap
         }
         
-        public init(_ state: Binding<Bool>, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(
+            _ state: Binding<Bool>,
+            size: MontageControlSize = .normal,
+            onTap: @escaping (UIViewType) -> Void = { _ in }
+        ) {
             _state = Binding(get: {
                 state.wrappedValue ? .checked : .unchecked
             }, set: { value in
@@ -33,7 +41,11 @@ extension Control {
             self.onTap = onTap
         }
         
-        public init(state: MontageControlState, size: MontageControlSize = .normal, onTap: @escaping (UIViewType) -> Void = { _ in }) {
+        public init(
+            state: MontageControlState,
+            size: MontageControlSize = .normal,
+            onTap: @escaping (UIViewType) -> Void = { _ in }
+        ) {
             _state = .constant(state)
             self.size = size
             self.onTap = onTap
@@ -45,12 +57,16 @@ extension Control {
             return uiView
         }
         
-        public func updateUIView(_ uiView: UIViewType, context: Context) {
+        public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.state = state
             uiView.disable = isDisable
         }
         
-        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        public func sizeThatFits(
+            _ proposal: ProposedViewSize,
+            uiView: UIViewType,
+            context _: Context
+        ) -> CGSize? {
             CGSize(
                 width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
                 height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
@@ -66,7 +82,7 @@ extension Control {
             private let onTap: (UIViewType) -> Void
             
             init(state: Binding<MontageControlState>, onTap: @escaping (UIViewType) -> Void) {
-                self._state = state
+                _state = state
                 self.onTap = onTap
             }
             
@@ -76,8 +92,8 @@ extension Control {
             }
         }
         
-        private var fillHorizontal: Bool = false
-        private var fillVertical: Bool = false
+        private var fillHorizontal = false
+        private var fillVertical = false
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
             zelf.fillHorizontal = fillHorizontal

@@ -46,9 +46,9 @@ extension Decorate {
         }
         
         required init?(coder: NSCoder) {
-            self.state = .normal
-            self.color = .labelNormal
-            self.variant = .normal
+            state = .normal
+            color = .labelNormal
+            variant = .normal
             
             super.init(coder: coder)
             
@@ -61,7 +61,7 @@ extension Decorate.Interaction {
     private func setupView() {
         isUserInteractionEnabled = false
         alpha = state.alpha * variant.weight
-        backgroundColor = .alias(self.color)
+        backgroundColor = .alias(color)
     }
     
     private func updateView() {
@@ -70,8 +70,8 @@ extension Decorate.Interaction {
             delay: 0,
             options: [.beginFromCurrentState, .curveEaseInOut]
         ) { [self] in
-            self.alpha = state.alpha * variant.weight
-            self.backgroundColor = .alias(color)
+            alpha = state.alpha * variant.weight
+            backgroundColor = .alias(color)
         }
     }
 }
@@ -80,13 +80,13 @@ extension Decorate.Interaction.State {
     var alpha: CGFloat {
         switch self {
         case .normal:
-            return 0
+            0
         case .hovered:
-            return 0.05
+            0.05
         case .focused:
-            return 0.08
+            0.08
         case .pressed:
-            return 0.12
+            0.12
         }
     }
 }
@@ -95,11 +95,11 @@ extension Decorate.Interaction.Variant {
     var weight: CGFloat {
         switch self {
         case .normal:
-            return 1
+            1
         case .light:
-            return 0.75
+            0.75
         case .strong:
-            return 1.5
+            1.5
         }
     }
 }

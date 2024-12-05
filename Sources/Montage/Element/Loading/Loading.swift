@@ -17,12 +17,13 @@ public struct Loading: View {
         func resourceName(_ colorScheme: ColorScheme) -> String {
             switch self {
             case .wanted: colorScheme == .light ? "loading-wanted-light.json" : "loading-wanted-dark.json"
-            case .circular: colorScheme == .light ? "loading-circular-light.json" : "loading-circular-dark.json"
+            case .circular: colorScheme == .light ? "loading-circular-light.json" :
+                "loading-circular-dark.json"
             }
         }
     }
     
-    @Environment(\.colorScheme)  private var colorScheme
+    @Environment(\.colorScheme) private var colorScheme
     
     private let kind: Kind
     private let size: CGSize?
@@ -47,7 +48,7 @@ public struct Loading: View {
         let dimmedColor: SwiftUI.Color
         
         init(_ isLoading: Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) {
-            self._isLoading = isLoading
+            _isLoading = isLoading
             self.type = type
             self.dimmedColor = dimmedColor
         }
