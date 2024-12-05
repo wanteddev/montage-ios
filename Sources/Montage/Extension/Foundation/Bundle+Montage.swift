@@ -6,13 +6,14 @@
 //  Copyright © 2024 WantedLab Inc. All rights reserved.
 //
 
+#if !SWIFT_PACKAGE
 // swiftlint:disable all
 // swift-format-ignore-file
 // swiftformat:disable all
-import Foundation// MARK: - Swift Bundle Accessor for Frameworks
+import Foundation
 private class BundleFinder {}
 extension Foundation.Bundle {
-/// Since Lottie is a dynamic framework, the bundle for classes within this module can be used directly.
 static let module = Bundle(for: BundleFinder.self)
 }// swiftlint:enable all
 // swiftformat:enable all
+#endif
