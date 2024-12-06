@@ -72,7 +72,7 @@ extension Button {
         }
         
         /// 버튼에서 표현될 텍스트입니다.
-        public var text: String = "" {
+        public var text = "" {
             didSet {
                 updateViews()
             }
@@ -88,7 +88,7 @@ extension Button {
         /// uniqueIcon 노출 여부입니다.
         /// > text와 leftIcon, rightIcon은 표현되지 않습니다.
         /// > 설정 시 constraint가 업데이트 됩니다.
-        public var iconOnly: Bool = false {
+        public var iconOnly = false {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -96,7 +96,7 @@ extension Button {
         }
         
         /// 버튼의 활성화 여부입니다.
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
@@ -159,13 +159,13 @@ extension Button {
             bindEvent()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -176,7 +176,7 @@ extension Button {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize(iconOnly)
             let edgeInsets = size.edgeInsets(iconOnly)
-            let iconCount = [leftIcon, rightIcon, uniqueIcon].filter({ $0 != nil }).count
+            let iconCount = [leftIcon, rightIcon, uniqueIcon].filter { $0 != nil }.count
             let iconWidths = iconSize.width * CGFloat(iconCount)
             let spacings = iconOnly ? .zero : size.gap * CGFloat(iconCount)
             
@@ -284,7 +284,7 @@ extension Button.SolidButton {
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ]
         
-        constraints.forEach({ $0.priority = .defaultLow })
+        constraints.forEach { $0.priority = .defaultLow }
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
     }
@@ -428,8 +428,7 @@ extension Button.SolidButton {
             
             if (translation >= 0 && height - location < translation)
                 || (translation < 0 && location < -translation)
-                || !frame.contains(recognizer.location(in: self))
-            {
+                || !frame.contains(recognizer.location(in: self)) {
                 interaction.state = .normal
             }
         default: break
@@ -439,10 +438,10 @@ extension Button.SolidButton {
 
 extension Button.SolidButton: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        _: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
     ) -> Bool {
-        return true
+        true
     }
 }
 
@@ -450,25 +449,25 @@ extension Button.SolidButton.Variant {
     var textColor: UIColor {
         switch self {
         case .primary:
-            return .alias(.staticWhite)
+            .alias(.staticWhite)
         case .assistive:
-            return .alias(.labelNeutral).withAlphaComponent(0.88)
+            .alias(.labelNeutral).withAlphaComponent(0.88)
         }
     }
     
     var typoWeight: Typography.Weight {
         switch self {
-        case .primary: return .bold
-        case .assistive: return .medium
+        case .primary: .bold
+        case .assistive: .medium
         }
     }
     
     var backgroundColor: UIColor {
         switch self {
         case .primary:
-            return .alias(.primaryNormal)
+            .alias(.primaryNormal)
         case .assistive:
-            return .component(.fillNormal).withAlphaComponent(0.08)
+            .component(.fillNormal).withAlphaComponent(0.08)
         }
     }
     
@@ -479,9 +478,9 @@ extension Button.SolidButton.Variant {
     var interactionVariant: Decorate.Interaction.Variant {
         switch self {
         case .primary:
-            return .strong
+            .strong
         case .assistive:
-            return .normal
+            .normal
         }
     }
 }
@@ -490,55 +489,70 @@ extension Button.SolidButton.Size {
     func iconSize(_ isIconOnly: Bool = false) -> CGSize {
         switch self {
         case .large:
-            return isIconOnly ? .init(width: 24, height: 24) : .init(width: 20, height: 20)
+            isIconOnly ? .init(width: 24, height: 24) : .init(width: 20, height: 20)
         case .medium:
-            return isIconOnly ? .init(width: 20, height: 20) : .init(width: 18, height: 18)
+            isIconOnly ? .init(width: 20, height: 20) : .init(width: 18, height: 18)
         case .small:
-            return isIconOnly ? .init(width: 18, height: 18) : .init(width: 16, height: 16)
+            isIconOnly ? .init(width: 18, height: 18) : .init(width: 16, height: 16)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
         case .large:
-            return .body1
+            .body1
         case .medium:
-            return .body2
+            .body2
         case .small:
-            return .label2
+            .label2
         }
     }
     
     func edgeInsets(_ isIconOnly: Bool = false) -> UIEdgeInsets {
         switch self {
         case .large:
-            return isIconOnly ? .init(top: 12, left: 12, bottom: 12, right: 12) : .init(top: 12, left: 28, bottom: 12, right: 28)
+            isIconOnly ? .init(top: 12, left: 12, bottom: 12, right: 12) : .init(
+                top: 12,
+                left: 28,
+                bottom: 12,
+                right: 28
+            )
         case .medium:
-            return isIconOnly ? .init(top: 10, left: 10, bottom: 10, right: 10) : .init(top: 9, left: 20, bottom: 9, right: 20)
+            isIconOnly ? .init(top: 10, left: 10, bottom: 10, right: 10) : .init(
+                top: 9,
+                left: 20,
+                bottom: 9,
+                right: 20
+            )
         case .small:
-            return isIconOnly ? .init(top: 7, left: 7, bottom: 7, right: 7) : .init(top: 7, left: 14, bottom: 7, right: 14)
+            isIconOnly ? .init(top: 7, left: 7, bottom: 7, right: 7) : .init(
+                top: 7,
+                left: 14,
+                bottom: 7,
+                right: 14
+            )
         }
     }
     
     var gap: CGFloat {
         switch self {
         case .large:
-            return 6.0
+            6.0
         case .medium:
-            return 5.0
+            5.0
         case .small:
-            return 4.0
+            4.0
         }
     }
     
     var cornerRadius: CGFloat {
         switch self {
         case .large:
-            return 12.0
+            12.0
         case .medium:
-            return 10.0
+            10.0
         case .small:
-            return 8.0
+            8.0
         }
     }
 }

@@ -45,11 +45,11 @@ extension Modal {
     ///
     public struct Popup: View {
         @State private var opacity: CGFloat = .zero
-        
-        private let navigation: (() -> Montage.Modal.Navigation)
-        private let content: (() -> any View)
+
+        private let navigation: () -> Montage.Modal.Navigation
+        private let content: () -> any View
         private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
-        
+
         public init(
             navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
@@ -59,7 +59,7 @@ extension Modal {
             self.content = content
             self.actionArea = actionArea
         }
-        
+
         public var body: some View {
             if #available(iOS 16.4, *) {
                 ZStack {
@@ -125,19 +125,18 @@ extension Modal {
 }
 
 private struct DimmerBackgroundView: UIViewRepresentable {
-    func makeUIView(context: Context) -> some UIView {
+    func makeUIView(context _: Context) -> some UIView {
         let view = UIView()
         DispatchQueue.main.async {
             view.superview?.superview?.backgroundColor = .component(.materialDimmer)
         }
         return view
     }
-    func updateUIView(_ uiView: UIViewType, context: Context) {
-    }
+
+    func updateUIView(_: UIViewType, context _: Context) {}
 }
 
 private struct DimmerBackgroundViewModifier: ViewModifier {
-    
     func body(content: Content) -> some View {
         content
             .background(DimmerBackgroundView())
@@ -146,12 +145,12 @@ private struct DimmerBackgroundViewModifier: ViewModifier {
 
 private extension View {
     func dimmerBackground() -> some View {
-        self.modifier(DimmerBackgroundViewModifier())
+        modifier(DimmerBackgroundViewModifier())
     }
 }
 
 private struct ModalPopupPreivew: View {
-    @State private var show: Bool = false
+    @State private var show = false
     @State private var scrollOffset: CGFloat = .zero
 
     var body: some View {
@@ -210,7 +209,8 @@ private struct ModalPopupPreivew: View {
                         )
                     }
                 )
-            })
+            }
+        )
         .transaction { transaction in
             transaction.disablesAnimations = true
         }

@@ -33,7 +33,7 @@ extension Control {
             }
         }
         
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
@@ -54,7 +54,7 @@ extension Control {
             bindEvent()
         }
         
-        required init?(coder: NSCoder) {
+        required init?(coder _: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
         
@@ -90,10 +90,13 @@ extension Control.Checkbox {
         boxView.topAnchor.constraint(equalTo: topAnchor, constant: boxInsets.top).isActive = true
         boxView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -boxInsets.bottom).isActive = true
         
-        imageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: imageInsets.left).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -imageInsets.right).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: imageInsets.left)
+            .isActive = true
+        imageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -imageInsets.right)
+            .isActive = true
         imageView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: imageInsets.top).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -imageInsets.bottom).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -imageInsets.bottom)
+            .isActive = true
         
         interactionView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         interactionView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -156,29 +159,29 @@ extension Control.Checkbox {
     private func resolveCurrentBackgroundColor() -> CGColor? {
         switch state {
         case .unchecked:
-            return nil
+            nil
         case .checked, .indeterminate:
-            return UIColor.alias(.primaryNormal).cgColor
+            UIColor.alias(.primaryNormal).cgColor
         }
     }
     
     private func resolveCurrentBorderColor() -> CGColor {
         switch state {
         case .unchecked:
-            return UIColor.alias(.lineNormal).cgColor
+            UIColor.alias(.lineNormal).cgColor
         case .checked, .indeterminate:
-            return UIColor.alias(.primaryNormal).cgColor
+            UIColor.alias(.primaryNormal).cgColor
         }
     }
     
     private func resolveCurrentImage() -> UIImage? {
         switch state {
         case .unchecked:
-            return nil
+            nil
         case .checked:
-            return .montage(.checkThick)
+            .montage(.checkThick)
         case .indeterminate:
-            return .montage(.lineHorizontalThick)
+            .montage(.lineHorizontalThick)
         }
     }
 }
@@ -187,18 +190,18 @@ extension Control.Checkbox {
     var containerSize: CGSize {
         switch size {
         case .normal:
-            return .init(width: 24, height: 24)
+            .init(width: 24, height: 24)
         case .small:
-            return .init(width: 20, height: 20)
+            .init(width: 20, height: 20)
         }
     }
     
     var boxInsets: UIEdgeInsets {
         switch size {
         case .normal:
-            return .init(top: 3, left: 3, bottom: 3, right: 3)
+            .init(top: 3, left: 3, bottom: 3, right: 3)
         case .small:
-            return .init(top: 2, left: 2, bottom: 2, right: 2)
+            .init(top: 2, left: 2, bottom: 2, right: 2)
         }
     }
     
@@ -213,18 +216,18 @@ extension Control.Checkbox {
     var interactionSize: CGSize {
         switch size {
         case .normal:
-            return .init(width: 32, height: 32)
+            .init(width: 32, height: 32)
         case .small:
-            return .init(width: 28, height: 28)
+            .init(width: 28, height: 28)
         }
     }
 }
 
 extension Control.Checkbox: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        _: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
     ) -> Bool {
-        return true
+        true
     }
 }

@@ -14,10 +14,10 @@ import SwiftUI
 /// 컴포넌트가 기본적으로 화면 전체를 차지하므로 필요하다면
 /// .frame modifier를 사용하여 크기를 조절하여 사용하시길 권장합니다.
 public struct EmptyState<V: View, C: View>: View {
-    private let image: (() -> V?)
+    private let image: () -> V?
     private let title: String?
     private let description: String
-    private let button: (() -> C)
+    private let button: () -> C
     
     public init(
         image: @escaping (() -> V?) = { nil as AnyView? },

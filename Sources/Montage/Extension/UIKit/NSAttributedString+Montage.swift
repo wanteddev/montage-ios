@@ -17,20 +17,20 @@ extension NSAttributedString {
     ) -> NSAttributedString {
         let font = UIFont.montage(variant: variant, weight: weight)
         let lineHeight = Typography.getLineHeight(variant: variant)
-        
+
         // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/
         let baselineOffset: CGFloat
-        
+
         // 16.4 버전에서 offset 적용이 변경된 것 같아서 버전 분기 추가
         if #available(iOS 16.4, *) {
             baselineOffset = (lineHeight - font.lineHeight) / 2
         } else {
             baselineOffset = (lineHeight - font.lineHeight) / 2 / 2
         }
-        
+
         let foregroundColor = color
         let tracking = Typography.getTracking(variant: variant)
-        
+
         return .init(string: string, attributes: [
             .font: font,
             .tracking: tracking,
@@ -64,7 +64,7 @@ public extension NSAttributedString {
             lineBreakMode: lineBreakMode
         )
     }
-    
+
     static func montage(
         _ string: String,
         variant: Typography.Variant = .body1,
@@ -112,7 +112,7 @@ public extension NSAttributedString {
             lineBreakMode: lineBreakMode
         )
     }
-    
+
     static func montage(
         _ string: String,
         variant: Typography.Variant = .body1,
@@ -126,7 +126,7 @@ public extension NSAttributedString {
             lineBreakMode: .byWordWrapping
         )
     }
-    
+
     static func montage(
         _ string: String
     ) -> NSAttributedString {
@@ -139,7 +139,11 @@ public extension NSAttributedString {
         )
     }
 
-    @available(swift, deprecated: 1.0, message: "alias color 사용 시 montage(_:variant:weight:alias:lineBreakMode:) 사용을 권장합니다.")
+    @available(
+        swift,
+        deprecated: 1.0,
+        message: "alias color 사용 시 montage(_:variant:weight:alias:lineBreakMode:) 사용을 권장합니다."
+    )
     static func montage(
         _ string: String,
         variant: Typography.Variant = .body1,
@@ -156,4 +160,3 @@ public extension NSAttributedString {
         )
     }
 }
-

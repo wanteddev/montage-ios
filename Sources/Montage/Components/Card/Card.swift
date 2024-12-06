@@ -7,4 +7,4 @@
 
 import SwiftUI
 
-public enum Card { }
+public enum Card {}

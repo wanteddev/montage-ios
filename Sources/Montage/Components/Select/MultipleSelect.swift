@@ -49,7 +49,7 @@ extension Select {
         @Binding var focus: Bool
         
         /// MultipleSelect의 활성화(=값이 있는지) 여부입니다.
-        @State private var active: Bool = true
+        @State private var active = true
 
         /// MultipleSelect의 텍스트와 외곽선을 포함하는 영역의 사이즈입니다.
         @State private var contentSize: CGSize = .zero
@@ -114,7 +114,7 @@ extension Select {
             onTap: (() -> Void)? = nil
         ) {
             self.items = items
-            self._focus = focus
+            _focus = focus
             self.render = render
             self.variant = variant
             self.placeholder = placeholder
@@ -122,7 +122,7 @@ extension Select {
             self.heading = heading
             self.requiredBadge = requiredBadge
             self.description = description
-            self.shadowBackgroundColor = backgroundColor
+            shadowBackgroundColor = backgroundColor
             self.leftContent = leftContent
             self.onTapItem = onTapItem
             self.onTap = onTap
@@ -175,7 +175,8 @@ extension Select {
                         .shadow(
                             color: .alias(.staticBlack).opacity(0.03),
                             radius: 2,
-                            x: 0, y: 1
+                            x: 0,
+                            y: 1
                         )
                         .frame(
                             width: contentSize.width,
@@ -230,7 +231,8 @@ extension Select {
                         Button.IconButton(
                             variant: .normal(size: 16),
                             icon: .chevronDownThickSmall,
-                            iconColor: disable ? SwiftUI.Color.alias(.labelDisable) : .alias(.labelAlternative)
+                            iconColor: disable ? SwiftUI.Color
+                                .alias(.labelDisable) : .alias(.labelAlternative)
                         ) {
                             onTap?()
                         }
@@ -249,7 +251,8 @@ extension Select {
                     .shadow(
                         color: .alias(.staticBlack).opacity(0.03),
                         radius: 2,
-                        x: 0, y: 1
+                        x: 0,
+                        y: 1
                     )
                 }
                 
@@ -281,7 +284,7 @@ extension Select {
                     ForEach(Array(items.indices), id: \.self) {
                         let item = items[$0]
                         Montage.Chip.ActionChipController(
-                            variant:.solid,
+                            variant: .solid,
                             size: .xsmall,
                             leftIcon: item.icon,
                             rightIcon: .closeThick,
@@ -302,9 +305,9 @@ extension Select {
                 guard disable == false else { return .alias(.labelDisable) }
                 switch item.state {
                 case .normal:
-                        return .alias(.labelAlternative)
+                    return .alias(.labelAlternative)
                 case .negative:
-                       return  .alias(.statusNegative)
+                    return .alias(.statusNegative)
                 }
             }
 
@@ -312,9 +315,9 @@ extension Select {
                 guard disable == false else { return nil }
                 switch item.state {
                 case .normal:
-                        return nil
+                    return nil
                 case .negative:
-                        return .alias(.statusNegative).opacity(0.05)
+                    return .alias(.statusNegative).opacity(0.05)
                 }
             }
 
@@ -348,9 +351,10 @@ struct MultipleSelect_Preview: PreviewProvider {
             requiredBadge: true,
             description: "메세지에 마침표를 찍어요.",
             leftContent: nil,
-            onTapItem: { _ in print("아이템 터치") }
-        ) {
-            print("컴포넌트 터치")
-        }
+            onTapItem: { _ in print("아이템 터치") },
+            onTap: {
+                print("컴포넌트 터치")
+            }
+        )
     }
 }

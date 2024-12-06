@@ -12,13 +12,13 @@ public final class ToastController: UIHostingController<Toast> {
     
     public convenience init(_ model: Toast.Model) {
         self.init(rootView: Toast(model.variant, message: model.message))
-        self.view.isHidden = true
-        self.view.backgroundColor = .clear
-        self.view.isUserInteractionEnabled = false
+        view.isHidden = true
+        view.backgroundColor = .clear
+        view.isUserInteractionEnabled = false
     }
     
     public func update(_ model: Toast.Model) {
-        self.rootView = Toast(model.variant, message: model.message)
+        rootView = Toast(model.variant, message: model.message)
     }
 
     public func show() {
@@ -41,11 +41,15 @@ public final class ToastController: UIHostingController<Toast> {
     }
     
     public func hide() {
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.view.alpha = 0
-        }) { [weak self] _ in
-            self?.view.isHidden = true
-        }
+        UIView.animate(
+            withDuration: 0.3,
+            animations: { [weak self] in
+                self?.view.alpha = 0
+            },
+            completion: { [weak self] _ in
+                self?.view.isHidden = true
+            }
+        )
 
         animationWorkItem = nil
     }

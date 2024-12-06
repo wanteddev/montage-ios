@@ -68,7 +68,7 @@ extension Badge {
         }
         
         /// 버튼에서 표현될 텍스트입니다.
-        public var text: String = "" {
+        public var text = "" {
             didSet {
                 updateViews()
             }
@@ -101,13 +101,13 @@ extension Badge {
             setupViews()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -118,10 +118,11 @@ extension Badge {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
             let edgeInsets = size.edgeInsets
-            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            let iconCount = [leftIcon, rightIcon].filter { $0 != nil }.count
             
             return .init(
-                width: iconSize.width * CGFloat(iconCount) + size.spacing * CGFloat(iconCount) + textSize.width + edgeInsets.horizontal,
+                width: iconSize.width * CGFloat(iconCount) + size.spacing * CGFloat(iconCount) + textSize
+                    .width + edgeInsets.horizontal,
                 height: max(iconSize.height, textSize.height) + edgeInsets.vertical
             )
         }
@@ -254,44 +255,44 @@ extension Badge.Content.Size {
     var iconSize: CGSize {
         switch self {
         case .normal:
-            return .init(width: 12, height: 12)
+            .init(width: 12, height: 12)
         case .medium:
-            return .init(width: 14, height: 14)
+            .init(width: 14, height: 14)
         case .large:
-            return .init(width: 16, height: 16)
+            .init(width: 16, height: 16)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
         case .normal:
-            return .caption2
+            .caption2
         case .medium:
-            return .caption1
+            .caption1
         case .large:
-            return .label2
+            .label2
         }
     }
     
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .normal:
-            return .init(top: 3, left: 6, bottom: 3, right: 6)
+            .init(top: 3, left: 6, bottom: 3, right: 6)
         case .medium:
-            return .init(top: 4, left: 6, bottom: 4, right: 6)
+            .init(top: 4, left: 6, bottom: 4, right: 6)
         case .large:
-            return .init(top: 5, left: 8, bottom: 5, right: 8)
+            .init(top: 5, left: 8, bottom: 5, right: 8)
         }
     }
 
     var cornerRadius: CGFloat {
         switch self {
         case .normal:
-            return 6.0
+            6.0
         case .medium:
-            return 6.0
+            6.0
         case .large:
-            return 8.0
+            8.0
         }
     }
     
@@ -311,9 +312,9 @@ extension Badge.Content.ColorStyle {
     var contentColor: Color.Alias {
         switch self {
         case .neutral:
-            return .labelAlternative
+            .labelAlternative
         case let .accent(contentColor, _):
-            return contentColor.resolveAsAlias()
+            contentColor.resolveAsAlias()
         }
     }
 }

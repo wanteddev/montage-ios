@@ -96,7 +96,7 @@ public struct TextArea: View {
         rightResource: [Resource] = [],
         rightResourceSpacing: CGFloat = 24
     ) {
-        self._text = text
+        _text = text
         self.resize = resize
         self.variant = variant
         self.focus = focus
@@ -155,7 +155,7 @@ public struct TextArea: View {
     private struct Editor: View {
         @FocusState private var textEditorFocusState: Bool
         @Binding private var text: String
-        @State private var typedCharacters: Int = 0
+        @State private var typedCharacters = 0
 
         private let resize: Resize
         private let variant: Variant
@@ -181,7 +181,7 @@ public struct TextArea: View {
             _ rightResource: [TextArea.Resource],
             _ rightResourceSpacing: CGFloat
         ) {
-            self._text = text
+            _text = text
             self.resize = resize
             self.variant = variant
             self.focus = focus
@@ -196,9 +196,10 @@ public struct TextArea: View {
 
         private var editorStrokeColor: SwiftUI.Color {
             if variant == .negative {
-                return SwiftUI.Color.alias(.statusNegative).opacity(0.43)
+                SwiftUI.Color.alias(.statusNegative).opacity(0.43)
             } else {
-                return textEditorFocusState ? SwiftUI.Color.alias(.primaryNormal).opacity(0.43) : SwiftUI.Color.alias(.lineNormal)
+                textEditorFocusState ? SwiftUI.Color.alias(.primaryNormal).opacity(0.43) : SwiftUI.Color
+                    .alias(.lineNormal)
             }
         }
         
@@ -223,7 +224,7 @@ public struct TextArea: View {
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: 36)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { result in
+                                .onChange(of: text) { _ in
                                     typedCharacters = text.count
                                 }
                                 .scrollContentBackground(.hidden)
@@ -239,7 +240,7 @@ public struct TextArea: View {
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: 36)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { result in
+                                .onChange(of: text) { _ in
                                     typedCharacters = text.count
                                 }
                                 .onAppear {
@@ -259,7 +260,7 @@ public struct TextArea: View {
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: 36, maxHeight: 320)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { result in
+                                .onChange(of: text) { _ in
                                     typedCharacters = text.count
                                 }
                                 .scrollContentBackground(.hidden)
@@ -275,7 +276,7 @@ public struct TextArea: View {
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: 36, maxHeight: 320)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { result in
+                                .onChange(of: text) { _ in
                                     typedCharacters = text.count
                                 }
                                 .onAppear {
@@ -297,7 +298,7 @@ public struct TextArea: View {
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { result in
+                                .onChange(of: text) { _ in
                                     typedCharacters = text.count
                                 }
                                 .scrollContentBackground(.hidden)
@@ -313,7 +314,7 @@ public struct TextArea: View {
                                 .focused($textEditorFocusState)
                                 .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
                                 .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { result in
+                                .onChange(of: text) { _ in
                                     typedCharacters = text.count
                                 }
                                 .onAppear {
@@ -355,7 +356,7 @@ public struct TextArea: View {
                     .stroke(editorStrokeColor, lineWidth: textEditorFocusState ? 2 : 1)
             }
             .background(
-                disable ? SwiftUI.Color.alias(.interactionDisable) :  SwiftUI.Color.clear
+                disable ? SwiftUI.Color.alias(.interactionDisable) : SwiftUI.Color.clear
             )
             .allowsHitTesting(disable == false)
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -383,7 +384,7 @@ public struct TextArea: View {
                 _ rightResources: [TextArea.Resource],
                 _ rightResourceSpacing: CGFloat
             ) {
-                self._typedCharacters = typedCharacters
+                _typedCharacters = typedCharacters
                 self.variant = variant
                 self.disable = disable
                 self.leftResources = leftResources
@@ -410,13 +411,12 @@ public struct TextArea: View {
                                     if
                                         leftResources.contains(where: { leftResource in
                                             if case .characterCount(_) = leftResource {
-                                                return true
+                                                true
                                             } else {
-                                                return false
+                                                false
                                             }
                                         }),
-                                        case .characterCount(_) = rightResource
-                                    {
+                                        case .characterCount(_) = rightResource {
                                         EmptyView()
                                     } else {
                                         component(rightResource)
@@ -425,7 +425,7 @@ public struct TextArea: View {
                                     Button.IconButton(
                                         icon: .circleExclamationFill,
                                         iconColor:
-                                            disable ? .alias(.labelDisable) : .alias(.statusNegative)
+                                        disable ? .alias(.labelDisable) : .alias(.statusNegative)
                                     )
                                 }
                             }
@@ -440,11 +440,19 @@ public struct TextArea: View {
                 case .characterCount(let limit):
                     HStack(spacing: .zero) {
                         Text("\(typedCharacters)")
-                            .montage(variant: .label2, weight: .medium, alias: disable ? .labelDisable : .labelAlternative)
+                            .montage(
+                                variant: .label2,
+                                weight: .medium,
+                                alias: disable ? .labelDisable : .labelAlternative
+                            )
                             .paragraph(variant: .label2)
                         if limit != .zero {
                             Text("/\(String(limit))")
-                                .montage(variant: .label2, weight: .medium, alias: disable ? .labelDisable : .labelAssistive)
+                                .montage(
+                                    variant: .label2,
+                                    weight: .medium,
+                                    alias: disable ? .labelDisable : .labelAssistive
+                                )
                                 .paragraph(variant: .label2)
                         }
                     }
@@ -453,11 +461,11 @@ public struct TextArea: View {
                     Button.TextButton(
                         variant: {
                             if let variant {
-                                return variant
+                                variant
                             } else {
                                 switch placement {
-                                case .left: return .assistive
-                                case .right: return .primary
+                                case .left: .assistive
+                                case .right: .primary
                                 }
                             }
                         }(),
@@ -471,11 +479,11 @@ public struct TextArea: View {
                     Button.IconButton(
                         variant: {
                             if let variant {
-                                return variant
+                                variant
                             } else {
                                 switch placement {
-                                case .left: return .outlined(size: .normal)
-                                case .right: return .solid(size: .small)
+                                case .left: .outlined(size: .normal)
+                                case .right: .solid(size: .small)
                                 }
                             }
                         }(),

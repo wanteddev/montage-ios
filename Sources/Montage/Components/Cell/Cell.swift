@@ -53,7 +53,7 @@ public struct Cell: View {
     }
     
     // MARK: - Body
-    @State private var isPressed: Bool = false
+    @State private var isPressed = false
     
     public var body: some View {
         SwiftUI.Button {
@@ -91,7 +91,7 @@ public struct Cell: View {
                                         alias: disable ? .labelDisable : .labelAlternative
                                     )
                                     .paragraph(variant: .label2)
-                                    .frame(maxWidth: .infinity,alignment: .leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                         
@@ -132,12 +132,12 @@ public struct Cell: View {
     
     private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight) = (.body1, .regular)
     private var padding: Padding = .pt12
-    private var fillWidth: Bool = false
-    private var textEllipsis: Bool = false
+    private var fillWidth = false
+    private var textEllipsis = false
     private var caption: String? = nil
-    private var disable: Bool = false
-    private var active: Bool = false
-    private var divider: Bool = false
+    private var disable = false
+    private var active = false
+    private var divider = false
     private var chevron = false
     private var extraContentMaxHeight: ContentHeight = .pt24
     private var leftContent: () -> AnyView = { AnyView(EmptyView()) }
@@ -252,14 +252,17 @@ extension Cell {
         
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
-                .onGeometryChange(for: CGSize.self, of: { $0.size }) { labelSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
                 .overlay(
                     Decorate.InteractionController(
                         state: configuration.isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .labelNormal
                     )
-                    .frame(width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2), height: labelSize.height)
+                    .frame(
+                        width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2),
+                        height: labelSize.height
+                    )
                     .clipShape(RoundedRectangle(cornerRadius: fillWidth ? 0 : 12))
                 )
         }
@@ -267,9 +270,9 @@ extension Cell {
     
     private var normalTitleColor: Color.Alias {
         if disable {
-            return .labelDisable
+            .labelDisable
         } else {
-            return active ? .primaryNormal : .labelNormal
+            active ? .primaryNormal : .labelNormal
         }
     }
 }

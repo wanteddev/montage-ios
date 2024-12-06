@@ -231,7 +231,7 @@ public enum Color {
         
         public var name: String { rawValue }
         
-        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+        public func resolve(_: UITraitCollection) -> UIColor {
             .load(name: name)
         }
     }
@@ -594,27 +594,27 @@ public enum Color {
         func resolveAsAlias() -> Alias {
             switch self {
             case .primary:
-                return .primaryNormal
+                .primaryNormal
             case .positive:
-                return .statusPositive
+                .statusPositive
             case .cautionary:
-                return .statusCautionary
+                .statusCautionary
             case .negative:
-                return .statusNegative
+                .statusNegative
             case .lime:
-                return .accentLime
+                .accentLime
             case .cyan:
-                return .accentCyan
+                .accentCyan
             case .lightBlue:
-                return .accentLightBlue
+                .accentLightBlue
             case .violet:
-                return .accentViolet
+                .accentViolet
             case .purple:
-                return .accentPurple
+                .accentPurple
             case .pink:
-                return .accentPink
+                .accentPink
             case .redOrange:
-                return .accentRedOrange
+                .accentRedOrange
             }
         }
         
@@ -622,7 +622,7 @@ public enum Color {
             .alias(resolveAsAlias())
         }
         
-        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
+        public func resolve(_: UITraitCollection) -> UIColor {
             .alias(resolveAsAlias())
         }
     }

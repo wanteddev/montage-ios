@@ -7,22 +7,21 @@
 
 import Foundation
 
-
 /// Montage 번들 내에 포함된 Logo 이름들입니다.
 
 public enum Logo {
     case wantedCircleSymbol
     case wantedLogoHorizontal
     case wantedLogoVertical
-    
+
     public var name: String {
         switch self {
         case .wantedCircleSymbol:
-            return "wantedCircleSymbol"
+            "wantedCircleSymbol"
         case .wantedLogoHorizontal:
-            return "wantedLogoHorizontal"
+            "wantedLogoHorizontal"
         case .wantedLogoVertical:
-            return "wantedLogoVertical"
+            "wantedLogoVertical"
         }
     }
 }

@@ -87,21 +87,25 @@ public struct SegmentedControl: View {
                                     UnevenRoundedRectangle(
                                         topLeadingRadius: index == 0 ? buttonCornerRadius : 0,
                                         bottomLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0,
+                                        bottomTrailingRadius: index == items
+                                            .count - 1 ? buttonCornerRadius : 0,
                                         topTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0
                                     )
-                                    .foregroundStyle(buttonBackgroundColor(isSelected: selectedIndex == index))
+                                    .foregroundStyle(buttonBackgroundColor(
+                                        isSelected: selectedIndex ==
+                                            index
+                                    ))
                                     UnevenRoundedRectangle(
                                         topLeadingRadius: index == 0 ? buttonCornerRadius : 0,
                                         bottomLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0,
+                                        bottomTrailingRadius: index == items
+                                            .count - 1 ? buttonCornerRadius : 0,
                                         topTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0
                                     )
                                     .stroke(buttonBorderColor(isSelected: selectedIndex == index))
                                 }
                             }
                         }
-                        
                     }
                 }
             }
@@ -115,9 +119,7 @@ public struct SegmentedControl: View {
         }
         .frame(height: frameHeight)
         .frame(maxWidth: .infinity)
-        .onGeometryChange(for: CGSize.self, of: { $0.size }) {
-            frameSize = $0
-        }
+        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { frameSize = $0 })
         .onChange(of: selectedIndex) { index in
             onSelect(index)
         }
@@ -170,7 +172,7 @@ extension SegmentedControl {
                 .init(top: 2, leading: 2, bottom: 2, trailing: 2)
             }
         case .outlined:
-                .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+            .init(top: 0, leading: 0, bottom: 0, trailing: 0)
         }
     }
     
@@ -192,22 +194,22 @@ extension SegmentedControl {
     private var buttonTitleFont: Typography.Variant {
         switch size {
         case .large:
-                .headline2
+            .headline2
         case .medium:
-                .body2
+            .body2
         case .small:
-                .label2
+            .label2
         }
     }
     
     private var buttonInsets: EdgeInsets {
         switch size {
         case .large:
-                .init(top: 9, leading: 8, bottom: 9, trailing: 8)
+            .init(top: 9, leading: 8, bottom: 9, trailing: 8)
         case .medium:
-                .init(top: 7, leading: 8, bottom: 7, trailing: 8)
+            .init(top: 7, leading: 8, bottom: 7, trailing: 8)
         case .small:
-                .init(top: 5, leading: 6, bottom: 5, trailing: 6)
+            .init(top: 5, leading: 6, bottom: 5, trailing: 6)
         }
     }
     
@@ -225,11 +227,11 @@ extension SegmentedControl {
     private var buttonIconSize: CGSize {
         switch size {
         case .large:
-                .init(width: 20, height: 20)
+            .init(width: 20, height: 20)
         case .medium:
-                .init(width: 18, height: 18)
+            .init(width: 18, height: 18)
         case .small:
-                .init(width: 14, height: 14)
+            .init(width: 14, height: 14)
         }
     }
     
@@ -257,40 +259,65 @@ extension SegmentedControl {
 
 import Pretendard
 struct SegmentControl_Previews: PreviewProvider {
-    @State static var selectedIndex: Int = 0
+    @State static var selectedIndex = 0
     static var previews: some View {
         _ = try? Pretendard.registerFonts()
         return VStack {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
-                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [
+                    .init(image: .montage(.android), title: "Android"),
+                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(title: "Web"),
+                    .init(title: "ETC")
+                ],
                 onSelect: { _ in }
             )
             
             SegmentedControl(
                 selectedIndex: $selectedIndex,
-                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [
+                    .init(image: .montage(.android), title: "Android"),
+                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(title: "Web"),
+                    .init(title: "ETC")
+                ],
                 onSelect: { _ in }
             )
             .size(.medium)
             
             SegmentedControl(
                 selectedIndex: $selectedIndex,
-                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [
+                    .init(image: .montage(.android), title: "Android"),
+                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(title: "Web"),
+                    .init(title: "ETC")
+                ],
                 onSelect: { _ in }
             )
             .size(.small)
             
             SegmentedControl(
                 selectedIndex: $selectedIndex,
-                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [
+                    .init(image: .montage(.android), title: "Android"),
+                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(title: "Web"),
+                    .init(title: "ETC")
+                ],
                 onSelect: { _ in }
             )
             .variant(.outlined)
             
             SegmentedControl(
                 selectedIndex: $selectedIndex,
-                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [
+                    .init(image: .montage(.android), title: "Android"),
+                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(title: "Web"),
+                    .init(title: "ETC")
+                ],
                 onSelect: { _ in }
             )
             .variant(.outlined)
@@ -298,7 +325,12 @@ struct SegmentControl_Previews: PreviewProvider {
             
             SegmentedControl(
                 selectedIndex: $selectedIndex,
-                items: [.init(image: .montage(.android), title: "Android"), .init(image: .montage(.logoApple), title: "iOS"), .init(title: "Web"), .init(title: "ETC")],
+                items: [
+                    .init(image: .montage(.android), title: "Android"),
+                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(title: "Web"),
+                    .init(title: "ETC")
+                ],
                 onSelect: { _ in }
             )
             .variant(.outlined)

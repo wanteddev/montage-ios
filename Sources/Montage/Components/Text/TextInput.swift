@@ -16,7 +16,7 @@ public struct TextInput: View {
     }
     
     @Binding private var text: String
-    @State private var active: Bool = false
+    @State private var active = false
     
     /// TextInput의 외관입니다.
     public var variant: Variant
@@ -69,7 +69,7 @@ public struct TextInput: View {
         rightContent: (() -> any View)? = nil,
         onCommit: (() -> Void)? = nil
     ) {
-        self._text = text
+        _text = text
         self.variant = variant
         self.disable = disable
         self.heading = heading
@@ -108,11 +108,11 @@ public struct TextInput: View {
             if let description {
                 let message: String = {
                     if variant == .positive {
-                        return description.positive ?? description.normal
+                        description.positive ?? description.normal
                     } else if variant == .negative {
-                        return description.negative ?? description.normal
+                        description.negative ?? description.normal
                     } else {
-                        return description.normal
+                        description.normal
                     }
                 }()
                 if message.isEmpty == false {
@@ -147,19 +147,20 @@ public struct TextInput: View {
             if textFieldFocusState {
                 switch variant {
                 case .normal, .positive:
-                    return .alias(.primaryNormal).opacity(0.43)
+                    .alias(.primaryNormal).opacity(0.43)
                 case .negative:
-                    return .alias(.statusNegative).opacity(0.43)
+                    .alias(.statusNegative).opacity(0.43)
                 }
             } else {
                 switch variant {
                 case .normal, .positive:
-                    return .alias(.lineNeutral)
+                    .alias(.lineNeutral)
                 case .negative:
-                    return .alias(.statusNegative).opacity(0.43)
+                    .alias(.statusNegative).opacity(0.43)
                 }
             }
         }
+
         private var placeholderTextColor: SwiftUI.Color {
             disable ? .alias(.labelDisable) : .alias(.labelAssistive)
         }
@@ -183,14 +184,14 @@ public struct TextInput: View {
                             text: $text,
                             prompt: {
                                 if let placeholder {
-                                    return Text(placeholder)
+                                    Text(placeholder)
                                         .montage(
                                             variant: .body1,
                                             weight: .regular,
                                             color: placeholderTextColor
                                         )
                                 } else {
-                                    return nil
+                                    nil
                                 }
                             }()
                         )
@@ -207,10 +208,14 @@ public struct TextInput: View {
                                 .onTapGesture { text = "" }
                         } else {
                             if variant == .positive || variant == .negative {
-                                Image.montage(variant == .positive ? .circleCheckFill : .circleExclamationFill)
+                                Image
+                                    .montage(variant == .positive ? .circleCheckFill : .circleExclamationFill)
                                     .resizable()
                                     .frame(width: 22, height: 22)
-                                    .foregroundStyle(variant == .positive ? SwiftUI.Color.alias(.primaryNormal) : .alias(.statusNegative))
+                                    .foregroundStyle(
+                                        variant == .positive ? SwiftUI.Color
+                                            .alias(.primaryNormal) : .alias(.statusNegative)
+                                    )
                             }
                         }
                         

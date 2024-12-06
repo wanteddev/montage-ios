@@ -11,7 +11,7 @@ public extension Font {
     static func montage(size: CGFloat, weight: Typography.Weight) -> Font {
         .custom(weight.pretendardWeight.fontName, size: size)
     }
-    
+
     static func montage(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular

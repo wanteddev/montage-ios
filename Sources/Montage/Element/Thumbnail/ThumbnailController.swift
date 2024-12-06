@@ -19,13 +19,13 @@ public struct ThumbnailController<V: View>: View {
         ratio: Ratio,
         portrait: Bool,
         width: CGFloat,
-        image: UIImage?
+        image _: UIImage?
     ) {
         self.ratio = ratio
         self.portrait = portrait
         self.width = width
-        self.placeholder = UIImage(named: "placeholder", in: Bundle.module, with: nil)!
-        self.imageLoader = nil
+        placeholder = UIImage(named: "placeholder", in: Bundle.module, with: nil)!
+        imageLoader = nil
     }
     
     public init(
@@ -37,7 +37,7 @@ public struct ThumbnailController<V: View>: View {
         self.ratio = ratio
         self.portrait = portrait
         self.width = width
-        self.placeholder = UIImage(named: "placeholder", in: Bundle.module, with: nil)!
+        placeholder = UIImage(named: "placeholder", in: Bundle.module, with: nil)!
         self.imageLoader = imageLoader
     }
     
@@ -87,7 +87,6 @@ struct ThumbnailControllerPreview: View {
                     ThumbnailController<EmptyView>(ratio: .r1x1, portrait: false, width: 100, image: nil)
                     ThumbnailController<EmptyView>(ratio: .r5x4, portrait: false, width: 100, image: nil)
                     ThumbnailController<EmptyView>(ratio: .r4x3, portrait: false, width: 100, image: nil)
-                    
                 }
                 
                 HStack(alignment: .top) {
@@ -115,4 +114,3 @@ struct ThumbnailController_Previews: PreviewProvider {
         ThumbnailControllerPreview()
     }
 }
-

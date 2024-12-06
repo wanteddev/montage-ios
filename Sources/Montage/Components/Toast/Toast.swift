@@ -94,7 +94,6 @@ public struct Toast: View {
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.alias(.statusPositive))
                         .frame(width: 22, height: 22)
-                    
                 }
             case .warning:
                 ZStack {

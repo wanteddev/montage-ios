@@ -31,7 +31,7 @@ public struct Tab: View {
     ) {
         _selectedIndex = selectedIndex
         self.items = items
-        self.itemWidths = .init(repeating: 0, count: items.count)
+        itemWidths = .init(repeating: 0, count: items.count)
         self.actions = actions
     }
     
@@ -44,10 +44,11 @@ public struct Tab: View {
     @State private var itemWidths: [CGFloat] = []
     
     private let gradientColors = {
-        [1.0, 0.86, 0.73, 0.62 ,0.52, 0.43, 0.35, 0.29, 0.23, 0.18, 0.14, 0.1, 0.07, 0.04, 0.02, 0.0].map {
+        [1.0, 0.86, 0.73, 0.62, 0.52, 0.43, 0.35, 0.29, 0.23, 0.18, 0.14, 0.1, 0.07, 0.04, 0.02, 0.0].map {
             SwiftUI.Color.black.opacity($0)
         }
     }()
+
     private let gradientWidth: CGFloat = 48
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
@@ -73,19 +74,20 @@ public struct Tab: View {
                                             }
                                             actions(index)
                                         }
-                                        .onGeometryChange(for: CGSize.self, of: { $0.size }) {
+                                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
                                             if itemWidths.count > index {
                                                 itemWidths[index] = $0.width
                                             }
-                                        }
+                                        })
                                     }
                                 }
                                 Divider()
                                     .frame(width: itemWidths[safe: selectedIndex] ?? 0, height: 2)
                                     .background(SwiftUI.Color.alias(.labelStrong))
-                                    .offset(x: itemWidths.enumerated()
-                                        .filter { $0.offset < selectedIndex }
-                                        .reduce(0) { $0 + $1.element + (resize == .normal ? 24 : 0) }
+                                    .offset(
+                                        x: itemWidths.enumerated()
+                                            .filter { $0.offset < selectedIndex }
+                                            .reduce(0) { $0 + $1.element + (resize == .normal ? 24 : 0) }
                                     )
                             }
                             Spacer(minLength: 0)
@@ -95,9 +97,17 @@ public struct Tab: View {
                             $0.padding(.leading, padding ? 20 : 0)
                                 .padding(.trailing, padding || icon != nil ? 20 : 0)
                         }
-                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentWidth = $0.width })
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { contentWidth = $0.width }
+                        )
                         .scrollable(.horizontal, contentOffset: $contentOffset)
-                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { scrollViewWidth = $0.width })
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { scrollViewWidth = $0.width }
+                        )
                         .mask {
                             gradientEdge()
                                 .if(resize == .normal) {
@@ -238,9 +248,7 @@ public struct Tab: View {
                     )
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
-                    .onGeometryChange(for: CGSize.self, of: { $0.size }) {
-                        itemWidth = $0.width
-                    }
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { itemWidth = $0.width })
                     .frame(height: itemHeight)
                 
                 SwiftUI.Color.clear

@@ -12,15 +12,15 @@ extension Card {
         @Binding private var skeleton: Bool
         private let imageRatio: Ratio
         private let imageWidth: CGFloat
-        private let imageLoader: (() -> ImageLoader)
-        private let title: (() -> T)
-        private let caption: (() -> C)
-        private let extraCaption : (() -> EC)
-        private let topContent: (() -> TC)
-        private let bottomContent: (() -> BC)
-        
+        private let imageLoader: () -> ImageLoader
+        private let title: () -> T
+        private let caption: () -> C
+        private let extraCaption: () -> EC
+        private let topContent: () -> TC
+        private let bottomContent: () -> BC
+
         @State var overlay: OverlayModel = .init()
-        
+
         public init(
             skeleton: Binding<Bool>,
             imageRatio: Ratio = .r3x2,
@@ -32,13 +32,13 @@ extension Card {
             @ViewBuilder topContent: @escaping (() -> TC) = { EmptyView() },
             @ViewBuilder bottomContent: @escaping (() -> BC) = { EmptyView() }
         ) {
-            self._skeleton = skeleton
+            _skeleton = skeleton
             self.imageRatio = imageRatio
             self.imageWidth = imageWidth
             self.imageLoader = imageLoader
             self.title = title
             self.caption = caption
-            self.extraCaption = extraCpation
+            extraCaption = extraCpation
             self.topContent = topContent
             self.bottomContent = bottomContent
         }
@@ -65,7 +65,6 @@ extension Card {
                 )
                 .skeleton(shape: .rectangle, show: $skeleton)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -75,21 +74,20 @@ extension Card {
 
                         Spacer()
                     }
-                    
+
                     VStack(alignment: .leading, spacing: .zero) {
-                        
                         title()
                             .skeleton(show: $skeleton)
-                        
+
                         caption()
                             .skeleton(show: $skeleton)
                             .padding(.top, 4)
-                        
+
                         extraCaption()
                             .skeleton(show: $skeleton)
                             .padding(.top, 4)
                     }
-                    
+
                     bottomContent()
                         .skeleton(shape: .rectangle, show: $skeleton)
                         .clipShape(RoundedRectangle(cornerRadius: 3))
@@ -104,18 +102,18 @@ extension Card {
 extension Card.Normal {
     private struct ThumbnailOverlayModifier: ViewModifier {
         private let model: OverlayModel
-        
+
         init(model: OverlayModel) {
             self.model = model
         }
-        
+
         private var show: Bool {
             if let caption = model.caption, caption.isEmpty == false {
-                return true
+                true
             } else if model.toggleIcon != nil {
-                return true
+                true
             } else {
-                return false
+                false
             }
         }
 
@@ -153,7 +151,7 @@ extension Card.Normal {
                                     }
                                     .padding(.bottom, 6)
                                 }
-                                
+
                                 if let icons = model.toggleIcon {
                                     Montage.Button.IconButton(
                                         icon: model.toggleIsOn ? icons.on : icons.off,
@@ -187,7 +185,7 @@ extension Card.Normal {
         let toggleIsOn: Bool
         let toggleIcon: (on: Montage.Icon, off: Montage.Icon)?
         let onToggleTap: (() -> Void)?
-        
+
         public init(
             caption: String? = nil,
             toggleIsOn: Bool = false,
@@ -205,7 +203,7 @@ extension Card.Normal {
 extension Card.Normal {
     /// Card Normal의 overlay를 표시합니다.
     public func overlay(_ model: OverlayModel) -> Self {
-        self.overlay = model
+        overlay = model
         return self
     }
 }
@@ -219,7 +217,7 @@ import Pretendard
         imageWidth: 240,
         imageLoader: {
             AsyncImage(
-                url: URL(string:"https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
+                url: URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
             ) { phase in
                 if let image = phase.image {
                     image
@@ -270,4 +268,3 @@ import Pretendard
         onToggleTap: { print("hello") }
     ))
 }
-

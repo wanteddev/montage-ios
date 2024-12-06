@@ -5,15 +5,15 @@
 //  Created by Euigyom Kim on 2023/04/26.
 //
 
-import UIKit
 import Pretendard
+import UIKit
 
 extension Badge {
     /// 특정 요소에 대한 알림을 표시할 수 있는 뱃지입니다
     public class Push: UIView {
         private enum Const {
             static let defaultDotSize: CGSize = .init(width: 4, height: 4)
-            static let defaultNumberLimit: Int = 1000
+            static let defaultNumberLimit = 1000
         }
         
         public enum Variant: Equatable {
@@ -48,13 +48,13 @@ extension Badge {
             setupViews()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -76,7 +76,7 @@ extension Badge {
             let height = textSize.height + edgeInsets.vertical
 
             return .init(
-                width:  width < 20 ? 20 : width,
+                width: width < 20 ? 20 : width,
                 height: height < 20 ? 20 : height
             )
         }
@@ -181,10 +181,10 @@ extension Badge.Push {
 extension Badge.Push {
     private func getText() -> String? {
         switch variant {
-        case .dot: return nil
-        case .new: return "N"
+        case .dot: nil
+        case .new: "N"
         case .number(let number):
-            return number >= Const.defaultNumberLimit ? "999+" : "\(number)"
+            number >= Const.defaultNumberLimit ? "999+" : "\(number)"
         }
     }
     
@@ -224,11 +224,11 @@ extension Badge.Push.Variant {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .dot:
-            return .init(top: 8, left: 8, bottom: 8, right: 8)
+            .init(top: 8, left: 8, bottom: 8, right: 8)
         case .number:
-            return .init(top: 3, left: 6, bottom: 3, right: 6)
+            .init(top: 3, left: 6, bottom: 3, right: 6)
         case .new:
-            return .init(top: 3, left: 6, bottom: 3, right: 6)
+            .init(top: 3, left: 6, bottom: 3, right: 6)
         }
     }
     

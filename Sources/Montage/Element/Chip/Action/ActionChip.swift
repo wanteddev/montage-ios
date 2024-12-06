@@ -57,21 +57,21 @@ extension Chip {
         }
         
         /// 칩에서 표현될 텍스트입니다.
-        public var text: String = "" {
+        public var text = "" {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 터치 활성화 여부입니다.
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
         }
 
         /// 칩의 선택 여부 입니다.
-        public var active: Bool = false {
+        public var active = false {
             didSet {
                 updateColors()
             }
@@ -145,13 +145,13 @@ extension Chip {
             bindEvent()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -162,7 +162,7 @@ extension Chip {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
             let edgeInsets = size.contentsEdgeInsets
-            let iconCount = [leftIcon, rightIcon].filter({ $0 != nil }).count
+            let iconCount = [leftIcon, rightIcon].filter { $0 != nil }.count
             let iconWidths = iconSize.width * CGFloat(iconCount)
             let spacings = size.contentsGap * CGFloat(iconCount)
             let textLabelPaddings = size.textLabelPadding * 2
@@ -264,7 +264,7 @@ extension Chip.Action {
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ]
         
-        constraints.forEach({ $0.priority = .defaultLow })
+        constraints.forEach { $0.priority = .defaultLow }
         NSLayoutConstraint.activate(constraints)
         stackViewConstraints = constraints
     }
@@ -347,32 +347,32 @@ extension Chip.Action {
 extension Chip.Action {
     private func resolveBackgroundColor() -> UIColor {
         if disable {
-            return variant.disableBackgroundColor
+            variant.disableBackgroundColor
         } else if active {
             if let activeUIColor {
-                return activeUIColor
+                activeUIColor
             } else {
-                return variant.activeBackgroundColor
+                variant.activeBackgroundColor
             }
         } else {
             if let backgroundUIColor {
-                return backgroundUIColor
+                backgroundUIColor
             } else {
-               return  variant.backgroundColor
+                variant.backgroundColor
             }
         }
     }
     
     private func currentTextUIColor() -> UIColor {
         if disable {
-            return .alias(.labelDisable)
+            .alias(.labelDisable)
         } else if active {
-            return variant.activeTextUIColor
+            variant.activeTextUIColor
         } else {
             if let fontUIColor {
-                return fontUIColor
+                fontUIColor
             } else {
-                return .alias(.labelNormal)
+                .alias(.labelNormal)
             }
         }
     }
@@ -388,17 +388,17 @@ extension Chip.Action {
     
     private func resolveCurrentIconColor() -> UIColor {
         if let iconUIColor {
-            return iconUIColor
+            iconUIColor
         } else {
-            return .alias(.labelAlternative)
+            .alias(.labelAlternative)
         }
     }
     
     private func resolveInteractionColor() -> Color.Alias {
         if active, variant == .outlined {
-            return .primaryNormal
+            .primaryNormal
         } else {
-            return .labelNormal
+            .labelNormal
         }
     }
 }
@@ -430,10 +430,10 @@ extension Chip.Action {
 
 extension Chip.Action: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        _: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
     ) -> Bool {
-        return true
+        true
     }
 }
 
@@ -441,45 +441,45 @@ extension Chip.Action.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .solid:
-            return .component(.fillAlternative)
+            .component(.fillAlternative)
         case .outlined:
-            return .clear
+            .clear
         }
     }
     
     var borderWidth: CGFloat {
         switch self {
         case .solid:
-            return 0
+            0
         case .outlined:
-            return 1
+            1
         }
     }
     
     var disableBackgroundColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.interactionDisable)
+            .alias(.interactionDisable)
         case .outlined:
-            return .clear
+            .clear
         }
     }
     
     var activeBackgroundColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.inverseBackground)
+            .alias(.inverseBackground)
         case .outlined:
-            return .alias(.primaryNormal).withAlphaComponent(0.05)
+            .alias(.primaryNormal).withAlphaComponent(0.05)
         }
     }
     
     var activeTextUIColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.inverseLabel)
+            .alias(.inverseLabel)
         case .outlined:
-            return .alias(.primaryNormal)
+            .alias(.primaryNormal)
         }
     }
 }
@@ -488,52 +488,52 @@ extension Chip.Action.Size {
     var iconSize: CGSize {
         switch self {
         case .large:
-            return .init(width: 16, height: 16)
+            .init(width: 16, height: 16)
         case .normal:
-            return .init(width: 14, height: 14)
+            .init(width: 14, height: 14)
         case .small:
-            return .init(width: 14, height: 14)
+            .init(width: 14, height: 14)
         case .xsmall:
-            return .init(width: 12, height: 12)
+            .init(width: 12, height: 12)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
         case .large:
-            return .body2
+            .body2
         case .normal:
-            return .label1
+            .label1
         case .small:
-            return .label1
+            .label1
         case .xsmall:
-            return .caption1
+            .caption1
         }
     }
     
     var contentsEdgeInsets: UIEdgeInsets {
         switch self {
         case .large:
-            return .init(top: 9, left: 12, bottom: 9, right: 12)
+            .init(top: 9, left: 12, bottom: 9, right: 12)
         case .normal:
-            return .init(top: 7, left: 11, bottom: 7, right: 11)
+            .init(top: 7, left: 11, bottom: 7, right: 11)
         case .small:
-            return .init(top: 6, left: 8, bottom: 6, right: 8)
+            .init(top: 6, left: 8, bottom: 6, right: 8)
         case .xsmall:
-            return .init(top: 4, left: 7, bottom: 4, right: 7)
+            .init(top: 4, left: 7, bottom: 4, right: 7)
         }
     }
     
     var contentsGap: CGFloat {
         switch self {
         case .large:
-            return 3
+            3
         case .normal:
-            return 3
+            3
         case .small:
-            return 2
+            2
         case .xsmall:
-            return 2
+            2
         }
     }
     
@@ -549,13 +549,13 @@ extension Chip.Action.Size {
     var cornerRadius: CGFloat {
         switch self {
         case .large:
-            return 10.0
+            10.0
         case .normal:
-            return 8.0
+            8.0
         case .small:
-            return 8.0
+            8.0
         case .xsmall:
-            return 6.0
+            6.0
         }
     }
 }

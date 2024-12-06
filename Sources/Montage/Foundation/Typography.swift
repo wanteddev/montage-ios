@@ -5,9 +5,9 @@
 //  Created by Eunyeong Kim on 2021/04/13.
 //
 
+import Pretendard
 import SwiftUI
 import UIKit
-import Pretendard
 
 public enum Typography {
     /// 타이포의 굵기를 정의하는 파라미터입니다.
@@ -45,33 +45,33 @@ public enum Typography {
 public extension Typography.Weight {
     var uiFontWeight: UIFont.Weight {
         switch self {
-        case .regular: return .regular
-        case .medium: return .medium
-        case .bold: return .bold
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .bold
         }
     }
 
     var fontWeight: Font.Weight {
         switch self {
-        case .regular: return .regular
-        case .medium: return .medium
-        case .bold: return .bold
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .bold
         }
     }
     
     var pretendardWeight: Pretendard.Weight {
         switch self {
-        case .regular: return .regular
-        case .medium: return .medium
-        case .bold: return .semibold
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .semibold
         }
     }
     
     var failbackWeight: UIFont.Weight {
         switch self {
-        case .regular: return .regular
-        case .medium: return .medium
-        case .bold: return .semibold
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .semibold
         }
     }
 }
@@ -80,59 +80,59 @@ public extension Typography {
     static func getSementicWeight(variant: Variant, weight: Weight) -> Pretendard.Weight {
         switch (variant, weight) {
         case (.title1, .bold), (.title2, .bold), (.title3, .bold):
-            return .bold
+            .bold
         default:
-            return weight.pretendardWeight
+            weight.pretendardWeight
         }
     }
     
     static func getFailbackWeight(variant: Variant, weight: Weight) -> UIFont.Weight {
         switch (variant, weight) {
         case (.title1, .bold), (.title2, .bold), (.title3, .bold):
-            return .bold
+            .bold
         default:
-            return weight.failbackWeight
+            weight.failbackWeight
         }
     }
     
     static func getSementicSize(variant: Variant) -> CGFloat {
         switch variant {
         case .display1:
-            return 56
+            56
         case .display2:
-            return 40
+            40
         case .title1:
-            return 36
+            36
         case .title2:
-            return 28
+            28
         case .title3:
-            return 24
+            24
         case .heading1:
-            return 22
+            22
         case .heading2:
-            return 20
+            20
         case .headline1:
-            return 18
+            18
         case .headline2:
-            return 17
+            17
         case .body1:
-            return 16
+            16
         case .body1Reading:
-            return 16
+            16
         case .body2:
-            return 15
+            15
         case .body2Reading:
-            return 15
+            15
         case .label1:
-            return 14
+            14
         case .label1Reading:
-            return 14
+            14
         case .label2:
-            return 13
+            13
         case .caption1:
-            return 12
+            12
         case .caption2:
-            return 11
+            11
         }
     }
     
@@ -185,41 +185,41 @@ public extension Typography {
     static func getLineHeight(variant: Variant) -> CGFloat {
         switch variant {
         case .display1:
-            return 72
+            72
         case .display2:
-            return 52
+            52
         case .title1:
-            return 48
+            48
         case .title2:
-            return 38
+            38
         case .title3:
-            return 32
+            32
         case .heading1:
-            return 30
+            30
         case .heading2:
-            return 28
+            28
         case .headline1:
-            return 26
+            26
         case .headline2:
-            return 24
+            24
         case .body1:
-            return 24
+            24
         case .body1Reading:
-            return 26
+            26
         case .body2:
-            return 22
+            22
         case .body2Reading:
-            return 24
+            24
         case .label1:
-            return 20
+            20
         case .label1Reading:
-            return 22
+            22
         case .label2:
-            return 18
+            18
         case .caption1:
-            return 16
+            16
         case .caption2:
-            return 14
+            14
         }
     }
 }
@@ -228,41 +228,41 @@ public extension Typography.Variant {
     var lineSpacing: CGFloat {
         switch self {
         case .display1:
-            return 5
+            5
         case .display2:
-            return 4.6667
+            4.6667
         case .title1:
-            return 5
+            5
         case .title2:
-            return 4.6667
+            4.6667
         case .title3:
-            return 3.3333
+            3.3333
         case .heading1:
-            return 3.6667
+            3.6667
         case .heading2:
-            return 4
+            4
         case .headline2:
-            return 1.6667
+            1.6667
         case .headline1:
-            return 1.6667
+            1.6667
         case .body1:
-            return 5
+            5
         case .body1Reading:
-            return 7
+            7
         case .body2:
-            return 4
+            4
         case .body2Reading:
-            return 6
+            6
         case .label1:
-            return 3.3333
+            3.3333
         case .label1Reading:
-            return 5.3333
+            5.3333
         case .label2:
-            return 3.3333
+            3.3333
         case .caption1:
-            return 1.6667
+            1.6667
         case .caption2:
-            return 1
+            1
         }
     }
     

@@ -8,18 +8,27 @@
 import SwiftUI
 
 extension Card {
-    public struct List<ImageLoader: View, T: View, C: View, EC: View, TC: View, BC: View, LC: View, RC: View>: View {
+    public struct List<
+        ImageLoader: View,
+        T: View,
+        C: View,
+        EC: View,
+        TC: View,
+        BC: View,
+        LC: View,
+        RC: View
+    >: View {
         @Binding private var skeleton: Bool
         private let imageRatio: Ratio
         private let imageWidth: CGFloat
-        private let imageLoader: (() -> ImageLoader)
-        private let title: (() -> T)
-        private let caption: (() -> C)
-        private let extraCaption : (() -> EC)
-        private let topContent: (() -> TC)
-        private let bottomContent: (() -> BC)
-        private let leftContent: (() -> LC)
-        private let rightContent: (() -> RC)
+        private let imageLoader: () -> ImageLoader
+        private let title: () -> T
+        private let caption: () -> C
+        private let extraCaption: () -> EC
+        private let topContent: () -> TC
+        private let bottomContent: () -> BC
+        private let leftContent: () -> LC
+        private let rightContent: () -> RC
         
         public init(
             skeleton: Binding<Bool>,
@@ -34,7 +43,7 @@ extension Card {
             @ViewBuilder leftContent: @escaping (() -> LC) = { EmptyView() },
             @ViewBuilder rightContent: @escaping (() -> RC) = { EmptyView() }
         ) {
-            self._skeleton = skeleton
+            _skeleton = skeleton
             self.imageRatio = imageRatio
             self.imageWidth = imageWidth
             self.imageLoader = imageLoader
@@ -49,7 +58,6 @@ extension Card {
 
         public var body: some View {
             HStack(alignment: .center, spacing: .zero) {
-                
                 leftContent()
                     .padding(.trailing, 12)
                 
@@ -76,7 +84,6 @@ extension Card {
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                     VStack(alignment: .leading, spacing: .zero) {
-                        
                         title()
                             .skeleton(show: $skeleton)
                         
@@ -113,7 +120,7 @@ import Pretendard
         imageWidth: 96,
         imageLoader: {
             AsyncImage(
-                url: URL(string:"https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
+                url: URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
             ) { phase in
                 if let image = phase.image {
                     image
@@ -165,4 +172,3 @@ import Pretendard
         }
     )
 }
-

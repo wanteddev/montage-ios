@@ -15,37 +15,37 @@ extension Skeleton {
         private var configuration: Skeleton.Configuration? = nil
         
         @Binding var originalSize: CGSize
-        @State private var animate: Bool = false
+        @State private var animate = false
         
         private var cornerRadius: CGFloat {
             if let r = configuration?.borderRadius {
-                return r
+                r
             } else {
-                return 3
+                3
             }
         }
         
         private var width: CGFloat {
             if let w = configuration?.width {
-                return w
+                w
             } else {
-                return originalSize.width * length.rawValue
+                originalSize.width * length.rawValue
             }
         }
         
         private var height: CGFloat {
             if let h = configuration?.height {
-                return h
+                h
             } else {
-                return originalSize.height
+                originalSize.height
             }
         }
         
         private var foregroundColor: SwiftUI.Color {
             if let c = configuration?.color {
-                return c
+                c
             } else {
-                return .component(.fillNormal)
+                .component(.fillNormal)
             }
         }
         
@@ -58,7 +58,7 @@ extension Skeleton {
             self.position = position
             self.length = length
             self.configuration = configuration
-            self._originalSize = originalSize
+            _originalSize = originalSize
         }
 
         public var body: some View {
@@ -90,7 +90,7 @@ extension Skeleton {
             model: Skeleton.Model,
             configuration: Skeleton.Configuration? = nil
         ) {
-            self._show = show
+            _show = show
             self.model = model
             self.configuration = configuration
         }
@@ -98,7 +98,7 @@ extension Skeleton {
         public func body(content: Content) -> some View {
             content
                 .opacity(show == false ? 1 : .zero)
-                .onGeometryChange(for: CGSize.self, of: { $0.size }) { originalSize = $0 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { originalSize = $0 })
                 .if(show) {
                     $0.overlay(alignment: model.align.alignment) {
                         Skeleton.Text(

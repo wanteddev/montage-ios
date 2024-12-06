@@ -56,14 +56,14 @@ extension Chip {
         }
         
         /// 칩에서 표현될 텍스트입니다.
-        public var text: String = "" {
+        public var text = "" {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 선택 여부입니다.
-        public var active: Bool = false {
+        public var active = false {
             didSet {
                 updateViews()
             }
@@ -78,7 +78,7 @@ extension Chip {
         }
         
         /// 칩의 활성화 여부입니다.
-        public var disable: Bool = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
@@ -134,13 +134,13 @@ extension Chip {
             bindEvent()
         }
         
-        public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             
             updateViews()
         }
         
-        public override func layoutSubviews() {
+        override public func layoutSubviews() {
             super.layoutSubviews()
             
             setupLayer()
@@ -243,7 +243,7 @@ extension Chip.Filter {
             contentsWrapperView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom)
         ]
         
-        constraints.forEach({ $0.priority = .defaultLow })
+        constraints.forEach { $0.priority = .defaultLow }
         NSLayoutConstraint.activate(constraints)
         contentsWrapperViewConstraints = constraints
     }
@@ -256,8 +256,14 @@ extension Chip.Filter {
         let contentsPadding = size.contentsPadding
         
         let constraints = [
-            stackView.leftAnchor.constraint(equalTo: contentsWrapperView.leftAnchor, constant: contentsPadding),
-            stackView.rightAnchor.constraint(equalTo: contentsWrapperView.rightAnchor, constant: -contentsPadding),
+            stackView.leftAnchor.constraint(
+                equalTo: contentsWrapperView.leftAnchor,
+                constant: contentsPadding
+            ),
+            stackView.rightAnchor.constraint(
+                equalTo: contentsWrapperView.rightAnchor,
+                constant: -contentsPadding
+            ),
             stackView.topAnchor.constraint(equalTo: contentsWrapperView.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: contentsWrapperView.bottomAnchor)
         ]
@@ -303,14 +309,14 @@ extension Chip.Filter {
     
     private func getAttributedText() -> NSAttributedString {
         if active, let activeLabel {
-            return ._montage(
+            ._montage(
                 activeLabel,
                 variant: size.typoVariant,
                 weight: .medium,
                 color: currentTextUIColor()
             )
         } else {
-            return ._montage(
+            ._montage(
                 text,
                 variant: size.typoVariant,
                 weight: .medium,
@@ -323,24 +329,24 @@ extension Chip.Filter {
 extension Chip.Filter {
     private func resolveCurrnetBackgroundColor() -> UIColor {
         if disable {
-            return variant.disableBackgroundColor
+            variant.disableBackgroundColor
         } else if active {
-            return variant.activeBackgroundColor
+            variant.activeBackgroundColor
         } else {
-            return variant.backgroundColor
+            variant.backgroundColor
         }
     }
 
     private func currentTextUIColor() -> UIColor {
         if disable {
-            return .alias(.labelDisable)
+            .alias(.labelDisable)
         } else if active {
-            return variant.activeTextUIColor
+            variant.activeTextUIColor
         } else {
             if let fontUIColor {
-                return fontUIColor
+                fontUIColor
             } else {
-                return .alias(.labelNormal)
+                .alias(.labelNormal)
             }
         }
     }
@@ -356,23 +362,23 @@ extension Chip.Filter {
     
     private func resolveArrowIconTintColor() -> UIColor {
         if disable {
-            return .alias(.labelDisable)
+            .alias(.labelDisable)
         } else if active {
-            return variant.activeArrowColor
+            variant.activeArrowColor
         } else {
             if let iconUIColor {
-                return iconUIColor
+                iconUIColor
             } else {
-                return .alias(.labelNormal)
+                .alias(.labelNormal)
             }
         }
     }
     
     private func resolveInteractionColor() -> Color.Alias {
         if active, variant == .outlined {
-            return .primaryNormal
+            .primaryNormal
         } else {
-            return .labelNormal
+            .labelNormal
         }
     }
 }
@@ -399,54 +405,54 @@ extension Chip.Filter.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .solid:
-            return .component(.fillAlternative)
+            .component(.fillAlternative)
         case .outlined:
-            return .clear
+            .clear
         }
     }
 
     var borderWidth: CGFloat {
         switch self {
         case .solid:
-            return .zero
+            .zero
         case .outlined:
-            return 1
+            1
         }
     }
     
     var disableBackgroundColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.interactionDisable)
+            .alias(.interactionDisable)
         case .outlined:
-            return .clear
+            .clear
         }
     }
     
     var activeBackgroundColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.inverseBackground)
+            .alias(.inverseBackground)
         case .outlined:
-            return .alias(.primaryNormal).withAlphaComponent(0.05)
+            .alias(.primaryNormal).withAlphaComponent(0.05)
         }
     }
     
     var activeTextUIColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.inverseLabel)
+            .alias(.inverseLabel)
         case .outlined:
-            return .alias(.primaryNormal)
+            .alias(.primaryNormal)
         }
     }
     
     var activeArrowColor: UIColor {
         switch self {
         case .solid:
-            return .alias(.inverseLabel)
+            .alias(.inverseLabel)
         case .outlined:
-            return .alias(.labelNormal)
+            .alias(.labelNormal)
         }
     }
 }
@@ -455,9 +461,9 @@ extension Chip.Filter.State {
     var icon: Icon {
         switch self {
         case .normal:
-            return .caretDown
+            .caretDown
         case .expand:
-            return .caretUp
+            .caretUp
         }
     }
 }
@@ -466,52 +472,52 @@ extension Chip.Filter.Size {
     var iconSize: CGSize {
         switch self {
         case .large:
-            return .init(width: 16, height: 16)
+            .init(width: 16, height: 16)
         case .normal:
-            return .init(width: 16, height: 16)
+            .init(width: 16, height: 16)
         case .small:
-            return .init(width: 16, height: 16)
+            .init(width: 16, height: 16)
         case .xsmall:
-            return .init(width: 12, height: 12)
+            .init(width: 12, height: 12)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
         case .large:
-            return .body2
+            .body2
         case .normal:
-            return .body2
+            .body2
         case .small:
-            return .label1
+            .label1
         case .xsmall:
-            return .caption1
+            .caption1
         }
     }
     
     var contentsEdgeInsets: UIEdgeInsets {
         switch self {
         case .large:
-            return .init(top: 9, left: 12, bottom: 9, right: 10)
+            .init(top: 9, left: 12, bottom: 9, right: 10)
         case .normal:
-            return .init(top: 7, left: 11, bottom: 7, right: 9)
+            .init(top: 7, left: 11, bottom: 7, right: 9)
         case .small:
-            return .init(top: 6, left: 8, bottom: 6, right: 6)
+            .init(top: 6, left: 8, bottom: 6, right: 6)
         case .xsmall:
-            return .init(top: 4, left: 7, bottom: 4, right: 5)
+            .init(top: 4, left: 7, bottom: 4, right: 5)
         }
     }
     
     var contentsGap: CGFloat {
         switch self {
         case .large:
-            return 2.0
+            2.0
         case .normal:
-            return 2.0
+            2.0
         case .small:
-            return 1.0
+            1.0
         case .xsmall:
-            return 1.0
+            1.0
         }
     }
     
@@ -527,14 +533,13 @@ extension Chip.Filter.Size {
     var cornerRadius: CGFloat {
         switch self {
         case .large:
-            return 10.0
+            10.0
         case .normal:
-            return 10.0
+            10.0
         case .small:
-            return 8.0
+            8.0
         case .xsmall:
-            return 6.0
+            6.0
         }
     }
 }
-

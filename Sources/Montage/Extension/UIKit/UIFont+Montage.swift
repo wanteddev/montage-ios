@@ -5,14 +5,14 @@
 //  Created by Eunyeong Kim on 2021/04/13.
 //
 
-import UIKit
 import Pretendard
+import UIKit
 
 public extension UIFont {
     static func montage(size: CGFloat, weight: Typography.Weight) -> UIFont? {
         UIFont(name: weight.pretendardWeight.fontName, size: size)
     }
-    
+
     static func montage(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular

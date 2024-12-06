@@ -5,8 +5,8 @@
 //  Created by Euigyom Kim on 2023/04/25.
 //
 
-import SwiftUI
 import Pretendard
+import SwiftUI
 
 extension Badge {
     public struct ContentBadgeController: UIViewRepresentable {
@@ -46,11 +46,11 @@ extension Badge {
             self.text = text
         }
         
-        public func makeUIView(context: Context) -> UIViewType {
+        public func makeUIView(context _: Context) -> UIViewType {
             .init()
         }
         
-        public func updateUIView(_ uiView: UIViewType, context: Context) {
+        public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.variant = variant
             uiView.size = size
             uiView.colorStyle = color
@@ -59,15 +59,19 @@ extension Badge {
             uiView.text = text
         }
         
-        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        public func sizeThatFits(
+            _ proposal: ProposedViewSize,
+            uiView: UIViewType,
+            context _: Context
+        ) -> CGSize? {
             CGSize(
                 width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
                 height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
             )
         }
         
-        private var fillHorizontal: Bool = false
-        private var fillVertical: Bool = false
+        private var fillHorizontal = false
+        private var fillVertical = false
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
             zelf.fillHorizontal = fillHorizontal
@@ -78,7 +82,7 @@ extension Badge {
 }
 
 fileprivate struct Preview: View {
-    @State var text: String = "안녕하세요"
+    @State var text = "안녕하세요"
 
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
@@ -121,41 +125,68 @@ fileprivate struct Preview: View {
             VStack(alignment: .leading) {
                 HStack {
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.primary), leftIcon: .montage(.circleInfoFill), text: "중요"
+                        variant: .solid,
+                        color: .accent(.primary),
+                        leftIcon: .montage(.circleInfoFill),
+                        text: "중요"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.positive), leftIcon: .montage(.circleCheckFill), text: "긍정"
+                        variant: .solid,
+                        color: .accent(.positive),
+                        leftIcon: .montage(.circleCheckFill),
+                        text: "긍정"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.cautionary), leftIcon: .montage(.circleExclamationFill), text: "경고"
+                        variant: .solid,
+                        color: .accent(.cautionary),
+                        leftIcon: .montage(.circleExclamationFill),
+                        text: "경고"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.negative), leftIcon: .montage(.circleClose), text: "에러"
+                        variant: .solid,
+                        color: .accent(.negative),
+                        leftIcon: .montage(.circleClose),
+                        text: "에러"
                     )
                 }
     
                 HStack {
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.lime), rightIcon: Image(systemName: "rectangle.fill"), text: "라임"
+                        variant: .solid,
+                        color: .accent(.lime),
+                        rightIcon: Image(systemName: "rectangle.fill"),
+                        text: "라임"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.cyan), rightIcon: Image(systemName: "rectangle.fill"), text: "시안"
+                        variant: .solid,
+                        color: .accent(.cyan),
+                        rightIcon: Image(systemName: "rectangle.fill"),
+                        text: "시안"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.lightBlue), rightIcon: Image(systemName: "rectangle.fill"), text: "라이트 블루"
+                        variant: .solid,
+                        color: .accent(.lightBlue),
+                        rightIcon: Image(systemName: "rectangle.fill"),
+                        text: "라이트 블루"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.violet), rightIcon: Image(systemName: "rectangle.fill"), text: "바이올렛"
+                        variant: .solid,
+                        color: .accent(.violet),
+                        rightIcon: Image(systemName: "rectangle.fill"),
+                        text: "바이올렛"
                     )
     
                     Badge.ContentBadgeController(
-                        variant: .solid, color: .accent(.pink), rightIcon: Image(systemName: "rectangle.fill"), text: "핑크"
+                        variant: .solid,
+                        color: .accent(.pink),
+                        rightIcon: Image(systemName: "rectangle.fill"),
+                        text: "핑크"
                     )
                 }
             }

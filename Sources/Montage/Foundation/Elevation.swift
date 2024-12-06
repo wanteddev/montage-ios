@@ -24,10 +24,10 @@ extension Elevation {
         let color: UIColor?
         let alpha: CGFloat
     }
-    
+
     var descriptor: Descriptor {
         let shadowColor = UIColor.alias(.staticBlack)
-        
+
         switch self {
         case .none:
             return .init(offset: .init(width: 0, height: -3), blur: 0, color: nil, alpha: 0)

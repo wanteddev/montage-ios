@@ -24,7 +24,7 @@ extension Decorate {
             self.variant = variant
             self.color = color
         }
-        
+
         public var body: some View {
             Rectangle()
                 .foregroundStyle(SwiftUI.Color.alias(color))
