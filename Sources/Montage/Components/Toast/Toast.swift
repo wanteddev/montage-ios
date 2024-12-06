@@ -11,10 +11,16 @@ public struct Toast: View {
     public struct Model: Equatable {
         let variant: Toast.Variant
         let message: String
+        let location: Toast.Location
         
-        public init(_ variant: Toast.Variant = .message, message: String) {
+        public init(
+            _ variant: Toast.Variant = .message,
+            message: String,
+            location: Toast.Location = .bottom(offset: .zero)
+        ) {
             self.variant = variant
             self.message = message
+            self.location = location
         }
     }
 
@@ -25,23 +31,43 @@ public struct Toast: View {
         case custom(Montage.Icon, tint: Montage.Color.Alias? = nil)
     }
     
+    public enum Location: Equatable {
+        case top(offset: CGFloat = .zero)
+        case bottom(offset: CGFloat = .zero)
+    }
+    
     private let variant: Variant
     private let message: String
+    private let location: Location
     
     init(
         _ variant: Variant = .message,
-        message: String = ""
+        message: String = "",
+        _ location: Location = .bottom(offset: .zero)
     ) {
         self.variant = variant
         self.message = message
+        self.location = location
     }
     
     public var body: some View {
-        VStack {
-            Spacer()
-            Contents(variant, message)
-                .padding(.horizontal, 20)
+        switch location {
+        case .top(let offset):
+            VStack {
+                Contents(variant, message)
+                    .padding(.horizontal, 20)
+                    .padding(.top, offset)
+                Spacer()
+            }
+        case .bottom(let offset):
+            VStack {
+                Spacer()
+                Contents(variant, message)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, offset)
+            }
         }
+        
     }
     
     fileprivate struct Contents: View {
@@ -160,7 +186,7 @@ extension Toast {
         @ViewBuilder
         private func toast() -> some View {
             if let model {
-                Toast(model.variant, message: model.message)
+                Toast(model.variant, message: model.message, model.location)
             }
         }
         
