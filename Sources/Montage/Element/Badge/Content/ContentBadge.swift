@@ -235,7 +235,7 @@ extension Badge.Content {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, variant: size.typoVariant, weight: .medium, color: colorStyle.contentColor)
+        .montage(text, variant: size.typoVariant, weight: .medium, alias: colorStyle.contentColor)
     }
 }
 
