@@ -67,7 +67,6 @@ public struct Toast: View {
                     .padding(.bottom, offset)
             }
         }
-        
     }
     
     fileprivate struct Contents: View {
