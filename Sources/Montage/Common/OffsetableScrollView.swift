@@ -57,10 +57,4 @@ struct OffsettableScrollView<T: View>: View {
         zelf.showsIndicators = showsIndicators
         return zelf
     }
-
-    func refreshable(_ onRefresh: () -> Void) -> Self {
-        var zelf = self
-        zelf.refreshable { onRefresh() }
-        return zelf
-    }
 }
