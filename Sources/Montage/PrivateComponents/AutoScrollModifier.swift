@@ -24,9 +24,9 @@ struct AutoScrollModifier: ViewModifier {
         Group {
             if scrollNotNeeded == false {
                 OffsettableScrollView {
-                    contentView(content)
-                } onOffsetChanged: {
                     contentOffset = $0
+                } content: {
+                    contentView(content)
                 }
                 .axis(axis)
                 .showIndicators(false)
