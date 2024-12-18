@@ -254,3 +254,11 @@ extension View {
         modifier(AutoScrollModifier(axis: axis, contentOffset: contentOffset))
     }
 }
+
+// MARK: Pull To Refresh
+
+extension View {
+    public func pullToRefresh(_ refresh: @escaping () async -> Void) -> some View {
+        modifier(PullToRefreshModifier(refreshData: refresh))
+    }
+}
