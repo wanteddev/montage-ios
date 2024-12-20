@@ -32,7 +32,7 @@ extension View {
                     pasteBoard.string = message
                 } label: {
                     StrokeText(text: message, font: font ?? .system(size: 12), color: .gray.opacity(0.5))
-                        .lineLimit(1)
+                        .multilineTextAlignment(.center)
                         .foregroundColor(.red)
                         .padding(3)
                 }
