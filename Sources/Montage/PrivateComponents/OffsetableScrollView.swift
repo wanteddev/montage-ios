@@ -9,15 +9,15 @@ import SwiftUI
 
 struct OffsettableScrollView<T: View>: View {
     // MARK: - Initializer
-    private let content: () -> T
     private let onOffsetChanged: (CGPoint) -> Void
+    private let content: () -> T
 
     init(
-        @ViewBuilder content: @escaping () -> T,
-        onOffsetChanged: @escaping (CGPoint) -> Void = { _ in }
+        onOffsetChanged: @escaping (CGPoint) -> Void = { _ in },
+        @ViewBuilder content: @escaping () -> T
     ) {
-        self.content = content
         self.onOffsetChanged = onOffsetChanged
+        self.content = content
     }
 
     // MARK: - Body
