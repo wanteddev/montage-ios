@@ -132,6 +132,11 @@ public struct PullToRefreshModifier: ViewModifier {
                     self.phase = .refreshing
                 }
             case .refreshing:
+                if !isScrolling {
+                    isClearRectNeeded = true
+                    pullToRefreshViewHeight = hangingHeight
+                    clearRectHeight = hangingHeight
+                }
                 task?.cancel()
                 task = Task {
                     await refresh()
