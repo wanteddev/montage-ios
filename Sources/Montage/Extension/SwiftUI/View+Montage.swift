@@ -262,3 +262,25 @@ extension View {
         modifier(PullToRefreshModifier(scrollYOffset: scrollYOffset, refresh: refresh))
     }
 }
+
+// MARK: DatePicker, TimePicker
+
+extension View {
+    public func datePicker(selectedDate: Binding<Date>, in range: ClosedRange<Date> = Date.distantPast...Date.distantFuture) -> some View {
+        overlay {
+            DatePicker(selection: selectedDate, in: range, displayedComponents: .date) {}
+                .labelsHidden()
+                .contentShape(Rectangle())
+                .colorMultiply(.clear)
+        }
+    }
+    
+    public func timePicker(selectedDate: Binding<Date>, in range: ClosedRange<Date> = Date.distantPast...Date.distantFuture) -> some View {
+        overlay {
+            DatePicker(selection: selectedDate, in: range, displayedComponents: .hourAndMinute) {}
+                .labelsHidden()
+                .contentShape(Rectangle())
+                .colorMultiply(.clear)
+        }
+    }
+}
