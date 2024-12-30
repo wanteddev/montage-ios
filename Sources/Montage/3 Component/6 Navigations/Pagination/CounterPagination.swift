@@ -39,9 +39,13 @@ extension Pagination {
                     RoundedRectangle(cornerRadius: height / 2)
                         .fill(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
                 } else {
-                    Rectangle()
-                        .background(.regularMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: height / 2))
+                    ZStack {
+                        Rectangle()
+                            .fill(.ultraThinMaterial)
+                            .clipShape(RoundedRectangle(cornerRadius: height / 2))
+                        RoundedRectangle(cornerRadius: height / 2)
+                            .fill(SwiftUI.Color.atomic(.globalCoolNeutral70).opacity(0.70))
+                    }
                 }
             }
         }
