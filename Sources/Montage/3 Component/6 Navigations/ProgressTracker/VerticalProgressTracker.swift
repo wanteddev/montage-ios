@@ -20,16 +20,12 @@ extension ProgressTracker {
                 self.labelAccessoryView = labelAccessoryView
                 self.contentView = contentView
             }
-
-//            @State private var textHeight: CGFloat = .zero
             
             public var body: some View {
                 ZStack(alignment: .topLeading) {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(alignment: .center, spacing: 6) {
                             text
-//                                .padding(.top, (20 - textHeight) / 2)
-//                            Spacer(minLength: 6)
                             labelAccessoryView()
                         }
                         .frame(height: 20)
@@ -37,11 +33,6 @@ extension ProgressTracker {
                         
                         contentView()
                     }
-                    
-//                    Text("Dummy")
-//                        .montage(variant: .label2, weight: .bold)
-//                        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { textHeight = $0 })
-//                        .opacity(0)
                 }
             }
             
