@@ -12,3 +12,13 @@ struct SafeAreaInsetsKey: EnvironmentKey {
         (UIApplication.keyWindow?.safeAreaInsets ?? .zero).insets
     }
 }
+
+public protocol SceneDelegateProtocol {
+    var windowScene: UIWindowScene? { get }
+}
+
+public struct WindowSceneKey: EnvironmentKey {
+    public static var defaultValue: UIWindowScene? {
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegateProtocol)?.windowScene
+    }
+}

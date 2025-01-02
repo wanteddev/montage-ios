@@ -284,3 +284,11 @@ extension View {
         }
     }
 }
+
+// MARK: Float
+
+extension View {
+    public func float<C: View>(isPresented: Binding<Bool>, content: @escaping () -> C) -> some View {
+        modifier(FloatModifier(isPresented: isPresented, content: content))
+    }
+}

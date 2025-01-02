@@ -11,4 +11,8 @@ extension EnvironmentValues {
     var safeAreaInsets: EdgeInsets {
         self[SafeAreaInsetsKey.self]
     }
+
+    public var windowScene: UIWindowScene? {
+        self[WindowSceneKey.self]
+    }
 }
