@@ -5,26 +5,26 @@
 //  Created by 김삼열 on 12/18/24.
 //
 
-import SwiftUI
 import Lottie
+import SwiftUI
 
 public struct PullToRefreshModifier: ViewModifier {
     @Binding private var scrollYOffset: CGFloat
     private let refresh: () async -> Void
     
     public init(scrollYOffset: Binding<CGFloat>, refresh: @escaping () async -> Void) {
-        self._scrollYOffset = scrollYOffset
+        _scrollYOffset = scrollYOffset
         self.refresh = refresh
     }
     
     @State private var phase: AnimatingLogo.Phase = .idle
     @State private var task: Task<Void, Never>?
     
-    @State private var isScrolling: Bool = false
+    @State private var isScrolling = false
     // 리프레시를 트리거링 할 가능성이 있는 '트리거스크롤'이 진행중임을 의미하는 플래그
-    @State private var isTriggerScrolling: Bool = false
+    @State private var isTriggerScrolling = false
     // 스크롤 옵셋을 임의로 조정하기 위한 '투명뷰'의 필요 여부를 나타내는 플래그
-    @State private var isClearRectNeeded: Bool = false
+    @State private var isClearRectNeeded = false
     
     // 로고 자체 높이(최초 셋팅 이후 고정값)
     @State private var logoHeight: CGFloat = .zero
@@ -66,15 +66,15 @@ public struct PullToRefreshModifier: ViewModifier {
             }
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                    .onChanged({ value in
+                    .onChanged { _ in
                         isScrolling = true
                         
                         if phase.beforeRefreshing {
                             // 현재 스크롤이 트리거스크롤임
                             isTriggerScrolling = true
                         }
-                    })
-                    .onEnded({ value in
+                    }
+                    .onEnded { value in
                         // 리프레시가 시작된 후 스크롤이 끝났을 때
                         if phase.isRefreshing {
                             // 투명뷰를 추가한다.
@@ -88,7 +88,8 @@ public struct PullToRefreshModifier: ViewModifier {
                         }
                         
                         // 리프레시가 끝나기 전에 스크롤을 드래그하여 위로 던지는 경우
-                        if phase.isRefreshing && (value.predictedEndTranslation.height < 0 || scrollYOffset < 0) {
+                        if phase
+                            .isRefreshing && (value.predictedEndTranslation.height < 0 || scrollYOffset < 0) {
                             task?.cancel()
                         }
                         
@@ -102,7 +103,7 @@ public struct PullToRefreshModifier: ViewModifier {
                         
                         isTriggerScrolling = false
                         isScrolling = false
-                    })
+                    }
             )
         }
         .onChange(of: scrollYOffset) { scrollPosition in
@@ -178,29 +179,29 @@ private struct AnimatingLogo: View {
         
         var beforeRefreshing: Bool {
             switch self {
-            case .idle, .pulledDown: return true
-            default: return false
+            case .idle, .pulledDown: true
+            default: false
             }
         }
         
         var isRefreshing: Bool {
             switch self {
-            case .refreshing: return true
-            default: return false
+            case .refreshing: true
+            default: false
             }
         }
         
         var isWaitingToEnd: Bool {
             switch self {
-            case .waitingToEnd: return true
-            default: return false
+            case .waitingToEnd: true
+            default: false
             }
         }
         
         var isEnding: Bool {
             switch self {
-            case .ending: return true
-            default: return false
+            case .ending: true
+            default: false
             }
         }
     }
@@ -208,20 +209,20 @@ private struct AnimatingLogo: View {
     @Binding private var phase: Phase
     
     init(phase: Binding<Phase>) {
-        self._phase = phase
+        _phase = phase
     }
     
     @State private var playbackMode: LottiePlaybackMode = .playing(.toMarker("Loop", loopMode: .playOnce))
-    @State private var scale: CGSize = CGSize(width: 1, height: 1)
+    @State private var scale = CGSize(width: 1, height: 1)
     @State private var opacity: Double = 1
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         LottieView(animation: .named(jsonName, bundle: .module))
             .playbackMode(playbackMode)
-            .configure({
+            .configure {
                 $0.contentMode = .scaleAspectFit
-            })
+            }
             .configuration(LottieConfiguration(renderingEngine: .automatic))
             .resizable()
             .scaledToFill()
@@ -238,11 +239,11 @@ private struct AnimatingLogo: View {
                 case .refreshing:
                     UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                     withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 0.25)) {
-                        self.scale = CGSize(width: 1.1, height: 1.1)
+                        scale = CGSize(width: 1.1, height: 1.1)
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                         withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 0.25)) {
-                            self.scale = CGSize(width: 1, height: 1)
+                            scale = CGSize(width: 1, height: 1)
                         }
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

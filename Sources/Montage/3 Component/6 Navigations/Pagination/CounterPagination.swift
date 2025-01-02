@@ -16,20 +16,32 @@ extension Pagination {
         @Binding private var selectedPage: Int
         private let totalPages: Int
         public init(selectedPage: Binding<Int>, totalPages: Int) {
-            self._selectedPage = selectedPage
+            _selectedPage = selectedPage
             self.totalPages = totalPages
         }
         
         public var body: some View {
             HStack(spacing: 4) {
                 Text("\(selectedPage)")
-                    .montage(variant: typography, weight: .bold, color: .alias(.staticWhite).opacity(alternative ? 88 : 74))
+                    .montage(
+                        variant: typography,
+                        weight: .bold,
+                        color: .alias(.staticWhite).opacity(alternative ? 88 : 74)
+                    )
                     .paragraph(variant: typography)
                 Text("/")
-                    .montage(variant: typography, weight: .regular, color: .alias(.staticWhite).opacity(alternative ? 52 : 28))
+                    .montage(
+                        variant: typography,
+                        weight: .regular,
+                        color: .alias(.staticWhite).opacity(alternative ? 52 : 28)
+                    )
                     .paragraph(variant: typography)
                 Text("\(totalPages)")
-                    .montage(variant: typography, weight: .bold, color: .alias(.staticWhite).opacity(alternative ? 88 : 74))
+                    .montage(
+                        variant: typography,
+                        weight: .bold,
+                        color: .alias(.staticWhite).opacity(alternative ? 88 : 74)
+                    )
                     .paragraph(variant: typography)
             }
             .padding(.horizontal, horizontalPadding)
@@ -51,7 +63,7 @@ extension Pagination {
         }
         
         private var size: Size = .normal
-        private var alternative: Bool = false
+        private var alternative = false
         
         public func size(_ size: Size) -> Self {
             var zelf = self
@@ -67,36 +79,36 @@ extension Pagination {
         
         private var typography: Typography.Variant {
             switch size {
-            case .normal: return .body2
-            case .small: return .label2
+            case .normal: .body2
+            case .small: .label2
             }
         }
         
         private var width: CGFloat {
             switch size {
-            case .normal: return 62
-            case .small: return 52
+            case .normal: 62
+            case .small: 52
             }
         }
         
         private var height: CGFloat {
             switch size {
-            case .normal: return 34
-            case .small: return 26
+            case .normal: 34
+            case .small: 26
             }
         }
         
         private var horizontalPadding: CGFloat {
             switch size {
-            case .normal: return 12
-            case .small: return 10
+            case .normal: 12
+            case .small: 10
             }
         }
         
         private var verticalPadding: CGFloat {
             switch size {
-            case .normal: return 6
-            case .small: return 4
+            case .normal: 6
+            case .small: 4
             }
         }
     }
