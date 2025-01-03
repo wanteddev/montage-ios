@@ -12,7 +12,7 @@ extension EnvironmentValues {
         self[SafeAreaInsetsKey.self]
     }
 
-    public var windowScene: UIWindowScene? {
-        self[WindowSceneKey.self]
+    public var floatingWindow: FloatingWindow? {
+        self[FloatingWindowKey.self]
     }
 }
