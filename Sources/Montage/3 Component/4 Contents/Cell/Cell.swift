@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct Cell: View {
     // MARK: - Types
-    /// Cell의 좌우 컨텐츠 크기를 나타내는 열거형입니다.
+    /// 좌우 컨텐츠 크기를 나타내는 열거형입니다.
     public enum ContentHeight {
         case pt24
         case pt40
@@ -24,7 +24,7 @@ public struct Cell: View {
         }
     }
     
-    /// Cell의 상하 여백을 나타내는 열거형입니다.
+    /// 상하 여백을 나타내는 열거형입니다.
     public enum Padding {
         case pt8
         case pt12
@@ -186,49 +186,49 @@ public struct Cell: View {
         return zelf
     }
     
-    /// Cell의 비활성화 여부를 조정합니다. 기본값은 `false`입니다.
+    /// 비활성화 여부를 조정합니다. 기본값은 `false`입니다.
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
         zelf.disable = disable
         return zelf
     }
 
-    /// Cell을 활성화 상태로 만듭니다. 타이틀 텍스트의 색상을 `primaryNormal`로 변경하고 `rightContent(_ contents: @escaping (Bool) -> some View)`의 입력 클로져의 파라메터로 활성화 여부를 받을 수 있습니다.
+    /// 활성화 상태로 만듭니다. 타이틀 텍스트의 색상을 `primaryNormal`로 변경하고 `rightContent(_ contents: @escaping (Bool) -> some View)`의 입력 클로져의 파라메터로 활성화 여부를 받을 수 있습니다.
     public func active(_ active: Bool = true) -> Self {
         var zelf = self
         zelf.active = active
         return zelf
     }
     
-    /// Cell 아래에 구분선을 추가합니다. 기본값은 `false`입니다.
+    /// 아래에 구분선을 추가합니다. 기본값은 `false`입니다.
     public func divider(_ divider: Bool = true) -> Self {
         var zelf = self
         zelf.divider = divider
         return zelf
     }
     
-    /// Cell 우측에 chevron 을 추가합니다.
+    /// 우측에 chevron 을 추가합니다.
     public func chevron(_ chevron: Bool = true) -> Self {
         var zelf = self
         zelf.chevron = chevron
         return zelf
     }
     
-    /// Cell 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.pt24`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
+    /// 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.pt24`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
     public func contentHeight(_ contentHeight: ContentHeight) -> Self {
         var zelf = self
         zelf.extraContentMaxHeight = contentHeight
         return zelf
     }
     
-    /// Cell의 좌측 컨텐츠를 지정합니다.
+    /// 좌측 컨텐츠를 지정합니다.
     public func leftContent(_ contents: @escaping () -> some View) -> Self {
         var zelf = self
         zelf.leftContent = { AnyView(contents()) }
         return zelf
     }
     
-    /// Cell의 우측 컨텐츠를 지정합니다.
+    /// 우측 컨텐츠를 지정합니다.
     public func rightContent(_ contents: @escaping (Bool) -> some View) -> Self {
         var zelf = self
         zelf.rightContent = { AnyView(contents(active)) }
@@ -245,29 +245,6 @@ public struct Cell: View {
 
 // MARK: - Private
 extension Cell {
-    struct InteractiveCellStyle: ButtonStyle {
-        let fillWidth: Bool
-        let interactionPadding: CGFloat
-        @State private var labelSize: CGSize = .zero
-        
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
-                .overlay(
-                    Decorate.InteractionController(
-                        state: configuration.isPressed ? .pressed : .normal,
-                        variant: .light,
-                        color: .labelNormal
-                    )
-                    .frame(
-                        width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2),
-                        height: labelSize.height
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: fillWidth ? 0 : 12))
-                )
-        }
-    }
-    
     private var normalTitleColor: Color.Alias {
         if disable {
             .labelDisable
