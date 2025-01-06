@@ -126,10 +126,10 @@ public struct MeasureView: View {
                     Text("\(Int(value))")
                         .font(.system(size: 6))
                         .background {
-                            Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.5)
+                            Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
                         }
                 }
-                .foregroundStyle(.red.opacity(0.25))
+                .foregroundStyle(.red.opacity(0.4))
             case .vertical:
                 ZStack {
                     VStack(spacing: 0) {
@@ -144,13 +144,13 @@ public struct MeasureView: View {
                     .frame(height: CGFloat(value))
                     Rectangle()
                         .frame(width: 1, height: CGFloat(value))
-                    Text("\(value)")
+                    Text("\(Int(value))")
                         .font(.system(size: 6))
                         .background {
-                            Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.5)
+                            Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
                         }
                 }
-                .foregroundStyle(.red.opacity(0.25))
+                .foregroundStyle(.red.opacity(0.4))
             default:
                 EmptyView()
             }
@@ -174,9 +174,9 @@ public struct MeasureBoxView: View {
                 .overlay {
                     Text("\(Int(width))x\(Int(height))")
                         .font(.system(size: 6))
-                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.5))
+                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
                 }
-                .foregroundStyle(.red.opacity(0.25))
+                .foregroundStyle(.red.opacity(0.4))
         }
     }
 }

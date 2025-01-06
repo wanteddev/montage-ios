@@ -49,53 +49,55 @@ public struct Accordion<A: View, C: View>: View {
     @State private var contentSize: CGSize = .zero
     
     public var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            SwiftUI.Button {
-                withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
-                    isExpanded.toggle()
-                }
-            } label: {
-                HStack(alignment: .top, spacing: 0) {
-                    Text(title)
-                        .montage(variant: titleTypography.variant, weight: titleTypography.weight, color: titleTypography.color)
-                        .paragraph(variant: titleTypography.variant)
-                    Spacer(minLength: 0)
-                    
-                    accessory()
-                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { accessorySize = $0 })
-                    
-                    if accessorySize == .zero {
-                        Image.montage(.chevronDown)
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .padding(2)
-                            .rotationEffect(.degrees(isExpanded ? 180 : 0))
+        ZStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 0) {
+                SwiftUI.Button {
+                    withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
+                        isExpanded.toggle()
                     }
-                }
-                .frame(minHeight: 24)
-                .padding(.vertical, padding.length)
-                .contentShape(Rectangle())
-                .padding(.horizontal, fillWidth ? 20 : 0)
-            }
-            .buttonStyle(InteractiveCellStyle(fillWidth: fillWidth, interactionPadding: 12))
-            
-            if isExpanded {
-                VStack(alignment: .leading, spacing: 0) {
-                    if !description.isEmpty {
-                        Text(description)
-                            .montage(variant: descriptionTypography.variant, weight: descriptionTypography.weight, color: descriptionTypography.color)
-                            .paragraph(variant: descriptionTypography.variant)
+                } label: {
+                    HStack(alignment: .top, spacing: 0) {
+                        Text(title)
+                            .montage(variant: titleTypography.variant, weight: titleTypography.weight, color: titleTypography.color)
+                            .paragraph(variant: titleTypography.variant)
+                        Spacer(minLength: 0)
+                        
+                        accessory()
+                            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { accessorySize = $0 })
+                        
+                        if accessorySize == .zero {
+                            Image.montage(.chevronDown)
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .padding(2)
+                                .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                        }
                     }
-                    
-                    Spacer().frame(height: 12)
-                        .if(!description.isEmpty && contentSize != .zero)
-                    
-                    content().onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+                    .frame(minHeight: 24)
+                    .padding(.vertical, padding.length)
+                    .contentShape(Rectangle())
+                    .padding(.horizontal, fillWidth ? 20 : 0)
                 }
-                .padding(.bottom, description.isEmpty && contentSize == .zero ? 0 : padding.length)
-                .padding(.horizontal, fillWidth ? 20 : 0)
+                .buttonStyle(InteractiveCellStyle(fillWidth: fillWidth, interactionPadding: 12))
+                
+                if isExpanded {
+                    VStack(alignment: .leading, spacing: 0) {
+                        if !description.isEmpty {
+                            Text(description)
+                                .montage(variant: descriptionTypography.variant, weight: descriptionTypography.weight, color: descriptionTypography.color)
+                                .paragraph(variant: descriptionTypography.variant)
+                        }
+                        
+                        Spacer().frame(height: 12)
+                            .if(!description.isEmpty && contentSize != .zero)
+                        
+                        content().onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+                    }
+                    .padding(.bottom, description.isEmpty && contentSize == .zero ? 0 : 16)
+                    .padding(.horizontal, fillWidth ? 20 : 0)
+                }
             }
-            
+                
             Rectangle()
                 .frame(height: 1)
                 .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
