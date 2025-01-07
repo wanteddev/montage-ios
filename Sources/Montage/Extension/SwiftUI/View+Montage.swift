@@ -64,7 +64,7 @@ extension View {
 // MARK: Toast
 
 extension View {
-    public func toast(_ model: Binding<Toast.Model?>) -> some View {
+    public func legacyToast(_ model: Binding<Toast.Model?>) -> some View {
         modifier(Toast.LegacyToastModifier(model: model))
     }
 
@@ -302,26 +302,16 @@ extension View {
 
 extension View {
     public func float<C: View>(
-        presenting: Binding<(isPresented: Bool, animated: Bool)>,
-        dismissWhenDisappearing: Bool = true,
-        content: @escaping () -> C
-    ) -> some View {
-        modifier(FloatModifier(
-            presenting: presenting,
-            dismissWhenDisappearing: dismissWhenDisappearing,
-            content: content
-        ))
-    }
-
-    public func float<C: View>(
         isPresented: Binding<Bool>,
-        dismissWhenDisappearing: Bool = true,
+        dismissAfterWhile: (seconds: Int, animated: Bool) = (.zero, true),
         content: @escaping () -> C
     ) -> some View {
-        modifier(FloatModifier(
-            isPresented: isPresented,
-            dismissWhenDisappearing: dismissWhenDisappearing,
-            content: content
-        ))
+        modifier(
+            FloatModifier(
+                isPresented: isPresented,
+                dismissAfterWhile: dismissAfterWhile,
+                content: content
+            )
+        )
     }
 }

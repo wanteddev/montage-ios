@@ -225,41 +225,22 @@ extension Toast {
             self.model = model
         }
         
-        @State private var floatPresenting = (isPresented: false, animated: false)
         @State private var animationWorkItem: DispatchWorkItem?
+        private let floatingDismissAfterWhile = (seconds: 2, animated: true)
         
         public func body(content: Content) -> some View {
             content
-                .float(presenting: $floatPresenting, dismissWhenDisappearing: false) {
+                .float(
+                    isPresented: $isPresented,
+                    dismissAfterWhile: floatingDismissAfterWhile
+                ) {
                     Toast(model.variant, message: model.message, model.location)
                 }
                 .onChange(of: isPresented) { isPresented in
                     if isPresented {
-                        floatPresenting = (isPresented: true, animated: false)
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        dismissAfterWhile()
                     }
                 }
-        }
-        
-        private func dismissAfterWhile() {
-            animationWorkItem?.cancel()
-            
-            let task = DispatchWorkItem { [self] in
-                self.dismissToast()
-            }
-            animationWorkItem = task
-            
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + 2.0,
-                execute: task
-            )
-        }
-        
-        private func dismissToast() {
-            floatPresenting = (isPresented: false, animated: true)
-            animationWorkItem?.cancel()
-            animationWorkItem = nil
         }
     }
 }

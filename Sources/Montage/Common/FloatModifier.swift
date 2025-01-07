@@ -11,30 +11,16 @@ import SwiftUI
 public struct FloatModifier<C: View>: ViewModifier {
     @Environment(\.floatingWindow) private var floatingWindow
 
-    @Binding private var presenting: (isPresented: Bool, animated: Bool)
-    private let dismissWhenDisappearing: Bool
+    @Binding private var isPresented: Bool
+    private let dismissAfterWhile: (seconds: Int, animated: Bool)
     private let floatingView: () -> C
     public init(
-        presenting: Binding<(isPresented: Bool, animated: Bool)>,
-        dismissWhenDisappearing: Bool = true,
-        content: @escaping () -> C
-    ) {
-        _presenting = presenting
-        self.dismissWhenDisappearing = dismissWhenDisappearing
-        floatingView = content
-    }
-
-    public init(
         isPresented: Binding<Bool>,
-        dismissWhenDisappearing: Bool = true,
+        dismissAfterWhile: (seconds: Int, animated: Bool),
         content: @escaping () -> C
     ) {
-        _presenting = Binding(
-            get: { (isPresented: isPresented.wrappedValue, animated: false)
-            },
-            set: { isPresented.wrappedValue = $0.isPresented }
-        )
-        self.dismissWhenDisappearing = dismissWhenDisappearing
+        _isPresented = isPresented
+        self.dismissAfterWhile = dismissAfterWhile
         floatingView = content
     }
 
@@ -50,7 +36,7 @@ public struct FloatModifier<C: View>: ViewModifier {
                 .opacity(0)
             content
         }
-        .if(floatingWindow == nil && presenting.isPresented) {
+        .if(floatingWindow == nil && isPresented) {
             $0.overlay(alignment: .center) {
                 floatingView()
             }
@@ -59,7 +45,7 @@ public struct FloatModifier<C: View>: ViewModifier {
             defer { viewDidLoad = true }
             viewDidDisappear = false
 
-            if !viewDidLoad || dismissWhenDisappearing {
+            if !viewDidLoad {
                 viewHash = floatingWindow?.addSubview(swiftUIView: rootView) ?? 0
                 floatingWindow?.layoutSubview(hashValue: viewHash, size: size)
                 floatingWindow?.setSubviewHidden(hashValue: viewHash, hidden: true)
@@ -68,23 +54,31 @@ public struct FloatModifier<C: View>: ViewModifier {
         .onChange(of: size) { _ in
             floatingWindow?.layoutSubview(hashValue: viewHash, size: size)
         }
-        .onChange(of: presenting.isPresented) { _ in
+        .onChange(of: isPresented) { _ in
             floatingWindow?.setSubviewHidden(
                 hashValue: viewHash,
-                hidden: !presenting.isPresented,
-                animated: presenting.animated
+                hidden: !isPresented,
+                rollBackAfterWhile: (
+                    seconds: dismissAfterWhile.seconds,
+                    animated: dismissAfterWhile.animated,
+                    completion: {
+                        isPresented = false
+                    }
+                )
             )
-            if !presenting.isPresented {
-                if dismissWhenDisappearing && viewDidDisappear {
-                    floatingWindow?.removeSubView(hashValue: viewHash)
-                }
-            }
         }
         .onDisappear {
             defer { viewDidDisappear = true }
 
-            if dismissWhenDisappearing {
-                presenting = (isPresented: false, animated: false)
+            if dismissAfterWhile.seconds == 0 {
+                isPresented = false
+            }
+
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + .seconds(
+                    dismissAfterWhile.seconds
+                )
+            ) {
                 floatingWindow?.removeSubView(hashValue: viewHash)
             }
         }
@@ -100,6 +94,8 @@ public struct FloatModifier<C: View>: ViewModifier {
 }
 
 public class FloatingWindow: UIWindow {
+    private var dismissDispatchWorkItem: DispatchWorkItem?
+
     override public init(windowScene: UIWindowScene) {
         super.init(windowScene: windowScene)
         rootViewController = UIViewController()
@@ -141,13 +137,43 @@ public class FloatingWindow: UIWindow {
         }
     }
 
-    func setSubviewHidden(hashValue: Int, hidden: Bool, animated: Bool = false) {
-        if animated {
-            UIView.animate(withDuration: 0.35) {
-                self.findSubview(hashValue)?.alpha = hidden ? 0 : 1
+    func setSubviewHidden(
+        hashValue: Int,
+        hidden: Bool,
+        rollBackAfterWhile: (
+            seconds: Int,
+            animated: Bool,
+            completion: () -> Void
+        ) = (seconds: 0, animated: false, completion: {})
+    ) {
+        findSubview(hashValue)?.alpha = hidden ? 0 : 1
+
+        if rollBackAfterWhile.seconds > 0, hidden == false {
+            if dismissDispatchWorkItem != nil {
+                dismissDispatchWorkItem?.cancel()
             }
-        } else {
-            findSubview(hashValue)?.alpha = hidden ? 0 : 1
+
+            dismissDispatchWorkItem = DispatchWorkItem {
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + .seconds(rollBackAfterWhile.seconds)
+                ) {
+                    if rollBackAfterWhile.animated {
+                        UIView.animate(
+                            withDuration: 0.35,
+                            animations: {
+                                self.findSubview(hashValue)?.alpha = hidden ? 1 : 0
+                            },
+                            completion: { _ in
+                                rollBackAfterWhile.completion()
+                            }
+                        )
+                    } else {
+                        self.findSubview(hashValue)?.alpha = hidden ? 1 : 0
+                        rollBackAfterWhile.completion()
+                    }
+                }
+            }
+            dismissDispatchWorkItem?.perform()
         }
     }
 
