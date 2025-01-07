@@ -27,8 +27,6 @@ extension ProgressTracker {
         
         public var body: some View {
             ZStack {
-                let lineLength = (size.width - (stepperSize.width * CGFloat(labels.count))) / CGFloat(labels.count - 1)
-                
                 HStack(alignment: .center, spacing: 0) {
                     ForEach(labels.indices, id: \.self) { index in
                         let alignment: HorizontalAlignment = .center
