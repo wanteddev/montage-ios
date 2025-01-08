@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct Toast: View {
     public struct Model: Equatable {
+        private let id = UUID()
         let variant: Toast.Variant
         let message: String
         let location: Toast.Location
@@ -218,11 +219,11 @@ extension Toast {
     
     public struct ToastModifier: ViewModifier {
         @Binding private var isPresented: Bool
-        private let model: Toast.Model
+        @Binding private var model: Toast.Model?
         
-        init(isPresented: Binding<Bool>, model: Toast.Model) {
+        init(isPresented: Binding<Bool>, model: Binding<Toast.Model?>) {
             _isPresented = isPresented
-            self.model = model
+            _model = model
         }
         
         @State private var animationWorkItem: DispatchWorkItem?
@@ -232,15 +233,25 @@ extension Toast {
             content
                 .float(
                     isPresented: $isPresented,
-                    dismissAfterWhile: floatingDismissAfterWhile
-                ) {
-                    Toast(model.variant, message: model.message, model.location)
-                }
+                    dismissAfterWhile: floatingDismissAfterWhile,
+                    onDismiss: {
+                        model = nil
+                    }, content: {
+                        toast()
+                    }
+                )
                 .onChange(of: isPresented) { isPresented in
                     if isPresented {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
                 }
+        }
+        
+        @ViewBuilder
+        private func toast() -> some View {
+            if let model {
+                Toast(model.variant, message: model.message, model.location)
+            }
         }
     }
 }
@@ -249,10 +260,10 @@ struct Toast_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Toast(.message, message: "메세지에 마침표를 찍어요.")
-            Toast.Contents(.message, "hello world!")
-            Toast.Contents(.success, "메세지에 마침표를 찍어요.")
-            Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
-            Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
+//            Toast.Contents(.message, "hello world!")
+//            Toast.Contents(.success, "메세지에 마침표를 찍어요.")
+//            Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
+//            Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
         }
     }
 }

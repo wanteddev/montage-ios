@@ -12,15 +12,20 @@ public struct FloatModifier<C: View>: ViewModifier {
     @Environment(\.floatingWindow) private var floatingWindow
 
     @Binding private var isPresented: Bool
+    /// 현재 화면 이탈 이후에 사라져야 할 때
     private let dismissAfterWhile: (seconds: Int, animated: Bool)
+    /// 현재 화면에서 사라진 이후에 동작할 내용
+    private let onDismiss: () -> Void
     private let floatingView: () -> C
     public init(
         isPresented: Binding<Bool>,
         dismissAfterWhile: (seconds: Int, animated: Bool),
+        onDismiss: @escaping () -> Void,
         content: @escaping () -> C
     ) {
         _isPresented = isPresented
         self.dismissAfterWhile = dismissAfterWhile
+        self.onDismiss = onDismiss
         floatingView = content
     }
 
@@ -61,10 +66,14 @@ public struct FloatModifier<C: View>: ViewModifier {
                 rollBackAfterWhile: (
                     seconds: dismissAfterWhile.seconds,
                     animated: dismissAfterWhile.animated,
-                    completion: {
+                    rollBackCompletion: {
                         isPresented = false
                     }
-                )
+                ),
+                completion: {
+                    guard isPresented == false else { return }
+                    onDismiss()
+                }
             )
         }
         .onDisappear {
@@ -143,8 +152,9 @@ public class FloatingWindow: UIWindow {
         rollBackAfterWhile: (
             seconds: Int,
             animated: Bool,
-            completion: () -> Void
-        ) = (seconds: 0, animated: false, completion: {})
+            rollBackCompletion: () -> Void
+        ) = (seconds: 0, animated: false, rollBackCompletion: {}),
+        completion: () -> Void = {}
     ) {
         findSubview(hashValue)?.alpha = hidden ? 0 : 1
 
@@ -164,16 +174,18 @@ public class FloatingWindow: UIWindow {
                                 self.findSubview(hashValue)?.alpha = hidden ? 1 : 0
                             },
                             completion: { _ in
-                                rollBackAfterWhile.completion()
+                                rollBackAfterWhile.rollBackCompletion()
                             }
                         )
                     } else {
                         self.findSubview(hashValue)?.alpha = hidden ? 1 : 0
-                        rollBackAfterWhile.completion()
+                        rollBackAfterWhile.rollBackCompletion()
                     }
                 }
             }
             dismissDispatchWorkItem?.perform()
+        } else {
+            completion()
         }
     }
 
