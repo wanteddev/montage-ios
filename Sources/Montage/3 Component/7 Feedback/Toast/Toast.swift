@@ -12,16 +12,13 @@ public struct Toast: View {
         private let id = UUID()
         let variant: Toast.Variant
         let message: String
-        let location: Toast.Location
         
         public init(
             _ variant: Toast.Variant = .message,
-            message: String,
-            location: Toast.Location = .bottom(offset: .zero)
+            message: String
         ) {
             self.variant = variant
             self.message = message
-            self.location = location
         }
     }
 
@@ -163,95 +160,44 @@ public struct Toast: View {
 }
 
 extension Toast {
-    public struct LegacyToastModifier: ViewModifier {
-        @Binding var model: Toast.Model?
-        @State private var animationWorkItem: DispatchWorkItem?
-        
-        public func body(content: Content) -> some View {
-            GeometryReader { proxy in
-                content
-                    .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
-                    .overlay {
-                        toast()
-                    }
-                    .onChange(
-                        of: model
-                    ) { toastModel in
-                        guard toastModel != nil else { return }
-                        showToast()
-                    }
-            }
-        }
-        
-        @ViewBuilder
-        private func toast() -> some View {
-            if let model {
-                Toast(model.variant, message: model.message, model.location)
-            }
-        }
-        
-        private func showToast() {
-            animationWorkItem?.cancel()
-            
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            
-            let task = DispatchWorkItem {
-                dismissToast()
-            }
-            
-            animationWorkItem = task
-            
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + 2.0,
-                execute: task
-            )
-        }
-        
-        private func dismissToast() {
-            withAnimation {
-                model = nil
-            }
-            
-            animationWorkItem?.cancel()
-            animationWorkItem = nil
-        }
-    }
-    
     public struct ToastModifier: ViewModifier {
-        @Binding private var isPresented: Bool
         @Binding private var model: Toast.Model?
+        private let location: Toast.Location
         
-        init(isPresented: Binding<Bool>, model: Binding<Toast.Model?>) {
-            _isPresented = isPresented
+        init(model: Binding<Toast.Model?>, location: Toast.Location) {
             _model = model
+            self.location = location
         }
         
         @State private var animationWorkItem: DispatchWorkItem?
-        private let floatingDismissAfterWhile = (seconds: 2, animated: true)
         
         public func body(content: Content) -> some View {
             content
                 .float(
-                    isPresented: $isPresented,
-                    dismissAfterWhile: floatingDismissAfterWhile,
+                    presentationPolicy: .presentIfNotNil(model),
+                    presentingAnimation: .easeIn(duration: 0.35),
+                    dismissingAnimation: .easeIn(duration: 0.35),
+                    dismissPolicy: .after(seconds: 2),
                     onDismiss: {
                         model = nil
-                    }, content: {
-                        toast()
+                    },
+                    floatView: {
+                        Group {
+                            if let model {
+                                Toast(
+                                    model.variant,
+                                    message: model.message,
+                                    location
+                                )
+                            }
+                        }
                     }
                 )
-                .onChange(of: isPresented) { isPresented in
-                    if isPresented {
+                .onChange(of: model) { _ in
+                    if model != nil {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
                 }
-        }
-        
-        @ViewBuilder
-        private func toast() -> some View {
-            if let model {
-                Toast(model.variant, message: model.message, model.location)
-            }
         }
     }
 }
@@ -260,10 +206,10 @@ struct Toast_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Toast(.message, message: "메세지에 마침표를 찍어요.")
-//            Toast.Contents(.message, "hello world!")
-//            Toast.Contents(.success, "메세지에 마침표를 찍어요.")
-//            Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
-//            Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
+            Toast.Contents(.message, "hello world!")
+            Toast.Contents(.success, "메세지에 마침표를 찍어요.")
+            Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
+            Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
         }
     }
 }

@@ -44,7 +44,7 @@ public struct Accordion<A: View, C: View>: View {
     
     // MARK: - Body
     
-    @State private var isExpanded: Bool = false
+    @State private var isExpanded = false
     @State private var accessorySize: CGSize = .zero
     @State private var contentSize: CGSize = .zero
     
@@ -58,12 +58,20 @@ public struct Accordion<A: View, C: View>: View {
                 } label: {
                     HStack(alignment: .top, spacing: 0) {
                         Text(title)
-                            .montage(variant: titleTypography.variant, weight: titleTypography.weight, color: titleTypography.color)
+                            .montage(
+                                variant: titleTypography.variant,
+                                weight: titleTypography.weight,
+                                color: titleTypography.color
+                            )
                             .paragraph(variant: titleTypography.variant)
                         Spacer(minLength: 0)
                         
                         accessory()
-                            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { accessorySize = $0 })
+                            .onGeometryChange(
+                                for: CGSize.self,
+                                of: { $0.size },
+                                action: { accessorySize = $0 }
+                            )
                         
                         if accessorySize == .zero {
                             Image.montage(.chevronDown)
@@ -84,14 +92,22 @@ public struct Accordion<A: View, C: View>: View {
                     VStack(alignment: .leading, spacing: 0) {
                         if !description.isEmpty {
                             Text(description)
-                                .montage(variant: descriptionTypography.variant, weight: descriptionTypography.weight, color: descriptionTypography.color)
+                                .montage(
+                                    variant: descriptionTypography.variant,
+                                    weight: descriptionTypography.weight,
+                                    color: descriptionTypography.color
+                                )
                                 .paragraph(variant: descriptionTypography.variant)
                         }
                         
                         Spacer().frame(height: 12)
                             .if(!description.isEmpty && contentSize != .zero)
                         
-                        content().onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+                        content().onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { contentSize = $0 }
+                        )
                     }
                     .padding(.bottom, description.isEmpty && contentSize == .zero ? 0 : 16)
                     .padding(.horizontal, fillWidth ? 20 : 0)
@@ -108,14 +124,26 @@ public struct Accordion<A: View, C: View>: View {
     
     // MARK: - Modifiers
     
-    private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) = (.body2, .bold, .alias(.labelNormal))
-    private var descriptionTypography: (variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) = (.label1, .regular, .alias(.labelNeutral))
+    private var titleTypography: (
+        variant: Typography.Variant,
+        weight: Typography.Weight,
+        color: SwiftUI.Color
+    ) = (.body2, .bold, .alias(.labelNormal))
+    private var descriptionTypography: (
+        variant: Typography.Variant,
+        weight: Typography.Weight,
+        color: SwiftUI.Color
+    ) = (.label1, .regular, .alias(.labelNeutral))
     private var padding: Padding = .pt12
-    private var fillWidth: Bool = false
-    private var divider: Bool = false
+    private var fillWidth = false
+    private var divider = false
     
     /// 타이틀 텍스트의 `variant`와 `weight` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`입니다.
-    public func title(_ variant: Typography.Variant = .body2, weight: Typography.Weight = .bold, color: SwiftUI.Color = .alias(.labelNormal)) -> Self {
+    public func title(
+        _ variant: Typography.Variant = .body2,
+        weight: Typography.Weight = .bold,
+        color: SwiftUI.Color = .alias(.labelNormal)
+    ) -> Self {
         var zelf = self
         zelf.titleTypography.variant = variant
         zelf.titleTypography.weight = weight
@@ -124,7 +152,11 @@ public struct Accordion<A: View, C: View>: View {
     }
     
     /// 타이틀 텍스트의 `variant`와 `weight` 속성을 조정합니다. 기본값은 각각 `.label1`, `.regular`입니다.
-    public func description(_ variant: Typography.Variant = .label1, weight: Typography.Weight = .regular, color: SwiftUI.Color = .alias(.labelNeutral)) -> Self {
+    public func description(
+        _ variant: Typography.Variant = .label1,
+        weight: Typography.Weight = .regular,
+        color: SwiftUI.Color = .alias(.labelNeutral)
+    ) -> Self {
         var zelf = self
         zelf.descriptionTypography.variant = variant
         zelf.descriptionTypography.weight = weight

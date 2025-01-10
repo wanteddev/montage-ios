@@ -11,8 +11,4 @@ extension EnvironmentValues {
     var safeAreaInsets: EdgeInsets {
         self[SafeAreaInsetsKey.self]
     }
-
-    public var floatingWindow: FloatingWindow? {
-        self[FloatingWindowKey.self]
-    }
 }

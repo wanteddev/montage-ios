@@ -12,13 +12,3 @@ struct SafeAreaInsetsKey: EnvironmentKey {
         (UIApplication.keyWindow?.safeAreaInsets ?? .zero).insets
     }
 }
-
-public protocol SceneDelegateProtocol {
-    var floatingWindow: FloatingWindow? { get }
-}
-
-public struct FloatingWindowKey: EnvironmentKey {
-    public static var defaultValue: FloatingWindow? {
-        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegateProtocol)?.floatingWindow
-    }
-}

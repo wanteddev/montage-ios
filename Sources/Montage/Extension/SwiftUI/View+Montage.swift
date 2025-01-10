@@ -64,14 +64,11 @@ extension View {
 // MARK: Toast
 
 extension View {
-    public func legacyToast(_ model: Binding<Toast.Model?>) -> some View {
-        modifier(Toast.LegacyToastModifier(model: model))
-    }
-
-    public func toast(isPresented: Binding<Bool>, model: Binding<Toast.Model?>) -> some View {
-        modifier(
-            Toast.ToastModifier(isPresented: isPresented, model: model)
-        )
+    public func toast(
+        _ model: Binding<Toast.Model?>,
+        location: Toast.Location = .bottom(offset: 0)
+    ) -> some View {
+        modifier(Toast.ToastModifier(model: model, location: location))
     }
 }
 
@@ -303,18 +300,22 @@ extension View {
 // MARK: Float
 
 extension View {
-    public func float<C: View>(
-        isPresented: Binding<Bool>,
-        dismissAfterWhile: (seconds: Int, animated: Bool) = (.zero, true),
-        onDismiss: @escaping () -> Void = {},
-        content: @escaping () -> C
+    public func float<V: Equatable, F: View>(
+        presentationPolicy: FloatModifier<V, F>.PresentationPolicy,
+        presentingAnimation: Animation = .default,
+        dismissingAnimation: Animation = .default,
+        dismissPolicy: FloatModifier<V, F>.DismissPolicy = .onDisappear,
+        onDismiss: (() -> Void)? = nil,
+        floatView: @escaping () -> F
     ) -> some View {
         modifier(
             FloatModifier(
-                isPresented: isPresented,
-                dismissAfterWhile: dismissAfterWhile,
+                presentationPolicy: presentationPolicy,
+                presentingAnimation: presentingAnimation,
+                dismissingAnimation: dismissingAnimation,
+                dismissPolicy: dismissPolicy,
                 onDismiss: onDismiss,
-                content: content
+                floatView: floatView
             )
         )
     }

@@ -14,8 +14,9 @@ struct InteractiveCellStyle: ButtonStyle {
         self.fillWidth = fillWidth
         self.interactionPadding = interactionPadding
     }
+
     @State private var labelSize: CGSize = .zero
-    
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
