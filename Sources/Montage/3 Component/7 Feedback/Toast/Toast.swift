@@ -168,9 +168,7 @@ extension Toast {
             _model = model
             self.location = location
         }
-        
-        @State private var animationWorkItem: DispatchWorkItem?
-        
+
         public func body(content: Content) -> some View {
             content
                 .float(
