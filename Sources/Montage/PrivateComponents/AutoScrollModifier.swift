@@ -35,15 +35,22 @@ struct AutoScrollModifier: ViewModifier {
             }
         }
         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { scrollViewSize = $0 })
-        .onAppear {
-            scrollNotNeeded = switch axis {
-            case .horizontal:
-                contentSize.width <= scrollViewSize.width
-            case .vertical:
-                contentSize.height <= scrollViewSize.height
-            default:
-                true
-            }
+        .onChange(of: contentSize) { _ in
+            updateWhetherScrollable()
+        }
+        .onChange(of: scrollViewSize) { _ in
+            updateWhetherScrollable()
+        }
+    }
+    
+    func updateWhetherScrollable() {
+        scrollNotNeeded = switch axis {
+        case .horizontal:
+            contentSize.width <= scrollViewSize.width
+        case .vertical:
+            contentSize.height <= scrollViewSize.height
+        default:
+            true
         }
     }
     
