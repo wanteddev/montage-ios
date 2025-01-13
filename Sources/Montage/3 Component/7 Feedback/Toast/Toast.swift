@@ -9,18 +9,16 @@ import SwiftUI
 
 public struct Toast: View {
     public struct Model: Equatable {
+        private let id = UUID()
         let variant: Toast.Variant
         let message: String
-        let location: Toast.Location
         
         public init(
             _ variant: Toast.Variant = .message,
-            message: String,
-            location: Toast.Location = .bottom(offset: .zero)
+            message: String
         ) {
             self.variant = variant
             self.message = message
-            self.location = location
         }
     }
 
@@ -163,56 +161,41 @@ public struct Toast: View {
 
 extension Toast {
     public struct ToastModifier: ViewModifier {
-        @Binding var model: Toast.Model?
-        @State private var animationWorkItem: DispatchWorkItem?
+        @Binding private var model: Toast.Model?
+        private let location: Toast.Location
         
+        init(model: Binding<Toast.Model?>, location: Toast.Location) {
+            _model = model
+            self.location = location
+        }
+
         public func body(content: Content) -> some View {
-            GeometryReader { proxy in
-                content
-                    .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
-                    .overlay {
-                        toast()
+            content
+                .float(
+                    presentationPolicy: .presentIfNotNil(model),
+                    presentingAnimation: .easeIn(duration: 0.35),
+                    dismissingAnimation: .easeIn(duration: 0.35),
+                    dismissPolicy: .after(seconds: 2),
+                    onDismiss: {
+                        model = nil
+                    },
+                    floatView: {
+                        Group {
+                            if let model {
+                                Toast(
+                                    model.variant,
+                                    message: model.message,
+                                    location
+                                )
+                            }
+                        }
                     }
-                    .onChange(
-                        of: model
-                    ) { toastModel in
-                        guard toastModel != nil else { return }
-                        showToast()
+                )
+                .onChange(of: model) { _ in
+                    if model != nil {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
-            }
-        }
-        
-        @ViewBuilder
-        private func toast() -> some View {
-            if let model {
-                Toast(model.variant, message: model.message, model.location)
-            }
-        }
-        
-        private func showToast() {
-            animationWorkItem?.cancel()
-            
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            
-            let task = DispatchWorkItem {
-                dismissToast()
-            }
-            
-            animationWorkItem = task
-            
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + 2.0,
-                execute: task
-            )
-        }
-        
-        private func dismissToast() {
-            withAnimation {
-                model = nil
-            }
-            
-            animationWorkItem?.cancel()
-            animationWorkItem = nil
+                }
         }
     }
 }

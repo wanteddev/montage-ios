@@ -64,8 +64,11 @@ extension View {
 // MARK: Toast
 
 extension View {
-    public func toast(_ model: Binding<Toast.Model?>) -> some View {
-        modifier(Toast.ToastModifier(model: model))
+    public func toast(
+        _ model: Binding<Toast.Model?>,
+        location: Toast.Location = .bottom(offset: 0)
+    ) -> some View {
+        modifier(Toast.ToastModifier(model: model, location: location))
     }
 }
 
@@ -258,7 +261,10 @@ extension View {
 // MARK: Pull To Refresh
 
 extension View {
-    public func pullToRefresh(scrollYOffset: Binding<CGFloat>, refresh: @escaping () async -> Void) -> some View {
+    public func pullToRefresh(
+        scrollYOffset: Binding<CGFloat>,
+        refresh: @escaping () async -> Void
+    ) -> some View {
         modifier(PullToRefreshModifier(scrollYOffset: scrollYOffset, refresh: refresh))
     }
 }
@@ -266,7 +272,10 @@ extension View {
 // MARK: DatePicker, TimePicker
 
 extension View {
-    public func datePicker(selectedDate: Binding<Date>, in range: ClosedRange<Date> = Date.distantPast...Date.distantFuture) -> some View {
+    public func datePicker(
+        selectedDate: Binding<Date>,
+        in range: ClosedRange<Date> = Date.distantPast ... Date.distantFuture
+    ) -> some View {
         overlay {
             DatePicker(selection: selectedDate, in: range, displayedComponents: .date) {}
                 .labelsHidden()
@@ -274,13 +283,40 @@ extension View {
                 .colorMultiply(.clear)
         }
     }
-    
-    public func timePicker(selectedDate: Binding<Date>, in range: ClosedRange<Date> = Date.distantPast...Date.distantFuture) -> some View {
+
+    public func timePicker(
+        selectedDate: Binding<Date>,
+        in range: ClosedRange<Date> = Date.distantPast ... Date.distantFuture
+    ) -> some View {
         overlay {
             DatePicker(selection: selectedDate, in: range, displayedComponents: .hourAndMinute) {}
                 .labelsHidden()
                 .contentShape(Rectangle())
                 .colorMultiply(.clear)
         }
+    }
+}
+
+// MARK: Float
+
+extension View {
+    public func float<V: Equatable, F: View>(
+        presentationPolicy: FloatModifier<V, F>.PresentationPolicy,
+        presentingAnimation: Animation = .default,
+        dismissingAnimation: Animation = .default,
+        dismissPolicy: FloatModifier<V, F>.DismissPolicy = .onDisappear,
+        onDismiss: (() -> Void)? = nil,
+        floatView: @escaping () -> F
+    ) -> some View {
+        modifier(
+            FloatModifier(
+                presentationPolicy: presentationPolicy,
+                presentingAnimation: presentingAnimation,
+                dismissingAnimation: dismissingAnimation,
+                dismissPolicy: dismissPolicy,
+                onDismiss: onDismiss,
+                floatView: floatView
+            )
+        )
     }
 }

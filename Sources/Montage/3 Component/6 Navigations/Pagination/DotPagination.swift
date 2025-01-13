@@ -19,15 +19,15 @@ extension Pagination {
         
         @Binding private var selectedPage: Int
         private let totalPages: Int
-        private let maxNumberOfVisibleDots: Int = 5
+        private let maxNumberOfVisibleDots = 5
         public init(selectedPage: Binding<Int>, totalPages: Int) {
-            self._selectedPage = selectedPage
+            _selectedPage = selectedPage
             self.totalPages = totalPages
         }
         
         public var body: some View {
             HStack(spacing: 0) {
-                ForEach(0..<totalPages) { index in
+                ForEach(0 ..< totalPages) { index in
                     let diameter = elementDiameter(at: index)
                     Element(selected: selectedPage == index + 1, variant: variant, diameter: diameter)
                         .onTapGesture { _ in
@@ -48,9 +48,10 @@ extension Pagination {
         private func trailingPadding(at index: Int) -> CGFloat {
             !visibleAreaIndices.contains(index) || index == visibleAreaIndices.last ? 0 : 5
         }
+
         private var visibleAreaIndices: [Int] {
             let selectedPageIndex = selectedPage - 1
-            let fullRange = 0...totalPages - 1
+            let fullRange = 0 ... totalPages - 1
             return if totalPages <= maxNumberOfVisibleDots {
                 Array(fullRange.prefix(totalPages))
             } else if selectedPage <= 2 {
@@ -58,7 +59,7 @@ extension Pagination {
             } else if totalPages - 2 <= selectedPage {
                 Array(fullRange.reversed().prefix(maxNumberOfVisibleDots).reversed())
             } else {
-                Array((selectedPageIndex - 2...totalPages - 1).prefix(maxNumberOfVisibleDots))
+                Array((selectedPageIndex - 2 ... totalPages - 1).prefix(maxNumberOfVisibleDots))
             }
         }
         
@@ -86,10 +87,10 @@ extension Pagination {
                         } else {
                             .medium
                         }
-                    case visibleAreaIndices[2]...visibleAreaIndices[maxNumberOfVisibleDots - 3]:
-                            .regular
+                    case visibleAreaIndices[2] ... visibleAreaIndices[maxNumberOfVisibleDots - 3]:
+                        .regular
                     default:
-                            .void
+                        .void
                     }
                 }
             }()
@@ -140,18 +141,18 @@ extension Pagination {
             private var dotColor: SwiftUI.Color {
                 switch variant {
                 case .normal:
-                    return .alias(.labelNormal).opacity(selected ? 1 : 0.16)
+                    .alias(.labelNormal).opacity(selected ? 1 : 0.16)
                 case .white:
-                    return .alias(.staticWhite).opacity(selected ? 1 : 0.52)
+                    .alias(.staticWhite).opacity(selected ? 1 : 0.52)
                 }
             }
             
             private var dotBorderColor: SwiftUI.Color {
                 switch variant {
                 case .normal:
-                    return .clear
+                    .clear
                 case .white:
-                    return .alias(.lineNeutral).opacity(selected ? 1 : 0.52)
+                    .alias(.lineNeutral).opacity(selected ? 1 : 0.52)
                 }
             }
         }

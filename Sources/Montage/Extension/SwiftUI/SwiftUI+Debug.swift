@@ -23,7 +23,11 @@ extension View {
 }
 
 extension View {
-    public func carveLogForDebug(_ message: String, font: Font? = nil, alignment: Alignment = .center) -> some View {
+    public func carveLogForDebug(
+        _ message: String,
+        font: Font? = nil,
+        alignment: Alignment = .center
+    ) -> some View {
         #if DEBUG
         ZStack(alignment: alignment) {
             self
@@ -64,7 +68,7 @@ extension View {
     public func measureForPreview(axis: Axis) -> some View {
         modifier(MeasureModifier(axis: axis))
     }
-    
+
     public func measureBoxForPreview() -> some View {
         modifier(MeasureBoxModifier())
     }
@@ -72,12 +76,12 @@ extension View {
 
 public struct MeasureModifier: ViewModifier {
     @State private var size: CGSize = .zero
-    
+
     private let axis: Axis
     public init(axis: Axis) {
         self.axis = axis
     }
-    
+
     public func body(content: Content) -> some View {
         content
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
@@ -89,7 +93,7 @@ public struct MeasureModifier: ViewModifier {
 
 public struct MeasureBoxModifier: ViewModifier {
     @State private var size: CGSize = .zero
-    
+
     public func body(content: Content) -> some View {
         content
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
@@ -102,12 +106,12 @@ public struct MeasureBoxModifier: ViewModifier {
 public struct MeasureView: View {
     private let axis: Axis
     private let value: CGFloat
-    
+
     public init(axis: Axis, value: CGFloat) {
         self.axis = axis
         self.value = value
     }
-    
+
     public var body: some View {
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
             switch axis {

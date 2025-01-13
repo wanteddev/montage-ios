@@ -44,9 +44,9 @@ public enum ProgressTracker {
         private var backgroundColor: SwiftUI.Color {
             switch state {
             case .complete, .active:
-                return .alias(.primaryNormal)
+                .alias(.primaryNormal)
             case .inactive:
-                return .alias(.lineSolidNormal)
+                .alias(.lineSolidNormal)
             }
         }
     }
@@ -61,4 +61,3 @@ public enum ProgressTracker {
         }
     }
 }
-

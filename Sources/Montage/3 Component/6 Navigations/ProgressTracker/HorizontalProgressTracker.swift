@@ -12,13 +12,13 @@ extension ProgressTracker {
         @Binding private var progress: Int
         private let labels: [String]
         public init(progress: Binding<Int>, labels: [String]) {
-            self._progress = progress
+            _progress = progress
             self.labels = labels
         }
         
         public init(progress: Binding<Int>, count: Int) {
-            self._progress = progress
-            self.labels = .init(repeating: "", count: count)
+            _progress = progress
+            labels = .init(repeating: "", count: count)
         }
         
         @State private var size: CGSize = .zero
@@ -40,7 +40,11 @@ extension ProgressTracker {
                                 text(at: index, alignment: textAlignment(from: alignment))
                                     .frame(height: textMaxHeight, alignment: .top)
                                 text(at: index, alignment: .center)
-                                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { textMaxHeight = max(textMaxHeight, $0) })
+                                    .onGeometryChange(
+                                        for: CGFloat.self,
+                                        of: { $0.size.height },
+                                        action: { textMaxHeight = max(textMaxHeight, $0) }
+                                    )
                                     .opacity(0)
                             }
                             .if(!labels[index].isEmpty)
@@ -69,9 +73,9 @@ extension ProgressTracker {
         private func labelColor(at index: Int) -> SwiftUI.Color {
             switch state(at: index) {
             case .complete, .inactive:
-                return .alias(.labelAlternative)
+                .alias(.labelAlternative)
             case .active:
-                return .alias(.labelNormal)
+                .alias(.labelNormal)
             }
         }
         
@@ -97,7 +101,10 @@ extension ProgressTracker {
             Group {
                 if index > 0 {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.alias(state(at: index - 1) == .complete ? .primaryNormal : .lineSolidNormal))
+                        .foregroundStyle(
+                            SwiftUI.Color
+                                .alias(state(at: index - 1) == .complete ? .primaryNormal : .lineSolidNormal)
+                        )
                 } else {
                     SwiftUI.Color.clear
                 }
@@ -109,7 +116,10 @@ extension ProgressTracker {
             Group {
                 if index < labels.count - 1 {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.alias(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal))
+                        .foregroundStyle(
+                            SwiftUI.Color
+                                .alias(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal)
+                        )
                 } else {
                     SwiftUI.Color.clear
                 }

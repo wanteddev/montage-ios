@@ -5,7 +5,6 @@
 //  Created by 김삼열 on 12/20/24.
 //
 
-
 import SwiftUI
 
 extension ProgressTracker {
@@ -15,7 +14,11 @@ extension ProgressTracker {
             private let labelAccessoryView: () -> A
             private let contentView: () -> C
             
-            public init(label: String = "", labelAccessoryView: @escaping () -> A = { EmptyView() }, contentView: @escaping () -> C = { EmptyView() }) {
+            public init(
+                label: String = "",
+                labelAccessoryView: @escaping () -> A = { EmptyView() },
+                contentView: @escaping () -> C = { EmptyView() }
+            ) {
                 self.label = label
                 self.labelAccessoryView = labelAccessoryView
                 self.contentView = contentView
@@ -44,7 +47,7 @@ extension ProgressTracker {
             }
             
             private var text: some View {
-                return Text(label)
+                Text(label)
                     .montage(variant: .label2, weight: .bold, color: labelColor)
                     .lineLimit(1)
                     .fixedSize()
@@ -53,9 +56,9 @@ extension ProgressTracker {
             private var labelColor: SwiftUI.Color {
                 switch status {
                 case .complete, .inactive:
-                    return .alias(.labelAlternative)
+                    .alias(.labelAlternative)
                 case .active:
-                    return .alias(.labelNormal)
+                    .alias(.labelNormal)
                 }
             }
         }
@@ -63,7 +66,7 @@ extension ProgressTracker {
         @Binding private var progress: Int
         private let stepContents: [StepContent<AnyView, AnyView>]
         public init(progress: Binding<Int>, stepContents: [StepContent<AnyView, AnyView>]) {
-            self._progress = progress
+            _progress = progress
             self.stepContents = stepContents
         }
         
@@ -95,13 +98,16 @@ extension ProgressTracker {
                                 stepContents[index]
                                     .status(state(at: index))
                                     .padding(.leading, 8)
-                                    
                             }
                             
                             Spacer(minLength: 0)
                         }
                         .padding(.bottom, index < stepContents.count - 1 ? 20 : 0)
-                        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { lineLengths.updateValue($0, forKey: index) })
+                        .onGeometryChange(
+                            for: CGFloat.self,
+                            of: { $0.size.height },
+                            action: { lineLengths.updateValue($0, forKey: index) }
+                        )
                     }
                 }
                 
@@ -127,7 +133,10 @@ extension ProgressTracker {
         private func line(after index: Int) -> some View {
             Rectangle()
                 .frame(width: 1)
-                .foregroundStyle(SwiftUI.Color.alias(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal))
+                .foregroundStyle(
+                    SwiftUI.Color
+                        .alias(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal)
+                )
         }
     }
 }
