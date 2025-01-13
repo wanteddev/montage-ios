@@ -286,13 +286,15 @@ extension Select {
                         Montage.Chip.ActionChipController(
                             variant: .solid,
                             size: .xsmall,
-                            leftIcon: item.icon,
-                            rightIcon: .closeThick,
                             text: item.text,
-                            iconColor: iconColor(item),
                             backgroundColor: backgroundColor(item),
                             fontColor: fontColor(item)
                         )
+                        .imageColor(iconColor(item))
+                        .rightImage(Image.montage(.closeThick))
+                        .if(item.icon != nil) {
+                            $0.leftImage(Image.montage(item.icon!))
+                        }
                         .contentShape(Rectangle())
                         .onTapGesture {
                             onTapItem?(item)
@@ -340,7 +342,7 @@ struct MultipleSelect_Preview: PreviewProvider {
             items: [
                 .init(state: .normal, text: "텍스트", icon: nil),
                 .init(state: .negative, text: "텍스트", icon: nil),
-                .init(state: .normal, text: "텍스트", icon: nil),
+                .init(state: .normal, text: "텍스트", icon: .apps),
             ],
             focus: .constant(false),
             render: .chip,

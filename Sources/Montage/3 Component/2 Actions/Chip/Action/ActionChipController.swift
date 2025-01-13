@@ -12,13 +12,10 @@ extension Chip {
     public struct ActionChipController: UIViewRepresentable {
         public var variant: Action.Variant = .solid
         public var size: Action.Size = .normal
-        public var leftIcon: Icon?
-        public var rightIcon: Icon?
         public var text = ""
         public var state: Decorate.Interaction.State = .normal
         public var disable = false
         public var active = false
-        public var iconColor: SwiftUI.Color? = nil
         public var backgroundColor: SwiftUI.Color? = nil
         public var fontColor: SwiftUI.Color? = nil
         public var activeColor: SwiftUI.Color? = nil
@@ -29,13 +26,10 @@ extension Chip {
         public init(
             variant: Action.Variant = .solid,
             size: Action.Size = .normal,
-            leftIcon: Icon? = nil,
-            rightIcon: Icon? = nil,
             text: String,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
             active: Bool = false,
-            iconColor: SwiftUI.Color? = nil,
             backgroundColor: SwiftUI.Color? = nil,
             fontColor: SwiftUI.Color? = nil,
             activeColor: SwiftUI.Color? = nil,
@@ -43,13 +37,10 @@ extension Chip {
         ) {
             self.variant = variant
             self.size = size
-            self.leftIcon = leftIcon
-            self.rightIcon = rightIcon
             self.text = text
             self.state = state
             self.disable = disable
             self.active = active
-            self.iconColor = iconColor
             self.backgroundColor = backgroundColor
             self.fontColor = fontColor
             self.activeColor = activeColor
@@ -63,17 +54,17 @@ extension Chip {
         public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.variant = variant
             uiView.size = size
-            uiView.leftIcon = leftIcon
-            uiView.rightIcon = rightIcon
+            if let leftImage {
+                uiView.leftImage = ImageRenderer(content: leftImage).uiImage
+            }
+            if let rightImage {
+                uiView.rightImage = ImageRenderer(content: rightImage).uiImage
+            }
+            uiView.imageColor = imageColor?.uiColor
             uiView.text = text
             uiView.state = state
             uiView.disable = disable
             uiView.active = active
-            if let iconColor {
-                uiView.iconUIColor = iconColor.uiColor
-            } else {
-                uiView.iconUIColor = nil
-            }
             if let backgroundColor {
                 uiView.backgroundUIColor = backgroundColor.uiColor
             } else {
@@ -105,244 +96,36 @@ extension Chip {
         
         private var fillHorizontal = false
         private var fillVertical = false
+        private var leftImage: Image?
+        private var rightImage: Image?
+        private var imageColor: SwiftUI.Color?
+        
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
             zelf.fillHorizontal = fillHorizontal
             zelf.fillVertical = fillVertical
             return zelf
         }
-    }
-}
-
-var actionChipControllerPreview: some View {
-    VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-        VStack(alignment: .leading) {
-            Text("Variant").montage(variant: .headline2)
-            HStack {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    text: "안녕하세요"
-                )
-            }
+        
+        /// 좌측 이미지를 지정합니다.
+        public func leftImage(_ image: Image) -> Self {
+            var zelf = self
+            zelf.leftImage = image
+            return zelf
         }
         
-        VStack(alignment: .leading) {
-            Text("Disable").montage(variant: .headline2)
-            HStack {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요",
-                    disable: false
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요",
-                    disable: true
-                )
-            }
-            HStack {
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    text: "안녕하세요",
-                    disable: false
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    text: "안녕하세요",
-                    disable: true
-                )
-            }
+        /// 우측 이미지를 지정합니다.
+        public func rightImage(_ image: Image) -> Self {
+            var zelf = self
+            zelf.rightImage = image
+            return zelf
         }
         
-        VStack(alignment: .leading) {
-            Text("Active").montage(variant: .headline2)
-            HStack {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요",
-                    active: true
-                )
-            }
-            HStack {
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    text: "안녕하세요",
-                    active: true
-                )
-            }
+        /// 이미지 색상을 지정합니다. 기본값은 .alias(.labelAlternative) 입니다.
+        public func imageColor(_ color: SwiftUI.Color) -> Self {
+            var zelf = self
+            zelf.imageColor = color
+            return zelf
         }
-        
-        VStack(alignment: .leading) {
-            Text("Size").montage(variant: .headline2)
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .xsmall,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .small,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .normal,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .large,
-                    text: "안녕하세요"
-                )
-            }
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .xsmall,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .small,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .normal,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .large,
-                    text: "안녕하세요"
-                )
-            }
-        }
-        
-        VStack(alignment: .leading) {
-            Text("Icon").montage(variant: .headline2)
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .xsmall,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .small,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요"
-                )
-            }
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .normal,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요"
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .large,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요"
-                )
-            }
-        }
-        
-        VStack(alignment: .leading) {
-            Text("Customize").montage(variant: .headline2)
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .xsmall,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요",
-                    iconColor: .alias(.accentViolet)
-                )
-                
-                Chip.ActionChipController(
-                    variant: .solid,
-                    size: .small,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요",
-                    backgroundColor: .alias(.accentRedOrange)
-                )
-            }
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .normal,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요",
-                    fontColor: .alias(.accentLightBlue)
-                )
-                
-                Chip.ActionChipController(
-                    variant: .outlined,
-                    size: .large,
-                    leftIcon: .bell,
-                    rightIcon: .apps,
-                    text: "안녕하세요",
-                    iconColor: .alias(.accentRedOrange),
-                    backgroundColor: .alias(.accentLime),
-                    fontColor: .alias(.accentLightBlue)
-                )
-            }
-            HStack(alignment: .center) {
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요"
-                )
-                Chip.ActionChipController(
-                    variant: .solid,
-                    text: "안녕하세요",
-                    active: true,
-                    activeColor: .alias(.accentCyan)
-                )
-            }
-        }
-    }
-}
-
-struct ActionChipController_Previews: PreviewProvider {
-    static var previews: some View {
-        actionChipControllerPreview
-            .padding()
-            .previewLayout(.sizeThatFits)
     }
 }
