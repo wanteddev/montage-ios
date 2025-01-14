@@ -9,6 +9,7 @@ import SwiftUI
 
 extension Control {
     /// ``Montage/RoundCheckbox``를 SwiftUI에서 사용할 수 있도록 감싼 컨테이너 객체입니다.
+    @available(*, deprecated, message: "Use Montage/CheckboxController instead.")
     public struct RoundCheckboxController: UIViewRepresentable {
         @Binding private var state: MontageControlState
         private let size: MontageControlSize

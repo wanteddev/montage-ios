@@ -16,6 +16,7 @@ public protocol RoundCheckboxControlDelegate: AnyObject {
 
 extension Control {
     /// 원형으로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageControl``의 모든 상태를 표현할 수 있습니다.
+    @available(*, deprecated, message: "Use Montage/CheckboxController instead.")
     public final class RoundCheckbox: UIView, MontageControl {
         private let boxView = UIView()
         
