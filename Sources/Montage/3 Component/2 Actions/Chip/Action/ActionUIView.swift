@@ -1,5 +1,5 @@
 //
-//  ActionChip.swift
+//  ActionUIView.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/18.
@@ -9,26 +9,16 @@ import UIKit
 
 extension Chip {
     /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
-    public class Action: UIView {
-        /// 칩의 외관을 결정하는 열거형입니다.
-        public enum Variant {
-            case solid, outlined
-        }
-        
-        /// 칩의 사이즈를 결정하는 열거형입니다.
-        public enum Size {
-            case normal, xsmall, small, large
-        }
-        
+    public class ActionUIView: UIView {
         /// 칩의 외관입니다.
-        public var variant: Variant = .solid {
+        var variant: Action.Variant = .solid {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 사이즈입니다.
-        public var size: Size = .normal {
+        var size: Action.Size = .normal {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -36,42 +26,42 @@ extension Chip {
         }
         
         /// 사용자와의 인터렉션 상태를 표현합니다.
-        public var state: Decorate.Interaction.State = .normal {
+        var state: Decorate.Interaction.State = .normal {
             didSet {
                 updateViews()
             }
         }
         
-        /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: Icon? = nil {
+        /// 텍스트의 좌측에 표시될 이미지입니다.
+        var leftImage: UIImage? = nil {
             didSet {
                 updateViews()
             }
         }
         
-        /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: Icon? = nil {
+        /// 텍스트의 우측에 표시될 이미지입니다.
+        var rightImage: UIImage? = nil {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩에서 표현될 텍스트입니다.
-        public var text = "" {
+        var text = "" {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 터치 활성화 여부입니다.
-        public var disable = false {
+        var disable = false {
             didSet {
                 updateViews()
             }
         }
 
         /// 칩의 선택 여부 입니다.
-        public var active = false {
+        var active = false {
             didSet {
                 updateColors()
             }
@@ -79,15 +69,15 @@ extension Chip {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var iconUIColor: UIColor? {
+        var imageColor: UIColor? {
             didSet {
-                updateColors()
+                updateViews()
             }
         }
         
         /// 커스텀 가능한 배경색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var backgroundUIColor: UIColor? {
+        var backgroundUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -95,7 +85,7 @@ extension Chip {
         
         /// 커스텀 가능한 텍스트 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var fontUIColor: UIColor? {
+        var fontUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -103,25 +93,33 @@ extension Chip {
         
         /// 커스텀 가능한 선택 시 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var activeUIColor: UIColor? {
+        var activeUIColor: UIColor? {
             didSet {
                 updateColors()
             }
         }
 
-        public var handler: (() -> Void)?
+        var handler: (() -> Void)?
         
-        private lazy var stackView = UIStackView()
+        private let stackView = UIStackView()
         
-        private lazy var leftIconView = UIImageView()
+        private let leftImageView = {
+            let view = UIImageView()
+            view.contentMode = .scaleAspectFit
+            return view
+        }()
         
-        private lazy var textLabel = UILabel()
+        private let textLabel = UILabel()
         
         private let textLabelWrapperView = UIView()
         
-        private lazy var rightIconView = UIImageView()
+        private let rightImageView = {
+            let view = UIImageView()
+            view.contentMode = .scaleAspectFit
+            return view
+        }()
         
-        private lazy var interaction = Decorate.Interaction()
+        private let interaction = Decorate.Interaction()
         
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
@@ -131,7 +129,7 @@ extension Chip {
         
         private var textLabelWrapperViewConstraints: [NSLayoutConstraint] = []
         
-        public init() {
+        init() {
             super.init(frame: .zero)
             
             setupViews()
@@ -160,22 +158,22 @@ extension Chip {
         /// Element의 기본적인 사이즈를 정의합니다.
         override public var intrinsicContentSize: CGSize {
             let textSize = getAttributedText().size()
-            let iconSize = size.iconSize
+            let imageSize = size.imageSize
             let edgeInsets = size.contentsEdgeInsets
-            let iconCount = [leftIcon, rightIcon].filter { $0 != nil }.count
-            let iconWidths = iconSize.width * CGFloat(iconCount)
-            let spacings = size.contentsGap * CGFloat(iconCount)
+            let imageCount = [leftImage, rightImage].compactMap { $0 }.count
+            let imageWidths = imageSize.width * CGFloat(imageCount)
+            let spacings = size.contentsGap * CGFloat(imageCount)
             let textLabelPaddings = size.textLabelPadding * 2
             
             return .init(
-                width: iconWidths + spacings + textSize.width + edgeInsets.horizontal + textLabelPaddings,
-                height: max(iconSize.height, textSize.height) + edgeInsets.vertical
+                width: imageWidths + spacings + textSize.width + edgeInsets.horizontal + textLabelPaddings,
+                height: max(imageSize.height, textSize.height) + edgeInsets.vertical
             )
         }
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     private func setupViews() {
         addSubview(stackView)
         addSubview(interaction)
@@ -201,16 +199,14 @@ extension Chip.Action {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = size.contentsGap
-        stackView.addArrangedSubview(leftIconView)
+        stackView.addArrangedSubview(leftImageView)
         stackView.addArrangedSubview(textLabelWrapperView)
-        stackView.addArrangedSubview(rightIconView)
+        stackView.addArrangedSubview(rightImageView)
         
         textLabelWrapperView.addSubview(textLabel)
     }
     
     private func setupInteraction() {
-        interaction.variant = .normal
-        
         setupInteractionContraints()
     }
     
@@ -235,15 +231,15 @@ extension Chip.Action {
     private func setupIconViewConstraints() {
         NSLayoutConstraint.deactivate(iconViewContraints)
         
-        leftIconView.translatesAutoresizingMaskIntoConstraints = false
-        rightIconView.translatesAutoresizingMaskIntoConstraints = false
+        leftImageView.translatesAutoresizingMaskIntoConstraints = false
+        rightImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
-            rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
-        ]
+            leftImageView.widthAnchor.constraint(equalToConstant: size.imageSize.width),
+            leftImageView.heightAnchor.constraint(equalToConstant: size.imageSize.height),
+            rightImageView.widthAnchor.constraint(equalToConstant: size.imageSize.width),
+            rightImageView.heightAnchor.constraint(equalToConstant: size.imageSize.height)
+        ].compactMap { $0 }
         
         NSLayoutConstraint.activate(constraints)
         iconViewContraints = constraints
@@ -293,12 +289,12 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
         updateColors()
-        updateIconView()
+        updateImageViews()
         updateTextLabel()
         
         invalidateIntrinsicContentSize()
@@ -308,25 +304,27 @@ extension Chip.Action {
         backgroundColor = resolveBackgroundColor()
         layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = variant.borderWidth
-        leftIconView.tintColor = resolveCurrentIconColor()
-        rightIconView.tintColor = resolveCurrentIconColor()
+        leftImageView.tintColor = resolveCurrentImageColor()
+        rightImageView.tintColor = resolveCurrentImageColor()
+        interaction.variant = resolveInteractionVariant()
         interaction.color = resolveInteractionColor()
         updateTextLabel()
     }
     
-    private func updateIconView() {
-        if let leftIcon {
-            leftIconView.isHidden = false
-            leftIconView.image = .montage(leftIcon)
+    private func updateImageViews() {
+        if let leftImage {
+            leftImageView.isHidden = false
+            leftImageView.image = imageColor == nil ? leftImage : leftImage.withRenderingMode(.alwaysTemplate)
         } else {
-            leftIconView.isHidden = true
+            leftImageView.isHidden = true
         }
         
-        if let rightIcon {
-            rightIconView.isHidden = false
-            rightIconView.image = .montage(rightIcon)
+        if let rightImage {
+            rightImageView.isHidden = false
+            rightImageView.image = imageColor == nil ? rightImage : rightImage
+                .withRenderingMode(.alwaysTemplate)
         } else {
-            rightIconView.isHidden = true
+            rightImageView.isHidden = true
         }
     }
     
@@ -344,7 +342,7 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     private func resolveBackgroundColor() -> UIColor {
         if disable {
             variant.disableBackgroundColor
@@ -386,24 +384,32 @@ extension Chip.Action {
         }
     }
     
-    private func resolveCurrentIconColor() -> UIColor {
-        if let iconUIColor {
-            iconUIColor
+    private func resolveCurrentImageColor() -> UIColor {
+        if let imageColor {
+            imageColor
         } else {
             .alias(.labelAlternative)
         }
     }
     
     private func resolveInteractionColor() -> Color.Alias {
-        if active, variant == .outlined {
-            .primaryNormal
+        if active {
+            if variant == .outlined {
+                .primaryNormal
+            } else {
+                .inverseLabel
+            }
         } else {
             .labelNormal
         }
     }
+    
+    private func resolveInteractionVariant() -> Decorate.Interaction.Variant {
+        active ? .normal : .light
+    }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     @objc private func longPressed() {
         guard let recognizer = longPressRecognizer else { return }
         
@@ -428,7 +434,7 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action: UIGestureRecognizerDelegate {
+extension Chip.ActionUIView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
         _: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
@@ -485,7 +491,7 @@ extension Chip.Action.Variant {
 }
 
 extension Chip.Action.Size {
-    var iconSize: CGSize {
+    var imageSize: CGSize {
         switch self {
         case .large:
             .init(width: 16, height: 16)
