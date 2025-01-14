@@ -1,5 +1,5 @@
 //
-//  ActionChip.swift
+//  ActionUIView.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/18.
@@ -9,26 +9,16 @@ import UIKit
 
 extension Chip {
     /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
-    public class Action: UIView {
-        /// 칩의 외관을 결정하는 열거형입니다.
-        public enum Variant {
-            case solid, outlined
-        }
-        
-        /// 칩의 사이즈를 결정하는 열거형입니다.
-        public enum Size: String {
-            case normal, xsmall, small, large
-        }
-        
+    public class ActionUIView: UIView {
         /// 칩의 외관입니다.
-        public var variant: Variant = .solid {
+        var variant: Action.Variant = .solid {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 사이즈입니다.
-        public var size: Size = .normal {
+        var size: Action.Size = .normal {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -36,42 +26,42 @@ extension Chip {
         }
         
         /// 사용자와의 인터렉션 상태를 표현합니다.
-        public var state: Decorate.Interaction.State = .normal {
+        var state: Decorate.Interaction.State = .normal {
             didSet {
                 updateViews()
             }
         }
         
         /// 텍스트의 좌측에 표시될 이미지입니다.
-        public var leftImage: UIImage? = nil {
+        var leftImage: UIImage? = nil {
             didSet {
                 updateViews()
             }
         }
         
         /// 텍스트의 우측에 표시될 이미지입니다.
-        public var rightImage: UIImage? = nil {
+        var rightImage: UIImage? = nil {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩에서 표현될 텍스트입니다.
-        public var text = "" {
+        var text = "" {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 터치 활성화 여부입니다.
-        public var disable = false {
+        var disable = false {
             didSet {
                 updateViews()
             }
         }
 
         /// 칩의 선택 여부 입니다.
-        public var active = false {
+        var active = false {
             didSet {
                 updateColors()
             }
@@ -79,7 +69,7 @@ extension Chip {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var imageColor: UIColor? {
+        var imageColor: UIColor? {
             didSet {
                 updateViews()
             }
@@ -87,7 +77,7 @@ extension Chip {
         
         /// 커스텀 가능한 배경색 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var backgroundUIColor: UIColor? {
+        var backgroundUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -95,7 +85,7 @@ extension Chip {
         
         /// 커스텀 가능한 텍스트 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var fontUIColor: UIColor? {
+        var fontUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -103,13 +93,13 @@ extension Chip {
         
         /// 커스텀 가능한 선택 시 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        public var activeUIColor: UIColor? {
+        var activeUIColor: UIColor? {
             didSet {
                 updateColors()
             }
         }
 
-        public var handler: (() -> Void)?
+        var handler: (() -> Void)?
         
         private let stackView = UIStackView()
         
@@ -183,7 +173,7 @@ extension Chip {
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     private func setupViews() {
         addSubview(stackView)
         addSubview(interaction)
@@ -299,7 +289,7 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
@@ -331,7 +321,8 @@ extension Chip.Action {
         
         if let rightImage {
             rightImageView.isHidden = false
-            rightImageView.image = imageColor == nil ? rightImage : rightImage.withRenderingMode(.alwaysTemplate)
+            rightImageView.image = imageColor == nil ? rightImage : rightImage
+                .withRenderingMode(.alwaysTemplate)
         } else {
             rightImageView.isHidden = true
         }
@@ -351,7 +342,7 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     private func resolveBackgroundColor() -> UIColor {
         if disable {
             variant.disableBackgroundColor
@@ -418,7 +409,7 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action {
+extension Chip.ActionUIView {
     @objc private func longPressed() {
         guard let recognizer = longPressRecognizer else { return }
         
@@ -443,7 +434,7 @@ extension Chip.Action {
     }
 }
 
-extension Chip.Action: UIGestureRecognizerDelegate {
+extension Chip.ActionUIView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
         _: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer

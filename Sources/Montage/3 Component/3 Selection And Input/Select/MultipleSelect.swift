@@ -283,7 +283,7 @@ extension Select {
                 HStack {
                     ForEach(Array(items.indices), id: \.self) {
                         let item = items[$0]
-                        Montage.Chip.ActionChipController(
+                        Montage.Chip.Action(
                             variant: .solid,
                             size: .xsmall,
                             text: item.text,

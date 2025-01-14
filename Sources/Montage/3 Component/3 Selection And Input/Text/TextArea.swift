@@ -497,7 +497,7 @@ public struct TextArea: View {
                         .foregroundColor(tintColor)
                         .frame(width: 22, height: 22)
                 case let .actionChip(variant, title, handler):
-                    Chip.ActionChipController(
+                    Chip.Action(
                         variant: variant,
                         size: .small,
                         text: title,

@@ -1,5 +1,5 @@
 //
-//  ActionChipController.swift
+//  Action.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/18.
@@ -9,9 +9,19 @@ import Pretendard
 import SwiftUI
 
 extension Chip {
-    public struct ActionChipController: UIViewRepresentable {
-        public var variant: Action.Variant = .solid
-        public var size: Action.Size = .normal
+    public struct Action: UIViewRepresentable {
+        /// 칩의 외관을 결정하는 열거형입니다.
+        public enum Variant {
+            case solid, outlined
+        }
+        
+        /// 칩의 사이즈를 결정하는 열거형입니다.
+        public enum Size: String {
+            case normal, xsmall, small, large
+        }
+        
+        public var variant: Variant = .solid
+        public var size: Size = .normal
         public var text = ""
         public var state: Decorate.Interaction.State = .normal
         public var disable = false
@@ -21,11 +31,11 @@ extension Chip {
         public var activeColor: SwiftUI.Color? = nil
         public var handler: (() -> Void)?
         
-        public typealias UIViewType = Action
+        public typealias UIViewType = ActionUIView
         
         public init(
-            variant: Action.Variant = .solid,
-            size: Action.Size = .normal,
+            variant: Variant = .solid,
+            size: Size = .normal,
             text: String,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,
