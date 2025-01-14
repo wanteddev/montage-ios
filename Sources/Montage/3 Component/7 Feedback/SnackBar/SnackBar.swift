@@ -152,7 +152,7 @@ public struct SnackBar: View {
                 .montage(variant: .body2, weight: .bold, alias: .staticWhite)
                 .paragraph(variant: .body2)
                 .background(
-                    Decorate.InteractionController(
+                    Decorate.Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .backgroundNormal

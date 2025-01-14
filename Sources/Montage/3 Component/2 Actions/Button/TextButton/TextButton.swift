@@ -191,7 +191,7 @@ extension Button {
                 }
             }
             .overlay {
-                Decorate.InteractionController(
+                Decorate.Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: variant.interactionVariant,
                     color: variant.interactionColor

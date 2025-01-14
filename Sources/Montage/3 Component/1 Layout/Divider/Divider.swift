@@ -5,54 +5,52 @@
 //  Created by Euigyom Kim on 2023/03/09.
 //
 
-import UIKit
+import SwiftUI
 
 extension Basic {
     /// 구획을 나누기 위해 사용되는 Element입니다.
-    public class Divider: UIView {
-        public enum Weight {
-            case thick, normal
+    public struct Divider: View {
+        // MARK: - Types
+        public enum Variant {
+            case normal, thick
+
+            var size: CGFloat {
+                switch self {
+                case .normal: 1
+                case .thick: 12
+                }
+            }
         }
-        
-        var weight: Weight
-        var isVertical: Bool
-        
-        /// 새로운 Divider를 생성합니다.
-        /// - Parameters:
-        ///   - weight: Divider의 두께를 결정합니다.
-        ///   - isVertical: Divider의 축을 결정합니다. true일 경우 세로 방향으로 폭에 대한 제약 조건이 설정됩니다. false일 경우 가로 방향으로 높이에 대한 제약 조건이 설정됩니다.
-        public init(weight: Weight = .normal, isVertical: Bool = false) {
-            self.weight = weight
-            self.isVertical = isVertical
-            
-            super.init(frame: .zero)
-            
-            setupView()
+
+        // MARK: - Initializer
+        private let axis: Axis
+        private let variant: Variant
+        public init(_ axis: Axis, variant: Variant = .normal) {
+            self.axis = axis
+            self.variant = variant
         }
-        
-        required init?(coder: NSCoder) {
-            weight = .normal
-            isVertical = false
-            
-            super.init(coder: coder)
-            
-            setupView()
+
+        // MARK: - Body
+        public var body: some View {
+            Rectangle()
+                .if(axis == .vertical) {
+                    $0.frame(width: variant.size)
+                }
+                .if(axis == .horizontal) {
+                    $0.frame(height: variant.size)
+                }
+                .foregroundStyle(SwiftUI.Color.alias(.lineNormal))
         }
     }
 }
 
-extension Basic.Divider {
-    private func setupView() {
-        if isVertical {
-            widthAnchor.constraint(equalToConstant: 1).isActive = true
-        } else {
-            heightAnchor.constraint(equalToConstant: 1).isActive = true
-        }
-        
-        if weight == .normal {
-            backgroundColor = .alias(.lineNormal)
-        } else {
-            backgroundColor = .alias(.lineAlternative)
-        }
+#Preview {
+    ZStack {
+        Basic.Divider(.vertical)
+        Basic.Divider(.horizontal)
+    }
+    ZStack {
+        Basic.Divider(.vertical, variant: .thick)
+        Basic.Divider(.horizontal, variant: .thick)
     }
 }

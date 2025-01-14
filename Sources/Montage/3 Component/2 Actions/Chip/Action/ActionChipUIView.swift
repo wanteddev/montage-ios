@@ -119,7 +119,7 @@ extension Chip {
             return view
         }()
         
-        private let interaction = Decorate.Interaction()
+        private let interaction = Decorate.InteractionUIView()
         
         private var longPressRecognizer: UILongPressGestureRecognizer?
         

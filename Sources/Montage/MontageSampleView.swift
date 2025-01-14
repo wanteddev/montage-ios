@@ -34,7 +34,7 @@ public struct MontageSampleView: View {
     }
 
     public init() {
-        inputView = Control.Checkbox()
+        inputView = Control.CheckboxUIView()
         inputState = .checked
         inputLabelText = "체크해주세용"
         isOn = true

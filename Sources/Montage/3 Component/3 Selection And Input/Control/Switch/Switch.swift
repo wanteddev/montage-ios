@@ -1,83 +1,73 @@
 //
-//  MontageSwitch.swift
+//  Switch.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/02/28.
 //
 
-import UIKit
-
-/// ``Montage/Switch``의 터치 이벤트를 받을 수 있는 Delegate입니다.
-public protocol SwitchControlDelegate: AnyObject {
-    /// 터치가 발생하였을 때 호출되는 메소드입니다.
-    /// - Parameter switch: 터치가 발생한 객체
-    func didValueChangedSwitch(_ switch: Control.Switch)
-}
+import SwiftUI
 
 extension Control {
-    /// ON/OFF 상태를 표시하는 Control Element 입니다. `UISwitch`를 오버라이딩하여 디자인시스템에 맞도록 색상을 변경하고 이벤트를 추가하였습니다.
-    public final class Switch: UISwitch {
-        public weak var delegate: SwitchControlDelegate?
-        
+    public struct Switch: View {
         public enum Size {
             case normal, small
         }
-        
-        public var disable = false {
-            didSet {
-                isEnabled = false == disable
+
+        @Binding private var isOn: Bool
+        private let size: Size
+        private let onChange: (Bool) -> Void
+
+        private let switchSize: CGSize = .init(width: 51, height: 31)
+
+        public init(
+            _ isOn: Binding<Bool>,
+            size: Size = .normal,
+            onChange: @escaping (Bool) -> Void = { _ in }
+        ) {
+            _isOn = isOn
+            self.size = size
+            self.onChange = onChange
+        }
+
+        public var body: some View {
+            VStack {
+                Toggle("", isOn: $isOn.didSet(execute: { newValue in
+                    onChange(newValue)
+                }))
+                .tint(.alias(.primaryNormal))
+                .frame(width: switchSize.width, height: switchSize.height)
+                .offset(CGSize(width: -5, height: 0))
+                .transformEffect(CGAffineTransform(
+                    scaleX: containerSize.width / switchSize.width,
+                    y: containerSize.height / switchSize.height
+                ))
+                .frame(width: containerSize.width, height: containerSize.height)
+                .offset(CGSize(
+                    width: (switchSize.width - containerSize.width) / 2,
+                    height: (switchSize.height - containerSize.height) / 2
+                ))
             }
         }
-        
-        private let size: Size
-        public init(size: Size = .normal) {
-            self.size = size
-            super.init(frame: .zero)
-            
-            setupViews()
-            bindEvent()
-        }
-        
-        required init?(coder _: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-        
-        /// Element의 기본적인 사이즈를 정의합니다.
-        override public var intrinsicContentSize: CGSize {
-            containerSize
+
+        private var containerSize: CGSize {
+            switch size {
+            case .normal:
+                .init(width: 52, height: 32)
+            case .small:
+                .init(width: 39, height: 24)
+            }
         }
     }
 }
 
-extension Control.Switch {
-    private func setupViews() {
-        tintColor = .component(.fillNormal)
-        onTintColor = .alias(.primaryNormal)
-        
-        transform = CGAffineTransform(
-            scaleX: containerSize.width / bounds.width,
-            y: containerSize.height / bounds.height
+private extension Binding {
+    func didSet(execute: @escaping (Value) -> Void) -> Binding {
+        Binding(
+            get: { self.wrappedValue },
+            set: {
+                self.wrappedValue = $0
+                execute($0)
+            }
         )
-        widthAnchor.constraint(equalToConstant: containerSize.width).isActive = true
-        heightAnchor.constraint(equalToConstant: containerSize.height).isActive = true
-    }
-    
-    private func bindEvent() {
-        addTarget(self, action: #selector(valueChanged), for: .valueChanged)
-    }
-    
-    @objc private func valueChanged() {
-        delegate?.didValueChangedSwitch(self)
-    }
-}
-
-extension Control.Switch {
-    var containerSize: CGSize {
-        switch size {
-        case .normal:
-            .init(width: 52, height: 32)
-        case .small:
-            .init(width: 39, height: 24)
-        }
     }
 }

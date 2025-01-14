@@ -40,7 +40,7 @@ extension Avatar {
             }
             .frame(width: size.componentSize.width, height: size.componentSize.height)
             .overlay {
-                Decorate.InteractionController(
+                Decorate.Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: .normal,
                     color: .labelNormal

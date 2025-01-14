@@ -303,7 +303,7 @@ extension Montage.Slider {
         
         var body: some View {
             ZStack {
-                Decorate.InteractionController(
+                Decorate.Interaction(
                     state: configuraiton.onDrag ? .pressed : .normal,
                     variant: .strong,
                     color: .primaryNormal

@@ -268,7 +268,7 @@ public struct TextInput: View {
     private struct FieldButton: View {
         @State private var isPressed = false
         
-        let variant: Button.OutlinedButton.Variant
+        let variant: Button.OutlinedUIButton.Variant
         let title: String
         let handler: (() -> Void)?
         
@@ -277,7 +277,7 @@ public struct TextInput: View {
                 .montage(variant: .body1, weight: variant.typoWeight, alias: variant.textColor)
                 .paragraph(variant: .body1)
                 .background(
-                    Decorate.InteractionController(
+                    Decorate.Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .backgroundNormal
@@ -327,7 +327,7 @@ extension TextInput {
     public enum Resource {
         public enum Button {
             case button(
-                variant: Montage.Button.OutlinedButton.Variant,
+                variant: Montage.Button.OutlinedUIButton.Variant,
                 title: String,
                 handler: (() -> Void)? = nil
             )
