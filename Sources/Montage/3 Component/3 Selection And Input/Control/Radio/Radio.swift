@@ -50,6 +50,16 @@ extension Control {
             self.onTap = onTap
         }
         
+        public init(
+            state: Bool,
+            size: MontageControlSize = .normal,
+            onTap: @escaping (UIViewType) -> Void = { _ in }
+        ) {
+            _state = .constant(state ? .checked : .unchecked)
+            self.size = size
+            self.onTap = onTap
+        }
+        
         public func makeUIView(context: Context) -> UIViewType {
             let uiView = UIViewType(size: size)
             uiView.delegate = context.coordinator
