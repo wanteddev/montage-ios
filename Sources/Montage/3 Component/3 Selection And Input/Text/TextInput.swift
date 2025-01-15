@@ -169,6 +169,8 @@ public struct TextInput: View {
             disable ? .alias(.labelAlternative) : .alias(.labelNormal)
         }
         
+        @State private var height: CGFloat = 0
+
         var body: some View {
             HStack(spacing: .zero) {
                 ZStack {
@@ -196,6 +198,7 @@ public struct TextInput: View {
                             }()
                         )
                         .font(.montage(variant: .body1, weight: .regular))
+                        .paragraph(variant: .body1)
                         .foregroundStyle(fieldTextColor)
                         .focused($textFieldFocusState)
                         .frame(minHeight: 24)
@@ -224,27 +227,40 @@ public struct TextInput: View {
                         }
                     }
                     .padding(.all, 12)
+                    .overlay {
+                        if rightButton == nil {
+                            RoundedRectangle(cornerRadius: 12)
+                                .inset(by: 0.5)
+                                .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
+                                .padding(.all, textFieldFocusState ? 2 : 1)
+                        } else {
+                            UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12))
+                                .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
+                                .padding([.top, .bottom, .leading], textFieldFocusState ? 2 : 1)
+                        }
+                    }
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { height = $0 })
                 }
                 
                 if case let .button(variant, title, handler) = rightButton {
-                    HStack(spacing: 0) {
-                        Rectangle()
-                            .frame(width: 1)
-                            .foregroundStyle(fieldStrokeColor)
+                    ZStack {
                         FieldButton(
                             variant: variant,
                             title: title,
                             handler: handler
                         )
+                        UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
+                            .stroke(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
+                            .padding([.top, .trailing, .bottom], textFieldFocusState ? 2 : 1)
+
+                            .clipShape(
+                                Rectangle()
+                                    .offset(x: textFieldFocusState ? 1 : 0.7, y: .zero)
+                            )
+                            .frame(height: height)
                     }
-                    .fixedSize()
+                    .fixedSize(horizontal: true, vertical: false)
                 }
-            }
-            .overlay {
-                RoundedRectangle(cornerRadius: 12)
-                    .inset(by: 0.5)
-                    .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                    .padding(.all, textFieldFocusState ? 2 : 1)
             }
             .frame(minHeight: 48)
             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
@@ -290,7 +306,7 @@ public struct TextInput: View {
                         .stroke(SwiftUI.Color.clear)
                 }
                 .padding(.horizontal, 19)
-                .padding(.vertical, 11)
+                .padding(.vertical, 12)
         }
     }
 }
