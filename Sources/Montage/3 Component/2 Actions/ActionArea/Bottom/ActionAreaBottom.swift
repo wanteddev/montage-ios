@@ -219,7 +219,7 @@ extension ActionArea {
                         if let customButton = main.custom {
                             AnyView(customButton())
                         } else {
-                            Button.SolidButtonController(
+                            Button.SolidButton(
                                 variant: .primary,
                                 size: .large,
                                 text: main.text,
@@ -231,7 +231,7 @@ extension ActionArea {
                             if let customButton = alternative.custom {
                                 AnyView(customButton())
                             } else {
-                                Button.OutlinedButtonController(
+                                Button.OutlinedButton(
                                     variant: .secondary,
                                     size: .large,
                                     text: alternative.text,
@@ -266,7 +266,7 @@ extension ActionArea {
                             if let customButton = sub.custom {
                                 AnyView(customButton())
                             } else {
-                                Button.OutlinedButtonController(
+                                Button.OutlinedButton(
                                     variant: .assistive,
                                     size: .large,
                                     text: sub.text,
@@ -278,7 +278,7 @@ extension ActionArea {
                             if let customButton = alternative.custom {
                                 AnyView(customButton())
                             } else {
-                                Button.OutlinedButtonController(
+                                Button.OutlinedButton(
                                     variant: .secondary,
                                     size: .large,
                                     text: alternative.text,
@@ -290,7 +290,7 @@ extension ActionArea {
                         if let customButton = main.custom {
                             AnyView(customButton())
                         } else {
-                            Button.SolidButtonController(
+                            Button.SolidButton(
                                 variant: .primary,
                                 size: .large,
                                 text: main.text,
@@ -312,7 +312,7 @@ extension ActionArea {
                             if let customButton = sub.custom {
                                 AnyView(customButton())
                             } else {
-                                Button.OutlinedButtonController(
+                                Button.OutlinedButton(
                                     variant: .assistive,
                                     size: .large,
                                     text: sub.text,
@@ -323,7 +323,7 @@ extension ActionArea {
                         if let customButton = main.custom {
                             AnyView(customButton())
                         } else {
-                            Button.SolidButtonController(
+                            Button.SolidButton(
                                 variant: .primary,
                                 size: .large,
                                 text: main.text,
@@ -340,7 +340,7 @@ extension ActionArea {
                     if let customButton = main.custom {
                         AnyView(customButton())
                     } else {
-                        Button.OutlinedButtonController(
+                        Button.OutlinedButton(
                             variant: .assistive,
                             size: .large,
                             text: main.text,

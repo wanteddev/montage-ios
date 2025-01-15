@@ -280,16 +280,16 @@ extension Button {
                         )
                         .foregroundStyle(_iconColor)
                     if showPushBadge {
-                        Badge.PushBadgeController(variant: .dot)
+                        Badge.Push(variant: .dot)
                             .offset(
-                                x: Badge.Push.Variant.dot.dotOffset,
-                                y: -Badge.Push.Variant.dot.dotOffset
+                                x: Badge.PushUIView.Variant.dot.dotOffset,
+                                y: -Badge.PushUIView.Variant.dot.dotOffset
                             )
                     }
                 }
             }
             .overlay {
-                Decorate.InteractionController(
+                Decorate.Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: variant.interactionVariant,
                     color: variant.interactionColor

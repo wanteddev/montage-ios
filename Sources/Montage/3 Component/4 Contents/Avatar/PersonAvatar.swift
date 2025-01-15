@@ -42,7 +42,7 @@ extension Avatar {
                 processedImage()
                 
                 if showPushBadge {
-                    Badge.PushBadgeController(variant: .dot)
+                    Badge.Push(variant: .dot)
                         .offset(
                             x: size.componentSize.width / 2,
                             y: -size.componentSize.height / 2
@@ -51,7 +51,7 @@ extension Avatar {
             }
             .frame(width: size.componentSize.width, height: size.componentSize.height)
             .overlay {
-                Decorate.InteractionController(
+                Decorate.Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: .normal,
                     color: .labelNormal

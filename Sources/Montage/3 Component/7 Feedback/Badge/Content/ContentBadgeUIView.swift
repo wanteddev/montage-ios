@@ -1,5 +1,5 @@
 //
-//  ContentBadge.swift
+//  ContentBadgeUIView.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/24.
@@ -9,7 +9,8 @@ import UIKit
 
 extension Badge {
     /// 컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다
-    public class Content: UIView {
+    @available(*, deprecated, message: "Use Badge.Content instead")
+    public class ContentUIView: UIView {
         private enum Const {
             static var defaultActiveColor: Color.Alias = .primaryNormal
             static var defaultInactiveColor: Color.Alias = .labelDisable
@@ -86,8 +87,6 @@ extension Badge {
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
-        private weak var delegate: TextButtonDelegate?
-        
         /// 객체를 생성합니다.
         public init() {
             super.init(frame: .zero)
@@ -129,7 +128,7 @@ extension Badge {
     }
 }
 
-extension Badge.Content {
+extension Badge.ContentUIView {
     private func setupViews() {
         addSubview(stackView)
         
@@ -197,7 +196,7 @@ extension Badge.Content {
     }
 }
 
-extension Badge.Content {
+extension Badge.ContentUIView {
     private func updateViews() {
         updateColor()
         updateIconView()
@@ -239,7 +238,7 @@ extension Badge.Content {
     }
 }
 
-extension Badge.Content {
+extension Badge.ContentUIView {
     private var enclosureColor: UIColor {
         switch colorStyle {
         case .neutral:
@@ -251,7 +250,7 @@ extension Badge.Content {
     }
 }
 
-extension Badge.Content.Size {
+extension Badge.ContentUIView.Size {
     var iconSize: CGSize {
         switch self {
         case .normal:
@@ -308,7 +307,7 @@ extension Badge.Content.Size {
     }
 }
 
-extension Badge.Content.ColorStyle {
+extension Badge.ContentUIView.ColorStyle {
     var contentColor: Color.Alias {
         switch self {
         case .neutral:

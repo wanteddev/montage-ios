@@ -504,14 +504,14 @@ public struct TextArea: View {
                         handler: handler
                     )
                 case let .filterChip(variant, title, handler):
-                    Chip.FilterChipController(
+                    Chip.Filter(
                         variant: variant,
                         size: .small,
                         text: title,
                         handler: handler
                     )
                 case let .badge(variant, title):
-                    Badge.ContentBadgeController(
+                    Badge.Content(
                         variant: variant,
                         size: .large,
                         color: .neutral,
@@ -561,7 +561,7 @@ extension TextArea {
             handler: (() -> Void)? = nil
         )
         case badge(
-            Badge.Content.Variant = .solid,
+            Badge.ContentUIView.Variant = .solid,
             title: String
         )
     }

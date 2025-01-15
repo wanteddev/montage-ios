@@ -1,5 +1,5 @@
 //
-//  PushBadge.swift
+//  PushBadgeUIView.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/26.
@@ -10,7 +10,7 @@ import UIKit
 
 extension Badge {
     /// 특정 요소에 대한 알림을 표시할 수 있는 뱃지입니다
-    public class Push: UIView {
+    public class PushUIView: UIView {
         private enum Const {
             static let defaultDotSize: CGSize = .init(width: 4, height: 4)
             static let defaultNumberLimit = 1000
@@ -21,7 +21,7 @@ extension Badge {
         }
         
         /// 뱃지의 외관 값을 가져오거나 설정합니다.
-        public var variant: Variant = .dot {
+        var variant: Variant = .dot {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -36,13 +36,13 @@ extension Badge {
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
         /// 객체를 생성합니다.
-        public init() {
+        init() {
             super.init(frame: .zero)
             
             setupViews()
         }
         
-        public required init?(coder: NSCoder) {
+        required init?(coder: NSCoder) {
             super.init(coder: coder)
             
             setupViews()
@@ -83,7 +83,7 @@ extension Badge {
     }
 }
 
-extension Badge.Push {
+extension Badge.PushUIView {
     private func setupViews() {
         addSubview(backgroundColorView)
         addSubview(stackView)
@@ -161,7 +161,7 @@ extension Badge.Push {
     }
 }
 
-extension Badge.Push {
+extension Badge.PushUIView {
     private func updateViews() {
         updateColor()
         updateTextLabel()
@@ -178,7 +178,7 @@ extension Badge.Push {
     }
 }
 
-extension Badge.Push {
+extension Badge.PushUIView {
     private func getText() -> String? {
         switch variant {
         case .dot: nil
@@ -220,7 +220,7 @@ extension Badge.Push {
     }
 }
 
-extension Badge.Push.Variant {
+extension Badge.PushUIView.Variant {
     var edgeInsets: UIEdgeInsets {
         switch self {
         case .dot:
@@ -235,6 +235,6 @@ extension Badge.Push.Variant {
     /// PushBadge/Dot을 위치시킬 때 필요한 Offset입니다.
     /// > edgeInsets + (size / 2)
     var dotOffset: CGFloat {
-        edgeInsets.insets.leading + (Badge.Push.Const.defaultDotSize.width / 2)
+        edgeInsets.insets.leading + (Badge.PushUIView.Const.defaultDotSize.width / 2)
     }
 }

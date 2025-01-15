@@ -21,7 +21,7 @@ struct InteractiveCellStyle: ButtonStyle {
         configuration.label
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
             .overlay(
-                Decorate.InteractionController(
+                Decorate.Interaction(
                     state: configuration.isPressed ? .pressed : .normal,
                     variant: .light,
                     color: .labelNormal

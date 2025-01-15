@@ -150,21 +150,21 @@ import Pretendard
         },
         topContent: {
             HStack {
-                Badge.ContentBadgeController(text: "텍스트")
-                Badge.ContentBadgeController(text: "텍스트")
-                Badge.ContentBadgeController(text: "텍스트")
-                Badge.ContentBadgeController(text: "텍스트")
+                Badge.Content(text: "텍스트")
+                Badge.Content(text: "텍스트")
+                Badge.Content(text: "텍스트")
+                Badge.Content(text: "텍스트")
             }
         },
         bottomContent: {
             HStack {
-                Badge.ContentBadgeController(text: "텍스트")
-                Badge.ContentBadgeController(text: "텍스트")
-                Badge.ContentBadgeController(text: "텍스트")
+                Badge.Content(text: "텍스트")
+                Badge.Content(text: "텍스트")
+                Badge.Content(text: "텍스트")
             }
         },
         leftContent: {
-            Control.CheckboxController(state: .unchecked)
+            Control.Checkbox(state: .unchecked)
         },
         rightContent: {
             Image.montage(.chevronRight)

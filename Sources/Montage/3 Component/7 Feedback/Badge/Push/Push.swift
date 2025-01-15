@@ -1,5 +1,5 @@
 //
-//  PushBadgeController.swift
+//  Push.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/26.
@@ -9,13 +9,13 @@ import Pretendard
 import SwiftUI
 
 extension Badge {
-    public struct PushBadgeController: UIViewRepresentable {
+    public struct Push: UIViewRepresentable {
         /// 뱃지의 외관입니다.
-        public var variant: Badge.Push.Variant
+        public var variant: Badge.PushUIView.Variant
         
-        public typealias UIViewType = Badge.Push
+        public typealias UIViewType = Badge.PushUIView
         
-        public init(variant: Badge.Push.Variant) {
+        public init(variant: Badge.PushUIView.Variant) {
             self.variant = variant
         }
         
@@ -52,13 +52,13 @@ extension Badge {
 fileprivate struct Preview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Badge.PushBadgeController(variant: .dot)
+            Badge.Push(variant: .dot)
             
-            Badge.PushBadgeController(variant: .new)
+            Badge.Push(variant: .new)
             
-            Badge.PushBadgeController(variant: .number(1))
+            Badge.Push(variant: .number(1))
             
-            Badge.PushBadgeController(variant: .number(999))
+            Badge.Push(variant: .number(999))
         }
     }
 }

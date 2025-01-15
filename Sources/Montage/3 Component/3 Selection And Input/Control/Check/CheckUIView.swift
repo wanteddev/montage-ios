@@ -1,34 +1,41 @@
 //
-//  RoundCheckbox.swift
+//  CheckUIView.swift
 //  Montage
 //
-//  Created by Euigyom Kim on 2023/09/07.
+//  Created by Euigyom Kim on 2023/03/02.
 //
 
 import UIKit
 
-/// ``Montage/RoundCheckbox``의 터치 이벤트를 받을 수 있는 Delegate입니다.
-public protocol RoundCheckboxControlDelegate: AnyObject {
+/// ``Montage/CheckUIView``의 터치 이벤트를 받을 수 있는 Delegate입니다.
+protocol CheckControlDelegate: AnyObject {
     /// 터치가 발생하였을 때 호출되는 메소드입니다.
-    /// - Parameter checkbox: 터치가 발생한 객체
-    func didTappedCheckbox(_ checkbox: Control.RoundCheckbox)
+    /// - Parameter check: 터치가 발생한 객체
+    func didTappedCheck(_ check: Control.CheckUIView)
 }
 
 extension Control {
-    /// 원형으로 둘러진 체크 모양을 표현하는 Control Element입니다. ``MontageControl``의 모든 상태를 표현할 수 있습니다.
-    public final class RoundCheckbox: UIView, MontageControl {
+    /// 체크 이미지를 표현하는 Control Element 입니다. ``MontageControl``의 일부만을 표현할 수 있습니다.
+    @available(*, deprecated, message: "Use Montage/Check instead.")
+    public final class CheckUIView: UIView, MontageControl {
         private let boxView = UIView()
         
-        private let imageView: UIImageView = {
+        private lazy var imageView: UIImageView = {
             let view = UIImageView()
             view.isUserInteractionEnabled = false
-            view.tintColor = .alias(.staticWhite)
+            view.tintColor = .alias(.labelAssistive)
+            view.image = .montage(.checkThick)
             return view
         }()
         
         /// Control Element의 모양을 표현하기 위한 상태값입니다.
+        /// `.indeterminate` 상태는 지원하지 않으며, 해당 상태로 설정할 경우 자동으로 `.checked` 상태로 변경후 설정됩니다.
         public var state: MontageControlState = .unchecked {
             didSet {
+                if state == .indeterminate {
+                    #warning("Can't use .indeterminate type on NestedCheck element. Must use .checked type.")
+                    state = .checked
+                }
                 updateViews()
             }
         }
@@ -40,13 +47,13 @@ extension Control {
         }
         
         public let size: MontageControlSize
-        private let interactionView = Decorate.Interaction()
-
+        private let interactionView = Decorate.InteractionUIView()
+                
         private var longPressRecognizer: UILongPressGestureRecognizer?
         
-        public weak var delegate: RoundCheckboxControlDelegate?
+        weak var delegate: CheckControlDelegate?
         
-        public init(size: MontageControlSize = .normal) {
+        init(size: MontageControlSize = .normal) {
             self.size = size
             super.init(frame: .zero)
             
@@ -71,7 +78,7 @@ extension Control {
     }
 }
 
-extension Control.RoundCheckbox {
+extension Control.CheckUIView {
     private func setupViews() {
         addSubview(boxView)
         addSubview(interactionView)
@@ -84,7 +91,7 @@ extension Control.RoundCheckbox {
         
         widthAnchor.constraint(equalToConstant: containerSize.width).isActive = true
         heightAnchor.constraint(equalToConstant: containerSize.height).isActive = true
-
+        
         boxView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: boxInsets.left).isActive = true
         boxView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -boxInsets.right).isActive = true
         boxView.topAnchor.constraint(equalTo: topAnchor, constant: boxInsets.top).isActive = true
@@ -109,12 +116,15 @@ extension Control.RoundCheckbox {
     private func updateViews() {
         isUserInteractionEnabled = false == disable
         
-        boxView.layer.cornerRadius = cornerRadius
-        boxView.layer.borderWidth = 1.5
-        boxView.layer.backgroundColor = resolveCurrentBackgroundColor()
-        boxView.layer.borderColor = resolveCurrentBorderColor()
         boxView.layer.opacity = .opacity(disable ? .p043 : .p100)
-        imageView.image = resolveCurrentImage()
+        
+        switch state {
+        case .unchecked:
+            imageView.tintColor = .alias(.labelAssistive)
+        case .checked, .indeterminate:
+            imageView.tintColor = .alias(.primaryNormal)
+        }
+        
         interactionView.variant = .normal
         interactionView.layer.cornerRadius = interactionSize.width / 2
     }
@@ -148,45 +158,14 @@ extension Control.RoundCheckbox {
             case .checked: .unchecked
             case .indeterminate, .unchecked: .checked
             }
-            delegate?.didTappedCheckbox(self)
+            delegate?.didTappedCheck(self)
         default:
             break
         }
     }
 }
 
-extension Control.RoundCheckbox {
-    private func resolveCurrentBackgroundColor() -> CGColor? {
-        switch state {
-        case .unchecked:
-            nil
-        case .checked, .indeterminate:
-            UIColor.alias(.primaryNormal).cgColor
-        }
-    }
-    
-    private func resolveCurrentBorderColor() -> CGColor {
-        switch state {
-        case .unchecked:
-            UIColor.alias(.lineNormal).cgColor
-        case .checked, .indeterminate:
-            UIColor.alias(.primaryNormal).cgColor
-        }
-    }
-    
-    private func resolveCurrentImage() -> UIImage? {
-        switch state {
-        case .unchecked:
-            nil
-        case .checked:
-            .montage(.checkThick)
-        case .indeterminate:
-            .montage(.lineHorizontalThick)
-        }
-    }
-}
-
-extension Control.RoundCheckbox {
+extension Control.CheckUIView {
     var containerSize: CGSize {
         switch size {
         case .normal:
@@ -197,20 +176,15 @@ extension Control.RoundCheckbox {
     }
     
     var boxInsets: UIEdgeInsets {
-        .init(top: 2, left: 2, bottom: 2, right: 2)
+        .zero
     }
     
     var imageInsets: UIEdgeInsets {
-        switch size {
-        case .normal:
-            .init(top: 2, left: 2, bottom: 2, right: 2)
-        case .small:
-            .init(top: 1, left: 1, bottom: 1, right: 1)
-        }
+        .zero
     }
     
     var cornerRadius: CGFloat {
-        (containerSize.width - boxInsets.horizontal) / 2
+        .zero
     }
     
     var interactionSize: CGSize {
@@ -223,7 +197,7 @@ extension Control.RoundCheckbox {
     }
 }
 
-extension Control.RoundCheckbox: UIGestureRecognizerDelegate {
+extension Control.CheckUIView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
         _: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer

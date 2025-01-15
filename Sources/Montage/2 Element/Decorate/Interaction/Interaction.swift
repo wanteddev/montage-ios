@@ -1,77 +1,40 @@
 //
 //  Interaction.swift
-//  Montage
 //
-//  Created by Euigyom Kim on 2023/04/06.
+//
+//  Created by Ahn Sang Hoon on 6/24/24.
 //
 
-import UIKit
+import SwiftUI
 
 extension Decorate {
-    public final class Interaction: UIView {
+    public struct Interaction: View {
         public enum State {
             case normal, hovered, focused, pressed
         }
-        
+
         public enum Variant {
             case normal, light, strong
         }
-        
-        var state: State {
-            didSet {
-                updateView()
-            }
-        }
-        
-        var color: Color.Alias {
-            didSet {
-                updateView()
-            }
-        }
-        
-        var variant: Variant {
-            didSet {
-                updateView()
-            }
-        }
-        
-        init(state: State = .normal, color: Color.Alias = .labelNormal, variant: Variant = .normal) {
-            self.state = state
-            self.color = color
-            self.variant = variant
-            
-            super.init(frame: .zero)
-            
-            setupView()
-        }
-        
-        required init?(coder: NSCoder) {
-            state = .normal
-            color = .labelNormal
-            variant = .normal
-            
-            super.init(coder: coder)
-            
-            setupView()
-        }
-    }
-}
 
-extension Decorate.Interaction {
-    private func setupView() {
-        isUserInteractionEnabled = false
-        alpha = state.alpha * variant.weight
-        backgroundColor = .alias(color)
-    }
-    
-    private func updateView() {
-        UIView.animate(
-            withDuration: 0.15,
-            delay: 0,
-            options: [.beginFromCurrentState, .curveEaseInOut]
-        ) { [self] in
-            alpha = state.alpha * variant.weight
-            backgroundColor = .alias(color)
+        public var state: State = .normal
+        public var variant: Variant = .normal
+        public var color: Color.Alias = .labelNormal
+
+        public init(
+            state: State = .normal,
+            variant: Variant = .normal,
+            color: Color.Alias = .labelNormal
+        ) {
+            self.state = state
+            self.variant = variant
+            self.color = color
+        }
+
+        public var body: some View {
+            Rectangle()
+                .foregroundStyle(SwiftUI.Color.alias(color))
+                .opacity(state.alpha * variant.weight)
         }
     }
 }
@@ -100,6 +63,17 @@ extension Decorate.Interaction.Variant {
             0.75
         case .strong:
             1.5
+        }
+    }
+}
+
+struct Interaction_Previews: PreviewProvider {
+    static var previews: some View {
+        HStack {
+            Decorate.Interaction()
+            Decorate.Interaction(
+                state: .pressed
+            )
         }
     }
 }
