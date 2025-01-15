@@ -105,6 +105,9 @@ public struct Category: View {
                     .padding(.trailing, padding ? 16 : 0)
                 }
             }
+            .if(verticalPadding) {
+                $0.padding(.vertical, 8)
+            }
             .onChange(of: selectedIndex) { index in
                 withAnimation(animation) {
                     reader.scrollTo(index, anchor: .center)
@@ -179,6 +182,7 @@ public struct Category: View {
     private var variant: Variant = .default
     private var size: Size = .medium
     private var padding = false
+    private var verticalPadding = false
     private var icon: Icon? = nil
     private var iconButtonAction: (() -> Void)?
     
@@ -197,6 +201,12 @@ public struct Category: View {
     public func padding(_ padding: Bool = true) -> Self {
         var zelf = self
         zelf.padding = padding
+        return zelf
+    }
+    
+    public func verticalPadding(_ verticalPadding: Bool = true) -> Self {
+        var zelf = self
+        zelf.verticalPadding = verticalPadding
         return zelf
     }
     
