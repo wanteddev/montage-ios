@@ -16,13 +16,13 @@ public struct Category: View {
     }
     
     public enum Size: String, CaseIterable {
-        case xsmall, small, normal, large
+        case small, normal, medium, large
         
         var spacing: CGFloat {
             switch self {
-            case .xsmall: 4
-            case .small: 6
-            case .normal: 8
+            case .small: 4
+            case .normal: 6
+            case .medium: 8
             case .large: 10
             }
         }
@@ -177,7 +177,7 @@ public struct Category: View {
     // MARK: - Modifiers
     
     private var variant: Variant = .default
-    private var size: Size = .normal
+    private var size: Size = .medium
     private var padding = false
     private var icon: Icon? = nil
     private var iconButtonAction: (() -> Void)?
@@ -229,7 +229,12 @@ public struct Category: View {
         }
         
         var chipSize: Chip.Action.Size {
-            .init(rawValue: size.rawValue) ?? .normal
+            switch size {
+            case .small: return .xsmall
+            case .normal: return .small
+            case .medium: return .normal
+            case .large: return .large
+            }
         }
     }
 }
