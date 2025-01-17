@@ -29,9 +29,13 @@ public struct Toast: View {
         case custom(Montage.Icon, tint: Montage.Color.Alias? = nil)
     }
     
-    public enum Location: Equatable {
+    public enum Location {
         case top(offset: CGFloat = .zero)
         case bottom(offset: CGFloat = .zero)
+    }
+    
+    public enum Duration {
+        case short, long
     }
     
     private let variant: Variant
@@ -163,10 +167,12 @@ extension Toast {
     public struct ToastModifier: ViewModifier {
         @Binding private var model: Toast.Model?
         private let location: Toast.Location
+        private let duration: Toast.Duration
         
-        init(model: Binding<Toast.Model?>, location: Toast.Location) {
+        init(model: Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) {
             _model = model
             self.location = location
+            self.duration = duration
         }
 
         public func body(content: Content) -> some View {
@@ -175,7 +181,7 @@ extension Toast {
                     presentationPolicy: .presentIfNotNil(model),
                     presentingAnimation: .easeIn(duration: 0.35),
                     dismissingAnimation: .easeIn(duration: 0.35),
-                    dismissPolicy: .after(seconds: 2),
+                    dismissPolicy: .after(seconds: durationTime),
                     onDismiss: {
                         model = nil
                     },
@@ -196,6 +202,13 @@ extension Toast {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
                 }
+        }
+        
+        private var durationTime: TimeInterval {
+            switch duration {
+            case .short: return 3
+            case .long: return 5
+            }
         }
     }
 }

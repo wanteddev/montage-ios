@@ -83,9 +83,10 @@ extension View {
 extension View {
     public func toast(
         _ model: Binding<Toast.Model?>,
-        location: Toast.Location = .bottom(offset: 0)
+        location: Toast.Location = .bottom(offset: 0),
+        duration: Toast.Duration = .short
     ) -> some View {
-        modifier(Toast.ToastModifier(model: model, location: location))
+        modifier(Toast.ToastModifier(model: model, location: location, duration: duration))
     }
 }
 
