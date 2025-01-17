@@ -12,20 +12,12 @@ public struct Category: View {
     
     /// 카테고리 아이템의 종류를 결정하는 열거형입니다.
     public enum Variant {
-        case `default`, alternative
+        case normal, alternative
     }
     
+    /// 카테고리 사이즈를 결정하는 열거형입니다.
     public enum Size: String, CaseIterable {
-        case small, normal, medium, large
-        
-        var spacing: CGFloat {
-            switch self {
-            case .small: 4
-            case .normal: 6
-            case .medium: 8
-            case .large: 10
-            }
-        }
+        case small, medium, large, xlarge
     }
     
     @Binding private var selectedIndex: Int
@@ -62,7 +54,7 @@ public struct Category: View {
         ScrollViewReader { reader in
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    HStack(spacing: size.spacing) {
+                    HStack(spacing: itemSpacing) {
                         ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                             ItemView(
                                 variant: variant,
@@ -106,7 +98,7 @@ public struct Category: View {
                 }
             }
             .if(verticalPadding) {
-                $0.padding(.vertical, 8)
+                $0.padding(.vertical, verticalPaddingValue)
             }
             .onChange(of: selectedIndex) { index in
                 withAnimation(animation) {
@@ -179,7 +171,7 @@ public struct Category: View {
     
     // MARK: - Modifiers
     
-    private var variant: Variant = .default
+    private var variant: Variant = .normal
     private var size: Size = .medium
     private var padding = false
     private var verticalPadding = false
@@ -217,6 +209,24 @@ public struct Category: View {
         return zelf
     }
     
+    // MARK: - private
+    
+    private var itemSpacing: CGFloat {
+        switch size {
+        case .small: 4
+        case .medium: 6
+        case .large: 8
+        case .xlarge: 10
+        }
+    }
+    
+    private var verticalPaddingValue: CGFloat {
+        switch size {
+        case .small, .medium: 8
+        case .large, .xlarge: 10
+        }
+    }
+    
     // MARK: - Inner View
     
     fileprivate struct ItemView: View {
@@ -231,7 +241,7 @@ public struct Category: View {
         }
         
         var chipVariant: Chip.Action.Variant {
-            if variant == .default && isSelected {
+            if variant == .normal && isSelected {
                 .solid
             } else {
                 .outlined
@@ -241,9 +251,9 @@ public struct Category: View {
         var chipSize: Chip.Action.Size {
             switch size {
             case .small: return .xsmall
-            case .normal: return .small
-            case .medium: return .normal
-            case .large: return .large
+            case .medium: return .small
+            case .large: return .normal
+            case .xlarge: return .large
             }
         }
     }
