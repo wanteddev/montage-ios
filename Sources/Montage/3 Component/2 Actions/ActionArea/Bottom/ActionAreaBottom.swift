@@ -5,6 +5,7 @@
 //  Created by Ahn Sang Hoon on 7/9/24.
 //
 
+import Combine
 import SwiftUI
 
 extension ActionArea {
@@ -41,7 +42,7 @@ extension ActionArea {
         }
         
         /// 하단 영역에 노출될 Gradient, Button들이 집합된 Component입니다.
-        public struct Component: View {
+        public struct Component: View, KeyboardReadable {
             // MARK: - Environment
             
             @Environment(\.safeAreaInsets) private var safeAreaInsets
@@ -50,6 +51,7 @@ extension ActionArea {
             
             @State private var height: CGFloat = .zero
             @State private var captionHeight: CGFloat = .zero
+            @State private var isKeyboardVisible = false
             
             // MARK: - Uninitialised properties
             
@@ -119,6 +121,11 @@ extension ActionArea {
                 }
             }
             
+            /// SafeAreaInest에 따른 Bottom Padding 입니다.
+            private var safeAreaBottomPadding: CGFloat {
+                safeAreaInsets.bottom != .zero ? 14 : .zero
+            }
+            
             // MARK: - Initialisers
            
             public init(model: ActionArea.Bottom.Model) {
@@ -169,6 +176,11 @@ extension ActionArea {
                             ActionView(model.priority)
                         }
                         .padding([.top, .horizontal], 20)
+
+                        if isKeyboardVisible == false {
+                            Spacer()
+                                .frame(height: safeAreaBottomPadding)
+                        }
                     }
                     .padding(.bottom, 20)
                     
@@ -187,6 +199,7 @@ extension ActionArea {
                         }
                     }
                 }
+                .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
             }
             
             private struct ActionView: View {
@@ -431,6 +444,28 @@ extension ActionArea.Bottom {
             self.caption = caption
             extraContents = nil
         }
+    }
+}
+
+extension ActionArea.Bottom {
+    /// Publisher to read keyboard changes.
+    protocol KeyboardReadable {
+        var keyboardPublisher: AnyPublisher<Bool, Never> { get }
+    }
+}
+
+extension ActionArea.Bottom.KeyboardReadable {
+    var keyboardPublisher: AnyPublisher<Bool, Never> {
+        Publishers.Merge(
+            NotificationCenter.default
+                .publisher(for: UIResponder.keyboardWillShowNotification)
+                .map { _ in true },
+            
+            NotificationCenter.default
+                .publisher(for: UIResponder.keyboardWillHideNotification)
+                .map { _ in false }
+        )
+        .eraseToAnyPublisher()
     }
 }
 
