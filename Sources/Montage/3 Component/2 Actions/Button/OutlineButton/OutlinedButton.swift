@@ -100,7 +100,7 @@ extension Button {
     }
 }
 
-struct OutlinedButtonControllerPreview: View {
+struct OutlinedButtonPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
             Text("Variant").montage()
@@ -268,9 +268,9 @@ struct OutlinedButtonControllerPreview: View {
     }
 }
     
-struct OutlinedButtonController_Previews: PreviewProvider {
+struct OutlinedButton_Previews: PreviewProvider {
     static var previews: some View {
-        OutlinedButtonControllerPreview()
+        OutlinedButtonPreview()
             .padding()
             .previewLayout(.sizeThatFits)
     }

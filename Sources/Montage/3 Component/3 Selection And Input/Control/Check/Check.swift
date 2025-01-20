@@ -68,6 +68,7 @@ extension Control {
         
         public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.state = state
+            uiView.size = size
             uiView.disable = isDisable
         }
         
@@ -118,7 +119,7 @@ extension Control {
     }
 }
 
-struct MontageCheckController_Previews: PreviewProvider {
+struct MontageCheck_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             Control.Check(state: .checked, size: .small)

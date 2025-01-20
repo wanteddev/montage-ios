@@ -118,7 +118,7 @@ extension Control {
     }
 }
 
-struct RadioController_Previews: PreviewProvider {
+struct Radio_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             Control.Radio(state: .checked)

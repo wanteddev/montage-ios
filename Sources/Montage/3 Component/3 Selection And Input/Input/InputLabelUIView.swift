@@ -16,7 +16,7 @@ protocol InputDelegate: AnyObject {
 
 /// Control Element와 텍스트 라벨을 함께 담고 있는 컴포넌트입니다.
 public class InputLabelUIView: UIView {
-    private var elementView: MontageControl
+    private var elementView: MontageUIControl
     
     private var textWrapperView = UIView()
     
@@ -60,7 +60,7 @@ public class InputLabelUIView: UIView {
     
     private var tapRecognizer: UITapGestureRecognizer?
     
-    init(with input: MontageControl) {
+    init(with input: MontageUIControl) {
         elementView = input
         super.init(frame: .zero)
         
@@ -157,21 +157,21 @@ extension InputLabelUIView {
 }
 
 /// 디자인시스템의 Input 요소들이 공통으로 가질 수 있는 프로퍼티를 정의한 프로토콜입니다.
-public protocol MontageControl: UIView {
+protocol MontageUIControl: UIView {
     var state: MontageControlState { get set }
     var size: MontageControlSize { get }
-    var disable: Bool { get set }
     var intrinsicContentSize: CGSize { get }
+    var disable: Bool { get set }
 }
 
 /// Input 요소들에서 사용할 수 있는 State를 정의합니다.
-public enum MontageControlState {
+public enum MontageControlState: String, CaseIterable {
     case unchecked
     case checked
     case indeterminate
 }
 
-public enum MontageControlSize {
+public enum MontageControlSize: String, CaseIterable {
     case normal
     case small
 }

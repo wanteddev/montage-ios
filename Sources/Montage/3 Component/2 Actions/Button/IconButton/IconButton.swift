@@ -347,15 +347,15 @@ extension Button {
     }
 }
 
-struct IconButtonController_Previews: PreviewProvider {
+struct IconButton_Previews: PreviewProvider {
     static var previews: some View {
-        IconButtonControllerPreview()
+        IconButtonPreview()
             .padding()
             .previewLayout(.sizeThatFits)
     }
 }
 
-struct IconButtonControllerPreview: View {
+struct IconButtonPreview: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("variant").montage()

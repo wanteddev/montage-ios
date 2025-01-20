@@ -138,7 +138,7 @@ public struct Accordion<A: View, C: View>: View {
     private var fillWidth = false
     private var divider = false
     
-    /// 타이틀 텍스트의 `variant`와 `weight` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`입니다.
+    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`, `.alias(.labelNormal)`입니다.
     public func title(
         _ variant: Typography.Variant = .body2,
         weight: Typography.Weight = .bold,
