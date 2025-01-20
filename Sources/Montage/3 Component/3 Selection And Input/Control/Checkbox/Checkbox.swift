@@ -118,7 +118,7 @@ extension Control {
     }
 }
 
-struct CheckboxController_Previews: PreviewProvider {
+struct Checkbox_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             Control.Checkbox(state: .checked, size: .small)

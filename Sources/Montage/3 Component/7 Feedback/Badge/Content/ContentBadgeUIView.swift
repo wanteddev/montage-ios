@@ -28,7 +28,7 @@ extension Badge {
         }
         
         /// 뱃지의 색상을 결정하는 열거형입니다.
-        public enum ColorStyle: Equatable {
+        public enum ColorStyle: Equatable, Hashable {
             case neutral, accent(_ content: Color.Accent, background: Color.Accent? = nil)
         }
         

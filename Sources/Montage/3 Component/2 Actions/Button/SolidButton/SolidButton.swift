@@ -94,7 +94,7 @@ extension Button {
     }
 }
 
-struct SolidButtonControllerPreview: View {
+struct SolidButtonPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
             Text("State").montage()
@@ -240,9 +240,9 @@ struct SolidButtonControllerPreview: View {
     }
 }
 
-struct RoundButtonController_Previews: PreviewProvider {
+struct RoundButton_Previews: PreviewProvider {
     static var previews: some View {
-        SolidButtonControllerPreview()
+        SolidButtonPreview()
             .padding()
             .previewLayout(.sizeThatFits)
     }

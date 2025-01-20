@@ -15,9 +15,9 @@ protocol RadioControlDelegate: AnyObject {
 }
 
 extension Control {
-    /// 원형 안의 점 모양을 표시하는 Control Element 입니다. ``MontageControl``의 일부만을 표현할 수 있습니다.
+    /// 원형 안의 점 모양을 표시하는 Control Element 입니다. ``MontageUIControl``의 일부만을 표현할 수 있습니다.
     @available(*, deprecated, message: "Use Montage/Radio instead.")
-    public final class RadioUIView: UIView, MontageControl {
+    public final class RadioUIView: UIView, MontageUIControl {
         private let boxView = UIView()
         
         private let imageView: UIImageView = {
