@@ -756,7 +756,7 @@ extension Bar.TopNavigation {
                 .onPreferenceChange(
                     OffsetPreferenceKey.self,
                     perform: {
-                        scrollOffset = $0.y + (safeAreaInsets.top - navigationHeight)
+                        scrollOffset = $0.y
                         calculateSticky()
                     }
                 )
