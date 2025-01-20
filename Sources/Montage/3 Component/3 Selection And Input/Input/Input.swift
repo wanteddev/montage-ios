@@ -39,9 +39,9 @@ public struct Input: View {
                     weight: titleTypography.weight,
                     color: titleTypography.color
                 )
+                .paragraph(variant: titleTypography.variant)
                 .bold(isBold)
                 .multilineTextAlignment(.leading)
-                .paragraph(variant: titleTypography.variant)
         }
     }
     
