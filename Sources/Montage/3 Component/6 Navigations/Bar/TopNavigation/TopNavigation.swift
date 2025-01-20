@@ -667,7 +667,9 @@ extension Bar.TopNavigation {
         @State private var containerSize: CGSize = .zero
         @State private var innerContentSize: CGSize = .zero
         @State private var navigationHeight: CGFloat = .zero
-        @State private var bottomActionHeight: CGFloat = .zero
+        @State private var originBottomActionHeight: CGFloat = .zero
+        @State private var currentBottomActionHeight: CGFloat = .zero
+        @State private var isBottomActionAreaSticky: Bool
 
         private let variant: Variant
         private let title: String
@@ -676,32 +678,6 @@ extension Bar.TopNavigation {
         private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
         private let model: ActionArea.Bottom.Model?
-        
-        /// TopNavigation의 사이즈를 측정하는 View입니다.
-        private var navigationSizeMeasurer: some View {
-            GeometryReader { proxy in
-                SwiftUI.Color.clear
-                    .onAppear {
-                        navigationHeight = proxy.size.height
-                    }
-                    .onChange(of: variant) { _ in
-                        navigationHeight = proxy.size.height
-                    }
-            }
-        }
-
-        /// ActionArea/Bottom의 사이즈를 측정하는 View입니다.
-        private var bottomActionSizeMeasurer: some View {
-            GeometryReader { proxy in
-                SwiftUI.Color.clear
-                    .onAppear {
-                        bottomActionHeight = proxy.size.height
-                    }
-                    .onChange(of: variant) { _ in
-                        bottomActionHeight = proxy.size.height
-                    }
-            }
-        }
 
         /// 무시할 SafeAreaEdge입니다.
         /// > ActionArea/Bottom이 존재하는 경우에 bottom SafeArea를 무시합니다.
@@ -720,22 +696,13 @@ extension Bar.TopNavigation {
             }
         }
 
-        /// ActionArea/Bottom의 sticky 속성을 결정하는 Property입니다.
-        /// > 기본적으로 스크롤이 컨텐츠의 끝(전체 컨텐츠 크기 - offset)에 도달했을 때 sticky를 사용하지 않습니다.
-        private var bottomActionSticky: Bool {
-            let contentHeightOffset: CGFloat = (model?.variant == .extra) ? 70 : 20
-            let totalContentHeight = innerContentSize.height + bottomActionHeight
-            let currentScrollOffset = containerSize.height + abs(scrollOffset)
-            return totalContentHeight - contentHeightOffset >= currentScrollOffset
-        }
-
         /// Scroll 영역이 가지는 bottom padding입니다.
         ///
         /// Scroll 영역이 ActionArea/Bottom에 가려지는것을 방지하기 위해 사용합니다.
         /// > ActionArea/Bottom과 함께 사용하는 경우에 ActionArea/Bottom의 variant에 의해 결정됩니다.
         private var scrollViewBottomPadding: CGFloat {
             if model != nil {
-                bottomActionHeight + (model?.variant == .extra ? +10 : .zero)
+                currentBottomActionHeight + (model?.variant == .extra ? +10 : .zero)
             } else {
                 .zero
             }
@@ -757,6 +724,8 @@ extension Bar.TopNavigation {
             self.backgroundColorResolvable = backgroundColorResolvable
             self.actions = actions
             self.model = model
+
+            isBottomActionAreaSticky = model != nil ? true : false
         }
         
         public func body(content: Content) -> some View {
@@ -788,6 +757,7 @@ extension Bar.TopNavigation {
                     OffsetPreferenceKey.self,
                     perform: {
                         scrollOffset = $0.y + (safeAreaInsets.top - navigationHeight)
+                        calculateSticky()
                     }
                 )
                 VStack(alignment: .leading, spacing: .zero) {
@@ -799,8 +769,10 @@ extension Bar.TopNavigation {
                         backgroundColorResolvable: backgroundColorResolvable,
                         actions: actions
                     )
-                    .background(
-                        navigationSizeMeasurer
+                    .onGeometryChange(
+                        for: CGSize.self,
+                        of: { $0.size },
+                        action: { navigationHeight = $0.height }
                     )
                     Spacer()
                 }
@@ -811,21 +783,49 @@ extension Bar.TopNavigation {
                             model: .init(
                                 variant: model.variant,
                                 priority: model.priority,
-                                sticky: bottomActionSticky,
+                                sticky: isBottomActionAreaSticky,
                                 caption: model.caption,
                                 extraContents: model.extraContents
                             )
                         )
-                        .animation(.easeInOut, value: bottomActionSticky)
-                        .background(
-                            bottomActionSizeMeasurer
+                        .onGeometryChange(
+                            for: CGFloat.self,
+                            of: { $0.size.height },
+                            action: {
+                                currentBottomActionHeight = $0
+                                originBottomActionHeight = $0
+                            }
                         )
+                        .onChange(
+                            of: isBottomActionAreaSticky,
+                            perform: { isSticky in
+                                currentBottomActionHeight += isSticky ? -20 : +20
+                            }
+                        )
+                        .animation(.easeInOut, value: isBottomActionAreaSticky)
                     }
                 }
             }
             .ignoresSafeArea(.container, edges: ignoreSafeAreaEdge)
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { containerSize = $0 })
         }
+    }
+}
+
+extension Bar.TopNavigation.TopNavigationModifier {
+    /// 스크롤 offset에 따른 sticky 판단
+    /// > 기본적으로 스크롤이 컨텐츠의 끝(전체 컨텐츠 크기 - offset)에 도달했을 때 sticky를 사용하지 않습니다.
+    private func calculateSticky() {
+        // ActionArea의 추가 영역
+        let actionAreaExtraArea: CGFloat = (model?.variant == .extra) ? 70 : .zero
+        // 전체 컨텐츠 크기 (내부 컨텐츠 사이즈 + ActionArea + (스티키인 경우 gradient 영역))
+        let totalContentHeight = innerContentSize.height + originBottomActionHeight
+        // 계산하기 편리하게 처리된 현재 스크롤 Offset
+        let currentScrollOffsetForCalculate = containerSize.height + abs(scrollOffset.rounded())
+
+        let newValue = totalContentHeight - actionAreaExtraArea >= currentScrollOffsetForCalculate
+        guard isBottomActionAreaSticky != newValue else { return }
+        isBottomActionAreaSticky = newValue
     }
 }
 

@@ -71,25 +71,41 @@ extension ActionArea {
                 if showExtraContents {
                     [
                         .clear,
+                        .alias(.backgroundElevated).opacity(0),
                         .alias(.backgroundElevated).opacity(0.14),
-                        .alias(.backgroundElevated).opacity(0.29),
-                        .alias(.backgroundElevated).opacity(0.34),
-                        .alias(.backgroundElevated).opacity(0.40),
-                        .alias(.backgroundElevated).opacity(0.54),
-                        .alias(.backgroundElevated).opacity(0.74),
+                        .alias(.backgroundElevated).opacity(0.27),
+                        .alias(.backgroundElevated).opacity(0.38),
+                        .alias(.backgroundElevated).opacity(0.48),
+                        .alias(.backgroundElevated).opacity(0.57),
+                        .alias(.backgroundElevated).opacity(0.65),
+                        .alias(.backgroundElevated).opacity(0.71),
+                        .alias(.backgroundElevated).opacity(0.77),
+                        .alias(.backgroundElevated).opacity(0.82),
                         .alias(.backgroundElevated).opacity(0.86),
+                        .alias(.backgroundElevated).opacity(0.9),
+                        .alias(.backgroundElevated).opacity(0.93),
+                        .alias(.backgroundElevated).opacity(0.96),
+                        .alias(.backgroundElevated).opacity(0.98),
                         .alias(.backgroundElevated)
                     ]
                 } else {
                     [
                         .clear,
+                        .alias(.backgroundNormal).opacity(0),
                         .alias(.backgroundNormal).opacity(0.14),
-                        .alias(.backgroundNormal).opacity(0.29),
-                        .alias(.backgroundNormal).opacity(0.34),
-                        .alias(.backgroundNormal).opacity(0.40),
-                        .alias(.backgroundNormal).opacity(0.54),
-                        .alias(.backgroundNormal).opacity(0.74),
+                        .alias(.backgroundNormal).opacity(0.27),
+                        .alias(.backgroundNormal).opacity(0.38),
+                        .alias(.backgroundNormal).opacity(0.48),
+                        .alias(.backgroundNormal).opacity(0.57),
+                        .alias(.backgroundNormal).opacity(0.65),
+                        .alias(.backgroundNormal).opacity(0.71),
+                        .alias(.backgroundNormal).opacity(0.77),
+                        .alias(.backgroundNormal).opacity(0.82),
                         .alias(.backgroundNormal).opacity(0.86),
+                        .alias(.backgroundNormal).opacity(0.9),
+                        .alias(.backgroundNormal).opacity(0.93),
+                        .alias(.backgroundNormal).opacity(0.96),
+                        .alias(.backgroundNormal).opacity(0.98),
                         .alias(.backgroundNormal)
                     ]
                 }
@@ -109,18 +125,6 @@ extension ActionArea {
                 }
             }
 
-            private var captionSizeMeasurer: some View {
-                GeometryReader { proxy in
-                    Text("")
-                        .onAppear {
-                            captionHeight = proxy.size.height
-                        }
-                        .onDisappear {
-                            captionHeight = .zero
-                        }
-                }
-            }
-            
             /// SafeAreaInest에 따른 Bottom Padding 입니다.
             private var safeAreaBottomPadding: CGFloat {
                 safeAreaInsets.bottom != .zero ? 14 : .zero
@@ -168,8 +172,10 @@ extension ActionArea {
                                     .montage(variant: .label2, alias: .labelAlternative)
                                     .paragraph(variant: .label2)
                                     .padding(.bottom, 16)
-                                    .background(
-                                        captionSizeMeasurer
+                                    .onGeometryChange(
+                                        for: CGSize.self,
+                                        of: { $0.size },
+                                        action: { captionHeight = $0.height }
                                     )
                             }
                             
