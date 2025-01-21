@@ -368,25 +368,18 @@ public struct TextArea: View {
             func component(_ resource: TextArea.Resource) -> some View {
                 switch resource {
                 case .characterCount(let limit):
-                    HStack(spacing: .zero) {
-                        Text("\(typedCharacters)")
-                            .montage(
-                                variant: .label2,
-                                weight: .medium,
-                                alias: disable ? .labelDisable : .labelAlternative
-                            )
-                            .paragraph(variant: .label2)
-                        if limit != .zero {
-                            Text("/\(String(limit))")
-                                .montage(
-                                    variant: .label2,
-                                    weight: .medium,
-                                    alias: disable ? .labelDisable : .labelAssistive
-                                )
-                                .paragraph(variant: .label2)
-                        }
-                    }
-                    .padding(.horizontal, 4)
+                    let counterString = [typedCharacters, limit]
+                        .compactMap { $0 }
+                        .map(String.init)
+                        .joined(separator: "/")
+                    Text(counterString)
+                        .montage(
+                            variant: .label2,
+                            weight: .medium,
+                            alias: disable ? .labelDisable : .labelAssistive
+                        )
+                        .paragraph(variant: .label2)
+                        .padding(.horizontal, 4)
                 case let .textButton(placement, variant, title, handler):
                     Button.TextButton(
                         variant: {
@@ -462,7 +455,7 @@ extension TextArea {
             case right
         }
         
-        case characterCount(limit: Int = .zero)
+        case characterCount(limit: Int? = nil)
         case textButton(
             placement: Placement = .left,
             varaint: Button.TextButton.Variant? = .assistive,
