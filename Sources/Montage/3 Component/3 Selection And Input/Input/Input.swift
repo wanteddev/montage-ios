@@ -32,16 +32,17 @@ public struct Input: View {
     public var body: some View {
         HStack(alignment: .top, spacing: spacing) {
             nestedControl
-                .frame(width: 24, height: 24)
+
             Text(text)
                 .montage(
                     variant: titleTypography.variant,
                     weight: titleTypography.weight,
                     color: titleTypography.color
                 )
+                .paragraph(variant: titleTypography.variant)
                 .bold(isBold)
                 .multilineTextAlignment(.leading)
-                .paragraph(variant: titleTypography.variant)
+                .padding(.vertical, size == .normal ? 1 : 0)
         }
     }
     
