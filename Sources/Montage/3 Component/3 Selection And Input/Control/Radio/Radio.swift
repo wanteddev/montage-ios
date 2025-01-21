@@ -68,6 +68,7 @@ extension Control {
         
         public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.state = state
+            uiView.size = size
             uiView.disable = isDisable
         }
         
