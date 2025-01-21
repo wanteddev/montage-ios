@@ -212,157 +212,160 @@ public struct TextArea: View {
         }
         
         var body: some View {
-            VStack(spacing: 12) {
-                ZStack(alignment: .topLeading) {
-                    switch resize {
-                    case .normal:
-                        if #available(iOS 16, *) {
-                            TextEditor(text: $text)
-                                .foregroundStyle(editorTextColor)
-                                .font(.montage(variant: .body1Reading))
-                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                                .focused($textEditorFocusState)
-                                .frame(minHeight: 36)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { _ in
-                                    typedCharacters = text.count
-                                }
-                                .scrollContentBackground(.hidden)
-                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                                .padding([.horizontal], -4.5)
-                                .padding(.top, -4)
-                                .padding(.bottom, -6)
-                        } else {
-                            TextEditor(text: $text)
-                                .foregroundStyle(editorTextColor)
-                                .font(.montage(variant: .body1Reading))
-                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                                .focused($textEditorFocusState)
-                                .frame(minHeight: 36)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { _ in
-                                    typedCharacters = text.count
-                                }
-                                .onAppear {
-                                    UITextView.appearance().backgroundColor = .clear
-                                }
-                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                                .padding([.horizontal], -4.5)
-                                .padding(.top, -4)
-                                .padding(.bottom, -6)
+            ZStack {
+                VStack(spacing: 12) {
+                    ZStack(alignment: .topLeading) {
+                        switch resize {
+                        case .normal:
+                            if #available(iOS 16, *) {
+                                TextEditor(text: $text)
+                                    .foregroundStyle(editorTextColor)
+                                    .font(.montage(variant: .body1Reading))
+                                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                    .focused($textEditorFocusState)
+                                    .frame(minHeight: 36)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .onChange(of: text) { _ in
+                                        typedCharacters = text.count
+                                    }
+                                    .scrollContentBackground(.hidden)
+                                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                    .padding([.horizontal], -4.5)
+                                    .padding(.top, -4)
+                                    .padding(.bottom, -6)
+                            } else {
+                                TextEditor(text: $text)
+                                    .foregroundStyle(editorTextColor)
+                                    .font(.montage(variant: .body1Reading))
+                                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                    .focused($textEditorFocusState)
+                                    .frame(minHeight: 36)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .onChange(of: text) { _ in
+                                        typedCharacters = text.count
+                                    }
+                                    .onAppear {
+                                        UITextView.appearance().backgroundColor = .clear
+                                    }
+                                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                    .padding([.horizontal], -4.5)
+                                    .padding(.top, -4)
+                                    .padding(.bottom, -6)
+                            }
+                        case .limit:
+                            if #available(iOS 16, *) {
+                                TextEditor(text: $text)
+                                    .font(.montage(variant: .body1Reading))
+                                    .foregroundStyle(editorTextColor)
+                                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                    .focused($textEditorFocusState)
+                                    .frame(minHeight: 36, maxHeight: 320)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .onChange(of: text) { _ in
+                                        typedCharacters = text.count
+                                    }
+                                    .scrollContentBackground(.hidden)
+                                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                    .padding([.horizontal], -4.5)
+                                    .padding(.top, -4)
+                                    .padding(.bottom, -6)
+                            } else {
+                                TextEditor(text: $text)
+                                    .foregroundStyle(editorTextColor)
+                                    .font(.montage(variant: .body1Reading))
+                                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                    .focused($textEditorFocusState)
+                                    .frame(minHeight: 36, maxHeight: 320)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .onChange(of: text) { _ in
+                                        typedCharacters = text.count
+                                    }
+                                    .onAppear {
+                                        UITextView.appearance().backgroundColor = .clear
+                                    }
+                                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                    .padding([.horizontal], -4.5)
+                                    .padding(.top, -4)
+                                    .padding(.bottom, -6)
+                            }
+                        case let .fixed(minimum, maximum):
+                            let min = min(minimum, maximum)
+                            let max = max(minimum, maximum)
+                            if #available(iOS 16, *) {
+                                TextEditor(text: $text)
+                                    .foregroundStyle(editorTextColor)
+                                    .font(.montage(variant: .body1Reading))
+                                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                    .focused($textEditorFocusState)
+                                    .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .onChange(of: text) { _ in
+                                        typedCharacters = text.count
+                                    }
+                                    .scrollContentBackground(.hidden)
+                                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                    .padding([.horizontal], -4.5)
+                                    .padding(.top, -4)
+                                    .padding(.bottom, -6)
+                            } else {
+                                TextEditor(text: $text)
+                                    .foregroundStyle(editorTextColor)
+                                    .font(.montage(variant: .body1Reading))
+                                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                                    .focused($textEditorFocusState)
+                                    .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .onChange(of: text) { _ in
+                                        typedCharacters = text.count
+                                    }
+                                    .onAppear {
+                                        UITextView.appearance().backgroundColor = .clear
+                                    }
+                                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                                    .padding([.horizontal], -4.5)
+                                    .padding(.top, -4)
+                                    .padding(.bottom, -6)
+                            }
                         }
-                    case .limit:
-                        if #available(iOS 16, *) {
-                            TextEditor(text: $text)
-                                .font(.montage(variant: .body1Reading))
-                                .foregroundStyle(editorTextColor)
-                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                                .focused($textEditorFocusState)
-                                .frame(minHeight: 36, maxHeight: 320)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { _ in
-                                    typedCharacters = text.count
-                                }
-                                .scrollContentBackground(.hidden)
+                        if $text.wrappedValue.isEmpty, let placeholder {
+                            Text(placeholder)
+                                .montage(
+                                    variant: .body1Reading,
+                                    color: placeholderTextColor
+                                )
+                                .paragraph(variant: .body1Reading)
                                 .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                                .padding([.horizontal], -4.5)
-                                .padding(.top, -4)
-                                .padding(.bottom, -6)
-                        } else {
-                            TextEditor(text: $text)
-                                .foregroundStyle(editorTextColor)
-                                .font(.montage(variant: .body1Reading))
-                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                                .focused($textEditorFocusState)
-                                .frame(minHeight: 36, maxHeight: 320)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { _ in
-                                    typedCharacters = text.count
-                                }
-                                .onAppear {
-                                    UITextView.appearance().backgroundColor = .clear
-                                }
-                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                                .padding([.horizontal], -4.5)
-                                .padding(.top, -4)
-                                .padding(.bottom, -6)
-                        }
-                    case let .fixed(minimum, maximum):
-                        let min = min(minimum, maximum)
-                        let max = max(minimum, maximum)
-                        if #available(iOS 16, *) {
-                            TextEditor(text: $text)
-                                .foregroundStyle(editorTextColor)
-                                .font(.montage(variant: .body1Reading))
-                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                                .focused($textEditorFocusState)
-                                .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { _ in
-                                    typedCharacters = text.count
-                                }
-                                .scrollContentBackground(.hidden)
-                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                                .padding([.horizontal], -4.5)
-                                .padding(.top, -4)
-                                .padding(.bottom, -6)
-                        } else {
-                            TextEditor(text: $text)
-                                .foregroundStyle(editorTextColor)
-                                .font(.montage(variant: .body1Reading))
-                                .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                                .focused($textEditorFocusState)
-                                .frame(minHeight: min, maxHeight: max, alignment: .topLeading)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .onChange(of: text) { _ in
-                                    typedCharacters = text.count
-                                }
-                                .onAppear {
-                                    UITextView.appearance().backgroundColor = .clear
-                                }
-                                .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                                .padding([.horizontal], -4.5)
-                                .padding(.top, -4)
-                                .padding(.bottom, -6)
+                                .allowsHitTesting(false)
                         }
                     }
-                    if $text.wrappedValue.isEmpty, let placeholder {
-                        Text(placeholder)
-                            .montage(
-                                variant: .body1Reading,
-                                color: placeholderTextColor
-                            )
-                            .paragraph(variant: .body1Reading)
-                            .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                            .allowsHitTesting(false)
+                    .padding(.horizontal, 4)
+                    if bottom {
+                        Bottom(
+                            typedCharacters: $typedCharacters,
+                            variant,
+                            disable,
+                            leftResource,
+                            leftResourceSpacing,
+                            rightResource,
+                            rightResourceSpacing
+                        )
                     }
                 }
-                .padding(.horizontal, 4)
-                if bottom {
-                    Bottom(
-                        typedCharacters: $typedCharacters,
-                        variant,
-                        disable,
-                        leftResource,
-                        leftResourceSpacing,
-                        rightResource,
-                        rightResourceSpacing
-                    )
-                }
-            }
-            .padding(.all, 12)
-            .overlay {
+                .padding(.all, 12)
+                .background(
+                    disable ? SwiftUI.Color.alias(.interactionDisable) : SwiftUI.Color.clear
+                )
+                .allowsHitTesting(disable == false)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .onChange(of: focus, perform: { v in
+                    textEditorFocusState = v
+                })
+                
+                // Stroke
                 RoundedRectangle(cornerRadius: 12)
+                    .inset(by: 0.5)
                     .stroke(editorStrokeColor, lineWidth: textEditorFocusState ? 2 : 1)
             }
-            .background(
-                disable ? SwiftUI.Color.alias(.interactionDisable) : SwiftUI.Color.clear
-            )
-            .allowsHitTesting(disable == false)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .onChange(of: focus, perform: { v in
-                textEditorFocusState = v
-            })
         }
         
         private struct Bottom: View {
