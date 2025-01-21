@@ -23,7 +23,7 @@ extension Badge {
         }
         
         /// 뱃지의 사이즈를 결정하는 열거형입니다.
-        public enum Size {
+        public enum Size: String, CaseIterable {
             case normal, medium, large
         }
         

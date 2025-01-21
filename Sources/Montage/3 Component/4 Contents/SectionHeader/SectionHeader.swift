@@ -57,6 +57,9 @@ public struct SectionHeader<C: View>: View {
     private var size: Size = .medium {
         didSet {
             titleTypography.variant = variant
+            if size == .xsmall {
+                titleTypography.color = .alias(.labelAlternative)
+            }
         }
     }
     private var titleTypography: (
