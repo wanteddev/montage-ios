@@ -10,10 +10,6 @@ import SwiftUI
 extension Modal {
     /// Modal/Bottom Component입니다.
     ///
-    /// > iOS 15 이하에서는 BottomSheet 형태가 아닌 FullScreen 형태로 표시됩니다.
-    /// >
-    /// > iOS 16.4 이하에서는 handle이 표시되지 않습니다.
-    ///
     /// .sheet(isPresented:content:)와 함께 사용하며 content안쪽에 Component를 위치시킵니다.
     /// ```
     /// .sheet(
@@ -131,6 +127,8 @@ extension Modal {
                     }
                 }
                 .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+                .presentationDetents(detents)
+                .presentationDragIndicator(handle ? .visible : .hidden)
                 .padding(.bottom, -safeAreaInsets.bottom)
             }
         }
