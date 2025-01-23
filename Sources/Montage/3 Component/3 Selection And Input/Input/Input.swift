@@ -36,11 +36,10 @@ public struct Input: View {
             Text(text)
                 .montage(
                     variant: titleTypography.variant,
-                    weight: titleTypography.weight,
+                    weight: isBold ? .bold : titleTypography.weight,
                     color: titleTypography.color
                 )
                 .paragraph(variant: titleTypography.variant)
-                .bold(isBold)
                 .multilineTextAlignment(.leading)
                 .padding(.vertical, size == .normal ? 1 : 0)
         }
