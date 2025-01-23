@@ -250,10 +250,10 @@ public struct Category: View {
         
         var chipSize: Chip.Action.Size {
             switch size {
-            case .small: return .xsmall
-            case .medium: return .small
-            case .large: return .normal
-            case .xlarge: return .large
+            case .small: .xsmall
+            case .medium: .small
+            case .large: .normal
+            case .xlarge: .large
             }
         }
     }
