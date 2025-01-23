@@ -60,9 +60,12 @@ extension Modal {
             if containScrollView {
                 [ .fraction(0.35), .medium, .max ]
             } else if handle {
-                [ .height(contentSize.height) ]
+                [ .height(max(.zero, contentSize.height - safeAreaInsets.bottom)) ]
             } else {
-                resize == .fill ? [ .max ] : [ .height(contentSize.height) ]
+                resize == .fill ? [ .max ] : [ .height(max(
+                    .zero,
+                    contentSize.height - safeAreaInsets.bottom
+                )) ]
             }
         }
 
