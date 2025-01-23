@@ -8,133 +8,135 @@
 import SwiftUI
 
 extension Skeleton {
-    private struct Text: View {
-        private var position: Skeleton.Align
-        private var length: Skeleton.Length
+    // MARK: - Types
+    
+    public enum Align: String, CaseIterable {
+        case left
+        case center
+        case right
         
-        private var configuration: Skeleton.Configuration? = nil
-        
-        @Binding var originalSize: CGSize
-        @State private var animate = false
-        
-        private var cornerRadius: CGFloat {
-            if let r = configuration?.borderRadius {
-                r
-            } else {
-                3
+        var horizontalAlignment: HorizontalAlignment {
+            switch self {
+            case .left: .leading
+            case .center: .center
+            case .right: .trailing
             }
         }
         
-        private var width: CGFloat {
-            if let w = configuration?.width {
-                w
-            } else {
-                originalSize.width * length.rawValue
+        var alignment: Alignment {
+            switch self {
+            case .left: .leading
+            case .center: .center
+            case .right: .trailing
             }
         }
-        
-        private var height: CGFloat {
-            if let h = configuration?.height {
-                h
-            } else {
-                originalSize.height
-            }
-        }
-        
-        private var foregroundColor: SwiftUI.Color {
-            if let c = configuration?.color {
-                c
-            } else {
-                .component(.fillNormal)
-            }
-        }
-        
-        init(
-            position: Skeleton.Align,
-            length: Skeleton.Length,
-            configuration: Skeleton.Configuration?,
-            originalSize: Binding<CGSize>
-        ) {
-            self.position = position
-            self.length = length
-            self.configuration = configuration
-            _originalSize = originalSize
+    }
+    
+    public enum Length: CGFloat, CaseIterable {
+        case _100 = 1
+        case _75 = 0.75
+        case _50 = 0.5
+        case _25 = 0.25
+    }
+    
+    public enum Kind {
+        case text(alignment: Align = .left, lengths: [Length] = [._100], cornerRadius: CGFloat = 3, lineNumber: Int = 1)
+        case rectangle(cornerRadius: CGFloat = 3)
+        case circle
+    }
+    
+    // MARK: - Views
+    public struct SkeletonView: View {
+        // MARK: - Initializer
+        private let kind: Kind
+        public init(_ kind: Kind) {
+            self.kind = kind
         }
 
+        // MARK: - Body
+        
+        @State private var size: CGSize = .zero
         public var body: some View {
-            ZStack {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .foregroundStyle(foregroundColor)
-                    .padding(.vertical, 2)
+            Group {
+                switch kind {
+                case .text(let alignment, let lengths, let cornerRadius, let lineNumber):
+                    GeometryReader { proxy in
+                        VStack(alignment: alignment.horizontalAlignment, spacing: 0) {
+                            ForEach(0..<lineNumber, id: \.self) { index in
+                                RoundedRectangle(cornerRadius: cornerRadius)
+                                    .frame(
+                                        width: proxy.size.width * (lengths[safe: index]?.rawValue ?? 1.0),
+                                        height: max(0, proxy.size.height / CGFloat(lineNumber) - 4)
+                                    )
+                                    .padding(.vertical, 2)
+                            }
+                        }
+                        .frame(width: proxy.size.width, height: proxy.size.height, alignment: alignment.alignment)
+                    }
+                case .rectangle(cornerRadius: let cornerRadius):
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                case .circle:
+                    Circle()
+                }
             }
-            .frame(
-                width: width,
-                height: height + 4
-            )
-            .clipShape(
-                RoundedRectangle(cornerRadius: cornerRadius)
-            )
-            .opacity(configuration?.opacity ?? 1)
+            .foregroundStyle(color)
+            .opacity(opacity)
+                
+        }
+        
+        // MARK: - Modifiers
+        
+        private var color: SwiftUI.Color = .component(.fillNormal)
+        private var opacity: CGFloat = 1
+        
+        public func color(_ color: SwiftUI.Color) -> Self {
+            var zelf = self
+            zelf.color = color
+            return zelf
+        }
+        
+        public func opacity(_ opacity: CGFloat) -> Self {
+            var zelf = self
+            zelf.opacity = opacity
+            return zelf
         }
     }
 
-    public struct SkeletonTextModifier: ViewModifier {
-        private let model: Skeleton.Model
-        private var configuration: Skeleton.Configuration? = nil
+    public struct PredefinedSkeletonModifier: ViewModifier {
+        private let kind: Skeleton.Kind
+        private let color: SwiftUI.Color
+        private let opacity: CGFloat
 
-        @Binding var show: Bool
+        private var isPresented: Bool
         @State private var originalSize: CGSize = .zero
         
         public init(
-            show: Binding<Bool>,
-            model: Skeleton.Model,
-            configuration: Skeleton.Configuration? = nil
+            isPresented: Bool,
+            kind: Skeleton.Kind,
+            color: SwiftUI.Color? = nil,
+            opacity: CGFloat? = nil
         ) {
-            _show = show
-            self.model = model
-            self.configuration = configuration
+            self.isPresented = isPresented
+            self.kind = kind
+            self.color = color ?? .component(.fillNormal)
+            self.opacity = opacity ?? 1
         }
         
+        @State private var size: CGSize = .zero
+        
         public func body(content: Content) -> some View {
-            content
-                .opacity(show == false ? 1 : .zero)
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { originalSize = $0 })
-                .if(show) {
-                    $0.overlay(alignment: model.align.alignment) {
-                        Skeleton.Text(
-                            position: model.align,
-                            length: model.length,
-                            configuration: configuration,
-                            originalSize: $originalSize
-                        )
-                        .frame(alignment: .leading)
+            ZStack {
+                content
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
+                    .hidden()
+                content
+                    .skeleton(isPresented: isPresented) {
+                        Skeleton.SkeletonView(kind)
+                            .color(color)
+                            .opacity(opacity)
+                            .frame(width: size.width, height: size.height)
                     }
-                }
+            }
         }
-    }
-}
-
-#Preview {
-    let text = ""
-    if text.isEmpty {
-        VStack {
-            Text("Skeleton")
-                .skeleton(
-                    show: .constant(true),
-                    model: .init(
-                        align: .center,
-                        length: ._100
-                    ),
-                    configuration: .init(
-                        width: nil,
-                        height: nil,
-                        color: nil,
-                        borderRadius: nil,
-                        opacity: nil
-                    )
-                )
-        }
-    } else {
-        Text(text)
     }
 }

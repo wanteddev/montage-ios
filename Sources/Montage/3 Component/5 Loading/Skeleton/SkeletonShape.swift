@@ -7,130 +7,126 @@
 
 import SwiftUI
 
-extension Skeleton {
-    struct Shape: View {
-        private var shape: Skeleton.ShapeType
-        private var position: Skeleton.Align
-        private var length: Skeleton.Length
-        
-        private var configuration: Skeleton.Configuration? = nil
-        
-        @Binding var originalSize: CGSize
-        
-        private var cornerRadius: CGFloat {
-            if let r = configuration?.borderRadius {
-                r
-            } else {
-                .zero
-            }
-        }
-        
-        private var width: CGFloat {
-            if let w = configuration?.width {
-                w
-            } else {
-                originalSize.width * length.rawValue
-            }
-        }
-        
-        private var height: CGFloat {
-            if let h = configuration?.height {
-                h
-            } else {
-                originalSize.height
-            }
-        }
-        
-        private var foregroundColor: SwiftUI.Color {
-            if let c = configuration?.color {
-                c
-            } else {
-                switch shape {
-                case .rectangle:
-                    .component(.fillAlternative)
-                case .circle:
-                    .component(.fillNormal)
-                }
-            }
-        }
-        
-        init(
-            shape: ShapeType,
-            position: Skeleton.Align,
-            length: Skeleton.Length,
-            configuration: Skeleton.Configuration?,
-            originalSize: Binding<CGSize>
-        ) {
-            self.shape = shape
-            self.position = position
-            self.length = length
-            self.configuration = configuration
-            _originalSize = originalSize
-        }
-
-        var body: some View {
-            ZStack {
-                switch shape {
-                case .rectangle:
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .foregroundStyle(foregroundColor)
-                case .circle:
-                    Circle()
-                        .foregroundStyle(foregroundColor)
-                }
-            }
-            .frame(
-                width: width,
-                height: height
-            )
-            .opacity(configuration?.opacity ?? 1)
-        }
-    }
-
-    public struct SkeletonShapeModifier: ViewModifier {
-        var shape: Skeleton.ShapeType
-        var model: Skeleton.Model
-        var configuration: Skeleton.Configuration? = nil
-
-        @Binding var show: Bool
-        @State private var originalSize: CGSize = .zero
-        
-        public init(
-            shape: Skeleton.ShapeType,
-            show: Binding<Bool>,
-            model: Skeleton.Model,
-            configuration: Skeleton.Configuration? = nil
-        ) {
-            self.shape = shape
-            _show = show
-            self.model = model
-            self.configuration = configuration
-        }
-        
-        public func body(content: Content) -> some View {
-            content
-                .opacity(show == false ? 1 : .zero)
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { originalSize = $0 })
-                .if(show) {
-                    $0.overlay(alignment: model.align.alignment) {
-                        Skeleton.Shape(
-                            shape: shape,
-                            position: model.align,
-                            length: model.length,
-                            configuration: configuration,
-                            originalSize: $originalSize
-                        )
-                        .frame(alignment: .leading)
-                    }
-                }
-        }
-    }
-}
-
-#Preview {
-    Rectangle()
-        .foregroundStyle(.black)
-        .frame(width: 100, height: 100)
-        .skeleton(shape: .rectangle, show: .constant(true))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-}
+//extension Skeleton {
+//        
+//        private var shape: ShapeType
+//        
+//        private var cornerRadius: CGFloat {
+//            if let r = configuration?.borderRadius {
+//                r
+//            } else {
+//                .zero
+//            }
+//        }
+//        
+//        private var width: CGFloat {
+//            if let w = configuration?.width {
+//                w
+//            } else {
+//                originalSize.width * length.rawValue
+//            }
+//        }
+//        
+//        private var height: CGFloat {
+//            if let h = configuration?.height {
+//                h
+//            } else {
+//                originalSize.height
+//            }
+//        }
+//        
+//        private var foregroundColor: SwiftUI.Color {
+//            if let c = configuration?.color {
+//                c
+//            } else {
+//                switch shape {
+//                case .rectangle:
+//                    .component(.fillAlternative)
+//                case .circle:
+//                    .component(.fillNormal)
+//                }
+//            }
+//        }
+//        
+//        init(
+//            shape: ShapeType,
+//            position: Skeleton.Align,
+//            length: Skeleton.Length,
+//            configuration: Skeleton.Configuration?,
+//            originalSize: Binding<CGSize>
+//        ) {
+//            self.shape = shape
+//            self.position = position
+//            self.length = length
+//            self.configuration = configuration
+//            _originalSize = originalSize
+//        }
+//
+//        var body: some View {
+//            ZStack {
+//                switch shape {
+//                case .rectangle:
+//                    RoundedRectangle(cornerRadius: cornerRadius)
+//                        .foregroundStyle(foregroundColor)
+//                case .circle:
+//                    Circle()
+//                        .foregroundStyle(foregroundColor)
+//                }
+//            }
+//            .frame(
+//                width: width,
+//                height: height
+//            )
+//            .opacity(configuration?.opacity ?? 1)
+//        }
+//    }
+//
+//    public struct ShapeSkeletonModifier: ViewModifier {
+//        private let shape: Skeleton.ShapeType
+//        private let color: SwiftUI.Color
+//        private let opacity: CGFloat
+//
+//        @Binding var isPresented: Bool
+//        @State private var originalSize: CGSize = .zero
+//        
+//        public init(
+//            isPresented: Binding<Bool>,
+//            shape: Skeleton.ShapeType,
+//            color: SwiftUI.Color,
+//            opacity: CGFloat
+//        ) {
+//            _isPresented = isPresented
+//            self.shape = shape
+//            self.color = color
+//            self.opacity = opacity
+//        }
+//        
+//        @State private var size: CGSize = .zero
+//        
+//        public func body(content: Content) -> some View {
+//            ZStack {
+//                content
+//                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
+//                    .hidden()
+//                content
+//                    .skeleton(isPresented: $isPresented) {
+//                        switch shape {
+//                        case .rectangle(let cornerRadius):
+//                            RoundedRectangle(cornerRadius: cornerRadius)
+//                                .foregroundStyle(color)
+//                                .opacity(opacity)
+//                                .frame(width: size.width, height: size.height)
+//                        }
+//                    }
+//            }
+//        }
+//    }
+//}
+//
+//#Preview {
+//    Rectangle()
+//        .foregroundStyle(.black)
+//        .frame(width: 100, height: 100)
+//        .skeleton(shape: .rectangle, show: .constant(true))
+//        .clipShape(RoundedRectangle(cornerRadius: 12))
+//}

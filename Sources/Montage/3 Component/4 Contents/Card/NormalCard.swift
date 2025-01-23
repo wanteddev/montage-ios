@@ -63,13 +63,13 @@ extension Card {
                         model: overlay
                     )
                 )
-                .skeleton(shape: .rectangle, show: $skeleton)
+                .skeleton(isPresented: skeleton, kind: .rectangle())
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         topContent()
-                            .skeleton(shape: .rectangle, show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .rectangle())
                             .clipShape(RoundedRectangle(cornerRadius: 3))
 
                         Spacer()
@@ -77,19 +77,19 @@ extension Card {
 
                     VStack(alignment: .leading, spacing: .zero) {
                         title()
-                            .skeleton(show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .text())
 
                         caption()
-                            .skeleton(show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .text())
                             .padding(.top, 4)
 
                         extraCaption()
-                            .skeleton(show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .text())
                             .padding(.top, 4)
                     }
 
                     bottomContent()
-                        .skeleton(shape: .rectangle, show: $skeleton)
+                        .skeleton(isPresented: skeleton, kind: .rectangle())
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                 }
                 .frame(width: imageWidth)

@@ -8,64 +8,46 @@
 import SwiftUI
 
 public enum Skeleton {
-    public enum Align {
-        case left
-        case center
-        case right
+    public struct SkeletonModifier<V: View>: ViewModifier {
+        private var isPresented: Bool
+        @ViewBuilder private let skeletonView: () -> V
+
+        public init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
+            self.isPresented = isPresented
+            self.skeletonView = skeletonView
+        }
         
-        var alignment: Alignment {
-            switch self {
-            case .left: .leading
-            case .center: .center
-            case .right: .trailing
+        @State var animationOpacity: CGFloat = 1
+        
+        public func body(content: Content) -> some View {
+            if isPresented {
+                skeletonView()
+                    .opacity(animationOpacity)
+                    .onChange(of: animationOpacity) { _ in
+                        if animationOpacity == 1 {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
+                                    animationOpacity = 0.5
+                                }
+                            }
+                        } else if animationOpacity == 0.5 {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
+                                    animationOpacity = 1
+                                }
+                            }
+                        }
+                    }
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
+                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
+                                animationOpacity = 0.5
+                            }
+                        }
+                    }
+            } else {
+                content
             }
-        }
-    }
-    
-    public enum Length: CGFloat {
-        case _100 = 1
-        case _75 = 0.75
-        case _50 = 0.5
-        case _25 = 0.25
-    }
-    
-    public enum ShapeType {
-        case rectangle
-        case circle
-    }
-    
-    public struct Model {
-        let align: Skeleton.Align
-        let length: Skeleton.Length
-        
-        public init(
-            align: Skeleton.Align = .left,
-            length: Skeleton.Length = ._100
-        ) {
-            self.align = align
-            self.length = length
-        }
-    }
-    
-    public struct Configuration {
-        let width: CGFloat?
-        let height: CGFloat?
-        let color: SwiftUI.Color?
-        let borderRadius: CGFloat?
-        let opacity: Double?
-        
-        public init(
-            width: CGFloat? = nil,
-            height: CGFloat? = nil,
-            color: SwiftUI.Color? = nil,
-            borderRadius: CGFloat? = nil,
-            opacity: Double? = nil
-        ) {
-            self.width = width
-            self.height = height
-            self.color = color
-            self.borderRadius = borderRadius
-            self.opacity = opacity
         }
     }
 }
