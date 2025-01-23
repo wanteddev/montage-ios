@@ -155,8 +155,6 @@ public struct MeasureView: View {
                         }
                 }
                 .foregroundStyle(.red.opacity(0.4))
-            default:
-                EmptyView()
             }
         }
     }

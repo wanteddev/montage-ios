@@ -27,7 +27,7 @@ extension Pagination {
         
         public var body: some View {
             HStack(spacing: 0) {
-                ForEach(0 ..< totalPages) { index in
+                ForEach(0 ..< totalPages, id: \.self) { index in
                     let diameter = elementDiameter(at: index)
                     Element(selected: selectedPage == index + 1, variant: variant, diameter: diameter)
                         .onTapGesture { _ in
@@ -68,7 +68,7 @@ extension Pagination {
         }
         
         private func elementDiameter(at index: Int) -> CGFloat {
-            var scale: ElementScale = {
+            let scale: ElementScale = {
                 if totalPages <= maxNumberOfVisibleDots {
                     .regular
                 } else {
