@@ -11,7 +11,7 @@ public struct Input: View {
     public enum NestedControl: String, CaseIterable {
         case check, checkbox, radio
     }
-    
+
     private let control: NestedControl
     private let state: MontageControlState
     private let text: String
@@ -44,7 +44,7 @@ public struct Input: View {
                 .padding(.vertical, size == .normal ? 1 : 0)
         }
     }
-    
+
     private var nestedControl: some View {
         Group {
             switch control {
@@ -66,16 +66,16 @@ public struct Input: View {
             }
         }
     }
-    
+
     private var spacing: CGFloat {
         switch control {
         case .checkbox, .radio:
-            return 8
+            8
         case .check:
-            return 4
+            4
         }
     }
-    
+
     // MARK: - Modifiers
     private var size: MontageControlSize = .normal {
         didSet {
@@ -86,6 +86,7 @@ public struct Input: View {
             }
         }
     }
+
     private var isDisable = false {
         didSet {
             if isDisable {
@@ -95,27 +96,28 @@ public struct Input: View {
             }
         }
     }
+
     private var titleTypography: (
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
     ) = (.body2, .regular, .alias(.labelNormal))
     private var isBold = false
-    
+
     /// 사이즈를 조정합니다. 기본값은 `.normal`입니다.
     public func size(_ size: MontageControlSize) -> Self {
         var zelf = self
         zelf.size = size
         return zelf
     }
-    
+
     /// 비활성화합니다.
     public func disable(_ isDisable: Bool = true) -> Self {
         var zelf = self
         zelf.isDisable = isDisable
         return zelf
     }
-    
+
     /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.alias(.labelNormal)`입니다.
     public func title(
         _ variant: Typography.Variant? = nil,
@@ -128,7 +130,7 @@ public struct Input: View {
         zelf.titleTypography.color = color
         return zelf
     }
-    
+
     /// 타이틀을 볼드체로 변경합니다.
     public func bold(_ isBold: Bool = true) -> Self {
         var zelf = self

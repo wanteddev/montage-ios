@@ -206,8 +206,8 @@ extension Toast {
         
         private var durationTime: TimeInterval {
             switch duration {
-            case .short: return 3
-            case .long: return 5
+            case .short: 3
+            case .long: 5
             }
         }
     }

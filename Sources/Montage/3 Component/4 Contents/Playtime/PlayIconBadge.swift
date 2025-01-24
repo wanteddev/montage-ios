@@ -59,17 +59,17 @@ public struct PlayIconBadge: View {
     // MARK: - private
     private var circleDiameter: CGFloat {
         switch size {
-        case .small: return 36
-        case .medium: return 60
-        case .large: return 80
+        case .small: 36
+        case .medium: 60
+        case .large: 80
         }
     }
     
     private var playIconSize: CGSize {
         switch size {
-        case .small: return CGSize(width: 24, height: 24)
-        case .medium: return CGSize(width: 40, height: 40)
-        case .large: return CGSize(width: 56, height: 56)
+        case .small: CGSize(width: 24, height: 24)
+        case .medium: CGSize(width: 40, height: 40)
+        case .large: CGSize(width: 56, height: 56)
         }
     }
 }

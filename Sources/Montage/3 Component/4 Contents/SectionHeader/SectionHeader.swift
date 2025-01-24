@@ -62,6 +62,7 @@ public struct SectionHeader<C: View>: View {
             }
         }
     }
+
     private var titleTypography: (
         variant: Typography.Variant?,
         weight: Typography.Weight,
@@ -92,26 +93,26 @@ public struct SectionHeader<C: View>: View {
     private var variant: Typography.Variant {
         switch size {
         case .xsmall:
-            return .label1
+            .label1
         case .small:
-            return .headline2
+            .headline2
         case .medium:
-            return .heading2
+            .heading2
         case .large:
-            return .title3
+            .title3
         }
     }
     
     private var height: CGFloat {
         switch size {
         case .xsmall:
-            return 20
+            20
         case .small:
-            return 24
+            24
         case .medium:
-            return 28
+            28
         case .large:
-            return 32
+            32
         }
     }
 }
