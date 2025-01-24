@@ -74,30 +74,30 @@ extension Card {
                         .inset(by: 0.5)
                         .strokeBorder(SwiftUI.Color.alias(.lineAlternative), lineWidth: 1)
                 )
-                .skeleton(shape: .rectangle, show: $skeleton)
+                .skeleton(isPresented: skeleton, kind: .rectangle())
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.trailing, 12)
 
                 VStack(alignment: .leading, spacing: 8) {
                     topContent()
-                        .skeleton(shape: .rectangle, show: $skeleton)
+                        .skeleton(isPresented: skeleton, kind: .rectangle())
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                     
                     VStack(alignment: .leading, spacing: .zero) {
                         title()
-                            .skeleton(show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .text())
                         
                         caption()
-                            .skeleton(show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .text())
                             .padding(.top, 4)
                         
                         extraCaption()
-                            .skeleton(show: $skeleton)
+                            .skeleton(isPresented: skeleton, kind: .text())
                             .padding(.top, 4)
                     }
                     
                     bottomContent()
-                        .skeleton(shape: .rectangle, show: $skeleton)
+                        .skeleton(isPresented: skeleton, kind: .rectangle())
                         .clipShape(RoundedRectangle(cornerRadius: 3))
                 }
                 .padding(.trailing, 12)

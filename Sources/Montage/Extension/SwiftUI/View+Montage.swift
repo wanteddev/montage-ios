@@ -204,34 +204,26 @@ extension View {
 // MARK: Skeleton
 
 extension View {
-    public func skeleton(
-        shape: Skeleton.ShapeType,
-        show: Binding<Bool>,
-        model: Skeleton.Model = .init(),
-        configuration: Skeleton.Configuration = .init()
+    public func skeleton<V: View>(
+        isPresented: Bool,
+        @ViewBuilder skeletonView: @escaping () -> V
     ) -> some View {
-        modifier(
-            Skeleton.SkeletonShapeModifier(
-                shape: shape,
-                show: show,
-                model: model,
-                configuration: configuration
-            )
-        )
+        modifier(Skeleton.SkeletonModifier(isPresented: isPresented, skeletonView: skeletonView))
     }
 
     public func skeleton(
-        show: Binding<Bool>,
-        model: Skeleton.Model = .init(),
-        configuration: Skeleton.Configuration = .init()
+        isPresented: Bool,
+        kind: Skeleton.Kind,
+        color: SwiftUI.Color? = nil,
+        opacity: CGFloat? = nil
     ) -> some View {
         modifier(
-            Skeleton
-                .SkeletonTextModifier(
-                    show: show,
-                    model: model,
-                    configuration: configuration
-                )
+            Skeleton.PredefinedSkeletonModifier(
+                isPresented: isPresented,
+                kind: kind,
+                color: color,
+                opacity: opacity
+            )
         )
     }
 }
