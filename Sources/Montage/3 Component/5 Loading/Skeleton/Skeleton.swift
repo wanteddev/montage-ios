@@ -144,7 +144,10 @@ public enum Skeleton {
                         Skeleton.SkeletonView(kind)
                             .color(color)
                             .opacity(opacity)
-                            .frame(width: size?.width ?? contentSize.width, height: size?.height ?? contentSize.height)
+                            .frame(
+                                width: size?.width ?? contentSize.width,
+                                height: size?.height ?? contentSize.height
+                            )
                     }
             }
         }

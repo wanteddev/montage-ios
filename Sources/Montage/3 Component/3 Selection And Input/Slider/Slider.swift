@@ -2,463 +2,306 @@
 //  Slider.swift
 //  Montage
 //
-//  Created by Sanghoon Ahn on 10/16/24.
+//  Created by 김삼열 on 1/24/25.
 //
 
-import Combine
 import SwiftUI
 
 public struct Slider: View {
-    @ObservedObject private var configuration: SliderConfiguration
+    // MARK: - Initializer
+    private let range: ClosedRange<CGFloat>
+    private let labelFormat: (CGFloat) -> String
     
-    public init(configuration: SliderConfiguration) {
-        self.configuration = configuration
+    public init(
+        range: ClosedRange<CGFloat> = 0 ... 1,
+        labelFormat: ((CGFloat) -> String)? = nil
+    ) {
+        self.range = range
+        self.labelFormat = labelFormat ?? { String(format: "%.1f", $0) }
     }
     
+    // MARK: - Constants
+    
+    private static let diameter = 20.0
+    private static let lineWidth: CGFloat = 4
+    
+    // MARK: - Body
+    
+    @State private var thumbRatio1 = 0.0
+    @State private var thumbRatio2 = 1.0
+    @State private var focusedThumb: Int?
+    @State private var lineLength = 0.0
+    
     public var body: some View {
-        VStack(spacing: .zero) {
-            if configuration.showHeading {
-                Text(configuration.headingLabel)
+        VStack(spacing: 32) {
+            if heading {
+                Text(headingLabel)
                     .montage(
                         variant: .headline2,
                         weight: .bold,
-                        alias: configuration.disable ? .interactionDisable : .labelNormal
+                        alias: disable ? .interactionDisable : .labelNormal
                     )
-                    .padding(.bottom, 32)
             }
-            RoundedRectangle(cornerRadius: configuration.height)
-                .fill(SwiftUI.Color.component(.fillStrong))
-                .frame(
-                    width: configuration.width,
-                    height: configuration.height
-                )
-                .overlay(
-                    ZStack {
-                        SliderPathBetweenView(
-                            slider: configuration,
-                            color: configuration.color,
-                            disable: configuration.disable
-                        )
+            
+            ZStack(alignment: .topLeading) {
+                // lines
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Line(kind: .outer, disable: disable)
+                            .frame(width: lineLength)
                         
-                        Knob(configuraiton: configuration.lowKnobConfiguration)
-                            .highPriorityGesture(
-                                configuration.lowKnobConfiguration.sliderDragGesture
-                            )
+                        Line(kind: .inner, disable: disable)
+                            .frame(width: min(lineLength, lineLength * highThumbRatio))
                         
-                        Knob(configuraiton: configuration.highKnobConfiguration)
-                            .highPriorityGesture(
-                                configuration.highKnobConfiguration.sliderDragGesture
-                            )
+                        Line(kind: .outer, disable: disable)
+                            .frame(width: max(0, lineLength * lowThumbRatio))
                     }
-                )
-            let showLabel = configuration.lowKnobConfiguration.labelConfiguration.show &&
-                configuration.highKnobConfiguration.labelConfiguration.show
-            Spacer()
-                .frame(height: showLabel ? 28 : 8)
-        }
-    }
-    
-    private struct SliderPathBetweenView: View {
-        @ObservedObject var slider: SliderConfiguration
-        var color: SwiftUI.Color
-        var disable: Bool
-        
-        var body: some View {
-            Path { path in
-                path.move(to: slider.lowKnobConfiguration.currentLocation)
-                path.addLine(to: slider.highKnobConfiguration.currentLocation)
-            }
-            .stroke(disable ? .alias(.interactionDisable) : color, lineWidth: slider.height)
-        }
-    }
-}
-
-// MARK: - SliderConfiguration
-
-extension Montage.Slider {
-    public final class SliderConfiguration: ObservableObject {
-        /// Slider의 총 길이
-        /// > 기본값은 (화면의 width - 40) 이며, initializer를 통해 변경할 수 있습니다.
-        let width: CGFloat
-        
-        /// Slider의 두께
-        /// > 기본값은 4 이며, initializer를 통해 변경할 수 있습니다.
-        let height: CGFloat
-        
-        /// Slider의 시작값
-        let valueStart: Double
-        /// Slider의 끝값
-        let valueEnd: Double
-        /// Slider의 disable 여부
-        let disable: Bool
-        
-        /// Slider의 제목 노출 여부
-        /// > 기본값은 false 입니다.
-        @Published public var showHeading: Bool
-        @Published public var highKnobConfiguration: KnobConfiguration
-        @Published public var lowKnobConfiguration: KnobConfiguration
-        
-        /// SliderKnob의 끝 지점 비율
-        @SliderValue var highKnobStartPercentage = 1.0
-        
-        /// SliderKnob의 시작 지점 비율
-        @SliderValue var lowKnobStartPercentage = 0.0
-
-        var anyCancellableHigh: AnyCancellable?
-        var anyCancellableLow: AnyCancellable?
-        
-        /// Slider의 Color
-        var color: SwiftUI.Color = .alias(.primaryNormal)
-        
-        /// heading에 표시될 내용
-        public var headingLabel: String {
-            if highKnobConfiguration.currentValue.rounded() == lowKnobConfiguration.currentValue.rounded() {
-                return highKnobConfiguration.currentLabel
-            }
-            
-            if highKnobConfiguration.currentLocation.x < lowKnobConfiguration.currentLocation.x {
-                return "\(highKnobConfiguration.currentLabel) ~ \(lowKnobConfiguration.currentLabel)"
-            } else {
-                return "\(lowKnobConfiguration.currentLabel) ~ \(highKnobConfiguration.currentLabel)"
-            }
-        }
-
-        /// Slider Knob의 작은값
-        public var lowValue: Double {
-            min(lowKnobConfiguration.currentValue, highKnobConfiguration.currentValue)
-        }
-
-        /// Slider Knob의 큰값
-        public var highValue: Double {
-            max(lowKnobConfiguration.currentValue, highKnobConfiguration.currentValue)
-        }
-        
-        public init(
-            knobLabelConfiguration: KnobConfiguration.LabelConfiguration = .init(),
-            start: Double,
-            end: Double
-        ) {
-            width = UIScreen.main.bounds.width - 40
-            height = 4
-            showHeading = false
-            valueStart = start
-            valueEnd = end
-            disable = false
-            
-            highKnobConfiguration = KnobConfiguration(
-                sliderWidth: width,
-                sliderHeight: height,
-                sliderValueStart: valueStart,
-                sliderValueEnd: valueEnd,
-                disable: disable,
-                labelConfiguration: knobLabelConfiguration,
-                startPercentage: _highKnobStartPercentage
-            )
-            
-            lowKnobConfiguration = KnobConfiguration(
-                sliderWidth: width,
-                sliderHeight: height,
-                sliderValueStart: valueStart,
-                sliderValueEnd: valueEnd,
-                disable: disable,
-                labelConfiguration: knobLabelConfiguration,
-                startPercentage: _lowKnobStartPercentage
-            )
-            
-            anyCancellableHigh = highKnobConfiguration.objectWillChange.sink { _ in
-                self.objectWillChange.send()
-            }
-            anyCancellableLow = lowKnobConfiguration.objectWillChange.sink { _ in
-                self.objectWillChange.send()
-            }
-        }
-        
-        fileprivate init(
-            width: CGFloat,
-            height: CGFloat,
-            showHeading: Bool,
-            disable: Bool,
-            knobLabelConfiguration: KnobConfiguration.LabelConfiguration = .init(),
-            start: Double,
-            end: Double
-        ) {
-            self.width = width
-            self.height = height
-            self.showHeading = showHeading
-            valueStart = start
-            valueEnd = end
-            self.disable = disable
-            
-            highKnobConfiguration = KnobConfiguration(
-                sliderWidth: self.width,
-                sliderHeight: self.height,
-                sliderValueStart: valueStart,
-                sliderValueEnd: valueEnd,
-                disable: disable,
-                labelConfiguration: knobLabelConfiguration,
-                startPercentage: _highKnobStartPercentage
-            )
-            
-            lowKnobConfiguration = KnobConfiguration(
-                sliderWidth: self.width,
-                sliderHeight: self.height,
-                sliderValueStart: valueStart,
-                sliderValueEnd: valueEnd,
-                disable: disable,
-                labelConfiguration: knobLabelConfiguration,
-                startPercentage: _lowKnobStartPercentage
-            )
-            
-            anyCancellableHigh = highKnobConfiguration.objectWillChange.sink { _ in
-                self.objectWillChange.send()
-            }
-            anyCancellableLow = lowKnobConfiguration.objectWillChange.sink { _ in
-                self.objectWillChange.send()
-            }
-        }
-    }
-}
-
-// MARK: - Slider Modifier
-
-extension Montage.Slider {
-    public func width(_ w: CGFloat) -> Slider {
-        let config = SliderConfiguration(
-            width: w,
-            height: configuration.height,
-            showHeading: configuration.showHeading,
-            disable: configuration.disable,
-            knobLabelConfiguration: configuration.lowKnobConfiguration.labelConfiguration,
-            start: configuration.valueStart,
-            end: configuration.valueEnd
-        )
-        return Slider(configuration: config)
-    }
-    
-    public func height(_ h: CGFloat) -> Slider {
-        let config = SliderConfiguration(
-            width: configuration.width,
-            height: h,
-            showHeading: configuration.showHeading,
-            disable: configuration.disable,
-            knobLabelConfiguration: configuration.lowKnobConfiguration.labelConfiguration,
-            start: configuration.valueStart,
-            end: configuration.valueEnd
-        )
-        return Slider(configuration: config)
-    }
-    
-    public func showHeading(_ show: Bool) -> Slider {
-        let config = SliderConfiguration(
-            width: configuration.width,
-            height: configuration.height,
-            showHeading: show,
-            disable: configuration.disable,
-            knobLabelConfiguration: configuration.lowKnobConfiguration.labelConfiguration,
-            start: configuration.valueStart,
-            end: configuration.valueEnd
-        )
-        return Slider(configuration: config)
-    }
-    
-    public func disable(_ disable: Bool) -> Slider {
-        let config = SliderConfiguration(
-            width: configuration.width,
-            height: configuration.height,
-            showHeading: configuration.showHeading,
-            disable: disable,
-            knobLabelConfiguration: configuration.lowKnobConfiguration.labelConfiguration,
-            start: configuration.valueStart,
-            end: configuration.valueEnd
-        )
-        return Slider(configuration: config)
-    }
-}
-
-// MARK: - PropertyWrapper
-
-extension Montage.Slider {
-    // SliderValue to restrict double range: 0.0 to 1.0
-    @propertyWrapper
-    struct SliderValue {
-        var value: Double
-        
-        init(wrappedValue: Double) {
-            value = wrappedValue
-        }
-        
-        var wrappedValue: Double {
-            get { value }
-            set { value = min(max(0.0, newValue), 1.0) }
-        }
-    }
-}
-
-// MARK: - Knob
-
-extension Montage.Slider {
-    struct Knob: View {
-        @ObservedObject var configuraiton: KnobConfiguration
-        @State private var textSize: CGSize = .zero
-        
-        var body: some View {
-            ZStack {
-                Decorate.Interaction(
-                    state: configuraiton.onDrag ? .pressed : .normal,
-                    variant: .strong,
-                    color: .primaryNormal
-                )
-                .frame(width: configuraiton.diameter + 12, height: configuraiton.diameter + 12)
-                .clipShape(Circle())
-                .position(x: configuraiton.currentLocation.x, y: configuraiton.currentLocation.y)
+                    .padding(.horizontal, Slider.diameter / 2)
+                    .onAppear {
+                        lineLength = geo.size.width - Slider.diameter
+                    }
+                }
+                .frame(height: Slider.lineWidth)
+                .offset(y: (Slider.diameter - Slider.lineWidth) / 2)
                 
+                // thumbs
+                Thumb(
+                    title: label ? labelFormat(value(from: thumbRatio1)) : nil,
+                    value: thumbRatio1,
+                    maxValue: lineLength,
+                    disable: disable
+                )
+                .offset(x: max(0, lineLength * thumbRatio1))
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged {
+                            thumbRatio1 = thumbRatio(from: $0.location.x)
+                            focusedThumb = 1
+                        }.onEnded {
+                            thumbRatio1 = thumbRatio(from: $0.location.x)
+                            focusedThumb = nil
+                        }
+                )
+                .zIndex(focusedThumb == 1 ? 1 : 0)
+                
+                Thumb(
+                    title: label ? labelFormat(value(from: thumbRatio2)) : nil,
+                    value: thumbRatio2,
+                    maxValue: lineLength,
+                    disable: disable
+                )
+                .offset(x: max(0, lineLength * thumbRatio2))
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged {
+                            thumbRatio2 = thumbRatio(from: $0.location.x)
+                            focusedThumb = 2
+                        }
+                        .onEnded {
+                            thumbRatio2 = thumbRatio(from: $0.location.x)
+                            focusedThumb = nil
+                        }
+                )
+                .zIndex(focusedThumb == 2 ? 1 : 0)
+            }
+        }
+        .allowsHitTesting(!disable)
+    }
+    
+    // MARK: - Modifiers
+    private var heading = false
+    private var label = false
+    private var disable = false
+    
+    public func heading(_ heading: Bool = true) -> Self {
+        var zelf = self
+        zelf.heading = heading
+        return zelf
+    }
+    
+    public func label(_ label: Bool = true) -> Self {
+        var zelf = self
+        zelf.label = label
+        return zelf
+    }
+    
+    public func disable(_ disable: Bool = true) -> Self {
+        var zelf = self
+        zelf.disable = disable
+        return zelf
+    }
+    
+    // MARK: - private
+    
+    private func value(from thumbRatio: CGFloat) -> CGFloat {
+        (range.upperBound - range.lowerBound) * thumbRatio + range.lowerBound
+    }
+    
+    private var headingLabel: String {
+        let lowValue = (range.upperBound - range.lowerBound) * lowThumbRatio + range.lowerBound
+        let highValue = (range.upperBound - range.lowerBound) * highThumbRatio + range.lowerBound
+        return "\(labelFormat(lowValue) ?? "") ~ \(labelFormat(highValue) ?? "")"
+    }
+    
+    private var lowThumbRatio: CGFloat {
+        min(thumbRatio1, thumbRatio2)
+    }
+    
+    private var highThumbRatio: CGFloat {
+        max(thumbRatio1, thumbRatio2)
+    }
+    
+    private func thumbRatio(from thumbLocation: CGFloat) -> CGFloat {
+        min(lineLength, max(0, thumbLocation - (Slider.diameter / 2))) / lineLength
+    }
+    
+    // MARK: - Inner Views
+    
+    private struct Line: View {
+        enum Kind {
+            case inner, outer
+        }
+        
+        private let kind: Kind
+        private let disable: Bool
+        
+        init(kind: Kind, disable: Bool) {
+            self.kind = kind
+            self.disable = disable
+        }
+        
+        var body: some View {
+            RoundedRectangle(cornerRadius: .infinity)
+                .fill(lineColor)
+                .background(.white)
+        }
+        
+        var lineColor: SwiftUI.Color {
+            guard !disable else { return .alias(.interactionDisable) }
+            return switch kind {
+            case .inner:
+                .alias(.primaryNormal)
+            case .outer:
+                .component(.fillStrong)
+            }
+        }
+    }
+    
+    private struct Thumb: View {
+        private let title: String?
+        private let value: CGFloat
+        private let maxValue: CGFloat
+        private let disable: Bool
+
+        init(title: String?, value: CGFloat, maxValue: CGFloat, disable: Bool) {
+            self.title = title
+            self.value = value
+            self.maxValue = maxValue
+            self.disable = disable
+        }
+        
+        @State private var isDragging = false
+        @State private var textSize: CGSize = .zero
+        var body: some View {
+            VStack(spacing: 8) {
                 Circle()
-                    .frame(width: configuraiton.diameter, height: configuraiton.diameter)
+                    .frame(width: Slider.diameter, height: Slider.diameter)
                     .foregroundStyle(
-                        configuraiton.disable ? SwiftUI.Color
-                            .alias(.interactionDisable) : configuraiton.color
+                        SwiftUI.Color.alias(disable ? .interactionDisable : .primaryNormal)
                     )
                     .contentShape(Rectangle())
                     .overlay(
                         Circle()
-                            .stroke(configuraiton.backgroundColor, lineWidth: 2)
+                            .stroke(SwiftUI.Color.alias(.backgroundNormal), lineWidth: 2)
                     )
-                    .position(x: configuraiton.currentLocation.x, y: configuraiton.currentLocation.y)
-            }
-            .overlay(
-                ZStack {
-                    if configuraiton.labelConfiguration.show {
-                        Text(
-                            String(format: "%.f", configuraiton.currentValue)
-                                + configuraiton.labelConfiguration.unit
+                    .background {
+                        Decorate.Interaction(
+                            state: isDragging ? .pressed : .normal,
+                            variant: .strong,
+                            color: .primaryNormal
                         )
-                        .montage(
-                            variant: .label1,
-                            weight: .medium,
-                            alias: configuraiton.disable ? .interactionDisable : .labelNormal
-                        )
-                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { textSize = $0 })
-                        .position(
-                            x: configuraiton.currentLocation.x,
-                            y: configuraiton.currentLocation.y + 8 + textSize.height
-                        )
+                        .frame(width: Slider.diameter + 12, height: Slider.diameter + 12)
+                        .clipShape(Circle())
                     }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in isDragging = true }
+                            .onEnded { _ in isDragging = false }
+                    )
+                    .overlay {
+                        if let title {
+                            Label(title: title, value: value, maxValue: maxValue, disable: disable)
+                        }
+                    }
+                
+                if let title {
+                    Label.spacer(for: title)
                 }
-            )
-            .allowsHitTesting(configuraiton.disable == false)
+            }
         }
     }
     
-    public final class KnobConfiguration: ObservableObject {
-        public struct LabelConfiguration {
-            let show: Bool
-            let unit: String
-            
-            public init(show: Bool = false, unit: String = "") {
-                self.show = show
-                self.unit = unit
-            }
-        }
-
-        private let sliderWidth: CGFloat
-        private let sliderHeight: CGFloat
+    private struct Label: View {
+        private let title: String
+        private let value: CGFloat
+        private let maxValue: CGFloat
+        private let disable: Bool
+        private var isSpacer = false
         
-        private let sliderValueStart: Double
-        private let sliderValueRange: Double
-        
-        let diameter: CGFloat = 20
-        var startLocation: CGPoint
-        let color: SwiftUI.Color
-        let backgroundColor: SwiftUI.Color
-        let disable: Bool
-        
-        @Published public var labelConfiguration: LabelConfiguration
-        @Published var currentPercentage: SliderValue
-        @Published var onDrag: Bool
-        @Published var currentLocation: CGPoint
-            
-        init(
-            sliderWidth: CGFloat,
-            sliderHeight: CGFloat,
-            sliderValueStart: Double,
-            sliderValueEnd: Double,
-            color: SwiftUI.Color = .alias(.primaryNormal),
-            backgroundColor: SwiftUI.Color = .alias(.backgroundNormal),
-            disable: Bool,
-            labelConfiguration: LabelConfiguration,
-            startPercentage: SliderValue
-        ) {
-            self.sliderWidth = sliderWidth
-            self.sliderHeight = sliderHeight
-            self.sliderValueStart = sliderValueStart
-            sliderValueRange = sliderValueEnd - sliderValueStart
-            
-            self.color = color
-            self.backgroundColor = backgroundColor
+        init(title: String, value: CGFloat, maxValue: CGFloat, disable: Bool) {
+            self.title = title
+            self.value = value
+            self.maxValue = maxValue
             self.disable = disable
-            
-            self.labelConfiguration = labelConfiguration
-            
-            let startLocation = CGPoint(
-                x: (CGFloat(startPercentage.wrappedValue) / 1.0) * sliderWidth,
-                y: sliderHeight / 2
-            )
-            
-            self.startLocation = startLocation
-            currentLocation = startLocation
-            currentPercentage = startPercentage
-            
-            onDrag = false
         }
         
-        lazy var sliderDragGesture: _EndedGesture<_ChangedGesture<DragGesture>> = DragGesture()
-            .onChanged { value in
-                self.onDrag = true
-                
-                let dragLocation = value.location
-                
-                // Restrict possible drag area
-                self.restrictSliderBtnLocation(dragLocation)
-                
-                // Get current value
-                self.currentPercentage.wrappedValue = Double(self.currentLocation.x / self.sliderWidth)
-                
-            }.onEnded { _ in
-                self.onDrag = false
-            }
+        static func spacer(for title: String) -> Label {
+            var view = Label(title: title, value: 0, maxValue: 0, disable: false)
+            view.isSpacer = true
+            return view
+        }
         
-        private func restrictSliderBtnLocation(_ dragLocation: CGPoint) {
-            if dragLocation.x > CGPoint.zero.x && dragLocation.x < sliderWidth {
-                calcSliderBtnLocation(dragLocation)
+        @State private var textSize: CGSize = .zero
+        
+        var body: some View {
+            let textView = Text(title)
+                .montage(
+                    variant: .label1,
+                    weight: .medium,
+                    alias: disable ? .interactionDisable : .labelNormal
+                )
+            Group {
+                if isSpacer {
+                    textView
+                        .lineLimit(1)
+                        .frame(width: Slider.diameter)
+                        .hidden()
+                } else {
+                    textView
+                        .fixedSize()
+                        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { textSize = $0 })
+                        .offset(
+                            x: leadingOverflow - trailingOverflow,
+                            y: textSize.height + 8
+                        )
+                }
             }
         }
         
-        private func calcSliderBtnLocation(_ dragLocation: CGPoint) {
-            if dragLocation.y != sliderHeight / 2 {
-                currentLocation = CGPoint(x: dragLocation.x, y: sliderHeight / 2)
-            } else {
-                currentLocation = dragLocation
-            }
-        }
-
-        var currentValue: Double {
-            sliderValueStart + currentPercentage.wrappedValue * sliderValueRange
+        private var leadingOverflow: CGFloat {
+            max(0, textSize.width / 2 - distanceToLeadingEdge)
         }
         
-        var currentLabel: String {
-            String(format: "%.f", currentValue) + labelConfiguration.unit
+        private var trailingOverflow: CGFloat {
+            max(0, textSize.width / 2 - distanceToTrailingEdge)
+        }
+        
+        private var distanceToTrailingEdge: CGFloat {
+            maxValue - value * maxValue + Slider.diameter / 2
+        }
+        
+        private var distanceToLeadingEdge: CGFloat {
+            value * maxValue + Slider.diameter / 2
         }
     }
-}
-
-#Preview {
-    Slider(
-        configuration: .init(
-            knobLabelConfiguration: .init(show: true, unit: "년"),
-            start: 0,
-            end: 10
-        )
-    )
-    .showHeading(true)
-    .disable(false)
 }
