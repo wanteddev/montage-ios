@@ -114,35 +114,37 @@ public enum Skeleton {
         private let kind: Skeleton.Kind
         private let color: SwiftUI.Color
         private let opacity: CGFloat
+        private let size: CGSize?
 
         private var isPresented: Bool
-        @State private var originalSize: CGSize = .zero
         
         init(
             isPresented: Bool,
             kind: Skeleton.Kind,
             color: SwiftUI.Color? = nil,
-            opacity: CGFloat? = nil
+            opacity: CGFloat? = nil,
+            size: CGSize? = nil
         ) {
             self.isPresented = isPresented
             self.kind = kind
             self.color = color ?? .component(.fillNormal)
             self.opacity = opacity ?? 1
+            self.size = size
         }
         
-        @State private var size: CGSize = .zero
+        @State private var contentSize: CGSize = .zero
         
         func body(content: Content) -> some View {
             ZStack {
                 content
-                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                     .hidden()
                 content
                     .skeleton(isPresented: isPresented) {
                         Skeleton.SkeletonView(kind)
                             .color(color)
                             .opacity(opacity)
-                            .frame(width: size.width, height: size.height)
+                            .frame(width: size?.width ?? contentSize.width, height: size?.height ?? contentSize.height)
                     }
             }
         }

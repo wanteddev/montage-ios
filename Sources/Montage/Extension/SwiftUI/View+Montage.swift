@@ -215,14 +215,16 @@ extension View {
         isPresented: Bool,
         kind: Skeleton.Kind,
         color: SwiftUI.Color? = nil,
-        opacity: CGFloat? = nil
+        opacity: CGFloat? = nil,
+        size: CGSize? = nil
     ) -> some View {
         modifier(
             Skeleton.PredefinedSkeletonModifier(
                 isPresented: isPresented,
                 kind: kind,
                 color: color,
-                opacity: opacity
+                opacity: opacity,
+                size: size
             )
         )
     }
