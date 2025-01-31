@@ -17,9 +17,9 @@ extension Decorate {
             case normal, light, strong
         }
 
-        public var state: State = .normal
-        public var variant: Variant = .normal
-        public var color: Color.Alias = .labelNormal
+        private let state: State
+        private let variant: Variant
+        private let color: Color.Alias
 
         public init(
             state: State = .normal,

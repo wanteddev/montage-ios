@@ -51,10 +51,8 @@ public struct Slider: View {
                             .frame(width: lineLength)
                         
                         Line(kind: .inner, disable: disable)
-                            .frame(width: min(lineLength, lineLength * highThumbRatio))
-                        
-                        Line(kind: .outer, disable: disable)
-                            .frame(width: max(0, lineLength * lowThumbRatio))
+                            .frame(width: min(lineLength, lineLength * (highThumbRatio - lowThumbRatio)))
+                            .offset(x: max(0, lineLength * lowThumbRatio))
                     }
                     .padding(.horizontal, Slider.diameter / 2)
                     .onAppear {
@@ -63,6 +61,24 @@ public struct Slider: View {
                 }
                 .frame(height: Slider.lineWidth)
                 .offset(y: (Slider.diameter - Slider.lineWidth) / 2)
+                .mask {
+                    GeometryReader { geo in
+                        ZStack(alignment: .topLeading) {
+                            Rectangle()
+                                .frame(width: geo.size.width + 12, height: Slider.diameter + 12)
+                            Group {
+                                Circle().stroke(lineWidth: 2)
+                                    .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
+                                    .offset(x: max(0, lineLength * thumbRatio1) + 5, y: 5)
+                                Circle().stroke(lineWidth: 2)
+                                    .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
+                                    .offset(x: max(0, lineLength * thumbRatio2) + 5, y: 5)
+                            }
+                            .blendMode(.destinationOut)
+                        }
+                            .offset(x: -6, y: -6)
+                    }
+                }
                 
                 // thumbs
                 Thumb(
@@ -71,6 +87,7 @@ public struct Slider: View {
                     maxValue: lineLength,
                     disable: disable
                 )
+                .zIndex(focusedThumb == 1 ? 1 : 0)
                 .offset(x: max(0, lineLength * thumbRatio1))
                 .gesture(
                     DragGesture(minimumDistance: 0)
@@ -79,10 +96,8 @@ public struct Slider: View {
                             focusedThumb = 1
                         }.onEnded {
                             thumbRatio1 = thumbRatio(from: $0.location.x)
-                            focusedThumb = nil
                         }
                 )
-                .zIndex(focusedThumb == 1 ? 1 : 0)
                 
                 Thumb(
                     title: label ? labelFormat(value(from: thumbRatio2)) : nil,
@@ -90,6 +105,7 @@ public struct Slider: View {
                     maxValue: lineLength,
                     disable: disable
                 )
+                .zIndex(focusedThumb == 2 ? 1 : 0)
                 .offset(x: max(0, lineLength * thumbRatio2))
                 .gesture(
                     DragGesture(minimumDistance: 0)
@@ -99,10 +115,29 @@ public struct Slider: View {
                         }
                         .onEnded {
                             thumbRatio2 = thumbRatio(from: $0.location.x)
-                            focusedThumb = nil
                         }
                 )
-                .zIndex(focusedThumb == 2 ? 1 : 0)
+            }
+            .mask {
+                GeometryReader { geo in
+                    ZStack(alignment: .topLeading) {
+                        Rectangle()
+                            .frame(width: geo.size.width + 12, height: geo.size.height + 12)
+                            .offset(x: -6, y: -6)
+                        Group {
+                            Circle().stroke(lineWidth: 2)
+                                .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
+                                .offset(x: max(0, lineLength * thumbRatio1) - 1, y: -1)
+                                .blendMode(focusedThumb == 2 && distanceBetweenThumbs <= Slider.diameter + 12 ? .normal : .destinationOut)
+                                .zIndex(focusedThumb == 1 ? 1 : 0)
+                            Circle().stroke(lineWidth: 2)
+                                .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
+                                .offset(x: max(0, lineLength * thumbRatio2) - 1, y: -1)
+                                .blendMode(focusedThumb == 1 && distanceBetweenThumbs <= Slider.diameter + 12 ? .normal : .destinationOut)
+                                .zIndex(focusedThumb == 2 ? 1 : 0)
+                        }
+                    }
+                }
             }
         }
         .allowsHitTesting(!disable)
@@ -135,6 +170,10 @@ public struct Slider: View {
     
     private func value(from thumbRatio: CGFloat) -> CGFloat {
         (range.upperBound - range.lowerBound) * thumbRatio + range.lowerBound
+    }
+    
+    private var distanceBetweenThumbs: CGFloat {
+        lineLength * (highThumbRatio - lowThumbRatio)
     }
     
     private var headingLabel: String {
@@ -173,7 +212,6 @@ public struct Slider: View {
         var body: some View {
             RoundedRectangle(cornerRadius: .infinity)
                 .fill(lineColor)
-                .background(.white)
         }
         
         var lineColor: SwiftUI.Color {
@@ -210,10 +248,6 @@ public struct Slider: View {
                         SwiftUI.Color.alias(disable ? .interactionDisable : .primaryNormal)
                     )
                     .contentShape(Rectangle())
-                    .overlay(
-                        Circle()
-                            .stroke(SwiftUI.Color.alias(.backgroundNormal), lineWidth: 2)
-                    )
                     .background {
                         Decorate.Interaction(
                             state: isDragging ? .pressed : .normal,
