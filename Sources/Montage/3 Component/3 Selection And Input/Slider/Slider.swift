@@ -257,11 +257,6 @@ public struct Slider: View {
                         .frame(width: Slider.diameter + 12, height: Slider.diameter + 12)
                         .clipShape(Circle())
                     }
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in isDragging = true }
-                            .onEnded { _ in isDragging = false }
-                    )
                     .overlay {
                         if let title {
                             Label(title: title, value: value, maxValue: maxValue, disable: disable)
@@ -272,6 +267,11 @@ public struct Slider: View {
                     Label.spacer(for: title)
                 }
             }
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in isDragging = true }
+                    .onEnded { _ in isDragging = false }
+            )
         }
     }
     
