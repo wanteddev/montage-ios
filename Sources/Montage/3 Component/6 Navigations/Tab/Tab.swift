@@ -73,7 +73,6 @@ public struct Tab: View {
                                             
                                             if itemWidths.count > index {
                                                 itemWidths[index] = $0.width
-                                                print("\(index) : \($0.width)")
                                             } else {
                                                 itemWidths = .init(repeating: 0, count: items.count)
                                             }

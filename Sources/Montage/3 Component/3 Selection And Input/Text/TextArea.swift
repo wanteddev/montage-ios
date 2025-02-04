@@ -134,11 +134,6 @@ public struct TextArea: View {
         self.rightResourceSpacing = rightResourceSpacing
     }
     
-    // MARK: - Computed properties
-    // MARK: - Initialisers
-    // MARK: - Helper functions
-    // MARK: - ViewModifier properties
-    
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let heading {

@@ -51,7 +51,6 @@ extension Modal {
         ///
         /// handle을 사용하는 경우 최대높이(화면 최상단 - 10) 까지 확장 가능하며,
         /// handle이 없는 경우에는 resize에 따라 최대높이가 결정됩니다.
-        @available(iOS 16.0, *)
         private var detents: Set<PresentationDetent> {
             if containScrollView {
                 [ .fraction(0.35), .medium, .max ]
@@ -92,45 +91,33 @@ extension Modal {
         }
 
         public var body: some View {
-            if #available(iOS 16.4, *) {
-                VStack(spacing: .zero) {
-                    if handle {
-                        Spacer()
-                            .frame(height: 10)
-                    }
-                    if let navigation {
-                        navigation()
-                    }
-                    AnyView(content())
-                    if let actionArea {
-                        AnyView(actionArea())
-                    }
+            VStack(spacing: .zero) {
+                if handle {
+                    Spacer()
+                        .frame(height: 10)
                 }
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-                .presentationDetents(detents)
-                .presentationDragIndicator(handle ? .visible : .hidden)
-                .presentationContentInteraction(containScrollView ? .resizes : .automatic)
-                .presentationCornerRadius(12)
-                .padding(.bottom, -safeAreaInsets.bottom)
-            } else {
-                VStack(spacing: .zero) {
-                    if handle {
-                        Spacer()
-                            .frame(height: 10)
-                    }
-                    if let navigation {
-                        navigation()
-                    }
-                    AnyView(content())
-                    if let actionArea {
-                        AnyView(actionArea())
-                    }
+                if let navigation {
+                    navigation()
                 }
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-                .presentationDetents(detents)
-                .presentationDragIndicator(handle ? .visible : .hidden)
-                .padding(.bottom, -safeAreaInsets.bottom)
+                AnyView(content())
+                if let actionArea {
+                    AnyView(actionArea())
+                }
             }
+            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+            .presentationDetents(detents)
+            .presentationDragIndicator(handle ? .visible : .hidden)
+            .padding(.bottom, -safeAreaInsets.bottom)
+            .if(true, transform: { originalView in
+                Group {
+                    if #available(iOS 16.4, *) {
+                        originalView.presentationContentInteraction(containScrollView ? .resizes : .automatic)
+                            .presentationCornerRadius(12)
+                    } else {
+                        originalView
+                    }
+                }
+            })
         }
     }
 }
