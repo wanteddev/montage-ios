@@ -11,13 +11,16 @@ public struct Slider: View {
     // MARK: - Initializer
     private let range: ClosedRange<CGFloat>
     private let labelFormat: (CGFloat) -> String
+    private let onChanged: ((CGFloat, CGFloat) -> Void)?
     
     public init(
         range: ClosedRange<CGFloat> = 0 ... 1,
-        labelFormat: ((CGFloat) -> String)? = nil
+        labelFormat: ((CGFloat) -> String)? = nil,
+        onChanged: ((CGFloat, CGFloat) -> Void)? = nil
     ) {
         self.range = range
         self.labelFormat = labelFormat ?? { String(format: "%.1f", $0) }
+        self.onChanged = onChanged
     }
     
     // MARK: - Constants
@@ -31,6 +34,8 @@ public struct Slider: View {
     @State private var thumbRatio2 = 1.0
     @State private var focusedThumb: Int?
     @State private var lineLength = 0.0
+    @State private var lowValue: CGFloat = 0
+    @State private var highValue: CGFloat = 0
     
     public var body: some View {
         VStack(spacing: 32) {
@@ -139,6 +144,17 @@ public struct Slider: View {
                     }
                 }
             }
+            .onAppear {
+                updateValues()
+            }
+            .onChange(of: lowThumbRatio) { _ in
+                updateValues()
+                onChanged?(lowValue, highValue)
+            }
+            .onChange(of: highThumbRatio) { _ in
+                updateValues()
+                onChanged?(lowValue, highValue)
+            }
         }
         .allowsHitTesting(!disable)
     }
@@ -168,6 +184,11 @@ public struct Slider: View {
     
     // MARK: - private
     
+    private func updateValues() {
+        lowValue = (range.upperBound - range.lowerBound) * lowThumbRatio + range.lowerBound
+        highValue = (range.upperBound - range.lowerBound) * highThumbRatio + range.lowerBound
+    }
+    
     private func value(from thumbRatio: CGFloat) -> CGFloat {
         (range.upperBound - range.lowerBound) * thumbRatio + range.lowerBound
     }
@@ -177,8 +198,6 @@ public struct Slider: View {
     }
     
     private var headingLabel: String {
-        let lowValue = (range.upperBound - range.lowerBound) * lowThumbRatio + range.lowerBound
-        let highValue = (range.upperBound - range.lowerBound) * highThumbRatio + range.lowerBound
         return "\(labelFormat(lowValue) ?? "") ~ \(labelFormat(highValue) ?? "")"
     }
     
