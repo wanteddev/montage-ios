@@ -121,7 +121,7 @@ public struct Cell: View {
                     .background()
                     .if(divider)
             }
-            .padding(.horizontal, fillWidth ? 12 : 20)
+            .padding(.horizontal, fillWidth ? 20 : 0)
             .contentShape(Rectangle())
         }
         .buttonStyle(InteractiveCellStyle(fillWidth: fillWidth, interactionPadding: interactionPadding))
