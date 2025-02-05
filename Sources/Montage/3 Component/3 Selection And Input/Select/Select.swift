@@ -12,29 +12,42 @@ public struct Select: View {
     
     /// 다중 선택 가능여부를 나타내는 열거형입니다.
     public enum Variant {
-        case single, multiple(render: Render = .text, overflow: Bool = false)
+        case single(selectionType: SingleSelectionType = .radio)
+        case multiple(render: Render = .text, overflow: Bool = false)
+        
+        var isSingle: Bool {
+            switch self {
+            case .single:
+                return true
+            case .multiple:
+                return false
+            }
+        }
     }
     
     /// 아이템 타입입니다.
     public struct Item: Equatable {
-        public enum State {
-            case normal
-            case negative
-        }
-        
-        public let state: State
         public let text: String
-        public var icon: Icon?
+        public let icon: Icon?
+        public let isNegative: Bool
+        public var isSelected: Bool
         
         public init(
-            state: State = .normal,
             text: String,
-            icon: Icon? = nil
+            icon: Icon? = nil,
+            isNegative: Bool = false,
+            isSelected: Bool = false
         ) {
-            self.state = state
             self.text = text
             self.icon = icon
+            self.isNegative = isNegative
+            self.isSelected = isSelected
         }
+    }
+    
+    /// variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.
+    public enum SingleSelectionType: String, CaseIterable {
+        case checkmark, radio
     }
     
     /// variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.
@@ -43,27 +56,29 @@ public struct Select: View {
         case chip
     }
     
+    private var customMenuPresented: Binding<Bool>?
     private let variant: Variant
-    private let items: [Item]
+    @Binding private var items: [Item]
     private let onTapItem: ((Select.Item) -> Void)?
-    private let onSelectionChanged: ([Select.Item]) -> Void
     
     public init(
+        menuPresented: Binding<Bool>? = nil,
         variant: Variant,
-        items: [Item],
-        onTapItem: ((Select.Item) -> Void)? = nil,
-        onSelectionChanged: @escaping ([Select.Item]) -> Void
+        items: Binding<[Item]>,
+        onTapItem: ((Select.Item) -> Void)? = nil
     ) {
+        self.customMenuPresented = menuPresented
         self.variant = variant
-        self.items = items
+        self._items = items
         self.onTapItem = onTapItem
-        self.onSelectionChanged = onSelectionChanged
     }
     
     // MARK: - Body
-    @State private var selectedIndices: [Int] = []
     @State private var contentSize: CGSize = .zero
-    @State private var menuPresented: Bool = false
+    @State private var defaultMenuPresented: Bool = false
+    private var menuPresented: Binding<Bool> {
+        customMenuPresented ?? $defaultMenuPresented
+    }
     @State private var menuSize: CGSize = .zero
     
     public var body: some View {
@@ -143,8 +158,8 @@ public struct Select: View {
                                             let chips = Chips(
                                                 items: selectedItems,
                                                 disable: disable,
-                                                onTapItem: { item in
-                                                    selectedIndices.removeAll { items[$0] == item }
+                                                onTapItem: { index in
+                                                    items[index].isSelected.toggle()
                                                 }
                                             )
                                             if overflow {
@@ -168,7 +183,7 @@ public struct Select: View {
                         .contentShape(Rectangle())
                     }
                     
-                    if !selectedIndices.isEmpty, negative {
+                    if !selectedItems.isEmpty, negative {
                         Image.montage(.circleExclamationFill)
                             .resizable()
                             .frame(width: 22, height: 22)
@@ -181,7 +196,7 @@ public struct Select: View {
                         iconColor: disable ? SwiftUI.Color
                             .alias(.labelDisable) : .alias(.labelAlternative)
                     ) {
-                        menuPresented.toggle()
+                        menuPresented.wrappedValue.toggle()
                     }
                     .padding(.horizontal, 4)
                 }
@@ -193,7 +208,7 @@ public struct Select: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
-                        .stroke(strokeColor, lineWidth: menuPresented ? 2 : 1)
+                        .stroke(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
                 }
                 .shadow(
                     color: .alias(.staticBlack).opacity(0.03),
@@ -214,37 +229,69 @@ public struct Select: View {
         }
         .allowsHitTesting(disable == false)
         .onTapGesture {
-            menuPresented.toggle()
+            menuPresented.wrappedValue.toggle()
         }
-        .sheet(isPresented: $menuPresented) {
-            VStack {
-                ForEach(Array(items.enumerated()), id: \.offset) { item in
-                    Cell(title: item.element.text) {
-                        switch variant {
-                        case .single:
-                            selectedIndices = [item.offset]
-                        case .multiple:
-                            if selectedIndices.contains(item.offset) {
-                                selectedIndices.removeAll { $0 == item.offset }
-                            } else {
-                                selectedIndices.append(item.offset)
+        .if(customMenuPresented == nil) {
+            $0.sheet(isPresented: $defaultMenuPresented) {
+                Modal.Bottom {
+                    ScrollView {
+                        VStack(spacing: 4) {
+                            ForEach(items.indices, id: \.self) { index in
+                                Group {
+                                    let cell = Cell(title: items[index].text) {
+                                        switch variant {
+                                        case .single:
+                                            deselectAll()
+                                            fallthrough
+                                        case .multiple:
+                                            items[index].isSelected.toggle()
+                                        }
+                                    }
+                                    
+                                    switch variant {
+                                    case .single(let selectionType):
+                                        switch selectionType {
+                                        case .checkmark:
+                                            cell.active(items[index].isSelected)
+                                                .rightContent { active in
+                                                    Control.Check(state: active)
+                                                }
+                                        case .radio:
+                                            cell.leftContent {
+                                                Control.Radio(state: items[index].isSelected)
+                                            }
+                                        }
+                                    case .multiple:
+                                        cell.leftContent {
+                                            Control.Checkbox(state: items[index].isSelected)
+                                        }
+                                    }
+                                }
                             }
                         }
-                        onSelectionChanged(selectedItems)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 20)
                     }
-                    .active(selectedIndices.contains(item.offset))
-                    .rightContent { active in
-                        Control.Check(state: active)
-                    }
+                    .frame(height: 480)
+                } actionArea: {
+                    .init(
+                        model: .init(
+                            priority: .neutral(
+                                main: .init(text: "완료", action: {
+                                    defaultMenuPresented.toggle()
+                                }),
+                                sub: .init(custom: {
+                                    Button.OutlinedButton(variant: .assistive, size: .large, leftIcon: .refresh, iconOnly: true) {
+                                        deselectAll()
+                                    }
+                                })
+                            )
+                        )
+                    )
                 }
+                .resize(.hug)
             }
-            .padding()
-            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { menuSize = $0 })
-            .presentationDetents([.height(menuSize.height)])
         }
-//        .onAppear {
-//            selectedIndices = Array(0..<Int(items.count))
-//        }
     }
     
     // MARK: - Modifiers
@@ -318,9 +365,15 @@ public struct Select: View {
     // MARK: - Private
     
     private var selectedItems: [Item] {
-        items.enumerated()
-            .filter { selectedIndices.contains($0.offset) }
-            .map { $0.element }
+        items.filter(\.isSelected)
+    }
+    
+    private func deselectAll() {
+        items = items.map {
+            var mutated = $0
+            mutated.isSelected = false
+            return mutated
+        }
     }
     
     private var strokeColor: SwiftUI.Color {
@@ -330,7 +383,7 @@ public struct Select: View {
             if negative {
                 .alias(.statusNegative).opacity(0.28)
             } else {
-                menuPresented ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
+                menuPresented.wrappedValue ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
             }
         }
     }
@@ -348,11 +401,11 @@ public struct Select: View {
     private struct Chips: View {
         var items: [Select.Item]
         var disable: Bool
-        var onTapItem: ((Select.Item) -> Void)?
+        var onTapItem: ((Int) -> Void)?
         
         var body: some View {
-            ForEach(Array(items.indices), id: \.self) {
-                let item = items[$0]
+            ForEach(items.indices, id: \.self) { index in
+                let item = items[index]
                 Montage.Chip.Action(
                     variant: .solid,
                     size: .xsmall,
@@ -367,38 +420,35 @@ public struct Select: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    onTapItem?(item)
+                    onTapItem?(index)
                 }
             }
         }
         
         private func iconColor(_ item: Select.Item) -> SwiftUI.Color {
             guard disable == false else { return .alias(.labelDisable) }
-            switch item.state {
-            case .normal:
-                return .alias(.labelAlternative)
-            case .negative:
+            if item.isNegative {
                 return .alias(.statusNegative)
+            } else {
+                return .alias(.labelAlternative)
             }
         }
         
         private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color? {
             guard disable == false else { return nil }
-            switch item.state {
-            case .normal:
-                return nil
-            case .negative:
+            if item.isNegative {
                 return .alias(.statusNegative).opacity(0.05)
+            } else {
+                return nil
             }
         }
         
         private func fontColor(_ item: Select.Item) -> SwiftUI.Color {
             guard disable == false else { return .alias(.labelDisable) }
-            switch item.state {
-            case .normal:
-                return .alias(.labelNormal)
-            case .negative:
+            if item.isNegative {
                 return .alias(.statusNegative)
+            } else {
+                return .alias(.labelNormal)
             }
         }
     }
