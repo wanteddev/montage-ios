@@ -76,7 +76,7 @@ public struct Cell: View {
                                 .paragraph(variant: titleTypography.variant)
                         }
                         .if(textEllipsis) {
-                            $0.lineLimit(1)
+                            $0.lineLimit(2)
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
