@@ -1,5 +1,5 @@
 //
-//  InteractiveCellStyle.swift
+//  PressInteractionModifier.swift
 //  Montage
 //
 //  Created by 김삼열 on 1/3/25.
@@ -7,22 +7,24 @@
 
 import SwiftUI
 
-struct InteractiveCellStyle: ButtonStyle {
+struct PressInteractionModifier: ViewModifier {
+    @Binding private var pressed: Bool
     private let fillWidth: Bool
     private let interactionPadding: CGFloat
-    init(fillWidth: Bool, interactionPadding: CGFloat) {
+    init(pressed: Binding<Bool>, fillWidth: Bool, interactionPadding: CGFloat) {
+        self._pressed = pressed
         self.fillWidth = fillWidth
         self.interactionPadding = interactionPadding
     }
 
     @State private var labelSize: CGSize = .zero
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+    func body(content: Content) -> some View {
+        content
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
             .overlay(
                 Decorate.Interaction(
-                    state: configuration.isPressed ? .pressed : .normal,
+                    state: pressed ? .pressed : .normal,
                     variant: .light,
                     color: .labelNormal
                 )

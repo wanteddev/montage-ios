@@ -56,76 +56,84 @@ public struct Cell: View {
     @State private var isPressed = false
     
     public var body: some View {
-        SwiftUI.Button {
-            onTap?()
-        } label: {
-            ZStack(alignment: .bottom) {
-                ZStack {
-                    HStack(alignment: textEllipsis ? .center : .top, spacing: 8) {
-                        leftContent()
-                            .frame(
-                                height: extraContentMaxHeight.maxHeight
-                            )
-                            .clipped()
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Group {
-                                Text(title)
-                                    .montage(
-                                        variant: titleTypography.variant,
-                                        weight: titleTypography.weight,
-                                        alias: normalTitleColor
-                                    )
-                                    .paragraph(variant: titleTypography.variant)
-                            }
-                            .if(textEllipsis) {
-                                $0.lineLimit(1)
-                            }
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            if let caption {
-                                Text(caption)
-                                    .montage(
-                                        variant: .label2,
-                                        alias: disable ? .labelDisable : .labelAlternative
-                                    )
-                                    .paragraph(variant: .label2)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
+        ZStack(alignment: .bottom) {
+            ZStack {
+                HStack(alignment: textEllipsis ? .center : .top, spacing: 8) {
+                    leftContent()
+                        .frame(
+                            height: extraContentMaxHeight.maxHeight
+                        )
+                        .clipped()
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Group {
+                            Text(title)
+                                .montage(
+                                    variant: titleTypography.variant,
+                                    weight: titleTypography.weight,
+                                    alias: normalTitleColor
+                                )
+                                .paragraph(variant: titleTypography.variant)
                         }
-                        
-                        rightContent()
-                            .frame(
-                                height: extraContentMaxHeight.maxHeight
-                            )
-                            .clipped()
-                        
-                        VStack {
-                            Image.montage(.chevronRightTightSmall)
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
-                                .frame(width: 8, height: 16)
-                                .padding(.vertical, 4)
+                        .if(textEllipsis) {
+                            $0.lineLimit(1)
                         }
-                        .frame(maxHeight: .infinity)
-                        .if(chevron)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        if let caption {
+                            Text(caption)
+                                .montage(
+                                    variant: .label2,
+                                    alias: disable ? .labelDisable : .labelAlternative
+                                )
+                                .paragraph(variant: .label2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
+                    
+                    rightContent()
+                        .frame(
+                            height: extraContentMaxHeight.maxHeight
+                        )
+                        .clipped()
+                    
+                    VStack {
+                        Image.montage(.chevronRightTightSmall)
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
+                            .frame(width: 8, height: 16)
+                            .padding(.vertical, 4)
+                    }
+                    .frame(maxHeight: .infinity)
+                    .if(chevron)
                 }
-                .padding(.vertical, padding.length)
-                
-                Rectangle()
-                    .frame(height: 1)
-                    .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
-                    .background()
-                    .if(divider)
             }
-            .padding(.horizontal, fillWidth ? 20 : 0)
-            .contentShape(Rectangle())
+            .padding(.vertical, padding.length)
+            
+            Rectangle()
+                .frame(height: 1)
+                .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
+                .background()
+                .if(divider)
         }
-        .buttonStyle(InteractiveCellStyle(fillWidth: fillWidth, interactionPadding: interactionPadding))
+        .padding(.horizontal, fillWidth ? 20 : 0)
+        .contentShape(Rectangle())
+        .modifier(PressInteractionModifier(pressed: $isPressed, fillWidth: fillWidth, interactionPadding: interactionPadding))
         .allowsHitTesting(disable == false)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged({ value in
+                    isPressed = value.translation == .zero
+                })
+                .onEnded({ value in
+                    isPressed = false
+                    if value.translation == .zero {
+                        onTap?()
+                    }
+                })
+        )
     }
     
     // MARK: - Modifiers

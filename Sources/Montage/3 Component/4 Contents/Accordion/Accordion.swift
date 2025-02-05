@@ -44,6 +44,7 @@ public struct Accordion<A: View, C: View>: View {
     
     // MARK: - Body
     
+    @State private var isPressed = false
     @State private var isExpanded = false
     @State private var accessorySize: CGSize = .zero
     @State private var contentSize: CGSize = .zero
@@ -51,42 +52,50 @@ public struct Accordion<A: View, C: View>: View {
     public var body: some View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
-                SwiftUI.Button {
-                    withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
-                        isExpanded.toggle()
+                HStack(alignment: .top, spacing: 0) {
+                    Text(title)
+                        .montage(
+                            variant: titleTypography.variant,
+                            weight: titleTypography.weight,
+                            color: titleTypography.color
+                        )
+                        .paragraph(variant: titleTypography.variant)
+                    Spacer(minLength: 0)
+                    
+                    accessory()
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { accessorySize = $0 }
+                        )
+                    
+                    if accessorySize == .zero {
+                        Image.montage(.chevronDown)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .padding(2)
+                            .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     }
-                } label: {
-                    HStack(alignment: .top, spacing: 0) {
-                        Text(title)
-                            .montage(
-                                variant: titleTypography.variant,
-                                weight: titleTypography.weight,
-                                color: titleTypography.color
-                            )
-                            .paragraph(variant: titleTypography.variant)
-                        Spacer(minLength: 0)
-                        
-                        accessory()
-                            .onGeometryChange(
-                                for: CGSize.self,
-                                of: { $0.size },
-                                action: { accessorySize = $0 }
-                            )
-                        
-                        if accessorySize == .zero {
-                            Image.montage(.chevronDown)
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .padding(2)
-                                .rotationEffect(.degrees(isExpanded ? 180 : 0))
-                        }
-                    }
-                    .frame(minHeight: 24)
-                    .padding(.vertical, padding.length)
-                    .contentShape(Rectangle())
-                    .padding(.horizontal, fillWidth ? 20 : 0)
                 }
-                .buttonStyle(InteractiveCellStyle(fillWidth: fillWidth, interactionPadding: 12))
+                .frame(minHeight: 24)
+                .padding(.vertical, padding.length)
+                .contentShape(Rectangle())
+                .padding(.horizontal, fillWidth ? 20 : 0)
+                .modifier(PressInteractionModifier(pressed: $isPressed, fillWidth: fillWidth, interactionPadding: 12))
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged({ value in
+                            isPressed = value.translation == .zero
+                        })
+                        .onEnded({ value in
+                            isPressed = false
+                            if value.translation == .zero {
+                                withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
+                                    isExpanded.toggle()
+                                }
+                            }
+                        })
+                )
                 
                 if isExpanded {
                     VStack(alignment: .leading, spacing: 0) {
