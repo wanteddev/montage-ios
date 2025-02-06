@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct TextInput: View {
     /// TextInput의 외관을 결정하는 열거형입니다.
-    public enum Variant {
+    public enum Status {
         case normal
         case positive
         case negative
@@ -19,7 +19,7 @@ public struct TextInput: View {
     @State private var active = false
     
     /// TextInput의 외관입니다.
-    public var variant: Variant
+    public var status: Status
 
     /// TextInput의 사용가능 여부입니다.
     public var disable: Bool
@@ -58,7 +58,7 @@ public struct TextInput: View {
     
     public init(
         text: Binding<String>,
-        variant: Variant = .normal,
+        status: Status = .normal,
         disable: Bool = false,
         heading: String? = nil,
         requiredBadge: Bool = false,
@@ -70,7 +70,7 @@ public struct TextInput: View {
         onCommit: (() -> Void)? = nil
     ) {
         _text = text
-        self.variant = variant
+        self.status = status
         self.disable = disable
         self.heading = heading
         self.requiredBadge = requiredBadge
@@ -98,7 +98,7 @@ public struct TextInput: View {
             Field(
                 text: $text,
                 active: $active,
-                variant: variant,
+                status: status,
                 disable: disable,
                 placeholder: placeholder,
                 icon: icon,
@@ -107,9 +107,9 @@ public struct TextInput: View {
             )
             if let description {
                 let message: String = {
-                    if variant == .positive {
+                    if status == .positive {
                         description.positive ?? description.normal
-                    } else if variant == .negative {
+                    } else if status == .negative {
                         description.negative ?? description.normal
                     } else {
                         description.normal
@@ -119,7 +119,7 @@ public struct TextInput: View {
                     Text(message)
                         .montage(
                             variant: .caption1,
-                            alias: variant == .negative ? .statusNegative : .labelAlternative
+                            alias: status == .negative ? .statusNegative : .labelAlternative
                         )
                         .paragraph(variant: .caption1)
                 }
@@ -136,7 +136,7 @@ public struct TextInput: View {
         @Binding var text: String
         @Binding var active: Bool
         
-        var variant: Variant
+        var status: Status
         var disable: Bool
         var placeholder: String?
         var icon: Icon?
@@ -145,14 +145,14 @@ public struct TextInput: View {
 
         private var fieldStrokeColor: SwiftUI.Color {
             if textFieldFocusState {
-                switch variant {
+                switch status {
                 case .normal, .positive:
                     .alias(.primaryNormal).opacity(0.43)
                 case .negative:
                     .alias(.statusNegative).opacity(0.43)
                 }
             } else {
-                switch variant {
+                switch status {
                 case .normal, .positive:
                     .alias(.lineNeutral)
                 case .negative:
@@ -210,13 +210,13 @@ public struct TextInput: View {
                                 .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
                                 .onTapGesture { text = "" }
                         } else {
-                            if variant == .positive || variant == .negative {
+                            if status == .positive || status == .negative {
                                 Image
-                                    .montage(variant == .positive ? .circleCheckFill : .circleExclamationFill)
+                                    .montage(status == .positive ? .circleCheckFill : .circleExclamationFill)
                                     .resizable()
                                     .frame(width: 22, height: 22)
                                     .foregroundStyle(
-                                        variant == .positive ? SwiftUI.Color
+                                        status == .positive ? SwiftUI.Color
                                             .alias(.primaryNormal) : .alias(.statusNegative)
                                     )
                             }
@@ -345,7 +345,7 @@ struct TextInput_Preview: PreviewProvider {
     static var previews: some View {
         TextInput(
             text: .constant("값"),
-            variant: .normal,
+            status: .normal,
             disable: false,
             heading: "주제",
             requiredBadge: true,
