@@ -227,7 +227,6 @@ public struct TextInput: View {
                             }()
                         )
                         .font(.montage(variant: .body1, weight: .regular))
-                        .paragraph(variant: .body1)
                         .foregroundStyle(fieldTextColor)
                         .focused($textFieldFocusState)
                         .frame(minHeight: 24)
