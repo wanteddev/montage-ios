@@ -58,7 +58,7 @@ public struct Loading: View {
         func body(content: Content) -> some View {
             ZStack {
                 content
-                    .interactionDisabled(isLoading)
+                    .userInteractionDisabled(isLoading)
                 dimmedColor
                     .opacity(opacity)
                     .ignoresSafeArea()

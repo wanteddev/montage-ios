@@ -35,19 +35,7 @@ public struct Category: View {
     }
     
     // MARK: - Body
-    @State private var contentOffset: CGPoint = .zero
-    @State private var contentWidth: CGFloat = .zero
-    @State private var scrollViewWidth: CGFloat = .zero
-    @State private var needsLeftGradient = false
-    @State private var needsRightGradient = false
     
-    private let gradientColors = {
-        [1.0, 0.86, 0.73, 0.62, 0.52, 0.43, 0.35, 0.29, 0.23, 0.18, 0.14, 0.1, 0.07, 0.04, 0.02, 0.0].map {
-            SwiftUI.Color.black.opacity($0)
-        }
-    }()
-    
-    private let gradientWidth: CGFloat = 48
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
     public var body: some View {
@@ -74,21 +62,14 @@ public struct Category: View {
                 }
                 .padding(.leading, padding ? 20 : 0)
                 .padding(.trailing, padding || icon != nil ? 20 : 0)
-                .onGeometryChange(
-                    for: CGSize.self,
-                    of: { $0.size },
-                    action: { contentWidth = $0.width }
+                .modifier(
+                    GradientScrollEdgeModifier(
+                        gradientWidth: 48,
+                        gradientInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: icon != nil ? 20 : 0),
+                        leftGradientDisabled: padding,
+                        rightGradientDisabled: padding && icon == nil
+                    )
                 )
-                .scrollable(.horizontal, contentOffset: $contentOffset)
-                .onGeometryChange(
-                    for: CGSize.self,
-                    of: { $0.size },
-                    action: { scrollViewWidth = $0.width }
-                )
-                .mask {
-                    gradientEdge()
-                        .padding(.trailing, icon != nil ? 20 : 0)
-                }
                 
                 if let icon, let iconButtonAction {
                     Button.IconButton(icon: icon) {
@@ -105,67 +86,6 @@ public struct Category: View {
                     reader.scrollTo(index, anchor: .center)
                 }
             }
-            .onChange(of: contentOffset) { _ in
-                withAnimation(animation) {
-                    setNeedsGradientIfNeeded()
-                }
-            }
-            .onChange(of: contentWidth) { _ in
-                setNeedsGradientIfNeeded()
-            }
-        }
-    }
-    
-    private func gradientEdge() -> some View {
-        HStack(spacing: 0) {
-            Group {
-                if needsLeftGradient {
-                    LinearGradient(
-                        colors: gradientColors,
-                        startPoint: .init(x: 1, y: 0),
-                        endPoint: .init(x: 0, y: 0)
-                    )
-                } else {
-                    Rectangle()
-                }
-            }
-            .frame(width: gradientWidth)
-            
-            Rectangle()
-                .frame(maxWidth: .infinity)
-            
-            Group {
-                if needsRightGradient {
-                    LinearGradient(
-                        colors: gradientColors,
-                        startPoint: .init(x: 0, y: 0),
-                        endPoint: .init(x: 1, y: 0)
-                    )
-                } else {
-                    Rectangle()
-                }
-            }
-            .frame(width: gradientWidth)
-        }
-        .allowsHitTesting(false)
-    }
-
-    private func setNeedsGradientIfNeeded() {
-        if -contentOffset.x + scrollViewWidth < contentWidth {
-            needsRightGradient = true
-        } else {
-            needsRightGradient = false
-        }
-
-        if contentOffset.x < 0 {
-            needsLeftGradient = true
-        } else {
-            needsLeftGradient = false
-        }
-        
-        if padding {
-            needsLeftGradient = false
-            needsRightGradient = needsRightGradient && (icon != nil)
         }
     }
     

@@ -42,6 +42,9 @@ public struct Input: View {
                 .paragraph(variant: titleTypography.variant)
                 .multilineTextAlignment(.leading)
                 .padding(.vertical, size == .normal ? 1 : 0)
+                .onTapGesture {
+                    onSelect()
+                }
         }
     }
 

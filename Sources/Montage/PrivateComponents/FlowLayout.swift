@@ -49,9 +49,9 @@ public struct FlowLayout: Layout {
         var lineHeight = 0.0
         
         for index in subviews.indices {
-            if lineWidth + cache.sizes[index].width > proposal.width ?? 0 {
+            if lineWidth + cache.sizes[index].width > (proposal.width ?? 0) {
                 totalHeight += lineHeight + lineSpacing
-                lineWidth = cache.sizes[index].width
+                lineWidth = cache.sizes[index].width + (spacing ?? cache.spacing[index])
                 lineHeight = cache.sizes[index].height
             } else {
                 lineWidth += cache.sizes[index].width + (spacing ?? cache.spacing[index])
@@ -77,7 +77,7 @@ public struct FlowLayout: Layout {
         var lineHeight: CGFloat = 0
         
         for index in subviews.indices {
-            if lineX + cache.sizes[index].width > (proposal.width ?? 0) {
+            if lineX + cache.sizes[index].width - bounds.minX > (proposal.width ?? 0) {
                 lineY += lineHeight + lineSpacing
                 lineHeight = 0
                 lineX = bounds.minX
@@ -99,3 +99,14 @@ public struct FlowLayout: Layout {
         }
     }
 }
+
+#Preview(body: {
+    ScrollView {
+        FlowLayout {
+            ForEach(0..<97) { i in
+                Chip.Action(text: "\(i)")
+            }
+        }
+        .borderForPreview()
+    }
+})

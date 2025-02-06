@@ -245,9 +245,9 @@ extension View {
 // MARK: Interaction Disabling
 
 extension View {
-    public func interactionDisabled(_ disabled: Bool) -> some View {
+    public func userInteractionDisabled(_ disabled: Bool) -> some View {
         ZStack {
-            modifier(InteractionDisablingViewModifier(disabled: disabled))
+            modifier(UserInteractionDisablingModifier(disabled: disabled))
         }
     }
 }
