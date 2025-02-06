@@ -21,19 +21,14 @@ struct AutoScrollModifier: ViewModifier {
     @State private var scrollViewSize: CGSize = .zero
     
     func body(content: Content) -> some View {
-        Group {
-            if scrollNotNeeded == false {
-                OffsettableScrollView {
-                    contentOffset = $0
-                } content: {
-                    contentView(content)
-                }
-                .axis(axis)
-                .showIndicators(false)
-            } else {
-                contentView(content)
-            }
+        OffsettableScrollView {
+            contentOffset = $0
+        } content: {
+            contentView(content)
         }
+        .axis(axis)
+        .showIndicators(false)
+        .scrollDisabled(scrollNotNeeded)
         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { scrollViewSize = $0 })
         .onChange(of: contentSize) { _ in
             updateWhetherScrollable()

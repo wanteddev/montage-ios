@@ -52,6 +52,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
             .mask {
                 gradientEdge()
                     .padding(gradientInsets)
+                    .frame(width: scrollViewWidth)
             }
             .onChange(of: contentOffset) { _ in
                 withAnimation(animation) {
@@ -98,7 +99,9 @@ struct GradientScrollEdgeModifier: ViewModifier {
     }
     
     private func setNeedsGradientIfNeeded() {
-        if -contentOffset.x + scrollViewWidth < contentWidth {
+        // FloatingPoint 오차로 인해 오른쪽 끝까지 스크롤했을 때 그래디언트가 나타나는
+        // 현상이 있어서 소수 아래 절삭한 상태로 비교함
+        if Int(-contentOffset.x) + Int(scrollViewWidth) < Int(contentWidth) {
             needsRightGradient = true
         } else {
             needsRightGradient = false
