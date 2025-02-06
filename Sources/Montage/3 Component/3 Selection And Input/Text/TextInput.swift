@@ -48,57 +48,6 @@ public struct TextInput: View {
         self.onCommit = onCommit
     }
     
-    // MARK: - Body
-    
-    public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if let heading {
-                HStack(spacing: 4) {
-                    Text(heading)
-                        .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
-                        .paragraph(variant: .label1)
-                    if requiredBadge {
-                        Text("*")
-                            .montage(variant: .label1, weight: .medium, alias: .statusNegative)
-                    }
-                }
-            }
-            Field(
-                text: $text,
-                status: status,
-                disable: disable,
-                placeholder: placeholder,
-                icon: icon,
-                rightButton: rightButton,
-                rightContent: rightContent
-            )
-            Group {
-                switch status {
-                case .positive(let caption), .negative(let caption), .normal(let caption):
-                    if caption.isEmpty == false {
-                        Text(caption)
-                            .montage(
-                                variant: .caption1,
-                                color: captionTextColor
-                            )
-                            .paragraph(variant: .caption1)
-                    }
-                }
-            }
-        }
-    }
-    
-    // MARK: - Private
-    
-    private var captionTextColor: SwiftUI.Color {
-        switch status {
-        case .negative:
-            .alias(.statusNegative)
-        default:
-            .alias(.labelAlternative)
-        }
-    }
-    
     // MARK: - Modifiers
     
     private var status: Status = .normal()
@@ -165,6 +114,57 @@ public struct TextInput: View {
         var zelf = self
         zelf.rightContent = rightContent
         return zelf
+    }
+    
+    // MARK: - Body
+    
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let heading {
+                HStack(spacing: 4) {
+                    Text(heading)
+                        .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
+                        .paragraph(variant: .label1)
+                    if requiredBadge {
+                        Text("*")
+                            .montage(variant: .label1, weight: .medium, alias: .statusNegative)
+                    }
+                }
+            }
+            Field(
+                text: $text,
+                status: status,
+                disable: disable,
+                placeholder: placeholder,
+                icon: icon,
+                rightButton: rightButton,
+                rightContent: rightContent
+            )
+            Group {
+                switch status {
+                case .positive(let caption), .negative(let caption), .normal(let caption):
+                    if caption.isEmpty == false {
+                        Text(caption)
+                            .montage(
+                                variant: .caption1,
+                                color: captionTextColor
+                            )
+                            .paragraph(variant: .caption1)
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Private
+    
+    private var captionTextColor: SwiftUI.Color {
+        switch status {
+        case .negative:
+            .alias(.statusNegative)
+        default:
+            .alias(.labelAlternative)
+        }
     }
     
     // MARK: - Inner Views
