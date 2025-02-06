@@ -8,79 +8,47 @@
 import SwiftUI
 
 public struct TextInput: View {
+    
+    // MARK: - Types
+    
     /// TextInput의 외관을 결정하는 열거형입니다.
     public enum Status {
-        case normal
-        case positive
-        case negative
+        case normal(description: String = "")
+        case positive(description: String = "")
+        case negative(description: String = "")
     }
     
+    /// 오른쪽 버튼의 속성을 가지고 있는 타입입니다.
+    public struct RightButton {
+        fileprivate let variant: Montage.Button.OutlinedUIButton.Variant
+        fileprivate let title: String
+        fileprivate let handler: (() -> Void)?
+        
+        public init(
+            variant: Montage.Button.OutlinedUIButton.Variant,
+            title: String,
+            handler: (() -> Void)? = nil
+        ) {
+            self.variant = variant
+            self.title = title
+            self.handler = handler
+        }
+    }
+    
+    // MARK: - Initializer
+    
     @Binding private var text: String
-    @State private var active = false
-    
-    /// TextInput의 외관입니다.
-    public var status: Status
-
-    /// TextInput의 사용가능 여부입니다.
-    public var disable: Bool
-    
-    /// TextInput의 제목입니다.
-    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var heading: String?
-    
-    /// TextInput의 필수 표시 노출 여부입니다.
-    public var requiredBadge: Bool
-    
-    /// TextInput의 설명입니다.
-    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var description: TextInput.Description?
-    
-    /// TextInput에 입력된 텍스트가 없을 때 노출되는 placeholder입니다.
-    ///  > 값을 지정하지 않으면 노출되지 않습니다.
-    public var placeholder: String? = nil
-
-    /// TextInput의 왼쪽 아이콘입니다.
-    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var icon: Icon?
-    
-    /// TextInput의 오른쪽 버튼입니다.
-    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    public var rightButton: Resource.Button?
-    
-    /// TextInput의 오른쪽 컨텐츠입니다.
-    /// > 기본값은 nil이며, 값이 없는 경우 노출되지 않습니다.
-    /// >
-    /// > rightButton과 함께 사용하는 경우 rightContent가 무시됩니다.
-    public var rightContent: (() -> any View)?
-    
-    /// TextInput의 onCommit시 실행될 내용입니다.
-    public var onCommit: (() -> Void)?
+    private let onCommit: (() -> Void)?
     
     public init(
         text: Binding<String>,
-        status: Status = .normal,
-        disable: Bool = false,
-        heading: String? = nil,
-        requiredBadge: Bool = false,
-        description: TextInput.Description? = nil,
-        placeholder: String? = nil,
-        icon: Icon? = nil,
-        rightButton: Resource.Button? = nil,
-        rightContent: (() -> any View)? = nil,
         onCommit: (() -> Void)? = nil
     ) {
         _text = text
-        self.status = status
-        self.disable = disable
-        self.heading = heading
-        self.requiredBadge = requiredBadge
-        self.description = description
-        self.placeholder = placeholder
-        self.icon = icon
-        self.rightButton = rightButton
-        self.rightContent = rightButton == nil ? rightContent : nil
         self.onCommit = onCommit
     }
+    
+    // MARK: - Body
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -97,7 +65,6 @@ public struct TextInput: View {
             }
             Field(
                 text: $text,
-                active: $active,
                 status: status,
                 disable: disable,
                 placeholder: placeholder,
@@ -105,70 +72,132 @@ public struct TextInput: View {
                 rightButton: rightButton,
                 rightContent: rightContent
             )
-            if let description {
-                let message: String = {
-                    if status == .positive {
-                        description.positive ?? description.normal
-                    } else if status == .negative {
-                        description.negative ?? description.normal
-                    } else {
-                        description.normal
+            Group {
+                switch status {
+                case .positive(let caption), .negative(let caption), .normal(let caption):
+                    if caption.isEmpty == false {
+                        Text(caption)
+                            .montage(
+                                variant: .caption1,
+                                color: captionTextColor
+                            )
+                            .paragraph(variant: .caption1)
                     }
-                }()
-                if message.isEmpty == false {
-                    Text(message)
-                        .montage(
-                            variant: .caption1,
-                            alias: status == .negative ? .statusNegative : .labelAlternative
-                        )
-                        .paragraph(variant: .caption1)
                 }
             }
-        }
-        .onChange(of: text) { newValue in
-            active = (newValue.isEmpty == false)
         }
     }
     
+    // MARK: - Private
+    
+    private var captionTextColor: SwiftUI.Color {
+        switch status {
+        case .negative:
+            .alias(.statusNegative)
+        default:
+            .alias(.labelAlternative)
+        }
+    }
+    
+    // MARK: - Modifiers
+    
+    private var status: Status = .normal()
+    private var disable: Bool = false
+    private var heading: String? = nil
+    private var requiredBadge: Bool = false
+    private var description: Bool = false
+    private var placeholder: String? = nil
+    private var icon: Icon? = nil
+    private var rightButton: RightButton? = nil
+    private var rightContent: (() -> any View)? = nil
+
+    /// 상태를 조정합니다.
+    public func status(_ status: Status) -> Self {
+        var zelf = self
+        zelf.status = status
+        return zelf
+    }
+
+    /// 사용가능 여부를 조정합니다.
+    public func disable(_ disable: Bool) -> Self {
+        var zelf = self
+        zelf.disable = disable
+        return zelf
+    }
+    
+    /// 제목을 표시합니다.
+    public func heading(_ heading: String?) -> Self {
+        var zelf = self
+        zelf.heading = heading
+        return zelf
+    }
+    
+    /// 필수값임을 나타내는 뱃지를 제목 옆에 노출할지 여부를 조정합니다. 제목이 없으면 노출되지 않습니다.
+    public func requiredBadge(_ requiredBadge: Bool) -> Self {
+        var zelf = self
+        zelf.requiredBadge = requiredBadge
+        return zelf
+    }
+    
+    /// 입력된 텍스트가 없을 때 노출되는 placeholder를 지정합니다.
+    public func placeholder(_ placeholder: String?) -> Self {
+        var zelf = self
+        zelf.placeholder = placeholder
+        return zelf
+    }
+
+    /// 왼쪽에 표시될 아이콘을 지정합니다.
+    public func icon(_ icon: Icon?) -> Self {
+        var zelf = self
+        zelf.icon = icon
+        return zelf
+    }
+    
+    /// 오른쪽에 표시될 버튼의 속성을 지정합니다. `rightContent`와 함께 사용될 경우 `rightButton`이 우선순위가 높습니다.
+    public func rightButton(_ rightButton: RightButton?) -> Self {
+        var zelf = self
+        zelf.rightButton = rightButton
+        return zelf
+    }
+    
+    /// 오른쪽에 표시될 컨텐츠를 지정합니다. `rightButton`과 함께 사용하는 경우 `rightContent`가 무시됩니다.
+    public func rightContent(_ rightContent: (() -> any View)?) -> Self {
+        var zelf = self
+        zelf.rightContent = rightContent
+        return zelf
+    }
+    
+    // MARK: - Inner Views
+    
     private struct Field: View {
+
+        @Binding private var text: String
+        private let status: Status
+        private let disable: Bool
+        private let placeholder: String?
+        private let icon: Icon?
+        private let rightButton: RightButton?
+        private let rightContent: (() -> any View)?
+
+        init(
+            text: Binding<String>,
+            status: Status,
+            disable: Bool,
+            placeholder: String?,
+            icon: Icon?,
+            rightButton: RightButton?,
+            rightContent: (() -> any View)?
+        ) {
+            self._text = text
+            self.status = status
+            self.disable = disable
+            self.placeholder = placeholder
+            self.icon = icon
+            self.rightButton = rightButton
+            self.rightContent = rightContent
+        }
+        
         @FocusState var textFieldFocusState: Bool
-
-        @Binding var text: String
-        @Binding var active: Bool
-        
-        var status: Status
-        var disable: Bool
-        var placeholder: String?
-        var icon: Icon?
-        var rightButton: Resource.Button?
-        var rightContent: (() -> any View)?
-
-        private var fieldStrokeColor: SwiftUI.Color {
-            if textFieldFocusState {
-                switch status {
-                case .normal, .positive:
-                    .alias(.primaryNormal).opacity(0.43)
-                case .negative:
-                    .alias(.statusNegative).opacity(0.43)
-                }
-            } else {
-                switch status {
-                case .normal, .positive:
-                    .alias(.lineNeutral)
-                case .negative:
-                    .alias(.statusNegative).opacity(0.43)
-                }
-            }
-        }
-
-        private var placeholderTextColor: SwiftUI.Color {
-            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
-        }
-        
-        private var fieldTextColor: SwiftUI.Color {
-            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
-        }
-        
         @State private var height: CGFloat = 0
 
         var body: some View {
@@ -204,25 +233,22 @@ public struct TextInput: View {
                         .frame(minHeight: 24)
                         .padding(.horizontal, 4)
 
-                        if active, textFieldFocusState {
+                        if !text.isEmpty, textFieldFocusState {
                             Image.montage(.circleClose)
                                 .frame(width: 22, height: 22)
                                 .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
                                 .onTapGesture { text = "" }
                         } else {
-                            if status == .positive || status == .negative {
+                            if let rightIcon, let rightIconColor {
                                 Image
-                                    .montage(status == .positive ? .circleCheckFill : .circleExclamationFill)
+                                    .montage(rightIcon)
                                     .resizable()
                                     .frame(width: 22, height: 22)
-                                    .foregroundStyle(
-                                        status == .positive ? SwiftUI.Color
-                                            .alias(.primaryNormal) : .alias(.statusNegative)
-                                    )
+                                    .foregroundStyle(rightIconColor)
                             }
                         }
                         
-                        if let rightContent {
+                        if rightButton == nil, let rightContent {
                             AnyView(rightContent())
                         }
                     }
@@ -242,12 +268,12 @@ public struct TextInput: View {
                     .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { height = $0 })
                 }
                 
-                if case let .button(variant, title, handler) = rightButton {
+                if let rightButton {
                     ZStack {
                         FieldButton(
-                            variant: variant,
-                            title: title,
-                            handler: handler
+                            variant: rightButton.variant,
+                            title: rightButton.title,
+                            handler: rightButton.handler
                         )
                         UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
                             .stroke(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
@@ -269,14 +295,69 @@ public struct TextInput: View {
             )
             .allowsHitTesting(disable == false)
         }
+        
+        private var fieldStrokeColor: SwiftUI.Color {
+            if textFieldFocusState {
+                switch status {
+                case .normal, .positive:
+                    .alias(.primaryNormal).opacity(0.43)
+                case .negative:
+                    .alias(.statusNegative).opacity(0.43)
+                }
+            } else {
+                switch status {
+                case .normal, .positive:
+                    .alias(.lineNeutral)
+                case .negative:
+                    .alias(.statusNegative).opacity(0.43)
+                }
+            }
+        }
+        
+        private var rightIcon: Icon? {
+            switch status {
+            case .positive:
+                .circleCheckFill
+            case .negative:
+                .circleExclamationFill
+            default:
+                nil
+            }
+        }
+        
+        private var rightIconColor: SwiftUI.Color? {
+            switch status {
+            case .positive:
+                .alias(.primaryNormal)
+            case .negative:
+                .alias(.statusNegative)
+            default:
+                nil
+            }
+        }
+
+        private var placeholderTextColor: SwiftUI.Color {
+            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        }
+        
+        private var fieldTextColor: SwiftUI.Color {
+            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
+        }
     }
     
     private struct FieldButton: View {
-        @State private var isPressed = false
         
-        let variant: Button.OutlinedUIButton.Variant
-        let title: String
-        let handler: (() -> Void)?
+        private let variant: Button.OutlinedUIButton.Variant
+        private let title: String
+        private let handler: (() -> Void)?
+        
+        init(variant: Button.OutlinedUIButton.Variant, title: String, handler: (() -> Void)?) {
+            self.variant = variant
+            self.title = title
+            self.handler = handler
+        }
+        
+        @State private var isPressed = false
         
         var body: some View {
             Text(title)
@@ -308,57 +389,5 @@ public struct TextInput: View {
                 .padding(.horizontal, 19)
                 .padding(.vertical, 12)
         }
-    }
-}
-
-extension TextInput {
-    public struct Description {
-        var normal: String
-        var positive: String?
-        var negative: String?
-        
-        public init(
-            normal: String = "",
-            positive: String? = nil,
-            negative: String? = nil
-        ) {
-            self.normal = normal
-            self.positive = positive
-            self.negative = negative
-        }
-    }
-}
-
-extension TextInput {
-    public enum Resource {
-        public enum Button {
-            case button(
-                variant: Montage.Button.OutlinedUIButton.Variant,
-                title: String,
-                handler: (() -> Void)? = nil
-            )
-        }
-    }
-}
-
-struct TextInput_Preview: PreviewProvider {
-    static var previews: some View {
-        TextInput(
-            text: .constant("값"),
-            status: .normal,
-            disable: false,
-            heading: "주제",
-            requiredBadge: true,
-            description: .init(
-                normal: "메세지에 마침표를 찍어요.",
-                positive: "성공 메세지를 나타내요.",
-                negative: "실패 메세지를 나타내요."
-            ),
-            icon: .apps,
-            rightButton: .button(variant: .primary, title: "텍스트", handler: {}),
-            rightContent: {
-                Text("히히")
-            }
-        )
     }
 }
