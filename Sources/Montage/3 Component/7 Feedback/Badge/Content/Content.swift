@@ -147,7 +147,7 @@ fileprivate struct Preview: View {
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.negative),
-                        leftIcon: .montage(.circleClose),
+                        leftIcon: .montage(.circleCloseFill),
                         text: "에러"
                     )
                 }

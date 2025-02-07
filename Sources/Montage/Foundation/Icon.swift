@@ -86,6 +86,7 @@ public enum Icon: String, CaseIterable {
     case circleCheck
     case circleCheckFill
     case circleClose
+    case circleCloseFill
     case circleDot
     case circleExclamation
     case circleExclamationFill
@@ -198,6 +199,10 @@ public enum Icon: String, CaseIterable {
     case menuThick
     case message
     case messageFill
+    case microphone
+    case microphoneFill
+    case microphoneSlash
+    case microphoneSlashFill
     case minus
     case minusThick
     case mobile
@@ -226,6 +231,7 @@ public enum Icon: String, CaseIterable {
     case question
     case quote
     case refresh
+    case reset
     case search
     case searchThick
     case send

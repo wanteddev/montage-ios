@@ -285,13 +285,13 @@ struct TextButtonPreview: View {
                     )
                     
                     Button.TextButton(
-                        rightIcon: .circleClose,
+                        rightIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                     
                     Button.TextButton(
                         leftIcon: .bubbleFill,
-                        rightIcon: .circleClose,
+                        rightIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                 }
@@ -305,14 +305,14 @@ struct TextButtonPreview: View {
                     
                     Button.TextButton(
                         variant: .assistive,
-                        rightIcon: .circleClose,
+                        rightIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                     
                     Button.TextButton(
                         variant: .assistive,
                         leftIcon: .bubbleFill,
-                        rightIcon: .circleClose,
+                        rightIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                 }
