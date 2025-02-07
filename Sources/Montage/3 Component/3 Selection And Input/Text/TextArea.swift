@@ -31,7 +31,7 @@ public struct TextArea: View {
         var maxHeight: CGFloat? {
             switch self {
             case .normal: nil
-            case .limit: 320.0
+            case .limit: 102.0
             case .fixed(_, let max): max
             }
         }
