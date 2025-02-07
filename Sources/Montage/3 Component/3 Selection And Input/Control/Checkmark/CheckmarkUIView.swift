@@ -1,5 +1,5 @@
 //
-//  CheckUIView.swift
+//  CheckmarkUIView.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/03/02.
@@ -10,14 +10,14 @@ import UIKit
 /// ``Montage/CheckUIView``의 터치 이벤트를 받을 수 있는 Delegate입니다.
 protocol CheckControlDelegate: AnyObject {
     /// 터치가 발생하였을 때 호출되는 메소드입니다.
-    /// - Parameter check: 터치가 발생한 객체
-    func didTappedCheck(_ check: Control.CheckUIView)
+    /// - Parameter checkmark: 터치가 발생한 객체
+    func didTappedCheck(_ checkmark: Control.CheckmarkUIView)
 }
 
 extension Control {
     /// 체크 이미지를 표현하는 Control Element 입니다. ``MontageUIControl``의 일부만을 표현할 수 있습니다.
-    @available(*, deprecated, message: "Use Montage/Check instead.")
-    public final class CheckUIView: UIView, MontageUIControl {
+    @available(*, deprecated, message: "Use Montage/Checkmark instead.")
+    public final class CheckmarkUIView: UIView, MontageUIControl {
         private let boxView = UIView()
         
         private lazy var imageView: UIImageView = {
@@ -78,7 +78,7 @@ extension Control {
     }
 }
 
-extension Control.CheckUIView {
+extension Control.CheckmarkUIView {
     private func setupViews() {
         addSubview(boxView)
         addSubview(interactionView)
@@ -165,7 +165,7 @@ extension Control.CheckUIView {
     }
 }
 
-extension Control.CheckUIView {
+extension Control.CheckmarkUIView {
     var containerSize: CGSize {
         switch size {
         case .normal:
@@ -197,7 +197,7 @@ extension Control.CheckUIView {
     }
 }
 
-extension Control.CheckUIView: UIGestureRecognizerDelegate {
+extension Control.CheckmarkUIView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(
         _: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer

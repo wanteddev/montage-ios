@@ -375,7 +375,7 @@ public struct Select: View {
                                     .rightContent { active in
                                         Group {
                                             if active {
-                                                Control.Check(state: active)
+                                                Control.Checkmark(state: active)
                                             }
                                         }
                                     }

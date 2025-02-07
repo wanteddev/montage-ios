@@ -1,5 +1,5 @@
 //
-//  Check.swift
+//  Checkmark.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/03/02.
@@ -8,13 +8,13 @@
 import SwiftUI
 
 extension Control {
-    public struct Check: UIViewRepresentable {
+    public struct Checkmark: UIViewRepresentable {
         @Binding private var state: MontageControlState
         private let size: MontageControlSize
         private let onTap: (UIViewType) -> Void
         private var isDisable = false
         
-        public typealias UIViewType = CheckUIView
+        public typealias UIViewType = CheckmarkUIView
         
         public init(
             _ state: Binding<MontageControlState>,
@@ -96,9 +96,9 @@ extension Control {
                 self.onTap = onTap
             }
             
-            public func didTappedCheck(_ check: UIViewType) {
-                state = check.state
-                onTap(check)
+            public func didTappedCheck(_ checkmark: UIViewType) {
+                state = checkmark.state
+                onTap(checkmark)
             }
         }
         
@@ -122,7 +122,7 @@ extension Control {
 struct MontageCheck_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Control.Check(state: .checked, size: .small)
+            Control.Checkmark(state: .checked, size: .small)
         }
     }
 }
