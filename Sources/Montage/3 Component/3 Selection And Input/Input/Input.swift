@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct Input: View {
     public enum NestedControl: String, CaseIterable {
-        case check, checkbox, radio
+        case checkmark, checkbox, radio
     }
 
     private let control: NestedControl
@@ -51,8 +51,8 @@ public struct Input: View {
     private var nestedControl: some View {
         Group {
             switch control {
-            case .check:
-                Control.Check(state: state, size: size) { _ in
+            case .checkmark:
+                Control.Checkmark(state: state, size: size) { _ in
                     onSelect()
                 }
                 .disable(isDisable)
@@ -74,7 +74,7 @@ public struct Input: View {
         switch control {
         case .checkbox, .radio:
             8
-        case .check:
+        case .checkmark:
             4
         }
     }

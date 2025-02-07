@@ -111,7 +111,7 @@ extension InputLabelUIView {
     }
     
     var elementSpacing: CGFloat {
-        if elementView is Control.CheckUIView {
+        if elementView is Control.CheckmarkUIView {
             .spacing(.pt04)
         } else {
             .spacing(.pt08)
