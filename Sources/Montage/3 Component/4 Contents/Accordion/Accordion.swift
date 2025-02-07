@@ -10,7 +10,7 @@ import SwiftUI
 public struct Accordion<A: View, C: View>: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
-    public enum Padding {
+    public enum VerticalPadding {
         case pt8
         case pt12
         case pt16
@@ -78,7 +78,7 @@ public struct Accordion<A: View, C: View>: View {
                     }
                 }
                 .frame(minHeight: 24)
-                .padding(.vertical, padding.length)
+                .padding(.vertical, verticalPadding.length)
                 .contentShape(Rectangle())
                 .padding(.horizontal, fillWidth ? 20 : 0)
                 .modifier(PressInteractionModifier(pressed: $isPressed, fillWidth: fillWidth, interactionPadding: 12))
@@ -143,7 +143,7 @@ public struct Accordion<A: View, C: View>: View {
         weight: Typography.Weight,
         color: SwiftUI.Color
     ) = (.label1, .regular, .alias(.labelNeutral))
-    private var padding: Padding = .pt12
+    private var verticalPadding: VerticalPadding = .pt12
     private var fillWidth = false
     private var divider = false
     
@@ -174,9 +174,9 @@ public struct Accordion<A: View, C: View>: View {
     }
     
     /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
-    public func padding(_ padding: Padding) -> Self {
+    public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
-        zelf.padding = padding
+        zelf.verticalPadding = verticalPadding
         return zelf
     }
     

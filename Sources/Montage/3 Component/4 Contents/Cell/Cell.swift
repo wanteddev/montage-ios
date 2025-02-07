@@ -25,7 +25,7 @@ public struct Cell: View {
     }
     
     /// 상하 여백을 나타내는 열거형입니다.
-    public enum Padding {
+    public enum VerticalPadding {
         case pt8
         case pt12
         case pt16
@@ -110,7 +110,7 @@ public struct Cell: View {
                     .if(chevron)
                 }
             }
-            .padding(.vertical, padding.length)
+            .padding(.vertical, verticalPadding.length)
             
             Rectangle()
                 .frame(height: 1)
@@ -139,7 +139,7 @@ public struct Cell: View {
     // MARK: - Modifiers
     
     private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight) = (.body1, .regular)
-    private var padding: Padding = .pt12
+    private var verticalPadding: VerticalPadding = .pt12
     private var fillWidth = false
     private var textEllipsis = false
     private var caption: String? = nil
@@ -167,9 +167,9 @@ public struct Cell: View {
     }
     
     /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
-    public func padding(_ padding: Padding) -> Self {
+    public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
-        zelf.padding = padding
+        zelf.verticalPadding = verticalPadding
         return zelf
     }
     
