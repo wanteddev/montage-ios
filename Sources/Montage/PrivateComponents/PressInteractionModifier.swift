@@ -12,7 +12,7 @@ struct PressInteractionModifier: ViewModifier {
     private let fillWidth: Bool
     private let interactionPadding: CGFloat
     init(pressed: Binding<Bool>, fillWidth: Bool, interactionPadding: CGFloat) {
-        self._pressed = pressed
+        _pressed = pressed
         self.fillWidth = fillWidth
         self.interactionPadding = interactionPadding
     }

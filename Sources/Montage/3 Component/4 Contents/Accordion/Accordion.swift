@@ -81,20 +81,24 @@ public struct Accordion<A: View, C: View>: View {
                 .padding(.vertical, verticalPadding.length)
                 .contentShape(Rectangle())
                 .padding(.horizontal, fillWidth ? 20 : 0)
-                .modifier(PressInteractionModifier(pressed: $isPressed, fillWidth: fillWidth, interactionPadding: 12))
+                .modifier(PressInteractionModifier(
+                    pressed: $isPressed,
+                    fillWidth: fillWidth,
+                    interactionPadding: 12
+                ))
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
-                        .onChanged({ value in
+                        .onChanged { value in
                             isPressed = value.translation == .zero
-                        })
-                        .onEnded({ value in
+                        }
+                        .onEnded { value in
                             isPressed = false
                             if value.translation == .zero {
                                 withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
                                     isExpanded.toggle()
                                 }
                             }
-                        })
+                        }
                 )
                 
                 if isExpanded {

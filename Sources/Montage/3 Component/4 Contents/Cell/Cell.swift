@@ -120,19 +120,23 @@ public struct Cell: View {
         }
         .padding(.horizontal, fillWidth ? 20 : 0)
         .contentShape(Rectangle())
-        .modifier(PressInteractionModifier(pressed: $isPressed, fillWidth: fillWidth, interactionPadding: interactionPadding))
+        .modifier(PressInteractionModifier(
+            pressed: $isPressed,
+            fillWidth: fillWidth,
+            interactionPadding: interactionPadding
+        ))
         .allowsHitTesting(disable == false)
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
-                .onChanged({ value in
+                .onChanged { value in
                     isPressed = value.translation == .zero
-                })
-                .onEnded({ value in
+                }
+                .onEnded { value in
                     isPressed = false
                     if value.translation == .zero {
                         onTap?()
                     }
-                })
+                }
         )
     }
     

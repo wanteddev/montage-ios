@@ -8,7 +8,6 @@
 import SwiftUI
 
 public struct TextInput: View {
-    
     // MARK: - Types
     
     /// TextInput의 외관을 결정하는 열거형입니다.
@@ -51,10 +50,10 @@ public struct TextInput: View {
     // MARK: - Modifiers
     
     private var status: Status = .normal()
-    private var disable: Bool = false
+    private var disable = false
     private var heading: String? = nil
-    private var requiredBadge: Bool = false
-    private var description: Bool = false
+    private var requiredBadge = false
+    private var description = false
     private var placeholder: String? = nil
     private var icon: Icon? = nil
     private var rightButton: RightButton? = nil
@@ -170,7 +169,6 @@ public struct TextInput: View {
     // MARK: - Inner Views
     
     private struct Field: View {
-
         @Binding private var text: String
         private let status: Status
         private let disable: Bool
@@ -188,7 +186,7 @@ public struct TextInput: View {
             rightButton: RightButton?,
             rightContent: (() -> any View)?
         ) {
-            self._text = text
+            _text = text
             self.status = status
             self.disable = disable
             self.placeholder = placeholder
@@ -345,7 +343,6 @@ public struct TextInput: View {
     }
     
     private struct FieldButton: View {
-        
         private let variant: Button.OutlinedUIButton.Variant
         private let title: String
         private let handler: (() -> Void)?

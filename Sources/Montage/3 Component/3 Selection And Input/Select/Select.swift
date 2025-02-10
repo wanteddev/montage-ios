@@ -18,9 +18,9 @@ public struct Select: View {
         var isSingle: Bool {
             switch self {
             case .single:
-                return true
+                true
             case .multiple:
-                return false
+                false
             }
         }
     }
@@ -76,21 +76,21 @@ public struct Select: View {
         items: Binding<[Item]>,
         onTapItem: ((Select.Item) -> Void)? = nil
     ) {
-        self.customMenuPresented = menuPresented
+        customMenuPresented = menuPresented
         self.variant = variant
-        self._items = items
+        _items = items
         self.onTapItem = onTapItem
     }
     
     // MARK: - Modifiers
     
-    private var negative: Bool = false
+    private var negative = false
     private var render: Render = .text
-    private var placeholder: String = ""
-    private var disable: Bool = false
-    private var heading: String = ""
-    private var requiredBadge: Bool = false
-    private var description: String = ""
+    private var placeholder = ""
+    private var disable = false
+    private var heading = ""
+    private var requiredBadge = false
+    private var description = ""
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leftContent: LeftContent?
     
@@ -154,7 +154,7 @@ public struct Select: View {
     
     @State private var contentSize: CGSize = .zero
     @State private var flowLayoutSize: CGSize = .zero
-    @State private var defaultMenuPresented: Bool = false
+    @State private var defaultMenuPresented = false
     @State private var menuSize: CGSize = .zero
     
     public var body: some View {
@@ -406,7 +406,12 @@ public struct Select: View {
                             defaultMenuPresented.toggle()
                         }),
                         sub: .init(custom: {
-                            Button.OutlinedButton(variant: .assistive, size: .large, leftIcon: .refresh, iconOnly: true) {
+                            Button.OutlinedButton(
+                                variant: .assistive,
+                                size: .large,
+                                leftIcon: .refresh,
+                                iconOnly: true
+                            ) {
                                 deselectAll()
                             }
                         })

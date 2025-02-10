@@ -36,7 +36,7 @@ public struct Menu: View {
         cellModifier: @escaping (_ index: Int, _ cell: Cell) -> Cell = { _, cell in cell }
     ) {
         self.variant = variant
-        self._items = items
+        _items = items
         self.onSelectCell = onSelectCell
         self.cellModifier = cellModifier
     }
@@ -105,7 +105,7 @@ public struct Menu: View {
         .padding(.vertical, 8)
     }
     
-    private var menuActionArea: Bool = false
+    private var menuActionArea = false
     private var menuActionAreaLeftContent: () -> any View = { EmptyView() }
     private var menuActionAreaRightContent: () -> any View = { EmptyView() }
     

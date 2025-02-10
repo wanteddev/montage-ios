@@ -65,7 +65,12 @@ public struct Category: View {
                 .modifier(
                     GradientScrollEdgeModifier(
                         gradientWidth: 48,
-                        gradientInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: icon != nil ? 20 : 0),
+                        gradientInsets: EdgeInsets(
+                            top: 0,
+                            leading: 0,
+                            bottom: 0,
+                            trailing: icon != nil ? 20 : 0
+                        ),
                         leftGradientDisabled: horizontalPadding,
                         rightGradientDisabled: horizontalPadding && icon == nil
                     )

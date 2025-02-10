@@ -8,7 +8,6 @@
 import SwiftUI
 
 public struct TextArea: View {
-    
     // MARK: - Types
     
     /// TextArea의 텍스트 영역 Resize 관한 열거형입니다.
@@ -96,17 +95,17 @@ public struct TextArea: View {
         focus: FocusState<Bool>.Binding? = nil
     ) {
         _text = text
-        self.exposedFocusState = focus
+        exposedFocusState = focus
     }
     
     // MARK: - Modifiers
     
     private var resize: Resize = .normal
-    private var negative: Bool = false
-    private var disable: Bool = false
+    private var negative = false
+    private var disable = false
     private var heading: String? = nil
-    private var requiredBadge: Bool = false
-    private var bottom: Bool = false
+    private var requiredBadge = false
+    private var bottom = false
     private var description: String? = nil
     private var placeholder: String? = nil
     private var leftResource: [Resource] = []
@@ -176,7 +175,7 @@ public struct TextArea: View {
     
     /// TextArea 하단 좌측의 컴포넌트입니다.
     /// > 최대 3개까지 사용할 수 있습니다.
-    public func leftResource(_ leftResource: [Resource], spacing: CGFloat = 24) -> Self {
+    public func leftResource(_ leftResource: [Resource], spacing _: CGFloat = 24) -> Self {
         var zelf = self
         zelf.leftResource = Array(leftResource.prefix(3))
         zelf.leftResourceSpacing = leftResourceSpacing
@@ -185,7 +184,7 @@ public struct TextArea: View {
     
     /// TextArea 하단 우측의 컴포넌트입니다.
     /// > 최대 3개까지 사용할 수 있습니다.
-    public func rightResource(_ rightResource: [Resource], spacing: CGFloat = 24) -> Self {
+    public func rightResource(_ rightResource: [Resource], spacing _: CGFloat = 24) -> Self {
         var zelf = self
         zelf.rightResource = Array(rightResource.prefix(3))
         zelf.rightResourceSpacing = rightResourceSpacing
@@ -355,7 +354,7 @@ public struct TextArea: View {
                                 Button.IconButton(
                                     icon: .circleExclamationFill,
                                     iconColor:
-                                        disable ? .alias(.labelDisable) : .alias(.statusNegative)
+                                    disable ? .alias(.labelDisable) : .alias(.statusNegative)
                                 )
                             } else {
                                 let rightResource = rightResources[index]

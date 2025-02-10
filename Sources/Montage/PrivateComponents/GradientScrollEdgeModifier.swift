@@ -21,13 +21,31 @@ struct GradientScrollEdgeModifier: ViewModifier {
         leftGradientDisabled: Bool = false,
         rightGradientDisabled: Bool = false
     ) {
-        self.gradientColors = gradientColors ?? [1.0, 0.86, 0.73, 0.62, 0.52, 0.43, 0.35, 0.29, 0.23, 0.18, 0.14, 0.1, 0.07, 0.04, 0.02, 0.0]
-            .map { SwiftUI.Color.black.opacity($0) }
+        self.gradientColors = gradientColors ?? [
+            1.0,
+            0.86,
+            0.73,
+            0.62,
+            0.52,
+            0.43,
+            0.35,
+            0.29,
+            0.23,
+            0.18,
+            0.14,
+            0.1,
+            0.07,
+            0.04,
+            0.02,
+            0.0
+        ]
+        .map { SwiftUI.Color.black.opacity($0) }
         self.gradientWidth = gradientWidth
         self.gradientInsets = gradientInsets
         self.leftGradientDisabled = leftGradientDisabled
         self.rightGradientDisabled = rightGradientDisabled
     }
+
     @State private var contentOffset: CGPoint = .zero
     @State private var contentWidth: CGFloat = .zero
     @State private var scrollViewWidth: CGFloat = .zero

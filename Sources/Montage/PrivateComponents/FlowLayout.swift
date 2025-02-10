@@ -103,7 +103,7 @@ public struct FlowLayout: Layout {
 #Preview(body: {
     ScrollView {
         FlowLayout {
-            ForEach(0..<97) { i in
+            ForEach(0 ..< 97) { i in
                 Chip.Action(text: "\(i)")
             }
         }

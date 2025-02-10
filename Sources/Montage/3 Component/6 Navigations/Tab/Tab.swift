@@ -53,7 +53,8 @@ public struct Tab: View {
                                                 .montage(
                                                     variant: itemFontVariant,
                                                     weight: .bold,
-                                                    alias: index == selectedIndex ? .labelStrong : .labelAssistive
+                                                    alias: index == selectedIndex ? .labelStrong :
+                                                        .labelAssistive
                                                 )
                                                 .multilineTextAlignment(.center)
                                                 .frame(height: itemHeight)
@@ -70,7 +71,6 @@ public struct Tab: View {
                                             actions(index)
                                         }
                                         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
-                                            
                                             if itemWidths.count > index {
                                                 itemWidths[index] = $0.width
                                             } else {
@@ -97,7 +97,12 @@ public struct Tab: View {
                                 .modifier(
                                     GradientScrollEdgeModifier(
                                         gradientWidth: 48,
-                                        gradientInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: icon != nil ? 20 : 0),
+                                        gradientInsets: EdgeInsets(
+                                            top: 0,
+                                            leading: 0,
+                                            bottom: 0,
+                                            trailing: icon != nil ? 20 : 0
+                                        ),
                                         leftGradientDisabled: horizontalPadding,
                                         rightGradientDisabled: horizontalPadding && icon == nil
                                     )

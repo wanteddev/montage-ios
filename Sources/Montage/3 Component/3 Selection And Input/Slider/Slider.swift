@@ -81,7 +81,7 @@ public struct Slider: View {
                             }
                             .blendMode(.destinationOut)
                         }
-                            .offset(x: -6, y: -6)
+                        .offset(x: -6, y: -6)
                     }
                 }
                 
@@ -133,12 +133,18 @@ public struct Slider: View {
                             Circle().stroke(lineWidth: 2)
                                 .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                 .offset(x: max(0, lineLength * thumbRatio1) - 1, y: -1)
-                                .blendMode(focusedThumb == 2 && distanceBetweenThumbs <= Slider.diameter + 12 ? .normal : .destinationOut)
+                                .blendMode(
+                                    focusedThumb == 2 && distanceBetweenThumbs <= Slider
+                                        .diameter + 12 ? .normal : .destinationOut
+                                )
                                 .zIndex(focusedThumb == 1 ? 1 : 0)
                             Circle().stroke(lineWidth: 2)
                                 .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                 .offset(x: max(0, lineLength * thumbRatio2) - 1, y: -1)
-                                .blendMode(focusedThumb == 1 && distanceBetweenThumbs <= Slider.diameter + 12 ? .normal : .destinationOut)
+                                .blendMode(
+                                    focusedThumb == 1 && distanceBetweenThumbs <= Slider
+                                        .diameter + 12 ? .normal : .destinationOut
+                                )
                                 .zIndex(focusedThumb == 2 ? 1 : 0)
                         }
                     }
@@ -198,7 +204,7 @@ public struct Slider: View {
     }
     
     private var headingLabel: String {
-        return "\(labelFormat(lowValue) ?? "") ~ \(labelFormat(highValue) ?? "")"
+        "\(labelFormat(lowValue) ?? "") ~ \(labelFormat(highValue) ?? "")"
     }
     
     private var lowThumbRatio: CGFloat {
