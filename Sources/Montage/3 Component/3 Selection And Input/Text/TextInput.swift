@@ -233,7 +233,7 @@ public struct TextInput: View {
                         .padding(.horizontal, 4)
 
                         if !text.isEmpty, textFieldFocusState {
-                            Image.montage(.circleClose)
+                            Image.montage(.circleCloseFill)
                                 .frame(width: 22, height: 22)
                                 .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
                                 .onTapGesture { text = "" }
