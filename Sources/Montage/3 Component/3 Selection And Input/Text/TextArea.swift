@@ -226,7 +226,7 @@ public struct TextArea: View {
     
     var editor: some View {
         VStack(spacing: 12) {
-            ZStack(alignment: .leading) {
+            ZStack(alignment: .topLeading) {
                 TextEditor(text: $text)
                     .foregroundStyle(editorTextColor)
                     .font(.montage(variant: .body1Reading))
