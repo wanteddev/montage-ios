@@ -60,14 +60,14 @@ public struct Category: View {
                     }
                     Spacer(minLength: 0)
                 }
-                .padding(.leading, padding ? 20 : 0)
-                .padding(.trailing, padding || icon != nil ? 20 : 0)
+                .padding(.leading, horizontalPadding ? 20 : 0)
+                .padding(.trailing, horizontalPadding || icon != nil ? 20 : 0)
                 .modifier(
                     GradientScrollEdgeModifier(
                         gradientWidth: 48,
                         gradientInsets: EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: icon != nil ? 20 : 0),
-                        leftGradientDisabled: padding,
-                        rightGradientDisabled: padding && icon == nil
+                        leftGradientDisabled: horizontalPadding,
+                        rightGradientDisabled: horizontalPadding && icon == nil
                     )
                 )
                 
@@ -75,7 +75,7 @@ public struct Category: View {
                     Button.IconButton(icon: icon) {
                         iconButtonAction()
                     }
-                    .padding(.trailing, padding ? 16 : 0)
+                    .padding(.trailing, horizontalPadding ? 16 : 0)
                 }
             }
             .if(verticalPadding) {
@@ -93,7 +93,7 @@ public struct Category: View {
     
     private var variant: Variant = .normal
     private var size: Size = .medium
-    private var padding = false
+    private var horizontalPadding = false
     private var verticalPadding = false
     private var icon: Icon? = nil
     private var iconButtonAction: (() -> Void)?
@@ -110,9 +110,9 @@ public struct Category: View {
         return zelf
     }
     
-    public func padding(_ padding: Bool = true) -> Self {
+    public func horizontalPadding(_ horizontalPadding: Bool = true) -> Self {
         var zelf = self
-        zelf.padding = padding
+        zelf.horizontalPadding = horizontalPadding
         return zelf
     }
     
