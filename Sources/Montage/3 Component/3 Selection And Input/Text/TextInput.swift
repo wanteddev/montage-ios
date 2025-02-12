@@ -37,13 +37,16 @@ public struct TextInput: View {
     // MARK: - Initializer
     
     @Binding private var text: String
+    @Binding private var suggestions: [String]
     private let onCommit: (() -> Void)?
     
     public init(
         text: Binding<String>,
+        suggestions: Binding<[String]> = .constant([]),
         onCommit: (() -> Void)? = nil
     ) {
         _text = text
+        _suggestions = suggestions
         self.onCommit = onCommit
     }
     
@@ -116,7 +119,7 @@ public struct TextInput: View {
     }
     
     // MARK: - Body
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let heading {
@@ -130,8 +133,10 @@ public struct TextInput: View {
                     }
                 }
             }
+            
             Field(
                 text: $text,
+                suggestions: $suggestions,
                 status: status,
                 disable: disable,
                 placeholder: placeholder,
@@ -139,6 +144,7 @@ public struct TextInput: View {
                 rightButton: rightButton,
                 rightContent: rightContent
             )
+            
             Group {
                 switch status {
                 case .positive(let caption), .negative(let caption), .normal(let caption):
@@ -170,15 +176,17 @@ public struct TextInput: View {
     
     private struct Field: View {
         @Binding private var text: String
+        @Binding private var suggestions: [String]
         private let status: Status
         private let disable: Bool
         private let placeholder: String?
         private let icon: Icon?
         private let rightButton: RightButton?
         private let rightContent: (() -> any View)?
-
+        
         init(
             text: Binding<String>,
+            suggestions: Binding<[String]>,
             status: Status,
             disable: Bool,
             placeholder: String?,
@@ -187,6 +195,7 @@ public struct TextInput: View {
             rightContent: (() -> any View)?
         ) {
             _text = text
+            _suggestions = suggestions
             self.status = status
             self.disable = disable
             self.placeholder = placeholder
@@ -195,9 +204,11 @@ public struct TextInput: View {
             self.rightContent = rightContent
         }
         
+        @State var textFieldFrame: CGRect = .zero
         @FocusState var textFieldFocusState: Bool
-        @State private var height: CGFloat = 0
-
+        @State var wantToPresentSuggestions = false
+        @State private var suggestionContentHeight: CGFloat = 0
+        
         var body: some View {
             HStack(spacing: .zero) {
                 ZStack {
@@ -229,7 +240,7 @@ public struct TextInput: View {
                         .focused($textFieldFocusState)
                         .frame(minHeight: 24)
                         .padding(.horizontal, 4)
-
+                        
                         if !text.isEmpty, textFieldFocusState {
                             Image.montage(.circleCloseFill)
                                 .resizable()
@@ -263,7 +274,11 @@ public struct TextInput: View {
                                 .padding([.top, .bottom, .leading], textFieldFocusState ? 2 : 1)
                         }
                     }
-                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { height = $0 })
+                    .onGeometryChange(
+                        for: CGRect.self,
+                        of: { $0.frame(in: .global) },
+                        action: { textFieldFrame = $0 }
+                    )
                 }
                 
                 if let rightButton {
@@ -276,15 +291,25 @@ public struct TextInput: View {
                         UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
                             .stroke(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
                             .padding([.top, .trailing, .bottom], textFieldFocusState ? 2 : 1)
-
+                        
                             .clipShape(
                                 Rectangle()
                                     .offset(x: textFieldFocusState ? 1 : 0.7, y: .zero)
                             )
-                            .frame(height: height)
+                            .frame(height: textFieldFrame.height)
                     }
                     .fixedSize(horizontal: true, vertical: false)
                 }
+            }
+            .overlay {
+                cells.opacity(0)
+                    .onGeometryChange(
+                        for: CGFloat.self,
+                        of: { $0.size.height },
+                        action: {
+                            suggestionContentHeight = $0
+                        }
+                    )
             }
             .frame(minHeight: 48)
             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
@@ -292,6 +317,86 @@ public struct TextInput: View {
                 RoundedRectangle(cornerRadius: 12)
             )
             .allowsHitTesting(disable == false)
+            .onChange(of: text) { _ in
+                wantToPresentSuggestions = !text.isEmpty
+                //text가 변경되면 여기서 다시 플래그를 켜는데 왜 suggestion이 안나오지?
+            }
+            .onChange(
+                of: wantToPresentSuggestions && textFieldFocusState && suggestions
+                    .isEmpty == false
+            ) { _ in
+                print(
+                    "wantToPresentSuggestions: \(wantToPresentSuggestions), textFieldFocusState: \(textFieldFocusState), suggestions.isNotEmpty: \(suggestions.isEmpty == false)"
+                )
+            }
+            .modifier(
+                FloatModifier(
+                    isPresented: Binding<Bool>(
+                        get: {
+                            wantToPresentSuggestions && textFieldFocusState && suggestions
+                                .isEmpty == false
+                        },
+                        set: { _ in }
+                    ),
+                    updatingValue: suggestions,
+                    dismissPolicy: .onTap,
+                    onDismiss: {
+                        wantToPresentSuggestions = false
+                    },
+                    floatView: {
+                        cells
+                        
+                        return Group {
+                            if suggestionContentHeight > 200 {
+                                ScrollView {
+                                    cells
+                                }
+                                .frame(height: 200)
+                            } else {
+                                cells
+                            }
+                        }
+                        .overlay(content: {
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(SwiftUI.Color.alias(.lineAlternative))
+                        })
+                        .background {
+                            SwiftUI.Color.alias(.backgroundNormal)
+                        }
+                        .frame(width: textFieldFrame.width)
+                        .position(
+                            x: textFieldFrame.midX,
+                            y: textFieldFrame.midY - 64
+                        )
+                        .offset(y: (textFieldFrame.height + min(200, suggestionContentHeight)) / 2)
+                    }
+                )
+            )
+        }
+        
+        private var suggestionsAndText: [String] {
+            suggestions.isEmpty ? [] : ([text] + suggestions)
+        }
+        
+        private var cells: some View {
+            VStack(alignment: .leading, spacing: 2) {
+                ForEach(suggestions, id: \.self) { suggestion in
+                    Cell(title: suggestion) {
+                        text = suggestion
+                        Task { @MainActor in
+                            wantToPresentSuggestions = false
+                        }
+                    }
+                    .leftContent {
+                        Image.montage(.wantedCircleSymbol)
+                            .resizable()
+                            .padding(1)
+                            .frame(width: 24, height: 24)
+                    }
+                }
+            }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 16)
         }
         
         private var fieldStrokeColor: SwiftUI.Color {
@@ -333,7 +438,7 @@ public struct TextInput: View {
                 nil
             }
         }
-
+        
         private var placeholderTextColor: SwiftUI.Color {
             disable ? .alias(.labelDisable) : .alias(.labelAssistive)
         }

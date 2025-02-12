@@ -308,27 +308,3 @@ extension View {
         }
     }
 }
-
-// MARK: Float
-
-extension View {
-    public func float<V: Equatable, F: View>(
-        presentationPolicy: FloatModifier<V, F>.PresentationPolicy,
-        presentingAnimation: Animation = .default,
-        dismissingAnimation: Animation = .default,
-        dismissPolicy: FloatModifier<V, F>.DismissPolicy = .onDisappear,
-        onDismiss: (() -> Void)? = nil,
-        floatView: @escaping () -> F
-    ) -> some View {
-        modifier(
-            FloatModifier(
-                presentationPolicy: presentationPolicy,
-                presentingAnimation: presentingAnimation,
-                dismissingAnimation: dismissingAnimation,
-                dismissPolicy: dismissPolicy,
-                onDismiss: onDismiss,
-                floatView: floatView
-            )
-        )
-    }
-}

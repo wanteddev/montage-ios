@@ -26,7 +26,8 @@ public extension UIView {
 
 extension UIView {
     var isSwiftUIView: Bool {
-        String(describing: classForCoder) == "CGDrawingView"
+        ["CGDrawingView", "_UIGraphicsView", "PlatformGroupContainer"]
+            .contains(String(describing: classForCoder))
     }
 
     var isUIHostingView: Bool {
