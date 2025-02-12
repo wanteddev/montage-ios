@@ -9,37 +9,13 @@
 import SwiftUI
 
 public struct FloatModifier<V: Equatable>: ViewModifier {
-    public enum PresentationPolicy: Equatable {
-        case presentIfNotNil(_ value: V?)
-        case presentIfTrue(_ value: V)
 
-        public static func == (
-            lhs: FloatModifier<V>.PresentationPolicy,
-            rhs: FloatModifier<V>.PresentationPolicy
-        ) -> Bool {
-            switch (lhs, rhs) {
-            case (.presentIfNotNil(let lhsValue), .presentIfNotNil(let rhsValue)):
-                lhsValue == rhsValue
-            case (.presentIfTrue(let lhsValue), .presentIfTrue(let rhsValue)):
-                lhsValue == rhsValue
-            default: false
-            }
-        }
-
-        var isPresented: Bool {
-            switch self {
-            case .presentIfNotNil(let value):
-                return value != nil
-            case .presentIfTrue(let value):
-                return value as? Bool ?? false
-            }
-        }
-    }
 
     public enum DismissPolicy {
         case after(seconds: TimeInterval)
         case onTap
-        case onDisappear
+        case onViewDisappear
+        case manually
 
         var isOnTap: Bool {
             switch self {
@@ -49,22 +25,43 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
         }
     }
 
-    private let presentationPolicy: PresentationPolicy
-    private let presentingAnimation: Animation
-    private let dismissingAnimation: Animation
+    @Binding private var isPresented: Bool
+    private var updatingValue: V
     private let dismissPolicy: DismissPolicy
+    private let presentingAnimation: Animation?
+    private let dismissingAnimation: Animation?
     private let onDismiss: (() -> Void)?
     private let floatView: () -> any View
 
     public init(
-        presentationPolicy: PresentationPolicy,
-        presentingAnimation: Animation = .default,
-        dismissingAnimation: Animation = .default,
-        dismissPolicy: DismissPolicy = .onDisappear,
+        isPresented: Bool,
+        updatingValue: V,
+        dismissPolicy: DismissPolicy = .onViewDisappear,
+        presentingAnimation: Animation? = .none,
+        dismissingAnimation: Animation? = .none,
         onDismiss: (() -> Void)? = nil,
         floatView: @escaping () -> any View
     ) {
-        self.presentationPolicy = presentationPolicy
+        _isPresented = .constant(isPresented)
+        self.updatingValue = updatingValue
+        self.presentingAnimation = presentingAnimation
+        self.dismissingAnimation = dismissingAnimation
+        self.dismissPolicy = dismissPolicy
+        self.onDismiss = onDismiss
+        self.floatView = floatView
+    }
+
+    public init(
+        isPresented: Binding<Bool>,
+        updatingValue: V,
+        dismissPolicy: DismissPolicy = .manually,
+        presentingAnimation: Animation? = .none,
+        dismissingAnimation: Animation? = .none,
+        onDismiss: (() -> Void)? = nil,
+        floatView: @escaping () -> any View
+    ) {
+        _isPresented = isPresented
+        self.updatingValue = updatingValue
         self.presentingAnimation = presentingAnimation
         self.dismissingAnimation = dismissingAnimation
         self.dismissPolicy = dismissPolicy
@@ -78,58 +75,75 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
 
     public func body(content: Content) -> some View {
         content
-            .onChange(of: presentationPolicy) { presentationPolicy in
-                if presentationPolicy.isPresented {
-                    floatRootView?.removeFromSuperview()
-                    let floatHC = FloatHostingController(rootView: AnyView(floatView()))
-                    self.floatHC = floatHC
-                    if let hostingView = floatHC.view,
-                       let topView = UIApplication.windows?.first {
-                        let hitTestingView = HitTestingView()
-                        floatRootView = hitTestingView
-                        hitTestingView.addSubview(hostingView)
-                        topView.addSubview(hitTestingView)
-                        hostingView.frame = topView.frame
-                        hitTestingView.frame = topView.frame
-                        floatHC.show(animation: presentingAnimation)
-
-                        if case .after(let seconds) = dismissPolicy {
-                            animationWorkItem?.cancel()
-
-                            animationWorkItem = DispatchWorkItem {
-                                floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
-
-                                animationWorkItem = nil
-                            }
-
-                            if let animationWorkItem {
-                                DispatchQueue.main.asyncAfter(
-                                    deadline: .now() + seconds,
-                                    execute: animationWorkItem
-                                )
-                            }
-                        }
-                    }
+            .onChange(of: isPresented) { _ in
+                if isPresented {
+                    present()
                 } else {
-                    floatRootView?.removeFromSuperview()
+                    dismiss()
                 }
             }
-            .if(dismissPolicy.isOnTap) {
-                $0.onTapGesture {
-                    if case .onTap = dismissPolicy {
-                        floatHC?.hide(animation: dismissingAnimation, completion: onDismiss)
-                    }
-                }
+            .onChange(of: updatingValue) { _ in
+                present()
             }
             .onDisappear {
-                if case .onDisappear = dismissPolicy {
+                if case .onViewDisappear = dismissPolicy {
                     floatHC?.hide(animation: dismissingAnimation, completion: onDismiss)
                 }
             }
     }
+
+    func present() {
+        // TODO: setup과 present 분리
+        floatRootView?.removeFromSuperview()
+        let floatHC = FloatHostingController(rootView: AnyView(floatView()))
+        self.floatHC = floatHC
+        if let hostingView = floatHC.view,
+           let topView = UIApplication.windows?.first {
+            let hitTestingView = HitTestingView()
+            floatRootView = hitTestingView
+            if dismissPolicy.isOnTap {
+                floatRootView?.onHitTest = {
+                    if $0 == nil {
+                        floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
+                        isPresented.toggle()
+                    }
+                }
+            }
+            hitTestingView.addSubview(hostingView)
+            topView.addSubview(hitTestingView)
+            hostingView.frame = topView.frame
+            hitTestingView.frame = topView.frame
+            floatHC.show(animation: presentingAnimation)
+
+            if case .after(let seconds) = dismissPolicy {
+                animationWorkItem?.cancel()
+
+                animationWorkItem = DispatchWorkItem {
+                    floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
+                    isPresented.toggle()
+
+                    animationWorkItem = nil
+                }
+
+                if let animationWorkItem {
+                    DispatchQueue.main.asyncAfter(
+                        deadline: .now() + seconds,
+                        execute: animationWorkItem
+                    )
+                }
+            }
+        }
+    }
+
+    func dismiss() {
+        floatRootView?.removeFromSuperview()
+        isPresented.toggle()
+    }
 }
 
 private final class HitTestingView: UIView {
+    var onHitTest: ((UIView?) -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
@@ -143,15 +157,18 @@ private final class HitTestingView: UIView {
         guard let hitView = super.hitTest(point, with: event) else { return nil }
 
         if hitView.isSwiftUIView {
+            onHitTest?(hitView)
             return hitView
         } else if hitView.isUIHostingView {
             if hitView.subviews.reversed().first(where: { $0.hitTest(
                 $0.convert(point, from: hitView),
                 with: event
             ) != nil }) != nil {
+                onHitTest?(hitView)
                 return hitView
             }
         }
+        onHitTest?(nil)
         return nil
     }
 }
@@ -167,35 +184,48 @@ private final class FloatHostingController<C: View>: UIHostingController<C> {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func show(animation: Animation) {
-        if #available(iOS 18.0, *) {
-            UIView.animate(animation, changes: {
-                self.view.alpha = 1
-            })
-        } else {
-            UIView.animate(withDuration: animation == .default ? 0 : 0.35) {
-                self.view.alpha = 1
+    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
+        print("touchesBegan")
+    }
+
+    func show(animation: Animation?) {
+        if let animation {
+            if #available(iOS 18.0, *) {
+                UIView.animate(animation, changes: {
+                    self.view.alpha = 1
+                })
+            } else {
+                UIView.animate(withDuration: animation == .default ? 0 : 0.35) {
+                    self.view.alpha = 1
+                }
             }
+        } else {
+            view.alpha = 1
         }
     }
 
-    func hide(animation: Animation, completion: (() -> Void)? = nil) {
-        if #available(iOS 18.0, *) {
-            UIView.animate(
-                animation,
-                changes: {
+    func hide(animation: Animation?, completion: (() -> Void)? = nil) {
+        if let animation {
+            if #available(iOS 18.0, *) {
+                UIView.animate(
+                    animation,
+                    changes: {
+                        self.view.alpha = 0
+                    },
+                    completion: completion
+                )
+            } else {
+                UIView.animate(withDuration: animation == .default ? 0 : 0.35) {
                     self.view.alpha = 0
-                },
-                completion: completion
-            )
-        } else {
-            UIView.animate(withDuration: animation == .default ? 0 : 0.35) {
-                self.view.alpha = 0
-            } completion: { finished in
-                if finished {
-                    completion?()
+                } completion: { finished in
+                    if finished {
+                        completion?()
+                    }
                 }
             }
+        } else {
+            view.alpha = 0
+            completion?()
         }
     }
 }

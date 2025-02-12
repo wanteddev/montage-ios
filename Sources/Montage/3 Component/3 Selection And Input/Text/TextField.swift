@@ -35,6 +35,12 @@ extension TextInput {
             }
         }
         
+        public struct AutoCompletion {
+            public enum Variant {
+                case search, avatar, checkbox, thumbnail
+            }
+        }
+        
         // MARK: - Initializer
         
         @Binding private var text: String
@@ -59,6 +65,7 @@ extension TextInput {
         private var icon: Icon? = nil
         private var rightButton: RightButton? = nil
         private var rightContent: (() -> any View)? = nil
+        private var suggestions: Binding<[String]> = .constant([])
         
         /// 상태를 조정합니다.
         public func status(_ status: Status) -> Self {
@@ -116,6 +123,12 @@ extension TextInput {
             return zelf
         }
         
+        public func autoComplete(_ suggestions: Binding<[String]>) -> Self {
+            var zelf = self
+            zelf.suggestions = suggestions
+            return zelf
+        }
+        
         // MARK: - Body
         
         public var body: some View {
@@ -131,8 +144,10 @@ extension TextInput {
                         }
                     }
                 }
+                
                 Field(
                     text: $text,
+                    suggestions: suggestions,
                     status: status,
                     disable: disable,
                     placeholder: placeholder,
@@ -140,6 +155,7 @@ extension TextInput {
                     rightButton: rightButton,
                     rightContent: rightContent
                 )
+                
                 Group {
                     switch status {
                     case .positive(let caption), .negative(let caption), .normal(let caption):
@@ -171,6 +187,7 @@ extension TextInput {
         
         private struct Field: View {
             @Binding private var text: String
+            @Binding private var suggestions: [String]
             private let status: Status
             private let disable: Bool
             private let placeholder: String?
@@ -180,6 +197,7 @@ extension TextInput {
             
             init(
                 text: Binding<String>,
+                suggestions: Binding<[String]>,
                 status: Status,
                 disable: Bool,
                 placeholder: String?,
@@ -188,6 +206,7 @@ extension TextInput {
                 rightContent: (() -> any View)?
             ) {
                 _text = text
+                _suggestions = suggestions
                 self.status = status
                 self.disable = disable
                 self.placeholder = placeholder
@@ -196,8 +215,11 @@ extension TextInput {
                 self.rightContent = rightContent
             }
             
+            @Environment(\.safeAreaInsets) private var safeAreaInsets
+            @State var textFieldFrame: CGRect = .zero
             @FocusState var textFieldFocusState: Bool
-            @State private var height: CGFloat = 0
+            @State var wantToPresentAutoCompletion = false
+            @State private var autoCompletionContentHeight: CGFloat = .zero
             
             var body: some View {
                 HStack(spacing: -1) {
@@ -261,7 +283,9 @@ extension TextInput {
                                     .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                             }
                         }
-                        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { height = $0 })
+                        .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) {
+                            textFieldFrame = $0
+                        }
                     }
                     
                     if let rightButton {
@@ -277,7 +301,7 @@ extension TextInput {
                                     Rectangle()
                                         .offset(x: 1, y: .zero)
                                 )
-                                .frame(height: height)
+                                .frame(height: textFieldFrame.height)
                         }
                         .fixedSize(horizontal: true, vertical: false)
                     }
@@ -288,6 +312,73 @@ extension TextInput {
                     RoundedRectangle(cornerRadius: 12)
                 )
                 .allowsHitTesting(disable == false)
+                .onChange(of: text) { _ in
+                    wantToPresentAutoCompletion = !text.isEmpty
+                }
+                .overlay {
+                    autoCompletionContent.opacity(0)
+                        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) {
+                            autoCompletionContentHeight = $0
+                        }
+                }
+                .modifier(
+                    FloatModifier(
+                        isPresented: Binding<Bool>(
+                            get: {
+                                wantToPresentAutoCompletion && textFieldFocusState && suggestions.isEmpty == false
+                            },
+                            set: { _ in }
+                        ),
+                        updatingValue: suggestions,
+                        dismissPolicy: .onTap,
+                        onDismiss: {
+                            textFieldFocusState = false
+                        },
+                        floatView: {
+                            SwiftUI.ScrollView {
+                                autoCompletionContent
+                            }
+                            .frame(width: textFieldFrame.width, height: min(autoCompletionContentHeight, 400))
+                            .overlay(content: {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .strokeBorder(SwiftUI.Color.alias(.lineAlternative))
+                            })
+                            .background(SwiftUI.Color.alias(.backgroundNormal))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .scrollDisabled(autoCompletionContentHeight <= 400)
+                            .position(
+                                x: textFieldFrame.midX,
+                                y: textFieldFrame.maxY - safeAreaInsets.top
+                            )
+                            .offset(y: 8 + min(autoCompletionContentHeight, 400) / 2)
+                        }
+                    )
+                )
+            }
+            
+            private var suggestionsAndDirectInput: [String] {
+                suggestions.isEmpty ? [] : ([text] + suggestions)
+            }
+            
+            private var autoCompletionContent: some View {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(suggestions, id: \.self) { suggestion in
+                        Cell(title: suggestion) {
+                            text = suggestion
+                            Task { @MainActor in
+                                wantToPresentAutoCompletion = false
+                            }
+                        }
+                        .leftContent {
+                            Image.montage(.wantedCircleSymbol)
+                                .resizable()
+                                .padding(1)
+                                .frame(width: 24, height: 24)
+                        }
+                    }
+                }
+                .padding(.horizontal, suggestions.isEmpty ? 0 : 20)
+                .padding(.vertical, suggestions.isEmpty ? 0 : 8)
             }
             
             private var fieldStrokeColor: SwiftUI.Color {

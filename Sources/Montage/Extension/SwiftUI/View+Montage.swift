@@ -274,30 +274,6 @@ extension View {
     }
 }
 
-// MARK: Float
-
-extension View {
-    public func float<V: Equatable>(
-        presentationPolicy: FloatModifier<V>.PresentationPolicy,
-        presentingAnimation: Animation = .default,
-        dismissingAnimation: Animation = .default,
-        dismissPolicy: FloatModifier<V>.DismissPolicy = .onDisappear,
-        onDismiss: (() -> Void)? = nil,
-        floatView: @escaping () -> any View
-    ) -> some View {
-        modifier(
-            FloatModifier(
-                presentationPolicy: presentationPolicy,
-                presentingAnimation: presentingAnimation,
-                dismissingAnimation: dismissingAnimation,
-                dismissPolicy: dismissPolicy,
-                onDismiss: onDismiss,
-                floatView: floatView
-            )
-        )
-    }
-}
-
 // MARK: - ActionArea
 
 extension View {
