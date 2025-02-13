@@ -63,6 +63,10 @@ public struct Select: View {
         case custom(() -> any View)
     }
     
+    public enum MenuHeightOption: String, CaseIterable {
+        case fit, flexible
+    }
+
     // MARK: - Initializer
     
     private var customMenuPresented: Binding<Bool>?
@@ -93,6 +97,7 @@ public struct Select: View {
     private var description = ""
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leftContent: LeftContent?
+    private var menuHeightOption: MenuHeightOption = .fit
     
     /// negative 상태 여부를 조정합니다.
     public func negative(_ negative: Bool = true) -> Self {
@@ -147,6 +152,13 @@ public struct Select: View {
     public func leftContent(_ content: LeftContent?) -> Self {
         var zelf = self
         zelf.leftContent = content
+        return zelf
+    }
+    
+    /// 메뉴의 높이 detent를 지정합니다.
+    public func menuHeightOption(_ menuHeightOption: MenuHeightOption) -> Self {
+        var zelf = self
+        zelf.menuHeightOption = menuHeightOption
         return zelf
     }
     
@@ -334,11 +346,26 @@ public struct Select: View {
         .if(customMenuPresented == nil) {
             $0.sheet(isPresented: $defaultMenuPresented) {
                 Modal.Bottom(
-                    content: { menu },
+                    content: {
+                        Group {
+                            let menu = menu
+                                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
+                                    menuSize = $0
+                                })
+                            if menuHeightOption == .flexible
+                                && menuSize.height > UIScreen.main.bounds.height / 2 {
+                                ScrollView {
+                                    menu
+                                }
+                            } else {
+                                menu
+                            }
+                        }
+                    },
                     actionArea: menuActionArea
                 )
                 .resize(.hug)
-                .presentationDetents([.fraction(0.5)])
+                .presentationDetents(menuDetents)
             }
         }
     }
@@ -349,52 +376,62 @@ public struct Select: View {
         customMenuPresented ?? $defaultMenuPresented
     }
     
+    private var menuDetents: Set<PresentationDetent> {
+        switch menuHeightOption {
+        case .fit:
+            return [.height(menuSize.height)]
+        case .flexible:
+            return [
+                .height(min(menuSize.height, UIScreen.main.bounds.height / 2)),
+                .height(min(menuSize.height, UIScreen.main.bounds.height))
+            ]
+        }
+    }
+
     private var menu: some View {
-        ScrollView {
-            VStack(spacing: 4) {
-                ForEach(items.indices, id: \.self) { index in
-                    Group {
-                        let cell = Cell(title: items[index].text) {
-                            switch variant {
-                            case .single(_, let primaryButtonTitle):
-                                deselectAll()
-                                if primaryButtonTitle == nil {
-                                    defaultMenuPresented.toggle()
-                                }
-                                items[index].isSelected.toggle()
-                            case .multiple:
-                                items[index].isSelected.toggle()
-                            }
-                        }
-                        
+        VStack(spacing: 4) {
+            ForEach(items.indices, id: \.self) { index in
+                Group {
+                    let cell = Cell(title: items[index].text) {
                         switch variant {
-                        case .single(let selectionType, _):
-                            switch selectionType {
-                            case .checkmark:
-                                cell.active(items[index].isSelected)
-                                    .rightContent { active in
-                                        Group {
-                                            if active {
-                                                Control.Checkmark(state: active)
-                                            }
+                        case .single(_, let primaryButtonTitle):
+                            deselectAll()
+                            if primaryButtonTitle == nil {
+                                defaultMenuPresented.toggle()
+                            }
+                            items[index].isSelected.toggle()
+                        case .multiple:
+                            items[index].isSelected.toggle()
+                        }
+                    }
+                    
+                    switch variant {
+                    case .single(let selectionType, _):
+                        switch selectionType {
+                        case .checkmark:
+                            cell.active(items[index].isSelected)
+                                .rightContent { active in
+                                    Group {
+                                        if active {
+                                            Control.Checkmark(state: active)
                                         }
                                     }
-                            case .radio:
-                                cell.leftContent {
-                                    Control.Radio(state: items[index].isSelected)
                                 }
-                            }
-                        case .multiple:
+                        case .radio:
                             cell.leftContent {
-                                Control.Checkbox(state: items[index].isSelected)
+                                Control.Radio(state: items[index].isSelected)
                             }
+                        }
+                    case .multiple:
+                        cell.leftContent {
+                            Control.Checkbox(state: items[index].isSelected)
                         }
                     }
                 }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 20)
         }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 20)
     }
     
     private var menuActionArea: (() -> ActionArea.Bottom.Component)? {
