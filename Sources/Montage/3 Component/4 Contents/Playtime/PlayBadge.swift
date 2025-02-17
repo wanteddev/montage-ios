@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct PlayIconBadge: View {
+public struct PlayBadge: View {
     // MARK: - Types
     public enum Size: String, CaseIterable {
         case small, medium, large
