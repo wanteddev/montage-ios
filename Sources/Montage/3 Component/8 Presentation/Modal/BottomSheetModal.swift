@@ -8,14 +8,14 @@
 import SwiftUI
 
 extension Modal {
-    /// Modal/Bottom Component입니다.
+    /// Modal/BottomSheet Component입니다.
     ///
     /// .sheet(isPresented:content:)와 함께 사용하며 content안쪽에 Component를 위치시킵니다.
     /// ```
     /// .sheet(
     ///   isPresented: Binding<Bool>,
     ///   content: {
-    ///       Modal.Bottom(
+    ///       Modal.BottomSheet(
     ///           navigation: {...},
     ///           content: {...},
     ///           actionArea: {...}
@@ -27,7 +27,7 @@ extension Modal {
     ///     - handle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 true입니다.
     ///     - resize: Content가 표시될 영역의 사이즈 입니다. 기본값은 .hug입니다.
     ///     - containScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
-    public struct Bottom: View {
+    public struct BottomSheet: View {
         /// Modal/Bottom의 사이즈를 나타내는 열거형입니다.
         public enum Resize {
             case hug
@@ -38,7 +38,7 @@ extension Modal {
         @State private var contentSize: CGSize = .zero
 
         private var handle = true
-        private var resize: Modal.Bottom.Resize = .hug
+        private var resize: Modal.BottomSheet.Resize = .hug
         private var containScrollView = false
 
         private let navigation: (() -> Montage.Modal.Navigation)?
@@ -76,7 +76,7 @@ extension Modal {
 
         fileprivate init(
             handle: Bool = true,
-            resize: Modal.Bottom.Resize = .hug,
+            resize: Modal.BottomSheet.Resize = .hug,
             containScrollView: Bool = false,
             navigation: (() -> Montage.Modal.Navigation)? = nil,
             content: @escaping () -> any View,
@@ -122,9 +122,9 @@ extension Modal {
     }
 }
 
-extension Modal.Bottom {
+extension Modal.BottomSheet {
     public func needHandle(_ need: Bool) -> Self {
-        Modal.Bottom(
+        Modal.BottomSheet(
             handle: need,
             resize: resize,
             containScrollView: containScrollView,
@@ -134,8 +134,8 @@ extension Modal.Bottom {
         )
     }
 
-    public func resize(_ type: Modal.Bottom.Resize) -> Self {
-        Modal.Bottom(
+    public func resize(_ type: Modal.BottomSheet.Resize) -> Self {
+        Modal.BottomSheet(
             handle: handle,
             resize: type,
             containScrollView: containScrollView,
@@ -146,7 +146,7 @@ extension Modal.Bottom {
     }
 
     public func containScrollView(_ isContain: Bool) -> Self {
-        Modal.Bottom(
+        Modal.BottomSheet(
             handle: handle,
             resize: resize,
             containScrollView: isContain,
@@ -184,7 +184,7 @@ private struct ModalBottomPreivew: View {
         .sheet(
             isPresented: $show,
             content: {
-                Modal.Bottom(
+                Modal.BottomSheet(
                     navigation: {
                         Modal.Navigation(title: "제목")
                     },

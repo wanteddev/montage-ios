@@ -345,7 +345,7 @@ public struct Select: View {
         }
         .if(customMenuPresented == nil) {
             $0.sheet(isPresented: $defaultMenuPresented) {
-                Modal.Bottom(
+                Modal.BottomSheet(
                     content: {
                         Group {
                             let menu = menu
