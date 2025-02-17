@@ -434,8 +434,8 @@ public struct Select: View {
         .padding(.horizontal, 20)
     }
     
-    private var menuActionArea: (() -> ActionArea.Bottom.Component)? {
-        let actionArea: (String) -> ActionArea.Bottom.Component = { buttonTitle in
+    private var menuActionArea: (() -> ActionArea.Component)? {
+        let actionArea: (String) -> ActionArea.Component = { buttonTitle in
             .init(
                 model: .init(
                     priority: .neutral(

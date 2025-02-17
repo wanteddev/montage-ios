@@ -30,12 +30,12 @@ extension Modal {
 
         private let navigation: () -> Montage.Modal.Navigation
         private let content: () -> any View
-        private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
+        private let actionArea: (() -> Montage.ActionArea.Component)?
 
         public init(
             navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
+            actionArea: (() -> Montage.ActionArea.Component)? = nil
         ) {
             self.navigation = navigation
             self.content = content

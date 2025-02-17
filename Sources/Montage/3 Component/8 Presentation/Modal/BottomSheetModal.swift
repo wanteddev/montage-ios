@@ -43,7 +43,7 @@ extension Modal {
 
         private let navigation: (() -> Montage.Modal.Navigation)?
         private let content: () -> any View
-        private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
+        private let actionArea: (() -> Montage.ActionArea.Component)?
 
         /// Modal/Bottom의 dentents입니다
         ///
@@ -67,7 +67,7 @@ extension Modal {
         public init(
             navigation: (() -> Montage.Modal.Navigation)? = nil,
             content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
+            actionArea: (() -> Montage.ActionArea.Component)? = nil
         ) {
             self.navigation = navigation
             self.content = content
@@ -80,7 +80,7 @@ extension Modal {
             containScrollView: Bool = false,
             navigation: (() -> Montage.Modal.Navigation)? = nil,
             content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Bottom.Component)? = nil
+            actionArea: (() -> Montage.ActionArea.Component)? = nil
         ) {
             self.handle = handle
             self.resize = resize
@@ -198,7 +198,7 @@ private struct ModalBottomPreivew: View {
                         }
                     },
                     actionArea: {
-                        ActionArea.Bottom.Component(
+                        ActionArea.Component(
                             model: .init(
                                 variant: .normal,
                                 priority: .cancel(main: .init(text: "눌러봐요", action: {

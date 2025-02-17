@@ -48,12 +48,12 @@ extension Modal {
 
         private let navigation: () -> Montage.Modal.Navigation
         private let content: () -> any View
-        private let actionArea: (() -> Montage.ActionArea.Bottom.Component)?
+        private let actionArea: (() -> Montage.ActionArea.Component)?
 
         public init(
             navigation: @escaping () -> Montage.Modal.Navigation,
             content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Bottom.Component)?
+            actionArea: (() -> Montage.ActionArea.Component)?
         ) {
             self.navigation = navigation
             self.content = content
@@ -197,7 +197,7 @@ private struct ModalPopupPreivew: View {
                         .frame(height: 300)
                     },
                     actionArea: {
-                        ActionArea.Bottom.Component(
+                        ActionArea.Component(
                             model: .init(
                                 variant: .normal,
                                 priority: .cancel(main: .init(text: "눌러봐요", action: {

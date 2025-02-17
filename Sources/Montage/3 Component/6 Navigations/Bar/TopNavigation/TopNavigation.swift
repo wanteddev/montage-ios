@@ -677,7 +677,7 @@ extension Bar.TopNavigation {
         private let left: Resource.Left?
         private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
-        private let model: ActionArea.Bottom.Model?
+        private let model: ActionArea.Model?
 
         /// 무시할 SafeAreaEdge입니다.
         /// > ActionArea/Bottom이 존재하는 경우에 bottom SafeArea를 무시합니다.
@@ -715,7 +715,7 @@ extension Bar.TopNavigation {
             left: Resource.Left?,
             backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action],
-            model: ActionArea.Bottom.Model? = nil
+            model: ActionArea.Model? = nil
         ) {
             self.variant = variant
             self.title = title
@@ -779,7 +779,7 @@ extension Bar.TopNavigation {
                 if let model {
                     VStack(alignment: .leading, spacing: .zero) {
                         Spacer()
-                        ActionArea.Bottom.Component(
+                        ActionArea.Component(
                             model: .init(
                                 variant: model.variant,
                                 priority: model.priority,
