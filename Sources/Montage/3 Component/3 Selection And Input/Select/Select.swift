@@ -379,9 +379,9 @@ public struct Select: View {
     private var menuDetents: Set<PresentationDetent> {
         switch menuHeightOption {
         case .fit:
-            return [.height(menuSize.height)]
+            [.height(menuSize.height)]
         case .flexible:
-            return [
+            [
                 .height(min(menuSize.height, UIScreen.main.bounds.height / 2)),
                 .height(min(menuSize.height, UIScreen.main.bounds.height))
             ]
