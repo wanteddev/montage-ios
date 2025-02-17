@@ -53,11 +53,11 @@ extension Modal {
         /// handle이 없는 경우에는 resize에 따라 최대높이가 결정됩니다.
         private var detents: Set<PresentationDetent> {
             if containScrollView {
-                [ .fraction(0.35), .medium, .max ]
+                [ .fraction(0.35), .medium, .large ]
             } else if handle {
                 [ .height(max(.zero, contentSize.height - safeAreaInsets.bottom)) ]
             } else {
-                resize == .fill ? [ .max ] : [ .height(max(
+                resize == .fill ? [ .large ] : [ .height(max(
                     .zero,
                     contentSize.height - safeAreaInsets.bottom
                 )) ]
@@ -154,18 +154,6 @@ extension Modal.BottomSheet {
             content: content,
             actionArea: actionArea
         )
-    }
-}
-
-@available(iOS 16.0, *)
-private extension PresentationDetent {
-    static let max = Self.custom(MontageModalMaxDentent.self)
-}
-
-@available(iOS 16.0, *)
-private struct MontageModalMaxDentent: CustomPresentationDetent {
-    static func height(in context: Context) -> CGFloat? {
-        context.maxDetentValue - 10
     }
 }
 

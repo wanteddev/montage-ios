@@ -167,7 +167,8 @@ public struct Select: View {
     @State private var contentSize: CGSize = .zero
     @State private var flowLayoutSize: CGSize = .zero
     @State private var defaultMenuPresented = false
-    @State private var menuSize: CGSize = .zero
+    @State private var bottomSheetContentHeight: CGFloat = .zero
+    @State private var pureBottomSheetHeight: CGFloat = .zero
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -345,26 +346,39 @@ public struct Select: View {
         }
         .if(customMenuPresented == nil) {
             $0.sheet(isPresented: $defaultMenuPresented) {
-                Modal.BottomSheet(
-                    content: {
-                        Group {
-                            let menu = menu
-                                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
-                                    menuSize = $0
-                                })
-                            if menuHeightOption == .flexible
-                                && menuSize.height > UIScreen.main.bounds.height / 2 {
-                                ScrollView {
-                                    menu
+                ZStack {
+                    Modal.BottomSheet(content: {
+                        menuActionArea { EmptyView() }
+                    })
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
+                        pureBottomSheetHeight = $0
+                    })
+                    .opacity(0)
+
+                    Modal.BottomSheet(
+                        content: {
+                            menuActionArea {
+                                Group {
+                                    let menu = menu
+                                        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
+                                            bottomSheetContentHeight = $0
+                                        })
+                                    switch menuHeightOption {
+                                    case .fit where bottomSheetMaxHeight > maxDetentValue,
+                                         .flexible where bottomSheetMaxHeight > maxDetentValue / 2:
+                                        ScrollView {
+                                            menu
+                                        }
+                                    default:
+                                        menu
+                                    }
                                 }
-                            } else {
-                                menu
                             }
                         }
-                    },
-                    actionArea: menuActionArea
-                )
-                .resize(.hug)
+                    )
+                    .resize(.hug)
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { print($0) })
+                }
                 .presentationDetents(menuDetents)
             }
         }
@@ -376,14 +390,22 @@ public struct Select: View {
         customMenuPresented ?? $defaultMenuPresented
     }
     
+    private var bottomSheetMaxHeight: CGFloat {
+        pureBottomSheetHeight + bottomSheetContentHeight
+    }
+    
+    private var maxDetentValue: CGFloat {
+        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10
+    }
+
     private var menuDetents: Set<PresentationDetent> {
         switch menuHeightOption {
         case .fit:
-            [.height(menuSize.height)]
+            [.height(bottomSheetMaxHeight)]
         case .flexible:
             [
-                .height(min(menuSize.height, UIScreen.main.bounds.height / 2)),
-                .height(min(menuSize.height, UIScreen.main.bounds.height))
+                .height(min(bottomSheetMaxHeight, maxDetentValue / 2)),
+                .height(min(bottomSheetMaxHeight, maxDetentValue))
             ]
         }
     }
@@ -434,8 +456,8 @@ public struct Select: View {
         .padding(.horizontal, 20)
     }
     
-    private var menuActionArea: (() -> ActionArea.Component)? {
-        let actionArea: (String) -> ActionArea.Component = { buttonTitle in
+    private func menuActionArea(content: @escaping () -> any View) -> any View {
+        let actionArea: (String) -> ActionArea = { buttonTitle in
             .init(
                 model: .init(
                     priority: .neutral(
@@ -452,23 +474,21 @@ public struct Select: View {
                                 deselectAll()
                             }
                         })
-                    )
-                )
+                    ),
+                    sticky: true
+                ),
+                content: content
             )
         }
-        switch variant {
+        return switch variant {
         case .single(_, let primaryButtonTitle):
             if let primaryButtonTitle {
-                return {
-                    actionArea(primaryButtonTitle)
-                }
+                actionArea(primaryButtonTitle)
             } else {
-                return nil
+                content()
             }
         case .multiple(_, _, let primaryButtonTitle):
-            return {
-                actionArea(primaryButtonTitle)
-            }
+            actionArea(primaryButtonTitle)
         }
     }
     
