@@ -107,6 +107,5 @@ public struct FlowLayout: Layout {
                 Chip.Action(text: "\(i)")
             }
         }
-        .borderForPreview()
     }
 })

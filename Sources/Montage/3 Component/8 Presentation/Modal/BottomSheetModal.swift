@@ -15,199 +15,231 @@ extension Modal {
     /// .sheet(
     ///   isPresented: Binding<Bool>,
     ///   content: {
-    ///       Modal.BottomSheet(
-    ///           navigation: {...},
-    ///           content: {...},
-    ///           actionArea: {...}
-    ///       )
+    ///       Modal.BottomSheet {
+    ///           ...
+    ///       }
     /// })
     /// ```
     ///
     /// - Parameters:
-    ///     - handle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 true입니다.
+    ///     - needHandle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 true입니다.
     ///     - resize: Content가 표시될 영역의 사이즈 입니다. 기본값은 .hug입니다.
     ///     - containScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
     public struct BottomSheet: View {
+        // MARK: - Types
+        
         /// Modal/Bottom의 사이즈를 나타내는 열거형입니다.
         public enum Resize {
             case hug
+            case fixedRatio(CGFloat)
+            case fixedHeight(CGFloat)
+            case flexible
             case fill
-        }
-
-        @Environment(\.safeAreaInsets) private var safeAreaInsets
-        @State private var contentSize: CGSize = .zero
-
-        private var handle = true
-        private var resize: Modal.BottomSheet.Resize = .hug
-        private var containScrollView = false
-
-        private let navigation: (() -> Montage.Modal.Navigation)?
-        private let content: () -> any View
-        private let actionArea: (() -> Montage.ActionArea.Component)?
-
-        /// Modal/Bottom의 dentents입니다
-        ///
-        /// ContentView에 ScrollView가 있는 경우, [.fractoin(0.35), .medium, .max]로 제한됩니다.
-        ///
-        /// handle을 사용하는 경우 최대높이(화면 최상단 - 10) 까지 확장 가능하며,
-        /// handle이 없는 경우에는 resize에 따라 최대높이가 결정됩니다.
-        private var detents: Set<PresentationDetent> {
-            if containScrollView {
-                [ .fraction(0.35), .medium, .large ]
-            } else if handle {
-                [ .height(max(.zero, contentSize.height - safeAreaInsets.bottom)) ]
-            } else {
-                resize == .fill ? [ .large ] : [ .height(max(
-                    .zero,
-                    contentSize.height - safeAreaInsets.bottom
-                )) ]
+            
+            fileprivate var isFlexible: Bool {
+                switch self {
+                case .flexible:
+                    true
+                default:
+                    false
+                }
             }
         }
-
-        public init(
-            navigation: (() -> Montage.Modal.Navigation)? = nil,
-            content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Component)? = nil
-        ) {
-            self.navigation = navigation
+        
+        // MARK: - Initializer
+        
+        private var content: () -> any View
+        
+        public init(_ content: @escaping () -> any View) {
             self.content = content
-            self.actionArea = actionArea
         }
-
-        fileprivate init(
-            handle: Bool = true,
-            resize: Modal.BottomSheet.Resize = .hug,
-            containScrollView: Bool = false,
-            navigation: (() -> Montage.Modal.Navigation)? = nil,
-            content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Component)? = nil
-        ) {
-            self.handle = handle
-            self.resize = resize
-            self.containScrollView = containScrollView
-            self.navigation = navigation
-            self.content = content
-            self.actionArea = actionArea
-        }
-
+        
+        // MARK: - Body
+        
+        @Environment(\.safeAreaInsets) private var safeAreaInsets
+        @State private var navigationHeight: CGFloat = 0
+        @State private var contentHeight: CGFloat = 0
+        @State private var actionAreaHeight: CGFloat = 0
+        @State private var contentOffset: CGFloat = 0
+        
         public var body: some View {
-            VStack(spacing: .zero) {
-                if handle {
-                    Spacer()
-                        .frame(height: 10)
+            ZStack(alignment: .top) {
+                Group {
+                    if actionAreaModel != nil {
+                        ActionArea(variant: actionAreaModel!.variant)
+                            .sticky(actionAreaModel!.sticky)
+                            .caption(actionAreaModel!.caption)
+                            .extra(actionAreaModel!.extra, divider: actionAreaModel!.extraDivider)
+                            .onGeometryChange(
+                                for: CGFloat.self,
+                                of: { $0.size.height
+                                },
+                                action: {
+                                    actionAreaHeight = $0
+                                }
+                            )
+                            .opacity(0)
+                    }
                 }
+                
+                Group {
+                    let contentView = AnyView(content())
+                        .onGeometryChange(
+                            for: CGFloat.self,
+                            of: { $0.size.height },
+                            action: { contentHeight = $0 }
+                        )
+                    
+                    if bottomSheetContentHeight > bottomSheetMaxHeight ||
+                        (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
+                        ZStack(alignment: .top) {
+                            OffsettableScrollView(onOffsetChanged: {
+                                contentOffset = $0.y
+                            }, content: {
+                                VStack(spacing: 0) {
+                                    SwiftUI.Color.clear
+                                        .frame(height: navigationHeight)
+                                    HStack(spacing: 0) {
+                                        Spacer(minLength: 0)
+                                        contentView
+                                        Spacer(minLength: 0)
+                                    }
+                                }
+                            })
+                            
+                            navigationView
+                        }
+                    } else {
+                        VStack(spacing: 0) {
+                            navigationView
+                            contentView
+                            if bottomSheetContentHeight < bottomSheetMaxHeight {
+                                Spacer(minLength: 0)
+                            }
+                        }
+                    }
+                }
+                .if(actionAreaModel != nil) {
+                    $0.actionArea(model: actionAreaModel!)
+                }
+            }
+            .presentationDetents(detents)
+            .presentationDragIndicator(needHandle ? .visible : .hidden)
+        }
+        
+        // MARK: - Modifiers
+        
+        private var needHandle = true
+        private var resize: Resize = .hug
+        private var navigation: (() -> Montage.Modal.Navigation)?
+        private var actionAreaModel: ActionAreaModifier.Model?
+        
+        public func needHandle(_ needHandle: Bool) -> Self {
+            var zelf = self
+            zelf.needHandle = needHandle
+            return zelf
+        }
+        
+        public func resize(_ resize: Modal.BottomSheet.Resize) -> Self {
+            var zelf = self
+            zelf.resize = resize
+            return zelf
+        }
+        
+        public func modalNavigation(_ navigation: (() -> Montage.Modal.Navigation)?) -> Self {
+            var zelf = self
+            zelf.navigation = navigation
+            return zelf
+        }
+        
+        public func modalActionArea(_ actionAreaModel: ActionAreaModifier.Model?) -> Self {
+            var zelf = self
+            zelf.actionAreaModel = actionAreaModel
+            return zelf
+        }
+        
+        // MARK: - Private
+        
+        private var navigationView: some View {
+            Group {
                 if let navigation {
                     navigation()
-                }
-                AnyView(content())
-                if let actionArea {
-                    AnyView(actionArea())
+                        .scrollOffset($contentOffset)
+                        .needHandleArea(needHandle)
                 }
             }
-            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-            .presentationDetents(detents)
-            .presentationDragIndicator(handle ? .visible : .hidden)
-            .padding(.bottom, -safeAreaInsets.bottom)
-            .if(true, transform: { originalView in
-                Group {
-                    if #available(iOS 16.4, *) {
-                        originalView.presentationContentInteraction(containScrollView ? .resizes : .automatic)
-                            .presentationCornerRadius(12)
-                    } else {
-                        originalView
-                    }
-                }
-            })
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
         }
-    }
-}
-
-extension Modal.BottomSheet {
-    public func needHandle(_ need: Bool) -> Self {
-        Modal.BottomSheet(
-            handle: need,
-            resize: resize,
-            containScrollView: containScrollView,
-            navigation: navigation,
-            content: content,
-            actionArea: actionArea
-        )
-    }
-
-    public func resize(_ type: Modal.BottomSheet.Resize) -> Self {
-        Modal.BottomSheet(
-            handle: handle,
-            resize: type,
-            containScrollView: containScrollView,
-            navigation: navigation,
-            content: content,
-            actionArea: actionArea
-        )
-    }
-
-    public func containScrollView(_ isContain: Bool) -> Self {
-        Modal.BottomSheet(
-            handle: handle,
-            resize: resize,
-            containScrollView: isContain,
-            navigation: navigation,
-            content: content,
-            actionArea: actionArea
-        )
-    }
-}
-
-private struct ModalBottomPreivew: View {
-    @State private var show = false
-    @State private var scrollOffset: CGFloat = .zero
-
-    var body: some View {
-        VStack {
-            SwiftUI.Button {
-                show = true
-            } label: {
-                Text("PUSH")
+        
+        private var maxDetentHeight: CGFloat {
+            (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10
+        }
+        
+        private var bottomSheetMaxHeight: CGFloat {
+            switch resize {
+            case .hug:
+                min(maxDetentHeight, bottomSheetContentHeight)
+            case .fixedRatio(let ratio):
+                maxDetentHeight * ratio
+            case .fixedHeight(let height):
+                height
+            case .flexible, .fill:
+                maxDetentHeight
             }
         }
-        .sheet(
-            isPresented: $show,
-            content: {
-                Modal.BottomSheet(
-                    navigation: {
-                        Modal.Navigation(title: "제목")
-                    },
-                    content: {
-                        VStack {
-                            Text("텍스트입니다")
-                            Text("텍스트입니다")
-                            Text("텍스트입니다")
-                            Text("텍스트입니다")
-                            Text("텍스트입니다")
-                        }
-                    },
-                    actionArea: {
-                        ActionArea.Component(
-                            model: .init(
-                                variant: .normal,
-                                priority: .cancel(main: .init(text: "눌러봐요", action: {
-                                    show = false
-                                })),
-                                sticky: false,
-                                caption: nil
-                            )
-                        )
-                    }
-                )
-                .needHandle(true)
-                .resize(.hug)
-                .containScrollView(false) // 스크롤뷰와 함께 쓰일때 사용
+        
+        private var bottomSheetContentHeight: CGFloat {
+            navigationHeight + contentHeight + actionAreaHeight
+        }
+        
+        private var detents: Set<PresentationDetent> {
+            switch resize {
+            case .flexible:
+                [
+                    .height(min(bottomSheetContentHeight, maxDetentHeight / 2 + safeAreaInsets.bottom)),
+                    .height(min(bottomSheetContentHeight, maxDetentHeight))
+                ]
+            default:
+                [.height(bottomSheetMaxHeight)]
             }
-        )
+        }
     }
-}
-
-struct ModalBottom_Previews: PreviewProvider {
-    static var previews: some View {
-        ModalBottomPreivew()
+    
+    public struct BottomSheetModifier: ViewModifier {
+        @Binding private var isPresented: Bool
+        private let bottomSheetContent: () -> any View
+        private let needHandle: Bool
+        private let resize: BottomSheet.Resize
+        private let navigation: (() -> Modal.Navigation)?
+        private let actionAreaModel: ActionAreaModifier.Model?
+        
+        public init(
+            isPresented: Binding<Bool>,
+            _ content: @escaping () -> any View,
+            needHandle: Bool = true,
+            resize: BottomSheet.Resize = .hug,
+            navigation: ( () -> Modal.Navigation)? = nil,
+            actionAreaModel: ActionAreaModifier.Model? = nil
+        ) {
+            _isPresented = isPresented
+            bottomSheetContent = content
+            self.needHandle = needHandle
+            self.resize = resize
+            self.navigation = navigation
+            self.actionAreaModel = actionAreaModel
+        }
+        
+        public func body(content: Content) -> some View {
+            content
+                .sheet(isPresented: $isPresented) {
+                    BottomSheet {
+                        AnyView(bottomSheetContent())
+                    }
+                    .needHandle(needHandle)
+                    .resize(resize)
+                    .modalNavigation(navigation)
+                    .modalActionArea(actionAreaModel)
+                }
+        }
     }
 }

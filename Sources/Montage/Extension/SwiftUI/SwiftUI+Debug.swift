@@ -48,6 +48,18 @@ extension View {
     }
 }
 
+extension View {
+    public func printValue<V: Equatable>(_ value: V, _ label: String = "Unknown") -> some View {
+        onChange(of: value) {
+            print("🐞\(label) = \($0)")
+        }
+    }
+
+    public func printSize(_ label: String = "Unknown") -> some View {
+        onGeometryChange(for: CGSize.self, of: { $0.size }, action: { print("🐞\(label) = \($0)") })
+    }
+}
+
 private struct StrokeText: View {
     let text: String
     let font: Font
@@ -133,7 +145,7 @@ public struct MeasureView: View {
                             Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
                         }
                 }
-                .foregroundStyle(.red.opacity(0.4))
+                .foregroundStyle(.red)
             case .vertical:
                 ZStack {
                     VStack(spacing: 0) {
@@ -154,7 +166,7 @@ public struct MeasureView: View {
                             Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
                         }
                 }
-                .foregroundStyle(.red.opacity(0.4))
+                .foregroundStyle(.red)
             }
         }
     }
@@ -178,7 +190,7 @@ public struct MeasureBoxView: View {
                         .font(.system(size: 6))
                         .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
                 }
-                .foregroundStyle(.red.opacity(0.4))
+                .foregroundStyle(.red)
         }
     }
 }

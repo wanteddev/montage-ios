@@ -167,7 +167,8 @@ extension View {
         title: String,
         left: Bar.TopNavigation.Resource.Left? = nil,
         backgroundColorResolvable: ColorResolvable? = nil,
-        actions: [Bar.TopNavigation.Resource.Action] = []
+        actions: [Bar.TopNavigation.Resource.Action] = [],
+        withBottom model: ActionAreaModifier.Model? = nil
     ) -> some View {
         modifier(
             Bar.TopNavigation.TopNavigationModifier(
@@ -178,26 +179,9 @@ extension View {
                 actions: actions
             )
         )
-    }
-
-    public func topNavigation(
-        variant: Bar.TopNavigation.Variant = .normal,
-        title: String,
-        left: Bar.TopNavigation.Resource.Left? = nil,
-        backgroundColorResolvable: ColorResolvable? = nil,
-        actions: [Bar.TopNavigation.Resource.Action] = [],
-        withBottom model: ActionArea.Model
-    ) -> some View {
-        modifier(
-            Bar.TopNavigation.TopNavigationModifier(
-                variant: variant,
-                title: title,
-                left: left,
-                backgroundColorResolvable: backgroundColorResolvable,
-                actions: actions,
-                model: model
-            )
-        )
+        .if(model != nil) {
+            $0.actionArea(model: model!)
+        }
     }
 }
 
@@ -328,6 +312,70 @@ extension View {
                 dismissPolicy: dismissPolicy,
                 onDismiss: onDismiss,
                 floatView: floatView
+            )
+        )
+    }
+}
+
+// MARK: - ActionArea
+
+extension View {
+    public func actionArea(model: ActionAreaModifier.Model) -> some View {
+        modifier(ActionAreaModifier(model: model))
+    }
+}
+
+// MARK: - Modal
+
+extension View {
+    public func popupModal(
+        isPresented: Binding<Bool>,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.PopupModifier(
+                isPresented: isPresented,
+                content,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
+            )
+        )
+    }
+
+    public func bottomSheetModal(
+        isPresented: Binding<Bool>,
+        needHandle: Bool = true,
+        resize: Modal.BottomSheet.Resize = .hug,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.BottomSheetModifier(
+                isPresented: isPresented,
+                content,
+                needHandle: needHandle,
+                resize: resize,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
+            )
+        )
+    }
+
+    public func fullModal(
+        isPresented: Binding<Bool>,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.FullModifier(
+                isPresented: isPresented,
+                content,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
             )
         )
     }

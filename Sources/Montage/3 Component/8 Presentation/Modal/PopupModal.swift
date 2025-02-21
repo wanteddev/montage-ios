@@ -15,24 +15,8 @@ extension Modal {
     /// .fullScreenCover(
     ///   isPresented: Binding<Bool>,
     ///   content: {
-    ///       Modal.Popup(
-    ///           navigation: {...},
-    ///           content: {...},
-    ///           actionArea: {...}
-    ///       )
+    ///       Modal.Popup {...}
     /// })
-    /// ```
-    ///
-    /// Content에 ScrollView가 들어가는 경우, ScrollView가 가질 height을 지정해주어야 합니다.
-    /// ```
-    /// Modal.Popup(
-    ///  navigation: {...},
-    ///  content: {
-    ///    ScrollView {...}
-    ///     .frame(height: 300)
-    ///  },
-    ///  actionArea: {...}
-    /// )
     /// ```
     ///
     /// 코드를 통해 transaction animation을 제거해야 animation이 정상적으로 작동합니다.
@@ -44,82 +28,167 @@ extension Modal {
     /// ```
     ///
     public struct Popup: View {
-        @State private var opacity: CGFloat = .zero
-
-        private let navigation: () -> Montage.Modal.Navigation
         private let content: () -> any View
-        private let actionArea: (() -> Montage.ActionArea.Component)?
 
-        public init(
-            navigation: @escaping () -> Montage.Modal.Navigation,
-            content: @escaping () -> any View,
-            actionArea: (() -> Montage.ActionArea.Component)?
-        ) {
-            self.navigation = navigation
+        public init(_ content: @escaping () -> any View) {
             self.content = content
-            self.actionArea = actionArea
         }
 
+        @State private var navigationHeight: CGFloat = 0
+        @State private var contentHeight: CGFloat = 0
+        @State private var actionAreaHeight: CGFloat = 0
+        @State private var contentOffset: CGFloat = 0
+
+        private let popupHeight: CGFloat = 400
+        
         public var body: some View {
-            if #available(iOS 16.4, *) {
-                ZStack {
-                    VStack(spacing: .zero) {
-                        AnyView(
-                            navigation()
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+            ZStack(alignment: .top) {
+                Group {
+                    let contentView = AnyView(content())
+                        .onGeometryChange(
+                            for: CGFloat.self,
+                            of: { $0.size.height },
+                            action: { contentHeight = $0 }
                         )
-                        AnyView(content())
-                        if let actionArea {
-                            AnyView(actionArea())
-                        } else {
-                            Spacer()
-                                .frame(maxHeight: 20)
+                    
+                    if popupContentHeight > popupHeight {
+                        ZStack(alignment: .top) {
+                            OffsettableScrollView(onOffsetChanged: {
+                                contentOffset = $0.y
+                            }, content: {
+                                VStack(spacing: 0) {
+                                    SwiftUI.Color.clear
+                                        .frame(height: navigationHeight)
+                                    HStack(spacing: 0) {
+                                        Spacer(minLength: 0)
+                                        contentView
+                                        Spacer(minLength: 0)
+                                    }
+                                }
+                            })
+                            
+                            navigationView
+                        }
+                    } else {
+                        VStack(spacing: 0) {
+                            navigationView
+                            contentView
+                            if popupContentHeight < popupHeight {
+                                Spacer(minLength: 0)
+                            }
                         }
                     }
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(SwiftUI.Color.alias(.backgroundNormal))
-                    )
                 }
-                .padding(.horizontal, 20)
-                .presentationBackground(
-                    SwiftUI.Color.component(.materialDimmer)
+                .if(actionAreaModel != nil) {
+                    $0.actionArea(model: actionAreaModel!)
+                        .padding(.bottom, 20)
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(SwiftUI.Color.alias(.backgroundNormal))
                 )
-                .opacity(opacity)
-                .onAppear {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        opacity = 1
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .frame(height: 400)
+            .padding(.horizontal, 20)
+            .if(true) { originalView in
+                Group {
+                    if #available(iOS 16.4, *) {
+                        originalView.presentationBackground(
+                            SwiftUI.Color.component(.materialDimmer)
+                        )
+                    } else {
+                        originalView.dimmerBackground()
                     }
                 }
-            } else {
-                ZStack {
-                    VStack(spacing: .zero) {
-                        AnyView(
-                            navigation()
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                        )
-                        AnyView(content())
-                        if let actionArea {
-                            AnyView(actionArea())
-                        } else {
-                            Spacer()
-                                .frame(maxHeight: 20)
+            }
+        }
+        
+        // MARK: - Modifiers
+        
+        private var navigation: (() -> Montage.Modal.Navigation)?
+        private var actionAreaModel: ActionAreaModifier.Model?
+        
+        public func modalNavigation(_ navigation: (() -> Montage.Modal.Navigation)?) -> Self {
+            var zelf = self
+            zelf.navigation = navigation
+            return zelf
+        }
+        
+        public func modalActionArea(_ actionAreaModel: ActionAreaModifier.Model?) -> Self {
+            var zelf = self
+            zelf.actionAreaModel = actionAreaModel
+            return zelf
+        }
+        
+        // MARK: - Private
+        
+        private var navigationView: some View {
+            Group {
+                if let navigation {
+                    navigation()
+                        .scrollOffset($contentOffset)
+                }
+            }
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
+        }
+        
+        private var popupContentHeight: CGFloat {
+            navigationHeight + contentHeight + actionAreaHeight
+        }
+    }
+    
+    public struct PopupModifier: ViewModifier {
+        @Binding private var isPresented: Bool
+        private let popupContent: () -> any View
+        private let navigation: (() -> Modal.Navigation)?
+        private let actionAreaModel: ActionAreaModifier.Model?
+        
+        public init(
+            isPresented: Binding<Bool>,
+            _ content: @escaping () -> any View,
+            navigation: (() -> Modal.Navigation)? = nil,
+            actionAreaModel: ActionAreaModifier.Model? = nil
+        ) {
+            _isPresented = isPresented
+            popupContent = content
+            self.navigation = navigation
+            self.actionAreaModel = actionAreaModel
+        }
+        
+        @State private var opacity: CGFloat = 1
+        @State private var fullScreenCoverPresented = true
+
+        public func body(content: Content) -> some View {
+            content
+                .fullScreenCover(isPresented: $fullScreenCoverPresented) {
+                    Popup {
+                        AnyView(popupContent())
+                    }
+                    .modalNavigation(navigation)
+                    .modalActionArea(actionAreaModel)
+                    .opacity(opacity)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            opacity = 1
                         }
                     }
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .foregroundColor(SwiftUI.Color.alias(.backgroundNormal))
-                    )
                 }
-                .padding(.horizontal, 20)
-                .opacity(opacity)
-                .onAppear {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        opacity = 1
+                .transaction { transaction in
+                    transaction.disablesAnimations = true
+                }
+                .onChange(of: isPresented) { _ in
+                    if isPresented {
+                        fullScreenCoverPresented = true
+                    } else {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            opacity = 0
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            fullScreenCoverPresented = false
+                        }
                     }
                 }
-                .dimmerBackground()
-            }
         }
     }
 }
@@ -146,79 +215,5 @@ private struct DimmerBackgroundViewModifier: ViewModifier {
 private extension View {
     func dimmerBackground() -> some View {
         modifier(DimmerBackgroundViewModifier())
-    }
-}
-
-private struct ModalPopupPreivew: View {
-    @State private var show = false
-    @State private var scrollOffset: CGFloat = .zero
-
-    var body: some View {
-        VStack {
-            SwiftUI.Button {
-                show = true
-            } label: {
-                Text("PUSH")
-            }
-        }
-        .fullScreenCover(
-            isPresented: $show,
-            content: {
-                Modal.Popup(
-                    navigation: {
-                        Modal.Navigation(
-                            title: "제목"
-                        )
-                        .scrollOffset($scrollOffset)
-                        .actions([
-                            .icon(.close, action: { show = false })
-                        ])
-                    },
-                    content: {
-                        ScrollView {
-                            GeometryReader { proxy in
-                                SwiftUI.Color.clear.preference(
-                                    key: OffsetPreferenceKey.self,
-                                    value: proxy.frame(
-                                        in: .named("ScrollViewOrigin")
-                                    ).origin
-                                )
-                                .frame(width: 0, height: 0)
-                            }
-                            VStack {
-                                SwiftUI.Color.red.frame(height: 500)
-                            }
-                        }
-                        .coordinateSpace(name: "ScrollViewOrigin")
-                        .onPreferenceChange(
-                            OffsetPreferenceKey.self,
-                            perform: { scrollOffset = $0.y }
-                        )
-                        .frame(height: 300)
-                    },
-                    actionArea: {
-                        ActionArea.Component(
-                            model: .init(
-                                variant: .normal,
-                                priority: .cancel(main: .init(text: "눌러봐요", action: {
-                                    show = false
-                                })),
-                                sticky: false,
-                                caption: nil
-                            )
-                        )
-                    }
-                )
-            }
-        )
-        .transaction { transaction in
-            transaction.disablesAnimations = true
-        }
-    }
-}
-
-struct ModalPopup_Previews: PreviewProvider {
-    static var previews: some View {
-        ModalPopupPreivew()
     }
 }

@@ -38,7 +38,6 @@ extension Pagination {
                 }
             }
             .animation(.smooth(duration: 0.2), value: selectedPage)
-            .measureForPreview(axis: .horizontal)
         }
         
         private func leadingPadding(at index: Int) -> CGFloat {
