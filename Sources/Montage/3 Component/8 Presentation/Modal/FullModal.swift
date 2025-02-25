@@ -36,6 +36,7 @@ extension Modal {
                 .resize(.fill)
                 .modalNavigation(navigation)
                 .modalActionArea(actionAreaModel)
+                .fullModal()
         }
         
         // MARK: - Modifiers

@@ -84,6 +84,7 @@ public struct ActionArea: View, KeyboardReadable {
     private var caption: String?
     private var extra: (() -> any View)?
     private var extraDivider = false
+    private var dividerVisibility: DividerVisibility = .automatic
     
     public func sticky(_ isSticky: Bool = true) -> Self {
         var zelf = self
@@ -104,15 +105,13 @@ public struct ActionArea: View, KeyboardReadable {
         return zelf
     }
     
-    // MARK: - Private
-    private var extraContentView: some View {
-        Group {
-            if let extra = extra {
-                AnyView(extra())
-                    .background(backgroundColor)
-            }
-        }
+    internal func dividerVisibility(_ dividerVisibility: DividerVisibility) -> Self {
+        var zelf = self
+        zelf.dividerVisibility = dividerVisibility
+        return zelf
     }
+    
+    // MARK: - Private
     
     private var captionView: some View {
         Group {
@@ -124,7 +123,17 @@ public struct ActionArea: View, KeyboardReadable {
         }
     }
     
+    private var extraContentView: some View {
+        Group {
+            if let extra = extra {
+                AnyView(extra())
+                    .background(backgroundColor)
+            }
+        }
+    }
+    
     private var showExtraContents: Bool { extra != nil }
+    
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
@@ -143,7 +152,11 @@ public struct ActionArea: View, KeyboardReadable {
     }
     
     private var dividerNeeded: Bool {
-        extraDivider || variant.isCompact || caption != nil
+        if dividerVisibility == .automatic {
+            extraDivider || (variant.isCompact && dividerVisibility == .automatic)
+        } else {
+            false
+        }
     }
     
     // MARK: - Types
@@ -200,6 +213,10 @@ public struct ActionArea: View, KeyboardReadable {
             action = {}
             self.custom = custom
         }
+    }
+    
+    public enum DividerVisibility: String, CaseIterable {
+        case automatic, hidden
     }
     
     // MARK: - Inner Views

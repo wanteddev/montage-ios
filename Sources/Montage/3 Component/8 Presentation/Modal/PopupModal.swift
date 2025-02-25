@@ -39,49 +39,56 @@ extension Modal {
         @State private var actionAreaHeight: CGFloat = 0
         @State private var contentOffset: CGFloat = 0
 
-        private let popupHeight: CGFloat = 400
+        private let popupMaxHeight: CGFloat = 400
         
         public var body: some View {
             ZStack(alignment: .top) {
-                Group {
-                    let contentView = AnyView(content())
-                        .onGeometryChange(
-                            for: CGFloat.self,
-                            of: { $0.size.height },
-                            action: { contentHeight = $0 }
-                        )
-                    
-                    if popupContentHeight > popupHeight {
-                        ZStack(alignment: .top) {
-                            OffsettableScrollView(onOffsetChanged: {
-                                contentOffset = $0.y
-                            }, content: {
-                                VStack(spacing: 0) {
-                                    SwiftUI.Color.clear
-                                        .frame(height: navigationHeight)
-                                    HStack(spacing: 0) {
-                                        Spacer(minLength: 0)
-                                        contentView
-                                        Spacer(minLength: 0)
+                VStack(spacing: 0) {
+                    Group {
+                        let contentView = AnyView(content())
+                            .onGeometryChange(
+                                for: CGFloat.self,
+                                of: { $0.size.height },
+                                action: { contentHeight = $0 }
+                            )
+                        
+                        if popupContentHeight > popupMaxHeight {
+                            ZStack(alignment: .top) {
+                                OffsettableScrollView(onOffsetChanged: {
+                                    contentOffset = $0.y
+                                }, content: {
+                                    VStack(spacing: 0) {
+                                        SwiftUI.Color.clear
+                                            .frame(height: navigationHeight)
+                                        HStack(spacing: 0) {
+                                            Spacer(minLength: 0)
+                                            contentView
+                                            Spacer(minLength: 0)
+                                        }
                                     }
-                                }
-                            })
-                            
-                            navigationView
-                        }
-                    } else {
-                        VStack(spacing: 0) {
-                            navigationView
-                            contentView
-                            if popupContentHeight < popupHeight {
-                                Spacer(minLength: 0)
+                                })
+                                
+                                navigationView
+                            }
+                        } else {
+                            VStack(spacing: 0) {
+                                navigationView
+                                contentView
                             }
                         }
                     }
-                }
-                .if(actionAreaModel != nil) {
-                    $0.actionArea(model: actionAreaModel!)
-                        .padding(.bottom, 20)
+                    
+                    if let actionAreaModel {
+                        ActionArea(variant: actionAreaModel.variant)
+                            .sticky(actionAreaModel.sticky)
+                            .caption(actionAreaModel.caption)
+                            .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                            .dividerVisibility(scrolledToBottom ? .hidden : .automatic)
+                            .padding(.bottom, 20)
+                            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
+                                actionAreaHeight = $0
+                            })
+                    }
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 12)
@@ -89,7 +96,7 @@ extension Modal {
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .frame(height: 400)
+            .frame(maxHeight: min(popupMaxHeight, popupContentHeight))
             .padding(.horizontal, 20)
             .if(true) { originalView in
                 Group {
@@ -136,6 +143,10 @@ extension Modal {
         private var popupContentHeight: CGFloat {
             navigationHeight + contentHeight + actionAreaHeight
         }
+        
+        private var scrolledToBottom: Bool {
+            Int(contentOffset) <= Int(popupMaxHeight) - Int(popupContentHeight)
+        }
     }
     
     public struct PopupModifier: ViewModifier {
@@ -156,8 +167,8 @@ extension Modal {
             self.actionAreaModel = actionAreaModel
         }
         
-        @State private var opacity: CGFloat = 1
-        @State private var fullScreenCoverPresented = true
+        @State private var opacity: CGFloat = 0
+        @State private var fullScreenCoverPresented = false
 
         public func body(content: Content) -> some View {
             content
@@ -168,11 +179,6 @@ extension Modal {
                     .modalNavigation(navigation)
                     .modalActionArea(actionAreaModel)
                     .opacity(opacity)
-                    .onAppear {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            opacity = 1
-                        }
-                    }
                 }
                 .transaction { transaction in
                     transaction.disablesAnimations = true
@@ -180,6 +186,11 @@ extension Modal {
                 .onChange(of: isPresented) { _ in
                     if isPresented {
                         fullScreenCoverPresented = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                            withAnimation(.easeInOut(duration: 0.29)) {
+                                opacity = 1
+                            }
+                        }
                     } else {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             opacity = 0

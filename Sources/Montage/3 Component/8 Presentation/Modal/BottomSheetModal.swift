@@ -64,63 +64,55 @@ extension Modal {
         
         public var body: some View {
             ZStack(alignment: .top) {
-                Group {
-                    if actionAreaModel != nil {
-                        ActionArea(variant: actionAreaModel!.variant)
-                            .sticky(actionAreaModel!.sticky)
-                            .caption(actionAreaModel!.caption)
-                            .extra(actionAreaModel!.extra, divider: actionAreaModel!.extraDivider)
+                VStack(spacing: 0) {
+                    Group {
+                        let contentView = AnyView(content())
                             .onGeometryChange(
                                 for: CGFloat.self,
-                                of: { $0.size.height
-                                },
-                                action: {
-                                    actionAreaHeight = $0
-                                }
+                                of: { $0.size.height },
+                                action: { contentHeight = $0 }
                             )
-                            .opacity(0)
-                    }
-                }
-                
-                Group {
-                    let contentView = AnyView(content())
-                        .onGeometryChange(
-                            for: CGFloat.self,
-                            of: { $0.size.height },
-                            action: { contentHeight = $0 }
-                        )
-                    
-                    if bottomSheetContentHeight > bottomSheetMaxHeight ||
-                        (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
-                        ZStack(alignment: .top) {
-                            OffsettableScrollView(onOffsetChanged: {
-                                contentOffset = $0.y
-                            }, content: {
-                                VStack(spacing: 0) {
-                                    SwiftUI.Color.clear
-                                        .frame(height: navigationHeight)
-                                    HStack(spacing: 0) {
-                                        Spacer(minLength: 0)
-                                        contentView
-                                        Spacer(minLength: 0)
+                        
+                        if bottomSheetContentHeight > bottomSheetMaxHeight ||
+                            (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
+                            ZStack(alignment: .top) {
+                                OffsettableScrollView(onOffsetChanged: {
+                                    contentOffset = $0.y
+                                }, content: {
+                                    VStack(spacing: 0) {
+                                        SwiftUI.Color.clear
+                                            .frame(height: navigationHeight)
+                                        HStack(spacing: 0) {
+                                            Spacer(minLength: 0)
+                                            contentView
+                                            Spacer(minLength: 0)
+                                        }
                                     }
+                                })
+                                
+                                navigationView
+                            }
+                        } else {
+                            VStack(spacing: 0) {
+                                navigationView
+                                contentView
+                                if bottomSheetContentHeight < bottomSheetMaxHeight {
+                                    Spacer(minLength: 0)
                                 }
-                            })
-                            
-                            navigationView
-                        }
-                    } else {
-                        VStack(spacing: 0) {
-                            navigationView
-                            contentView
-                            if bottomSheetContentHeight < bottomSheetMaxHeight {
-                                Spacer(minLength: 0)
                             }
                         }
                     }
-                }
-                .if(actionAreaModel != nil) {
-                    $0.actionArea(model: actionAreaModel!)
+                    
+                    if let actionAreaModel {
+                        ActionArea(variant: actionAreaModel.variant)
+                            .sticky(actionAreaModel.sticky)
+                            .caption(actionAreaModel.caption)
+                            .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                            .dividerVisibility(scrolledToBottom ? .hidden : .automatic)
+                            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
+                                actionAreaHeight = $0
+                            })
+                    }
                 }
             }
             .presentationDetents(detents)
@@ -133,6 +125,7 @@ extension Modal {
         private var resize: Resize = .hug
         private var navigation: (() -> Montage.Modal.Navigation)?
         private var actionAreaModel: ActionAreaModifier.Model?
+        private var fullModal = false
         
         public func needHandle(_ needHandle: Bool) -> Self {
             var zelf = self
@@ -158,7 +151,18 @@ extension Modal {
             return zelf
         }
         
+        internal func fullModal(_ fullModal: Bool = true) -> Self {
+            var zelf = self
+            zelf.fullModal = fullModal
+            return zelf
+        }
+        
         // MARK: - Private
+        
+        private var scrolledToBottom: Bool {
+            Int(contentOffset) <= (Int(bottomSheetMaxHeight) + (fullModal ? 10 : 0)) -
+                Int(bottomSheetContentHeight)
+        }
         
         private var navigationView: some View {
             Group {
@@ -166,6 +170,9 @@ extension Modal {
                     navigation()
                         .scrollOffset($contentOffset)
                         .needHandleArea(needHandle)
+                } else {
+                    Spacer()
+                        .frame(height: 32)
                 }
             }
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
