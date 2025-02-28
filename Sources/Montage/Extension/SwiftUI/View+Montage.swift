@@ -11,12 +11,15 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func `if`<Content: View>(
+    func `if`(
         _ condition: Bool,
-        transform: (Self) -> Content
+        _ transform: (Self) -> any View,
+        else alternative: ((Self) -> any View)? = nil
     ) -> some View {
         if condition {
-            transform(self)
+            AnyView(transform(self))
+        } else if let alternative {
+            AnyView(alternative(self))
         } else {
             self
         }
@@ -27,6 +30,14 @@ extension View {
         if condition {
             self
         }
+    }
+
+    func modifying<Content: View>(_ transform: (Self) -> Content) -> some View {
+        transform(self)
+    }
+
+    func modifying(_ transform: (Self) -> Self) -> Self {
+        transform(self)
     }
 }
 

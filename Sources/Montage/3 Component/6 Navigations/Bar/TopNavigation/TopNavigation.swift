@@ -11,9 +11,6 @@ extension Bar {
     public struct TopNavigation: View {
         // MARK: - Uninitialised properties
         
-        /// TopNavigation이 노출될 screenWidth입니다.
-        @State private var screenWidth: CGFloat = .zero
-        
         private let variant: Variant
         private let title: String
         private let scrollOffset: CGFloat
@@ -24,17 +21,6 @@ extension Bar {
         // MARK: - Computed properties
 
         private var scrolled: Bool { scrollOffset < .zero }
-        private var isFloatingVariant: Bool {
-            switch variant {
-            case .floating: return true
-            case .normal: fallthrough
-            case .extended: return false
-            }
-        }
-        
-        private var needMaterial: Bool {
-            scrolled && isFloatingVariant == false && (scrollOffset / -33) > 1
-        }
         
         private var backgroundColor: SwiftUI.Color {
             if let backgroundColorResolvable {
@@ -45,11 +31,15 @@ extension Bar {
         }
         
         private var backgroundOpacity: CGFloat {
-            let ratio = (scrollOffset / -32)
-            return min(1, ratio) * 0.88
+            if variant.isFloating {
+                return 0
+            } else {
+                let ratio = (scrollOffset / -32)
+                return max(0, min(1, ratio))
+            }
         }
 
-        // MARK: - Initialisers
+        // MARK: - Initializers
        
         public init(
             variant: Variant = .normal,
@@ -76,21 +66,20 @@ extension Bar {
                     actions: actions
                 )
                 .padding(.all, 16)
-                .background(
-                    (scrolled && isFloatingVariant == false) ? backgroundColor
-                        .opacity(backgroundOpacity) : .clear
-                )
-                .background(
-                    (scrolled && isFloatingVariant == false) ?
-                        Material.ultraThinMaterial.opacity(backgroundOpacity)
-                        : Material.ultraThinMaterial.opacity(.zero)
-                )
-                .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { screenWidth = $0 })
+                .background {
+                    ZStack {
+                        backgroundColor
+                            .opacity(backgroundOpacity * 0.88)
+                        Rectangle().fill(.ultraThinMaterial)
+                    }
+                    .opacity(backgroundOpacity)
+                    .ignoresSafeArea(.container, edges: .top)
+                }
                 
-                if scrolled && isFloatingVariant == false {
+                if scrolled && variant.isFloating == false {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
-                        .frame(width: screenWidth, height: 0.5)
+                        .frame(height: 0.5)
                 }
             }
         }
@@ -355,108 +344,73 @@ extension Bar {
             
             var body: some View {
                 if let left {
-                    Group {
-                        if background {
-                            if alternative {
-                                switch left {
-                                case .back(let action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: .chevronLeftThick
-                                    ) {
-                                        action()
+                    switch left {
+                    case .back(let action):
+                        Button.IconButton(
+                            variant: background
+                                ? .background(size: 24, isAlternative: alternative)
+                                : .default,
+                            icon: background ? .chevronLeftThick : .chevronLeft
+                        ) {
+                            action()
+                        }
+                        .frame(width: 24, height: 24)
+                    case let .icon(i, action):
+                        Button.IconButton(
+                            variant: background
+                                ? .background(size: 24, isAlternative: alternative)
+                                : .default,
+                            icon: i
+                        ) {
+                            action()
+                        }
+                        .frame(width: 24, height: 24)
+                    case let .text(t, action):
+                        SwiftUI.Button {
+                            action()
+                        } label: {
+                            Text(t)
+                                .montage(
+                                    variant: background ? .headline2 : .body2,
+                                    weight: .medium,
+                                    alias: background
+                                        ? .labelNormal
+                                        : (alternative ? .staticWhite : .labelAlternative)
+                                )
+                                .if(background) {
+                                    $0.paragraph(variant: .body2)
+                                        .if(alternative) {
+                                            $0.opacity(0.88)
+                                        } else: {
+                                            $0.blendMode(.plusDarker)
+                                        }
+                                        .padding(.vertical, 5)
+                                        .padding(.horizontal, 10)
+                                } else: {
+                                    $0
+                                }
+                        }
+                        .modifying { original in
+                            Group {
+                                if background {
+                                    Group {
+                                        if alternative {
+                                            original
+                                                .background(
+                                                    SwiftUI.Color.atomic(.globalCoolNeutral30)
+                                                        .opacity(0.61)
+                                                )
+                                        } else {
+                                            original.background(.regularMaterial)
+                                        }
                                     }
-                                    .frame(width: 24, height: 24)
-                                case let .icon(i, action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: i
-                                    ) {
-                                        action()
-                                    }
-                                    .frame(width: 24, height: 24)
-                                case let .text(t, action):
-                                    SwiftUI.Button {
-                                        action()
-                                    } label: {
-                                        Text(t)
-                                            .montage(variant: .body2, weight: .medium, alias: .staticWhite)
-                                            .paragraph(variant: .body2)
-                                            .opacity(0.88)
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 10)
-                                    }
-                                    .background(
-                                        SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
-                                    )
                                     .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                    .frame(height: 24)
+                                } else {
+                                    original
                                 }
-                            } else {
-                                switch left {
-                                case .back(let action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: .chevronLeftThick
-                                    ) {
-                                        action()
-                                    }
-                                    .frame(width: 24, height: 24)
-                                case let .icon(i, action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: i
-                                    ) {
-                                        action()
-                                    }
-                                    .frame(width: 24, height: 24)
-                                case let .text(t, action):
-                                    SwiftUI.Button {
-                                        action()
-                                    } label: {
-                                        Text(t)
-                                            .montage(
-                                                variant: .body2,
-                                                weight: .medium,
-                                                alias: .labelAlternative
-                                            )
-                                            .blendMode(.plusDarker)
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 10)
-                                    }
-                                    .background(.regularMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                    .frame(height: 24)
-                                }
-                            }
-                        } else {
-                            switch left {
-                            case .back(let action):
-                                Button.IconButton(
-                                    variant: .default,
-                                    icon: .chevronLeft
-                                ) {
-                                    action()
-                                }
-                                .frame(width: 24, height: 24)
-                            case let .icon(i, action):
-                                Button.IconButton(
-                                    variant: .default,
-                                    icon: i
-                                ) {
-                                    action()
-                                }
-                                .frame(width: 24, height: 24)
-                            case let .text(t, action):
-                                SwiftUI.Button {
-                                    action()
-                                } label: {
-                                    Text(t)
-                                        .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
-                                }
-                                .frame(height: 24)
                             }
                         }
+                        .frame(height: 24)
                     }
                 } else {
                     SwiftUI.Color.clear
@@ -607,6 +561,13 @@ extension Bar.TopNavigation {
         case normal
         case extended
         case floating(alternative: Bool = false, background: Bool = false)
+        
+        fileprivate var isFloating: Bool {
+            switch self {
+            case .floating: true
+            case .normal, .extended: false
+            }
+        }
     }
     
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.

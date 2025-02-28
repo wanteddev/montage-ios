@@ -70,7 +70,7 @@ public struct ActionArea: View, KeyboardReadable {
     private var clearBackground = false
     private var caption: String?
     private var extra: (() -> any View)?
-    private var extraDivider = false
+    private var extraDivider = true
     
     public func clearBackground(_ clearBackground: Bool = true) -> Self {
         var zelf = self
@@ -84,7 +84,7 @@ public struct ActionArea: View, KeyboardReadable {
         return zelf
     }
     
-    public func extra(_ content: (() -> any View)?, divider: Bool = false) -> Self {
+    public func extra(_ content: (() -> any View)?, divider: Bool = true) -> Self {
         var zelf = self
         zelf.extra = content
         zelf.extraDivider = divider
@@ -359,9 +359,9 @@ public struct ActionAreaModifier: ViewModifier {
         var isManual: Bool {
             switch self {
             case .automatic:
-                return false
+                false
             case .manual:
-                return true
+                true
             }
         }
     }

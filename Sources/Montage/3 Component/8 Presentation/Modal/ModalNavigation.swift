@@ -16,6 +16,13 @@ extension Modal {
             case extended
             case floating(alternative: Bool = false, background: Bool = true)
             case emphasized
+            
+            fileprivate var isFloating: Bool {
+                switch self {
+                case .floating: true
+                case .normal, .extended, .emphasized: false
+                }
+            }
         }
         
         // MARK: - Initialisers
@@ -43,16 +50,17 @@ extension Modal {
                 }
                 .padding(.vertical, 20)
                 .padding(.horizontal, 16)
-                .background(
-                    (scrolled && isFloatingVariant == false) ? _backgroundColor
-                        .opacity(backgroundOpacity) : .clear
-                )
-                .background(
-                    (scrolled && isFloatingVariant == false) ?
-                        Material.ultraThinMaterial.opacity(backgroundOpacity)
-                        : Material.ultraThinMaterial.opacity(.zero)
-                )
-                if scrolled && isFloatingVariant == false {
+                .background {
+                    ZStack {
+                        backgroundColor
+                            .opacity(backgroundOpacity * 0.88)
+                        Rectangle().fill(.ultraThinMaterial)
+                    }
+                    .opacity(backgroundOpacity)
+                    .ignoresSafeArea(.container, edges: .top)
+                }
+                
+                if scrolled && variant.isFloating == false {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
                         .frame(height: 0.5)
@@ -147,28 +155,14 @@ extension Modal {
 
 private extension Modal.Navigation {
     var scrolled: Bool { scrollOffset < .zero }
-    var isFloatingVariant: Bool {
-        switch variant {
-        case .floating: true
-        case .normal, .extended, .emphasized: false
-        }
-    }
-    
-    var needMaterial: Bool {
-        scrolled && isFloatingVariant == false && (scrollOffset / -33) > 1
-    }
-    
-    var _backgroundColor: SwiftUI.Color {
-        if let backgroundColor {
-            backgroundColor.opacity(0.88)
-        } else {
-            SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
-        }
-    }
     
     var backgroundOpacity: CGFloat {
-        let ratio = (scrollOffset / -32)
-        return ratio > 1 ? 1 : ratio
+        if variant.isFloating {
+            return 0
+        } else {
+            let ratio = (scrollOffset / -32)
+            return max(0, min(1, ratio))
+        }
     }
 }
 
