@@ -321,7 +321,7 @@ public struct Select: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
-                        .stroke(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
+                        .strokeBorder(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
                 }
                 .shadow(
                     color: .alias(.staticBlack).opacity(0.03),

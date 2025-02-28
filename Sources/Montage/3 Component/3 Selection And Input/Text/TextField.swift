@@ -200,7 +200,7 @@ extension TextInput {
             @State private var height: CGFloat = 0
             
             var body: some View {
-                HStack(spacing: .zero) {
+                HStack(spacing: -1) {
                     ZStack {
                         HStack(spacing: 9) {
                             if let icon {
@@ -255,13 +255,10 @@ extension TextInput {
                         .overlay {
                             if rightButton == nil {
                                 RoundedRectangle(cornerRadius: 12)
-                                    .inset(by: 0.5)
-                                    .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                                    .padding(.all, textFieldFocusState ? 2 : 1)
+                                    .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                             } else {
                                 UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12))
-                                    .stroke(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                                    .padding([.top, .bottom, .leading], textFieldFocusState ? 2 : 1)
+                                    .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                             }
                         }
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { height = $0 })
@@ -275,12 +272,10 @@ extension TextInput {
                                 handler: rightButton.handler
                             )
                             UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
-                                .stroke(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
-                                .padding([.top, .trailing, .bottom], textFieldFocusState ? 2 : 1)
-                            
+                                .strokeBorder(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
                                 .clipShape(
                                     Rectangle()
-                                        .offset(x: textFieldFocusState ? 1 : 0.7, y: .zero)
+                                        .offset(x: 1, y: .zero)
                                 )
                                 .frame(height: height)
                         }
