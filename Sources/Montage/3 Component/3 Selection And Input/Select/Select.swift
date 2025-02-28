@@ -336,7 +336,7 @@ public struct Select: View {
                     .montage(
                         variant: .caption1,
                         weight: .regular,
-                        alias: .labelAlternative
+                        alias: negative ? .statusNegative : .labelAlternative
                     )
             }
         }
