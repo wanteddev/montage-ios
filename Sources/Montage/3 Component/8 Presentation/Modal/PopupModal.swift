@@ -46,6 +46,7 @@ extension Modal {
                 VStack(spacing: 0) {
                     Group {
                         let contentView = AnyView(content())
+                            .padding(contentEdgeInsets)
                             .onGeometryChange(
                                 for: CGFloat.self,
                                 of: { $0.size.height },
@@ -54,7 +55,7 @@ extension Modal {
                         
                         if popupContentHeight > popupMaxHeight {
                             ZStack(alignment: .top) {
-                                OffsettableScrollView(onOffsetChanged: {
+                                ScrollView(onOffsetChanged: {
                                     contentOffset = $0.y
                                 }, content: {
                                     VStack(spacing: 0) {
@@ -80,10 +81,9 @@ extension Modal {
                     
                     if let actionAreaModel {
                         ActionArea(variant: actionAreaModel.variant)
-                            .sticky(actionAreaModel.sticky)
+                            .clearBackground(scrolledToBottom)
                             .caption(actionAreaModel.caption)
                             .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
-                            .dividerVisibility(scrolledToBottom ? .hidden : .automatic)
                             .padding(.bottom, 20)
                             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                                 actionAreaHeight = $0
@@ -113,8 +113,15 @@ extension Modal {
         
         // MARK: - Modifiers
         
+        private var ignoresEdgeInsets = false
         private var navigation: (() -> Montage.Modal.Navigation)?
         private var actionAreaModel: ActionAreaModifier.Model?
+        
+        public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
+            var zelf = self
+            zelf.ignoresEdgeInsets = ignoresEdgeInsets
+            return zelf
+        }
         
         public func modalNavigation(_ navigation: (() -> Montage.Modal.Navigation)?) -> Self {
             var zelf = self
@@ -140,6 +147,17 @@ extension Modal {
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
         }
         
+        private var contentEdgeInsets: EdgeInsets {
+            ignoresEdgeInsets
+                ? .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+                : .init(
+                    top: navigation == nil ? 20 : 0,
+                    leading: 20,
+                    bottom: 20,
+                    trailing: 20
+                )
+        }
+        
         private var popupContentHeight: CGFloat {
             navigationHeight + contentHeight + actionAreaHeight
         }
@@ -151,17 +169,20 @@ extension Modal {
     
     public struct PopupModifier: ViewModifier {
         @Binding private var isPresented: Bool
+        private let ignoresEdgeInsets: Bool
         private let popupContent: () -> any View
         private let navigation: (() -> Modal.Navigation)?
         private let actionAreaModel: ActionAreaModifier.Model?
         
         public init(
             isPresented: Binding<Bool>,
+            ignoresEdgeInsets: Bool = false,
             _ content: @escaping () -> any View,
             navigation: (() -> Modal.Navigation)? = nil,
             actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
             _isPresented = isPresented
+            self.ignoresEdgeInsets = ignoresEdgeInsets
             popupContent = content
             self.navigation = navigation
             self.actionAreaModel = actionAreaModel
@@ -176,6 +197,7 @@ extension Modal {
                     Popup {
                         AnyView(popupContent())
                     }
+                    .ignoresEdgeInsets(ignoresEdgeInsets)
                     .modalNavigation(navigation)
                     .modalActionArea(actionAreaModel)
                     .opacity(opacity)

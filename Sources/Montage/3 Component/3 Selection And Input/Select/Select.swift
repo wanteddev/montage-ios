@@ -345,33 +345,28 @@ public struct Select: View {
             menuPresented.wrappedValue.toggle()
         }
         .if(customMenuPresented == nil) {
-            $0.sheet(isPresented: $defaultMenuPresented) {
-                Modal.BottomSheet {
-                    menu
+            $0.bottomSheetModal(
+                isPresented: $defaultMenuPresented,
+                resize: menuResize,
+                actionAreaModel: actionAreaButtonTitle.map {
+                    .init(variant: .neutral(
+                        main: .init(text: $0, action: {
+                            defaultMenuPresented.toggle()
+                        }),
+                        sub: .custom {
+                            Button.OutlinedButton(
+                                variant: .assistive,
+                                size: .large,
+                                leftIcon: .refresh,
+                                iconOnly: true
+                            ) {
+                                deselectAll()
+                            }
+                        }
+                    ))
                 }
-                .resize(menuResize)
-                .if(actionAreaButtonTitle != nil) {
-                    $0.modalActionArea(
-                        .init(
-                            variant: .neutral(
-                                main: .init(text: actionAreaButtonTitle!, action: {
-                                    defaultMenuPresented.toggle()
-                                }),
-                                sub: .init(custom: {
-                                    Button.OutlinedButton(
-                                        variant: .assistive,
-                                        size: .large,
-                                        leftIcon: .refresh,
-                                        iconOnly: true
-                                    ) {
-                                        deselectAll()
-                                    }
-                                })
-                            ),
-                            sticky: true
-                        )
-                    )
-                }
+            ) {
+                menu
             }
         }
     }

@@ -67,7 +67,7 @@ struct ThumbnailControllerPreview: View {
     let url = URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
 
     var body: some View {
-        ScrollView {
+        SwiftUI.ScrollView {
             VStack(alignment: .leading, spacing: .spacing(.pt20)) {
                 ThumbnailController(
                     ratio: .r1x1,

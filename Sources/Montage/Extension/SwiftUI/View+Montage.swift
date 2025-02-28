@@ -176,12 +176,10 @@ extension View {
                 title: title,
                 left: left,
                 backgroundColorResolvable: backgroundColorResolvable,
-                actions: actions
+                actions: actions,
+                actionAreaModel: model
             )
         )
-        .if(model != nil) {
-            $0.actionArea(model: model!)
-        }
     }
 }
 
@@ -249,7 +247,7 @@ extension View {
 // MARK: Auto Scroll
 
 extension View {
-    public func scrollable(_ axis: Axis.Set, contentOffset: Binding<CGPoint>) -> some View {
+    public func scrollable(_ axis: Axis, contentOffset: Binding<CGPoint>) -> some View {
         modifier(AutoScrollModifier(axis: axis, contentOffset: contentOffset))
     }
 }
@@ -330,6 +328,7 @@ extension View {
 extension View {
     public func popupModal(
         isPresented: Binding<Bool>,
+        ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionAreaModifier.Model? = nil,
         _ content: @escaping () -> any View,
         navigation: (() -> Modal.Navigation)? = nil
@@ -337,6 +336,7 @@ extension View {
         modifier(
             Modal.PopupModifier(
                 isPresented: isPresented,
+                ignoresEdgeInsets: ignoresEdgeInsets,
                 content,
                 navigation: navigation,
                 actionAreaModel: actionAreaModel
@@ -378,5 +378,18 @@ extension View {
                 actionAreaModel: actionAreaModel
             )
         )
+    }
+}
+
+// MARK: - Debounced Geometry Change
+
+extension View {
+    func onGeometryChange<T>(
+        for type: T.Type,
+        of transform: @escaping (GeometryProxy) -> T,
+        for dueTime: RunLoop.SchedulerTimeType.Stride,
+        action: @escaping (_ newValue: T) -> Void
+    ) -> some View where T: Equatable {
+        modifier(DebouncedGeometryChangeModifier(for: type, of: transform, for: dueTime, action: action))
     }
 }

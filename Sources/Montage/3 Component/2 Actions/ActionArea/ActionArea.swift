@@ -25,11 +25,24 @@ public struct ActionArea: View, KeyboardReadable {
     
     public var body: some View {
         VStack(spacing: 0) {
-            backgroundColor
-                .frame(height: gradientNeeded && !showExtraContents ? 0 : 20)
-                .overlay {
-                    if gradientNeeded {
-                        if !showExtraContents {
+            if let extra = extra {
+                ZStack(alignment: .top) {
+                    AnyView(extra())
+                        .padding([.top, .horizontal], 20)
+                        .padding(.bottom, 24)
+                        .background(backgroundColor)
+                    
+                    if extraDivider {
+                        Rectangle()
+                            .foregroundStyle(SwiftUI.Color.alias(.lineNeutral))
+                            .frame(height: 1)
+                    }
+                }
+            } else {
+                backgroundColor
+                    .frame(height: 0)
+                    .overlay {
+                        if !clearBackground {
                             LinearGradient(
                                 colors: gradient,
                                 startPoint: .top,
@@ -38,39 +51,13 @@ public struct ActionArea: View, KeyboardReadable {
                             .frame(height: 40)
                             .offset(y: -20)
                         }
-                    } else {
-                        if dividerNeeded {
-                            Rectangle()
-                                .foregroundStyle(SwiftUI.Color.alias(.lineNeutral))
-                                .frame(height: 1)
-                                .offset(y: -9.5)
-                        }
                     }
-                }
+            }
             
-            VStack(spacing: 0) {
-                if variant.isCompact {
-                    HStack(spacing: 12) {
-                        if showExtraContents {
-                            extraContentView
-                        } else {
-                            Spacer(minLength: 0)
-                        }
-                        
-                        Buttons(variant)
-                    }
-                } else {
-                    VStack(spacing: 20) {
-                        extraContentView
-                            .padding(.bottom, 4)
-                        
-                        VStack(spacing: 16) {
-                            captionView
-                            
-                            Buttons(variant)
-                        }
-                    }
-                }
+            VStack(spacing: 16) {
+                captionView
+                
+                Buttons(variant)
             }
             .padding(.horizontal, 20)
             .background(backgroundColor)
@@ -80,15 +67,14 @@ public struct ActionArea: View, KeyboardReadable {
     
     // MARK: - Modifiers
     
-    private var sticky = false
+    private var clearBackground = false
     private var caption: String?
     private var extra: (() -> any View)?
     private var extraDivider = false
-    private var dividerVisibility: DividerVisibility = .automatic
     
-    public func sticky(_ isSticky: Bool = true) -> Self {
+    public func clearBackground(_ clearBackground: Bool = true) -> Self {
         var zelf = self
-        zelf.sticky = isSticky
+        zelf.clearBackground = clearBackground
         return zelf
     }
     
@@ -104,77 +90,14 @@ public struct ActionArea: View, KeyboardReadable {
         zelf.extraDivider = divider
         return zelf
     }
+}
     
-    internal func dividerVisibility(_ dividerVisibility: DividerVisibility) -> Self {
-        var zelf = self
-        zelf.dividerVisibility = dividerVisibility
-        return zelf
-    }
-    
-    // MARK: - Private
-    
-    private var captionView: some View {
-        Group {
-            if let caption = caption, variant.isCaptionAvailable {
-                Text(caption)
-                    .montage(variant: .label2, alias: .labelAlternative)
-                    .paragraph(variant: .label2)
-            }
-        }
-    }
-    
-    private var extraContentView: some View {
-        Group {
-            if let extra = extra {
-                AnyView(extra())
-                    .background(backgroundColor)
-            }
-        }
-    }
-    
-    private var showExtraContents: Bool { extra != nil }
-    
-    private var gradient: [SwiftUI.Color] {
-        [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
-            .map {
-                backgroundColor.opacity($0)
-            }
-    }
-    
-    private var backgroundColor: SwiftUI.Color {
-        sticky
-            ? (showExtraContents ? .alias(.backgroundElevated) : .alias(.backgroundNormal))
-            : .clear
-    }
-    
-    private var gradientNeeded: Bool {
-        sticky && !showExtraContents && !variant.isCompact
-    }
-    
-    private var dividerNeeded: Bool {
-        if dividerVisibility == .automatic {
-            extraDivider || (variant.isCompact && dividerVisibility == .automatic)
-        } else {
-            false
-        }
-    }
-    
-    // MARK: - Types
-    
+// MARK: - Types
+extension ActionArea {
     public enum Variant {
-        case strong(main: Action, sub: Action? = nil, alternative: Action? = nil)
-        case neutral(main: Action, sub: Action? = nil, alternative: Action? = nil)
-        case compact(main: Action, sub: Action? = nil)
-        case cancel(main: Action)
-        
-        fileprivate var isCompact: Bool {
-            switch self {
-            case .compact:
-                true
-            default:
-                false
-            }
-        }
+        case strong(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
+        case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
+        case cancel(main: ButtonInfo)
         
         fileprivate var isCaptionAvailable: Bool {
             switch self {
@@ -184,10 +107,10 @@ public struct ActionArea: View, KeyboardReadable {
         }
     }
     
-    public struct Action {
-        let text: String
-        let action: () -> Void
-        let custom: (() -> any View)?
+    public struct ButtonInfo {
+        internal let text: String
+        internal let action: () -> Void
+        internal var custom: (() -> any View)?
         
         /// ActionArea/Bottom의 항목을 기본값으로 생성합니다.
         /// - Parameters:
@@ -202,25 +125,54 @@ public struct ActionArea: View, KeyboardReadable {
             custom = nil
         }
         
-        /// ActionArea/Bottom의 항목을 커스텀하여 생성합니다.
-        /// - Parameter custom: 커스텀 Montage/Button 컴포넌트입니다.
-        /// > Component 사용하는 과정에서 fixedSize를 내부에서 지정하기 때문에
-        /// > 전달하는 Button 컴포넌트는 fixedSize를 지정하여 전달하면 안됩니다.
-        public init(
+        private init(
             custom: @escaping (() -> any View)
         ) {
             text = ""
             action = {}
             self.custom = custom
         }
+        
+        /// ActionArea/Bottom의 항목을 커스텀하여 생성합니다.
+        /// - Parameter custom: 커스텀 Montage/Button 컴포넌트입니다.
+        /// > 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하십시오.
+        public static func custom(
+            _ custom: @escaping (() -> any View)
+        ) -> Self {
+            self.init(custom: custom)
+        }
+    }
+}
+
+// MARK: - Private
+private extension ActionArea {
+    private var captionView: some View {
+        Group {
+            if let caption = caption, variant.isCaptionAvailable {
+                Text(caption)
+                    .montage(variant: .label2, alias: .labelAlternative)
+                    .paragraph(variant: .label2)
+            }
+        }
     }
     
-    public enum DividerVisibility: String, CaseIterable {
-        case automatic, hidden
+    private var showExtraContents: Bool { extra != nil }
+    
+    private var gradient: [SwiftUI.Color] {
+        [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
+            .map {
+                backgroundColor.opacity($0)
+            }
     }
     
-    // MARK: - Inner Views
-    
+    private var backgroundColor: SwiftUI.Color {
+        !clearBackground || showExtraContents ? .alias(.backgroundElevated) : .clear
+    }
+}
+
+// MARK: - Inner Views
+
+private extension ActionArea {
     private struct Buttons: View {
         private let variant: Variant
         
@@ -235,8 +187,6 @@ public struct ActionArea: View, KeyboardReadable {
                     strong(main, sub, alternative)
                 case let .neutral(main, sub, alternative):
                     neutral(main, sub, alternative)
-                case let .compact(main, sub):
-                    compact(main, sub)
                 case let .cancel(main):
                     cancel(main)
                 }
@@ -245,141 +195,107 @@ public struct ActionArea: View, KeyboardReadable {
         
         @ViewBuilder
         private func strong(
-            _ main: Action,
-            _ sub: Action?,
-            _ alternative: Action?
+            _ main: ButtonInfo,
+            _ sub: ButtonInfo?,
+            _ alternative: ButtonInfo?
         ) -> some View {
             VStack(spacing: 8) {
-                if let customButton = main.custom {
-                    AnyView(customButton())
-                } else {
-                    Button.SolidButton(
-                        variant: .primary,
-                        size: .large,
-                        text: main.text,
-                        handler: main.action
-                    )
-                    .fill(horizontal: true, vertical: false)
-                }
+                primarySolidButton(main)
                 if let alternative {
-                    if let customButton = alternative.custom {
-                        AnyView(customButton())
-                    } else {
-                        Button.OutlinedButton(
-                            variant: .secondary,
-                            size: .large,
-                            text: alternative.text,
-                            handler: alternative.action
-                        )
-                        .fill(horizontal: true, vertical: false)
-                    }
+                    secondaryOutlinedButton(alternative)
                 }
                 if let sub {
-                    if let customButton = sub.custom {
-                        AnyView(customButton())
-                    } else {
-                        Button.TextButton(
-                            variant: .assistive,
-                            size: .small,
-                            text: sub.text,
-                            handler: sub.action
-                        )
-                    }
+                    assistiveTextButton(sub)
                 }
             }
         }
         
         @ViewBuilder
         private func neutral(
-            _ main: Action,
-            _ sub: Action?,
-            _ alternative: Action?
+            _ main: ButtonInfo,
+            _ sub: ButtonInfo?,
+            _ alternative: ButtonInfo?
         ) -> some View {
             HStack(spacing: 12) {
                 if let sub {
-                    if let customButton = sub.custom {
-                        AnyView(customButton())
-                    } else {
-                        Button.OutlinedButton(
-                            variant: .assistive,
-                            size: .large,
-                            text: sub.text,
-                            handler: sub.action
-                        )
-                    }
+                    assistiveOutlinedButton(sub, fillWidth: false)
                 }
                 if let alternative {
-                    if let customButton = alternative.custom {
-                        AnyView(customButton())
-                    } else {
-                        Button.OutlinedButton(
-                            variant: .secondary,
-                            size: .large,
-                            text: alternative.text,
-                            handler: alternative.action
-                        )
-                        .fill(horizontal: true, vertical: false)
-                    }
+                    secondaryOutlinedButton(alternative)
                 }
-                if let customButton = main.custom {
+                primarySolidButton(main)
+            }
+        }
+        
+        @ViewBuilder
+        private func cancel(
+            _ main: ButtonInfo
+        ) -> some View {
+            assistiveOutlinedButton(main)
+        }
+        
+        private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
+            Group {
+                if let customButton = buttonInfo.custom {
                     AnyView(customButton())
                 } else {
                     Button.SolidButton(
                         variant: .primary,
                         size: .large,
-                        text: main.text,
-                        handler: main.action
+                        text: buttonInfo.text,
+                        handler: buttonInfo.action
                     )
                     .fill(horizontal: true, vertical: false)
                 }
             }
         }
         
-        @ViewBuilder
-        private func compact(
-            _ main: Action,
-            _ sub: Action?
-        ) -> some View {
-            HStack(spacing: 12) {
-                if let sub {
-                    if let customButton = sub.custom {
-                        AnyView(customButton())
-                    } else {
-                        Button.OutlinedButton(
-                            variant: .assistive,
-                            size: .large,
-                            text: sub.text,
-                            handler: sub.action
-                        )
-                    }
-                }
-                if let customButton = main.custom {
+        private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
+            Group {
+                if let customButton = buttonInfo.custom {
                     AnyView(customButton())
                 } else {
-                    Button.SolidButton(
-                        variant: .primary,
+                    Button.OutlinedButton(
+                        variant: .secondary,
                         size: .large,
-                        text: main.text,
-                        handler: main.action
+                        text: buttonInfo.text,
+                        handler: buttonInfo.action
                     )
+                    .fill(horizontal: true, vertical: false)
                 }
             }
         }
         
-        @ViewBuilder
-        private func cancel(
-            _ main: Action
-        ) -> some View {
-            if let customButton = main.custom {
-                AnyView(customButton())
-            } else {
-                Button.OutlinedButton(
-                    variant: .assistive,
-                    size: .large,
-                    text: main.text,
-                    handler: main.action
-                )
-                .fill(horizontal: true, vertical: false)
+        private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
+            Group {
+                if let customButton = buttonInfo.custom {
+                    AnyView(customButton())
+                } else {
+                    Button.OutlinedButton(
+                        variant: .assistive,
+                        size: .large,
+                        text: buttonInfo.text,
+                        handler: buttonInfo.action
+                    )
+                    .if(fillWidth) {
+                        $0.fill(horizontal: true, vertical: false)
+                    }
+                }
+            }
+        }
+        
+        private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
+            Group {
+                if let customButton = buttonInfo.custom {
+                    AnyView(customButton())
+                } else {
+                    Button.TextButton(
+                        variant: .assistive,
+                        size: .small,
+                        text: buttonInfo.text,
+                        handler: buttonInfo.action
+                    )
+                }
             }
         }
     }
@@ -399,9 +315,15 @@ public struct ActionAreaModifier: ViewModifier {
             content
             
             ActionArea(variant: model.variant)
-                .sticky(model.sticky)
                 .caption(model.caption)
                 .extra(model.extra, divider: model.extraDivider)
+                .if(true) {
+                    if case .manual(let visibility) = model.backgroundVisibility {
+                        $0.clearBackground(visibility)
+                    } else {
+                        $0
+                    }
+                }
         }
     }
     
@@ -409,23 +331,37 @@ public struct ActionAreaModifier: ViewModifier {
     
     public struct Model {
         let variant: ActionArea.Variant
-        let sticky: Bool
+        let backgroundVisibility: BackgroundVisibility
         let caption: String?
         let extra: (() -> any View)?
         let extraDivider: Bool
         
         public init(
             variant: ActionArea.Variant,
-            sticky: Bool = false,
+            backgroundVisibility: BackgroundVisibility = .automatic,
             caption: String? = nil,
             extra: (() -> any View)? = nil,
             extraDivider: Bool = false
         ) {
             self.variant = variant
-            self.sticky = sticky
+            self.backgroundVisibility = backgroundVisibility
             self.caption = caption
             self.extra = extra
             self.extraDivider = extraDivider
+        }
+    }
+    
+    public enum BackgroundVisibility {
+        case automatic
+        case manual(_ visible: Bool)
+        
+        var isManual: Bool {
+            switch self {
+            case .automatic:
+                return false
+            case .manual:
+                return true
+            }
         }
     }
 }

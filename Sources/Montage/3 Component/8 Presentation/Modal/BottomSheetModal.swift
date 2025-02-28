@@ -67,6 +67,7 @@ extension Modal {
                 VStack(spacing: 0) {
                     Group {
                         let contentView = AnyView(content())
+                            .padding(contentEdgeInsets)
                             .onGeometryChange(
                                 for: CGFloat.self,
                                 of: { $0.size.height },
@@ -76,7 +77,7 @@ extension Modal {
                         if bottomSheetContentHeight > bottomSheetMaxHeight ||
                             (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
                             ZStack(alignment: .top) {
-                                OffsettableScrollView(onOffsetChanged: {
+                                ScrollView(onOffsetChanged: {
                                     contentOffset = $0.y
                                 }, content: {
                                     VStack(spacing: 0) {
@@ -105,10 +106,9 @@ extension Modal {
                     
                     if let actionAreaModel {
                         ActionArea(variant: actionAreaModel.variant)
-                            .sticky(actionAreaModel.sticky)
+                            .clearBackground(scrolledToBottom)
                             .caption(actionAreaModel.caption)
                             .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
-                            .dividerVisibility(scrolledToBottom ? .hidden : .automatic)
                             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                                 actionAreaHeight = $0
                             })
@@ -125,6 +125,7 @@ extension Modal {
         private var resize: Resize = .hug
         private var navigation: (() -> Montage.Modal.Navigation)?
         private var actionAreaModel: ActionAreaModifier.Model?
+        private var ignoresEdgeInsets = false
         private var fullModal = false
         
         public func needHandle(_ needHandle: Bool) -> Self {
@@ -151,6 +152,12 @@ extension Modal {
             return zelf
         }
         
+        public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
+            var zelf = self
+            zelf.ignoresEdgeInsets = ignoresEdgeInsets
+            return zelf
+        }
+        
         internal func fullModal(_ fullModal: Bool = true) -> Self {
             var zelf = self
             zelf.fullModal = fullModal
@@ -170,12 +177,21 @@ extension Modal {
                     navigation()
                         .scrollOffset($contentOffset)
                         .needHandleArea(needHandle)
-                } else {
-                    Spacer()
-                        .frame(height: 32)
                 }
             }
+            .ignoresSafeArea()
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
+        }
+        
+        private var contentEdgeInsets: EdgeInsets {
+            ignoresEdgeInsets
+                ? .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+                : .init(
+                    top: navigation == nil ? (needHandle ? 32 : 20) : 0,
+                    leading: 20,
+                    bottom: actionAreaModel == nil ? 0 : 20,
+                    trailing: 20
+                )
         }
         
         private var maxDetentHeight: CGFloat {
@@ -217,6 +233,7 @@ extension Modal {
         private let bottomSheetContent: () -> any View
         private let needHandle: Bool
         private let resize: BottomSheet.Resize
+        private let ignoresEdgeInsets: Bool
         private let navigation: (() -> Modal.Navigation)?
         private let actionAreaModel: ActionAreaModifier.Model?
         
@@ -225,6 +242,7 @@ extension Modal {
             _ content: @escaping () -> any View,
             needHandle: Bool = true,
             resize: BottomSheet.Resize = .hug,
+            ignoresEdgeInsets: Bool = false,
             navigation: ( () -> Modal.Navigation)? = nil,
             actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
@@ -232,6 +250,7 @@ extension Modal {
             bottomSheetContent = content
             self.needHandle = needHandle
             self.resize = resize
+            self.ignoresEdgeInsets = ignoresEdgeInsets
             self.navigation = navigation
             self.actionAreaModel = actionAreaModel
         }
@@ -244,6 +263,7 @@ extension Modal {
                     }
                     .needHandle(needHandle)
                     .resize(resize)
+                    .ignoresEdgeInsets(ignoresEdgeInsets)
                     .modalNavigation(navigation)
                     .modalActionArea(actionAreaModel)
                 }

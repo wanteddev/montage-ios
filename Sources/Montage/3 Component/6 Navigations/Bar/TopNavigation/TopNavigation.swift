@@ -683,6 +683,7 @@ extension Bar.TopNavigation {
         private let left: Resource.Left?
         private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
+        private let actionAreaModel: ActionAreaModifier.Model?
         
         public init(
             variant: Variant,
@@ -690,7 +691,8 @@ extension Bar.TopNavigation {
             showIndicator: Bool = true,
             left: Resource.Left?,
             backgroundColorResolvable: ColorResolvable? = nil,
-            actions: [Resource.Action]
+            actions: [Resource.Action],
+            actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
             self.variant = variant
             self.title = title
@@ -698,47 +700,54 @@ extension Bar.TopNavigation {
             self.left = left
             self.backgroundColorResolvable = backgroundColorResolvable
             self.actions = actions
+            self.actionAreaModel = actionAreaModel
         }
         
         // MARK: - Body
         
         @Environment(\.safeAreaInsets) private var safeAreaInsets
 
-        @State private var scrollOffset: CGFloat = .zero
+        @State private var scrollStatus: ScrollView.ScrollStatus = .init()
         @State private var navigationHeight: CGFloat = .zero
         @State private var originBottomActionHeight: CGFloat = .zero
         @State private var currentBottomActionHeight: CGFloat = .zero
 
         public func body(content: Content) -> some View {
-            ZStack {
-                OffsettableScrollView(onOffsetChanged: {
-                    scrollOffset = $0.y
-                }, content: {
-                    content
-                        .padding(.top, navigationHeight)
-                })
-                .background(
-                    backgroundColor
-                )
+            VStack(spacing: 0) {
+                ZStack {
+                    ScrollView(scrollStatus: $scrollStatus) {
+                        content
+                            .padding(.top, navigationHeight)
+                    }
+                    .background(
+                        backgroundColor
+                    )
+                    
+                    VStack(alignment: .leading, spacing: .zero) {
+                        Bar.TopNavigation(
+                            variant: variant,
+                            title: title,
+                            scrollOffset: scrollStatus.contentOffset.y,
+                            left: left,
+                            backgroundColorResolvable: backgroundColorResolvable,
+                            actions: actions
+                        )
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { navigationHeight = $0.height }
+                        )
+                        Spacer()
+                    }
+                }
                 
-                VStack(alignment: .leading, spacing: .zero) {
-                    Bar.TopNavigation(
-                        variant: variant,
-                        title: title,
-                        scrollOffset: scrollOffset,
-                        left: left,
-                        backgroundColorResolvable: backgroundColorResolvable,
-                        actions: actions
-                    )
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { navigationHeight = $0.height }
-                    )
-                    Spacer()
+                if let actionAreaModel {
+                    ActionArea(variant: actionAreaModel.variant)
+                        .clearBackground(scrollStatus.scrolledToMax)
+                        .caption(actionAreaModel.caption)
+                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                 }
             }
-            .ignoresSafeArea(.container, edges: .bottom)
         }
         
         private var backgroundColor: SwiftUI.Color {

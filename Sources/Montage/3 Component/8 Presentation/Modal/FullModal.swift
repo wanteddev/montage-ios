@@ -34,6 +34,7 @@ extension Modal {
             Modal.BottomSheet(content)
                 .needHandle(false)
                 .resize(.fill)
+                .ignoresEdgeInsets(ignoresEdgeInsets)
                 .modalNavigation(navigation)
                 .modalActionArea(actionAreaModel)
                 .fullModal()
@@ -41,8 +42,15 @@ extension Modal {
         
         // MARK: - Modifiers
         
+        private var ignoresEdgeInsets = false
         private var navigation: (() -> Montage.Modal.Navigation)?
         private var actionAreaModel: ActionAreaModifier.Model?
+        
+        public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
+            var zelf = self
+            zelf.ignoresEdgeInsets = ignoresEdgeInsets
+            return zelf
+        }
         
         public func modalNavigation(_ navigation: (() -> Montage.Modal.Navigation)?) -> Self {
             var zelf = self
@@ -59,17 +67,20 @@ extension Modal {
     
     public struct FullModifier: ViewModifier {
         @Binding private var isPresented: Bool
+        private let ignoresEdgeInsets: Bool
         private let fullContent: () -> any View
         private let navigation: (() -> Modal.Navigation)?
         private let actionAreaModel: ActionAreaModifier.Model?
         
         public init(
             isPresented: Binding<Bool>,
+            ignoresEdgeInsets: Bool = false,
             _ content: @escaping () -> any View,
             navigation: (() -> Modal.Navigation)? = nil,
             actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
             _isPresented = isPresented
+            self.ignoresEdgeInsets = ignoresEdgeInsets
             fullContent = content
             self.navigation = navigation
             self.actionAreaModel = actionAreaModel
@@ -81,6 +92,7 @@ extension Modal {
                     Full {
                         AnyView(fullContent())
                     }
+                    .ignoresEdgeInsets(ignoresEdgeInsets)
                     .modalNavigation(navigation)
                     .modalActionArea(actionAreaModel)
                 }
