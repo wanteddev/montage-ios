@@ -408,6 +408,7 @@ public struct Select: View {
                         case .multiple:
                             items[index].isSelected.toggle()
                         }
+                        onTapItem?(items[index])
                     }
                     
                     switch variant {
