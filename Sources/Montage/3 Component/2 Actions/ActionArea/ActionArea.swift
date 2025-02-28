@@ -320,7 +320,7 @@ public struct ActionAreaModifier: ViewModifier {
                 .extra(model.extra, divider: model.extraDivider)
                 .if(true) {
                     if case .manual(let visibility) = model.backgroundVisibility {
-                        $0.clearBackground(visibility)
+                        $0.clearBackground(!visibility)
                     } else {
                         $0
                     }
