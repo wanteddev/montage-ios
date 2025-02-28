@@ -134,7 +134,7 @@ extension Modal {
                                 )
                                 .paragraph(variant: variant.typoVaraint)
                                 .lineLimit(1)
-                                .frame(alignment: variant.textAlignment)
+                                .frame(height: 24, alignment: variant.textAlignment)
                             Spacer(minLength: 0)
                             Bar.TopNavigation.NormalAction(actions)
                         }

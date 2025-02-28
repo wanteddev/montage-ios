@@ -38,15 +38,15 @@ extension Bar {
         
         private var backgroundColor: SwiftUI.Color {
             if let backgroundColorResolvable {
-                .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
+                .init(uiColor: backgroundColorResolvable.resolve(.current))
             } else {
-                SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
+                SwiftUI.Color.alias(.backgroundNormal)
             }
         }
         
         private var backgroundOpacity: CGFloat {
             let ratio = (scrollOffset / -32)
-            return ratio > 1 ? 1 : ratio
+            return min(1, ratio) * 0.88
         }
 
         // MARK: - Initialisers
@@ -150,7 +150,7 @@ extension Bar {
                             }
                             HStack {
                                 titleView
-                                    .frame(alignment: variant.textAlignment)
+                                    .frame(height: 24, alignment: variant.textAlignment)
                                 Spacer()
                             }
                             .padding(.horizontal, 4)
@@ -434,7 +434,7 @@ extension Bar {
                             case .back(let action):
                                 Button.IconButton(
                                     variant: .default,
-                                    icon: .chevronLeftThick
+                                    icon: .chevronLeft
                                 ) {
                                     action()
                                 }
@@ -606,7 +606,7 @@ extension Bar.TopNavigation {
     public enum Variant: Equatable {
         case normal
         case extended
-        case floating(alternative: Bool = false, background: Bool = true)
+        case floating(alternative: Bool = false, background: Bool = false)
     }
     
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.

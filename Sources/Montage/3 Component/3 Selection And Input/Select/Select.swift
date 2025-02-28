@@ -435,8 +435,6 @@ public struct Select: View {
                 }
             }
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 20)
     }
     
     private var selectedItems: [Item] {

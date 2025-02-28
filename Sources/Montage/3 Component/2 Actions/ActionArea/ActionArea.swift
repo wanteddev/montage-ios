@@ -295,6 +295,7 @@ private extension ActionArea {
                         text: buttonInfo.text,
                         handler: buttonInfo.action
                     )
+                    .padding(.vertical, 8)
                 }
             }
         }
