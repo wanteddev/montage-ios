@@ -255,7 +255,6 @@ extension TextInput {
                                 variant: .body1Reading,
                                 color: placeholderTextColor
                             )
-                            .lineLimit(1)
                             .paragraph(variant: .body1Reading)
                             .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
                             .allowsHitTesting(false)
