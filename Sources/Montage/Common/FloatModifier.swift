@@ -8,14 +8,14 @@
 
 import SwiftUI
 
-public struct FloatModifier<V: Equatable, F: View>: ViewModifier {
+public struct FloatModifier<V: Equatable>: ViewModifier {
     public enum PresentationPolicy: Equatable {
         case presentIfNotNil(_ value: V?)
         case presentIfTrue(_ value: V)
 
         public static func == (
-            lhs: FloatModifier<V, F>.PresentationPolicy,
-            rhs: FloatModifier<V, F>.PresentationPolicy
+            lhs: FloatModifier<V>.PresentationPolicy,
+            rhs: FloatModifier<V>.PresentationPolicy
         ) -> Bool {
             switch (lhs, rhs) {
             case (.presentIfNotNil(let lhsValue), .presentIfNotNil(let rhsValue)):
@@ -54,7 +54,7 @@ public struct FloatModifier<V: Equatable, F: View>: ViewModifier {
     private let dismissingAnimation: Animation
     private let dismissPolicy: DismissPolicy
     private let onDismiss: (() -> Void)?
-    private let floatView: () -> F
+    private let floatView: () -> any View
 
     public init(
         presentationPolicy: PresentationPolicy,
@@ -62,7 +62,7 @@ public struct FloatModifier<V: Equatable, F: View>: ViewModifier {
         dismissingAnimation: Animation = .default,
         dismissPolicy: DismissPolicy = .onDisappear,
         onDismiss: (() -> Void)? = nil,
-        floatView: @escaping () -> F
+        floatView: @escaping () -> any View
     ) {
         self.presentationPolicy = presentationPolicy
         self.presentingAnimation = presentingAnimation
@@ -73,7 +73,7 @@ public struct FloatModifier<V: Equatable, F: View>: ViewModifier {
     }
 
     @State private var animationWorkItem: DispatchWorkItem?
-    @State private var floatHC: FloatHostingController<F>?
+    @State private var floatHC: FloatHostingController<AnyView>?
     @State private var floatRootView: HitTestingView?
 
     public func body(content: Content) -> some View {
@@ -81,7 +81,7 @@ public struct FloatModifier<V: Equatable, F: View>: ViewModifier {
             .onChange(of: presentationPolicy) { presentationPolicy in
                 if presentationPolicy.isPresented {
                     floatRootView?.removeFromSuperview()
-                    let floatHC = FloatHostingController(rootView: floatView())
+                    let floatHC = FloatHostingController(rootView: AnyView(floatView()))
                     self.floatHC = floatHC
                     if let hostingView = floatHC.view,
                        let topView = UIApplication.windows?.first {

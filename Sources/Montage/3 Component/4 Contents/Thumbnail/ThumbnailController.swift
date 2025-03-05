@@ -5,15 +5,16 @@
 //  Created by Euigyom Kim on 2023/05/09.
 //
 
+import SDWebImageSwiftUI
 import SwiftUI
 
-public struct ThumbnailController<V: View>: View {
+public struct ThumbnailController: View {
     @State public var ratio: Ratio
     @State public var portrait: Bool
     @State public var width: CGFloat
     @State public var placeholder: UIImage
     
-    public var imageLoader: (() -> V)?
+    public var imageLoader: (() -> any View)?
     
     public init(
         ratio: Ratio,
@@ -32,7 +33,7 @@ public struct ThumbnailController<V: View>: View {
         ratio: Ratio,
         portrait: Bool,
         width: CGFloat,
-        @ViewBuilder imageLoader: @escaping (() -> V)
+        @ViewBuilder imageLoader: @escaping (() -> any View)
     ) {
         self.ratio = ratio
         self.portrait = portrait
@@ -44,7 +45,7 @@ public struct ThumbnailController<V: View>: View {
     public var body: some View {
         ZStack {
             if let imageLoader {
-                imageLoader()
+                AnyView(imageLoader())
             } else {
                 GeometryReader { proxy in
                     Image(uiImage: placeholder)
@@ -64,7 +65,7 @@ public struct ThumbnailController<V: View>: View {
 }
 
 struct ThumbnailControllerPreview: View {
-    let url = URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
+    let url = URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")
 
     var body: some View {
         SwiftUI.ScrollView {
@@ -74,7 +75,7 @@ struct ThumbnailControllerPreview: View {
                     portrait: false,
                     width: 240
                 ) {
-                    AsyncImage(url: url) { phase in
+                    WebImage(url: url) { phase in
                         if let image = phase.image {
                             image
                         } else {
@@ -84,24 +85,24 @@ struct ThumbnailControllerPreview: View {
                 }
                 
                 HStack(alignment: .top) {
-                    ThumbnailController<EmptyView>(ratio: .r1x1, portrait: false, width: 100, image: nil)
-                    ThumbnailController<EmptyView>(ratio: .r5x4, portrait: false, width: 100, image: nil)
-                    ThumbnailController<EmptyView>(ratio: .r4x3, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r1x1, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r5x4, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r4x3, portrait: false, width: 100, image: nil)
                 }
                 
                 HStack(alignment: .top) {
-                    ThumbnailController<EmptyView>(ratio: .r3x2, portrait: false, width: 100, image: nil)
-                    ThumbnailController<EmptyView>(ratio: .r16x10, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r3x2, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r16x10, portrait: false, width: 100, image: nil)
                 }
                 
                 HStack(alignment: .top) {
-                    ThumbnailController<EmptyView>(ratio: .r1_618x1, portrait: false, width: 100, image: nil)
-                    ThumbnailController<EmptyView>(ratio: .r16x9, portrait: false, width: 100, image: nil)
-                    ThumbnailController<EmptyView>(ratio: .r2x1, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r1_618x1, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r16x9, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r2x1, portrait: false, width: 100, image: nil)
                 }
                 
                 HStack(alignment: .top) {
-                    ThumbnailController<EmptyView>(ratio: .r21x9, portrait: false, width: 100, image: nil)
+                    ThumbnailController(ratio: .r21x9, portrait: false, width: 100, image: nil)
                 }
             }
         }

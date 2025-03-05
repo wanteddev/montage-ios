@@ -39,7 +39,7 @@ public enum Skeleton {
         case _25 = 0.25
     }
     
-    public enum Kind {
+    public enum Kind: CaseDescribable {
         case text(
             alignment: Align = .left,
             lengths: [Length] = [._100],
@@ -153,11 +153,11 @@ public enum Skeleton {
         }
     }
     
-    struct SkeletonModifier<V: View>: ViewModifier {
+    struct SkeletonModifier: ViewModifier {
         private var isPresented: Bool
-        @ViewBuilder private let skeletonView: () -> V
+        @ViewBuilder private let skeletonView: () -> any View
 
-        init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
+        init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> any View) {
             self.isPresented = isPresented
             self.skeletonView = skeletonView
         }
@@ -166,7 +166,7 @@ public enum Skeleton {
         
         func body(content: Content) -> some View {
             if isPresented {
-                skeletonView()
+                AnyView(skeletonView())
                     .opacity(animationOpacity)
                     .onChange(of: animationOpacity) { _ in
                         if animationOpacity == 1 {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct SectionHeader<C: View>: View {
+public struct SectionHeader: View {
     // MARK: - Types
     
     /// 사이즈를 나타내는 열거형입니다.
@@ -18,8 +18,8 @@ public struct SectionHeader<C: View>: View {
     // MARK: - Initializer
     
     private let title: String
-    @ViewBuilder private let content: () -> C
-    public init(title: String, content: @escaping () -> C = { EmptyView() }) {
+    @ViewBuilder private let content: () -> any View
+    public init(title: String, content: @escaping () -> any View = { EmptyView() }) {
         self.title = title
         self.content = content
     }
@@ -29,7 +29,7 @@ public struct SectionHeader<C: View>: View {
     
     public var body: some View {
         ZStack {
-            content()
+            AnyView(content())
                 .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                 .opacity(0)
             HStack(spacing: 0) {
@@ -44,7 +44,7 @@ public struct SectionHeader<C: View>: View {
                 if contentSize == .zero {
                     Spacer(minLength: 0)
                 } else {
-                    content()
+                    AnyView(content())
                         .padding(.leading, 10)
                 }
             }

@@ -10,7 +10,6 @@ import SwiftUI
 
 extension Badge {
     public struct Push: View {
-        
         // MARK: - Types
         
         public enum Variant: Equatable {

@@ -9,15 +9,15 @@ import SwiftUI
 
 extension ProgressTracker {
     public struct Vertical: View {
-        public struct StepContent<A: View, C: View>: View {
+        public struct StepContent: View {
             private let label: String
-            private let labelAccessoryView: () -> A
-            private let contentView: () -> C
+            private let labelAccessoryView: (() -> any View)?
+            private let contentView: (() -> any View)?
             
             public init(
                 label: String = "",
-                labelAccessoryView: @escaping () -> A = { EmptyView() },
-                contentView: @escaping () -> C = { EmptyView() }
+                labelAccessoryView: (() -> any View)? = nil,
+                contentView: (() -> any View)? = nil
             ) {
                 self.label = label
                 self.labelAccessoryView = labelAccessoryView
@@ -29,12 +29,16 @@ extension ProgressTracker {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(alignment: .center, spacing: 6) {
                             text
-                            labelAccessoryView()
+                            if let labelAccessoryView {
+                                AnyView(labelAccessoryView())
+                            }
                         }
                         .frame(height: 20)
                         .if(!label.isEmpty)
                         
-                        contentView()
+                        if let contentView {
+                            AnyView(contentView())
+                        }
                     }
                 }
             }
@@ -64,8 +68,8 @@ extension ProgressTracker {
         }
         
         @Binding private var progress: Int
-        private let stepContents: [StepContent<AnyView, AnyView>]
-        public init(progress: Binding<Int>, stepContents: [StepContent<AnyView, AnyView>]) {
+        private let stepContents: [StepContent]
+        public init(progress: Binding<Int>, stepContents: [StepContent]) {
             _progress = progress
             self.stepContents = stepContents
         }

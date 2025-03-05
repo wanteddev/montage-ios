@@ -8,16 +8,16 @@
 import SwiftUI
 
 extension Card {
-    public struct Normal<ImageLoader: View, T: View, C: View, EC: View, TC: View, BC: View>: View {
+    public struct Normal: View {
         @Binding private var skeleton: Bool
         private let imageRatio: Ratio
         private let imageWidth: CGFloat
-        private let imageLoader: () -> ImageLoader
-        private let title: () -> T
-        private let caption: () -> C
-        private let extraCaption: () -> EC
-        private let topContent: () -> TC
-        private let bottomContent: () -> BC
+        private let imageLoader: () -> any View
+        private let title: (() -> any View)?
+        private let caption: (() -> any View)?
+        private let extraCaption: (() -> any View)?
+        private let topContent: (() -> any View)?
+        private let bottomContent: (() -> any View)?
 
         @State var overlay: OverlayModel = .init()
 
@@ -25,12 +25,12 @@ extension Card {
             skeleton: Binding<Bool>,
             imageRatio: Ratio = .r3x2,
             imageWidth: CGFloat,
-            @ViewBuilder imageLoader: @escaping (() -> ImageLoader),
-            @ViewBuilder title: @escaping (() -> T) = { EmptyView() },
-            @ViewBuilder caption: @escaping (() -> C) = { EmptyView() },
-            @ViewBuilder extraCpation: @escaping (() -> EC) = { EmptyView() },
-            @ViewBuilder topContent: @escaping (() -> TC) = { EmptyView() },
-            @ViewBuilder bottomContent: @escaping (() -> BC) = { EmptyView() }
+            @ViewBuilder imageLoader: @escaping () -> any View,
+            title: (() -> any View)? = nil,
+            caption: (() -> any View)? = nil,
+            extraCpation: (() -> any View)? = nil,
+            topContent: (() -> any View)? = nil,
+            bottomContent: (() -> any View)? = nil
         ) {
             _skeleton = skeleton
             self.imageRatio = imageRatio
@@ -68,29 +68,39 @@ extension Card {
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        topContent()
-                            .skeleton(isPresented: skeleton, kind: .rectangle())
-                            .clipShape(RoundedRectangle(cornerRadius: 3))
+                        if let topContent {
+                            AnyView(topContent())
+                                .skeleton(isPresented: skeleton, kind: .rectangle())
+                                .clipShape(RoundedRectangle(cornerRadius: 3))
+                        }
 
                         Spacer()
                     }
 
                     VStack(alignment: .leading, spacing: .zero) {
-                        title()
-                            .skeleton(isPresented: skeleton, kind: .text())
+                        if let title {
+                            AnyView(title())
+                                .skeleton(isPresented: skeleton, kind: .text())
+                        }
 
-                        caption()
-                            .skeleton(isPresented: skeleton, kind: .text())
-                            .padding(.top, 4)
+                        if let caption {
+                            AnyView(caption())
+                                .skeleton(isPresented: skeleton, kind: .text())
+                                .padding(.top, 4)
+                        }
 
-                        extraCaption()
-                            .skeleton(isPresented: skeleton, kind: .text())
-                            .padding(.top, 4)
+                        if let extraCaption {
+                            AnyView(extraCaption())
+                                .skeleton(isPresented: skeleton, kind: .text())
+                                .padding(.top, 4)
+                        }
                     }
 
-                    bottomContent()
-                        .skeleton(isPresented: skeleton, kind: .rectangle())
-                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                    if let bottomContent {
+                        AnyView(bottomContent())
+                            .skeleton(isPresented: skeleton, kind: .rectangle())
+                            .clipShape(RoundedRectangle(cornerRadius: 3))
+                    }
                 }
                 .frame(width: imageWidth)
                 .padding(.horizontal, 6)
