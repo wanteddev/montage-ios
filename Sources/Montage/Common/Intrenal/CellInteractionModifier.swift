@@ -1,5 +1,5 @@
 //
-//  PressInteractionModifier.swift
+//  CellInteractionModifier.swift
 //  Montage
 //
 //  Created by 김삼열 on 1/3/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PressInteractionModifier: ViewModifier {
+struct CellInteractionModifier: ViewModifier {
     @Binding private var pressed: Bool
     private let fillWidth: Bool
     private let interactionPadding: CGFloat
@@ -22,7 +22,7 @@ struct PressInteractionModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
-            .overlay(
+            .background(
                 Decorate.Interaction(
                     state: pressed ? .pressed : .normal,
                     variant: .light,

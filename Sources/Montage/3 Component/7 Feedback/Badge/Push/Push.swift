@@ -9,41 +9,67 @@ import Pretendard
 import SwiftUI
 
 extension Badge {
-    public struct Push: UIViewRepresentable {
-        /// 뱃지의 외관입니다.
-        public var variant: Badge.PushUIView.Variant
+    public struct Push: View {
         
-        public typealias UIViewType = Badge.PushUIView
+        // MARK: - Types
         
-        public init(variant: Badge.PushUIView.Variant) {
+        public enum Variant: Equatable {
+            case dot, new, number(Int)
+        }
+        
+        // MARK: - Initializer
+        
+        private let variant: Variant
+        public init(variant: Variant) {
             self.variant = variant
         }
         
-        public func makeUIView(context _: Context) -> UIViewType {
-            .init()
+        // MARK: - Body
+        
+        public var body: some View {
+            switch variant {
+            case .dot:
+                Circle()
+                    .frame(minHeight: 4, maxHeight: 8)
+                    .foregroundColor(backgroundColor)
+                    .padding(8)
+            case .new:
+                Text("N")
+                    .montage(variant: .caption2, weight: .bold, color: fontColor)
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, 6)
+                    .background {
+                        Circle()
+                            .foregroundColor(backgroundColor)
+                    }
+                    .frame(width: 20, height: 20)
+            case .number(let number):
+                Text("\(number)")
+                    .montage(variant: .caption2, weight: .bold, color: fontColor)
+                    .padding(.vertical, 3)
+                    .padding(.horizontal, 6)
+                    .background {
+                        RoundedRectangle(cornerRadius: 1000)
+                            .foregroundColor(backgroundColor)
+                    }
+                    .frame(height: 20)
+            }
         }
         
-        public func updateUIView(_ uiView: UIViewType, context _: Context) {
-            uiView.variant = variant
-        }
+        // MARK: - Modifiers
         
-        public func sizeThatFits(
-            _ proposal: ProposedViewSize,
-            uiView: UIViewType,
-            context _: Context
-        ) -> CGSize? {
-            CGSize(
-                width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
-                height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
-            )
-        }
+        private var fontColor: SwiftUI.Color = .alias(.staticWhite)
+        private var backgroundColor: SwiftUI.Color = .alias(.primaryNormal)
         
-        private var fillHorizontal = false
-        private var fillVertical = false
-        public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
+        public func fontColor(_ color: SwiftUI.Color) -> Self {
             var zelf = self
-            zelf.fillHorizontal = fillHorizontal
-            zelf.fillVertical = fillVertical
+            zelf.fontColor = color
+            return zelf
+        }
+        
+        public func backgroundColor(_ color: SwiftUI.Color) -> Self {
+            var zelf = self
+            zelf.backgroundColor = color
             return zelf
         }
     }
