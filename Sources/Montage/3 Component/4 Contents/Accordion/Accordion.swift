@@ -81,7 +81,7 @@ public struct Accordion<A: View, C: View>: View {
                 .padding(.vertical, verticalPadding.length)
                 .contentShape(Rectangle())
                 .padding(.horizontal, fillWidth ? 20 : 0)
-                .modifier(PressInteractionModifier(
+                .modifier(CellInteractionModifier(
                     pressed: $isPressed,
                     fillWidth: fillWidth,
                     interactionPadding: 12

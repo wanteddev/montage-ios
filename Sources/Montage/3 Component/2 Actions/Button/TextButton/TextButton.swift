@@ -91,10 +91,6 @@ extension Button.TextButton.Size {
 extension Button {
     public struct TextButton: View {
         @State private var isPressed = false
-        @State private var isLongPressSessionActive = false
-        @State private var frame: CGRect = .zero
-        @State private var startingFrame: CGRect = .zero
-        @State private var isDragging = false
 
         /// 버튼의 외관입니다.
         private let variant: TextButton.Variant
@@ -174,23 +170,21 @@ extension Button {
         }
         
         public var body: some View {
-            SwiftUI.Button {} label: {
-                HStack(alignment: .center, spacing: 4) {
-                    if let leftIcon {
-                        icon(leftIcon)
-                    }
-                    Text(text)
-                        .montage(
-                            variant: size.typoVariant,
-                            weight: size.typoWeight,
-                            color: typoColor
-                        )
-                    if let rightIcon {
-                        icon(rightIcon)
-                    }
+            HStack(alignment: .center, spacing: 4) {
+                if let leftIcon {
+                    icon(leftIcon)
+                }
+                Text(text)
+                    .montage(
+                        variant: size.typoVariant,
+                        weight: size.typoWeight,
+                        color: typoColor
+                    )
+                if let rightIcon {
+                    icon(rightIcon)
                 }
             }
-            .overlay {
+            .background {
                 Decorate.Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: variant.interactionVariant,
@@ -200,31 +194,16 @@ extension Button {
                 .padding(.vertical, -variant.interactionVerticalOffset)
                 .padding(.horizontal, -variant.interactionHorizontalOffset)
             }
-            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }, action: { frame = $0 })
-            .onLongPressGesture(perform: {}, onPressingChanged: {
-                isLongPressSessionActive = $0 // 스크롤로 인해 버튼 frame이 변경되면 longPress 세션이 종료됨
-                guard isPressed != $0, !isDragging else { return }
-                if isPressed {
-                    handler?()
-                    startingFrame = .zero
-                } else {
-                    startingFrame = frame
-                }
-                isPressed = $0
-            })
             .simultaneousGesture(
-                DragGesture(minimumDistance: 0.1, coordinateSpace: .global)
+                DragGesture(minimumDistance: 0)
                     .onChanged { value in
-                        isDragging = true
-                        // 스크롤되면 press상태가 해제되고 다시 버튼을 누르기 전까지는 press상태가 다시 켜지는 일이 없음
-                        isPressed = isLongPressSessionActive && startingFrame.contains(value.location)
+                        isPressed = value.translation == .zero
                     }
                     .onEnded { value in
-                        if isLongPressSessionActive && startingFrame.contains(value.location) {
+                        isPressed = false
+                        if value.translation == .zero {
                             handler?()
                         }
-                        isPressed = false
-                        isDragging = false
                     }
             )
             .allowsHitTesting(disable == false)
