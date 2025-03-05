@@ -78,6 +78,7 @@ fileprivate struct Preview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: .spacing(.pt20)) {
             Badge.Push(variant: .dot)
+                .frame(width: 24, height: 24)
             
             Badge.Push(variant: .new)
             

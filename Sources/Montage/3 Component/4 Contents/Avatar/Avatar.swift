@@ -29,13 +29,7 @@ public struct Avatar: View {
             switch self {
             case .person: 1000
             default:
-                switch size {
-                case .xsmall, .small: 6
-                case .medium: 8
-                case .large: 10
-                case .xlarge: 12
-                case .custom(let side): 0
-                }
+                size.containerSize.width / 4
             }
         }
         
@@ -71,12 +65,7 @@ public struct Avatar: View {
         }
         
         fileprivate var badgeSize: CGSize {
-            switch self {
-            case .xsmall, .small: .init(width: 20, height: 20)
-            case .medium: .init(width: 22, height: 22)
-            case .large, .xlarge: .init(width: 24, height: 24)
-            case .custom: .init(width: 20, height: 20)
-            }
+            .init(width: containerSize.width * 0.55, height: containerSize.height * 0.55)
         }
     }
     
