@@ -79,23 +79,19 @@ extension Avatar {
                     height: avatartSize.containerSize.height
                 )
                 
-                if let trailingButtonLabel, let onTrailingButtonTap {
-                    Button.TextButton(variant: .assistive, size: .small, text: trailingButtonLabel) {
-                        onTrailingButtonTap()
-                    }
+                if let trailingContent {
+                    AnyView(trailingContent())
                 }
             }
         }
         
         // MARK: - Modifiers
         
-        private var trailingButtonLabel: String?
-        private var onTrailingButtonTap: (() -> Void)?
+        private var trailingContent: (() -> any View)?
         
-        public func trailingButton(_ label: String, onTap: @escaping () -> Void) -> Self {
+        public func trailingContent(_ trailingContent: @escaping () -> any View) -> Self {
             var zelf = self
-            zelf.trailingButtonLabel = label
-            zelf.onTrailingButtonTap = onTap
+            zelf.trailingContent = trailingContent
             return zelf
         }
     }
