@@ -43,7 +43,7 @@ public struct Menu: View {
     
     public var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
+            SwiftUI.ScrollView {
                 VStack(spacing: 4) {
                     ForEach(items.indices, id: \.self) { index in
                         cellModifier(index, Cell(title: items[index].title, onTap: {

@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct AutoScrollModifier: ViewModifier {
-    private let axis: Axis.Set
+    private let axis: Axis
     @Binding private var contentOffset: CGPoint
     
-    init(axis: Axis.Set, contentOffset: Binding<CGPoint>) {
+    init(axis: Axis, contentOffset: Binding<CGPoint>) {
         self.axis = axis
         _contentOffset = contentOffset
     }
@@ -21,13 +21,13 @@ struct AutoScrollModifier: ViewModifier {
     @State private var scrollViewSize: CGSize = .zero
     
     func body(content: Content) -> some View {
-        OffsettableScrollView {
+        ScrollView {
             contentOffset = $0
         } content: {
             contentView(content)
         }
         .axis(axis)
-        .showIndicators(false)
+        .hidesIndicators()
         .scrollDisabled(scrollNotNeeded)
         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { scrollViewSize = $0 })
         .onChange(of: contentSize) { _ in
@@ -44,8 +44,6 @@ struct AutoScrollModifier: ViewModifier {
             contentSize.width <= scrollViewSize.width
         case .vertical:
             contentSize.height <= scrollViewSize.height
-        default:
-            true
         }
     }
     

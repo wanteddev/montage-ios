@@ -24,6 +24,13 @@ extension Button.IconButton {
         
         /// normal(size: 24)의 기본 variant입니다.
         public static let `default` = Self.normal(size: 24)
+        
+        fileprivate var isBackground: Bool {
+            switch self {
+            case .background: true
+            default: false
+            }
+        }
     }
 }
 
@@ -274,6 +281,11 @@ extension Button {
                 ZStack {
                     Image.montage(icon)
                         .resizable()
+                        .if(variant.isBackground) {
+                            $0.padding(2)
+                        } else: {
+                            $0
+                        }
                         .frame(
                             width: variant.iconSize.width,
                             height: variant.iconSize.height

@@ -390,7 +390,7 @@ extension TextInput {
                         .montage(
                             variant: .label2,
                             weight: .medium,
-                            alias: disable ? .labelDisable : .labelAssistive
+                            alias: disable ? .labelDisable : .labelAlternative
                         )
                         .paragraph(variant: .label2)
                         .padding(.horizontal, 4)

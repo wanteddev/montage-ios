@@ -63,9 +63,9 @@ public struct Select: View {
         case custom(() -> any View)
     }
     
-    public enum MenuHeightOption: String, CaseIterable {
-        case fit, flexible
-    }
+//    public enum menuResize: String, CaseIterable {
+//        case fit, flexible
+//    }
 
     // MARK: - Initializer
     
@@ -97,7 +97,7 @@ public struct Select: View {
     private var description = ""
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leftContent: LeftContent?
-    private var menuHeightOption: MenuHeightOption = .fit
+    private var menuResize: Modal.BottomSheet.Resize = .hug
     
     /// negative 상태 여부를 조정합니다.
     public func negative(_ negative: Bool = true) -> Self {
@@ -156,9 +156,9 @@ public struct Select: View {
     }
     
     /// 메뉴의 높이 detent를 지정합니다.
-    public func menuHeightOption(_ menuHeightOption: MenuHeightOption) -> Self {
+    public func menuResize(_ menuResize: Modal.BottomSheet.Resize) -> Self {
         var zelf = self
-        zelf.menuHeightOption = menuHeightOption
+        zelf.menuResize = menuResize
         return zelf
     }
     
@@ -167,7 +167,8 @@ public struct Select: View {
     @State private var contentSize: CGSize = .zero
     @State private var flowLayoutSize: CGSize = .zero
     @State private var defaultMenuPresented = false
-    @State private var menuSize: CGSize = .zero
+    @State private var bottomSheetContentHeight: CGFloat = .zero
+    @State private var pureBottomSheetHeight: CGFloat = .zero
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -320,7 +321,7 @@ public struct Select: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
-                        .stroke(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
+                        .strokeBorder(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
                 }
                 .shadow(
                     color: .alias(.staticBlack).opacity(0.03),
@@ -335,7 +336,7 @@ public struct Select: View {
                     .montage(
                         variant: .caption1,
                         weight: .regular,
-                        alias: .labelAlternative
+                        alias: negative ? .statusNegative : .labelAlternative
                     )
             }
         }
@@ -344,48 +345,52 @@ public struct Select: View {
             menuPresented.wrappedValue.toggle()
         }
         .if(customMenuPresented == nil) {
-            $0.sheet(isPresented: $defaultMenuPresented) {
-                Modal.Bottom(
-                    content: {
-                        Group {
-                            let menu = menu
-                                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
-                                    menuSize = $0
-                                })
-                            if menuHeightOption == .flexible
-                                && menuSize.height > UIScreen.main.bounds.height / 2 {
-                                ScrollView {
-                                    menu
-                                }
-                            } else {
-                                menu
+            $0.bottomSheetModal(
+                isPresented: $defaultMenuPresented,
+                resize: menuResize,
+                actionAreaModel: actionAreaButtonTitle.map {
+                    .init(variant: .neutral(
+                        main: .init(text: $0, action: {
+                            defaultMenuPresented.toggle()
+                        }),
+                        sub: .custom {
+                            Button.OutlinedButton(
+                                variant: .assistive,
+                                size: .large,
+                                leftIcon: .refresh,
+                                iconOnly: true
+                            ) {
+                                deselectAll()
                             }
                         }
-                    },
-                    actionArea: menuActionArea
-                )
-                .resize(.hug)
-                .presentationDetents(menuDetents)
+                    ))
+                }
+            ) {
+                menu
             }
         }
     }
     
     // MARK: - Private
+    private var actionAreaButtonTitle: String? {
+        switch variant {
+        case .single(_, let primaryButtonTitle):
+            primaryButtonTitle
+        case .multiple(_, _, let primaryButtonTitle):
+            primaryButtonTitle
+        }
+    }
     
     private var menuPresented: Binding<Bool> {
         customMenuPresented ?? $defaultMenuPresented
     }
     
-    private var menuDetents: Set<PresentationDetent> {
-        switch menuHeightOption {
-        case .fit:
-            [.height(menuSize.height)]
-        case .flexible:
-            [
-                .height(min(menuSize.height, UIScreen.main.bounds.height / 2)),
-                .height(min(menuSize.height, UIScreen.main.bounds.height))
-            ]
-        }
+    private var bottomSheetMaxHeight: CGFloat {
+        pureBottomSheetHeight + bottomSheetContentHeight
+    }
+    
+    private var maxDetentValue: CGFloat {
+        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10
     }
 
     private var menu: some View {
@@ -403,6 +408,7 @@ public struct Select: View {
                         case .multiple:
                             items[index].isSelected.toggle()
                         }
+                        onTapItem?(items[index])
                     }
                     
                     switch variant {
@@ -428,46 +434,6 @@ public struct Select: View {
                         }
                     }
                 }
-            }
-        }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 20)
-    }
-    
-    private var menuActionArea: (() -> ActionArea.Bottom.Component)? {
-        let actionArea: (String) -> ActionArea.Bottom.Component = { buttonTitle in
-            .init(
-                model: .init(
-                    priority: .neutral(
-                        main: .init(text: buttonTitle, action: {
-                            defaultMenuPresented.toggle()
-                        }),
-                        sub: .init(custom: {
-                            Button.OutlinedButton(
-                                variant: .assistive,
-                                size: .large,
-                                leftIcon: .refresh,
-                                iconOnly: true
-                            ) {
-                                deselectAll()
-                            }
-                        })
-                    )
-                )
-            )
-        }
-        switch variant {
-        case .single(_, let primaryButtonTitle):
-            if let primaryButtonTitle {
-                return {
-                    actionArea(primaryButtonTitle)
-                }
-            } else {
-                return nil
-            }
-        case .multiple(_, _, let primaryButtonTitle):
-            return {
-                actionArea(primaryButtonTitle)
             }
         }
     }

@@ -11,12 +11,15 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func `if`<Content: View>(
+    func `if`(
         _ condition: Bool,
-        transform: (Self) -> Content
+        _ transform: (Self) -> any View,
+        else alternative: ((Self) -> any View)? = nil
     ) -> some View {
         if condition {
-            transform(self)
+            AnyView(transform(self))
+        } else if let alternative {
+            AnyView(alternative(self))
         } else {
             self
         }
@@ -27,6 +30,14 @@ extension View {
         if condition {
             self
         }
+    }
+
+    func modifying<Content: View>(_ transform: (Self) -> Content) -> some View {
+        transform(self)
+    }
+
+    func modifying(_ transform: (Self) -> Self) -> Self {
+        transform(self)
     }
 }
 
@@ -167,26 +178,8 @@ extension View {
         title: String,
         left: Bar.TopNavigation.Resource.Left? = nil,
         backgroundColorResolvable: ColorResolvable? = nil,
-        actions: [Bar.TopNavigation.Resource.Action] = []
-    ) -> some View {
-        modifier(
-            Bar.TopNavigation.TopNavigationModifier(
-                variant: variant,
-                title: title,
-                left: left,
-                backgroundColorResolvable: backgroundColorResolvable,
-                actions: actions
-            )
-        )
-    }
-
-    public func topNavigation(
-        variant: Bar.TopNavigation.Variant = .normal,
-        title: String,
-        left: Bar.TopNavigation.Resource.Left? = nil,
-        backgroundColorResolvable: ColorResolvable? = nil,
         actions: [Bar.TopNavigation.Resource.Action] = [],
-        withBottom model: ActionArea.Bottom.Model
+        withBottom model: ActionAreaModifier.Model? = nil
     ) -> some View {
         modifier(
             Bar.TopNavigation.TopNavigationModifier(
@@ -195,7 +188,7 @@ extension View {
                 left: left,
                 backgroundColorResolvable: backgroundColorResolvable,
                 actions: actions,
-                model: model
+                actionAreaModel: model
             )
         )
     }
@@ -265,7 +258,7 @@ extension View {
 // MARK: Auto Scroll
 
 extension View {
-    public func scrollable(_ axis: Axis.Set, contentOffset: Binding<CGPoint>) -> some View {
+    public func scrollable(_ axis: Axis, contentOffset: Binding<CGPoint>) -> some View {
         modifier(AutoScrollModifier(axis: axis, contentOffset: contentOffset))
     }
 }
@@ -330,5 +323,84 @@ extension View {
                 floatView: floatView
             )
         )
+    }
+}
+
+// MARK: - ActionArea
+
+extension View {
+    public func actionArea(model: ActionAreaModifier.Model) -> some View {
+        modifier(ActionAreaModifier(model: model))
+    }
+}
+
+// MARK: - Modal
+
+extension View {
+    public func popupModal(
+        isPresented: Binding<Bool>,
+        ignoresEdgeInsets: Bool = false,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.PopupModifier(
+                isPresented: isPresented,
+                ignoresEdgeInsets: ignoresEdgeInsets,
+                content,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
+            )
+        )
+    }
+
+    public func bottomSheetModal(
+        isPresented: Binding<Bool>,
+        needHandle: Bool = true,
+        resize: Modal.BottomSheet.Resize = .hug,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.BottomSheetModifier(
+                isPresented: isPresented,
+                content,
+                needHandle: needHandle,
+                resize: resize,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
+            )
+        )
+    }
+
+    public func fullModal(
+        isPresented: Binding<Bool>,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.FullModifier(
+                isPresented: isPresented,
+                content,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
+            )
+        )
+    }
+}
+
+// MARK: - Debounced Geometry Change
+
+extension View {
+    func onGeometryChange<T>(
+        for type: T.Type,
+        of transform: @escaping (GeometryProxy) -> T,
+        for dueTime: RunLoop.SchedulerTimeType.Stride,
+        action: @escaping (_ newValue: T) -> Void
+    ) -> some View where T: Equatable {
+        modifier(DebouncedGeometryChangeModifier(for: type, of: transform, for: dueTime, action: action))
     }
 }

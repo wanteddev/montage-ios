@@ -11,9 +11,6 @@ extension Bar {
     public struct TopNavigation: View {
         // MARK: - Uninitialised properties
         
-        /// TopNavigation이 노출될 screenWidth입니다.
-        @State private var screenWidth: CGFloat = .zero
-        
         private let variant: Variant
         private let title: String
         private let scrollOffset: CGFloat
@@ -22,43 +19,27 @@ extension Bar {
         private let actions: [Resource.Action]
         
         // MARK: - Computed properties
-        
-        private var screenWidthMeasurer: some View {
-            GeometryReader { proxy in
-                SwiftUI.Color.clear
-                    .onAppear {
-                        screenWidth = proxy.size.width
-                    }
-            }
-        }
 
         private var scrolled: Bool { scrollOffset < .zero }
-        private var isFloatingVariant: Bool {
-            switch variant {
-            case .floating: return true
-            case .normal: fallthrough
-            case .extended: return false
-            }
-        }
-        
-        private var needMaterial: Bool {
-            scrolled && isFloatingVariant == false && (scrollOffset / -33) > 1
-        }
         
         private var backgroundColor: SwiftUI.Color {
             if let backgroundColorResolvable {
-                .init(uiColor: backgroundColorResolvable.resolve(.current)).opacity(0.88)
+                .init(uiColor: backgroundColorResolvable.resolve(.current))
             } else {
-                SwiftUI.Color.alias(.backgroundNormal).opacity(0.88)
+                SwiftUI.Color.alias(.backgroundNormal)
             }
         }
         
         private var backgroundOpacity: CGFloat {
-            let ratio = (scrollOffset / -32)
-            return ratio > 1 ? 1 : ratio
+            if variant.isFloating {
+                return 0
+            } else {
+                let ratio = (scrollOffset / -32)
+                return max(0, min(1, ratio))
+            }
         }
 
-        // MARK: - Initialisers
+        // MARK: - Initializers
        
         public init(
             variant: Variant = .normal,
@@ -79,29 +60,26 @@ extension Bar {
         public var body: some View {
             ZStack(alignment: .bottom) {
                 Contents(
-                    screenWidth: $screenWidth,
                     variant: variant,
                     title: title,
                     left: left,
                     actions: actions
                 )
                 .padding(.all, 16)
-                .background(
-                    (scrolled && isFloatingVariant == false) ? backgroundColor
-                        .opacity(backgroundOpacity) : .clear
-                )
-                .background(
-                    (scrolled && isFloatingVariant == false) ?
-                        Material.ultraThinMaterial.opacity(backgroundOpacity)
-                        : Material.ultraThinMaterial.opacity(.zero)
-                )
-                .background(
-                    screenWidthMeasurer
-                )
-                if scrolled && isFloatingVariant == false {
+                .background {
+                    ZStack {
+                        backgroundColor
+                            .opacity(backgroundOpacity * 0.88)
+                        Rectangle().fill(.ultraThinMaterial)
+                    }
+                    .opacity(backgroundOpacity)
+                    .ignoresSafeArea(.container, edges: .top)
+                }
+                
+                if scrolled && variant.isFloating == false {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
-                        .frame(width: screenWidth, height: 0.5)
+                        .frame(height: 0.5)
                 }
             }
         }
@@ -109,7 +87,7 @@ extension Bar {
         struct Contents: View {
             @State private var leftSize: CGSize = .zero
             @State private var actionSize: CGSize = .zero
-            @Binding var screenWidth: CGFloat
+            @State private var screenWidth: CGFloat = 0
             
             var variant: Variant
             var title: String
@@ -124,82 +102,86 @@ extension Bar {
                 return max(screenWidth - (componentWitdh + horizontalPadding + titleHorizontalPadding), 0)
             }
             
-            private var leftSizeMeasuerer: some View {
-                GeometryReader { proxy in
-                    SwiftUI.Color.clear
-                        .onAppear {
-                            leftSize = proxy.size
-                        }
-                }
-            }
-            
-            private var actionSizeMeasurer: some View {
-                GeometryReader { proxy in
-                    SwiftUI.Color.clear
-                        .onAppear {
-                            actionSize = proxy.size
-                        }
-                }
-            }
-            
             var body: some View {
-                switch variant {
-                case .normal: 
-                    ZStack {
+                ZStack {
+                    SwiftUI.Color.clear
+                        .frame(height: 1)
+                        .onGeometryChange(
+                            for: CGFloat.self,
+                            of: { $0.size.width },
+                            action: { screenWidth = $0 }
+                        )
+                    switch variant {
+                    case .normal:
                         HStack(spacing: .zero) {
                             NormalLeft(left)
-                                .background(
-                                    leftSizeMeasuerer
+                                .onGeometryChange(
+                                    for: CGSize.self,
+                                    of: { $0.size },
+                                    action: { leftSize = $0 }
                                 )
                             Spacer()
                             NormalAction(actions)
-                                .background(
-                                    actionSizeMeasurer
+                                .onGeometryChange(
+                                    for: CGSize.self,
+                                    of: { $0.size },
+                                    action: { actionSize = $0 }
                                 )
                         }
-                        Text(title)
-                            .montage(
-                                variant: variant.typoVaraint,
-                                weight: variant.typoWeight,
-                                alias: .labelStrong
-                            )
-                            .paragraph(variant: variant.typoVaraint)
-                            .lineLimit(1)
+                        titleView
                             .frame(width: titleSize, height: 24)
-                    }
-                case .extended:
-                    VStack(spacing: 20) {
-                        HStack {
-                            ExtendedLeft(left)
-                            Spacer()
-                            ExtendedAction(actions)
+                    case .extended:
+                        VStack(spacing: 20) {
+                            HStack {
+                                ExtendedLeft(left)
+                                Spacer()
+                                ExtendedAction(actions)
+                            }
+                            HStack {
+                                titleView
+                                    .frame(height: 24, alignment: variant.textAlignment)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 4)
                         }
-                        HStack {
-                            Text(title)
-                                .montage(
-                                    variant: variant.typoVaraint,
-                                    weight: variant.typoWeight,
-                                    alias: .labelStrong
-                                )
-                                .paragraph(variant: variant.typoVaraint)
-                                .lineLimit(1)
-                                .frame(alignment: variant.textAlignment)
-                            Spacer()
+                    case let .floating(alternative, background):
+                        ZStack {
+                            HStack(spacing: .zero) {
+                                FloatingLeft(left, alternative, background)
+                                    .onGeometryChange(
+                                        for: CGSize.self,
+                                        of: { $0.size },
+                                        action: { leftSize = $0 }
+                                    )
+                                Spacer()
+                                FloatingAction(actions, alternative, background)
+                                    .onGeometryChange(
+                                        for: CGSize.self,
+                                        of: { $0.size },
+                                        action: { actionSize = $0 }
+                                    )
+                            }
+                            .frame(height: 24)
+                            titleView
+                                .frame(width: titleSize, height: 24)
                         }
-                        .padding(.horizontal, 4)
                     }
-                case let .floating(alternative, background):
-                    HStack(spacing: .zero) {
-                        FloatingLeft(left, alternative, background)
-                        Spacer()
-                        FloatingAction(actions, alternative, background)
-                    }
-                    .frame(height: 24)
                 }
+            }
+            
+            private var titleView: some View {
+                Text(title)
+                    .montage(
+                        variant: variant.typoVaraint,
+                        weight: variant.typoWeight,
+                        alias: .labelStrong
+                    )
+                    .paragraph(variant: variant.typoVaraint)
+                    .lineLimit(1)
             }
         }
         
-        private struct NormalLeft: View {
+        struct NormalLeft: View {
             let left: Resource.Left?
             
             init(_ left: Resource.Left?) {
@@ -237,7 +219,7 @@ extension Bar {
             }
         }
         
-        private struct NormalAction: View {
+        struct NormalAction: View {
             let actions: [Resource.Action]
             
             init(_ actions: [Resource.Action]) {
@@ -300,9 +282,12 @@ extension Bar {
                             ) {
                                 action()
                             }
-                            .padding(.vertical, 4)
+                            .frame(height: 24)
                         }
                     }
+                } else {
+                    SwiftUI.Color.clear
+                        .frame(width: 24, height: 24)
                 }
             }
         }
@@ -323,6 +308,7 @@ extension Bar {
                                 Button.IconButton(icon: i, showPushBadge: s) {
                                     action()
                                 }
+                                .frame(width: 24, height: 24)
                             case let .text(t, action):
                                 Button.TextButton(
                                     text: t,
@@ -330,9 +316,13 @@ extension Bar {
                                 ) {
                                     action()
                                 }
+                                .frame(height: 24)
                             }
                         }
                     }
+                } else {
+                    SwiftUI.Color.clear
+                        .frame(width: 24, height: 24)
                 }
             }
         }
@@ -354,100 +344,77 @@ extension Bar {
             
             var body: some View {
                 if let left {
-                    Group {
-                        if background {
-                            if alternative {
-                                switch left {
-                                case .back(let action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: .chevronLeftThick
-                                    ) {
-                                        action()
+                    switch left {
+                    case .back(let action):
+                        Button.IconButton(
+                            variant: background
+                                ? .background(size: 24, isAlternative: alternative)
+                                : .default,
+                            icon: background ? .chevronLeftThick : .chevronLeft
+                        ) {
+                            action()
+                        }
+                        .frame(width: 24, height: 24)
+                    case let .icon(i, action):
+                        Button.IconButton(
+                            variant: background
+                                ? .background(size: 24, isAlternative: alternative)
+                                : .default,
+                            icon: i
+                        ) {
+                            action()
+                        }
+                        .frame(width: 24, height: 24)
+                    case let .text(t, action):
+                        SwiftUI.Button {
+                            action()
+                        } label: {
+                            Text(t)
+                                .montage(
+                                    variant: background ? .headline2 : .body2,
+                                    weight: .medium,
+                                    alias: background
+                                        ? .labelNormal
+                                        : (alternative ? .staticWhite : .labelAlternative)
+                                )
+                                .if(background) {
+                                    $0.paragraph(variant: .body2)
+                                        .if(alternative) {
+                                            $0.opacity(0.88)
+                                        } else: {
+                                            $0.blendMode(.plusDarker)
+                                        }
+                                        .padding(.vertical, 5)
+                                        .padding(.horizontal, 10)
+                                } else: {
+                                    $0
+                                }
+                        }
+                        .modifying { original in
+                            Group {
+                                if background {
+                                    Group {
+                                        if alternative {
+                                            original
+                                                .background(
+                                                    SwiftUI.Color.atomic(.globalCoolNeutral30)
+                                                        .opacity(0.61)
+                                                )
+                                        } else {
+                                            original.background(.regularMaterial)
+                                        }
                                     }
-                                case let .icon(i, action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: i
-                                    ) {
-                                        action()
-                                    }
-                                case let .text(t, action):
-                                    SwiftUI.Button {
-                                        action()
-                                    } label: {
-                                        Text(t)
-                                            .montage(variant: .body2, weight: .medium, alias: .staticWhite)
-                                            .paragraph(variant: .body2)
-                                            .opacity(0.88)
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 10)
-                                    }
-                                    .background(
-                                        SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
-                                    )
                                     .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                }
-                            } else {
-                                switch left {
-                                case .back(let action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: .chevronLeftThick
-                                    ) {
-                                        action()
-                                    }
-                                case let .icon(i, action):
-                                    Button.IconButton(
-                                        variant: .background(size: 24, isAlternative: alternative),
-                                        icon: i
-                                    ) {
-                                        action()
-                                    }
-                                case let .text(t, action):
-                                    SwiftUI.Button {
-                                        action()
-                                    } label: {
-                                        Text(t)
-                                            .montage(
-                                                variant: .body2,
-                                                weight: .medium,
-                                                alias: .labelAlternative
-                                            )
-                                            .blendMode(.plusDarker)
-                                            .padding(.vertical, 5)
-                                            .padding(.horizontal, 10)
-                                    }
-                                    .background(.regularMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                }
-                            }
-                        } else {
-                            switch left {
-                            case .back(let action):
-                                Button.IconButton(
-                                    variant: .default,
-                                    icon: .chevronLeftThick
-                                ) {
-                                    action()
-                                }
-                            case let .icon(i, action):
-                                Button.IconButton(
-                                    variant: .default,
-                                    icon: i
-                                ) {
-                                    action()
-                                }
-                            case let .text(t, action):
-                                SwiftUI.Button {
-                                    action()
-                                } label: {
-                                    Text(t)
-                                        .montage(variant: .headline2, weight: .medium, alias: .labelNormal)
+                                } else {
+                                    original
                                 }
                             }
                         }
+                        .frame(height: 24)
                     }
+                } else {
+                    SwiftUI.Color.clear
+                        .frame(width: 24, height: 24)
                 }
             }
         }
@@ -474,6 +441,7 @@ extension Bar {
                             switch $0 {
                             case let .icon(i, s, action):
                                 ActionIcon(i, s, alternative, background, action)
+                                    .frame(width: 24, height: 24)
                             case let .text(t, action):
                                 if background {
                                     SwiftUI.Button {
@@ -481,6 +449,7 @@ extension Bar {
                                     } label: {
                                         ActionText(t, alternative)
                                     }
+                                    .frame(height: 24)
                                 } else {
                                     SwiftUI.Button {
                                         action()
@@ -492,6 +461,7 @@ extension Bar {
                                                 alias: .labelNormal
                                             )
                                     }
+                                    .frame(height: 24)
                                 }
                             }
                         }
@@ -590,7 +560,14 @@ extension Bar.TopNavigation {
     public enum Variant: Equatable {
         case normal
         case extended
-        case floating(alternative: Bool = false, background: Bool = true)
+        case floating(alternative: Bool = false, background: Bool = false)
+        
+        fileprivate var isFloating: Bool {
+            switch self {
+            case .floating: true
+            case .normal, .extended: false
+            }
+        }
     }
     
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
@@ -646,7 +623,7 @@ extension Bar.TopNavigation.Variant {
         switch self {
         case .normal: .bold
         case .extended: .bold
-        case .floating: .regular
+        case .floating: .bold
         }
     }
     
@@ -661,52 +638,13 @@ extension Bar.TopNavigation.Variant {
 
 extension Bar.TopNavigation {
     public struct TopNavigationModifier: ViewModifier {
-        @Environment(\.safeAreaInsets) private var safeAreaInsets
-
-        @State private var scrollOffset: CGFloat = .zero
-        @State private var containerSize: CGSize = .zero
-        @State private var innerContentSize: CGSize = .zero
-        @State private var navigationHeight: CGFloat = .zero
-        @State private var originBottomActionHeight: CGFloat = .zero
-        @State private var currentBottomActionHeight: CGFloat = .zero
-        @State private var isBottomActionAreaSticky: Bool
-
         private let variant: Variant
         private let title: String
         private let showIndicator: Bool
         private let left: Resource.Left?
         private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
-        private let model: ActionArea.Bottom.Model?
-
-        /// 무시할 SafeAreaEdge입니다.
-        /// > ActionArea/Bottom이 존재하는 경우에 bottom SafeArea를 무시합니다.
-        private var ignoreSafeAreaEdge: Edge.Set {
-            model != nil ? .bottom : []
-        }
-
-        /// Scroll 영역 전체에 삽입될 background 입니다.
-        /// > backgroundColorResolvable을 전달한 경우에 해당 컬러가 background에 적용되며,
-        /// > backgroundColorResolvable가 없는 경우 .clear 컬러가 적용됩니다.
-        private var backgroundColor: SwiftUI.Color {
-            if let backgroundColorResolvable {
-                .init(uiColor: backgroundColorResolvable.resolve(.current))
-            } else {
-                .clear
-            }
-        }
-
-        /// Scroll 영역이 가지는 bottom padding입니다.
-        ///
-        /// Scroll 영역이 ActionArea/Bottom에 가려지는것을 방지하기 위해 사용합니다.
-        /// > ActionArea/Bottom과 함께 사용하는 경우에 ActionArea/Bottom의 variant에 의해 결정됩니다.
-        private var scrollViewBottomPadding: CGFloat {
-            if model != nil {
-                currentBottomActionHeight + (model?.variant == .extra ? +10 : .zero)
-            } else {
-                .zero
-            }
-        }
+        private let actionAreaModel: ActionAreaModifier.Model?
         
         public init(
             variant: Variant,
@@ -715,7 +653,7 @@ extension Bar.TopNavigation {
             left: Resource.Left?,
             backgroundColorResolvable: ColorResolvable? = nil,
             actions: [Resource.Action],
-            model: ActionArea.Bottom.Model? = nil
+            actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
             self.variant = variant
             self.title = title
@@ -723,213 +661,62 @@ extension Bar.TopNavigation {
             self.left = left
             self.backgroundColorResolvable = backgroundColorResolvable
             self.actions = actions
-            self.model = model
-
-            isBottomActionAreaSticky = model != nil ? true : false
+            self.actionAreaModel = actionAreaModel
         }
         
+        // MARK: - Body
+        
+        @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+        @State private var scrollStatus: ScrollView.ScrollStatus = .init()
+        @State private var navigationHeight: CGFloat = .zero
+        @State private var originBottomActionHeight: CGFloat = .zero
+        @State private var currentBottomActionHeight: CGFloat = .zero
+
         public func body(content: Content) -> some View {
-            ZStack {
-                ScrollView {
-                    GeometryReader { proxy in
-                        SwiftUI.Color.clear.preference(
-                            key: OffsetPreferenceKey.self,
-                            value: proxy.frame(
-                                in: .named("ScrollViewOrigin")
-                            ).origin
-                        )
+            VStack(spacing: 0) {
+                ZStack {
+                    ScrollView(scrollStatus: $scrollStatus) {
+                        content
+                            .padding(.top, navigationHeight)
                     }
-                    .frame(width: 0, height: 0)
-                    content
+                    .background(
+                        backgroundColor
+                    )
+                    
+                    VStack(alignment: .leading, spacing: .zero) {
+                        Bar.TopNavigation(
+                            variant: variant,
+                            title: title,
+                            scrollOffset: scrollStatus.contentOffset.y,
+                            left: left,
+                            backgroundColorResolvable: backgroundColorResolvable,
+                            actions: actions
+                        )
                         .onGeometryChange(
                             for: CGSize.self,
                             of: { $0.size },
-                            action: { innerContentSize = $0 }
+                            action: { navigationHeight = $0.height }
                         )
-                        .padding(.top, navigationHeight)
-                }
-                .padding(.bottom, scrollViewBottomPadding)
-                .background(
-                    backgroundColor
-                )
-                .coordinateSpace(name: "ScrollViewOrigin")
-                .onPreferenceChange(
-                    OffsetPreferenceKey.self,
-                    perform: {
-                        scrollOffset = $0.y
-                        calculateSticky()
-                    }
-                )
-                VStack(alignment: .leading, spacing: .zero) {
-                    Bar.TopNavigation(
-                        variant: variant,
-                        title: title,
-                        scrollOffset: scrollOffset,
-                        left: left,
-                        backgroundColorResolvable: backgroundColorResolvable,
-                        actions: actions
-                    )
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { navigationHeight = $0.height }
-                    )
-                    Spacer()
-                }
-                if let model {
-                    VStack(alignment: .leading, spacing: .zero) {
                         Spacer()
-                        ActionArea.Bottom.Component(
-                            model: .init(
-                                variant: model.variant,
-                                priority: model.priority,
-                                sticky: isBottomActionAreaSticky,
-                                caption: model.caption,
-                                extraContents: model.extraContents
-                            )
-                        )
-                        .onGeometryChange(
-                            for: CGFloat.self,
-                            of: { $0.size.height },
-                            action: {
-                                currentBottomActionHeight = $0
-                                originBottomActionHeight = $0
-                            }
-                        )
-                        .onChange(
-                            of: isBottomActionAreaSticky,
-                            perform: { isSticky in
-                                currentBottomActionHeight += isSticky ? -20 : +20
-                            }
-                        )
-                        .animation(.easeInOut, value: isBottomActionAreaSticky)
                     }
+                }
+                
+                if let actionAreaModel {
+                    ActionArea(variant: actionAreaModel.variant)
+                        .clearBackground(scrollStatus.scrolledToMax)
+                        .caption(actionAreaModel.caption)
+                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                 }
             }
-            .ignoresSafeArea(.container, edges: ignoreSafeAreaEdge)
-            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { containerSize = $0 })
         }
-    }
-}
-
-extension Bar.TopNavigation.TopNavigationModifier {
-    /// 스크롤 offset에 따른 sticky 판단
-    /// > 기본적으로 스크롤이 컨텐츠의 끝(전체 컨텐츠 크기 - offset)에 도달했을 때 sticky를 사용하지 않습니다.
-    private func calculateSticky() {
-        // ActionArea의 추가 영역
-        let actionAreaExtraArea: CGFloat = (model?.variant == .extra) ? 70 : .zero
-        // 전체 컨텐츠 크기 (내부 컨텐츠 사이즈 + ActionArea + (스티키인 경우 gradient 영역))
-        let totalContentHeight = innerContentSize.height + originBottomActionHeight
-        // 계산하기 편리하게 처리된 현재 스크롤 Offset
-        let currentScrollOffsetForCalculate = containerSize.height + abs(scrollOffset.rounded())
-
-        let newValue = totalContentHeight - actionAreaExtraArea >= currentScrollOffsetForCalculate
-        guard isBottomActionAreaSticky != newValue else { return }
-        isBottomActionAreaSticky = newValue
-    }
-}
-
-struct TopNavigation_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            Bar.TopNavigation(
-                title: "제목"
-            )
-            Divider()
-            
-            Bar.TopNavigation(
-                title: "제목",
-                left: .text("행동", action: {})
-            )
-            .background(SwiftUI.Color.teal)
-            Divider()
-            
-            Bar.TopNavigation(
-                title: "제목",
-                left: .back(action: {})
-            )
-            .background(SwiftUI.Color.green)
-            
-            Bar.TopNavigation(
-                variant: .floating(),
-                title: "제목",
-                left: .back(action: {}),
-                actions: [
-                    .text("행동", action: {}),
-                    .text("행동", action: {}),
-                ]
-            )
-            .background(SwiftUI.Color.red)
-            
-            Bar.TopNavigation(
-                variant: .floating(),
-                title: "제목",
-                left: .text("뒤로", action: {}),
-                actions: [
-                    .text("행동", action: {}),
-                    .text("행동", action: {}),
-                ]
-            )
-            Divider()
-            
-            Bar.TopNavigation(
-                title: "제목",
-                left: .back(action: {}),
-                actions: [
-                    .icon(.android, action: {}),
-                    .icon(.android, action: {}),
-                    .icon(.android, action: {}),
-                ]
-            )
-            Bar.TopNavigation(
-                title: "제목",
-                left: .back(action: {}),
-                actions: [
-                    .text("행동", action: {})
-                ]
-            )
-            
-            Divider()
-            
-            Bar.TopNavigation(
-                variant: .extended,
-                title: "제목",
-                left: .back(action: {})
-            )
-            .background(SwiftUI.Color.yellow)
-            Bar.TopNavigation(
-                variant: .extended,
-                title: "제목dasfsdasdasdhadjahshdashdkahkjhfajsadhhkfjash",
-                left: .back(action: {}),
-                actions: [.text("행동", action: {})]
-            )
-
-            Divider()
-            
-            Bar.TopNavigation(
-                variant: .floating(),
-                title: "제목",
-                left: .back(action: {})
-            )
-            Bar.TopNavigation(
-                variant: .floating(),
-                title: "제목",
-                left: .back(action: {}),
-                actions: [
-                    .text("행동", action: {}),
-                    .text("행동", action: {}),
-                ]
-            )
-            Bar.TopNavigation(
-                variant: .floating(alternative: true),
-                title: "제목",
-                left: .back(action: {}),
-                actions: [
-                    .icon(.android, action: {}),
-                    .icon(.android, action: {}),
-                    .icon(.android, action: {}),
-                ]
-            )
+        
+        private var backgroundColor: SwiftUI.Color {
+            if let backgroundColorResolvable {
+                .init(uiColor: backgroundColorResolvable.resolve(.current))
+            } else {
+                .clear
+            }
         }
     }
 }
