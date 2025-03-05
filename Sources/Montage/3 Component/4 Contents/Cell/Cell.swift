@@ -120,7 +120,7 @@ public struct Cell: View {
         }
         .padding(.horizontal, fillWidth ? 20 : 0)
         .contentShape(Rectangle())
-        .modifier(PressInteractionModifier(
+        .modifier(CellInteractionModifier(
             pressed: $isPressed,
             fillWidth: fillWidth,
             interactionPadding: interactionPadding

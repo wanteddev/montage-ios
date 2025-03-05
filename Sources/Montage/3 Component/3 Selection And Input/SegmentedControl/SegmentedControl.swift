@@ -30,11 +30,17 @@ public struct SegmentedControl: View {
     // MARK: - Initializer
     @Binding private var selectedIndex: Int
     private let items: [Item]
-    private let onSelect: (Int) -> Void
+    private let onSelect: ((Int) -> Void)?
     
-    public init(selectedIndex: Binding<Int>, items: [Item], onSelect: @escaping (Int) -> Void) {
+    public init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)? = nil) {
         _selectedIndex = selectedIndex
         self.items = items
+        self.onSelect = onSelect
+    }
+    
+    public init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)? = nil) {
+        _selectedIndex = selectedIndex
+        items = labels.map { Item(title: $0) }
         self.onSelect = onSelect
     }
     
@@ -121,7 +127,7 @@ public struct SegmentedControl: View {
         .frame(maxWidth: .infinity)
         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { frameSize = $0 })
         .onChange(of: selectedIndex) { index in
-            onSelect(index)
+            onSelect?(index)
         }
     }
     

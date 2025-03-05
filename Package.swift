@@ -16,6 +16,10 @@ let package = Package(
         .package(
             url: "https://github.com/airbnb/lottie-ios",
             exact: "4.5.0"
+        ),
+        .package(
+            url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
+            from: "3.0.0"
         )
     ],
     targets: [
@@ -23,7 +27,8 @@ let package = Package(
             name: "Montage",
             dependencies: [
                 .product(name: "Pretendard", package: "pretendard-ios"),
-                .product(name: "Lottie", package: "lottie-ios")
+                .product(name: "Lottie", package: "lottie-ios"),
+                .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI")
             ],
             resources: [
                 .process("Asset")

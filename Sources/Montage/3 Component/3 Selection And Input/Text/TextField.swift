@@ -360,20 +360,22 @@ extension TextInput {
                         Decorate.Interaction(
                             state: isPressed ? .pressed : .normal,
                             variant: .light,
-                            color: .backgroundNormal
+                            color: .labelNormal
                         )
                         .padding(.horizontal, -7)
                         .padding(.vertical, -4)
                     )
-                    .onLongPressGesture(
-                        minimumDuration: 2.0,
-                        perform: {},
-                        onPressingChanged: { state in
-                            isPressed = state
-                            if state == false {
-                                handler?()
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                isPressed = value.translation == .zero
                             }
-                        }
+                            .onEnded { value in
+                                isPressed = false
+                                if value.translation == .zero {
+                                    handler?()
+                                }
+                            }
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: 12)

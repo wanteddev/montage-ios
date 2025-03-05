@@ -13,17 +13,17 @@ import SwiftUI
 ///
 /// 컴포넌트가 기본적으로 화면 전체를 차지하므로 필요하다면
 /// .frame modifier를 사용하여 크기를 조절하여 사용하시길 권장합니다.
-public struct EmptyState<V: View, C: View>: View {
-    private let image: () -> V?
+public struct EmptyState: View {
+    private let image: (() -> any View)?
     private let title: String?
     private let description: String
-    private let button: () -> C
+    private let button: (() -> any View)?
     
     public init(
-        image: @escaping (() -> V?) = { nil as AnyView? },
+        image: (() -> any View)? = nil,
         title: String? = nil,
         description: String,
-        button: @escaping (() -> C) = { EmptyView() }
+        button: (() -> any View)? = nil
     ) {
         self.image = image
         self.title = title
@@ -35,7 +35,9 @@ public struct EmptyState<V: View, C: View>: View {
         VStack(alignment: .center, spacing: .zero) {
             Spacer()
             
-            image()
+            if let image {
+                AnyView(image())
+            }
             
             VStack(spacing: 24) {
                 VStack(spacing: 12) {
@@ -60,11 +62,13 @@ public struct EmptyState<V: View, C: View>: View {
                     }
                 }
                 
-                button()
+                if let button {
+                    AnyView(button())
+                }
             }
             .padding(.vertical, 12)
             
-            if image() != nil {
+            if image != nil {
                 Spacer()
                     .frame(height: 20)
             }

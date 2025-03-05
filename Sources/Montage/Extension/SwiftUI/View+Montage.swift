@@ -11,7 +11,7 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func `if`(
+    public func `if`(
         _ condition: Bool,
         _ transform: (Self) -> any View,
         else alternative: ((Self) -> any View)? = nil
@@ -26,17 +26,17 @@ extension View {
     }
 
     @ViewBuilder
-    func `if`(_ condition: Bool) -> some View {
+    public func `if`(_ condition: Bool) -> some View {
         if condition {
             self
         }
     }
 
-    func modifying<Content: View>(_ transform: (Self) -> Content) -> some View {
-        transform(self)
+    public func modifying(_ transform: (Self) -> any View) -> some View {
+        AnyView(transform(self))
     }
 
-    func modifying(_ transform: (Self) -> Self) -> Self {
+    public func modifying(_ transform: (Self) -> Self) -> Self {
         transform(self)
     }
 }
@@ -197,9 +197,9 @@ extension View {
 // MARK: Skeleton
 
 extension View {
-    public func skeleton<V: View>(
+    public func skeleton(
         isPresented: Bool,
-        @ViewBuilder skeletonView: @escaping () -> V
+        @ViewBuilder skeletonView: @escaping () -> any View
     ) -> some View {
         modifier(Skeleton.SkeletonModifier(isPresented: isPresented, skeletonView: skeletonView))
     }
@@ -305,13 +305,13 @@ extension View {
 // MARK: Float
 
 extension View {
-    public func float<V: Equatable, F: View>(
-        presentationPolicy: FloatModifier<V, F>.PresentationPolicy,
+    public func float<V: Equatable>(
+        presentationPolicy: FloatModifier<V>.PresentationPolicy,
         presentingAnimation: Animation = .default,
         dismissingAnimation: Animation = .default,
-        dismissPolicy: FloatModifier<V, F>.DismissPolicy = .onDisappear,
+        dismissPolicy: FloatModifier<V>.DismissPolicy = .onDisappear,
         onDismiss: (() -> Void)? = nil,
-        floatView: @escaping () -> F
+        floatView: @escaping () -> any View
     ) -> some View {
         modifier(
             FloatModifier(

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct Accordion<A: View, C: View>: View {
+public struct Accordion: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
     public enum VerticalPadding {
@@ -28,13 +28,13 @@ public struct Accordion<A: View, C: View>: View {
     
     private let title: String
     private let description: String
-    @ViewBuilder private let accessory: () -> A
-    @ViewBuilder private let content: () -> C
+    @ViewBuilder private let accessory: (() -> any View)?
+    @ViewBuilder private let content: (() -> any View)?
     public init(
         title: String,
         description: String = "",
-        accessory: @escaping () -> A = { EmptyView() },
-        content: @escaping () -> C = { EmptyView() }
+        accessory: (() -> any View)? = nil,
+        content: (() -> any View)? = nil
     ) {
         self.title = title
         self.description = description
@@ -62,12 +62,14 @@ public struct Accordion<A: View, C: View>: View {
                         .paragraph(variant: titleTypography.variant)
                     Spacer(minLength: 0)
                     
-                    accessory()
-                        .onGeometryChange(
-                            for: CGSize.self,
-                            of: { $0.size },
-                            action: { accessorySize = $0 }
-                        )
+                    if let accessory {
+                        AnyView(accessory())
+                            .onGeometryChange(
+                                for: CGSize.self,
+                                of: { $0.size },
+                                action: { accessorySize = $0 }
+                            )
+                    }
                     
                     if accessorySize == .zero {
                         Image.montage(.chevronDown)
@@ -81,7 +83,7 @@ public struct Accordion<A: View, C: View>: View {
                 .padding(.vertical, verticalPadding.length)
                 .contentShape(Rectangle())
                 .padding(.horizontal, fillWidth ? 20 : 0)
-                .modifier(PressInteractionModifier(
+                .modifier(CellInteractionModifier(
                     pressed: $isPressed,
                     fillWidth: fillWidth,
                     interactionPadding: 12
@@ -116,11 +118,14 @@ public struct Accordion<A: View, C: View>: View {
                         Spacer().frame(height: 12)
                             .if(!description.isEmpty && contentSize != .zero)
                         
-                        content().onGeometryChange(
-                            for: CGSize.self,
-                            of: { $0.size },
-                            action: { contentSize = $0 }
-                        )
+                        if let content {
+                            AnyView(content())
+                                .onGeometryChange(
+                                    for: CGSize.self,
+                                    of: { $0.size },
+                                    action: { contentSize = $0 }
+                                )
+                        }
                     }
                     .padding(.bottom, description.isEmpty && contentSize == .zero ? 0 : 16)
                     .padding(.horizontal, fillWidth ? 20 : 0)

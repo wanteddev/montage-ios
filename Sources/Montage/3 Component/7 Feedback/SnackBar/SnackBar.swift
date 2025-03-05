@@ -160,15 +160,17 @@ public struct SnackBar: View {
                     .padding(.horizontal, -7)
                     .padding(.vertical, -4)
                 )
-                .onLongPressGesture(
-                    minimumDuration: 2.0,
-                    perform: {},
-                    onPressingChanged: { state in
-                        isPressed = state
-                        if state == false {
-                            handler()
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            isPressed = value.translation == .zero
                         }
-                    }
+                        .onEnded { value in
+                            isPressed = false
+                            if value.translation == .zero {
+                                handler()
+                            }
+                        }
                 )
         }
     }

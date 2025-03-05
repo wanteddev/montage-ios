@@ -573,7 +573,7 @@ extension Bar.TopNavigation {
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
     public enum Resource {
         /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
-        public enum Left {
+        public enum Left: CaseDescribable {
             case back(action: () -> Void)
             case icon(Icon, action: () -> Void)
             case text(String, action: () -> Void)

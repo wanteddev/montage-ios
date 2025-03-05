@@ -8,19 +8,10 @@
 import SwiftUI
 
 extension Avatar {
-    /// Avatar를 묶는 컴포넌트로 여러 Avatar를 표시해야 하는 경우에 사용합니다.
-    ///
-    /// Avatar/Group이 위치한 배경색이 backgroundNormal이 아니라면
-    /// 아바타의 구분선을 위해 배경색을 backgroundColor에 전달해야합니다.
-    /// 기본값은 backgroundNormal 입니다.
     public struct Group: View {
-        public enum Variant {
-            case person([Avatar.Variant])
-            case company([Avatar.Variant])
-            case academic([Avatar.Variant])
-        }
+        // MARK: - Types
         
-        public enum Size {
+        public enum Size: String, CaseIterable {
             case xsmall
             case small
             
@@ -32,121 +23,82 @@ extension Avatar {
             }
         }
         
-        private let variant: Variant
-        private let size: Size
-        /// Avatar들의 구분을 위한 구분선의 색
-        private let separateBorderColor: SwiftUI.Color?
+        // MARK: - Initializer
         
-        @State private var width: CGFloat = .zero
-        @State private var height: CGFloat = .zero
+        private let imageUrls: [String]
+        private let variant: Avatar.Variant
+        private let size: Size
+        private let onTap: ((_ index: Int) -> Void)?
         
         public init(
-            variant: Variant,
+            _ imageUrls: [String],
+            variant: Avatar.Variant,
             size: Size,
-            backgroundColor: SwiftUI.Color? = nil
+            onTap: ((_ index: Int) -> Void)? = nil
         ) {
+            self.imageUrls = Array(imageUrls.prefix(5))
             self.variant = variant
             self.size = size
-            separateBorderColor = backgroundColor
+            self.onTap = onTap
         }
         
+        // MARK: - Body
+        
         public var body: some View {
-            ZStack {
-                switch variant {
-                case .person(let array):
-                    ForEach(Array(array.indices).reversed(), id: \.self) { index in
-                        let v: Avatar.Variant = array[index]
-                        let s: Avatar.Size = {
-                            size == .xsmall ? .xsmall : .small
-                        }()
-                        Avatar.Person(
-                            variant: v,
-                            size: s
+            HStack(spacing: 10) {
+                ZStack {
+                    ForEach(imageUrls.indices, id: \.self) { index in
+                        ZStack {
+                            Avatar(imageUrls[index], variant: variant, size: avatartSize) {
+                                onTap?(index)
+                            }
+                            .interactionDisabled()
+                            
+                            if index < imageUrls.count - 1 {
+                                RoundedRectangle(cornerRadius: variant.cornerRadius(size: avatartSize))
+                                    .scaleEffect(1.1)
+                                    .offset(x: avatartSize.containerSize.width - size.space)
+                                    .blendMode(.destinationOut)
+                            }
+                        }
+                        .compositingGroup()
+                        .frame(
+                            width: avatartSize.containerSize.width,
+                            height: avatartSize.containerSize.height
                         )
-                        .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
-                        .background {
-                            Circle()
-                                .foregroundStyle(
-                                    separateBorderColor ?? SwiftUI.Color
-                                        .alias(.backgroundNormal)
-                                )
-                                .scaleEffect(1.1)
-                                .offset(
-                                    x: s.componentSize
-                                        .width * CGFloat(index) - (size.space * CGFloat(index))
-                                )
-                        }
-                        .task {
-                            let count = CGFloat(array.count)
-                            width = (s.componentSize.width * count) - (size.space * (count - 1))
-                            height = s.componentSize.height
-                        }
-                    }
-                case .company(let array):
-                    ForEach(Array(array.indices).reversed(), id: \.self) { index in
-                        let v: Avatar.Variant = array[index]
-                        let s: Avatar.Size = {
-                            size == .xsmall ? .xsmall : .small
-                        }()
-                        Avatar.Company(
-                            variant: v,
-                            size: s
+                        .offset(
+                            x: avatartSize.containerSize
+                                .width * CGFloat(index) - (size.space * CGFloat(index))
                         )
-                        .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
-                        .background {
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundStyle(
-                                    separateBorderColor ?? SwiftUI.Color
-                                        .alias(.backgroundNormal)
-                                )
-                                .scaleEffect(1.1)
-                                .offset(
-                                    x: s.componentSize
-                                        .width * CGFloat(index) - (size.space * CGFloat(index))
-                                )
-                        }
-                        .task {
-                            let count = CGFloat(array.count)
-                            width = (s.componentSize.width * count) - (size.space * (count - 1))
-                            height = s.componentSize.height
-                        }
-                    }
-                case .academic(let array):
-                    ForEach(Array(array.indices).reversed(), id: \.self) { index in
-                        let v: Avatar.Variant = array[index]
-                        let s: Avatar.Size = {
-                            size == .xsmall ? .xsmall : .small
-                        }()
-                        Avatar.Academic(
-                            variant: v,
-                            size: s
-                        )
-                        .offset(x: s.componentSize.width * CGFloat(index) - (size.space * CGFloat(index)))
-                        .background {
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundStyle(
-                                    separateBorderColor ?? SwiftUI.Color
-                                        .alias(.backgroundNormal)
-                                )
-                                .scaleEffect(1.1)
-                                .offset(
-                                    x: s.componentSize
-                                        .width * CGFloat(index) - (size.space * CGFloat(index))
-                                )
-                        }
-                        .task {
-                            let count = CGFloat(array.count)
-                            width = (s.componentSize.width * count) - (size.space * (count - 1))
-                            height = s.componentSize.height
-                        }
                     }
                 }
+                .offset(x: -(avatartSize.containerSize.width - size.space) * CGFloat(imageUrls.count - 1) / 2)
+                .frame(
+                    width: avatartSize.containerSize
+                        .width * CGFloat(imageUrls.count) - (size.space * CGFloat(imageUrls.count - 1)),
+                    height: avatartSize.containerSize.height
+                )
+                
+                if let trailingContent {
+                    AnyView(trailingContent())
+                }
             }
-            .frame(width: width, height: height, alignment: .leading)
+        }
+        
+        // MARK: - Modifiers
+        
+        private var trailingContent: (() -> any View)?
+        
+        public func trailingContent(_ trailingContent: @escaping () -> any View) -> Self {
+            var zelf = self
+            zelf.trailingContent = trailingContent
+            return zelf
         }
     }
 }
 
-#Preview {
-    Avatar.Group(variant: .academic([.icon, .icon, .icon]), size: .small)
+private extension Avatar.Group {
+    var avatartSize: Avatar.Size {
+        size == .xsmall ? .xsmall : .small
+    }
 }
