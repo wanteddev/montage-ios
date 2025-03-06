@@ -164,7 +164,7 @@ import Pretendard
             }
         },
         leftContent: {
-            Control.Checkbox(state: .unchecked)
+            Control.checkbox(state: .unchecked)
         },
         rightContent: {
             Image.montage(.chevronRight)

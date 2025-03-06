@@ -419,18 +419,18 @@ public struct Select: View {
                                 .rightContent { active in
                                     Group {
                                         if active {
-                                            Control.Checkmark(state: active)
+                                            Control.checkmark(checked: active)
                                         }
                                     }
                                 }
                         case .radio:
                             cell.leftContent {
-                                Control.Radio(state: items[index].isSelected)
+                                Control.radio(checked: items[index].isSelected)
                             }
                         }
                     case .multiple:
                         cell.leftContent {
-                            Control.Checkbox(state: items[index].isSelected)
+                            Control.checkbox(checked: items[index].isSelected)
                         }
                     }
                 }
