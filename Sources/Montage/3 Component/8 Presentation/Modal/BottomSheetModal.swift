@@ -97,7 +97,7 @@ extension Modal {
                             VStack(spacing: 0) {
                                 navigationView
                                 contentView
-                                if bottomSheetContentHeight < bottomSheetMaxHeight {
+                                if bottomSheetContentHeight <= bottomSheetMaxHeight {
                                     Spacer(minLength: 0)
                                 }
                             }

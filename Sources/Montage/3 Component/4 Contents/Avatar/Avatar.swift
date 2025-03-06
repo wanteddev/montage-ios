@@ -30,11 +30,11 @@ public struct Avatar: View {
             case .person: 1000
             default:
                 switch size {
-                case .xsmall, .small: 6
-                case .medium: 8
-                case .large: 10
-                case .xlarge: 12
-                case .custom(let side): 0
+                case .xsmall: 6
+                case .small: 8
+                case .medium: 10
+                case .large: 12
+                case .xlarge: 14
                 }
             }
         }
@@ -47,13 +47,12 @@ public struct Avatar: View {
         }
     }
     
-    public enum Size: CaseDescribable {
+    public enum Size: String, CaseIterable {
         case xsmall
         case small
         case medium
         case large
         case xlarge
-        case custom(_ side: CGFloat)
         
         internal var containerSize: CGSize {
             switch self {
@@ -62,7 +61,6 @@ public struct Avatar: View {
             case .medium: .init(width: 40, height: 40)
             case .large: .init(width: 48, height: 48)
             case .xlarge: .init(width: 56, height: 56)
-            case .custom(let side): .init(width: side, height: side)
             }
         }
         
@@ -75,7 +73,6 @@ public struct Avatar: View {
             case .xsmall, .small: .init(width: 20, height: 20)
             case .medium: .init(width: 22, height: 22)
             case .large, .xlarge: .init(width: 24, height: 24)
-            case .custom: .init(width: 20, height: 20)
             }
         }
     }
@@ -99,15 +96,16 @@ public struct Avatar: View {
     @State private var isPressed = false
     
     public var body: some View {
-        WebImage(url: URL(string: imageUrl)) {
-            if let image = $0.image {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } else {
-                Image(variant.placeholderImageName, bundle: .module)
-                    .resizable()
-            }
+        WebImage(url: URL(string: imageUrl)) { image in
+            image.resizable()
+                .aspectRatio(contentMode: .fill)
+                .backgroundStyle(SwiftUI.Color.alias(.staticWhite))
+        } placeholder: {
+            Image(variant.placeholderImageName, bundle: .module)
+                .resizable()
+                .background( // WebImage에서 placeholder가 두 장 겹쳐지는 문제가 있어서 흰색 배경을 깔아줌
+                    SwiftUI.Color.alias(.backgroundNormal)
+                )
         }
         .frame(width: size.containerSize.width, height: size.containerSize.height)
         .overlay {

@@ -52,11 +52,11 @@ extension Modal {
                 .padding(.horizontal, 16)
                 .background {
                     ZStack {
-                        backgroundColor
-                            .opacity(backgroundOpacity * 0.88)
                         Rectangle().fill(.ultraThinMaterial)
+                            .opacity(backgroundOpacity)
+                        backgroundColor
+                            .opacity(backgroundOpacity * 0.70)
                     }
-                    .opacity(backgroundOpacity)
                     .ignoresSafeArea(.container, edges: .top)
                 }
                 
