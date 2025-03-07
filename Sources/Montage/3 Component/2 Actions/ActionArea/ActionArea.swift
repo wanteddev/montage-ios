@@ -22,6 +22,7 @@ public struct ActionArea: View, KeyboardReadable {
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
     @State private var captionHeight: CGFloat = .zero
+    @State private var gradientOpacity: CGFloat = 1
     
     public var body: some View {
         VStack(spacing: 0) {
@@ -39,19 +40,18 @@ public struct ActionArea: View, KeyboardReadable {
                     }
                 }
             } else {
-                backgroundColor
+                SwiftUI.Color.alias(.backgroundElevated)
                     .frame(height: 0)
                     .overlay {
-                        if !clearBackground {
-                            LinearGradient(
-                                colors: gradient,
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                            .frame(height: 40)
-                            .offset(y: -20)
-                        }
+                        LinearGradient(
+                            colors: gradient,
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .frame(height: 40)
+                        .offset(y: -20)
                     }
+                    .opacity(gradientOpacity)
             }
             
             VStack(spacing: 16) {
@@ -63,6 +63,11 @@ public struct ActionArea: View, KeyboardReadable {
             .background(backgroundColor)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
+        .onChange(of: clearBackground) { clearBackground in
+            withAnimation(.easeInOut(duration: 0.5)) {
+                gradientOpacity = clearBackground ? 0 : 1
+            }
+        }
     }
     
     // MARK: - Modifiers
@@ -161,7 +166,7 @@ private extension ActionArea {
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
-                backgroundColor.opacity($0)
+                .alias(.backgroundElevated).opacity($0)
             }
     }
     
@@ -318,7 +323,7 @@ public struct ActionAreaModifier: ViewModifier {
             ActionArea(variant: model.variant)
                 .caption(model.caption)
                 .extra(model.extra, divider: model.extraDivider)
-                .if(true) {
+                .modifying {
                     if case .manual(let visibility) = model.backgroundVisibility {
                         $0.clearBackground(!visibility)
                     } else {

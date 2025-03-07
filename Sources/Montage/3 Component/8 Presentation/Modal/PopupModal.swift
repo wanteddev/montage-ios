@@ -98,7 +98,7 @@ extension Modal {
             }
             .frame(maxHeight: min(popupMaxHeight, popupContentHeight))
             .padding(.horizontal, 20)
-            .if(true) { originalView in
+            .modifying { originalView in
                 Group {
                     if #available(iOS 16.4, *) {
                         originalView.presentationBackground(
