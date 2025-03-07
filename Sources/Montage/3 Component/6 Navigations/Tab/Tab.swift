@@ -15,8 +15,8 @@ public struct Tab: View {
     }
     
     /// 탭 아이템의 크기를 결정하는 열거형입니다.
-    public enum Size {
-        case small, meidum, large
+    public enum Size: String, CaseIterable {
+        case small, medium, large
     }
 
     // MARK: - Initializer
@@ -115,7 +115,7 @@ public struct Tab: View {
                         }
                     
                         if resize == .normal, let icon, let iconButtonAction {
-                            Button.IconButton(icon: icon) {
+                            Button.IconButton(variant: .normal(size: iconSize), icon: icon) {
                                 iconButtonAction()
                             }
                             .padding(.trailing, horizontalPadding ? 16 : 0)
@@ -132,7 +132,7 @@ public struct Tab: View {
     
     // MARK: - Modifiers
     private var resize: Resize = .normal
-    private var size: Size = .small
+    private var size: Size = .medium
     private var horizontalPadding = false
     private var icon: Icon? = nil
     private var iconButtonAction: (() -> Void)?
@@ -164,11 +164,11 @@ public struct Tab: View {
 }
 
 // MARK: - Private
-extension Tab {
+private extension Tab {
     var itemHeight: CGFloat {
         switch size {
         case .small: 40
-        case .meidum: 48
+        case .medium: 48
         case .large: 56
         }
     }
@@ -176,8 +176,16 @@ extension Tab {
     var itemFontVariant: Typography.Variant {
         switch size {
         case .small: .body2
-        case .meidum: .headline2
+        case .medium: .headline2
         case .large: .heading2
+        }
+    }
+    
+    var iconSize: Int {
+        switch size {
+        case .small: 20
+        case .medium: 22
+        default: 24
         }
     }
 }
