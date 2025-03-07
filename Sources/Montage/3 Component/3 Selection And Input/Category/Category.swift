@@ -23,7 +23,7 @@ public struct Category: View {
     @Binding private var selectedIndex: Int
     private let items: [String]
     private let actions: (Int) -> Void
-
+    
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
@@ -77,7 +77,7 @@ public struct Category: View {
                 )
                 
                 if let icon, let iconButtonAction {
-                    Button.IconButton(icon: icon) {
+                    Button.IconButton(variant: .normal(size: iconSize), icon: icon) {
                         iconButtonAction()
                     }
                     .padding(.trailing, horizontalPadding ? 16 : 0)
@@ -133,10 +133,11 @@ public struct Category: View {
         zelf.iconButtonAction = action
         return zelf
     }
-    
-    // MARK: - private
-    
-    private var itemSpacing: CGFloat {
+}
+
+// MARK: - private
+private extension Category {
+    var itemSpacing: CGFloat {
         switch size {
         case .small: 4
         case .medium: 6
@@ -145,16 +146,24 @@ public struct Category: View {
         }
     }
     
-    private var verticalPaddingValue: CGFloat {
+    var verticalPaddingValue: CGFloat {
         switch size {
         case .small, .medium: 8
         case .large, .xlarge: 10
         }
     }
     
+    var iconSize: Int {
+        switch size {
+        case .small: 20
+        case .medium: 22
+        default: 24
+        }
+    }
+    
     // MARK: - Inner View
     
-    fileprivate struct ItemView: View {
+    struct ItemView: View {
         let variant: Variant
         let size: Size
         let isSelected: Bool
