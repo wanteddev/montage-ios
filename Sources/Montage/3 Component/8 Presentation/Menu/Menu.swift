@@ -65,9 +65,9 @@ public struct Menu: View {
                             Group {
                                 switch variant {
                                 case .radio:
-                                    Control.Radio(state: items[index].isSelected)
+                                    Control.radio(checked: items[index].isSelected)
                                 case .checkbox:
-                                    Control.Checkbox(state: items[index].isSelected)
+                                    Control.checkbox(checked: items[index].isSelected)
                                 default:
                                     EmptyView()
                                 }
