@@ -21,6 +21,8 @@ public enum Icon: String, CaseIterable {
     case arrowLeftThick
     case arrowRight
     case arrowRightThick
+    case arrowTurnDownLeft
+    case arrowTurnDownRight
     case arrowUp
     case arrowUpThick
     case attachment
@@ -261,6 +263,7 @@ public enum Icon: String, CaseIterable {
     case thumbnail
     case thunder
     case thunderFill
+    case ticket
     case trash
     case triangle
     case triangleExclamation
