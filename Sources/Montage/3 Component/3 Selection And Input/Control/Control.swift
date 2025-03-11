@@ -83,27 +83,15 @@ public struct Control: View {
         onSelect = nil
     }
     
-    public static func checkbox(
-        state: State,
-        size: Size = .normal,
-        onSelect: ((State) -> Void)? = nil
-    ) -> Self {
+    public static func checkbox(state: State, size: Size = .normal, onSelect: ((State) -> Void)? = nil) -> Self {
         .init(variant: .checkbox, state: state, size: size, onSelect: onSelect)
     }
     
-    public static func checkbox(
-        checked: Bool,
-        size: Size = .normal,
-        onSelect: ((Bool) -> Void)? = nil
-    ) -> Self {
+    public static func checkbox(checked: Bool, size: Size = .normal, onSelect: ((Bool) -> Void)? = nil) -> Self {
         .init(variant: .checkbox, checked: checked, size: size, onSelect: onSelect)
     }
     
-    public static func checkmark(
-        checked: Bool,
-        size: Size = .normal,
-        onSelect: ((Bool) -> Void)? = nil
-    ) -> Self {
+    public static func checkmark(checked: Bool, size: Size = .normal, onSelect: ((Bool) -> Void)? = nil) -> Self {
         .init(variant: .checkmark, checked: checked, size: size, onSelect: onSelect)
     }
     
