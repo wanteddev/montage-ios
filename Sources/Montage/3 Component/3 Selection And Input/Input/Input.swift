@@ -134,9 +134,9 @@ public struct Input: View {
                     )
                     .paragraph(variant: titleTypography.variant)
                     .lineLimit(1)
-                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) {
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                         singleLineHeight = $0
-                    }
+                    })
                     .opacity(0)
                     
                 Text(text)
