@@ -119,25 +119,42 @@ public struct Input: View {
     
     // MARK: - Body
     
+    @State private var singleLineHeight: CGFloat = 0
+    
     public var body: some View {
         HStack(alignment: .top, spacing: spacing) {
             nestedControl
+                .frame(height: singleLineHeight)
 
-            Text(text)
-                .montage(
-                    variant: titleTypography.variant,
-                    weight: isBold ? .bold : titleTypography.weight,
-                    color: titleTypography.color
-                )
-                .paragraph(variant: titleTypography.variant)
-                .multilineTextAlignment(.leading)
-                .padding(.vertical, size == .normal ? 1 : 0)
-                .onTapGesture {
-                    guard isDisable == false else { return }
-                    stateBinding?.wrappedValue = state.isUnchecked ? .checked : .unchecked
-                    checkedBinding?.wrappedValue = state.isUnchecked
-                    onSelect?(state.isUnchecked ? .checked : .unchecked)
-                }
+            ZStack {
+                Text(text)
+                    .montage(
+                        variant: titleTypography.variant,
+                        weight: isBold ? .bold : titleTypography.weight
+                    )
+                    .paragraph(variant: titleTypography.variant)
+                    .lineLimit(1)
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) {
+                        singleLineHeight = $0
+                    }
+                    .opacity(0)
+                    
+                Text(text)
+                    .montage(
+                        variant: titleTypography.variant,
+                        weight: isBold ? .bold : titleTypography.weight,
+                        color: titleTypography.color
+                    )
+                    .paragraph(variant: titleTypography.variant)
+                    .multilineTextAlignment(.leading)
+                    .padding(.vertical, size == .normal ? 1 : 0)
+                    .onTapGesture {
+                        guard isDisable == false else { return }
+                        stateBinding?.wrappedValue = state.isUnchecked ? .checked : .unchecked
+                        checkedBinding?.wrappedValue = state.isUnchecked
+                        onSelect?(state.isUnchecked ? .checked : .unchecked)
+                    }
+            }
         }
     }
 
