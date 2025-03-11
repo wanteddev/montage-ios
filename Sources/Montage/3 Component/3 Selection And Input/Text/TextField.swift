@@ -44,14 +44,11 @@ extension TextInput {
         // MARK: - Initializer
         
         @Binding private var text: String
-        private let onCommit: (() -> Void)?
         
         public init(
-            text: Binding<String>,
-            onCommit: (() -> Void)? = nil
+            text: Binding<String>
         ) {
             _text = text
-            self.onCommit = onCommit
         }
         
         // MARK: - Modifiers
@@ -65,6 +62,8 @@ extension TextInput {
         private var icon: Icon? = nil
         private var rightButton: RightButton? = nil
         private var rightContent: (() -> any View)? = nil
+        private var autoCompletionCellCount = 0
+        private var autoCompletionCellForRow: ((Int) -> any View)? = nil
         private var suggestions: Binding<[String]> = .constant([])
         
         /// 상태를 조정합니다.
@@ -123,9 +122,10 @@ extension TextInput {
             return zelf
         }
         
-        public func autoComplete(_ suggestions: Binding<[String]>) -> Self {
+        public func autoComplete(cellCount: Int, cellForRow: @escaping (_ index: Int) -> any View) -> Self {
             var zelf = self
-            zelf.suggestions = suggestions
+            zelf.autoCompletionCellCount = cellCount
+            zelf.autoCompletionCellForRow = cellForRow
             return zelf
         }
         
@@ -194,6 +194,8 @@ extension TextInput {
             private let icon: Icon?
             private let rightButton: RightButton?
             private let rightContent: (() -> any View)?
+            private let autoCompletionCellCount: Int
+            private let autoCompletionCellForRow: ((Int) -> any View)?
             
             init(
                 text: Binding<String>,
@@ -203,8 +205,11 @@ extension TextInput {
                 placeholder: String?,
                 icon: Icon?,
                 rightButton: RightButton?,
-                rightContent: (() -> any View)?
+                rightContent: (() -> any View)?,
+                autoCompletionCellCount: Int,
+                autoCompletionCellForRow: ((Int) -> any View)?
             ) {
+                
                 _text = text
                 _suggestions = suggestions
                 self.status = status
@@ -213,6 +218,8 @@ extension TextInput {
                 self.icon = icon
                 self.rightButton = rightButton
                 self.rightContent = rightContent
+                self.autoCompletionCellCount = autoCompletionCellCount
+                self.autoCompletionCellForRow = autoCompletionCellForRow
             }
             
             @Environment(\.safeAreaInsets) private var safeAreaInsets
@@ -356,13 +363,9 @@ extension TextInput {
                 )
             }
             
-            private var suggestionsAndDirectInput: [String] {
-                suggestions.isEmpty ? [] : ([text] + suggestions)
-            }
-            
             private var autoCompletionContent: some View {
                 VStack(alignment: .leading, spacing: 2) {
-                    ForEach(suggestions, id: \.self) { suggestion in
+                    ForEach(0..<autoCompletionCellCount, id: \.self) { suggestion in
                         Cell(title: suggestion) {
                             text = suggestion
                             Task { @MainActor in
