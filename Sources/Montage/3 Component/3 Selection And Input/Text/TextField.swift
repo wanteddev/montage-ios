@@ -65,7 +65,7 @@ extension TextInput {
             }
             
             public var totalNumberOfItems: Int {
-                (0..<numberOfSections).map(numberOfItemsInSection).reduce(0, +)
+                (0 ..< numberOfSections).map(numberOfItemsInSection).reduce(0, +)
             }
         }
         
@@ -77,7 +77,8 @@ extension TextInput {
         public init(
             text: Binding<String>,
             autoCompletionDataSource: Binding<AutoCompletionDataSource?> = .constant(
-                nil)
+                nil
+            )
         ) {
             _text = text
             _autoCompletionDataSource = autoCompletionDataSource
@@ -337,9 +338,9 @@ private extension TextInput.TextField {
     var captionTextColor: SwiftUI.Color {
         switch status {
         case .negative:
-                .alias(.statusNegative)
+            .alias(.statusNegative)
         default:
-                .alias(.labelAlternative)
+            .alias(.labelAlternative)
         }
     }
     
@@ -348,8 +349,7 @@ private extension TextInput.TextField {
             if let autoCompletionDataSource {
                 VStack(alignment: .leading, spacing: 4) {
                     if let headerView = autoCompletionDataSource.headerView,
-                       autoCompletionDataSource.totalNumberOfItems > 0
-                    {
+                       autoCompletionDataSource.totalNumberOfItems > 0 {
                         AnyView(headerView())
                     }
                     LazyVStack(alignment: .leading, spacing: 4, pinnedViews: [.sectionHeaders]) {
@@ -387,8 +387,7 @@ private extension TextInput.TextField {
                         }
                     }
                     if let footerView = autoCompletionDataSource.footerView,
-                       autoCompletionDataSource.totalNumberOfItems > 0
-                    {
+                       autoCompletionDataSource.totalNumberOfItems > 0 {
                         AnyView(footerView())
                     }
                 }
@@ -402,16 +401,16 @@ private extension TextInput.TextField {
         if textFieldFocusState {
             switch status {
             case .normal, .positive:
-                    .alias(.primaryNormal).opacity(0.43)
+                .alias(.primaryNormal).opacity(0.43)
             case .negative:
-                    .alias(.statusNegative).opacity(0.43)
+                .alias(.statusNegative).opacity(0.43)
             }
         } else {
             switch status {
             case .normal, .positive:
-                    .alias(.lineNeutral)
+                .alias(.lineNeutral)
             case .negative:
-                    .alias(.statusNegative).opacity(0.43)
+                .alias(.statusNegative).opacity(0.43)
             }
         }
     }
@@ -419,9 +418,9 @@ private extension TextInput.TextField {
     var rightIcon: Icon? {
         switch status {
         case .positive:
-                .circleCheckFill
+            .circleCheckFill
         case .negative:
-                .circleExclamationFill
+            .circleExclamationFill
         default:
             nil
         }
@@ -430,9 +429,9 @@ private extension TextInput.TextField {
     var rightIconColor: SwiftUI.Color? {
         switch status {
         case .positive:
-                .alias(.primaryNormal)
+            .alias(.primaryNormal)
         case .negative:
-                .alias(.statusNegative)
+            .alias(.statusNegative)
         default:
             nil
         }
@@ -496,4 +495,3 @@ private extension TextInput.TextField {
         }
     }
 }
-
