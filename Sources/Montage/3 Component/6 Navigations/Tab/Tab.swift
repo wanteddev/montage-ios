@@ -71,11 +71,13 @@ public struct Tab: View {
                                             actions(index)
                                         }
                                         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
-                                            if itemWidths.count > index {
-                                                itemWidths[index] = $0.width
-                                            } else {
-                                                itemWidths = .init(repeating: 0, count: items.count)
+                                            if index >= itemWidths.count {
+                                                itemWidths = itemWidths + .init(
+                                                    repeating: 0,
+                                                    count: items.count - itemWidths.count
+                                                )
                                             }
+                                            itemWidths[index] = $0.width
                                         })
                                     }
                                 }
