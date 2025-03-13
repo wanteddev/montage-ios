@@ -9,8 +9,6 @@
 import SwiftUI
 
 public struct FloatModifier<V: Equatable>: ViewModifier {
-
-
     public enum DismissPolicy {
         case after(seconds: TimeInterval)
         case onTap
@@ -26,7 +24,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
     }
 
     @Binding private var isPresented: Bool
-    private var updatingValue: V
+    private var updatingValue: Binding<V?>
     private let dismissPolicy: DismissPolicy
     private let presentingAnimation: Animation?
     private let dismissingAnimation: Animation?
@@ -35,7 +33,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
 
     public init(
         isPresented: Bool,
-        updatingValue: V,
+        updatingValue: Binding<V?>,
         dismissPolicy: DismissPolicy = .onViewDisappear,
         presentingAnimation: Animation? = .none,
         dismissingAnimation: Animation? = .none,
@@ -53,7 +51,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
 
     public init(
         isPresented: Binding<Bool>,
-        updatingValue: V,
+        updatingValue: Binding<V?>,
         dismissPolicy: DismissPolicy = .manually,
         presentingAnimation: Animation? = .none,
         dismissingAnimation: Animation? = .none,
@@ -75,15 +73,17 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
 
     public func body(content: Content) -> some View {
         content
-            .onChange(of: isPresented) { _ in
-                if isPresented {
+            .onChange(of: updatingValue.wrappedValue) {
+                if $0 != nil {
+                    present()
+                }
+            }
+            .onChange(of: isPresented) {
+                if $0 {
                     present()
                 } else {
                     dismiss()
                 }
-            }
-            .onChange(of: updatingValue) { _ in
-                present()
             }
             .onDisappear {
                 if case .onViewDisappear = dismissPolicy {
@@ -105,7 +105,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
                 floatRootView?.onHitTest = {
                     if $0 == nil {
                         floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
-                        isPresented.toggle()
+                        isPresented = false
                     }
                 }
             }
@@ -120,7 +120,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
 
                 animationWorkItem = DispatchWorkItem {
                     floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
-                    isPresented.toggle()
+                    isPresented = false
 
                     animationWorkItem = nil
                 }
@@ -137,7 +137,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
 
     func dismiss() {
         floatRootView?.removeFromSuperview()
-        isPresented.toggle()
+        isPresented = false
     }
 }
 
@@ -182,10 +182,6 @@ private final class FloatHostingController<C: View>: UIHostingController<C> {
 
     @MainActor @preconcurrency dynamic required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func touchesBegan(_: Set<UITouch>, with _: UIEvent?) {
-        print("touchesBegan")
     }
 
     func show(animation: Animation?) {

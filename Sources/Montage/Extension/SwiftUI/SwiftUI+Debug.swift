@@ -9,7 +9,7 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    public func borderForPreview(_ color: SwiftUI.Color = .blue, fill: Bool = false) -> some View {
+    public func recognizeViewForPreview(_ color: SwiftUI.Color = .blue, fill: Bool = false) -> some View {
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
             if fill {
                 background(color)
@@ -23,40 +23,30 @@ extension View {
 }
 
 extension View {
-    public func carveLogForDebug(
+    public func carveLogForPreview(
         _ message: String,
         font: Font? = nil,
         alignment: Alignment = .center
     ) -> some View {
-        #if DEBUG
-        ZStack(alignment: alignment) {
-            self
-            SwiftUI.Button {
-                let pasteBoard = UIPasteboard.general
-                pasteBoard.string = message
-            } label: {
-                StrokeText(text: message, font: font ?? .system(size: 12), color: .gray.opacity(0.5))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.red)
-                    .padding(3)
+        Group {
+            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+                ZStack(alignment: alignment) {
+                    self
+                    SwiftUI.Button {
+                        let pasteBoard = UIPasteboard.general
+                        pasteBoard.string = message
+                    } label: {
+                        StrokeText(text: message, font: font ?? .system(size: 12), color: .gray.opacity(0.5))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.red)
+                            .padding(3)
+                    }
+                    .buttonStyle(.plain)
+                }
+            } else {
+                self
             }
-            .buttonStyle(.plain)
         }
-        #else
-        self
-        #endif
-    }
-}
-
-extension View {
-    public func printValue<V: Equatable>(_ value: V, _ label: String = "Unknown") -> some View {
-        onChange(of: value) {
-            print("🐞\(label) = \($0)")
-        }
-    }
-
-    public func printSize(_ label: String = "Unknown") -> some View {
-        onGeometryChange(for: CGSize.self, of: { $0.size }, action: { print("🐞\(label) = \($0)") })
     }
 }
 
@@ -73,6 +63,18 @@ private struct StrokeText: View {
                 RoundedRectangle(cornerRadius: 2)
                     .foregroundColor(color)
             )
+    }
+}
+
+extension View {
+    public func printValue<V: Equatable>(_ value: V, _ label: String = "Unknown") -> some View {
+        onChange(of: value) {
+            print("🐞\(label) = \($0)")
+        }
+    }
+
+    public func printSize(_ label: String = "Unknown") -> some View {
+        onGeometryChange(for: CGSize.self, of: { $0.size }, action: { print("🐞\(label) = \($0)") })
     }
 }
 

@@ -180,7 +180,7 @@ extension Toast {
                 .modifier(
                     FloatModifier(
                         isPresented: model != nil,
-                        updatingValue: model,
+                        updatingValue: $model,
                         dismissPolicy: .after(seconds: durationTime),
                         presentingAnimation: .easeIn(duration: 0.35),
                         dismissingAnimation: .easeIn(duration: 0.35),
