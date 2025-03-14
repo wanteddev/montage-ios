@@ -24,6 +24,8 @@ public struct ScrollView: View {
     }
 
     // MARK: - Body
+    
+    @State private var contentOffset: CGPoint = .zero
 
     public var body: some View {
         SwiftUI.ScrollView(axisSet, showsIndicators: !hidesIndicators) {
@@ -59,9 +61,10 @@ public struct ScrollView: View {
         .onPreferenceChange(OffsetPreferenceKey.self) {
             onOffsetChanged($0)
             updateScrollStatus(contentOffset: $0)
+            contentOffset = $0
         }
         .if(onRefresh != nil) {
-            $0.pullToRefresh(scrollYOffset: $scrollStatus.contentOffset.y) {
+            $0.pullToRefresh(scrollYOffset: $contentOffset.y) {
                 await onRefresh?()
             }
         }
