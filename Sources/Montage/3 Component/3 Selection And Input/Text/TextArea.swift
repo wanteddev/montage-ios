@@ -30,7 +30,7 @@ extension TextInput {
             
             var maxHeight: CGFloat? {
                 switch self {
-                case .normal: nil
+                case .normal: .infinity
                 case .limit: 102.0
                 case .fixed(_, let max): max
                 }
@@ -106,13 +106,12 @@ extension TextInput {
         private var disable = false
         private var heading: String? = nil
         private var requiredBadge = false
-        private var bottom = false
         private var description: String? = nil
         private var placeholder: String? = nil
-        private var leftResource: [Resource] = []
-        private var leftResourceSpacing: CGFloat = 24
-        private var rightResource: [Resource] = []
-        private var rightResourceSpacing: CGFloat = 2
+        private var leadingResources: [Resource] = []
+        private var trailingResources: [Resource] = []
+        private var leadingResourceSpacing: CGFloat = 4
+        private var trailingResourceSpacing: CGFloat = 4
         
         /// TextArea의 resize 여부 입니다.
         public func resize(_ resize: Resize) -> Self {
@@ -122,14 +121,14 @@ extension TextInput {
         }
         
         /// TextArea의 negative 여부를 결정합니다.
-        public func negative(_ negative: Bool) -> Self {
+        public func negative(_ negative: Bool = true) -> Self {
             var zelf = self
             zelf.negative = negative
             return zelf
         }
         
         /// TextArea의 사용가능 여부입니다.
-        public func disable(_ disable: Bool) -> Self {
+        public func disable(_ disable: Bool = true) -> Self {
             var zelf = self
             zelf.disable = disable
             return zelf
@@ -144,17 +143,21 @@ extension TextInput {
         }
         
         /// TextArea의 필수 표시 노출 여부입니다.
-        public func requiredBadge(_ requiredBadge: Bool) -> Self {
+        public func requiredBadge(_ requiredBadge: Bool = true) -> Self {
             var zelf = self
             zelf.requiredBadge = requiredBadge
             return zelf
         }
         
-        /// TextArea의 하단 영역 노출 여부입니다.
-        /// - 하단 영역 : 글자수 / 제한 글자수 / 버튼
-        public func bottom(_ bottom: Bool) -> Self {
+        /// TextArea 하단 컴포넌트입니다.
+        /// > 좌/우 각각 최대 3개까지 사용할 수 있습니다.
+        public func bottomResources(leading leadingResources: [Resource] = [], trailing trailingResources: [Resource] = [], leadingResourceSpacing: CGFloat = 4, trailingResourceSpacing: CGFloat = 4) -> Self {
             var zelf = self
-            zelf.bottom = bottom
+            zelf.leadingResources = Array(leadingResources.prefix(3))
+            zelf.leadingResourceSpacing = leadingResourceSpacing
+            
+            zelf.trailingResources = Array(trailingResources.prefix(3))
+            zelf.trailingResourceSpacing = trailingResourceSpacing
             return zelf
         }
         
@@ -171,24 +174,6 @@ extension TextInput {
         public func placeholder(_ placeholder: String?) -> Self {
             var zelf = self
             zelf.placeholder = placeholder
-            return zelf
-        }
-        
-        /// TextArea 하단 좌측의 컴포넌트입니다.
-        /// > 최대 3개까지 사용할 수 있습니다.
-        public func leftResource(_ leftResource: [Resource], spacing _: CGFloat = 24) -> Self {
-            var zelf = self
-            zelf.leftResource = Array(leftResource.prefix(3))
-            zelf.leftResourceSpacing = leftResourceSpacing
-            return zelf
-        }
-        
-        /// TextArea 하단 우측의 컴포넌트입니다.
-        /// > 최대 3개까지 사용할 수 있습니다.
-        public func rightResource(_ rightResource: [Resource], spacing _: CGFloat = 24) -> Self {
-            var zelf = self
-            zelf.rightResource = Array(rightResource.prefix(3))
-            zelf.rightResourceSpacing = rightResourceSpacing
             return zelf
         }
         
@@ -227,27 +212,30 @@ extension TextInput {
         var editor: some View {
             VStack(spacing: 12) {
                 ZStack(alignment: .topLeading) {
-                    TextEditor(text: $text)
-                        .foregroundStyle(editorTextColor)
-                        .font(.montage(variant: .body1Reading))
-                        .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                        .if(!disable) {
-                            $0.focused(focus)
-                        }
-                        .frame(
+                    ResizableTextView(text: $text)
+                        .frameHeight(
                             minHeight: resize.minHeight,
-                            maxHeight: resize.maxHeight,
-                            alignment: resize.alignment
+                            maxHeight: resize.maxHeight
                         )
-                        .fixedSize(horizontal: false, vertical: true)
-                        .onChange(of: text) { _ in
-                            typedCharacters = text.count
-                        }
-                        .scrollContentBackground(.hidden)
-                        .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                        .padding(.horizontal, -4.5)
-                        .padding(.top, -4)
-                        .padding(.bottom, -6)
+                    .frame(
+                        minHeight: resize.minHeight,
+                        maxHeight: resize.maxHeight,
+                        alignment: resize.alignment
+                    )
+                    .foregroundStyle(editorTextColor)
+                    .font(.montage(variant: .body1Reading))
+                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                    .if(!disable) {
+                        $0.focused(focus)
+                    }
+                    .onChange(of: text) { _ in
+                        typedCharacters = text.count
+                    }
+                    .scrollContentBackground(.hidden)
+                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                    .padding(.horizontal, -4.5)
+                    .padding(.top, -4)
+                    .padding(.bottom, -6)
                     
                     if $text.wrappedValue.isEmpty, let placeholder {
                         Text(placeholder)
@@ -262,15 +250,15 @@ extension TextInput {
                 }
                 .padding(.horizontal, 4)
                 
-                if bottom {
+                if leadingResources.isEmpty == false || trailingResources.isEmpty == false {
                     Bottom(
                         typedCharacters: $typedCharacters,
                         negative,
                         disable,
-                        leftResource,
-                        leftResourceSpacing,
-                        rightResource,
-                        rightResourceSpacing
+                        leadingResources,
+                        leadingResourceSpacing,
+                        trailingResources,
+                        trailingResourceSpacing
                     )
                 }
             }
@@ -455,6 +443,90 @@ extension TextInput {
                         text: title
                     )
                 }
+            }
+        }
+        
+        struct ResizableTextView: UIViewRepresentable {
+            @Binding var text: String
+            
+            init(
+                text: Binding<String>
+            ) {
+                _text = text
+            }
+            
+            func makeUIView(context: Context) -> UITextView {
+                let textView = CustomTextView()
+                textView.font = UIFont.systemFont(ofSize: 16)
+                textView.isScrollEnabled = false
+                textView.backgroundColor = .clear
+                textView.delegate = context.coordinator
+                return textView
+            }
+            
+            func updateUIView(_ uiView: UITextView, context: Context) {
+                uiView.text = text
+                context.coordinator.minHeight = minHeight
+                context.coordinator.maxHeight = maxHeight
+                context.coordinator.updateHeight(for: uiView, minHeight: minHeight, maxHeight: maxHeight)
+            }
+            
+            func makeCoordinator() -> Coordinator {
+                Coordinator(self)
+            }
+            
+            class Coordinator: NSObject, UITextViewDelegate {
+                var parent: ResizableTextView
+                var minHeight: CGFloat?
+                var maxHeight: CGFloat?
+                private var heightConstraint: NSLayoutConstraint?
+                
+                init(_ parent: ResizableTextView) {
+                    self.parent = parent
+                }
+                
+                func textViewDidChange(_ textView: UITextView) {
+                    DispatchQueue.main.async {
+                        self.parent.text = textView.text
+                        self.updateHeight(for: textView, minHeight: self.minHeight, maxHeight: self.maxHeight)
+                    }
+                }
+                
+                func updateHeight(for textView: UITextView, minHeight: CGFloat?, maxHeight: CGFloat?) {
+                    let newSize = textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.greatestFiniteMagnitude))
+                    let newHeight = min(max(newSize.height, minHeight ?? 0), maxHeight ?? 0)
+                    
+                    if newHeight >= maxHeight ?? 0 {
+                        textView.isScrollEnabled = true
+                    } else {
+                        textView.isScrollEnabled = false
+                    }
+                    
+                    if heightConstraint == nil {
+                        heightConstraint = textView.heightAnchor.constraint(equalToConstant: newHeight)
+                        heightConstraint?.isActive = true
+                    } else {
+                        heightConstraint?.constant = newHeight
+                    }
+                    
+                    textView.layoutIfNeeded()
+                }
+            }
+            
+            private var minHeight: CGFloat?
+            private var maxHeight: CGFloat?
+            
+            func frameHeight(minHeight: CGFloat?, maxHeight: CGFloat?) -> Self {
+                var zelf = self
+                zelf.minHeight = minHeight
+                zelf.maxHeight = maxHeight
+                return zelf
+            }
+        }
+        
+        class CustomTextView: UITextView {
+            override var intrinsicContentSize: CGSize {
+                sizeThatFits(CGSize(width: frame.width, height: CGFloat.greatestFiniteMagnitude))
             }
         }
     }
