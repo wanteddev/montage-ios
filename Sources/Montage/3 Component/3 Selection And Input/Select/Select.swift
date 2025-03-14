@@ -62,10 +62,6 @@ public struct Select: View {
         case iconButton(Button.IconButton)
         case custom(() -> any View)
     }
-    
-//    public enum menuResize: String, CaseIterable {
-//        case fit, flexible
-//    }
 
     // MARK: - Initializer
     

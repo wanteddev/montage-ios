@@ -177,25 +177,28 @@ extension Toast {
 
         public func body(content: Content) -> some View {
             content
-                .float(
-                    presentationPolicy: .presentIfNotNil(model),
-                    presentingAnimation: .easeIn(duration: 0.35),
-                    dismissingAnimation: .easeIn(duration: 0.35),
-                    dismissPolicy: .after(seconds: durationTime),
-                    onDismiss: {
-                        model = nil
-                    },
-                    floatView: {
-                        Group {
-                            if let model {
-                                Toast(
-                                    model.variant,
-                                    message: model.message,
-                                    location
-                                )
+                .modifier(
+                    FloatModifier(
+                        isPresented: model != nil,
+                        updatingValue: $model,
+                        dismissPolicy: .after(seconds: durationTime),
+                        presentingAnimation: .easeIn(duration: 0.35),
+                        dismissingAnimation: .easeIn(duration: 0.35),
+                        onDismiss: {
+                            model = nil
+                        },
+                        floatView: {
+                            Group {
+                                if let model {
+                                    Toast(
+                                        model.variant,
+                                        message: model.message,
+                                        location
+                                    )
+                                }
                             }
                         }
-                    }
+                    )
                 )
                 .onChange(of: model) { _ in
                     if model != nil {

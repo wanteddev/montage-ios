@@ -119,12 +119,12 @@ public struct Cell: View {
                 .if(divider)
         }
         .padding(.horizontal, fillWidth ? 20 : 0)
-        .contentShape(Rectangle())
         .modifier(CellInteractionModifier(
             pressed: $isPressed,
             fillWidth: fillWidth,
             interactionPadding: interactionPadding
         ))
+        .contentShape(Rectangle())
         .allowsHitTesting(disable == false)
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
