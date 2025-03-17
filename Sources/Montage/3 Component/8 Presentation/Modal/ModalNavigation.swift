@@ -42,8 +42,8 @@ extension Modal {
                 Contents(
                     variant: variant,
                     title: title,
-                    left: left,
-                    actions: actions
+                    leadingButton: leadingButton,
+                    trailingButtons: trailingButtons
                 )
                 .if(needHandleArea) {
                     $0.padding(.top, 10)
@@ -71,10 +71,10 @@ extension Modal {
         // MARK: - Modifiers
         
         private var variant: Variant = .normal
-        private var left: Bar.TopNavigation.Resource.Left? = nil
         private var backgroundColor: SwiftUI.Color? = nil
         private var needHandleArea = false
-        private var actions: [Bar.TopNavigation.Resource.Action] = []
+        private var leadingButton: Bar.TopNavigation.Resource.LeadingButton? = nil
+        private var trailingButtons: [Bar.TopNavigation.Resource.TrailingButton] = []
 
         public func variant(_ variant: Variant) -> Self {
             var zelf = self
@@ -85,12 +85,6 @@ extension Modal {
         public func scrollOffset(_ scrollOffset: Binding<CGFloat>) -> Self {
             var zelf = self
             zelf._scrollOffset = scrollOffset
-            return zelf
-        }
-        
-        public func left(_ left: Bar.TopNavigation.Resource.Left?) -> Self {
-            var zelf = self
-            zelf.left = left
             return zelf
         }
         
@@ -106,20 +100,23 @@ extension Modal {
             return zelf
         }
         
-        public func actions(_ actions: [Bar.TopNavigation.Resource.Action]) -> Self {
+        public func leadingButton(_ leadingButton: Bar.TopNavigation.Resource.LeadingButton?) -> Self {
             var zelf = self
-            zelf.actions = Array(actions.prefix(3))
+            zelf.leadingButton = leadingButton
+            return zelf
+        }
+        
+        public func trailingButtons(_ actions: [Bar.TopNavigation.Resource.TrailingButton]) -> Self {
+            var zelf = self
+            zelf.trailingButtons = Array(actions.prefix(3))
             return zelf
         }
         
         private struct Contents: View {
-            @State private var leftSize: CGSize = .zero
-            @State private var actionSize: CGSize = .zero
-            
             var variant: Variant
             var title: String
-            var left: Bar.TopNavigation.Resource.Left?
-            var actions: [Bar.TopNavigation.Resource.Action]
+            var leadingButton: Bar.TopNavigation.Resource.LeadingButton?
+            var trailingButtons: [Bar.TopNavigation.Resource.TrailingButton]
             
             var body: some View {
                 switch variant {
@@ -127,13 +124,13 @@ extension Modal {
                     Bar.TopNavigation.Contents(
                         variant: variant.topNavigationVariant,
                         title: title,
-                        left: left,
-                        actions: actions
+                        leadingButton: leadingButton,
+                        trailingButtons: trailingButtons
                     )
                 case .emphasized:
                     ZStack {
                         HStack(spacing: 20) {
-                            Bar.TopNavigation.NormalLeft(left)
+                            Bar.TopNavigation.LeadingButton(leadingButton)
                             Text(title)
                                 .montage(
                                     variant: variant.typoVaraint,
@@ -144,7 +141,7 @@ extension Modal {
                                 .lineLimit(1)
                                 .frame(height: 24, alignment: variant.textAlignment)
                             Spacer(minLength: 0)
-                            Bar.TopNavigation.NormalAction(actions)
+                            Bar.TopNavigation.TrailingButtons(trailingButtons)
                         }
                     }
                 }

@@ -59,14 +59,14 @@ extension Button {
         }
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: Icon? {
+        public var leadingIcon: Icon? {
             didSet {
                 updateViews()
             }
         }
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: Icon? {
+        public var trailingIcon: Icon? {
             didSet {
                 updateViews()
             }
@@ -80,7 +80,7 @@ extension Button {
         }
         
         /// uniqueIcon 노출 여부입니다.
-        /// > text와 leftIcon, rightIcon은 표현되지 않습니다.
+        /// > text와 leadingIcon, trailingIcon은 표현되지 않습니다.
         /// > 설정 시 constraint가 업데이트 됩니다.
         public var iconOnly = false {
             didSet {
@@ -132,7 +132,7 @@ extension Button {
         
         private lazy var stackView = UIStackView()
         
-        private lazy var leftIconView = UIImageView()
+        private lazy var leadingIconView = UIImageView()
         
         private lazy var textLabel: UILabel = {
             let label = UILabel()
@@ -140,7 +140,7 @@ extension Button {
             return label
         }()
         
-        private lazy var rightIconView = UIImageView()
+        private lazy var trailingIconView = UIImageView()
         
         private lazy var uniqueIconView = UIImageView()
         
@@ -185,7 +185,7 @@ extension Button {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize(iconOnly)
             let edgeInsets = size.edgeInsets(iconOnly)
-            let iconCount = [leftIcon, rightIcon, uniqueIcon].filter { $0 != nil }.count
+            let iconCount = [leadingIcon, trailingIcon, uniqueIcon].filter { $0 != nil }.count
             let iconWidths = iconSize.width * CGFloat(iconCount)
             let spacings = iconOnly ? .zero : size.gap * CGFloat(iconCount)
             
@@ -227,9 +227,9 @@ extension Button.OutlinedUIButton {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = size.gap
-        stackView.addArrangedSubview(leftIconView)
+        stackView.addArrangedSubview(leadingIconView)
         stackView.addArrangedSubview(textLabel)
-        stackView.addArrangedSubview(rightIconView)
+        stackView.addArrangedSubview(trailingIconView)
         stackView.addArrangedSubview(uniqueIconView)
     }
     
@@ -259,17 +259,17 @@ extension Button.OutlinedUIButton {
     private func setupIconViewConstraints() {
         NSLayoutConstraint.deactivate(iconViewContraints)
         
-        leftIconView.translatesAutoresizingMaskIntoConstraints = false
-        rightIconView.translatesAutoresizingMaskIntoConstraints = false
+        leadingIconView.translatesAutoresizingMaskIntoConstraints = false
+        trailingIconView.translatesAutoresizingMaskIntoConstraints = false
         uniqueIconView.translatesAutoresizingMaskIntoConstraints = false
         
         let size = size.iconSize(iconOnly)
         
         let constraints = [
-            leftIconView.widthAnchor.constraint(equalToConstant: size.width),
-            leftIconView.heightAnchor.constraint(equalToConstant: size.height),
-            rightIconView.widthAnchor.constraint(equalToConstant: size.width),
-            rightIconView.heightAnchor.constraint(equalToConstant: size.height),
+            leadingIconView.widthAnchor.constraint(equalToConstant: size.width),
+            leadingIconView.heightAnchor.constraint(equalToConstant: size.height),
+            trailingIconView.widthAnchor.constraint(equalToConstant: size.width),
+            trailingIconView.heightAnchor.constraint(equalToConstant: size.height),
             uniqueIconView.widthAnchor.constraint(equalToConstant: size.width),
             uniqueIconView.heightAnchor.constraint(equalToConstant: size.height)
         ]
@@ -346,8 +346,8 @@ extension Button.OutlinedUIButton {
                 }
             }
         }()
-        leftIconView.tintColor = contentColor
-        rightIconView.tintColor = contentColor
+        leadingIconView.tintColor = contentColor
+        trailingIconView.tintColor = contentColor
         uniqueIconView.tintColor = contentColor
         interaction.color = variant.interactionColor
         interaction.variant = variant.interactionVariant
@@ -356,25 +356,25 @@ extension Button.OutlinedUIButton {
     private func updateIconView() {
         if iconOnly {
             if let uniqueIcon {
-                leftIconView.isHidden = true
-                rightIconView.isHidden = true
+                leadingIconView.isHidden = true
+                trailingIconView.isHidden = true
                 
                 uniqueIconView.isHidden = false
                 uniqueIconView.image = .montage(uniqueIcon)
             }
         } else {
-            if let leftIcon {
-                leftIconView.isHidden = false
-                leftIconView.image = .montage(leftIcon)
+            if let leadingIcon {
+                leadingIconView.isHidden = false
+                leadingIconView.image = .montage(leadingIcon)
             } else {
-                leftIconView.isHidden = true
+                leadingIconView.isHidden = true
             }
             
-            if let rightIcon {
-                rightIconView.isHidden = false
-                rightIconView.image = .montage(rightIcon)
+            if let trailingIcon {
+                trailingIconView.isHidden = false
+                trailingIconView.image = .montage(trailingIcon)
             } else {
-                rightIconView.isHidden = true
+                trailingIconView.isHidden = true
             }
             
             uniqueIconView.isHidden = true

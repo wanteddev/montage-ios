@@ -12,8 +12,8 @@ extension Button {
     public struct SolidButton: UIViewRepresentable {
         public var variant: SolidUIButton.Variant = .primary
         public var size: SolidUIButton.Size = .medium
-        public var leftIcon: Icon?
-        public var rightIcon: Icon?
+        public var leadingIcon: Icon?
+        public var trailingIcon: Icon?
         public var text: String
         public var uniqueIcon: Icon?
         public var iconOnly = false
@@ -28,8 +28,8 @@ extension Button {
         public init(
             variant: SolidUIButton.Variant = .primary,
             size: SolidUIButton.Size = .medium,
-            leftIcon: Icon? = nil,
-            rightIcon: Icon? = nil,
+            leadingIcon: Icon? = nil,
+            trailingIcon: Icon? = nil,
             text: String = "",
             uniqueIcon: Icon? = nil,
             iconOnly: Bool = false,
@@ -41,8 +41,8 @@ extension Button {
         ) {
             self.variant = variant
             self.size = size
-            self.leftIcon = leftIcon
-            self.rightIcon = rightIcon
+            self.leadingIcon = leadingIcon
+            self.trailingIcon = trailingIcon
             self.text = text
             self.uniqueIcon = uniqueIcon
             self.iconOnly = iconOnly
@@ -60,8 +60,8 @@ extension Button {
         public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.variant = variant
             uiView.size = size
-            uiView.leftIcon = leftIcon
-            uiView.rightIcon = rightIcon
+            uiView.leadingIcon = leadingIcon
+            uiView.trailingIcon = trailingIcon
             uiView.text = text
             uiView.uniqueIcon = uniqueIcon
             uiView.iconOnly = iconOnly
@@ -102,7 +102,7 @@ struct SolidButtonPreview: View {
             HStack {
                 Button.SolidButton(
                     size: .medium,
-                    rightIcon: .chevronRightThick,
+                    trailingIcon: .chevronRightThick,
                     text: "안녕하세요"
                 ) {
                     debugPrint(">>> hello world!")
@@ -110,7 +110,7 @@ struct SolidButtonPreview: View {
                 
                 Button.SolidButton(
                     size: .medium,
-                    rightIcon: .chevronRightThick,
+                    trailingIcon: .chevronRightThick,
                     text: "안녕하세요",
                     disable: true
                 )
@@ -203,20 +203,20 @@ struct SolidButtonPreview: View {
             HStack {
                 Button.SolidButton(
                     size: .small,
-                    leftIcon: .apps,
+                    leadingIcon: .apps,
                     text: "안녕하세요"
                 )
                 
                 Button.SolidButton(
                     size: .small,
-                    rightIcon: .apps,
+                    trailingIcon: .apps,
                     text: "안녕하세요"
                 )
                 
                 Button.SolidButton(
                     size: .small,
-                    leftIcon: .apps,
-                    rightIcon: .apps,
+                    leadingIcon: .apps,
+                    trailingIcon: .apps,
                     text: "안녕하세요"
                 )
             }

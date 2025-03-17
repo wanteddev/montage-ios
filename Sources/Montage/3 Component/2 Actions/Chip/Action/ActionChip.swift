@@ -64,11 +64,11 @@ extension Chip {
         public func updateUIView(_ uiView: UIViewType, context _: Context) {
             uiView.variant = variant
             uiView.size = size
-            if let leftImage {
-                uiView.leftImage = ImageRenderer(content: leftImage).uiImage
+            if let leadingImage {
+                uiView.leadingImage = ImageRenderer(content: leadingImage).uiImage
             }
-            if let rightImage {
-                uiView.rightImage = ImageRenderer(content: rightImage).uiImage
+            if let trailingImage {
+                uiView.trailingImage = ImageRenderer(content: trailingImage).uiImage
             }
             uiView.imageColor = imageColor?.uiColor
             uiView.text = text
@@ -106,8 +106,8 @@ extension Chip {
         
         private var fillHorizontal = false
         private var fillVertical = false
-        private var leftImage: Image?
-        private var rightImage: Image?
+        private var leadingImage: Image?
+        private var trailingImage: Image?
         private var imageColor: SwiftUI.Color?
         
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
@@ -118,16 +118,16 @@ extension Chip {
         }
         
         /// 좌측 이미지를 지정합니다.
-        public func leftImage(_ image: Image) -> Self {
+        public func leadingImage(_ image: Image) -> Self {
             var zelf = self
-            zelf.leftImage = image
+            zelf.leadingImage = image
             return zelf
         }
         
         /// 우측 이미지를 지정합니다.
-        public func rightImage(_ image: Image) -> Self {
+        public func trailingImage(_ image: Image) -> Self {
             var zelf = self
-            zelf.rightImage = image
+            zelf.trailingImage = image
             return zelf
         }
         

@@ -61,7 +61,7 @@ public struct Menu: View {
                             }
                             onSelectCell?(items[index])
                         }))
-                        .leftContent {
+                        .leadingContent {
                             Group {
                                 switch variant {
                                 case .radio:
@@ -81,10 +81,10 @@ public struct Menu: View {
             
             if menuActionArea {
                 HStack(spacing: 0) {
-                    AnyView(menuActionAreaLeftContent())
+                    AnyView(menuActionAreaLeadingContent())
                         .frame(alignment: .leading)
                     Spacer(minLength: 24)
-                    AnyView(menuActionAreaRightContent())
+                    AnyView(menuActionAreaTrailingContent())
                 }
                 .frame(maxWidth: .infinity)
                 .padding(12)
@@ -106,17 +106,17 @@ public struct Menu: View {
     }
     
     private var menuActionArea = false
-    private var menuActionAreaLeftContent: () -> any View = { EmptyView() }
-    private var menuActionAreaRightContent: () -> any View = { EmptyView() }
+    private var menuActionAreaLeadingContent: () -> any View = { EmptyView() }
+    private var menuActionAreaTrailingContent: () -> any View = { EmptyView() }
     
     public func menuActionArea(
-        leftContent: @escaping () -> any View,
-        rightContent: @escaping () -> any View
+        leadingContent: @escaping () -> any View,
+        trailingContent: @escaping () -> any View
     ) -> Self {
         var zelf = self
         zelf.menuActionArea = true
-        zelf.menuActionAreaLeftContent = leftContent
-        zelf.menuActionAreaRightContent = rightContent
+        zelf.menuActionAreaLeadingContent = leadingContent
+        zelf.menuActionAreaTrailingContent = trailingContent
         return zelf
     }
 }

@@ -176,18 +176,18 @@ extension View {
     public func topNavigation(
         variant: Bar.TopNavigation.Variant = .normal,
         title: String,
-        left: Bar.TopNavigation.Resource.Left? = nil,
         backgroundColorResolvable: ColorResolvable? = nil,
-        actions: [Bar.TopNavigation.Resource.Action] = [],
+        leadingButton: Bar.TopNavigation.Resource.LeadingButton? = nil,
+        trailingButtons: [Bar.TopNavigation.Resource.TrailingButton] = [],
         withBottom model: ActionAreaModifier.Model? = nil
     ) -> some View {
         modifier(
             Bar.TopNavigation.TopNavigationModifier(
                 variant: variant,
                 title: title,
-                left: left,
                 backgroundColorResolvable: backgroundColorResolvable,
-                actions: actions,
+                leadingButton: leadingButton,
+                trailingButtons: trailingButtons,
                 actionAreaModel: model
             )
         )

@@ -14,6 +14,6 @@ public protocol CaseDescribable {
 
 extension CaseDescribable {
     public var description: String {
-        String("\(self)".split(separator: "(").first ?? "")
+        String("\(self)".split(separator: "(").first?.split(separator: ".").last ?? "")
     }
 }

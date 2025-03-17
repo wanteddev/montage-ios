@@ -19,7 +19,7 @@ extension TextInput {
         }
         
         /// 오른쪽 버튼의 속성을 가지고 있는 타입입니다.
-        public struct RightButton {
+        public struct TrailingButton {
             fileprivate let variant: Montage.Button.OutlinedUIButton.Variant
             fileprivate let title: String
             fileprivate let handler: (() -> Void)?
@@ -93,8 +93,8 @@ extension TextInput {
         private var description = false
         private var placeholder: String? = nil
         private var icon: Icon? = nil
-        private var rightButton: RightButton? = nil
-        private var rightContent: (() -> any View)? = nil
+        private var trailingButton: TrailingButton? = nil
+        private var trailingContent: (() -> any View)? = nil
         private var suggestions: Binding<[String]> = .constant([])
         
         /// 상태를 조정합니다.
@@ -139,17 +139,17 @@ extension TextInput {
             return zelf
         }
         
-        /// 오른쪽에 표시될 버튼의 속성을 지정합니다. `rightContent`와 함께 사용될 경우 `rightButton`이 우선순위가 높습니다.
-        public func rightButton(_ rightButton: RightButton?) -> Self {
+        /// 오른쪽에 표시될 버튼의 속성을 지정합니다. `trailingContent`와 함께 사용될 경우 `trailingButton`이 우선순위가 높습니다.
+        public func trailingButton(_ trailingButton: TrailingButton?) -> Self {
             var zelf = self
-            zelf.rightButton = rightButton
+            zelf.trailingButton = trailingButton
             return zelf
         }
         
-        /// 오른쪽에 표시될 컨텐츠를 지정합니다. `rightButton`과 함께 사용하는 경우 `rightContent`가 무시됩니다.
-        public func rightContent(_ rightContent: (() -> any View)?) -> Self {
+        /// 오른쪽에 표시될 컨텐츠를 지정합니다. `trailingButton`과 함께 사용하는 경우 `trailingContent`가 무시됩니다.
+        public func trailingContent(_ trailingContent: (() -> any View)?) -> Self {
             var zelf = self
-            zelf.rightContent = rightContent
+            zelf.trailingContent = trailingContent
             return zelf
         }
         
@@ -236,22 +236,22 @@ private extension TextInput.TextField {
                             .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
                             .onTapGesture { text = "" }
                     } else {
-                        if let rightIcon, let rightIconColor {
+                        if let trailingIcon, let trailingIconColor {
                             Image
-                                .montage(rightIcon)
+                                .montage(trailingIcon)
                                 .resizable()
                                 .frame(width: 22, height: 22)
-                                .foregroundStyle(rightIconColor)
+                                .foregroundStyle(trailingIconColor)
                         }
                     }
                     
-                    if rightButton == nil, let rightContent {
-                        AnyView(rightContent())
+                    if trailingButton == nil, let trailingContent {
+                        AnyView(trailingContent())
                     }
                 }
                 .padding(.all, 12)
                 .overlay {
-                    if rightButton == nil {
+                    if trailingButton == nil {
                         RoundedRectangle(cornerRadius: 12)
                             .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                     } else {
@@ -266,12 +266,12 @@ private extension TextInput.TextField {
                 )
             }
             
-            if let rightButton {
+            if let trailingButton {
                 ZStack {
-                    RightButtonView(
-                        variant: rightButton.variant,
-                        title: rightButton.title,
-                        handler: rightButton.handler
+                    TrailingButtonView(
+                        variant: trailingButton.variant,
+                        title: trailingButton.title,
+                        handler: trailingButton.handler
                     )
                     UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
                         .strokeBorder(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
@@ -415,7 +415,7 @@ private extension TextInput.TextField {
         }
     }
     
-    var rightIcon: Icon? {
+    var trailingIcon: Icon? {
         switch status {
         case .positive:
             .circleCheckFill
@@ -426,7 +426,7 @@ private extension TextInput.TextField {
         }
     }
     
-    var rightIconColor: SwiftUI.Color? {
+    var trailingIconColor: SwiftUI.Color? {
         switch status {
         case .positive:
             .alias(.primaryNormal)
@@ -448,7 +448,7 @@ private extension TextInput.TextField {
 
 // MARK: - Inner Views
 private extension TextInput.TextField {
-    struct RightButtonView: View {
+    struct TrailingButtonView: View {
         private let variant: Button.OutlinedUIButton.Variant
         private let title: String
         private let handler: (() -> Void)?

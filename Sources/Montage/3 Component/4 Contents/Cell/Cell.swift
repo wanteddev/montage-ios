@@ -59,7 +59,7 @@ public struct Cell: View {
         ZStack(alignment: .bottom) {
             ZStack {
                 HStack(alignment: textEllipsis ? .center : .top, spacing: 8) {
-                    leftContent()
+                    leadingContent()
                         .frame(
                             height: extraContentMaxHeight.maxHeight
                         )
@@ -92,7 +92,7 @@ public struct Cell: View {
                         }
                     }
                     
-                    rightContent()
+                    trailingContent()
                         .frame(
                             height: extraContentMaxHeight.maxHeight
                         )
@@ -152,8 +152,8 @@ public struct Cell: View {
     private var divider = false
     private var chevron = false
     private var extraContentMaxHeight: ContentHeight = .pt24
-    private var leftContent: () -> AnyView = { AnyView(EmptyView()) }
-    private var rightContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var interactionPadding: CGFloat = 12
     
     /// 타이틀 텍스트의 `variant` 속성을 조정합니다. 기본값은 `.body1`입니다.
@@ -205,7 +205,7 @@ public struct Cell: View {
         return zelf
     }
 
-    /// 활성화 상태로 만듭니다. 타이틀 텍스트의 색상을 `primaryNormal`로 변경하고 `rightContent(_ contents: @escaping (Bool) -> some View)`의 입력 클로져의 파라메터로 활성화 여부를 받을 수 있습니다.
+    /// 활성화 상태로 만듭니다. 타이틀 텍스트의 색상을 `primaryNormal`로 변경하고 `trailingContent(_ contents: @escaping (Bool) -> some View)`의 입력 클로져의 파라메터로 활성화 여부를 받을 수 있습니다.
     public func active(_ active: Bool = true) -> Self {
         var zelf = self
         zelf.active = active
@@ -234,16 +234,16 @@ public struct Cell: View {
     }
     
     /// 좌측 컨텐츠를 지정합니다.
-    public func leftContent(_ contents: @escaping () -> some View) -> Self {
+    public func leadingContent(_ contents: @escaping () -> some View) -> Self {
         var zelf = self
-        zelf.leftContent = { AnyView(contents()) }
+        zelf.leadingContent = { AnyView(contents()) }
         return zelf
     }
     
     /// 우측 컨텐츠를 지정합니다.
-    public func rightContent(_ contents: @escaping (Bool) -> some View) -> Self {
+    public func trailingContent(_ contents: @escaping (Bool) -> some View) -> Self {
         var zelf = self
-        zelf.rightContent = { AnyView(contents(active)) }
+        zelf.trailingContent = { AnyView(contents(active)) }
         return zelf
     }
     

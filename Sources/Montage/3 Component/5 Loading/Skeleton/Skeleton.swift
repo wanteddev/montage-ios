@@ -11,23 +11,23 @@ public enum Skeleton {
     // MARK: - Types
     
     public enum Align: String, CaseIterable {
-        case left
+        case leading
         case center
-        case right
+        case trailing
         
         var horizontalAlignment: HorizontalAlignment {
             switch self {
-            case .left: .leading
+            case .leading: .leading
             case .center: .center
-            case .right: .trailing
+            case .trailing: .trailing
             }
         }
         
         var alignment: Alignment {
             switch self {
-            case .left: .leading
+            case .leading: .leading
             case .center: .center
-            case .right: .trailing
+            case .trailing: .trailing
             }
         }
     }
@@ -41,7 +41,7 @@ public enum Skeleton {
     
     public enum Kind: CaseDescribable {
         case text(
-            alignment: Align = .left,
+            alignment: Align = .leading,
             lengths: [Length] = [._100],
             cornerRadius: CGFloat = 3,
             lineNumber: Int = 1

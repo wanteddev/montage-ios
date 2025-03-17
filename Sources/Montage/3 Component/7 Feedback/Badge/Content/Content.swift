@@ -19,10 +19,10 @@ extension Badge {
         public var color: Badge.ContentUIView.ColorStyle
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: Image?
+        public var leadingIcon: Image?
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: Image?
+        public var trailingIcon: Image?
         
         /// 버튼에서 표현될 텍스트입니다.
         public var text: String
@@ -33,15 +33,15 @@ extension Badge {
             variant: Badge.ContentUIView.Variant = .solid,
             size: Badge.ContentUIView.Size = .medium,
             color: Badge.ContentUIView.ColorStyle = .neutral,
-            leftIcon: Image? = nil,
-            rightIcon: Image? = nil,
+            leadingIcon: Image? = nil,
+            trailingIcon: Image? = nil,
             text: String
         ) {
             self.variant = variant
             self.size = size
             self.color = color
-            self.leftIcon = leftIcon
-            self.rightIcon = rightIcon
+            self.leadingIcon = leadingIcon
+            self.trailingIcon = trailingIcon
             self.text = text
         }
         
@@ -53,8 +53,8 @@ extension Badge {
             uiView.variant = variant
             uiView.size = size
             uiView.colorStyle = color
-            uiView.leftIcon = ImageRenderer(content: leftIcon).uiImage
-            uiView.rightIcon = ImageRenderer(content: rightIcon).uiImage
+            uiView.leadingIcon = ImageRenderer(content: leadingIcon).uiImage
+            uiView.trailingIcon = ImageRenderer(content: trailingIcon).uiImage
             uiView.text = text
         }
         
@@ -126,28 +126,28 @@ fileprivate struct Preview: View {
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.primary),
-                        leftIcon: .montage(.circleInfoFill),
+                        leadingIcon: .montage(.circleInfoFill),
                         text: "중요"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.positive),
-                        leftIcon: .montage(.circleCheckFill),
+                        leadingIcon: .montage(.circleCheckFill),
                         text: "긍정"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.cautionary),
-                        leftIcon: .montage(.circleExclamationFill),
+                        leadingIcon: .montage(.circleExclamationFill),
                         text: "경고"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.negative),
-                        leftIcon: .montage(.circleCloseFill),
+                        leadingIcon: .montage(.circleCloseFill),
                         text: "에러"
                     )
                 }
@@ -156,35 +156,35 @@ fileprivate struct Preview: View {
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.lime),
-                        rightIcon: Image(systemName: "rectangle.fill"),
+                        trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "라임"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.cyan),
-                        rightIcon: Image(systemName: "rectangle.fill"),
+                        trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "시안"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.lightBlue),
-                        rightIcon: Image(systemName: "rectangle.fill"),
+                        trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "라이트 블루"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.violet),
-                        rightIcon: Image(systemName: "rectangle.fill"),
+                        trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "바이올렛"
                     )
     
                     Badge.Content(
                         variant: .solid,
                         color: .accent(.pink),
-                        rightIcon: Image(systemName: "rectangle.fill"),
+                        trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "핑크"
                     )
                 }

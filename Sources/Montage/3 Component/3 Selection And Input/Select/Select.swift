@@ -57,7 +57,7 @@ public struct Select: View {
     }
     
     /// 왼쪽에 표시될 컨텐트 타입입니다.
-    public enum LeftContent: CaseDescribable {
+    public enum LeadingContent: CaseDescribable {
         case icon(Icon)
         case iconButton(Button.IconButton)
         case custom(() -> any View)
@@ -92,7 +92,7 @@ public struct Select: View {
     private var requiredBadge = false
     private var description = ""
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
-    private var leftContent: LeftContent?
+    private var leadingContent: LeadingContent?
     private var menuResize: Modal.BottomSheet.Resize = .hug
     
     /// negative 상태 여부를 조정합니다.
@@ -145,9 +145,9 @@ public struct Select: View {
     }
     
     /// 왼쪽 컨텐츠를 추가합니다.
-    public func leftContent(_ content: LeftContent?) -> Self {
+    public func leadingContent(_ content: LeadingContent?) -> Self {
         var zelf = self
-        zelf.leftContent = content
+        zelf.leadingContent = content
         return zelf
     }
     
@@ -203,7 +203,7 @@ public struct Select: View {
                 
                 HStack(alignment: .top, spacing: 8) {
                     Group {
-                        switch leftContent {
+                        switch leadingContent {
                         case .icon(let icon):
                             Image.montage(icon)
                                 .resizable()
@@ -353,7 +353,7 @@ public struct Select: View {
                             Button.OutlinedButton(
                                 variant: .assistive,
                                 size: .large,
-                                leftIcon: .refresh,
+                                leadingIcon: .refresh,
                                 iconOnly: true
                             ) {
                                 deselectAll()
@@ -412,7 +412,7 @@ public struct Select: View {
                         switch selectionType {
                         case .checkmark:
                             cell.active(items[index].isSelected)
-                                .rightContent { active in
+                                .trailingContent { active in
                                     Group {
                                         if active {
                                             Control.checkmark(checked: active)
@@ -420,12 +420,12 @@ public struct Select: View {
                                     }
                                 }
                         case .radio:
-                            cell.leftContent {
+                            cell.leadingContent {
                                 Control.radio(checked: items[index].isSelected)
                             }
                         }
                     case .multiple:
-                        cell.leftContent {
+                        cell.leadingContent {
                             Control.checkbox(checked: items[index].isSelected)
                         }
                     }
@@ -484,9 +484,9 @@ public struct Select: View {
                     fontColor: fontColor(item)
                 )
                 .imageColor(iconColor(item))
-                .rightImage(Image.montage(.closeThick))
+                .trailingImage(Image.montage(.closeThick))
                 .if(item.icon != nil) {
-                    $0.leftImage(Image.montage(item.icon!))
+                    $0.leadingImage(Image.montage(item.icon!))
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {

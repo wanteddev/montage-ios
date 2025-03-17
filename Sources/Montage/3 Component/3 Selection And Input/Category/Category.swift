@@ -71,8 +71,8 @@ public struct Category: View {
                             bottom: 0,
                             trailing: icon != nil ? 20 : 0
                         ),
-                        leftGradientDisabled: horizontalPadding,
-                        rightGradientDisabled: horizontalPadding && icon == nil
+                        leadingGradientDisabled: horizontalPadding,
+                        trailingGradientDisabled: horizontalPadding && icon == nil
                     )
                 )
                 
