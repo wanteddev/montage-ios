@@ -27,18 +27,15 @@ public struct Accordion: View {
     // MARK: - Initializer
     
     private let title: String
-    private let description: String
-    @ViewBuilder private let accessory: (() -> any View)?
+    private let description: String?
     @ViewBuilder private let content: (() -> any View)?
     public init(
         title: String,
-        description: String = "",
-        accessory: (() -> any View)? = nil,
+        description: String? = nil,
         content: (() -> any View)? = nil
     ) {
         self.title = title
         self.description = description
-        self.accessory = accessory
         self.content = content
     }
     
@@ -46,13 +43,23 @@ public struct Accordion: View {
     
     @State private var isPressed = false
     @State private var isExpanded = false
-    @State private var accessorySize: CGSize = .zero
+    @State private var trailingContentSize: CGSize = .zero
     @State private var contentSize: CGSize = .zero
     
     public var body: some View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .top, spacing: 0) {
+                HStack(alignment: .top, spacing: 8) {
+                    if let leadingIcon {
+                        Image.montage(leadingIcon)
+                            .resizable()
+                            .if(leadingIconColor != nil) {
+                                $0.foregroundStyle(leadingIconColor!)
+                            }
+                            .padding(2)
+                            .frame(width: 24, height: 24)
+                    }
+                    
                     Text(title)
                         .montage(
                             variant: titleTypography.variant,
@@ -62,16 +69,18 @@ public struct Accordion: View {
                         .paragraph(variant: titleTypography.variant)
                     Spacer(minLength: 0)
                     
-                    if let accessory {
-                        AnyView(accessory())
-                            .onGeometryChange(
-                                for: CGSize.self,
-                                of: { $0.size },
-                                action: { accessorySize = $0 }
-                            )
+                    Group {
+                        if let trailingContent {
+                            AnyView(trailingContent())
+                        }
                     }
+                    .onGeometryChange(
+                        for: CGSize.self,
+                        of: { $0.size },
+                        action: { trailingContentSize = $0 }
+                    )
                     
-                    if accessorySize == .zero {
+                    if trailingContentSize == .zero {
                         Image.montage(.chevronDown)
                             .resizable()
                             .frame(width: 20, height: 20)
@@ -105,7 +114,7 @@ public struct Accordion: View {
                 
                 if isExpanded {
                     VStack(alignment: .leading, spacing: 0) {
-                        if !description.isEmpty {
+                        if let description, !description.isEmpty {
                             Text(description)
                                 .montage(
                                     variant: descriptionTypography.variant,
@@ -116,18 +125,20 @@ public struct Accordion: View {
                         }
                         
                         Spacer().frame(height: 12)
-                            .if(!description.isEmpty && contentSize != .zero)
+                            .if(description.isNilOrEmpty == false && contentSize != .zero)
                         
-                        if let content {
-                            AnyView(content())
-                                .onGeometryChange(
-                                    for: CGSize.self,
-                                    of: { $0.size },
-                                    action: { contentSize = $0 }
-                                )
+                        Group {
+                            if let content {
+                                AnyView(content())
+                            }
                         }
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { contentSize = $0 }
+                        )
                     }
-                    .padding(.bottom, description.isEmpty && contentSize == .zero ? 0 : 16)
+                    .padding(.bottom, description.isNilOrEmpty && contentSize == .zero ? 0 : 16)
                     .padding(.horizontal, fillWidth ? 20 : 0)
                 }
             }
@@ -155,6 +166,9 @@ public struct Accordion: View {
     private var verticalPadding: VerticalPadding = .pt12
     private var fillWidth = false
     private var divider = false
+    private var leadingIcon: Icon? = nil
+    private var leadingIconColor: SwiftUI.Color? = nil
+    private var trailingContent: (() -> any View)? = nil
     
     /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`, `.alias(.labelNormal)`입니다.
     public func title(
@@ -200,6 +214,19 @@ public struct Accordion: View {
     public func divider(_ divider: Bool = true) -> Self {
         var zelf = self
         zelf.divider = divider
+        return zelf
+    }
+    
+    public func leadingIcon(_ leadingIcon: Icon? = nil, color: SwiftUI.Color? = nil) -> Self {
+        var zelf = self
+        zelf.leadingIcon = leadingIcon
+        zelf.leadingIconColor = color
+        return zelf
+    }
+    
+    public func trailingContent(_ trailingContent: (() -> any View)? = nil) -> Self {
+        var zelf = self
+        zelf.trailingContent = trailingContent
         return zelf
     }
 }
