@@ -99,10 +99,10 @@ extension Button {
         private let size: TextButton.Size
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
-        private let leftIcon: Icon?
+        private let leadingIcon: Icon?
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
-        private let rightIcon: Icon?
+        private let trailingIcon: Icon?
         
         /// 버튼에서 표현될 텍스트입니다.
         private let text: String
@@ -116,7 +116,9 @@ extension Button {
         
         /// 커스텀 가능한 텍스트 사이즈입니다.
         /// montage의 모든 Typography.Variant를 사용할 수 있습니다.
-        private let fontSize: Typography.Variant?
+        private let fontVariant: Typography.Variant?
+        
+        private let fontWeight: Typography.Weight?
         
         /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
         private let handler: (() -> Void)?
@@ -124,22 +126,24 @@ extension Button {
         public init(
             variant: TextButton.Variant = .primary,
             size: TextButton.Size = .medium,
-            leftIcon: Icon? = nil,
-            rightIcon: Icon? = nil,
+            leadingIcon: Icon? = nil,
+            trailingIcon: Icon? = nil,
             text: String,
             disable: Bool = false,
             contentColor: SwiftUI.Color? = nil,
-            fontSize: Typography.Variant? = nil,
+            fontVariant: Typography.Variant? = nil,
+            fontWeight: Typography.Weight? = nil,
             handler: (() -> Void)? = nil
         ) {
             self.variant = variant
             self.size = size
-            self.leftIcon = leftIcon
-            self.rightIcon = rightIcon
+            self.leadingIcon = leadingIcon
+            self.trailingIcon = trailingIcon
             self.text = text
             self.disable = disable
             self.contentColor = contentColor
-            self.fontSize = fontSize
+            self.fontVariant = fontVariant
+            self.fontWeight = fontWeight
             self.handler = handler
         }
         
@@ -171,17 +175,17 @@ extension Button {
         
         public var body: some View {
             HStack(alignment: .center, spacing: 4) {
-                if let leftIcon {
-                    icon(leftIcon)
+                if let leadingIcon {
+                    icon(leadingIcon)
                 }
                 Text(text)
                     .montage(
-                        variant: size.typoVariant,
-                        weight: size.typoWeight,
+                        variant: fontVariant ?? size.typoVariant,
+                        weight: fontWeight ?? size.typoWeight,
                         color: typoColor
                     )
-                if let rightIcon {
-                    icon(rightIcon)
+                if let trailingIcon {
+                    icon(trailingIcon)
                 }
             }
             .background {
@@ -259,18 +263,18 @@ struct TextButtonPreview: View {
             VStack(alignment: .leading) {
                 HStack {
                     Button.TextButton(
-                        leftIcon: .bubbleFill,
+                        leadingIcon: .bubbleFill,
                         text: "안녕하세요"
                     )
                     
                     Button.TextButton(
-                        rightIcon: .circleCloseFill,
+                        trailingIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                     
                     Button.TextButton(
-                        leftIcon: .bubbleFill,
-                        rightIcon: .circleCloseFill,
+                        leadingIcon: .bubbleFill,
+                        trailingIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                 }
@@ -278,20 +282,20 @@ struct TextButtonPreview: View {
                 HStack {
                     Button.TextButton(
                         variant: .assistive,
-                        leftIcon: .bubbleFill,
+                        leadingIcon: .bubbleFill,
                         text: "안녕하세요"
                     )
                     
                     Button.TextButton(
                         variant: .assistive,
-                        rightIcon: .circleCloseFill,
+                        trailingIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                     
                     Button.TextButton(
                         variant: .assistive,
-                        leftIcon: .bubbleFill,
-                        rightIcon: .circleCloseFill,
+                        leadingIcon: .bubbleFill,
+                        trailingIcon: .circleCloseFill,
                         text: "안녕하세요"
                     )
                 }
@@ -345,14 +349,14 @@ struct TextButtonPreview: View {
                         text: "body1",
                         disable: false,
                         contentColor: .alias(.accentCyan),
-                        fontSize: .body1
+                        fontVariant: .body1
                     )
                     
                     Button.TextButton(
                         text: "heading1",
                         disable: false,
                         contentColor: .atomic(.globalBlue40),
-                        fontSize: .heading1
+                        fontVariant: .heading1
                     )
                 }
             }

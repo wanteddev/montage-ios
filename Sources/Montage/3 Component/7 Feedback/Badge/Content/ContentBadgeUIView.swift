@@ -55,14 +55,14 @@ extension Badge {
         }
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leftIcon: UIImage? {
+        public var leadingIcon: UIImage? {
             didSet {
                 updateViews()
             }
         }
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var rightIcon: UIImage? {
+        public var trailingIcon: UIImage? {
             didSet {
                 updateViews()
             }
@@ -77,11 +77,11 @@ extension Badge {
         
         private lazy var stackView = UIStackView()
         
-        private lazy var leftIconView = UIImageView()
+        private lazy var leadingIconView = UIImageView()
         
         private lazy var textLabel = UILabel()
         
-        private lazy var rightIconView = UIImageView()
+        private lazy var trailingIconView = UIImageView()
         
         private var iconViewContraints: [NSLayoutConstraint] = []
         
@@ -117,7 +117,7 @@ extension Badge {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize
             let edgeInsets = size.edgeInsets
-            let iconCount = [leftIcon, rightIcon].filter { $0 != nil }.count
+            let iconCount = [leadingIcon, trailingIcon].filter { $0 != nil }.count
             
             return .init(
                 width: iconSize.width * CGFloat(iconCount) + size.spacing * CGFloat(iconCount) + textSize
@@ -142,9 +142,9 @@ extension Badge.ContentUIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = size.spacing
-        stackView.addArrangedSubview(leftIconView)
+        stackView.addArrangedSubview(leadingIconView)
         stackView.addArrangedSubview(textLabel)
-        stackView.addArrangedSubview(rightIconView)
+        stackView.addArrangedSubview(trailingIconView)
     }
     
     private func setupUpdateableConstraints() {
@@ -157,14 +157,14 @@ extension Badge.ContentUIView {
     private func setupIconViewConstraints() {
         NSLayoutConstraint.deactivate(iconViewContraints)
         
-        leftIconView.translatesAutoresizingMaskIntoConstraints = false
-        rightIconView.translatesAutoresizingMaskIntoConstraints = false
+        leadingIconView.translatesAutoresizingMaskIntoConstraints = false
+        trailingIconView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            leftIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            leftIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
-            rightIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            rightIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
+            leadingIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
+            leadingIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
+            trailingIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
+            trailingIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -209,23 +209,23 @@ extension Badge.ContentUIView {
         backgroundColor = variant == .solid ? enclosureColor : .alias(.backgroundNormal)
         layer.borderWidth = variant == .solid ? 0 : 1
         layer.borderColor = variant == .solid ? nil : enclosureColor.cgColor
-        leftIconView.tintColor = .alias(colorStyle.contentColor)
-        rightIconView.tintColor = .alias(colorStyle.contentColor)
+        leadingIconView.tintColor = .alias(colorStyle.contentColor)
+        trailingIconView.tintColor = .alias(colorStyle.contentColor)
     }
     
     private func updateIconView() {
-        if let leftIcon {
-            leftIconView.isHidden = false
-            leftIconView.image = leftIcon.withRenderingMode(.alwaysTemplate)
+        if let leadingIcon {
+            leadingIconView.isHidden = false
+            leadingIconView.image = leadingIcon.withRenderingMode(.alwaysTemplate)
         } else {
-            leftIconView.isHidden = true
+            leadingIconView.isHidden = true
         }
         
-        if let rightIcon {
-            rightIconView.isHidden = false
-            rightIconView.image = rightIcon.withRenderingMode(.alwaysTemplate)
+        if let trailingIcon {
+            trailingIconView.isHidden = false
+            trailingIconView.image = trailingIcon.withRenderingMode(.alwaysTemplate)
         } else {
-            rightIconView.isHidden = true
+            trailingIconView.isHidden = true
         }
     }
     

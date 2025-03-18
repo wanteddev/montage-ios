@@ -33,14 +33,14 @@ extension Chip {
         }
         
         /// 텍스트의 좌측에 표시될 이미지입니다.
-        var leftImage: UIImage? = nil {
+        var leadingImage: UIImage? = nil {
             didSet {
                 updateViews()
             }
         }
         
         /// 텍스트의 우측에 표시될 이미지입니다.
-        var rightImage: UIImage? = nil {
+        var trailingImage: UIImage? = nil {
             didSet {
                 updateViews()
             }
@@ -103,7 +103,7 @@ extension Chip {
         
         private let stackView = UIStackView()
         
-        private let leftImageView = {
+        private let leadingImageView = {
             let view = UIImageView()
             view.contentMode = .scaleAspectFit
             return view
@@ -113,7 +113,7 @@ extension Chip {
         
         private let textLabelWrapperView = UIView()
         
-        private let rightImageView = {
+        private let trailingImageView = {
             let view = UIImageView()
             view.contentMode = .scaleAspectFit
             return view
@@ -160,7 +160,7 @@ extension Chip {
             let textSize = getAttributedText().size()
             let imageSize = size.imageSize
             let edgeInsets = size.contentsEdgeInsets
-            let imageCount = [leftImage, rightImage].compactMap { $0 }.count
+            let imageCount = [leadingImage, trailingImage].compactMap { $0 }.count
             let imageWidths = imageSize.width * CGFloat(imageCount)
             let spacings = size.contentsGap * CGFloat(imageCount)
             let textLabelPaddings = size.textLabelPadding * 2
@@ -199,9 +199,9 @@ extension Chip.ActionUIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = size.contentsGap
-        stackView.addArrangedSubview(leftImageView)
+        stackView.addArrangedSubview(leadingImageView)
         stackView.addArrangedSubview(textLabelWrapperView)
-        stackView.addArrangedSubview(rightImageView)
+        stackView.addArrangedSubview(trailingImageView)
         
         textLabelWrapperView.addSubview(textLabel)
     }
@@ -231,14 +231,14 @@ extension Chip.ActionUIView {
     private func setupIconViewConstraints() {
         NSLayoutConstraint.deactivate(iconViewContraints)
         
-        leftImageView.translatesAutoresizingMaskIntoConstraints = false
-        rightImageView.translatesAutoresizingMaskIntoConstraints = false
+        leadingImageView.translatesAutoresizingMaskIntoConstraints = false
+        trailingImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            leftImageView.widthAnchor.constraint(equalToConstant: size.imageSize.width),
-            leftImageView.heightAnchor.constraint(equalToConstant: size.imageSize.height),
-            rightImageView.widthAnchor.constraint(equalToConstant: size.imageSize.width),
-            rightImageView.heightAnchor.constraint(equalToConstant: size.imageSize.height)
+            leadingImageView.widthAnchor.constraint(equalToConstant: size.imageSize.width),
+            leadingImageView.heightAnchor.constraint(equalToConstant: size.imageSize.height),
+            trailingImageView.widthAnchor.constraint(equalToConstant: size.imageSize.width),
+            trailingImageView.heightAnchor.constraint(equalToConstant: size.imageSize.height)
         ].compactMap { $0 }
         
         NSLayoutConstraint.activate(constraints)
@@ -304,27 +304,28 @@ extension Chip.ActionUIView {
         backgroundColor = resolveBackgroundColor()
         layer.borderColor = resolveCurrentLineColor()
         layer.borderWidth = variant.borderWidth
-        leftImageView.tintColor = resolveCurrentImageColor()
-        rightImageView.tintColor = resolveCurrentImageColor()
+        leadingImageView.tintColor = resolveCurrentImageColor()
+        trailingImageView.tintColor = resolveCurrentImageColor()
         interaction.variant = resolveInteractionVariant()
         interaction.color = resolveInteractionColor()
         updateTextLabel()
     }
     
     private func updateImageViews() {
-        if let leftImage {
-            leftImageView.isHidden = false
-            leftImageView.image = imageColor == nil ? leftImage : leftImage.withRenderingMode(.alwaysTemplate)
+        if let leadingImage {
+            leadingImageView.isHidden = false
+            leadingImageView.image = imageColor == nil
+            ? leadingImage : leadingImage.withRenderingMode(.alwaysTemplate)
         } else {
-            leftImageView.isHidden = true
+            leadingImageView.isHidden = true
         }
         
-        if let rightImage {
-            rightImageView.isHidden = false
-            rightImageView.image = imageColor == nil ? rightImage : rightImage
+        if let trailingImage {
+            trailingImageView.isHidden = false
+            trailingImageView.image = imageColor == nil ? trailingImage : trailingImage
                 .withRenderingMode(.alwaysTemplate)
         } else {
-            rightImageView.isHidden = true
+            trailingImageView.isHidden = true
         }
     }
     

@@ -27,8 +27,8 @@ extension Card {
         private let extraCaption: () -> EC
         private let topContent: () -> TC
         private let bottomContent: () -> BC
-        private let leftContent: () -> LC
-        private let rightContent: () -> RC
+        private let leadingContent: () -> LC
+        private let trailingContent: () -> RC
         
         public init(
             skeleton: Binding<Bool>,
@@ -40,8 +40,8 @@ extension Card {
             @ViewBuilder extraCaption: @escaping (() -> EC) = { EmptyView() },
             @ViewBuilder topContent: @escaping (() -> TC) = { EmptyView() },
             @ViewBuilder bottomContent: @escaping (() -> BC) = { EmptyView() },
-            @ViewBuilder leftContent: @escaping (() -> LC) = { EmptyView() },
-            @ViewBuilder rightContent: @escaping (() -> RC) = { EmptyView() }
+            @ViewBuilder leadingContent: @escaping (() -> LC) = { EmptyView() },
+            @ViewBuilder trailingContent: @escaping (() -> RC) = { EmptyView() }
         ) {
             _skeleton = skeleton
             self.imageRatio = imageRatio
@@ -52,13 +52,13 @@ extension Card {
             self.extraCaption = extraCaption
             self.topContent = topContent
             self.bottomContent = bottomContent
-            self.leftContent = leftContent
-            self.rightContent = rightContent
+            self.leadingContent = leadingContent
+            self.trailingContent = trailingContent
         }
 
         public var body: some View {
             HStack(alignment: .center, spacing: .zero) {
-                leftContent()
+                leadingContent()
                     .padding(.trailing, 12)
                 
                 ZStack {
@@ -104,7 +104,7 @@ extension Card {
                 
                 Spacer()
                 
-                rightContent()
+                trailingContent()
             }
             .frame(height: imageWidth * (imageRatio.size.height / imageRatio.size.width))
         }
@@ -163,10 +163,10 @@ import Pretendard
                 Badge.Content(text: "텍스트")
             }
         },
-        leftContent: {
+        leadingContent: {
             Control.checkbox(state: .unchecked)
         },
-        rightContent: {
+        trailingContent: {
             Image.montage(.chevronRight)
                 .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
         }

@@ -48,19 +48,19 @@ extension TextInput {
         /// > characterCount는 좌/우측 중 하나에만 사용 가능합니다. 중복된다면 좌측을 우선 표시합니다.
         public enum Resource {
             public enum Placement {
-                case left
-                case right
+                case leading
+                case trailing
             }
             
             case characterCount(limit: Int? = nil)
             case textButton(
-                placement: Placement = .left,
+                placement: Placement = .leading,
                 varaint: Button.TextButton.Variant? = .assistive,
                 title: String,
                 handler: (() -> Void)? = nil
             )
             case iconButton(
-                placement: Placement = .left,
+                placement: Placement = .leading,
                 variant: Button.IconButton.Variant? = .solid(size: .small),
                 icon: Icon,
                 tintColor: SwiftUI.Color = .alias(.labelAlternative),
@@ -84,6 +84,14 @@ extension TextInput {
                 Badge.ContentUIView.Variant = .solid,
                 title: String
             )
+            
+            var isCharacterCount: Bool {
+                if case .characterCount = self {
+                    return true
+                } else {
+                    return false
+                }
+            }
         }
         
         // MARK: - Initializer
@@ -151,7 +159,12 @@ extension TextInput {
         
         /// TextArea 하단 컴포넌트입니다.
         /// > 좌/우 각각 최대 3개까지 사용할 수 있습니다.
-        public func bottomResources(leading leadingResources: [Resource] = [], trailing trailingResources: [Resource] = [], leadingResourceSpacing: CGFloat = 4, trailingResourceSpacing: CGFloat = 4) -> Self {
+        public func bottomResources(
+            leading leadingResources: [Resource] = [],
+            trailing trailingResources: [Resource] = [],
+            leadingResourceSpacing: CGFloat = 4,
+            trailingResourceSpacing: CGFloat = 4
+        ) -> Self {
             var zelf = self
             zelf.leadingResources = Array(leadingResources.prefix(3))
             zelf.leadingResourceSpacing = leadingResourceSpacing
@@ -302,63 +315,50 @@ extension TextInput {
             
             private let negative: Bool
             private let disable: Bool
-            private let leftResources: [Resource]
-            private let leftResourceSpacing: CGFloat
-            private let rightResources: [Resource]
-            private let rightResourceSpacing: CGFloat
+            private let leadingResources: [Resource]
+            private let leadingResourceSpacing: CGFloat
+            private let trailingResources: [Resource]
+            private let trailingResourceSpacing: CGFloat
             
             init(
                 typedCharacters: Binding<Int>,
                 _ negative: Bool,
                 _ disable: Bool,
-                _ leftResources: [Resource],
-                _ leftResourceSpacing: CGFloat,
-                _ rightResources: [Resource],
-                _ rightResourceSpacing: CGFloat
+                _ leadingResources: [Resource],
+                _ leadingResourceSpacing: CGFloat,
+                _ trailingResources: [Resource],
+                _ trailingResourceSpacing: CGFloat
             ) {
                 _typedCharacters = typedCharacters
                 self.negative = negative
                 self.disable = disable
-                self.leftResources = leftResources
-                self.leftResourceSpacing = leftResourceSpacing
-                self.rightResources = rightResources
-                self.rightResourceSpacing = rightResourceSpacing
+                self.leadingResources = leadingResources
+                self.leadingResourceSpacing = leadingResourceSpacing
+                self.trailingResources = trailingResources
+                self.trailingResourceSpacing = trailingResourceSpacing
             }
             
             var body: some View {
                 HStack {
-                    if leftResources.isEmpty == false {
-                        HStack(spacing: leftResourceSpacing) {
-                            ForEach(leftResources.indices, id: \.self) { index in
-                                component(leftResources[index])
+                    if leadingResources.isEmpty == false {
+                        HStack(spacing: leadingResourceSpacing) {
+                            ForEach(leadingResources.indices, id: \.self) { index in
+                                component(leadingResources[index])
                             }
                         }
                     }
                     Spacer()
-                    if rightResources.isEmpty == false {
-                        HStack(spacing: rightResourceSpacing) {
-                            ForEach(rightResources.indices, id: \.self) { index in
-                                if negative {
-                                    Button.IconButton(
-                                        icon: .circleExclamationFill,
-                                        iconColor:
-                                        disable ? .alias(.labelDisable) : .alias(.statusNegative)
-                                    )
-                                } else {
-                                    let rightResource = rightResources[index]
-                                    if
-                                        leftResources.contains(where: { leftResource in
-                                            if case .characterCount(_) = leftResource {
-                                                true
-                                            } else {
-                                                false
-                                            }
-                                        }),
-                                        case .characterCount(_) = rightResource {
-                                        EmptyView()
-                                    } else {
-                                        component(rightResource)
-                                    }
+                    if negative {
+                        Button.IconButton(
+                            icon: .circleExclamationFill,
+                            iconColor:
+                            disable ? .alias(.labelDisable) : .alias(.statusNegative)
+                        )
+                    } else {
+                        if trailingResources.isEmpty == false {
+                            HStack(spacing: trailingResourceSpacing) {
+                                ForEach(trailingResources.indices, id: \.self) { index in
+                                    component(trailingResources[index])
                                 }
                             }
                         }
@@ -370,18 +370,22 @@ extension TextInput {
             func component(_ resource: Resource) -> some View {
                 switch resource {
                 case .characterCount(let limit):
-                    let counterString = [typedCharacters, limit]
-                        .compactMap { $0 }
-                        .map(String.init)
-                        .joined(separator: "/")
-                    Text(counterString)
-                        .montage(
-                            variant: .label2,
-                            weight: .medium,
-                            alias: disable ? .labelDisable : .labelAlternative
-                        )
-                        .paragraph(variant: .label2)
-                        .padding(.horizontal, 4)
+                    if leadingResources.contains(where: \.isCharacterCount) {
+                        EmptyView()
+                    } else {
+                        let counterString = [typedCharacters, limit]
+                            .compactMap { $0 }
+                            .map(String.init)
+                            .joined(separator: "/")
+                        Text(counterString)
+                            .montage(
+                                variant: .label2,
+                                weight: .medium,
+                                alias: disable ? .labelDisable : .labelAlternative
+                            )
+                            .paragraph(variant: .label2)
+                            .padding(.horizontal, 4)
+                    }
                 case let .textButton(placement, variant, title, handler):
                     Button.TextButton(
                         variant: {
@@ -389,8 +393,8 @@ extension TextInput {
                                 variant
                             } else {
                                 switch placement {
-                                case .left: .assistive
-                                case .right: .primary
+                                case .leading: .assistive
+                                case .trailing: .primary
                                 }
                             }
                         }(),
@@ -407,8 +411,8 @@ extension TextInput {
                                 variant
                             } else {
                                 switch placement {
-                                case .left: .outlined(size: .normal)
-                                case .right: .solid(size: .small)
+                                case .leading: .outlined(size: .normal)
+                                case .trailing: .solid(size: .small)
                                 }
                             }
                         }(),
@@ -488,12 +492,18 @@ extension TextInput {
                 func textViewDidChange(_ textView: UITextView) {
                     DispatchQueue.main.async {
                         self.parent.text = textView.text
-                        self.updateHeight(for: textView, minHeight: self.minHeight, maxHeight: self.maxHeight)
+                        self.updateHeight(
+                            for: textView,
+                            minHeight: self.minHeight,
+                            maxHeight: self.maxHeight
+                        )
                     }
                 }
                 
                 func updateHeight(for textView: UITextView, minHeight: CGFloat?, maxHeight: CGFloat?) {
-                    let newSize = textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.greatestFiniteMagnitude))
+                    let newSize = textView.sizeThatFits(
+                        CGSize(width: textView.frame.width, height: CGFloat.greatestFiniteMagnitude)
+                    )
                     let newHeight = min(max(newSize.height, minHeight ?? 0), maxHeight ?? 0)
                     
                     if newHeight >= maxHeight ?? 0 {

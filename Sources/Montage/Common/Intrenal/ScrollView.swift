@@ -24,9 +24,7 @@ public struct ScrollView: View {
     }
 
     // MARK: - Body
-
-    @State private var scrollViewSize: CGSize = .zero
-    @State private var contentSize: CGSize = .zero
+    
     @State private var contentOffset: CGPoint = .zero
 
     public var body: some View {
@@ -44,24 +42,26 @@ public struct ScrollView: View {
                 }
             }
             .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
-                contentSize = $0
+                scrollStatus.contentSize = $0
             })
         }
         .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
-            scrollViewSize = $0
+            scrollStatus.scrollViewSize = $0
         })
         .coordinateSpace(name: "ScrollViewOrigin")
-        .onChange(of: "\(axis)\(contentSize)\(scrollViewSize)\(contentOffset)") { _ in
-            scrollStatus = .init(
-                axis: axis,
-                scrollViewSize: scrollViewSize,
-                contentSize: contentSize,
-                contentOffset: contentOffset
-            )
+        .onChange(of: scrollStatus.axis) {
+            updateScrollStatus(axis: $0)
+        }
+        .onChange(of: scrollStatus.contentSize) {
+            updateScrollStatus(contentSize: $0)
+        }
+        .onChange(of: scrollStatus.scrollViewSize) {
+            updateScrollStatus(scrollViewSize: $0)
         }
         .onPreferenceChange(OffsetPreferenceKey.self) {
-            contentOffset = $0
             onOffsetChanged($0)
+            updateScrollStatus(contentOffset: $0)
+            contentOffset = $0
         }
         .if(onRefresh != nil) {
             $0.pullToRefresh(scrollYOffset: $contentOffset.y) {
@@ -96,9 +96,9 @@ public struct ScrollView: View {
     // MARK: - Types
 
     public struct ScrollStatus {
-        public let axis: Axis
-        public let scrollViewSize: CGSize
-        public let contentSize: CGSize
+        public var axis: Axis
+        public var scrollViewSize: CGSize
+        public var contentSize: CGSize
         public var contentOffset: CGPoint
 
         public init(
@@ -129,5 +129,19 @@ private extension ScrollView {
         case .horizontal: .horizontal
         case .vertical: .vertical
         }
+    }
+    
+    func updateScrollStatus(
+        axis: Axis? = nil,
+        scrollViewSize: CGSize? = nil,
+        contentSize: CGSize? = nil,
+        contentOffset: CGPoint? = nil
+    ) {
+        scrollStatus = .init(
+            axis: axis ?? scrollStatus.axis,
+            scrollViewSize: scrollViewSize ?? scrollStatus.scrollViewSize,
+            contentSize: contentSize ?? scrollStatus.contentSize,
+            contentOffset: contentOffset ?? scrollStatus.contentOffset
+        )
     }
 }

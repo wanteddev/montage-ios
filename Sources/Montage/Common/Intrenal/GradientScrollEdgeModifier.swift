@@ -11,15 +11,15 @@ struct GradientScrollEdgeModifier: ViewModifier {
     private let gradientColors: [SwiftUI.Color]
     private let gradientWidth: CGFloat
     private let gradientInsets: EdgeInsets
-    private let leftGradientDisabled: Bool
-    private let rightGradientDisabled: Bool
+    private let leadingGradientDisabled: Bool
+    private let trailingGradientDisabled: Bool
     
     init(
         gradientColors: [SwiftUI.Color]? = nil,
         gradientWidth: CGFloat,
         gradientInsets: EdgeInsets = .init(),
-        leftGradientDisabled: Bool = false,
-        rightGradientDisabled: Bool = false
+        leadingGradientDisabled: Bool = false,
+        trailingGradientDisabled: Bool = false
     ) {
         self.gradientColors = gradientColors ?? [
             1.0,
@@ -42,15 +42,15 @@ struct GradientScrollEdgeModifier: ViewModifier {
         .map { SwiftUI.Color.black.opacity($0) }
         self.gradientWidth = gradientWidth
         self.gradientInsets = gradientInsets
-        self.leftGradientDisabled = leftGradientDisabled
-        self.rightGradientDisabled = rightGradientDisabled
+        self.leadingGradientDisabled = leadingGradientDisabled
+        self.trailingGradientDisabled = trailingGradientDisabled
     }
 
     @State private var contentOffset: CGPoint = .zero
     @State private var contentWidth: CGFloat = .zero
     @State private var scrollViewWidth: CGFloat = .zero
-    @State private var needsLeftGradient = false
-    @State private var needsRightGradient = false
+    @State private var needsLeadingGradient = false
+    @State private var needsTrailingGradient = false
     
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
@@ -85,7 +85,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
     private func gradientEdge() -> some View {
         HStack(spacing: 0) {
             Group {
-                if needsLeftGradient {
+                if needsLeadingGradient {
                     LinearGradient(
                         colors: gradientColors,
                         startPoint: .init(x: 1, y: 0),
@@ -101,7 +101,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
                 .frame(maxWidth: .infinity)
             
             Group {
-                if needsRightGradient {
+                if needsTrailingGradient {
                     LinearGradient(
                         colors: gradientColors,
                         startPoint: .init(x: 0, y: 0),
@@ -120,22 +120,22 @@ struct GradientScrollEdgeModifier: ViewModifier {
         // FloatingPoint 오차로 인해 오른쪽 끝까지 스크롤했을 때 그래디언트가 나타나는
         // 현상이 있어서 소수 아래 절삭한 상태로 비교함
         if Int(-contentOffset.x) + Int(scrollViewWidth) < Int(contentWidth) {
-            needsRightGradient = true
+            needsTrailingGradient = true
         } else {
-            needsRightGradient = false
+            needsTrailingGradient = false
         }
 
         if contentOffset.x < 0 {
-            needsLeftGradient = true
+            needsLeadingGradient = true
         } else {
-            needsLeftGradient = false
+            needsLeadingGradient = false
         }
         
-        if leftGradientDisabled {
-            needsLeftGradient = false
+        if leadingGradientDisabled {
+            needsLeadingGradient = false
         }
-        if rightGradientDisabled {
-            needsRightGradient = false
+        if trailingGradientDisabled {
+            needsTrailingGradient = false
         }
     }
 }

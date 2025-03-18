@@ -14,9 +14,9 @@ extension Bar {
         private let variant: Variant
         private let title: String
         private let scrollOffset: CGFloat
-        private let left: Resource.Left?
         private let backgroundColorResolvable: ColorResolvable?
-        private let actions: [Resource.Action]
+        private let leadingButton: Resource.LeadingButton?
+        private let trailingButtons: [Resource.TrailingButton]
         
         // MARK: - Computed properties
 
@@ -45,16 +45,16 @@ extension Bar {
             variant: Variant = .normal,
             title: String = "",
             scrollOffset: CGFloat = .zero,
-            left: Resource.Left? = nil,
             backgroundColorResolvable: ColorResolvable? = nil,
-            actions: [Resource.Action] = []
+            leadingButton: Resource.LeadingButton? = nil,
+            trailingButtons: [Resource.TrailingButton] = []
         ) {
             self.variant = variant
             self.title = title
             self.scrollOffset = scrollOffset
-            self.left = left
             self.backgroundColorResolvable = backgroundColorResolvable
-            self.actions = Array(actions.prefix(3))
+            self.leadingButton = leadingButton
+            self.trailingButtons = Array(trailingButtons.prefix(3))
         }
         
         public var body: some View {
@@ -62,8 +62,8 @@ extension Bar {
                 Contents(
                     variant: variant,
                     title: title,
-                    left: left,
-                    actions: actions
+                    leadingButton: leadingButton,
+                    trailingButtons: trailingButtons
                 )
                 .padding(.all, 16)
                 .background {
@@ -85,17 +85,17 @@ extension Bar {
         }
         
         struct Contents: View {
-            @State private var leftSize: CGSize = .zero
-            @State private var actionSize: CGSize = .zero
+            @State private var leadingButtonSize: CGSize = .zero
+            @State private var totalSizeOfTrailingButtons: CGSize = .zero
             @State private var screenWidth: CGFloat = 0
             
             var variant: Variant
             var title: String
-            var left: Resource.Left? = nil
-            var actions: [Resource.Action]
+            var leadingButton: Resource.LeadingButton? = nil
+            var trailingButtons: [Resource.TrailingButton]
 
             private var titleSize: CGFloat {
-                let componentSize: CGFloat = max(leftSize.width, actionSize.width)
+                let componentSize: CGFloat = max(leadingButtonSize.width, totalSizeOfTrailingButtons.width)
                 let componentWitdh: CGFloat = componentSize * 2
                 let horizontalPadding: CGFloat = 16 * 2
                 let titleHorizontalPadding: CGFloat = 4 * 2
@@ -114,18 +114,18 @@ extension Bar {
                     switch variant {
                     case .normal:
                         HStack(spacing: .zero) {
-                            NormalLeft(left)
+                            LeadingButton(leadingButton)
                                 .onGeometryChange(
                                     for: CGSize.self,
                                     of: { $0.size },
-                                    action: { leftSize = $0 }
+                                    action: { leadingButtonSize = $0 }
                                 )
                             Spacer()
-                            NormalAction(actions)
+                            TrailingButtons(trailingButtons)
                                 .onGeometryChange(
                                     for: CGSize.self,
                                     of: { $0.size },
-                                    action: { actionSize = $0 }
+                                    action: { totalSizeOfTrailingButtons = $0 }
                                 )
                         }
                         titleView
@@ -133,9 +133,9 @@ extension Bar {
                     case .extended:
                         VStack(spacing: 20) {
                             HStack {
-                                ExtendedLeft(left)
+                                LeadingButton(leadingButton)
                                 Spacer()
-                                ExtendedAction(actions)
+                                TrailingButtons(trailingButtons)
                             }
                             HStack {
                                 titleView
@@ -147,18 +147,18 @@ extension Bar {
                     case let .floating(alternative, background):
                         ZStack {
                             HStack(spacing: .zero) {
-                                FloatingLeft(left, alternative, background)
+                                LeadingButton(leadingButton, alternative, background)
                                     .onGeometryChange(
                                         for: CGSize.self,
                                         of: { $0.size },
-                                        action: { leftSize = $0 }
+                                        action: { leadingButtonSize = $0 }
                                     )
                                 Spacer()
-                                FloatingAction(actions, alternative, background)
+                                TrailingButtons(trailingButtons, alternative, background)
                                     .onGeometryChange(
                                         for: CGSize.self,
                                         of: { $0.size },
-                                        action: { actionSize = $0 }
+                                        action: { totalSizeOfTrailingButtons = $0 }
                                     )
                             }
                             .frame(height: 24)
@@ -181,170 +181,24 @@ extension Bar {
             }
         }
         
-        struct NormalLeft: View {
-            let left: Resource.Left?
-            
-            init(_ left: Resource.Left?) {
-                self.left = left
-            }
-            
-            var body: some View {
-                if let left {
-                    Group {
-                        switch left {
-                        case .back(let action):
-                            Button.IconButton(icon: .chevronLeft) {
-                                action()
-                            }
-                            .frame(width: 24, height: 24)
-                        case let .icon(i, action):
-                            Button.IconButton(icon: i) {
-                                action()
-                            }
-                            .frame(width: 24, height: 24)
-                        case let .text(t, action):
-                            Button.TextButton(
-                                text: t,
-                                contentColor: .alias(.labelNormal)
-                            ) {
-                                action()
-                            }
-                            .frame(height: 24)
-                        }
-                    }
-                } else {
-                    SwiftUI.Color.clear
-                        .frame(width: 24, height: 24)
-                }
-            }
-        }
-        
-        struct NormalAction: View {
-            let actions: [Resource.Action]
-            
-            init(_ actions: [Resource.Action]) {
-                self.actions = actions
-            }
-            
-            var body: some View {
-                if actions.isEmpty == false {
-                    HStack(alignment: .center, spacing: 16) {
-                        ForEach(actions, id: \.self) {
-                            switch $0 {
-                            case let .icon(i, s, action):
-                                Button.IconButton(icon: i, showPushBadge: s) {
-                                    action()
-                                }
-                                .frame(width: 24, height: 24)
-                            case let .text(t, action):
-                                Button.TextButton(
-                                    text: t,
-                                    contentColor: .alias(.labelNormal)
-                                ) {
-                                    action()
-                                }
-                                .frame(height: 24)
-                            }
-                        }
-                    }
-                } else {
-                    SwiftUI.Color.clear
-                        .frame(width: 24, height: 24)
-                }
-            }
-        }
-        
-        struct ExtendedLeft: View {
-            let left: Resource.Left?
-            
-            init(_ left: Resource.Left?) {
-                self.left = left
-            }
-            
-            var body: some View {
-                if let left {
-                    Group {
-                        switch left {
-                        case .back(let action):
-                            Button.IconButton(icon: .chevronLeft) {
-                                action()
-                            }
-                            .frame(width: 24, height: 24)
-                        case let .icon(i, action):
-                            Button.IconButton(icon: i) {
-                                action()
-                            }
-                            .frame(width: 24, height: 24)
-                        case let .text(t, action):
-                            Button.TextButton(
-                                text: t,
-                                contentColor: .alias(.labelNormal)
-                            ) {
-                                action()
-                            }
-                            .frame(height: 24)
-                        }
-                    }
-                } else {
-                    SwiftUI.Color.clear
-                        .frame(width: 24, height: 24)
-                }
-            }
-        }
-        
-        struct ExtendedAction: View {
-            private let actions: [Resource.Action]
-            
-            init(_ actions: [Resource.Action]) {
-                self.actions = actions
-            }
-            
-            var body: some View {
-                if actions.isEmpty == false {
-                    HStack(alignment: .center, spacing: 16) {
-                        ForEach(actions, id: \.self) {
-                            switch $0 {
-                            case let .icon(i, s, action):
-                                Button.IconButton(icon: i, showPushBadge: s) {
-                                    action()
-                                }
-                                .frame(width: 24, height: 24)
-                            case let .text(t, action):
-                                Button.TextButton(
-                                    text: t,
-                                    contentColor: .alias(.labelNormal)
-                                ) {
-                                    action()
-                                }
-                                .frame(height: 24)
-                            }
-                        }
-                    }
-                } else {
-                    SwiftUI.Color.clear
-                        .frame(width: 24, height: 24)
-                }
-            }
-        }
-        
-        private struct FloatingLeft: View {
-            let left: Resource.Left?
+        struct LeadingButton: View {
+            let action: Resource.LeadingButton?
             let alternative: Bool
             let background: Bool
             
             init(
-                _ left: Resource.Left?,
-                _ alternative: Bool,
-                _ background: Bool
+                _ action: Resource.LeadingButton?,
+                _ alternative: Bool = false,
+                _ background: Bool = false
             ) {
-                self.left = left
+                self.action = action
                 self.alternative = alternative
                 self.background = background
             }
             
             var body: some View {
-                if let left {
-                    switch left {
+                if let action {
+                    switch action {
                     case .back(let action):
                         Button.IconButton(
                             variant: background
@@ -366,50 +220,12 @@ extension Bar {
                         }
                         .frame(width: 24, height: 24)
                     case let .text(t, action):
-                        SwiftUI.Button {
-                            action()
-                        } label: {
-                            Text(t)
-                                .montage(
-                                    variant: background ? .headline2 : .body2,
-                                    weight: .medium,
-                                    alias: background
-                                        ? .labelNormal
-                                        : (alternative ? .staticWhite : .labelAlternative)
-                                )
-                                .if(background) {
-                                    $0.paragraph(variant: .body2)
-                                        .if(alternative) {
-                                            $0.opacity(0.88)
-                                        } else: {
-                                            $0.blendMode(.plusDarker)
-                                        }
-                                        .padding(.vertical, 5)
-                                        .padding(.horizontal, 10)
-                                } else: {
-                                    $0
-                                }
-                        }
-                        .modifying { original in
-                            Group {
-                                if background {
-                                    Group {
-                                        if alternative {
-                                            original
-                                                .background(
-                                                    SwiftUI.Color.atomic(.globalCoolNeutral30)
-                                                        .opacity(0.61)
-                                                )
-                                        } else {
-                                            original.background(.regularMaterial)
-                                        }
-                                    }
-                                    .clipShape(RoundedRectangle(cornerRadius: 1000))
-                                } else {
-                                    original
-                                }
-                            }
-                        }
+                        TrailingTextButton(
+                            text: t,
+                            action: action,
+                            background: background,
+                            alternative: alternative
+                        )
                         .frame(height: 24)
                     }
                 } else {
@@ -419,136 +235,119 @@ extension Bar {
             }
         }
         
-        private struct FloatingAction: View {
-            let actions: [Resource.Action]
+        struct TrailingButtons: View {
+            let buttons: [Resource.TrailingButton]
             let alternative: Bool
             let background: Bool
             
             init(
-                _ actions: [Resource.Action],
-                _ alternative: Bool,
-                _ background: Bool
+                _ buttons: [Resource.TrailingButton],
+                _ alternative: Bool = false,
+                _ background: Bool = false
             ) {
-                self.actions = actions
+                self.buttons = buttons
                 self.alternative = alternative
                 self.background = background
             }
 
             var body: some View {
-                if actions.isEmpty == false {
+                if buttons.isEmpty == false {
                     HStack(alignment: .center, spacing: 16) {
-                        ForEach(actions, id: \.self) {
-                            switch $0 {
-                            case let .icon(i, s, action):
-                                ActionIcon(i, s, alternative, background, action)
+                        ForEach(buttons, id: \.self) { button in
+                            Group {
+                                switch button {
+                                case let .icon(i, s, action):
+                                    Button.IconButton(
+                                        variant: background ?
+                                            .background(size: 24, isAlternative: alternative) : .default,
+                                        icon: i,
+                                        showPushBadge: s
+                                    ) {
+                                        action()
+                                    }
                                     .frame(width: 24, height: 24)
-                            case let .text(t, action):
-                                if background {
-                                    SwiftUI.Button {
-                                        action()
-                                    } label: {
-                                        ActionText(t, alternative)
-                                    }
-                                    .frame(height: 24)
-                                } else {
-                                    SwiftUI.Button {
-                                        action()
-                                    } label: {
-                                        Text(t)
-                                            .montage(
-                                                variant: .headline2,
-                                                weight: .medium,
-                                                alias: .labelNormal
-                                            )
-                                    }
+                                case let .text(t, action):
+                                    TrailingTextButton(
+                                        text: t,
+                                        action: action,
+                                        background: background,
+                                        alternative: alternative
+                                    )
                                     .frame(height: 24)
                                 }
                             }
                         }
                     }
                 } else {
-                    EmptyView()
+                    SwiftUI.Color.clear
+                        .frame(width: 24, height: 24)
                 }
             }
+        }
+        
+        private struct TrailingTextButton: View {
+            private let text: String
+            private let action: () -> Void
+            private let background: Bool
+            private let alternative: Bool
             
-            private struct ActionIcon: View {
-                let i: Icon
-                let showPushBadge: Bool
-                let alternative: Bool
-                let background: Bool
-                let action: () -> Void
-                
-                init(
-                    _ i: Icon,
-                    _ showPushBadge: Bool,
-                    _ alternative: Bool,
-                    _ background: Bool,
-                    _ action: @escaping (() -> Void)
-                ) {
-                    self.i = i
-                    self.showPushBadge = showPushBadge
-                    self.alternative = alternative
-                    self.background = background
-                    self.action = action
-                }
-                
-                private var variant: Button.IconButton.Variant {
-                    background ? .background(size: 24, isAlternative: alternative) : .default
-                }
-                
-                var body: some View {
-                    Button.IconButton(
-                        variant: variant,
-                        icon: i,
-                        showPushBadge: showPushBadge
+            init(text: String, action: @escaping () -> Void, background: Bool, alternative: Bool) {
+                self.text = text
+                self.action = action
+                self.background = background
+                self.alternative = alternative
+            }
+
+            var body: some View {
+                if background {
+                    SwiftUI.Button {
+                        action()
+                    } label: {
+                        Text(text)
+                            .montage(
+                                variant: .body2,
+                                weight: .medium,
+                                alias: alternative ? .staticWhite : .labelAlternative
+                            )
+                            .paragraph(variant: .body2)
+                            .if(alternative) {
+                                $0.opacity(0.88)
+                            } else: {
+                                $0.blendMode(.plusDarker)
+                            }
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .modifying { original in
+                                Group {
+                                    if alternative {
+                                        original.background(
+                                            SwiftUI.Color.atomic(.globalCoolNeutral30)
+                                                .opacity(0.61)
+                                        )
+                                    } else {
+                                        original.background(
+                                            ZStack {
+                                                SwiftUI.Color.alias(.staticBlack)
+                                                    .opacity(0.05)
+                                                SwiftUI.Color.alias(.staticWhite)
+                                                    .opacity(0.35)
+                                            }
+                                        )
+                                        .background(.thinMaterial)
+                                    }
+                                }
+                                .clipShape(RoundedRectangle(cornerRadius: 1000))
+                            }
+                    }
+                } else {
+                    Button.TextButton(
+                        text: text,
+                        contentColor: .alias(.labelNormal),
+                        fontVariant: .headline2,
+                        fontWeight: .regular
                     ) {
                         action()
                     }
-                }
-            }
-            
-            private struct ActionText: View {
-                let t: String
-                let alternative: Bool
-                
-                init(_ t: String, _ alternative: Bool) {
-                    self.t = t
-                    self.alternative = alternative
-                }
-
-                var body: some View {
-                    Group {
-                        if alternative {
-                            text()
-                                .background(
-                                    SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61)
-                                )
-                        } else {
-                            text()
-                                .background(
-                                    ZStack {
-                                        SwiftUI.Color.alias(.staticBlack)
-                                            .opacity(0.05)
-                                        SwiftUI.Color.alias(.staticWhite)
-                                            .opacity(0.35)
-                                    }
-                                )
-                                .background(.thinMaterial)
-                        }
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 1000))
-                }
-                
-                @ViewBuilder
-                private func text() -> some View {
-                    Text(t)
-                        .montage(
-                            variant: .body2,
-                            weight: .medium,
-                            alias: alternative ? .staticWhite : .labelAlternative
-                        )
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
                 }
             }
         }
@@ -573,14 +372,14 @@ extension Bar.TopNavigation {
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
     public enum Resource {
         /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
-        public enum Left: CaseDescribable {
+        public enum LeadingButton: CaseDescribable {
             case back(action: () -> Void)
             case icon(Icon, action: () -> Void)
             case text(String, action: () -> Void)
         }
         
         /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
-        public enum Action: Hashable {
+        public enum TrailingButton: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
             ///  - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
@@ -601,8 +400,8 @@ extension Bar.TopNavigation {
             }
             
             public static func == (
-                lhs: Bar.TopNavigation.Resource.Action,
-                rhs: Bar.TopNavigation.Resource.Action
+                lhs: Bar.TopNavigation.Resource.TrailingButton,
+                rhs: Bar.TopNavigation.Resource.TrailingButton
             ) -> Bool {
                 lhs.hashValue == rhs.hashValue
             }
@@ -641,26 +440,26 @@ extension Bar.TopNavigation {
         private let variant: Variant
         private let title: String
         private let showIndicator: Bool
-        private let left: Resource.Left?
-        private let actions: [Resource.Action]
         private let backgroundColorResolvable: ColorResolvable?
+        private let leadingButton: Resource.LeadingButton?
+        private let trailingButtons: [Resource.TrailingButton]
         private let actionAreaModel: ActionAreaModifier.Model?
         
         public init(
             variant: Variant,
             title: String,
             showIndicator: Bool = true,
-            left: Resource.Left?,
             backgroundColorResolvable: ColorResolvable? = nil,
-            actions: [Resource.Action],
+            leadingButton: Resource.LeadingButton?,
+            trailingButtons: [Resource.TrailingButton],
             actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
             self.variant = variant
             self.title = title
             self.showIndicator = showIndicator
-            self.left = left
             self.backgroundColorResolvable = backgroundColorResolvable
-            self.actions = actions
+            self.leadingButton = leadingButton
+            self.trailingButtons = trailingButtons
             self.actionAreaModel = actionAreaModel
         }
         
@@ -689,9 +488,9 @@ extension Bar.TopNavigation {
                             variant: variant,
                             title: title,
                             scrollOffset: scrollStatus.contentOffset.y,
-                            left: left,
                             backgroundColorResolvable: backgroundColorResolvable,
-                            actions: actions
+                            leadingButton: leadingButton,
+                            trailingButtons: trailingButtons
                         )
                         .onGeometryChange(
                             for: CGSize.self,
