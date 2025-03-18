@@ -64,7 +64,7 @@ public struct PullToRefreshModifier: ViewModifier {
                 
                 content
             }
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged { _ in
                         isScrolling = true
