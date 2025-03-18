@@ -29,6 +29,7 @@ public struct Accordion: View {
     private let title: String
     private let description: String?
     @ViewBuilder private let content: (() -> any View)?
+    
     public init(
         title: String,
         description: String? = nil,
@@ -37,6 +38,85 @@ public struct Accordion: View {
         self.title = title
         self.description = description
         self.content = content
+    }
+    
+    // MARK: - Modifiers
+    
+    private var titleTypography: (
+        variant: Typography.Variant,
+        weight: Typography.Weight,
+        color: SwiftUI.Color
+    ) = (.body2, .bold, .alias(.labelNormal))
+    private var descriptionTypography: (
+        variant: Typography.Variant,
+        weight: Typography.Weight,
+        color: SwiftUI.Color
+    ) = (.label1, .regular, .alias(.labelNeutral))
+    private var verticalPadding: VerticalPadding = .pt12
+    private var fillWidth = false
+    private var divider = false
+    private var leadingIcon: Icon? = nil
+    private var leadingIconColor: SwiftUI.Color? = nil
+    private var trailingContent: (() -> any View)? = nil
+    
+    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`, `.alias(.labelNormal)`입니다.
+    public func title(
+        _ variant: Typography.Variant = .body2,
+        weight: Typography.Weight = .bold,
+        color: SwiftUI.Color = .alias(.labelNormal)
+    ) -> Self {
+        var zelf = self
+        zelf.titleTypography.variant = variant
+        zelf.titleTypography.weight = weight
+        zelf.titleTypography.color = color
+        return zelf
+    }
+    
+    /// 타이틀 텍스트의 `variant`와 `weight` 속성을 조정합니다. 기본값은 각각 `.label1`, `.regular`입니다.
+    public func description(
+        _ variant: Typography.Variant = .label1,
+        weight: Typography.Weight = .regular,
+        color: SwiftUI.Color = .alias(.labelNeutral)
+    ) -> Self {
+        var zelf = self
+        zelf.descriptionTypography.variant = variant
+        zelf.descriptionTypography.weight = weight
+        zelf.descriptionTypography.color = color
+        return zelf
+    }
+    
+    /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
+    public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
+        var zelf = self
+        zelf.verticalPadding = verticalPadding
+        return zelf
+    }
+    
+    /// 좌우 여백 여부를 조정합니다. 기본값은 `false`입니다.
+    public func fillWidth(_ fillWidth: Bool = true) -> Self {
+        var zelf = self
+        zelf.fillWidth = fillWidth
+        return zelf
+    }
+    
+    /// 아래에 구분선을 추가합니다. 기본값은 `false`입니다.
+    public func divider(_ divider: Bool = true) -> Self {
+        var zelf = self
+        zelf.divider = divider
+        return zelf
+    }
+    
+    public func leadingIcon(_ leadingIcon: Icon? = nil, color: SwiftUI.Color? = nil) -> Self {
+        var zelf = self
+        zelf.leadingIcon = leadingIcon
+        zelf.leadingIconColor = color
+        return zelf
+    }
+    
+    public func trailingContent(_ trailingContent: (() -> any View)? = nil) -> Self {
+        var zelf = self
+        zelf.trailingContent = trailingContent
+        return zelf
     }
     
     // MARK: - Body
@@ -149,84 +229,5 @@ public struct Accordion: View {
                 .background()
                 .if(divider)
         }
-    }
-    
-    // MARK: - Modifiers
-    
-    private var titleTypography: (
-        variant: Typography.Variant,
-        weight: Typography.Weight,
-        color: SwiftUI.Color
-    ) = (.body2, .bold, .alias(.labelNormal))
-    private var descriptionTypography: (
-        variant: Typography.Variant,
-        weight: Typography.Weight,
-        color: SwiftUI.Color
-    ) = (.label1, .regular, .alias(.labelNeutral))
-    private var verticalPadding: VerticalPadding = .pt12
-    private var fillWidth = false
-    private var divider = false
-    private var leadingIcon: Icon? = nil
-    private var leadingIconColor: SwiftUI.Color? = nil
-    private var trailingContent: (() -> any View)? = nil
-    
-    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`, `.alias(.labelNormal)`입니다.
-    public func title(
-        _ variant: Typography.Variant = .body2,
-        weight: Typography.Weight = .bold,
-        color: SwiftUI.Color = .alias(.labelNormal)
-    ) -> Self {
-        var zelf = self
-        zelf.titleTypography.variant = variant
-        zelf.titleTypography.weight = weight
-        zelf.titleTypography.color = color
-        return zelf
-    }
-    
-    /// 타이틀 텍스트의 `variant`와 `weight` 속성을 조정합니다. 기본값은 각각 `.label1`, `.regular`입니다.
-    public func description(
-        _ variant: Typography.Variant = .label1,
-        weight: Typography.Weight = .regular,
-        color: SwiftUI.Color = .alias(.labelNeutral)
-    ) -> Self {
-        var zelf = self
-        zelf.descriptionTypography.variant = variant
-        zelf.descriptionTypography.weight = weight
-        zelf.descriptionTypography.color = color
-        return zelf
-    }
-    
-    /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
-    public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
-        var zelf = self
-        zelf.verticalPadding = verticalPadding
-        return zelf
-    }
-    
-    /// 좌우 여백 여부를 조정합니다. 기본값은 `false`입니다.
-    public func fillWidth(_ fillWidth: Bool = true) -> Self {
-        var zelf = self
-        zelf.fillWidth = fillWidth
-        return zelf
-    }
-    
-    /// 아래에 구분선을 추가합니다. 기본값은 `false`입니다.
-    public func divider(_ divider: Bool = true) -> Self {
-        var zelf = self
-        zelf.divider = divider
-        return zelf
-    }
-    
-    public func leadingIcon(_ leadingIcon: Icon? = nil, color: SwiftUI.Color? = nil) -> Self {
-        var zelf = self
-        zelf.leadingIcon = leadingIcon
-        zelf.leadingIconColor = color
-        return zelf
-    }
-    
-    public func trailingContent(_ trailingContent: (() -> any View)? = nil) -> Self {
-        var zelf = self
-        zelf.trailingContent = trailingContent
-        return zelf
     }
 }
