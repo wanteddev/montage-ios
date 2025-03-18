@@ -75,6 +75,7 @@ public struct PullToRefreshModifier: ViewModifier {
                         }
                     }
                     .onEnded { value in
+                        print(value.predictedEndTranslation)
                         // 리프레시가 시작된 후 스크롤이 끝났을 때
                         if phase.isRefreshing {
                             // 투명뷰를 추가한다.
@@ -129,7 +130,7 @@ public struct PullToRefreshModifier: ViewModifier {
             case .idle:
                 break
             case .pulledDown(let ratio):
-                if ratio > 1 {
+                if ratio > 1 && isScrolling {
                     self.phase = .refreshing
                 }
             case .refreshing:
