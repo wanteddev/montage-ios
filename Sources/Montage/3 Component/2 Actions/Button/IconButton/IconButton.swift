@@ -316,7 +316,7 @@ extension Button {
                         .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
             )
-            .simultaneousGesture(
+            .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         isPressed = value.translation == .zero

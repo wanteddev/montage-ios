@@ -160,7 +160,7 @@ public struct SnackBar: View {
                     .padding(.horizontal, -7)
                     .padding(.vertical, -4)
                 )
-                .simultaneousGesture(
+                .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
                             isPressed = value.translation == .zero

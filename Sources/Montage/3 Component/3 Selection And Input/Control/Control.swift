@@ -157,7 +157,7 @@ public struct Control: View {
             .clipShape(Circle())
             .frame(width: interactionSize.width, height: interactionSize.height)
         }
-        .simultaneousGesture(
+        .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isPressed = value.translation == .zero

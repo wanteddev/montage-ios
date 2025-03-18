@@ -198,7 +198,7 @@ extension Button {
                 .padding(.vertical, -variant.interactionVerticalOffset)
                 .padding(.horizontal, -variant.interactionHorizontalOffset)
             }
-            .simultaneousGesture(
+            .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         isPressed = value.translation == .zero
