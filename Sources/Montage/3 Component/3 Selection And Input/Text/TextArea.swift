@@ -63,12 +63,12 @@ extension TextInput {
                 placement: Placement = .leading,
                 variant: Button.IconButton.Variant? = .solid(size: .small),
                 icon: Icon,
-                tintColor: SwiftUI.Color = .alias(.labelAlternative),
+                tintColor: SwiftUI.Color = .semantic(.labelAlternative),
                 handler: (() -> Void)? = nil
             )
             case icon(
                 Icon,
-                tintColor: SwiftUI.Color = .alias(.labelAssistive)
+                tintColor: SwiftUI.Color = .semantic(.labelAssistive)
             )
             case actionChip(
                 Chip.Action.Variant = .solid,
@@ -200,10 +200,10 @@ extension TextInput {
                 if let heading {
                     HStack(spacing: 4) {
                         Text(heading)
-                            .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
+                            .montage(variant: .label1, weight: .bold, semantic: .labelNeutral)
                         if requiredBadge {
                             Text("*")
-                                .montage(variant: .label1, weight: .medium, alias: .statusNegative)
+                                .montage(variant: .label1, weight: .medium, semantic: .statusNegative)
                         }
                     }
                 }
@@ -214,7 +214,7 @@ extension TextInput {
                     Text(description)
                         .montage(
                             variant: .caption1,
-                            alias: negative ? .statusNegative : .labelAlternative
+                            semantic: negative ? .statusNegative : .labelAlternative
                         )
                 }
             }
@@ -245,7 +245,7 @@ extension TextInput {
                             typedCharacters = text.count
                         }
                         .scrollContentBackground(.hidden)
-                        .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
                         .padding(.horizontal, -4.5)
                         .padding(.top, -4)
                         .padding(.bottom, -6)
@@ -257,7 +257,7 @@ extension TextInput {
                                 color: placeholderTextColor
                             )
                             .paragraph(variant: .body1Reading)
-                            .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                            .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
                             .allowsHitTesting(false)
                     }
                 }
@@ -281,7 +281,7 @@ extension TextInput {
                     .strokeBorder(editorStrokeColor, lineWidth: focus.wrappedValue ? 2 : 1)
             }
             .background(
-                disable ? SwiftUI.Color.alias(.interactionDisable) : SwiftUI.Color.clear
+                disable ? SwiftUI.Color.semantic(.interactionDisable) : SwiftUI.Color.clear
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .allowsHitTesting(disable == false)
@@ -289,10 +289,10 @@ extension TextInput {
         
         private var editorStrokeColor: SwiftUI.Color {
             if negative {
-                SwiftUI.Color.alias(.statusNegative).opacity(0.43)
+                SwiftUI.Color.semantic(.statusNegative).opacity(0.43)
             } else {
-                focus.wrappedValue ? SwiftUI.Color.alias(.primaryNormal).opacity(0.43) : SwiftUI.Color
-                    .alias(.lineNormal)
+                focus.wrappedValue ? SwiftUI.Color.semantic(.primaryNormal).opacity(0.43) : SwiftUI.Color
+                    .semantic(.lineNormal)
             }
         }
         
@@ -301,11 +301,11 @@ extension TextInput {
         }
         
         private var placeholderTextColor: SwiftUI.Color {
-            disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+            disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
         }
         
         private var editorTextColor: SwiftUI.Color {
-            disable ? .alias(.labelAlternative) : .alias(.labelNormal)
+            disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
         }
         
         // MARK: - Inner View
@@ -352,7 +352,7 @@ extension TextInput {
                         Button.IconButton(
                             icon: .circleExclamationFill,
                             iconColor:
-                            disable ? .alias(.labelDisable) : .alias(.statusNegative)
+                            disable ? .semantic(.labelDisable) : .semantic(.statusNegative)
                         )
                     } else {
                         if trailingResources.isEmpty == false {
@@ -387,7 +387,7 @@ extension TextInput {
                         .montage(
                             variant: .label2,
                             weight: .medium,
-                            alias: disable ? .labelDisable : .labelAlternative
+                            semantic: disable ? .labelDisable : .labelAlternative
                         )
                         .paragraph(variant: .label2)
                         .padding(.horizontal, 4)

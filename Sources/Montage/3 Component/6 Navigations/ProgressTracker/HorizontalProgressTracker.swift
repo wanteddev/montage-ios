@@ -73,9 +73,9 @@ extension ProgressTracker {
         private func labelColor(at index: Int) -> SwiftUI.Color {
             switch state(at: index) {
             case .complete, .inactive:
-                .alias(.labelAlternative)
+                .semantic(.labelAlternative)
             case .active:
-                .alias(.labelNormal)
+                .semantic(.labelNormal)
             }
         }
         
@@ -102,8 +102,9 @@ extension ProgressTracker {
                 if index > 0 {
                     Rectangle()
                         .foregroundStyle(
-                            SwiftUI.Color
-                                .alias(state(at: index - 1) == .complete ? .primaryNormal : .lineSolidNormal)
+                            SwiftUI.Color.semantic(
+                                state(at: index - 1) == .complete ? .primaryNormal : .lineSolidNormal
+                            )
                         )
                 } else {
                     SwiftUI.Color.clear
@@ -117,8 +118,9 @@ extension ProgressTracker {
                 if index < labels.count - 1 {
                     Rectangle()
                         .foregroundStyle(
-                            SwiftUI.Color
-                                .alias(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal)
+                            SwiftUI.Color.semantic(
+                                state(at: index) == .complete ? .primaryNormal : .lineSolidNormal
+                            )
                         )
                 } else {
                     SwiftUI.Color.clear

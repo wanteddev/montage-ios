@@ -57,8 +57,8 @@ extension Badge {
         
         // MARK: - Modifiers
         
-        private var fontColor: SwiftUI.Color = .alias(.staticWhite)
-        private var backgroundColor: SwiftUI.Color = .alias(.primaryNormal)
+        private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
+        private var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
         
         public func fontColor(_ color: SwiftUI.Color) -> Self {
             var zelf = self
@@ -92,7 +92,7 @@ struct PushBadgeController_Previews: PreviewProvider {
     static var previews: some View {
         Preview()
             .padding()
-            .background(SwiftUI.Color(.alias(.backgroundNormal)))
+            .background(SwiftUI.Color(.semantic(.backgroundNormal)))
             .previewLayout(.sizeThatFits)
     }
 }

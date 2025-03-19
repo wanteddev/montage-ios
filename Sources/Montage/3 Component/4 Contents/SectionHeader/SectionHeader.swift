@@ -58,7 +58,7 @@ public struct SectionHeader: View {
         didSet {
             titleTypography.variant = variant
             if size == .xsmall {
-                titleTypography.color = .alias(.labelAlternative)
+                titleTypography.color = .semantic(.labelAlternative)
             }
         }
     }
@@ -67,7 +67,7 @@ public struct SectionHeader: View {
         variant: Typography.Variant?,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (nil, .bold, .alias(.labelStrong))
+    ) = (nil, .bold, .semantic(.labelStrong))
     
     /// 사이즈를 조정합니다.
     public func size(_ size: Size) -> Self {
@@ -76,11 +76,11 @@ public struct SectionHeader: View {
         return zelf
     }
     
-    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.alias(.labelNormal)`입니다.
+    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.semantic(.labelNormal)`입니다.
     public func title(
         _ variant: Typography.Variant? = nil,
         weight: Typography.Weight = .bold,
-        color: SwiftUI.Color = .alias(.labelStrong)
+        color: SwiftUI.Color = .semantic(.labelStrong)
     ) -> Self {
         var zelf = self
         zelf.titleTypography.variant = variant

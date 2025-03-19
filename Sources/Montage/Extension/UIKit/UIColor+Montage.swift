@@ -12,15 +12,11 @@ extension UIColor {
         .init(named: name, in: Bundle.module, compatibleWith: nil) ?? .clear
     }
 
-    public static func atomic(_ type: Color.Global) -> UIColor {
-        load(name: type.name)
-    }
-
-    public static func alias(_ type: Color.Alias) -> UIColor {
+    public static func atomic(_ type: Color.Atomic) -> UIColor {
         .init(dynamicProvider: type.resolve)
     }
 
-    public static func component(_ type: Color.Component) -> UIColor {
+    public static func semantic(_ type: Color.Semantic) -> UIColor {
         .init(dynamicProvider: type.resolve)
     }
 

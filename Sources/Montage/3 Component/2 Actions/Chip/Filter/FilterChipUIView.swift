@@ -323,14 +323,14 @@ extension Chip.FilterUIView {
 
     private func currentTextUIColor() -> UIColor {
         if disable {
-            .alias(.labelDisable)
+            .semantic(.labelDisable)
         } else if active {
             variant.activeTextUIColor
         } else {
             if let fontUIColor {
                 fontUIColor
             } else {
-                .alias(.labelNormal)
+                .semantic(.labelNormal)
             }
         }
     }
@@ -338,27 +338,27 @@ extension Chip.FilterUIView {
     private func resolveCurrentLineColor() -> CGColor {
         guard variant == .outlined else { return UIColor.clear.cgColor }
         if active {
-            return UIColor.alias(.primaryNormal).withAlphaComponent(0.43).cgColor
+            return UIColor.semantic(.primaryNormal).withAlphaComponent(0.43).cgColor
         } else {
-            return UIColor.alias(.lineNeutral).cgColor
+            return UIColor.semantic(.lineNeutral).cgColor
         }
     }
     
     private func resolveArrowIconTintColor() -> UIColor {
         if disable {
-            .alias(.labelDisable)
+            .semantic(.labelDisable)
         } else if active {
             variant.activeArrowColor
         } else {
             if let iconUIColor {
                 iconUIColor
             } else {
-                .alias(.labelNormal)
+                .semantic(.labelNormal)
             }
         }
     }
     
-    private func resolveInteractionColor() -> Color.Alias {
+    private func resolveInteractionColor() -> Color.Semantic {
         if active, variant == .outlined {
             .primaryNormal
         } else {

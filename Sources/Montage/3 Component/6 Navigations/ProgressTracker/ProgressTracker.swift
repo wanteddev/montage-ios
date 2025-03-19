@@ -32,10 +32,10 @@ public enum ProgressTracker {
                         .resizable()
                         .renderingMode(.template)
                         .frame(width: 14, height: 14)
-                        .foregroundStyle(SwiftUI.Color.alias(.staticWhite))
+                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                 } else {
                     Text(String(step))
-                        .montage(variant: .caption1, weight: .bold, alias: .staticWhite)
+                        .montage(variant: .caption1, weight: .bold, semantic: .staticWhite)
                         .frame(height: 16, alignment: .center)
                 }
             }
@@ -44,9 +44,9 @@ public enum ProgressTracker {
         private var backgroundColor: SwiftUI.Color {
             switch state {
             case .complete, .active:
-                .alias(.primaryNormal)
+                .semantic(.primaryNormal)
             case .inactive:
-                .alias(.lineSolidNormal)
+                .semantic(.lineSolidNormal)
             }
         }
     }

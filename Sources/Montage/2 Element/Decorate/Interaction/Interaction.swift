@@ -19,12 +19,12 @@ extension Decorate {
 
         private let state: State
         private let variant: Variant
-        private let color: Color.Alias
+        private let color: Color.Semantic
 
         public init(
             state: State = .normal,
             variant: Variant = .normal,
-            color: Color.Alias = .labelNormal
+            color: Color.Semantic = .labelNormal
         ) {
             self.state = state
             self.variant = variant
@@ -33,7 +33,7 @@ extension Decorate {
 
         public var body: some View {
             Rectangle()
-                .foregroundStyle(SwiftUI.Color.alias(color))
+                .foregroundStyle(SwiftUI.Color.semantic(color))
                 .opacity(state.alpha * variant.weight)
         }
     }

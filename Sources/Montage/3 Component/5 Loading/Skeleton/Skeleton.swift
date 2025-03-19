@@ -94,7 +94,7 @@ public enum Skeleton {
         
         // MARK: - Modifiers
         
-        private var color: SwiftUI.Color = .component(.fillNormal)
+        private var color: SwiftUI.Color = .semantic(.fillNormal)
         private var opacity: CGFloat = 1
         
         public func color(_ color: SwiftUI.Color) -> Self {
@@ -127,7 +127,7 @@ public enum Skeleton {
         ) {
             self.isPresented = isPresented
             self.kind = kind
-            self.color = color ?? .component(.fillNormal)
+            self.color = color ?? .semantic(.fillNormal)
             self.opacity = opacity ?? 1
             self.size = size
         }

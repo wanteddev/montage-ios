@@ -12,9 +12,9 @@ extension Badge {
     @available(*, deprecated, message: "Use Badge.Content instead")
     public class ContentUIView: UIView {
         private enum Const {
-            static var defaultActiveColor: Color.Alias = .primaryNormal
-            static var defaultInactiveColor: Color.Alias = .labelDisable
-            static var defaultInteractionColor: Color.Alias = .primaryNormal
+            static var defaultActiveColor: Color.Semantic = .primaryNormal
+            static var defaultInactiveColor: Color.Semantic = .labelDisable
+            static var defaultInteractionColor: Color.Semantic = .primaryNormal
         }
         
         /// 뱃지의 외관을 결정하는 열거형 타입입니다.
@@ -29,7 +29,7 @@ extension Badge {
         
         /// 뱃지의 색상을 결정하는 열거형입니다.
         public enum ColorStyle: Equatable, Hashable {
-            case neutral, accent(_ content: Color.Accent, background: Color.Accent? = nil)
+            case neutral, accent(_ content: UIColor, background: UIColor? = nil)
         }
         
         /// 뱃지의 외관입니다.
@@ -206,11 +206,11 @@ extension Badge.ContentUIView {
     }
     
     private func updateColor() {
-        backgroundColor = variant == .solid ? enclosureColor : .alias(.backgroundNormal)
+        backgroundColor = variant == .solid ? enclosureColor : .semantic(.backgroundNormal)
         layer.borderWidth = variant == .solid ? 0 : 1
         layer.borderColor = variant == .solid ? nil : enclosureColor.cgColor
-        leadingIconView.tintColor = .alias(colorStyle.contentColor)
-        trailingIconView.tintColor = .alias(colorStyle.contentColor)
+        leadingIconView.tintColor = colorStyle.contentColor
+        trailingIconView.tintColor = colorStyle.contentColor
     }
     
     private func updateIconView() {
@@ -234,7 +234,7 @@ extension Badge.ContentUIView {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        .montage(text, variant: size.typoVariant, weight: .medium, alias: colorStyle.contentColor)
+        ._montage(text, variant: size.typoVariant, weight: .medium, color: colorStyle.contentColor)
     }
 }
 
@@ -242,10 +242,10 @@ extension Badge.ContentUIView {
     private var enclosureColor: UIColor {
         switch colorStyle {
         case .neutral:
-            return variant == .solid ? .component(.fillNormal) : .alias(.lineNormal)
+            return variant == .solid ? .semantic(.fillNormal) : .semantic(.lineNormal)
         case let .accent(contentColor, enclosureColor):
             let opacity: CGFloat = variant == .solid ? .opacity(.p008) : .opacity(.p043)
-            return (enclosureColor ?? contentColor).resolveAsUIColor().withAlphaComponent(opacity)
+            return (enclosureColor ?? contentColor).withAlphaComponent(opacity)
         }
     }
 }
@@ -308,12 +308,12 @@ extension Badge.ContentUIView.Size {
 }
 
 extension Badge.ContentUIView.ColorStyle {
-    var contentColor: Color.Alias {
+    var contentColor: UIColor {
         switch self {
         case .neutral:
-            .labelAlternative
+            .semantic(.labelAlternative)
         case let .accent(contentColor, _):
-            contentColor.resolveAsAlias()
+            contentColor
         }
     }
 }

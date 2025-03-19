@@ -21,13 +21,13 @@ public struct PlayBadge: View {
         Image.montage(.play)
             .resizable()
             .renderingMode(.template)
-            .foregroundStyle(SwiftUI.Color.alias(.staticWhite))
+            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
             .frame(width: playIconSize.width, height: playIconSize.height)
             .background {
                 Group {
                     if alternative {
                         Circle()
-                            .fill(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
+                            .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
                     } else {
                         ZStack {
                             Circle()

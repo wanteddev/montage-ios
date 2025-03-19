@@ -165,11 +165,11 @@ extension TextInput {
                 if let heading {
                     HStack(spacing: 4) {
                         Text(heading)
-                            .montage(variant: .label1, weight: .bold, alias: .labelNeutral)
+                            .montage(variant: .label1, weight: .bold, semantic: .labelNeutral)
                             .paragraph(variant: .label1)
                         if requiredBadge {
                             Text("*")
-                                .montage(variant: .label1, weight: .medium, alias: .statusNegative)
+                                .montage(variant: .label1, weight: .medium, semantic: .statusNegative)
                         }
                     }
                 }
@@ -205,7 +205,7 @@ private extension TextInput.TextField {
                         Image.montage(icon)
                             .resizable()
                             .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.alias(.labelAlternative))
+                            .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
                     }
                     SwiftUI.TextField(
                         "",
@@ -233,7 +233,7 @@ private extension TextInput.TextField {
                         Image.montage(.circleCloseFill)
                             .resizable()
                             .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
+                            .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
                             .onTapGesture { text = "" }
                     } else {
                         if let trailingIcon, let trailingIconColor {
@@ -274,7 +274,7 @@ private extension TextInput.TextField {
                         handler: trailingButton.handler
                     )
                     UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
-                        .strokeBorder(SwiftUI.Color.alias(.lineNeutral), lineWidth: 1)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutral), lineWidth: 1)
                         .clipShape(
                             Rectangle()
                                 .offset(x: 1, y: .zero)
@@ -285,7 +285,7 @@ private extension TextInput.TextField {
             }
         }
         .frame(minHeight: 48)
-        .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
         .clipShape(
             RoundedRectangle(cornerRadius: 12)
         )
@@ -320,9 +320,9 @@ private extension TextInput.TextField {
                     )
                     .background {
                         RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(SwiftUI.Color.alias(.lineAlternative))
+                            .strokeBorder(SwiftUI.Color.semantic(.lineAlternative))
                     }
-                    .background(SwiftUI.Color.alias(.backgroundNormal))
+                    .background(SwiftUI.Color.semantic(.backgroundNormal))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .scrollDisabled(autoCompletionContentHeight <= 400)
                     .position(
@@ -338,9 +338,9 @@ private extension TextInput.TextField {
     var captionTextColor: SwiftUI.Color {
         switch status {
         case .negative:
-            .alias(.statusNegative)
+            .semantic(.statusNegative)
         default:
-            .alias(.labelAlternative)
+            .semantic(.labelAlternative)
         }
     }
     
@@ -364,14 +364,14 @@ private extension TextInput.TextField {
                                                     .montage(
                                                         variant: .caption1,
                                                         weight: .bold,
-                                                        color: .alias(.labelAlternative)
+                                                        color: .semantic(.labelAlternative)
                                                     )
                                                     .paragraph(variant: .caption1)
                                                 Spacer()
                                             }
                                             .padding(.horizontal, 1)
                                             .padding(.vertical, 4)
-                                            .background(SwiftUI.Color.alias(.backgroundElevated))
+                                            .background(SwiftUI.Color.semantic(.backgroundElevated))
                                         }
                                     }
                                     Section(header: header) {
@@ -401,16 +401,16 @@ private extension TextInput.TextField {
         if textFieldFocusState {
             switch status {
             case .normal, .positive:
-                .alias(.primaryNormal).opacity(0.43)
+                .semantic(.primaryNormal).opacity(0.43)
             case .negative:
-                .alias(.statusNegative).opacity(0.43)
+                .semantic(.statusNegative).opacity(0.43)
             }
         } else {
             switch status {
             case .normal, .positive:
-                .alias(.lineNeutral)
+                .semantic(.lineNeutral)
             case .negative:
-                .alias(.statusNegative).opacity(0.43)
+                .semantic(.statusNegative).opacity(0.43)
             }
         }
     }
@@ -429,20 +429,20 @@ private extension TextInput.TextField {
     var trailingIconColor: SwiftUI.Color? {
         switch status {
         case .positive:
-            .alias(.primaryNormal)
+            .semantic(.primaryNormal)
         case .negative:
-            .alias(.statusNegative)
+            .semantic(.statusNegative)
         default:
             nil
         }
     }
     
     var placeholderTextColor: SwiftUI.Color {
-        disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
     }
     
     var fieldTextColor: SwiftUI.Color {
-        disable ? .alias(.labelAlternative) : .alias(.labelNormal)
+        disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
     }
 }
 
@@ -463,7 +463,7 @@ private extension TextInput.TextField {
         
         var body: some View {
             Text(title)
-                .montage(variant: .body1, weight: variant.typoWeight, alias: variant.textColor)
+                .montage(variant: .body1, weight: variant.typoWeight, semantic: variant.textColor)
                 .paragraph(variant: .body1)
                 .background(
                     Decorate.Interaction(

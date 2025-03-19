@@ -325,7 +325,7 @@ extension Button.OutlinedUIButton {
         }()
         layer.borderColor = {
             if disable {
-                UIColor.alias(.lineNormal).cgColor
+                UIColor.semantic(.lineNormal).cgColor
             } else {
                 if let borderUIColor {
                     borderUIColor.cgColor
@@ -337,12 +337,12 @@ extension Button.OutlinedUIButton {
         layer.borderWidth = 1.0
         let contentColor: UIColor = {
             if disable {
-                .alias(.labelDisable)
+                .semantic(.labelDisable)
             } else {
                 if let contentUIColor {
                     contentUIColor
                 } else {
-                    .alias(variant.textColor)
+                    .semantic(variant.textColor)
                 }
             }
         }()
@@ -397,7 +397,7 @@ extension Button.OutlinedUIButton {
             weight: variant.typoWeight,
             color: {
                 if disable {
-                    .alias(.labelDisable)
+                    .semantic(.labelDisable)
                 } else {
                     if let contentUIColor {
                         contentUIColor
@@ -464,7 +464,7 @@ extension Button.OutlinedUIButton: UIGestureRecognizerDelegate {
 }
 
 extension Button.OutlinedUIButton.Variant {
-    var textColor: Color.Alias {
+    var textColor: Color.Semantic {
         switch self {
         case .primary, .secondary:
             .primaryNormal
@@ -483,15 +483,15 @@ extension Button.OutlinedUIButton.Variant {
     var borderColor: UIColor {
         switch self {
         case .primary:
-            .alias(.primaryNormal)
+            .semantic(.primaryNormal)
         case .secondary:
-            .alias(.lineNeutral).withAlphaComponent(0.16)
+            .semantic(.lineNeutral).withAlphaComponent(0.16)
         case .assistive:
-            .alias(.lineNeutral).withAlphaComponent(0.16)
+            .semantic(.lineNeutral).withAlphaComponent(0.16)
         }
     }
     
-    var interactionColor: Color.Alias {
+    var interactionColor: Color.Semantic {
         switch self {
         case .primary:
             .primaryNormal

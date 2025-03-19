@@ -310,7 +310,7 @@ extension Button.SolidUIButton {
     private func updateColors() {
         backgroundColor = {
             if disable {
-                .alias(.interactionDisable)
+                .semantic(.interactionDisable)
             } else {
                 if let backgroundUIColor {
                     backgroundUIColor
@@ -321,7 +321,7 @@ extension Button.SolidUIButton {
         }()
         let contentColor: UIColor = {
             if disable {
-                .alias(.labelAssistive)
+                .semantic(.labelAssistive)
             } else {
                 if let contentUIColor {
                     contentUIColor
@@ -380,7 +380,7 @@ extension Button.SolidUIButton {
             weight: variant.typoWeight,
             color: {
                 if disable {
-                    .alias(.labelAssistive)
+                    .semantic(.labelAssistive)
                 } else {
                     if let contentUIColor {
                         contentUIColor
@@ -450,9 +450,9 @@ extension Button.SolidUIButton.Variant {
     var textColor: UIColor {
         switch self {
         case .primary:
-            .alias(.staticWhite)
+            .semantic(.staticWhite)
         case .assistive:
-            .alias(.labelNeutral).withAlphaComponent(0.88)
+            .semantic(.labelNeutral).withAlphaComponent(0.88)
         }
     }
     
@@ -466,13 +466,13 @@ extension Button.SolidUIButton.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .primary:
-            .alias(.primaryNormal)
+            .semantic(.primaryNormal)
         case .assistive:
-            .component(.fillNormal).withAlphaComponent(0.08)
+            .semantic(.fillNormal).withAlphaComponent(0.08)
         }
     }
     
-    var interactionColor: Color.Alias {
+    var interactionColor: Color.Semantic {
         .labelNormal
     }
 

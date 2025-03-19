@@ -131,7 +131,7 @@ extension Chip {
             return zelf
         }
         
-        /// 이미지 색상을 지정합니다. 기본값은 .alias(.labelAlternative) 입니다.
+        /// 이미지 색상을 지정합니다. 기본값은 .semantic(.labelAlternative) 입니다.
         public func imageColor(_ color: SwiftUI.Color) -> Self {
             var zelf = self
             zelf.imageColor = color

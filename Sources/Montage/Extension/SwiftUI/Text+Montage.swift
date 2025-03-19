@@ -29,24 +29,16 @@ public extension Text {
     func montage(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        alias: Color.Alias = .labelNormal
+        semantic: Color.Semantic = .labelNormal
     ) -> Text {
-        montage(variant: variant, weight: weight, color: .alias(alias))
+        montage(variant: variant, weight: weight, color: .semantic(semantic))
     }
     
     func montage(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        component: Color.Component
+        atomic: Color.Atomic
     ) -> Text {
-        montage(variant: variant, weight: weight, color: .component(component))
-    }
-    
-    func montage(
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        global: Color.Global
-    ) -> Text {
-        montage(variant: variant, weight: weight, color: .atomic(global))
+        montage(variant: variant, weight: weight, color: .atomic(atomic))
     }
 }

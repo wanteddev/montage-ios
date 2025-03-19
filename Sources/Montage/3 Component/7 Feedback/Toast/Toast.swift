@@ -26,7 +26,7 @@ public struct Toast: View {
         case message
         case success
         case warning
-        case custom(Montage.Icon, tint: Montage.Color.Alias? = nil)
+        case custom(Montage.Icon, tint: Montage.Color.Semantic? = nil)
     }
     
     public enum Location {
@@ -85,7 +85,7 @@ public struct Toast: View {
                 HStack(alignment: .center, spacing: 8) {
                     Icon(variant)
                     Text(message)
-                        .montage(variant: .body2, weight: .bold, alias: .staticWhite)
+                        .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
                         .paragraph(variant: .body2)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -115,25 +115,25 @@ public struct Toast: View {
             case .success:
                 ZStack {
                     Circle()
-                        .foregroundStyle(SwiftUI.Color.alias(.staticWhite))
+                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
                     Image.montage(.circleCheckFill)
                         .resizable()
-                        .foregroundStyle(SwiftUI.Color.alias(.statusPositive))
+                        .foregroundStyle(SwiftUI.Color.semantic(.statusPositive))
                         .frame(width: 22, height: 22)
                 }
             case .warning:
                 ZStack {
                     Circle()
-                        .foregroundStyle(SwiftUI.Color.alias(.staticWhite))
+                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
                     Image.montage(.circleExclamationFill)
                         .resizable()
-                        .foregroundStyle(SwiftUI.Color.alias(.statusCautionary))
+                        .foregroundStyle(SwiftUI.Color.semantic(.statusCautionary))
                         .frame(width: 22, height: 22)
                 }
             case let .custom(icon, tint):
-                let tintColor: Montage.Color.Alias = {
+                let tintColor: Montage.Color.Semantic = {
                     if let tint {
                         tint
                     } else {
@@ -142,7 +142,7 @@ public struct Toast: View {
                 }()
                 Image.montage(icon)
                     .resizable()
-                    .foregroundStyle(SwiftUI.Color.alias(tintColor))
+                    .foregroundStyle(SwiftUI.Color.semantic(tintColor))
                     .frame(width: 22, height: 22)
             }
         }
@@ -153,8 +153,8 @@ public struct Toast: View {
 
         var body: some View {
             ZStack {
-                SwiftUI.Color.alias(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
-                SwiftUI.Color.alias(.primaryNormal).opacity(0.05)
+                SwiftUI.Color.semantic(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
+                SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
             }
             .background(
                 .ultraThinMaterial

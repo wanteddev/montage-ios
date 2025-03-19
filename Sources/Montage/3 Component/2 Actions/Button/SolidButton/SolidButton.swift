@@ -227,13 +227,13 @@ struct SolidButtonPreview: View {
                 Button.SolidButton(
                     size: .small,
                     text: "content",
-                    contentColor: .alias(.accentRedOrange)
+                    contentColor: .semantic(.accentRedOrange)
                 )
                 
                 Button.SolidButton(
                     size: .small,
                     text: "background",
-                    backgroundColor: .alias(.accentPurple)
+                    backgroundColor: .semantic(.accentPurple)
                 )
             }
         }

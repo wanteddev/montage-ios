@@ -145,21 +145,21 @@ extension Tooltip {
 
         private var underLayerColor: SwiftUI.Color {
             if config.variant == .compact, config.inverse {
-                SwiftUI.Color.alias(.lineNeutral)
+                SwiftUI.Color.semantic(.lineNeutral)
             } else {
-                SwiftUI.Color.alias(.primaryNormal).opacity(0.05)
+                SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
             }
         }
 
         private var upperLayerColor: SwiftUI.Color {
             if config.variant == .compact, config.inverse {
-                SwiftUI.Color.alias(.backgroundElevated).opacity(0.88)
+                SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88)
             } else {
-                SwiftUI.Color.alias(.inverseBackground).opacity(0.88)
+                SwiftUI.Color.semantic(.inverseBackground).opacity(0.88)
             }
         }
 
-        private var contentColor: Color.Alias {
+        private var contentColor: Color.Semantic {
             if config.variant == .compact, config.inverse {
                 .labelNeutral
             } else {
@@ -169,7 +169,7 @@ extension Tooltip {
 
         private var borderColor: SwiftUI.Color {
             if config.inverse {
-                SwiftUI.Color.alias(.lineNeutral)
+                SwiftUI.Color.semantic(.lineNeutral)
             } else {
                 .clear
             }
@@ -428,7 +428,7 @@ extension Tooltip {
                                 .montage(
                                     variant: .label1,
                                     weight: .medium,
-                                    alias: contentColor
+                                    semantic: contentColor
                                 )
                                 .paragraph(variant: .label1)
                                 .padding(.horizontal, 2)
@@ -436,7 +436,7 @@ extension Tooltip {
                                 Button.IconButton(
                                     variant: .normal(size: 16),
                                     icon: .close,
-                                    iconColor: .alias(.inverseLabel)
+                                    iconColor: .semantic(.inverseLabel)
                                 ) {
                                     show = false
                                 }
@@ -454,7 +454,7 @@ extension Tooltip {
                                     .montage(
                                         variant: .label1,
                                         weight: .bold,
-                                        alias: .inverseLabel
+                                        semantic: .inverseLabel
                                     )
                                     .paragraph(variant: .label1)
                                     .opacity(0.61)

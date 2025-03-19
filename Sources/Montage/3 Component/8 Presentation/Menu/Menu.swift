@@ -89,18 +89,18 @@ public struct Menu: View {
                 .frame(maxWidth: .infinity)
                 .padding(12)
                 .frame(height: 56)
-                .background(SwiftUI.Color.alias(.backgroundElevated))
+                .background(SwiftUI.Color.semantic(.backgroundElevated))
                 .overlay {
                     Rectangle()
-                        .strokeBorder(SwiftUI.Color.alias(.lineSolidAlternative), lineWidth: 1)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineSolidAlternative), lineWidth: 1)
                 }
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay {
             RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(SwiftUI.Color.alias(.lineSolidNeutral), lineWidth: 1)
-                .shadow(color: .alias(.staticBlack).opacity(0.04), radius: 1, x: 0, y: 1)
+                .strokeBorder(SwiftUI.Color.semantic(.lineSolidNeutral), lineWidth: 1)
+                .shadow(color: .semantic(.staticBlack).opacity(0.04), radius: 1, x: 0, y: 1)
         }
         .padding(.vertical, 8)
     }

@@ -34,7 +34,7 @@ extension Control {
                 Toggle("", isOn: $isOn.didSet(execute: { newValue in
                     onChange(newValue)
                 }))
-                .tint(.alias(.primaryNormal))
+                .tint(.semantic(.primaryNormal))
                 .frame(width: switchSize.width, height: switchSize.height)
                 .offset(CGSize(width: -5, height: 0))
                 .transformEffect(CGAffineTransform(

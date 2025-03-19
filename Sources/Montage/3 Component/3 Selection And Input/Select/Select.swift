@@ -174,14 +174,14 @@ public struct Select: View {
                         .montage(
                             variant: .label1,
                             weight: .bold,
-                            alias: .labelNormal
+                            semantic: .labelNormal
                         )
                     if requiredBadge {
                         Text("*")
                             .montage(
                                 variant: .label1,
                                 weight: .medium,
-                                alias: .statusNegative
+                                semantic: .statusNegative
                             )
                     }
                 }
@@ -191,7 +191,7 @@ public struct Select: View {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(shadowBackgroundColor)
                     .shadow(
-                        color: .alias(.staticBlack).opacity(0.03),
+                        color: .semantic(.staticBlack).opacity(0.03),
                         radius: 2,
                         x: 0,
                         y: 1
@@ -207,7 +207,7 @@ public struct Select: View {
                         case .icon(let icon):
                             Image.montage(icon)
                                 .resizable()
-                                .foregroundStyle(SwiftUI.Color.alias(.labelAlternative))
+                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
                                 .padding(1)
                                 .frame(width: 24, height: 24)
                         case .iconButton(let iconButton):
@@ -295,14 +295,14 @@ public struct Select: View {
                             .resizable()
                             .padding(1)
                             .frame(width: 24, height: 24)
-                            .foregroundStyle(SwiftUI.Color.alias(.statusNegative))
+                            .foregroundStyle(SwiftUI.Color.semantic(.statusNegative))
                     }
                     
                     Button.IconButton(
                         variant: .normal(size: 16),
                         icon: .chevronDownThickSmall,
                         iconColor: disable ? SwiftUI.Color
-                            .alias(.labelDisable) : .alias(.labelAlternative)
+                            .semantic(.labelDisable) : .semantic(.labelAlternative)
                     ) {
                         menuPresented.wrappedValue.toggle()
                     }
@@ -312,7 +312,7 @@ public struct Select: View {
                 .padding(.all, 12)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                        .foregroundStyle(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
                 )
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
@@ -320,7 +320,7 @@ public struct Select: View {
                         .strokeBorder(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
                 }
                 .shadow(
-                    color: .alias(.staticBlack).opacity(0.03),
+                    color: .semantic(.staticBlack).opacity(0.03),
                     radius: 2,
                     x: 0,
                     y: 1
@@ -332,7 +332,7 @@ public struct Select: View {
                     .montage(
                         variant: .caption1,
                         weight: .regular,
-                        alias: negative ? .statusNegative : .labelAlternative
+                        semantic: negative ? .statusNegative : .labelAlternative
                     )
             }
         }
@@ -448,22 +448,22 @@ public struct Select: View {
     
     private var strokeColor: SwiftUI.Color {
         if disable {
-            .alias(.lineNeutral)
+            .semantic(.lineNeutral)
         } else {
             if negative {
-                .alias(.statusNegative).opacity(0.28)
+                .semantic(.statusNegative).opacity(0.28)
             } else {
-                menuPresented.wrappedValue ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNeutral)
+                menuPresented.wrappedValue ? .semantic(.primaryNormal).opacity(0.43) : .semantic(.lineNeutral)
             }
         }
     }
     
     private var placeholderTextColor: SwiftUI.Color {
-        disable ? .alias(.labelDisable) : .alias(.labelAssistive)
+        disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
     }
     
     private var textColor: SwiftUI.Color {
-        disable ? .alias(.labelAlternative) : .alias(.labelNormal)
+        disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
     }
     
     // MARK: - Inner View
@@ -496,29 +496,29 @@ public struct Select: View {
         }
         
         private func iconColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .alias(.labelDisable) }
+            guard disable == false else { return .semantic(.labelDisable) }
             if item.isNegative {
-                return .alias(.statusNegative)
+                return .semantic(.statusNegative)
             } else {
-                return .alias(.labelAlternative)
+                return .semantic(.labelAlternative)
             }
         }
         
         private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color? {
             guard disable == false else { return nil }
             if item.isNegative {
-                return .alias(.statusNegative).opacity(0.05)
+                return .semantic(.statusNegative).opacity(0.05)
             } else {
                 return nil
             }
         }
         
         private func fontColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .alias(.labelDisable) }
+            guard disable == false else { return .semantic(.labelDisable) }
             if item.isNegative {
-                return .alias(.statusNegative)
+                return .semantic(.statusNegative)
             } else {
-                return .alias(.labelAlternative)
+                return .semantic(.labelAlternative)
             }
         }
     }

@@ -44,7 +44,7 @@ public struct Slider: View {
                     .montage(
                         variant: .headline2,
                         weight: .bold,
-                        alias: disable ? .interactionDisable : .labelNormal
+                        semantic: disable ? .interactionDisable : .labelNormal
                     )
             }
             
@@ -240,12 +240,12 @@ public struct Slider: View {
         }
         
         var lineColor: SwiftUI.Color {
-            guard !disable else { return .alias(.interactionDisable) }
+            guard !disable else { return .semantic(.interactionDisable) }
             return switch kind {
             case .inner:
-                .alias(.primaryNormal)
+                .semantic(.primaryNormal)
             case .outer:
-                .component(.fillStrong)
+                .semantic(.fillStrong)
             }
         }
     }
@@ -270,7 +270,7 @@ public struct Slider: View {
                 Circle()
                     .frame(width: Slider.diameter, height: Slider.diameter)
                     .foregroundStyle(
-                        SwiftUI.Color.alias(disable ? .interactionDisable : .primaryNormal)
+                        SwiftUI.Color.semantic(disable ? .interactionDisable : .primaryNormal)
                     )
                     .contentShape(Rectangle())
                     .background {
@@ -327,7 +327,7 @@ public struct Slider: View {
                 .montage(
                     variant: .label1,
                     weight: .medium,
-                    alias: disable ? .interactionDisable : .labelNormal
+                    semantic: disable ? .interactionDisable : .labelNormal
                 )
             Group {
                 if isSpacer {

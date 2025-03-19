@@ -125,28 +125,28 @@ fileprivate struct Preview: View {
                 HStack {
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.primary),
+                        color: .accent(.semantic(.primaryNormal)),
                         leadingIcon: .montage(.circleInfoFill),
                         text: "중요"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.positive),
+                        color: .accent(.semantic(.statusPositive)),
                         leadingIcon: .montage(.circleCheckFill),
                         text: "긍정"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.cautionary),
+                        color: .accent(.semantic(.statusCautionary)),
                         leadingIcon: .montage(.circleExclamationFill),
                         text: "경고"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.negative),
+                        color: .accent(.semantic(.statusNegative)),
                         leadingIcon: .montage(.circleCloseFill),
                         text: "에러"
                     )
@@ -155,35 +155,35 @@ fileprivate struct Preview: View {
                 HStack {
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.lime),
+                        color: .accent(.semantic(.accentLime)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "라임"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.cyan),
+                        color: .accent(.semantic(.accentCyan)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "시안"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.lightBlue),
+                        color: .accent(.semantic(.accentLightBlue)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "라이트 블루"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.violet),
+                        color: .accent(.semantic(.accentViolet)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "바이올렛"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.pink),
+                        color: .accent(.semantic(.accentPink)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "핑크"
                     )
@@ -195,41 +195,41 @@ fileprivate struct Preview: View {
             VStack(alignment: .leading) {
                 HStack {
                     Badge.Content(
-                        variant: .outlined, color: .accent(.primary), text: "중요"
+                        variant: .outlined, color: .accent(.semantic(.primaryNormal)), text: "중요"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.positive), text: "긍정"
+                        variant: .outlined, color: .accent(.semantic(.statusPositive)), text: "긍정"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.cautionary), text: "경고"
+                        variant: .outlined, color: .accent(.semantic(.statusCautionary)), text: "경고"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.negative), text: "에러"
+                        variant: .outlined, color: .accent(.semantic(.statusNegative)), text: "에러"
                     )
                 }
                 
                 HStack {
                     Badge.Content(
-                        variant: .outlined, color: .accent(.lime), text: "라임"
+                        variant: .outlined, color: .accent(.semantic(.accentLime)), text: "라임"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.cyan), text: "시안"
+                        variant: .outlined, color: .accent(.semantic(.accentCyan)), text: "시안"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.lightBlue), text: "라이트 블루"
+                        variant: .outlined, color: .accent(.semantic(.accentLightBlue)), text: "라이트 블루"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.violet), text: "바이올렛"
+                        variant: .outlined, color: .accent(.semantic(.accentViolet)), text: "바이올렛"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.pink), text: "핑크"
+                        variant: .outlined, color: .accent(.semantic(.accentPink)), text: "핑크"
                     )
                 }
             }
@@ -241,7 +241,7 @@ struct ContentBadgeController_Previews: PreviewProvider {
     static var previews: some View {
         Preview()
             .padding()
-            .background(SwiftUI.Color(.alias(.backgroundNormal)))
+            .background(SwiftUI.Color(.semantic(.backgroundNormal)))
             .previewLayout(.sizeThatFits)
     }
 }

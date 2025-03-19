@@ -254,14 +254,14 @@ struct OutlinedButtonPreview: View {
                 Button.OutlinedButton(
                     size: .small,
                     text: "border&content",
-                    contentColor: .alias(.accentLime),
-                    borderColor: .alias(.accentLime)
+                    contentColor: .semantic(.accentLime),
+                    borderColor: .semantic(.accentLime)
                 )
                 
                 Button.OutlinedButton(
                     size: .small,
                     text: "background",
-                    backgroundColor: .alias(.accentPink)
+                    backgroundColor: .semantic(.accentPink)
                 )
             }
         }

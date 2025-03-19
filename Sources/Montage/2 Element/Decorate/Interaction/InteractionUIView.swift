@@ -15,7 +15,7 @@ extension Decorate {
             }
         }
         
-        var color: Color.Alias {
+        var color: Color.Semantic {
             didSet {
                 updateView()
             }
@@ -29,7 +29,7 @@ extension Decorate {
         
         init(
             state: Interaction.State = .normal,
-            color: Color.Alias = .labelNormal,
+            color: Color.Semantic = .labelNormal,
             variant: Interaction.Variant = .normal
         ) {
             self.state = state
@@ -57,7 +57,7 @@ extension Decorate.InteractionUIView {
     private func setupView() {
         isUserInteractionEnabled = false
         alpha = state.alpha * variant.weight
-        backgroundColor = .alias(color)
+        backgroundColor = .semantic(color)
     }
     
     private func updateView() {
@@ -67,7 +67,7 @@ extension Decorate.InteractionUIView {
             options: [.beginFromCurrentState, .curveEaseInOut]
         ) { [self] in
             alpha = state.alpha * variant.weight
-            backgroundColor = .alias(color)
+            backgroundColor = .semantic(color)
         }
     }
 }

@@ -26,21 +26,21 @@ extension Pagination {
                     .montage(
                         variant: typography,
                         weight: .bold,
-                        color: .alias(.staticWhite).opacity(alternative ? 88 : 74)
+                        color: .semantic(.staticWhite).opacity(alternative ? 88 : 74)
                     )
                     .paragraph(variant: typography)
                 Text("/")
                     .montage(
                         variant: typography,
                         weight: .regular,
-                        color: .alias(.staticWhite).opacity(alternative ? 52 : 28)
+                        color: .semantic(.staticWhite).opacity(alternative ? 52 : 28)
                     )
                     .paragraph(variant: typography)
                 Text("\(totalPages)")
                     .montage(
                         variant: typography,
                         weight: .bold,
-                        color: .alias(.staticWhite).opacity(alternative ? 88 : 74)
+                        color: .semantic(.staticWhite).opacity(alternative ? 88 : 74)
                     )
                     .paragraph(variant: typography)
             }
@@ -49,14 +49,14 @@ extension Pagination {
             .background {
                 if alternative {
                     RoundedRectangle(cornerRadius: height / 2)
-                        .fill(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.61))
+                        .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
                 } else {
                     ZStack {
                         Rectangle()
                             .fill(.ultraThinMaterial)
                             .clipShape(RoundedRectangle(cornerRadius: height / 2))
                         RoundedRectangle(cornerRadius: height / 2)
-                            .fill(SwiftUI.Color.atomic(.globalCoolNeutral30).opacity(0.43))
+                            .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.43))
                     }
                 }
             }

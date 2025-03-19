@@ -5,7 +5,7 @@
 //  Created by Eunyeong Kim on 2021/04/12.
 //
 
-import UIKit
+import SwiftUI
 
 /// 디자인시스템에서 미리 정의된 컬러들입니다.
 public enum Color {
@@ -14,220 +14,220 @@ public enum Color {
     ///
     /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Palettes (New)](https://www.figma.com/file/r0LXCzm4slyOAhR7jVp1DM/Color---Palettes-(New)?node-id=19%3A2&t=VRHF3ebMufBEkKtL-1) 를 참고하세요.
     ///
-    public enum Global: String, CaseIterable, ColorResolvable {
+    public enum Atomic: String, CaseIterable, ColorResolvable {
         // COMMON
-        case globalCommon100
-        case globalCommon0
+        case common100
+        case common0
         
         // NEUTRAL
-        case globalNeutral100
-        case globalNeutral99
-        case globalNeutral95
-        case globalNeutral90
-        case globalNeutral80
-        case globalNeutral70
-        case globalNeutral60
-        case globalNeutral50
-        case globalNeutral40
-        case globalNeutral30
-        case globalNeutral22
-        case globalNeutral20
-        case globalNeutral15
-        case globalNeutral10
-        case globalNeutral5
-        case globalNeutral0
+        case neutral100
+        case neutral99
+        case neutral95
+        case neutral90
+        case neutral80
+        case neutral70
+        case neutral60
+        case neutral50
+        case neutral40
+        case neutral30
+        case neutral22
+        case neutral20
+        case neutral15
+        case neutral10
+        case neutral5
+        case neutral0
         
         // COOL NEUTRAL
-        case globalCoolNeutral100
-        case globalCoolNeutral99
-        case globalCoolNeutral98
-        case globalCoolNeutral97
-        case globalCoolNeutral96
-        case globalCoolNeutral95
-        case globalCoolNeutral90
-        case globalCoolNeutral80
-        case globalCoolNeutral70
-        case globalCoolNeutral60
-        case globalCoolNeutral50
-        case globalCoolNeutral40
-        case globalCoolNeutral30
-        case globalCoolNeutral25
-        case globalCoolNeutral23
-        case globalCoolNeutral22
-        case globalCoolNeutral20
-        case globalCoolNeutral17
-        case globalCoolNeutral15
-        case globalCoolNeutral10
-        case globalCoolNeutral7
-        case globalCoolNeutral5
-        case globalCoolNeutral0
+        case coolNeutral100
+        case coolNeutral99
+        case coolNeutral98
+        case coolNeutral97
+        case coolNeutral96
+        case coolNeutral95
+        case coolNeutral90
+        case coolNeutral80
+        case coolNeutral70
+        case coolNeutral60
+        case coolNeutral50
+        case coolNeutral40
+        case coolNeutral30
+        case coolNeutral25
+        case coolNeutral23
+        case coolNeutral22
+        case coolNeutral20
+        case coolNeutral17
+        case coolNeutral15
+        case coolNeutral10
+        case coolNeutral7
+        case coolNeutral5
+        case coolNeutral0
         
         // BLUE
-        case globalBlue100
-        case globalBlue99
-        case globalBlue95
-        case globalBlue90
-        case globalBlue80
-        case globalBlue70
-        case globalBlue60
-        case globalBlue55
-        case globalBlue50
-        case globalBlue45
-        case globalBlue40
-        case globalBlue30
-        case globalBlue20
-        case globalBlue10
-        case globalBlue0
+        case blue100
+        case blue99
+        case blue95
+        case blue90
+        case blue80
+        case blue70
+        case blue60
+        case blue55
+        case blue50
+        case blue45
+        case blue40
+        case blue30
+        case blue20
+        case blue10
+        case blue0
         
         // RED
-        case globalRed100
-        case globalRed99
-        case globalRed95
-        case globalRed90
-        case globalRed80
-        case globalRed70
-        case globalRed60
-        case globalRed50
-        case globalRed40
-        case globalRed30
-        case globalRed20
-        case globalRed10
-        case globalRed0
+        case red100
+        case red99
+        case red95
+        case red90
+        case red80
+        case red70
+        case red60
+        case red50
+        case red40
+        case red30
+        case red20
+        case red10
+        case red0
         
         // GREEN
-        case globalGreen100
-        case globalGreen99
-        case globalGreen95
-        case globalGreen90
-        case globalGreen80
-        case globalGreen70
-        case globalGreen60
-        case globalGreen50
-        case globalGreen40
-        case globalGreen30
-        case globalGreen20
-        case globalGreen10
-        case globalGreen0
+        case green100
+        case green99
+        case green95
+        case green90
+        case green80
+        case green70
+        case green60
+        case green50
+        case green40
+        case green30
+        case green20
+        case green10
+        case green0
         
         // ORANGE
-        case globalOrange100
-        case globalOrange99
-        case globalOrange95
-        case globalOrange90
-        case globalOrange80
-        case globalOrange70
-        case globalOrange60
-        case globalOrange50
-        case globalOrange40
-        case globalOrange30
-        case globalOrange20
-        case globalOrange10
-        case globalOrange0
+        case orange100
+        case orange99
+        case orange95
+        case orange90
+        case orange80
+        case orange70
+        case orange60
+        case orange50
+        case orange40
+        case orange30
+        case orange20
+        case orange10
+        case orange0
         
         // LIME
-        case globalLime100
-        case globalLime99
-        case globalLime95
-        case globalLime90
-        case globalLime80
-        case globalLime70
-        case globalLime60
-        case globalLime50
-        case globalLime40
-        case globalLime30
-        case globalLime20
-        case globalLime10
-        case globalLime0
+        case lime100
+        case lime99
+        case lime95
+        case lime90
+        case lime80
+        case lime70
+        case lime60
+        case lime50
+        case lime40
+        case lime30
+        case lime20
+        case lime10
+        case lime0
         
         // CYAN
-        case globalCyan100
-        case globalCyan99
-        case globalCyan95
-        case globalCyan90
-        case globalCyan80
-        case globalCyan70
-        case globalCyan60
-        case globalCyan50
-        case globalCyan40
-        case globalCyan30
-        case globalCyan20
-        case globalCyan10
-        case globalCyan0
+        case cyan100
+        case cyan99
+        case cyan95
+        case cyan90
+        case cyan80
+        case cyan70
+        case cyan60
+        case cyan50
+        case cyan40
+        case cyan30
+        case cyan20
+        case cyan10
+        case cyan0
         
         // LIGHT BLUE
-        case globalLightBlue100
-        case globalLightBlue99
-        case globalLightBlue95
-        case globalLightBlue90
-        case globalLightBlue80
-        case globalLightBlue70
-        case globalLightBlue60
-        case globalLightBlue50
-        case globalLightBlue40
-        case globalLightBlue30
-        case globalLightBlue20
-        case globalLightBlue10
-        case globalLightBlue0
+        case lightBlue100
+        case lightBlue99
+        case lightBlue95
+        case lightBlue90
+        case lightBlue80
+        case lightBlue70
+        case lightBlue60
+        case lightBlue50
+        case lightBlue40
+        case lightBlue30
+        case lightBlue20
+        case lightBlue10
+        case lightBlue0
         
         // VIOLET
-        case globalViolet100
-        case globalViolet99
-        case globalViolet95
-        case globalViolet90
-        case globalViolet80
-        case globalViolet70
-        case globalViolet60
-        case globalViolet50
-        case globalViolet40
-        case globalViolet30
-        case globalViolet20
-        case globalViolet10
-        case globalViolet0
+        case violet100
+        case violet99
+        case violet95
+        case violet90
+        case violet80
+        case violet70
+        case violet60
+        case violet50
+        case violet40
+        case violet30
+        case violet20
+        case violet10
+        case violet0
         
         // PURPLE
-        case globalPurple100
-        case globalPurple99
-        case globalPurple95
-        case globalPurple90
-        case globalPurple80
-        case globalPurple70
-        case globalPurple60
-        case globalPurple50
-        case globalPurple40
-        case globalPurple30
-        case globalPurple20
-        case globalPurple10
-        case globalPurple0
+        case purple100
+        case purple99
+        case purple95
+        case purple90
+        case purple80
+        case purple70
+        case purple60
+        case purple50
+        case purple40
+        case purple30
+        case purple20
+        case purple10
+        case purple0
         
         // PINK
-        case globalPink100
-        case globalPink99
-        case globalPink95
-        case globalPink90
-        case globalPink80
-        case globalPink70
-        case globalPink60
-        case globalPink50
-        case globalPink40
-        case globalPink30
-        case globalPink20
-        case globalPink10
-        case globalPink0
+        case pink100
+        case pink99
+        case pink95
+        case pink90
+        case pink80
+        case pink70
+        case pink60
+        case pink50
+        case pink40
+        case pink30
+        case pink20
+        case pink10
+        case pink0
         
         // Red Orange
-        case globalRedOrange100
-        case globalRedOrange99
-        case globalRedOrange95
-        case globalRedOrange90
-        case globalRedOrange80
-        case globalRedOrange70
-        case globalRedOrange60
-        case globalRedOrange50
-        case globalRedOrange40
-        case globalRedOrange30
-        case globalRedOrange20
-        case globalRedOrange10
-        case globalRedOrange0
+        case redOrange100
+        case redOrange99
+        case redOrange95
+        case redOrange90
+        case redOrange80
+        case redOrange70
+        case redOrange60
+        case redOrange50
+        case redOrange40
+        case redOrange30
+        case redOrange20
+        case redOrange10
+        case redOrange0
         
         public var name: String { rawValue }
         
@@ -241,311 +241,204 @@ public enum Color {
     ///
     /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
     ///
-    public enum Alias: String, CaseIterable, ColorResolvable {
+    public enum Semantic: String, CaseIterable, ColorResolvable {
         ///
-        /// Figma상의 `.color-alias-static-white` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-static-white` 토큰과 대응되는 값입니다.
         ///
         case staticWhite
         
         ///
-        /// Figma상의 `.color-alias-static-black` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-static-black` 토큰과 대응되는 값입니다.
         ///
         case staticBlack
         
         ///
-        /// Figma상의 `.color-alias-primary-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-primary-normal` 토큰과 대응되는 값입니다.
         ///
         case primaryNormal
         
         ///
-        /// Figma상의 `.color-alias-primary-strong` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-primary-strong` 토큰과 대응되는 값입니다.
         ///
         case primaryStrong
         
         ///
-        /// Figma상의 `.color-alias-primary-heavy` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-primary-heavy` 토큰과 대응되는 값입니다.
         ///
         case primaryHeavy
         
         ///
-        /// Figma상의 `.color-alias-label-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-label-normal` 토큰과 대응되는 값입니다.
         ///
         case labelNormal
         
         ///
-        /// Figma상의 `.color-alias-label-strong` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-label-strong` 토큰과 대응되는 값입니다.
         ///
         case labelStrong
         
         ///
-        /// Figma상의 `.color-alias-label-neutral` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-label-neutral` 토큰과 대응되는 값입니다.
         ///
         case labelNeutral
         
         ///
-        /// Figma상의 `.color-alias-label-alternative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-label-alternative` 토큰과 대응되는 값입니다.
         ///
         case labelAlternative
         
         ///
-        /// Figma상의 `.color-alias-label-assistive` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-label-assistive` 토큰과 대응되는 값입니다.
         ///
         case labelAssistive
         
         ///
-        /// Figma상의 `.color-alias-label-disable` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-label-disable` 토큰과 대응되는 값입니다.
         ///
         case labelDisable
         
         ///
-        /// Figma상의 `.color-alias-background-normal-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-background-normal-normal` 토큰과 대응되는 값입니다.
         ///
         case backgroundNormal
         
         ///
-        /// Figma상의 `.color-alias-background-normal-alternative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-background-normal-alternative` 토큰과 대응되는 값입니다.
         ///
         case backgroundNormalAlternative
         
         ///
-        /// Figma상의 `.color-alias-background-elevated-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-background-elevated-normal` 토큰과 대응되는 값입니다.
         ///
         case backgroundElevated
         
         ///
-        /// Figma상의 `.color-alias-background-elevated-alternative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-background-elevated-alternative` 토큰과 대응되는 값입니다.
         ///
         case backgroundElevatedAlternative
         
         ///
-        /// Figma상의 `.color-alias-interaction-inactive` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-interaction-inactive` 토큰과 대응되는 값입니다.
         ///
         case interactionInactive
         
         ///
-        /// Figma상의 `.color-alias-interaction-disable` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-interaction-disable` 토큰과 대응되는 값입니다.
         ///
         case interactionDisable
         
         ///
-        /// Figma상의 `.color-alias-line-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-line-normal` 토큰과 대응되는 값입니다.
         ///
         case lineNormal
         
         ///
-        /// Figma상의 `.color-alias-line-neutral` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-line-neutral` 토큰과 대응되는 값입니다.
         ///
         case lineNeutral
         
         ///
-        /// Figma상의 `.color-alias-line-alternative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-line-alternative` 토큰과 대응되는 값입니다.
         ///
         case lineAlternative
         
         ///
-        /// Figma상의 `.color-alias-line-solid-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-line-solid-normal` 토큰과 대응되는 값입니다.
         ///
         case lineSolidNormal
         
         ///
-        /// Figma상의 `.color-alias-line-solid-neutral` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-line-solid-neutral` 토큰과 대응되는 값입니다.
         ///
         case lineSolidNeutral
         
         ///
-        /// Figma상의 `.color-alias-line-solid-alternative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-line-solid-alternative` 토큰과 대응되는 값입니다.
         ///
         case lineSolidAlternative
         
         ///
-        /// Figma상의 `.color-alias-status-positive` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-status-positive` 토큰과 대응되는 값입니다.
         ///
         case statusPositive
         
         ///
-        /// Figma상의 `.color-alias-status-cautionary` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-status-cautionary` 토큰과 대응되는 값입니다.
         ///
         case statusCautionary
         
         ///
-        /// Figma상의 `.color-alias-status-negative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-status-negative` 토큰과 대응되는 값입니다.
         ///
         case statusNegative
         
         ///
-        /// Figma상의 `.color-alias-accent-lime` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-lime` 토큰과 대응되는 값입니다.
         ///
         case accentLime
 
         ///
-        /// Figma상의 `.color-alias-accent-cyan` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-cyan` 토큰과 대응되는 값입니다.
         ///
         case accentCyan
 
         ///
-        /// Figma상의 `.color-alias-accent-lightBlue` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-lightBlue` 토큰과 대응되는 값입니다.
         ///
         case accentLightBlue
 
         ///
-        /// Figma상의 `.color-alias-accent-violet` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-violet` 토큰과 대응되는 값입니다.
         ///
         case accentViolet
         
         ///
-        /// Figma상의 `.color-alias-accent-purple` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-purple` 토큰과 대응되는 값입니다.
         ///
         case accentPurple
         
         ///
-        /// Figma상의 `.color-alias-accent-redOrange` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-redOrange` 토큰과 대응되는 값입니다.
         ///
         case accentRedOrange
 
         ///
-        /// Figma상의 `.color-alias-accent-pink` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-pink` 토큰과 대응되는 값입니다.
         ///
         case accentPink
         
         ///
-        /// Figma상의 `.color-alias-inverse-primary` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-inverse-primary` 토큰과 대응되는 값입니다.
         ///
         case inversePrimary
         
         ///
-        /// Figma상의 `.color-alias-inverse-background` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-inverse-background` 토큰과 대응되는 값입니다.
         ///
         case inverseBackground
         
         ///
-        /// Figma상의 `.color-alias-inverse-label` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-inverse-label` 토큰과 대응되는 값입니다.
         ///
         case inverseLabel
         
-        public var name: String { rawValue }
-        
-        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
-            let style = traitCollection.userInterfaceStyle
-            let globalType: Color.Global
-            let opacity: Decorate.Opacity
-            
-            switch self {
-            case .staticWhite:
-                globalType = .globalCommon100
-            case .staticBlack:
-                globalType = .globalCommon0
-            case .primaryNormal:
-                globalType = style == .dark ? .globalBlue60 : .globalBlue50
-            case .primaryStrong:
-                globalType = style == .dark ? .globalBlue55 : .globalBlue45
-            case .primaryHeavy:
-                globalType = style == .dark ? .globalBlue50 : .globalBlue40
-            case .labelNormal:
-                globalType = style == .dark ? .globalCoolNeutral99 : .globalCoolNeutral10
-            case .labelStrong:
-                globalType = style == .dark ? .globalCommon100 : .globalCommon0
-            case .labelNeutral:
-                globalType = style == .dark ? .globalCoolNeutral90 : .globalCoolNeutral22
-            case .labelAlternative:
-                globalType = style == .dark ? .globalCoolNeutral80 : .globalCoolNeutral25
-            case .labelAssistive:
-                globalType = style == .dark ? .globalCoolNeutral80 : .globalCoolNeutral25
-            case .labelDisable:
-                globalType = style == .dark ? .globalCoolNeutral70 : .globalCoolNeutral25
-            case .backgroundNormal:
-                globalType = style == .dark ? .globalCoolNeutral15 : .globalCommon100
-            case .backgroundNormalAlternative:
-                globalType = style == .dark ? .globalCoolNeutral5 : .globalCoolNeutral99
-            case .backgroundElevated:
-                globalType = style == .dark ? .globalCoolNeutral17 : .globalCommon100
-            case .backgroundElevatedAlternative:
-                globalType = style == .dark ? .globalCoolNeutral7 : .globalCoolNeutral99
-            case .interactionInactive:
-                globalType = style == .dark ? .globalCoolNeutral40 : .globalCoolNeutral70
-            case .interactionDisable:
-                globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
-            case .lineNormal, .lineNeutral, .lineAlternative:
-                globalType = .globalCoolNeutral50
-            case .lineSolidNormal:
-                globalType = style == .dark ? .globalCoolNeutral25 : .globalCoolNeutral96
-            case .lineSolidNeutral:
-                globalType = style == .dark ? .globalCoolNeutral23 : .globalCoolNeutral97
-            case .lineSolidAlternative:
-                globalType = style == .dark ? .globalCoolNeutral22 : .globalCoolNeutral98
-            case .statusPositive:
-                globalType = style == .dark ? .globalGreen60 : .globalGreen50
-            case .statusCautionary:
-                globalType = style == .dark ? .globalOrange60 : .globalOrange50
-            case .statusNegative:
-                globalType = style == .dark ? .globalRed60 : .globalRed50
-            case .accentLime:
-                globalType = style == .dark ? .globalLime60 : .globalLime50
-            case .accentCyan:
-                globalType = style == .dark ? .globalCyan60 : .globalCyan50
-            case .accentLightBlue:
-                globalType = style == .dark ? .globalLightBlue60 : .globalLightBlue50
-            case .accentViolet:
-                globalType = style == .dark ? .globalViolet60 : .globalViolet50
-            case .accentPurple:
-                globalType = style == .dark ? .globalPurple60 : .globalPurple50
-            case .accentPink:
-                globalType = style == .dark ? .globalPink60 : .globalPink50
-            case .accentRedOrange:
-                globalType = style == .dark ? .globalRedOrange60 : .globalRedOrange50
-            case .inversePrimary:
-                globalType = style == .dark ? .globalBlue50 : .globalBlue60
-            case .inverseBackground:
-                globalType = style == .dark ? .globalCommon100 : .globalCoolNeutral15
-            case .inverseLabel:
-                globalType = style == .dark ? .globalNeutral10 : .globalNeutral99
-            }
-            
-            switch self {
-            case .labelNeutral:
-                opacity = .p088
-            case .labelAlternative:
-                opacity = .p061
-            case .labelAssistive:
-                opacity = .p028
-            case .labelDisable:
-                opacity = .p016
-            case .lineNormal:
-                opacity = style == .dark ? .p032 : .p022
-            case .lineNeutral:
-                opacity = style == .dark ? .p028 : .p016
-            case .lineAlternative:
-                opacity = style == .dark ? .p022 : .p008
-            default:
-                opacity = .p100
-            }
-            
-            return .load(name: globalType.name).withAlphaComponent(.opacity(opacity))
-        }
-    }
-    
-    ///
-    /// 디자인시스템에서 정의된 Component 컬러 파렛트를 바라보는 레퍼런스 컬러 값입니다. 컬러 모드에 따라 실제로는 다른 값을 가질 수 있습니다.
-    ///
-    /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
-    ///
-    public enum Component: String, CaseIterable, ColorResolvable {
         ///
-        /// Figma상의 `.color-component-fill-normal` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-fill-normal` 토큰과 대응되는 값입니다.
         ///
         case fillNormal
         
         ///
-        /// Figma상의 `.color-component-fill-strong` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-fill-strong` 토큰과 대응되는 값입니다.
         ///
         case fillStrong
         
         ///
-        /// Figma상의 `.color-component-fill-alternative` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-fill-alternative` 토큰과 대응되는 값입니다.
         ///
         case fillAlternative
         
         ///
-        /// Figma상의 `.color-component-material-dimmer` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-material-dimmer` 토큰과 대응되는 값입니다.
         ///
         case materialDimmer
         
@@ -553,77 +446,104 @@ public enum Color {
         
         public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             let style = traitCollection.userInterfaceStyle
-            
-            let baseColor: UIColor
-            let alpha: CGFloat
+            let atomicColor: Color.Atomic
+            var opacity: Decorate.Opacity = .p100
             
             switch self {
+            case .staticWhite:
+                atomicColor = .common100
+            case .staticBlack:
+                atomicColor = .common0
+            case .primaryNormal:
+                atomicColor = style == .dark ? .blue60 : .blue50
+            case .primaryStrong:
+                atomicColor = style == .dark ? .blue55 : .blue45
+            case .primaryHeavy:
+                atomicColor = style == .dark ? .blue50 : .blue40
+            case .labelNormal:
+                atomicColor = style == .dark ? .coolNeutral99 : .coolNeutral10
+            case .labelStrong:
+                atomicColor = style == .dark ? .common100 : .common0
+            case .labelNeutral:
+                atomicColor = style == .dark ? .coolNeutral90 : .coolNeutral22
+                opacity = .p088
+            case .labelAlternative:
+                atomicColor = style == .dark ? .coolNeutral80 : .coolNeutral25
+                opacity = .p061
+            case .labelAssistive:
+                atomicColor = style == .dark ? .coolNeutral80 : .coolNeutral25
+                opacity = .p028
+            case .labelDisable:
+                atomicColor = style == .dark ? .coolNeutral70 : .coolNeutral25
+                opacity = .p016
+            case .backgroundNormal:
+                atomicColor = style == .dark ? .coolNeutral15 : .common100
+            case .backgroundNormalAlternative:
+                atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral99
+            case .backgroundElevated:
+                atomicColor = style == .dark ? .coolNeutral17 : .common100
+            case .backgroundElevatedAlternative:
+                atomicColor = style == .dark ? .coolNeutral7 : .coolNeutral99
+            case .interactionInactive:
+                atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
+            case .interactionDisable:
+                atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .lineNormal:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .p032 : .p022
+            case .lineNeutral:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .p028 : .p016
+            case .lineAlternative:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .p022 : .p008
+            case .lineSolidNormal:
+                atomicColor = style == .dark ? .coolNeutral25 : .coolNeutral96
+            case .lineSolidNeutral:
+                atomicColor = style == .dark ? .coolNeutral23 : .coolNeutral97
+            case .lineSolidAlternative:
+                atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .statusPositive:
+                atomicColor = style == .dark ? .green60 : .green50
+            case .statusCautionary:
+                atomicColor = style == .dark ? .orange60 : .orange50
+            case .statusNegative:
+                atomicColor = style == .dark ? .red60 : .red50
+            case .accentLime:
+                atomicColor = style == .dark ? .lime60 : .lime50
+            case .accentCyan:
+                atomicColor = style == .dark ? .cyan60 : .cyan50
+            case .accentLightBlue:
+                atomicColor = style == .dark ? .lightBlue60 : .lightBlue50
+            case .accentViolet:
+                atomicColor = style == .dark ? .violet60 : .violet50
+            case .accentPurple:
+                atomicColor = style == .dark ? .purple60 : .purple50
+            case .accentPink:
+                atomicColor = style == .dark ? .pink60 : .pink50
+            case .accentRedOrange:
+                atomicColor = style == .dark ? .redOrange60 : .redOrange50
+            case .inversePrimary:
+                atomicColor = style == .dark ? .blue50 : .blue60
+            case .inverseBackground:
+                atomicColor = style == .dark ? .common100 : .coolNeutral15
+            case .inverseLabel:
+                atomicColor = style == .dark ? .neutral10 : .neutral99
             case .fillNormal:
-                baseColor = .load(name: Global.globalCoolNeutral50.name)
-                alpha = style == .dark ? 0.22 : 0.08
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .p022 : .p008
             case .fillStrong:
-                baseColor = .load(name: Global.globalCoolNeutral50.name)
-                alpha = style == .dark ? 0.28 : 0.16
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .p028 : .p016
             case .fillAlternative:
-                baseColor = .load(name: Global.globalCoolNeutral50.name)
-                alpha = style == .dark ? 0.12 : 0.05
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .p012 : .p005
             case .materialDimmer:
-                let gColor = style == .dark ? Global.globalCoolNeutral5 : Global.globalCoolNeutral10
-                baseColor = .load(name: gColor.name)
-                alpha = style == .dark ? 0.74 : 0.52
+                atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral10
+                opacity = style == .dark ? .p074 : .p052
             }
             
-            return baseColor.withAlphaComponent(alpha)
-        }
-    }
-    
-    /// 장식 요소를 위해 사용할 수 있는 색상들을 나열하는 값입니다.
-    public enum Accent: Equatable, ColorResolvable, CaseIterable {
-        case primary
-        case positive
-        case cautionary
-        case negative
-        case lime
-        case cyan
-        case lightBlue
-        case violet
-        case purple
-        case pink
-        case redOrange
-        
-        func resolveAsAlias() -> Alias {
-            switch self {
-            case .primary:
-                .primaryNormal
-            case .positive:
-                .statusPositive
-            case .cautionary:
-                .statusCautionary
-            case .negative:
-                .statusNegative
-            case .lime:
-                .accentLime
-            case .cyan:
-                .accentCyan
-            case .lightBlue:
-                .accentLightBlue
-            case .violet:
-                .accentViolet
-            case .purple:
-                .accentPurple
-            case .pink:
-                .accentPink
-            case .redOrange:
-                .accentRedOrange
-            }
-        }
-        
-        func resolveAsUIColor() -> UIColor {
-            .alias(resolveAsAlias())
-        }
-        
-        public func resolve(_: UITraitCollection) -> UIColor {
-            .alias(resolveAsAlias())
+            return .load(name: atomicColor.name).withAlphaComponent(.opacity(opacity))
         }
     }
 }

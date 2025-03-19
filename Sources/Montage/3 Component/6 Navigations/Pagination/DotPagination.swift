@@ -140,9 +140,9 @@ extension Pagination {
             private var dotColor: SwiftUI.Color {
                 switch variant {
                 case .normal:
-                    .alias(.labelNormal).opacity(selected ? 1 : 0.16)
+                    .semantic(.labelNormal).opacity(selected ? 1 : 0.16)
                 case .white:
-                    .alias(.staticWhite).opacity(selected ? 1 : 0.52)
+                    .semantic(.staticWhite).opacity(selected ? 1 : 0.52)
                 }
             }
             
@@ -151,7 +151,7 @@ extension Pagination {
                 case .normal:
                     .clear
                 case .white:
-                    .alias(.lineNeutral).opacity(selected ? 1 : 0.52)
+                    .semantic(.lineNeutral).opacity(selected ? 1 : 0.52)
                 }
             }
         }
