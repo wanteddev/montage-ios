@@ -47,6 +47,7 @@ extension TextInput {
             fileprivate let cellForItemAt: (IndexPath) -> any View
             fileprivate let headerView: (() -> any View)?
             fileprivate let footerView: (() -> any View)?
+            fileprivate let maxHeight: CGFloat
             
             public init(
                 numberOfSections: Int = 1,
@@ -54,7 +55,8 @@ extension TextInput {
                 numberOfItemsInSection: @escaping (Int) -> Int,
                 cellForItemAt: @escaping (IndexPath) -> any View,
                 headerView: (() -> any View)? = nil,
-                footerView: (() -> any View)? = nil
+                footerView: (() -> any View)? = nil,
+                maxHeight: CGFloat = 400
             ) {
                 self.numberOfSections = numberOfSections
                 self.sectionTitleAt = sectionTitleAt
@@ -62,6 +64,7 @@ extension TextInput {
                 self.cellForItemAt = cellForItemAt
                 self.headerView = headerView
                 self.footerView = footerView
+                self.maxHeight = maxHeight
             }
             
             public var totalNumberOfItems: Int {
@@ -316,7 +319,7 @@ private extension TextInput.TextField {
                     }
                     .frame(
                         width: textFieldFrame.width,
-                        height: min(autoCompletionContentHeight, 400)
+                        height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
                     .background {
                         RoundedRectangle(cornerRadius: 12)
@@ -324,12 +327,14 @@ private extension TextInput.TextField {
                     }
                     .background(SwiftUI.Color.semantic(.backgroundNormal))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .scrollDisabled(autoCompletionContentHeight <= 400)
+                    .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .position(
                         x: textFieldFrame.midX,
                         y: textFieldFrame.maxY - safeAreaInsets.top
                     )
-                    .offset(y: 8 + min(autoCompletionContentHeight, 400) / 2)
+                    .offset(
+                        y: 8 + min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0) / 2
+                    )
                 }
             )
         )
