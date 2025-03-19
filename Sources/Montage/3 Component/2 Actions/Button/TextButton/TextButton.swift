@@ -332,9 +332,9 @@ struct TextButtonPreview: View {
             VStack(alignment: .leading) {
                 HStack {
                     Button.TextButton(
-                        text: "accentCyan",
+                        text: "accentBackgroundCyan",
                         disable: false,
-                        contentColor: .semantic(.accentCyan)
+                        contentColor: .semantic(.accentBackgroundCyan)
                     )
                     
                     Button.TextButton(
@@ -348,7 +348,7 @@ struct TextButtonPreview: View {
                     Button.TextButton(
                         text: "body1",
                         disable: false,
-                        contentColor: .semantic(.accentCyan),
+                        contentColor: .semantic(.accentBackgroundCyan),
                         fontVariant: .body1
                     )
                     

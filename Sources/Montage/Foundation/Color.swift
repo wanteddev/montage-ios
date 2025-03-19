@@ -69,6 +69,7 @@ public enum Color {
         case blue90
         case blue80
         case blue70
+        case blue65
         case blue60
         case blue55
         case blue50
@@ -119,6 +120,7 @@ public enum Color {
         case orange60
         case orange50
         case orange40
+        case orange39
         case orange30
         case orange20
         case orange10
@@ -134,6 +136,7 @@ public enum Color {
         case lime60
         case lime50
         case lime40
+        case lime37
         case lime30
         case lime20
         case lime10
@@ -178,6 +181,7 @@ public enum Color {
         case violet70
         case violet60
         case violet50
+        case violet45
         case violet40
         case violet30
         case violet20
@@ -208,6 +212,7 @@ public enum Color {
         case pink70
         case pink60
         case pink50
+        case pink46
         case pink40
         case pink30
         case pink20
@@ -223,6 +228,7 @@ public enum Color {
         case redOrange70
         case redOrange60
         case redOrange50
+        case redOrange48
         case redOrange40
         case redOrange30
         case redOrange20
@@ -373,39 +379,94 @@ public enum Color {
         case statusNegative
         
         ///
-        /// Figma상의 `.color-semantic-accent-lime` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-foreground-red` 토큰과 대응되는 값입니다.
         ///
-        case accentLime
-
-        ///
-        /// Figma상의 `.color-semantic-accent-cyan` 토큰과 대응되는 값입니다.
-        ///
-        case accentCyan
-
-        ///
-        /// Figma상의 `.color-semantic-accent-lightBlue` 토큰과 대응되는 값입니다.
-        ///
-        case accentLightBlue
-
-        ///
-        /// Figma상의 `.color-semantic-accent-violet` 토큰과 대응되는 값입니다.
-        ///
-        case accentViolet
+        case accentForegroundRed
         
         ///
-        /// Figma상의 `.color-semantic-accent-purple` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-foreground-redOrange` 토큰과 대응되는 값입니다.
         ///
-        case accentPurple
-        
-        ///
-        /// Figma상의 `.color-semantic-accent-redOrange` 토큰과 대응되는 값입니다.
-        ///
-        case accentRedOrange
+        case accentForegroundRedOrange
 
         ///
-        /// Figma상의 `.color-semantic-accent-pink` 토큰과 대응되는 값입니다.
+        /// Figma상의 `.color-semantic-accent-foreground-orange` 토큰과 대응되는 값입니다.
         ///
-        case accentPink
+        case accentForegroundOrange
+
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-lime` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundLime
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-green` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundGreen
+
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-cyan` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundCyan
+
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-lightBlue` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundLightBlue
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-blue` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundBlue
+
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-violet` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundViolet
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-purple` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundPurple
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-foreground-pink` 토큰과 대응되는 값입니다.
+        ///
+        case accentForegroundPink
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-background-redOrange` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundRedOrange
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-background-lime` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundLime
+
+        ///
+        /// Figma상의 `.color-semantic-accent-background-cyan` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundCyan
+
+        ///
+        /// Figma상의 `.color-semantic-accent-background-lightBlue` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundLightBlue
+
+        ///
+        /// Figma상의 `.color-semantic-accent-background-violet` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundViolet
+        
+        ///
+        /// Figma상의 `.color-semantic-accent-background-purple` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundPurple
+
+        ///
+        /// Figma상의 `.color-semantic-accent-background-pink` 토큰과 대응되는 값입니다.
+        ///
+        case accentBackgroundPink
         
         ///
         /// Figma상의 `.color-semantic-inverse-primary` 토큰과 대응되는 값입니다.
@@ -509,20 +570,42 @@ public enum Color {
                 atomicColor = style == .dark ? .orange60 : .orange50
             case .statusNegative:
                 atomicColor = style == .dark ? .red60 : .red50
-            case .accentLime:
-                atomicColor = style == .dark ? .lime60 : .lime50
-            case .accentCyan:
-                atomicColor = style == .dark ? .cyan60 : .cyan50
-            case .accentLightBlue:
-                atomicColor = style == .dark ? .lightBlue60 : .lightBlue50
-            case .accentViolet:
-                atomicColor = style == .dark ? .violet60 : .violet50
-            case .accentPurple:
-                atomicColor = style == .dark ? .purple60 : .purple50
-            case .accentPink:
-                atomicColor = style == .dark ? .pink60 : .pink50
-            case .accentRedOrange:
+            case .accentForegroundRed:
+                atomicColor = .red40
+            case .accentForegroundRedOrange:
+                atomicColor = .redOrange48
+            case .accentForegroundOrange:
+                atomicColor = .orange39
+            case .accentForegroundLime:
+                atomicColor = .lime37
+            case .accentForegroundGreen:
+                atomicColor = .green40
+            case .accentForegroundCyan:
+                atomicColor = .cyan40
+            case .accentForegroundLightBlue:
+                atomicColor = .lightBlue40
+            case .accentForegroundBlue:
+                atomicColor = .blue45
+            case .accentForegroundViolet:
+                atomicColor = .violet45
+            case .accentForegroundPurple:
+                atomicColor = .purple40
+            case .accentForegroundPink:
+                atomicColor = .pink46
+            case .accentBackgroundRedOrange:
                 atomicColor = style == .dark ? .redOrange60 : .redOrange50
+            case .accentBackgroundLime:
+                atomicColor = style == .dark ? .lime60 : .lime50
+            case .accentBackgroundCyan:
+                atomicColor = style == .dark ? .cyan60 : .cyan50
+            case .accentBackgroundLightBlue:
+                atomicColor = style == .dark ? .lightBlue60 : .lightBlue50
+            case .accentBackgroundViolet:
+                atomicColor = style == .dark ? .violet60 : .violet50
+            case .accentBackgroundPurple:
+                atomicColor = style == .dark ? .purple60 : .purple50
+            case .accentBackgroundPink:
+                atomicColor = style == .dark ? .pink60 : .pink50
             case .inversePrimary:
                 atomicColor = style == .dark ? .blue50 : .blue60
             case .inverseBackground:
