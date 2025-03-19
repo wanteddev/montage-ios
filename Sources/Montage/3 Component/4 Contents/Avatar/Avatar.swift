@@ -99,12 +99,12 @@ public struct Avatar: View {
         WebImage(url: URL(string: imageUrl)) { image in
             image.resizable()
                 .aspectRatio(contentMode: .fill)
-                .backgroundStyle(SwiftUI.Color.alias(.staticWhite))
+                .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
         } placeholder: {
             Image(variant.placeholderImageName, bundle: .module)
                 .resizable()
                 .background( // WebImage에서 placeholder가 두 장 겹쳐지는 문제가 있어서 흰색 배경을 깔아줌
-                    SwiftUI.Color.alias(.backgroundNormal)
+                    SwiftUI.Color.semantic(.backgroundNormal)
                 )
         }
         .frame(width: size.containerSize.width, height: size.containerSize.height)
@@ -146,7 +146,7 @@ public struct Avatar: View {
     }
     
     private var pushBadge = false
-    private var borderColor: SwiftUI.Color = .alias(.lineAlternative)
+    private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
     
@@ -156,7 +156,7 @@ public struct Avatar: View {
         return zelf
     }
     
-    public func border(color: SwiftUI.Color = .alias(.lineAlternative), width: CGFloat = 1) -> Self {
+    public func border(color: SwiftUI.Color = .semantic(.lineAlternative), width: CGFloat = 1) -> Self {
         var zelf = self
         zelf.borderColor = color
         zelf.borderWidth = width

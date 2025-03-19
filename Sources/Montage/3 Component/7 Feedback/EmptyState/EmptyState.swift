@@ -54,7 +54,7 @@ public struct EmptyState: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .montage(variant: .body2, alias: .labelAlternative)
+                            .montage(variant: .body2, semantic: .labelAlternative)
                             .paragraph(variant: .body2)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)

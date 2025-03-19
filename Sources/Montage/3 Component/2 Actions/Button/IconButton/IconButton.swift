@@ -41,13 +41,13 @@ extension Button.IconButton.Variant {
             .clear
         case .background(_, let isAlternative):
             if isAlternative {
-                .atomic(.globalCoolNeutral30).withAlphaComponent(0.61)
+                .atomic(.coolNeutral30).withAlphaComponent(0.61)
             } else {
                 // material이 적용되어 있기 때문에 값에 무관
                 .clear
             }
         case .solid:
-            .alias(.primaryNormal)
+            .semantic(.primaryNormal)
         }
     }
     
@@ -56,31 +56,31 @@ extension Button.IconButton.Variant {
         case .normal, .outlined:
             .clear
         case .background:
-            .component(.fillAlternative).withAlphaComponent(0.05)
+            .semantic(.fillAlternative).withAlphaComponent(0.05)
         case .solid:
-            .component(.fillNormal).withAlphaComponent(0.08)
+            .semantic(.fillNormal).withAlphaComponent(0.08)
         }
     }
     
     var activeColor: UIColor {
         switch self {
-        case .normal, .outlined: .alias(.labelNormal)
+        case .normal, .outlined: .semantic(.labelNormal)
         case .background(_, let isAlternative):
             if isAlternative {
-                .alias(.staticWhite).withAlphaComponent(0.88)
+                .semantic(.staticWhite).withAlphaComponent(0.88)
             } else {
-                .atomic(.globalCoolNeutral50).withAlphaComponent(0.74)
+                .atomic(.coolNeutral50).withAlphaComponent(0.74)
             }
-        case .solid: .alias(.staticWhite)
+        case .solid: .semantic(.staticWhite)
         }
     }
     
     var inactiveColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
-            .alias(.labelDisable).withAlphaComponent(0.16)
+            .semantic(.labelDisable).withAlphaComponent(0.16)
         case .background:
-            .atomic(.globalCoolNeutral50).withAlphaComponent(0.22)
+            .atomic(.coolNeutral50).withAlphaComponent(0.22)
         }
     }
     
@@ -93,12 +93,12 @@ extension Button.IconButton.Variant {
     
     var borderColor: UIColor {
         switch self {
-        case .outlined: .alias(.lineNeutral)
+        case .outlined: .semantic(.lineNeutral)
         default: .clear
         }
     }
     
-    var interactionColor: Color.Alias {
+    var interactionColor: Color.Semantic {
         .labelNormal
     }
     
@@ -457,12 +457,12 @@ struct IconButtonPreview: View {
                 Button.IconButton(
                     variant: .background(size: 10, isAlternative: false),
                     icon: .chat,
-                    iconColor: .atomic(.globalBlue50)
+                    iconColor: .atomic(.blue50)
                 )
                 
                 Button.IconButton(
                     icon: .apps,
-                    iconColor: .alias(.accentLightBlue)
+                    iconColor: .semantic(.accentLightBlue)
                 ) {
                     debugPrint(">>> hello world!")
                 }
@@ -470,13 +470,13 @@ struct IconButtonPreview: View {
                 Button.IconButton(
                     variant: .background(size: 20),
                     icon: .apps,
-                    iconColor: .alias(.accentPink)
+                    iconColor: .semantic(.accentPink)
                 )
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps,
-                    iconColor: .alias(.accentRedOrange)
+                    iconColor: .semantic(.accentRedOrange)
                 )
                 
                 Button.IconButton(
@@ -489,20 +489,20 @@ struct IconButtonPreview: View {
                     variant: .outlined(size: .normal),
                     icon: .apps,
                     padding: 3,
-                    borderColor: .alias(.primaryHeavy)
+                    borderColor: .semantic(.primaryHeavy)
                 )
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
-                    iconColor: .alias(.accentRedOrange),
-                    borderColor: .alias(.accentLime)
+                    iconColor: .semantic(.accentRedOrange),
+                    borderColor: .semantic(.accentLime)
                 )
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
-                    borderColor: .alias(.accentLime)
+                    borderColor: .semantic(.accentLime)
                 )
             }
         }

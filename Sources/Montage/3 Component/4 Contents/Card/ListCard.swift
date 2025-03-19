@@ -72,7 +72,7 @@ extension Card {
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
-                        .strokeBorder(SwiftUI.Color.alias(.lineAlternative), lineWidth: 1)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineAlternative), lineWidth: 1)
                 )
                 .skeleton(isPresented: skeleton, kind: .rectangle())
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -140,12 +140,12 @@ import Pretendard
         },
         caption: {
             Text("캡션")
-                .montage(variant: .label2, weight: .medium, alias: .labelAlternative)
+                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
                 .paragraph(variant: .label2)
         },
         extraCaption: {
             Text("추가 캡션")
-                .montage(variant: .label2, weight: .medium, alias: .labelAlternative)
+                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
                 .paragraph(variant: .label2)
         },
         topContent: {
@@ -168,7 +168,7 @@ import Pretendard
         },
         trailingContent: {
             Image.montage(.chevronRight)
-                .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
+                .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
         }
     )
 }

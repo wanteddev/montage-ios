@@ -364,14 +364,14 @@ extension Chip.ActionUIView {
     
     private func currentTextUIColor() -> UIColor {
         if disable {
-            .alias(.labelDisable)
+            .semantic(.labelDisable)
         } else if active {
             variant.activeTextUIColor
         } else {
             if let fontUIColor {
                 fontUIColor
             } else {
-                .alias(.labelNormal)
+                .semantic(.labelNormal)
             }
         }
     }
@@ -379,9 +379,9 @@ extension Chip.ActionUIView {
     private func resolveCurrentLineColor() -> CGColor {
         guard variant == .outlined else { return UIColor.clear.cgColor }
         if active {
-            return UIColor.alias(.primaryNormal).withAlphaComponent(0.43).cgColor
+            return UIColor.semantic(.primaryNormal).withAlphaComponent(0.43).cgColor
         } else {
-            return UIColor.alias(.lineNeutral).cgColor
+            return UIColor.semantic(.lineNeutral).cgColor
         }
     }
     
@@ -389,11 +389,11 @@ extension Chip.ActionUIView {
         if let imageColor {
             imageColor
         } else {
-            .alias(.labelAlternative)
+            .semantic(.labelAlternative)
         }
     }
     
-    private func resolveInteractionColor() -> Color.Alias {
+    private func resolveInteractionColor() -> Color.Semantic {
         if active {
             if variant == .outlined {
                 .primaryNormal
@@ -448,7 +448,7 @@ extension Chip.Action.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .solid:
-            .component(.fillAlternative)
+            .semantic(.fillAlternative)
         case .outlined:
             .clear
         }
@@ -466,7 +466,7 @@ extension Chip.Action.Variant {
     var disableBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .alias(.interactionDisable)
+            .semantic(.interactionDisable)
         case .outlined:
             .clear
         }
@@ -475,18 +475,18 @@ extension Chip.Action.Variant {
     var activeBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .alias(.inverseBackground)
+            .semantic(.inverseBackground)
         case .outlined:
-            .alias(.primaryNormal).withAlphaComponent(0.05)
+            .semantic(.primaryNormal).withAlphaComponent(0.05)
         }
     }
     
     var activeTextUIColor: UIColor {
         switch self {
         case .solid:
-            .alias(.inverseLabel)
+            .semantic(.inverseLabel)
         case .outlined:
-            .alias(.primaryNormal)
+            .semantic(.primaryNormal)
         }
     }
 }

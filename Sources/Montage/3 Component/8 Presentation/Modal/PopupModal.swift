@@ -92,7 +92,7 @@ extension Modal {
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .foregroundColor(SwiftUI.Color.alias(.backgroundNormal))
+                        .foregroundColor(SwiftUI.Color.semantic(.backgroundNormal))
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
@@ -102,7 +102,7 @@ extension Modal {
                 Group {
                     if #available(iOS 16.4, *) {
                         originalView.presentationBackground(
-                            SwiftUI.Color.component(.materialDimmer)
+                            SwiftUI.Color.semantic(.materialDimmer)
                         )
                     } else {
                         originalView.dimmerBackground()
@@ -230,7 +230,7 @@ private struct DimmerBackgroundView: UIViewRepresentable {
     func makeUIView(context _: Context) -> some UIView {
         let view = UIView()
         DispatchQueue.main.async {
-            view.superview?.superview?.backgroundColor = .component(.materialDimmer)
+            view.superview?.superview?.backgroundColor = .semantic(.materialDimmer)
         }
         return view
     }

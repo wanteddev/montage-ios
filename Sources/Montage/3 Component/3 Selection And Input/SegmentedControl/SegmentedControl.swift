@@ -81,11 +81,14 @@ public struct SegmentedControl: View {
                             case .solid:
                                 ZStack {
                                     RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                        .foregroundStyle(SwiftUI.Color.alias(.backgroundElevated))
+                                        .foregroundStyle(SwiftUI.Color.semantic(.backgroundElevated))
                                     RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                        .foregroundStyle(SwiftUI.Color.alias(.staticWhite).opacity(0.28))
+                                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.28))
                                 }
-                                .shadow(color: .alias(.staticBlack).opacity(0.08), radius: buttonCornerRadius)
+                                .shadow(
+                                    color: .semantic(.staticBlack).opacity(0.08),
+                                    radius: buttonCornerRadius
+                                )
                                 .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
                                 .if(index == 0)
                             case .outlined:
@@ -152,7 +155,7 @@ public struct SegmentedControl: View {
 extension SegmentedControl {
     private var backgroundColor: SwiftUI.Color {
         switch variant {
-        case .solid: .component(.fillNormal)
+        case .solid: .semantic(.fillNormal)
         case .outlined: .clear
         }
     }
@@ -243,22 +246,22 @@ extension SegmentedControl {
     
     private func buttonForegroundColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
-        case .solid: .alias(isSelected ? .labelNormal : .labelAlternative)
-        case .outlined: .alias(isSelected ? .primaryNormal : .labelAlternative)
+        case .solid: .semantic(isSelected ? .labelNormal : .labelAlternative)
+        case .outlined: .semantic(isSelected ? .primaryNormal : .labelAlternative)
         }
     }
     
     private func buttonBackgroundColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
         case .solid: .clear
-        case .outlined: isSelected ? .alias(.primaryNormal).opacity(0.05) : .clear
+        case .outlined: isSelected ? .semantic(.primaryNormal).opacity(0.05) : .clear
         }
     }
     
     private func buttonBorderColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
         case .solid: .clear
-        case .outlined: isSelected ? .alias(.primaryNormal).opacity(0.43) : .alias(.lineNormal)
+        case .outlined: isSelected ? .semantic(.primaryNormal).opacity(0.43) : .semantic(.lineNormal)
         }
     }
 }

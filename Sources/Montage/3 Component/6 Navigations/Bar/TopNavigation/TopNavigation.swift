@@ -26,7 +26,7 @@ extension Bar {
             if let backgroundColorResolvable {
                 .init(uiColor: backgroundColorResolvable.resolve(.current))
             } else {
-                SwiftUI.Color.alias(.backgroundNormal)
+                SwiftUI.Color.semantic(.backgroundNormal)
             }
         }
         
@@ -78,7 +78,7 @@ extension Bar {
                 
                 if scrolled && variant.isFloating == false {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
+                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral).opacity(backgroundOpacity))
                         .frame(height: 0.5)
                 }
             }
@@ -174,7 +174,7 @@ extension Bar {
                     .montage(
                         variant: variant.typoVaraint,
                         weight: variant.typoWeight,
-                        alias: .labelStrong
+                        semantic: .labelStrong
                     )
                     .paragraph(variant: variant.typoVaraint)
                     .lineLimit(1)
@@ -307,7 +307,7 @@ extension Bar {
                             .montage(
                                 variant: .body2,
                                 weight: .medium,
-                                alias: alternative ? .staticWhite : .labelAlternative
+                                semantic: alternative ? .staticWhite : .labelAlternative
                             )
                             .paragraph(variant: .body2)
                             .if(alternative) {
@@ -321,15 +321,15 @@ extension Bar {
                                 Group {
                                     if alternative {
                                         original.background(
-                                            SwiftUI.Color.atomic(.globalCoolNeutral30)
+                                            SwiftUI.Color.atomic(.coolNeutral30)
                                                 .opacity(0.61)
                                         )
                                     } else {
                                         original.background(
                                             ZStack {
-                                                SwiftUI.Color.alias(.staticBlack)
+                                                SwiftUI.Color.semantic(.staticBlack)
                                                     .opacity(0.05)
-                                                SwiftUI.Color.alias(.staticWhite)
+                                                SwiftUI.Color.semantic(.staticWhite)
                                                     .opacity(0.35)
                                             }
                                         )
@@ -342,7 +342,7 @@ extension Bar {
                 } else {
                     Button.TextButton(
                         text: text,
-                        contentColor: .alias(.labelNormal),
+                        contentColor: .semantic(.labelNormal),
                         fontVariant: .headline2,
                         fontWeight: .regular
                     ) {

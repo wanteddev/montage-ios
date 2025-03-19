@@ -181,7 +181,7 @@ public struct Input: View {
         return zelf
     }
 
-    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.alias(.labelNormal)`입니다.
+    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.semantic(.labelNormal)`입니다.
     public func title(
         _ variant: Typography.Variant? = nil,
         weight: Typography.Weight? = nil,
@@ -256,7 +256,7 @@ private extension Input {
         (
             variant: titleVariant ?? (size == .small ? .label1 : .body2),
             weight: titleWeight ?? .regular,
-            color: isDisable ? .alias(.labelDisable) : titleColor ?? .alias(.labelNormal)
+            color: isDisable ? .semantic(.labelDisable) : titleColor ?? .semantic(.labelNormal)
         )
     }
     

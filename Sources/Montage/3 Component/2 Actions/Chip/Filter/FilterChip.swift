@@ -118,7 +118,7 @@ extension Chip.Filter.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .solid:
-            .component(.fillAlternative)
+            .semantic(.fillAlternative)
         case .outlined:
             .clear
         }
@@ -136,7 +136,7 @@ extension Chip.Filter.Variant {
     var disableBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .alias(.interactionDisable)
+            .semantic(.interactionDisable)
         case .outlined:
             .clear
         }
@@ -145,27 +145,27 @@ extension Chip.Filter.Variant {
     var activeBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .alias(.inverseBackground)
+            .semantic(.inverseBackground)
         case .outlined:
-            .alias(.primaryNormal).withAlphaComponent(0.05)
+            .semantic(.primaryNormal).withAlphaComponent(0.05)
         }
     }
     
     var activeTextUIColor: UIColor {
         switch self {
         case .solid:
-            .alias(.inverseLabel)
+            .semantic(.inverseLabel)
         case .outlined:
-            .alias(.primaryNormal)
+            .semantic(.primaryNormal)
         }
     }
     
     var activeArrowColor: UIColor {
         switch self {
         case .solid:
-            .alias(.inverseLabel)
+            .semantic(.inverseLabel)
         case .outlined:
-            .alias(.labelNormal)
+            .semantic(.labelNormal)
         }
     }
 }

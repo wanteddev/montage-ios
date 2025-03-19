@@ -60,9 +60,9 @@ extension ProgressTracker {
             private var labelColor: SwiftUI.Color {
                 switch status {
                 case .complete, .inactive:
-                    .alias(.labelAlternative)
+                    .semantic(.labelAlternative)
                 case .active:
-                    .alias(.labelNormal)
+                    .semantic(.labelNormal)
                 }
             }
         }
@@ -139,7 +139,7 @@ extension ProgressTracker {
                 .frame(width: 1)
                 .foregroundStyle(
                     SwiftUI.Color
-                        .alias(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal)
+                        .semantic(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal)
                 )
         }
     }

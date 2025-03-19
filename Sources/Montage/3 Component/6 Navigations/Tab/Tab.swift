@@ -53,7 +53,7 @@ public struct Tab: View {
                                                 .montage(
                                                     variant: itemFontVariant,
                                                     weight: .bold,
-                                                    alias: index == selectedIndex ? .labelStrong :
+                                                    semantic: index == selectedIndex ? .labelStrong :
                                                         .labelAssistive
                                                 )
                                                 .multilineTextAlignment(.center)
@@ -83,7 +83,7 @@ public struct Tab: View {
                                 }
                                 Divider()
                                     .frame(width: itemWidths[safe: selectedIndex] ?? 0, height: 2)
-                                    .background(SwiftUI.Color.alias(.labelStrong))
+                                    .background(SwiftUI.Color.semantic(.labelStrong))
                                     .offset(
                                         x: itemWidths.enumerated()
                                             .filter { $0.offset < selectedIndex }
@@ -127,7 +127,7 @@ public struct Tab: View {
             }
             
             Rectangle()
-                .fill(SwiftUI.Color.alias(.lineAlternative))
+                .fill(SwiftUI.Color.semantic(.lineAlternative))
                 .frame(height: 1)
         }
     }

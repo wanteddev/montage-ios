@@ -71,7 +71,7 @@ public struct Cell: View {
                                 .montage(
                                     variant: titleTypography.variant,
                                     weight: titleTypography.weight,
-                                    alias: normalTitleColor
+                                    semantic: normalTitleColor
                                 )
                                 .paragraph(variant: titleTypography.variant)
                         }
@@ -85,7 +85,7 @@ public struct Cell: View {
                             Text(caption)
                                 .montage(
                                     variant: .label2,
-                                    alias: disable ? .labelDisable : .labelAlternative
+                                    semantic: disable ? .labelDisable : .labelAlternative
                                 )
                                 .paragraph(variant: .label2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -102,7 +102,7 @@ public struct Cell: View {
                         Image.montage(.chevronRightTightSmall)
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundStyle(SwiftUI.Color.alias(.labelAssistive))
+                            .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
                             .frame(width: 8, height: 16)
                             .padding(.vertical, 4)
                     }
@@ -114,7 +114,7 @@ public struct Cell: View {
             
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
+                .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))
                 .background()
                 .if(divider)
         }
@@ -257,7 +257,7 @@ public struct Cell: View {
 
 // MARK: - Private
 extension Cell {
-    private var normalTitleColor: Color.Alias {
+    private var normalTitleColor: Color.Semantic {
         if disable {
             .labelDisable
         } else {

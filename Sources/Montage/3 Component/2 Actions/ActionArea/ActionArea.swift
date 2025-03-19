@@ -35,12 +35,12 @@ public struct ActionArea: View, KeyboardReadable {
                     
                     if extraDivider {
                         Rectangle()
-                            .foregroundStyle(SwiftUI.Color.alias(.lineNeutral))
+                            .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral))
                             .frame(height: 1)
                     }
                 }
             } else {
-                SwiftUI.Color.alias(.backgroundElevated)
+                SwiftUI.Color.semantic(.backgroundElevated)
                     .frame(height: 0)
                     .overlay {
                         LinearGradient(
@@ -155,7 +155,7 @@ private extension ActionArea {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
                 Text(caption)
-                    .montage(variant: .label2, alias: .labelAlternative)
+                    .montage(variant: .label2, semantic: .labelAlternative)
                     .paragraph(variant: .label2)
             }
         }
@@ -166,12 +166,12 @@ private extension ActionArea {
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
-                .alias(.backgroundElevated).opacity($0)
+                .semantic(.backgroundElevated).opacity($0)
             }
     }
     
     private var backgroundColor: SwiftUI.Color {
-        !clearBackground || showExtraContents ? .alias(.backgroundElevated) : .clear
+        !clearBackground || showExtraContents ? .semantic(.backgroundElevated) : .clear
     }
 }
 

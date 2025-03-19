@@ -69,14 +69,14 @@ public extension NSAttributedString {
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        alias: Color.Alias,
+        semantic: Color.Semantic,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
             string,
             variant: variant,
             weight: weight,
-            colorResolver: alias,
+            colorResolver: semantic,
             lineBreakMode: lineBreakMode
         )
     }
@@ -85,30 +85,14 @@ public extension NSAttributedString {
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        component: Color.Component,
+        atomic: Color.Atomic,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         montage(
             string,
             variant: variant,
             weight: weight,
-            colorResolver: component,
-            lineBreakMode: lineBreakMode
-        )
-    }
-
-    static func montage(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        global: Color.Global,
-        lineBreakMode: NSLineBreakMode = .byWordWrapping
-    ) -> NSAttributedString {
-        montage(
-            string,
-            variant: variant,
-            weight: weight,
-            colorResolver: global,
+            colorResolver: atomic,
             lineBreakMode: lineBreakMode
         )
     }
@@ -122,7 +106,7 @@ public extension NSAttributedString {
             string,
             variant: variant,
             weight: weight,
-            alias: .labelNormal,
+            semantic: .labelNormal,
             lineBreakMode: .byWordWrapping
         )
     }
@@ -134,29 +118,8 @@ public extension NSAttributedString {
             string,
             variant: .body1,
             weight: .regular,
-            alias: .labelNormal,
+            semantic: .labelNormal,
             lineBreakMode: .byWordWrapping
-        )
-    }
-
-    @available(
-        swift,
-        deprecated: 1.0,
-        message: "alias color 사용 시 montage(_:variant:weight:alias:lineBreakMode:) 사용을 권장합니다."
-    )
-    static func montage(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        color: Color.Alias = .labelNormal,
-        lineBreakMode: NSLineBreakMode = .byWordWrapping
-    ) -> NSAttributedString {
-        _montage(
-            string,
-            variant: variant,
-            weight: weight,
-            color: .alias(color),
-            lineBreakMode: lineBreakMode
         )
     }
 }

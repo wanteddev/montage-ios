@@ -12,16 +12,12 @@ extension SwiftUI.Color {
         .init(UIColor(named: name, in: Bundle.module, compatibleWith: nil)!)
     }
 
-    public static func atomic(_ type: Color.Global) -> SwiftUI.Color {
-        load(name: type.name)
+    public static func atomic(_ type: Color.Atomic) -> SwiftUI.Color {
+        SwiftUI.Color(UIColor.atomic(type))
     }
 
-    public static func alias(_ type: Color.Alias) -> SwiftUI.Color {
-        SwiftUI.Color(UIColor.alias(type))
-    }
-
-    public static func component(_ type: Color.Component) -> SwiftUI.Color {
-        SwiftUI.Color(UIColor.component(type))
+    public static func semantic(_ type: Color.Semantic) -> SwiftUI.Color {
+        SwiftUI.Color(UIColor.semantic(type))
     }
 
     public static func montage(_ type: ColorResolvable) -> SwiftUI.Color {

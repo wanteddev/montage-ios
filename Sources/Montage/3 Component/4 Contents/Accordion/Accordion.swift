@@ -46,12 +46,12 @@ public struct Accordion: View {
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (.body2, .bold, .alias(.labelNormal))
+    ) = (.body2, .bold, .semantic(.labelNormal))
     private var descriptionTypography: (
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (.label1, .regular, .alias(.labelNeutral))
+    ) = (.label1, .regular, .semantic(.labelNeutral))
     private var verticalPadding: VerticalPadding = .pt12
     private var fillWidth = false
     private var divider = false
@@ -59,11 +59,11 @@ public struct Accordion: View {
     private var leadingIconColor: SwiftUI.Color? = nil
     private var trailingContent: (() -> any View)? = nil
     
-    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`, `.alias(.labelNormal)`입니다.
+    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.bold`, `.semantic(.labelNormal)`입니다.
     public func title(
         _ variant: Typography.Variant = .body2,
         weight: Typography.Weight = .bold,
-        color: SwiftUI.Color = .alias(.labelNormal)
+        color: SwiftUI.Color = .semantic(.labelNormal)
     ) -> Self {
         var zelf = self
         zelf.titleTypography.variant = variant
@@ -76,7 +76,7 @@ public struct Accordion: View {
     public func description(
         _ variant: Typography.Variant = .label1,
         weight: Typography.Weight = .regular,
-        color: SwiftUI.Color = .alias(.labelNeutral)
+        color: SwiftUI.Color = .semantic(.labelNeutral)
     ) -> Self {
         var zelf = self
         zelf.descriptionTypography.variant = variant
@@ -225,7 +225,7 @@ public struct Accordion: View {
                 
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(SwiftUI.Color.alias(.lineAlternative))
+                .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))
                 .background()
                 .if(divider)
         }

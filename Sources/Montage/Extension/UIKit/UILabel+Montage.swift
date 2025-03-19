@@ -28,27 +28,18 @@ public extension UILabel {
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        alias: Color.Alias = .labelNormal
+        semantic: Color.Semantic = .labelNormal
     ) -> UILabel {
-        montage(string, variant: variant, weight: weight, colorResolver: alias)
+        montage(string, variant: variant, weight: weight, colorResolver: semantic)
     }
     
     static func montage(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        component: Color.Component = .fillNormal
+        atomic: Color.Atomic = .red0
     ) -> UILabel {
-        montage(string, variant: variant, weight: weight, colorResolver: component)
-    }
-    
-    static func montage(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        global: Color.Global = .globalRed0
-    ) -> UILabel {
-        montage(string, variant: variant, weight: weight, colorResolver: global)
+        montage(string, variant: variant, weight: weight, colorResolver: atomic)
     }
     
     static func montage(
@@ -60,7 +51,7 @@ public extension UILabel {
             string,
             variant: variant,
             weight: weight,
-            alias: .labelNormal
+            semantic: .labelNormal
         )
     }
     
@@ -71,23 +62,7 @@ public extension UILabel {
             string,
             variant: .body1,
             weight: .regular,
-            alias: .labelNormal
+            semantic: .labelNormal
         )
-    }
-
-    @available(
-        swift,
-        deprecated: 1.0,
-        message: "alias color 사용 시 montage(_:variant:weight:alias:) 사용을 권장합니다."
-    )
-    static func montage(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        color: Color.Alias = .labelNormal
-    ) -> UILabel {
-        let label = UIKit.UILabel()
-        label.attributedText = .montage(string, variant: variant, weight: weight, alias: color)
-        return label
     }
 }

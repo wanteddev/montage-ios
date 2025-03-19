@@ -109,12 +109,12 @@ public struct SnackBar: View {
                         VStack(alignment: .leading, spacing: .zero) {
                             if let heading {
                                 Text(heading)
-                                    .montage(variant: .body2, weight: .bold, alias: .staticWhite)
+                                    .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
                                     .paragraph(variant: .body2)
                             }
                             if let description {
                                 Text(description)
-                                    .montage(variant: .label2, weight: .regular, alias: .staticWhite)
+                                    .montage(variant: .label2, weight: .regular, semantic: .staticWhite)
                                     .paragraph(variant: .label2)
                                     .lineLimit(2)
                             }
@@ -149,7 +149,7 @@ public struct SnackBar: View {
         
         var body: some View {
             Text(action)
-                .montage(variant: .body2, weight: .bold, alias: .staticWhite)
+                .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
                 .paragraph(variant: .body2)
                 .background(
                     Decorate.Interaction(
@@ -180,8 +180,8 @@ public struct SnackBar: View {
 
         var body: some View {
             ZStack {
-                SwiftUI.Color.alias(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
-                SwiftUI.Color.alias(.primaryNormal).opacity(0.05)
+                SwiftUI.Color.semantic(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
+                SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
             }
             .background(
                 .ultraThinMaterial

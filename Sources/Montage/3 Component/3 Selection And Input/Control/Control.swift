@@ -216,10 +216,10 @@ private extension Control {
     var iconColor: SwiftUI.Color {
         switch variant {
         case .checkmark:
-            .alias(state.isUnchecked ? .labelAssistive : .primaryNormal)
+            .semantic(state.isUnchecked ? .labelAssistive : .primaryNormal)
                 .opacity(disable ? 0.43 : 1)
         case .checkbox, .radio:
-            .alias(.staticWhite)
+            .semantic(.staticWhite)
         }
     }
     
@@ -246,14 +246,14 @@ private extension Control {
     var backgroundColor: SwiftUI.Color {
         variant == .checkmark || state.isUnchecked
             ? .clear
-            : .alias(.primaryNormal).opacity(disable ? 0.43 : 1)
+            : .semantic(.primaryNormal).opacity(disable ? 0.43 : 1)
     }
     
     var borderColor: SwiftUI.Color {
         switch variant {
         case .checkmark: .clear
         case .checkbox, .radio:
-            .alias(state.isUnchecked ? .lineNormal : .primaryNormal).opacity(disable ? 0.43 : 1)
+            .semantic(state.isUnchecked ? .lineNormal : .primaryNormal).opacity(disable ? 0.43 : 1)
         }
     }
     

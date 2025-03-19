@@ -62,7 +62,7 @@ extension Modal {
                 
                 if scrolled && variant.isFloating == false {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.alias(.lineNeutral).opacity(backgroundOpacity))
+                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral).opacity(backgroundOpacity))
                         .frame(height: 0.5)
                 }
             }
@@ -135,7 +135,7 @@ extension Modal {
                                 .montage(
                                     variant: variant.typoVaraint,
                                     weight: variant.typoWeight,
-                                    alias: .labelStrong
+                                    semantic: .labelStrong
                                 )
                                 .paragraph(variant: variant.typoVaraint)
                                 .lineLimit(1)

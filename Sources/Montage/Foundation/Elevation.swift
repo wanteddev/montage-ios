@@ -26,7 +26,7 @@ extension Elevation {
     }
 
     var descriptor: Descriptor {
-        let shadowColor = UIColor.alias(.staticBlack)
+        let shadowColor = UIColor.semantic(.staticBlack)
 
         switch self {
         case .none:

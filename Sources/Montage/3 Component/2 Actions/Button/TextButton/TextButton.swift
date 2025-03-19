@@ -25,8 +25,8 @@ extension Button.TextButton {
 extension Button.TextButton.Variant {
     var activeUIColor: UIColor {
         switch self {
-        case .primary: .alias(.primaryNormal)
-        case .assistive: .alias(.labelAlternative).withAlphaComponent(0.61)
+        case .primary: .semantic(.primaryNormal)
+        case .assistive: .semantic(.labelAlternative).withAlphaComponent(0.61)
         }
     }
     
@@ -35,7 +35,7 @@ extension Button.TextButton.Variant {
     }
     
     var inactiveUIColor: UIColor {
-        .alias(.labelDisable).withAlphaComponent(0.16)
+        .semantic(.labelDisable).withAlphaComponent(0.16)
     }
     
     var inactiveColor: SwiftUI.Color {
@@ -53,7 +53,7 @@ extension Button.TextButton.Variant {
         }
     }
     
-    var interactionColor: Color.Alias {
+    var interactionColor: Color.Semantic {
         switch self {
         case .primary: .primaryNormal
         case .assistive: .labelNormal
@@ -334,13 +334,13 @@ struct TextButtonPreview: View {
                     Button.TextButton(
                         text: "accentCyan",
                         disable: false,
-                        contentColor: .alias(.accentCyan)
+                        contentColor: .semantic(.accentCyan)
                     )
                     
                     Button.TextButton(
-                        text: "globalBlue40",
+                        text: "blue40",
                         disable: false,
-                        contentColor: .atomic(.globalBlue40)
+                        contentColor: .atomic(.blue40)
                     )
                 }
                 
@@ -348,14 +348,14 @@ struct TextButtonPreview: View {
                     Button.TextButton(
                         text: "body1",
                         disable: false,
-                        contentColor: .alias(.accentCyan),
+                        contentColor: .semantic(.accentCyan),
                         fontVariant: .body1
                     )
                     
                     Button.TextButton(
                         text: "heading1",
                         disable: false,
-                        contentColor: .atomic(.globalBlue40),
+                        contentColor: .atomic(.blue40),
                         fontVariant: .heading1
                     )
                 }

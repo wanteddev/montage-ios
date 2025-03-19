@@ -56,7 +56,7 @@ extension Card {
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
-                        .strokeBorder(SwiftUI.Color.alias(.lineAlternative), lineWidth: 1)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineAlternative), lineWidth: 1)
                 )
                 .modifier(
                     ThumbnailOverlayModifier(
@@ -128,22 +128,22 @@ extension Card.Normal {
         }
 
         private let gradientColors: [SwiftUI.Color] = [
-            .alias(.staticBlack),
-            .alias(.staticBlack).opacity(0.97),
-            .alias(.staticBlack).opacity(0.95),
-            .alias(.staticBlack).opacity(0.92),
-            .alias(.staticBlack).opacity(0.89),
-            .alias(.staticBlack).opacity(0.86),
-            .alias(.staticBlack).opacity(0.82),
-            .alias(.staticBlack).opacity(0.77),
-            .alias(.staticBlack).opacity(0.71),
-            .alias(.staticBlack).opacity(0.64),
-            .alias(.staticBlack).opacity(0.57),
-            .alias(.staticBlack).opacity(0.48),
-            .alias(.staticBlack).opacity(0.38),
-            .alias(.staticBlack).opacity(0.26),
-            .alias(.staticBlack).opacity(0.14),
-            .alias(.staticBlack).opacity(0)
+            .semantic(.staticBlack),
+            .semantic(.staticBlack).opacity(0.97),
+            .semantic(.staticBlack).opacity(0.95),
+            .semantic(.staticBlack).opacity(0.92),
+            .semantic(.staticBlack).opacity(0.89),
+            .semantic(.staticBlack).opacity(0.86),
+            .semantic(.staticBlack).opacity(0.82),
+            .semantic(.staticBlack).opacity(0.77),
+            .semantic(.staticBlack).opacity(0.71),
+            .semantic(.staticBlack).opacity(0.64),
+            .semantic(.staticBlack).opacity(0.57),
+            .semantic(.staticBlack).opacity(0.48),
+            .semantic(.staticBlack).opacity(0.38),
+            .semantic(.staticBlack).opacity(0.26),
+            .semantic(.staticBlack).opacity(0.14),
+            .semantic(.staticBlack).opacity(0)
         ]
 
         public func body(content: Content) -> some View {
@@ -155,7 +155,7 @@ extension Card.Normal {
                                 if let caption = model.caption {
                                     HStack {
                                         Text(caption)
-                                            .montage(variant: .label2, weight: .bold, alias: .staticWhite)
+                                            .montage(variant: .label2, weight: .bold, semantic: .staticWhite)
                                             .paragraph(variant: .label2)
                                         Spacer()
                                     }
@@ -165,7 +165,7 @@ extension Card.Normal {
                                 if let icons = model.toggleIcon {
                                     Montage.Button.IconButton(
                                         icon: model.toggleIsOn ? icons.on : icons.off,
-                                        iconColor: SwiftUI.Color.alias(.staticWhite)
+                                        iconColor: SwiftUI.Color.semantic(.staticWhite)
                                     ) {
                                         model.onToggleTap?()
                                     }
@@ -247,12 +247,12 @@ import Pretendard
         },
         caption: {
             Text("캡션")
-                .montage(variant: .label2, weight: .medium, alias: .labelAlternative)
+                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
                 .paragraph(variant: .label2)
         },
         extraCpation: {
             Text("추가 캡션")
-                .montage(variant: .label2, weight: .medium, alias: .labelAlternative)
+                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
                 .paragraph(variant: .label2)
         },
         topContent: {

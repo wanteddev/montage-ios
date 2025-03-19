@@ -39,7 +39,7 @@ extension Basic {
                 .if(axis == .horizontal) {
                     $0.frame(height: variant.size)
                 }
-                .foregroundStyle(SwiftUI.Color.alias(.lineNormal))
+                .foregroundStyle(SwiftUI.Color.semantic(.lineNormal))
         }
     }
 }

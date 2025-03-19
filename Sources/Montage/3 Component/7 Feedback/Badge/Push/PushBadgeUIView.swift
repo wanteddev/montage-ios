@@ -169,7 +169,7 @@ extension Badge.PushUIView {
     }
     
     private func updateColor() {
-        backgroundColorView.backgroundColor = .alias(.primaryNormal)
+        backgroundColorView.backgroundColor = .semantic(.primaryNormal)
     }
     
     private func updateTextLabel() {
@@ -201,7 +201,7 @@ extension Badge.PushUIView {
             baselineOffset = (lineHeight - font.lineHeight) / 2 / 2
         }
         
-        let foregroundColor = UIColor.alias(.staticWhite)
+        let foregroundColor = UIColor.semantic(.staticWhite)
         let tracking = Typography.getTracking(variant: .caption2)
         
         return .init(string: text, attributes: [
