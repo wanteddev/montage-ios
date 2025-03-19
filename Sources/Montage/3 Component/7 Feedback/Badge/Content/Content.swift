@@ -155,35 +155,35 @@ fileprivate struct Preview: View {
                 HStack {
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.semantic(.accentLime)),
+                        color: .accent(.semantic(.accentBackgroundLime)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "라임"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.semantic(.accentCyan)),
+                        color: .accent(.semantic(.accentBackgroundCyan)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "시안"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.semantic(.accentLightBlue)),
+                        color: .accent(.semantic(.accentBackgroundLightBlue)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "라이트 블루"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.semantic(.accentViolet)),
+                        color: .accent(.semantic(.accentBackgroundViolet)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "바이올렛"
                     )
     
                     Badge.Content(
                         variant: .solid,
-                        color: .accent(.semantic(.accentPink)),
+                        color: .accent(.semantic(.accentBackgroundPink)),
                         trailingIcon: Image(systemName: "rectangle.fill"),
                         text: "핑크"
                     )
@@ -213,23 +213,25 @@ fileprivate struct Preview: View {
                 
                 HStack {
                     Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentLime)), text: "라임"
+                        variant: .outlined, color: .accent(.semantic(.accentBackgroundLime)), text: "라임"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentCyan)), text: "시안"
+                        variant: .outlined, color: .accent(.semantic(.accentBackgroundCyan)), text: "시안"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentLightBlue)), text: "라이트 블루"
+                        variant: .outlined,
+                        color: .accent(.semantic(.accentBackgroundLightBlue)),
+                        text: "라이트 블루"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentViolet)), text: "바이올렛"
+                        variant: .outlined, color: .accent(.semantic(.accentBackgroundViolet)), text: "바이올렛"
                     )
                     
                     Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentPink)), text: "핑크"
+                        variant: .outlined, color: .accent(.semantic(.accentBackgroundPink)), text: "핑크"
                     )
                 }
             }

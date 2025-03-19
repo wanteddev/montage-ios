@@ -462,7 +462,7 @@ struct IconButtonPreview: View {
                 
                 Button.IconButton(
                     icon: .apps,
-                    iconColor: .semantic(.accentLightBlue)
+                    iconColor: .semantic(.accentBackgroundLightBlue)
                 ) {
                     debugPrint(">>> hello world!")
                 }
@@ -470,13 +470,13 @@ struct IconButtonPreview: View {
                 Button.IconButton(
                     variant: .background(size: 20),
                     icon: .apps,
-                    iconColor: .semantic(.accentPink)
+                    iconColor: .semantic(.accentBackgroundPink)
                 )
                 
                 Button.IconButton(
                     variant: .outlined(size: .normal),
                     icon: .apps,
-                    iconColor: .semantic(.accentRedOrange)
+                    iconColor: .semantic(.accentBackgroundRedOrange)
                 )
                 
                 Button.IconButton(
@@ -495,14 +495,14 @@ struct IconButtonPreview: View {
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
-                    iconColor: .semantic(.accentRedOrange),
-                    borderColor: .semantic(.accentLime)
+                    iconColor: .semantic(.accentBackgroundRedOrange),
+                    borderColor: .semantic(.accentBackgroundLime)
                 )
                 
                 Button.IconButton(
                     variant: .solid(size: .small),
                     icon: .apps,
-                    borderColor: .semantic(.accentLime)
+                    borderColor: .semantic(.accentBackgroundLime)
                 )
             }
         }
