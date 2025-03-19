@@ -26,12 +26,14 @@ public struct Cell: View {
     
     /// 상하 여백을 나타내는 열거형입니다.
     public enum VerticalPadding {
+        case pt0
         case pt8
         case pt12
         case pt16
         
         public var length: CGFloat {
             switch self {
+            case .pt0: 0
             case .pt8: 8
             case .pt12: 12
             case .pt16: 16
@@ -58,12 +60,14 @@ public struct Cell: View {
     public var body: some View {
         ZStack(alignment: .bottom) {
             ZStack {
-                HStack(alignment: textEllipsis ? .center : .top, spacing: 8) {
-                    leadingContent()
-                        .frame(
-                            height: extraContentMaxHeight.maxHeight
-                        )
-                        .clipped()
+                HStack(alignment: verticalAlignment, spacing: 8) {
+                    if let leadingContent {
+                        AnyView(leadingContent())
+                            .frame(
+                                height: extraContentMaxHeight.maxHeight
+                            )
+                            .clipped()
+                    }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Group {
@@ -92,11 +96,13 @@ public struct Cell: View {
                         }
                     }
                     
-                    trailingContent()
-                        .frame(
-                            height: extraContentMaxHeight.maxHeight
-                        )
-                        .clipped()
+                    if let trailingContent {
+                        AnyView(trailingContent(active))
+                            .frame(
+                                height: extraContentMaxHeight.maxHeight
+                            )
+                            .clipped()
+                    }
                     
                     VStack {
                         Image.montage(.chevronRightTightSmall)
@@ -152,9 +158,10 @@ public struct Cell: View {
     private var divider = false
     private var chevron = false
     private var extraContentMaxHeight: ContentHeight = .pt24
-    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
-    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var leadingContent: (() -> any View)? = nil
+    private var trailingContent: ((Bool) -> any View)? = nil
     private var interactionPadding: CGFloat = 12
+    private var verticalAlignment: VerticalAlignment = .center
     
     /// 타이틀 텍스트의 `variant` 속성을 조정합니다. 기본값은 `.body1`입니다.
     public func titleVariant(_ variant: Typography.Variant) -> Self {
@@ -177,6 +184,13 @@ public struct Cell: View {
         return zelf
     }
     
+    /// 상단 정렬을 조정합니다. 기본값은 `.center`입니다.
+    public func verticalAlign(_ verticalAlignment: VerticalAlignment) -> Self {
+        var zelf = self
+        zelf.verticalAlignment = verticalAlignment
+        return zelf
+    }
+    
     /// 좌우 여백 여부를 조정합니다. 기본값은 `false`입니다.
     public func fillWidth(_ fillWidth: Bool = true) -> Self {
         var zelf = self
@@ -192,7 +206,7 @@ public struct Cell: View {
     }
     
     /// 캡션을 추가합니다.
-    public func caption(_ caption: String) -> Self {
+    public func caption(_ caption: String? = nil) -> Self {
         var zelf = self
         zelf.caption = caption
         return zelf
@@ -234,16 +248,16 @@ public struct Cell: View {
     }
     
     /// 좌측 컨텐츠를 지정합니다.
-    public func leadingContent(_ contents: @escaping () -> some View) -> Self {
+    public func leadingContent(_ contents: (() -> any View)? = nil) -> Self {
         var zelf = self
-        zelf.leadingContent = { AnyView(contents()) }
+        zelf.leadingContent = contents
         return zelf
     }
     
     /// 우측 컨텐츠를 지정합니다.
-    public func trailingContent(_ contents: @escaping (Bool) -> some View) -> Self {
+    public func trailingContent(_ contents: ((Bool) -> any View)? = nil) -> Self {
         var zelf = self
-        zelf.trailingContent = { AnyView(contents(active)) }
+        zelf.trailingContent = contents
         return zelf
     }
     
