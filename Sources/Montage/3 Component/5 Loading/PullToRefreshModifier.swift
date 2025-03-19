@@ -75,7 +75,6 @@ public struct PullToRefreshModifier: ViewModifier {
                         }
                     }
                     .onEnded { value in
-                        print(value.predictedEndTranslation)
                         // 리프레시가 시작된 후 스크롤이 끝났을 때
                         if phase.isRefreshing {
                             // 투명뷰를 추가한다.
