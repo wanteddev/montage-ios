@@ -18,10 +18,9 @@ public struct SectionHeader: View {
     // MARK: - Initializer
     
     private let title: String
-    @ViewBuilder private let content: () -> any View
-    public init(title: String, content: @escaping () -> any View = { EmptyView() }) {
+    
+    public init(title: String) {
         self.title = title
-        self.content = content
     }
     
     // MARK: - Body
@@ -29,23 +28,25 @@ public struct SectionHeader: View {
     
     public var body: some View {
         ZStack {
-            AnyView(content())
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-                .opacity(0)
             HStack(spacing: 0) {
-                Text(title)
-                    .montage(
-                        variant: titleTypography.variant ?? variant,
-                        weight: titleTypography.weight,
-                        color: titleTypography.color
-                    )
-                    .paragraph(variant: variant)
-                    .multilineTextAlignment(.leading)
-                if contentSize == .zero {
-                    Spacer(minLength: 0)
+                HStack(alignment: .bottom, spacing: 16) {
+                    Text(title)
+                        .montage(variant: variant, weight: .bold, color: titleColor)
+                        .paragraph(variant: variant)
+                        .multilineTextAlignment(.leading)
+                        .layoutPriority(1)
+                    
+                    if let headingContent {
+                        AnyView(headingContent())
+                    }
+                }
+                    
+                if let trailingContent {
+                    Spacer(minLength: 16)
+                    
+                    AnyView(trailingContent())
                 } else {
-                    AnyView(content())
-                        .padding(.leading, 10)
+                    Spacer(minLength: 0)
                 }
             }
             .frame(minHeight: height)
@@ -54,38 +55,37 @@ public struct SectionHeader: View {
     
     // MARK: - Modifiers
     
-    private var size: Size = .medium {
-        didSet {
-            titleTypography.variant = variant
-            if size == .xsmall {
-                titleTypography.color = .semantic(.labelAlternative)
-            }
-        }
-    }
-
-    private var titleTypography: (
-        variant: Typography.Variant?,
-        weight: Typography.Weight,
-        color: SwiftUI.Color
-    ) = (nil, .bold, .semantic(.labelStrong))
+    private var size: Size = .medium
+    private var titleColor: SwiftUI.Color = .semantic(.labelStrong)
+    private var headingContent: (() -> any View)? = nil
+    private var trailingContent: (() -> any View)? = nil
     
     /// 사이즈를 조정합니다.
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size
+        if size == .xsmall {
+            zelf.titleColor = .semantic(.labelAlternative)
+        }
         return zelf
     }
     
-    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.semantic(.labelNormal)`입니다.
-    public func title(
-        _ variant: Typography.Variant? = nil,
-        weight: Typography.Weight = .bold,
-        color: SwiftUI.Color = .semantic(.labelStrong)
-    ) -> Self {
+    /// 타이틀 텍스트의 색상을 조정합니다. 기본값은 `.semantic(.labelNormal)`입니다.
+    public func titleColor(_ color: SwiftUI.Color) -> Self {
         var zelf = self
-        zelf.titleTypography.variant = variant
-        zelf.titleTypography.weight = weight
-        zelf.titleTypography.color = color
+        zelf.titleColor = color
+        return zelf
+    }
+    
+    public func headingContent(_ content: (() -> any View)? = nil) -> Self {
+        var zelf = self
+        zelf.headingContent = content
+        return zelf
+    }
+
+    public func trailingContent(_ content: (() -> any View)? = nil) -> Self {
+        var zelf = self
+        zelf.trailingContent = content
         return zelf
     }
 
