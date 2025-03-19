@@ -126,7 +126,7 @@ public struct Cell: View {
         ))
         .contentShape(Rectangle())
         .allowsHitTesting(disable == false)
-        .simultaneousGesture(
+        .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isPressed = value.translation == .zero

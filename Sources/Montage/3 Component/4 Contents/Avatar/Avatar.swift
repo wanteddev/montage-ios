@@ -131,7 +131,7 @@ public struct Avatar: View {
                 .clipShape(RoundedRectangle(cornerRadius: variant.interactionCornerRadius(size: size)))
             }
         }
-        .simultaneousGesture(
+        .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isPressed = value.translation == .zero
