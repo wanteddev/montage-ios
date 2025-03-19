@@ -64,7 +64,7 @@ public struct PullToRefreshModifier: ViewModifier {
                 
                 content
             }
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .onChanged { _ in
                         isScrolling = true
@@ -129,7 +129,7 @@ public struct PullToRefreshModifier: ViewModifier {
             case .idle:
                 break
             case .pulledDown(let ratio):
-                if ratio > 1 {
+                if ratio > 1 && isScrolling {
                     self.phase = .refreshing
                 }
             case .refreshing:
