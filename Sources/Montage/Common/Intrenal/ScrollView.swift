@@ -24,7 +24,7 @@ public struct ScrollView: View {
     }
 
     // MARK: - Body
-    
+
     @State private var contentOffset: CGPoint = .zero
 
     public var body: some View {
@@ -130,7 +130,7 @@ private extension ScrollView {
         case .vertical: .vertical
         }
     }
-    
+
     func updateScrollStatus(
         axis: Axis? = nil,
         scrollViewSize: CGSize? = nil,

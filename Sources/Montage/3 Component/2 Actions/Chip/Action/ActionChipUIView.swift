@@ -315,7 +315,7 @@ extension Chip.ActionUIView {
         if let leadingImage {
             leadingImageView.isHidden = false
             leadingImageView.image = imageColor == nil
-            ? leadingImage : leadingImage.withRenderingMode(.alwaysTemplate)
+                ? leadingImage : leadingImage.withRenderingMode(.alwaysTemplate)
         } else {
             leadingImageView.isHidden = true
         }

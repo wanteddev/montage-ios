@@ -270,7 +270,7 @@ extension Tooltip {
                         + arrowVerticalPadding
                         + config.margin
                 )
-                
+
             case .trailing:
                 originSize.width / 2
                     + contentWidth / 2
@@ -282,16 +282,16 @@ extension Tooltip {
                 switch arrowPosition {
                 case .leading:
                     contentWidth / 2
-                    - config.arrowWidth
-                    - arrowHorizontalPadding
+                        - config.arrowWidth
+                        - arrowHorizontalPadding
                 case .trailing:
                     -(
                         contentWidth / 2
-                        - config.arrowWidth
-                        - arrowHorizontalPadding
+                            - config.arrowWidth
+                            - arrowHorizontalPadding
                     )
                 default:
-                        .zero
+                    .zero
                 }
             }
         }
@@ -302,18 +302,18 @@ extension Tooltip {
                 switch arrowPosition {
                 case .top:
                     contentHeight / 2
-                    - config.arrowWidth / 2
-                    - arrowHorizontalPadding
+                        - config.arrowWidth / 2
+                        - arrowHorizontalPadding
                 case .bottom:
                     -(
                         contentHeight / 2
-                        - config.arrowWidth / 2
-                        - arrowHorizontalPadding
+                            - config.arrowWidth / 2
+                            - arrowHorizontalPadding
                     )
                 default:
                     .zero
                 }
-                
+
             case .top:
                 -(
                     contentHeight / 2
@@ -322,7 +322,7 @@ extension Tooltip {
                         + arrowVerticalPadding
                         + config.margin
                 )
-                
+
             case .bottom:
                 contentHeight / 2
                     + originSize.height / 2

@@ -230,25 +230,25 @@ extension TextInput {
                             minHeight: resize.minHeight,
                             maxHeight: resize.maxHeight
                         )
-                    .frame(
-                        minHeight: resize.minHeight,
-                        maxHeight: resize.maxHeight,
-                        alignment: resize.alignment
-                    )
-                    .foregroundStyle(editorTextColor)
-                    .font(.montage(variant: .body1Reading))
-                    .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
-                    .if(!disable) {
-                        $0.focused(focus)
-                    }
-                    .onChange(of: text) { _ in
-                        typedCharacters = text.count
-                    }
-                    .scrollContentBackground(.hidden)
-                    .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
-                    .padding(.horizontal, -4.5)
-                    .padding(.top, -4)
-                    .padding(.bottom, -6)
+                        .frame(
+                            minHeight: resize.minHeight,
+                            maxHeight: resize.maxHeight,
+                            alignment: resize.alignment
+                        )
+                        .foregroundStyle(editorTextColor)
+                        .font(.montage(variant: .body1Reading))
+                        .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
+                        .if(!disable) {
+                            $0.focused(focus)
+                        }
+                        .onChange(of: text) { _ in
+                            typedCharacters = text.count
+                        }
+                        .scrollContentBackground(.hidden)
+                        .background(disable ? SwiftUI.Color.alias(.interactionDisable) : .clear)
+                        .padding(.horizontal, -4.5)
+                        .padding(.top, -4)
+                        .padding(.bottom, -6)
                     
                     if $text.wrappedValue.isEmpty, let placeholder {
                         Text(placeholder)
