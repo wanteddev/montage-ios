@@ -81,14 +81,14 @@ public struct SnackBar: View {
         private var description: String?
         private var extraContents: (() -> any View)?
         private let action: String
-        private let handler: () -> Void
+        private let handler: (() -> Void)?
         
         public init(
             heading: String? = nil,
             description: String? = nil,
             extraContents: (() -> any View)? = nil,
             action: String,
-            handler: @escaping () -> Void
+            handler: (() -> Void)? = nil
         ) {
             self.heading = heading
             self.description = description
@@ -140,9 +140,9 @@ public struct SnackBar: View {
         @State private var interaction: Decorate.Interaction.State = .normal
         
         private let action: String
-        private let handler: () -> Void
+        private let handler: (() -> Void)?
         
-        init(_ action: String, _ handler: @escaping () -> Void) {
+        init(_ action: String, _ handler: (() -> Void)?) {
             self.action = action
             self.handler = handler
         }
@@ -160,18 +160,18 @@ public struct SnackBar: View {
                     .padding(.horizontal, -7)
                     .padding(.vertical, -4)
                 )
-                .gesture(
+                .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
                             isPressed = value.translation == .zero
                         }
-                        .onEnded { value in
+                        .onEnded { _ in
                             isPressed = false
-                            if value.translation == .zero {
-                                handler()
-                            }
                         }
                 )
+                .onTapGesture {
+                    handler?()
+                }
         }
     }
     

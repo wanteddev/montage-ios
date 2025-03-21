@@ -157,21 +157,21 @@ public struct Control: View {
             .clipShape(Circle())
             .frame(width: interactionSize.width, height: interactionSize.height)
         }
-        .gesture(
+        .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isPressed = value.translation == .zero
                 }
-                .onEnded { value in
+                .onEnded { _ in
                     isPressed = false
-                    if value.translation == .zero {
-                        let newState: State = state.isUnchecked ? .checked : .unchecked
-                        stateBinding?.wrappedValue = newState
-                        checkedBinding?.wrappedValue = state.isUnchecked
-                        onSelect?(newState)
-                    }
                 }
         )
+        .onTapGesture {
+            let newState: State = state.isUnchecked ? .checked : .unchecked
+            stateBinding?.wrappedValue = newState
+            checkedBinding?.wrappedValue = state.isUnchecked
+            onSelect?(newState)
+        }
         .disabled(disable)
     }
     

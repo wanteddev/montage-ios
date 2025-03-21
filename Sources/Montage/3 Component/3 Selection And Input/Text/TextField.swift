@@ -479,18 +479,18 @@ private extension TextInput.TextField {
                     .padding(.horizontal, -7)
                     .padding(.vertical, -4)
                 )
-                .gesture(
+                .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
                             isPressed = value.translation == .zero
                         }
-                        .onEnded { value in
+                        .onEnded { _ in
                             isPressed = false
-                            if value.translation == .zero {
-                                handler?()
-                            }
                         }
                 )
+                .onTapGesture {
+                    handler?()
+                }
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(SwiftUI.Color.clear)

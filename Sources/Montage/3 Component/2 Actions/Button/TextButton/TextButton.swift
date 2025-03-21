@@ -198,18 +198,18 @@ extension Button {
                 .padding(.vertical, -variant.interactionVerticalOffset)
                 .padding(.horizontal, -variant.interactionHorizontalOffset)
             }
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         isPressed = value.translation == .zero
                     }
-                    .onEnded { value in
+                    .onEnded { _ in
                         isPressed = false
-                        if value.translation == .zero {
-                            handler?()
-                        }
                     }
             )
+            .onTapGesture {
+                handler?()
+            }
             .allowsHitTesting(disable == false)
         }
         
@@ -221,145 +221,6 @@ extension Button {
                     height: size.iconSize.height
                 )
                 .foregroundStyle(iconColor)
-        }
-    }
-}
-
-struct TextButton_Previews: PreviewProvider {
-    static var previews: some View {
-        TextButtonPreview()
-    }
-}
-
-struct TextButtonPreview: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Size").montage(variant: .headline2)
-            
-            HStack {
-                Button.TextButton(
-                    text: "안녕하세요"
-                )
-                
-                Button.TextButton(
-                    size: .small,
-                    text: "안녕하세요"
-                )
-                
-                Button.TextButton(
-                    variant: .assistive,
-                    text: "안녕하세요"
-                )
-                
-                Button.TextButton(
-                    variant: .assistive,
-                    size: .small,
-                    text: "안녕하세요"
-                )
-            }
-            
-            Text("Icon").montage(variant: .headline2)
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Button.TextButton(
-                        leadingIcon: .bubbleFill,
-                        text: "안녕하세요"
-                    )
-                    
-                    Button.TextButton(
-                        trailingIcon: .circleCloseFill,
-                        text: "안녕하세요"
-                    )
-                    
-                    Button.TextButton(
-                        leadingIcon: .bubbleFill,
-                        trailingIcon: .circleCloseFill,
-                        text: "안녕하세요"
-                    )
-                }
-                
-                HStack {
-                    Button.TextButton(
-                        variant: .assistive,
-                        leadingIcon: .bubbleFill,
-                        text: "안녕하세요"
-                    )
-                    
-                    Button.TextButton(
-                        variant: .assistive,
-                        trailingIcon: .circleCloseFill,
-                        text: "안녕하세요"
-                    )
-                    
-                    Button.TextButton(
-                        variant: .assistive,
-                        leadingIcon: .bubbleFill,
-                        trailingIcon: .circleCloseFill,
-                        text: "안녕하세요"
-                    )
-                }
-            }
-            
-            Text("State").montage(variant: .headline2)
-            
-            HStack {
-                Button.TextButton(
-                    text: "안녕하세요",
-                    disable: false
-                )
-                
-                Button.TextButton(
-                    text: "안녕하세요",
-                    disable: true
-                )
-                
-                Button.TextButton(
-                    variant: .assistive,
-                    text: "안녕하세요",
-                    disable: false
-                )
-                
-                Button.TextButton(
-                    variant: .assistive,
-                    text: "안녕하세요",
-                    disable: true
-                )
-            }
-            
-            Text("Custom").montage(variant: .headline2)
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Button.TextButton(
-                        text: "accentBackgroundCyan",
-                        disable: false,
-                        contentColor: .semantic(.accentBackgroundCyan)
-                    )
-                    
-                    Button.TextButton(
-                        text: "blue40",
-                        disable: false,
-                        contentColor: .atomic(.blue40)
-                    )
-                }
-                
-                HStack {
-                    Button.TextButton(
-                        text: "body1",
-                        disable: false,
-                        contentColor: .semantic(.accentBackgroundCyan),
-                        fontVariant: .body1
-                    )
-                    
-                    Button.TextButton(
-                        text: "heading1",
-                        disable: false,
-                        contentColor: .atomic(.blue40),
-                        fontVariant: .heading1
-                    )
-                }
-            }
         }
     }
 }
