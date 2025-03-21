@@ -248,7 +248,7 @@ private extension TextInput.TextField {
                         }
                     }
                     
-                    if trailingButton == nil, let trailingContent {
+                    if let trailingContent {
                         AnyView(trailingContent())
                     }
                 }
