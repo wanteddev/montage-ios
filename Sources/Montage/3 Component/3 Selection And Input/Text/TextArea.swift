@@ -357,8 +357,8 @@ extension TextInput {
                     } else {
                         if trailingResources.isEmpty == false {
                             HStack(spacing: trailingResourceSpacing) {
-                                ForEach(trailingResources.indices, id: \.self) { index in
-                                    component(trailingResources[index])
+                                ForEach(filteredTrailingResources.indices, id: \.self) { index in
+                                    component(filteredTrailingResources[index])
                                 }
                             }
                         }
@@ -366,26 +366,31 @@ extension TextInput {
                 }
             }
             
+            var filteredTrailingResources: [Resource] {
+                if trailingResources.contains(where: \.isCharacterCount) &&
+                    leadingResources.contains(where: \.isCharacterCount) {
+                    Array(trailingResources.drop(while: \.isCharacterCount))
+                } else {
+                    trailingResources
+                }
+            }
+            
             @ViewBuilder
             func component(_ resource: Resource) -> some View {
                 switch resource {
                 case .characterCount(let limit):
-                    if leadingResources.contains(where: \.isCharacterCount) {
-                        EmptyView()
-                    } else {
-                        let counterString = [typedCharacters, limit]
-                            .compactMap { $0 }
-                            .map(String.init)
-                            .joined(separator: "/")
-                        Text(counterString)
-                            .montage(
-                                variant: .label2,
-                                weight: .medium,
-                                alias: disable ? .labelDisable : .labelAlternative
-                            )
-                            .paragraph(variant: .label2)
-                            .padding(.horizontal, 4)
-                    }
+                    let counterString = [typedCharacters, limit]
+                        .compactMap { $0 }
+                        .map(String.init)
+                        .joined(separator: "/")
+                    Text(counterString)
+                        .montage(
+                            variant: .label2,
+                            weight: .medium,
+                            alias: disable ? .labelDisable : .labelAlternative
+                        )
+                        .paragraph(variant: .label2)
+                        .padding(.horizontal, 4)
                 case let .textButton(placement, variant, title, handler):
                     Button.TextButton(
                         variant: {
