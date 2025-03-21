@@ -47,6 +47,7 @@ public enum Icon: String, CaseIterable {
     case cameraFill
     case caretDown
     case caretUp
+    case certificate
     case change
     case chat
     case check
@@ -167,6 +168,7 @@ public enum Icon: String, CaseIterable {
     case history
     case home
     case homeFill
+    case hourglass
     case image
     case inbox
     case keyboard
@@ -195,6 +197,7 @@ public enum Icon: String, CaseIterable {
     case magicWand
     case mail
     case mailOpen
+    case medal
     case megaphone
     case megaphoneFill
     case menu
@@ -241,6 +244,7 @@ public enum Icon: String, CaseIterable {
     case setting
     case share
     case shareIos
+    case sparkle
     case square
     case squareCaret
     case squareCheck
@@ -256,6 +260,7 @@ public enum Icon: String, CaseIterable {
     case starFill
     case strikethrough
     case sun
+    case tag
     case template
     case templateFill
     case textFormat
