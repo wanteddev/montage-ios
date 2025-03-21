@@ -470,14 +470,14 @@ private extension TextInput.TextField {
             Text(title)
                 .montage(variant: .body1, weight: variant.typoWeight, semantic: variant.textColor)
                 .paragraph(variant: .body1)
+                .padding(.horizontal, 19)
+                .padding(.vertical, 12)
                 .background(
                     Decorate.Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .labelNormal
                     )
-                    .padding(.horizontal, -7)
-                    .padding(.vertical, -4)
                 )
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
@@ -491,12 +491,6 @@ private extension TextInput.TextField {
                 .onTapGesture {
                     handler?()
                 }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(SwiftUI.Color.clear)
-                }
-                .padding(.horizontal, 19)
-                .padding(.vertical, 12)
         }
     }
 }
