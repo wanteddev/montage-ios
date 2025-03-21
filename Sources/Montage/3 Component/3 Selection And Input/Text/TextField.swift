@@ -288,10 +288,9 @@ private extension TextInput.TextField {
             }
         }
         .frame(minHeight: 48)
-        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 12)
-        )
+        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .white)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         .allowsHitTesting(disable == false)
         .overlay {
             autoCompletionContent.opacity(0)
