@@ -11,15 +11,15 @@ public struct Cell: View {
     // MARK: - Types
     /// 좌우 컨텐츠 크기를 나타내는 열거형입니다.
     public enum ContentHeight {
-        case pt24
-        case pt40
-        case pt56
+        case medim
+        case large
+        case xlarge
         
         public var maxHeight: CGFloat {
             switch self {
-            case .pt24: 24
-            case .pt40: 40
-            case .pt56: 56
+            case .medim: 24
+            case .large: 40
+            case .xlarge: 56
             }
         }
     }
@@ -158,7 +158,7 @@ public struct Cell: View {
     private var active = false
     private var divider = false
     private var chevron = false
-    private var extraContentMaxHeight: ContentHeight = .pt24
+    private var extraContentMaxHeight: ContentHeight = .medim
     private var leadingContent: (() -> any View)? = nil
     private var trailingContent: ((Bool) -> any View)? = nil
     private var interactionPadding: CGFloat = 12
@@ -241,7 +241,7 @@ public struct Cell: View {
         return zelf
     }
     
-    /// 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.pt24`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
+    /// 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.medim`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
     public func contentHeight(_ contentHeight: ContentHeight) -> Self {
         var zelf = self
         zelf.extraContentMaxHeight = contentHeight

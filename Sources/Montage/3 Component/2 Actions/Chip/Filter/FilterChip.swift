@@ -23,11 +23,11 @@ extension Chip {
         
         /// 칩의 사이즈를 결정하는 열거형입니다.
         public enum Size {
-            case normal, xsmall, small, large
+            case xsmall, small, medium, large
         }
         
         public var variant: Variant = .solid
-        public var size: Size = .normal
+        public var size: Size = .medium
         public var text = ""
         public var state: State = .normal
         public var interactionState: Decorate.Interaction.State = .normal
@@ -42,7 +42,7 @@ extension Chip {
         
         public init(
             variant: Variant = .solid,
-            size: Size = .normal,
+            size: Size = .medium,
             text: String,
             state: State = .normal,
             interactionState: Decorate.Interaction.State = .normal,
@@ -186,7 +186,7 @@ extension Chip.Filter.Size {
         switch self {
         case .large:
             .init(width: 16, height: 16)
-        case .normal:
+        case .medium:
             .init(width: 16, height: 16)
         case .small:
             .init(width: 16, height: 16)
@@ -199,7 +199,7 @@ extension Chip.Filter.Size {
         switch self {
         case .large:
             .body2
-        case .normal:
+        case .medium:
             .body2
         case .small:
             .label1
@@ -212,7 +212,7 @@ extension Chip.Filter.Size {
         switch self {
         case .large:
             .init(top: 9, left: 12, bottom: 9, right: 10)
-        case .normal:
+        case .medium:
             .init(top: 7, left: 11, bottom: 7, right: 9)
         case .small:
             .init(top: 6, left: 8, bottom: 6, right: 6)
@@ -225,7 +225,7 @@ extension Chip.Filter.Size {
         switch self {
         case .large:
             2.0
-        case .normal:
+        case .medium:
             2.0
         case .small:
             1.0
@@ -236,7 +236,7 @@ extension Chip.Filter.Size {
     
     var contentsPadding: CGFloat {
         switch self {
-        case .normal: 2.0
+        case .medium: 2.0
         case .small: 2.0
         case .large: 2.0
         case .xsmall: 1.0
@@ -247,7 +247,7 @@ extension Chip.Filter.Size {
         switch self {
         case .large:
             10.0
-        case .normal:
+        case .medium:
             10.0
         case .small:
             8.0

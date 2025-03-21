@@ -147,7 +147,7 @@ public struct Input: View {
                     )
                     .paragraph(variant: titleTypography.variant)
                     .multilineTextAlignment(.leading)
-                    .padding(.vertical, size == .normal ? 1 : 0)
+                    .padding(.vertical, size == .meidum ? 1 : 0)
                     .onTapGesture {
                         guard isDisable == false else { return }
                         stateBinding?.wrappedValue = state.isUnchecked ? .checked : .unchecked
@@ -159,7 +159,7 @@ public struct Input: View {
     }
 
     // MARK: - Modifiers
-    private var size: Control.Size = .normal
+    private var size: Control.Size = .meidum
     private var isDisable = false
     private var titleVariant: Typography.Variant?
     private var titleWeight: Typography.Weight?
@@ -167,7 +167,7 @@ public struct Input: View {
     private var isBold = false
     private var tight = false
 
-    /// 사이즈를 조정합니다. 기본값은 `.normal`입니다.
+    /// 사이즈를 조정합니다. 기본값은 `.meidum`입니다.
     public func size(_ size: Control.Size) -> Self {
         var zelf = self
         zelf.size = size

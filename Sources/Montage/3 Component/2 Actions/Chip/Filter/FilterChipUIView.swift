@@ -25,7 +25,7 @@ extension Chip {
         }
         
         /// 칩의 사이즈입니다.
-        var size: Filter.Size = .normal {
+        var size: Filter.Size = .medium {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()

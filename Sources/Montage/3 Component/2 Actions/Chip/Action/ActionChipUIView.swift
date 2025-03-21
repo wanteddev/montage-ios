@@ -18,7 +18,7 @@ extension Chip {
         }
         
         /// 칩의 사이즈입니다.
-        var size: Action.Size = .normal {
+        var size: Action.Size = .medium {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -496,7 +496,7 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             .init(width: 16, height: 16)
-        case .normal:
+        case .medium:
             .init(width: 14, height: 14)
         case .small:
             .init(width: 14, height: 14)
@@ -509,7 +509,7 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             .body2
-        case .normal:
+        case .medium:
             .label1
         case .small:
             .label1
@@ -522,7 +522,7 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             .init(top: 9, left: 12, bottom: 9, right: 12)
-        case .normal:
+        case .medium:
             .init(top: 7, left: 11, bottom: 7, right: 11)
         case .small:
             .init(top: 6, left: 8, bottom: 6, right: 8)
@@ -535,7 +535,7 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             3
-        case .normal:
+        case .medium:
             3
         case .small:
             2
@@ -547,7 +547,7 @@ extension Chip.Action.Size {
     var textLabelPadding: CGFloat {
         switch self {
         case .large: 2.0
-        case .normal: 2.0
+        case .medium: 2.0
         case .small: 2.0
         case .xsmall: 1.0
         }
@@ -557,7 +557,7 @@ extension Chip.Action.Size {
         switch self {
         case .large:
             10.0
-        case .normal:
+        case .medium:
             8.0
         case .small:
             8.0

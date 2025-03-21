@@ -84,7 +84,7 @@ public struct Avatar: View {
     private let size: Size
     private let onTap: (() -> Void)?
     
-    public init(_ imageUrl: String, variant: Variant, size: Size, onTap: (() -> Void)? = nil) {
+    public init(_ imageUrl: String, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
         self.imageUrl = imageUrl
         self.variant = variant
         self.size = size

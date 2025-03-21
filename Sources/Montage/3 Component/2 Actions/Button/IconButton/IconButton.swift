@@ -12,8 +12,8 @@ extension Button.IconButton {
     public enum Variant {
         /// 버튼 사이즈를 결정하는 열거형입니다.
         public enum Size {
-            case normal
             case small
+            case medium
             case custom(size: Int)
         }
         
@@ -117,8 +117,8 @@ extension Button.IconButton.Variant {
         case .background(_, _): 6
         case let .outlined(size), let .solid(size):
             switch size {
-            case .normal: 10
             case .small: 7
+            case .medium: 10
             case .custom(_): 6
             }
         }
@@ -137,10 +137,10 @@ extension Button.IconButton.Variant {
         case .background(let size, _): .init(width: size, height: size)
         case .outlined(let variant), .solid(let variant):
             switch variant {
-            case .normal:
-                .init(width: 20, height: 20)
             case .small:
                 .init(width: 18, height: 18)
+            case .medium:
+                    .init(width: 20, height: 20)
             case .custom(let size):
                 .init(width: size, height: size)
             }

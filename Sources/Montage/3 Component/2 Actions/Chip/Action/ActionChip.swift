@@ -17,11 +17,11 @@ extension Chip {
         
         /// 칩의 사이즈를 결정하는 열거형입니다.
         public enum Size: String {
-            case normal, xsmall, small, large
+            case xsmall, small, medium, large
         }
         
         public var variant: Variant = .solid
-        public var size: Size = .normal
+        public var size: Size = .medium
         public var text = ""
         public var state: Decorate.Interaction.State = .normal
         public var disable = false
@@ -35,7 +35,7 @@ extension Chip {
         
         public init(
             variant: Variant = .solid,
-            size: Size = .normal,
+            size: Size = .medium,
             text: String,
             state: Decorate.Interaction.State = .normal,
             disable: Bool = false,

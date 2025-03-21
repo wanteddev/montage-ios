@@ -31,7 +31,7 @@ extension Badge {
         
         public init(
             variant: Badge.ContentUIView.Variant = .solid,
-            size: Badge.ContentUIView.Size = .medium,
+            size: Badge.ContentUIView.Size = .small,
             color: Badge.ContentUIView.ColorStyle = .neutral,
             leadingIcon: Image? = nil,
             trailingIcon: Image? = nil,
@@ -101,19 +101,19 @@ fileprivate struct Preview: View {
 
             HStack {
                 Badge.Content(
-                    variant: .solid, size: .normal, text: text
+                    variant: .solid, size: .xsmall, text: text
                 )
 
                 Badge.Content(
-                    variant: .outlined, size: .normal, text: text
+                    variant: .outlined, size: .xsmall, text: text
                 )
 
                 Badge.Content(
-                    variant: .solid, size: .medium, text: text
+                    variant: .solid, size: .small, text: text
                 )
 
                 Badge.Content(
-                    variant: .outlined, size: .medium, text: text
+                    variant: .outlined, size: .small, text: text
                 )
             }
     
