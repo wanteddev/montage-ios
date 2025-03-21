@@ -51,7 +51,7 @@ public struct ActionArea: View, KeyboardReadable {
                         .frame(height: 40)
                         .offset(y: -20)
                     }
-                    .opacity(gradientOpacity)
+                    .opacity(clearBackground ? 0 : gradientOpacity)
             }
             
             VStack(spacing: 16) {
