@@ -74,7 +74,7 @@ public struct Cell: View {
                             Text(title)
                                 .montage(
                                     variant: titleTypography.variant,
-                                    weight: titleTypography.weight,
+                                    weight: active ? .medium : titleTypography.weight,
                                     semantic: normalTitleColor
                                 )
                                 .paragraph(variant: titleTypography.variant)
