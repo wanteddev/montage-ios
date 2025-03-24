@@ -415,7 +415,10 @@ public struct Select: View {
                                 .trailingContent { active in
                                     Group {
                                         if active {
-                                            Control.checkmark(checked: active)
+                                            Image.montage(.check)
+                                                .resizable()
+                                                .foregroundStyle(SwiftUI.Color.semantic(.primaryNormal))
+                                                .frame(width: 24, height: 24)
                                         }
                                     }
                                 }
