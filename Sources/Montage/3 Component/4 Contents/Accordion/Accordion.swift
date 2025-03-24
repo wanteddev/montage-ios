@@ -54,7 +54,7 @@ public struct Accordion: View {
     ) = (.label1, .regular, .semantic(.labelNeutral))
     private var verticalPadding: VerticalPadding = .pt12
     private var fillWidth = false
-    private var divider = false
+    private var hideDivider = false
     private var leadingIcon: Icon? = nil
     private var leadingIconColor: SwiftUI.Color? = nil
     private var trailingContent: (() -> any View)? = nil
@@ -99,10 +99,10 @@ public struct Accordion: View {
         return zelf
     }
     
-    /// 아래에 구분선을 추가합니다. 기본값은 `false`입니다.
-    public func divider(_ divider: Bool = true) -> Self {
+    /// 아래에 구분선을 제거합니다. 기본값은 `false`입니다.
+    public func hideDivider(_ hideDivider: Bool = true) -> Self {
         var zelf = self
-        zelf.divider = divider
+        zelf.hideDivider = hideDivider
         return zelf
     }
     
@@ -227,7 +227,7 @@ public struct Accordion: View {
                 .frame(height: 1)
                 .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))
                 .background()
-                .if(divider)
+                .if(!hideDivider)
         }
     }
 }

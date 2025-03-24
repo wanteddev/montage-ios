@@ -47,6 +47,7 @@ extension TextInput {
             fileprivate let cellForItemAt: (IndexPath) -> any View
             fileprivate let headerView: (() -> any View)?
             fileprivate let footerView: (() -> any View)?
+            fileprivate let maxHeight: CGFloat
             
             public init(
                 numberOfSections: Int = 1,
@@ -54,7 +55,8 @@ extension TextInput {
                 numberOfItemsInSection: @escaping (Int) -> Int,
                 cellForItemAt: @escaping (IndexPath) -> any View,
                 headerView: (() -> any View)? = nil,
-                footerView: (() -> any View)? = nil
+                footerView: (() -> any View)? = nil,
+                maxHeight: CGFloat = 400
             ) {
                 self.numberOfSections = numberOfSections
                 self.sectionTitleAt = sectionTitleAt
@@ -62,6 +64,7 @@ extension TextInput {
                 self.cellForItemAt = cellForItemAt
                 self.headerView = headerView
                 self.footerView = footerView
+                self.maxHeight = maxHeight
             }
             
             public var totalNumberOfItems: Int {
@@ -245,7 +248,7 @@ private extension TextInput.TextField {
                         }
                     }
                     
-                    if trailingButton == nil, let trailingContent {
+                    if let trailingContent {
                         AnyView(trailingContent())
                     }
                 }
@@ -285,10 +288,9 @@ private extension TextInput.TextField {
             }
         }
         .frame(minHeight: 48)
-        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 12)
-        )
+        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .white)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         .allowsHitTesting(disable == false)
         .overlay {
             autoCompletionContent.opacity(0)
@@ -316,7 +318,7 @@ private extension TextInput.TextField {
                     }
                     .frame(
                         width: textFieldFrame.width,
-                        height: min(autoCompletionContentHeight, 400)
+                        height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
                     .background {
                         RoundedRectangle(cornerRadius: 12)
@@ -324,12 +326,14 @@ private extension TextInput.TextField {
                     }
                     .background(SwiftUI.Color.semantic(.backgroundNormal))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .scrollDisabled(autoCompletionContentHeight <= 400)
+                    .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .position(
                         x: textFieldFrame.midX,
                         y: textFieldFrame.maxY - safeAreaInsets.top
                     )
-                    .offset(y: 8 + min(autoCompletionContentHeight, 400) / 2)
+                    .offset(
+                        y: 8 + min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0) / 2
+                    )
                 }
             )
         )
@@ -465,33 +469,27 @@ private extension TextInput.TextField {
             Text(title)
                 .montage(variant: .body1, weight: variant.typoWeight, semantic: variant.textColor)
                 .paragraph(variant: .body1)
+                .padding(.horizontal, 19)
+                .padding(.vertical, 12)
                 .background(
                     Decorate.Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .labelNormal
                     )
-                    .padding(.horizontal, -7)
-                    .padding(.vertical, -4)
                 )
-                .gesture(
+                .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
                             isPressed = value.translation == .zero
                         }
-                        .onEnded { value in
+                        .onEnded { _ in
                             isPressed = false
-                            if value.translation == .zero {
-                                handler?()
-                            }
                         }
                 )
-                .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(SwiftUI.Color.clear)
+                .onTapGesture {
+                    handler?()
                 }
-                .padding(.horizontal, 19)
-                .padding(.vertical, 12)
         }
     }
 }

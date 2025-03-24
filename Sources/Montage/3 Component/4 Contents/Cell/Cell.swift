@@ -133,18 +133,18 @@ public struct Cell: View {
         ))
         .contentShape(Rectangle())
         .allowsHitTesting(disable == false)
-        .gesture(
+        .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isPressed = value.translation == .zero
                 }
-                .onEnded { value in
+                .onEnded { _ in
                     isPressed = false
-                    if value.translation == .zero {
-                        onTap?()
-                    }
                 }
         )
+        .onTapGesture {
+            onTap?()
+        }
     }
     
     // MARK: - Modifiers

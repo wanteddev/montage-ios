@@ -316,195 +316,23 @@ extension Button {
                         .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
             )
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         isPressed = value.translation == .zero
                     }
-                    .onEnded { value in
+                    .onEnded { _ in
                         isPressed = false
-                        if value.translation == .zero {
-                            handler?()
-                        }
                     }
             )
+            .onTapGesture {
+                handler?()
+            }
             .frame(
                 width: variant.iconSize.width + variant.backgroundOffset + padding,
                 height: variant.iconSize.height + variant.backgroundOffset + padding
             )
             .allowsHitTesting(disable == false)
-        }
-    }
-}
-
-struct IconButton_Previews: PreviewProvider {
-    static var previews: some View {
-        IconButtonPreview()
-            .padding()
-            .previewLayout(.sizeThatFits)
-    }
-}
-
-struct IconButtonPreview: View {
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("variant").montage()
-            
-            HStack {
-                Button.IconButton(
-                    icon: .apps
-                ) {
-                    debugPrint(">>> hello world!")
-                }
-                
-                Button.IconButton(
-                    icon: .bookmark,
-                    showPushBadge: true
-                ) {
-                    debugPrint(">>> hello world!")
-                }
-
-                Button.IconButton(
-                    variant: .background(size: 20),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .background(size: 20, isAlternative: true),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .normal),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .solid(size: .normal),
-                    icon: .apps
-                )
-            }
-            
-            Text("size").montage()
-            
-            HStack {
-                Button.IconButton(
-                    variant: .normal(size: 28),
-                    icon: .apps
-                ) {
-                    debugPrint(">>> hello world!")
-                }
-                
-                Button.IconButton(
-                    variant: .background(size: 36),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .normal),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .small),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .custom(size: 12)),
-                    icon: .apps
-                )
-                
-                Button.IconButton(
-                    variant: .solid(size: .custom(size: 12)),
-                    icon: .apps
-                )
-            }
-            
-            Text("disable").montage()
-            
-            HStack {
-                Button.IconButton(
-                    variant: .normal(size: 28),
-                    icon: .apps,
-                    disable: true
-                ) {
-                    debugPrint(">>> hello world!")
-                }
-                
-                Button.IconButton(
-                    variant: .background(size: 36),
-                    icon: .apps,
-                    disable: true
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .custom(size: 12)),
-                    icon: .apps,
-                    disable: true
-                )
-                
-                Button.IconButton(
-                    variant: .solid(size: .custom(size: 12)),
-                    icon: .apps,
-                    disable: true
-                )
-            }
-            
-            Text("custom").montage()
-            
-            HStack {
-                Button.IconButton(
-                    variant: .background(size: 10, isAlternative: false),
-                    icon: .chat,
-                    iconColor: .atomic(.blue50)
-                )
-                
-                Button.IconButton(
-                    icon: .apps,
-                    iconColor: .semantic(.accentBackgroundLightBlue)
-                ) {
-                    debugPrint(">>> hello world!")
-                }
-                
-                Button.IconButton(
-                    variant: .background(size: 20),
-                    icon: .apps,
-                    iconColor: .semantic(.accentBackgroundPink)
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .normal),
-                    icon: .apps,
-                    iconColor: .semantic(.accentBackgroundRedOrange)
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .normal),
-                    icon: .apps,
-                    padding: 3
-                )
-                
-                Button.IconButton(
-                    variant: .outlined(size: .normal),
-                    icon: .apps,
-                    padding: 3,
-                    borderColor: .semantic(.primaryHeavy)
-                )
-                
-                Button.IconButton(
-                    variant: .solid(size: .small),
-                    icon: .apps,
-                    iconColor: .semantic(.accentBackgroundRedOrange),
-                    borderColor: .semantic(.accentBackgroundLime)
-                )
-                
-                Button.IconButton(
-                    variant: .solid(size: .small),
-                    icon: .apps,
-                    borderColor: .semantic(.accentBackgroundLime)
-                )
-            }
         }
     }
 }

@@ -131,18 +131,18 @@ public struct Avatar: View {
                 .clipShape(RoundedRectangle(cornerRadius: variant.interactionCornerRadius(size: size)))
             }
         }
-        .gesture(
+        .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     isPressed = value.translation == .zero
                 }
-                .onEnded { value in
+                .onEnded { _ in
                     isPressed = false
-                    if value.translation == .zero {
-                        onTap?()
-                    }
                 }
         )
+        .onTapGesture {
+            onTap?()
+        }
     }
     
     private var pushBadge = false
