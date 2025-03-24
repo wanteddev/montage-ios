@@ -24,7 +24,7 @@ extension Badge {
         
         /// 뱃지의 사이즈를 결정하는 열거형입니다.
         public enum Size: String, CaseIterable {
-            case normal, medium, large
+            case xsmall, small, medium
         }
         
         /// 뱃지의 색상을 결정하는 열거형입니다.
@@ -40,7 +40,7 @@ extension Badge {
         }
         
         /// 뱃지의 사이즈입니다.
-        public var size: Size = .medium {
+        public var size: Size = .small {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -253,55 +253,55 @@ extension Badge.ContentUIView {
 extension Badge.ContentUIView.Size {
     var iconSize: CGSize {
         switch self {
-        case .normal:
+        case .xsmall:
             .init(width: 12, height: 12)
-        case .medium:
+        case .small:
             .init(width: 14, height: 14)
-        case .large:
+        case .medium:
             .init(width: 16, height: 16)
         }
     }
     
     var typoVariant: Typography.Variant {
         switch self {
-        case .normal:
+        case .xsmall:
             .caption2
-        case .medium:
+        case .small:
             .caption1
-        case .large:
+        case .medium:
             .label2
         }
     }
     
     var edgeInsets: UIEdgeInsets {
         switch self {
-        case .normal:
+        case .xsmall:
             .init(top: 3, left: 6, bottom: 3, right: 6)
-        case .medium:
+        case .small:
             .init(top: 4, left: 6, bottom: 4, right: 6)
-        case .large:
+        case .medium:
             .init(top: 5, left: 8, bottom: 5, right: 8)
         }
     }
 
     var cornerRadius: CGFloat {
         switch self {
-        case .normal:
+        case .xsmall:
+            6.0
+        case .small:
             6.0
         case .medium:
-            6.0
-        case .large:
             8.0
         }
     }
     
     var spacing: CGFloat {
         switch self {
-        case .normal:
+        case .xsmall:
             2
-        case .medium:
+        case .small:
             3
-        case .large:
+        case .medium:
             4
         }
     }

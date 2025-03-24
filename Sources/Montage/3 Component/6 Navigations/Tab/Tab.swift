@@ -11,7 +11,7 @@ public struct Tab: View {
     // MARK: - Types
     /// 탭 아이템 너비를 결정하는 열거형입니다.
     public enum Resize {
-        case normal, fill
+        case hug, fill
     }
     
     /// 탭 아이템의 크기를 결정하는 열거형입니다.
@@ -46,7 +46,7 @@ public struct Tab: View {
                     HStack(spacing: 0) {
                         HStack(spacing: 0) {
                             ZStack(alignment: .bottomLeading) {
-                                HStack(spacing: resize == .normal ? 24 : 0) {
+                                HStack(spacing: resize == .hug ? 24 : 0) {
                                     ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                                         ZStack {
                                             Text(item)
@@ -87,13 +87,13 @@ public struct Tab: View {
                                     .offset(
                                         x: itemWidths.enumerated()
                                             .filter { $0.offset < selectedIndex }
-                                            .reduce(0) { $0 + $1.element + (resize == .normal ? 24 : 0) }
+                                            .reduce(0) { $0 + $1.element + (resize == .hug ? 24 : 0) }
                                     )
                             }
                             Spacer(minLength: 0)
-                                .if(resize == .normal)
+                                .if(resize == .hug)
                         }
-                        .if(resize == .normal) {
+                        .if(resize == .hug) {
                             $0.padding(.leading, horizontalPadding ? 20 : 0)
                                 .padding(.trailing, horizontalPadding || icon != nil ? 20 : 0)
                                 .modifier(
@@ -116,7 +116,7 @@ public struct Tab: View {
                             }
                         }
                     
-                        if resize == .normal, let icon, let iconButtonAction {
+                        if resize == .hug, let icon, let iconButtonAction {
                             Button.IconButton(variant: .normal(size: iconSize), icon: icon) {
                                 iconButtonAction()
                             }
@@ -133,7 +133,7 @@ public struct Tab: View {
     }
     
     // MARK: - Modifiers
-    private var resize: Resize = .normal
+    private var resize: Resize = .hug
     private var size: Size = .medium
     private var horizontalPadding = false
     private var icon: Icon? = nil

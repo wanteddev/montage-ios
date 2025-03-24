@@ -10,7 +10,7 @@ import SwiftUI
 extension Pagination {
     public struct Counter: View {
         public enum Size: String, CaseIterable {
-            case normal, small
+            case small, medium
         }
         
         @Binding private var selectedPage: Int
@@ -62,7 +62,7 @@ extension Pagination {
             }
         }
         
-        private var size: Size = .normal
+        private var size: Size = .medium
         private var alternative = false
         
         public func size(_ size: Size) -> Self {
@@ -79,35 +79,35 @@ extension Pagination {
         
         private var typography: Typography.Variant {
             switch size {
-            case .normal: .body2
+            case .medium: .body2
             case .small: .label2
             }
         }
         
         private var width: CGFloat {
             switch size {
-            case .normal: 62
+            case .medium: 62
             case .small: 52
             }
         }
         
         private var height: CGFloat {
             switch size {
-            case .normal: 34
+            case .medium: 34
             case .small: 26
             }
         }
         
         private var horizontalPadding: CGFloat {
             switch size {
-            case .normal: 12
+            case .medium: 12
             case .small: 10
             }
         }
         
         private var verticalPadding: CGFloat {
             switch size {
-            case .normal: 6
+            case .medium: 6
             case .small: 4
             }
         }

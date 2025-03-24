@@ -186,7 +186,7 @@ private extension Category {
             switch size {
             case .small: .xsmall
             case .medium: .small
-            case .large: .normal
+            case .large: .medium
             case .xlarge: .large
             }
         }

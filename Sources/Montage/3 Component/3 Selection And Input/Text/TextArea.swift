@@ -416,7 +416,7 @@ extension TextInput {
                                 variant
                             } else {
                                 switch placement {
-                                case .leading: .outlined(size: .normal)
+                                case .leading: .outlined(size: .medium)
                                 case .trailing: .solid(size: .small)
                                 }
                             }
@@ -447,7 +447,7 @@ extension TextInput {
                 case let .badge(variant, title):
                     Badge.Content(
                         variant: variant,
-                        size: .large,
+                        size: .medium,
                         color: .neutral,
                         text: title
                     )
