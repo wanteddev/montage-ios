@@ -15,7 +15,7 @@ public struct Control: View {
     }
     
     public enum Size: String, CaseIterable {
-        case meidum, small
+        case medium, small
     }
     
     public enum State: String, CaseIterable {
@@ -40,7 +40,7 @@ public struct Control: View {
     init(
         variant: Variant,
         state: State,
-        size: Size = .meidum,
+        size: Size = .medium,
         onSelect: ((_ newValue: State) -> Void)? = nil
     ) {
         self.variant = variant
@@ -54,7 +54,7 @@ public struct Control: View {
     init(
         variant: Variant,
         checked: Bool,
-        size: Size = .meidum,
+        size: Size = .medium,
         onSelect: ((_ newValue: Bool) -> Void)? = nil
     ) {
         self.variant = variant
@@ -65,7 +65,7 @@ public struct Control: View {
         self.onSelect = onSelect == nil ? nil : { onSelect?(!$0.isUnchecked) }
     }
     
-    init(variant: Variant, stateBinding: Binding<State>, size: Size = .meidum) {
+    init(variant: Variant, stateBinding: Binding<State>, size: Size = .medium) {
         self.variant = variant
         initializedState = stateBinding.wrappedValue
         self.stateBinding = stateBinding
@@ -74,7 +74,7 @@ public struct Control: View {
         onSelect = nil
     }
     
-    init(variant: Variant, checkedBinding: Binding<Bool>, size: Size = .meidum) {
+    init(variant: Variant, checkedBinding: Binding<Bool>, size: Size = .medium) {
         self.variant = variant
         initializedState = checkedBinding.wrappedValue ? .checked : .unchecked
         stateBinding = nil
@@ -84,42 +84,42 @@ public struct Control: View {
     }
     
     public static func checkbox(
-        state: State, size: Size = .meidum, onSelect: ((State) -> Void)? = nil
+        state: State, size: Size = .medium, onSelect: ((State) -> Void)? = nil
     ) -> Self {
         .init(variant: .checkbox, state: state, size: size, onSelect: onSelect)
     }
     
     public static func checkbox(
-        checked: Bool, size: Size = .meidum, onSelect: ((Bool) -> Void)? = nil
+        checked: Bool, size: Size = .medium, onSelect: ((Bool) -> Void)? = nil
     ) -> Self {
         .init(variant: .checkbox, checked: checked, size: size, onSelect: onSelect)
     }
     
     public static func checkmark(
-        checked: Bool, size: Size = .meidum, onSelect: ((Bool) -> Void)? = nil
+        checked: Bool, size: Size = .medium, onSelect: ((Bool) -> Void)? = nil
     ) -> Self {
         .init(variant: .checkmark, checked: checked, size: size, onSelect: onSelect)
     }
     
     public static func radio(
-        checked: Bool, size: Size = .meidum, onSelect: ((Bool) -> Void)? = nil
+        checked: Bool, size: Size = .medium, onSelect: ((Bool) -> Void)? = nil
     ) -> Self {
         .init(variant: .radio, checked: checked, size: size, onSelect: onSelect)
     }
     
-    public static func checkbox(_ state: Binding<State>, size: Size = .meidum) -> Self {
+    public static func checkbox(_ state: Binding<State>, size: Size = .medium) -> Self {
         .init(variant: .checkbox, stateBinding: state, size: size)
     }
     
-    public static func checkbox(_ checked: Binding<Bool>, size: Size = .meidum) -> Self {
+    public static func checkbox(_ checked: Binding<Bool>, size: Size = .medium) -> Self {
         .init(variant: .checkbox, checkedBinding: checked, size: size)
     }
     
-    public static func checkmark(_ checked: Binding<Bool>, size: Size = .meidum) -> Self {
+    public static func checkmark(_ checked: Binding<Bool>, size: Size = .medium) -> Self {
         .init(variant: .checkmark, checkedBinding: checked, size: size)
     }
     
-    public static func radio(_ checked: Binding<Bool>, size: Size = .meidum) -> Self {
+    public static func radio(_ checked: Binding<Bool>, size: Size = .medium) -> Self {
         .init(variant: .radio, checkedBinding: checked, size: size)
     }
     
@@ -227,17 +227,17 @@ private extension Control {
         switch variant {
         case .checkbox:
             switch size {
-            case .meidum: .init(width: 16, height: 16)
+            case .medium: .init(width: 16, height: 16)
             case .small: .init(width: 14, height: 14)
             }
         case .checkmark:
             switch size {
-            case .meidum: .init(width: 24, height: 24)
+            case .medium: .init(width: 24, height: 24)
             case .small: .init(width: 20, height: 20)
             }
         case .radio:
             switch size {
-            case .meidum: .init(width: 16, height: 16)
+            case .medium: .init(width: 16, height: 16)
             case .small: .init(width: 14, height: 14)
             }
         }
@@ -263,7 +263,7 @@ private extension Control {
     
     var containerSize: CGSize {
         switch size {
-        case .meidum:
+        case .medium:
             .init(width: tight ? 20 : 24, height: 24)
         case .small:
             .init(width: tight ? 16 : 20, height: 20)
@@ -274,21 +274,21 @@ private extension Control {
         switch variant {
         case .checkbox:
             switch size {
-            case .meidum:
+            case .medium:
                 .init(width: 18, height: 18)
             case .small:
                 .init(width: 16, height: 16)
             }
         case .checkmark:
             switch size {
-            case .meidum:
+            case .medium:
                 .init(width: 24, height: 24)
             case .small:
                 .init(width: 20, height: 20)
             }
         case .radio:
             switch size {
-            case .meidum:
+            case .medium:
                 .init(width: 20, height: 20)
             case .small:
                 .init(width: 16, height: 16)
@@ -309,7 +309,7 @@ private extension Control {
     
     var interactionSize: CGSize {
         switch size {
-        case .meidum:
+        case .medium:
             .init(width: 32, height: 32)
         case .small:
             .init(width: 28, height: 28)
