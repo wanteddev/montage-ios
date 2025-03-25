@@ -225,7 +225,7 @@ extension TextInput {
         var editor: some View {
             VStack(spacing: 12) {
                 ZStack(alignment: .topLeading) {
-                    ResizableTextView(text: $text)
+                    UITextViewWrapper(text: $text)
                         .frameHeight(
                             minHeight: resize.minHeight,
                             maxHeight: resize.maxHeight
@@ -455,7 +455,7 @@ extension TextInput {
             }
         }
         
-        struct ResizableTextView: UIViewRepresentable {
+        struct UITextViewWrapper: UIViewRepresentable {
             @Binding var text: String
             
             init(
@@ -465,7 +465,7 @@ extension TextInput {
             }
             
             func makeUIView(context: Context) -> UITextView {
-                let textView = CustomTextView()
+                let textView = UITextView()
                 textView.font = UIFont.systemFont(ofSize: 16)
                 textView.isScrollEnabled = false
                 textView.backgroundColor = .clear
@@ -474,10 +474,8 @@ extension TextInput {
             }
             
             func updateUIView(_ uiView: UITextView, context: Context) {
+                guard uiView.text != text else { return }
                 uiView.text = text
-                context.coordinator.minHeight = minHeight
-                context.coordinator.maxHeight = maxHeight
-                context.coordinator.updateHeight(for: uiView, minHeight: minHeight, maxHeight: maxHeight)
             }
             
             func makeCoordinator() -> Coordinator {
@@ -485,47 +483,34 @@ extension TextInput {
             }
             
             class Coordinator: NSObject, UITextViewDelegate {
-                var parent: ResizableTextView
+                var parent: UITextViewWrapper
                 var minHeight: CGFloat?
                 var maxHeight: CGFloat?
                 private var heightConstraint: NSLayoutConstraint?
                 
-                init(_ parent: ResizableTextView) {
+                init(_ parent: UITextViewWrapper) {
                     self.parent = parent
                 }
                 
                 func textViewDidChange(_ textView: UITextView) {
-                    DispatchQueue.main.async {
-                        self.parent.text = textView.text
-                        self.updateHeight(
-                            for: textView,
-                            minHeight: self.minHeight,
-                            maxHeight: self.maxHeight
-                        )
-                    }
+                    textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                    parent.text = textView.text
                 }
-                
-                func updateHeight(for textView: UITextView, minHeight: CGFloat?, maxHeight: CGFloat?) {
-                    let newSize = textView.sizeThatFits(
-                        CGSize(width: textView.frame.width, height: CGFloat.greatestFiniteMagnitude)
-                    )
-                    let newHeight = min(max(newSize.height, minHeight ?? 0), maxHeight ?? 0)
-                    
-                    if newHeight >= maxHeight ?? 0 {
-                        textView.isScrollEnabled = true
-                    } else {
-                        textView.isScrollEnabled = false
-                    }
-                    
-                    if heightConstraint == nil {
-                        heightConstraint = textView.heightAnchor.constraint(equalToConstant: newHeight)
-                        heightConstraint?.isActive = true
-                    } else {
-                        heightConstraint?.constant = newHeight
-                    }
-                    
-                    textView.layoutIfNeeded()
-                }
+            }
+            
+            public func sizeThatFits(
+                _ proposal: ProposedViewSize,
+                uiView: UIViewType,
+                context _: Context
+            ) -> CGSize? {
+                var newSize = uiView.sizeThatFits(
+                    CGSize(width: proposal.width ?? 0, height: CGFloat.greatestFiniteMagnitude)
+                )
+                newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
+                return CGSize(
+                    width: proposal.width ?? 0,
+                    height: newSize.height
+                )
             }
             
             private var minHeight: CGFloat?
