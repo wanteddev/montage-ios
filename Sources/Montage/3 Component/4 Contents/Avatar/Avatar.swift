@@ -115,7 +115,7 @@ public struct Avatar: View {
         .clipShape(RoundedRectangle(cornerRadius: variant.cornerRadius(size: size)))
         .overlay {
             if variant == .person, pushBadge {
-                Badge.Push(variant: .dot)
+                PushBadge(variant: .dot)
                     .frame(width: size.badgeSize.width, height: size.badgeSize.height)
                     .position(x: size.containerSize.width)
             }

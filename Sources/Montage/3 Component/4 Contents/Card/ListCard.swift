@@ -150,17 +150,17 @@ import Pretendard
         },
         topContent: {
             HStack {
-                Badge.Content(text: "텍스트")
-                Badge.Content(text: "텍스트")
-                Badge.Content(text: "텍스트")
-                Badge.Content(text: "텍스트")
+                ContentBadge(text: "텍스트")
+                ContentBadge(text: "텍스트")
+                ContentBadge(text: "텍스트")
+                ContentBadge(text: "텍스트")
             }
         },
         bottomContent: {
             HStack {
-                Badge.Content(text: "텍스트")
-                Badge.Content(text: "텍스트")
-                Badge.Content(text: "텍스트")
+                ContentBadge(text: "텍스트")
+                ContentBadge(text: "텍스트")
+                ContentBadge(text: "텍스트")
             }
         },
         leadingContent: {

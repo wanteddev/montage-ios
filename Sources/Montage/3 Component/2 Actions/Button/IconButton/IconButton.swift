@@ -288,7 +288,7 @@ extension Button {
                     .foregroundStyle(_iconColor)
                 
                 if showPushBadge {
-                    Badge.Push(variant: .dot)
+                    PushBadge(variant: .dot)
                         .frame(width: 20, height: 20)
                         .offset(x: 10, y: -10)
                 }

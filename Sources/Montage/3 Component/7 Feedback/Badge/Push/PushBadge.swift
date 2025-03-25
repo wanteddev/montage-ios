@@ -1,5 +1,5 @@
 //
-//  Push.swift
+//  PushBadge.swift
 //  Montage
 //
 //  Created by Euigyom Kim on 2023/04/26.
@@ -8,96 +8,94 @@
 import Pretendard
 import SwiftUI
 
-extension Badge {
-    public struct Push: View {
-        // MARK: - Types
+public struct PushBadge: View {
+    // MARK: - Types
+    
+    public enum Variant: Equatable, CaseDescribable {
+        case dot, new, number(Int)
+    }
+    
+    public enum Size: String, CaseIterable {
+        case xsmall, small, medium
+    }
+    
+    public enum Position: CaseDescribable {
+        case top(HorizontalPosition = .center)
+        case center(HorizontalPosition = .center)
+        case bottom(HorizontalPosition = .center)
         
-        public enum Variant: Equatable, CaseDescribable {
-            case dot, new, number(Int)
+        public enum HorizontalPosition: String, CaseIterable {
+            case leading, center, trailing
         }
-        
-        public enum Size: String, CaseIterable {
-            case xsmall, small, medium
-        }
-        
-        public enum Position: CaseDescribable {
-            case top(HorizontalPosition = .center)
-            case center(HorizontalPosition = .center)
-            case bottom(HorizontalPosition = .center)
-            
-            public enum HorizontalPosition: String, CaseIterable {
-                case leading, center, trailing
+    }
+    
+    // MARK: - Initializer
+    
+    private let variant: Variant
+    public init(variant: Variant) {
+        self.variant = variant
+    }
+    
+    // MARK: - Body
+    
+    public var body: some View {
+        Group {
+            switch variant {
+            case .dot:
+                Circle()
+                    .frame(width: dotSize.width, height: dotSize.height)
+                    .foregroundColor(backgroundColor)
+            case .new:
+                Text("N")
+                    .font(font)
+                    .frame(minWidth: textMinSize.width)
+                    .frame(height: textMinSize.height)
+                    .foregroundStyle(fontColor)
+                    .padding(fontPadding)
+                    .background {
+                        Circle()
+                            .foregroundColor(backgroundColor)
+                    }
+            case .number(let number):
+                Text("\(number)")
+                    .font(font)
+                    .frame(minWidth: textMinSize.width)
+                    .frame(height: textMinSize.height)
+                    .foregroundStyle(fontColor)
+                    .padding(fontPadding)
+                    .background {
+                        RoundedRectangle(cornerRadius: 1000)
+                            .foregroundColor(backgroundColor)
+                    }
             }
         }
-        
-        // MARK: - Initializer
-        
-        private let variant: Variant
-        public init(variant: Variant) {
-            self.variant = variant
-        }
-        
-        // MARK: - Body
-        
-        public var body: some View {
-            Group {
-                switch variant {
-                case .dot:
-                    Circle()
-                        .frame(width: dotSize.width, height: dotSize.height)
-                        .foregroundColor(backgroundColor)
-                case .new:
-                    Text("N")
-                        .font(font)
-                        .frame(minWidth: textMinSize.width)
-                        .frame(height: textMinSize.height)
-                        .foregroundStyle(fontColor)
-                        .padding(fontPadding)
-                        .background {
-                            Circle()
-                                .foregroundColor(backgroundColor)
-                        }
-                case .number(let number):
-                    Text("\(number)")
-                        .font(font)
-                        .frame(minWidth: textMinSize.width)
-                        .frame(height: textMinSize.height)
-                        .foregroundStyle(fontColor)
-                        .padding(fontPadding)
-                        .background {
-                            RoundedRectangle(cornerRadius: 1000)
-                                .foregroundColor(backgroundColor)
-                        }
-                }
-            }
-        }
-        
-        // MARK: - Modifiers
-        private var size: Size = .xsmall
-        private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
-        private var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
-        
-        public func size(_ size: Size) -> Self {
-            var zelf = self
-            zelf.size = size
-            return zelf
-        }
-        
-        public func fontColor(_ color: SwiftUI.Color) -> Self {
-            var zelf = self
-            zelf.fontColor = color
-            return zelf
-        }
-        
-        public func backgroundColor(_ color: SwiftUI.Color) -> Self {
-            var zelf = self
-            zelf.backgroundColor = color
-            return zelf
-        }
+    }
+    
+    // MARK: - Modifiers
+    private var size: Size = .xsmall
+    private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
+    private var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
+    
+    public func size(_ size: Size) -> Self {
+        var zelf = self
+        zelf.size = size
+        return zelf
+    }
+    
+    public func fontColor(_ color: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.fontColor = color
+        return zelf
+    }
+    
+    public func backgroundColor(_ color: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.backgroundColor = color
+        return zelf
     }
 }
 
-private extension Badge.Push {
+private extension PushBadge {
     var font: Font? {
         switch size {
         case .xsmall, .small: .montage(variant: .caption2, weight: .bold)
@@ -130,7 +128,7 @@ private extension Badge.Push {
     }
 }
 
-extension Badge.Push {
+extension PushBadge {
     public struct Modifier: ViewModifier {
         private let variant: Variant
         private let size: Size
@@ -163,7 +161,7 @@ extension Badge.Push {
                     .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
                         contentSize = $0
                     })
-                Badge.Push(variant: variant)
+                PushBadge(variant: variant)
                     .size(size)
                     .fontColor(fontColor)
                     .backgroundColor(backgroundColor)
