@@ -113,13 +113,7 @@ public struct Avatar: View {
                 .strokeBorder(borderColor, lineWidth: borderWidth)
         }
         .clipShape(RoundedRectangle(cornerRadius: variant.cornerRadius(size: size)))
-        .overlay {
-            if variant == .person, pushBadge {
-                PushBadge(variant: .dot)
-                    .frame(width: size.badgeSize.width, height: size.badgeSize.height)
-                    .position(x: size.containerSize.width)
-            }
-        }
+        .pushBadge(variant: .dot, size: pushBadgeSize)
         .background {
             if !interactionDisabled {
                 Decorate.Interaction(
@@ -167,5 +161,15 @@ public struct Avatar: View {
         var zelf = self
         zelf.interactionDisabled = interactionDisabled
         return zelf
+    }
+}
+
+private extension Avatar {
+    var pushBadgeSize: PushBadge.Size {
+        switch size {
+        case .xsmall, .small: return .xsmall
+        case .medium, .large: return .small
+        case .xlarge: return .medium
+        }
     }
 }
