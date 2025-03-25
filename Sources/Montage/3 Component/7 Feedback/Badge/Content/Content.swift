@@ -8,242 +8,187 @@
 import SwiftUI
 
 extension Badge {
-    public struct Content: UIViewRepresentable {
-        /// 뱃지의 외관입니다.
-        public var variant: Badge.ContentUIView.Variant
+    public struct Content: View {
+        /// 뱃지의 외관을 결정하는 열거형 타입입니다.
+        public enum Variant {
+            case solid, outlined
+        }
         
-        /// 뱃지의 사이즈입니다.
-        public var size: Badge.ContentUIView.Size
+        /// 뱃지의 사이즈를 결정하는 열거형입니다.
+        public enum Size: String, CaseIterable {
+            case xsmall, small, medium
+        }
         
-        /// 뱃지에 사용될 색상 스타일입니다.
-        public var color: Badge.ContentUIView.ColorStyle
+        /// 뱃지의 색상을 결정하는 열거형입니다.
+        public enum ColorStyle: Equatable, Hashable {
+            case neutral, accent(_ content: SwiftUI.Color, background: SwiftUI.Color? = nil)
+        }
         
-        /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leadingIcon: Image?
+        private let variant: Variant
         
-        /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var trailingIcon: Image?
-        
-        /// 버튼에서 표현될 텍스트입니다.
-        public var text: String
-        
-        public typealias UIViewType = Badge.ContentUIView
-        
-        public init(
-            variant: Badge.ContentUIView.Variant = .solid,
-            size: Badge.ContentUIView.Size = .small,
-            color: Badge.ContentUIView.ColorStyle = .neutral,
-            leadingIcon: Image? = nil,
-            trailingIcon: Image? = nil,
-            text: String
-        ) {
+        public init(variant: Variant = .solid, text: String) {
             self.variant = variant
-            self.size = size
-            self.color = color
-            self.leadingIcon = leadingIcon
-            self.trailingIcon = trailingIcon
             self.text = text
         }
         
-        public func makeUIView(context _: Context) -> UIViewType {
-            .init()
-        }
+        // MARK: - Modifiers
         
-        public func updateUIView(_ uiView: UIViewType, context _: Context) {
-            uiView.variant = variant
-            uiView.size = size
-            uiView.colorStyle = color
-            uiView.leadingIcon = ImageRenderer(content: leadingIcon).uiImage
-            uiView.trailingIcon = ImageRenderer(content: trailingIcon).uiImage
-            uiView.text = text
-        }
-        
-        public func sizeThatFits(
-            _ proposal: ProposedViewSize,
-            uiView: UIViewType,
-            context _: Context
-        ) -> CGSize? {
-            CGSize(
-                width: fillHorizontal ? proposal.width ?? 0 : uiView.intrinsicContentSize.width,
-                height: fillVertical ? proposal.height ?? 0 : uiView.intrinsicContentSize.height
-            )
-        }
-        
+        private var size: Size = .small
+        private var colorStyle: ColorStyle = .neutral
+        private var leadingIcon: Icon? = nil
+        private var trailingIcon: Icon? = nil
+        private var text: String
         private var fillHorizontal = false
         private var fillVertical = false
+        
+        public func size(_ size: Size) -> Self {
+            var zelf = self
+            zelf.size = size
+            return zelf
+        }
+        
+        public func colorStyle(_ colorStyle: ColorStyle) -> Self {
+            var zelf = self
+            zelf.colorStyle = colorStyle
+            return zelf
+        }
+        
+        public func leadingIcon(_ leadingIcon: Icon) -> Self {
+            var zelf = self
+            zelf.leadingIcon = leadingIcon
+            return zelf
+        }
+        
+        public func trailingIcon(_ trailingIcon: Icon) -> Self {
+            var zelf = self
+            zelf.trailingIcon = trailingIcon
+            return zelf
+        }
+        
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
             zelf.fillHorizontal = fillHorizontal
             zelf.fillVertical = fillVertical
             return zelf
         }
-    }
-}
-
-fileprivate struct Preview: View {
-    @State var text = "안녕하세요"
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: .spacing(.pt20)) {
-            Text("Variant").montage(variant: .headline2)
-
-            HStack {
-                Badge.Content(
-                    variant: .solid, text: text
-                )
-
-                Badge.Content(
-                    variant: .outlined, text: text
-                )
-            }
-
-            Text("Size").montage(variant: .headline2)
-
-            HStack {
-                Badge.Content(
-                    variant: .solid, size: .xsmall, text: text
-                )
-
-                Badge.Content(
-                    variant: .outlined, size: .xsmall, text: text
-                )
-
-                Badge.Content(
-                    variant: .solid, size: .small, text: text
-                )
-
-                Badge.Content(
-                    variant: .outlined, size: .small, text: text
-                )
-            }
-    
-            Text("Accents").montage(variant: .headline2)
-    
-            Text("Solid").montage(variant: .body2)
-    
-            VStack(alignment: .leading) {
-                HStack {
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.primaryNormal)),
-                        leadingIcon: .montage(.circleInfoFill),
-                        text: "중요"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.statusPositive)),
-                        leadingIcon: .montage(.circleCheckFill),
-                        text: "긍정"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.statusCautionary)),
-                        leadingIcon: .montage(.circleExclamationFill),
-                        text: "경고"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.statusNegative)),
-                        leadingIcon: .montage(.circleCloseFill),
-                        text: "에러"
-                    )
+        
+        // MARK: - Body
+        
+        public var body: some View {
+            HStack(spacing: contentItemSpacing) {
+                if let leadingIcon {
+                    Image.montage(leadingIcon)
+                        .resizable()
+                        .foregroundStyle(contentColor)
+                        .frame(width: iconSize.width, height: iconSize.height)
                 }
-    
-                HStack {
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.accentBackgroundLime)),
-                        trailingIcon: Image(systemName: "rectangle.fill"),
-                        text: "라임"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.accentBackgroundCyan)),
-                        trailingIcon: Image(systemName: "rectangle.fill"),
-                        text: "시안"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.accentBackgroundLightBlue)),
-                        trailingIcon: Image(systemName: "rectangle.fill"),
-                        text: "라이트 블루"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.accentBackgroundViolet)),
-                        trailingIcon: Image(systemName: "rectangle.fill"),
-                        text: "바이올렛"
-                    )
-    
-                    Badge.Content(
-                        variant: .solid,
-                        color: .accent(.semantic(.accentBackgroundPink)),
-                        trailingIcon: Image(systemName: "rectangle.fill"),
-                        text: "핑크"
-                    )
+                Text(text)
+                    .montage(variant: typoVariant, weight: .medium, color: contentColor)
+                if let trailingIcon {
+                    Image.montage(trailingIcon)
+                        .resizable()
+                        .foregroundStyle(contentColor)
+                        .frame(width: iconSize.width, height: iconSize.height)
                 }
             }
-    
-            Text("Outlined").montage(variant: .body2)
-    
-            VStack(alignment: .leading) {
-                HStack {
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.primaryNormal)), text: "중요"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.statusPositive)), text: "긍정"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.statusCautionary)), text: "경고"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.statusNegative)), text: "에러"
-                    )
-                }
-                
-                HStack {
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentBackgroundLime)), text: "라임"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentBackgroundCyan)), text: "시안"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined,
-                        color: .accent(.semantic(.accentBackgroundLightBlue)),
-                        text: "라이트 블루"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentBackgroundViolet)), text: "바이올렛"
-                    )
-                    
-                    Badge.Content(
-                        variant: .outlined, color: .accent(.semantic(.accentBackgroundPink)), text: "핑크"
-                    )
+            .padding(contentEdgeInsets)
+            .background {
+                if variant == .solid {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(backgroundColor)
+                } else {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .strokeBorder(borderColor, lineWidth: borderWidth)
                 }
             }
         }
     }
 }
 
-struct ContentBadgeController_Previews: PreviewProvider {
-    static var previews: some View {
-        Preview()
-            .padding()
-            .background(SwiftUI.Color(.semantic(.backgroundNormal)))
-            .previewLayout(.sizeThatFits)
+private extension Badge.Content {
+    var iconSize: CGSize {
+        switch size {
+        case .xsmall:
+            .init(width: 12, height: 12)
+        case .small:
+            .init(width: 14, height: 14)
+        case .medium:
+            .init(width: 16, height: 16)
+        }
+    }
+    
+    var typoVariant: Typography.Variant {
+        switch size {
+        case .xsmall:
+            .caption2
+        case .small:
+            .caption1
+        case .medium:
+            .label2
+        }
+    }
+    
+    var contentColor: SwiftUI.Color {
+        switch colorStyle {
+        case .neutral:
+            return .semantic(.labelAlternative)
+        case let .accent(contentColor, _):
+            return contentColor
+        }
+    }
+    
+    var backgroundColor: SwiftUI.Color {
+        switch colorStyle {
+        case .neutral:
+            return variant == .solid ? .semantic(.fillNormal) : .clear
+        case let .accent(contentColor, backgroundColor):
+            return (backgroundColor ?? contentColor).opacity(0.08)
+        }
+    }
+    
+    var contentEdgeInsets: EdgeInsets {
+        switch size {
+        case .xsmall:
+            .init(top: 3, leading: 6, bottom: 3, trailing: 6)
+        case .small:
+            .init(top: 4, leading: 6, bottom: 4, trailing: 6)
+        case .medium:
+            .init(top: 5, leading: 8, bottom: 5, trailing: 8)
+        }
+    }
+    
+    var contentItemSpacing: CGFloat {
+        switch size {
+        case .xsmall:
+            2
+        case .small:
+            3
+        case .medium:
+            4
+        }
+    }
+    
+    var borderColor: SwiftUI.Color {
+        switch colorStyle {
+        case .neutral:
+            return variant == .solid ? .clear : .semantic(.lineNormal)
+        case let .accent(contentColor, backgroundColor):
+            return (backgroundColor ?? contentColor).opacity(0.43)
+        }
+    }
+    
+    var borderWidth: CGFloat {
+        variant == .outlined ? 1 : 0
+    }
+    
+    var cornerRadius: CGFloat {
+        switch size {
+        case .xsmall:
+            6.0
+        case .small:
+            6.0
+        case .medium:
+            8.0
+        }
     }
 }
