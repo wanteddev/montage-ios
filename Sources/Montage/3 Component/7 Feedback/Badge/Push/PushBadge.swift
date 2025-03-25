@@ -138,7 +138,7 @@ extension PushBadge {
         private let inset: CGSize
         
         public init(
-            variant: Variant,
+            variant: Variant = .dot,
             size: Size = .xsmall,
             fontColor: SwiftUI.Color = .semantic(.staticWhite),
             backgroundColor: SwiftUI.Color = .semantic(.primaryNormal),
