@@ -9,21 +9,6 @@ import SwiftUI
 
 public struct Cell: View {
     // MARK: - Types
-    /// 좌우 컨텐츠 크기를 나타내는 열거형입니다.
-    public enum ContentHeight {
-        case medim
-        case large
-        case xlarge
-        
-        public var maxHeight: CGFloat {
-            switch self {
-            case .medim: 24
-            case .large: 40
-            case .xlarge: 56
-            }
-        }
-    }
-    
     /// 상하 여백을 나타내는 열거형입니다.
     public enum VerticalPadding {
         case pt0
@@ -63,10 +48,6 @@ public struct Cell: View {
                 HStack(alignment: verticalAlignment, spacing: 8) {
                     if let leadingContent {
                         AnyView(leadingContent())
-                            .frame(
-                                height: extraContentMaxHeight.maxHeight
-                            )
-                            .clipped()
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
@@ -99,10 +80,6 @@ public struct Cell: View {
                     
                     if let trailingContent {
                         AnyView(trailingContent(active))
-                            .frame(
-                                height: extraContentMaxHeight.maxHeight
-                            )
-                            .clipped()
                     }
                     
                     VStack {
@@ -158,7 +135,6 @@ public struct Cell: View {
     private var active = false
     private var divider = false
     private var chevron = false
-    private var extraContentMaxHeight: ContentHeight = .medim
     private var leadingContent: (() -> any View)? = nil
     private var trailingContent: ((Bool) -> any View)? = nil
     private var interactionPadding: CGFloat = 12
@@ -238,13 +214,6 @@ public struct Cell: View {
     public func chevron(_ chevron: Bool = true) -> Self {
         var zelf = self
         zelf.chevron = chevron
-        return zelf
-    }
-    
-    /// 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.medim`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
-    public func contentHeight(_ contentHeight: ContentHeight) -> Self {
-        var zelf = self
-        zelf.extraContentMaxHeight = contentHeight
         return zelf
     }
     
