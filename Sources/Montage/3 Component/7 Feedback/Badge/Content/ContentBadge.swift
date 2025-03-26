@@ -37,8 +37,6 @@ public struct ContentBadge: View {
     private var leadingIcon: Icon? = nil
     private var trailingIcon: Icon? = nil
     private var text: String
-    private var fillHorizontal = false
-    private var fillVertical = false
     
     public func size(_ size: Size) -> Self {
         var zelf = self
@@ -55,19 +53,6 @@ public struct ContentBadge: View {
     public func leadingIcon(_ leadingIcon: Icon) -> Self {
         var zelf = self
         zelf.leadingIcon = leadingIcon
-        return zelf
-    }
-    
-    public func trailingIcon(_ trailingIcon: Icon) -> Self {
-        var zelf = self
-        zelf.trailingIcon = trailingIcon
-        return zelf
-    }
-    
-    public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
-        var zelf = self
-        zelf.fillHorizontal = fillHorizontal
-        zelf.fillVertical = fillVertical
         return zelf
     }
     
