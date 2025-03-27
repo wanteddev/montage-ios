@@ -56,6 +56,12 @@ public struct ContentBadge: View {
         return zelf
     }
     
+    public func trailingIcon(_ trailingIcon: Icon) -> Self {
+        var zelf = self
+        zelf.trailingIcon = trailingIcon
+        return zelf
+    }
+    
     // MARK: - Body
     
     public var body: some View {
