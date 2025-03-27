@@ -46,13 +46,13 @@ extension TextInput {
         
         /// TextArea 하단 좌/우측에 사용할 수 있는 컴포넌트입니다.
         /// > characterCount는 좌/우측 중 하나에만 사용 가능합니다. 중복된다면 좌측을 우선 표시합니다.
-        public enum Resource {
+        public enum Resource: CaseDescribable {
             public enum Placement {
                 case leading
                 case trailing
             }
             
-            case characterCount(limit: Int? = nil)
+            case characterCount(limit: Int? = nil, overflow: Bool = false)
             case textButton(
                 placement: Placement = .leading,
                 varaint: Button.TextButton.Variant? = .assistive,
@@ -120,6 +120,8 @@ extension TextInput {
         private var trailingResources: [Resource] = []
         private var leadingResourceSpacing: CGFloat = 4
         private var trailingResourceSpacing: CGFloat = 4
+        private var characterCounterLimit: Int?
+        private var characterCounterOverflow: Bool = false
         
         /// TextArea의 resize 여부 입니다.
         public func resize(_ resize: Resize) -> Self {
@@ -171,6 +173,15 @@ extension TextInput {
             
             zelf.trailingResources = Array(trailingResources.prefix(3))
             zelf.trailingResourceSpacing = trailingResourceSpacing
+            
+            let bottomResouces = leadingResources + filteredTrailingResources
+            if let characterCounter = bottomResouces.first(where: \.isCharacterCount),
+               case let .characterCount(limit, overflow) = characterCounter {
+                zelf.characterCounterLimit = limit
+                zelf.characterCounterOverflow = overflow
+            } else {
+                zelf.characterCounterLimit = nil
+            }
             return zelf
         }
         
@@ -226,6 +237,8 @@ extension TextInput {
             VStack(spacing: 12) {
                 ZStack(alignment: .topLeading) {
                     UITextViewWrapper(text: $text)
+                        .characterCountLimit(characterCounterLimit)
+                        .characterCountOverflow(characterCounterOverflow)
                         .frameHeight(
                             minHeight: resize.minHeight,
                             maxHeight: resize.maxHeight
@@ -249,6 +262,15 @@ extension TextInput {
                         .padding(.horizontal, -4.5)
                         .padding(.top, -4)
                         .padding(.bottom, -6)
+                        .onAppear {
+                            typedCharacters = text.count
+                        }
+                        .onChange(of: characterCounterLimit) { limit in
+                            updateText(limit: limit, overflow: characterCounterOverflow)
+                        }
+                        .onChange(of: characterCounterOverflow) { overflow in
+                            updateText(limit: characterCounterLimit, overflow: overflow)
+                        }
                     
                     if $text.wrappedValue.isEmpty, let placeholder {
                         Text(placeholder)
@@ -270,7 +292,7 @@ extension TextInput {
                         disable,
                         leadingResources,
                         leadingResourceSpacing,
-                        trailingResources,
+                        filteredTrailingResources,
                         trailingResourceSpacing
                     )
                 }
@@ -306,6 +328,21 @@ extension TextInput {
         
         private var editorTextColor: SwiftUI.Color {
             disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
+        }
+        
+        private var filteredTrailingResources: [Resource] {
+            if trailingResources.contains(where: \.isCharacterCount) &&
+                leadingResources.contains(where: \.isCharacterCount) {
+                Array(trailingResources.drop(while: \.isCharacterCount))
+            } else {
+                trailingResources
+            }
+        }
+        
+        private func updateText(limit: Int?, overflow: Bool) {
+            if !overflow && text.count > limit ?? .max {
+                text = String(text.prefix(limit ?? .max))
+            }
         }
         
         // MARK: - Inner View
@@ -357,8 +394,8 @@ extension TextInput {
                     } else {
                         if trailingResources.isEmpty == false {
                             HStack(spacing: trailingResourceSpacing) {
-                                ForEach(filteredTrailingResources.indices, id: \.self) { index in
-                                    component(filteredTrailingResources[index])
+                                ForEach(trailingResources.indices, id: \.self) { index in
+                                    component(trailingResources[index])
                                 }
                             }
                         }
@@ -366,31 +403,33 @@ extension TextInput {
                 }
             }
             
-            var filteredTrailingResources: [Resource] {
-                if trailingResources.contains(where: \.isCharacterCount) &&
-                    leadingResources.contains(where: \.isCharacterCount) {
-                    Array(trailingResources.drop(while: \.isCharacterCount))
-                } else {
-                    trailingResources
-                }
-            }
-            
             @ViewBuilder
             func component(_ resource: Resource) -> some View {
                 switch resource {
-                case .characterCount(let limit):
-                    let counterString = [typedCharacters, limit]
-                        .compactMap { $0 }
-                        .map(String.init)
-                        .joined(separator: "/")
-                    Text(counterString)
-                        .montage(
-                            variant: .label2,
-                            weight: .medium,
-                            semantic: disable ? .labelDisable : .labelAlternative
-                        )
-                        .paragraph(variant: .label2)
-                        .padding(.horizontal, 4)
+                case .characterCount(let limit, let overflow):
+                    HStack(spacing: 0) {
+                        Text(String(typedCharacters))
+                            .montage(
+                                variant: .label2,
+                                weight: .medium,
+                                semantic: disable ? .labelDisable : (
+                                    overflow && typedCharacters > limit ?? 0
+                                    ? .statusNegative
+                                    : .labelAlternative
+                                )
+                            )
+                            .paragraph(variant: .label2)
+                        if let limit {
+                            Text("/\(String(limit))")
+                                .montage(
+                                    variant: .label2,
+                                    weight: .medium,
+                                    semantic: disable ? .labelDisable : .labelAlternative
+                                )
+                                .paragraph(variant: .label2)
+                        }
+                    }
+                    .padding(.horizontal, 4)
                 case let .textButton(placement, variant, title, handler):
                     Button.TextButton(
                         variant: {
@@ -455,9 +494,7 @@ extension TextInput {
         struct UITextViewWrapper: UIViewRepresentable {
             @Binding var text: String
             
-            init(
-                text: Binding<String>
-            ) {
+            init(text: Binding<String>) {
                 _text = text
             }
             
@@ -471,8 +508,16 @@ extension TextInput {
             }
             
             func updateUIView(_ uiView: UITextView, context: Context) {
-                guard uiView.text != text else { return }
-                uiView.text = text
+                if uiView.text != text {
+                    uiView.text = text
+                }
+                if context.coordinator.parent.text != text {
+                    DispatchQueue.main.async {
+                        context.coordinator.parent.text = text
+                    }
+                }
+                context.coordinator.parent.limit = limit
+                context.coordinator.parent.overflow = overflow
             }
             
             func makeCoordinator() -> Coordinator {
@@ -488,8 +533,16 @@ extension TextInput {
                 init(_ parent: UITextViewWrapper) {
                     self.parent = parent
                 }
-
                 
+                func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+                    if let limit = parent.limit, !parent.overflow {
+                        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+                        if newText.count > limit {
+                            return false
+                        }
+                    }
+                    return true
+                }
                 
                 func textViewDidChange(_ textView: UITextView) {
                     let parentText = parent.text
@@ -517,8 +570,22 @@ extension TextInput {
                 )
             }
             
+            private var limit: Int?
+            private var overflow: Bool = false
             private var minHeight: CGFloat?
             private var maxHeight: CGFloat?
+            
+            func characterCountLimit(_ limit: Int?) -> Self {
+                var zelf = self
+                zelf.limit = limit
+                return zelf
+            }
+            
+            func characterCountOverflow(_ overflow: Bool) -> Self {
+                var zelf = self
+                zelf.overflow = overflow
+                return zelf
+            }
             
             func frameHeight(minHeight: CGFloat?, maxHeight: CGFloat?) -> Self {
                 var zelf = self
