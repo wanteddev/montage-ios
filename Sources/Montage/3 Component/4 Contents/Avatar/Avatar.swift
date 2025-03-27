@@ -98,7 +98,7 @@ public struct Avatar: View {
     public var body: some View {
         WebImage(url: URL(string: imageUrl)) { image in
             image.resizable()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
         } placeholder: {
             Image(variant.placeholderImageName, bundle: .module)
