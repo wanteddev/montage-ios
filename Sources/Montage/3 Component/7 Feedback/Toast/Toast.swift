@@ -14,7 +14,7 @@ public struct Toast: View {
         let message: String
         
         public init(
-            _ variant: Toast.Variant = .message,
+            _ variant: Toast.Variant = .normal(),
             message: String
         ) {
             self.variant = variant
@@ -22,11 +22,11 @@ public struct Toast: View {
         }
     }
 
-    public enum Variant: Equatable {
-        case message
-        case success
-        case warning
-        case custom(Montage.Icon, tint: Montage.Color.Semantic? = nil)
+    public enum Variant: Equatable, CaseDescribable {
+        case normal(Montage.Icon? = nil, tint: Montage.Color.Semantic? = nil)
+        case positive
+        case cautionary
+        case negative
     }
     
     public enum Location {
@@ -43,7 +43,7 @@ public struct Toast: View {
     private let location: Location
     
     init(
-        _ variant: Variant = .message,
+        _ variant: Variant = .normal(),
         message: String = "",
         _ location: Location = .bottom(offset: .zero)
     ) {
@@ -110,40 +110,52 @@ public struct Toast: View {
         
         var body: some View {
             switch variant {
-            case .message:
-                EmptyView()
-            case .success:
+            case let .normal(icon, tint):
+                if let icon {
+                    let tintColor: Montage.Color.Semantic = {
+                        if let tint {
+                            tint
+                        } else {
+                            .staticWhite
+                        }
+                    }()
+                    Image.montage(icon)
+                        .resizable()
+                        .foregroundStyle(SwiftUI.Color.semantic(tintColor))
+                        .frame(width: 22, height: 22)
+                } else {
+                    EmptyView()
+                }
+            case .positive:
                 ZStack {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
                     Image.montage(.circleCheckFill)
                         .resizable()
-                        .foregroundStyle(SwiftUI.Color.semantic(.statusPositive))
+                        .foregroundStyle(SwiftUI.Color.atomic(.green60))
                         .frame(width: 22, height: 22)
                 }
-            case .warning:
+            case .cautionary:
+                ZStack {
+                    Circle()
+                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+                        .frame(width: 11, height: 11)
+                    Image.montage(.triangleExclamationFill)
+                        .resizable()
+                        .foregroundStyle(SwiftUI.Color.atomic(.orange60))
+                        .frame(width: 22, height: 22)
+                }
+            case .negative:
                 ZStack {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
                     Image.montage(.circleExclamationFill)
                         .resizable()
-                        .foregroundStyle(SwiftUI.Color.semantic(.statusCautionary))
+                        .foregroundStyle(SwiftUI.Color.atomic(.red60))
                         .frame(width: 22, height: 22)
                 }
-            case let .custom(icon, tint):
-                let tintColor: Montage.Color.Semantic = {
-                    if let tint {
-                        tint
-                    } else {
-                        .staticWhite
-                    }
-                }()
-                Image.montage(icon)
-                    .resizable()
-                    .foregroundStyle(SwiftUI.Color.semantic(tintColor))
-                    .frame(width: 22, height: 22)
             }
         }
     }
@@ -212,18 +224,6 @@ extension Toast {
             case .short: 3
             case .long: 5
             }
-        }
-    }
-}
-
-struct Toast_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            Toast(.message, message: "메세지에 마침표를 찍어요.")
-            Toast.Contents(.message, "hello world!")
-            Toast.Contents(.success, "메세지에 마침표를 찍어요.")
-            Toast.Contents(.warning, "메세지에 마침표를 찍어요.")
-            Toast.Contents(.custom(.android), "아이콘이 예외적으로 필요한 경우에만 써요.")
         }
     }
 }
