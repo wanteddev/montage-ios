@@ -99,6 +99,7 @@ extension TextInput {
         private var trailingButton: TrailingButton? = nil
         private var trailingContent: (() -> any View)? = nil
         private var suggestions: Binding<[String]> = .constant([])
+        private var customBackgroundColor: SwiftUI.Color?
         
         /// 상태를 조정합니다.
         public func status(_ status: Status) -> Self {
@@ -153,6 +154,12 @@ extension TextInput {
         public func trailingContent(_ trailingContent: (() -> any View)?) -> Self {
             var zelf = self
             zelf.trailingContent = trailingContent
+            return zelf
+        }
+        
+        public func backgroundColor(_ color: SwiftUI.Color?) -> Self {
+            var zelf = self
+            zelf.customBackgroundColor = color
             return zelf
         }
         
@@ -288,7 +295,7 @@ private extension TextInput.TextField {
             }
         }
         .frame(minHeight: 48)
-        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .white)
+        .background(backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         .allowsHitTesting(disable == false)
@@ -337,6 +344,12 @@ private extension TextInput.TextField {
                 }
             )
         )
+    }
+    
+    var backgroundColor: SwiftUI.Color {
+        disable
+        ? .semantic(.interactionDisable)
+        : customBackgroundColor ?? .semantic(.backgroundNormal)
     }
     
     var captionTextColor: SwiftUI.Color {
