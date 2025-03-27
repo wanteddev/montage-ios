@@ -352,3 +352,26 @@ extension View {
         modifier(DebouncedGeometryChangeModifier(for: type, of: transform, for: dueTime, action: action))
     }
 }
+
+// MARK: - PushBadge {
+extension View {
+    public func pushBadge(
+        variant: PushBadge.Variant = .dot,
+        size: PushBadge.Size = .xsmall,
+        fontColor: SwiftUI.Color = .semantic(.staticWhite),
+        backgroundColor: SwiftUI.Color = .semantic(.primaryNormal),
+        position: PushBadge.Position = .top(.trailing),
+        inset: CGSize = .zero
+    ) -> some View {
+        modifier(
+            PushBadge.Modifier(
+                variant: variant,
+                size: size,
+                fontColor: fontColor,
+                backgroundColor: backgroundColor,
+                position: position,
+                inset: inset
+            )
+        )
+    }
+}

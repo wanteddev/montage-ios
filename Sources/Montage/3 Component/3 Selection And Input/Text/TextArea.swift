@@ -81,7 +81,7 @@ extension TextInput {
                 handler: (() -> Void)? = nil
             )
             case badge(
-                Badge.ContentUIView.Variant = .solid,
+                ContentBadge.Variant = .solid,
                 title: String
             )
             
@@ -445,12 +445,9 @@ extension TextInput {
                         handler: handler
                     )
                 case let .badge(variant, title):
-                    Badge.Content(
-                        variant: variant,
-                        size: .medium,
-                        color: .neutral,
-                        text: title
-                    )
+                    ContentBadge(variant: variant, text: title)
+                        .size(.medium)
+                        .colorStyle(.neutral)
                 }
             }
         }

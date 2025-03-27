@@ -7,128 +7,111 @@
 
 import UIKit
 
-extension Badge {
-    /// 컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다
-    @available(*, deprecated, message: "Use Badge.Content instead")
-    public class ContentUIView: UIView {
-        private enum Const {
-            static var defaultActiveColor: Color.Semantic = .primaryNormal
-            static var defaultInactiveColor: Color.Semantic = .labelDisable
-            static var defaultInteractionColor: Color.Semantic = .primaryNormal
-        }
-        
-        /// 뱃지의 외관을 결정하는 열거형 타입입니다.
-        public enum Variant {
-            case solid, outlined
-        }
-        
-        /// 뱃지의 사이즈를 결정하는 열거형입니다.
-        public enum Size: String, CaseIterable {
-            case xsmall, small, medium
-        }
-        
-        /// 뱃지의 색상을 결정하는 열거형입니다.
-        public enum ColorStyle: Equatable, Hashable {
-            case neutral, accent(_ content: UIColor, background: UIColor? = nil)
-        }
-        
-        /// 뱃지의 외관입니다.
-        public var variant: Variant = .solid {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 뱃지의 사이즈입니다.
-        public var size: Size = .small {
-            didSet {
-                setupUpdateableConstraints()
-                updateViews()
-            }
-        }
-        
-        /// 뱃지에 사용될 색상 스타일입니다.
-        public var colorStyle: ColorStyle = .neutral {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 텍스트의 좌측에 표현될 아이콘입니다.
-        public var leadingIcon: UIImage? {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 텍스트의 우측에 표현될 아이콘입니다.
-        public var trailingIcon: UIImage? {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        /// 버튼에서 표현될 텍스트입니다.
-        public var text = "" {
-            didSet {
-                updateViews()
-            }
-        }
-        
-        private lazy var stackView = UIStackView()
-        
-        private lazy var leadingIconView = UIImageView()
-        
-        private lazy var textLabel = UILabel()
-        
-        private lazy var trailingIconView = UIImageView()
-        
-        private var iconViewContraints: [NSLayoutConstraint] = []
-        
-        private var stackViewConstraints: [NSLayoutConstraint] = []
-        
-        /// 객체를 생성합니다.
-        public init() {
-            super.init(frame: .zero)
-            
-            setupViews()
-        }
-        
-        public required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            
-            setupViews()
-        }
-        
-        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            
+/// 컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다
+@available(*, deprecated, message: "Use ContentBadge instead")
+public class ContentBadgeUIView: UIView {
+    private enum Const {
+        static var defaultActiveColor: Color.Semantic = .primaryNormal
+        static var defaultInactiveColor: Color.Semantic = .labelDisable
+        static var defaultInteractionColor: Color.Semantic = .primaryNormal
+    }
+    
+    /// 뱃지의 외관입니다.
+    public var variant: ContentBadge.Variant = .solid {
+        didSet {
             updateViews()
         }
-        
-        override public func layoutSubviews() {
-            super.layoutSubviews()
-            
-            setupLayer()
+    }
+    
+    /// 뱃지의 사이즈입니다.
+    public var size: ContentBadge.Size = .small {
+        didSet {
+            setupUpdateableConstraints()
+            updateViews()
         }
-        
-        /// Element의 기본적인 사이즈를 정의합니다.
-        override public var intrinsicContentSize: CGSize {
-            let textSize = getAttributedText().size()
-            let iconSize = size.iconSize
-            let edgeInsets = size.edgeInsets
-            let iconCount = [leadingIcon, trailingIcon].filter { $0 != nil }.count
-            
-            return .init(
-                width: iconSize.width * CGFloat(iconCount) + size.spacing * CGFloat(iconCount) + textSize
-                    .width + edgeInsets.horizontal,
-                height: max(iconSize.height, textSize.height) + edgeInsets.vertical
-            )
+    }
+    
+    /// 뱃지에 사용될 색상 스타일입니다.
+    public var colorStyle: ContentBadge.ColorStyle = .neutral {
+        didSet {
+            updateViews()
         }
+    }
+    
+    /// 텍스트의 좌측에 표현될 아이콘입니다.
+    public var leadingIcon: UIImage? {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    /// 텍스트의 우측에 표현될 아이콘입니다.
+    public var trailingIcon: UIImage? {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    /// 버튼에서 표현될 텍스트입니다.
+    public var text = "" {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    private lazy var stackView = UIStackView()
+    
+    private lazy var leadingIconView = UIImageView()
+    
+    private lazy var textLabel = UILabel()
+    
+    private lazy var trailingIconView = UIImageView()
+    
+    private var iconViewContraints: [NSLayoutConstraint] = []
+    
+    private var stackViewConstraints: [NSLayoutConstraint] = []
+    
+    /// 객체를 생성합니다.
+    public init() {
+        super.init(frame: .zero)
+        
+        setupViews()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        setupViews()
+    }
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        updateViews()
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        setupLayer()
+    }
+    
+    /// Element의 기본적인 사이즈를 정의합니다.
+    override public var intrinsicContentSize: CGSize {
+        let textSize = getAttributedText().size()
+        let iconSize = iconSize
+        let edgeInsets = edgeInsets
+        let iconCount = [leadingIcon, trailingIcon].filter { $0 != nil }.count
+        
+        return .init(
+            width: iconSize.width * CGFloat(iconCount) + spacing * CGFloat(iconCount) + textSize
+                .width + edgeInsets.horizontal,
+            height: max(iconSize.height, textSize.height) + edgeInsets.vertical
+        )
     }
 }
 
-extension Badge.ContentUIView {
+extension ContentBadgeUIView {
     private func setupViews() {
         addSubview(stackView)
         
@@ -141,7 +124,7 @@ extension Badge.ContentUIView {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = size.spacing
+        stackView.spacing = spacing
         stackView.addArrangedSubview(leadingIconView)
         stackView.addArrangedSubview(textLabel)
         stackView.addArrangedSubview(trailingIconView)
@@ -161,10 +144,10 @@ extension Badge.ContentUIView {
         trailingIconView.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = [
-            leadingIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            leadingIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height),
-            trailingIconView.widthAnchor.constraint(equalToConstant: size.iconSize.width),
-            trailingIconView.heightAnchor.constraint(equalToConstant: size.iconSize.height)
+            leadingIconView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            leadingIconView.heightAnchor.constraint(equalToConstant: iconSize.height),
+            trailingIconView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            trailingIconView.heightAnchor.constraint(equalToConstant: iconSize.height)
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -176,7 +159,7 @@ extension Badge.ContentUIView {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        let insets = size.edgeInsets
+        let insets = edgeInsets
         
         let constraints = [
             stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: insets.left),
@@ -191,12 +174,12 @@ extension Badge.ContentUIView {
     }
     
     private func setupLayer() {
-        layer.cornerRadius = size.cornerRadius
+        layer.cornerRadius = cornerRadius
         layer.masksToBounds = true
     }
 }
 
-extension Badge.ContentUIView {
+extension ContentBadgeUIView {
     private func updateViews() {
         updateColor()
         updateIconView()
@@ -209,8 +192,8 @@ extension Badge.ContentUIView {
         backgroundColor = variant == .solid ? enclosureColor : .semantic(.backgroundNormal)
         layer.borderWidth = variant == .solid ? 0 : 1
         layer.borderColor = variant == .solid ? nil : enclosureColor.cgColor
-        leadingIconView.tintColor = colorStyle.contentColor
-        trailingIconView.tintColor = colorStyle.contentColor
+        leadingIconView.tintColor = contentColor
+        trailingIconView.tintColor = contentColor
     }
     
     private func updateIconView() {
@@ -234,25 +217,23 @@ extension Badge.ContentUIView {
     }
     
     private func getAttributedText() -> NSAttributedString {
-        ._montage(text, variant: size.typoVariant, weight: .medium, color: colorStyle.contentColor)
+        ._montage(text, variant: typoVariant, weight: .medium, color: contentColor)
     }
 }
 
-extension Badge.ContentUIView {
+extension ContentBadgeUIView {
     private var enclosureColor: UIColor {
         switch colorStyle {
         case .neutral:
             return variant == .solid ? .semantic(.fillNormal) : .semantic(.lineNormal)
         case let .accent(contentColor, enclosureColor):
             let opacity: CGFloat = variant == .solid ? .opacity(.p008) : .opacity(.p043)
-            return (enclosureColor ?? contentColor).withAlphaComponent(opacity)
+            return (enclosureColor ?? contentColor).uiColor.withAlphaComponent(opacity)
         }
     }
-}
-
-extension Badge.ContentUIView.Size {
+    
     var iconSize: CGSize {
-        switch self {
+        switch size {
         case .xsmall:
             .init(width: 12, height: 12)
         case .small:
@@ -263,7 +244,7 @@ extension Badge.ContentUIView.Size {
     }
     
     var typoVariant: Typography.Variant {
-        switch self {
+        switch size {
         case .xsmall:
             .caption2
         case .small:
@@ -274,7 +255,7 @@ extension Badge.ContentUIView.Size {
     }
     
     var edgeInsets: UIEdgeInsets {
-        switch self {
+        switch size {
         case .xsmall:
             .init(top: 3, left: 6, bottom: 3, right: 6)
         case .small:
@@ -285,7 +266,7 @@ extension Badge.ContentUIView.Size {
     }
 
     var cornerRadius: CGFloat {
-        switch self {
+        switch size {
         case .xsmall:
             6.0
         case .small:
@@ -296,7 +277,7 @@ extension Badge.ContentUIView.Size {
     }
     
     var spacing: CGFloat {
-        switch self {
+        switch size {
         case .xsmall:
             2
         case .small:
@@ -305,15 +286,13 @@ extension Badge.ContentUIView.Size {
             4
         }
     }
-}
-
-extension Badge.ContentUIView.ColorStyle {
+    
     var contentColor: UIColor {
-        switch self {
+        switch colorStyle {
         case .neutral:
             .semantic(.labelAlternative)
         case let .accent(contentColor, _):
-            contentColor
+            contentColor.uiColor
         }
     }
 }

@@ -273,26 +273,21 @@ extension Button {
         }
 
         public var body: some View {
-            ZStack(alignment: .topTrailing) {
-                Image.montage(icon)
-                    .resizable()
-                    .if(variant.isBackground) {
-                        $0.padding(2)
-                    } else: {
-                        $0
-                    }
-                    .frame(
-                        width: variant.iconSize.width,
-                        height: variant.iconSize.height
-                    )
-                    .foregroundStyle(_iconColor)
-                
-                if showPushBadge {
-                    Badge.Push(variant: .dot)
-                        .frame(width: 20, height: 20)
-                        .offset(x: 10, y: -10)
+            Image.montage(icon)
+                .resizable()
+                .if(variant.isBackground) {
+                    $0.padding(2)
+                } else: {
+                    $0
                 }
-            }
+                .frame(
+                    width: variant.iconSize.width,
+                    height: variant.iconSize.height
+                )
+                .foregroundStyle(_iconColor)
+                .if(showPushBadge) {
+                    $0.pushBadge()
+                }
             .background {
                 Decorate.Interaction(
                     state: isPressed ? .pressed : .normal,
