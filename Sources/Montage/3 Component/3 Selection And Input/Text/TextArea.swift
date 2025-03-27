@@ -491,8 +491,6 @@ extension TextInput {
                 init(_ parent: UITextViewWrapper) {
                     self.parent = parent
                 }
-
-                
                 
                 func textViewDidChange(_ textView: UITextView) {
                     let parentText = parent.text
