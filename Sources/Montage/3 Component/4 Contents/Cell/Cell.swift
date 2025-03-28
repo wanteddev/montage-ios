@@ -11,17 +11,17 @@ public struct Cell: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
     public enum VerticalPadding {
-        case pt0
-        case pt8
-        case pt12
-        case pt16
+        case none
+        case small
+        case medium
+        case large
         
         public var length: CGFloat {
             switch self {
-            case .pt0: 0
-            case .pt8: 8
-            case .pt12: 12
-            case .pt16: 16
+            case .none: 0
+            case .small: 8
+            case .medium: 12
+            case .large: 16
             }
         }
     }
@@ -127,7 +127,7 @@ public struct Cell: View {
     // MARK: - Modifiers
     
     private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight) = (.body1, .regular)
-    private var verticalPadding: VerticalPadding = .pt12
+    private var verticalPadding: VerticalPadding = .medium
     private var fillWidth = false
     private var textEllipsis = false
     private var caption: String? = nil
@@ -154,7 +154,7 @@ public struct Cell: View {
         return zelf
     }
     
-    /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
+    /// 상하 여백의 크기를 조정합니다. 기본값은 `.medium` 입니다.
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
         zelf.verticalPadding = verticalPadding
