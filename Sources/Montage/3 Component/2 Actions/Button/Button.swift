@@ -7,39 +7,37 @@
 
 import SwiftUI
 
-public enum Button {}
+public struct Button: View {
+    public enum Solid {
+        public enum Variant: String {
+            case primary, assistive
+        }
+        
+        public enum Size: String {
+            case small, medium, large
+        }
+    }
 
-public enum SolidButton {
-    public enum Variant: String {
-        case primary, assistive
+    public enum Outlined {
+        public enum Variant: String {
+            case primary, secondary, assistive
+        }
+        
+        public enum Size: String {
+            case small, medium, large
+        }
+    }
+
+    public enum Text {
+        public enum Variant: String {
+            case primary, assistive
+        }
+        
+        public enum Size: String {
+            case small, medium
+        }
     }
     
-    public enum Size: String {
-        case small, medium, large
-    }
-}
-
-public enum OutlinedButton {
-    public enum Variant: String {
-        case primary, secondary, assistive
-    }
-    
-    public enum Size: String {
-        case small, medium, large
-    }
-}
-
-public enum TextButton {
-    public enum Variant: String {
-        case primary, assistive
-    }
-    
-    public enum Size: String {
-        case small, medium
-    }
-}
-
-public struct MontageButton: View {
     // MARK: - Types
     internal enum Style {
         case solid, outlined, text
@@ -82,8 +80,8 @@ public struct MontageButton: View {
     }
     
     public static func solid(
-        variant: SolidButton.Variant = .primary,
-        size: SolidButton.Size = .large,
+        variant: Solid.Variant = .primary,
+        size: Solid.Size = .large,
         text: String,
         leadingIcon: Icon? = nil,
         trailingIcon: Icon? = nil,
@@ -101,8 +99,8 @@ public struct MontageButton: View {
     }
     
     public static func solid(
-        variant: SolidButton.Variant = .primary,
-        size: SolidButton.Size = .large,
+        variant: Solid.Variant = .primary,
+        size: Solid.Size = .large,
         icon: Icon,
         handler: (() -> Void)? = nil
     ) -> Self {
@@ -116,8 +114,8 @@ public struct MontageButton: View {
     }
     
     public static func outlined(
-        variant: OutlinedButton.Variant = .primary,
-        size: OutlinedButton.Size = .large,
+        variant: Outlined.Variant = .primary,
+        size: Outlined.Size = .large,
         text: String,
         leadingIcon: Icon? = nil,
         trailingIcon: Icon? = nil,
@@ -135,8 +133,8 @@ public struct MontageButton: View {
     }
     
     public static func outlined(
-        variant: OutlinedButton.Variant = .primary,
-        size: OutlinedButton.Size = .large,
+        variant: Outlined.Variant = .primary,
+        size: Outlined.Size = .large,
         icon: Icon,
         handler: (() -> Void)? = nil
     ) -> Self {
@@ -150,8 +148,8 @@ public struct MontageButton: View {
     }
     
     public static func text(
-        variant: TextButton.Variant = .primary,
-        size: TextButton.Size = .medium,
+        variant: Text.Variant = .primary,
+        size: Text.Size = .medium,
         text: String,
         leadingIcon: Icon? = nil,
         trailingIcon: Icon? = nil,
@@ -177,6 +175,8 @@ public struct MontageButton: View {
     private var fontVariant: Typography.Variant? = nil
     private var fontWeight: Typography.Weight? = nil
     private var loading = false
+    private var fillHorizontal = false
+    private var fillVertical = false
     
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -220,18 +220,27 @@ public struct MontageButton: View {
         return zelf
     }
     
+    public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
+        var zelf = self
+        zelf.fillHorizontal = fillHorizontal
+        zelf.fillVertical = fillVertical
+        return zelf
+    }
+    
     // MARK: - Body
     
     @State private var isPressed = false
     
     public var body: some View {
         ZStack {
+            SwiftUI.Color.clear
+            
             HStack(alignment: .center, spacing: 4) {
                 if let leadingIcon {
                     icon(leadingIcon)
                 }
                 if let text {
-                    Text(text)
+                    SwiftUI.Text(text)
                         .montage(
                             variant: fontVariant ?? typoVariant,
                             weight: fontWeight ?? typoWeight,
@@ -249,6 +258,7 @@ public struct MontageButton: View {
                     .foregroundColor(loadingColor)
             }
         }
+        .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
         .padding(edgeInsets)
         .background {
             RoundedRectangle(cornerRadius: cornerRadius)
@@ -284,7 +294,7 @@ public struct MontageButton: View {
     }
 }
 
-private extension MontageButton {
+private extension Button {
     var backgroundColor: SwiftUI.Color {
         switch style {
         case .solid:

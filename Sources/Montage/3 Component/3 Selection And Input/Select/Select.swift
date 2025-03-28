@@ -59,7 +59,7 @@ public struct Select: View {
     /// 왼쪽에 표시될 컨텐트 타입입니다.
     public enum LeadingContent: CaseDescribable {
         case icon(Icon)
-        case iconButton(Button.IconButton)
+        case iconButton(IconButton)
         case custom(() -> any View)
     }
 
@@ -298,7 +298,7 @@ public struct Select: View {
                             .foregroundStyle(SwiftUI.Color.semantic(.statusNegative))
                     }
                     
-                    Button.IconButton(
+                    IconButton(
                         variant: .normal(size: 16),
                         icon: .chevronDownThickSmall,
                         iconColor: disable ? SwiftUI.Color
@@ -350,11 +350,10 @@ public struct Select: View {
                             defaultMenuPresented.toggle()
                         }),
                         sub: .custom {
-                            Button.OutlinedButton(
+                            Button.outlined(
                                 variant: .assistive,
                                 size: .large,
-                                leadingIcon: .refresh,
-                                iconOnly: true
+                                icon: .refresh
                             ) {
                                 deselectAll()
                             }

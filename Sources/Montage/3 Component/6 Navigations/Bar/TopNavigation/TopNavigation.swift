@@ -200,7 +200,7 @@ extension Bar {
                 if let action {
                     switch action {
                     case .back(let action):
-                        Button.IconButton(
+                        IconButton(
                             variant: background
                                 ? .background(size: 24, isAlternative: alternative)
                                 : .default,
@@ -210,7 +210,7 @@ extension Bar {
                         }
                         .frame(width: 24, height: 24)
                     case let .icon(i, action):
-                        Button.IconButton(
+                        IconButton(
                             variant: background
                                 ? .background(size: 24, isAlternative: alternative)
                                 : .default,
@@ -257,7 +257,7 @@ extension Bar {
                             Group {
                                 switch button {
                                 case let .icon(i, s, action):
-                                    Button.IconButton(
+                                    IconButton(
                                         variant: background ?
                                             .background(size: 24, isAlternative: alternative) : .default,
                                         icon: i,
@@ -340,14 +340,12 @@ extension Bar {
                             }
                     }
                 } else {
-                    Button.TextButton(
-                        text: text,
-                        contentColor: .semantic(.labelNormal),
-                        fontVariant: .headline2,
-                        fontWeight: .regular
-                    ) {
+                    Button.text(text: text) {
                         action()
                     }
+                    .contentColor(.semantic(.labelNormal))
+                    .fontVariant(.headline2)
+                    .fontWeight(.regular)
                 }
             }
         }

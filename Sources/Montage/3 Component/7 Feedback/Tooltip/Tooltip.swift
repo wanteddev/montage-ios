@@ -433,7 +433,7 @@ extension Tooltip {
                                 .paragraph(variant: .label1)
                                 .padding(.horizontal, 2)
                             if showCloseButton {
-                                Button.IconButton(
+                                IconButton(
                                     variant: .normal(size: 16),
                                     icon: .close,
                                     iconColor: .semantic(.inverseLabel)

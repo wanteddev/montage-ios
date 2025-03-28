@@ -20,12 +20,12 @@ extension TextInput {
         
         /// 오른쪽 버튼의 속성을 가지고 있는 타입입니다.
         public struct TrailingButton {
-            fileprivate let variant: Montage.Button.OutlinedUIButton.Variant
+            fileprivate let variant: Button.Outlined.Variant
             fileprivate let title: String
             fileprivate let handler: (() -> Void)?
             
             public init(
-                variant: Montage.Button.OutlinedUIButton.Variant,
+                variant: Button.Outlined.Variant,
                 title: String,
                 handler: (() -> Void)? = nil
             ) {
@@ -470,11 +470,11 @@ private extension TextInput.TextField {
 // MARK: - Inner Views
 private extension TextInput.TextField {
     struct TrailingButtonView: View {
-        private let variant: Button.OutlinedUIButton.Variant
+        private let variant: Button.Outlined.Variant
         private let title: String
         private let handler: (() -> Void)?
         
-        init(variant: Button.OutlinedUIButton.Variant, title: String, handler: (() -> Void)?) {
+        init(variant: Button.Outlined.Variant, title: String, handler: (() -> Void)?) {
             self.variant = variant
             self.title = title
             self.handler = handler
@@ -484,7 +484,7 @@ private extension TextInput.TextField {
         
         var body: some View {
             Text(title)
-                .montage(variant: .body1, weight: variant.typoWeight, semantic: variant.textColor)
+                .montage(variant: .body1, weight: typoWeight, semantic: textColor)
                 .paragraph(variant: .body1)
                 .padding(.horizontal, 19)
                 .padding(.vertical, 12)
@@ -507,6 +507,22 @@ private extension TextInput.TextField {
                 .onTapGesture {
                     handler?()
                 }
+        }
+        
+        var textColor: Color.Semantic {
+            switch variant {
+            case .primary, .secondary:
+                .primaryNormal
+            case .assistive:
+                .labelNormal
+            }
+        }
+        
+        var typoWeight: Typography.Weight {
+            switch variant {
+            case .primary, .secondary: .bold
+            case .assistive: .medium
+            }
         }
     }
 }

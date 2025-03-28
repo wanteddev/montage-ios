@@ -55,13 +55,13 @@ extension TextInput {
             case characterCount(limit: Int? = nil, overflow: Bool = false)
             case textButton(
                 placement: Placement = .leading,
-                varaint: Button.TextButton.Variant? = .assistive,
+                varaint: Button.Text.Variant? = .assistive,
                 title: String,
                 handler: (() -> Void)? = nil
             )
             case iconButton(
                 placement: Placement = .leading,
-                variant: Button.IconButton.Variant? = .solid(size: .small),
+                variant: IconButton.Variant? = .solid(size: .small),
                 icon: Icon,
                 tintColor: SwiftUI.Color = .semantic(.labelAlternative),
                 handler: (() -> Void)? = nil
@@ -390,7 +390,7 @@ extension TextInput {
                     }
                     Spacer()
                     if negative {
-                        Button.IconButton(
+                        IconButton(
                             icon: .circleExclamationFill,
                             iconColor:
                             disable ? .semantic(.labelDisable) : .semantic(.statusNegative)
@@ -435,7 +435,7 @@ extension TextInput {
                     }
                     .padding(.horizontal, 4)
                 case let .textButton(placement, variant, title, handler):
-                    Button.TextButton(
+                    Button.text(
                         variant: {
                             if let variant {
                                 variant
@@ -453,7 +453,7 @@ extension TextInput {
                     .frame(maxHeight: 24)
                     .padding(.horizontal, 4)
                 case let .iconButton(placement, variant, icon, tintColor, handler):
-                    Button.IconButton(
+                    IconButton(
                         variant: {
                             if let variant {
                                 variant

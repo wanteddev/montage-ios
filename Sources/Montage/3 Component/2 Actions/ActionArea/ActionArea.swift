@@ -244,7 +244,7 @@ private extension ActionArea {
                 if let customButton = buttonInfo.custom {
                     AnyView(customButton())
                 } else {
-                    Button.SolidButton(
+                    Button.solid(
                         variant: .primary,
                         size: .large,
                         text: buttonInfo.text,
@@ -260,7 +260,7 @@ private extension ActionArea {
                 if let customButton = buttonInfo.custom {
                     AnyView(customButton())
                 } else {
-                    Button.OutlinedButton(
+                    Button.outlined(
                         variant: .secondary,
                         size: .large,
                         text: buttonInfo.text,
@@ -276,7 +276,7 @@ private extension ActionArea {
                 if let customButton = buttonInfo.custom {
                     AnyView(customButton())
                 } else {
-                    Button.OutlinedButton(
+                    Button.outlined(
                         variant: .assistive,
                         size: .large,
                         text: buttonInfo.text,
@@ -294,7 +294,7 @@ private extension ActionArea {
                 if let customButton = buttonInfo.custom {
                     AnyView(customButton())
                 } else {
-                    Button.TextButton(
+                    Button.text(
                         variant: .assistive,
                         size: .small,
                         text: buttonInfo.text,

@@ -83,6 +83,6 @@ public struct EmptyState: View {
         title: "타이틀이 들어갈수도 있고, 안들어dasfasdasfasda갈 수 도 있어요.",
         description: "상황에 대한 설명이 들어fdsasdasfasdasfasdasf asdasfasdafasd가요.\n설명은 최대 두 줄로 작성해요."
     ) {
-        Button.OutlinedButton(text: "텍스트")
+        Button.outlined(text: "텍스트")
     }
 }
