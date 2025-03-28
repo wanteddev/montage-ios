@@ -268,6 +268,10 @@ private extension TextInput.TextField {
                     action: { textFieldFrame = $0 }
                 )
             }
+            .contentShape(RoundedRectangle(cornerRadius: 12))
+            .onTapGesture {
+                textFieldFocusState = true
+            }
             
             if let trailingButton {
                 ZStack {
