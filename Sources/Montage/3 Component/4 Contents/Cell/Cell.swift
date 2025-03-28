@@ -10,7 +10,7 @@ import SwiftUI
 public struct Cell: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
-    public enum VerticalPadding {
+    public enum VerticalPadding: String, CaseIterable {
         case none
         case small
         case medium
@@ -138,7 +138,7 @@ public struct Cell: View {
     private var leadingContent: (() -> any View)? = nil
     private var trailingContent: ((Bool) -> any View)? = nil
     private var interactionPadding: CGFloat = 12
-    private var verticalAlignment: VerticalAlignment = .center
+    private var verticalAlignment: VerticalAlignment = .top
     
     /// 타이틀 텍스트의 `variant` 속성을 조정합니다. 기본값은 `.body1`입니다.
     public func titleVariant(_ variant: Typography.Variant) -> Self {

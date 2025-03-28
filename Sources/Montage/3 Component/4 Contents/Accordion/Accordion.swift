@@ -10,7 +10,7 @@ import SwiftUI
 public struct Accordion: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
-    public enum VerticalPadding {
+    public enum VerticalPadding: String, CaseIterable {
         case small
         case medium
         case large
