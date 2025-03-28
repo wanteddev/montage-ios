@@ -163,7 +163,7 @@ extension Card.Normal {
                                 }
 
                                 if let icons = model.toggleIcon {
-                                    Montage.Button.IconButton(
+                                    Montage.IconButton(
                                         icon: model.toggleIsOn ? icons.on : icons.off,
                                         iconColor: SwiftUI.Color.semantic(.staticWhite)
                                     ) {

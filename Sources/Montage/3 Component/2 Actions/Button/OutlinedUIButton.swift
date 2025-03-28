@@ -10,7 +10,7 @@ import UIKit
 extension Button {
     /// 외곽선으로 둘러 싸인 곡선 모서리 버튼입니다.
     /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
-    @available(*, deprecated, message: "Use `Montage.OutlinedButton` instead")
+    @available(*, deprecated, message: "Use `Montage.Button.outlined()` instead")
     public class OutlinedUIButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
         public enum Variant {
