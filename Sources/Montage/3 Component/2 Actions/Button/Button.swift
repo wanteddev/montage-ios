@@ -176,6 +176,7 @@ public struct MontageButton: View {
     private var customBorderColor: SwiftUI.Color? = nil
     private var fontVariant: Typography.Variant? = nil
     private var fontWeight: Typography.Weight? = nil
+    private var loading = false
     
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -213,25 +214,39 @@ public struct MontageButton: View {
         return zelf
     }
     
+    public func loading(_ loading: Bool = true) -> Self {
+        var zelf = self
+        zelf.loading = loading
+        return zelf
+    }
+    
     // MARK: - Body
     
     @State private var isPressed = false
     
     public var body: some View {
-        HStack(alignment: .center, spacing: 4) {
-            if let leadingIcon {
-                icon(leadingIcon)
+        ZStack {
+            HStack(alignment: .center, spacing: 4) {
+                if let leadingIcon {
+                    icon(leadingIcon)
+                }
+                if let text {
+                    Text(text)
+                        .montage(
+                            variant: fontVariant ?? typoVariant,
+                            weight: fontWeight ?? typoWeight,
+                            color: foregroundColor
+                        )
+                }
+                if let trailingIcon {
+                    icon(trailingIcon)
+                }
             }
-            if let text {
-                Text(text)
-                    .montage(
-                        variant: fontVariant ?? typoVariant,
-                        weight: fontWeight ?? typoWeight,
-                        color: foregroundColor
-                    )
-            }
-            if let trailingIcon {
-                icon(trailingIcon)
+            .opacity(loading ? 0 : 1)
+            
+            if loading {
+                Loading(kind: .circular, size: loadingSize)
+                    .foregroundColor(loadingColor)
             }
         }
         .padding(edgeInsets)
@@ -243,7 +258,7 @@ public struct MontageButton: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .strokeBorder(borderColor)
         }
-        .background {
+        .overlay {
             Decorate.Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: interactionVariant,
@@ -344,6 +359,25 @@ private extension MontageButton {
             }
         }
     }
+    
+    var loadingColor: SwiftUI.Color? {
+        if let contentColor {
+            contentColor
+        } else {
+            switch style {
+            case .solid:
+                switch variant {
+                case .primary, .secondary: .semantic(.staticWhite)
+                case .assistive: .semantic(.labelAssistive)
+                }
+            default:
+                switch variant {
+                case .primary, .secondary: .semantic(.primaryNormal)
+                case .assistive: .semantic(.labelAssistive)
+                }
+            }
+        }
+    }
 
     func icon(_ i: Icon) -> some View {
         Image.montage(i)
@@ -419,8 +453,8 @@ private extension MontageButton {
     
     var interactionVariant: Decorate.Interaction.Variant {
         switch variant {
-        case .primary: .normal
-        case .secondary, .assistive: .light
+        case .primary: style == .solid ? .strong : .normal
+        case .secondary, .assistive: style == .solid ? .normal : .light
         }
     }
     
@@ -433,4 +467,9 @@ private extension MontageButton {
 
     var interactionVerticalOffset: CGFloat { style == .text ? 4 : 0 }
     var interactionHorizontalOffset: CGFloat { style == .text ? 7 : 0 }
+    
+    var loadingSize: CGSize {
+        let textHeight = Typography.getSementicSize(variant: fontVariant ?? typoVariant)
+        return .init(width: textHeight, height: textHeight)
+    }
 }
