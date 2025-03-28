@@ -52,13 +52,7 @@ public struct Cell: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Group {
-                            Text(title)
-                                .montage(
-                                    variant: titleTypography.variant,
-                                    weight: active ? .medium : titleTypography.weight,
-                                    semantic: normalTitleColor
-                                )
-                                .paragraph(variant: titleTypography.variant)
+                            titleView
                         }
                         .frame(minHeight: 24)
                         .if(textEllipsis) {
@@ -139,6 +133,7 @@ public struct Cell: View {
     private var trailingContent: ((Bool) -> any View)? = nil
     private var interactionPadding: CGFloat = 12
     private var verticalAlignment: VerticalAlignment = .top
+    private var highlightText: String? = nil
     
     /// 타이틀 텍스트의 `variant` 속성을 조정합니다. 기본값은 `.body1`입니다.
     public func titleVariant(_ variant: Typography.Variant) -> Self {
@@ -237,6 +232,13 @@ public struct Cell: View {
         zelf.interactionPadding = padding
         return zelf
     }
+    
+    /// 타이틀의 특정 텍스트를 bold로 강조합니다. 첫 번째 매칭되는 부분만 강조됩니다.
+    public func highlight(_ text: String) -> Self {
+        var zelf = self
+        zelf.highlightText = text
+        return zelf
+    }
 }
 
 // MARK: - Private
@@ -246,6 +248,33 @@ extension Cell {
             .labelDisable
         } else {
             active ? .primaryNormal : .labelNormal
+        }
+    }
+    
+    private var titleView: some View {
+        if let highlightText {
+            let attributedString: AttributedString = {
+                var string = AttributedString(stringLiteral: title)
+                string.font = .montage(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
+                string.foregroundColor = .semantic(normalTitleColor)
+                guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
+                    return string
+                }
+                string[range].font = .montage(variant: titleTypography.variant, weight: .bold)
+                string[range].foregroundColor = .semantic(normalTitleColor)
+                return string
+            }()
+            
+            return Text(attributedString)
+                .paragraph(variant: titleTypography.variant)
+        } else {
+            return Text(title)
+                .montage(
+                    variant: titleTypography.variant,
+                    weight: active ? .medium : titleTypography.weight,
+                    semantic: normalTitleColor
+                )
+                .paragraph(variant: titleTypography.variant)
         }
     }
 }

@@ -113,7 +113,7 @@ public struct Avatar: View {
                 .strokeBorder(borderColor, lineWidth: borderWidth)
         }
         .clipShape(RoundedRectangle(cornerRadius: variant.cornerRadius(size: size)))
-        .pushBadge(variant: .dot, size: pushBadgeSize)
+        .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
         .background {
             if !interactionDisabled {
                 Decorate.Interaction(
