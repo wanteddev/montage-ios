@@ -478,18 +478,9 @@ private extension TextInput.TextField {
                         color: .labelNormal
                     )
                 )
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            isPressed = value.translation == .zero
-                        }
-                        .onEnded { _ in
-                            isPressed = false
-                        }
-                )
-                .onTapGesture {
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
                     handler?()
-                }
+                })
         }
         
         var textColor: Color.Semantic {
