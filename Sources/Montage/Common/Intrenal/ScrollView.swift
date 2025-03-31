@@ -9,25 +9,23 @@ import SwiftUI
 
 public struct ScrollView: View {
     // MARK: - Initializer
-    @Binding private var scrollStatus: ScrollStatus
+    private var externalScrollStatus: Binding<ScrollStatus>?
     private let onOffsetChanged: (CGPoint) -> Void
     private let content: () -> any View
 
     public init(
-        scrollStatus: Binding<ScrollStatus> = .constant(.init()),
+        scrollStatus: Binding<ScrollStatus>? = nil,
         onOffsetChanged: @escaping (CGPoint) -> Void = { _ in },
         @ViewBuilder content: @escaping () -> any View
     ) {
         self.onOffsetChanged = onOffsetChanged
-        _scrollStatus = scrollStatus
+        externalScrollStatus = scrollStatus
         self.content = content
     }
 
     // MARK: - Body
-
-    @State private var scrollViewSize: CGSize = .zero
-    @State private var contentSize: CGSize = .zero
-    @State private var contentOffset: CGPoint = .zero
+    
+    @State private var defaultScrollStatus = ScrollStatus()
 
     public var body: some View {
         SwiftUI.ScrollView(axisSet, showsIndicators: !hidesIndicators) {
@@ -42,29 +40,24 @@ public struct ScrollView: View {
                 VStack {
                     AnyView(content())
                 }
+                .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
+                    scrollStatus.wrappedValue.contentSize = $0
+                })
             }
-            .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
-                contentSize = $0
-            })
         }
         .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
-            scrollViewSize = $0
+            scrollStatus.wrappedValue.scrollViewSize = $0
         })
         .coordinateSpace(name: "ScrollViewOrigin")
-        .onChange(of: "\(axis)\(contentSize)\(scrollViewSize)\(contentOffset)") { _ in
-            scrollStatus = .init(
-                axis: axis,
-                scrollViewSize: scrollViewSize,
-                contentSize: contentSize,
-                contentOffset: contentOffset
-            )
+        .onChange(of: axis) {
+            scrollStatus.wrappedValue.axis = $0
         }
         .onPreferenceChange(OffsetPreferenceKey.self) {
-            contentOffset = $0
+            scrollStatus.wrappedValue.contentOffset = $0
             onOffsetChanged($0)
         }
         .if(onRefresh != nil) {
-            $0.pullToRefresh(scrollYOffset: $contentOffset.y) {
+            $0.pullToRefresh(scrollYOffset: scrollStatus.contentOffset.y) {
                 await onRefresh?()
             }
         }
@@ -95,10 +88,10 @@ public struct ScrollView: View {
 
     // MARK: - Types
 
-    public struct ScrollStatus {
-        public let axis: Axis
-        public let scrollViewSize: CGSize
-        public let contentSize: CGSize
+    public struct ScrollStatus: Equatable {
+        public var axis: Axis
+        public var scrollViewSize: CGSize
+        public var contentSize: CGSize
         public var contentOffset: CGPoint
 
         public init(
@@ -129,5 +122,9 @@ private extension ScrollView {
         case .horizontal: .horizontal
         case .vertical: .vertical
         }
+    }
+    
+    var scrollStatus: Binding<ScrollStatus> {
+        externalScrollStatus ?? $defaultScrollStatus
     }
 }
