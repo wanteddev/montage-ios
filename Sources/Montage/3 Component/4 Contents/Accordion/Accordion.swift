@@ -177,20 +177,11 @@ public struct Accordion: View {
                     fillWidth: fillWidth,
                     interactionPadding: 12
                 ))
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            isPressed = value.translation == .zero
-                        }
-                        .onEnded { value in
-                            isPressed = false
-                            if value.translation == .zero {
-                                withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
-                                    isExpanded.toggle()
-                                }
-                            }
-                        }
-                )
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
+                    withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
+                        isExpanded.toggle()
+                    }
+                })
                 
                 if isExpanded {
                     VStack(alignment: .leading, spacing: 0) {

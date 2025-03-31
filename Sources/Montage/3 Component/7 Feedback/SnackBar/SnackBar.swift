@@ -160,18 +160,9 @@ public struct SnackBar: View {
                     .padding(.horizontal, -7)
                     .padding(.vertical, -4)
                 )
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            isPressed = value.translation == .zero
-                        }
-                        .onEnded { _ in
-                            isPressed = false
-                        }
-                )
-                .onTapGesture {
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
                     handler?()
-                }
+                })
         }
     }
     

@@ -278,18 +278,9 @@ public struct Button: View {
             .padding(.vertical, -interactionVerticalOffset)
             .padding(.horizontal, -interactionHorizontalOffset)
         }
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    isPressed = value.translation == .zero
-                }
-                .onEnded { _ in
-                    isPressed = false
-                }
-        )
-        .onTapGesture {
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
             handler?()
-        }
+        })
         .allowsHitTesting(disable == false)
     }
 }

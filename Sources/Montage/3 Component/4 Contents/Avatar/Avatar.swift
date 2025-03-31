@@ -125,18 +125,9 @@ public struct Avatar: View {
                 .clipShape(RoundedRectangle(cornerRadius: variant.interactionCornerRadius(size: size)))
             }
         }
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    isPressed = value.translation == .zero
-                }
-                .onEnded { _ in
-                    isPressed = false
-                }
-        )
-        .onTapGesture {
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
             onTap?()
-        }
+        })
     }
     
     private var pushBadge = false

@@ -169,23 +169,14 @@ public struct IconButton: View {
                         .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
             )
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { value in
-                        isPressed = value.translation == .zero
-                    }
-                    .onEnded { _ in
-                        isPressed = false
-                    }
-            )
-            .onTapGesture {
-                handler?()
-            }
             .frame(
                 width: variant.iconSize.width + variant.backgroundOffset + padding,
                 height: variant.iconSize.height + variant.backgroundOffset + padding
             )
             .allowsHitTesting(disable == false)
+            .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
+                handler?()
+            })
     }
 }
 
