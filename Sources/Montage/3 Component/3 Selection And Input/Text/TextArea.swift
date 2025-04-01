@@ -307,6 +307,10 @@ extension TextInput {
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .allowsHitTesting(disable == false)
+            .contentShape(RoundedRectangle(cornerRadius: 12))
+            .onTapGesture {
+                focus.wrappedValue = true
+            }
         }
         
         private var editorStrokeColor: SwiftUI.Color {
