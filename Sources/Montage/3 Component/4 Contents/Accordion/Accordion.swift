@@ -10,16 +10,16 @@ import SwiftUI
 public struct Accordion: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
-    public enum VerticalPadding {
-        case pt8
-        case pt12
-        case pt16
+    public enum VerticalPadding: String, CaseIterable {
+        case small
+        case medium
+        case large
         
         public var length: CGFloat {
             switch self {
-            case .pt8: 8
-            case .pt12: 12
-            case .pt16: 16
+            case .small: 8
+            case .medium: 12
+            case .large: 16
             }
         }
     }
@@ -52,7 +52,7 @@ public struct Accordion: View {
         weight: Typography.Weight,
         color: SwiftUI.Color
     ) = (.label1, .regular, .semantic(.labelNeutral))
-    private var verticalPadding: VerticalPadding = .pt12
+    private var verticalPadding: VerticalPadding = .large
     private var fillWidth = false
     private var hideDivider = false
     private var leadingIcon: Icon? = nil
@@ -85,7 +85,7 @@ public struct Accordion: View {
         return zelf
     }
     
-    /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
+    /// 상하 여백의 크기를 조정합니다. 기본값은 `.large` 입니다.
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
         zelf.verticalPadding = verticalPadding

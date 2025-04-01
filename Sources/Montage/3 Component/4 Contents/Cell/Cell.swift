@@ -9,34 +9,19 @@ import SwiftUI
 
 public struct Cell: View {
     // MARK: - Types
-    /// 좌우 컨텐츠 크기를 나타내는 열거형입니다.
-    public enum ContentHeight {
-        case medim
-        case large
-        case xlarge
-        
-        public var maxHeight: CGFloat {
-            switch self {
-            case .medim: 24
-            case .large: 40
-            case .xlarge: 56
-            }
-        }
-    }
-    
     /// 상하 여백을 나타내는 열거형입니다.
-    public enum VerticalPadding {
-        case pt0
-        case pt8
-        case pt12
-        case pt16
+    public enum VerticalPadding: String, CaseIterable {
+        case none
+        case small
+        case medium
+        case large
         
         public var length: CGFloat {
             switch self {
-            case .pt0: 0
-            case .pt8: 8
-            case .pt12: 12
-            case .pt16: 16
+            case .none: 0
+            case .small: 8
+            case .medium: 12
+            case .large: 16
             }
         }
     }
@@ -63,21 +48,11 @@ public struct Cell: View {
                 HStack(alignment: verticalAlignment, spacing: 8) {
                     if let leadingContent {
                         AnyView(leadingContent())
-                            .frame(
-                                height: extraContentMaxHeight.maxHeight
-                            )
-                            .clipped()
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Group {
-                            Text(title)
-                                .montage(
-                                    variant: titleTypography.variant,
-                                    weight: active ? .medium : titleTypography.weight,
-                                    semantic: normalTitleColor
-                                )
-                                .paragraph(variant: titleTypography.variant)
+                            titleView
                         }
                         .frame(minHeight: 24)
                         .if(textEllipsis) {
@@ -99,10 +74,6 @@ public struct Cell: View {
                     
                     if let trailingContent {
                         AnyView(trailingContent(active))
-                            .frame(
-                                height: extraContentMaxHeight.maxHeight
-                            )
-                            .clipped()
                     }
                     
                     VStack {
@@ -150,7 +121,7 @@ public struct Cell: View {
     // MARK: - Modifiers
     
     private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight) = (.body1, .regular)
-    private var verticalPadding: VerticalPadding = .pt12
+    private var verticalPadding: VerticalPadding = .medium
     private var fillWidth = false
     private var textEllipsis = false
     private var caption: String? = nil
@@ -158,11 +129,11 @@ public struct Cell: View {
     private var active = false
     private var divider = false
     private var chevron = false
-    private var extraContentMaxHeight: ContentHeight = .medim
     private var leadingContent: (() -> any View)? = nil
     private var trailingContent: ((Bool) -> any View)? = nil
     private var interactionPadding: CGFloat = 12
-    private var verticalAlignment: VerticalAlignment = .center
+    private var verticalAlignment: VerticalAlignment = .top
+    private var highlightText: String? = nil
     
     /// 타이틀 텍스트의 `variant` 속성을 조정합니다. 기본값은 `.body1`입니다.
     public func titleVariant(_ variant: Typography.Variant) -> Self {
@@ -178,7 +149,7 @@ public struct Cell: View {
         return zelf
     }
     
-    /// 상하 여백의 크기를 조정합니다. 기본값은 `.pt12` 입니다.
+    /// 상하 여백의 크기를 조정합니다. 기본값은 `.medium` 입니다.
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
         zelf.verticalPadding = verticalPadding
@@ -241,13 +212,6 @@ public struct Cell: View {
         return zelf
     }
     
-    /// 좌우 컨텐츠의 높이를 조정합니다. 기본값은 `.medim`입니다. 컨텐츠의 높이가 더 큰 경우는 가운데 정렬 상태에서 위, 아래가 클립되어 표시됩니다. 좌우는 클립되지 않고 컨텐츠 너비만큼 표시됩니다.
-    public func contentHeight(_ contentHeight: ContentHeight) -> Self {
-        var zelf = self
-        zelf.extraContentMaxHeight = contentHeight
-        return zelf
-    }
-    
     /// 좌측 컨텐츠를 지정합니다.
     public func leadingContent(_ contents: (() -> any View)? = nil) -> Self {
         var zelf = self
@@ -268,6 +232,13 @@ public struct Cell: View {
         zelf.interactionPadding = padding
         return zelf
     }
+    
+    /// 타이틀의 특정 텍스트를 bold로 강조합니다. 첫 번째 매칭되는 부분만 강조됩니다.
+    public func highlight(_ text: String) -> Self {
+        var zelf = self
+        zelf.highlightText = text
+        return zelf
+    }
 }
 
 // MARK: - Private
@@ -277,6 +248,33 @@ extension Cell {
             .labelDisable
         } else {
             active ? .primaryNormal : .labelNormal
+        }
+    }
+    
+    private var titleView: some View {
+        if let highlightText {
+            let attributedString: AttributedString = {
+                var string = AttributedString(stringLiteral: title)
+                string.font = .montage(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
+                string.foregroundColor = .semantic(normalTitleColor)
+                guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
+                    return string
+                }
+                string[range].font = .montage(variant: titleTypography.variant, weight: .bold)
+                string[range].foregroundColor = .semantic(normalTitleColor)
+                return string
+            }()
+            
+            return Text(attributedString)
+                .paragraph(variant: titleTypography.variant)
+        } else {
+            return Text(title)
+                .montage(
+                    variant: titleTypography.variant,
+                    weight: active ? .medium : titleTypography.weight,
+                    semantic: normalTitleColor
+                )
+                .paragraph(variant: titleTypography.variant)
         }
     }
 }
