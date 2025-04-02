@@ -94,7 +94,7 @@ public struct Slider: View {
                 )
                 .zIndex(focusedThumb == 1 ? 1 : 0)
                 .offset(x: max(0, lineLength * thumbRatio1))
-                .gesture(
+                .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged {
                             thumbRatio1 = thumbRatio(from: $0.location.x)
@@ -112,7 +112,7 @@ public struct Slider: View {
                 )
                 .zIndex(focusedThumb == 2 ? 1 : 0)
                 .offset(x: max(0, lineLength * thumbRatio2))
-                .gesture(
+                .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged {
                             thumbRatio2 = thumbRatio(from: $0.location.x)
