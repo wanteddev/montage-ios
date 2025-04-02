@@ -10,6 +10,9 @@ import SwiftUI
 import Lottie
 
 public struct Loading: View {
+    
+    // MARK: - Type
+    
     public enum Kind {
         case wanted
         case circular
@@ -22,8 +25,8 @@ public struct Loading: View {
             }
         }
     }
-    
-    @Environment(\.colorScheme) private var colorScheme
+
+    // MARK: - Initializer
     
     private let kind: Kind
     private let size: CGSize?
@@ -33,11 +36,24 @@ public struct Loading: View {
         self.size = size
     }
     
+    // MARK: - Modifiers
+    private var foregroundColor: SwiftUI.Color?
+    public func foregroundColor(_ color: SwiftUI.Color?) -> Self {
+        var zelf = self
+        zelf.foregroundColor = color
+        return zelf
+    }
+    
+    // MARK: - Body
+    
+    @Environment(\.colorScheme) private var colorScheme
+    
     public var body: some View {
         LottieView(animation: .named(kind.resourceName(colorScheme), bundle: .module))
             .playing(loopMode: .loop)
             .if(size != nil) {
                 $0.resizable()
+                    .if(foregroundColor != nil) { $0.colorMultiply(foregroundColor!) }
                     .frame(width: size?.width, height: size?.height)
             }
     }

@@ -77,7 +77,7 @@ public struct Category: View {
                 )
                 
                 if let icon, let iconButtonAction {
-                    Button.IconButton(variant: .normal(size: iconSize), icon: icon) {
+                    IconButton(variant: .normal(size: iconSize), icon: icon) {
                         iconButtonAction()
                     }
                     .padding(.trailing, horizontalPadding ? 16 : 0)
