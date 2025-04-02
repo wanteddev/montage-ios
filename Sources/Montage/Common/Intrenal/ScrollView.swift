@@ -57,8 +57,14 @@ public struct ScrollView: View {
             onOffsetChanged($0)
         }
         .if(onRefresh != nil) {
-            $0.pullToRefresh(scrollYOffset: scrollStatus.contentOffset.y) {
-                await onRefresh?()
+            if #available(iOS 18, *) {
+            	$0.pullToRefresh(scrollYOffset: scrollStatus.contentOffset.y) {
+                    await onRefresh?()
+                }
+            } else {
+                $0.refreshable {
+                    await onRefresh?()
+                }
             }
         }
     }

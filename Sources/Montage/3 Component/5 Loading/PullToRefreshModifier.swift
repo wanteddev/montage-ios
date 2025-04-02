@@ -8,6 +8,7 @@
 import Lottie
 import SwiftUI
 
+@available(iOS 18, *)
 public struct PullToRefreshModifier: ViewModifier {
     @Binding private var scrollYOffset: CGFloat
     private let refresh: () async -> Void
@@ -65,7 +66,7 @@ public struct PullToRefreshModifier: ViewModifier {
                 content
             }
             .simultaneousGesture(
-                DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                DragGesture(minimumDistance: 1)
                     .onChanged { _ in
                         isScrolling = true
                         

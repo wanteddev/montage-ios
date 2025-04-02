@@ -266,6 +266,7 @@ extension View {
 // MARK: Pull To Refresh
 
 extension View {
+    @available(iOS 18, *)
     public func pullToRefresh(
         scrollYOffset: Binding<CGFloat>,
         refresh: @escaping () async -> Void
