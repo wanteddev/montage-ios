@@ -547,6 +547,10 @@ extension TextInput {
                     }
                     return true
                 }
+
+                func textViewDidBeginEditing(_ textView: UITextView) {
+                    textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                }
                 
                 func textViewDidChange(_ textView: UITextView) {
                     let parentText = parent.text
