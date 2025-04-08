@@ -8,29 +8,15 @@
 import SwiftUI
 
 public enum Tooltip {
-    public enum Variant: Equatable {
-        case extended(title: String? = nil, action: (() -> Void)? = nil)
-        case compact
-
-        public static func == (lhs: Tooltip.Variant, rhs: Tooltip.Variant) -> Bool {
-            switch (lhs, rhs) {
-            case let (.extended(t1, _), .extended(t2, _)): t1 == t2
-            case (.compact, .compact): true
-            default: false
-            }
-        }
-
-        public var isExtended: Bool {
-            self != .compact
-        }
-    }
-
+    
+    // MARK: - Types
+    
     public enum Position: CaseDescribable {
         case leading(arrowPosition: VerticalAlignment = .center)
         case trailing(arrowPosition: VerticalAlignment = .center)
         case top(arrowPosition: HorizontalAlignment = .center)
         case bottom(arrowPosition: HorizontalAlignment = .center)
-
+        
         fileprivate func getArrowAngleDegree() -> Double {
             switch self {
             case .leading:
@@ -43,474 +29,380 @@ public enum Tooltip {
                 0
             }
         }
-    }
-
-    public enum Size {
-        public enum Arrow {
-            public static let width: CGFloat = 12
-            public static let height: CGFloat = 7
+        
+        fileprivate var arrowEdge: Edge {
+            switch self {
+            case .leading: .trailing
+            case .trailing: .leading
+            case .top: .bottom
+            case .bottom: .top
+            }
         }
-
-        public static let margin: CGFloat = 4
-
-        public static let width: CGFloat = 10
-        public static let height: CGFloat = 10
-        public static let borderRadius: CGFloat = 8
     }
-
-    private struct Arrow: Shape {
-        public func path(in rect: CGRect) -> Path {
-            var path = Path()
-            path.addLines([
-                CGPoint(x: 0, y: rect.height),
-                CGPoint(x: rect.width / 2, y: 0),
-                CGPoint(x: rect.width, y: rect.height),
-            ])
-            return path
+    
+    public struct ButtonInfo {
+        public let title: String
+        public let action: () -> Void
+        
+        public init(title: String, action: @escaping () -> Void) {
+            self.title = title
+            self.action = action
         }
     }
 
-    public struct DefaultTooltipConfig: TooltipConfigurable {
-        public var variant: Tooltip.Variant
+    // MARK: - ViewModifier
+    
+    struct Modifier: ViewModifier {
+        
+        // MARK: - Constants
+        
+        private let margin: CGFloat = 4
+        private let cornerRadius: CGFloat = 8
+        private let arrowWidth: CGFloat = 12
+        private let arrowHeight: CGFloat = 7
+        private let arrowVerticalPadding: CGFloat = 1
+        private let arrowHorizontalPadding: CGFloat = 12
+        private let lowerLayerColor: SwiftUI.Color = .semantic(.primaryNormal).opacity(0.05)
+        private let upperLayerColor: SwiftUI.Color = .semantic(.inverseBackground).opacity(0.88)
+        private let contentColor: Color.Semantic = .inverseLabel
+        
+        // MARK: - Initializer
 
-        public var position: Tooltip.Position
-        public var margin: CGFloat = Tooltip.Size.margin
+        @Binding private var isPresented: Bool
+        private let buttonInfo: ButtonInfo?
+        private let position: Position?
+        private let showArrow: Bool
+        private let showCloseButton: Bool
+        private let message: String
 
-        public var inverse: Bool
-        public var width: CGFloat?
-        public var height: CGFloat?
-        public var borderRadius: CGFloat = Tooltip.Size.borderRadius
-
-        public var showArrow = true
-        public var arrowWidth: CGFloat = Tooltip.Size.Arrow.width
-        public var arrowHeight: CGFloat = Tooltip.Size.Arrow.height
-
-        public var showCloseButton = false
-
-        public init(
-            variant: Tooltip.Variant = .extended(),
-            position: Tooltip.Position = .top(),
-            inverse: Bool = false,
+        init(
+            isPresented: Binding<Bool>,
+            position: Tooltip.Position,
+            message: String,
             showArrow: Bool = true,
-            showCloseButton: Bool = false
+            showCloseButton: Bool = false,
+            buttonInfo: ButtonInfo? = nil
         ) {
-            self.variant = variant
+            _isPresented = isPresented
             self.position = position
-            self.inverse = inverse
+            self.message = message
             self.showArrow = showArrow
             self.showCloseButton = showCloseButton
+            self.buttonInfo = buttonInfo
+        }
+        
+        @available(iOS 16.4, *)
+        init(
+            isPresented: Binding<Bool>,
+            message: String,
+            showCloseButton: Bool = false,
+            buttonInfo: ButtonInfo? = nil
+        ) {
+            _isPresented = isPresented
+            self.position = nil
+            self.message = message
+            self.showArrow = false
+            self.showCloseButton = showCloseButton
+            self.buttonInfo = buttonInfo
+        }
+
+        @State private var originSize: CGSize = .zero
+        @State private var contentSize: CGSize = .zero
+
+        // MARK: - Body
+
+        func body(content: Content) -> some View {
+            content
+                .modifying { originalView in
+                    if #available(iOS 16.4, *), position == nil {
+                        originalView.popover(
+                            isPresented: $isPresented,
+                            arrowEdge: position?.arrowEdge
+                        ) {
+                            tooltipContent
+                                .frame(height: contentSize.height)
+                                .presentationCompactAdaptation(.none)
+                                .presentationBackground {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: cornerRadius)
+                                            .foregroundColor(lowerLayerColor)
+                                        RoundedRectangle(cornerRadius: cornerRadius)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: cornerRadius)
+                                                    .foregroundStyle(upperLayerColor)
+                                            )
+                                    }
+                                    .background(.ultraThinMaterial)
+                                }
+                                .frame(minWidth: 64, maxWidth: 280)
+                        }
+                        .transaction { transaction in
+                            transaction.disablesAnimations = true
+                        }
+                    } else {
+                        originalView.onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
+                            originSize = $0
+                        })
+                        .modifying {
+                            if isPresented {
+                                $0.overlay {
+                                    tooltipContent.background {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: cornerRadius)
+                                                .foregroundColor(lowerLayerColor)
+                                            RoundedRectangle(cornerRadius: cornerRadius)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: cornerRadius)
+                                                        .foregroundStyle(upperLayerColor)
+                                                )
+                                        }
+                                        .background(.ultraThinMaterial)
+                                        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                                    }
+                                    .background(arrowView)
+                                    .frame(minWidth: 64, maxWidth: 280)
+                                    .fixedSize(horizontal: true, vertical: false)
+                                    .allowsHitTesting(true)
+                                    .offset(
+                                        x: offsetHorizontal(),
+                                        y: offsetVertical()
+                                    )
+                                }
+                            } else {
+                                $0
+                            }
+                        }
+                    }
+                }
         }
     }
 }
 
-extension Tooltip {
-    struct TooltipModifier: ViewModifier {
-        // MARK: - Local state
-
-        @State private var originSize: CGSize = .zero
-        @State private var contentWidth: CGFloat = 10
-        @State private var contentHeight: CGFloat = 10
-
-        @Binding private var show: Bool
-
-        // MARK: - Environment
-
-        @Environment(\.colorScheme) private var colorScheme
-
-        // MARK: - Uninitialised properties
-
-        private var config: TooltipConfigurable
-        private var content: String
-
-        // MARK: - Initialisers
-
-        init(
-            config: TooltipConfigurable,
-            show: Binding<Bool>,
-            content: String
-        ) {
-            self.config = config
-            _show = show
-            self.content = content
-        }
-
-        // MARK: - Computed properties
-
-        private var showArrow: Bool { config.variant.isExtended && config.showArrow }
-        private var showCloseButton: Bool { config.variant.isExtended && config.showCloseButton }
-
-        private var actualArrowHeight: CGFloat { showArrow ? config.arrowHeight : 0 }
-        private let arrowVerticalPadding: CGFloat = 1
-        private let arrowHorizontalPadding: CGFloat = 12
-
-        private var underLayerColor: SwiftUI.Color {
-            if config.variant == .compact, config.inverse {
-                SwiftUI.Color.semantic(.lineNeutral)
-            } else {
-                SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
+private extension Tooltip.Modifier {
+    var tooltipContent: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: 6) {
+                Text(message)
+                    .montage(
+                        variant: .label1,
+                        weight: .medium,
+                        semantic: contentColor
+                    )
+                    .paragraph(variant: .label1)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 2)
+                Spacer(minLength: 0)
+                if showCloseButton {
+                    IconButton(
+                        variant: .normal(size: 16),
+                        icon: .close,
+                        iconColor: .semantic(.inverseLabel)
+                    ) {
+                        isPresented = false
+                    }
+                    .frame(width: 16, height: 16)
+                    .padding([.leading, .top], 2)
+                    .opacity(0.61)
+                }
+            }
+            if let buttonInfo = buttonInfo {
+                SwiftUI.Button(action: {
+                    buttonInfo.action()
+                }, label: {
+                    Text(buttonInfo.title)
+                        .montage(
+                            variant: .label1,
+                            weight: .bold,
+                            semantic: .inverseLabel
+                        )
+                        .paragraph(variant: .label1)
+                        .opacity(0.61)
+                        .frame(height: 20)
+                        .padding(.horizontal, 2)
+                })
             }
         }
+        .padding(.all, 10)
+        .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+    }
+    
+    var actualArrowHeight: CGFloat { showArrow ? arrowHeight : 0 }
 
-        private var upperLayerColor: SwiftUI.Color {
-            if config.variant == .compact, config.inverse {
-                SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88)
-            } else {
-                SwiftUI.Color.semantic(.inverseBackground).opacity(0.88)
+    var arrowOffsetX: CGFloat {
+        switch position ?? .top() {
+        case .leading:
+            contentSize.width / 2
+                + arrowHeight / 2
+                - 0.3
+
+        case .trailing:
+            -(
+                contentSize.width / 2
+                    + arrowHeight / 2
+                    - 0.3
+            )
+        case .top(let arrowPosition):
+            switch arrowPosition {
+            case .leading:
+                -(
+                    contentSize.width / 2 - (arrowWidth + arrowHorizontalPadding)
+                )
+            case .trailing:
+                contentSize.width / 2 - (arrowWidth + arrowHorizontalPadding)
+            default:
+                .zero
             }
-        }
 
-        private var contentColor: Color.Semantic {
-            if config.variant == .compact, config.inverse {
-                .labelNeutral
-            } else {
-                .inverseLabel
-            }
-        }
-
-        private var borderColor: SwiftUI.Color {
-            if config.inverse {
-                SwiftUI.Color.semantic(.lineNeutral)
-            } else {
-                .clear
-            }
-        }
-
-        private var borderWidth: CGFloat {
-            if config.inverse {
-                1
-            } else {
+        case .bottom(let arrowPosition):
+            switch arrowPosition {
+            case .leading:
+                -(
+                    contentSize.width / 2 - (arrowWidth + arrowHorizontalPadding)
+                )
+            case .trailing:
+                contentSize.width / 2 - (arrowWidth + arrowHorizontalPadding)
+            default:
                 .zero
             }
         }
+    }
 
-        private var arrowOffsetX: CGFloat {
-            switch config.position {
-            case .leading:
-                contentWidth / 2
-                    + config.arrowHeight / 2
-                    - 0.3
-
-            case .trailing:
-                -(
-                    contentWidth / 2
-                        + config.arrowHeight / 2
-                        - 0.3
-                )
-            case .top(let arrowPosition):
-                switch arrowPosition {
-                case .leading:
-                    -(
-                        contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
-                    )
-                case .trailing:
-                    contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
-                default:
-                    .zero
-                }
-
-            case .bottom(let arrowPosition):
-                switch arrowPosition {
-                case .leading:
-                    -(
-                        contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
-                    )
-                case .trailing:
-                    contentWidth / 2 - (config.arrowWidth + arrowHorizontalPadding)
-                default:
-                    .zero
-                }
-            }
-        }
-
-        private var arrowOffsetY: CGFloat {
-            switch config.position {
-            case .leading(let arrowPosition):
-                switch arrowPosition {
-                case .top:
-                    -(
-                        contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
-                    )
-                case .bottom:
-                    contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
-                default:
-                    .zero
-                }
-
-            case .trailing(let arrowPosition):
-                switch arrowPosition {
-                case .top:
-                    -(
-                        contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
-                    )
-                case .bottom:
-                    contentHeight / 2 - (actualArrowHeight + arrowHorizontalPadding)
-                default:
-                    .zero
-                }
-
+    var arrowOffsetY: CGFloat {
+        switch position ?? .top() {
+        case .leading(let arrowPosition):
+            switch arrowPosition {
             case .top:
-                contentHeight / 2 + actualArrowHeight / 2
-
+                -(
+                    contentSize.height / 2 - (actualArrowHeight + arrowHorizontalPadding)
+                )
             case .bottom:
-                -(
-                    contentHeight / 2 + actualArrowHeight / 2
-                )
+                contentSize.height / 2 - (actualArrowHeight + arrowHorizontalPadding)
+            default:
+                .zero
             }
-        }
 
-        // MARK: - Helper functions
-
-        private func offsetHorizontal() -> CGFloat {
-            switch config.position {
-            case .leading:
+        case .trailing(let arrowPosition):
+            switch arrowPosition {
+            case .top:
                 -(
-                    originSize.width / 2
-                        + contentWidth / 2
-                        + actualArrowHeight
-                        + arrowVerticalPadding
-                        + config.margin
+                    contentSize.height / 2 - (actualArrowHeight + arrowHorizontalPadding)
                 )
+            case .bottom:
+                contentSize.height / 2 - (actualArrowHeight + arrowHorizontalPadding)
+            default:
+                .zero
+            }
 
-            case .trailing:
+        case .top:
+            contentSize.height / 2 + actualArrowHeight / 2
+
+        case .bottom:
+            -(
+                contentSize.height / 2 + actualArrowHeight / 2
+            )
+        }
+    }
+
+    func offsetHorizontal() -> CGFloat {
+        switch position ?? .top() {
+        case .leading:
+            -(
                 originSize.width / 2
-                    + contentWidth / 2
+                    + contentSize.width / 2
                     + actualArrowHeight
                     + arrowVerticalPadding
-                    + config.margin
+                    + margin
+            )
 
-            case .top(let arrowPosition), .bottom(let arrowPosition):
-                switch arrowPosition {
-                case .leading:
-                    contentWidth / 2
-                        - config.arrowWidth
+        case .trailing:
+            originSize.width / 2
+                + contentSize.width / 2
+                + actualArrowHeight
+                + arrowVerticalPadding
+                + margin
+
+        case .top(let arrowPosition), .bottom(let arrowPosition):
+            switch arrowPosition {
+            case .leading:
+                contentSize.width / 2
+                    - arrowWidth
+                    - arrowHorizontalPadding
+            case .trailing:
+                -(
+                    contentSize.width / 2
+                        - arrowWidth
                         - arrowHorizontalPadding
-                case .trailing:
-                    -(
-                        contentWidth / 2
-                            - config.arrowWidth
-                            - arrowHorizontalPadding
-                    )
-                default:
-                    .zero
-                }
+                )
+            default:
+                .zero
             }
         }
+    }
 
-        private func offsetVertical() -> CGFloat {
-            switch config.position {
-            case .leading(let arrowPosition), .trailing(let arrowPosition):
-                switch arrowPosition {
-                case .top:
-                    contentHeight / 2
-                        - config.arrowWidth / 2
-                        - arrowHorizontalPadding
-                case .bottom:
-                    -(
-                        contentHeight / 2
-                            - config.arrowWidth / 2
-                            - arrowHorizontalPadding
-                    )
-                default:
-                    .zero
-                }
-
+    func offsetVertical() -> CGFloat {
+        switch position ?? .top() {
+        case .leading(let arrowPosition), .trailing(let arrowPosition):
+            switch arrowPosition {
             case .top:
-                -(
-                    contentHeight / 2
-                        + originSize.height / 2
-                        + actualArrowHeight
-                        + arrowVerticalPadding
-                        + config.margin
-                )
-
+                contentSize.height / 2
+                    - arrowWidth / 2
+                    - arrowHorizontalPadding
             case .bottom:
-                contentHeight / 2
+                -(
+                    contentSize.height / 2
+                        - arrowWidth / 2
+                        - arrowHorizontalPadding
+                )
+            default:
+                .zero
+            }
+
+        case .top:
+            -(
+                contentSize.height / 2
                     + originSize.height / 2
                     + actualArrowHeight
                     + arrowVerticalPadding
-                    + config.margin
-            }
+                    + margin
+            )
+
+        case .bottom:
+            contentSize.height / 2
+                + originSize.height / 2
+                + actualArrowHeight
+                + arrowVerticalPadding
+                + margin
         }
+    }
 
-        // MARK: - TooltipModifier Body Properties
-
-        private var contentSizeMeasurer: some View {
-            GeometryReader { proxy in
-                Text("")
-                    .onAppear {
-                        contentWidth = config.width ?? proxy.size.width
-                        contentHeight = config.height ?? proxy.size.height
-                    }
-            }
-        }
-
-        private var originSizeMeasurer: some View {
-            GeometryReader { proxy in
-                Text("")
-                    .onAppear {
-                        originSize = proxy.size
-                    }
-            }
-        }
-
-        @ViewBuilder
-        private var arrowView: some View {
-            if showArrow {
-                ZStack {
-                    arrowShape(degree: config.position.getArrowAngleDegree())
-                        .frame(
-                            width: config.arrowWidth,
-                            height: config.arrowHeight
-                        )
-                        .offset(
-                            x: arrowOffsetX,
-                            y: arrowOffsetY
-                        )
-                }
-            } else {
-                EmptyView()
-            }
-        }
-
-        private func arrowShape(degree: Double) -> some View {
+    @ViewBuilder
+    var arrowView: some View {
+        if showArrow {
             ZStack {
-                Tooltip.Arrow()
-                    .rotation(Angle(degrees: degree))
-                    .foregroundStyle(underLayerColor)
-                Tooltip.Arrow()
-                    .rotation(Angle(degrees: degree))
-                    .foregroundStyle(upperLayerColor)
-            }
-        }
-
-        private var arrowCutoutMask: some View {
-            ZStack {
-                Rectangle()
+                arrowShape(degree: (position ?? .top()).getArrowAngleDegree())
                     .frame(
-                        width: config.arrowWidth,
-                        height: config.arrowHeight
-                    )
-                    .rotationEffect(
-                        Angle(
-                            degrees: config.position.getArrowAngleDegree()
-                        )
+                        width: arrowWidth,
+                        height: arrowHeight
                     )
                     .offset(
                         x: arrowOffsetX,
                         y: arrowOffsetY
                     )
-                    .foregroundStyle(.black)
             }
-            .compositingGroup()
-            .luminanceToAlpha()
-        }
-
-        private var tooltipBody: some View {
-            ZStack {
-                ZStack {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: config.borderRadius)
-                            .foregroundColor(underLayerColor)
-                        RoundedRectangle(cornerRadius: config.borderRadius)
-                            .stroke(borderColor)
-                            .background(
-                                RoundedRectangle(cornerRadius: config.borderRadius)
-                                    .foregroundStyle(upperLayerColor)
-                            )
-                    }
-                    .background(
-                        .ultraThinMaterial
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: config.borderRadius))
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(alignment: .top, spacing: 6) {
-                            Text(content)
-                                .montage(
-                                    variant: .label1,
-                                    weight: .medium,
-                                    semantic: contentColor
-                                )
-                                .paragraph(variant: .label1)
-                                .padding(.horizontal, 2)
-                            if showCloseButton {
-                                IconButton(
-                                    variant: .normal(size: 16),
-                                    icon: .close,
-                                    iconColor: .semantic(.inverseLabel)
-                                ) {
-                                    show = false
-                                }
-                                .frame(width: 16, height: 16)
-                                .padding([.leading, .top], 2)
-                                .opacity(0.61)
-                            }
-                        }
-                        if case let .extended(title, action) = config.variant,
-                           let title = title, let action = action {
-                            SwiftUI.Button(action: {
-                                action()
-                            }, label: {
-                                Text(title)
-                                    .montage(
-                                        variant: .label1,
-                                        weight: .bold,
-                                        semantic: .inverseLabel
-                                    )
-                                    .paragraph(variant: .label1)
-                                    .opacity(0.61)
-                                    .frame(height: 20)
-                                    .padding(.horizontal, 2)
-                            })
-                        }
-                    }
-                    .padding(.all, 10)
-                }
-                .background(contentSizeMeasurer)
-                .background(arrowView)
-                .frame(
-                    minWidth: 64,
-                    maxWidth: 280
-                )
-                .fixedSize(
-                    horizontal: true,
-                    vertical: true
-                )
-            }
-            .offset(
-                x: offsetHorizontal(),
-                y: offsetVertical()
-            )
-        }
-
-        // MARK: - ViewModifier properties
-
-        func body(content: Content) -> some View {
-            content
-                .background(
-                    originSizeMeasurer
-                )
-                .overlay(
-                    show ? tooltipBody : nil
-                )
-                .animation(.easeInOut, value: show)
+        } else {
+            EmptyView()
         }
     }
-}
 
-struct Tooltip_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            Text("Text")
-                .padding()
-                .background(SwiftUI.Color.teal)
-                .tooltip(
-                    config: Tooltip.DefaultTooltipConfig(
-                        position: .top(),
-                        showCloseButton: true
-                    ),
-                    show: .constant(true),
-                    content: "긴 내용이 필요한 경우 이 영역을 써요. 이 텍스트는 본래 내용이 입력되기 전까지 공간을 차지하고, 배치를 확인하기 위한 텍스트입니다"
-                )
+    func arrowShape(degree: Double) -> some View {
+        ZStack {
+            Triangle()
+                .rotation(Angle(degrees: degree))
+                .foregroundStyle(lowerLayerColor)
+            Triangle()
+                .rotation(Angle(degrees: degree))
+                .foregroundStyle(upperLayerColor)
         }
     }
 }
