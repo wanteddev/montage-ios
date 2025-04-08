@@ -113,10 +113,11 @@ public struct ScrollView: View {
         }
 
         public var scrolledToMax: Bool {
+            // FloatingPoint 오류를 보정하기 위해 0.1을 빼줍니다.
             if axis == .vertical {
-                Int(contentOffset.y) <= Int(scrollViewSize.height) - Int(contentSize.height)
+                contentOffset.y - 0.1 <= scrollViewSize.height - contentSize.height
             } else {
-                Int(contentOffset.x) <= Int(scrollViewSize.width) - Int(contentSize.width)
+                contentOffset.x - 0.1 <= scrollViewSize.width - contentSize.width
             }
         }
     }

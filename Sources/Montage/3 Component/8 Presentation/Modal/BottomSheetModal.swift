@@ -60,7 +60,7 @@ extension Modal {
         @State private var navigationHeight: CGFloat = 0
         @State private var contentHeight: CGFloat = 0
         @State private var actionAreaHeight: CGFloat = 0
-        @State private var contentOffset: CGFloat = 0
+        @State private var scrollStatus: ScrollView.ScrollStatus = .init()
         
         public var body: some View {
             ZStack(alignment: .top) {
@@ -86,9 +86,7 @@ extension Modal {
                         if bottomSheetContentHeight > bottomSheetMaxHeight ||
                             (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
                             ZStack(alignment: .top) {
-                                ScrollView(onOffsetChanged: {
-                                    contentOffset = $0.y
-                                }, content: {
+                                ScrollView(scrollStatus: $scrollStatus) {
                                     VStack(spacing: 0) {
                                         SwiftUI.Color.clear
                                             .frame(height: navigationHeight)
@@ -98,7 +96,7 @@ extension Modal {
                                             Spacer(minLength: 0)
                                         }
                                     }
-                                })
+                                }
                                 
                                 navigationView
                             }
@@ -115,7 +113,7 @@ extension Modal {
                     
                     if let actionAreaModel {
                         ActionArea(variant: actionAreaModel.variant)
-                            .clearBackground(scrolledToBottom)
+                            .clearBackground(scrollStatus.scrolledToMax)
                             .caption(actionAreaModel.caption)
                             .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
@@ -175,20 +173,14 @@ extension Modal {
         
         // MARK: - Private
         
-        private var scrolledToBottom: Bool {
-            Int(contentOffset) <= (Int(bottomSheetMaxHeight) + (fullModal ? 10 : 0)) -
-                Int(bottomSheetContentHeight)
-        }
-        
         private var navigationView: some View {
             Group {
                 if let navigation {
                     navigation()
-                        .scrollOffset($contentOffset)
+                        .scrollOffset($scrollStatus.contentOffset.y)
                         .needHandleArea(needHandle)
                 }
             }
-            .ignoresSafeArea()
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
         }
         
