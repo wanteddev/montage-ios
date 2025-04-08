@@ -166,10 +166,11 @@ extension TextInput {
         // MARK: - Body
         
         @Environment(\.safeAreaInsets) private var safeAreaInsets
-        @State var textFieldFrame: CGRect = .zero
-        @FocusState var textFieldFocusState: Bool
+        @State private var textFieldFrame: CGRect = .zero
+        @FocusState private var textFieldFocusState: Bool
         @State private var autoCompletionContentHeight: CGFloat = .zero
-        
+        @State private var fixAutocorrection = false
+
         public var body: some View {
             VStack(alignment: .leading, spacing: 8) {
                 if let heading {
@@ -233,6 +234,7 @@ private extension TextInput.TextField {
                             }
                         }()
                     )
+                    .autocorrectionDisabled(fixAutocorrection)
                     .font(.montage(variant: .body1, weight: .regular))
                     .foregroundStyle(fieldTextColor)
                     .focused($textFieldFocusState)
@@ -240,11 +242,15 @@ private extension TextInput.TextField {
                     .padding(.horizontal, 4)
                     
                     if !text.isEmpty, textFieldFocusState {
-                        Image.montage(.circleCloseFill)
-                            .resizable()
-                            .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
-                            .onTapGesture { text = "" }
+                        IconButton(
+                            variant: .normal(size: 22),
+                            icon: .circleCloseFill,
+                            iconColor: .semantic(.labelAssistive)
+                        ) {
+                            text = ""
+                            fixAutocorrection = true
+                            Task { fixAutocorrection = false }
+                        }
                     } else {
                         if let trailingIcon, let trailingIconColor {
                             Image
