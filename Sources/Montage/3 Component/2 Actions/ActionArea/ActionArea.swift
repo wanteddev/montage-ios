@@ -60,6 +60,7 @@ public struct ActionArea: View, KeyboardReadable {
                 Buttons(variant)
             }
             .padding(.horizontal, 20)
+            .padding(.bottom, isKeyboardVisible ? 20 : 0)
             .background(backgroundColor)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
