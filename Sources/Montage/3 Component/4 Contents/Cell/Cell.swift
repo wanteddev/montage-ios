@@ -111,7 +111,7 @@ public struct Cell: View {
     
     // MARK: - Modifiers
     
-    private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight) = (.body1, .regular)
+    private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight, color: Color.Semantic) = (.body1, .regular, .labelNormal)
     private var verticalPadding: VerticalPadding = .medium
     private var fillWidth = false
     private var textEllipsis = false
@@ -137,6 +137,13 @@ public struct Cell: View {
     public func titleWeight(_ weight: Typography.Weight) -> Self {
         var zelf = self
         zelf.titleTypography.weight = weight
+        return zelf
+    }
+    
+    /// 타이틀 텍스트의 `color` 속성을 조정합니다. 기본값은 `.labelNormal`입니다.
+    public func titleColor(_ color: Color.Semantic) -> Self {
+        var zelf = self
+        zelf.titleTypography.color = color
         return zelf
     }
     
@@ -238,7 +245,7 @@ extension Cell {
         if disable {
             .labelDisable
         } else {
-            active ? .primaryNormal : .labelNormal
+            active ? .primaryNormal : titleTypography.color
         }
     }
     
