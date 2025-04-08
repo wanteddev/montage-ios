@@ -113,60 +113,36 @@ extension View {
 
 extension View {
     public func tooltip(
-        config: TooltipConfigurable,
-        show: Binding<Bool>,
-        content: String
-    ) -> some View {
-        modifier(
-            Tooltip.TooltipModifier(
-                config: config,
-                show: show,
-                content: content
-            )
-        )
-    }
-
-    public func tooltip(
-        variant: Tooltip.Variant = .extended(),
+        isPresented: Binding<Bool>,
         position: Tooltip.Position,
-        show: Binding<Bool>,
-        inverse: Bool = false,
+        message: String,
+        showArrow: Bool = true,
         showCloseButton: Bool = false,
-        content: String
+        buttonInfo: Tooltip.ButtonInfo? = nil
     ) -> some View {
-        tooltip(
-            config: Tooltip.DefaultTooltipConfig(
-                variant: variant,
-                position: position,
-                inverse: inverse,
-                showCloseButton: showCloseButton
-            ),
-            show: show,
-            content: content
-        )
+        modifier(Tooltip.Modifier(
+            isPresented: isPresented,
+            position: position,
+            message: message,
+            showArrow: showArrow,
+            showCloseButton: showCloseButton,
+            buttonInfo: buttonInfo
+        ))
     }
-
+    
+    @available(iOS 16.4, *)
     public func tooltip(
-        position: Tooltip.Position,
-        show: Binding<Bool>,
-        content: String
+        isPresented: Binding<Bool>,
+        message: String,
+        showCloseButton: Bool = false,
+        buttonInfo: Tooltip.ButtonInfo? = nil
     ) -> some View {
-        tooltip(
-            config: Tooltip.DefaultTooltipConfig(position: position),
-            show: show,
-            content: content
-        )
-    }
-
-    public func tooltip(
-        show: Binding<Bool>,
-        content: String
-    ) -> some View {
-        tooltip(
-            config: Tooltip.DefaultTooltipConfig(),
-            show: show,
-            content: content
-        )
+        modifier(Tooltip.Modifier(
+            isPresented: isPresented,
+            message: message,
+            showCloseButton: showCloseButton,
+            buttonInfo: buttonInfo
+        ))
     }
 }
 
