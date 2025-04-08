@@ -65,6 +65,15 @@ extension Modal {
         public var body: some View {
             ZStack(alignment: .top) {
                 VStack(spacing: 0) {
+                    if needHandle {
+                        ZStack(alignment: .bottom) {
+                            SwiftUI.Color.clear
+                                .frame(height: 12)
+                            RoundedRectangle(cornerRadius: 1000)
+                                .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                                .frame(width: 40, height: 5)
+                        }
+                    }
                     Group {
                         let contentView = AnyView(content())
                             .padding(contentEdgeInsets)
@@ -116,7 +125,7 @@ extension Modal {
                 }
             }
             .presentationDetents(detents)
-            .presentationDragIndicator(needHandle ? .visible : .hidden)
+            .presentationDragIndicator(.hidden)
         }
         
         // MARK: - Modifiers
@@ -187,7 +196,7 @@ extension Modal {
             ignoresEdgeInsets
                 ? .init(top: 0, leading: 0, bottom: 0, trailing: 0)
                 : .init(
-                    top: navigation == nil ? (needHandle ? 32 : 20) : 0,
+                    top: navigation == nil ? 20 : 0,
                     leading: 20,
                     bottom: actionAreaModel == nil ? 0 : 20,
                     trailing: 20
@@ -212,7 +221,7 @@ extension Modal {
         }
         
         private var bottomSheetContentHeight: CGFloat {
-            navigationHeight + contentHeight + actionAreaHeight
+            navigationHeight + contentHeight + actionAreaHeight + (needHandle ? 12 : 0)
         }
         
         private var detents: Set<PresentationDetent> {
