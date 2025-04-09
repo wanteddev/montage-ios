@@ -281,7 +281,7 @@ public struct Button: View {
         .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
             handler?()
         })
-        .allowsHitTesting(disable == false)
+        .allowsHitTesting(!disable && !loading)
     }
 }
 
