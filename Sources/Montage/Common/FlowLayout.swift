@@ -24,11 +24,12 @@ public struct FlowLayout: Layout {
     public func makeCache(subviews: Subviews) -> Cache {
         let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
         let spacing: [CGFloat] = subviews.indices.map { index in
+            // 마지막 항목은 간격을 추가하지 않음
             guard index != subviews.count - 1 else {
                 return 0
             }
             
-            return subviews[index].spacing.distance(
+            return self.spacing ?? subviews[index].spacing.distance(
                 to: subviews[index + 1].spacing,
                 along: .horizontal
             )
@@ -47,16 +48,26 @@ public struct FlowLayout: Layout {
         
         var lineWidth = 0.0
         var lineHeight = 0.0
+        var isFirstInLine = true
         
         for index in subviews.indices {
-            if lineWidth + cache.sizes[index].width > (proposal.width ?? 0) {
+            // 줄바꿈 여부 확인
+            if !isFirstInLine && lineWidth + cache.spacing[index-1] + cache.sizes[index].width >= (proposal.width ?? 0) - 0.001 {
                 totalHeight += lineHeight + lineSpacing
-                lineWidth = cache.sizes[index].width + (spacing ?? cache.spacing[index])
-                lineHeight = cache.sizes[index].height
-            } else {
-                lineWidth += cache.sizes[index].width + (spacing ?? cache.spacing[index])
-                lineHeight = max(lineHeight, cache.sizes[index].height)
+                lineWidth = 0
+                lineHeight = 0
+                isFirstInLine = true
             }
+            
+            // 간격 추가
+            if !isFirstInLine {
+                lineWidth += cache.spacing[index-1]
+            }
+            
+            // 항목 너비 추가
+            lineWidth += cache.sizes[index].width
+            lineHeight = max(lineHeight, cache.sizes[index].height)
+            isFirstInLine = false
             
             totalWidth = max(totalWidth, lineWidth)
         }
@@ -75,37 +86,33 @@ public struct FlowLayout: Layout {
         var lineX = bounds.minX
         var lineY = bounds.minY
         var lineHeight: CGFloat = 0
+        var isFirstInLine = true
         
         for index in subviews.indices {
-            if lineX + cache.sizes[index].width - bounds.minX > (proposal.width ?? 0) {
+            // 줄바꿈 여부 확인
+            if !isFirstInLine && lineX + cache.spacing[index-1] + cache.sizes[index].width - bounds.minX >= (proposal.width ?? 0) - 0.001 {
                 lineY += lineHeight + lineSpacing
                 lineHeight = 0
                 lineX = bounds.minX
+                isFirstInLine = true
             }
             
-            let position = CGPoint(
-                x: lineX + cache.sizes[index].width / 2,
-                y: lineY + cache.sizes[index].height / 2
-            )
+            // 간격 추가
+            if !isFirstInLine {
+                lineX += cache.spacing[index-1]
+            }
             
-            lineHeight = max(lineHeight, cache.sizes[index].height)
-            lineX += cache.sizes[index].width + (spacing ?? cache.spacing[index])
-            
+            // 항목 배치
             subviews[index].place(
-                at: position,
-                anchor: .center,
+                at: CGPoint(x: lineX, y: lineY),
+                anchor: .topLeading,
                 proposal: ProposedViewSize(cache.sizes[index])
             )
+            
+            // 상태 업데이트 - sizeThatFits와 동일한 방식
+            lineHeight = max(lineHeight, cache.sizes[index].height)
+            lineX += cache.sizes[index].width
+            isFirstInLine = false
         }
     }
 }
-
-#Preview(body: {
-    SwiftUI.ScrollView {
-        FlowLayout {
-            ForEach(0 ..< 97) { i in
-                Chip.Action(text: "\(i)")
-            }
-        }
-    }
-})

@@ -141,7 +141,7 @@ public struct MeasureView: View {
                             .frame(width: 1)
                     }
                     .frame(width: CGFloat(value))
-                    Text("\(Int(value))")
+                    Text("\(String(format: "%.1f", value))")
                         .font(.system(size: 6))
                         .background {
                             Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
@@ -162,7 +162,7 @@ public struct MeasureView: View {
                     .frame(height: CGFloat(value))
                     Rectangle()
                         .frame(width: 1, height: CGFloat(value))
-                    Text("\(Int(value))")
+                    Text("\(String(format: "%.1f", value))")
                         .font(.system(size: 6))
                         .background {
                             Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
@@ -188,7 +188,7 @@ public struct MeasureBoxView: View {
                 .stroke()
                 .frame(width: CGFloat(width), height: CGFloat(height))
                 .overlay {
-                    Text("\(Int(width))x\(Int(height))")
+                    Text("\(String(format: "%.1f", width))x\(String(format: "%.1f", height))")
                         .font(.system(size: 6))
                         .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
                 }
