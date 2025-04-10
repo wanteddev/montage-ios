@@ -19,8 +19,9 @@ public struct ContentBadge: View {
     }
     
     /// 뱃지의 색상을 결정하는 열거형입니다.
-    public enum ColorStyle: Equatable, Hashable {
-        case neutral, accent(_ content: SwiftUI.Color, background: SwiftUI.Color? = nil)
+    public enum ColorStyle: Equatable, Hashable, CaseDescribable {
+        case neutral(_ contentColor: SwiftUI.Color? = nil)
+        case accent(_ contentColor: SwiftUI.Color, background: SwiftUI.Color? = nil)
     }
     
     private let variant: Variant
@@ -33,7 +34,7 @@ public struct ContentBadge: View {
     // MARK: - Modifiers
     
     private var size: Size = .small
-    private var colorStyle: ColorStyle = .neutral
+    private var colorStyle: ColorStyle = .neutral()
     private var leadingIcon: Icon? = nil
     private var trailingIcon: Icon? = nil
     private var text: String
@@ -119,8 +120,8 @@ private extension ContentBadge {
     
     var contentColor: SwiftUI.Color {
         switch colorStyle {
-        case .neutral:
-            return .semantic(.labelAlternative)
+        case .neutral(let contentColor):
+            return contentColor ?? .semantic(.labelAlternative)
         case let .accent(contentColor, _):
             return contentColor
         }

@@ -32,7 +32,7 @@ public class ContentBadgeUIView: UIView {
     }
     
     /// 뱃지에 사용될 색상 스타일입니다.
-    public var colorStyle: ContentBadge.ColorStyle = .neutral {
+    public var colorStyle: ContentBadge.ColorStyle = .neutral() {
         didSet {
             updateViews()
         }
