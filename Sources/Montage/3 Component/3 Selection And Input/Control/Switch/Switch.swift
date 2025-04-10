@@ -9,8 +9,8 @@ import SwiftUI
 
 extension Control {
     public struct Switch: View {
-        public enum Size {
-            case normal, small
+        public enum Size: String, CaseIterable {
+            case small, medium
         }
 
         @Binding private var isOn: Bool
@@ -21,7 +21,7 @@ extension Control {
 
         public init(
             _ isOn: Binding<Bool>,
-            size: Size = .normal,
+            size: Size = .small,
             onChange: @escaping (Bool) -> Void = { _ in }
         ) {
             _isOn = isOn
@@ -51,7 +51,7 @@ extension Control {
 
         private var containerSize: CGSize {
             switch size {
-            case .normal:
+            case .medium:
                 .init(width: 52, height: 32)
             case .small:
                 .init(width: 39, height: 24)
