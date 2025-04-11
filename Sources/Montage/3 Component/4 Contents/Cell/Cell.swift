@@ -65,7 +65,7 @@ public struct Cell: View {
                             Text(caption)
                                 .montage(
                                     variant: .label2,
-                                    semantic: disable ? .labelDisable : .labelAlternative
+                                    semantic: .labelAlternative
                                 )
                                 .paragraph(variant: .label2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -104,6 +104,7 @@ public struct Cell: View {
         ))
         .contentShape(Rectangle())
         .allowsHitTesting(disable == false)
+        .opacity(disable ? 0.43 : 1)
         .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
             onTap?()
         })
@@ -243,7 +244,7 @@ public struct Cell: View {
 extension Cell {
     private var normalTitleColor: Color.Semantic {
         if disable {
-            .labelDisable
+            .labelAlternative
         } else {
             active ? .primaryNormal : titleTypography.color
         }
