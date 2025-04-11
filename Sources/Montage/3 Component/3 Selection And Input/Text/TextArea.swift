@@ -490,7 +490,7 @@ extension TextInput {
                 case let .badge(variant, title):
                     ContentBadge(variant: variant, text: title)
                         .size(.medium)
-                        .colorStyle(.neutral)
+                        .colorStyle(.neutral())
                 }
             }
         }
