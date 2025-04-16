@@ -22,7 +22,7 @@ public struct Toast: View {
         }
     }
 
-    public enum Variant: Equatable, CaseDescribable {
+    public enum Variant: Equatable {
         case normal(Montage.Icon? = nil, tint: Montage.Color.Semantic? = nil)
         case positive
         case cautionary

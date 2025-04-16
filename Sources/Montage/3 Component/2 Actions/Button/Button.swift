@@ -43,11 +43,11 @@ public struct Button: View {
         case solid, outlined, text
     }
     
-    public enum Variant: String, CaseIterable {
+    public enum Variant: String {
         case primary, secondary, assistive
     }
     
-    public enum Size: String, CaseIterable {
+    public enum Size: String {
         case small, medium, large
     }
     

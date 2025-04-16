@@ -11,7 +11,7 @@ extension Avatar {
     public struct Group: View {
         // MARK: - Types
         
-        public enum Size: String, CaseIterable {
+        public enum Size {
             case xsmall
             case small
             

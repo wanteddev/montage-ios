@@ -11,7 +11,7 @@ import SwiftUI
 public struct Avatar: View {
     // MARK: - Types
     
-    public enum Variant: String, CaseIterable {
+    public enum Variant {
         case person, company, academy
         
         fileprivate var placeholderImageName: String {
@@ -47,7 +47,7 @@ public struct Avatar: View {
         }
     }
     
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case xsmall
         case small
         case medium

@@ -1,6 +1,6 @@
 # ``Montage``
 
-Wanted One Design System
+Wanted Design System
 
 ## Overview
 

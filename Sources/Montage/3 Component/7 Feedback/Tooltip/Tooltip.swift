@@ -11,7 +11,7 @@ public enum Tooltip {
     
     // MARK: - Types
     
-    public enum Position: CaseDescribable {
+    public enum Position {
         case leading(arrowPosition: VerticalAlignment = .center)
         case trailing(arrowPosition: VerticalAlignment = .center)
         case top(arrowPosition: HorizontalAlignment = .center)

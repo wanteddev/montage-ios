@@ -9,7 +9,7 @@ import SwiftUI
 
 extension Pagination {
     public struct Counter: View {
-        public enum Size: String, CaseIterable {
+        public enum Size {
             case small, medium
         }
         

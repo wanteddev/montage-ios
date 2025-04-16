@@ -14,12 +14,12 @@ public struct ContentBadge: View {
     }
     
     /// 뱃지의 사이즈를 결정하는 열거형입니다.
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case xsmall, small, medium
     }
     
     /// 뱃지의 색상을 결정하는 열거형입니다.
-    public enum ColorStyle: Equatable, Hashable, CaseDescribable {
+    public enum ColorStyle: Equatable, Hashable {
         case neutral(_ contentColor: SwiftUI.Color? = nil)
         case accent(_ contentColor: SwiftUI.Color, background: SwiftUI.Color? = nil)
     }
