@@ -11,7 +11,7 @@ public struct Select: View {
     // MARK: - Types
     
     /// 다중 선택 가능여부를 나타내는 열거형입니다.
-    public enum Variant: CaseDescribable {
+    public enum Variant {
         case single(selectionType: SingleSelectionType = .radio, menuPrimaryButtonTitle: String? = nil)
         case multiple(render: Render = .text, overflow: Bool = false, menuPrimaryButtonTitle: String)
         
@@ -46,18 +46,18 @@ public struct Select: View {
     }
     
     /// variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.
-    public enum SingleSelectionType: String, CaseIterable {
+    public enum SingleSelectionType {
         case checkmark, radio
     }
     
     /// variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.
-    public enum Render: String, CaseIterable {
+    public enum Render {
         case text
         case chip
     }
     
     /// 왼쪽에 표시될 컨텐트 타입입니다.
-    public enum LeadingContent: CaseDescribable {
+    public enum LeadingContent {
         case icon(Icon)
         case iconButton(IconButton)
         case custom(() -> any View)

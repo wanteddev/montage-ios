@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct Menu: View {
-    public enum Variant: String, CaseIterable {
+    public enum Variant {
         case normal
         case radio
         case checkbox

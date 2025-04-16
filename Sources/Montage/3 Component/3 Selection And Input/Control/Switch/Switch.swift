@@ -9,7 +9,7 @@ import SwiftUI
 
 extension Control {
     public struct Switch: View {
-        public enum Size: String, CaseIterable {
+        public enum Size {
             case small, medium
         }
 

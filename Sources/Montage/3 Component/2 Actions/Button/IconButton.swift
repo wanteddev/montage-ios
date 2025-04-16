@@ -182,9 +182,9 @@ public struct IconButton: View {
 
 extension IconButton {
     /// 버튼의 외관을 결정하는 열거형입니다.
-    public enum Variant: CaseDescribable {
+    public enum Variant {
         /// 버튼 사이즈를 결정하는 열거형입니다.
-        public enum Size: CaseDescribable {
+        public enum Size {
             case small
             case medium
             case custom(size: Int)
