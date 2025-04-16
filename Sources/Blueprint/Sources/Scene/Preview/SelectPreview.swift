@@ -29,10 +29,13 @@ struct SelectPreview: View {
     @State private var menuResizeIndex = 0
     @State private var itemCountClassIndex: Int = 0
 
+    private let selectionTypes: [Select.SingleSelectionType] = [.checkmark, .radio]
+    private let renders: [Select.Render] = [.text, .chip]
+    
     private var variants: [Select.Variant] {
         [
-            .single(selectionType: Select.SingleSelectionType.allCases[selectionTypeIndex], menuPrimaryButtonTitle: menuActionArea ? menuButtonTitle : nil),
-            .multiple(render: Select.Render.allCases[renderIndex], overflow: overflow, menuPrimaryButtonTitle: menuButtonTitle)
+            .single(selectionType: selectionTypes[selectionTypeIndex], menuPrimaryButtonTitle: menuActionArea ? menuButtonTitle : nil),
+            .multiple(render: renders[renderIndex], overflow: overflow, menuPrimaryButtonTitle: menuButtonTitle)
         ]
     }
     
@@ -57,6 +60,10 @@ struct SelectPreview: View {
     
     private enum ItemCountClass: String, CaseIterable {
         case few, medium, many
+        
+        var description: String {
+            self.rawValue
+        }
     }
     
     @State private var items: [Select.Item] = [
@@ -120,9 +127,9 @@ struct SelectPreview: View {
                     Text("variant")
                     SegmentedControl(
                         selectedIndex: $variantIndex,
-                        items: variants.map { .init(title: $0.description)
-                        }) { _ in }
-                        .size(.small)
+                        labels: variants.map(\.description)
+                    )
+                    .size(.small)
                 }
                 switch variants[variantIndex] {
                 case .single:
@@ -130,9 +137,9 @@ struct SelectPreview: View {
                         Text("selectionType")
                         SegmentedControl(
                             selectedIndex: $selectionTypeIndex,
-                            items: Select.SingleSelectionType.allCases.map { .init(title: $0.rawValue)
-                            }) { _ in }
-                            .size(.small)
+                            labels: selectionTypes.map(\.description)
+                        )
+                        .size(.small)
                     }
                     HStack {
                         Text("menuActionArea")
@@ -149,9 +156,9 @@ struct SelectPreview: View {
                         Text("render")
                         SegmentedControl(
                             selectedIndex: $renderIndex,
-                            items: Select.Render.allCases.map { .init(title: $0.rawValue)
-                            }) { _ in }
-                            .size(.small)
+                            labels: renders.map(\.description)
+                        )
+                        .size(.small)
                         Text("overflow")
                         Control.Switch($overflow)
                     }
@@ -178,9 +185,9 @@ struct SelectPreview: View {
                     Text("leadingContent")
                     SegmentedControl(
                         selectedIndex: $leadingContentIndex,
-                        items: leadingContents.map { .init(title: $0?.description ?? "none")
-                        }) { _ in }
-                        .size(.small)
+                        labels: leadingContents.map { $0?.description ?? "none" }
+                    )
+                    .size(.small)
                 }
                 HStack {
                     Text("custom menu")
@@ -245,6 +252,11 @@ struct SelectPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Select.Variant: CaseDescribable {}
+extension Select.SingleSelectionType: CaseDescribable {}
+extension Select.Render: CaseDescribable {}
+extension Select.LeadingContent: CaseDescribable {}
 
 #Preview {
     SelectPreview()

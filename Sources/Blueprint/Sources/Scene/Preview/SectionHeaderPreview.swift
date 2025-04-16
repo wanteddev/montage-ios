@@ -15,6 +15,13 @@ struct SectionHeaderPreview: View {
     @State var titleColor = false
     @State var trailingContent = false
     
+    private let sizes: [SectionHeader.Size] = [
+        .xsmall,
+        .small,
+        .medium,
+        .large
+    ]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack {
@@ -27,7 +34,7 @@ struct SectionHeaderPreview: View {
                         Chip.Filter(variant: .outlined, size : .small, text: "텍스트")
                     } : nil)
                     .trailingContent(trailingContent ? { ContentBadge(text: "텍스트") } : nil)
-                    .size(SectionHeader.Size.allCases[sizeIndex])
+                    .size(sizes[sizeIndex])
                     .if(titleColor) {
                         $0.titleColor(.semantic(.accentBackgroundPink))
                 }
@@ -38,7 +45,7 @@ struct SectionHeaderPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: SectionHeader.Size.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
                 }
                 HStack {
@@ -61,6 +68,8 @@ struct SectionHeaderPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension SectionHeader.Size: CaseDescribable {}
 
 import Pretendard
 #Preview {

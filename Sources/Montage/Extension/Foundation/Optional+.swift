@@ -6,7 +6,7 @@
 //
 
 extension Optional where Wrapped: Collection {
-    public var isNilOrEmpty: Bool {
+    var isNilOrEmpty: Bool {
         switch self {
         case .none: return true
         case .some(let value):

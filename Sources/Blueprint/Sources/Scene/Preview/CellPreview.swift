@@ -65,7 +65,7 @@ struct CellPreview: View {
                     Text("Vertical Padding")
                     SegmentedControl(
                         selectedIndex: $verticalPaddingIndex,
-                        labels: Cell.VerticalPadding.allCases.map(\.rawValue)
+                        labels: verticalPaddings.map(\.description)
                     )
                     .size(.small)
                 }
@@ -132,6 +132,8 @@ struct CellPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Cell.VerticalPadding: CaseDescribable {}
 
 #Preview {
     CellPreview()

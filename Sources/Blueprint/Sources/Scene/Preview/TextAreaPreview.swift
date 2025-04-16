@@ -16,7 +16,7 @@ struct TextAreaPreview: View {
         case limit
         case fixed
         
-        var selectableTitle: String {
+        var description: String {
             self.rawValue.capitalized
         }
         
@@ -97,12 +97,12 @@ struct TextAreaPreview: View {
                             Text("Resize :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Menu(resize.selectableTitle) {
+                            Menu(resize.description) {
                                 ForEach(Resize.allCases, id: \.self) { r in
                                     Button {
                                         resize = r
                                     } label: {
-                                        Text(r.selectableTitle)
+                                        Text(r.description)
                                     }
                                 }
                             }
@@ -227,6 +227,8 @@ extension TextInput.TextArea.Resource {
         }
     }
 }
+
+extension TextInput.TextArea.Resource: CaseDescribable {}
 
 #Preview {
     TextAreaPreview()

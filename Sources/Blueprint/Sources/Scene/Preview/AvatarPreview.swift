@@ -17,6 +17,9 @@ struct AvatarPreview: View {
     @State var borderWidth: CGFloat = 1
     @State var invalidUrl: Bool = false
     
+    let variants: [Avatar.Variant] = [.person, .company, .academy]
+    let sizes: [Avatar.Size] = [.xsmall, .small, .medium, .large, .xlarge]
+    
     var body: some View {
         VStack {
             Text("Avatar").font(.title)
@@ -25,7 +28,7 @@ struct AvatarPreview: View {
                     Text("Preview").bold()
                     HStack {
                         Spacer()
-                        Avatar(invalidUrl ? "https://invalid-url" : "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg", variant: Avatar.Variant.allCases[variantIndex], size: Avatar.Size.allCases[sizeIndex])
+                        Avatar(invalidUrl ? "https://invalid-url" : "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg", variant: variants[variantIndex], size: sizes[sizeIndex])
                             .pushBadge(pushBadge)
                             .border(color: borderColor, width: borderWidth)
                         Spacer()
@@ -34,10 +37,10 @@ struct AvatarPreview: View {
                     Text("Options").bold()
                     HStack {
                         Text("variant")
-                        SegmentedControl(selectedIndex: $variantIndex, labels: Avatar.Variant.allCases.map(\.rawValue))
+                        SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
                             .size(.small)
                     }
-                    if Avatar.Variant.allCases[variantIndex] == .person {
+                    if variants[variantIndex] == .person {
                         HStack {
                             Text("pushBadge")
                             Control.Switch($pushBadge)
@@ -45,7 +48,7 @@ struct AvatarPreview: View {
                     }
                     HStack {
                         Text("size")
-                        SegmentedControl(selectedIndex: $sizeIndex, labels: Avatar.Size.allCases.map(\.rawValue))
+                        SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                             .size(.small)
                     }
                     HStack {
@@ -83,6 +86,9 @@ struct AvatarGroupPreview: View {
     @State var itemCount: CGFloat = 5
     @State var trailingContent = false
     @State var invalidUrl: Bool = false
+    
+    let variants: [Avatar.Variant] = [.person, .company, .academy]
+    let sizes: [Avatar.Group.Size] = [.xsmall, .small]
 
     var body: some View {
         Text("AvatarGroup").font(.title)
@@ -91,7 +97,7 @@ struct AvatarGroupPreview: View {
                 Text("Preview").bold()
                 HStack {
                     Spacer()
-                    Avatar.Group(imageUrls, variant: Avatar.Variant.allCases[variantIndex], size: Avatar.Group.Size.allCases[sizeIndex]) {
+                    Avatar.Group(imageUrls, variant: variants[variantIndex], size: sizes[sizeIndex]) {
                         alertLabel = "Item at index \($0) pressed"
                         alertPresented.toggle()
                     }
@@ -115,12 +121,12 @@ struct AvatarGroupPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("variant")
-                    SegmentedControl(selectedIndex: $variantIndex, labels: Avatar.Variant.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
                         .size(.small)
                 }
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: Avatar.Group.Size.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
                 }
                 HStack {
@@ -148,6 +154,10 @@ struct AvatarGroupPreview: View {
         return urls
     }
 }
+
+extension Avatar.Variant: CaseDescribable {}
+extension Avatar.Size: CaseDescribable {}
+extension Avatar.Group.Size: CaseDescribable {}
 
 #Preview {
     AvatarPreview()

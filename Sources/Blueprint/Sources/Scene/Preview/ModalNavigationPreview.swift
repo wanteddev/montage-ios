@@ -17,7 +17,8 @@ struct ModalNavigationPreview: View {
     @State private var leadingButton = true
     @State private var leadingButtonTypeIndex = 0
     @State private var trailingButtonCount = 1
-
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack(alignment: .top) {
             ScrollView(
@@ -82,15 +83,24 @@ struct ModalNavigationPreview: View {
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .navigationBarHidden(true)
     }
     
     private var variants: [Modal.Navigation.Variant] {
         [.normal, .extended, .emphasized, .floating(alternative: alternative, background: background)]
     }
     
-    private let leadingButtons: [Bar.TopNavigation.Resource.LeadingButton] = [
-        .back(action: {}), .icon(.flipBackward, action: {}), .text("뒤로", action: {})
-    ]
+    private var leadingButtons: [Bar.TopNavigation.Resource.LeadingButton] {
+        [
+            .back(action: {
+                presentationMode.wrappedValue.dismiss()
+            }), .icon(.flipBackward, action: {
+                presentationMode.wrappedValue.dismiss()
+            }), .text("뒤로", action: {
+                presentationMode.wrappedValue.dismiss()
+            })
+        ]
+    }
     
     private let actions: [Bar.TopNavigation.Resource.TrailingButton] = {
         [
@@ -100,6 +110,10 @@ struct ModalNavigationPreview: View {
         ]
     }()
 }
+
+extension Modal.Navigation.Variant: CaseDescribable {}
+extension Bar.TopNavigation.Resource.LeadingButton: CaseDescribable {}
+extension Bar.TopNavigation.Resource.TrailingButton: CaseDescribable {}
 
 #Preview {
     ModalNavigationPreview()

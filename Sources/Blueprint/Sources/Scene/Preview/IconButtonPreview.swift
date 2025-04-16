@@ -153,6 +153,9 @@ struct IconButtonPreview: View {
     }
 }
 
+extension IconButton.Variant: CaseDescribable {}
+extension IconButton.Variant.Size: CaseDescribable {}
+
 #Preview {
     IconButtonPreview()
 }

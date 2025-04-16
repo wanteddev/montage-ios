@@ -20,6 +20,9 @@ struct ControlPreview: View {
     @State private var tight: Bool = false
     @State private var guideLine: Bool = true
     
+    private let sizes: [Control.Size] = [.small, .medium]
+    private let states: [Control.State] = [.unchecked, .checked, .indeterminate]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
@@ -34,13 +37,13 @@ struct ControlPreview: View {
                     Group {
                         Control.checkbox(
                             $state,
-                            size: Control.Size.allCases[sizeIndex]
+                            size: sizes[sizeIndex]
                         )
                         .disable(disabled)
                         .tight(tight)
                         Control.checkmark(
                             checked: checked,
-                            size: Control.Size.allCases[sizeIndex]
+                            size: sizes[sizeIndex]
                         ) {
                             self.checked = $0
                         }
@@ -48,7 +51,7 @@ struct ControlPreview: View {
                         .tight(tight)
                         Control.radio(
                             $selected,
-                            size: Control.Size.allCases[sizeIndex]
+                            size: sizes[sizeIndex]
                         )
                         .disable(disabled)
                         .tight(tight)
@@ -59,8 +62,8 @@ struct ControlPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("state")
-                    SegmentedControl(selectedIndex: $stateIndex, labels: Control.State.allCases.map(\.rawValue)) {
-                        state = Control.State.allCases[$0]
+                    SegmentedControl(selectedIndex: $stateIndex, labels: states.map(\.description)) {
+                        state = states[$0]
                         checked = $0 != 0
                         selected = $0 != 0
                     }
@@ -68,8 +71,11 @@ struct ControlPreview: View {
                 }
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: Control.Size.allCases.map(\.rawValue))
-                        .size(.small)
+                    SegmentedControl(
+                        selectedIndex: $sizeIndex,
+                        labels: sizes.map(\.description)
+                    )
+                    .size(.small)
                 }
                 HStack {
                     Text("disabled")
@@ -84,6 +90,9 @@ struct ControlPreview: View {
     }
 }
 
+extension Control.Size: CaseDescribable {}
+extension Control.Variant: CaseDescribable {}
+extension Control.State: CaseDescribable {}
 
 struct CheckboxPreview_Previews: PreviewProvider {
     @State static private var isOn: Bool = true

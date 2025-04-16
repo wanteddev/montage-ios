@@ -103,8 +103,8 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: AccordionPreview())
         case .category:
             vc = UIHostingController(rootView: CategoryPreview())
-        case .playIconBadge:
-            vc = UIHostingController(rootView: PlayIconBadgePreview())
+        case .playBadge:
+            vc = UIHostingController(rootView: PlayBadgePreview())
         case .sectionHeader:
             vc = UIHostingController(rootView: SectionHeaderPreview())
         case .menu:

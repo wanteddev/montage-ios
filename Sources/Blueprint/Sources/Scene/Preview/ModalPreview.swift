@@ -52,6 +52,7 @@ struct ModalPreview: View {
         .onAppear {
             subViewTitle = ""
         }
+        .navigationBarHidden(false)
     }
 }
 

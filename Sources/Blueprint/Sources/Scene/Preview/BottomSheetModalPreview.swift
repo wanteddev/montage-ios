@@ -211,6 +211,8 @@ struct BottomSheetModalPreview: View {
     }
 }
 
+extension Modal.BottomSheet.Resize: CaseDescribable {}
+
 #Preview {
     BottomSheetModalPreview()
 }

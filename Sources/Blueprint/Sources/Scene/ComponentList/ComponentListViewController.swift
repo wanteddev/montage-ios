@@ -56,6 +56,11 @@ final class ComponentListViewController: BaseViewController {
         
         interactor?.onLoad()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 }
 
 extension ComponentListViewController {

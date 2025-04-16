@@ -17,6 +17,12 @@ struct TabPreview: View {
     @State var horizontalPadding: Bool = false
     @State var icon: Bool = false
     
+    private let sizes: [Montage.Tab.Size] = [
+        .small,
+        .medium,
+        .large
+    ]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack {
@@ -29,7 +35,7 @@ struct TabPreview: View {
                     selectedIndex: $selectedIndex,
                     items: items
                 )
-                .size(Tab.Size.allCases[sizeIndex])
+                .size(sizes[sizeIndex])
                 .resize(resize ? .fill : .hug)
                 .horizontalPadding(horizontalPadding)
                 .if(icon) {
@@ -50,7 +56,7 @@ struct TabPreview: View {
                     Text("Options").bold()
                     HStack {
                         Text("size")
-                        SegmentedControl(selectedIndex: $sizeIndex, labels: Tab.Size.allCases.map(\.rawValue))
+                        SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                             .size(.small)
                     }
                     HStack {
@@ -73,6 +79,8 @@ struct TabPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Montage.Tab.Size: CaseDescribable {}
 
 #Preview {
     TabPreview()
