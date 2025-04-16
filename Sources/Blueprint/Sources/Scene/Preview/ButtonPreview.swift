@@ -25,17 +25,20 @@ struct ButtonPreview: View {
     @State private var fontWeight = false
     @State private var loading = false
     
+    private let variants: [Montage.Button.Variant] = [.primary, .secondary, .assistive]
+    private let sizes: [Montage.Button.Size] = [.small, .medium, .large]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
                 
                 Grid {
-                    let variant = Button.Variant.allCases[variantIndex]
-                    let size = Button.Size.allCases[sizeIndex]
+                    let variant = variants[variantIndex]
+                    let size = sizes[sizeIndex]
                     
-                    if let solidVariant = Button.Solid.Variant(rawValue: variant.rawValue),
-                       let solidSize = Button.Solid.Size(rawValue: size.rawValue) {
+                    if let solidVariant = Button.Solid.Variant(rawValue: variant.description),
+                       let solidSize = Button.Solid.Size(rawValue: size.description) {
                         GridRow {
                             Spacer(minLength: 0)
                             
@@ -78,8 +81,8 @@ struct ButtonPreview: View {
                         }
                     }
                     
-                    if let outlinedVariant = Button.Outlined.Variant(rawValue: variant.rawValue),
-                       let outlinedSize = Button.Outlined.Size(rawValue: size.rawValue) {
+                    if let outlinedVariant = Button.Outlined.Variant(rawValue: variant.description),
+                       let outlinedSize = Button.Outlined.Size(rawValue: size.description) {
                         GridRow {
                             Spacer(minLength: 0)
                             
@@ -122,8 +125,8 @@ struct ButtonPreview: View {
                         }
                     }
                     
-                    if let textVariant = Button.Text.Variant(rawValue: variant.rawValue),
-                       let textSize = Button.Text.Size(rawValue: size.rawValue) {
+                    if let textVariant = Button.Text.Variant(rawValue: variant.description),
+                       let textSize = Button.Text.Size(rawValue: size.description) {
                         GridRow {
                             Spacer(minLength: 0)
                             
@@ -156,7 +159,7 @@ struct ButtonPreview: View {
                     Text("variant")
                     SegmentedControl(
                         selectedIndex: $variantIndex,
-                        labels: Button.Variant.allCases.map(\.rawValue)
+                        labels: variants.map(\.description)
                     )
                     .size(.small)
                 }
@@ -164,7 +167,7 @@ struct ButtonPreview: View {
                     Text("size")
                     SegmentedControl(
                         selectedIndex: $sizeIndex,
-                        labels: Button.Size.allCases.map(\.rawValue)
+                        labels: sizes.map(\.description)
                     )
                     .size(.small)
                 }
@@ -213,6 +216,9 @@ struct ButtonPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Montage.Button.Variant: CaseDescribable {}
+extension Montage.Button.Size: CaseDescribable {}
 
 #Preview {
     ButtonPreview()

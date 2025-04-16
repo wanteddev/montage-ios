@@ -69,7 +69,7 @@ struct AccordionPreview: View {
                     Text("verticalPadding")
                     SegmentedControl(
                         selectedIndex: $verticalPaddingIndex,
-                        labels: Accordion.VerticalPadding.allCases.map(\.rawValue)
+                        labels: verticalPaddings.map(\.description)
                     )
                     .size(.small)
                 }
@@ -95,6 +95,8 @@ struct AccordionPreview: View {
             .frame(height: 100)
     }
 }
+
+extension Accordion.VerticalPadding: CaseDescribable {}
 
 #Preview {
     AccordionPreview()

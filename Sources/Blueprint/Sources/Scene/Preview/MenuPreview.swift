@@ -26,13 +26,15 @@ struct MenuPreview: View {
     @State var menuActionArea: Bool = false
     @State var selectAllState: Control.State = .unchecked
     
+    private let variants: [Montage.Menu.Variant] = [.normal, .radio, .checkbox]
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
                 Text("Preview").bold()
                 Spacer()
             }
-            Montage.Menu(variant: Montage.Menu.Variant.allCases[variantIndex], items: $items) {
+            Montage.Menu(variant: variants[variantIndex], items: $items) {
                 print("\($0) selectd")
             } cellModifier: { index, cell in
                 cell
@@ -40,7 +42,7 @@ struct MenuPreview: View {
             .if(menuActionArea) {
                 $0.menuActionArea {
                     Group {
-                        if Montage.Menu.Variant.allCases[variantIndex] == .checkbox {
+                        if variants[variantIndex] == .checkbox {
                             Input.checkbox(state: selectAllState, text: leadingButtonTitle) { _ in
                                 items = items.map {
                                     var mutated = $0
@@ -65,7 +67,7 @@ struct MenuPreview: View {
             Text("Options").bold()
             HStack {
                 Text("size")
-                SegmentedControl(selectedIndex: $variantIndex, labels: Montage.Menu.Variant.allCases.map(\.rawValue))
+                SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
                     .size(.small)
             }
             HStack {
@@ -97,13 +99,15 @@ struct MenuPreview: View {
     }
     
     var leadingButtonTitle: String {
-        if Montage.Menu.Variant.allCases[variantIndex] == .checkbox {
+        if variants[variantIndex] == .checkbox {
             allSelected ? "전체 해제" : "전체 선택"
         } else {
             ""
         }
     }
 }
+
+extension Montage.Menu.Variant: CaseDescribable {}
 
 #Preview {
     MenuPreview()

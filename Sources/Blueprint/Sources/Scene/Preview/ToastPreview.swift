@@ -69,6 +69,8 @@ struct ToastPreview: View {
     }
 }
 
+extension Toast.Variant: CaseDescribable {}
+
 #Preview {
     ToastPreview()
 }

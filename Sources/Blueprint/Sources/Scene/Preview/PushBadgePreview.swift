@@ -14,9 +14,17 @@ struct PushBadgePreview: View {
     }
     
     var positionYs: [PushBadge.Position] {
-        let horizontalPosition = PushBadge.Position.HorizontalPosition.allCases[positionXIndex]
+        let horizontalPosition = horizontalPositions[positionXIndex]
         return [.top(horizontalPosition), .center(horizontalPosition), .bottom(horizontalPosition)]
     }
+    
+    private let sizes: [PushBadge.Size] = [
+        .xsmall, .small, .medium
+    ]
+    
+    private let horizontalPositions: [PushBadge.Position.HorizontalPosition] = [
+        .leading, .center, .trailing
+    ]
     
     @State var variantIndex = 0
     @State var number = 1.0
@@ -39,7 +47,7 @@ struct PushBadgePreview: View {
                         .opacity(0.3)
                         .modifier(PushBadge.Modifier(
                             variant: variants[variantIndex],
-                            size: PushBadge.Size.allCases[sizeIndex],
+                            size: sizes[sizeIndex],
                             fontColor: fontColor,
                             backgroundColor: backgroundColor,
                             position: positionYs[positionYIndex],
@@ -65,7 +73,7 @@ struct PushBadgePreview: View {
                     Text("size")
                     SegmentedControl(
                         selectedIndex: $sizeIndex,
-                        labels: PushBadge.Size.allCases.map(\.rawValue)
+                        labels: sizes.map(\.description)
                     )
                     .size(.small)
                 }
@@ -77,7 +85,7 @@ struct PushBadgePreview: View {
                     Text("horizontal")
                     SegmentedControl(
                         selectedIndex: $positionXIndex,
-                        labels: PushBadge.Position.HorizontalPosition.allCases.map(\.rawValue)
+                        labels: horizontalPositions.map(\.description)
                     )
                     .size(.small)
                 }
@@ -100,6 +108,11 @@ struct PushBadgePreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension PushBadge.Variant: CaseDescribable {}
+extension PushBadge.Size: CaseDescribable {}
+extension PushBadge.Position: CaseDescribable {}
+extension PushBadge.Position.HorizontalPosition: CaseDescribable {}
 
 #Preview {
     PushBadgePreview()

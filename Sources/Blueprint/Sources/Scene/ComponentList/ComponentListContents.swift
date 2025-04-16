@@ -35,7 +35,7 @@ class ComponentListContents {
         case divider, flowLayout
         case actionArea, button, iconButton, chip
         case control, `switch`, input, segmentedControl, select, slider, textField, textArea, dateTimePicker
-        case avatar, card, cell, thumbnail, accordion, playIconBadge, sectionHeader, contentBadge
+        case avatar, card, cell, thumbnail, accordion, playBadge, sectionHeader, contentBadge
         case loading, skeleton, pullToRefresh
         case topNavigation, progressIndicator, tab, pagination, progressTracker, category
         case pushBadge, emptyState, snackbar, toast, tooltip
@@ -48,7 +48,7 @@ class ComponentListContents {
                     .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
                     .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
-                    .pagination, .accordion, .category, .playIconBadge, .sectionHeader, .menu, .modal, .contentBadge:
+                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .menu, .modal, .contentBadge:
                 return .completed
             case .divider, .card:
                 return .previewNotReady
@@ -65,7 +65,7 @@ class ComponentListContents {
                 return .actions
             case .control, .switch, .input, .segmentedControl, .select, .slider, .textField, .textArea, .dateTimePicker:
                 return .selectionAndInput
-            case .avatar, .card, .cell, .thumbnail, .accordion, .playIconBadge, .sectionHeader, .contentBadge:
+            case .avatar, .card, .cell, .thumbnail, .accordion, .playBadge, .sectionHeader, .contentBadge:
                 return .contents
             case .loading, .skeleton, .pullToRefresh:
                 return .loading

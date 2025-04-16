@@ -22,18 +22,22 @@ struct SwitchPreview: View {
     @State private var sizeIndex: Int = 0
     @State private var disabled: Bool = false
     
+    private let sizes: [Control.Switch.Size] = [
+        .small, .medium
+    ]
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
-                Control.Switch($isOn, size: Control.Switch.Size.allCases[sizeIndex]) {
+                Control.Switch($isOn, size: sizes[sizeIndex]) {
                     print($0)
                 }
                 .disabled(disabled)
                 Text("Options").bold()
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: Control.Switch.Size.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
                 }
                 HStack {
@@ -46,6 +50,8 @@ struct SwitchPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Control.Switch.Size: CaseDescribable {}
 
 #Preview {
     SwitchPreview()

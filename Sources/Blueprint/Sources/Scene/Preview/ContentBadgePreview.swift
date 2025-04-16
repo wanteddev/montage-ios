@@ -22,6 +22,12 @@ struct ContentBadgePreview: View {
     @State private var foregroundColor: SwiftUI.Color = .semantic(.labelAlternative)
     @State private var backgroundColor: SwiftUI.Color = .semantic(.accentBackgroundViolet)
     
+    private let sizes: [ContentBadge.Size] = [
+        .xsmall,
+        .small,
+        .medium
+    ]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack {
@@ -33,7 +39,7 @@ struct ContentBadgePreview: View {
                     variant: isSolid ? .solid : .outlined,
                     text: "Badge"
                 )
-                .size(ContentBadge.Size.allCases[sizeIndex])
+                .size(sizes[sizeIndex])
                 .colorStyle(
                     colorStyleIndex == 0 ? .neutral(foregroundColor) : .accent(foregroundColor, background: backgroundColor)
                 )
@@ -59,7 +65,7 @@ struct ContentBadgePreview: View {
                 }
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: ContentBadge.Size.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
                 }
                 HStack {
@@ -97,6 +103,9 @@ struct ContentBadgePreview: View {
         ]
     }
 }
+
+extension ContentBadge.Size: CaseDescribable {}
+extension ContentBadge.ColorStyle: CaseDescribable {}
 
 #Preview {
     ContentBadgePreview()

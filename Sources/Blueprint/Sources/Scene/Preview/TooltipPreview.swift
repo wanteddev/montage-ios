@@ -293,7 +293,7 @@ enum VAlign: String, CaseIterable {
     case bottom
 }
 
-extension Tooltip.Position {
+extension Tooltip.Position: CaseDescribable {
     var arrowPositions: [String] {
         switch self {
         case .top, .bottom:

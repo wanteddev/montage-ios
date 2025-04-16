@@ -21,6 +21,12 @@ public struct InputPreview: View {
     @State private var selected: Bool = false
     @State var customTypography = false
     
+    private let states: [Control.State] = [
+        .unchecked,
+        .checked,
+        .indeterminate
+    ]
+    
     public var body: some View {
         SwiftUI.ScrollView {
             VStack {
@@ -79,8 +85,8 @@ public struct InputPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("state")
-                    SegmentedControl(selectedIndex: $stateIndex, labels: Control.State.allCases.map(\.rawValue)) {
-                        state = Control.State.allCases[$0]
+                    SegmentedControl(selectedIndex: $stateIndex, labels: states.map(\.description)) {
+                        state = states[$0]
                         checked = $0 != 0
                         selected = $0 != 0
                     }

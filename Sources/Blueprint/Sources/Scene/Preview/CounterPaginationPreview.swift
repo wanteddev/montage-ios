@@ -16,6 +16,11 @@ struct CounterPaginationPreview: View {
     
     let images = ["none", "wantedCircleSymbol", "Background", "placeholder"]
     
+    private let sizes: [Pagination.Counter.Size] = [
+        .small,
+        .medium
+    ]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
@@ -26,7 +31,7 @@ struct CounterPaginationPreview: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 400)
                     Pagination.Counter(selectedPage: $selectedPage, totalPages: 10)
-                        .size(Pagination.Counter.Size.allCases[sizeIndex])
+                        .size(sizes[sizeIndex])
                         .alternative(isAlternative)
                 }
                 Text("Options").bold()
@@ -54,7 +59,7 @@ struct CounterPaginationPreview: View {
                 }
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: Pagination.Counter.Size.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
                 }
             }
@@ -63,6 +68,8 @@ struct CounterPaginationPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Pagination.Counter.Size: CaseDescribable {}
 
 #Preview {
     CounterPaginationPreview()

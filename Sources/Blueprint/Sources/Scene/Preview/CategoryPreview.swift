@@ -19,6 +19,10 @@ struct CategoryPreview: View {
     @State var icon: Bool = false
     @State var alertPresented = false
     
+    private let sizes: [Montage.Category.Size] = [
+        .small, .medium, .large, .xlarge
+    ]
+    
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
@@ -27,7 +31,7 @@ struct CategoryPreview: View {
                 
                 Category(selectedIndex: $selectedIndex, items: items)
                     .variant(isAlternative ? .alternative : .normal)
-                    .size(Category.Size.allCases[sizeIndex])
+                    .size(sizes[sizeIndex])
                     .horizontalPadding(horizontalPadding)
                     .verticalPadding(verticalPadding)
                     .if(icon) {
@@ -54,7 +58,7 @@ struct CategoryPreview: View {
                 }
                 HStack {
                     Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: Category.Size.allCases.map(\.rawValue))
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
                 }
             }
@@ -64,6 +68,8 @@ struct CategoryPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Montage.Category.Size: CaseDescribable {}
 
 #Preview {
     CategoryPreview()

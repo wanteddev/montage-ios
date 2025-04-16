@@ -13,7 +13,7 @@ public struct SkeletonPreview: View {
     @State private var text = "텍스트 스켈레톤 테스트"
     @State private var kindIndex = 0
     @State private var alignmentIndex = 0
-    @State private var lengthIndices: [Int] = []
+    @State private var lengthIndices: [Int] = [0]
     @State private var cornerRadius: CGFloat = 3
     @State private var color: SwiftUI.Color = .semantic(.fillNormal)
     @State private var opacity: CGFloat = 1
@@ -22,6 +22,16 @@ public struct SkeletonPreview: View {
         .text(),
         .rectangle(),
         .circle
+    ]
+    
+    private let alignments: [Skeleton.Align] = [
+        .leading,
+        .center,
+        .trailing
+    ]
+    
+    private let lengths: [Skeleton.Length] = [
+        ._100, ._75, ._50, ._25
     ]
     
     @State private var lineNumber: Int = 1
@@ -40,8 +50,8 @@ public struct SkeletonPreview: View {
                             .skeleton(
                                 isPresented: isPresented,
                                 kind: .text(
-                                    alignment: Skeleton.Align.allCases[alignmentIndex],
-                                    lengths: lengthIndices.map { Skeleton.Length.allCases[$0] },
+                                    alignment: alignments[alignmentIndex],
+                                    lengths: lengthIndices.map { lengths[$0] },
                                     cornerRadius: cornerRadius,
                                     lineNumber: lineNumber
                                 ),
@@ -93,14 +103,14 @@ public struct SkeletonPreview: View {
                             Text("align")
                             SegmentedControl(
                                 selectedIndex: $alignmentIndex,
-                                labels: Skeleton.Align.allCases.map(\.rawValue)
+                                labels: alignments.map(\.description)
                             )
                             .size(.small)
                         }
                         ForEach(0..<lineNumber, id: \.self) { index in
                             HStack {
                                 Text("length of line \(index + 1)")
-                                SegmentedControl(selectedIndex: $lengthIndices[safe: index] ?? .constant(0), labels: Skeleton.Length.allCases.map { "\(Int($0.rawValue * 100))%" })
+                                SegmentedControl(selectedIndex: $lengthIndices[safe: index] ?? .constant(0), labels: lengths.map { "\(Int($0.rawValue * 100))%" })
                                     .size(.small)
                             }
                         }
@@ -142,6 +152,10 @@ public struct SkeletonPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension Skeleton.Align: CaseDescribable {}
+extension Skeleton.Length: CaseDescribable {}
+extension Skeleton.Kind: CaseDescribable {}
 
 #Preview {
     SkeletonPreview()
