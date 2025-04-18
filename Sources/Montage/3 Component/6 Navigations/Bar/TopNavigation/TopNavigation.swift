@@ -198,36 +198,39 @@ extension Bar {
             
             var body: some View {
                 if let action {
-                    switch action {
-                    case .back(let action):
-                        IconButton(
-                            variant: background
-                                ? .background(size: 24, isAlternative: alternative)
-                                : .default,
-                            icon: background ? .chevronLeftThick : .chevronLeft
-                        ) {
-                            action()
+                    Group {
+                        switch action {
+                        case .back(let action):
+                            IconButton(
+                                variant: background
+                                    ? .background(size: 24, isAlternative: alternative)
+                                    : .default,
+                                icon: background ? .chevronLeftThick : .chevronLeft
+                            ) {
+                                action()
+                            }
+                            .frame(width: 24, height: 24)
+                        case let .icon(i, action):
+                            IconButton(
+                                variant: background
+                                    ? .background(size: 24, isAlternative: alternative)
+                                    : .default,
+                                icon: i
+                            ) {
+                                action()
+                            }
+                            .frame(width: 24, height: 24)
+                        case let .text(t, action):
+                            TrailingTextButton(
+                                text: t,
+                                action: action,
+                                background: background,
+                                alternative: alternative
+                            )
+                            .frame(height: 24)
                         }
-                        .frame(width: 24, height: 24)
-                    case let .icon(i, action):
-                        IconButton(
-                            variant: background
-                                ? .background(size: 24, isAlternative: alternative)
-                                : .default,
-                            icon: i
-                        ) {
-                            action()
-                        }
-                        .frame(width: 24, height: 24)
-                    case let .text(t, action):
-                        TrailingTextButton(
-                            text: t,
-                            action: action,
-                            background: background,
-                            alternative: alternative
-                        )
-                        .frame(height: 24)
                     }
+                    .contentShape(Rectangle().scale(2), eoFill: true)
                 } else {
                     SwiftUI.Color.clear
                         .frame(width: 24, height: 24)
@@ -278,6 +281,7 @@ extension Bar {
                             }
                         }
                     }
+                    .contentShape(Rectangle().scale(2), eoFill: true)
                 } else {
                     SwiftUI.Color.clear
                         .frame(width: 24, height: 24)
