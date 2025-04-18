@@ -10,15 +10,15 @@ import SwiftUI
 public struct Control: View {
     // MARK: - Types
     
-    public enum Variant: String, CaseIterable {
+    public enum Variant {
         case checkbox, checkmark, radio
     }
     
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case medium, small
     }
     
-    public enum State: String, CaseIterable {
+    public enum State {
         case unchecked
         case checked
         case indeterminate

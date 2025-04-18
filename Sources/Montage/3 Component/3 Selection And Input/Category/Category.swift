@@ -16,7 +16,7 @@ public struct Category: View {
     }
     
     /// 카테고리 사이즈를 결정하는 열거형입니다.
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case small, medium, large, xlarge
     }
     

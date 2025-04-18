@@ -10,7 +10,7 @@ import SwiftUI
 public enum Skeleton {
     // MARK: - Types
     
-    public enum Align: String, CaseIterable {
+    public enum Align {
         case leading
         case center
         case trailing
@@ -32,14 +32,14 @@ public enum Skeleton {
         }
     }
     
-    public enum Length: CGFloat, CaseIterable {
+    public enum Length: CGFloat {
         case _100 = 1
         case _75 = 0.75
         case _50 = 0.5
         case _25 = 0.25
     }
     
-    public enum Kind: CaseDescribable {
+    public enum Kind {
         case text(
             alignment: Align = .leading,
             lengths: [Length] = [._100],

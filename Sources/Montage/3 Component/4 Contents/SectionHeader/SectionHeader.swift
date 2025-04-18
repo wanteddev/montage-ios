@@ -11,7 +11,7 @@ public struct SectionHeader: View {
     // MARK: - Types
     
     /// 사이즈를 나타내는 열거형입니다.
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case xsmall, small, medium, large
     }
     

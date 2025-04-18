@@ -29,7 +29,7 @@ extension Modal {
         // MARK: - Types
         
         /// Modal/Bottom의 사이즈를 나타내는 열거형입니다.
-        public enum Resize: CaseDescribable {
+        public enum Resize {
             case hug
             case fixedRatio(CGFloat)
             case fixedHeight(CGFloat)
