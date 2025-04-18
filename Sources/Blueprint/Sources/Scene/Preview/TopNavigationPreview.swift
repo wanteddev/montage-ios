@@ -47,6 +47,7 @@ struct TopNavigationPreview: View {
     @State var background: Bool = false
     @State var leading: LeadingButton = .back
     @State var trailing: [TrailingButton] = []
+    @State var trailingButtonDisable: Bool = false
     @State var toast: Toast.Model? = nil
     @State var backgroundColor: ColorResolvable? = nil
     @State var selectedBackgroundColorName: Montage.Color.Semantic = .backgroundNormal
@@ -76,8 +77,8 @@ struct TopNavigationPreview: View {
     private var trailingButton: [Bar.TopNavigation.Resource.TrailingButton] {
         return trailing.map {
             switch $0 {
-            case .icon: return .icon(.bell, action: { closure() })
-            case .text: return .text("알림", action: { closure() })
+            case .icon: return .icon(.bell, disable: trailingButtonDisable, action: { closure() })
+            case .text: return .text("알림", disable: trailingButtonDisable, action: { closure() })
             }
         }
     }
@@ -173,6 +174,16 @@ struct TopNavigationPreview: View {
                             Text(action.selectableTitle)
                         }
                     }
+                }
+            }
+            HStack {
+                Text("TrailingButton Disable: ")
+                    .montage(variant: .headline2, weight: .medium)
+                Spacer()
+                Button {
+                    trailingButtonDisable.toggle()
+                } label: {
+                    Text(trailingButtonDisable ? "true" : "false")
                 }
             }
             HStack {
