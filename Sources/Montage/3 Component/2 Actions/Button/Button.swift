@@ -259,6 +259,7 @@ public struct Button: View {
             }
         }
         .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
+        .contentShape(Rectangle())
         .padding(edgeInsets)
         .background {
             RoundedRectangle(cornerRadius: cornerRadius)
