@@ -15,7 +15,7 @@ public struct Tab: View {
     }
     
     /// 탭 아이템의 크기를 결정하는 열거형입니다.
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case small, medium, large
     }
 

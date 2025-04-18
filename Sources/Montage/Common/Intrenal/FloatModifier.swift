@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-public struct FloatModifier<V: Equatable>: ViewModifier {
-    public enum DismissPolicy {
+struct FloatModifier<V: Equatable>: ViewModifier {
+    enum DismissPolicy {
         case after(seconds: TimeInterval)
         case onTap
         case onViewDisappear
@@ -31,7 +31,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
     private let onDismiss: (() -> Void)?
     private let floatView: () -> any View
 
-    public init(
+    init(
         isPresented: Bool,
         updatingValue: Binding<V?>,
         dismissPolicy: DismissPolicy = .onViewDisappear,
@@ -49,7 +49,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
         self.floatView = floatView
     }
 
-    public init(
+    init(
         isPresented: Binding<Bool>,
         updatingValue: Binding<V?>,
         dismissPolicy: DismissPolicy = .manually,
@@ -71,7 +71,7 @@ public struct FloatModifier<V: Equatable>: ViewModifier {
     @State private var floatHC: FloatHostingController<AnyView>?
     @State private var floatRootView: HitTestingView?
 
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .onChange(of: updatingValue.wrappedValue) {
                 if $0 != nil {
@@ -153,7 +153,7 @@ private final class HitTestingView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard let hitView = super.hitTest(point, with: event) else { return nil }
 
         if hitView.isSwiftUIView {
@@ -174,7 +174,7 @@ private final class HitTestingView: UIView {
 }
 
 private final class FloatHostingController<C: View>: UIHostingController<C> {
-    override public init(rootView: C) {
+    override init(rootView: C) {
         super.init(rootView: rootView)
         view.alpha = 0
         view.backgroundColor = .clear

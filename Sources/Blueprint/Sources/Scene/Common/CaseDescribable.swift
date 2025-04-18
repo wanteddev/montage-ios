@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol CaseDescribable {
+protocol CaseDescribable {
     var description: String { get }
 }
 
@@ -16,4 +16,4 @@ extension CaseDescribable {
     public var description: String {
         String("\(self)".split(separator: "(").first?.split(separator: ".").last ?? "")
     }
-}
+} 

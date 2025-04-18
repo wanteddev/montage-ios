@@ -11,20 +11,20 @@ import SwiftUI
 public struct PushBadge: View {
     // MARK: - Types
     
-    public enum Variant: Equatable, CaseDescribable {
+    public enum Variant: Equatable {
         case dot, new, number(Int)
     }
     
-    public enum Size: String, CaseIterable {
+    public enum Size {
         case xsmall, small, medium
     }
     
-    public enum Position: CaseDescribable {
+    public enum Position {
         case top(HorizontalPosition = .center)
         case center(HorizontalPosition = .center)
         case bottom(HorizontalPosition = .center)
         
-        public enum HorizontalPosition: String, CaseIterable {
+        public enum HorizontalPosition {
             case leading, center, trailing
         }
     }

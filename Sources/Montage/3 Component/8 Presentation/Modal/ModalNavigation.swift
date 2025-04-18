@@ -11,7 +11,7 @@ extension Modal {
     public struct Navigation: View {
         // MARK: - Types
         
-        public enum Variant: Equatable, CaseDescribable {
+        public enum Variant: Equatable {
             case normal
             case extended
             case floating(alternative: Bool = false, background: Bool = true)
