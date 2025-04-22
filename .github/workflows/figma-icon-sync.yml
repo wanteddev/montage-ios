@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   sync:
-    uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@feature/sh031224/platform-sync
+    uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@main
     with:
       platform: ios
     secrets: inherit
