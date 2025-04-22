@@ -4,17 +4,16 @@
 //
 //  Created by Eunyeong Kim on 2021/04/20.
 //
-
 import Foundation
 
 /// Montage 번들 내에 포함된 아이콘들의 이름들입니다.
 public enum Icon: String, CaseIterable {
-    case android
-    case apps
     case alignCenter
     case alignJustify
     case alignLeft
     case alignRight
+    case android
+    case apps
     case arrowDown
     case arrowDownThick
     case arrowLeft
@@ -30,6 +29,7 @@ public enum Icon: String, CaseIterable {
     case bellFill
     case bellPlus
     case blank
+    case blankColor
     case bold
     case book
     case bookFill
@@ -43,6 +43,7 @@ public enum Icon: String, CaseIterable {
     case businessBag
     case businessBagFill
     case calendar
+    case calendarPerson
     case camera
     case cameraFill
     case caretDown
@@ -105,9 +106,9 @@ public enum Icon: String, CaseIterable {
     case clockFill
     case close
     case closeThick
+    case code
     case coffee
     case coffeeFill
-    case code
     case coins
     case coinsFill
     case column
@@ -119,6 +120,8 @@ public enum Icon: String, CaseIterable {
     case companyPlusFill
     case compass
     case compassFill
+    case component
+    case componentFill
     case copy
     case crown
     case crownFill
@@ -132,6 +135,7 @@ public enum Icon: String, CaseIterable {
     case documentFill
     case documentPerson
     case documentPersonFill
+    case documentSearch
     case documentText
     case documentTextFill
     case dot
@@ -148,6 +152,7 @@ public enum Icon: String, CaseIterable {
     case filterFill
     case fire
     case fireFill
+    case flag
     case flipBackward
     case folder
     case folderFill
@@ -171,6 +176,7 @@ public enum Icon: String, CaseIterable {
     case hourglass
     case image
     case inbox
+    case instance
     case keyboard
     case like
     case likeFill
@@ -186,14 +192,29 @@ public enum Icon: String, CaseIterable {
     case lockFill
     case lockOpen
     case lockOpenFill
+    case login
     case logoApple
+    case logoAppleColor
+    case logoBrunch
     case logoFacebook
+    case logoFacebookColor
+    case logoGoogleColor
     case logoGooglePlay
+    case logoGooglePlayColor
     case logoInstagram
+    case logoInstagramColor
     case logoKakao
+    case logoKakaoColor
     case logoLinkedIn
+    case logoLinkedInColor
+    case logoMicrosoft
+    case logoMicrosoftColor
     case logoNaverBlog
+    case logoNaverBlogColor
+    case logoX
     case logoYoutube
+    case logoYoutubeColor
+    case logout
     case magicWand
     case mail
     case mailOpen
@@ -216,6 +237,12 @@ public enum Icon: String, CaseIterable {
     case moreHorizontal
     case moreVertical
     case moreVerticalTight
+    case musicMicrophone
+    case navigationCareer
+    case navigationMenu
+    case navigationMypage
+    case navigationRecruit
+    case navigationSocial
     case pause
     case pencil
     case pencilFill
@@ -232,6 +259,7 @@ public enum Icon: String, CaseIterable {
     case play
     case plus
     case plusThick
+    case presentation
     case printer
     case question
     case quote
@@ -245,6 +273,7 @@ public enum Icon: String, CaseIterable {
     case share
     case shareIos
     case sparkle
+    case sparkleFill
     case square
     case squareCaret
     case squareCheck
@@ -254,6 +283,7 @@ public enum Icon: String, CaseIterable {
     case squareKana
     case squareLatin
     case squareMore
+    case squarePlay
     case squarePlus
     case squarePlusFill
     case star
@@ -261,6 +291,7 @@ public enum Icon: String, CaseIterable {
     case strikethrough
     case sun
     case tag
+    case tagFill
     case template
     case templateFill
     case textFormat
@@ -269,6 +300,7 @@ public enum Icon: String, CaseIterable {
     case thunder
     case thunderFill
     case ticket
+    case ticketFill
     case trash
     case triangle
     case triangleExclamation
@@ -285,6 +317,8 @@ public enum Icon: String, CaseIterable {
     case verifiedCheckFill
     case verifiedStar
     case verifiedStarFill
+    case video
+    case webinar
     case write
 
     public var name: String { rawValue }
