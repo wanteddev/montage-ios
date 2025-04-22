@@ -56,7 +56,7 @@ extension ComponentListRouter: ComponentListRoutingLogic {
         case .pushBadge:
             vc = UIHostingController(rootView: PushBadgePreview())
         case .thumbnail:
-            vc = ThumbnailPreviewBuilder().build()
+            vc = UIHostingController(rootView: ThumbnailPreview())
         case .topNavigation:
             vc = UIHostingController(rootView: TopNavigationPreview())
         case .loading:

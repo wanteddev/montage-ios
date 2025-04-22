@@ -9,7 +9,6 @@ import SwiftUI
 
 extension Card {
     public struct List<
-        ImageLoader: View,
         T: View,
         C: View,
         EC: View,
@@ -18,10 +17,12 @@ extension Card {
         LC: View,
         RC: View
     >: View {
+        private let thumbnailUrl: URL?
         @Binding private var skeleton: Bool
         private let imageRatio: Ratio
         private let imageWidth: CGFloat
-        private let imageLoader: () -> ImageLoader
+        private let imageLoader: ((Image) -> any View)?
+        private let placeholder: (() -> any View)?
         private let title: () -> T
         private let caption: () -> C
         private let extraCaption: () -> EC
@@ -31,10 +32,12 @@ extension Card {
         private let trailingContent: () -> RC
         
         public init(
+            thumbnailUrl: URL?,
             skeleton: Binding<Bool>,
             imageRatio: Ratio = .r3x2,
             imageWidth: CGFloat,
-            @ViewBuilder imageLoader: @escaping (() -> ImageLoader),
+            imageLoader: ((Image) -> any View)? = nil,
+            placeholder: (() -> any View)? = nil,
             @ViewBuilder title: @escaping (() -> T) = { EmptyView() },
             @ViewBuilder caption: @escaping (() -> C) = { EmptyView() },
             @ViewBuilder extraCaption: @escaping (() -> EC) = { EmptyView() },
@@ -43,10 +46,12 @@ extension Card {
             @ViewBuilder leadingContent: @escaping (() -> LC) = { EmptyView() },
             @ViewBuilder trailingContent: @escaping (() -> RC) = { EmptyView() }
         ) {
+            self.thumbnailUrl = thumbnailUrl
             _skeleton = skeleton
             self.imageRatio = imageRatio
             self.imageWidth = imageWidth
             self.imageLoader = imageLoader
+            self.placeholder = placeholder
             self.title = title
             self.caption = caption
             self.extraCaption = extraCaption
@@ -61,14 +66,12 @@ extension Card {
                 leadingContent()
                     .padding(.trailing, 12)
                 
-                ZStack {
-                    ThumbnailController(
-                        ratio: imageRatio,
-                        portrait: false,
-                        width: imageWidth,
-                        imageLoader: imageLoader
-                    )
-                }
+                Thumbnail(
+                    url: thumbnailUrl,
+                    content: imageLoader,
+                    placeholder: placeholder
+                )
+                .ratio(imageRatio, width: imageWidth)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
@@ -116,22 +119,17 @@ import Pretendard
 #Preview {
     let _ = try? Pretendard.registerFonts()
     Card.List(
+        thumbnailUrl: URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp"),
         skeleton: .constant(false),
         imageWidth: 96,
         imageLoader: {
-            AsyncImage(
-                url: URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
-            ) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    Image("placeholder", bundle: .module)
-                        .resizable()
-                        .scaledToFill()
-                }
-            }
+            $0.resizable()
+                .scaledToFill()
+        },
+        placeholder: {
+            Image("placeholder", bundle: .module)
+                .resizable()
+                .scaledToFill()
         },
         title: {
             Text("제목")
