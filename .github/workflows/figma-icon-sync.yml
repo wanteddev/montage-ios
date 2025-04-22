@@ -1,3 +1,5 @@
+name: Figma Icon Sync
+
 on:
   workflow_dispatch:
 
