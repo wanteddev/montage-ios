@@ -1,16 +1,16 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "lockOpenFill.svg",
-      "idiom" : "universal"
+      "filename": "lockOpenFill.svg",
+      "idiom": "universal"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
+  "info": {
+    "author": "xcode",
+    "version": 1
   },
-  "properties" : {
-    "preserves-vector-representation" : true,
-    "template-rendering-intent" : "template"
+  "properties": {
+    "preserves-vector-representation": true,
+    "template-rendering-intent": "template"
   }
 }
