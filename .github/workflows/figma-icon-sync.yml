@@ -1,0 +1,15 @@
+on:
+  workflow_dispatch:
+
+permissions:
+  packages: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@main
+    with:
+      platform: ios
+      pr_name: 'feat: add icons synced from figma'
+    secrets: inherit
