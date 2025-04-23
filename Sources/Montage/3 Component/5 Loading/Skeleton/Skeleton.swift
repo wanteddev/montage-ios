@@ -82,7 +82,7 @@ public enum Skeleton {
                             alignment: alignment.alignment
                         )
                     }
-                case .rectangle(cornerRadius: let cornerRadius):
+                case .rectangle(let cornerRadius):
                     RoundedRectangle(cornerRadius: cornerRadius)
                 case .circle:
                     Circle()
@@ -139,15 +139,31 @@ public enum Skeleton {
                 content
                     .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                     .hidden()
+                    .modifying {
+                        if isPresented {
+                            $0.frame(
+                                width: size?.width ?? contentSize.width,
+                                height: size?.height ?? contentSize.height
+                            )
+                        } else {
+                            $0
+                        }
+                    }
                 content
                     .skeleton(isPresented: isPresented) {
                         Skeleton.SkeletonView(kind)
                             .color(color)
                             .opacity(opacity)
-                            .frame(
+                    }
+                    .modifying {
+                        if isPresented {
+                            $0.frame(
                                 width: size?.width ?? contentSize.width,
                                 height: size?.height ?? contentSize.height
                             )
+                        } else {
+                            $0
+                        }
                     }
             }
         }
