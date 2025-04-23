@@ -38,7 +38,12 @@ struct ThumbnailPreview: View {
                     Thumbnail(
                         url: imageURL,
                         placeholder: customPlaceholder ? {
-                            ProgressView()
+                            Rectangle()
+                                .fill(SwiftUI.Color.semantic(.lineNeutral))
+                                .overlay {
+                                    Image.montage(.image)
+                                        .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
+                                }
                         } : nil
                     )
                     .radius(radius)
