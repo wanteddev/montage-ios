@@ -260,6 +260,7 @@ public struct Button: View {
         }
         .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
         .contentShape(Rectangle())
+        .frame(height: contentHeight)
         .padding(edgeInsets)
         .background {
             RoundedRectangle(cornerRadius: cornerRadius)
@@ -429,6 +430,14 @@ private extension Button {
             case .medium: 10.0
             case .small: 8.0
             }
+        }
+    }
+    
+    var contentHeight: CGFloat {
+        switch size {
+        case .small: style == .text ? 20 : 18
+        case .medium: style == .text ? 24 : 22
+        case .large: 24
         }
     }
     
