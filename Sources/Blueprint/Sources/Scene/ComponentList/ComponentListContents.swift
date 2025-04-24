@@ -48,9 +48,10 @@ class ComponentListContents {
                     .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
                     .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
-                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .menu, .modal, .contentBadge:
+                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .menu, .modal,
+                    .contentBadge, .card:
                 return .completed
-            case .divider, .card:
+            case .divider:
                 return .previewNotReady
             }
         }

@@ -135,67 +135,25 @@ public struct Thumbnail: View {
     
     // MARK: - Initializer
     
-    private let url: URL?
-    private let content: ((Image) -> any View)?
-    private let placeholder: (() -> any View)?
+    private let urlString: String
+    private let ratio: Ratio
     
     /// 썸네일을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - url: 로드할 이미지의 URL
-    ///   - content: 이미지 로드 성공 시 이미지를 커스터마이징할 수 있는 클로저 (기본값: nil)
-    ///   - placeholder: 이미지 로드 중이나 실패 시 표시할 플레이스홀더 뷰를 생성하는 클로저 (기본값: nil)
+    ///   - urlString: 로드할 이미지의 URL 문자열
+    ///   - ratio: 적용할 가로세로 비율
     ///
-    /// - Note: placeholder가 nil이면 기본 배경색(.fillAlternative)이 사용됩니다.
-    public init(
-        url: URL?,
-        content: ((Image) -> any View)? = nil,
-        placeholder: (() -> any View)? = nil
-    ) {
-        self.url = url
-        self.content = content
-        self.placeholder = placeholder
+    public init(urlString: String, ratio: Ratio) {
+        self.urlString = urlString
+        self.ratio = ratio
     }
     
     // MARK: - Modifiers
     
-    private var ratio: Ratio = .r1x1
-    private var width: CGFloat? = nil
-    private var height: CGFloat? = nil
     private var radius = false
     private var border = false
-    
-    /// 너비를 기준으로 썸네일의 비율을 설정합니다.
-    ///
-    /// 지정된 비율과 너비에 맞게 높이가 자동으로 계산됩니다.
-    ///
-    /// - Parameters:
-    ///   - ratio: 적용할 가로세로 비율
-    ///   - width: 썸네일의 너비 (포인트 단위)
-    /// - Returns: 수정된 Thumbnail 인스턴스
-    public func ratio(_ ratio: Ratio, width: CGFloat) -> Self {
-        var zelf = self
-        zelf.ratio = ratio
-        zelf.width = width
-        zelf.height = nil
-        return zelf
-    }
-    
-    /// 높이를 기준으로 썸네일의 비율을 설정합니다.
-    ///
-    /// 지정된 비율과 높이에 맞게 너비가 자동으로 계산됩니다.
-    ///
-    /// - Parameters:
-    ///   - ratio: 적용할 가로세로 비율
-    ///   - height: 썸네일의 높이 (포인트 단위)
-    /// - Returns: 수정된 Thumbnail 인스턴스
-    public func ratio(_ ratio: Ratio, height: CGFloat) -> Self {
-        var zelf = self
-        zelf.ratio = ratio
-        zelf.width = nil
-        zelf.height = height
-        return zelf
-    }
+    private var width: CGFloat?
     
     /// 썸네일에 둥근 모서리를 적용합니다.
     ///
@@ -223,47 +181,49 @@ public struct Thumbnail: View {
         return zelf
     }
     
+    public func width(_ width: CGFloat) -> Self {
+        var zelf = self
+        zelf.width = width
+        return zelf
+    }
+    
     // MARK: - Body
     
+    @State private var proposedWidth: CGFloat = .zero
+    
     public var body: some View {
-        WebImage(url: url) { phase in
-            switch phase {
-            case .success(let image):
-                if let content {
-                    AnyView(content(image))
-                } else {
+        ZStack {
+            SwiftUI.Color.clear
+                .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { proposedWidth = $0 })
+                
+            WebImage(url: URL(string: urlString)) { phase in
+                switch phase {
+                case .success(let image):
                     image
                         .resizable()
                         .scaledToFill()
-                }
-            default:
-                SwiftUI.Color.clear
-            }
-        }
-        .background {
-            Group {
-                if let placeholder {
-                    AnyView(placeholder())
-                } else {
+                case .failure(let error):
+                    Image("placeholder", bundle: .module)
+                        .resizable()
+                        .scaledToFill()
+                        .onAppear {
+                            print(error)
+                        }
+                case .empty:
                     SwiftUI.Color.semantic(.fillAlternative)
                 }
             }
-        }
-        .modifying {
-            if let width {
-                $0.frame(width: width, height: width * (ratio.size.height / ratio.size.width))
-            } else if let height {
-                $0.frame(width: height * (ratio.size.width / ratio.size.height), height: height)
-            } else {
-                $0
+            .clipped()
+            .cornerRadius(radius ? 12 : 0)
+            .overlay {
+                RoundedRectangle(cornerRadius: radius ? 12 : 0)
+                    .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: border ? 1 : 0)
             }
         }
-        .clipped()
-        .cornerRadius(radius ? 12 : 0)
-        .overlay {
-            RoundedRectangle(cornerRadius: radius ? 12 : 0)
-                .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: border ? 1 : 0)
-        }
+        .frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
+    }
+    
+    private var thumbnailWidth: CGFloat {
+        width ?? proposedWidth
     }
 }
-

@@ -28,6 +28,7 @@
 		4D5B46DB2CE3463F001DD48B /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5B46DA2CE3463F001DD48B /* Lottie */; };
 		4D5D8C9C2D27E8E100108C92 /* AccordionPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */; };
 		4D5D8C9E2D2E5D9E00108C92 /* CategoryPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */; };
+		4D6372C72DBA655200E66D22 /* CardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6372C62DBA655200E66D22 /* CardPreview.swift */; };
 		4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D853DF62D96491E004549CF /* IconButtonPreview.swift */; };
 		4D9083502DAF9D7000DF22A4 /* CaseDescribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */; };
 		4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */; };
@@ -161,6 +162,7 @@
 		4D5597552D1E802C00CFBCA5 /* CounterPaginationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterPaginationPreview.swift; sourceTree = "<group>"; };
 		4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccordionPreview.swift; sourceTree = "<group>"; };
 		4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPreview.swift; sourceTree = "<group>"; };
+		4D6372C62DBA655200E66D22 /* CardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPreview.swift; sourceTree = "<group>"; };
 		4D853DF62D96491E004549CF /* IconButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonPreview.swift; sourceTree = "<group>"; };
 		4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseDescribable.swift; sourceTree = "<group>"; };
 		4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardPreview.swift; sourceTree = "<group>"; };
@@ -557,6 +559,7 @@
 		4DF7C4FD2CE340F0002B241B /* Preview */ = {
 			isa = PBXGroup;
 			children = (
+				4D6372C62DBA655200E66D22 /* CardPreview.swift */,
 				4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */,
 				4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */,
 				4DD3E95C2CF45F5500F97C50 /* AvatarPreview.swift */,
@@ -850,6 +853,7 @@
 				4DF7C5452CE340F0002B241B /* ColorPickerViewController.swift in Sources */,
 				4DF7C5462CE340F0002B241B /* IconPreviewInteractor.swift in Sources */,
 				4DCFAAF72CE600D600F7A4CD /* SegmentedControlPreview.swift in Sources */,
+				4D6372C72DBA655200E66D22 /* CardPreview.swift in Sources */,
 				4D1AB4F12CF494DE00311591 /* SliderPreview.swift in Sources */,
 				4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */,
 				4DC668AC2D6849C400461189 /* ModalPreview.swift in Sources */,

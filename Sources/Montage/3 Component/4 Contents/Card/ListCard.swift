@@ -33,7 +33,7 @@ extension Card {
         
         private let thumbnail: () -> Thumbnail
         @Binding private var skeleton: Bool
-        private let title: () -> any View
+        private let title: String
 
         /// List 카드를 초기화합니다.
         ///
@@ -44,7 +44,7 @@ extension Card {
         public init(
             thumbnail: @escaping () -> Thumbnail,
             skeleton: Binding<Bool>,
-            title: @escaping () -> any View
+            title: String
         ) {
             self.thumbnail = thumbnail
             _skeleton = skeleton
@@ -53,8 +53,8 @@ extension Card {
         
         // MARK: - Modifiers
         
-        private var caption: (() -> any View)?
-        private var extraCaption: (() -> any View)?
+        private var caption: String?
+        private var extraCaption: String?
         private var topContent: (() -> any View)? = nil
         private var bottomContent: (() -> any View)? = nil
         private var leadingContent: (() -> any View)? = nil
@@ -62,9 +62,9 @@ extension Card {
         
         /// 카드의 캡션(부제목)을 설정합니다.
         ///
-        /// - Parameter caption: 표시할 캡션 뷰를 반환하는 클로저
+        /// - Parameter caption: 표시할 캡션 문자열
         /// - Returns: 수정된 카드 인스턴스
-        public func caption(_ caption: (() -> any View)? = nil) -> Self {
+        public func caption(_ caption: String?) -> Self {
             var zelf = self
             zelf.caption = caption
             return zelf
@@ -72,9 +72,9 @@ extension Card {
         
         /// 카드의 추가 캡션을 설정합니다.
         ///
-        /// - Parameter extraCaption: 표시할 추가 캡션 뷰를 반환하는 클로저
+        /// - Parameter extraCaption: 표시할 추가 캡션 문자열
         /// - Returns: 수정된 카드 인스턴스
-        public func extraCaption(_ extraCaption: (() -> any View)? = nil) -> Self {
+        public func extraCaption(_ extraCaption: String?) -> Self {
             var zelf = self
             zelf.extraCaption = extraCaption
             return zelf
@@ -121,59 +121,73 @@ extension Card {
         }
         
         // MARK: - Body
+        
+        @State private var textAreaWidth: CGFloat = 0
 
         public var body: some View {
-            HStack(alignment: .center, spacing: .zero) {
+            HStack(alignment: .center, spacing: 12) {
                 if let leadingContent {
                     AnyView(leadingContent())
-                        .padding(.trailing, 12)
                 }
                 
                 thumbnail()
                     .radius()
                     .border()
                     .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 12))
-                    .padding(.trailing, 12)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
-                VStack(alignment: .leading, spacing: 8) {
-                    if let topContent {
-                        AnyView(topContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                    }
-                    
-                    VStack(alignment: .leading, spacing: .zero) {
-                        AnyView(title())
-                            .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: 164, height: 20))
+                ZStack {
+                    SwiftUI.Color.clear
+                        .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { textAreaWidth = $0 })
                         
-                        if let caption {
-                            AnyView(caption())
-                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: 164, height: 14))
-                                .padding(.top, 4)
+                    VStack(alignment: .leading, spacing: 8) {
+                        if let topContent {
+                            AnyView(topContent())
+                                .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
                         
-                        if let extraCaption {
-                            AnyView(extraCaption())
+                        VStack(alignment: .leading, spacing: .zero) {
+                            Text(title)
+                                .montage(variant: .body1, weight: .bold, semantic: .labelNormal)
+                                .paragraph(variant: .body1)
+                                .lineLimit(2)
+                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: textAreaWidth, height: 20))
+                            
+                            if let caption {
+                                Text(caption)
+                                    .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .paragraph(variant: .label2)
+                                    .lineLimit(1)
+                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
+                                    .padding(.top, 4)
+                            }
+                            
+                            if let extraCaption {
+                                Text(extraCaption)
+                                    .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .paragraph(variant: .label2)
+                                    .lineLimit(1)
+                                    .skeleton(
+                                        isPresented: skeleton,
+                                        kind: .text(lengths: [._25]),
+                                        size: CGSize(width: textAreaWidth, height: 14)
+                                    )
+                                    .padding(.top, 4)
+                            }
+                        }
+                        
+                        if let bottomContent {
+                            AnyView(bottomContent())
                                 .skeleton(
                                     isPresented: skeleton,
-                                    kind: .text(lengths: [._25]),
-                                    size: CGSize(width: 164, height: 14)
+                                    kind: .rectangle(cornerRadius: 3),
+                                    size: CGSize(width: 48, height: 20)
                                 )
-                                .padding(.top, 4)
                         }
                     }
-                    
-                    if let bottomContent {
-                        AnyView(bottomContent())
-                            .skeleton(
-                                isPresented: skeleton,
-                                kind: .rectangle(cornerRadius: 3),
-                                size: CGSize(width: 48, height: 20)
-                            )
-                    }
+                    .frame(maxWidth: textAreaWidth, alignment: .leading)
                 }
-                .padding(.trailing, 12)
-                
-                Spacer()
+                .layoutPriority(1)
                 
                 if let trailingContent {
                     AnyView(trailingContent())
