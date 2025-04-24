@@ -8,167 +8,128 @@
 import SwiftUI
 
 extension Card {
-    public struct List<
-        ImageLoader: View,
-        T: View,
-        C: View,
-        EC: View,
-        TC: View,
-        BC: View,
-        LC: View,
-        RC: View
-    >: View {
-        @Binding private var skeleton: Bool
-        private let imageRatio: Ratio
-        private let imageWidth: CGFloat
-        private let imageLoader: () -> ImageLoader
-        private let title: () -> T
-        private let caption: () -> C
-        private let extraCaption: () -> EC
-        private let topContent: () -> TC
-        private let bottomContent: () -> BC
-        private let leadingContent: () -> LC
-        private let trailingContent: () -> RC
+    public struct List: View {
         
+        // MARK: - Initializer
+        
+        private let thumbnail: () -> Thumbnail
+        @Binding private var skeleton: Bool
+        private let title: () -> any View
+
         public init(
+            thumbnail: @escaping () -> Thumbnail,
             skeleton: Binding<Bool>,
-            imageRatio: Ratio = .r3x2,
-            imageWidth: CGFloat,
-            @ViewBuilder imageLoader: @escaping (() -> ImageLoader),
-            @ViewBuilder title: @escaping (() -> T) = { EmptyView() },
-            @ViewBuilder caption: @escaping (() -> C) = { EmptyView() },
-            @ViewBuilder extraCaption: @escaping (() -> EC) = { EmptyView() },
-            @ViewBuilder topContent: @escaping (() -> TC) = { EmptyView() },
-            @ViewBuilder bottomContent: @escaping (() -> BC) = { EmptyView() },
-            @ViewBuilder leadingContent: @escaping (() -> LC) = { EmptyView() },
-            @ViewBuilder trailingContent: @escaping (() -> RC) = { EmptyView() }
+            title: @escaping () -> any View
         ) {
+            self.thumbnail = thumbnail
             _skeleton = skeleton
-            self.imageRatio = imageRatio
-            self.imageWidth = imageWidth
-            self.imageLoader = imageLoader
             self.title = title
-            self.caption = caption
-            self.extraCaption = extraCaption
-            self.topContent = topContent
-            self.bottomContent = bottomContent
-            self.leadingContent = leadingContent
-            self.trailingContent = trailingContent
         }
+        
+        // MARK: - Modifiers
+        
+        private var caption: (() -> any View)?
+        private var extraCaption: (() -> any View)?
+        private var topContent: (() -> any View)? = nil
+        private var bottomContent: (() -> any View)? = nil
+        private var leadingContent: (() -> any View)? = nil
+        private var trailingContent: (() -> any View)? = nil
+        
+        public func caption(_ caption: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.caption = caption
+            return zelf
+        }
+        
+        public func extraCaption(_ extraCaption: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.extraCaption = extraCaption
+            return zelf
+        }
+        
+        public func topContent(_ content: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.topContent = content
+            return zelf
+        }
+        
+        public func bottomContent(_ content: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.bottomContent = content
+            return zelf
+        }
+        
+        public func leadingContent(_ content: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.leadingContent = content
+            return zelf
+        }
+        
+        public func trailingContent(_ content: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.trailingContent = content
+            return zelf
+        }
+        
+        // MARK: - Body
 
         public var body: some View {
             HStack(alignment: .center, spacing: .zero) {
-                leadingContent()
-                    .padding(.trailing, 12)
-                
-                ZStack {
-                    ThumbnailController(
-                        ratio: imageRatio,
-                        portrait: false,
-                        width: imageWidth,
-                        imageLoader: imageLoader
-                    )
+                if let leadingContent {
+                    AnyView(leadingContent())
+                        .padding(.trailing, 12)
                 }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .inset(by: 0.5)
-                        .strokeBorder(SwiftUI.Color.semantic(.lineAlternative), lineWidth: 1)
-                )
-                .skeleton(isPresented: skeleton, kind: .rectangle())
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.trailing, 12)
+                
+                thumbnail()
+                    .radius()
+                    .border()
+                    .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 12))
+                    .padding(.trailing, 12)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    topContent()
-                        .skeleton(isPresented: skeleton, kind: .rectangle())
-                        .clipShape(RoundedRectangle(cornerRadius: 3))
-                    
-                    VStack(alignment: .leading, spacing: .zero) {
-                        title()
-                            .skeleton(isPresented: skeleton, kind: .text())
-                        
-                        caption()
-                            .skeleton(isPresented: skeleton, kind: .text())
-                            .padding(.top, 4)
-                        
-                        extraCaption()
-                            .skeleton(isPresented: skeleton, kind: .text())
-                            .padding(.top, 4)
+                    if let topContent {
+                        AnyView(topContent())
+                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                     }
                     
-                    bottomContent()
-                        .skeleton(isPresented: skeleton, kind: .rectangle())
-                        .clipShape(RoundedRectangle(cornerRadius: 3))
+                    VStack(alignment: .leading, spacing: .zero) {
+                        AnyView(title())
+                            .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: 164, height: 20))
+                        
+                        if let caption {
+                            AnyView(caption())
+                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: 164, height: 14))
+                                .padding(.top, 4)
+                        }
+                        
+                        if let extraCaption {
+                            AnyView(extraCaption())
+                                .skeleton(
+                                    isPresented: skeleton,
+                                    kind: .text(lengths: [._25]),
+                                    size: CGSize(width: 164, height: 14)
+                                )
+                                .padding(.top, 4)
+                        }
+                    }
+                    
+                    if let bottomContent {
+                        AnyView(bottomContent())
+                            .skeleton(
+                                isPresented: skeleton,
+                                kind: .rectangle(cornerRadius: 3),
+                                size: CGSize(width: 48, height: 20)
+                            )
+                    }
                 }
                 .padding(.trailing, 12)
                 
                 Spacer()
                 
-                trailingContent()
-            }
-            .frame(height: imageWidth * (imageRatio.size.height / imageRatio.size.width))
-        }
-    }
-}
-
-import Pretendard
-
-#Preview {
-    let _ = try? Pretendard.registerFonts()
-    Card.List(
-        skeleton: .constant(false),
-        imageWidth: 96,
-        imageLoader: {
-            AsyncImage(
-                url: URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
-            ) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    Image("placeholder", bundle: .module)
-                        .resizable()
-                        .scaledToFill()
+                if let trailingContent {
+                    AnyView(trailingContent())
                 }
             }
-        },
-        title: {
-            Text("제목")
-                .montage(variant: .body1, weight: .bold)
-                .paragraph(variant: .body1)
-        },
-        caption: {
-            Text("캡션")
-                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                .paragraph(variant: .label2)
-        },
-        extraCaption: {
-            Text("추가 캡션")
-                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                .paragraph(variant: .label2)
-        },
-        topContent: {
-            HStack {
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-            }
-        },
-        bottomContent: {
-            HStack {
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-            }
-        },
-        leadingContent: {
-            Control.checkbox(state: .unchecked)
-        },
-        trailingContent: {
-            Image.montage(.chevronRight)
-                .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
         }
-    )
+    }
 }

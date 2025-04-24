@@ -9,101 +9,120 @@ import SwiftUI
 
 extension Card {
     public struct Normal: View {
+        
+        // MARK: - Initializer
+        
+        private let thumbnail: () -> Thumbnail
         @Binding private var skeleton: Bool
-        private let imageRatio: Ratio
-        private let imageWidth: CGFloat
-        private let imageLoader: () -> any View
-        private let title: (() -> any View)?
-        private let caption: (() -> any View)?
-        private let extraCaption: (() -> any View)?
-        private let topContent: (() -> any View)?
-        private let bottomContent: (() -> any View)?
-
-        @State var overlay: OverlayModel = .init()
+        private let title: () -> any View
 
         public init(
+            thumbnail: @escaping () -> Thumbnail,
             skeleton: Binding<Bool>,
-            imageRatio: Ratio = .r3x2,
-            imageWidth: CGFloat,
-            @ViewBuilder imageLoader: @escaping () -> any View,
-            title: (() -> any View)? = nil,
-            caption: (() -> any View)? = nil,
-            extraCpation: (() -> any View)? = nil,
-            topContent: (() -> any View)? = nil,
-            bottomContent: (() -> any View)? = nil
+            title: @escaping () -> any View
         ) {
+            self.thumbnail = thumbnail
             _skeleton = skeleton
-            self.imageRatio = imageRatio
-            self.imageWidth = imageWidth
-            self.imageLoader = imageLoader
             self.title = title
-            self.caption = caption
-            extraCaption = extraCpation
-            self.topContent = topContent
-            self.bottomContent = bottomContent
         }
-
+        
+        // MARK: - Modifiers
+        
+        private var caption: (() -> any View)?
+        private var overlayCaption: String?
+        private var extraCaption: (() -> any View)?
+        private var overlayButtonIcon: Montage.Icon?
+        private var onTapOverlayButton: (() -> Void)?
+        private var topContent: (() -> any View)?
+        private var bottomContent: (() -> any View)?
+        
+        public func caption(_ caption: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.caption = caption
+            return zelf
+        }
+        
+        public func extraCaption(_ extraCaption: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.extraCaption = extraCaption
+            return zelf
+        }
+        
+        public func overlay(
+            caption: String? = nil,
+            buttonIcon: Montage.Icon? = nil,
+            onTapButton: (() -> Void)? = nil
+        ) -> Self {
+            var zelf = self
+            zelf.overlayCaption = caption
+            zelf.overlayButtonIcon = buttonIcon
+            zelf.onTapOverlayButton = onTapButton
+            return zelf
+        }
+        
+        public func topContent(_ content: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.topContent = content
+            return zelf
+        }
+        
+        public func bottomContent(_ content: (() -> any View)? = nil) -> Self {
+            var zelf = self
+            zelf.bottomContent = content
+            return zelf
+        }
+        
+        // MARK: - Body
+        @State private var thumbnailWidth: CGFloat = 0
+        
         public var body: some View {
-            VStack(spacing: 12) {
-                ZStack {
-                    ThumbnailController(
-                        ratio: imageRatio,
-                        portrait: false,
-                        width: imageWidth,
-                        imageLoader: imageLoader
-                    )
+            Grid(alignment: .leading, verticalSpacing: 12) {
+                GridRow {
+                    thumbnail()
+                        .radius()
+                        .border()
+                        .modifier(
+                            ThumbnailOverlayModifier(
+                                caption: overlayCaption,
+                                buttonIcon: overlayButtonIcon,
+                                onTapButton: onTapOverlayButton
+                            )
+                        )
+                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .inset(by: 0.5)
-                        .strokeBorder(SwiftUI.Color.semantic(.lineAlternative), lineWidth: 1)
-                )
-                .modifier(
-                    ThumbnailOverlayModifier(
-                        model: overlay
-                    )
-                )
-                .skeleton(isPresented: skeleton, kind: .rectangle())
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
+                .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { thumbnailWidth = $0 })
+                
+                GridRow {
+                    VStack(alignment: .leading, spacing: 8) {
                         if let topContent {
                             AnyView(topContent())
-                                .skeleton(isPresented: skeleton, kind: .rectangle())
-                                .clipShape(RoundedRectangle(cornerRadius: 3))
+                                .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
-
-                        Spacer()
-                    }
-
-                    VStack(alignment: .leading, spacing: .zero) {
-                        if let title {
+                        
+                        VStack(alignment: .leading, spacing: 4) {
                             AnyView(title())
-                                .skeleton(isPresented: skeleton, kind: .text())
+                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: thumbnailWidth - 12, height: 20))
+                            
+                            if let caption {
+                                AnyView(caption())
+                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: thumbnailWidth - 12, height: 14))
+                            }
+                            
+                            if let extraCaption {
+                                AnyView(extraCaption())
+                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: thumbnailWidth - 12, height: 14))
+                            }
                         }
-
-                        if let caption {
-                            AnyView(caption())
-                                .skeleton(isPresented: skeleton, kind: .text())
-                                .padding(.top, 4)
-                        }
-
-                        if let extraCaption {
-                            AnyView(extraCaption())
-                                .skeleton(isPresented: skeleton, kind: .text())
-                                .padding(.top, 4)
+                        
+                        if let bottomContent {
+                            AnyView(bottomContent())
+                                .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
                     }
-
-                    if let bottomContent {
-                        AnyView(bottomContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle())
-                            .clipShape(RoundedRectangle(cornerRadius: 3))
-                    }
+                    .padding(.horizontal, 6)
+                    .frame(maxWidth: thumbnailWidth, alignment: .leading)
                 }
-                .frame(width: imageWidth)
-                .padding(.horizontal, 6)
             }
         }
     }
@@ -111,63 +130,49 @@ extension Card {
 
 extension Card.Normal {
     private struct ThumbnailOverlayModifier: ViewModifier {
-        private let model: OverlayModel
+        private let caption: String?
+        private let buttonIcon: Montage.Icon?
+        private let onTapButton: (() -> Void)?
 
-        init(model: OverlayModel) {
-            self.model = model
-        }
-
-        private var show: Bool {
-            if let caption = model.caption, caption.isEmpty == false {
-                true
-            } else if model.toggleIcon != nil {
-                true
-            } else {
-                false
-            }
+        public init(
+            caption: String? = nil,
+            buttonIcon: Montage.Icon? = nil,
+            onTapButton: (() -> Void)? = nil
+        ) {
+            self.caption = caption
+            self.buttonIcon = buttonIcon
+            self.onTapButton = onTapButton
         }
 
         private let gradientColors: [SwiftUI.Color] = [
-            .semantic(.staticBlack),
-            .semantic(.staticBlack).opacity(0.97),
-            .semantic(.staticBlack).opacity(0.95),
-            .semantic(.staticBlack).opacity(0.92),
-            .semantic(.staticBlack).opacity(0.89),
-            .semantic(.staticBlack).opacity(0.86),
-            .semantic(.staticBlack).opacity(0.82),
-            .semantic(.staticBlack).opacity(0.77),
-            .semantic(.staticBlack).opacity(0.71),
-            .semantic(.staticBlack).opacity(0.64),
-            .semantic(.staticBlack).opacity(0.57),
-            .semantic(.staticBlack).opacity(0.48),
-            .semantic(.staticBlack).opacity(0.38),
-            .semantic(.staticBlack).opacity(0.26),
-            .semantic(.staticBlack).opacity(0.14),
-            .semantic(.staticBlack).opacity(0)
-        ]
-
+            1.0, 0.97, 0.95, 0.92, 0.89, 0.86, 0.82, 0.77, 0.71, 0.64, 0.57, 0.48, 0.38, 0.26, 0.14, 0
+        ].map { .semantic(.staticBlack).opacity($0) }
+        
         public func body(content: Content) -> some View {
             content
-                .if(show) {
+                .if(!caption.isNilOrEmpty || buttonIcon != nil) {
                     $0.overlay(alignment: .top) {
                         ZStack {
                             HStack(spacing: 4) {
-                                if let caption = model.caption {
-                                    HStack {
+                                if let caption {
+                                    HStack(spacing: 0) {
                                         Text(caption)
                                             .montage(variant: .label2, weight: .bold, semantic: .staticWhite)
                                             .paragraph(variant: .label2)
-                                        Spacer()
+                                        Spacer(minLength: 0)
                                     }
                                     .padding(.bottom, 6)
                                 }
-
-                                if let icons = model.toggleIcon {
-                                    Montage.IconButton(
-                                        icon: model.toggleIsOn ? icons.on : icons.off,
-                                        iconColor: SwiftUI.Color.semantic(.staticWhite)
-                                    ) {
-                                        model.onToggleTap?()
+                                
+                                if let buttonIcon {
+                                    HStack(spacing: 0) {
+                                        Spacer(minLength: 0)
+                                        Montage.IconButton(
+                                            icon: buttonIcon,
+                                            iconColor: SwiftUI.Color.semantic(.staticWhite)
+                                        ) {
+                                            onTapButton?()
+                                        }
                                     }
                                 }
                             }
@@ -187,94 +192,3 @@ extension Card.Normal {
     }
 }
 
-extension Card.Normal {
-    /// Card Normal의 Overlay를 나타내기 위한 Model
-    /// toggleIcon을 전달하지 않으면 Icon이 표시되지 않습니다.
-    public struct OverlayModel {
-        let caption: String?
-        let toggleIsOn: Bool
-        let toggleIcon: (on: Montage.Icon, off: Montage.Icon)?
-        let onToggleTap: (() -> Void)?
-
-        public init(
-            caption: String? = nil,
-            toggleIsOn: Bool = false,
-            toggleIcon: (on: Montage.Icon, off: Montage.Icon)? = nil,
-            onToggleTap: (() -> Void)? = nil
-        ) {
-            self.caption = caption
-            self.toggleIsOn = toggleIsOn
-            self.toggleIcon = toggleIcon
-            self.onToggleTap = onToggleTap
-        }
-    }
-}
-
-extension Card.Normal {
-    /// Card Normal의 overlay를 표시합니다.
-    public func overlay(_ model: OverlayModel) -> Self {
-        overlay = model
-        return self
-    }
-}
-
-import Pretendard
-
-#Preview {
-    let _ = try? Pretendard.registerFonts()
-    Card.Normal(
-        skeleton: .constant(false),
-        imageWidth: 240,
-        imageLoader: {
-            AsyncImage(
-                url: URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")!
-            ) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    Image("placeholder", bundle: .module)
-                        .resizable()
-                        .scaledToFill()
-                }
-            }
-        },
-        title: {
-            Text("제목")
-                .montage(variant: .body1, weight: .bold)
-                .paragraph(variant: .body1)
-        },
-        caption: {
-            Text("캡션")
-                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                .paragraph(variant: .label2)
-        },
-        extraCpation: {
-            Text("추가 캡션")
-                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                .paragraph(variant: .label2)
-        },
-        topContent: {
-            HStack {
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-            }
-        },
-        bottomContent: {
-            HStack {
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-                ContentBadge(text: "텍스트")
-            }
-        }
-    )
-    .overlay(.init(
-        caption: "캡션",
-        toggleIsOn: true,
-        toggleIcon: (.bookmarkFill, .bookmark),
-        onToggleTap: { print("hello") }
-    ))
-}
