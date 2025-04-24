@@ -6,7 +6,7 @@
 
 ### Color
 
-![Figma에서 확인할 수 있는 Color 속성](figma-color)
+![Figma에서 확인할 수 있는 Color 속성](Resources/figma-color.png)
 
 디자인시스템에서 정의된 색상들은 UIKit의 `UIColor`와 SwiftUI의 `Color` Extension을 통해서 각각의 실제 값을 불러올 수 있습니다. 정의된 색상의 타입은 두가지로, 용도에 맞춰서 선택해서 사용하시면 됩니다.
 
@@ -35,7 +35,7 @@ struct CustomView: View {
 
 ### Typography
 
-![Figma에서 확인할 수 있는 Typography 속성](figma-typography)
+![Figma에서 확인할 수 있는 Typography 속성](Resources/figma-typography.png)
 
 Typography에서 정의한 파라미터는 크게 세가지로, 각각의 용도는 다음과 같습니다. 
 

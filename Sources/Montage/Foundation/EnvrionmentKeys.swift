@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SafeAreaInsetsKey: EnvironmentKey {
-    public static var defaultValue: EdgeInsets {
+    static var defaultValue: EdgeInsets {
         (UIApplication.keyWindow?.safeAreaInsets ?? .zero).insets
     }
 }

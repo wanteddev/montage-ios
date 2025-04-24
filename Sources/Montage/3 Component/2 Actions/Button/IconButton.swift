@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+/// 다양한 스타일의 아이콘 버튼을 제공하는 컴포넌트입니다.
+///
+/// 아이콘만 표시하는 간결한 버튼으로, 여러 변형과 스타일을 지원합니다:
+/// - 기본형(normal): 배경 없이 아이콘만 표시
+/// - 배경형(background): 반투명 배경을 가진 아이콘
+/// - 외곽선형(outlined): 테두리로 둘러싸인 아이콘
+/// - 솔리드형(solid): 배경색이 채워진 아이콘
+///
+/// ```swift
+/// IconButton(
+///     variant: .default,
+///     icon: .arrowLeft,
+///     handler: { print("뒤로 가기 버튼 탭됨") }
+/// )
+/// ```
 public struct IconButton: View {
     @State private var isPressed = false
     
@@ -45,6 +60,19 @@ public struct IconButton: View {
     /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
     private let handler: (() -> Void)?
     
+    /// 아이콘 버튼을 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 외관 스타일, 기본값은 `.default`
+    ///   - icon: 표시할 아이콘
+    ///   - disable: 비활성화 여부, 기본값은 `false`
+    ///   - showPushBadge: 푸시 뱃지 표시 여부, 기본값은 `false` (normal 변형에서만 적용)
+    ///   - padding: 추가 패딩, 기본값은 `0` (outlined, solid 변형에서만 적용)
+    ///   - iconColor: 아이콘 색상 커스터마이징, 기본값은 `nil`
+    ///   - backgroundColor: 배경 색상 커스터마이징, 기본값은 `nil` (outlined, solid 변형에서만 적용)
+    ///   - borderColor: 테두리 색상 커스터마이징, 기본값은 `nil` (outlined 변형에서만 적용)
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 아이콘 버튼 뷰
     public init(
         variant: IconButton.Variant = .default,
         icon: Icon,
@@ -182,17 +210,36 @@ public struct IconButton: View {
 
 extension IconButton {
     /// 버튼의 외관을 결정하는 열거형입니다.
+    ///
+    /// 아이콘 버튼의 다양한 스타일과 크기를 정의합니다.
     public enum Variant {
         /// 버튼 사이즈를 결정하는 열거형입니다.
+        ///
+        /// - `small`: 작은 크기 (18x18)
+        /// - `medium`: 중간 크기 (20x20)
+        /// - `custom`: 사용자 지정 크기
         public enum Size {
             case small
             case medium
             case custom(size: Int)
         }
         
+        /// 기본형 아이콘 버튼 - 배경 없이 아이콘만 표시
+        /// - Parameter size: 아이콘 크기 (픽셀)
         case normal(size: Int)
+        
+        /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
+        /// - Parameters:
+        ///   - size: 아이콘 크기 (픽셀)
+        ///   - isAlternative: 대체 스타일 사용 여부
         case background(size: Int, isAlternative: Bool = false)
+        
+        /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
+        /// - Parameter size: 아이콘 크기 (Size 열거형)
         case outlined(size: Size)
+        
+        /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
+        /// - Parameter size: 아이콘 크기 (Size 열거형)
         case solid(size: Size)
         
         /// normal(size: 24)의 기본 variant입니다.

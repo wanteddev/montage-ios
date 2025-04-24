@@ -7,13 +7,49 @@
 
 import SwiftUI
 
-/// 디자인시스템에서 미리 정의된 컬러들입니다.
+/// 디자인 시스템에서 미리 정의된 컬러 네임스페이스
+///
+/// Color는 모든 Montage 컴포넌트에서 일관된 색상을 사용할 수 있도록
+/// 설계된 색상 체계를 제공합니다. Atomic과 Semantic으로 구분된 두 가지 
+/// 색상 타입을 지원합니다.
+///
+/// **사용 예시**:
+/// ```swift
+/// // Atomic 색상 사용
+/// let atomicColor = Color.Atomic.blue50
+/// let uiColor = UIColor.atomic(.blue50)
+/// let swiftUIColor = SwiftUI.Color.atomic(.blue50)
+/// 
+/// // Semantic 색상 사용
+/// let semanticColor = Color.Semantic.primaryNormal
+/// let uiColor = UIColor.semantic(.primaryNormal)
+/// let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
+/// ```
+///
+/// - Note: 디자인 시스템 UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다
+///   Semantic 색상을 사용하는 것이 권장됩니다. 이는 다크 모드와 같은 다양한 
+///   환경에서 일관된 디자인을 유지하는 데 도움이 됩니다.
 public enum Color {
+    /// 디자인 시스템에서 정의된 Atomic 컬러 팔레트
     ///
-    /// 디자인시스템에서 정의된 Atomic 컬러 파렛트입니다.
+    /// Atomic 색상은 디자인 시스템의 기본 색상 값을 정의합니다.
+    /// 이 색상들은 직접 사용하기보다는 Semantic 색상의 기반이 되는 
+    /// 기본 색상 팔레트로 활용됩니다.
     ///
-    /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Palettes (New)](https://www.figma.com/file/r0LXCzm4slyOAhR7jVp1DM/Color---Palettes-(New)?node-id=19%3A2&t=VRHF3ebMufBEkKtL-1) 를 참고하세요.
+    /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Atomic)](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-52196) 를 참고하세요.
     ///
+    /// **사용 예시**:
+    /// ```swift
+    /// // UIKit에서 사용
+    /// view.backgroundColor = UIColor.atomic(.blue50)
+    ///
+    /// // SwiftUI에서 사용
+    /// Text("텍스트")
+    ///     .foregroundColor(.atomic(.red60))
+    /// ```
+    ///
+    /// - Note: 숫자가 높을수록 밝은 색상을 나타내며, 100에 가까울수록 흰색에 가깝고
+    ///   0에 가까울수록 검은색에 가깝습니다.
     public enum Atomic: String, CaseIterable, ColorResolvable {
         // COMMON
         case common100
@@ -242,15 +278,31 @@ public enum Color {
         }
     }
     
+    /// 디자인 시스템에서 정의된 Semantic 컬러 값
     ///
-    /// 디자인시스템에서 정의된 Atomic 컬러 파렛트를 바라보는 레퍼런스 컬러 값입니다. 컬러 모드에 따라 실제로는 다른 값을 가질 수 있습니다.
+    /// Semantic 색상은 Atomic 색상을 참조하여 의미적 맥락에 따라 
+    /// 적절한 색상을 제공합니다. 다크 모드와 라이트 모드에서 
+    /// 자동으로 적절한 색상으로 변환됩니다.
     ///
-    /// 각 컬러 모드별 색상은 Figma의 [Color - Light (New)](https://www.figma.com/file/YfMmyQn7XDsRFm5PqV2rLU/Color---Light-(New)?node-id=0%3A1&t=bZPnjMqOyriXwL7S-1), [Color - Dark (New)](https://www.figma.com/file/j7Y8t3z3rni3snTsQGmq2q/Color---Dark-(New)?node-id=0%3A1&t=hB7mGKI3FXnGQvHI-1) 를 참고하세요.
+    /// 각 컬러 모드별 색상은 Figma의 [Color - Semantic](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-32983) 를 참고하세요.
     ///
+    /// **사용 예시**:
+    /// ```swift
+    /// // UIKit에서 사용
+    /// label.textColor = UIColor.semantic(.labelNormal)
+    /// 
+    /// // SwiftUI에서 사용
+    /// Button("버튼") { }
+    ///     .foregroundColor(.semantic(.primaryNormal))
+    ///     .background(Color.semantic(.backgroundNormal))
+    /// ```
+    ///
+    /// - Note: 컴포넌트 개발 시 Atomic 색상보다 Semantic 색상을 
+    ///   우선적으로 사용하는 것이 권장됩니다.
     public enum Semantic: String, CaseIterable, ColorResolvable {
         ///
         /// Figma상의 `.color-semantic-static-white` 토큰과 대응되는 값입니다.
-        ///
+        /// 
         case staticWhite
         
         ///

@@ -7,46 +7,98 @@
 
 import SwiftUI
 
+/// 사용자가 상호작용할 수 있는 버튼 컴포넌트입니다.
+///
+/// 세 가지 스타일로 제공됩니다:
+/// - `solid`: 색상이 채워진 버튼
+/// - `outlined`: 테두리만 있는 버튼
+/// - `text`: 텍스트만 있는 버튼
+///
+/// ```swift
+/// Button.solid(text: "확인", handler: { print("버튼 클릭") })
+/// ```
 public struct Button: View {
+    
+    // MARK: - Types
+    
+    /// Solid 스타일 버튼과 관련된 타입을 정의합니다.
     public enum Solid {
+        /// Solid 스타일 버튼의 변형을 정의합니다.
+        ///
+        /// - `primary`: 기본 강조 스타일
+        /// - `assistive`: 보조 스타일
         public enum Variant: String {
             case primary, assistive
         }
         
+        /// Solid 스타일 버튼의 크기를 정의합니다.
+        ///
+        /// - `small`: 작은 크기
+        /// - `medium`: 중간 크기
+        /// - `large`: 큰 크기
         public enum Size: String {
             case small, medium, large
         }
     }
 
+    /// Outlined 스타일 버튼과 관련된 타입을 정의합니다.
     public enum Outlined {
+        /// Outlined 스타일 버튼의 변형을 정의합니다.
+        ///
+        /// - `primary`: 기본 강조 스타일
+        /// - `secondary`: 보조 강조 스타일
+        /// - `assistive`: 보조 스타일
         public enum Variant: String {
             case primary, secondary, assistive
         }
         
+        /// Outlined 스타일 버튼의 크기를 정의합니다.
+        ///
+        /// - `small`: 작은 크기
+        /// - `medium`: 중간 크기
+        /// - `large`: 큰 크기
         public enum Size: String {
             case small, medium, large
         }
     }
 
+    /// Text 스타일 버튼과 관련된 타입을 정의합니다.
     public enum Text {
+        /// Text 스타일 버튼의 변형을 정의합니다.
+        ///
+        /// - `primary`: 기본 강조 스타일
+        /// - `assistive`: 보조 스타일
         public enum Variant: String {
             case primary, assistive
         }
         
+        /// Text 스타일 버튼의 크기를 정의합니다.
+        ///
+        /// - `small`: 작은 크기
+        /// - `medium`: 중간 크기
         public enum Size: String {
             case small, medium
         }
     }
     
-    // MARK: - Types
     internal enum Style {
         case solid, outlined, text
     }
     
+    /// 버튼의 변형을 정의합니다.
+    ///
+    /// - `primary`: 기본 강조 스타일
+    /// - `secondary`: 보조 강조 스타일
+    /// - `assistive`: 보조 스타일
     public enum Variant: String {
         case primary, secondary, assistive
     }
     
+    /// 버튼의 크기를 정의합니다.
+    ///
+    /// - `small`: 작은 크기
+    /// - `medium`: 중간 크기
+    /// - `large`: 큰 크기
     public enum Size: String {
         case small, medium, large
     }
@@ -79,6 +131,16 @@ public struct Button: View {
         self.handler = handler
     }
     
+    /// Solid 스타일의 텍스트 버튼을 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 변형, 기본값은 `.primary`
+    ///   - size: 버튼의 크기, 기본값은 `.large`
+    ///   - text: 버튼에 표시할 텍스트
+    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
+    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
     public static func solid(
         variant: Solid.Variant = .primary,
         size: Solid.Size = .large,
@@ -98,6 +160,14 @@ public struct Button: View {
         )
     }
     
+    /// Solid 스타일의 아이콘 버튼을 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 변형, 기본값은 `.primary`
+    ///   - size: 버튼의 크기, 기본값은 `.large`
+    ///   - icon: 버튼에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
     public static func solid(
         variant: Solid.Variant = .primary,
         size: Solid.Size = .large,
@@ -113,6 +183,16 @@ public struct Button: View {
         )
     }
     
+    /// Outlined 스타일의 텍스트 버튼을 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 변형, 기본값은 `.primary`
+    ///   - size: 버튼의 크기, 기본값은 `.large`
+    ///   - text: 버튼에 표시할 텍스트
+    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
+    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
     public static func outlined(
         variant: Outlined.Variant = .primary,
         size: Outlined.Size = .large,
@@ -132,6 +212,14 @@ public struct Button: View {
         )
     }
     
+    /// Outlined 스타일의 아이콘 버튼을 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 변형, 기본값은 `.primary`
+    ///   - size: 버튼의 크기, 기본값은 `.large`
+    ///   - icon: 버튼에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
     public static func outlined(
         variant: Outlined.Variant = .primary,
         size: Outlined.Size = .large,
@@ -147,6 +235,16 @@ public struct Button: View {
         )
     }
     
+    /// Text 스타일의 버튼을 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 변형, 기본값은 `.primary`
+    ///   - size: 버튼의 크기, 기본값은 `.medium`
+    ///   - text: 버튼에 표시할 텍스트
+    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
+    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
     public static func text(
         variant: Text.Variant = .primary,
         size: Text.Size = .medium,
@@ -178,48 +276,82 @@ public struct Button: View {
     private var fillHorizontal = false
     private var fillVertical = false
     
+    /// 버튼을 비활성화 상태로 설정합니다.
+    ///
+    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Returns: 수정된 버튼 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
         zelf.disable = disable
         return zelf
     }
     
+    /// 버튼 콘텐츠의 색상을 설정합니다.
+    ///
+    /// - Parameter contentColor: 설정할 색상
+    /// - Returns: 수정된 버튼 인스턴스
     public func contentColor(_ contentColor: SwiftUI.Color?) -> Self {
         var zelf = self
         zelf.contentColor = contentColor
         return zelf
     }
     
+    /// 버튼 배경색을 설정합니다.
+    ///
+    /// - Parameter backgroundColor: 설정할 배경색
+    /// - Returns: 수정된 버튼 인스턴스
     public func backgroundColor(_ backgroundColor: SwiftUI.Color?) -> Self {
         var zelf = self
         zelf.customBackgroundColor = backgroundColor
         return zelf
     }
     
+    /// 버튼 테두리 색상을 설정합니다.
+    ///
+    /// - Parameter borderColor: 설정할 테두리 색상
+    /// - Returns: 수정된 버튼 인스턴스
     public func borderColor(_ borderColor: SwiftUI.Color?) -> Self {
         var zelf = self
         zelf.customBorderColor = borderColor
         return zelf
     }
     
+    /// 버튼 텍스트의 폰트 변형을 설정합니다.
+    ///
+    /// - Parameter fontVariant: 설정할 폰트 변형
+    /// - Returns: 수정된 버튼 인스턴스
     public func fontVariant(_ fontVariant: Typography.Variant?) -> Self {
         var zelf = self
         zelf.fontVariant = fontVariant
         return zelf
     }
     
+    /// 버튼 텍스트의 폰트 두께를 설정합니다.
+    ///
+    /// - Parameter fontWeight: 설정할 폰트 두께
+    /// - Returns: 수정된 버튼 인스턴스
     public func fontWeight(_ fontWeight: Typography.Weight?) -> Self {
         var zelf = self
         zelf.fontWeight = fontWeight
         return zelf
     }
     
+    /// 버튼을 로딩 상태로 설정합니다.
+    ///
+    /// - Parameter loading: 로딩 상태 여부, 기본값은 `true`
+    /// - Returns: 수정된 버튼 인스턴스
     public func loading(_ loading: Bool = true) -> Self {
         var zelf = self
         zelf.loading = loading
         return zelf
     }
     
+    /// 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
+    ///
+    /// - Parameters:
+    ///   - horizontal: 수평 방향 채우기 여부, 기본값은 `false`
+    ///   - vertical: 수직 방향 채우기 여부, 기본값은 `false`
+    /// - Returns: 수정된 버튼 인스턴스
     public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
         var zelf = self
         zelf.fillHorizontal = fillHorizontal
