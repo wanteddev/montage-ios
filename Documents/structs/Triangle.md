@@ -21,10 +21,6 @@ public init()
 public func path(in rect: CGRect) -> Path
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| rect | The frame of reference for describing this shape. |
 
 </details>

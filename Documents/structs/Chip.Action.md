@@ -113,11 +113,7 @@ public init(
 public func makeUIView(context _: Context) -> UIViewType
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| context | A context structure containing information about the current state of the system. |
 
 </details>
 
@@ -127,12 +123,7 @@ public func makeUIView(context _: Context) -> UIViewType
 public func updateUIView(_ uiView: UIViewType, context _: Context)
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| uiView | Your custom view object. |
-| context | A context structure containing information about the current state of the system. |
 
 </details>
 
@@ -146,13 +137,7 @@ public func sizeThatFits(
 ) -> CGSize?
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| proposal | The proposed size for the view. |
-| uiView | Your custom view object. |
-| context | A context structure containing information about the current state of the system. |
 
 </details>
 

@@ -16,9 +16,13 @@ case icon(Icon, disable: Bool = false, showPushBadge: Bool = false, action: () -
 ```
 
 icon 형태의 Action입니다.
-- Parameters:
- - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
- - action: icon 클릭시 동작할 action입니다.
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| showPushBadge | PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다. |
+| action | icon 클릭시 동작할 action입니다. |
+
 
 ### `text(_:disable:action:)`
 
@@ -27,8 +31,12 @@ case text(String, disable: Bool = false, action: () -> Void)
 ```
 
 text 형태의 Action입니다.
-- Parameters:
- - action: text 클릭시 동작할 action입니다.
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| action | text 클릭시 동작할 action입니다. |
+
 
 ## Methods
 <details><summary markdown="span"><code>hash(into:)</code></summary>
@@ -37,11 +45,7 @@ text 형태의 Action입니다.
 public func hash(into hasher: inout Hasher)
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| hasher | The hasher to use when combining the components of this instance. |
 
 </details>
 
@@ -54,11 +58,6 @@ public static func == (
 ) -> Bool
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| lhs | A value to compare. |
-| rhs | Another value to compare. |
 
 </details>

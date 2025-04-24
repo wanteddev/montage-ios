@@ -22,12 +22,7 @@ public var totalNumberOfItems: Int
 public static func == (lhs: AutoCompletionDataSource, rhs: AutoCompletionDataSource) -> Bool
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| lhs | A value to compare. |
-| rhs | Another value to compare. |
 
 </details>
 

@@ -118,7 +118,9 @@ override public var intrinsicContentSize: CGSize
 
 이 메서드는 텍스트 크기, 아이콘 크기, 여백을 고려하여 최적의 크기를 계산합니다.
 
-- Returns: 계산된 뱃지의 크기
+#### Returns
+
+계산된 뱃지의 크기
 
 </details>
 
@@ -143,13 +145,14 @@ public required init?(coder: NSCoder)
 
 Interface Builder와 함께 사용할 때 호출되는 초기화 메서드입니다.
 
-- Parameter coder: 디코더 객체
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | coder | 디코더 객체 |
+
+
+
 
 </details>
 
@@ -163,13 +166,14 @@ override public func traitCollectionDidChange(_ previousTraitCollection: UITrait
 
 다크 모드와 라이트 모드 전환 시 UI를 업데이트합니다.
 
-- Parameter previousTraitCollection: 이전 트레이트 컬렉션
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | previousTraitCollection | 이전 트레이트 컬렉션 |
+
+
+
 
 </details>
 

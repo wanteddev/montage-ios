@@ -67,11 +67,6 @@ public init(
 
 아코디언을 생성합니다.
 
-- Parameters:
-  - title: 아코디언의 제목
-  - description: 확장 시 표시될 설명 텍스트 (선택 사항)
-  - content: 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항)
-
 #### Parameters
 
 | Name | Description |
@@ -79,6 +74,9 @@ public init(
 | title | 아코디언의 제목 |
 | description | 확장 시 표시될 설명 텍스트 (선택 사항) |
 | content | 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항) |
+
+
+
 
 </details>
 
@@ -94,12 +92,6 @@ public func title(
 
 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
 
-- Parameters:
-  - variant: 텍스트 변형 (기본값: `.body2`)
-  - weight: 텍스트 굵기 (기본값: `.bold`)
-  - color: 텍스트 색상 (기본값: `.semantic(.labelNormal)`)
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
@@ -107,6 +99,12 @@ public func title(
 | variant | 텍스트 변형 (기본값: `.body2`) |
 | weight | 텍스트 굵기 (기본값: `.bold`) |
 | color | 텍스트 색상 (기본값: `.semantic(.labelNormal)`) |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>
 
@@ -122,12 +120,6 @@ public func description(
 
 설명 텍스트의 타이포그래피 속성을 조정합니다.
 
-- Parameters:
-  - variant: 텍스트 변형 (기본값: `.label1`)
-  - weight: 텍스트 굵기 (기본값: `.regular`)
-  - color: 텍스트 색상 (기본값: `.semantic(.labelNeutral)`)
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
@@ -135,6 +127,12 @@ public func description(
 | variant | 텍스트 변형 (기본값: `.label1`) |
 | weight | 텍스트 굵기 (기본값: `.regular`) |
 | color | 텍스트 색상 (기본값: `.semantic(.labelNeutral)`) |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>
 
@@ -146,14 +144,17 @@ public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self
 
 아코디언 헤더의 상하 여백 크기를 조정합니다.
 
-- Parameter verticalPadding: 상하 여백 크기 (기본값: `.large`)
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | verticalPadding | 상하 여백 크기 (기본값: `.large`) |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>
 
@@ -167,14 +168,17 @@ public func fillWidth(_ fillWidth: Bool = true) -> Self
 
 이 수정자를 적용하면 좌우 20pt의 여백이 추가됩니다.
 
-- Parameter fillWidth: 너비를 채울지 여부 (기본값: `true`)
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | fillWidth | 너비를 채울지 여부 (기본값: `true`) |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>
 
@@ -186,14 +190,17 @@ public func hideDivider(_ hideDivider: Bool = true) -> Self
 
 아코디언 하단의 구분선을 숨깁니다.
 
-- Parameter hideDivider: 구분선을 숨길지 여부 (기본값: `true`)
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | hideDivider | 구분선을 숨길지 여부 (기본값: `true`) |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>
 
@@ -205,17 +212,18 @@ public func leadingIcon(_ leadingIcon: Icon? = nil, color: SwiftUI.Color? = nil)
 
 아코디언 제목 앞에 아이콘을 추가합니다.
 
-- Parameters:
-  - leadingIcon: 표시할 아이콘
-  - color: 아이콘 색상 (기본값: nil - 기본 색상 사용)
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | leadingIcon | 표시할 아이콘 |
 | color | 아이콘 색상 (기본값: nil - 기본 색상 사용) |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>
 
@@ -229,13 +237,16 @@ public func trailingContent(_ trailingContent: (() -> any View)? = nil) -> Self
 
 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
 
-- Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
-- Returns: 수정된 아코디언 인스턴스
-
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
 | trailingContent | 표시할 커스텀 컨텐츠 뷰 |
+
+#### Returns
+
+수정된 아코디언 인스턴스
+
+
 
 </details>

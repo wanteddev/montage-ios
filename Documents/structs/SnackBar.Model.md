@@ -27,11 +27,6 @@ public init(
 public static func == (lhs: Self, rhs: Self) -> Bool
 ```
 
-#### Parameters
 
-| Name | Description |
-| ---- | ----------- |
-| lhs | A value to compare. |
-| rhs | Another value to compare. |
 
 </details>
