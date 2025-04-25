@@ -1196,4 +1196,6 @@ public var name: String
 public func resolve(_: UITraitCollection) -> UIColor
 ```
 
+
+
 </details>

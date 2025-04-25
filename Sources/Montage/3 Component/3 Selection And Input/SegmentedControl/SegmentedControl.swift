@@ -7,22 +7,68 @@
 
 import SwiftUI
 
+/// 여러 옵션 중 하나를 선택할 수 있는 세그먼트 컨트롤 컴포넌트입니다.
+///
+/// 제한된 옵션 세트 내에서 선택할 수 있도록 하는 가로로 정렬된 버튼 그룹입니다.
+/// 각 세그먼트는 이미지와 텍스트를 포함할 수 있으며, 선택된 세그먼트는 시각적으로 강조됩니다.
+///
+/// **사용 예시**:
+/// ```swift
+/// @State private var selectedIndex = 0
+///
+/// // 텍스트만 있는 세그먼트 컨트롤
+/// SegmentedControl(
+///     selectedIndex: $selectedIndex,
+///     labels: ["첫 번째", "두 번째", "세 번째"]
+/// )
+///
+/// // 이미지와 텍스트가 모두 있는 세그먼트 컨트롤
+/// SegmentedControl(
+///     selectedIndex: $selectedIndex,
+///     items: [
+///         .init(image: .montage(.home), title: "홈"),
+///         .init(image: .montage(.person), title: "프로필"),
+///         .init(title: "설정")
+///     ]
+/// )
+/// .variant(.outlined)
+/// .size(.medium)
+/// ```
+///
+/// - Note: 기본 변형(.solid)은 배경이 있는 형태로, .outlined 변형은 테두리만 있는 형태로 표시됩니다.
 public struct SegmentedControl: View {
     // MARK: - Types
+    /// 세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
+    ///
+    /// 각 항목은 이미지(선택 사항)와 텍스트로 구성됩니다.
     public struct Item {
         let image: Image?
         let title: String
         
+        /// 세그먼트 항목을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - image: 표시할 이미지 (선택 사항)
+        ///   - title: 표시할 텍스트
         public init(image: Image? = nil, title: String) {
             self.image = image
             self.title = title
         }
     }
     
+    /// 세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
+    ///
+    /// - solid: 배경이 채워진 스타일
+    /// - outlined: 테두리만 있는 스타일
     public enum Variant {
         case solid, outlined
     }
     
+    /// 세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
+    ///
+    /// - large: 큰 크기 (48px 높이)
+    /// - medium: 중간 크기 (40px 높이)
+    /// - small: 작은 크기 (32px 높이)
     public enum Size {
         case large, medium, small
     }
@@ -32,12 +78,24 @@ public struct SegmentedControl: View {
     private let items: [Item]
     private let onSelect: ((Int) -> Void)?
     
+    /// 항목 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
+    ///   - items: 표시할 항목 배열
+    ///   - onSelect: 항목 선택 시 호출될 클로저 (기본값: nil)
     public init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)? = nil) {
         _selectedIndex = selectedIndex
         self.items = items
         self.onSelect = onSelect
     }
     
+    /// 텍스트 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
+    ///   - labels: 표시할 텍스트 배열
+    ///   - onSelect: 항목 선택 시 호출될 클로저 (기본값: nil)
     public init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)? = nil) {
         _selectedIndex = selectedIndex
         items = labels.map { Item(title: $0) }
@@ -138,12 +196,20 @@ public struct SegmentedControl: View {
     private var variant: Variant = .solid
     private var size: Size = .large
     
+    /// 세그먼트 컨트롤의 시각적 스타일을 설정합니다.
+    ///
+    /// - Parameter variant: 적용할 스타일 (.solid 또는 .outlined)
+    /// - Returns: 수정된 세그먼트 컨트롤 인스턴스
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
         zelf.variant = variant
         return zelf
     }
     
+    /// 세그먼트 컨트롤의 크기를 설정합니다.
+    ///
+    /// - Parameter size: 적용할 크기 (.large, .medium, 또는 .small)
+    /// - Returns: 수정된 세그먼트 컨트롤 인스턴스
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size

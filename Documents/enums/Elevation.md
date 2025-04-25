@@ -18,8 +18,9 @@ Elevation은 UI 요소의 시각적 깊이와 높이를 표현하기 위한
 let cardView = UIView()
 cardView.setElevation(.shadowNormal)
 
-// 그림자 변경
-cardView.setElevation(.shadowEmphasize)
+// SwiftUI에서 사용
+Text("Hello, World!")
+    .elevation(.shadowEmphasize)
 ```
 
 - Note: `UIView.setElevation(_:)`을 사용하여 레이어에 그림자를 적용할 수 있습니다.

@@ -8,6 +8,22 @@ public enum TrailingButton: Hashable
 
 TopNavigation의 우측에 표시될 내용들의 열거형입니다.
 
+아이콘 버튼과 텍스트 버튼을 지원합니다.
+
+**사용 예시**:
+```swift
+Bar.TopNavigation(
+    trailingButtons: [
+        .icon(.search) {
+            // 검색 동작
+        },
+        .text("완료") {
+            // 완료 동작
+        }
+    ]
+)
+```
+
 ## Cases
 ### `icon(_:disable:showPushBadge:action:)`
 

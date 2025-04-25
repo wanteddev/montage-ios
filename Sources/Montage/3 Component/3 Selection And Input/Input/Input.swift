@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+/// 텍스트와 함께 표시되는 선택 컨트롤 컴포넌트입니다.
+///
+/// 체크박스, 체크마크, 라디오 버튼과 같은 컨트롤을 텍스트 레이블과 함께 표시합니다.
+/// 사용자가 텍스트를 클릭하여 컨트롤의 상태를 변경할 수 있습니다.
+///
+/// **사용 예시**:
+/// ```swift
+/// // 체크박스와 텍스트
+/// Input.checkbox(checked: true, text: "이용약관에 동의합니다") { isChecked in
+///     print("동의 상태: \(isChecked)")
+/// }
+///
+/// // 라디오 버튼과 텍스트
+/// Input.radio(checked: false, text: "옵션 1")
+///     .bold()
+///     .size(.small)
+///
+/// // 바인딩 사용
+/// @State private var isChecked = false
+/// Input.checkmark($isChecked, text: "완료됨")
+/// ```
+///
+/// - Note: 컨트롤과 텍스트는 수직 정렬되어 표시됩니다.
 public struct Input: View {
     // MARK: - Initializer
     
@@ -73,6 +96,13 @@ public struct Input: View {
         self.onSelect = onSelect == nil ? nil : { onSelect?(!$0.isUnchecked) }
     }
     
+    /// 상태 값을 이용해 체크박스와 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - state: 체크박스의 초기 상태
+    ///   - text: 표시할 텍스트
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저
+    /// - Returns: 구성된 입력 컴포넌트
     public static func checkbox(
         state: Control.State,
         text: String,
@@ -81,6 +111,13 @@ public struct Input: View {
         .init(control: .checkbox, state: state, text: text, onSelect: onSelect)
     }
     
+    /// 불리언 값을 이용해 체크박스와 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - checked: 체크박스의 초기 선택 상태
+    ///   - text: 표시할 텍스트
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저
+    /// - Returns: 구성된 입력 컴포넌트
     public static func checkbox(
         checked: Bool,
         text: String,
@@ -89,6 +126,13 @@ public struct Input: View {
         .init(control: .checkbox, checked: checked, text: text, onSelect: onSelect)
     }
     
+    /// 불리언 값을 이용해 체크마크와 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - checked: 체크마크의 초기 선택 상태
+    ///   - text: 표시할 텍스트
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저
+    /// - Returns: 구성된 입력 컴포넌트
     public static func checkmark(
         checked: Bool,
         text: String,
@@ -97,22 +141,53 @@ public struct Input: View {
         .init(control: .checkmark, checked: checked, text: text, onSelect: onSelect)
     }
     
+    /// 불리언 값을 이용해 라디오 버튼과 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - checked: 라디오 버튼의 초기 선택 상태
+    ///   - text: 표시할 텍스트
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저
+    /// - Returns: 구성된 입력 컴포넌트
     public static func radio(checked: Bool, text: String, onSelect: ((Bool) -> Void)? = nil) -> Self {
         .init(control: .radio, checked: checked, text: text, onSelect: onSelect)
     }
     
+    /// 상태 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - state: 체크박스 상태와 연결된 바인딩
+    ///   - text: 표시할 텍스트
+    /// - Returns: 구성된 입력 컴포넌트
     public static func checkbox(_ state: Binding<Control.State>, text: String) -> Self {
         .init(control: .checkbox, stateBinding: state, text: text)
     }
     
+    /// 불리언 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - checked: 체크박스 선택 상태와 연결된 바인딩
+    ///   - text: 표시할 텍스트
+    /// - Returns: 구성된 입력 컴포넌트
     public static func checkbox(_ checked: Binding<Bool>, text: String) -> Self {
         .init(control: .checkbox, checkedBinding: checked, text: text)
     }
     
+    /// 불리언 바인딩을 이용해 체크마크와 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - checked: 체크마크 선택 상태와 연결된 바인딩
+    ///   - text: 표시할 텍스트
+    /// - Returns: 구성된 입력 컴포넌트
     public static func checkmark(_ checked: Binding<Bool>, text: String) -> Self {
         .init(control: .checkmark, checkedBinding: checked, text: text)
     }
     
+    /// 불리언 바인딩을 이용해 라디오 버튼과 텍스트를 생성합니다.
+    ///
+    /// - Parameters:
+    ///   - checked: 라디오 버튼 선택 상태와 연결된 바인딩
+    ///   - text: 표시할 텍스트
+    /// - Returns: 구성된 입력 컴포넌트
     public static func radio(_ checked: Binding<Bool>, text: String) -> Self {
         .init(control: .radio, checkedBinding: checked, text: text)
     }
@@ -167,21 +242,35 @@ public struct Input: View {
     private var isBold = false
     private var tight = false
 
-    /// 사이즈를 조정합니다. 기본값은 `.medium`입니다.
+    /// 컨트롤 사이즈를 설정합니다.
+    ///
+    /// - Parameter size: 컨트롤 크기 (.medium 또는 .small)
+    /// - Returns: 수정된 입력 컴포넌트
     public func size(_ size: Control.Size) -> Self {
         var zelf = self
         zelf.size = size
         return zelf
     }
 
-    /// 비활성화합니다.
+    /// 컴포넌트를 비활성화합니다.
+    ///
+    /// 비활성화된 컴포넌트는 사용자 상호작용이 불가능하며, 시각적으로도 흐리게 표시됩니다.
+    ///
+    /// - Parameter isDisable: 비활성화 여부 (기본값: true)
+    /// - Returns: 수정된 입력 컴포넌트
     public func disable(_ isDisable: Bool = true) -> Self {
         var zelf = self
         zelf.isDisable = isDisable
         return zelf
     }
 
-    /// 타이틀 텍스트의 `variant`, `weight`, `color` 속성을 조정합니다. 기본값은 각각 `.body2`, `.regular`, `.semantic(.labelNormal)`입니다.
+    /// 텍스트의 타이포그래피 속성을 설정합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 텍스트 변형 (.body2 또는 .label1)
+    ///   - weight: 텍스트 굵기
+    ///   - color: 텍스트 색상
+    /// - Returns: 수정된 입력 컴포넌트
     public func title(
         _ variant: Typography.Variant? = nil,
         weight: Typography.Weight? = nil,
@@ -194,13 +283,20 @@ public struct Input: View {
         return zelf
     }
 
-    /// 타이틀을 볼드체로 변경합니다.
+    /// 텍스트를 볼드체로 설정합니다.
+    ///
+    /// - Parameter isBold: 볼드 적용 여부 (기본값: true)
+    /// - Returns: 수정된 입력 컴포넌트
     public func bold(_ isBold: Bool = true) -> Self {
         var zelf = self
         zelf.isBold = isBold
         return zelf
     }
     
+    /// 컨트롤을 더 조밀한 레이아웃으로 표시합니다.
+    ///
+    /// - Parameter tight: 조밀한 레이아웃 적용 여부 (기본값: true)
+    /// - Returns: 수정된 입력 컴포넌트
     public func tight(_ tight: Bool = true) -> Self {
         var zelf = self
         zelf.tight = tight

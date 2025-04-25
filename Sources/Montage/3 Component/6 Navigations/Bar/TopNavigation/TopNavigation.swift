@@ -8,6 +8,28 @@
 import SwiftUI
 
 extension Bar {
+    /// 상단에 표시되는 내비게이션 바 컴포넌트입니다.
+    ///
+    /// 제목, 뒤로가기 버튼, 추가 액션 버튼 등을 포함할 수 있으며, 다양한 외관 스타일을 지원합니다.
+    /// 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// Bar.TopNavigation(
+    ///     variant: .normal,
+    ///     title: "제목",
+    ///     leadingButton: .back {
+    ///         // 뒤로가기 동작
+    ///     },
+    ///     trailingButtons: [
+    ///         .icon(.search) {
+    ///             // 검색 동작
+    ///         }
+    ///     ]
+    /// )
+    /// ```
+    ///
+    /// - SeeAlso: `Bar.TopNavigation.Variant`, `Bar.TopNavigation.Resource`
     public struct TopNavigation: View {
         // MARK: - Uninitialised properties
         
@@ -41,6 +63,15 @@ extension Bar {
 
         // MARK: - Initializers
        
+        /// TopNavigation을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 내비게이션 바의 외관 스타일
+        ///   - title: 표시할 제목
+        ///   - scrollOffset: 스크롤 오프셋 값
+        ///   - backgroundColorResolvable: 배경색 리졸버
+        ///   - leadingButton: 좌측에 표시할 버튼
+        ///   - trailingButtons: 우측에 표시할 버튼 배열 (최대 3개까지 표시)
         public init(
             variant: Variant = .normal,
             title: String = "",
@@ -369,9 +400,25 @@ extension Bar {
 
 extension Bar.TopNavigation {
     /// TopNavigation의 외관을 결정하는 열거형입니다.
+    ///
+    /// 내비게이션 바의 다양한 레이아웃과 시각적 스타일을 정의합니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// Bar.TopNavigation(
+    ///     variant: .floating(alternative: true, background: true),
+    ///     title: "제목"
+    /// )
+    /// ```
     public enum Variant: Equatable {
+        /// 기본 내비게이션 바 스타일
         case normal
+        /// 확장된 내비게이션 바 스타일 (제목이 별도의 줄에 표시됨)
         case extended
+        /// 플로팅 스타일의 내비게이션 바
+        /// - Parameters:
+        ///   - alternative: 대체 색상 사용 여부
+        ///   - background: 배경색 적용 여부
         case floating(alternative: Bool = false, background: Bool = false)
         
         fileprivate var isFloating: Bool {
@@ -385,13 +432,43 @@ extension Bar.TopNavigation {
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
     public enum Resource {
         /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
+        ///
+        /// 뒤로가기 버튼, 아이콘 버튼, 텍스트 버튼을 지원합니다.
+        ///
+        /// **사용 예시**:
+        /// ```swift
+        /// Bar.TopNavigation(
+        ///     leadingButton: .back {
+        ///         // 뒤로가기 동작
+        ///     }
+        /// )
+        /// ```
         public enum LeadingButton {
+            /// 뒤로가기 버튼
             case back(action: () -> Void)
+            /// 아이콘 버튼
             case icon(Icon, action: () -> Void)
+            /// 텍스트 버튼
             case text(String, action: () -> Void)
         }
         
         /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
+        ///
+        /// 아이콘 버튼과 텍스트 버튼을 지원합니다.
+        ///
+        /// **사용 예시**:
+        /// ```swift
+        /// Bar.TopNavigation(
+        ///     trailingButtons: [
+        ///         .icon(.search) {
+        ///             // 검색 동작
+        ///         },
+        ///         .text("완료") {
+        ///             // 완료 동작
+        ///         }
+        ///     ]
+        /// )
+        /// ```
         public enum TrailingButton: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
@@ -451,6 +528,24 @@ extension Bar.TopNavigation.Variant {
 }
 
 extension Bar.TopNavigation {
+    /// 컨텐츠 뷰에 TopNavigation을 적용하는 뷰 모디파이어입니다.
+    ///
+    /// 스크롤 감지 및 내비게이션 바 스타일링을 자동으로 처리합니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// contentView
+    ///     .modifier(
+    ///         Bar.TopNavigation.TopNavigationModifier(
+    ///             variant: .normal,
+    ///             title: "제목",
+    ///             leadingButton: .back { 
+    ///                 // 뒤로가기 동작
+    ///             },
+    ///             trailingButtons: []
+    ///         )
+    ///     )
+    /// ```
     public struct TopNavigationModifier: ViewModifier {
         private let variant: Variant
         private let title: String
@@ -460,6 +555,16 @@ extension Bar.TopNavigation {
         private let trailingButtons: [Resource.TrailingButton]
         private let actionAreaModel: ActionAreaModifier.Model?
         
+        /// TopNavigationModifier를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 내비게이션 바의 외관 스타일
+        ///   - title: 표시할 제목
+        ///   - showIndicator: 인디케이터 표시 여부
+        ///   - backgroundColorResolvable: 배경색 리졸버
+        ///   - leadingButton: 좌측에 표시할 버튼
+        ///   - trailingButtons: 우측에 표시할 버튼 배열
+        ///   - actionAreaModel: 액션 영역 모델
         public init(
             variant: Variant,
             title: String,
@@ -532,5 +637,39 @@ extension Bar.TopNavigation {
                 .clear
             }
         }
+    }
+}
+
+// MARK: - View Extension
+
+extension View {
+    /// 현재 뷰에 TopNavigation 바를 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
+    ///   - title: 표시할 제목
+    ///   - backgroundColorResolvable: 배경색 리졸버 (기본값: nil)
+    ///   - leadingButton: 좌측에 표시할 버튼 (기본값: nil)
+    ///   - trailingButtons: 우측에 표시할 버튼 배열 (기본값: [])
+    ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
+    /// - Returns: TopNavigation이 적용된 뷰
+    public func topNavigation(
+        variant: Bar.TopNavigation.Variant = .normal,
+        title: String,
+        backgroundColorResolvable: ColorResolvable? = nil,
+        leadingButton: Bar.TopNavigation.Resource.LeadingButton? = nil,
+        trailingButtons: [Bar.TopNavigation.Resource.TrailingButton] = [],
+        withBottom model: ActionAreaModifier.Model? = nil
+    ) -> some View {
+        modifier(
+            Bar.TopNavigation.TopNavigationModifier(
+                variant: variant,
+                title: title,
+                backgroundColorResolvable: backgroundColorResolvable,
+                leadingButton: leadingButton,
+                trailingButtons: trailingButtons,
+                actionAreaModel: model
+            )
+        )
     }
 }

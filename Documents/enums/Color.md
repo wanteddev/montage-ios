@@ -28,3 +28,5 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 - Note: 디자인 시스템 UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다
   Semantic 색상을 사용하는 것이 권장됩니다. 이는 다크 모드와 같은 다양한 
   환경에서 일관된 디자인을 유지하는 데 도움이 됩니다.
+
+- SeeAlso: `Color.Atomic`, `Color.Semantic`

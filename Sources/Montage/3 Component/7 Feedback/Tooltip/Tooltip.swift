@@ -7,14 +7,84 @@
 
 import SwiftUI
 
+/// UI 요소 주변에 추가 정보나 설명을 제공하는 툴팁 컴포넌트입니다.
+///
+/// 툴팁은 사용자가 특정 UI 요소를 이해하는데 도움이 되는 짧은 설명을 보여주기 위해 사용됩니다.
+/// 화살표가 있는 말풍선 형태로 표시되며, 화살표의 위치와 방향을 설정할 수 있습니다.
+/// 또한 닫기 버튼과 액션 버튼을 추가할 수 있습니다.
+///
+/// **사용 예시**:
+/// ```swift
+/// // 기본 툴팁 표시
+/// @State private var showTooltip = false
+///
+/// Button("도움말") {
+///     showTooltip.toggle()
+/// }
+/// .modifier(
+///     Tooltip.Modifier(
+///         isPresented: $showTooltip,
+///         position: .top(),
+///         message: "이 버튼을 클릭하면 도움말이 표시됩니다."
+///     )
+/// )
+///
+/// // 버튼이 있는 툴팁
+/// Button("설정") {
+///     showTooltip.toggle()
+/// }
+/// .modifier(
+///     Tooltip.Modifier(
+///         isPresented: $showTooltip,
+///         position: .bottom(arrowPosition: .leading),
+///         message: "서비스 이용을 위해 설정이 필요합니다.",
+///         showCloseButton: true,
+///         buttonInfo: Tooltip.ButtonInfo(
+///             title: "설정하기",
+///             action: {
+///                 // 설정 화면으로 이동
+///             }
+///         )
+///     )
+/// )
+/// ```
+///
+/// - SeeAlso: `Tooltip.Position`, `Tooltip.ButtonInfo`, `Tooltip.Modifier`
 public enum Tooltip {
     
     // MARK: - Types
     
+    /// 툴팁이 표시될 위치를 정의하는 열거형입니다.
+    ///
+    /// 툴팁의 방향(상단, 하단, 왼쪽, 오른쪽)과
+    /// 화살표의 위치를 함께 지정할 수 있습니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// // 상단에 표시되고 화살표는 중앙에 위치
+    /// .position(.top())
+    ///
+    /// // 왼쪽에 표시되고 화살표는 상단에 위치
+    /// .position(.leading(arrowPosition: .top))
+    ///
+    /// // 하단에 표시되고 화살표는 오른쪽에 위치
+    /// .position(.bottom(arrowPosition: .trailing))
+    /// ```
     public enum Position {
+        /// 왼쪽에 툴팁 표시
+        /// - Parameter arrowPosition: 화살표의 수직 위치 (기본값: .center)
         case leading(arrowPosition: VerticalAlignment = .center)
+        
+        /// 오른쪽에 툴팁 표시
+        /// - Parameter arrowPosition: 화살표의 수직 위치 (기본값: .center)
         case trailing(arrowPosition: VerticalAlignment = .center)
+        
+        /// 상단에 툴팁 표시
+        /// - Parameter arrowPosition: 화살표의 수평 위치 (기본값: .center)
         case top(arrowPosition: HorizontalAlignment = .center)
+        
+        /// 하단에 툴팁 표시
+        /// - Parameter arrowPosition: 화살표의 수평 위치 (기본값: .center)
         case bottom(arrowPosition: HorizontalAlignment = .center)
         
         fileprivate func getArrowAngleDegree() -> Double {
@@ -40,10 +110,28 @@ public enum Tooltip {
         }
     }
     
+    /// 툴팁에 표시되는 버튼의 정보를 정의하는 구조체입니다.
+    ///
+    /// 툴팁 내용 아래에 표시되는 버튼의 제목과 동작을 정의합니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// Tooltip.ButtonInfo(
+    ///     title: "더 알아보기",
+    ///     action: {
+    ///         // 상세 정보 페이지로 이동
+    ///     }
+    /// )
+    /// ```
     public struct ButtonInfo {
         public let title: String
         public let action: () -> Void
         
+        /// ButtonInfo를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - title: 버튼에 표시될 텍스트
+        ///   - action: 버튼 클릭 시 실행될 동작
         public init(title: String, action: @escaping () -> Void) {
             self.title = title
             self.action = action
@@ -52,6 +140,31 @@ public enum Tooltip {
 
     // MARK: - ViewModifier
     
+    /// 뷰에 툴팁을 적용하기 위한 뷰 모디파이어입니다.
+    ///
+    /// isPresented 바인딩 값을 통해 툴팁의 표시 여부를 제어합니다.
+    /// iOS 16.4 이상에서는 내장 popover API를 사용할 수 있으며,
+    /// 그 이하 버전에서는 커스텀 툴팁이 구현됩니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// @State private var showTooltip = false
+    ///
+    /// Text("도움말이 필요한 항목")
+    ///     .onTapGesture {
+    ///         showTooltip.toggle()
+    ///     }
+    ///     .modifier(
+    ///         Tooltip.Modifier(
+    ///             isPresented: $showTooltip,
+    ///             position: .bottom(),
+    ///             message: "이 항목에 대한 설명입니다.",
+    ///             showCloseButton: true
+    ///         )
+    ///     )
+    /// ```
+    ///
+    /// - Note: iOS 16.4 이상에서는 `position` 파라미터를 생략하면 시스템 팝오버가 사용됩니다.
     struct Modifier: ViewModifier {
         
         // MARK: - Constants
@@ -75,6 +188,15 @@ public enum Tooltip {
         private let showCloseButton: Bool
         private let message: String
 
+        /// 특정 위치에 표시되는 툴팁 모디파이어를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - isPresented: 툴팁의 표시 여부를 제어하는 바인딩
+        ///   - position: 툴팁이 표시될 위치 및 화살표 위치
+        ///   - message: 툴팁에 표시될 메시지
+        ///   - showArrow: 화살표 표시 여부 (기본값: true)
+        ///   - showCloseButton: 닫기 버튼 표시 여부 (기본값: false)
+        ///   - buttonInfo: 툴팁에 추가할 버튼 정보 (선택 사항)
         init(
             isPresented: Binding<Bool>,
             position: Tooltip.Position,
@@ -91,6 +213,13 @@ public enum Tooltip {
             self.buttonInfo = buttonInfo
         }
         
+        /// iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 모디파이어를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - isPresented: 툴팁의 표시 여부를 제어하는 바인딩
+        ///   - message: 툴팁에 표시될 메시지
+        ///   - showCloseButton: 닫기 버튼 표시 여부 (기본값: false)
+        ///   - buttonInfo: 툴팁에 추가할 버튼 정보 (선택 사항)
         @available(iOS 16.4, *)
         init(
             isPresented: Binding<Bool>,
@@ -404,5 +533,60 @@ private extension Tooltip.Modifier {
                 .rotation(Angle(degrees: degree))
                 .foregroundStyle(upperLayerColor)
         }
+    }
+}
+
+// MARK: - View Extension
+
+extension View {
+    /// 현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - isPresented: 툴팁의 표시 여부를 제어하는 바인딩
+    ///   - position: 툴팁이 표시될 위치 및 화살표 위치
+    ///   - message: 툴팁에 표시될 메시지
+    ///   - showArrow: 화살표 표시 여부 (기본값: true)
+    ///   - showCloseButton: 닫기 버튼 표시 여부 (기본값: false)
+    ///   - buttonInfo: 툴팁에 추가할 버튼 정보 (선택 사항)
+    /// - Returns: 툴팁이 적용된 뷰
+    public func tooltip(
+        isPresented: Binding<Bool>,
+        position: Tooltip.Position,
+        message: String,
+        showArrow: Bool = true,
+        showCloseButton: Bool = false,
+        buttonInfo: Tooltip.ButtonInfo? = nil
+    ) -> some View {
+        modifier(Tooltip.Modifier(
+            isPresented: isPresented,
+            position: position,
+            message: message,
+            showArrow: showArrow,
+            showCloseButton: showCloseButton,
+            buttonInfo: buttonInfo
+        ))
+    }
+    
+    /// iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - isPresented: 툴팁의 표시 여부를 제어하는 바인딩
+    ///   - message: 툴팁에 표시될 메시지
+    ///   - showCloseButton: 닫기 버튼 표시 여부 (기본값: false)
+    ///   - buttonInfo: 툴팁에 추가할 버튼 정보 (선택 사항)
+    /// - Returns: 툴팁이 적용된 뷰
+    @available(iOS 16.4, *)
+    public func tooltip(
+        isPresented: Binding<Bool>,
+        message: String,
+        showCloseButton: Bool = false,
+        buttonInfo: Tooltip.ButtonInfo? = nil
+    ) -> some View {
+        modifier(Tooltip.Modifier(
+            isPresented: isPresented,
+            message: message,
+            showCloseButton: showCloseButton,
+            buttonInfo: buttonInfo
+        ))
     }
 }

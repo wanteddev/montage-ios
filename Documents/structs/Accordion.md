@@ -96,9 +96,9 @@ public func title(
 
 | Name | Description |
 | ---- | ----------- |
-| variant | 텍스트 변형 (기본값: `.body2`) |
-| weight | 텍스트 굵기 (기본값: `.bold`) |
-| color | 텍스트 색상 (기본값: `.semantic(.labelNormal)`) |
+| variant | 텍스트 변형 (기본값: .body2) |
+| weight | 텍스트 굵기 (기본값: .bold) |
+| color | 텍스트 색상 (기본값: .semantic(.labelNormal)) |
 
 #### Returns
 
@@ -124,9 +124,9 @@ public func description(
 
 | Name | Description |
 | ---- | ----------- |
-| variant | 텍스트 변형 (기본값: `.label1`) |
-| weight | 텍스트 굵기 (기본값: `.regular`) |
-| color | 텍스트 색상 (기본값: `.semantic(.labelNeutral)`) |
+| variant | 텍스트 변형 (기본값: .label1) |
+| weight | 텍스트 굵기 (기본값: .regular) |
+| color | 텍스트 색상 (기본값: .semantic(.labelNeutral)) |
 
 #### Returns
 
@@ -148,7 +148,7 @@ public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self
 
 | Name | Description |
 | ---- | ----------- |
-| verticalPadding | 상하 여백 크기 (기본값: `.large`) |
+| verticalPadding | 상하 여백 크기 (기본값: .large) |
 
 #### Returns
 
@@ -172,7 +172,7 @@ public func fillWidth(_ fillWidth: Bool = true) -> Self
 
 | Name | Description |
 | ---- | ----------- |
-| fillWidth | 너비를 채울지 여부 (기본값: `true`) |
+| fillWidth | 너비를 채울지 여부 |
 
 #### Returns
 

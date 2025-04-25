@@ -8,9 +8,34 @@
 import SDWebImageSwiftUI
 import SwiftUI
 
+/// 사용자, 회사, 학원의 프로필 이미지를 표시하는 아바타 컴포넌트입니다.
+///
+/// 원형 또는 둥근 모서리 사각형 형태로 프로필 이미지를 표시합니다.
+/// 이미지 URL이 유효하지 않을 경우 각 유형별 기본 이미지를 표시합니다.
+///
+/// **사용 예시**:
+/// ```swift
+/// // 기본 사용자 아바타
+/// Avatar("https://example.com/profile.jpg", variant: .person)
+///
+/// // 테두리가 있는 회사 아바타
+/// Avatar("https://example.com/company-logo.png", variant: .company, size: .medium)
+///     .border(color: .red, width: 2)
+///
+/// // 푸시 알림 표시가 있는 아바타
+/// Avatar("https://example.com/profile.jpg", variant: .person)
+///     .pushBadge()
+/// ```
+///
+/// - Note: 이미지 로딩은 SDWebImage를 통해 처리되며, 탭 상호작용을 지원합니다.
 public struct Avatar: View {
     // MARK: - Types
     
+    /// 아바타의 유형을 정의하는 열거형입니다.
+    ///
+    /// - person: 사용자 프로필 (원형)
+    /// - company: 회사 프로필 (둥근 모서리 사각형)
+    /// - academy: 학원 프로필 (둥근 모서리 사각형)
     public enum Variant {
         case person, company, academy
         
@@ -47,6 +72,13 @@ public struct Avatar: View {
         }
     }
     
+    /// 아바타의 크기를 정의하는 열거형입니다.
+    ///
+    /// - xsmall: 24x24
+    /// - small: 32x32
+    /// - medium: 40x40
+    /// - large: 48x48
+    /// - xlarge: 56x56
     public enum Size {
         case xsmall
         case small
@@ -84,6 +116,13 @@ public struct Avatar: View {
     private let size: Size
     private let onTap: (() -> Void)?
     
+    /// 아바타를 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - imageUrl: 표시할 이미지의 URL 문자열
+    ///   - variant: 아바타 유형 (.person, .company, .academy)
+    ///   - size: 아바타 크기 (기본값: .small)
+    ///   - onTap: 탭 시 실행할 액션 (기본값: nil)
     public init(_ imageUrl: String, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
         self.imageUrl = imageUrl
         self.variant = variant
@@ -135,12 +174,24 @@ public struct Avatar: View {
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
     
+    /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
+    ///
+    /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
+    ///
+    /// - Parameter pushBadge: 뱃지 표시 여부 (기본값: true)
+    /// - Returns: 수정된 아바타 인스턴스
     public func pushBadge(_ pushBadge: Bool = true) -> Self {
         var zelf = self
         zelf.pushBadge = pushBadge
         return zelf
     }
     
+    /// 아바타에 테두리를 추가합니다.
+    ///
+    /// - Parameters:
+    ///   - color: 테두리 색상 (기본값: .semantic(.lineAlternative))
+    ///   - width: 테두리 두께 (기본값: 1)
+    /// - Returns: 수정된 아바타 인스턴스
     public func border(color: SwiftUI.Color = .semantic(.lineAlternative), width: CGFloat = 1) -> Self {
         var zelf = self
         zelf.borderColor = color
@@ -148,6 +199,10 @@ public struct Avatar: View {
         return zelf
     }
     
+    /// 아바타의 상호작용 효과를 비활성화합니다.
+    ///
+    /// - Parameter interactionDisabled: 상호작용 비활성화 여부 (기본값: true)
+    /// - Returns: 수정된 아바타 인스턴스
     internal func interactionDisabled(_ interactionDisabled: Bool = true) -> Self {
         var zelf = self
         zelf.interactionDisabled = interactionDisabled

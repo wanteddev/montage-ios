@@ -6,8 +6,12 @@
 public enum Resource
 ```
 
-TextArea 하단 좌/우측에 사용할 수 있는 컴포넌트입니다.
-> characterCount는 좌/우측 중 하나에만 사용 가능합니다. 중복된다면 좌측을 우선 표시합니다.
+텍스트 영역 하단에 표시할 수 있는 UI 요소를 정의합니다.
+
+다양한 종류의 컴포넌트를 텍스트 영역 하단에 배치할 수 있습니다.
+문자 수 카운터, 버튼, 아이콘, 칩, 뱃지 등을 지원합니다.
+
+- Note: 문자 수 카운터는 좌/우측 중 하나에만 사용 가능합니다. 중복 사용 시 좌측이 우선 표시됩니다.
 
 ## Cases
 ### `characterCount(limit:overflow:)`
@@ -15,6 +19,15 @@ TextArea 하단 좌/우측에 사용할 수 있는 컴포넌트입니다.
 ```swift
 case characterCount(limit: Int? = nil, overflow: Bool = false)
 ```
+
+문자 수 카운터
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| limit | 최대 문자 수 제한 (nil인 경우 제한 없음) |
+| overflow | 최대 문자 수 초과 허용 여부 |
+
 
 ### `textButton(placement:varaint:title:handler:)`
 
@@ -26,6 +39,17 @@ case textButton(
     handler: (() -> Void)? = nil
 )
 ```
+
+텍스트 버튼
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| placement | 버튼 위치 |
+| varaint | 버튼 변형 스타일 |
+| title | 버튼 텍스트 |
+| handler | 버튼 클릭 핸들러 |
+
 
 ### `iconButton(placement:variant:icon:tintColor:handler:)`
 
@@ -39,6 +63,18 @@ case iconButton(
 )
 ```
 
+아이콘 버튼
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| placement | 버튼 위치 |
+| variant | 버튼 변형 스타일 |
+| icon | 버튼 아이콘 |
+| tintColor | 아이콘 색상 |
+| handler | 버튼 클릭 핸들러 |
+
+
 ### `icon(_:tintColor:)`
 
 ```swift
@@ -47,6 +83,15 @@ case icon(
     tintColor: SwiftUI.Color = .semantic(.labelAssistive)
 )
 ```
+
+단순 아이콘
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| icon | 표시할 아이콘 |
+| tintColor | 아이콘 색상 |
+
 
 ### `actionChip(_:title:handler:)`
 
@@ -58,6 +103,16 @@ case actionChip(
 )
 ```
 
+액션 칩
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| variant | 칩 변형 스타일 |
+| title | 칩 텍스트 |
+| handler | 칩 클릭 핸들러 |
+
+
 ### `filterChip(_:title:handler:)`
 
 ```swift
@@ -68,6 +123,16 @@ case filterChip(
 )
 ```
 
+필터 칩
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| variant | 칩 변형 스타일 |
+| title | 칩 텍스트 |
+| handler | 칩 클릭 핸들러 |
+
+
 ### `badge(_:title:)`
 
 ```swift
@@ -76,3 +141,11 @@ case badge(
     title: String
 )
 ```
+
+뱃지
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| variant | 뱃지 변형 스타일 |
+| title | 뱃지 텍스트 |

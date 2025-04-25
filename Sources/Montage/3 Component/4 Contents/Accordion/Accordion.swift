@@ -114,9 +114,9 @@ public struct Accordion: View {
     /// 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
     ///
     /// - Parameters:
-    ///   - variant: 텍스트 변형 (기본값: `.body2`)
-    ///   - weight: 텍스트 굵기 (기본값: `.bold`)
-    ///   - color: 텍스트 색상 (기본값: `.semantic(.labelNormal)`)
+    ///   - variant: 텍스트 변형 (기본값: .body2)
+    ///   - weight: 텍스트 굵기 (기본값: .bold)
+    ///   - color: 텍스트 색상 (기본값: .semantic(.labelNormal))
     /// - Returns: 수정된 아코디언 인스턴스
     public func title(
         _ variant: Typography.Variant = .body2,
@@ -133,9 +133,9 @@ public struct Accordion: View {
     /// 설명 텍스트의 타이포그래피 속성을 조정합니다.
     ///
     /// - Parameters:
-    ///   - variant: 텍스트 변형 (기본값: `.label1`)
-    ///   - weight: 텍스트 굵기 (기본값: `.regular`)
-    ///   - color: 텍스트 색상 (기본값: `.semantic(.labelNeutral)`)
+    ///   - variant: 텍스트 변형 (기본값: .label1)
+    ///   - weight: 텍스트 굵기 (기본값: .regular)
+    ///   - color: 텍스트 색상 (기본값: .semantic(.labelNeutral))
     /// - Returns: 수정된 아코디언 인스턴스
     public func description(
         _ variant: Typography.Variant = .label1,
@@ -151,7 +151,7 @@ public struct Accordion: View {
     
     /// 아코디언 헤더의 상하 여백 크기를 조정합니다.
     ///
-    /// - Parameter verticalPadding: 상하 여백 크기 (기본값: `.large`)
+    /// - Parameter verticalPadding: 상하 여백 크기 (기본값: .large)
     /// - Returns: 수정된 아코디언 인스턴스
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
@@ -163,7 +163,7 @@ public struct Accordion: View {
     ///
     /// 이 수정자를 적용하면 좌우 20pt의 여백이 추가됩니다.
     ///
-    /// - Parameter fillWidth: 너비를 채울지 여부 (기본값: `true`)
+    /// - Parameter fillWidth: 너비를 채울지 여부
     /// - Returns: 수정된 아코디언 인스턴스
     public func fillWidth(_ fillWidth: Bool = true) -> Self {
         var zelf = self

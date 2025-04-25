@@ -6,7 +6,10 @@
 public enum State
 ```
 
-칩의 확장 상태를 나타내는 열거형입니다.
+칩의 확장 상태를 정의합니다.
+
+- `.normal`: 기본 상태
+- `.expand`: 확장된 상태 (드롭다운 표시)
 
 ## Cases
 ### `normal`
