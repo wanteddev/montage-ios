@@ -150,7 +150,7 @@ extension Card {
                             Text(title)
                                 .montage(variant: .body1, weight: .bold, semantic: .labelNormal)
                                 .paragraph(variant: .body1)
-                                .lineLimit(2)
+                                .lineLimit(1)
                                 .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: textAreaWidth, height: 20))
                             
                             if let caption {
