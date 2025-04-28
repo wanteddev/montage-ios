@@ -8,27 +8,56 @@
 import SwiftUI
 
 extension Modal {
-    /// Modal/BottomSheet Component입니다.
+    /// 화면 하단에서 위로 올라오는 바텀 시트 모달 컴포넌트입니다.
     ///
-    /// .sheet(isPresented:content:)와 함께 사용하며 content안쪽에 Component를 위치시킵니다.
-    /// ```
-    /// .sheet(
-    ///   isPresented: Binding<Bool>,
-    ///   content: {
-    ///       Modal.BottomSheet {
-    ///           ...
-    ///       }
-    /// })
+    /// SwiftUI의 .sheet 수정자와 함께 사용하여 다양한 크기와 동작을 지원하는 바텀 시트를 구현합니다.
+    /// 내비게이션 바, 액션 영역, 핸들 등의 요소를 설정할 수 있습니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// @State private var showBottomSheet = false
+    ///
+    /// Button("바텀 시트 열기") {
+    ///     showBottomSheet = true
+    /// }
+    /// .sheet(isPresented: $showBottomSheet) {
+    ///     Modal.BottomSheet {
+    ///         VStack(spacing: 16) {
+    ///             Text("바텀 시트 내용")
+    ///             Button("닫기") {
+    ///                 showBottomSheet = false
+    ///             }
+    ///         }
+    ///     }
+    ///     .resize(.flexible)
+    ///     .modalNavigation {
+    ///         Modal.Navigation(title: "제목")
+    ///     }
+    /// }
     /// ```
     ///
-    /// - Parameters:
-    ///     - needHandle: Content 표시 영역을 변경시킬 수 있는 handle의 여부 입니다. 기본값은 true입니다.
-    ///     - resize: Content가 표시될 영역의 사이즈 입니다. 기본값은 .hug입니다.
-    ///     - containScrollView: Content에 ScrollView 가 삽입된 경우 전달합니다. 기본값은 false입니다.
+    /// 모디파이어를 사용하면 더 간편하게 구현할 수 있습니다:
+    /// ```swift
+    /// YourView()
+    ///     .bottomSheetModal(
+    ///         isPresented: $showBottomSheet,
+    ///         resize: .hug
+    ///     ) {
+    ///         Text("바텀 시트 내용")
+    ///     }
+    /// ```
+    ///
+    /// - SeeAlso: `Modal.BottomSheetModifier`, `Modal.Navigation`, `ActionAreaModifier.Model`
     public struct BottomSheet: View {
         // MARK: - Types
         
-        /// Modal/Bottom의 사이즈를 나타내는 열거형입니다.
+        /// 바텀 시트의 크기를 정의하는 열거형입니다.
+        ///
+        /// - hug: 컨텐츠 크기에 맞게 자동 조절됩니다.
+        /// - fixedRatio: 화면 높이의 특정 비율로 고정됩니다.
+        /// - fixedHeight: 지정한 높이로 고정됩니다.
+        /// - flexible: 사용자가 드래그하여 크기를 조절할 수 있습니다.
+        /// - fill: 화면 전체를 채웁니다.
         public enum Resize {
             case hug
             case fixedRatio(CGFloat)
@@ -50,6 +79,9 @@ extension Modal {
         
         private var content: () -> any View
         
+        /// 바텀 시트 모달을 초기화합니다.
+        ///
+        /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
         public init(_ content: @escaping () -> any View) {
             self.content = content
         }
@@ -135,30 +167,50 @@ extension Modal {
         private var ignoresEdgeInsets = false
         private var fullModal = false
         
+        /// 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
+        ///
+        /// - Parameter needHandle: 핸들 표시 여부
+        /// - Returns: 수정된 바텀 시트 뷰
         public func needHandle(_ needHandle: Bool) -> Self {
             var zelf = self
             zelf.needHandle = needHandle
             return zelf
         }
         
+        /// 바텀 시트의 크기 조절 방식을 설정합니다.
+        ///
+        /// - Parameter resize: 크기 조절 방식
+        /// - Returns: 수정된 바텀 시트 뷰
         public func resize(_ resize: Modal.BottomSheet.Resize) -> Self {
             var zelf = self
             zelf.resize = resize
             return zelf
         }
         
+        /// 바텀 시트 상단에 내비게이션 바를 설정합니다.
+        ///
+        /// - Parameter navigation: 내비게이션 바를 반환하는 클로저
+        /// - Returns: 수정된 바텀 시트 뷰
         public func modalNavigation(_ navigation: (() -> Montage.Modal.Navigation)?) -> Self {
             var zelf = self
             zelf.navigation = navigation
             return zelf
         }
         
+        /// 바텀 시트 하단에 액션 영역을 설정합니다.
+        ///
+        /// - Parameter actionAreaModel: 액션 영역 모델
+        /// - Returns: 수정된 바텀 시트 뷰
         public func modalActionArea(_ actionAreaModel: ActionAreaModifier.Model?) -> Self {
             var zelf = self
             zelf.actionAreaModel = actionAreaModel
             return zelf
         }
         
+        /// 컨텐츠의 기본 여백을 무시할지 설정합니다.
+        ///
+        /// - Parameter ignoresEdgeInsets: 여백 무시 여부
+        /// - Returns: 수정된 바텀 시트 뷰
         public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
             var zelf = self
             zelf.ignoresEdgeInsets = ignoresEdgeInsets
@@ -229,6 +281,29 @@ extension Modal {
         }
     }
     
+    /// 바텀 시트를 표시하기 위한 뷰 모디파이어입니다.
+    ///
+    /// 이 모디파이어를 사용하면 바텀 시트를 쉽게 표시하고 설정할 수 있습니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// @State private var showBottomSheet = false
+    ///
+    /// Button("바텀 시트 열기") {
+    ///     showBottomSheet = true
+    /// }
+    /// .modifier(
+    ///     Modal.BottomSheetModifier(
+    ///         isPresented: $showBottomSheet,
+    ///         needHandle: true, 
+    ///         resize: .flexible
+    ///     ) {
+    ///         Text("바텀 시트 내용")
+    ///     }
+    /// )
+    /// ```
+    ///
+    /// - SeeAlso: `Modal.BottomSheet`
     public struct BottomSheetModifier: ViewModifier {
         @Binding private var isPresented: Bool
         private let bottomSheetContent: () -> any View
@@ -238,6 +313,16 @@ extension Modal {
         private let navigation: (() -> Modal.Navigation)?
         private let actionAreaModel: ActionAreaModifier.Model?
         
+        /// 바텀 시트 모디파이어를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - isPresented: 바텀 시트 표시 여부에 대한 바인딩
+        ///   - content: 바텀 시트에 표시할 콘텐츠를 반환하는 클로저
+        ///   - needHandle: 핸들 표시 여부 (기본값: true)
+        ///   - resize: 크기 조절 방식 (기본값: .hug)
+        ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
+        ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
+        ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
         public init(
             isPresented: Binding<Bool>,
             _ content: @escaping () -> any View,
@@ -269,5 +354,41 @@ extension Modal {
                     .modalActionArea(actionAreaModel)
                 }
         }
+    }
+}
+
+// MARK: - View Extension
+
+extension View {
+    /// 바텀 시트 모달을 표시합니다.
+    ///
+    /// 화면 하단에서 올라오는 시트 형태로 모달을 표시합니다.
+    ///
+    /// - Parameters:
+    ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
+    ///   - needHandle: 상단 핸들 표시 여부 (기본값: true)
+    ///   - resize: 모달 크기 조절 방식 (기본값: .hug)
+    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
+    ///   - content: 모달에 표시할 콘텐츠 클로저
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
+    /// - Returns: 바텀 시트 모달이 적용된 뷰
+    public func bottomSheetModal(
+        isPresented: Binding<Bool>,
+        needHandle: Bool = true,
+        resize: Modal.BottomSheet.Resize = .hug,
+        actionAreaModel: ActionAreaModifier.Model? = nil,
+        _ content: @escaping () -> any View,
+        navigation: (() -> Modal.Navigation)? = nil
+    ) -> some View {
+        modifier(
+            Modal.BottomSheetModifier(
+                isPresented: isPresented,
+                content,
+                needHandle: needHandle,
+                resize: resize,
+                navigation: navigation,
+                actionAreaModel: actionAreaModel
+            )
+        )
     }
 }

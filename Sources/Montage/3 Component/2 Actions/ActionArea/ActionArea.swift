@@ -7,11 +7,45 @@
 
 import SwiftUI
 
+/// 화면 하단에 사용자 액션 버튼을 표시하는 영역 컴포넌트입니다.
+///
+/// 이 컴포넌트는 화면 하단에 위치하며 주요 액션 버튼과 보조 버튼을 표시합니다.
+/// 다양한 레이아웃 변형을 지원하고, 캡션 텍스트와 추가 콘텐츠를 포함할 수 있습니다.
+///
+/// ## 사용 예시
+/// ```swift
+/// // 기본 강조 버튼 영역
+/// ActionArea(variant: .strong(
+///     main: .init(text: "확인", action: { confirmAction() }),
+///     sub: .init(text: "취소", action: { cancelAction() })
+/// ))
+///
+/// // 캡션이 있는 중립 버튼 영역
+/// ActionArea(variant: .neutral(
+///     main: .init(text: "저장", action: { saveData() })
+/// ))
+/// .caption("변경 사항을 저장하시겠습니까?")
+///
+/// // 추가 콘텐츠가 있는 취소 버튼 영역
+/// ActionArea(variant: .cancel(
+///     main: .init(text: "닫기", action: { dismiss() })
+/// ))
+/// .extra({ 
+///     Text("추가 정보")
+///         .montage(variant: .label2) 
+/// })
+/// ```
+///
+/// - Note: 키보드가 표시될 때 자동으로 조정됩니다.
 public struct ActionArea: View, KeyboardReadable {
     // MARK: - Initializers
     
     private let variant: Variant
     
+    /// ActionArea 컴포넌트를 초기화합니다.
+    ///
+    /// - Parameter variant: 버튼 영역의 변형 스타일과 버튼 구성
+    /// - Returns: 구성된 ActionArea 인스턴스
     public init(variant: Variant) {
         self.variant = variant
     }
@@ -78,18 +112,34 @@ public struct ActionArea: View, KeyboardReadable {
     private var extra: (() -> any View)?
     private var extraDivider = true
     
+    /// 배경을 투명하게 설정합니다.
+    ///
+    /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
+    ///
+    /// - Parameter clearBackground: 배경 투명 여부, 기본값은 `true`
+    /// - Returns: 수정된 ActionArea 인스턴스
     public func clearBackground(_ clearBackground: Bool = true) -> Self {
         var zelf = self
         zelf.clearBackground = clearBackground
         return zelf
     }
     
+    /// 버튼 위에 표시할 캡션 텍스트를 설정합니다.
+    ///
+    /// - Parameter caption: 표시할 캡션 텍스트
+    /// - Returns: 수정된 ActionArea 인스턴스
     public func caption(_ caption: String?) -> Self {
         var zelf = self
         zelf.caption = caption
         return zelf
     }
     
+    /// 버튼 위에 표시할 추가 콘텐츠를 설정합니다.
+    ///
+    /// - Parameters:
+    ///   - content: 표시할 추가 콘텐츠를 생성하는 클로저
+    ///   - divider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
+    /// - Returns: 수정된 ActionArea 인스턴스
     public func extra(_ content: (() -> any View)?, divider: Bool = true) -> Self {
         var zelf = self
         zelf.extra = content
@@ -100,6 +150,11 @@ public struct ActionArea: View, KeyboardReadable {
     
 // MARK: - Types
 extension ActionArea {
+    /// ActionArea의 버튼 레이아웃 변형을 정의합니다.
+    ///
+    /// - `.strong`: 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
+    /// - `.neutral`: 중립적인 스타일의 버튼 레이아웃
+    /// - `.cancel`: 취소 버튼만 있는 간단한 레이아웃
     public enum Variant {
         case strong(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
@@ -113,15 +168,20 @@ extension ActionArea {
         }
     }
     
+    /// ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
+    ///
+    /// 버튼의 텍스트, 액션, 커스텀 뷰 등을 지정할 수 있습니다.
     public struct ButtonInfo {
         internal let text: String
         internal let action: () -> Void
         internal var custom: (() -> any View)?
         
-        /// ActionArea/Bottom의 항목을 기본값으로 생성합니다.
+        /// 기본 버튼 정보를 초기화합니다.
+        ///
         /// - Parameters:
-        ///   - text: 기본 컴포넌트에 나타날 텍스트입니다.
-        ///   - action: 기본 컴포넌트 클릭시 동작할 내용입니다.
+        ///   - text: 버튼에 표시할 텍스트
+        ///   - action: 버튼 클릭 시 실행할 액션
+        /// - Returns: 구성된 ButtonInfo 인스턴스
         public init(
             text: String,
             action: @escaping (() -> Void)
@@ -139,9 +199,11 @@ extension ActionArea {
             self.custom = custom
         }
         
-        /// ActionArea/Bottom의 항목을 커스텀하여 생성합니다.
-        /// - Parameter custom: 커스텀 Montage/Button 컴포넌트입니다.
-        /// > 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하십시오.
+        /// 커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.
+        ///
+        /// - Parameter custom: 커스텀 버튼 뷰를 생성하는 클로저
+        /// - Returns: 커스텀 뷰가 포함된 ButtonInfo 인스턴스
+        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
         public static func custom(
             _ custom: @escaping (() -> any View)
         ) -> Self {
@@ -370,5 +432,30 @@ public struct ActionAreaModifier: ViewModifier {
                 true
             }
         }
+    }
+}
+
+// MARK: - View Extension
+
+extension View {
+    /// 현재 뷰에 하단 ActionArea를 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - model: ActionArea의 구성 모델
+    /// - Returns: ActionArea가 적용된 뷰
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// contentView
+    ///     .actionArea(model: .init(
+    ///         variant: .strong(
+    ///             main: .init(text: "확인", action: { confirmAction() }),
+    ///             sub: .init(text: "취소", action: { cancelAction() })
+    ///         ),
+    ///         caption: "변경 사항을 저장하시겠습니까?"
+    ///     ))
+    /// ```
+    public func actionArea(model: ActionAreaModifier.Model) -> some View {
+        modifier(ActionAreaModifier(model: model))
     }
 }

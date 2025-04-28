@@ -8,30 +8,90 @@
 import Pretendard
 import SwiftUI
 
+/// 푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입니다.
+///
+/// 작은 점, 'N' 표시, 또는 숫자를 표시할 수 있으며 다양한 크기와 위치를 지원합니다.
+/// 주로 아이콘이나 버튼 주변에 새로운 알림이나 메시지가 있음을 나타내기 위해 사용됩니다.
+///
+/// **사용 예시**:
+/// ```swift
+/// // 기본 점 형태 뱃지
+/// PushBadge(variant: .dot)
+///
+/// // 'N' 표시 뱃지
+/// PushBadge(variant: .new)
+///     .size(.small)
+///
+/// // 숫자 표시 뱃지
+/// PushBadge(variant: .number(5))
+///     .backgroundColor(.red)
+/// ```
+///
+/// - SeeAlso: `PushBadge.Modifier`, `PushBadge.Variant`, `PushBadge.Size`, `PushBadge.Position`
 public struct PushBadge: View {
     // MARK: - Types
     
+    /// 뱃지의 표시 형태를 정의하는 열거형입니다.
+    ///
+    /// - dot: 작은 점 형태의 뱃지
+    /// - new: 'N' 문자를 표시하는 뱃지
+    /// - number: 특정 숫자를 표시하는 뱃지
     public enum Variant: Equatable {
         case dot, new, number(Int)
     }
     
+    /// 뱃지의 크기를 정의하는 열거형입니다.
+    ///
+    /// - xsmall: 가장 작은 크기 (dot: 4pt, text: 14pt)
+    /// - small: 중간 크기 (dot: 6pt, text: 14pt)
+    /// - medium: 큰 크기 (dot: 8pt, text: 20pt)
     public enum Size {
         case xsmall, small, medium
     }
     
+    /// 뱃지의 위치를 정의하는 열거형입니다.
+    ///
+    /// 수직 위치(top, center, bottom)와 수평 위치(leading, center, trailing)를 함께 지정할 수 있습니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// // 우측 상단에 위치
+    /// .modifier(PushBadge.Modifier(position: .top(.trailing)))
+    /// 
+    /// // 좌측 하단에 위치
+    /// .modifier(PushBadge.Modifier(position: .bottom(.leading)))
+    /// ```
     public enum Position {
+        /// 상단 위치
+        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
         case top(HorizontalPosition = .center)
+        
+        /// 중앙 위치
+        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
         case center(HorizontalPosition = .center)
+        
+        /// 하단 위치
+        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
         case bottom(HorizontalPosition = .center)
         
+        /// 수평 위치를 정의하는 열거형입니다.
         public enum HorizontalPosition {
-            case leading, center, trailing
+            /// 좌측 정렬
+            case leading
+            /// 중앙 정렬
+            case center
+            /// 우측 정렬
+            case trailing
         }
     }
     
     // MARK: - Initializer
     
     private let variant: Variant
+    
+    /// PushBadge를 초기화합니다.
+    ///
+    /// - Parameter variant: 뱃지의 표시 형태 (dot, new, number)
     public init(variant: Variant) {
         self.variant = variant
     }
@@ -76,18 +136,30 @@ public struct PushBadge: View {
     private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
     private var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
     
+    /// 뱃지의 크기를 설정합니다.
+    ///
+    /// - Parameter size: 뱃지 크기
+    /// - Returns: 크기가 변경된 PushBadge
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size
         return zelf
     }
     
+    /// 텍스트 색상을 설정합니다.
+    ///
+    /// - Parameter color: 텍스트 색상
+    /// - Returns: 텍스트 색상이 변경된 PushBadge
     public func fontColor(_ color: SwiftUI.Color) -> Self {
         var zelf = self
         zelf.fontColor = color
         return zelf
     }
     
+    /// 배경 색상을 설정합니다.
+    ///
+    /// - Parameter color: 배경 색상
+    /// - Returns: 배경 색상이 변경된 PushBadge
     public func backgroundColor(_ color: SwiftUI.Color) -> Self {
         var zelf = self
         zelf.backgroundColor = color
@@ -129,6 +201,21 @@ private extension PushBadge {
 }
 
 extension PushBadge {
+    /// 다른 뷰에 PushBadge를 적용하기 위한 뷰 모디파이어입니다.
+    ///
+    /// 이 모디파이어를 사용하면 기존 뷰의 특정 위치에 뱃지를 표시할 수 있습니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// IconButton(icon: .home)
+    ///     .modifier(
+    ///         PushBadge.Modifier(
+    ///             variant: .number(3),
+    ///             size: .small,
+    ///             position: .top(.trailing)
+    ///         )
+    ///     )
+    /// ```
     public struct Modifier: ViewModifier {
         private let variant: Variant
         private let size: Size
@@ -137,6 +224,15 @@ extension PushBadge {
         private let position: Position
         private let inset: CGSize
         
+        /// PushBadge 모디파이어를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 뱃지의 표시 형태 (기본값: .dot)
+        ///   - size: 뱃지 크기 (기본값: .xsmall)
+        ///   - fontColor: 텍스트 색상 (기본값: staticWhite)
+        ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
+        ///   - position: 뱃지 위치 (기본값: .top(.trailing))
+        ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
         public init(
             variant: Variant = .dot,
             size: Size = .xsmall,
@@ -207,5 +303,50 @@ extension PushBadge {
             }
             return .init(width: width, height: height)
         }
+    }
+}
+
+// MARK: - View Extension
+
+extension View {
+    /// 현재 뷰에 푸시 알림 뱃지를 표시합니다.
+    ///
+    /// 뷰의 특정 위치에 알림 또는 메시지 표시용 뱃지를 추가합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 뱃지의 표시 형태 (기본값: .dot)
+    ///   - size: 뱃지 크기 (기본값: .xsmall)
+    ///   - fontColor: 텍스트 색상 (기본값: staticWhite)
+    ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
+    ///   - position: 뱃지 위치 (기본값: .top(.trailing))
+    ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
+    /// - Returns: 뱃지가 적용된 뷰
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// Button("메시지") { }
+    ///     .pushBadge(variant: .number(3), position: .top(.leading))
+    ///
+    /// Image.montage(.bell)
+    ///     .pushBadge()  // 기본값: 우측 상단에 빨간 점
+    /// ```
+    public func pushBadge(
+        variant: PushBadge.Variant = .dot,
+        size: PushBadge.Size = .xsmall,
+        fontColor: SwiftUI.Color = .semantic(.staticWhite),
+        backgroundColor: SwiftUI.Color = .semantic(.primaryNormal),
+        position: PushBadge.Position = .top(.trailing),
+        inset: CGSize = .zero
+    ) -> some View {
+        modifier(
+            PushBadge.Modifier(
+                variant: variant,
+                size: size,
+                fontColor: fontColor,
+                backgroundColor: backgroundColor,
+                position: position,
+                inset: inset
+            )
+        )
     }
 }

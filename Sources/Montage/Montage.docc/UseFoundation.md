@@ -6,28 +6,28 @@
 
 ### Color
 
-![Figma에서 확인할 수 있는 Color 속성](figma-color)
+![Figma에서 확인할 수 있는 Color 속성](Resources/figma-color.png)
 
 디자인시스템에서 정의된 색상들은 UIKit의 `UIColor`와 SwiftUI의 `Color` Extension을 통해서 각각의 실제 값을 불러올 수 있습니다. 정의된 색상의 타입은 두가지로, 용도에 맞춰서 선택해서 사용하시면 됩니다.
 
 | Type          | Description |
 | ------------- | ----------- |
-| `.alias(_:)`  | 의미를 부여한 색상 세트. UIColor 타입으로 사용시 라이트/다크 모드를 지원합니다. 대부분의 경우에 이쪽을 사용하시면 됩니다. |  
-| `.atomic(_:)` | 디자인 시스템에서 정의한 모든 색상 파레트. 디자이너가 이 색상을 사용했을 경우, 실제로 이 Atomic 색상을 의도하고 사용한 건지 추가 확인이 필요합니다. |
+| `.atomic(_:)`  | 디자인 시스템에서 정의한 모든 색상 파레트. 디자이너가 이 색상을 사용했을 경우, 실제로 이 Atomic 색상을 의도하고 사용한 건지 추가 확인이 필요합니다. |
+| `.semantic(_:)` | 의미를 부여한 색상 세트. UIColor 타입으로 사용시 라이트/다크 모드를 지원합니다. 대부분의 경우에 이쪽을 사용하시면 됩니다. |
 
 UIKit과 SwiftUI에서의 사용법은 아래의 샘플 코드와 같습니다.
 
 ```swift
 /// UIKit
 let label = UILabel()
-label.textColor = .alias(.primaryNormal)
+label.textColor = .semantic(.primaryNormal)
 
 /// SwiftUI
 struct CustomView: View {
     public var body: some View {
         Group {
             Text("hello, world")
-                .foregroundColor(.alias(.primaryNormal))
+                .foregroundColor(.semantic(.primaryNormal))
         }
     }
 }
@@ -35,7 +35,7 @@ struct CustomView: View {
 
 ### Typography
 
-![Figma에서 확인할 수 있는 Typography 속성](figma-typography)
+![Figma에서 확인할 수 있는 Typography 속성](Resources/figma-typography.png)
 
 Typography에서 정의한 파라미터는 크게 세가지로, 각각의 용도는 다음과 같습니다. 
 
@@ -74,7 +74,7 @@ struct CustomView: View {
 ```swift
 /// UIKit
 let imageView = UIImageView()
-imageView.tintColor = .alias(.primaryNormal)
+imageView.tintColor = .semantic(.primaryNormal)
 let iconImage: UIImage = .montage(.bell)
 imageView.image = iconImage
 

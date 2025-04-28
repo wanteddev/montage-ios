@@ -8,24 +8,43 @@
 import UIKit
 
 extension Chip {
-    /// 액션을 설정하거나 실행(이동, 추가, 삭제)합니다.
+    /// **`Deprecated`**
+    ///
+    /// 필터 칩의 UI 구현을 위한 내부 뷰 클래스입니다.
+    ///
+    /// `FilterUIView`는 `Chip.Filter`의 실제 UI 구현체로, UIKit 기반으로 구현되어 있습니다.
+    /// SwiftUI에서 `UIViewRepresentable`을 통해 사용되며, 다양한 상태와 스타일을 표현할 수 있습니다.
+    ///
+    /// 이 클래스는 다음과 같은 주요 기능을 제공합니다:
+    /// - 다양한 외관 스타일 지원 (solid, outlined)
+    /// - 크기 조정 (xsmall, small, medium, large)
+    /// - 확장 상태 표시 (normal, expand)
+    /// - 활성/비활성 상태 표시
+    /// - 사용자 상호작용 효과
+    ///
+    /// - Warning: 이 클래스는 더 이상 사용되지 않으며 향후 릴리스에서 제거될 예정입니다.
+    ///   SwiftUI에서 `Chip.Filter`를 직접 사용하세요.
+    ///
+    /// - Note: 이 클래스는 `Chip.Filter`의 내부 구현체이므로 직접 사용보다는
+    ///   SwiftUI에서 `Chip.Filter`를 통해 사용하는 것이 권장됩니다.
+    @available(*, deprecated, message: "This class is deprecated and will be removed in a future release. Use Chip.Filter directly in SwiftUI instead.")
     public class FilterUIView: UIView {
         /// 칩의 외관입니다.
-        var variant: Filter.Variant = .solid {
+        public var variant: Filter.Variant = .solid {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 확장 상태입니다.
-        var state: Filter.State = .normal {
+        public var state: Filter.State = .normal {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 사이즈입니다.
-        var size: Filter.Size = .medium {
+        public var size: Filter.Size = .medium {
             didSet {
                 setupUpdateableConstraints()
                 updateViews()
@@ -33,21 +52,21 @@ extension Chip {
         }
         
         /// 사용자와의 인터렉션 상태를 표현합니다.
-        var interactionState: Decorate.Interaction.State = .normal {
+        public var interactionState: Decorate.Interaction.State = .normal {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩에서 표현될 텍스트입니다.
-        var text = "" {
+        public var text = "" {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 선택 여부입니다.
-        var active = false {
+        public var active = false {
             didSet {
                 updateViews()
             }
@@ -55,14 +74,14 @@ extension Chip {
         
         /// 칩 선택시 표시될 텍스트입니다.
         /// 값이 있는 경우에 표시되며 기본값은 칩의 텍스트가 표현됩니다.
-        var activeLabel: String? = nil {
+        public var activeLabel: String? = nil {
             didSet {
                 updateViews()
             }
         }
         
         /// 칩의 활성화 여부입니다.
-        var disable = false {
+        public var disable = false {
             didSet {
                 updateViews()
             }
@@ -70,7 +89,7 @@ extension Chip {
         
         /// 커스텀 가능한 아이콘 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        var iconUIColor: UIColor? {
+        public var iconUIColor: UIColor? {
             didSet {
                 updateColors()
             }
@@ -78,13 +97,16 @@ extension Chip {
         
         /// 커스텀 가능한 텍스트 컬러 입니다.
         /// montage의 모든 컬러를 사용할 수 있습니다.
-        var fontUIColor: UIColor? {
+        public var fontUIColor: UIColor? {
             didSet {
                 updateColors()
             }
         }
 
-        var handler: (() -> Void)?
+        /// 칩이 탭되었을 때 실행될 핸들러입니다.
+        ///
+        /// 사용자가 칩을 탭하면 이 클로저가 호출됩니다.
+        public var handler: (() -> Void)?
         
         private let contentsWrapperView = UIView()
         
@@ -104,14 +126,20 @@ extension Chip {
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
-        init() {
+        /// 기본 이니셜라이저입니다.
+        ///
+        /// 필터 칩 뷰를 초기화하고 기본 설정을 적용합니다.
+        public init() {
             super.init(frame: .zero)
             
             setupViews()
             bindEvent()
         }
         
-        required init?(coder: NSCoder) {
+        /// 스토리보드에서 사용하기 위한 이니셜라이저입니다.
+        ///
+        /// - Parameter coder: 디코더 객체
+        required public init?(coder: NSCoder) {
             super.init(coder: coder)
             
             setupViews()
@@ -130,7 +158,11 @@ extension Chip {
             setupLayer()
         }
         
-        /// Element의 기본적인 사이즈를 정의합니다.
+        /// 필터 칩의 기본 내용 크기를 계산합니다.
+        ///
+        /// 텍스트 크기, 아이콘 크기, 여백 등을 고려하여 칩의 적절한 크기를 계산합니다.
+        ///
+        /// - Returns: 계산된 콘텐츠 크기
         override public var intrinsicContentSize: CGSize {
             let textSize = getAttributedText().size()
             let iconSize = size.iconSize

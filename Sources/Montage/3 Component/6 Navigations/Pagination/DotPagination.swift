@@ -8,18 +8,66 @@
 import SwiftUI
 
 extension Pagination {
+    /// 점 형태의 페이지 표시기 컴포넌트입니다.
+    ///
+    /// `Dot`은 페이지 간 이동 및 현재 페이지 표시를 위한 점 형태의 페이지네이션 컴포넌트를 제공합니다.
+    /// 현재 선택된 페이지는 강조 표시되며, 점을 탭하여 해당 페이지로 이동할 수 있습니다.
+    /// 페이지 수가 많을 경우 표시되는 점의 개수와 크기가 자동으로 조정됩니다.
+    ///
+    /// **사용 예시**:
+    /// ```swift
+    /// @State private var currentPage = 1
+    ///
+    /// Pagination.Dot(selectedPage: $currentPage, totalPages: 10)
+    ///     .variant(.normal)
+    ///     .size(.normal)
+    /// ```
+    ///
+    /// - Note: 최대 표시 가능한 점의 개수는 5개이며, 페이지 수가 더 많을 경우 동적으로 조정됩니다.
     public struct Dot: View {
+        /// 점 페이지네이션의 색상 변형을 지정하는 열거형입니다.
+        ///
+        /// 배경색이나 사용 컨텍스트에 따라 적합한 색상 테마를 선택할 수 있습니다.
+        ///
+        /// **사용 예시**:
+        /// ```swift
+        /// // 어두운 배경에 사용
+        /// Pagination.Dot(selectedPage: $currentPage, totalPages: 5)
+        ///     .variant(.white)
+        /// ```
         public enum Variant {
-            case normal, white
+            /// 기본 스타일 (회색 배경에 검은색 점)
+            case normal
+            /// 흰색 스타일 (어두운 배경에 적합)
+            case white
         }
         
+        /// 점 페이지네이션의 크기를 지정하는 열거형입니다.
+        ///
+        /// UI 디자인 요구사항에 따라 점의 크기를 선택할 수 있습니다.
+        ///
+        /// **사용 예시**:
+        /// ```swift
+        /// // 작은 크기의 점 페이지네이션
+        /// Pagination.Dot(selectedPage: $currentPage, totalPages: 5)
+        ///     .size(.small)
+        /// ```
         public enum Size {
-            case normal, small
+            /// 표준 크기 (10pt 직경)
+            case normal
+            /// 작은 크기 (6pt 직경)
+            case small
         }
         
         @Binding private var selectedPage: Int
         private let totalPages: Int
         private let maxNumberOfVisibleDots = 5
+        
+        /// 점 형태의 페이지네이션을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - selectedPage: 현재 선택된 페이지 번호 (1부터 시작)
+        ///   - totalPages: 전체 페이지 수
         public init(selectedPage: Binding<Int>, totalPages: Int) {
             _selectedPage = selectedPage
             self.totalPages = totalPages
@@ -104,12 +152,26 @@ extension Pagination {
         private var variant: Variant = .normal
         private var size: Size = .normal
         
+        /// 점 페이지네이션의 색상 변형을 설정합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 적용할 색상 변형
+        /// - Returns: 수정된 Dot 인스턴스
+        ///
+        /// - Note: 기본값은 `.normal`입니다.
         public func variant(_ variant: Variant) -> Self {
             var zelf = self
             zelf.variant = variant
             return zelf
         }
         
+        /// 점 페이지네이션의 크기를 설정합니다.
+        ///
+        /// - Parameters:
+        ///   - size: 적용할 점 크기
+        /// - Returns: 수정된 Dot 인스턴스
+        ///
+        /// - Note: 기본값은 `.normal`입니다.
         public func size(_ size: Size) -> Self {
             var zelf = self
             zelf.size = size

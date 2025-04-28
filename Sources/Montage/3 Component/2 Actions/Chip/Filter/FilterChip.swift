@@ -9,37 +9,108 @@ import Pretendard
 import SwiftUI
 
 extension Chip {
+    /// 필터링 기능을 제공하는 칩 컴포넌트입니다.
+    ///
+    /// 이 컴포넌트는 사용자가 항목을 필터링하는 데 사용할 수 있는 탭 가능한 UI 요소입니다.
+    /// 다양한 크기와 스타일을 지원하며, 활성/비활성 상태를 표시할 수 있습니다.
+    ///
+    /// ## 사용 예시
+    /// ```swift
+    /// // 기본 필터 칩
+    /// Chip.Filter(
+    ///     variant: .solid,
+    ///     size: .medium,
+    ///     text: "카테고리",
+    ///     handler: { toggleFilter() }
+    /// )
+    ///
+    /// // 활성화된 확장 가능한 필터 칩
+    /// Chip.Filter(
+    ///     variant: .outlined,
+    ///     text: "정렬",
+    ///     state: .expand,
+    ///     active: true,
+    ///     activeLabel: "최신순"
+    /// )
+    /// ```
     public struct Filter: UIViewRepresentable {
-        /// 칩의 외관을 결정하는 열거형입니다.
+        /// 칩의 외관 스타일을 정의합니다.
+        ///
+        /// - `.solid`: 배경색이 채워진 스타일
+        /// - `.outlined`: 테두리만 있는 스타일
         public enum Variant {
             case solid, outlined
         }
         
-        /// 칩의 확장 상태를 나타내는 열거형입니다.
+        /// 칩의 확장 상태를 정의합니다.
+        ///
+        /// - `.normal`: 기본 상태
+        /// - `.expand`: 확장된 상태 (드롭다운 표시)
         public enum State {
             case normal
             case expand
         }
         
-        /// 칩의 사이즈를 결정하는 열거형입니다.
+        /// 칩의 크기를 정의합니다.
+        ///
+        /// - `.xsmall`: 가장 작은 크기
+        /// - `.small`: 작은 크기
+        /// - `.medium`: 중간 크기
+        /// - `.large`: 큰 크기
         public enum Size {
             case xsmall, small, medium, large
         }
         
+        /// 칩의 외관 스타일입니다.
         public var variant: Variant = .solid
+        
+        /// 칩의 크기입니다.
         public var size: Size = .medium
+        
+        /// 칩에 표시할 텍스트입니다.
         public var text = ""
+        
+        /// 칩의 확장 상태입니다.
         public var state: State = .normal
+        
+        /// 칩의 상호작용 상태입니다.
         public var interactionState: Decorate.Interaction.State = .normal
+        
+        /// 칩의 활성화 상태입니다.
         public var active = false
+        
+        /// 활성화 상태일 때 표시할 레이블입니다.
         public var activeLabel: String? = nil
+        
+        /// 칩의 비활성화 상태입니다.
         public var disable = false
+        
+        /// 아이콘 색상입니다.
         public var iconColor: SwiftUI.Color? = nil
+        
+        /// 텍스트 색상입니다.
         public var fontColor: SwiftUI.Color? = nil
+        
+        /// 칩 클릭 시 실행할 핸들러입니다.
         public var handler: (() -> Void)?
         
         public typealias UIViewType = FilterUIView
         
+        /// 필터 칩 컴포넌트를 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 칩의 외관 스타일, 기본값은 `.solid`
+        ///   - size: 칩의 크기, 기본값은 `.medium`
+        ///   - text: 칩에 표시할 텍스트
+        ///   - state: 칩의 확장 상태, 기본값은 `.normal`
+        ///   - interactionState: 칩의 상호작용 상태, 기본값은 `.normal`
+        ///   - active: 칩의 활성화 상태, 기본값은 `false`
+        ///   - activeLabel: 활성화 상태일 때 표시할 레이블, 기본값은 `nil`
+        ///   - disable: 칩의 비활성화 상태, 기본값은 `false`
+        ///   - iconColor: 아이콘 색상, 기본값은 `nil`
+        ///   - fontColor: 텍스트 색상, 기본값은 `nil`
+        ///   - handler: 칩 클릭 시 실행할 핸들러, 기본값은 `nil`
+        /// - Returns: 구성된 필터 칩 인스턴스
         public init(
             variant: Variant = .solid,
             size: Size = .medium,
@@ -105,6 +176,13 @@ extension Chip {
         
         private var fillHorizontal = false
         private var fillVertical = false
+        
+        /// 칩이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
+        ///
+        /// - Parameters:
+        ///   - fillHorizontal: 수평 방향 채우기 여부
+        ///   - fillVertical: 수직 방향 채우기 여부
+        /// - Returns: 수정된 필터 칩 인스턴스
         public func fill(horizontal fillHorizontal: Bool, vertical fillVertical: Bool) -> Self {
             var zelf = self
             zelf.fillHorizontal = fillHorizontal
