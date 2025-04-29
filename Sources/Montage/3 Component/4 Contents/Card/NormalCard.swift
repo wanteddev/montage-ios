@@ -33,7 +33,7 @@ extension Card {
         
         private let thumbnail: () -> Thumbnail
         @Binding private var skeleton: Bool
-        private let title: () -> any View
+        private let title: String
 
         /// Normal 카드를 초기화합니다.
         ///
@@ -44,7 +44,7 @@ extension Card {
         public init(
             thumbnail: @escaping () -> Thumbnail,
             skeleton: Binding<Bool>,
-            title: @escaping () -> any View
+            title: String
         ) {
             self.thumbnail = thumbnail
             _skeleton = skeleton
@@ -53,9 +53,9 @@ extension Card {
         
         // MARK: - Modifiers
         
-        private var caption: (() -> any View)?
+        private var caption: String?
         private var overlayCaption: String?
-        private var extraCaption: (() -> any View)?
+        private var extraCaption: String?
         private var overlayButtonIcon: Montage.Icon?
         private var onTapOverlayButton: (() -> Void)?
         private var topContent: (() -> any View)?
@@ -63,9 +63,9 @@ extension Card {
         
         /// 카드의 캡션(부제목)을 설정합니다.
         ///
-        /// - Parameter caption: 표시할 캡션 뷰를 반환하는 클로저
+        /// - Parameter caption: 표시할 캡션 문자열
         /// - Returns: 수정된 카드 인스턴스
-        public func caption(_ caption: (() -> any View)? = nil) -> Self {
+        public func caption(_ caption: String?) -> Self {
             var zelf = self
             zelf.caption = caption
             return zelf
@@ -73,9 +73,9 @@ extension Card {
         
         /// 카드의 추가 캡션을 설정합니다.
         ///
-        /// - Parameter extraCaption: 표시할 추가 캡션 뷰를 반환하는 클로저
+        /// - Parameter extraCaption: 표시할 추가 캡션 문자열
         /// - Returns: 수정된 카드 인스턴스
-        public func extraCaption(_ extraCaption: (() -> any View)? = nil) -> Self {
+        public func extraCaption(_ extraCaption: String?) -> Self {
             var zelf = self
             zelf.extraCaption = extraCaption
             return zelf
@@ -121,10 +121,11 @@ extension Card {
         }
         
         // MARK: - Body
+        
         @State private var thumbnailWidth: CGFloat = 0
         
         public var body: some View {
-            Grid(alignment: .leading, verticalSpacing: 12) {
+            Grid(alignment: .leading, verticalSpacing: 10) {
                 GridRow {
                     thumbnail()
                         .radius()
@@ -149,17 +150,28 @@ extension Card {
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            AnyView(title())
-                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: thumbnailWidth - 12, height: 20))
+                            Text(title)
+                                .montage(variant: .body1, weight: .bold, semantic: .labelNormal)
+                                .paragraph(variant: .body1)
+                                .lineLimit(2)
+                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: textAreaWidth, height: 20))
                             
-                            if let caption {
-                                AnyView(caption())
-                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: thumbnailWidth - 12, height: 14))
-                            }
-                            
-                            if let extraCaption {
-                                AnyView(extraCaption())
-                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: thumbnailWidth - 12, height: 14))
+                            VStack(alignment: .leading, spacing: 2) {
+                                if let caption {
+                                    Text(caption)
+                                        .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                        .paragraph(variant: .label2)
+                                        .lineLimit(1)
+                                        .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
+                                }
+                                
+                                if let extraCaption {
+                                    Text(extraCaption)
+                                        .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                        .paragraph(variant: .label2)
+                                        .lineLimit(1)
+                                        .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 14))
+                                }
                             }
                         }
                         
@@ -168,10 +180,15 @@ extension Card {
                                 .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
                     }
-                    .padding(.horizontal, 6)
+                    .padding(.horizontal, horizontalPadding)
                     .frame(maxWidth: thumbnailWidth, alignment: .leading)
                 }
             }
+        }
+        
+        private var horizontalPadding: CGFloat = 2
+        private var textAreaWidth: CGFloat {
+            thumbnailWidth - horizontalPadding * 2
         }
     }
 }
@@ -217,8 +234,8 @@ extension Card.Normal {
                                 if let caption {
                                     HStack(spacing: 0) {
                                         Text(caption)
-                                            .montage(variant: .label2, weight: .bold, semantic: .staticWhite)
-                                            .paragraph(variant: .label2)
+                                            .montage(variant: .caption2, weight: .bold, semantic: .staticWhite)
+                                            .paragraph(variant: .caption2)
                                         Spacer(minLength: 0)
                                     }
                                     .padding(.bottom, 6)
@@ -228,6 +245,7 @@ extension Card.Normal {
                                     HStack(spacing: 0) {
                                         Spacer(minLength: 0)
                                         Montage.IconButton(
+                                            variant: .normal(size: 20),
                                             icon: buttonIcon,
                                             iconColor: SwiftUI.Color.semantic(.staticWhite)
                                         ) {
@@ -236,7 +254,7 @@ extension Card.Normal {
                                     }
                                 }
                             }
-                            .padding(.all, 14)
+                            .padding(.all, 10)
                         }
                         .background(
                             LinearGradient(

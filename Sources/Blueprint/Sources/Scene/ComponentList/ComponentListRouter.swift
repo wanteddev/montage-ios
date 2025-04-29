@@ -113,8 +113,9 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: ModalPreview())
         case .flowLayout:
             vc = UIHostingController(rootView: FlowLayoutPreview())
-        case .divider: fallthrough
         case .card:
+            vc = UIHostingController(rootView: CardPreview())
+        case .divider:
             return
         }
         

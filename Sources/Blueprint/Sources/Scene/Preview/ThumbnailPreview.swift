@@ -10,18 +10,15 @@ import Montage
 
 struct ThumbnailPreview: View {
     @State private var selectedRatio: Thumbnail.Ratio = .r1x1
-    @State private var radius: Bool = false
-    @State private var border: Bool = false
-    @State private var useWidth: Bool = true
-    @State private var size: CGFloat = 200
+    @State private var radius: Bool = true
+    @State private var border: Bool = true
     @State private var invalidURL: Bool = false
-    @State private var customPlaceholder: Bool = false
     
-    var imageURL: URL? {
+    var imageURL: String {
         if invalidURL {
-            return URL(string: "https://invalid-url-that-does-not-exist.com/image.jpg")
+            "https://invalid-url-that-does-not-exist.com/image.jpg"
         } else {
-            return URL(string: "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp")
+            "https://upload.wikimedia.org/wikipedia/commons/7/7d/%22_The_Calutron_Girls%22_Y-12_Oak_Ridge_1944_Large_Format_%2832093954911%29_%282%29.jpg"
         }
     }
     
@@ -35,26 +32,11 @@ struct ThumbnailPreview: View {
                 
                 HStack(spacing: 0) {
                     Spacer(minLength: 0)
-                    Thumbnail(
-                        url: imageURL,
-                        placeholder: customPlaceholder ? {
-                            Rectangle()
-                                .fill(SwiftUI.Color.semantic(.lineNeutral))
-                                .overlay {
-                                    Image.montage(.image)
-                                        .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
-                                }
-                        } : nil
-                    )
-                    .radius(radius)
-                    .border(border)
-                    .modifying {
-                        if useWidth {
-                            $0.ratio(selectedRatio, width: size)
-                        } else {
-                            $0.ratio(selectedRatio, height: size)
-                        }
-                    }
+                    
+                    Thumbnail(urlString: imageURL, ratio: selectedRatio)
+                        .radius(radius)
+                        .border(border)
+                    
                     Spacer(minLength: 0)
                 }
                 
@@ -93,21 +75,7 @@ struct ThumbnailPreview: View {
                             }
                         }
                         .pickerStyle(.wheel)
-                    }
-                    
-                    HStack {
-                        Text("Size Mode")
-                        Picker("Size Mode", selection: $useWidth) {
-                            Text("Width").tag(true)
-                            Text("Height").tag(false)
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    
-                    HStack {
-                        Text(useWidth ? "Width" : "Height")
-                        Slider(value: $size, in: 50...maxSize, step: 10)
-                        Text("\(Int(size))pt")
+                        .frame(height: 130)
                     }
                     
                     HStack {
@@ -124,28 +92,11 @@ struct ThumbnailPreview: View {
                         Text("Invalid URL (테스트용)")
                         Control.Switch($invalidURL)
                     }
-                    
-                    HStack {
-                        Text("Custom Placeholder")
-                        Control.Switch($customPlaceholder)
-                    }
                 }
             }
             .padding(.horizontal)
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
-    }
-    
-    var maxSize: CGFloat {
-        useWidth ? maxWidth : maxHeight
-    }
-    
-    var maxWidth: CGFloat {
-        UIScreen.main.bounds.width - 32
-    }
-    
-    var maxHeight: CGFloat {
-        maxWidth / selectedRatio.rawValue
     }
 }
 
