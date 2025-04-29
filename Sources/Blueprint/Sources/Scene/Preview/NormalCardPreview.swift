@@ -14,6 +14,7 @@ struct NormalCardPreview: View {
     @State private var bookmarkIsOn: Bool = false
     @State private var skeletonIsOn: Bool = false
     @State private var showCaption: Bool = false
+    @State private var showSubCaption: Bool = false
     @State private var showExtraCaption: Bool = false
     @State private var showTopContent: Bool = false
     @State private var showBottomContent: Bool = false
@@ -40,6 +41,7 @@ struct NormalCardPreview: View {
                         title: multilineTitle ? "제목이 매우 매우 매우 매우 매우 매우 길어서 세 줄이 되면 어떻게 될까요?" : "제목"
                     )
                     .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
+                    .subCaption(showSubCaption ? "서브 캡션" : nil)
                     .extraCaption(showExtraCaption ? "추가 캡션" : nil)
                     .topContent(showTopContent ? {
                         HStack {
@@ -90,6 +92,11 @@ struct NormalCardPreview: View {
                         
                         Text("caption")
                         Control.Switch($showCaption)
+                    }
+                    
+                    HStack {
+                        Text("sub caption")
+                        Control.Switch($showSubCaption)
                         
                         Text("extra caption")
                         Control.Switch($showExtraCaption)

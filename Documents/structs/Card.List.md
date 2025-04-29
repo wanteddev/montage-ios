@@ -42,7 +42,7 @@ public var body: some View
 public init(
     thumbnail: @escaping () -> Thumbnail,
     skeleton: Binding<Bool>,
-    title: @escaping () -> any View
+    title: String
 )
 ```
 
@@ -64,7 +64,7 @@ List 카드를 초기화합니다.
 <details><summary markdown="span"><code>caption(_:)</code></summary>
 
 ```swift
-public func caption(_ caption: (() -> any View)? = nil) -> Self
+public func caption(_ caption: String?) -> Self
 ```
 
 카드의 캡션(부제목)을 설정합니다.
@@ -73,7 +73,7 @@ public func caption(_ caption: (() -> any View)? = nil) -> Self
 
 | Name | Description |
 | ---- | ----------- |
-| caption | 표시할 캡션 뷰를 반환하는 클로저 |
+| caption | 표시할 캡션 문자열 |
 
 #### Returns
 
@@ -86,7 +86,7 @@ public func caption(_ caption: (() -> any View)? = nil) -> Self
 <details><summary markdown="span"><code>extraCaption(_:)</code></summary>
 
 ```swift
-public func extraCaption(_ extraCaption: (() -> any View)? = nil) -> Self
+public func extraCaption(_ extraCaption: String?) -> Self
 ```
 
 카드의 추가 캡션을 설정합니다.
@@ -95,7 +95,7 @@ public func extraCaption(_ extraCaption: (() -> any View)? = nil) -> Self
 
 | Name | Description |
 | ---- | ----------- |
-| extraCaption | 표시할 추가 캡션 뷰를 반환하는 클로저 |
+| extraCaption | 표시할 추가 캡션 문자열 |
 
 #### Returns
 

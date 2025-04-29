@@ -146,7 +146,7 @@ extension Card {
                                 .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
                         
-                        VStack(alignment: .leading, spacing: .zero) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(title)
                                 .montage(variant: .body1, weight: .bold, semantic: .labelNormal)
                                 .paragraph(variant: .body1)
@@ -159,7 +159,6 @@ extension Card {
                                     .paragraph(variant: .label2)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
-                                    .padding(.top, 4)
                             }
                             
                             if let extraCaption {
@@ -172,7 +171,6 @@ extension Card {
                                         kind: .text(lengths: [._25]),
                                         size: CGSize(width: textAreaWidth, height: 14)
                                     )
-                                    .padding(.top, 4)
                             }
                         }
                         

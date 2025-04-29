@@ -54,8 +54,9 @@ extension Card {
         // MARK: - Modifiers
         
         private var caption: String?
-        private var overlayCaption: String?
+        private var subCaption: String?
         private var extraCaption: String?
+        private var overlayCaption: String?
         private var overlayButtonIcon: Montage.Icon?
         private var onTapOverlayButton: (() -> Void)?
         private var topContent: (() -> any View)?
@@ -68,6 +69,16 @@ extension Card {
         public func caption(_ caption: String?) -> Self {
             var zelf = self
             zelf.caption = caption
+            return zelf
+        }
+        
+        /// 카드의 보조 캡션을 설정합니다.
+        ///
+        /// - Parameter subCaption: 표시할 보조 캡션 문자열
+        /// - Returns: 수정된 카드 인스턴스
+        public func subCaption(_ subCaption: String?) -> Self {
+            var zelf = self
+            zelf.subCaption = subCaption
             return zelf
         }
         
@@ -163,6 +174,14 @@ extension Card {
                                         .paragraph(variant: .label2)
                                         .lineLimit(1)
                                         .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
+                                }
+                                
+                                if let subCaption {
+                                    Text(subCaption)
+                                        .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                        .paragraph(variant: .label2)
+                                        .lineLimit(1)
+                                        .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 14))
                                 }
                                 
                                 if let extraCaption {
