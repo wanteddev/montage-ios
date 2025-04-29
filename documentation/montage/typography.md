@@ -1,0 +1,56 @@
+Enumeration
+
+# Typography 
+
+Montage 디자인 시스템의 타이포그래피 체계
+
+```swift
+enum Typography
+```
+
+## Overview 
+
+Typography는 Montage 디자인 시스템에서 사용되는 모든 텍스트 스타일을 정의합니다. 폰트 크기, 두께, 자간, 행간 등 텍스트의 시각적 특성을 일관되게 적용할 수 있도록 표준화된 타이포그래피 시스템을 제공합니다.
+
+**사용 예시**:
+
+```swift
+// UIKit에서 사용
+let label = UILabel()
+label.font = UIFont.montage(.body1, .regular)
+
+// SwiftUI에서 사용
+Text("Hello, World!")
+    .montage(.heading1, .bold)
+```
+
+> **Note**
+>
+> 텍스트 스타일을 적용할 때는 일관성을 위해 직접 폰트를 지정하기보다 Typography 시스템을 사용하는 것이 권장됩니다.
+
+> **See Also**
+>
+> Typography.Weight, Typography.Variant
+
+## Topics 
+
+### Type Methods 
+
+- [static func getFailbackWeight(variant: Variant, weight: Weight) -> UIFont.Weight](/documentation/montage/typography/getfailbackweight(variant:weight:).md)
+
+- [static func getLineHeight(variant: Variant) -> CGFloat](/documentation/montage/typography/getlineheight(variant:).md)
+
+- [static func getSementicSize(variant: Variant) -> CGFloat](/documentation/montage/typography/getsementicsize(variant:).md)
+
+- [static func getSementicWeight(variant: Variant, weight: Weight) -> Pretendard.Weight](/documentation/montage/typography/getsementicweight(variant:weight:).md)
+
+- [static func getTracking(variant: Variant) -> CGFloat](/documentation/montage/typography/gettracking(variant:).md)
+
+### Enumerations 
+
+- [enum Variant](/documentation/montage/typography/variant.md)
+
+  텍스트 변형을 정의하는 열거형
+
+- [enum Weight](/documentation/montage/typography/weight.md)
+

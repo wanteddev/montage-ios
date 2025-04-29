@@ -1,0 +1,17 @@
+Initializer
+
+# init(_:) 
+
+바텀 시트 모달을 초기화합니다.
+
+```swift
+@MainActor
+init(_ content: @escaping () -> any View)
+```
+
+## Parameters 
+
+content
+
+모달 내에 표시할 콘텐츠를 반환하는 클로저
+
