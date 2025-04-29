@@ -222,7 +222,8 @@ private extension Category {
         let onTap: () -> Void
 
         var body: some View {
-            Chip.Action(variant: chipVariant, size: chipSize, text: title, active: isSelected, handler: onTap)
+            Chip.Action(variant: chipVariant, size: chipSize, text: title, handler: onTap)
+                .active(isSelected)
         }
         
         var chipVariant: Chip.Action.Variant {

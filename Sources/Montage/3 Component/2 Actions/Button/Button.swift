@@ -530,7 +530,7 @@ public struct Button: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .strokeBorder(borderColor)
         }
-        .overlay {
+        .background {
             Decorate.Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: interactionVariant,

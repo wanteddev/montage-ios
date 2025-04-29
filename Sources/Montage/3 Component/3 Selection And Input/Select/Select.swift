@@ -552,10 +552,10 @@ public struct Select: View {
                 Montage.Chip.Action(
                     variant: .solid,
                     size: .xsmall,
-                    text: item.text,
-                    backgroundColor: backgroundColor(item),
-                    fontColor: fontColor(item)
+                    text: item.text
                 )
+                .backgroundColor(backgroundColor(item))
+                .fontColor(fontColor(item))
                 .imageColor(iconColor(item))
                 .trailingImage(Image.montage(.closeThick))
                 .if(item.icon != nil) {
@@ -577,12 +577,12 @@ public struct Select: View {
             }
         }
         
-        private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color? {
-            guard disable == false else { return nil }
+        private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color {
+            guard disable == false else { return .clear }
             if item.isNegative {
                 return .semantic(.statusNegative).opacity(0.05)
             } else {
-                return nil
+                return .clear
             }
         }
         
