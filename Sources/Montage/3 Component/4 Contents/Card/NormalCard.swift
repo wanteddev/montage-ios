@@ -159,9 +159,10 @@ extension Card {
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { thumbnailWidth = $0 })
                 
                 GridRow {
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 6) {
                         if let topContent {
                             AnyView(topContent())
+                                .padding(.top, 2)
                                 .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
                         
@@ -201,6 +202,7 @@ extension Card {
                         
                         if let bottomContent {
                             AnyView(bottomContent())
+                                .padding(.top, 2)
                                 .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                         }
                     }
