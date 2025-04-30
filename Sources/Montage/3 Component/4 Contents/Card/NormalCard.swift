@@ -58,6 +58,7 @@ extension Card {
         private var extraCaption: String?
         private var overlayCaption: String?
         private var overlayButtonIcon: Montage.Icon?
+        private var overlayButtonColor: SwiftUI.Color = .semantic(.staticWhite)
         private var onTapOverlayButton: (() -> Void)?
         private var topContent: (() -> any View)?
         private var bottomContent: (() -> any View)?
@@ -97,16 +98,19 @@ extension Card {
         /// - Parameters:
         ///   - caption: 오버레이에 표시할 텍스트
         ///   - buttonIcon: 오버레이에 표시할 버튼 아이콘
+        ///   - buttonColor: 버튼 아이콘 색상
         ///   - onTapButton: 버튼 탭 시 실행할 액션
         /// - Returns: 수정된 카드 인스턴스
         public func overlay(
             caption: String? = nil,
             buttonIcon: Montage.Icon? = nil,
+            buttonColor: SwiftUI.Color = .semantic(.staticWhite),
             onTapButton: (() -> Void)? = nil
         ) -> Self {
             var zelf = self
             zelf.overlayCaption = caption
             zelf.overlayButtonIcon = buttonIcon
+            zelf.overlayButtonColor = buttonColor
             zelf.onTapOverlayButton = onTapButton
             return zelf
         }
@@ -145,6 +149,7 @@ extension Card {
                             ThumbnailOverlayModifier(
                                 caption: overlayCaption,
                                 buttonIcon: overlayButtonIcon,
+                                buttonColor: overlayButtonColor,
                                 onTapButton: onTapOverlayButton
                             )
                         )
@@ -222,6 +227,7 @@ extension Card.Normal {
     private struct ThumbnailOverlayModifier: ViewModifier {
         private let caption: String?
         private let buttonIcon: Montage.Icon?
+        private let buttonColor: SwiftUI.Color
         private let onTapButton: (() -> Void)?
 
         /// 오버레이 모디파이어를 초기화합니다.
@@ -233,10 +239,12 @@ extension Card.Normal {
         public init(
             caption: String? = nil,
             buttonIcon: Montage.Icon? = nil,
+            buttonColor: SwiftUI.Color = .semantic(.staticWhite),
             onTapButton: (() -> Void)? = nil
         ) {
             self.caption = caption
             self.buttonIcon = buttonIcon
+            self.buttonColor = buttonColor
             self.onTapButton = onTapButton
         }
 
@@ -265,11 +273,11 @@ extension Card.Normal {
                                         Spacer(minLength: 0)
                                         Montage.IconButton(
                                             variant: .normal(size: 20),
-                                            icon: buttonIcon,
+                                            icon: buttonIcon
                                         ) {
                                             onTapButton?()
                                         }
-                                        .iconColor(SwiftUI.Color.semantic(.staticWhite))
+                                        .iconColor(buttonColor)
                                     }
                                 }
                             }
