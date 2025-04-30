@@ -9,25 +9,48 @@ import UIKit
 
 extension Button {
     /// 외곽선으로 둘러 싸인 곡선 모서리 버튼입니다.
-    /// [Figma](https://www.figma.com/file/NzeCJaXMkqRBlRd9CZCx8j/0-Component?node-id=1174%3A12997&t=5otLCYvozBpnxZ7j-1) 에서 모양을 미리 확인할 수 있습니다.
-    @available(*, deprecated, message: "Use `Montage.Button.outlined()` instead")
+    ///
+    /// 테두리와 내부 컨텐츠로 구성된 둥근 모서리 버튼을 제공합니다.
+    /// 텍스트, 아이콘 또는 둘의 조합을 표시할 수 있으며, 다양한 상호작용 상태에 대응합니다.
+    ///
+    /// ```swift
+    /// let button = Button.OutlinedUIButton()
+    /// button.text = "확인"
+    /// button.variant = .primary
+    /// button.size = .medium
+    /// button.handler = { print("버튼이 탭되었습니다.") }
+    /// ```
+    @available(*, deprecated, message: "`Montage.Button.outlined()`를 사용하세요.")
     public class OutlinedUIButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
+        ///
+        /// - `primary`: 주요 강조 스타일
+        /// - `secondary`: 보조 강조 스타일
+        /// - `assistive`: 보조 스타일
         public enum Variant {
             case primary, secondary, assistive
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
+        ///
+        /// - `large`: 큰 크기 버튼
+        /// - `medium`: 중간 크기 버튼
+        /// - `small`: 작은 크기 버튼
         public enum Size {
             case large, medium, small
         }
         
         /// 버튼 모서리의 곡률 스타일을 결정하는 열거형입니다.
+        ///
+        /// - `legacy`: 높이의 절반을 반지름으로 하는 원형 모서리
+        /// - `default`: 버튼 크기에 따른 고정된 모서리 곡률
         public enum CornerStyle {
             case legacy, `default`
         }
         
         /// 버튼의 외관입니다.
+        ///
+        /// 기본값은 `.primary`입니다.
         public var variant: Variant = .primary {
             didSet {
                 updateViews()
@@ -35,6 +58,8 @@ extension Button {
         }
         
         /// 버튼의 사이즈입니다.
+        ///
+        /// 기본값은 `.large`입니다.
         /// > Important: Variant이 Assistive일 경우 .large를 사용할 수 없습니다.
         /// > size 설정 시 constraint가 정상적으로 반영됩니다.
         public var size: Size = .large {
@@ -45,6 +70,8 @@ extension Button {
         }
         
         /// 버튼의 모서리 곡률을 결정하는 스타일입니다.
+        ///
+        /// 기본값은 `.default`입니다.
         public var cornerStyle: CornerStyle = .default {
             didSet {
                 updateViews()
@@ -52,6 +79,9 @@ extension Button {
         }
         
         /// 사용자와의 인터렉션 상태를 표현합니다.
+        ///
+        /// 버튼의 현재 상호작용 상태를 나타냅니다.
+        /// 기본값은 `.normal`입니다.
         public var state: Decorate.Interaction.State = .normal {
             didSet {
                 updateViews()
@@ -59,6 +89,8 @@ extension Button {
         }
         
         /// 텍스트의 좌측에 표현될 아이콘입니다.
+        ///
+        /// 텍스트가 있는 경우, 텍스트 앞에 나타납니다.
         public var leadingIcon: Icon? {
             didSet {
                 updateViews()
@@ -66,6 +98,8 @@ extension Button {
         }
         
         /// 텍스트의 우측에 표현될 아이콘입니다.
+        ///
+        /// 텍스트가 있는 경우, 텍스트 뒤에 나타납니다.
         public var trailingIcon: Icon? {
             didSet {
                 updateViews()
@@ -73,6 +107,8 @@ extension Button {
         }
         
         /// iconOnly인 경우 표현될 아이콘입니다.
+        ///
+        /// `iconOnly`가 `true`일 경우에만 표시됩니다.
         public var uniqueIcon: Icon? {
             didSet {
                 updateViews()
@@ -80,8 +116,10 @@ extension Button {
         }
         
         /// uniqueIcon 노출 여부입니다.
-        /// > text와 leadingIcon, trailingIcon은 표현되지 않습니다.
-        /// > 설정 시 constraint가 업데이트 됩니다.
+        ///
+        /// `true`로 설정 시 `text`와 `leadingIcon`, `trailingIcon`은 표현되지 않고
+        /// `uniqueIcon`만 표시됩니다.
+        /// 설정 시 constraint가 업데이트 됩니다.
         public var iconOnly = false {
             didSet {
                 setupUpdateableConstraints()
@@ -90,6 +128,8 @@ extension Button {
         }
 
         /// 버튼에서 표현될 텍스트입니다.
+        ///
+        /// 버튼에 표시될 문자열을 설정합니다.
         public var text = "" {
             didSet {
                 updateViews()
@@ -97,6 +137,9 @@ extension Button {
         }
         
         /// 버튼의 활성화 여부입니다.
+        ///
+        /// `true`로 설정 시 버튼이 비활성화되고 시각적으로 비활성 상태로 표시됩니다.
+        /// 기본값은 `false`입니다.
         public var disable = false {
             didSet {
                 updateViews()
@@ -104,7 +147,8 @@ extension Button {
         }
         
         /// 커스텀 가능한 컨텐트(텍스트, 아이콘) 컬러 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
+        ///
+        /// `nil`이 아닌 경우, 지정된 색상으로 텍스트와 아이콘이 표시됩니다.
         public var contentUIColor: UIColor? {
             didSet {
                 updateViews()
@@ -112,7 +156,8 @@ extension Button {
         }
         
         /// 커스텀 가능한 배경색 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
+        ///
+        /// `nil`이 아닌 경우, 지정된 색상으로 버튼 배경이 표시됩니다.
         public var backgroundUIColor: UIColor? {
             didSet {
                 updateColors()
@@ -120,7 +165,8 @@ extension Button {
         }
         
         /// 커스텀 가능한 테두리색 입니다.
-        /// montage의 모든 컬러를 사용할 수 있습니다.
+        ///
+        /// `nil`이 아닌 경우, 지정된 색상으로 버튼 테두리가 표시됩니다.
         public var borderUIColor: UIColor? {
             didSet {
                 updateColors()
@@ -128,6 +174,8 @@ extension Button {
         }
         
         /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
+        ///
+        /// 버튼이 탭될 때 호출될 클로저입니다.
         public var handler: (() -> Void)?
         
         private lazy var stackView = UIStackView()
@@ -153,7 +201,9 @@ extension Button {
         
         private var stackViewConstraints: [NSLayoutConstraint] = []
         
-        /// SolidButton 객체를 생성합니다.
+        /// OutlinedUIButton 객체를 생성합니다.
+        ///
+        /// 기본 설정으로 버튼을 초기화합니다.
         public init() {
             super.init(frame: .zero)
             

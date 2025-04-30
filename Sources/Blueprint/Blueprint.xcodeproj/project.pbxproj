@@ -28,6 +28,7 @@
 		4D5B46DB2CE3463F001DD48B /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5B46DA2CE3463F001DD48B /* Lottie */; };
 		4D5D8C9C2D27E8E100108C92 /* AccordionPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */; };
 		4D5D8C9E2D2E5D9E00108C92 /* CategoryPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */; };
+		4D6372C72DBA655200E66D22 /* CardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6372C62DBA655200E66D22 /* CardPreview.swift */; };
 		4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D853DF62D96491E004549CF /* IconButtonPreview.swift */; };
 		4D9083502DAF9D7000DF22A4 /* CaseDescribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */; };
 		4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */; };
@@ -124,6 +125,8 @@
 		4DF7C5632CE340F0002B241B /* ComponentListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4952CE340F0002B241B /* ComponentListRouter.swift */; };
 		4DF7C5642CE340F0002B241B /* ElevationPreviewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E42CE340F0002B241B /* ElevationPreviewInteractor.swift */; };
 		4DF7C5662CE340F0002B241B /* IconPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E92CE340F0002B241B /* IconPreviewCell.swift */; };
+		4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */; };
+		4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +164,7 @@
 		4D5597552D1E802C00CFBCA5 /* CounterPaginationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterPaginationPreview.swift; sourceTree = "<group>"; };
 		4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccordionPreview.swift; sourceTree = "<group>"; };
 		4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPreview.swift; sourceTree = "<group>"; };
+		4D6372C62DBA655200E66D22 /* CardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPreview.swift; sourceTree = "<group>"; };
 		4D853DF62D96491E004549CF /* IconButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonPreview.swift; sourceTree = "<group>"; };
 		4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseDescribable.swift; sourceTree = "<group>"; };
 		4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardPreview.swift; sourceTree = "<group>"; };
@@ -261,6 +265,8 @@
 		4DF7C4FF2CE340F0002B241B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4DF7C5002CE340F0002B241B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		4DF7C56A2CE342EA002B241B /* Blueprint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Blueprint-Info.plist"; sourceTree = "<group>"; };
+		4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionChipPreview.swift; sourceTree = "<group>"; };
+		4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterChipPreview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -557,8 +563,10 @@
 		4DF7C4FD2CE340F0002B241B /* Preview */ = {
 			isa = PBXGroup;
 			children = (
+				4D6372C62DBA655200E66D22 /* CardPreview.swift */,
 				4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */,
 				4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */,
+				4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */,
 				4DD3E95C2CF45F5500F97C50 /* AvatarPreview.swift */,
 				4DC668A92D673E8F00461189 /* BottomSheetModalPreview.swift */,
 				4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */,
@@ -571,6 +579,7 @@
 				4D55974D2D1E402C00CFBCA5 /* DateTimePickerPreview.swift */,
 				4D5597512D1E7EC000CFBCA5 /* DotPaginationPreview.swift */,
 				4D1AB4ED2CF492CC00311591 /* EmptyStatePreview.swift */,
+				4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */,
 				4D4B71FC2DA649080069C4F7 /* FlowLayoutPreview.swift */,
 				4DC668B12D68A61900461189 /* FullModalPreivew.swift */,
 				4D5597492D19A33500CFBCA5 /* HorizontalProgressTrackerPreview.swift */,
@@ -812,6 +821,7 @@
 				4D5597522D1E7EC000CFBCA5 /* DotPaginationPreview.swift in Sources */,
 				4DF7C5202CE340F0002B241B /* ColorChipCell.swift in Sources */,
 				4D0D251E2DB763FE00608CE5 /* ThumbnailPreview.swift in Sources */,
+				4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */,
 				4DA44F1B2D12CC91009FE3DB /* PullToRefreshPreview.swift in Sources */,
 				4DCFAAFA2CE6016900F7A4CD /* CellPreview.swift in Sources */,
 				4DF7C5212CE340F0002B241B /* TypographyPreviewPresenter.swift in Sources */,
@@ -832,6 +842,7 @@
 				4DB87ADC2CEC8F6B00DEC2A4 /* ProgressIndicatorPreview.swift in Sources */,
 				4D5597542D1E7F9400CFBCA5 /* PaginationPreview.swift in Sources */,
 				4DF7C5352CE340F0002B241B /* ColorPreviewBuilder.swift in Sources */,
+				4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */,
 				4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */,
 				4DF7C5372CE340F0002B241B /* IconPreviewPresenter.swift in Sources */,
 				4DF7C5382CE340F0002B241B /* ComponentListWorker.swift in Sources */,
@@ -850,6 +861,7 @@
 				4DF7C5452CE340F0002B241B /* ColorPickerViewController.swift in Sources */,
 				4DF7C5462CE340F0002B241B /* IconPreviewInteractor.swift in Sources */,
 				4DCFAAF72CE600D600F7A4CD /* SegmentedControlPreview.swift in Sources */,
+				4D6372C72DBA655200E66D22 /* CardPreview.swift in Sources */,
 				4D1AB4F12CF494DE00311591 /* SliderPreview.swift in Sources */,
 				4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */,
 				4DC668AC2D6849C400461189 /* ModalPreview.swift in Sources */,

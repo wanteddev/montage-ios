@@ -10,7 +10,7 @@ import UIKit
 import Montage
 
 final class OpacityPreviewContents {
-    private let items: [Decorate.Opacity] = [
+    private let items: [Opacity] = [
         .p000, .p005, .p008, .p012, .p016, .p022, .p028, .p035,
         .p043, .p052, .p061, .p074, .p088, .p097, .p100
     ].reversed()

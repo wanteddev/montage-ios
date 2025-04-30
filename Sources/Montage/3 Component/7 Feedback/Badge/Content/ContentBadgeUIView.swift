@@ -7,8 +7,33 @@
 
 import UIKit
 
-/// 컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다
-@available(*, deprecated, message: "Use ContentBadge instead")
+/// 컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다.
+///
+/// 이 컴포넌트는 다양한 스타일과 크기를 지원하며, 텍스트와 함께 아이콘을 표시할 수 있습니다.
+///
+/// ## 개요
+/// `ContentBadgeUIView`는 카테고리나 상태를 시각적으로 표현하기 위한 UI 컴포넌트입니다.
+/// Solid 또는 Outline 스타일로 표현할 수 있으며, 다양한 크기와 색상을 지원합니다.
+///
+/// - Warning: 이 클래스는 더 이상 사용되지 않으며, 대신 `Montage.ContentBadge`를 사용하세요.
+/// - SeeAlso: ``ContentBadge``
+///
+/// ## 사용 예시
+/// ```swift
+/// // 기본 사용법
+/// let badge = ContentBadgeUIView()
+/// badge.text = "카테고리"
+/// badge.variant = .solid
+/// badge.size = .small
+/// badge.colorStyle = .neutral()
+/// 
+/// // 아이콘 추가
+/// badge.leadingIcon = UIImage(named: "icon-category")
+/// 
+/// // 커스텀 색상 적용
+/// badge.colorStyle = .accent(.blue, nil)
+/// ```
+@available(*, deprecated, message: "`Montage.ContentBadge`를 사용하세요.")
 public class ContentBadgeUIView: UIView {
     private enum Const {
         static var defaultActiveColor: Color.Semantic = .primaryNormal
@@ -16,14 +41,21 @@ public class ContentBadgeUIView: UIView {
         static var defaultInteractionColor: Color.Semantic = .primaryNormal
     }
     
-    /// 뱃지의 외관입니다.
+    /// 뱃지의 외관 스타일입니다.
+    ///
+    /// - `.solid`: 배경색이 채워진 스타일
+    /// - `.outline`: 테두리만 있는 스타일
     public var variant: ContentBadge.Variant = .solid {
         didSet {
             updateViews()
         }
     }
     
-    /// 뱃지의 사이즈입니다.
+    /// 뱃지의 크기입니다.
+    ///
+    /// - `.xsmall`: 가장 작은 크기 (12pt 아이콘)
+    /// - `.small`: 작은 크기 (14pt 아이콘)
+    /// - `.medium`: 중간 크기 (16pt 아이콘)
     public var size: ContentBadge.Size = .small {
         didSet {
             setupUpdateableConstraints()
@@ -31,28 +63,35 @@ public class ContentBadgeUIView: UIView {
         }
     }
     
-    /// 뱃지에 사용될 색상 스타일입니다.
+    /// 뱃지에 적용될 색상 스타일입니다.
+    ///
+    /// - `.neutral()`: 기본 중립 색상
+    /// - `.accent(contentColor, enclosureColor)`: 커스텀 강조 색상
     public var colorStyle: ContentBadge.ColorStyle = .neutral() {
         didSet {
             updateViews()
         }
     }
     
-    /// 텍스트의 좌측에 표현될 아이콘입니다.
+    /// 텍스트의 좌측에 표시될 아이콘입니다.
+    ///
+    /// 아이콘은 현재 색상 스타일에 맞게 색상이 자동으로 적용됩니다.
     public var leadingIcon: UIImage? {
         didSet {
             updateViews()
         }
     }
     
-    /// 텍스트의 우측에 표현될 아이콘입니다.
+    /// 텍스트의 우측에 표시될 아이콘입니다.
+    ///
+    /// 아이콘은 현재 색상 스타일에 맞게 색상이 자동으로 적용됩니다.
     public var trailingIcon: UIImage? {
         didSet {
             updateViews()
         }
     }
     
-    /// 버튼에서 표현될 텍스트입니다.
+    /// 뱃지에 표시될 텍스트입니다.
     public var text = "" {
         didSet {
             updateViews()
@@ -71,32 +110,47 @@ public class ContentBadgeUIView: UIView {
     
     private var stackViewConstraints: [NSLayoutConstraint] = []
     
-    /// 객체를 생성합니다.
+    /// 기본 초기화 메서드입니다.
+    ///
+    /// 이 메서드는 프레임을 `.zero`로 초기화하고 기본 UI 요소를 설정합니다.
     public init() {
         super.init(frame: .zero)
         
         setupViews()
     }
     
+    /// Interface Builder와 함께 사용할 때 호출되는 초기화 메서드입니다.
+    ///
+    /// - Parameter coder: 디코더 객체
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setupViews()
     }
     
+    /// 트레이트 컬렉션이 변경될 때 호출되는 메서드입니다.
+    ///
+    /// 다크 모드와 라이트 모드 전환 시 UI를 업데이트합니다.
+    ///
+    /// - Parameter previousTraitCollection: 이전 트레이트 컬렉션
     override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
         updateViews()
     }
     
+    /// 하위 뷰의 레이아웃이 변경될 때 호출되는 메서드입니다.
     override public func layoutSubviews() {
         super.layoutSubviews()
         
         setupLayer()
     }
     
-    /// Element의 기본적인 사이즈를 정의합니다.
+    /// 뱃지의 기본 크기를 계산하여 반환합니다.
+    ///
+    /// 이 메서드는 텍스트 크기, 아이콘 크기, 여백을 고려하여 최적의 크기를 계산합니다.
+    ///
+    /// - Returns: 계산된 뱃지의 크기
     override public var intrinsicContentSize: CGSize {
         let textSize = getAttributedText().size()
         let iconSize = iconSize

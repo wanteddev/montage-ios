@@ -14,16 +14,16 @@ struct NormalCardPreview: View {
     @State private var bookmarkIsOn: Bool = false
     @State private var skeletonIsOn: Bool = false
     @State private var showCaption: Bool = false
+    @State private var showSubCaption: Bool = false
     @State private var showExtraCaption: Bool = false
     @State private var showTopContent: Bool = false
     @State private var showBottomContent: Bool = false
     @State private var showOverlayCaption: Bool = false
     @State private var showOverlayButton: Bool = false
-    @State private var selectedRatio: Ratio = .r3x2
-    @State private var thumbnailWidth: CGFloat = 240
     @State private var invalidImageUrl: Bool = false
+    @State private var thumbnailWidth: CGFloat = 180
     
-    private let imageUrl = "https://developer.apple.com/xcode/images/xcode-15-hero-large_2x.webp"
+    private let imageUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7d/%22_The_Calutron_Girls%22_Y-12_Oak_Ridge_1944_Large_Format_%2832093954911%29_%282%29.jpg"
     
     var body: some View {
         SwiftUI.ScrollView {
@@ -34,43 +34,17 @@ struct NormalCardPreview: View {
                     Spacer(minLength: 0)
                     Card.Normal(
                         thumbnail: {
-                            Thumbnail(
-                                url: URL(string: invalidImageUrl ? "https://invalid-url" : imageUrl),
-                                content: {
-                                    $0.resizable()
-                                        .scaledToFill()
-                                },
-                                placeholder: {
-                                    Rectangle()
-                                        .fill(SwiftUI.Color.semantic(.lineNeutral))
-                                        .overlay {
-                                            Image.montage(.image)
-                                                .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
-                                        }
-                                }
-                            )
-                            .ratio(selectedRatio, width: thumbnailWidth)
+                            Thumbnail(urlString: invalidImageUrl ? "https://invalid-url" : imageUrl, ratio: .r4x3)
+                                .width(thumbnailWidth)
                         },
                         skeleton: $skeletonIsOn,
-                        title: {
-                            Text(multilineTitle ? "제목이 길어서 두 줄이 되면 어떻게 될까요?" : "제목")
-                                .montage(variant: .body1, weight: .bold)
-                                .paragraph(variant: .body1)
-                        }
+                        title: multilineTitle ? "제목이 매우 매우 매우 매우 매우 매우 길어서 세 줄이 되면 어떻게 될까요?" : "제목"
                     )
-                    .caption(showCaption ? {
-                        Text("캡션")
-                            .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                            .paragraph(variant: .label2)
-                    } : nil)
-                    .extraCaption(showExtraCaption ? {
-                        Text("추가 캡션")
-                            .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                            .paragraph(variant: .label2)
-                    } : nil)
+                    .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
+                    .subCaption(showSubCaption ? "서브 캡션" : nil)
+                    .extraCaption(showExtraCaption ? "추가 캡션" : nil)
                     .topContent(showTopContent ? {
                         HStack {
-                            ContentBadge(text: "텍스트")
                             ContentBadge(text: "텍스트")
                             ContentBadge(text: "텍스트")
                             ContentBadge(text: "텍스트")
@@ -107,43 +81,8 @@ struct NormalCardPreview: View {
                     }
                     
                     HStack {
-                        Text("Ratio")
-                        Picker("Ratio", selection: $selectedRatio) {
-                            // 가로가 긴 비율
-                            Group {
-                                Text("21:9").tag(Ratio.r21x9)
-                                Text("2:1").tag(Ratio.r2x1)
-                                Text("16:9").tag(Ratio.r16x9)
-                                Text("1.618:1").tag(Ratio.r1_618x1)
-                                Text("16:10").tag(Ratio.r16x10)
-                                Text("3:2").tag(Ratio.r3x2)
-                                Text("4:3").tag(Ratio.r4x3)
-                                Text("5:4").tag(Ratio.r5x4)
-                            }
-                            
-                            // 정사각형
-                            Text("1:1").tag(Ratio.r1x1)
-                            
-                            
-                            // 세로가 긴 비율
-                            Group {
-                                Text("4:5").tag(Ratio.r4x5)
-                                Text("3:4").tag(Ratio.r3x4)
-                                Text("2:3").tag(Ratio.r2x3)
-                                Text("10:16").tag(Ratio.r10x16)
-                                Text("1:1.618").tag(Ratio.r1x1_618)
-                                Text("9:16").tag(Ratio.r9x16)
-                                Text("1:2").tag(Ratio.r1x2)
-                                Text("9:21").tag(Ratio.r9x21)
-                            }
-                        }
-                        .pickerStyle(.wheel)
-                        .frame(height: 120)
-                    }
-                    
-                    HStack {
                         Text("thumbnail width")
-                        SwiftUI.Slider(value: $thumbnailWidth, in: 150...300)
+                        SwiftUI.Slider(value: $thumbnailWidth, in: 120...300)
                         Text("\(Int(thumbnailWidth))")
                     }
                     
@@ -153,6 +92,11 @@ struct NormalCardPreview: View {
                         
                         Text("caption")
                         Control.Switch($showCaption)
+                    }
+                    
+                    HStack {
+                        Text("sub caption")
+                        Control.Switch($showSubCaption)
                         
                         Text("extra caption")
                         Control.Switch($showExtraCaption)

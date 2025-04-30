@@ -7,12 +7,41 @@
 
 import SwiftUI
 
+/// `Select` 컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다.
+/// 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.
+///
+/// ## 사용 예시:
+/// ```swift
+/// @State private var items = [
+///     .init(text: "Option 1"),
+///     .init(text: "Option 2"),
+///     .init(text: "Option 3")
+/// ]
+///
+/// Select(
+///     variant: .single(.checkmark, nil),
+///     placeholder: "선택하세요",
+///     items: $items
+/// )
+/// ```
 public struct Select: View {
     // MARK: - Types
     
     /// 다중 선택 가능여부를 나타내는 열거형입니다.
+    /// - single: 단일 항목 선택 모드
+    /// - multiple: 다중 항목 선택 모드
     public enum Variant {
+        /// 단일 선택 모드
+        /// - Parameters:
+        ///   - selectionType: 선택 표시 방식 (체크마크 또는 라디오 버튼), 기본값은 .radio
+        ///   - menuPrimaryButtonTitle: 확인 버튼 제목 (nil일 경우 버튼 표시 안 함)
         case single(selectionType: SingleSelectionType = .radio, menuPrimaryButtonTitle: String? = nil)
+        
+        /// 다중 선택 모드
+        /// - Parameters:
+        ///   - render: 선택된 항목 표시 방식 (텍스트 또는 칩), 기본값은 .text
+        ///   - overflow: 선택된 항목이 여러 줄로 표시되는지 여부, 기본값은 false
+        ///   - menuPrimaryButtonTitle: 확인 버튼 제목
         case multiple(render: Render = .text, overflow: Bool = false, menuPrimaryButtonTitle: String)
         
         var isSingle: Bool {
@@ -26,12 +55,23 @@ public struct Select: View {
     }
     
     /// 아이템 타입입니다.
+    /// Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.
     public struct Item: Equatable {
+        /// 아이템 텍스트 내용
         public let text: String
+        /// 아이템의 아이콘 (선택 사항)
         public let icon: Icon?
+        /// 부정적 상태 여부 (오류나 경고를 나타낼 때 사용)
         public let isNegative: Bool
+        /// 항목의 선택 여부
         public var isSelected: Bool
         
+        /// 아이템 초기화
+        /// - Parameters:
+        ///   - text: 아이템 텍스트
+        ///   - icon: 아이템 아이콘 (기본값: nil)
+        ///   - isNegative: 부정적 상태 여부 (기본값: false)
+        ///   - isSelected: 선택 여부 (기본값: false)
         public init(
             text: String,
             icon: Icon? = nil,
@@ -46,17 +86,24 @@ public struct Select: View {
     }
     
     /// variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.
+    /// - checkmark: 체크마크로 선택 표시
+    /// - radio: 라디오 버튼으로 선택 표시
     public enum SingleSelectionType {
         case checkmark, radio
     }
     
     /// variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.
+    /// - text: 선택된 항목 텍스트만 표시
+    /// - chip: 선택된 항목을 칩(chip) 형태로 표시
     public enum Render {
         case text
         case chip
     }
     
     /// 왼쪽에 표시될 컨텐트 타입입니다.
+    /// - icon: 아이콘 표시
+    /// - iconButton: 아이콘 버튼 표시
+    /// - custom: 사용자 정의 뷰 표시
     public enum LeadingContent {
         case icon(Icon)
         case iconButton(IconButton)
@@ -70,6 +117,12 @@ public struct Select: View {
     @Binding private var items: [Item]
     private let onTapItem: ((Select.Item) -> Void)?
     
+    /// Select 컴포넌트 초기화
+    /// - Parameters:
+    ///   - menuPresented: 메뉴 표시 상태 바인딩 (기본값: nil)
+    ///   - variant: 컴포넌트의 시각적/기능적 변형
+    ///   - items: 선택 가능한 항목 배열 (바인딩)
+    ///   - onTapItem: 항목 선택 시 호출되는 클로저 (기본값: nil)
     public init(
         menuPresented: Binding<Bool>? = nil,
         variant: Variant,
@@ -96,6 +149,8 @@ public struct Select: View {
     private var menuResize: Modal.BottomSheet.Resize = .hug
     
     /// negative 상태 여부를 조정합니다.
+    /// - Parameter negative: 부정적 상태 여부 (기본값: true)
+    /// - Returns: 수정된 Select 인스턴스
     public func negative(_ negative: Bool = true) -> Self {
         var zelf = self
         zelf.negative = negative
@@ -103,6 +158,8 @@ public struct Select: View {
     }
     
     /// 선택된 항목들이 없는 경우 placeholder를 표시합니다.
+    /// - Parameter placeholder: 표시할 플레이스홀더 텍스트
+    /// - Returns: 수정된 Select 인스턴스
     public func placeholder(_ placeholder: String) -> Self {
         var zelf = self
         zelf.placeholder = placeholder
@@ -110,6 +167,8 @@ public struct Select: View {
     }
     
     /// 활성화 여부를 조정합니다.
+    /// - Parameter disable: 비활성화 여부 (기본값: true)
+    /// - Returns: 수정된 Select 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
         zelf.disable = disable
@@ -117,6 +176,8 @@ public struct Select: View {
     }
     
     /// 제목을 추가합니다.
+    /// - Parameter heading: 표시할 제목 텍스트
+    /// - Returns: 수정된 Select 인스턴스
     public func heading(_ heading: String) -> Self {
         var zelf = self
         zelf.heading = heading
@@ -124,6 +185,8 @@ public struct Select: View {
     }
     
     /// 필수 표시 노출 여부를 조정합니다.
+    /// - Parameter requiredBadge: 필수 표시 여부 (기본값: true)
+    /// - Returns: 수정된 Select 인스턴스
     public func requiredBadge(_ requiredBadge: Bool = true) -> Self {
         var zelf = self
         zelf.requiredBadge = requiredBadge
@@ -131,6 +194,8 @@ public struct Select: View {
     }
     
     /// 설명을 추가합니다.
+    /// - Parameter description: 표시할 설명 텍스트
+    /// - Returns: 수정된 Select 인스턴스
     public func description(_ description: String) -> Self {
         var zelf = self
         zelf.description = description
@@ -138,6 +203,8 @@ public struct Select: View {
     }
     
     /// shadow 배경색을 조정합니다. 기본값은 systemBackgroundColor 입니다.
+    /// - Parameter shadowBackgroundColor: 설정할 배경색
+    /// - Returns: 수정된 Select 인스턴스
     public func shadowBackgroundColor(_ shadowBackgroundColor: SwiftUI.Color) -> Self {
         var zelf = self
         zelf.shadowBackgroundColor = shadowBackgroundColor
@@ -145,6 +212,8 @@ public struct Select: View {
     }
     
     /// 왼쪽 컨텐츠를 추가합니다.
+    /// - Parameter content: 표시할 선행 콘텐츠
+    /// - Returns: 수정된 Select 인스턴스
     public func leadingContent(_ content: LeadingContent?) -> Self {
         var zelf = self
         zelf.leadingContent = content
@@ -152,6 +221,8 @@ public struct Select: View {
     }
     
     /// 메뉴의 높이 detent를 지정합니다.
+    /// - Parameter menuResize: 메뉴 크기 조정 방식
+    /// - Returns: 수정된 Select 인스턴스
     public func menuResize(_ menuResize: Modal.BottomSheet.Resize) -> Self {
         var zelf = self
         zelf.menuResize = menuResize
@@ -481,10 +552,10 @@ public struct Select: View {
                 Montage.Chip.Action(
                     variant: .solid,
                     size: .xsmall,
-                    text: item.text,
-                    backgroundColor: backgroundColor(item),
-                    fontColor: fontColor(item)
+                    text: item.text
                 )
+                .backgroundColor(backgroundColor(item))
+                .fontColor(fontColor(item))
                 .imageColor(iconColor(item))
                 .trailingImage(Image.montage(.closeThick))
                 .if(item.icon != nil) {
@@ -506,12 +577,12 @@ public struct Select: View {
             }
         }
         
-        private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color? {
-            guard disable == false else { return nil }
+        private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color {
+            guard disable == false else { return .clear }
             if item.isNegative {
                 return .semantic(.statusNegative).opacity(0.05)
             } else {
-                return nil
+                return .clear
             }
         }
         
