@@ -53,6 +53,15 @@ extension Modal {
     ///
     /// - SeeAlso: `Modal.PopupModifier`, `Modal.Navigation`, `ActionAreaModifier.Model`
     public struct Popup: View {
+        /// 팝업의 크기를 정의하는 열거형입니다.
+        ///
+        /// - hug: 컨텐츠 크기에 맞게 자동 조절됩니다.
+        /// - fixed: 지정한 높이로 고정됩니다.
+        public enum Resize {
+            case hug
+            case fixed(CGFloat)
+        }
+        
         private let content: () -> any View
 
         /// 팝업 모달을 초기화합니다.
@@ -67,7 +76,7 @@ extension Modal {
         @State private var actionAreaHeight: CGFloat = 0
         @State private var contentOffset: CGFloat = 0
 
-        private let popupMaxHeight: CGFloat = 400
+        private let popupMaxHeight: CGFloat = min(760, UIScreen.main.bounds.height - 40)
         
         public var body: some View {
             ZStack(alignment: .top) {
@@ -81,29 +90,24 @@ extension Modal {
                                 action: { contentHeight = $0 }
                             )
                         
-                        if popupContentHeight > popupMaxHeight {
-                            ZStack(alignment: .top) {
-                                ScrollView(onOffsetChanged: {
-                                    contentOffset = $0.y
-                                }, content: {
-                                    VStack(spacing: 0) {
-                                        SwiftUI.Color.clear
-                                            .frame(height: navigationHeight)
-                                        HStack(spacing: 0) {
-                                            Spacer(minLength: 0)
-                                            contentView
-                                            Spacer(minLength: 0)
-                                        }
+                        ZStack(alignment: .top) {
+                            ScrollView(onOffsetChanged: {
+                                contentOffset = $0.y
+                            }, content: {
+                                VStack(spacing: 0) {
+                                    SwiftUI.Color.clear
+                                        .frame(height: navigationHeight)
+                                    HStack(spacing: 0) {
+                                        Spacer(minLength: 0)
+                                        contentView
+                                        Spacer(minLength: 0)
                                     }
-                                })
-                                
-                                navigationView
-                            }
-                        } else {
-                            VStack(spacing: 0) {
-                                navigationView
-                                contentView
-                            }
+                                }
+                            })
+                            .hidesIndicators()
+                            .scrollDisabled(!scrollable)
+                            
+                            navigationView
                         }
                     }
                     
@@ -124,8 +128,15 @@ extension Modal {
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .frame(maxHeight: min(popupMaxHeight, popupContentHeight))
             .padding(.horizontal, 20)
+            .modifying {
+                print("resize: \(resize)")
+                return if case .fixed(let height) = resize {
+                    $0.frame(height: height)
+                } else {
+                    $0.frame(maxHeight: min(popupMaxHeight, popupContentHeight))
+                }
+            }
             .modifying { originalView in
                 Group {
                     if #available(iOS 16.4, *) {
@@ -141,9 +152,20 @@ extension Modal {
         
         // MARK: - Modifiers
         
+        private var resize: Resize = .hug
         private var ignoresEdgeInsets = false
         private var navigation: (() -> Montage.Modal.Navigation)?
         private var actionAreaModel: ActionAreaModifier.Model?
+        
+        /// 팝업 모달의 크기를 설정합니다.
+        ///
+        /// - Parameter resize: 팝업 모달의 크기 설정
+        /// - Returns: 수정된 팝업 모달 뷰
+        public func resize(_ resize: Resize) -> Self {
+            var zelf = self
+            zelf.resize = resize
+            return zelf
+        }
         
         /// 컨텐츠의 기본 여백을 무시할지 설정합니다.
         ///
@@ -205,6 +227,14 @@ extension Modal {
         private var scrolledToBottom: Bool {
             Int(contentOffset) <= Int(popupMaxHeight) - Int(popupContentHeight)
         }
+        
+        private var scrollable: Bool {
+            if case .fixed(let height) = resize {
+                popupContentHeight > height
+            } else {
+                popupContentHeight > popupMaxHeight
+            }
+        }
     }
     
     /// 팝업 모달을 표시하기 위한 뷰 모디파이어입니다.
@@ -237,6 +267,7 @@ extension Modal {
     /// - SeeAlso: `Modal.Popup`
     public struct PopupModifier: ViewModifier {
         @Binding private var isPresented: Bool
+        private let resize: Modal.Popup.Resize
         private let ignoresEdgeInsets: Bool
         private let popupContent: () -> any View
         private let navigation: (() -> Modal.Navigation)?
@@ -246,18 +277,21 @@ extension Modal {
         ///
         /// - Parameters:
         ///   - isPresented: 팝업 모달 표시 여부에 대한 바인딩
+        ///   - resize: 팝업 모달 크기 설정 (기본값: .hug)
         ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
         ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
         ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
         ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
         public init(
             isPresented: Binding<Bool>,
+            resize: Modal.Popup.Resize = .hug,
             ignoresEdgeInsets: Bool = false,
             _ content: @escaping () -> any View,
             navigation: (() -> Modal.Navigation)? = nil,
             actionAreaModel: ActionAreaModifier.Model? = nil
         ) {
             _isPresented = isPresented
+            self.resize = resize
             self.ignoresEdgeInsets = ignoresEdgeInsets
             popupContent = content
             self.navigation = navigation
@@ -273,6 +307,7 @@ extension Modal {
                     Popup {
                         AnyView(popupContent())
                     }
+                    .resize(resize)
                     .ignoresEdgeInsets(ignoresEdgeInsets)
                     .modalNavigation(navigation)
                     .modalActionArea(actionAreaModel)
@@ -343,6 +378,7 @@ extension View {
     /// - Returns: 팝업 모달이 적용된 뷰
     public func popupModal(
         isPresented: Binding<Bool>,
+        resize: Modal.Popup.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionAreaModifier.Model? = nil,
         _ content: @escaping () -> any View,
@@ -351,6 +387,7 @@ extension View {
         modifier(
             Modal.PopupModifier(
                 isPresented: isPresented,
+                resize: resize,
                 ignoresEdgeInsets: ignoresEdgeInsets,
                 content,
                 navigation: navigation,

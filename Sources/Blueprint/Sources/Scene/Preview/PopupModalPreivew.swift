@@ -13,6 +13,7 @@ struct PopupModalPreivew: View {
 
     @State private var itemCountsIndex: Int = 0
     
+    @State private var resize: Modal.Popup.Resize = .hug
     @State private var navigation = true
     @State private var navVariantIndex = 0
     
@@ -35,6 +36,15 @@ struct PopupModalPreivew: View {
                     SegmentedControl(selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" })
                         .size(.small)
                     Text("items")
+                }
+                
+                HStack {
+                    Text("resize")
+                    Picker("resize", selection: $resize) {
+                        Text("hug").tag(Modal.Popup.Resize.hug)
+                        Text("fixed(300)").tag(Modal.Popup.Resize.fixed(300))
+                    }
+                    .pickerStyle(.segmented)
                 }
                 HStack {
                     Text("navigation")
@@ -70,7 +80,7 @@ struct PopupModalPreivew: View {
                 }
             }
             .padding(.horizontal)
-            .onChange(of: "\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)") { _ in
+            .onChange(of: "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)") { _ in
                 refreshTask?.cancel()
                 refreshTask = Task {
                     do {
@@ -85,6 +95,7 @@ struct PopupModalPreivew: View {
         }
         .popupModal(
             isPresented: $show,
+            resize: resize,
             actionAreaModel: actionArea
             ? .init(
                 variant: actionAreaVariant,
@@ -161,12 +172,32 @@ struct PopupModalPreivew: View {
         .floating(alternative: true, background: true)
     ]
     
-    private var itemCounts = [1, 5, 10]
+    private var itemCounts = [1, 5, 20]
     
     private enum ActionAreaButtons: String, CaseIterable {
         case main
         case mainAndSub = "main/sub"
         case mainSubAndAlternative = "main/sub/alt"
+    }
+}
+
+extension Modal.Popup.Resize: @retroactive Hashable {
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case .hug:
+            hasher.combine(0)
+        case .fixed(let height):
+            hasher.combine(1)
+            hasher.combine(height)
+        }
+    }
+    
+    public static func == (lhs: Modal.Popup.Resize, rhs: Modal.Popup.Resize) -> Bool {
+        switch (lhs, rhs) {
+        case (.hug, .hug): return true
+        case (.fixed(let l), .fixed(let r)): return l == r
+        default: return false
+        }
     }
 }
 
