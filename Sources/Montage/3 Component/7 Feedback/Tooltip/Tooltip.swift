@@ -325,11 +325,11 @@ private extension Tooltip.Modifier {
                 if showCloseButton {
                     IconButton(
                         variant: .normal(size: 16),
-                        icon: .close,
-                        iconColor: .semantic(.inverseLabel)
+                        icon: .close
                     ) {
                         isPresented = false
                     }
+                    .iconColor(.semantic(.inverseLabel))
                     .frame(width: 16, height: 16)
                     .padding([.leading, .top], 2)
                     .opacity(0.61)

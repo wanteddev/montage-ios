@@ -340,13 +340,13 @@ private extension TextInput.TextField {
                     if !text.isEmpty, textFieldFocusState {
                         IconButton(
                             variant: .normal(size: 22),
-                            icon: .circleCloseFill,
-                            iconColor: .semantic(.labelAssistive)
+                            icon: .circleCloseFill
                         ) {
                             text = ""
                             fixAutocorrection = true
                             Task { fixAutocorrection = false }
                         }
+                        .iconColor(.semantic(.labelAssistive))
                     } else {
                         if let trailingIcon, let trailingIconColor {
                             Image

@@ -76,9 +76,9 @@ struct TextFieldPreview: View {
                 return {
                     IconButton(
                         variant: .normal(size: 8),
-                        icon: .send,
-                        iconColor: .semantic(.labelAlternative)
+                        icon: .send
                     )
+                    .iconColor(.semantic(.labelAlternative))
                 }
             }
         }

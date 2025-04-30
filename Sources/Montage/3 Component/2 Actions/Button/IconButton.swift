@@ -25,39 +25,8 @@ import SwiftUI
 public struct IconButton: View {
     @State private var isPressed = false
     
-    /// 버튼의 외관입니다.
     private let variant: IconButton.Variant
-    
-    /// 버튼에 표시될 아이콘입니다.
     private let icon: Icon
-    
-    /// 버튼의 활성화 여부입니다.
-    private let disable: Bool
-    
-    /// 버튼 우측 상단의 푸시 뱃지 노출 여부입니다.
-    /// > normal variant에서만 사용 가능합니다.
-    private let showPushBadge: Bool
-    
-    /// 커스텀 가능한 패딩 입니다.
-    /// > 설정 시 constraint가 업데이트 됩니다.
-    /// > outlined, soild variant에서만 사용 가능합니다.
-    private let padding: CGFloat
-    
-    /// 커스텀 가능한 아이콘 컬러 입니다.
-    /// montage의 모든 컬러를 사용할 수 있습니다.
-    private let iconColor: SwiftUI.Color?
-    
-    /// 커스텀 가능한 배경색 입니다.
-    /// montage의 모든 컬러를 사용할 수 있습니다.
-    /// > outlined, soild variant에서만 사용 가능합니다.
-    private let backgroundColor: SwiftUI.Color?
-    
-    /// 커스텀 가능한 테두리색 입니다.
-    /// montage의 모든 컬러를 사용할 수 있습니다.
-    /// > outlined 에서만 사용 가능합니다.
-    private let borderColor: SwiftUI.Color?
-    
-    /// 버튼의 클릭 이벤트를 받을 수 있는 핸들러입니다.
     private let handler: (() -> Void)?
     
     /// 아이콘 버튼을 생성합니다.
@@ -76,48 +45,105 @@ public struct IconButton: View {
     public init(
         variant: IconButton.Variant = .default,
         icon: Icon,
-        disable: Bool = false,
-        showPushBadge: Bool = false,
-        padding: CGFloat = .zero,
-        iconColor: SwiftUI.Color? = nil,
-        backgroundColor: SwiftUI.Color? = nil,
-        borderColor: SwiftUI.Color? = nil,
         handler: (() -> Void)? = nil
     ) {
         self.variant = variant
         self.icon = icon
-        self.disable = disable
-        self.showPushBadge = {
-            guard case .normal(_) = variant else { return false }
-            return showPushBadge
-        }()
+        self.disable = false
+        self.showPushBadge = false
         self.padding = {
             switch variant {
             case .normal, .background: .zero
-            case .outlined, .solid: padding
+            case .outlined, .solid: .zero
             }
         }()
-        if let iconColor {
-            self.iconColor = iconColor
-        } else {
-            self.iconColor = nil
-        }
-        self.backgroundColor = {
-            switch variant {
-            case .normal, .background: nil
-            case .outlined, .solid:
-                if let backgroundColor {
-                    backgroundColor
-                } else {
-                    nil
-                }
-            }
-        }()
-        self.borderColor = {
-            guard case .outlined(_) = variant, let borderColor else { return nil }
-            return borderColor
-        }()
+        self.iconColor = nil
+        self.backgroundColor = nil
+        self.borderColor = nil
         self.handler = handler
+    }
+    
+    // MARK: - Modifiers
+    
+    private var disable: Bool
+    private var showPushBadge: Bool
+    private var padding: CGFloat
+    private var iconColor: SwiftUI.Color?
+    private var backgroundColor: SwiftUI.Color?
+    private var borderColor: SwiftUI.Color?
+    
+    /// 버튼의 비활성화 여부를 설정합니다.
+    /// - Parameter value: 비활성화 여부, true이면 버튼이 비활성화됩니다.
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func disable(_ value: Bool = true) -> Self {
+        var copy = self
+        copy.disable = value
+        return copy
+    }
+    
+    /// 푸시 뱃지 표시 여부를 설정합니다.
+    /// > normal variant에서만 사용 가능합니다.
+    /// - Parameter value: 푸시 뱃지 표시 여부
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func showPushBadge(_ value: Bool = true) -> Self {
+        var copy = self
+        copy.showPushBadge = {
+            guard case .normal(_) = self.variant else { return false }
+            return value
+        }()
+        return copy
+    }
+    
+    /// 버튼의 패딩을 설정합니다.
+    /// > outlined, soild variant에서만 사용 가능합니다.
+    /// - Parameter value: 패딩 값
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func padding(_ value: CGFloat) -> Self {
+        var copy = self
+        copy.padding = {
+            switch self.variant {
+            case .normal, .background: .zero
+            case .outlined, .solid: value
+            }
+        }()
+        return copy
+    }
+    
+    /// 아이콘 색상을 설정합니다.
+    /// - Parameter color: 설정할 색상
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func iconColor(_ color: SwiftUI.Color) -> Self {
+        var copy = self
+        copy.iconColor = color
+        return copy
+    }
+    
+    /// 배경 색상을 설정합니다.
+    /// > outlined, soild variant에서만 사용 가능합니다.
+    /// - Parameter color: 설정할 색상
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func backgroundColor(_ color: SwiftUI.Color) -> Self {
+        var copy = self
+        copy.backgroundColor = {
+            switch self.variant {
+            case .normal, .background: nil
+            case .outlined, .solid: color
+            }
+        }()
+        return copy
+    }
+    
+    /// 테두리 색상을 설정합니다.
+    /// > outlined 에서만 사용 가능합니다.
+    /// - Parameter color: 설정할 색상
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func borderColor(_ color: SwiftUI.Color) -> Self {
+        var copy = self
+        copy.borderColor = {
+            guard case .outlined(_) = self.variant else { return nil }
+            return color
+        }()
+        return copy
     }
     
     // MARK: Private Computed Property

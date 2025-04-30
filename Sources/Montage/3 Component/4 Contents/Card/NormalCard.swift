@@ -266,10 +266,10 @@ extension Card.Normal {
                                         Montage.IconButton(
                                             variant: .normal(size: 20),
                                             icon: buttonIcon,
-                                            iconColor: SwiftUI.Color.semantic(.staticWhite)
                                         ) {
                                             onTapButton?()
                                         }
+                                        .iconColor(SwiftUI.Color.semantic(.staticWhite))
                                     }
                                 }
                             }

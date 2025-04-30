@@ -10,6 +10,7 @@ import Montage
 
 struct IconButtonPreview: View {
     @State private var variantIndex = 0
+    @State private var customSize: CGFloat = 24
     @State private var sizeIndex = 0
     @State private var alternative = false
     @State private var disable = false
@@ -21,8 +22,8 @@ struct IconButtonPreview: View {
     
     private var variants: [IconButton.Variant] {
         [
-            .normal(size: 24),
-            .background(size: 24, isAlternative: alternative),
+            .normal(size: Int(customSize)),
+            .background(size: Int(customSize), isAlternative: alternative),
             .outlined(size: sizes[sizeIndex]),
             .solid(size: sizes[sizeIndex])
         ]
@@ -70,14 +71,33 @@ struct IconButtonPreview: View {
                     IconButton(
                         variant: currentVariant,
                         icon: .apps,
-                        disable: disable,
-                        showPushBadge: showPushBadge,
-                        padding: padding,
-                        iconColor: iconColor,
-                        backgroundColor: backgroundColor,
-                        borderColor: borderColor
-                    ) {
-                        print("tapped")
+                        handler: {
+                            print("tapped")
+                        }
+                    )
+                    .disable(disable)
+                    .showPushBadge(isNormal ? showPushBadge : false)
+                    .padding(isOutlinedOrSolid ? padding : 0)
+                    .modifying {
+                        if iconColor != nil {
+                            $0.iconColor(iconColor!)
+                        } else {
+                            $0
+                        }
+                    }
+                    .modifying {
+                        if isOutlinedOrSolid && backgroundColor != nil {
+                            $0.backgroundColor(backgroundColor!)
+                        } else {
+                            $0
+                        }
+                    }
+                    .modifying {
+                        if isOutlined && borderColor != nil {
+                            $0.borderColor(borderColor!)
+                        } else {
+                            $0
+                        }
                     }
                     
                     Spacer(minLength: 0)
@@ -94,11 +114,15 @@ struct IconButtonPreview: View {
                 }
                 HStack {
                     Text("size")
-                    SegmentedControl(
-                        selectedIndex: $sizeIndex,
-                        labels: sizes.map(\.description)
-                    )
-                    .size(.small)
+                    if variantIndex == 0 || variantIndex == 1 {
+                        SwiftUI.Slider(value: $customSize, in: 10...30, step: 1)
+                    } else {
+                        SegmentedControl(
+                            selectedIndex: $sizeIndex,
+                            labels: sizes.map(\.description)
+                        )
+                        .size(.small)
+                    }
                 }
                 if isBackground {
                     HStack {

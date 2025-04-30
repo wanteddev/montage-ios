@@ -372,11 +372,10 @@ public struct Select: View {
                     IconButton(
                         variant: .normal(size: 16),
                         icon: .chevronDownThickSmall,
-                        iconColor: disable ? SwiftUI.Color
-                            .semantic(.labelDisable) : .semantic(.labelAlternative)
                     ) {
                         menuPresented.wrappedValue.toggle()
                     }
+                    .iconColor(disable ? SwiftUI.Color.semantic(.labelDisable) : .semantic(.labelAlternative))
                     .padding(.horizontal, 4)
                     .frame(height: 24)
                 }
