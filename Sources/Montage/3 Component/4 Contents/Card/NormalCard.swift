@@ -136,7 +136,7 @@ extension Card {
         @State private var thumbnailWidth: CGFloat = 0
         
         public var body: some View {
-            Grid(alignment: .leading, verticalSpacing: 10) {
+            Grid(alignment: .leading, verticalSpacing: 6) {
                 GridRow {
                     thumbnail()
                         .radius()
