@@ -371,7 +371,7 @@ public struct Select: View {
                     
                     IconButton(
                         variant: .normal(size: 16),
-                        icon: .chevronDownThickSmall,
+                        icon: .chevronDownThickSmall
                     ) {
                         menuPresented.wrappedValue.toggle()
                     }

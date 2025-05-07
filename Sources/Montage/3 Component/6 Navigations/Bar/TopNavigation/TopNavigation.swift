@@ -294,7 +294,7 @@ extension Bar {
                                     IconButton(
                                         variant: background ?
                                             .background(size: 24, isAlternative: alternative) : .default,
-                                        icon: i,
+                                        icon: i
                                     ) {
                                         action()
                                     }
