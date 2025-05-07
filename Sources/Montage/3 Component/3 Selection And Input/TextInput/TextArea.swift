@@ -502,10 +502,11 @@ extension TextInput {
                     Spacer()
                     if negative {
                         IconButton(
+                            variant: .default,
                             icon: .circleExclamationFill,
-                            iconColor:
-                            disable ? .semantic(.labelDisable) : .semantic(.statusNegative)
+                            handler: nil
                         )
+                        .iconColor(disable ? .semantic(.labelDisable) : .semantic(.statusNegative))
                     } else {
                         if trailingResources.isEmpty == false {
                             HStack(spacing: trailingResourceSpacing) {
@@ -576,9 +577,9 @@ extension TextInput {
                             }
                         }(),
                         icon: icon,
-                        iconColor: tintColor,
                         handler: handler
                     )
+                    .iconColor(tintColor)
                 case let .icon(icon, tintColor):
                     Image.montage(icon)
                         .resizable()

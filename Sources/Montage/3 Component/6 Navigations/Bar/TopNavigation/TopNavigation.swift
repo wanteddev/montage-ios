@@ -295,11 +295,11 @@ extension Bar {
                                         variant: background ?
                                             .background(size: 24, isAlternative: alternative) : .default,
                                         icon: i,
-                                        disable: d,
-                                        showPushBadge: s
                                     ) {
                                         action()
                                     }
+                                    .disable(d)
+                                    .showPushBadge(s)
                                     .frame(width: 24, height: 24)
                                 case let .text(t, d, action):
                                     TrailingTextButton(
