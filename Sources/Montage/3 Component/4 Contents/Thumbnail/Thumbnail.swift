@@ -99,7 +99,7 @@ public struct Thumbnail: View {
         ///
         /// - Returns: 가로 길이를 세로 길이로 나눈 값
         public var rawValue: CGFloat {
-            size.width / size.height
+            size.height / size.width
         }
         
         /// 비율에 해당하는 크기를 반환합니다.

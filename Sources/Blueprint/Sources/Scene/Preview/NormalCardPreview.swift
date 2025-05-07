@@ -61,6 +61,7 @@ struct NormalCardPreview: View {
                         $0.overlay(
                             caption: showOverlayCaption ? "오버레이캡션" : nil,
                             buttonIcon: showOverlayButton ? (bookmarkIsOn ? .bookmarkFill : .bookmark) : nil,
+                            buttonColor: bookmarkIsOn ? .semantic(.primaryNormal) : .semantic(.staticWhite),
                             onTapButton: showOverlayButton ? { bookmarkIsOn.toggle() } : nil
                         )
                     }
