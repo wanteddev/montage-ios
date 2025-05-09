@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   sync:
-    uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@main
+    uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@feature/figma-icon-sync-fix
     with:
       platform: ios
       pr_name: 'feat: add icons synced from figma'

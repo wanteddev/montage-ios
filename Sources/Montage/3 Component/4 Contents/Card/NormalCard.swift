@@ -198,6 +198,7 @@ extension Card {
                                         .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
                                 }
                             }
+                            .if(!caption.isNilOrEmpty || !subCaption.isNilOrEmpty || !extraCaption.isNilOrEmpty)
                         }
                         
                         if let bottomContent {
