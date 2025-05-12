@@ -1,0 +1,3 @@
+[submodule "docc"]
+	path = docc
+	url = https://github.com/wanteddev/montage-ios-doc.git
