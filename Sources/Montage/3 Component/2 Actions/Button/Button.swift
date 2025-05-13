@@ -416,7 +416,6 @@ public struct Button: View {
     ///
     /// - Parameter fontVariant: 설정할 폰트 변형
     /// - Returns: 수정된 버튼 인스턴스
-    /// - SeeAlso: ``Variant``
     public func fontVariant(_ fontVariant: Typography.Variant?) -> Self {
         var zelf = self
         zelf.fontVariant = fontVariant
@@ -435,7 +434,6 @@ public struct Button: View {
     ///
     /// - Parameter fontWeight: 설정할 폰트 두께
     /// - Returns: 수정된 버튼 인스턴스
-    /// - SeeAlso: ``Weight``
     public func fontWeight(_ fontWeight: Typography.Weight?) -> Self {
         var zelf = self
         zelf.fontWeight = fontWeight
