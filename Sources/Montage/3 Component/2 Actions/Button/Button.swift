@@ -416,7 +416,7 @@ public struct Button: View {
     ///
     /// - Parameter fontVariant: 설정할 폰트 변형
     /// - Returns: 수정된 버튼 인스턴스
-    /// - SeeAlso: ``Typography.Variant``
+    /// - SeeAlso: ``Variant``
     public func fontVariant(_ fontVariant: Typography.Variant?) -> Self {
         var zelf = self
         zelf.fontVariant = fontVariant
@@ -435,7 +435,7 @@ public struct Button: View {
     ///
     /// - Parameter fontWeight: 설정할 폰트 두께
     /// - Returns: 수정된 버튼 인스턴스
-    /// - SeeAlso: ``Typography.Weight``
+    /// - SeeAlso: ``Weight``
     public func fontWeight(_ fontWeight: Typography.Weight?) -> Self {
         var zelf = self
         zelf.fontWeight = fontWeight
@@ -477,8 +477,8 @@ public struct Button: View {
     /// ```
     ///
     /// - Parameters:
-    ///   - horizontal: 수평 방향 채우기 여부, 기본값은 `false`
-    ///   - vertical: 수직 방향 채우기 여부, 기본값은 `false`
+    ///   - fillHorizontal: 수평 방향 채우기 여부, 기본값은 `false`
+    ///   - fillVertical: 수직 방향 채우기 여부, 기본값은 `false`
     /// - Returns: 수정된 버튼 인스턴스
     public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
         var zelf = self

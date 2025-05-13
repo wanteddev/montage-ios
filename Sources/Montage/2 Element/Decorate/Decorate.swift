@@ -14,5 +14,5 @@ import Foundation
 /// 주요 기능:
 /// - 사용자 상호작용에 따른 시각적 피드백 (Interaction)
 ///
-/// - SeeAlso: ``Decorate.Interaction``
+/// - SeeAlso: ``Interaction``
 public enum Decorate {}

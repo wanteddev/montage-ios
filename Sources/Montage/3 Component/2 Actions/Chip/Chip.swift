@@ -16,5 +16,5 @@ import Foundation
 /// - 필터링 기능을 위한 필터 칩 (Filter)
 /// - 액션 실행을 위한 액션 칩 (Action)
 ///
-/// - SeeAlso: ``Chip.Filter``, ``Chip.Action``
+/// - SeeAlso: ``Filter``, ``Action``
 public enum Chip {}

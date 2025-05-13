@@ -371,6 +371,7 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
+    ///   - resize: 모달 크기 설정
     ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
     ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
     ///   - content: 모달에 표시할 콘텐츠 클로저
