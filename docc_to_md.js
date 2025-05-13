@@ -2,6 +2,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 const TurndownService = require('turndown');
+const BASE_URL = 'https://montage-ios-docc.netlify.app';
 
 
 async function extractAndConvertToMarkdown(baseUrl) {
@@ -53,8 +54,8 @@ async function extractAndConvertToMarkdown(baseUrl) {
               // 외부 http 링크는 그대로 두거나, 특정 도메인만 내부 링크로 처리할 수 있음.
               // 여기서는 일단 외부링크로 간주하고 그대로 둠.
               // 만약 netlify 링크를 내부화하려면 여기서 추가 처리
-              if (pathSegment.startsWith('https://montage-ios-docc.netlify.app')) {
-                let internalPath = pathSegment.replace('https://montage-ios-docc.netlify.app', '');
+              if (pathSegment.startsWith(BASE_URL)) {
+                let internalPath = pathSegment.replace(BASE_URL, '');
                 // 여기서 다시 normalizeMdPathInternal을 재귀적으로 호출하면 순환에 빠질 수 있으므로 주의
                 // 여기서는 상대경로화된 부분에 대해서만 .md 처리를 시도한다.
                 if (internalPath.endsWith('.md') || internalPath.includes('?') || internalPath.includes('#')) {
@@ -333,7 +334,7 @@ async function extractAndConvertToMarkdown(baseUrl) {
         for (const link of linksToFollow) {
           if (!visitedUrls.has(link) && !queue.includes(link)) {
             if (link.includes('view-implementations')) {
-              queue.push('https://montage-ios-docc.netlify.app/documentation/montage/swiftuicore/view.md');
+              queue.push(`${BASE_URL}/documentation/montage/swiftuicore/view.md`);
             } else {
               queue.push(link);
             }
@@ -357,7 +358,7 @@ async function extractAndConvertToMarkdown(baseUrl) {
     try {
       // turndown 패키지가 설치되어 있는지 확인
       require.resolve('turndown');
-      const baseUrl = 'https://montage-ios-docc.netlify.app/documentation/montage/';
+      const baseUrl = `${BASE_URL}/documentation/montage/`;
       await extractAndConvertToMarkdown(baseUrl);
     } catch (e) {
       console.error('turndown이 설치되어 있지 않습니다. 먼저 설치해주세요:');
