@@ -4,6 +4,11 @@ const fs = require('fs');
 const TurndownService = require('turndown');
 const BASE_URL = 'https://montage-ios-docc.netlify.app';
 
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+const dateStr = `${yyyy}-${mm}-${dd}`;
 
 async function extractAndConvertToMarkdown(baseUrl) {
   const browser = await chromium.launch();
@@ -312,7 +317,31 @@ async function extractAndConvertToMarkdown(baseUrl) {
           return cleanedContent;
         });
 
-        fs.writeFileSync(savePath, finalMarkdown);
+        // 마크다운 저장 직전
+        const fileName = path.basename(savePath, '.md');
+        let yamlHeader = '';
+        let markdownBody = finalMarkdown;
+
+        if (fs.existsSync(savePath)) {
+          const oldContent = fs.readFileSync(savePath, 'utf-8');
+          const yamlMatch = oldContent.match(/^---[\s\S]*?---/);
+          if (yamlMatch) {
+            // 기존 헤더가 있으면 그대로 사용, updatedAt만 추가
+            let oldHeader = yamlMatch[0];
+            // updatedAt이 이미 있으면 제거
+            oldHeader = oldHeader.replace(/updatedAt:.*\n?/, '');
+            yamlHeader = oldHeader.replace(/\n*---\s*$/, '') + `\nupdatedAt: ${dateStr}\n---\n\n`;
+            markdownBody = oldContent.replace(/^---[\s\S]*?---\s*/, '') || finalMarkdown;
+          } else {
+            // 헤더가 없으면 새로 생성
+            yamlHeader = `---\n1title: ${fileName}\ndescription: \nimage: \ncreatedAt: ${dateStr}\n---\n\n`;
+          }
+        } else {
+          // 파일이 없으면 새로 생성
+          yamlHeader = `---\n2title: ${fileName}\ndescription: \nimage: \ncreatedAt: ${dateStr}\n---\n\n`;
+        }
+
+        fs.writeFileSync(savePath, yamlHeader + markdownBody);
         console.log(`마크다운 저장 완료: ${savePath}`);
 
         const linksToFollow = await page.evaluate(() => {

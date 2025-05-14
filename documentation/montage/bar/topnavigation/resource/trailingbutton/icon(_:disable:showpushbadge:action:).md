@@ -1,3 +1,11 @@
+---
+1title: icon(_:disable:showpushbadge:action:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # Bar.TopNavigation.Resource.TrailingButton.icon(_:disable:showPushBadge:action:) 

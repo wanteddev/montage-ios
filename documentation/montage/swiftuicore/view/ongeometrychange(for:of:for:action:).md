@@ -1,3 +1,11 @@
+---
+1title: ongeometrychange(for:of:for:action:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # onGeometryChange(for:of:for:action:) 

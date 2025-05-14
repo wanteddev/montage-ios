@@ -1,3 +1,11 @@
+---
+1title: text(alignment:lengths:cornerradius:linenumber:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # Skeleton.Kind.text(alignment:lengths:cornerRadius:lineNumber:) 

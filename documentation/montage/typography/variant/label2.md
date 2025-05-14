@@ -1,3 +1,10 @@
+---
+1title: label2
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Case
 
 # Typography.Variant.label2 

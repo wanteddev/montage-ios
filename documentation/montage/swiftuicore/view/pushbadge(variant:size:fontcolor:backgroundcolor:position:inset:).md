@@ -1,3 +1,11 @@
+---
+1title: pushbadge(variant:size:fontcolor:backgroundcolor:position:inset:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # pushBadge(variant:size:fontColor:backgroundColor:position:inset:) 

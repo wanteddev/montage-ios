@@ -1,3 +1,11 @@
+---
+1title: init(numberofsections:sectiontitleat:numberofitemsinsection:cellforitemat:headerview:footerview:maxheight:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(numberOfSections:sectionTitleAt:numberOfItemsInSection:cellForItemAt:headerView:footerView:maxHeight:) 

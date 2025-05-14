@@ -1,3 +1,11 @@
+---
+1title: init(axis:scrollviewsize:contentsize:contentoffset:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(axis:scrollViewSize:contentSize:contentOffset:) 

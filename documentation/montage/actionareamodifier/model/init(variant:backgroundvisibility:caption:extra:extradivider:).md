@@ -1,3 +1,10 @@
+---
+1title: init(variant:backgroundvisibility:caption:extra:extradivider:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Initializer
 
 # init(variant:backgroundVisibility:caption:extra:extraDivider:) 

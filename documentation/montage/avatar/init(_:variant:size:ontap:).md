@@ -1,3 +1,11 @@
+---
+1title: init(_:variant:size:ontap:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(_:variant:size:onTap:) 

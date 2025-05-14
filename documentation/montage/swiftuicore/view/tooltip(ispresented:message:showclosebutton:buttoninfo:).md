@@ -1,3 +1,11 @@
+---
+1title: tooltip(ispresented:message:showclosebutton:buttoninfo:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # tooltip(isPresented:message:showCloseButton:buttonInfo:) 

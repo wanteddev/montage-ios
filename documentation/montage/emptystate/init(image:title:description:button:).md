@@ -1,3 +1,11 @@
+---
+1title: init(image:title:description:button:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(image:title:description:button:) 

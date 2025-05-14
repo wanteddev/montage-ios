@@ -1,3 +1,11 @@
+---
+1title: init(text:icon:isnegative:isselected:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(text:icon:isNegative:isSelected:) 

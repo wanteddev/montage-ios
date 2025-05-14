@@ -1,3 +1,11 @@
+---
+1title: icon(_:tintcolor:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # TextInput.TextArea.Resource.icon(_:tintColor:) 

@@ -1,3 +1,10 @@
+---
+1title: display1
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Case
 
 # Typography.Variant.display1 

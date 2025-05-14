@@ -1,3 +1,11 @@
+---
+1title: init(variant:title:scrolloffset:backgroundcolorresolvable:leadingbutton:trailingbuttons:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(variant:title:scrollOffset:backgroundColorResolvable:leadingButton:trailingButtons:) 

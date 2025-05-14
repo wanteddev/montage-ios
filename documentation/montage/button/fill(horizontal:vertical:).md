@@ -1,3 +1,11 @@
+---
+1title: fill(horizontal:vertical:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # fill(horizontal:vertical:) 

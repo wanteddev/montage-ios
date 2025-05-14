@@ -1,3 +1,11 @@
+---
+1title: init(variant:size:fontcolor:backgroundcolor:position:inset:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(variant:size:fontColor:backgroundColor:position:inset:) 

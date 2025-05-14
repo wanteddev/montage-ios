@@ -1,3 +1,11 @@
+---
+1title: init(title:description:content:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(title:description:content:) 

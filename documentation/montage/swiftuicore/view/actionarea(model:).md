@@ -1,3 +1,11 @@
+---
+1title: actionarea(model:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # actionArea(model:) 

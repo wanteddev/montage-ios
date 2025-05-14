@@ -1,3 +1,10 @@
+---
+1title: offset(_:)-3u44b
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # offset(_:) 

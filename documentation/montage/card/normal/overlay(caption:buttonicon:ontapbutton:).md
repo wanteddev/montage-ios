@@ -1,3 +1,11 @@
+---
+1title: overlay(caption:buttonicon:ontapbutton:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # overlay(caption:buttonIcon:onTapButton:) 

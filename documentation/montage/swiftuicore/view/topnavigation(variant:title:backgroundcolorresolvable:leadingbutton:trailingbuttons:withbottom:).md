@@ -1,3 +1,11 @@
+---
+1title: topnavigation(variant:title:backgroundcolorresolvable:leadingbutton:trailingbuttons:withbottom:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # topNavigation(variant:title:backgroundColorResolvable:leadingButton:trailingButtons:withBottom:) 

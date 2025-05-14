@@ -1,3 +1,11 @@
+---
+1title: fullmodal(ispresented:ignoresedgeinsets:actionareamodel:_:navigation:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # fullModal(isPresented:ignoresEdgeInsets:actionAreaModel:_:navigation:) 

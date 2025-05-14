@@ -1,3 +1,11 @@
+---
+1title: state
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Enumeration
 
 # Decorate.Interaction.State 

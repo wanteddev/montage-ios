@@ -1,3 +1,11 @@
+---
+1title: tight(_:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # tight(_:) 

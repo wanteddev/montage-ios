@@ -1,3 +1,11 @@
+---
+1title: solid(variant:size:text:leadingicon:trailingicon:handler:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Type Method
 
 # solid(variant:size:text:leadingIcon:trailingIcon:handler:) 

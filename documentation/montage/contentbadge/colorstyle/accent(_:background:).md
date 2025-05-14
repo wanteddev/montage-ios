@@ -1,3 +1,11 @@
+---
+1title: accent(_:background:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # ContentBadge.ColorStyle.accent(_:background:) 

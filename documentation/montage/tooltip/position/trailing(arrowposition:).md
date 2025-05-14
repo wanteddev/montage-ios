@@ -1,3 +1,11 @@
+---
+1title: trailing(arrowposition:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # Tooltip.Position.trailing(arrowPosition:) 

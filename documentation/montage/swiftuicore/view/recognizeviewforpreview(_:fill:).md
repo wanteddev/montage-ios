@@ -1,3 +1,11 @@
+---
+1title: recognizeviewforpreview(_:fill:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # recognizeViewForPreview(_:fill:) 

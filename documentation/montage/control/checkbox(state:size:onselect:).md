@@ -1,3 +1,11 @@
+---
+1title: checkbox(state:size:onselect:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Type Method
 
 # checkbox(state:size:onSelect:) 

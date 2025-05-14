@@ -1,3 +1,10 @@
+---
+1title: fill(_:style:)-4004a
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # fill(_:style:) 

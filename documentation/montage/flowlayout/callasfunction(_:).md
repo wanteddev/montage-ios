@@ -1,3 +1,10 @@
+---
+1title: callasfunction(_:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # callAsFunction(_:) 

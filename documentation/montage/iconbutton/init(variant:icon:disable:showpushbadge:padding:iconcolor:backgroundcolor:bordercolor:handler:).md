@@ -1,3 +1,11 @@
+---
+1title: init(variant:icon:disable:showpushbadge:padding:iconcolor:backgroundcolor:bordercolor:handler:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(variant:icon:disable:showPushBadge:padding:iconColor:backgroundColor:borderColor:handler:) 

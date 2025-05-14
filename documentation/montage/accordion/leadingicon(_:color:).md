@@ -1,3 +1,11 @@
+---
+1title: leadingicon(_:color:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # leadingIcon(_:color:) 

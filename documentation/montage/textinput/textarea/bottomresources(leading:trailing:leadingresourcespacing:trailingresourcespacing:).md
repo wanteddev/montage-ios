@@ -1,3 +1,11 @@
+---
+1title: bottomresources(leading:trailing:leadingresourcespacing:trailingresourcespacing:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:) 

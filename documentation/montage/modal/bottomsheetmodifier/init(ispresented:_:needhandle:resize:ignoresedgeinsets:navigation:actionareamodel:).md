@@ -1,3 +1,11 @@
+---
+1title: init(ispresented:_:needhandle:resize:ignoresedgeinsets:navigation:actionareamodel:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(isPresented:_:needHandle:resize:ignoresEdgeInsets:navigation:actionAreaModel:) 

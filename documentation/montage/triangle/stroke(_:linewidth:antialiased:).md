@@ -1,3 +1,10 @@
+---
+1title: stroke(_:linewidth:antialiased:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # stroke(_:lineWidth:antialiased:) 

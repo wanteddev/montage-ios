@@ -1,3 +1,11 @@
+---
+1title: printvalue(_:_:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # printValue(_:_:) 

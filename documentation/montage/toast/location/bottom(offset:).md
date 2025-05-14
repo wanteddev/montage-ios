@@ -1,3 +1,11 @@
+---
+1title: bottom(offset:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # Toast.Location.bottom(offset:) 

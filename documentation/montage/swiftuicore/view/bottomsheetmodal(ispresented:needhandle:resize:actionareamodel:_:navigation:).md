@@ -1,3 +1,11 @@
+---
+1title: bottomsheetmodal(ispresented:needhandle:resize:actionareamodel:_:navigation:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # bottomSheetModal(isPresented:needHandle:resize:actionAreaModel:_:navigation:) 

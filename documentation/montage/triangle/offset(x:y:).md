@@ -1,3 +1,10 @@
+---
+1title: offset(x:y:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # offset(x:y:) 

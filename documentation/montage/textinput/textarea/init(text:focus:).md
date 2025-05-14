@@ -1,3 +1,11 @@
+---
+1title: init(text:focus:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(text:focus:) 

@@ -1,3 +1,11 @@
+---
+1title: outlined(variant:size:text:leadingicon:trailingicon:handler:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Type Method
 
 # outlined(variant:size:text:leadingIcon:trailingIcon:handler:) 

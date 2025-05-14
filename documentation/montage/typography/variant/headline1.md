@@ -1,3 +1,10 @@
+---
+1title: headline1
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Case
 
 # Typography.Variant.headline1 

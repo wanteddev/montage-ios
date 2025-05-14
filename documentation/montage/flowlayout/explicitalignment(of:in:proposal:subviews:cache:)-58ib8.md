@@ -1,3 +1,10 @@
+---
+1title: explicitalignment(of:in:proposal:subviews:cache:)-58ib8
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # explicitAlignment(of:in:proposal:subviews:cache:) 

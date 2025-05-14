@@ -1,3 +1,10 @@
+---
+1title: union(_:eofill:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # union(_:eoFill:) 

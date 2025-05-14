@@ -1,3 +1,10 @@
+---
+1title: init(scrollyoffset:refresh:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Initializer
 
 # init(scrollYOffset:refresh:) 

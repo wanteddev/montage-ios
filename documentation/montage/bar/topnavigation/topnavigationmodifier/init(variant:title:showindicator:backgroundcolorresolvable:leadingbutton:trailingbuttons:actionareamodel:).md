@@ -1,3 +1,11 @@
+---
+1title: init(variant:title:showindicator:backgroundcolorresolvable:leadingbutton:trailingbuttons:actionareamodel:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Initializer
 
 # init(variant:title:showIndicator:backgroundColorResolvable:leadingButton:trailingButtons:actionAreaModel:) 

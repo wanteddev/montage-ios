@@ -1,3 +1,10 @@
+---
+1title: circular
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Case
 
 # Loading.Kind.circular 

@@ -1,3 +1,10 @@
+---
+1title: scale(_:anchor:)
+description: 
+image: 
+createdAt: 2025-05-13
+---
+
 Instance Method
 
 # scale(_:anchor:) 

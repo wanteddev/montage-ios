@@ -1,3 +1,11 @@
+---
+1title: skeleton(ispresented:kind:color:opacity:size:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Instance Method
 
 # skeleton(isPresented:kind:color:opacity:size:) 

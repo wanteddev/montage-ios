@@ -1,3 +1,11 @@
+---
+1title: charactercount(limit:overflow:)
+description: 
+image: 
+createdAt: 2025-05-13
+updatedAt: 2025-05-13
+---
+
 Case
 
 # TextInput.TextArea.Resource.characterCount(limit:overflow:) 
