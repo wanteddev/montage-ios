@@ -121,7 +121,7 @@ struct CellPreview: View {
                 }
                 HStack {
                     Text("Highlight Text")
-                    TextInput.TextField(text: $highlightText)
+                    TextField(text: $highlightText)
                         .placeholder("강조할 텍스트를 입력하세요")
                 }
                 Spacer(minLength: 0)

@@ -97,7 +97,7 @@ public struct SkeletonPreview: View {
                     case .text:
                         HStack {
                             Text("text")
-                            TextInput.TextField(text: $text)
+                            TextField(text: $text)
                         }
                         HStack {
                             Text("align")

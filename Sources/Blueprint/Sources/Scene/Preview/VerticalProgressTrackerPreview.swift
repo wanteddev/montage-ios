@@ -45,7 +45,7 @@ struct VerticalProgressTrackerPreview: View {
                         },
                         contentView: {
                             isContentExist
-                            ? AnyView(TextInput.TextArea(text: .constant("테스트 텍스트입니다.")))
+                            ? AnyView(TextArea(text: .constant("테스트 텍스트입니다.")))
                             : AnyView(EmptyView())
                         }
                     ),

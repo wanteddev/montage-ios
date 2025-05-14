@@ -16,7 +16,7 @@ struct CounterPaginationPreview: View {
     
     let images = ["none", "wantedCircleSymbol", "Background", "placeholder"]
     
-    private let sizes: [Pagination.Counter.Size] = [
+    private let sizes: [CounterPagination.Size] = [
         .small,
         .medium
     ]
@@ -30,7 +30,7 @@ struct CounterPaginationPreview: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 400)
-                    Pagination.Counter(selectedPage: $selectedPage, totalPages: 10)
+                    CounterPagination(selectedPage: $selectedPage, totalPages: 10)
                         .size(sizes[sizeIndex])
                         .alternative(isAlternative)
                 }
@@ -69,7 +69,7 @@ struct CounterPaginationPreview: View {
     }
 }
 
-extension Pagination.Counter.Size: CaseDescribable {}
+extension CounterPagination.Size: CaseDescribable {}
 
 #Preview {
     CounterPaginationPreview()

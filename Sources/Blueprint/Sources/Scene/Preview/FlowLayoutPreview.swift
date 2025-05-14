@@ -24,7 +24,7 @@ struct FlowLayoutPreview: View {
                         
                         FlowLayout(spacing: spacing, lineSpacing: lineSpacing) {
                             ForEach(0 ..< Int(itemCount), id: \.self) { i in
-                                Chip.Action(text: "\(i+1)")
+                                ActionChip(text: "\(i+1)")
                                     .backgroundColor(.accentColor)
                                     .fontColor(.white)
                             }

@@ -222,11 +222,11 @@ private extension Category {
         let onTap: () -> Void
 
         var body: some View {
-            Chip.Action(variant: chipVariant, size: chipSize, text: title, handler: onTap)
+            ActionChip(variant: chipVariant, size: chipSize, text: title, handler: onTap)
                 .active(isSelected)
         }
         
-        var chipVariant: Chip.Action.Variant {
+        var chipVariant: ActionChip.Variant {
             if variant == .normal && isSelected {
                 .solid
             } else {
@@ -234,7 +234,7 @@ private extension Category {
             }
         }
         
-        var chipSize: Chip.Action.Size {
+        var chipSize: ActionChip.Size {
             switch size {
             case .small: .xsmall
             case .medium: .small

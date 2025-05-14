@@ -106,7 +106,7 @@ struct FullModalPreivew: View {
             },
             navigation: navigation
             ? {
-                Modal.Navigation(title: "제목")
+                ModalNavigation(title: "제목")
                     .variant(navigationVariants[navVariantIndex])
                     .leadingButton(.back(action: {}))
                     .trailingButtons([
@@ -151,7 +151,7 @@ struct FullModalPreivew: View {
         }
     }
     
-    private let navigationVariants: [Modal.Navigation.Variant] = [
+    private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
         .extended,
         .emphasized,

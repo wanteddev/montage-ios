@@ -106,7 +106,7 @@ public struct InputPreview: View {
                 }
                 HStack {
                     Text("text")
-                    TextInput.TextField(text: $text)
+                    TextField(text: $text)
                 }
                 HStack {
                     Text("custom title typography")

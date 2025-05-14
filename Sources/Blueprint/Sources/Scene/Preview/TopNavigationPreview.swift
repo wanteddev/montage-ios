@@ -58,7 +58,7 @@ struct TopNavigationPreview: View {
     @State var actionAreaExtra = false
     
     
-    private var v: Bar.TopNavigation.Variant {
+    private var v: TopNavigation.Variant {
         switch variant {
         case .normal: return .normal
         case .extended: return .extended
@@ -66,7 +66,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var leadingButton: Bar.TopNavigation.Resource.LeadingButton {
+    private var leadingButton: TopNavigation.Resource.LeadingButton {
         switch leading {
         case .back: return .back(action: { presentationMode.wrappedValue.dismiss() })
         case .icon: return .icon(.arrowLeft, action: { presentationMode.wrappedValue.dismiss()})
@@ -74,7 +74,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var trailingButton: [Bar.TopNavigation.Resource.TrailingButton] {
+    private var trailingButton: [TopNavigation.Resource.TrailingButton] {
         return trailing.map {
             switch $0 {
             case .icon: return .icon(.bell, disable: trailingButtonDisable, action: { closure() })

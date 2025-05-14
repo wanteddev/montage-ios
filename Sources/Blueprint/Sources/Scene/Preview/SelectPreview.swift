@@ -50,7 +50,7 @@ struct SelectPreview: View {
         ]
     }
     
-    private let bottomSheetResizes: [Modal.BottomSheet.Resize] = [
+    private let bottomSheetResizes: [BottomSheetModal.Resize] = [
         .hug,
         .fixedRatio(0.6),
         .fixedHeight(200),
@@ -148,7 +148,7 @@ struct SelectPreview: View {
                     if menuActionArea {
                         HStack {
                             Text("menuButtonTitle")
-                            TextInput.TextField(text: $menuButtonTitle)
+                            TextField(text: $menuButtonTitle)
                         }
                     }
                 case .multiple:
@@ -164,7 +164,7 @@ struct SelectPreview: View {
                     }
                     HStack {
                         Text("menuButtonTitle")
-                        TextInput.TextField(text: $menuButtonTitle)
+                        TextField(text: $menuButtonTitle)
                     }
                 }
                 HStack {

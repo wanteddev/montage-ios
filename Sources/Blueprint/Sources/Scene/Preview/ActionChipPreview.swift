@@ -2,8 +2,8 @@ import SwiftUI
 import Montage
 
 struct ActionChipPreview: View {
-    @State private var variant: Chip.Action.Variant = .solid
-    @State private var size: Chip.Action.Size = .medium
+    @State private var variant: ActionChip.Variant = .solid
+    @State private var size: ActionChip.Size = .medium
     @State private var text = "텍스트"
     @State private var disable = false
     @State private var active = false
@@ -19,7 +19,7 @@ struct ActionChipPreview: View {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
                 
-                Chip.Action(
+                ActionChip(
                     variant: variant,
                     size: size,
                     text: text
@@ -112,7 +112,7 @@ struct ActionChipPreview: View {
                 
                 HStack {
                     Text("Text")
-                    TextInput.TextField(text: $text)
+                    TextField(text: $text)
                         .placeholder("텍스트를 입력하세요")
                 }
                 

@@ -40,7 +40,7 @@ struct ModalNavigationPreview: View {
             )
             
             VStack(spacing: 0) {
-                Modal.Navigation(
+                ModalNavigation(
                     title: "제목",
                     scrollOffset: $contentOffset
                 )
@@ -86,11 +86,11 @@ struct ModalNavigationPreview: View {
         .navigationBarHidden(true)
     }
     
-    private var variants: [Modal.Navigation.Variant] {
+    private var variants: [ModalNavigation.Variant] {
         [.normal, .extended, .emphasized, .floating(alternative: alternative, background: background)]
     }
     
-    private var leadingButtons: [Bar.TopNavigation.Resource.LeadingButton] {
+    private var leadingButtons: [TopNavigation.Resource.LeadingButton] {
         [
             .back(action: {
                 presentationMode.wrappedValue.dismiss()
@@ -102,7 +102,7 @@ struct ModalNavigationPreview: View {
         ]
     }
     
-    private let actions: [Bar.TopNavigation.Resource.TrailingButton] = {
+    private let actions: [TopNavigation.Resource.TrailingButton] = {
         [
             .icon(.close, action: {}),
             .icon(.download, showPushBadge: true, action: {}),
@@ -111,9 +111,9 @@ struct ModalNavigationPreview: View {
     }()
 }
 
-extension Modal.Navigation.Variant: CaseDescribable {}
-extension Bar.TopNavigation.Resource.LeadingButton: CaseDescribable {}
-extension Bar.TopNavigation.Resource.TrailingButton: CaseDescribable {}
+extension ModalNavigation.Variant: CaseDescribable {}
+extension TopNavigation.Resource.LeadingButton: CaseDescribable {}
+extension TopNavigation.Resource.TrailingButton: CaseDescribable {}
 
 #Preview {
     ModalNavigationPreview()

@@ -82,7 +82,7 @@ extension Button {
         ///
         /// 버튼의 현재 상호작용 상태를 나타냅니다.
         /// 기본값은 `.normal`입니다.
-        public var state: Decorate.Interaction.State = .normal {
+        public var state: Interaction.State = .normal {
             didSet {
                 updateViews()
             }
@@ -192,7 +192,7 @@ extension Button {
         
         private lazy var uniqueIconView = UIImageView()
         
-        private lazy var interaction = Decorate.InteractionUIView()
+        private lazy var interaction = InteractionUIView()
         
         private var longPressRecognizer: UILongPressGestureRecognizer?
         private var panRecognizer: UIPanGestureRecognizer?
@@ -550,7 +550,7 @@ extension Button.OutlinedUIButton.Variant {
         }
     }
     
-    var interactionVariant: Decorate.Interaction.Variant {
+    var interactionVariant: Interaction.Variant {
         switch self {
         case .primary:
             .normal

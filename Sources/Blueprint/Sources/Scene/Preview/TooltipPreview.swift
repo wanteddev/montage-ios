@@ -264,7 +264,7 @@ struct TooltipPreview: View {
                 if showButton {
                     HStack {
                         Text("Button Text")
-                        TextInput.TextField(text: $buttonText)
+                        TextField(text: $buttonText)
                             .placeholder("버튼 텍스트")
                     }
                 }

@@ -529,7 +529,7 @@ public struct Button: View {
                 .strokeBorder(borderColor)
         }
         .background {
-            Decorate.Interaction(
+            Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: interactionVariant,
                 color: interactionColor
@@ -720,7 +720,7 @@ private extension Button {
         }
     }
     
-    var interactionVariant: Decorate.Interaction.Variant {
+    var interactionVariant: Interaction.Variant {
         switch variant {
         case .primary: style == .solid ? .strong : .normal
         case .secondary, .assistive: style == .solid ? .normal : .light

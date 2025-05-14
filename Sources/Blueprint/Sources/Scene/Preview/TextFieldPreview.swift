@@ -21,7 +21,7 @@ struct TextFieldPreview: View {
             self.rawValue.capitalized
         }
         
-        var v: TextInput.TextField.Status {
+        var v: Montage.TextField.Status {
             switch self {
             case .normal: .normal(description: "메세지에 마침표를 찍어요.")
             case .positive: .positive(description: "성공 메세지를 나타내요.")
@@ -95,7 +95,7 @@ struct TextFieldPreview: View {
     @State private var trailingButton: Bool = false
     @State private var trailingContent: Content = .none
     @State private var usingSuggestions: Bool = false
-    @State private var autoCompletionDataSource: TextInput.TextField.AutoCompletionDataSource? = nil
+    @State private var autoCompletionDataSource: Montage.TextField.AutoCompletionDataSource? = nil
     
     let candidates: [String] = [
         "aaa1", "bbb1", "ccc1", "ddd1", "eee1", "fff1", "ggg1", "hhh1", "iii1", "jjj1", "kkk1",
@@ -109,7 +109,7 @@ struct TextFieldPreview: View {
                     Text("Preview").bold()
                     Spacer()
                 }
-                TextInput.TextField(
+                TextField(
                     text: $text,
                     autoCompletionDataSource: $autoCompletionDataSource
                 )
@@ -120,7 +120,7 @@ struct TextFieldPreview: View {
                 .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
                 .icon(icon ? .verifiedCheckFill : nil)
                 .trailingButton(
-                    trailingButton ? TextInput.TextField.TrailingButton(
+                    trailingButton ? TextField.TrailingButton(
                         variant: .primary,
                         title: "텍스트",
                         handler: { print("trailing button tapped") }

@@ -136,7 +136,7 @@ public struct Tab: View {
                                         })
                                     }
                                 }
-                                Divider()
+                                SwiftUI.Divider()
                                     .frame(width: itemWidths[safe: selectedIndex] ?? 0, height: 2)
                                     .background(SwiftUI.Color.semantic(.labelStrong))
                                     .offset(

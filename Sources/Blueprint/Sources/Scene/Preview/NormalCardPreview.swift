@@ -32,7 +32,7 @@ struct NormalCardPreview: View {
                 
                 HStack(spacing: 0) {
                     Spacer(minLength: 0)
-                    Card.Normal(
+                    NormalCard(
                         thumbnail: {
                             Thumbnail(urlString: invalidImageUrl ? "https://invalid-url" : imageUrl, ratio: .r4x3)
                                 .width(thumbnailWidth)

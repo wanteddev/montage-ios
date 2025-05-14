@@ -205,7 +205,7 @@ struct ActionAreaPreview: View {
                         Color.clear
                         VStack {
                             ForEach(0..<30, id: \.self) {
-                                TextInput.TextField(text: .constant("Item \($0)"))
+                                TextField(text: .constant("Item \($0)"))
                             }
                         }
                         .padding(.bottom, contentBottomPadding ? 30 : 0)

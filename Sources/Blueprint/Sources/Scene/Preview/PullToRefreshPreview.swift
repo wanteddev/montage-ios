@@ -43,7 +43,7 @@ struct PullToRefreshPreview: View {
             }
             HStack {
                 Text("리프레시 시간")
-                TextInput.TextField(text: $seconds)
+                TextField(text: $seconds)
                     .focused($inputFieldFocused)
                 Text("초")
             }

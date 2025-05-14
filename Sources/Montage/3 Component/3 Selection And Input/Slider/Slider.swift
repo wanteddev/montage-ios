@@ -246,7 +246,7 @@ public struct Slider: View {
     }
     
     private var headingLabel: String {
-        "\(labelFormat(lowValue) ?? "") ~ \(labelFormat(highValue) ?? "")"
+        "\(labelFormat(lowValue)) ~ \(labelFormat(highValue))"
     }
     
     private var lowThumbRatio: CGFloat {
@@ -316,7 +316,7 @@ public struct Slider: View {
                     )
                     .contentShape(Rectangle())
                     .background {
-                        Decorate.Interaction(
+                        Interaction(
                             state: isDragging ? .pressed : .normal,
                             variant: .strong,
                             color: .primaryNormal

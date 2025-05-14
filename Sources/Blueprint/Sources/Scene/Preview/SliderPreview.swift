@@ -51,7 +51,7 @@ struct SliderPreview: View {
                 }
                 HStack {
                     Text("unit")
-                    TextInput.TextField(text: $unit)
+                    TextField(text: $unit)
                 }
                 HStack {
                     Text("heading")

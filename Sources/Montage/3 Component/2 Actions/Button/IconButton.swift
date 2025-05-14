@@ -195,7 +195,7 @@ public struct IconButton: View {
                 $0.pushBadge()
             }
             .background {
-                Decorate.Interaction(
+                Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: variant.interactionVariant,
                     color: variant.interactionColor
@@ -342,7 +342,7 @@ extension IconButton.Variant {
         .labelNormal
     }
     
-    var interactionVariant: Decorate.Interaction.Variant {
+    var interactionVariant: Interaction.Variant {
         switch self {
         case .normal, .outlined: .light
         case .background(_, let isAlternative):

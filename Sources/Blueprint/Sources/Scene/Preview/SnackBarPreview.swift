@@ -30,8 +30,8 @@ struct SnackBarPreview: View {
             }
             VStack(spacing: 25) {
                 VStack {
-                    TextInput.TextField(text: $heading)
-                    TextInput.TextField(text: $description)
+                    TextField(text: $heading)
+                    TextField(text: $description)
                     Toggle(isOn: $showExtraContents) {
                         Text("extral contents(icon)")
                             .montage(semantic: .labelAssistive)

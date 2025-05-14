@@ -31,7 +31,7 @@ struct SectionHeaderPreview: View {
                 }
                 SectionHeader(title: title)
                     .headingContent(headingContent ? {
-                        Chip.Filter(variant: .outlined, size : .small, text: "텍스트")
+                        FilterChip(variant: .outlined, size : .small, text: "텍스트")
                     } : nil)
                     .trailingContent(trailingContent ? { ContentBadge(text: "텍스트") } : nil)
                     .size(sizes[sizeIndex])
@@ -50,7 +50,7 @@ struct SectionHeaderPreview: View {
                 }
                 HStack {
                     Text("text")
-                    TextInput.TextField(text: $title)
+                    TextField(text: $title)
                 }
                 HStack {
                     Text("titleColor")

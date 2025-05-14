@@ -20,7 +20,7 @@ struct TextAreaPreview: View {
             self.rawValue.capitalized
         }
         
-        var r: TextInput.TextArea.Resize {
+        var r: TextArea.Resize {
             switch self {
             case .normal: .normal
             case .limit: .limit
@@ -29,7 +29,7 @@ struct TextAreaPreview: View {
         }
     }
     
-    var resources: [TextInput.TextArea.Resource?] {
+    var resources: [TextArea.Resource?] {
         [
             .none,
             .characterCount(limit: Int(limit), overflow: overflow),
@@ -77,7 +77,7 @@ struct TextAreaPreview: View {
                     Text("Preview").bold()
                     Spacer()
                 }
-                TextInput.TextArea(text: $text, focus: $focusState)
+                TextArea(text: $text, focus: $focusState)
                     .resize(resize.r)
                     .negative(negative)
                     .disable(disable)
@@ -218,7 +218,7 @@ struct TextAreaPreview: View {
     }
 }
 
-extension TextInput.TextArea.Resource {
+extension TextArea.Resource {
     var isCharacterCount: Bool {
         if case .characterCount = self {
             return true
@@ -228,7 +228,7 @@ extension TextInput.TextArea.Resource {
     }
 }
 
-extension TextInput.TextArea.Resource: CaseDescribable {}
+extension TextArea.Resource: CaseDescribable {}
 
 #Preview {
     TextAreaPreview()

@@ -155,7 +155,7 @@ public struct Avatar: View {
         .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
         .background {
             if !interactionDisabled {
-                Decorate.Interaction(
+                Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: .normal,
                     color: .labelNormal

@@ -28,7 +28,7 @@ struct ListCardPreview: View {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
                 
-                Card.List(
+                ListCard(
                     thumbnail: {
                         Thumbnail(urlString: invalidImageUrl ? "https://invalid-url" : imageUrl, ratio: .r4x3)
                             .width(thumbnailWidth)

@@ -146,7 +146,7 @@ public struct Select: View {
     private var description = ""
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leadingContent: LeadingContent?
-    private var menuResize: Modal.BottomSheet.Resize = .hug
+    private var menuResize: BottomSheetModal.Resize = .hug
     
     /// negative 상태 여부를 조정합니다.
     /// - Parameter negative: 부정적 상태 여부 (기본값: true)
@@ -223,7 +223,7 @@ public struct Select: View {
     /// 메뉴의 높이 detent를 지정합니다.
     /// - Parameter menuResize: 메뉴 크기 조정 방식
     /// - Returns: 수정된 Select 인스턴스
-    public func menuResize(_ menuResize: Modal.BottomSheet.Resize) -> Self {
+    public func menuResize(_ menuResize: BottomSheetModal.Resize) -> Self {
         var zelf = self
         zelf.menuResize = menuResize
         return zelf
@@ -548,7 +548,7 @@ public struct Select: View {
         var body: some View {
             ForEach(items.indices, id: \.self) { index in
                 let item = items[index]
-                Montage.Chip.Action(
+                Montage.ActionChip(
                     variant: .solid,
                     size: .xsmall,
                     text: item.text

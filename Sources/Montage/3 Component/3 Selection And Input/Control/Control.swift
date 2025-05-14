@@ -238,7 +238,7 @@ public struct Control: View {
         }
         .frame(width: containerSize.width, height: containerSize.height)
         .background {
-            Decorate.Interaction(
+            Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: .normal,
                 color: .labelNormal

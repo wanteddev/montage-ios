@@ -23,7 +23,7 @@ struct CellInteractionModifier: ViewModifier {
         content
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { labelSize = $0 })
             .background(
-                Decorate.Interaction(
+                Interaction(
                     state: pressed ? .pressed : .normal,
                     variant: .light,
                     color: .labelNormal

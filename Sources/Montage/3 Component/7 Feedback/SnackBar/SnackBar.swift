@@ -205,7 +205,7 @@ public struct SnackBar: View {
     
     private struct Action: View {
         @State private var isPressed = false
-        @State private var interaction: Decorate.Interaction.State = .normal
+        @State private var interaction: Interaction.State = .normal
         
         private let action: String
         private let handler: (() -> Void)?
@@ -220,7 +220,7 @@ public struct SnackBar: View {
                 .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
                 .paragraph(variant: .body2)
                 .background(
-                    Decorate.Interaction(
+                    Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
                         color: .backgroundNormal
