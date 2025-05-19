@@ -5,34 +5,8 @@
 //  Created by Eunyeong Kim on 2021/04/20.
 //
 import Foundation
-import SwiftUI
-import UIKit
 
-/// Montage 디자인 시스템의 아이콘 세트
-///
-/// Icon은 Montage 디자인 시스템에서 사용 가능한 모든 아이콘을 정의합니다.
-/// 각 아이콘은 전체 앱에서 일관된 방식으로 시각적 요소를 표현하기 위해 
-/// 사용됩니다. 아이콘은 크기 및 색상을 조정할 수 있습니다.
-///
-/// **사용 예시**:
-/// ```swift
-/// // UIKit에서 사용
-/// let imageView = UIImageView()
-/// imageView.image = UIImage.montage(.home)
-///
-/// // SwiftUI에서 사용
-/// Image.montage(.heart)
-///     .foregroundColor(.red)
-///     .frame(width: 24, height: 24)
-///
-/// // 버튼에 아이콘 사용
-/// Button(action: {}) {
-///     Image.montage(.download)
-/// }
-/// ```
-///
-/// - Note: Fill로 끝나는 아이콘 이름은 채워진 스타일의 아이콘을 나타냅니다.
-/// 동일한 아이콘의 윤곽선 버전과 채워진 버전이 모두 제공되는 경우가 많습니다.
+/// Montage 번들 내에 포함된 아이콘들의 이름들입니다.
 public enum Icon: String, CaseIterable {
     case alignCenter
     case alignJustify
@@ -188,6 +162,7 @@ public enum Icon: String, CaseIterable {
     case folderStarFill
     case full
     case globe
+    case globeFill
     case graduation
     case graduationFill
     case handle
@@ -269,6 +244,8 @@ public enum Icon: String, CaseIterable {
     case navigationMypage
     case navigationRecruit
     case navigationSocial
+    case palette
+    case paletteFill
     case pause
     case pencil
     case pencilFill
@@ -308,6 +285,7 @@ public enum Icon: String, CaseIterable {
     case squareHangul
     case squareKana
     case squareLatin
+    case squareLatinFill
     case squareMore
     case squarePlay
     case squarePlus
@@ -339,6 +317,8 @@ public enum Icon: String, CaseIterable {
     case umbrellaFill
     case underline
     case upload
+    case utility
+    case utilityFill
     case verifiedCheck
     case verifiedCheckFill
     case verifiedStar
@@ -346,29 +326,8 @@ public enum Icon: String, CaseIterable {
     case video
     case webinar
     case write
+    case zepFast
+    case zepFastFill
 
-    /// 아이콘의 리소스 이름을 반환합니다.
     public var name: String { rawValue }
-}
-
-// MARK: - UIKit Extensions
-extension UIImage {
-    /// Montage 디자인 시스템의 아이콘을 생성합니다.
-    ///
-    /// - Parameter type: 생성할 아이콘 타입
-    /// - Returns: 생성된 UIImage 인스턴스
-    public static func montage(_ type: Icon) -> UIImage {
-        load(name: type.name)
-    }
-}
-
-// MARK: - SwiftUI Extensions
-extension Image {
-    /// Montage 디자인 시스템의 아이콘을 생성합니다.
-    ///
-    /// - Parameter type: 생성할 아이콘 타입
-    /// - Returns: 생성된 Image 인스턴스
-    public static func montage(_ type: Icon) -> Image {
-        load(name: type.name)
-    }
 }
