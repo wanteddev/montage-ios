@@ -13,7 +13,6 @@ import SwiftUI
 /// 일반, 긍정, 주의, 부정적인 상태로 표시할 수 있으며,
 /// 설정된 시간이 지나면 자동으로 사라집니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 토스트 메시지 표시
 /// @State private var toastModel: Toast.Model?
@@ -42,7 +41,6 @@ public struct Toast: View {
     ///
     /// 토스트에 표시할 메시지와 스타일을 설정할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 기본 토스트 모델
     /// Toast.Model(message: "작업이 완료되었습니다.")
@@ -73,13 +71,8 @@ public struct Toast: View {
     }
 
     /// 토스트 메시지의 시각적 스타일을 정의하는 열거형입니다.
-    ///
-    /// - normal: 기본 토스트 스타일 (선택적으로 아이콘과 색상 지정 가능)
-    /// - positive: 성공이나 긍정적인 메시지를 위한 녹색 체크 아이콘 스타일
-    /// - cautionary: 주의가 필요한 메시지를 위한 주황색 경고 아이콘 스타일
-    /// - negative: 오류나 실패 메시지를 위한 빨간색 아이콘 스타일
     public enum Variant: Equatable {
-        /// 기본 스타일의 토스트
+        /// 기본 스타일의 토스트 (선택적으로 아이콘과 색상 지정 가능)
         /// - Parameters:
         ///   - icon: 표시할 아이콘 (선택 사항)
         ///   - tint: 아이콘의 색상 (선택 사항)
@@ -96,9 +89,6 @@ public struct Toast: View {
     }
     
     /// 토스트 메시지가 표시될 위치를 정의하는 열거형입니다.
-    ///
-    /// - top: 화면 상단에 표시
-    /// - bottom: 화면 하단에 표시
     public enum Location {
         /// 화면 상단에 토스트 표시
         /// - Parameter offset: 상단에서의 오프셋 값 (기본값: 0)
@@ -110,11 +100,11 @@ public struct Toast: View {
     }
     
     /// 토스트 메시지의 표시 시간을 정의하는 열거형입니다.
-    ///
-    /// - short: 짧은 표시 시간 (3초)
-    /// - long: 긴 표시 시간 (5초)
     public enum Duration {
-        case short, long
+        /// 짧은 표시 시간 (3초)
+        case short
+        /// 긴 표시 시간 (5초)
+        case long
     }
     
     private let variant: Variant
@@ -260,7 +250,6 @@ extension Toast {
     /// 바인딩된 Model 값이 nil이 아닐 때 토스트를 표시하며,
     /// 설정된 시간이 지나면 자동으로 사라집니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var toastModel: Toast.Model?
     ///
@@ -284,7 +273,7 @@ extension Toast {
     /// ```
     ///
     /// - Note: 토스트가 표시될 때 진동 피드백이 발생합니다.
-    public struct ToastModifier: ViewModifier {
+    struct ToastModifier: ViewModifier {
         @Binding private var model: Toast.Model?
         private let location: Toast.Location
         private let duration: Toast.Duration
@@ -301,7 +290,7 @@ extension Toast {
             self.duration = duration
         }
 
-        public func body(content: Content) -> some View {
+        func body(content: Content) -> some View {
             content
                 .modifier(
                     FloatModifier(
@@ -353,7 +342,6 @@ extension View {
     ///   - duration: Toast가 표시될 시간 (기본값: .short)
     /// - Returns: Toast가 적용된 뷰
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var toastModel: Toast.Model?
     ///

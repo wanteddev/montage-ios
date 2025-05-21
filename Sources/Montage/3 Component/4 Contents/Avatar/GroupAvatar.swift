@@ -12,7 +12,6 @@ extension Avatar {
     ///
     /// 최대 5개의 아바타를 부분적으로 겹쳐 표시하며, 각 아바타에 개별 탭 동작을 지정할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 기본 그룹 아바타
     /// Avatar.Group(
@@ -40,11 +39,10 @@ extension Avatar {
         // MARK: - Types
         
         /// 그룹 아바타의 크기와 간격을 정의하는 열거형입니다.
-        ///
-        /// - xsmall: 작은 크기 (24x24 아바타, 6pt 간격)
-        /// - small: 중간 크기 (32x32 아바타, 8pt 간격)
         public enum Size {
+            /// 가장 작은 크기
             case xsmall
+            /// 작은 크기
             case small
             
             var space: CGFloat {

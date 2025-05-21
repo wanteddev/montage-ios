@@ -13,7 +13,6 @@ import SwiftUI
 /// 현재 선택된 페이지는 강조 표시되며, 점을 탭하여 해당 페이지로 이동할 수 있습니다.
 /// 페이지 수가 많을 경우 표시되는 점의 개수와 크기가 자동으로 조정됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var currentPage = 1
 ///
@@ -28,7 +27,6 @@ public struct DotPagination: View {
     ///
     /// 배경색이나 사용 컨텍스트에 따라 적합한 색상 테마를 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 어두운 배경에 사용
     /// DotPagination(selectedPage: $currentPage, totalPages: 5)
@@ -45,16 +43,15 @@ public struct DotPagination: View {
     ///
     /// UI 디자인 요구사항에 따라 점의 크기를 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 작은 크기의 점 페이지네이션
     /// DotPagination(selectedPage: $currentPage, totalPages: 5)
     ///     .size(.small)
     /// ```
     public enum Size {
-        /// 표준 크기 (10pt 직경)
+        /// 표준 크기
         case normal
-        /// 작은 크기 (6pt 직경)
+        /// 작은 크기
         case small
     }
     

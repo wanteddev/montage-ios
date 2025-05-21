@@ -13,7 +13,6 @@ import SwiftUI
 /// 이 컴포넌트는 사용자가 항목을 필터링하는 데 사용할 수 있는 탭 가능한 UI 요소입니다.
 /// 다양한 크기와 스타일을 지원하며, 활성/비활성 상태를 표시할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// FilterChip(
 ///     variant: .solid,
@@ -31,29 +30,30 @@ public struct FilterChip: View {
     // MARK: - Types
 
     /// 칩의 외관을 결정하는 열거형입니다.
-    ///
-    /// - `.solid`: 배경색이 있는 실선 스타일
-    /// - `.outlined`: 테두리만 있는 아웃라인 스타일
     public enum Variant {
-        case solid, outlined
+        /// 배경색이 있는 실선 스타일
+        case solid
+        /// 테두리만 있는 아웃라인 스타일
+        case outlined
     }
     
     /// 칩의 크기를 정의합니다.
-    ///
-    /// - `.xsmall`: 가장 작은 크기 (12pt 아이콘, 6pt 모서리)
-    /// - `.small`: 작은 크기 (16pt 아이콘, 8pt 모서리)
-    /// - `.medium`: 중간 크기 (16pt 아이콘, 10pt 모서리)
-    /// - `.large`: 큰 크기 (16pt 아이콘, 10pt 모서리)
     public enum Size: String {
-        case xsmall, small, medium, large
+        /// 가장 작은 크기
+        case xsmall
+        /// 작은 크기
+        case small
+        /// 중간 크기
+        case medium
+        /// 큰 크기
+        case large
     }
     
     /// 칩의 확장 상태를 정의합니다.
-    ///
-    /// - `.normal`: 기본 상태
-    /// - `.expand`: 확장된 상태 (드롭다운 표시)
     public enum State {
+        /// 기본 상태
         case normal
+        /// 확장된 상태 (드롭다운 표시)
         case expand
     }
     

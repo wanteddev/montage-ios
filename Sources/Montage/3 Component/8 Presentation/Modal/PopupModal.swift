@@ -12,7 +12,6 @@ import SwiftUI
 /// 배경을 어둡게 처리하고 화면 중앙에 콘텐츠를 표시하는 형태의 모달입니다.
 /// 내비게이션 바와 액션 영역을 설정할 수 있으며, 애니메이션과 함께 표시됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var showPopup = false
 ///
@@ -50,14 +49,15 @@ import SwiftUI
 ///     )
 /// ```
 ///
-/// - SeeAlso: `PopupModalModifier`, `ModalNavigation`, `ActionAreaModifier.Model`
+/// - SeeAlso: `PopupModalModifier`, `ModalNavigation`, `ActionArea.Model`
 public struct PopupModal: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
-    ///
-    /// - hug: 컨텐츠 크기에 맞게 자동 조절됩니다.
-    /// - fixed: 지정한 높이로 고정됩니다.
     public enum Resize {
+        /// 컨텐츠 크기에 맞게 자동 조절됩니다.
         case hug
+        /// 지정한 높이로 고정됩니다.
+        ///
+        /// - Parameter height: 높이
         case fixed(CGFloat)
     }
     
@@ -154,7 +154,7 @@ public struct PopupModal: View {
     private var resize: Resize = .hug
     private var ignoresEdgeInsets = false
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionAreaModifier.Model?
+    private var actionAreaModel: ActionArea.Model?
     
     /// 팝업 모달의 크기를 설정합니다.
     ///
@@ -190,7 +190,7 @@ public struct PopupModal: View {
     ///
     /// - Parameter actionAreaModel: 액션 영역 모델
     /// - Returns: 수정된 팝업 모달 뷰
-    public func modalActionArea(_ actionAreaModel: ActionAreaModifier.Model?) -> Self {
+    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
         var zelf = self
         zelf.actionAreaModel = actionAreaModel
         return zelf
@@ -241,7 +241,6 @@ public struct PopupModal: View {
 /// 이 모디파이어를 사용하면 팝업 모달을 자연스러운 애니메이션과 함께
 /// 표시하고 설정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var showPopup = false
 ///
@@ -258,13 +257,13 @@ public struct PopupModal: View {
 /// ```
 ///
 /// - SeeAlso: `PopupModal`
-public struct PopupModalModifier: ViewModifier {
+struct PopupModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let resize: PopupModal.Resize
     private let ignoresEdgeInsets: Bool
     private let popupContent: () -> any View
     private let navigation: (() -> ModalNavigation)?
-    private let actionAreaModel: ActionAreaModifier.Model?
+    private let actionAreaModel: ActionArea.Model?
     
     /// 팝업 모달 모디파이어를 초기화합니다.
     ///
@@ -275,13 +274,13 @@ public struct PopupModalModifier: ViewModifier {
     ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
     ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
-    public init(
+    init(
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil,
-        actionAreaModel: ActionAreaModifier.Model? = nil
+        actionAreaModel: ActionArea.Model? = nil
     ) {
         _isPresented = isPresented
         self.resize = resize
@@ -294,7 +293,7 @@ public struct PopupModalModifier: ViewModifier {
         @State private var opacity: CGFloat = 0
         @State private var fullScreenCoverPresented = false
 
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .fullScreenCover(isPresented: $fullScreenCoverPresented) {
                 PopupModal {
@@ -373,7 +372,7 @@ extension View {
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionAreaModifier.Model? = nil,
+        actionAreaModel: ActionArea.Model? = nil,
         _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {

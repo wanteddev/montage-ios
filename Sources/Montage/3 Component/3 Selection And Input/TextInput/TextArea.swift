@@ -12,7 +12,6 @@ import SwiftUI
 /// 이 컴포넌트는 사용자가 여러 줄의 텍스트를 입력할 수 있는 영역을 제공합니다.
 /// 제목, 배지, 리사이즈 옵션, 캐릭터 카운터 등 다양한 기능을 지원합니다.
 ///
-/// ## 사용 예시
 /// ```swift
 /// @State private var longText = ""
 /// @FocusState private var isFocused: Bool
@@ -39,13 +38,15 @@ public struct TextArea: View {
     // MARK: - Types
     
     /// 텍스트 영역의 크기 조절 방식을 정의합니다.
-    ///
-    /// - `.normal`: 줄 수 제한이 없으며, 입력된 텍스트에 따라 영역이 자동으로 확장됩니다.
-    /// - `.limit`: 최대 8줄까지 표시되며, 초과 부분은 스크롤할 수 있습니다.
-    /// - `.fixed(min:max:)`: 텍스트 영역의 최소 및 최대 높이를 지정합니다. 초과 부분은 스크롤할 수 있습니다.
     public enum Resize {
+        /// 줄 수 제한이 없으며, 입력된 텍스트에 따라 영역이 자동으로 확장됩니다.
         case normal
+        /// 최대 8줄까지 표시되며, 초과 부분은 스크롤할 수 있습니다.
         case limit
+        /// 텍스트 영역의 최소 및 최대 높이를 지정합니다. 초과 부분은 스크롤할 수 있습니다.
+        /// - Parameters:
+        ///   - min: 최소 높이
+        ///   - max: 최대 높이
         case fixed(min: CGFloat, max: CGFloat)
         
         var minHeight: CGFloat? {
@@ -80,11 +81,10 @@ public struct TextArea: View {
     /// - Note: 문자 수 카운터는 좌/우측 중 하나에만 사용 가능합니다. 중복 사용 시 좌측이 우선 표시됩니다.
     public enum Resource {
         /// 요소의 배치 위치를 정의합니다.
-        ///
-        /// - `.leading`: 왼쪽에 배치
-        /// - `.trailing`: 오른쪽에 배치
         public enum Placement {
+            /// 왼쪽에 배치
             case leading
+            /// 오른쪽에 배치
             case trailing
         }
         

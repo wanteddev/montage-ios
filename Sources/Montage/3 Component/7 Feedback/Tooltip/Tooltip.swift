@@ -13,7 +13,6 @@ import SwiftUI
 /// 화살표가 있는 말풍선 형태로 표시되며, 화살표의 위치와 방향을 설정할 수 있습니다.
 /// 또한 닫기 버튼과 액션 버튼을 추가할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 툴팁 표시
 /// @State private var showTooltip = false
@@ -59,7 +58,6 @@ public enum Tooltip {
     /// 툴팁의 방향(상단, 하단, 왼쪽, 오른쪽)과
     /// 화살표의 위치를 함께 지정할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 상단에 표시되고 화살표는 중앙에 위치
     /// .position(.top())
@@ -114,7 +112,6 @@ public enum Tooltip {
     ///
     /// 툴팁 내용 아래에 표시되는 버튼의 제목과 동작을 정의합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Tooltip.ButtonInfo(
     ///     title: "더 알아보기",
@@ -146,7 +143,6 @@ public enum Tooltip {
     /// iOS 16.4 이상에서는 내장 popover API를 사용할 수 있으며,
     /// 그 이하 버전에서는 커스텀 툴팁이 구현됩니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var showTooltip = false
     ///

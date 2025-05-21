@@ -12,7 +12,6 @@ import SwiftUI
 /// 제목, 뒤로가기 버튼, 추가 액션 버튼 등을 포함할 수 있으며, 다양한 외관 스타일을 지원합니다.
 /// 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// TopNavigation(
 ///     variant: .normal,
@@ -401,7 +400,6 @@ extension TopNavigation {
     ///
     /// 내비게이션 바의 다양한 레이아웃과 시각적 스타일을 정의합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// TopNavigation(
     ///     variant: .floating(alternative: true, background: true),
@@ -433,7 +431,6 @@ extension TopNavigation {
         ///
         /// 뒤로가기 버튼, 아이콘 버튼, 텍스트 버튼을 지원합니다.
         ///
-        /// **사용 예시**:
         /// ```swift
         /// TopNavigation(
         ///     leadingButton: .back {
@@ -443,10 +440,16 @@ extension TopNavigation {
         /// ```
         public enum LeadingButton {
             /// 뒤로가기 버튼
+            /// - Parameters:
+            ///  - action: 뒤로가기 버튼 클릭시 동작할 action입니다.
             case back(action: () -> Void)
             /// 아이콘 버튼
+            /// - Parameters:
+            ///  - action: 아이콘 버튼 클릭시 동작할 action입니다.
             case icon(Icon, action: () -> Void)
             /// 텍스트 버튼
+            /// - Parameters:
+            ///  - action: 텍스트 버튼 클릭시 동작할 action입니다.
             case text(String, action: () -> Void)
         }
         
@@ -454,7 +457,6 @@ extension TopNavigation {
         ///
         /// 아이콘 버튼과 텍스트 버튼을 지원합니다.
         ///
-        /// **사용 예시**:
         /// ```swift
         /// TopNavigation(
         ///     trailingButtons: [
@@ -470,11 +472,15 @@ extension TopNavigation {
         public enum TrailingButton: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
+            ///  - icon: 아이콘 버튼의 아이콘입니다.
+            ///  - disable: 버튼 비활성화 여부를 결정합니다. 기본값은 false입니다.
             ///  - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
             ///  - action: icon 클릭시 동작할 action입니다.
             case icon(Icon, disable: Bool = false, showPushBadge: Bool = false, action: () -> Void)
             /// text 형태의 Action입니다.
             /// - Parameters:
+            ///  - text: 텍스트 버튼의 텍스트입니다.
+            ///  - disable: 버튼 비활성화 여부를 결정합니다. 기본값은 false입니다.
             ///  - action: text 클릭시 동작할 action입니다.
             case text(String, disable: Bool = false, action: () -> Void)
             
@@ -530,7 +536,6 @@ extension TopNavigation {
     ///
     /// 스크롤 감지 및 내비게이션 바 스타일링을 자동으로 처리합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// contentView
     ///     .modifier(
@@ -544,14 +549,14 @@ extension TopNavigation {
     ///         )
     ///     )
     /// ```
-    public struct TopNavigationModifier: ViewModifier {
+    struct TopNavigationModifier: ViewModifier {
         private let variant: Variant
         private let title: String
         private let showIndicator: Bool
         private let backgroundColorResolvable: ColorResolvable?
         private let leadingButton: Resource.LeadingButton?
         private let trailingButtons: [Resource.TrailingButton]
-        private let actionAreaModel: ActionAreaModifier.Model?
+        private let actionAreaModel: ActionArea.Model?
         
         /// TopNavigationModifier를 초기화합니다.
         ///
@@ -563,14 +568,14 @@ extension TopNavigation {
         ///   - leadingButton: 좌측에 표시할 버튼
         ///   - trailingButtons: 우측에 표시할 버튼 배열
         ///   - actionAreaModel: 액션 영역 모델
-        public init(
+        init(
             variant: Variant,
             title: String,
             showIndicator: Bool = true,
             backgroundColorResolvable: ColorResolvable? = nil,
             leadingButton: Resource.LeadingButton?,
             trailingButtons: [Resource.TrailingButton],
-            actionAreaModel: ActionAreaModifier.Model? = nil
+            actionAreaModel: ActionArea.Model? = nil
         ) {
             self.variant = variant
             self.title = title
@@ -590,7 +595,7 @@ extension TopNavigation {
         @State private var originBottomActionHeight: CGFloat = .zero
         @State private var currentBottomActionHeight: CGFloat = .zero
 
-        public func body(content: Content) -> some View {
+        func body(content: Content) -> some View {
             VStack(spacing: 0) {
                 ZStack {
                     ScrollView(scrollStatus: $scrollStatus) {
@@ -657,7 +662,7 @@ extension View {
         backgroundColorResolvable: ColorResolvable? = nil,
         leadingButton: TopNavigation.Resource.LeadingButton? = nil,
         trailingButtons: [TopNavigation.Resource.TrailingButton] = [],
-        withBottom model: ActionAreaModifier.Model? = nil
+        withBottom model: ActionArea.Model? = nil
     ) -> some View {
         modifier(
             TopNavigation.TopNavigationModifier(

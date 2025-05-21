@@ -12,7 +12,6 @@ import SwiftUI
 /// 이 컴포넌트는 화면 하단에 위치하며 주요 액션 버튼과 보조 버튼을 표시합니다.
 /// 다양한 레이아웃 변형을 지원하고, 캡션 텍스트와 추가 콘텐츠를 포함할 수 있습니다.
 ///
-/// ## 사용 예시
 /// ```swift
 /// // 기본 강조 버튼 영역
 /// ActionArea(variant: .strong(
@@ -151,13 +150,12 @@ public struct ActionArea: View, KeyboardReadable {
 // MARK: - Types
 extension ActionArea {
     /// ActionArea의 버튼 레이아웃 변형을 정의합니다.
-    ///
-    /// - `.strong`: 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
-    /// - `.neutral`: 중립적인 스타일의 버튼 레이아웃
-    /// - `.cancel`: 취소 버튼만 있는 간단한 레이아웃
     public enum Variant {
+        /// 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
         case strong(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
+        /// 중립적인 스타일의 버튼 레이아웃
         case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
+        /// 취소 버튼만 있는 간단한 레이아웃
         case cancel(main: ButtonInfo)
         
         fileprivate var isCaptionAvailable: Bool {
@@ -208,6 +206,57 @@ extension ActionArea {
             _ custom: @escaping (() -> any View)
         ) -> Self {
             self.init(custom: custom)
+        }
+    }
+    
+    /// ActionArea를 구성하기 위한 모델 구조체입니다.
+    ///
+    /// 이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다.
+    /// 버튼 레이아웃, 배경 가시성, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
+    public struct Model {
+        let variant: ActionArea.Variant
+        let backgroundVisibility: BackgroundVisibility
+        let caption: String?
+        let extra: (() -> any View)?
+        let extraDivider: Bool
+        
+        /// ActionArea 모델을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 버튼 레이아웃 변형
+        ///   - backgroundVisibility: 배경 가시성 설정
+        ///   - caption: 캡션 텍스트
+        ///   - extra: 추가 콘텐츠를 생성하는 클로저
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        public init(
+            variant: ActionArea.Variant,
+            backgroundVisibility: BackgroundVisibility = .automatic,
+            caption: String? = nil,
+            extra: (() -> any View)? = nil,
+            extraDivider: Bool = false
+        ) {
+            self.variant = variant
+            self.backgroundVisibility = backgroundVisibility
+            self.caption = caption
+            self.extra = extra
+            self.extraDivider = extraDivider
+        }
+    }
+    
+    /// ActionArea의 배경 가시성을 제어하는 열거형입니다.
+    public enum BackgroundVisibility {
+        /// 자동으로 배경 가시성을 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 가시성이 자동 처리됩니다.
+        case automatic
+        /// 수동으로 배경 가시성을 설정합니다. true면 배경이 표시되고, false면 배경이 투명해집니다.
+        case manual(_ visible: Bool)
+        
+        var isManual: Bool {
+            switch self {
+            case .automatic:
+                false
+            case .manual:
+                true
+            }
         }
     }
 }
@@ -370,16 +419,16 @@ private extension ActionArea {
     }
 }
 
-public struct ActionAreaModifier: ViewModifier {
+struct ActionAreaModifier: ViewModifier {
     // MARK: - Initializer
-    private let model: Model
-    public init(model: Model) {
+    private let model: ActionArea.Model
+    init(model: ActionArea.Model) {
         self.model = model
     }
     
     // MARK: - Body
         
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         VStack(spacing: 0) {
             content
             
@@ -395,44 +444,6 @@ public struct ActionAreaModifier: ViewModifier {
                 }
         }
     }
-    
-    // MARK: - Types
-    
-    public struct Model {
-        let variant: ActionArea.Variant
-        let backgroundVisibility: BackgroundVisibility
-        let caption: String?
-        let extra: (() -> any View)?
-        let extraDivider: Bool
-        
-        public init(
-            variant: ActionArea.Variant,
-            backgroundVisibility: BackgroundVisibility = .automatic,
-            caption: String? = nil,
-            extra: (() -> any View)? = nil,
-            extraDivider: Bool = false
-        ) {
-            self.variant = variant
-            self.backgroundVisibility = backgroundVisibility
-            self.caption = caption
-            self.extra = extra
-            self.extraDivider = extraDivider
-        }
-    }
-    
-    public enum BackgroundVisibility {
-        case automatic
-        case manual(_ visible: Bool)
-        
-        var isManual: Bool {
-            switch self {
-            case .automatic:
-                false
-            case .manual:
-                true
-            }
-        }
-    }
 }
 
 // MARK: - View Extension
@@ -444,7 +455,6 @@ extension View {
     ///   - model: ActionArea의 구성 모델
     /// - Returns: ActionArea가 적용된 뷰
     ///
-    /// **사용 예시**:
     /// ```swift
     /// contentView
     ///     .actionArea(model: .init(
@@ -455,7 +465,7 @@ extension View {
     ///         caption: "변경 사항을 저장하시겠습니까?"
     ///     ))
     /// ```
-    public func actionArea(model: ActionAreaModifier.Model) -> some View {
+    public func actionArea(model: ActionArea.Model) -> some View {
         modifier(ActionAreaModifier(model: model))
     }
 }

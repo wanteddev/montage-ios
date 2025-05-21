@@ -12,7 +12,6 @@ import SwiftUI
 /// `CounterPagination`은 현재 페이지와 전체, 페이지 수를 숫자로 표시하는 페이지네이션 컴포넌트를 제공합니다.
 /// "1/10"과 같은 형식으로 페이지 정보를 시각화하며, 반투명 배경이 적용됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var currentPage = 1
 ///
@@ -27,16 +26,15 @@ public struct CounterPagination: View {
     ///
     /// UI 디자인 요구사항에 따라 카운터의 크기를 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 작은 크기의 카운터 페이지네이션
     /// CounterPagination(selectedPage: $currentPage, totalPages: 5)
     ///     .size(.small)
     /// ```
     public enum Size {
-        /// 작은 크기 (52x26pt, label2 폰트)
+        /// 작은 크기
         case small
-        /// 중간 크기 (62x34pt, body2 폰트)
+        /// 중간 크기
         case medium
     }
     

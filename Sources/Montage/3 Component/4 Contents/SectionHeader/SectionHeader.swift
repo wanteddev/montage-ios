@@ -12,7 +12,6 @@ import SwiftUI
 /// `SectionHeader`는 콘텐츠를 논리적으로 구분하는 섹션 제목을 표시하며,
 /// 선택적으로 추가 액션이나 정보를 제공할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 섹션 헤더
 /// SectionHeader(title: "추천 콘텐츠")
@@ -43,21 +42,18 @@ public struct SectionHeader: View {
     /// 콘텐츠의 중요도나 시각적 계층 구조에 따라 4가지 크기 옵션을 제공합니다.
     /// 각 크기는 서로 다른 폰트 크기와 높이를 가지며, 콘텐츠 구조에 맞게 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// SectionHeader(title: "주요 기능")
     ///     .size(.large) // 큰 크기의 헤더 사용
     /// ```
-    ///
-    /// - Note: xsmall(20pt), small(24pt), medium(28pt), large(32pt) 네 가지 크기를 제공합니다.
     public enum Size {
-        /// 가장 작은 크기 (20pt, label1 폰트)
+        /// 가장 작은 크기
         case xsmall
-        /// 작은 크기 (24pt, headline2 폰트)
+        /// 작은 크기
         case small
-        /// 중간 크기 (28pt, heading2 폰트, 기본값)
+        /// 중간 크기
         case medium
-        /// 큰 크기 (32pt, title3 폰트)
+        /// 큰 크기
         case large
     }
     

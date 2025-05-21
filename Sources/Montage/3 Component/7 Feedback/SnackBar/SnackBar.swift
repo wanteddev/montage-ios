@@ -13,7 +13,6 @@ import SwiftUI
 /// 제목, 설명, 추가 콘텐츠와 액션 버튼을 포함할 수 있으며,
 /// 설정된 시간이 지나면 자동으로 사라집니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 모델을 통한 스낵바 표시
 /// @State private var snackBarModel: SnackBar.Model?
@@ -41,11 +40,10 @@ import SwiftUI
 /// - SeeAlso: `SnackBar.Duration`, `SnackBar.Model`, `SnackBar.SnackBarModifier`
 public struct SnackBar: View {
     /// SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
-    ///
-    /// - short: 짧은 표시 시간 (4초)
-    /// - long: 긴 표시 시간 (16초)
     public enum Duration: Double {
+        /// 짧은 표시 시간 (4초)
         case short = 4.0
+        /// 긴 표시 시간 (16초)
         case long = 16.0
     }
 
@@ -53,7 +51,6 @@ public struct SnackBar: View {
     ///
     /// 스낵바에 표시할 콘텐츠와 동작 방식을 설정할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 기본 스낵바 모델
     /// SnackBar.Model(
@@ -253,7 +250,6 @@ public struct SnackBar: View {
     /// 바인딩된 Model 값이 nil이 아닐 때 스낵바를 표시하며,
     /// 설정된 시간이 지나면 자동으로 사라집니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var snackBarModel: SnackBar.Model?
     ///
@@ -279,7 +275,7 @@ public struct SnackBar: View {
     /// ```
     ///
     /// - Note: 스낵바가 표시될 때 진동 피드백이 발생합니다.
-    public struct SnackBarModifier: ViewModifier {
+    struct SnackBarModifier: ViewModifier {
         @Binding var model: SnackBar.Model?
         @State private var animationWorkItem: DispatchWorkItem?
 
@@ -290,12 +286,12 @@ public struct SnackBar: View {
         /// - Parameters:
         ///   - model: 표시할 스낵바 모델에 대한 바인딩. nil이면 스낵바가 표시되지 않습니다.
         ///   - handler: 스낵바의 액션 버튼이 클릭될 때 실행할 핸들러
-        public init(model: Binding<SnackBar.Model?>, handler: @escaping () -> Void) {
+        init(model: Binding<SnackBar.Model?>, handler: @escaping () -> Void) {
             self._model = model
             self.handler = handler
         }
 
-        public func body(content: Content) -> some View {
+        func body(content: Content) -> some View {
             GeometryReader { proxy in
                 content
                     .frame(maxWidth: proxy.size.width, maxHeight: proxy.size.height)
@@ -409,7 +405,6 @@ extension View {
     ///   - handler: SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저
     /// - Returns: SnackBar가 적용된 뷰
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var snackBarModel: SnackBar.Model?
     ///

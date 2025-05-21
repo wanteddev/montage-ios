@@ -10,7 +10,6 @@ import SwiftUI
 /// `Select` 컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다.
 /// 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.
 ///
-/// ## 사용 예시:
 /// ```swift
 /// @State private var items = [
 ///     .init(text: "Option 1"),
@@ -28,8 +27,6 @@ public struct Select: View {
     // MARK: - Types
     
     /// 다중 선택 가능여부를 나타내는 열거형입니다.
-    /// - single: 단일 항목 선택 모드
-    /// - multiple: 다중 항목 선택 모드
     public enum Variant {
         /// 단일 선택 모드
         /// - Parameters:
@@ -54,7 +51,6 @@ public struct Select: View {
         }
     }
     
-    /// 아이템 타입입니다.
     /// Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.
     public struct Item: Equatable {
         /// 아이템 텍스트 내용
@@ -86,27 +82,28 @@ public struct Select: View {
     }
     
     /// variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.
-    /// - checkmark: 체크마크로 선택 표시
-    /// - radio: 라디오 버튼으로 선택 표시
     public enum SingleSelectionType {
-        case checkmark, radio
+        /// 체크마크로 선택 표시
+        case checkmark
+        /// 라디오 버튼으로 선택 표시
+        case radio
     }
     
     /// variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.
-    /// - text: 선택된 항목 텍스트만 표시
-    /// - chip: 선택된 항목을 칩(chip) 형태로 표시
     public enum Render {
+        /// 선택된 항목 텍스트만 표시
         case text
+        /// 선택된 항목을 칩(chip) 형태로 표시
         case chip
     }
     
     /// 왼쪽에 표시될 컨텐트 타입입니다.
-    /// - icon: 아이콘 표시
-    /// - iconButton: 아이콘 버튼 표시
-    /// - custom: 사용자 정의 뷰 표시
     public enum LeadingContent {
+        /// 아이콘 표시
         case icon(Icon)
+        /// 아이콘 버튼 표시
         case iconButton(IconButton)
+        /// 사용자 정의 뷰 표시
         case custom(() -> any View)
     }
 

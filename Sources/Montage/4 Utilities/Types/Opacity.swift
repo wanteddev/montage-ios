@@ -13,7 +13,6 @@ import UIKit
 /// Montage 디자인 시스템에서 사용하는 정규화된 투명도 값을 제공합니다.
 /// 각 케이스는 백분율 형식으로 이름이 지정되어 있습니다 (예: p005는 5% 투명도).
 ///
-/// ## 사용 예시
 /// ```swift
 /// // CGFloat 값으로 변환
 /// let alpha: CGFloat = .opacity(.p052)
@@ -66,7 +65,6 @@ public extension CGFloat {
     ///
     /// 디자인 시스템에서 정의된 일관된 불투명도 값을 사용할 수 있도록 합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// let alpha = CGFloat.opacity(.p052) // 0.52
     /// ```
@@ -116,7 +114,6 @@ public extension Float {
     ///
     /// 디자인 시스템에서 정의된 일관된 불투명도 값을 사용할 수 있도록 합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// let alpha = Float.opacity(.p050) // 0.5
     /// ```

@@ -13,7 +13,6 @@ import SwiftUI
 /// 내비게이션 바를 제공합니다. 스크롤에 따라 배경 불투명도가 자동으로 조절되며
 /// 다양한 스타일을 지원합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// ModalNavigation(title: "제목")
 ///     .variant(.normal)
@@ -32,15 +31,17 @@ public struct ModalNavigation: View {
     // MARK: - Types
     
     /// 내비게이션 바의 외관을 정의하는 열거형입니다.
-    ///
-    /// - normal: 기본 스타일의 내비게이션 바
-    /// - extended: 제목이 별도 줄에 표시되는 확장된 스타일
-    /// - floating: 배경이 투명한 플로팅 스타일
-    /// - emphasized: 강조된 큰 제목 스타일
     public enum Variant: Equatable {
+        /// 기본 스타일의 내비게이션 바
         case normal
+        /// 제목이 별도 줄에 표시되는 확장된 스타일
         case extended
+        /// 배경이 투명한 플로팅 스타일
+        ///
+        /// - Parameter alternative: 대체 아이콘 사용 여부 (기본값: false)
+        /// - Parameter background: 배경 표시 여부 (기본값: true)
         case floating(alternative: Bool = false, background: Bool = true)
+        /// 강조된 큰 제목 스타일
         case emphasized
         
         fileprivate var isFloating: Bool {

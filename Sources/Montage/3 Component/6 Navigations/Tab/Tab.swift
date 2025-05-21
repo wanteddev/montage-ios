@@ -12,7 +12,6 @@ import SwiftUI
 /// `Tab`은 여러 항목 중 하나를 선택할 수 있는 수평 탭 메뉴를 제공합니다.
 /// 선택된 탭은 하단에 강조 표시되며, 탭 너비와 크기를 다양하게 커스터마이징할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var selectedTab = 0
 /// let tabItems = ["전체", "인기", "최신", "추천"]
@@ -34,7 +33,6 @@ public struct Tab: View {
     ///
     /// 탭 아이템의 너비가 콘텐츠에 맞게 조정될지, 전체 너비를 균등하게 분할할지 결정합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Tab(selectedIndex: $selectedTab, items: tabItems)
     ///     .resize(.fill) // 균등하게 분할
@@ -52,19 +50,16 @@ public struct Tab: View {
     ///
     /// 탭 컴포넌트의 높이와 폰트 크기를 결정합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Tab(selectedIndex: $selectedTab, items: tabItems)
     ///     .size(.large) // 큰 크기의 탭
     /// ```
-    ///
-    /// - Note: small(40pt, body2), medium(48pt, headline2), large(56pt, heading2) 세 가지 크기를 제공합니다.
     public enum Size {
-        /// 작은 크기 (40pt 높이, body2 폰트)
+        /// 작은 크기
         case small
-        /// 중간 크기 (48pt 높이, headline2 폰트)
+        /// 중간 크기
         case medium
-        /// 큰 크기 (56pt 높이, heading2 폰트)
+        /// 큰 크기
         case large
     }
 

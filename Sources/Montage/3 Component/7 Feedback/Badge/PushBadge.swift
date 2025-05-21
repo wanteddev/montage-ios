@@ -13,7 +13,6 @@ import SwiftUI
 /// 작은 점, 'N' 표시, 또는 숫자를 표시할 수 있으며 다양한 크기와 위치를 지원합니다.
 /// 주로 아이콘이나 버튼 주변에 새로운 알림이나 메시지가 있음을 나타내기 위해 사용됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 점 형태 뱃지
 /// PushBadge(variant: .dot)
@@ -32,28 +31,29 @@ public struct PushBadge: View {
     // MARK: - Types
     
     /// 뱃지의 표시 형태를 정의하는 열거형입니다.
-    ///
-    /// - dot: 작은 점 형태의 뱃지
-    /// - new: 'N' 문자를 표시하는 뱃지
-    /// - number: 특정 숫자를 표시하는 뱃지
     public enum Variant: Equatable {
-        case dot, new, number(Int)
+        /// 작은 점 형태의 뱃지
+        case dot
+        /// 'N' 문자를 표시하는 뱃지
+        case new
+        /// 특정 숫자를 표시하는 뱃지
+        case number(Int)
     }
     
     /// 뱃지의 크기를 정의하는 열거형입니다.
-    ///
-    /// - xsmall: 가장 작은 크기 (dot: 4pt, text: 14pt)
-    /// - small: 중간 크기 (dot: 6pt, text: 14pt)
-    /// - medium: 큰 크기 (dot: 8pt, text: 20pt)
     public enum Size {
-        case xsmall, small, medium
+        /// 가장 작은 크기
+        case xsmall
+        /// 중간 크기
+        case small
+        /// 큰 크기
+        case medium
     }
     
     /// 뱃지의 위치를 정의하는 열거형입니다.
     ///
     /// 수직 위치(top, center, bottom)와 수평 위치(leading, center, trailing)를 함께 지정할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 우측 상단에 위치
     /// .modifier(PushBadge.Modifier(position: .top(.trailing)))
@@ -205,7 +205,6 @@ extension PushBadge {
     ///
     /// 이 모디파이어를 사용하면 기존 뷰의 특정 위치에 뱃지를 표시할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// IconButton(icon: .home)
     ///     .modifier(
@@ -216,7 +215,7 @@ extension PushBadge {
     ///         )
     ///     )
     /// ```
-    public struct Modifier: ViewModifier {
+    struct Modifier: ViewModifier {
         private let variant: Variant
         private let size: Size
         private let fontColor: SwiftUI.Color
@@ -233,7 +232,7 @@ extension PushBadge {
         ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
         ///   - position: 뱃지 위치 (기본값: .top(.trailing))
         ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
-        public init(
+        init(
             variant: Variant = .dot,
             size: Size = .xsmall,
             fontColor: SwiftUI.Color = .semantic(.staticWhite),
@@ -251,7 +250,7 @@ extension PushBadge {
         
         @State private var contentSize: CGSize = .zero
 
-        public func body(content: Content) -> some View {
+        func body(content: Content) -> some View {
             ZStack {
                 content
                     .onGeometryChange(for: CGSize.self, of: { $0.size }, action: {
@@ -322,7 +321,6 @@ extension View {
     ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
     /// - Returns: 뱃지가 적용된 뷰
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Button("메시지") { }
     ///     .pushBadge(variant: .number(3), position: .top(.leading))

@@ -29,7 +29,7 @@ struct IconButtonPreview: View {
         ]
     }
     
-    private let sizes: [IconButton.Variant.Size] = [
+    private let sizes: [IconButton.Size] = [
         .small,
         .medium,
         .custom(size: 8)
@@ -178,7 +178,7 @@ struct IconButtonPreview: View {
 }
 
 extension IconButton.Variant: CaseDescribable {}
-extension IconButton.Variant.Size: CaseDescribable {}
+extension IconButton.Size: CaseDescribable {}
 
 #Preview {
     IconButtonPreview()

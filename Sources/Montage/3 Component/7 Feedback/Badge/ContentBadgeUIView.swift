@@ -11,14 +11,12 @@ import UIKit
 ///
 /// 이 컴포넌트는 다양한 스타일과 크기를 지원하며, 텍스트와 함께 아이콘을 표시할 수 있습니다.
 ///
-/// ## 개요
 /// `ContentBadgeUIView`는 카테고리나 상태를 시각적으로 표현하기 위한 UI 컴포넌트입니다.
 /// Solid 또는 Outline 스타일로 표현할 수 있으며, 다양한 크기와 색상을 지원합니다.
 ///
 /// - Warning: 이 클래스는 더 이상 사용되지 않으며, 대신 `Montage.ContentBadge`를 사용하세요.
 /// - SeeAlso: ``ContentBadge``
 ///
-/// ## 사용 예시
 /// ```swift
 /// // 기본 사용법
 /// let badge = ContentBadgeUIView()
@@ -34,7 +32,7 @@ import UIKit
 /// badge.colorStyle = .accent(.blue, nil)
 /// ```
 @available(*, deprecated, message: "`Montage.ContentBadge`를 사용하세요.")
-public class ContentBadgeUIView: UIView {
+public final class ContentBadgeUIView: UIView {
     private enum Const {
         static var defaultActiveColor: Color.Semantic = .primaryNormal
         static var defaultInactiveColor: Color.Semantic = .labelDisable
@@ -45,6 +43,8 @@ public class ContentBadgeUIView: UIView {
     ///
     /// - `.solid`: 배경색이 채워진 스타일
     /// - `.outline`: 테두리만 있는 스타일
+    /// 
+    /// - SeeAlso: ``ContentBadge.Variant``
     public var variant: ContentBadge.Variant = .solid {
         didSet {
             updateViews()
@@ -56,6 +56,8 @@ public class ContentBadgeUIView: UIView {
     /// - `.xsmall`: 가장 작은 크기 (12pt 아이콘)
     /// - `.small`: 작은 크기 (14pt 아이콘)
     /// - `.medium`: 중간 크기 (16pt 아이콘)
+    ///
+    /// - SeeAlso: ``ContentBadge.Size``
     public var size: ContentBadge.Size = .small {
         didSet {
             setupUpdateableConstraints()
@@ -67,6 +69,8 @@ public class ContentBadgeUIView: UIView {
     ///
     /// - `.neutral()`: 기본 중립 색상
     /// - `.accent(contentColor, enclosureColor)`: 커스텀 강조 색상
+    ///
+    /// - SeeAlso: ``ContentBadge.ColorStyle``
     public var colorStyle: ContentBadge.ColorStyle = .neutral() {
         didSet {
             updateViews()

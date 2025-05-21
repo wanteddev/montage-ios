@@ -10,7 +10,6 @@
 /// 사용자가 스크롤 뷰를 아래로 당기면 애니메이션과 함께 리프레시 기능을 제공합니다.
 /// iOS 18 이상에서 사용 가능하며, 로딩 애니메이션과 함께 당김 정도에 따른 시각적 피드백을 제공합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// ScrollView {
 ///     content
@@ -34,11 +33,11 @@ import Lottie
 import SwiftUI
 
 @available(iOS 18, *)
-public struct PullToRefreshModifier: ViewModifier {
+struct PullToRefreshModifier: ViewModifier {
     @Binding private var scrollYOffset: CGFloat
     private let refresh: () async -> Void
     
-    public init(scrollYOffset: Binding<CGFloat>, refresh: @escaping () async -> Void) {
+    init(scrollYOffset: Binding<CGFloat>, refresh: @escaping () async -> Void) {
         _scrollYOffset = scrollYOffset
         self.refresh = refresh
     }
@@ -71,7 +70,7 @@ public struct PullToRefreshModifier: ViewModifier {
         max(0, scrollYOffset - animationThreshold) / max(1, refreshThreshold - animationThreshold)
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         ZStack(alignment: .top) {
             AnimatingLogo(phase: $phase)
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
@@ -307,7 +306,6 @@ extension View {
     ///   - refresh: 리프레시가 트리거될 때 실행될 비동기 클로저입니다.
     /// - Returns: 풀-투-리프레시 기능이, 추가된 뷰
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var scrollYOffset: CGFloat = 0
     ///

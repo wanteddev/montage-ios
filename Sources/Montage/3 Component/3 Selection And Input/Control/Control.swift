@@ -12,7 +12,6 @@ import SwiftUI
 /// 다양한 유형의 선택 컨트롤을 통일된 인터페이스로 제공합니다.
 /// 선택 상태 변경 시 콜백을 받을 수 있으며, 크기와 스타일을 조정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 체크박스
 /// Control.checkbox(checked: true) { isChecked in
@@ -34,30 +33,30 @@ public struct Control: View {
     // MARK: - Types
     
     /// 컨트롤의 종류를 정의하는 열거형입니다.
-    ///
-    /// - checkbox: 체크박스 (3가지 상태: 선택, 미선택, 중간 상태)
-    /// - checkmark: 체크마크 (선택, 미선택 상태만 지원)
-    /// - radio: 라디오 버튼 (선택, 미선택 상태만 지원)
     public enum Variant {
-        case checkbox, checkmark, radio
+        /// 체크박스 (3가지 상태: 선택, 미선택, 중간 상태)
+        case checkbox
+        /// 체크마크 (선택, 미선택 상태만 지원)
+        case checkmark
+        /// 라디오 버튼 (선택, 미선택 상태만 지원)
+        case radio
     }
     
     /// 컨트롤의 크기를 정의하는 열거형입니다.
-    ///
-    /// - medium: 중간 크기 (24x24)
-    /// - small: 작은 크기 (20x20)
     public enum Size {
-        case medium, small
+        /// 중간 크기
+        case medium
+        /// 작은 크기
+        case small
     }
     
     /// 컨트롤의 상태를 정의하는 열거형입니다.
-    ///
-    /// - unchecked: 선택되지 않은 상태
-    /// - checked: 선택된 상태
-    /// - indeterminate: 중간 상태 (checkbox에서만 지원)
     public enum State {
+        /// 선택되지 않은 상태
         case unchecked
+        /// 선택된 상태
         case checked
+        /// 중간 상태 (checkbox에서만 지원)
         case indeterminate
         
         internal var isUnchecked: Bool {

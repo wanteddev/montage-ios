@@ -12,7 +12,6 @@ import SwiftUI
 /// 사용자가 카테고리 목록에서 하나의 항목을 선택할 수 있는 스크롤 가능한 컴포넌트입니다.
 /// 다양한 크기와 스타일을 지원하며, 선택된 항목에 대한 시각적 피드백을 제공합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var selectedIndex = 0
 /// let categories = ["전체", "디자인", "개발", "마케팅", "경영"]
@@ -35,12 +34,22 @@ public struct Category: View {
     
     /// 카테고리 아이템의 종류를 결정하는 열거형입니다.
     public enum Variant {
-        case normal, alternative
+        /// 기본 스타일
+        case normal
+        /// 대체 스타일
+        case alternative
     }
     
     /// 카테고리 사이즈를 결정하는 열거형입니다.
     public enum Size {
-        case small, medium, large, xlarge
+        /// 작은 크기
+        case small
+        /// 중간 크기
+        case medium
+        /// 큰 크기
+        case large
+        /// 큰 크기
+        case xlarge
     }
     
     @Binding private var selectedIndex: Int

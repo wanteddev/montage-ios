@@ -23,29 +23,31 @@ extension Button {
     @available(*, deprecated, message: "`Montage.Button.outlined()`를 사용하세요.")
     public class OutlinedUIButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
-        ///
-        /// - `primary`: 주요 강조 스타일
-        /// - `secondary`: 보조 강조 스타일
-        /// - `assistive`: 보조 스타일
         public enum Variant {
-            case primary, secondary, assistive
+            /// 기본 강조 스타일 - 주요 액션에 사용
+            case primary
+            /// 보조 강조 스타일 - 보조 액션에 사용
+            case secondary
+            /// 보조 스타일 - 덜 중요한 액션에 사용
+            case assistive
         }
         
         /// 버튼의 사이즈를 결정하는 열거형입니다.
-        ///
-        /// - `large`: 큰 크기 버튼
-        /// - `medium`: 중간 크기 버튼
-        /// - `small`: 작은 크기 버튼
         public enum Size {
-            case large, medium, small
+            /// 큰 크기
+            case large
+            /// 중간 크기
+            case medium
+            /// 작은 크기
+            case small
         }
         
         /// 버튼 모서리의 곡률 스타일을 결정하는 열거형입니다.
-        ///
-        /// - `legacy`: 높이의 절반을 반지름으로 하는 원형 모서리
-        /// - `default`: 버튼 크기에 따른 고정된 모서리 곡률
         public enum CornerStyle {
-            case legacy, `default`
+            /// 높이의 절반을 반지름으로 하는 원형 모서리
+            case legacy
+            /// 버튼 크기에 따른 고정된 모서리 곡률
+            case `default`
         }
         
         /// 버튼의 외관입니다.

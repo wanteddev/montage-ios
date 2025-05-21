@@ -12,7 +12,6 @@ import SwiftUI
 /// 이 컴포넌트는 UI 요소 간의 시각적 구분을 제공하기 위해 사용됩니다.
 /// 수직 또는 수평 방향으로 배치할 수 있으며, 두 가지 두께 변형을 지원합니다.
 ///
-/// ## 사용 예시
 /// ```swift
 /// // 기본 수평 구분선
 /// Divider(.horizontal)
@@ -31,11 +30,11 @@ public struct Divider: View {
     // MARK: - Types
     
     /// 구분선의 두께 변형을 정의합니다.
-    ///
-    /// - `.normal`: 표준 두께 (1pt)
-    /// - `.thick`: 두꺼운 두께 (12pt)
     public enum Variant {
-        case normal, thick
+        /// 표준 두께
+        case normal
+        /// 두꺼운 두께
+        case thick
 
         var size: CGFloat {
             switch self {

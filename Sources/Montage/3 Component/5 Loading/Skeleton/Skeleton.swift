@@ -12,7 +12,6 @@ import SwiftUI
 /// 데이터 로딩 중에 UI의 구조를 미리 보여주는 스켈레톤 뷰를 제공합니다.
 /// 텍스트, 사각형, 원형 등 다양한 형태의 스켈레톤 로딩 플레이스홀더를 지원합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 텍스트 스켈레톤 사용
 /// Text("콘텐츠")
@@ -26,7 +25,7 @@ import SwiftUI
 /// contentView
 ///     .skeleton(isPresented: isLoading) {
 ///         Skeleton.SkeletonView(.rectangle(cornerRadius: 8))
-///             .color(.gray)
+///             .color(.semantic(.fillNormal))
 ///             .opacity(0.7)
 ///     }
 /// ```
@@ -39,9 +38,8 @@ public enum Skeleton {
     ///
     /// 텍스트 스켈레톤에서 각 라인의 정렬 방식을 지정할 때 사용됩니다.
     ///
-    /// **사용 예시**:
     /// ```swift
-    /// .text(alignment: .center, lineNumber: 2)
+    /// Skeleton.Kind.text(alignment: .center, lineNumber: 2)
     /// ```
     public enum Align {
         /// 좌측 정렬
@@ -78,9 +76,8 @@ public enum Skeleton {
     ///
     /// 텍스트 스켈레톤에서 각 라인의 길이를 상대적으로 지정하는 데 사용됩니다.
     ///
-    /// **사용 예시**:
     /// ```swift
-    /// .text(lengths: [._100, ._75, ._50], lineNumber: 3)
+    /// Skeleton.Kind.text(lengths: [._100, ._75, ._50], lineNumber: 3)
     /// ```
     public enum Length: CGFloat {
         /// 100% 길이 (전체 너비)
@@ -97,16 +94,15 @@ public enum Skeleton {
     ///
     /// 다양한 콘텐츠 유형에 맞게 적절한 스켈레톤 형태를 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 3줄 텍스트 스켈레톤
-    /// .text(lineNumber: 3)
+    /// Skeleton.Kind.text(lineNumber: 3)
     ///
     /// // 둥근 모서리 사각형 스켈레톤
-    /// .rectangle(cornerRadius: 8)
+    /// Skeleton.Kind.rectangle(cornerRadius: 8)
     ///
     /// // 원형 스켈레톤 (프로필 이미지 등에 적합)
-    /// .circle
+    /// Skeleton.Kind.circle
     /// ```
     public enum Kind {
         /// 텍스트 줄을 나타내는 스켈레톤
@@ -136,7 +132,6 @@ public enum Skeleton {
     /// 지정된 형태(텍스트, 사각형, 원형)에 따라 적절한 스켈레톤 UI를 렌더링합니다.
     /// 색상, 투명도 등을 커스터마이징할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Skeleton.SkeletonView(.text(lineNumber: 3))
     ///     .color(.gray)

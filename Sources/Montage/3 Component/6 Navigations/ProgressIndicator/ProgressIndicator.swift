@@ -12,7 +12,6 @@ import SwiftUI
 /// 주어진 퍼센트에 따라 진행 상태를 막대 형태로 표시합니다.
 /// 왼쪽에서 오른쪽으로 채워지는 형태로 진행 상태를 시각화합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var progress: CGFloat = 0.5
 /// 

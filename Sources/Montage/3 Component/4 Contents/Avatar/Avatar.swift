@@ -13,7 +13,6 @@ import SwiftUI
 /// 원형 또는 둥근 모서리 사각형 형태로 프로필 이미지를 표시합니다.
 /// 이미지 URL이 유효하지 않을 경우 각 유형별 기본 이미지를 표시합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 사용자 아바타
 /// Avatar("https://example.com/profile.jpg", variant: .person)
@@ -32,12 +31,13 @@ public struct Avatar: View {
     // MARK: - Types
     
     /// 아바타의 유형을 정의하는 열거형입니다.
-    ///
-    /// - person: 사용자 프로필 (원형)
-    /// - company: 회사 프로필 (둥근 모서리 사각형)
-    /// - academy: 학원 프로필 (둥근 모서리 사각형)
     public enum Variant {
-        case person, company, academy
+        /// 사용자 프로필 (원형)
+        case person
+        /// 회사 프로필 (둥근 모서리 사각형)
+        case company
+        /// 학원 프로필 (둥근 모서리 사각형)
+        case academy
         
         fileprivate var placeholderImageName: String {
             switch self {
@@ -73,17 +73,16 @@ public struct Avatar: View {
     }
     
     /// 아바타의 크기를 정의하는 열거형입니다.
-    ///
-    /// - xsmall: 24x24
-    /// - small: 32x32
-    /// - medium: 40x40
-    /// - large: 48x48
-    /// - xlarge: 56x56
     public enum Size {
+        /// 가장 작은 크기
         case xsmall
+        /// 작은 크기
         case small
+        /// 중간 크기
         case medium
+        /// 큰 크기
         case large
+        /// 가장 큰 크기
         case xlarge
         
         internal var containerSize: CGSize {

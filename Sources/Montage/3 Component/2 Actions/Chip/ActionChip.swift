@@ -13,7 +13,6 @@ import SwiftUI
 /// 텍스트와 이미지를 포함하는 칩 형태의 버튼입니다.
 /// 다양한 크기와 스타일을 지원하며, 탭 이벤트를 처리할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// ActionChip(
 ///     variant: .solid,
@@ -28,21 +27,23 @@ import SwiftUI
 /// - Note: 기본적으로 8pt의 패딩과 12pt의 모서리 반경을 가집니다.
 public struct ActionChip: View {
     /// 칩의 외관을 결정하는 열거형입니다.
-    ///
-    /// - `.solid`: 배경색이 있는 실선 스타일
-    /// - `.outlined`: 테두리만 있는 아웃라인 스타일
     public enum Variant {
-        case solid, outlined
+        /// 배경색이 있는 실선 스타일
+        case solid
+        /// 테두리만 있는 아웃라인 스타일
+        case outlined
     }
     
     /// 칩의 크기를 정의합니다.
-    ///
-    /// - `.xsmall`: 가장 작은 크기 (12pt 아이콘, 6pt 모서리)
-    /// - `.small`: 작은 크기 (14pt 아이콘, 8pt 모서리)
-    /// - `.medium`: 중간 크기 (14pt 아이콘, 8pt 모서리)
-    /// - `.large`: 큰 크기 (16pt 아이콘, 10pt 모서리)
     public enum Size: String {
-        case xsmall, small, medium, large
+        /// 가장 작은 크기
+        case xsmall
+        /// 작은 크기
+        case small
+        /// 중간 크기
+        case medium
+        /// 큰 크기
+        case large
     }
     
     // MARK: - Properties

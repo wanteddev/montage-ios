@@ -13,7 +13,6 @@ extension Control {
     /// 사용자가 기능을 활성화하거나 비활성화할 수 있는 토글 스위치입니다.
     /// 작은 크기와 중간 크기 두 가지 옵션을 제공합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var isOn = false
     ///
@@ -29,11 +28,11 @@ extension Control {
     /// - Note: 스위치가 켜진 상태에서는 기본 테마 색상(primaryNormal)을 사용합니다.
     public struct Switch: View {
         /// 스위치의 크기를 정의하는 열거형입니다.
-        ///
-        /// - small: 작은 크기 (39x24)
-        /// - medium: 중간 크기 (52x32)
         public enum Size {
-            case small, medium
+            /// 작은 크기
+            case small
+            /// 중간 크기
+            case medium
         }
 
         @Binding private var isOn: Bool

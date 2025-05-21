@@ -15,7 +15,6 @@ import Lottie
 /// Lottie 애니메이션을 사용하여 시각적으로 매력적인 로딩 인디케이터를 표시하며,
 /// 색상 및 크기를 커스터마이징할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 원형 로딩 애니메이션 사용
 /// Loading(kind: .circular)
@@ -38,7 +37,6 @@ public struct Loading: View {
     ///
     /// 애플리케이션의 디자인 요구사항이나 컨텍스트에 따라 적절한 로딩 스타일을 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // Wanted 스타일 로딩 사용
     /// Loading(kind: .wanted)
@@ -155,7 +153,6 @@ extension View {
     ///   - dimmedColor: 오버레이 배경색 (기본값: 투명)
     /// - Returns: 로딩 기능이 적용된 뷰
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var isLoading = false
     ///

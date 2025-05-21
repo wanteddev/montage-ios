@@ -13,31 +13,23 @@ import SwiftUI
 /// `Thumbnail`은 원격 URL에서 이미지를 로드하여 지정된 비율과 크기로 표시합니다.
 /// 이미지 로딩 상태에 따른 플레이스홀더를 지원하고, 둥근 모서리와 테두리 스타일을 적용할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 정사각형 썸네일
-/// Thumbnail(url: imageURL)
-///    .ratio(.r1x1, width: 100)
+/// Thumbnail(urlString: imageURL, ratio: .r1x1)
+///    .width(100)
 ///
 /// // 16:9 비율의 둥근 모서리 썸네일
-/// Thumbnail(url: videoURL)
-///    .ratio(.r16x9, width: 320)
+/// Thumbnail(urlString: imageURL, ratio: .r16x9)
+///    .width(320)
 ///    .radius(true)
 ///
-/// // 커스텀 플레이스홀더가 있는 썸네일
-/// Thumbnail(
-///    url: profileURL,
-///    placeholder: {
-///        Image.montage(.userPlaceholder)
-///            .resizable()
-///            .scaledToFit()
-///    }
-/// )
-/// .ratio(.r1x1, height: 50)
-/// .border(true)
+/// // 테두리가 있는 썸네일
+/// Thumbnail(urlString: imageURL, ratio: .r1x1)
+///    .width(50)
+///    .border(true)
 /// ```
 ///
-/// - Note: 이미지 로딩에는 SDWebImage 라이브러리를 사용하며, 로드 실패 시 기본 또는 커스텀 플레이스홀더가 표시됩니다.
+/// - Note: 이미지 로딩에는 SDWebImage 라이브러리를 사용하며, 로드 실패 시 기본 플레이스홀더가 표시됩니다.
 public struct Thumbnail: View {
     
     // MARK: - Ratio Enum
@@ -47,15 +39,14 @@ public struct Thumbnail: View {
     /// 다양한 미디어 콘텐츠 유형에 맞는 여러 표준 비율을 제공합니다.
     /// 가로가 긴 비율(21:9, 16:9 등), 정사각형(1:1), 세로가 긴 비율(9:16, 1:2 등)을 지원합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// // 와이드스크린 비디오용 썸네일
-    /// Thumbnail(url: videoURL)
-    ///    .ratio(.r16x9, width: 320)
+    /// Thumbnail(urlString: videoURL, ratio: .r16x9)
+    ///    .width(320)
     ///
     /// // 모바일 세로 화면용 썸네일
-    /// Thumbnail(url: storyURL)
-    ///    .ratio(.r9x16, height: 400)
+    /// Thumbnail(urlString: storyURL, ratio: .r9x16)
+    ///    .width(400)
     /// ```
     ///
     /// - Note: 각 비율은 실제 픽셀 크기가 아닌 가로와 세로의 상대적 비율을 나타냅니다.

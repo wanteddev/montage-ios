@@ -14,7 +14,6 @@ import SwiftUI
 /// - `outlined`: 테두리만 있는 버튼
 /// - `text`: 텍스트만 있는 버튼
 ///
-/// ## 사용 예시
 /// ```swift
 /// // 기본 솔리드 버튼
 /// Button.solid(text: "확인", handler: { print("버튼 클릭") })
@@ -42,60 +41,63 @@ public struct Button: View {
     /// Solid 스타일 버튼과 관련된 타입을 정의합니다.
     public enum Solid {
         /// Solid 스타일 버튼의 변형을 정의합니다.
-        ///
-        /// - `.primary`: 기본 강조 스타일 - 브랜드 컬러를 사용하는 가장 강조된 버튼
-        /// - `.assistive`: 보조 스타일 - 중요도가 낮은 보조 액션에 사용
         public enum Variant: String {
-            case primary, assistive
+            /// 기본 강조 스타일 - 브랜드 컬러를 사용하는 가장 강조된 버튼
+            case primary
+            /// 보조 스타일 - 중요도가 낮은 보조 액션에 사용
+            case assistive
         }
         
         /// Solid 스타일 버튼의 크기를 정의합니다.
-        ///
-        /// - `.small`: 작은 크기
-        /// - `.medium`: 중간 크기
-        /// - `.large`: 큰 크기
         public enum Size: String {
-            case small, medium, large
+            /// 작은 크기
+            case small
+            /// 중간 크기
+            case medium
+            /// 큰 크기
+            case large
         }
     }
 
     /// Outlined 스타일 버튼과 관련된 타입을 정의합니다.
     public enum Outlined {
         /// Outlined 스타일 버튼의 변형을 정의합니다.
-        ///
-        /// - `.primary`: 기본 강조 스타일 - 브랜드 컬러의 테두리를 사용
-        /// - `.secondary`: 보조 강조 스타일 - 브랜드 컬러보다 덜 강조된 스타일
-        /// - `.assistive`: 보조 스타일 - 중요도가 낮은 보조 액션에 사용
         public enum Variant: String {
-            case primary, secondary, assistive
+            /// 기본 강조 스타일 - 브랜드 컬러의 테두리를 사용
+            case primary
+            /// 보조 강조 스타일 - 브랜드 컬러보다 덜 강조된 스타일
+            case secondary
+            /// 보조 스타일 - 중요도가 낮은 보조 액션에 사용
+            case assistive
         }
         
         /// Outlined 스타일 버튼의 크기를 정의합니다.
-        ///
-        /// - `.small`: 작은 크기
-        /// - `.medium`: 중간 크기
-        /// - `.large`: 큰 크기
         public enum Size: String {
-            case small, medium, large
+            /// 작은 크기
+            case small
+            /// 중간 크기
+            case medium
+            /// 큰 크기
+            case large
         }
     }
 
     /// Text 스타일 버튼과 관련된 타입을 정의합니다.
     public enum Text {
         /// Text 스타일 버튼의 변형을 정의합니다.
-        ///
-        /// - `.primary`: 기본 강조 스타일 - 브랜드 컬러를 텍스트에 사용
-        /// - `.assistive`: 보조 스타일 - 중요도가 낮은 텍스트 링크에 사용
         public enum Variant: String {
-            case primary, assistive
+            /// 기본 강조 스타일 - 브랜드 컬러를 텍스트에 사용
+            case primary
+            /// 보조 스타일 - 중요도가 낮은 텍스트 링크에 사용
+            case assistive
         }
         
         /// Text 스타일 버튼의 크기를 정의합니다.
-        ///
-        /// - `.small`: 작은 크기
-        /// - `.medium`: 중간 크기
         public enum Size: String {
-            case small, medium
+            /// 작은 크기
+            case small
+            /// 중간 크기
+            case medium
         }
     }
     
@@ -104,21 +106,23 @@ public struct Button: View {
     }
     
     /// 버튼의 변형을 정의합니다.
-    ///
-    /// - `.primary`: 기본 강조 스타일 - 주요 액션에 사용
-    /// - `.secondary`: 보조 강조 스타일 - 보조 액션에 사용
-    /// - `.assistive`: 보조 스타일 - 덜 중요한 액션에 사용
     public enum Variant: String {
-        case primary, secondary, assistive
+        /// 기본 강조 스타일 - 주요 액션에 사용
+        case primary
+        /// 보조 강조 스타일 - 보조 액션에 사용
+        case secondary
+        /// 보조 스타일 - 덜 중요한 액션에 사용
+        case assistive
     }
     
     /// 버튼의 크기를 정의합니다.
-    ///
-    /// - `.small`: 작은 크기 - 공간이 제한적일 때 사용
-    /// - `.medium`: 중간 크기 - 일반적인 용도로 사용
-    /// - `.large`: 큰 크기 - 중요한 액션이나 터치 영역이 커야 할 때 사용
     public enum Size: String {
-        case small, medium, large
+        /// 작은 크기
+        case small
+        /// 중간 크기
+        case medium
+        /// 큰 크기
+        case large
     }
     
     // MARK: - Initializers
@@ -153,7 +157,6 @@ public struct Button: View {
     ///
     /// 배경색이 채워진 스타일의 버튼으로, 주요 액션이나 강조가 필요한 액션에 적합합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.solid(text: "로그인", handler: { loginUser() })
     /// Button.solid(variant: .assistive, size: .small, text: "확인")
@@ -190,7 +193,6 @@ public struct Button: View {
     ///
     /// 배경색이 채워진 스타일의 아이콘 버튼으로, 공간이 제한적이거나 아이콘으로 충분히 의미가 전달될 때 사용합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.solid(icon: .plus, handler: { addItem() })
     /// Button.solid(variant: .assistive, size: .small, icon: .search)
@@ -221,7 +223,6 @@ public struct Button: View {
     ///
     /// 테두리만 있는 스타일의 버튼으로, 보조 액션이나 덜 강조된 액션에 적합합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.outlined(text: "취소", handler: { dismiss() })
     /// Button.outlined(variant: .secondary, size: .medium, text: "뒤로")
@@ -258,7 +259,6 @@ public struct Button: View {
     ///
     /// 테두리만 있는 스타일의 아이콘 버튼으로, 공간이 제한적이거나 보조적인 아이콘 액션에 적합합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.outlined(icon: .share, handler: { shareContent() })
     /// Button.outlined(variant: .assistive, size: .small, icon: .bookmark)
@@ -289,7 +289,6 @@ public struct Button: View {
     ///
     /// 텍스트만 있는 스타일의 버튼으로, 가벼운 액션이나 링크 형태의 액션에 적합합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.text(text: "더 보기", handler: { showMore() })
     /// Button.text(variant: .assistive, text: "상세보기", trailingIcon: .chevronRight)
@@ -338,7 +337,6 @@ public struct Button: View {
     ///
     /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.solid(text: "저장")
     ///     .disable(isFormInvalid)
@@ -354,7 +352,6 @@ public struct Button: View {
     
     /// 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.outlined(text: "복사")
     ///     .contentColor(.red)
@@ -372,7 +369,6 @@ public struct Button: View {
     ///
     /// Solid 스타일 버튼에 가장 효과적으로 적용됩니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.solid(text: "특별 액션")
     ///     .backgroundColor(.blue)
@@ -390,7 +386,6 @@ public struct Button: View {
     ///
     /// Outlined 스타일 버튼에 가장 효과적으로 적용됩니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.outlined(text: "경고")
     ///     .borderColor(.red)
@@ -408,7 +403,6 @@ public struct Button: View {
     ///
     /// 텍스트의 크기와 스타일을 변경할 때 사용합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.text(text: "중요 안내")
     ///     .fontVariant(.heading)
@@ -426,7 +420,6 @@ public struct Button: View {
     ///
     /// 텍스트의 강조를 조절할 때 사용합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.text(text: "중요 공지")
     ///     .fontWeight(.bold)
@@ -445,7 +438,6 @@ public struct Button: View {
     /// 로딩 상태인 버튼은 내부 콘텐츠 대신 로딩 인디케이터를 표시하며 사용자 상호작용에 반응하지 않습니다.
     /// 비동기 작업이 진행 중일 때 사용자에게 피드백을 제공하는 데 유용합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// Button.solid(text: "저장")
     ///     .loading(isLoading)
@@ -463,7 +455,6 @@ public struct Button: View {
     ///
     /// 버튼의 크기를 조절하여 컨테이너 뷰의 공간을 효율적으로 활용할 때 사용합니다.
     ///
-    /// ## 사용 예시
     /// ```swift
     /// // 부모 뷰의 가로 너비를 모두 채우는 버튼
     /// Button.solid(text: "전체 확인")

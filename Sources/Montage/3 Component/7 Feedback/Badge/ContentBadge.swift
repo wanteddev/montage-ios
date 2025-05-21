@@ -12,7 +12,6 @@ import SwiftUI
 /// 다양한 크기와 스타일, 색상을 제공하며 텍스트 앞뒤로 아이콘을 추가할 수 있습니다.
 /// 솔리드와 아웃라인 스타일을 지원합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 솔리드 뱃지
 /// ContentBadge(text: "New")
@@ -27,11 +26,11 @@ import SwiftUI
 /// - SeeAlso: `ContentBadge.Variant`, `ContentBadge.Size`, `ContentBadge.ColorStyle`
 public struct ContentBadge: View {
     /// 뱃지의 외관을 결정하는 열거형 타입입니다.
-    ///
-    /// - solid: 색상이 채워진 배경을 가진 뱃지
-    /// - outlined: 테두리만 있는 뱃지
     public enum Variant {
-        case solid, outlined
+        /// 색상이 채워진 배경을 가진 뱃지
+        case solid
+        /// 테두리만 있는 뱃지
+        case outlined
     }
     
     /// 뱃지의 사이즈를 결정하는 열거형입니다.
@@ -45,10 +44,6 @@ public struct ContentBadge: View {
     
     /// 뱃지의 색상을 결정하는 열거형입니다.
     ///
-    /// - neutral: 중립적인 회색 계열 뱃지
-    /// - accent: 강조 색상을 사용하는 뱃지
-    ///
-    /// **사용 예시**:
     /// ```swift
     /// ContentBadge(text: "이벤트")
     ///     .colorStyle(.accent(SwiftUI.Color.red))

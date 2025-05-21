@@ -12,7 +12,6 @@ import SwiftUI
 /// SwiftUI의 .sheet 수정자와 함께 사용하여 다양한 크기와 동작을 지원하는 바텀 시트를 구현합니다.
 /// 내비게이션 바, 액션 영역, 핸들 등의 요소를 설정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var showBottomSheet = false
 ///
@@ -46,22 +45,25 @@ import SwiftUI
 ///     }
 /// ```
 ///
-/// - SeeAlso: `BottomSheetModalModifier`, `ModalNavigation`, `ActionAreaModifier.Model`
+/// - SeeAlso: `BottomSheetModalModifier`, `ModalNavigation`, `ActionArea.Model`
 public struct BottomSheetModal: View {
     // MARK: - Types
     
     /// 바텀 시트의 크기를 정의하는 열거형입니다.
-    ///
-    /// - hug: 컨텐츠 크기에 맞게 자동 조절됩니다.
-    /// - fixedRatio: 화면 높이의 특정 비율로 고정됩니다.
-    /// - fixedHeight: 지정한 높이로 고정됩니다.
-    /// - flexible: 사용자가 드래그하여 크기를 조절할 수 있습니다.
-    /// - fill: 화면 전체를 채웁니다.
     public enum Resize {
+        /// 컨텐츠 크기에 맞게 자동 조절됩니다.
         case hug
+        /// 화면 높이의 특정 비율로 고정됩니다.
+        ///
+        /// - Parameter ratio: 비율 (0.0 ~ 1.0)
         case fixedRatio(CGFloat)
+        /// 지정한 높이로 고정됩니다.
+        ///
+        /// - Parameter height: 높이
         case fixedHeight(CGFloat)
+        /// 사용자가 드래그하여 크기를 조절할 수 있습니다.
         case flexible
+        /// 화면 전체를 채웁니다.
         case fill
         
         fileprivate var isFlexible: Bool {
@@ -162,7 +164,7 @@ public struct BottomSheetModal: View {
     private var needHandle = true
     private var resize: Resize = .hug
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionAreaModifier.Model?
+    private var actionAreaModel: ActionArea.Model?
     private var ignoresEdgeInsets = false
     private var fullModal = false
     
@@ -200,7 +202,7 @@ public struct BottomSheetModal: View {
     ///
     /// - Parameter actionAreaModel: 액션 영역 모델
     /// - Returns: 수정된 바텀 시트 뷰
-    public func modalActionArea(_ actionAreaModel: ActionAreaModifier.Model?) -> Self {
+    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
         var zelf = self
         zelf.actionAreaModel = actionAreaModel
         return zelf
@@ -284,7 +286,6 @@ public struct BottomSheetModal: View {
 ///
     /// 이 모디파이어를 사용하면 바텀 시트를 쉽게 표시하고 설정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var showBottomSheet = false
 ///
@@ -302,14 +303,14 @@ public struct BottomSheetModal: View {
 /// ```
 ///
 /// - SeeAlso: `BottomSheetModal`
-public struct BottomSheetModalModifier: ViewModifier {
+struct BottomSheetModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let bottomSheetContent: () -> any View
     private let needHandle: Bool
     private let resize: BottomSheetModal.Resize
     private let ignoresEdgeInsets: Bool
     private let navigation: (() -> ModalNavigation)?
-    private let actionAreaModel: ActionAreaModifier.Model?
+    private let actionAreaModel: ActionArea.Model?
     
     /// 바텀 시트 모디파이어를 초기화합니다.
     ///
@@ -321,14 +322,14 @@ public struct BottomSheetModalModifier: ViewModifier {
     ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
     ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
-    public init(
+    init(
         isPresented: Binding<Bool>,
         _ content: @escaping () -> any View,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         navigation: ( () -> ModalNavigation)? = nil,
-        actionAreaModel: ActionAreaModifier.Model? = nil
+        actionAreaModel: ActionArea.Model? = nil
     ) {
         _isPresented = isPresented
         bottomSheetContent = content
@@ -339,7 +340,7 @@ public struct BottomSheetModalModifier: ViewModifier {
         self.actionAreaModel = actionAreaModel
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .sheet(isPresented: $isPresented) {
                 BottomSheetModal {
@@ -373,7 +374,7 @@ extension View {
         isPresented: Binding<Bool>,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
-        actionAreaModel: ActionAreaModifier.Model? = nil,
+        actionAreaModel: ActionArea.Model? = nil,
         _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {

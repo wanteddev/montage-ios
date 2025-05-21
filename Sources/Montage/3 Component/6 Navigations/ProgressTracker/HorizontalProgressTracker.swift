@@ -14,7 +14,6 @@ extension ProgressTracker {
     /// 각 단계는 원형 아이콘과 선으로 연결되며, 완료된 단계는 체크 마크로 표시됩니다.
     /// 각 단계에 라벨을 추가하여 단계의 의미를 명확히 전달할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var currentStep = 2
     /// 

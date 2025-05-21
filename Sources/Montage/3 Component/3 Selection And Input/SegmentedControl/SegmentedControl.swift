@@ -12,7 +12,6 @@ import SwiftUI
 /// 제한된 옵션 세트 내에서 선택할 수 있도록 하는 가로로 정렬된 버튼 그룹입니다.
 /// 각 세그먼트는 이미지와 텍스트를 포함할 수 있으며, 선택된 세그먼트는 시각적으로 강조됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var selectedIndex = 0
 ///
@@ -57,20 +56,21 @@ public struct SegmentedControl: View {
     }
     
     /// 세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
-    ///
-    /// - solid: 배경이 채워진 스타일
-    /// - outlined: 테두리만 있는 스타일
     public enum Variant {
-        case solid, outlined
+        /// 배경이 채워진 스타일
+        case solid
+        /// 테두리만 있는 스타일
+        case outlined
     }
     
     /// 세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
-    ///
-    /// - large: 큰 크기 (48px 높이)
-    /// - medium: 중간 크기 (40px 높이)
-    /// - small: 작은 크기 (32px 높이)
     public enum Size {
-        case large, medium, small
+        /// 큰 크기
+        case large
+        /// 중간 크기
+        case medium
+        /// 작은 크기
+        case small
     }
     
     // MARK: - Initializer

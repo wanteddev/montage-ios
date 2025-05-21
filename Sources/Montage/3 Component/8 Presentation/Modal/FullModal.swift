@@ -13,7 +13,6 @@ import SwiftUI
 /// 전체 화면을 덮는 모달을 구현합니다. 내비게이션 바와 액션 영역을
 /// 설정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var showFullModal = false
 ///
@@ -51,7 +50,7 @@ import SwiftUI
 ///     )
 /// ```
 ///
-/// - SeeAlso: `FullModalModifier`, `ModalNavigation`, `ActionAreaModifier.Model`
+/// - SeeAlso: `FullModalModifier`, `ModalNavigation`, `ActionArea.Model`
 public struct FullModal: View {
     // MARK: - Initializer
     
@@ -80,7 +79,7 @@ public struct FullModal: View {
     
     private var ignoresEdgeInsets = false
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionAreaModifier.Model?
+    private var actionAreaModel: ActionArea.Model?
     
     /// 컨텐츠의 기본 여백을 무시할지 설정합니다.
     ///
@@ -106,7 +105,7 @@ public struct FullModal: View {
     ///
     /// - Parameter actionAreaModel: 액션 영역 모델
     /// - Returns: 수정된 풀스크린 모달 뷰
-    public func modalActionArea(_ actionAreaModel: ActionAreaModifier.Model?) -> Self {
+    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
         var zelf = self
         zelf.actionAreaModel = actionAreaModel
         return zelf
@@ -117,7 +116,6 @@ public struct FullModal: View {
 ///
 /// 이 모디파이어를 사용하면 풀스크린 모달을 쉽게 표시하고 설정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var showFullModal = false
 ///
@@ -134,12 +132,12 @@ public struct FullModal: View {
 /// ```
 ///
 /// - SeeAlso: `FullModal`
-public struct FullModalModifier: ViewModifier {
+struct FullModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let ignoresEdgeInsets: Bool
     private let fullContent: () -> any View
     private let navigation: (() -> ModalNavigation)?
-    private let actionAreaModel: ActionAreaModifier.Model?
+    private let actionAreaModel: ActionArea.Model?
     
     /// 풀스크린 모달 모디파이어를 초기화합니다.
     ///
@@ -149,12 +147,12 @@ public struct FullModalModifier: ViewModifier {
     ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
     ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
-    public init(
+    init(
         isPresented: Binding<Bool>,
         ignoresEdgeInsets: Bool = false,
         _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil,
-        actionAreaModel: ActionAreaModifier.Model? = nil
+        actionAreaModel: ActionArea.Model? = nil
     ) {
         _isPresented = isPresented
         self.ignoresEdgeInsets = ignoresEdgeInsets
@@ -163,7 +161,7 @@ public struct FullModalModifier: ViewModifier {
         self.actionAreaModel = actionAreaModel
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content
             .fullScreenCover(isPresented: $isPresented) {
                 FullModal {
@@ -193,7 +191,7 @@ extension View {
     public func fullModal(
         isPresented: Binding<Bool>,
         ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionAreaModifier.Model? = nil,
+        actionAreaModel: ActionArea.Model? = nil,
         _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {

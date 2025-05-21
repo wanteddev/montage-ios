@@ -12,7 +12,6 @@ import SwiftUI
 /// 기본 SwiftUI 스크롤 뷰를 확장하여 스크롤 상태 추적, 오프셋 감지, 새로고침 등
 /// 추가 기능을 제공합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// @State private var scrollStatus = ScrollView.ScrollStatus()
 ///

@@ -15,7 +15,6 @@ import UIKit
 /// 각 로고는 브랜드 아이덴티티를 일관되게 표현하기 위해 
 /// 다양한 형태와 방향으로 제공됩니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // UIKit에서 사용
 /// let imageView = UIImageView()

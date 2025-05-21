@@ -12,7 +12,6 @@ import SwiftUI
 /// `Cell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다.
 /// 타이틀, 부가 설명, 좌측 콘텐츠, 우측 콘텐츠 등을 포함할 수 있으며 다양한 스타일로 커스터마이징할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 셀
 /// Cell(title: "기본 셀")
@@ -41,13 +40,10 @@ public struct Cell: View {
     ///
     /// 셀 컴포넌트의 상하 여백을 조정할 때 사용되며, 각 케이스는 다양한 크기의 여백을 제공합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Cell(title: "넓은 여백이 있는 셀")
     ///     .verticalPadding(.large)
     /// ```
-    ///
-    /// - Note: 여백 크기는 none(0), small(8), medium(12), large(16)으로 정의됩니다.
     public enum VerticalPadding {
         /// 여백 없음 (0pt)
         case none

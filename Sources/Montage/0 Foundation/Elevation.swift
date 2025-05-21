@@ -14,7 +14,6 @@ import SwiftUI
 /// 그림자 효과를 정의합니다. 여러 단계의 그림자를 통해 
 /// 요소 간의 계층 구조와 중요도를 시각적으로 나타냅니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // UIKit에서 사용
 /// let cardView = UIView()
@@ -30,13 +29,13 @@ import SwiftUI
 public enum Elevation: Equatable {
     /// 그림자 없음
     case none
-    /// 일반적인 수준의 그림자 (1pt 높이)
+    /// 일반적인 수준의 그림자
     case shadowNormal
-    /// 강조된 수준의 그림자 (2pt 높이)
+    /// 강조된 수준의 그림자
     case shadowEmphasize
-    /// 강한 수준의 그림자 (4pt 높이)
+    /// 강한 수준의 그림자
     case shadowStrong
-    /// 가장 강한 수준의 그림자 (8pt 높이)
+    /// 가장 강한 수준의 그림자
     case shadowHeavy
 }
 

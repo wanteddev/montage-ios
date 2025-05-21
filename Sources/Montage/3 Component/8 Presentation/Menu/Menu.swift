@@ -12,7 +12,6 @@ import SwiftUI
 /// 일반, 라디오 버튼, 체크박스 형태로 메뉴 항목을 표시할 수 있으며,
 /// 메뉴 하단에 추가 액션 영역을 포함할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 메뉴
 /// @State private var items: [Menu.Item] = [
@@ -45,13 +44,12 @@ import SwiftUI
 /// - SeeAlso: `Menu.Variant`, `Menu.Item`
 public struct Menu: View {
     /// 메뉴의 표시 형태를 정의하는 열거형입니다.
-    ///
-    /// - normal: 기본 메뉴 형태로, 선택 표시 없이 항목만 표시
-    /// - radio: 라디오 버튼 형태로, 단일 항목만 선택 가능
-    /// - checkbox: 체크박스 형태로, 다중 항목 선택 가능
     public enum Variant {
+        /// 기본 메뉴 형태, 선택 표시 없이 항목만 표시
         case normal
+        /// 라디오 버튼 형태, 단일 항목만 선택 가능
         case radio
+        /// 체크박스 형태, 다중 항목 선택 가능
         case checkbox
     }
     
@@ -59,7 +57,6 @@ public struct Menu: View {
     ///
     /// 제목과 선택 상태를 포함합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Menu.Item(title: "메뉴 항목", isSelected: false)
     /// ```
@@ -174,7 +171,6 @@ public struct Menu: View {
     ///
     /// 왼쪽과 오른쪽에 버튼이나 다른 뷰를 배치할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// Menu(variant: .normal, items: $items)
     ///     .menuActionArea(

@@ -15,7 +15,6 @@ import UIKit
 /// 정의합니다. 폰트 크기, 두께, 자간, 행간 등 텍스트의 시각적 특성을
 /// 일관되게 적용할 수 있도록 표준화된 타이포그래피 시스템을 제공합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // UIKit에서 사용
 /// let label = UILabel()
@@ -36,15 +35,12 @@ public enum Typography {
     /// Weight는 텍스트의 시각적 강조를 위한 세 가지 기본 두께를 제공합니다.
     /// 텍스트의 중요도나 계층 구조에 따라 적절한 두께를 선택하여 사용합니다.
     ///
-    /// - regular: 일반적인 본문 텍스트에 사용 (400)
-    /// - medium: 중간 강조가 필요한 텍스트에 사용 (500)
-    /// - bold: 강한 강조가 필요한 제목이나 중요 정보에 사용 (600/700)
     public enum Weight: CaseIterable {
-        /// 일반 두께 (Regular, 400)
+        /// 일반 두께
         case regular
-        /// 중간 두께 (Medium, 500)
+        /// 중간 두께
         case medium
-        /// 굵은 두께 (SemiBold/Bold, 600/700)
+        /// 굵은 두께
         case bold
     }
     
@@ -62,80 +58,44 @@ public enum Typography {
     /// - Label: 작은 텍스트 (버튼, 폼 레이블 등)
     /// - Caption: 가장 작은 보조 텍스트
     public enum Variant: CaseIterable {
-        /// 가장 큰 디스플레이 텍스트 (56pt)
+        /// 가장 큰 디스플레이 텍스트
         case display1
-        /// 큰 디스플레이 텍스트 (40pt)
+        /// 큰 디스플레이 텍스트
         case display2
-        /// 대제목 (36pt)
+        /// 대제목
         case title1
-        /// 중간 제목 (28pt)
+        /// 중간 제목
         case title2
-        /// 소제목 (24pt)
+        /// 소제목
         case title3
-        /// 주요 헤딩 (22pt)
+        /// 주요 헤딩
         case heading1
-        /// 보조 헤딩 (20pt)
+        /// 보조 헤딩
         case heading2
-        /// 강조 헤드라인 (18pt)
+        /// 강조 헤드라인
         case headline1
-        /// 일반 헤드라인 (17pt)
+        /// 일반 헤드라인
         case headline2
-        /// 기본 본문 텍스트 (16pt)
+        /// 기본 본문 텍스트
         case body1
-        /// 긴 텍스트용 본문 (16pt, 높은 행간)
+        /// 긴 텍스트용 본문
         case body1Reading
-        /// 작은 본문 텍스트 (15pt)
+        /// 작은 본문 텍스트
         case body2
-        /// 긴 텍스트용 작은 본문 (15pt, 높은 행간)
+        /// 긴 텍스트용 작은 본문
         case body2Reading
-        /// 라벨 텍스트 (14pt)
+        /// 라벨 텍스트
         case label1
-        /// 긴 텍스트용 라벨 (14pt, 높은 행간)
+        /// 긴 텍스트용 라벨
         case label1Reading
-        /// 작은 라벨 텍스트 (13pt)
+        /// 작은 라벨 텍스트
         case label2
-        /// 캡션 텍스트 (12pt)
+        /// 캡션 텍스트
         case caption1
-        /// 작은 캡션 텍스트 (11pt)
+        /// 작은 캡션 텍스트
         case caption2
     }
-}
 
-public extension Typography.Weight {
-    var uiFontWeight: UIFont.Weight {
-        switch self {
-        case .regular: .regular
-        case .medium: .medium
-        case .bold: .bold
-        }
-    }
-
-    var fontWeight: Font.Weight {
-        switch self {
-        case .regular: .regular
-        case .medium: .medium
-        case .bold: .bold
-        }
-    }
-    
-    var pretendardWeight: Pretendard.Weight {
-        switch self {
-        case .regular: .regular
-        case .medium: .medium
-        case .bold: .semibold
-        }
-    }
-    
-    var failbackWeight: UIFont.Weight {
-        switch self {
-        case .regular: .regular
-        case .medium: .medium
-        case .bold: .semibold
-        }
-    }
-}
-
-public extension Typography {
     static func getSementicWeight(variant: Variant, weight: Weight) -> Pretendard.Weight {
         switch (variant, weight) {
         case (.title1, .bold), (.title2, .bold), (.title3, .bold):
@@ -279,6 +239,40 @@ public extension Typography {
             16
         case .caption2:
             14
+        }
+    }
+}
+
+public extension Typography.Weight {
+    var uiFontWeight: UIFont.Weight {
+        switch self {
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .bold
+        }
+    }
+
+    var fontWeight: Font.Weight {
+        switch self {
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .bold
+        }
+    }
+    
+    var pretendardWeight: Pretendard.Weight {
+        switch self {
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .semibold
+        }
+    }
+    
+    var failbackWeight: UIFont.Weight {
+        switch self {
+        case .regular: .regular
+        case .medium: .medium
+        case .bold: .semibold
         }
     }
 }

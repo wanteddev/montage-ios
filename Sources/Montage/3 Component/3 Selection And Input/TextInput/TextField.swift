@@ -12,7 +12,6 @@ import SwiftUI
 /// 이 컴포넌트는 사용자가 텍스트를 입력할 수 있는 필드를 제공합니다.
 /// 제목, 아이콘, 자동완성, 상태 표시 등 다양한 기능을 지원합니다.
 ///
-/// ## 사용 예시
 /// ```swift
 /// @State private var inputText = ""
 ///
@@ -42,13 +41,12 @@ public struct TextField: View {
     // MARK: - Types
     
     /// 텍스트 필드의 상태를 정의합니다.
-    ///
-    /// - `.normal`: 기본 상태, 선택적으로 설명 텍스트 포함 가능
-    /// - `.positive`: 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
-    /// - `.negative`: 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
     public enum Status {
+        /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
         case normal(description: String = "")
+        /// 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
         case positive(description: String = "")
+        /// 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
         case negative(description: String = "")
     }
     

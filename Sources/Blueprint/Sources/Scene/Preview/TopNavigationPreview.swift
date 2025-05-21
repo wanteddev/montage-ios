@@ -83,7 +83,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var actionAreaModel: ActionAreaModifier.Model? {
+    private var actionAreaModel: ActionArea.Model? {
         if actionArea {
             .init(
                 variant: .strong(

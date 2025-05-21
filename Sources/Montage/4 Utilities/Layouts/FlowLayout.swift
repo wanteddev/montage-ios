@@ -12,7 +12,6 @@ import SwiftUI
 /// 이 레이아웃은 컨테이너의 너비를 초과할 경우 항목을 자동으로 다음 줄로 넘겨 배치합니다.
 /// 항목 간 수평 간격과 줄 간 수직 간격을 설정할 수 있습니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// FlowLayout(spacing: 8, lineSpacing: 12) {
 ///     ForEach(tags, id: \.self) { tag in

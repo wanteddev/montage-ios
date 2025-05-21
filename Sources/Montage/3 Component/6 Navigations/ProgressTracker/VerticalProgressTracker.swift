@@ -14,7 +14,6 @@ extension ProgressTracker {
     /// 각 단계는 원형 아이콘과 수직선으로 연결되며, 완료된 단계는 체크 마크로 표시됩니다.
     /// 각 단계에 라벨과 추가 콘텐츠를 표시할 수 있어 풍부한 정보 제공이 가능합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// @State private var currentStep = 2
     /// 
@@ -37,7 +36,6 @@ extension ProgressTracker {
         ///
         /// 각 단계의 라벨, 라벨 보조 뷰, 그리고 추가 콘텐츠를 포함할 수 있습니다.
         ///
-        /// **사용 예시**:
         /// ```swift
         /// ProgressTracker.Vertical.StepContent(
         ///     label: "배송 정보",

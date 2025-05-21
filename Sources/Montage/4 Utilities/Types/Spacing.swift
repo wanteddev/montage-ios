@@ -15,7 +15,6 @@ import UIKit
 /// 모든 간격은 4포인트 기반의 스케일로 구성되어 있어 디자인의 
 /// 일관성과 조화를 유지합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // UIKit에서 사용
 /// let padding = CGFloat.spacing(.pt16)
@@ -71,7 +70,6 @@ public extension CGFloat {
     ///
     /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// let padding = CGFloat.spacing(.pt16) // 16.0
     /// ```
@@ -123,7 +121,6 @@ public extension Float {
     ///
     /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// let padding = Float.spacing(.pt16) // 16.0
     /// ```

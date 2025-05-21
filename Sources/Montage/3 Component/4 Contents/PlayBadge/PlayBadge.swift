@@ -12,7 +12,6 @@ import SwiftUI
 /// `PlayBadge`는 미디어 콘텐츠에서 재생 기능을 나타내는 원형 아이콘을 제공합니다.
 /// 다양한 크기와 스타일로 커스터마이징할 수 있으며, 이미지나 비디오 위에 오버레이로 표시하기 적합합니다.
 ///
-/// **사용 예시**:
 /// ```swift
 /// // 기본 재생 배지
 /// PlayBadge()
@@ -35,19 +34,16 @@ public struct PlayBadge: View {
     ///
     /// 미디어 콘텐츠의 크기나 중요도에 따라 적절한 배지 크기를 선택할 수 있습니다.
     ///
-    /// **사용 예시**:
     /// ```swift
     /// PlayBadge()
     ///     .size(.large) // 큰 크기의 배지 사용
     /// ```
-    ///
-    /// - Note: small(36pt), medium(60pt), large(80pt) 세 가지 크기를 제공합니다.
     public enum Size {
-        /// 작은 크기 배지 (36pt)
+        /// 작은 크기 배지
         case small
-        /// 중간 크기 배지 (60pt, 기본값)
+        /// 중간 크기 배지
         case medium
-        /// 큰 크기 배지 (80pt)
+        /// 큰 크기 배지
         case large
     }
     
