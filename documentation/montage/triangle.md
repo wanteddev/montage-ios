@@ -1,26 +1,15 @@
 ---
-1title: triangle
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Triangle
+description: 삼각형 모양을 그리는 Shape 컴포넌트입니다.
 ---
-
-Structure
-
-# Triangle 
-
-삼각형 모양을 그리는 Shape 컴포넌트입니다.
 
 ```swift
 struct Triangle
 ```
 
-## Overview 
+## Overview
 
 정해진 영역 내에 정삼각형 형태를 그립니다. 화살표 포인터, 툴팁, 인디케이터 등 다양한 UI 요소에 활용할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 Triangle()
@@ -40,40 +29,59 @@ Button("메뉴") {
 }
 ```
 
-> **See Also**
+>  See Also
 >
-> SwiftUI.Shape 프로토콜
+> `SwiftUI.Shape` 프로토콜
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init()](/documentation/montage/triangle/init().md)
 
-  삼각형을 초기화합니다.
+``init()``
 
-### Instance Methods 
+삼각형을 초기화합니다.
 
-- [func path(in: CGRect) -> Path](/documentation/montage/triangle/path(in:).md)
+### Instance Methods
 
-  삼각형 경로를 정의합니다.
 
-### Default Implementations 
+``func path(in: CGRect) -> Path``
 
-- [API ReferenceAnimatable Implementations](/documentation/montage/triangle/animatable-implementations.md)
+삼각형 경로를 정의합니다.
 
-- [API ReferenceShape Implementations](/documentation/montage/triangle/shape-implementations.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `rect` | 삼각형이 그려질 영역 |
+- **Return Value**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  삼각형 경로
+- **Discussion**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  삼각형은 기본적으로 아래쪽을 향하는 형태로 그려집니다. 방향을 변경하려면 rotationEffect 모디파이어를 사용하세요.
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Sendable
-- SwiftUICore.Animatable
-- SwiftUICore.Shape
-- SwiftUICore.View
+[Animatable Implementations](/documentation/montage/triangle/animatable-implementations.md)
+
+[Shape Implementations](/documentation/montage/triangle/shape-implementations.md)
+
+[View Implementations](/documentation/montage/triangle/view-implementations.md)
+
+[View Implementations](/documentation/montage/triangle/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.Animatable`
+
+`SwiftUICore.Shape`
+
+`SwiftUICore.View`
+
+
 

@@ -1,27 +1,15 @@
 ---
-1title: snackbar
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: SnackBar
+description: 화면 하단에 임시로 표시되는 알림 메시지 컴포넌트입니다.
 ---
 
-Structure
-
-# SnackBar 
-
-화면 하단에 임시로 표시되는 알림 메시지 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct SnackBar
+@MainActor struct SnackBar
 ```
 
-## Overview 
+## Overview
 
 사용자에게 짧은 피드백이나 알림을 제공하기 위해 사용합니다. 제목, 설명, 추가 콘텐츠와 액션 버튼을 포함할 수 있으며, 설정된 시간이 지나면 자동으로 사라집니다.
-
-**사용 예시**:
 
 ```swift
 // 모델을 통한 스낵바 표시
@@ -47,42 +35,45 @@ var body: some View {
 }
 ```
 
-> **See Also**
+>  See Also
 >
-> SnackBar.Duration, SnackBar.Model, SnackBar.SnackBarModifier
+> `SnackBar.Duration`, `SnackBar.Model`, `SnackBar.SnackBarModifier`
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct Model](/documentation/montage/snackbar/model.md)
 
-  SnackBar의 데이터 모델을 정의하는 구조체입니다.
+[``struct Model``](/documentation/montage/snackbar/model.md)
 
-- [struct SnackBarModifier](/documentation/montage/snackbar/snackbarmodifier.md)
+SnackBar의 데이터 모델을 정의하는 구조체입니다.
 
-  SnackBar를 화면에 표시하기 위한 뷰 모디파이어입니다.
+### Instance Properties
 
-### Instance Properties 
 
-- [var body: some View](/documentation/montage/snackbar/body.md)
+``var body: some View``
 
-### Enumerations 
+### Enumerations
 
-- [enum Duration](/documentation/montage/snackbar/duration.md)
 
-  SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
+[``enum Duration``](/documentation/montage/snackbar/duration.md)
 
-### Default Implementations 
+SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+### Default Implementations
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-## Relationships 
+[View Implementations](/documentation/montage/snackbar/view-implementations.md)
 
-### Conforms To 
+[View Implementations](/documentation/montage/snackbar/view-implementations.md)
 
-- Swift.Sendable
-- SwiftUICore.View
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

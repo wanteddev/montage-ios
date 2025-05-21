@@ -1,10 +1,11 @@
-API Collection
+---
+title: Equatable Implementations
+---
 
-# Equatable Implementations 
+## Topics
 
-## Topics 
+### Operators
 
-### Operators 
 
-- [static func != (Self, Self) -> Bool](/documentation/montage/color/semantic/!=(_:_:).md)
+``static func != (Self, Self) -> Bool``
 

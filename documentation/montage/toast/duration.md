@@ -1,42 +1,37 @@
 ---
-1title: duration
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Toast.Duration
+description: 토스트 메시지의 표시 시간을 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# Toast.Duration 
-
-토스트 메시지의 표시 시간을 정의하는 열거형입니다.
 
 ```swift
 enum Duration
 ```
 
-## Overview 
+## Topics
 
-- short: 짧은 표시 시간 (3초)
-- long: 긴 표시 시간 (5초)
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case long``
 
-- [case long](/documentation/montage/toast/duration/long.md)
+긴 표시 시간 (5초)
 
-- [case short](/documentation/montage/toast/duration/short.md)
+``case short``
 
-### Default Implementations 
+짧은 표시 시간 (3초)
 
-- [API ReferenceEquatable Implementations](/documentation/montage/toast/duration/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/toast/duration/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

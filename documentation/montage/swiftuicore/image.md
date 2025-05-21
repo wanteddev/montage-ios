@@ -1,28 +1,37 @@
 ---
-1title: image
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Image
 ---
-
-Extended Structure
-
-# Image 
-
-MontageSwiftUICore
 
 ```swift
 extension Image
 ```
 
-## Topics 
+## Topics
 
-### Type Methods 
+### Type Methods
 
-- [static func montage(Logo) -> Image](/documentation/montage/swiftuicore/image/montage(_:)-1tvgb.md)
 
-  Montage 디자인 시스템의 로고를 생성합니다.
+``static func montage(Logo) -> Image``
 
-- [static func montage(Icon) -> Image](/documentation/montage/swiftuicore/image/montage(_:)-854f5.md)
+Montage 디자인 시스템의 로고를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `type` | 생성할 로고 타입 |
+- **Return Value**
+
+  생성된 Image 인스턴스
+
+``static func montage(Icon) -> Image``
+
+Montage 디자인 시스템의 아이콘을 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `type` | 생성할 아이콘 타입 |
+- **Return Value**
+
+  생성된 Image 인스턴스
 

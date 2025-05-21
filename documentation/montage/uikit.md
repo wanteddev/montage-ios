@@ -1,26 +1,19 @@
 ---
-1title: uikit
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: UIKit
 ---
 
-Extended Module
+## Topics
 
-# UIKit 
+### Extended Classes
 
-## Topics 
 
-### Extended Classes 
+[``extension UIColor``](/documentation/montage/uikit/uicolor.md)
 
-- [extension UIColor](/documentation/montage/uikit/uicolor.md)
+[``extension UIFont``](/documentation/montage/uikit/uifont.md)
 
-- [extension UIFont](/documentation/montage/uikit/uifont.md)
+[``extension UIImage``](/documentation/montage/uikit/uiimage.md)
 
-- [extension UIImage](/documentation/montage/uikit/uiimage.md)
+[``extension UILabel``](/documentation/montage/uikit/uilabel.md)
 
-- [extension UILabel](/documentation/montage/uikit/uilabel.md)
-
-- [extension UIView](/documentation/montage/uikit/uiview.md)
+[``extension UIView``](/documentation/montage/uikit/uiview.md)
 

@@ -1,45 +1,41 @@
 ---
-1title: horizontalposition
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: PushBadge.Position.HorizontalPosition
+description: 수평 위치를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# PushBadge.Position.HorizontalPosition 
-
-수평 위치를 정의하는 열거형입니다.
 
 ```swift
 enum HorizontalPosition
 ```
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case center](/documentation/montage/pushbadge/position/horizontalposition/center.md)
 
-  중앙 정렬
+``case center``
 
-- [case leading](/documentation/montage/pushbadge/position/horizontalposition/leading.md)
+중앙 정렬
 
-  좌측 정렬
+``case leading``
 
-- [case trailing](/documentation/montage/pushbadge/position/horizontalposition/trailing.md)
+좌측 정렬
 
-  우측 정렬
+``case trailing``
 
-### Default Implementations 
+우측 정렬
 
-- [API ReferenceEquatable Implementations](/documentation/montage/pushbadge/position/horizontalposition/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/pushbadge/position/horizontalposition/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

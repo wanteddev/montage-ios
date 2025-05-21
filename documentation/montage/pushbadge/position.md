@@ -1,26 +1,15 @@
 ---
-1title: position
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: PushBadge.Position
+description: 뱃지의 위치를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# PushBadge.Position 
-
-뱃지의 위치를 정의하는 열거형입니다.
 
 ```swift
 enum Position
 ```
 
-## Overview 
+## Overview
 
 수직 위치(top, center, bottom)와 수평 위치(leading, center, trailing)를 함께 지정할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 우측 상단에 위치
@@ -30,23 +19,42 @@ enum Position
 .modifier(PushBadge.Modifier(position: .bottom(.leading)))
 ```
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case bottom(HorizontalPosition)](/documentation/montage/pushbadge/position/bottom(_:).md)
 
-  하단 위치
+``case bottom(HorizontalPosition)``
 
-- [case center(HorizontalPosition)](/documentation/montage/pushbadge/position/center(_:).md)
+하단 위치
 
-  중앙 위치
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `horizontalPosition` | 수평 위치 (기본값: center) |
 
-- [case top(HorizontalPosition)](/documentation/montage/pushbadge/position/top(_:).md)
+``case center(HorizontalPosition)``
 
-  상단 위치
+중앙 위치
 
-### Enumerations 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `horizontalPosition` | 수평 위치 (기본값: center) |
 
-- [enum HorizontalPosition](/documentation/montage/pushbadge/position/horizontalposition.md)
+``case top(HorizontalPosition)``
+
+상단 위치
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `horizontalPosition` | 수평 위치 (기본값: center) |
+
+### Enumerations
+
+
+[``enum HorizontalPosition``](/documentation/montage/pushbadge/position/horizontalposition.md)
+
+수평 위치를 정의하는 열거형입니다.
 

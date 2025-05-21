@@ -1,27 +1,15 @@
 ---
-1title: cell
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Cell
+description: 텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.
 ---
 
-Structure
-
-# Cell 
-
-텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct Cell
+@MainActor struct Cell
 ```
 
-## Overview 
+## Overview
 
-Cell은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다. 타이틀, 부가 설명, 좌측 콘텐츠, 우측 콘텐츠 등을 포함할 수 있으며 다양한 스타일로 커스터마이징할 수 있습니다.
-
-**사용 예시**:
+`Cell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다. 타이틀, 부가 설명, 좌측 콘텐츠, 우측 콘텐츠 등을 포함할 수 있으며 다양한 스타일로 커스터마이징할 수 있습니다.
 
 ```swift
 // 기본 셀
@@ -44,104 +32,328 @@ Cell(title: "커스텀 셀")
     }
 ```
 
-> **Note**
+>  Note
 >
-> Cell은 인터랙션 효과, 구분선, 강조 표시 등 다양한 시각적 요소를 지원합니다.
+> `Cell`은 인터랙션 효과, 구분선, 강조 표시 등 다양한 시각적 요소를 지원합니다.
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(title: String, onTap: (() -> Void)?)](/documentation/montage/cell/init(title:ontap:).md)
 
-  셀 컴포넌트를 초기화합니다.
+``init(title: String, onTap: (() -> Void)?)``
 
-### Instance Properties 
+셀 컴포넌트를 초기화합니다.
 
-- [var body: some View](/documentation/montage/cell/body.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 셀에 표시할 제목 텍스트 |
+  | `onTap` | 셀을 탭했을 때 실행할 클로저 |
 
-### Instance Methods 
+### Instance Properties
 
-- [func active(Bool) -> Cell](/documentation/montage/cell/active(_:).md)
 
-  셀을 활성화 상태로 설정합니다.
+``var body: some View``
 
-- [func caption(String?) -> Cell](/documentation/montage/cell/caption(_:).md)
+### Instance Methods
 
-  셀에 부가 설명(캡션)을 추가합니다.
 
-- [func chevron(Bool) -> Cell](/documentation/montage/cell/chevron(_:).md)
+``func active(Bool) -> Cell``
 
-  셀 우측에 화살표(chevron) 아이콘을 추가합니다.
+셀을 활성화 상태로 설정합니다.
 
-- [func disable(Bool) -> Cell](/documentation/montage/cell/disable(_:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `active` | 활성화 여부 |
+- **Return Value**
 
-  셀의 비활성화 상태를 설정합니다.
+  수정된 Cell 인스턴스
+- **Discussion**
 
-- [func divider(Bool) -> Cell](/documentation/montage/cell/divider(_:).md)
+  활성화된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다. `trailingContent` 클로저의 파라미터로 활성화 상태 여부가 전달됩니다.
+  >  Note
+  >
+  > 기본값은 `false`입니다.
 
-  셀 하단에 구분선을 추가합니다.
 
-- [func fillWidth(Bool) -> Cell](/documentation/montage/cell/fillwidth(_:).md)
+``func caption(String?) -> Cell``
 
-  셀의 좌우 여백 사용 여부를 설정합니다.
+셀에 부가 설명(캡션)을 추가합니다.
 
-- [func highlight(String) -> Cell](/documentation/montage/cell/highlight(_:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `caption` | 표시할 캡션 텍스트 (nil 설정 시 캡션 제거) |
+- **Return Value**
 
-  타이틀의 특정 텍스트를 강조 표시합니다.
+  수정된 Cell 인스턴스
+- **Discussion**
 
-- [func interactionPadding(CGFloat) -> Cell](/documentation/montage/cell/interactionpadding(_:).md)
+  캡션은 타이틀 아래에 작은 글씨로 표시되는 부가 설명 텍스트입니다.
 
-  셀의 인터랙션 효과 영역의 좌우 패딩을 조정합니다.
+``func chevron(Bool) -> Cell``
 
-- [func leadingContent((() -> any View)?) -> Cell](/documentation/montage/cell/leadingcontent(_:).md)
+셀 우측에 화살표(chevron) 아이콘을 추가합니다.
 
-  셀 좌측에 추가 콘텐츠를 표시합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `chevron` | 화살표 표시 여부 |
+- **Return Value**
 
-- [func textEllipsis(Bool) -> Cell](/documentation/montage/cell/textellipsis(_:).md)
+  수정된 Cell 인스턴스
+- **Discussion**
 
-  타이틀 텍스트의 생략 처리 여부를 설정합니다.
+  주로 탭했을 때 다른 화면으로 이동하는 셀에 사용됩니다.
+  >  Note
+  >
+  > 기본값은 `false`입니다.
 
-- [func titleColor(Color.Semantic) -> Cell](/documentation/montage/cell/titlecolor(_:).md)
 
-  타이틀 텍스트의 color 속성을 조정합니다.
+``func disable(Bool) -> Cell``
 
-- [func titleVariant(Typography.Variant) -> Cell](/documentation/montage/cell/titlevariant(_:).md)
+셀의 비활성화 상태를 설정합니다.
 
-  타이틀 텍스트의 variant 속성을 조정합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `disable` | 비활성화 여부 |
+- **Return Value**
 
-- [func titleWeight(Typography.Weight) -> Cell](/documentation/montage/cell/titleweight(_:).md)
+  수정된 Cell 인스턴스
+- **Discussion**
 
-  타이틀 텍스트의 weight 속성을 조정합니다.
+  비활성화된 셀은 탭 이벤트를 받지 않으며, 시각적으로 흐리게 표시됩니다.
+  >  Note
+  >
+  > 기본값은 `false`입니다.
 
-- [func trailingContent(((Bool) -> any View)?) -> Cell](/documentation/montage/cell/trailingcontent(_:).md)
 
-  셀 우측에 추가 콘텐츠를 표시합니다.
+``func divider(Bool) -> Cell``
 
-- [func verticalAlign(VerticalAlignment) -> Cell](/documentation/montage/cell/verticalalign(_:).md)
+셀 하단에 구분선을 추가합니다.
 
-  셀 내 콘텐츠의 수직 정렬을 조정합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `divider` | 구분선 표시 여부 |
+- **Return Value**
 
-- [func verticalPadding(VerticalPadding) -> Cell](/documentation/montage/cell/verticalpadding(_:).md)
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `false`입니다.
 
-  상하 여백의 크기를 조정합니다.
 
-### Enumerations 
+``func fillWidth(Bool) -> Cell``
 
-- [enum VerticalPadding](/documentation/montage/cell/verticalpadding.md)
+셀의 좌우 여백 사용 여부를 설정합니다.
 
-  상하 여백을 나타내는 열거형입니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `fillWidth` | 좌우 여백 적용 여부 |
+- **Return Value**
 
-### Default Implementations 
+  수정된 Cell 인스턴스
+- **Discussion**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  `true`로 설정하면 좌우 20포인트의 여백이 적용됩니다.
+  >  Note
+  >
+  > 기본값은 `false`입니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-## Relationships 
+``func highlight(String) -> Cell``
 
-### Conforms To 
+타이틀의 특정 텍스트를 강조 표시합니다.
 
-- Swift.Sendable
-- SwiftUICore.View
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 강조할 텍스트 문자열 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+
+  지정한 문자열과 일치하는 부분을 굵은 글씨(bold)로 강조 표시합니다. 대소문자를 구분하지 않으며, 첫 번째로 일치하는 부분만 강조됩니다.
+
+``func interactionPadding(CGFloat) -> Cell``
+
+셀의 인터랙션 효과 영역의 좌우 패딩을 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `padding` | 적용할 패딩 값 (포인트 단위) |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 12입니다.
+
+
+``func leadingContent((() -> any View)?) -> Cell``
+
+셀 좌측에 추가 콘텐츠를 표시합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `contents` | 표시할 콘텐츠를 생성하는 클로저 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+
+  아이콘, 이미지, 기타 커스텀 뷰 등을 셀 타이틀 앞에 배치할 수 있습니다.
+
+``func textEllipsis(Bool) -> Cell``
+
+타이틀 텍스트의 생략 처리 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `textEllipsis` | 텍스트 생략 처리 여부 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+
+  `true`로 설정하면 타이틀 텍스트가 2줄로 제한되고, 초과 텍스트는 생략됩니다.
+  >  Note
+  >
+  > 기본값은 `false`입니다. `false`인 경우 좌우 콘텐츠는 상단 정렬됩니다.
+
+
+``func titleColor(Color.Semantic) -> Cell``
+
+타이틀 텍스트의    속성을 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 적용할 텍스트 색상 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `.labelNormal`입니다.
+
+
+``func titleVariant(Typography.Variant) -> Cell``
+
+타이틀 텍스트의    속성을 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 적용할 Typography 변형 스타일 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `.body1`입니다.
+
+
+``func titleWeight(Typography.Weight) -> Cell``
+
+타이틀 텍스트의    속성을 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `weight` | 적용할 텍스트 두께 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `.regular`입니다.
+
+
+``func trailingContent(((Bool) -> any View)?) -> Cell``
+
+셀 우측에 추가 콘텐츠를 표시합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `contents` | 표시할 콘텐츠를 생성하는 클로저 (활성화 상태를 파라미터로 받음) |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+
+  배지, 스위치, 토글 등 추가 UI 요소를 셀 타이틀 뒤에 배치할 수 있습니다. 클로저 파라미터를 통해 셀의 활성화 상태를 전달받을 수 있습니다.
+
+``func verticalAlign(VerticalAlignment) -> Cell``
+
+셀 내 콘텐츠의 수직 정렬을 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `verticalAlignment` | 적용할 수직 정렬 방식 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `.top`입니다.
+
+
+``func verticalPadding(VerticalPadding) -> Cell``
+
+상하 여백의 크기를 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `verticalPadding` | 적용할 상하 여백 크기 |
+- **Return Value**
+
+  수정된 Cell 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `.medium` 입니다.
+
+
+### Enumerations
+
+
+[``enum VerticalPadding``](/documentation/montage/cell/verticalpadding.md)
+
+상하 여백을 나타내는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/cell/view-implementations.md)
+
+[View Implementations](/documentation/montage/cell/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

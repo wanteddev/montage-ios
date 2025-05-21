@@ -1,42 +1,37 @@
 ---
-1title: render
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Select.Render
+description: variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# Select.Render 
-
-variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.
 
 ```swift
 enum Render
 ```
 
-## Overview 
+## Topics
 
-- text: 선택된 항목 텍스트만 표시
-- chip: 선택된 항목을 칩(chip) 형태로 표시
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case chip``
 
-- [case chip](/documentation/montage/select/render/chip.md)
+선택된 항목을 칩(chip) 형태로 표시
 
-- [case text](/documentation/montage/select/render/text.md)
+``case text``
 
-### Default Implementations 
+선택된 항목 텍스트만 표시
 
-- [API ReferenceEquatable Implementations](/documentation/montage/select/render/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/select/render/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

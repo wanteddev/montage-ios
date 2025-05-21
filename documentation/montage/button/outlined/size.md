@@ -1,52 +1,50 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Button.Outlined.Size
+description: Outlined 스타일 버튼의 크기를 정의합니다.
 ---
-
-Enumeration
-
-# Button.Outlined.Size 
-
-Outlined 스타일 버튼의 크기를 정의합니다.
 
 ```swift
 enum Size
 ```
 
-## Overview 
+## Topics
 
-- .small: 작은 크기
-- .medium: 중간 크기
-- .large: 큰 크기
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case large``
 
-- [case large](/documentation/montage/button/outlined/size/large.md)
+큰 크기
 
-- [case medium](/documentation/montage/button/outlined/size/medium.md)
+``case medium``
 
-- [case small](/documentation/montage/button/outlined/size/small.md)
+중간 크기
 
-### Initializers 
+``case small``
 
-- [init?(rawValue: String)](/documentation/montage/button/outlined/size/init(rawvalue:).md)
+작은 크기
 
-### Default Implementations 
+### Initializers
 
-- [API ReferenceEquatable Implementations](/documentation/montage/button/outlined/size/equatable-implementations.md)
 
-- [API ReferenceRawRepresentable Implementations](/documentation/montage/button/outlined/size/rawrepresentable-implementations.md)
+``init?(rawValue: String)``
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
-- Swift.RawRepresentable
+[Equatable Implementations](/documentation/montage/button/outlined/size/equatable-implementations.md)
+
+[RawRepresentable Implementations](/documentation/montage/button/outlined/size/rawrepresentable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.RawRepresentable`
+
+
 

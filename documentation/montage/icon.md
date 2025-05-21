@@ -1,26 +1,15 @@
 ---
-1title: icon
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Icon
+description: Montage 디자인 시스템의 아이콘 세트
 ---
-
-Enumeration
-
-# Icon 
-
-Montage 디자인 시스템의 아이콘 세트
 
 ```swift
 enum Icon
 ```
 
-## Overview 
+## Overview
 
 Icon은 Montage 디자인 시스템에서 사용 가능한 모든 아이콘을 정의합니다. 각 아이콘은 전체 앱에서 일관된 방식으로 시각적 요소를 표현하기 위해 사용됩니다. 아이콘은 크기 및 색상을 조정할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // UIKit에서 사용
@@ -38,660 +27,669 @@ Button(action: {}) {
 }
 ```
 
-> **Note**
+>  Note
 >
 > Fill로 끝나는 아이콘 이름은 채워진 스타일의 아이콘을 나타냅니다. 동일한 아이콘의 윤곽선 버전과 채워진 버전이 모두 제공되는 경우가 많습니다.
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case alignCenter](/documentation/montage/icon/aligncenter.md)
 
-- [case alignJustify](/documentation/montage/icon/alignjustify.md)
+``case alignCenter``
 
-- [case alignLeft](/documentation/montage/icon/alignleft.md)
+``case alignJustify``
 
-- [case alignRight](/documentation/montage/icon/alignright.md)
+``case alignLeft``
 
-- [case android](/documentation/montage/icon/android.md)
+``case alignRight``
 
-- [case apps](/documentation/montage/icon/apps.md)
+``case android``
 
-- [case arrowDown](/documentation/montage/icon/arrowdown.md)
+``case apps``
 
-- [case arrowDownThick](/documentation/montage/icon/arrowdownthick.md)
+``case arrowDown``
 
-- [case arrowLeft](/documentation/montage/icon/arrowleft.md)
+``case arrowDownThick``
 
-- [case arrowLeftThick](/documentation/montage/icon/arrowleftthick.md)
+``case arrowLeft``
 
-- [case arrowRight](/documentation/montage/icon/arrowright.md)
+``case arrowLeftThick``
 
-- [case arrowRightThick](/documentation/montage/icon/arrowrightthick.md)
+``case arrowRight``
 
-- [case arrowTurnDownLeft](/documentation/montage/icon/arrowturndownleft.md)
+``case arrowRightThick``
 
-- [case arrowTurnDownRight](/documentation/montage/icon/arrowturndownright.md)
+``case arrowTurnDownLeft``
 
-- [case arrowUp](/documentation/montage/icon/arrowup.md)
+``case arrowTurnDownRight``
 
-- [case arrowUpThick](/documentation/montage/icon/arrowupthick.md)
+``case arrowUp``
 
-- [case attachment](/documentation/montage/icon/attachment.md)
+``case arrowUpThick``
 
-- [case bell](/documentation/montage/icon/bell.md)
+``case attachment``
 
-- [case bellFill](/documentation/montage/icon/bellfill.md)
+``case bell``
 
-- [case bellPlus](/documentation/montage/icon/bellplus.md)
+``case bellFill``
 
-- [case blank](/documentation/montage/icon/blank.md)
+``case bellPlus``
 
-- [case blankColor](/documentation/montage/icon/blankcolor.md)
+``case blank``
 
-- [case bold](/documentation/montage/icon/bold.md)
+``case blankColor``
 
-- [case book](/documentation/montage/icon/book.md)
+``case bold``
 
-- [case bookFill](/documentation/montage/icon/bookfill.md)
+``case book``
 
-- [case bookmark](/documentation/montage/icon/bookmark.md)
+``case bookFill``
 
-- [case bookmarkFill](/documentation/montage/icon/bookmarkfill.md)
+``case bookmark``
 
-- [case bubble](/documentation/montage/icon/bubble.md)
+``case bookmarkFill``
 
-- [case bubbleFill](/documentation/montage/icon/bubblefill.md)
+``case bubble``
 
-- [case bubblePlus](/documentation/montage/icon/bubbleplus.md)
+``case bubbleFill``
 
-- [case bubblePlusFill](/documentation/montage/icon/bubbleplusfill.md)
+``case bubblePlus``
 
-- [case bulb](/documentation/montage/icon/bulb.md)
+``case bubblePlusFill``
 
-- [case businessBag](/documentation/montage/icon/businessbag.md)
+``case bulb``
 
-- [case businessBagFill](/documentation/montage/icon/businessbagfill.md)
+``case businessBag``
 
-- [case calendar](/documentation/montage/icon/calendar.md)
+``case businessBagFill``
 
-- [case calendarPerson](/documentation/montage/icon/calendarperson.md)
+``case calendar``
 
-- [case camera](/documentation/montage/icon/camera.md)
+``case calendarPerson``
 
-- [case cameraFill](/documentation/montage/icon/camerafill.md)
+``case camera``
 
-- [case caretDown](/documentation/montage/icon/caretdown.md)
+``case cameraFill``
 
-- [case caretUp](/documentation/montage/icon/caretup.md)
+``case caretDown``
 
-- [case certificate](/documentation/montage/icon/certificate.md)
+``case caretUp``
 
-- [case change](/documentation/montage/icon/change.md)
+``case certificate``
 
-- [case chat](/documentation/montage/icon/chat.md)
+``case change``
 
-- [case check](/documentation/montage/icon/check.md)
+``case chat``
 
-- [case checkThick](/documentation/montage/icon/checkthick.md)
+``case check``
 
-- [case chevronDoubleLeft](/documentation/montage/icon/chevrondoubleleft.md)
+``case checkThick``
 
-- [case chevronDoubleLeftSmall](/documentation/montage/icon/chevrondoubleleftsmall.md)
+``case chevronDoubleLeft``
 
-- [case chevronDoubleLeftThick](/documentation/montage/icon/chevrondoubleleftthick.md)
+``case chevronDoubleLeftSmall``
 
-- [case chevronDoubleLeftThickSmall](/documentation/montage/icon/chevrondoubleleftthicksmall.md)
+``case chevronDoubleLeftThick``
 
-- [case chevronDoubleRight](/documentation/montage/icon/chevrondoubleright.md)
+``case chevronDoubleLeftThickSmall``
 
-- [case chevronDoubleRightSmall](/documentation/montage/icon/chevrondoublerightsmall.md)
+``case chevronDoubleRight``
 
-- [case chevronDoubleRightThick](/documentation/montage/icon/chevrondoublerightthick.md)
+``case chevronDoubleRightSmall``
 
-- [case chevronDoubleRightThickSmall](/documentation/montage/icon/chevrondoublerightthicksmall.md)
+``case chevronDoubleRightThick``
 
-- [case chevronDown](/documentation/montage/icon/chevrondown.md)
+``case chevronDoubleRightThickSmall``
 
-- [case chevronDownSmall](/documentation/montage/icon/chevrondownsmall.md)
+``case chevronDown``
 
-- [case chevronDownThick](/documentation/montage/icon/chevrondownthick.md)
+``case chevronDownSmall``
 
-- [case chevronDownThickSmall](/documentation/montage/icon/chevrondownthicksmall.md)
+``case chevronDownThick``
 
-- [case chevronLeft](/documentation/montage/icon/chevronleft.md)
+``case chevronDownThickSmall``
 
-- [case chevronLeftSmall](/documentation/montage/icon/chevronleftsmall.md)
+``case chevronLeft``
 
-- [case chevronLeftThick](/documentation/montage/icon/chevronleftthick.md)
+``case chevronLeftSmall``
 
-- [case chevronLeftThickSmall](/documentation/montage/icon/chevronleftthicksmall.md)
+``case chevronLeftThick``
 
-- [case chevronLeftTight](/documentation/montage/icon/chevronlefttight.md)
+``case chevronLeftThickSmall``
 
-- [case chevronLeftTightSmall](/documentation/montage/icon/chevronlefttightsmall.md)
+``case chevronLeftTight``
 
-- [case chevronLeftTightThick](/documentation/montage/icon/chevronlefttightthick.md)
+``case chevronLeftTightSmall``
 
-- [case chevronLeftTightThickSmall](/documentation/montage/icon/chevronlefttightthicksmall.md)
+``case chevronLeftTightThick``
 
-- [case chevronRight](/documentation/montage/icon/chevronright.md)
+``case chevronLeftTightThickSmall``
 
-- [case chevronRightSmall](/documentation/montage/icon/chevronrightsmall.md)
+``case chevronRight``
 
-- [case chevronRightThick](/documentation/montage/icon/chevronrightthick.md)
+``case chevronRightSmall``
 
-- [case chevronRightThickSmall](/documentation/montage/icon/chevronrightthicksmall.md)
+``case chevronRightThick``
 
-- [case chevronRightTight](/documentation/montage/icon/chevronrighttight.md)
+``case chevronRightThickSmall``
 
-- [case chevronRightTightSmall](/documentation/montage/icon/chevronrighttightsmall.md)
+``case chevronRightTight``
 
-- [case chevronRightTightThick](/documentation/montage/icon/chevronrighttightthick.md)
+``case chevronRightTightSmall``
 
-- [case chevronRightTightThickSmall](/documentation/montage/icon/chevronrighttightthicksmall.md)
+``case chevronRightTightThick``
 
-- [case chevronUp](/documentation/montage/icon/chevronup.md)
+``case chevronRightTightThickSmall``
 
-- [case chevronUpSmall](/documentation/montage/icon/chevronupsmall.md)
+``case chevronUp``
 
-- [case chevronUpThick](/documentation/montage/icon/chevronupthick.md)
+``case chevronUpSmall``
 
-- [case chevronUpThickSmall](/documentation/montage/icon/chevronupthicksmall.md)
+``case chevronUpThick``
 
-- [case circle](/documentation/montage/icon/circle.md)
+``case chevronUpThickSmall``
 
-- [case circleBlock](/documentation/montage/icon/circleblock.md)
+``case circle``
 
-- [case circleCheck](/documentation/montage/icon/circlecheck.md)
+``case circleBlock``
 
-- [case circleCheckFill](/documentation/montage/icon/circlecheckfill.md)
+``case circleCheck``
 
-- [case circleClose](/documentation/montage/icon/circleclose.md)
+``case circleCheckFill``
 
-- [case circleCloseFill](/documentation/montage/icon/circleclosefill.md)
+``case circleClose``
 
-- [case circleDot](/documentation/montage/icon/circledot.md)
+``case circleCloseFill``
 
-- [case circleExclamation](/documentation/montage/icon/circleexclamation.md)
+``case circleDot``
 
-- [case circleExclamationFill](/documentation/montage/icon/circleexclamationfill.md)
+``case circleExclamation``
 
-- [case circleFill](/documentation/montage/icon/circlefill.md)
+``case circleExclamationFill``
 
-- [case circleInfo](/documentation/montage/icon/circleinfo.md)
+``case circleFill``
 
-- [case circleInfoFill](/documentation/montage/icon/circleinfofill.md)
+``case circleInfo``
 
-- [case circlePlus](/documentation/montage/icon/circleplus.md)
+``case circleInfoFill``
 
-- [case circlePlusFill](/documentation/montage/icon/circleplusfill.md)
+``case circlePlus``
 
-- [case circlePoint](/documentation/montage/icon/circlepoint.md)
+``case circlePlusFill``
 
-- [case circleQuestion](/documentation/montage/icon/circlequestion.md)
+``case circlePoint``
 
-- [case circleQuestionFill](/documentation/montage/icon/circlequestionfill.md)
+``case circleQuestion``
 
-- [case clock](/documentation/montage/icon/clock.md)
+``case circleQuestionFill``
 
-- [case clockFill](/documentation/montage/icon/clockfill.md)
+``case clock``
 
-- [case close](/documentation/montage/icon/close.md)
+``case clockFill``
 
-- [case closeThick](/documentation/montage/icon/closethick.md)
+``case close``
 
-- [case code](/documentation/montage/icon/code.md)
+``case closeThick``
 
-- [case coffee](/documentation/montage/icon/coffee.md)
+``case code``
 
-- [case coffeeFill](/documentation/montage/icon/coffeefill.md)
+``case coffee``
 
-- [case coins](/documentation/montage/icon/coins.md)
+``case coffeeFill``
 
-- [case coinsFill](/documentation/montage/icon/coinsfill.md)
+``case coins``
 
-- [case column](/documentation/montage/icon/column.md)
+``case coinsFill``
 
-- [case company](/documentation/montage/icon/company.md)
+``case column``
 
-- [case companyCheck](/documentation/montage/icon/companycheck.md)
+``case company``
 
-- [case companyCheckFill](/documentation/montage/icon/companycheckfill.md)
+``case companyCheck``
 
-- [case companyFill](/documentation/montage/icon/companyfill.md)
+``case companyCheckFill``
 
-- [case companyPlus](/documentation/montage/icon/companyplus.md)
+``case companyFill``
 
-- [case companyPlusFill](/documentation/montage/icon/companyplusfill.md)
+``case companyPlus``
 
-- [case compass](/documentation/montage/icon/compass.md)
+``case companyPlusFill``
 
-- [case compassFill](/documentation/montage/icon/compassfill.md)
+``case compass``
 
-- [case component](/documentation/montage/icon/component.md)
+``case compassFill``
 
-- [case componentFill](/documentation/montage/icon/componentfill.md)
+``case component``
 
-- [case copy](/documentation/montage/icon/copy.md)
+``case componentFill``
 
-- [case crown](/documentation/montage/icon/crown.md)
+``case copy``
 
-- [case crownFill](/documentation/montage/icon/crownfill.md)
+``case crown``
 
-- [case desktop](/documentation/montage/icon/desktop.md)
+``case crownFill``
 
-- [case desktopFill](/documentation/montage/icon/desktopfill.md)
+``case desktop``
 
-- [case diamond](/documentation/montage/icon/diamond.md)
+``case desktopFill``
 
-- [case diamondFill](/documentation/montage/icon/diamondfill.md)
+``case diamond``
 
-- [case dislike](/documentation/montage/icon/dislike.md)
+``case diamondFill``
 
-- [case dislikeFill](/documentation/montage/icon/dislikefill.md)
+``case dislike``
 
-- [case document](/documentation/montage/icon/document.md)
+``case dislikeFill``
 
-- [case documentFill](/documentation/montage/icon/documentfill.md)
+``case document``
 
-- [case documentPerson](/documentation/montage/icon/documentperson.md)
+``case documentFill``
 
-- [case documentPersonFill](/documentation/montage/icon/documentpersonfill.md)
+``case documentPerson``
 
-- [case documentSearch](/documentation/montage/icon/documentsearch.md)
+``case documentPersonFill``
 
-- [case documentText](/documentation/montage/icon/documenttext.md)
+``case documentSearch``
 
-- [case documentTextFill](/documentation/montage/icon/documenttextfill.md)
+``case documentText``
 
-- [case dot](/documentation/montage/icon/dot.md)
+``case documentTextFill``
 
-- [case download](/documentation/montage/icon/download.md)
+``case dot``
 
-- [case exclamation](/documentation/montage/icon/exclamation.md)
+``case download``
 
-- [case externalLink](/documentation/montage/icon/externallink.md)
+``case exclamation``
 
-- [case eye](/documentation/montage/icon/eye.md)
+``case externalLink``
 
-- [case eyeFill](/documentation/montage/icon/eyefill.md)
+``case eye``
 
-- [case eyeSlash](/documentation/montage/icon/eyeslash.md)
+``case eyeFill``
 
-- [case eyeSlashFill](/documentation/montage/icon/eyeslashfill.md)
+``case eyeSlash``
 
-- [case faceSmile](/documentation/montage/icon/facesmile.md)
+``case eyeSlashFill``
 
-- [case faceSmileFill](/documentation/montage/icon/facesmilefill.md)
+``case faceSmile``
 
-- [case filter](/documentation/montage/icon/filter.md)
+``case faceSmileFill``
 
-- [case filterFill](/documentation/montage/icon/filterfill.md)
+``case filter``
 
-- [case fire](/documentation/montage/icon/fire.md)
+``case filterFill``
 
-- [case fireFill](/documentation/montage/icon/firefill.md)
+``case fire``
 
-- [case flag](/documentation/montage/icon/flag.md)
+``case fireFill``
 
-- [case flipBackward](/documentation/montage/icon/flipbackward.md)
+``case flag``
 
-- [case folder](/documentation/montage/icon/folder.md)
+``case flipBackward``
 
-- [case folderFill](/documentation/montage/icon/folderfill.md)
+``case folder``
 
-- [case folderJob](/documentation/montage/icon/folderjob.md)
+``case folderFill``
 
-- [case folderJobFill](/documentation/montage/icon/folderjobfill.md)
+``case folderJob``
 
-- [case folderStar](/documentation/montage/icon/folderstar.md)
+``case folderJobFill``
 
-- [case folderStarFill](/documentation/montage/icon/folderstarfill.md)
+``case folderStar``
 
-- [case full](/documentation/montage/icon/full.md)
+``case folderStarFill``
 
-- [case globe](/documentation/montage/icon/globe.md)
+``case full``
 
-- [case graduation](/documentation/montage/icon/graduation.md)
+``case globe``
 
-- [case graduationFill](/documentation/montage/icon/graduationfill.md)
+``case graduation``
 
-- [case handle](/documentation/montage/icon/handle.md)
+``case graduationFill``
 
-- [case handleDesktop](/documentation/montage/icon/handledesktop.md)
+``case handle``
 
-- [case heart](/documentation/montage/icon/heart.md)
+``case handleDesktop``
 
-- [case heartFill](/documentation/montage/icon/heartfill.md)
+``case heart``
 
-- [case heartInHeart](/documentation/montage/icon/heartinheart.md)
+``case heartFill``
 
-- [case heartInHeartFill](/documentation/montage/icon/heartinheartfill.md)
+``case heartInHeart``
 
-- [case history](/documentation/montage/icon/history.md)
+``case heartInHeartFill``
 
-- [case home](/documentation/montage/icon/home.md)
+``case history``
 
-- [case homeFill](/documentation/montage/icon/homefill.md)
+``case home``
 
-- [case hourglass](/documentation/montage/icon/hourglass.md)
+``case homeFill``
 
-- [case image](/documentation/montage/icon/image.md)
+``case hourglass``
 
-- [case inbox](/documentation/montage/icon/inbox.md)
+``case image``
 
-- [case instance](/documentation/montage/icon/instance.md)
+``case inbox``
 
-- [case keyboard](/documentation/montage/icon/keyboard.md)
+``case instance``
 
-- [case like](/documentation/montage/icon/like.md)
+``case keyboard``
 
-- [case likeFill](/documentation/montage/icon/likefill.md)
+``case like``
 
-- [case lineHorizontal](/documentation/montage/icon/linehorizontal.md)
+``case likeFill``
 
-- [case lineHorizontalThick](/documentation/montage/icon/linehorizontalthick.md)
+``case lineHorizontal``
 
-- [case link](/documentation/montage/icon/link.md)
+``case lineHorizontalThick``
 
-- [case list](/documentation/montage/icon/list.md)
+``case link``
 
-- [case listCategory](/documentation/montage/icon/listcategory.md)
+``case list``
 
-- [case listOrdered](/documentation/montage/icon/listordered.md)
+``case listCategory``
 
-- [case location](/documentation/montage/icon/location.md)
+``case listOrdered``
 
-- [case locationFill](/documentation/montage/icon/locationfill.md)
+``case location``
 
-- [case lock](/documentation/montage/icon/lock.md)
+``case locationFill``
 
-- [case lockFill](/documentation/montage/icon/lockfill.md)
+``case lock``
 
-- [case lockOpen](/documentation/montage/icon/lockopen.md)
+``case lockFill``
 
-- [case lockOpenFill](/documentation/montage/icon/lockopenfill.md)
+``case lockOpen``
 
-- [case login](/documentation/montage/icon/login.md)
+``case lockOpenFill``
 
-- [case logoApple](/documentation/montage/icon/logoapple.md)
+``case login``
 
-- [case logoAppleColor](/documentation/montage/icon/logoapplecolor.md)
+``case logoApple``
 
-- [case logoBrunch](/documentation/montage/icon/logobrunch.md)
+``case logoAppleColor``
 
-- [case logoFacebook](/documentation/montage/icon/logofacebook.md)
+``case logoBrunch``
 
-- [case logoFacebookColor](/documentation/montage/icon/logofacebookcolor.md)
+``case logoFacebook``
 
-- [case logoGoogleColor](/documentation/montage/icon/logogooglecolor.md)
+``case logoFacebookColor``
 
-- [case logoGooglePlay](/documentation/montage/icon/logogoogleplay.md)
+``case logoGoogleColor``
 
-- [case logoGooglePlayColor](/documentation/montage/icon/logogoogleplaycolor.md)
+``case logoGooglePlay``
 
-- [case logoInstagram](/documentation/montage/icon/logoinstagram.md)
+``case logoGooglePlayColor``
 
-- [case logoInstagramColor](/documentation/montage/icon/logoinstagramcolor.md)
+``case logoInstagram``
 
-- [case logoKakao](/documentation/montage/icon/logokakao.md)
+``case logoInstagramColor``
 
-- [case logoKakaoColor](/documentation/montage/icon/logokakaocolor.md)
+``case logoKakao``
 
-- [case logoLinkedIn](/documentation/montage/icon/logolinkedin.md)
+``case logoKakaoColor``
 
-- [case logoLinkedInColor](/documentation/montage/icon/logolinkedincolor.md)
+``case logoLinkedIn``
 
-- [case logoMicrosoft](/documentation/montage/icon/logomicrosoft.md)
+``case logoLinkedInColor``
 
-- [case logoMicrosoftColor](/documentation/montage/icon/logomicrosoftcolor.md)
+``case logoMicrosoft``
 
-- [case logoNaverBlog](/documentation/montage/icon/logonaverblog.md)
+``case logoMicrosoftColor``
 
-- [case logoNaverBlogColor](/documentation/montage/icon/logonaverblogcolor.md)
+``case logoNaverBlog``
 
-- [case logoX](/documentation/montage/icon/logox.md)
+``case logoNaverBlogColor``
 
-- [case logoYoutube](/documentation/montage/icon/logoyoutube.md)
+``case logoX``
 
-- [case logoYoutubeColor](/documentation/montage/icon/logoyoutubecolor.md)
+``case logoYoutube``
 
-- [case logout](/documentation/montage/icon/logout.md)
+``case logoYoutubeColor``
 
-- [case magicWand](/documentation/montage/icon/magicwand.md)
+``case logout``
 
-- [case mail](/documentation/montage/icon/mail.md)
+``case magicWand``
 
-- [case mailOpen](/documentation/montage/icon/mailopen.md)
+``case mail``
 
-- [case medal](/documentation/montage/icon/medal.md)
+``case mailOpen``
 
-- [case megaphone](/documentation/montage/icon/megaphone.md)
+``case medal``
 
-- [case megaphoneFill](/documentation/montage/icon/megaphonefill.md)
+``case megaphone``
 
-- [case menu](/documentation/montage/icon/menu.md)
+``case megaphoneFill``
 
-- [case menuThick](/documentation/montage/icon/menuthick.md)
+``case menu``
 
-- [case message](/documentation/montage/icon/message.md)
+``case menuThick``
 
-- [case messageFill](/documentation/montage/icon/messagefill.md)
+``case message``
 
-- [case microphone](/documentation/montage/icon/microphone.md)
+``case messageFill``
 
-- [case microphoneFill](/documentation/montage/icon/microphonefill.md)
+``case microphone``
 
-- [case microphoneSlash](/documentation/montage/icon/microphoneslash.md)
+``case microphoneFill``
 
-- [case microphoneSlashFill](/documentation/montage/icon/microphoneslashfill.md)
+``case microphoneSlash``
 
-- [case minus](/documentation/montage/icon/minus.md)
+``case microphoneSlashFill``
 
-- [case minusThick](/documentation/montage/icon/minusthick.md)
+``case minus``
 
-- [case mobile](/documentation/montage/icon/mobile.md)
+``case minusThick``
 
-- [case mobileFill](/documentation/montage/icon/mobilefill.md)
+``case mobile``
 
-- [case moon](/documentation/montage/icon/moon.md)
+``case mobileFill``
 
-- [case moreHorizontal](/documentation/montage/icon/morehorizontal.md)
+``case moon``
 
-- [case moreVertical](/documentation/montage/icon/morevertical.md)
+``case moreHorizontal``
 
-- [case moreVerticalTight](/documentation/montage/icon/moreverticaltight.md)
+``case moreVertical``
 
-- [case musicMicrophone](/documentation/montage/icon/musicmicrophone.md)
+``case moreVerticalTight``
 
-- [case navigationCareer](/documentation/montage/icon/navigationcareer.md)
+``case musicMicrophone``
 
-- [case navigationMenu](/documentation/montage/icon/navigationmenu.md)
+``case navigationCareer``
 
-- [case navigationMypage](/documentation/montage/icon/navigationmypage.md)
+``case navigationMenu``
 
-- [case navigationRecruit](/documentation/montage/icon/navigationrecruit.md)
+``case navigationMypage``
 
-- [case navigationSocial](/documentation/montage/icon/navigationsocial.md)
+``case navigationRecruit``
 
-- [case pause](/documentation/montage/icon/pause.md)
+``case navigationSocial``
 
-- [case pencil](/documentation/montage/icon/pencil.md)
+``case pause``
 
-- [case pencilFill](/documentation/montage/icon/pencilfill.md)
+``case pencil``
 
-- [case person](/documentation/montage/icon/person.md)
+``case pencilFill``
 
-- [case personFill](/documentation/montage/icon/personfill.md)
+``case person``
 
-- [case personPlus](/documentation/montage/icon/personplus.md)
+``case personFill``
 
-- [case personPlusFill](/documentation/montage/icon/personplusfill.md)
+``case personPlus``
 
-- [case persons](/documentation/montage/icon/persons.md)
+``case personPlusFill``
 
-- [case personsFill](/documentation/montage/icon/personsfill.md)
+``case persons``
 
-- [case phone](/documentation/montage/icon/phone.md)
+``case personsFill``
 
-- [case phoneFill](/documentation/montage/icon/phonefill.md)
+``case phone``
 
-- [case pin](/documentation/montage/icon/pin.md)
+``case phoneFill``
 
-- [case pinFill](/documentation/montage/icon/pinfill.md)
+``case pin``
 
-- [case play](/documentation/montage/icon/play.md)
+``case pinFill``
 
-- [case plus](/documentation/montage/icon/plus.md)
+``case play``
 
-- [case plusThick](/documentation/montage/icon/plusthick.md)
+``case plus``
 
-- [case presentation](/documentation/montage/icon/presentation.md)
+``case plusThick``
 
-- [case printer](/documentation/montage/icon/printer.md)
+``case presentation``
 
-- [case question](/documentation/montage/icon/question.md)
+``case printer``
 
-- [case quote](/documentation/montage/icon/quote.md)
+``case question``
 
-- [case refresh](/documentation/montage/icon/refresh.md)
+``case quote``
 
-- [case reset](/documentation/montage/icon/reset.md)
+``case refresh``
 
-- [case search](/documentation/montage/icon/search.md)
+``case reset``
 
-- [case searchThick](/documentation/montage/icon/searchthick.md)
+``case search``
 
-- [case send](/documentation/montage/icon/send.md)
+``case searchThick``
 
-- [case sendFill](/documentation/montage/icon/sendfill.md)
+``case send``
 
-- [case setting](/documentation/montage/icon/setting.md)
+``case sendFill``
 
-- [case share](/documentation/montage/icon/share.md)
+``case setting``
 
-- [case shareIos](/documentation/montage/icon/shareios.md)
+``case share``
 
-- [case sparkle](/documentation/montage/icon/sparkle.md)
+``case shareIos``
 
-- [case sparkleFill](/documentation/montage/icon/sparklefill.md)
+``case sparkle``
 
-- [case square](/documentation/montage/icon/square.md)
+``case sparkleFill``
 
-- [case squareCaret](/documentation/montage/icon/squarecaret.md)
+``case square``
 
-- [case squareCheck](/documentation/montage/icon/squarecheck.md)
+``case squareCaret``
 
-- [case squareFill](/documentation/montage/icon/squarefill.md)
+``case squareCheck``
 
-- [case squareHan](/documentation/montage/icon/squarehan.md)
+``case squareFill``
 
-- [case squareHangul](/documentation/montage/icon/squarehangul.md)
+``case squareHan``
 
-- [case squareKana](/documentation/montage/icon/squarekana.md)
+``case squareHangul``
 
-- [case squareLatin](/documentation/montage/icon/squarelatin.md)
+``case squareKana``
 
-- [case squareMore](/documentation/montage/icon/squaremore.md)
+``case squareLatin``
 
-- [case squarePlay](/documentation/montage/icon/squareplay.md)
+``case squareMore``
 
-- [case squarePlus](/documentation/montage/icon/squareplus.md)
+``case squarePlay``
 
-- [case squarePlusFill](/documentation/montage/icon/squareplusfill.md)
+``case squarePlus``
 
-- [case star](/documentation/montage/icon/star.md)
+``case squarePlusFill``
 
-- [case starFill](/documentation/montage/icon/starfill.md)
+``case star``
 
-- [case strikethrough](/documentation/montage/icon/strikethrough.md)
+``case starFill``
 
-- [case sun](/documentation/montage/icon/sun.md)
+``case strikethrough``
 
-- [case tag](/documentation/montage/icon/tag.md)
+``case sun``
 
-- [case tagFill](/documentation/montage/icon/tagfill.md)
+``case tag``
 
-- [case template](/documentation/montage/icon/template.md)
+``case tagFill``
 
-- [case templateFill](/documentation/montage/icon/templatefill.md)
+``case template``
 
-- [case textFormat](/documentation/montage/icon/textformat.md)
+``case templateFill``
 
-- [case textVariable](/documentation/montage/icon/textvariable.md)
+``case textFormat``
 
-- [case thumbnail](/documentation/montage/icon/thumbnail.md)
+``case textVariable``
 
-- [case thunder](/documentation/montage/icon/thunder.md)
+``case thumbnail``
 
-- [case thunderFill](/documentation/montage/icon/thunderfill.md)
+``case thunder``
 
-- [case ticket](/documentation/montage/icon/ticket.md)
+``case thunderFill``
 
-- [case ticketFill](/documentation/montage/icon/ticketfill.md)
+``case ticket``
 
-- [case trash](/documentation/montage/icon/trash.md)
+``case ticketFill``
 
-- [case triangle](/documentation/montage/icon/triangle.md)
+``case trash``
 
-- [case triangleExclamation](/documentation/montage/icon/triangleexclamation.md)
+``case triangle``
 
-- [case triangleExclamationFill](/documentation/montage/icon/triangleexclamationfill.md)
+``case triangleExclamation``
 
-- [case triangleFill](/documentation/montage/icon/trianglefill.md)
+``case triangleExclamationFill``
 
-- [case trophy](/documentation/montage/icon/trophy.md)
+``case triangleFill``
 
-- [case trophyFill](/documentation/montage/icon/trophyfill.md)
+``case trophy``
 
-- [case tune](/documentation/montage/icon/tune.md)
+``case trophyFill``
 
-- [case umbrella](/documentation/montage/icon/umbrella.md)
+``case tune``
 
-- [case umbrellaFill](/documentation/montage/icon/umbrellafill.md)
+``case umbrella``
 
-- [case underline](/documentation/montage/icon/underline.md)
+``case umbrellaFill``
 
-- [case upload](/documentation/montage/icon/upload.md)
+``case underline``
 
-- [case verifiedCheck](/documentation/montage/icon/verifiedcheck.md)
+``case upload``
 
-- [case verifiedCheckFill](/documentation/montage/icon/verifiedcheckfill.md)
+``case verifiedCheck``
 
-- [case verifiedStar](/documentation/montage/icon/verifiedstar.md)
+``case verifiedCheckFill``
 
-- [case verifiedStarFill](/documentation/montage/icon/verifiedstarfill.md)
+``case verifiedStar``
 
-- [case video](/documentation/montage/icon/video.md)
+``case verifiedStarFill``
 
-- [case webinar](/documentation/montage/icon/webinar.md)
+``case video``
 
-- [case write](/documentation/montage/icon/write.md)
+``case webinar``
 
-### Initializers 
+``case write``
 
-- [init?(rawValue: String)](/documentation/montage/icon/init(rawvalue:).md)
+### Initializers
 
-### Instance Properties 
 
-- [var name: String](/documentation/montage/icon/name.md)
+``init?(rawValue: String)``
 
-  아이콘의 리소스 이름을 반환합니다.
+### Instance Properties
 
-### Default Implementations 
 
-- [API ReferenceEquatable Implementations](/documentation/montage/icon/equatable-implementations.md)
+``var name: String``
 
-- [API ReferenceRawRepresentable Implementations](/documentation/montage/icon/rawrepresentable-implementations.md)
+아이콘의 리소스 이름을 반환합니다.
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.CaseIterable
-- Swift.Equatable
-- Swift.Hashable
-- Swift.RawRepresentable
+[Equatable Implementations](/documentation/montage/icon/equatable-implementations.md)
+
+[RawRepresentable Implementations](/documentation/montage/icon/rawrepresentable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.CaseIterable`
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.RawRepresentable`
+
+
 

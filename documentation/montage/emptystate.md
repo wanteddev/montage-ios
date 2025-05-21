@@ -1,27 +1,15 @@
 ---
-1title: emptystate
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: EmptyState
+description: 콘텐츠가 빈 상태일 때 사용자의 이해를 돕기 위한 컴포넌트입니다.
 ---
 
-Structure
-
-# EmptyState 
-
-콘텐츠가 빈 상태일 때 사용자의 이해를 돕기 위한 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct EmptyState
+@MainActor struct EmptyState
 ```
 
-## Overview 
+## Overview
 
 빈 화면, 데이터 없음, 검색 결과 없음 등의 상태를 시각적으로 표현하고 사용자에게 적절한 안내를 제공합니다. 이미지, 제목, 설명, 버튼 요소를 조합하여 다양한 상황에 맞는 빈 상태 화면을 구성할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 기본 사용법
@@ -46,32 +34,49 @@ EmptyState(
 )
 ```
 
-> **Note**
+>  Note
 >
 > 컴포넌트가 기본적으로 화면 전체를 차지하므로 필요하다면 .frame modifier를 사용하여 크기를 조절하여 사용하시길 권장합니다.
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(image: (() -> any View)?, title: String?, description: String, button: (() -> any View)?)](/documentation/montage/emptystate/init(image:title:description:button:).md)
 
-  EmptyState 컴포넌트를 초기화합니다.
+``init(image: (() -> any View)?, title: String?, description: String, button: (() -> any View)?)``
 
-### Instance Properties 
+EmptyState 컴포넌트를 초기화합니다.
 
-- [var body: some View](/documentation/montage/emptystate/body.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `image` | 상단에 표시할 이미지 뷰를 반환하는 클로저 (선택 사항) |
+  | `title` | 강조되어 표시할 제목 (선택 사항) |
+  | `description` | 상황을 설명하는 텍스트 (필수) |
+  | `button` | 하단에 표시할 버튼 뷰를 반환하는 클로저 (선택 사항) |
+- **Discussion**
 
-### Default Implementations 
+  원하는 레이아웃을 구성하기 위해 이미지, 제목, 설명, 버튼을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 최대 2줄로 표시됩니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+### Instance Properties
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-## Relationships 
+``var body: some View``
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Sendable
-- SwiftUICore.View
+
+[View Implementations](/documentation/montage/emptystate/view-implementations.md)
+
+[View Implementations](/documentation/montage/emptystate/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

@@ -1,18 +1,11 @@
 ---
-1title: equatable-implementations
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Equatable Implementations
 ---
 
-API Collection
+## Topics
 
-# Equatable Implementations 
+### Operators
 
-## Topics 
 
-### Operators 
-
-- [static func != (Self, Self) -> Bool](/documentation/montage/cell/verticalpadding/!=(_:_:).md)
+``static func != (Self, Self) -> Bool``
 

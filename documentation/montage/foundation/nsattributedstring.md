@@ -1,40 +1,88 @@
 ---
-1title: nsattributedstring
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: NSAttributedString
+description: Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성하는 확장입니다.
 ---
-
-Extended Class
-
-# NSAttributedString 
-
-Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성하는 확장입니다.MontageFoundation
 
 ```swift
 extension NSAttributedString
 ```
 
-## Topics 
+## Topics
 
-### Type Methods 
+### Type Methods
 
-- [static func montage(String) -> NSAttributedString](/documentation/montage/foundation/nsattributedstring/montage(_:).md)
 
-  Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+``static func montage(String) -> NSAttributedString``
 
-- [static func montage(String, variant: Typography.Variant, weight: Typography.Weight) -> NSAttributedString](/documentation/montage/foundation/nsattributedstring/montage(_:variant:weight:).md)
+Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
-  Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `string` | 변환할 문자열 |
+- **Return Value**
 
-- [static func montage(String, variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic, lineBreakMode: NSLineBreakMode) -> NSAttributedString](/documentation/montage/foundation/nsattributedstring/montage(_:variant:weight:atomic:linebreakmode:).md)
+  Montage 스타일이 적용된 NSAttributedString
 
-  Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+``static func montage(String, variant: Typography.Variant, weight: Typography.Weight) -> NSAttributedString``
 
-- [static func montage(String, variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable, lineBreakMode: NSLineBreakMode) -> NSAttributedString](/documentation/montage/foundation/nsattributedstring/montage(_:variant:weight:colorresolver:linebreakmode:).md)
+Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
-  Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `string` | 변환할 문자열 |
+  | `variant` | 타이포그래피 변형 (기본값: .body1) |
+  | `weight` | 폰트 두께 (기본값: .regular) |
+- **Return Value**
 
-- [static func montage(String, variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic, lineBreakMode: NSLineBreakMode) -> NSAttributedString](/documentation/montage/foundation/nsattributedstring/montage(_:variant:weight:semantic:linebreakmode:).md)
+  Montage 스타일이 적용된 NSAttributedString
+
+``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic, lineBreakMode: NSLineBreakMode) -> NSAttributedString``
+
+Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `string` | 변환할 문자열 |
+  | `variant` | 타이포그래피 변형 (기본값: .body1) |
+  | `weight` | 폰트 두께 (기본값: .regular) |
+  | `atomic` | 원자적 색상 |
+  | `lineBreakMode` | 줄바꿈 모드 (기본값: .byWordWrapping) |
+- **Return Value**
+
+  Montage 스타일이 적용된 NSAttributedString
+
+``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable, lineBreakMode: NSLineBreakMode) -> NSAttributedString``
+
+Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `string` | 변환할 문자열 |
+  | `variant` | 타이포그래피 변형 (기본값: .body1) |
+  | `weight` | 폰트 두께 (기본값: .regular) |
+  | `colorResolver` | 색상 해석기 |
+  | `lineBreakMode` | 줄바꿈 모드 (기본값: .byWordWrapping) |
+- **Return Value**
+
+  Montage 스타일이 적용된 NSAttributedString
+
+``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic, lineBreakMode: NSLineBreakMode) -> NSAttributedString``
+
+Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `string` | 변환할 문자열 |
+  | `variant` | 타이포그래피 변형 (기본값: .body1) |
+  | `weight` | 폰트 두께 (기본값: .regular) |
+  | `semantic` | 의미론적 색상 |
+  | `lineBreakMode` | 줄바꿈 모드 (기본값: .byWordWrapping) |
+- **Return Value**
+
+  Montage 스타일이 적용된 NSAttributedString
 

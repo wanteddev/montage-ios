@@ -1,22 +1,17 @@
-Enumeration
-
-# Color.Atomic 
-
-디자인 시스템에서 정의된 Atomic 컬러 팔레트
+---
+title: Color.Atomic
+description: 디자인 시스템에서 정의된 Atomic 컬러 팔레트
+---
 
 ```swift
 enum Atomic
 ```
 
-## Overview 
+## Overview
 
 Atomic 색상은 디자인 시스템의 기본 색상 값을 정의합니다. 이 색상들은 직접 사용하기보다는 Semantic 색상의 기반이 되는 기본 색상 팔레트로 활용됩니다.
 
-전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Atomic)](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-52196)
-
- 를 참고하세요.
-
-**사용 예시**:
+전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Atomic)](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-52196.md) 를 참고하세요.
 
 ```swift
 // UIKit에서 사용
@@ -27,425 +22,833 @@ Text("텍스트")
     .foregroundColor(.atomic(.red60))
 ```
 
-> **Note**
+>  Note
 >
 > 숫자가 높을수록 밝은 색상을 나타내며, 100에 가까울수록 흰색에 가깝고 0에 가까울수록 검은색에 가깝습니다.
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case blue0](/documentation/montage/color/atomic/blue0.md)
 
-- [case blue10](/documentation/montage/color/atomic/blue10.md)
+``case blue0``
 
-- [case blue100](/documentation/montage/color/atomic/blue100.md)
+가장 어두운 파란색
 
-- [case blue20](/documentation/montage/color/atomic/blue20.md)
+``case blue10``
 
-- [case blue30](/documentation/montage/color/atomic/blue30.md)
+매우 어두운 파란색
 
-- [case blue40](/documentation/montage/color/atomic/blue40.md)
+``case blue100``
 
-- [case blue45](/documentation/montage/color/atomic/blue45.md)
+가장 밝은 파란색
 
-- [case blue50](/documentation/montage/color/atomic/blue50.md)
+``case blue20``
 
-- [case blue55](/documentation/montage/color/atomic/blue55.md)
+거의 검은색 파란색
 
-- [case blue60](/documentation/montage/color/atomic/blue60.md)
+``case blue30``
 
-- [case blue65](/documentation/montage/color/atomic/blue65.md)
+거의 검은색에 가까운 파란색
 
-- [case blue70](/documentation/montage/color/atomic/blue70.md)
+``case blue40``
 
-- [case blue80](/documentation/montage/color/atomic/blue80.md)
+매우 어두운 파란색
 
-- [case blue90](/documentation/montage/color/atomic/blue90.md)
+``case blue45``
 
-- [case blue95](/documentation/montage/color/atomic/blue95.md)
+어두운 파란색
 
-- [case blue99](/documentation/montage/color/atomic/blue99.md)
+``case blue50``
 
-- [case common0](/documentation/montage/color/atomic/common0.md)
+중간 어두운 파란색
 
-- [case common100](/documentation/montage/color/atomic/common100.md)
+``case blue55``
 
-- [case coolNeutral0](/documentation/montage/color/atomic/coolneutral0.md)
+어두운 파란색
 
-- [case coolNeutral10](/documentation/montage/color/atomic/coolneutral10.md)
+``case blue60``
 
-- [case coolNeutral100](/documentation/montage/color/atomic/coolneutral100.md)
+중간 어두운 파란색
 
-- [case coolNeutral15](/documentation/montage/color/atomic/coolneutral15.md)
+``case blue65``
 
-- [case coolNeutral17](/documentation/montage/color/atomic/coolneutral17.md)
+약간 어두운 파란색
 
-- [case coolNeutral20](/documentation/montage/color/atomic/coolneutral20.md)
+``case blue70``
 
-- [case coolNeutral22](/documentation/montage/color/atomic/coolneutral22.md)
+중간 파란색
 
-- [case coolNeutral23](/documentation/montage/color/atomic/coolneutral23.md)
+``case blue80``
 
-- [case coolNeutral25](/documentation/montage/color/atomic/coolneutral25.md)
+중간 밝기의 파란색
 
-- [case coolNeutral30](/documentation/montage/color/atomic/coolneutral30.md)
+``case blue90``
 
-- [case coolNeutral40](/documentation/montage/color/atomic/coolneutral40.md)
+약간 밝은 파란색
 
-- [case coolNeutral5](/documentation/montage/color/atomic/coolneutral5.md)
+``case blue95``
 
-- [case coolNeutral50](/documentation/montage/color/atomic/coolneutral50.md)
+밝은 파란색
 
-- [case coolNeutral60](/documentation/montage/color/atomic/coolneutral60.md)
+``case blue99``
 
-- [case coolNeutral7](/documentation/montage/color/atomic/coolneutral7.md)
+매우 밝은 파란색
 
-- [case coolNeutral70](/documentation/montage/color/atomic/coolneutral70.md)
+``case common0``
 
-- [case coolNeutral80](/documentation/montage/color/atomic/coolneutral80.md)
+검은색 계열의 기본 색상
 
-- [case coolNeutral90](/documentation/montage/color/atomic/coolneutral90.md)
+``case common100``
 
-- [case coolNeutral95](/documentation/montage/color/atomic/coolneutral95.md)
+흰색 계열의 기본 색상
 
-- [case coolNeutral96](/documentation/montage/color/atomic/coolneutral96.md)
+``case coolNeutral0``
 
-- [case coolNeutral97](/documentation/montage/color/atomic/coolneutral97.md)
+가장 어두운 차가운 중립 색상
 
-- [case coolNeutral98](/documentation/montage/color/atomic/coolneutral98.md)
+``case coolNeutral10``
 
-- [case coolNeutral99](/documentation/montage/color/atomic/coolneutral99.md)
+매우 어두운 차가운 중립 색상
 
-- [case cyan0](/documentation/montage/color/atomic/cyan0.md)
+``case coolNeutral100``
 
-- [case cyan10](/documentation/montage/color/atomic/cyan10.md)
+가장 밝은 차가운 중립 색상
 
-- [case cyan100](/documentation/montage/color/atomic/cyan100.md)
+``case coolNeutral15``
 
-- [case cyan20](/documentation/montage/color/atomic/cyan20.md)
+거의 검은색 차가운 중립 색상
 
-- [case cyan30](/documentation/montage/color/atomic/cyan30.md)
+``case coolNeutral17``
 
-- [case cyan40](/documentation/montage/color/atomic/cyan40.md)
+거의 검은색에 가까운 차가운 중립 색상
 
-- [case cyan50](/documentation/montage/color/atomic/cyan50.md)
+``case coolNeutral20``
 
-- [case cyan60](/documentation/montage/color/atomic/cyan60.md)
+매우 어두운 차가운 중립 색상
 
-- [case cyan70](/documentation/montage/color/atomic/cyan70.md)
+``case coolNeutral22``
 
-- [case cyan80](/documentation/montage/color/atomic/cyan80.md)
+어두운 차가운 중립 색상
 
-- [case cyan90](/documentation/montage/color/atomic/cyan90.md)
+``case coolNeutral23``
 
-- [case cyan95](/documentation/montage/color/atomic/cyan95.md)
+매우 어두운 차가운 중립 색상
 
-- [case cyan99](/documentation/montage/color/atomic/cyan99.md)
+``case coolNeutral25``
 
-- [case green0](/documentation/montage/color/atomic/green0.md)
+특별한 어두운 차가운 중립 색상
 
-- [case green10](/documentation/montage/color/atomic/green10.md)
+``case coolNeutral30``
 
-- [case green100](/documentation/montage/color/atomic/green100.md)
+매우 어두운 차가운 중립 색상
 
-- [case green20](/documentation/montage/color/atomic/green20.md)
+``case coolNeutral40``
 
-- [case green30](/documentation/montage/color/atomic/green30.md)
+어두운 차가운 중립 색상
 
-- [case green40](/documentation/montage/color/atomic/green40.md)
+``case coolNeutral5``
 
-- [case green50](/documentation/montage/color/atomic/green50.md)
+매우 어두운 차가운 중립 색상
 
-- [case green60](/documentation/montage/color/atomic/green60.md)
+``case coolNeutral50``
 
-- [case green70](/documentation/montage/color/atomic/green70.md)
+중간 어두운 차가운 중립 색상
 
-- [case green80](/documentation/montage/color/atomic/green80.md)
+``case coolNeutral60``
 
-- [case green90](/documentation/montage/color/atomic/green90.md)
+약간 어두운 차가운 중립 색상
 
-- [case green95](/documentation/montage/color/atomic/green95.md)
+``case coolNeutral7``
 
-- [case green99](/documentation/montage/color/atomic/green99.md)
+거의 검은색에 가까운 차가운 중립 색상
 
-- [case lightBlue0](/documentation/montage/color/atomic/lightblue0.md)
+``case coolNeutral70``
 
-- [case lightBlue10](/documentation/montage/color/atomic/lightblue10.md)
+중간 차가운 중립 색상
 
-- [case lightBlue100](/documentation/montage/color/atomic/lightblue100.md)
+``case coolNeutral80``
 
-- [case lightBlue20](/documentation/montage/color/atomic/lightblue20.md)
+중간 밝기의 차가운 중립 색상
 
-- [case lightBlue30](/documentation/montage/color/atomic/lightblue30.md)
+``case coolNeutral90``
 
-- [case lightBlue40](/documentation/montage/color/atomic/lightblue40.md)
+약간 밝은 차가운 중립 색상
 
-- [case lightBlue50](/documentation/montage/color/atomic/lightblue50.md)
+``case coolNeutral95``
 
-- [case lightBlue60](/documentation/montage/color/atomic/lightblue60.md)
+밝은 차가운 중립 색상
 
-- [case lightBlue70](/documentation/montage/color/atomic/lightblue70.md)
+``case coolNeutral96``
 
-- [case lightBlue80](/documentation/montage/color/atomic/lightblue80.md)
+중간 밝기의 차가운 중립 색상
 
-- [case lightBlue90](/documentation/montage/color/atomic/lightblue90.md)
+``case coolNeutral97``
 
-- [case lightBlue95](/documentation/montage/color/atomic/lightblue95.md)
+약간 밝은 차가운 중립 색상
 
-- [case lightBlue99](/documentation/montage/color/atomic/lightblue99.md)
+``case coolNeutral98``
 
-- [case lime0](/documentation/montage/color/atomic/lime0.md)
+밝은 차가운 중립 색상
 
-- [case lime10](/documentation/montage/color/atomic/lime10.md)
+``case coolNeutral99``
 
-- [case lime100](/documentation/montage/color/atomic/lime100.md)
+매우 밝은 차가운 중립 색상
 
-- [case lime20](/documentation/montage/color/atomic/lime20.md)
+``case cyan0``
 
-- [case lime30](/documentation/montage/color/atomic/lime30.md)
+가장 어두운 시안색
 
-- [case lime37](/documentation/montage/color/atomic/lime37.md)
+``case cyan10``
 
-- [case lime40](/documentation/montage/color/atomic/lime40.md)
+거의 검은색 시안색
 
-- [case lime50](/documentation/montage/color/atomic/lime50.md)
+``case cyan100``
 
-- [case lime60](/documentation/montage/color/atomic/lime60.md)
+가장 밝은 시안색
 
-- [case lime70](/documentation/montage/color/atomic/lime70.md)
+``case cyan20``
 
-- [case lime80](/documentation/montage/color/atomic/lime80.md)
+거의 검은색에 가까운 시안색
 
-- [case lime90](/documentation/montage/color/atomic/lime90.md)
+``case cyan30``
 
-- [case lime95](/documentation/montage/color/atomic/lime95.md)
+매우 어두운 시안색
 
-- [case lime99](/documentation/montage/color/atomic/lime99.md)
+``case cyan40``
 
-- [case neutral0](/documentation/montage/color/atomic/neutral0.md)
+어두운 시안색
 
-- [case neutral10](/documentation/montage/color/atomic/neutral10.md)
+``case cyan50``
 
-- [case neutral100](/documentation/montage/color/atomic/neutral100.md)
+중간 어두운 시안색
 
-- [case neutral15](/documentation/montage/color/atomic/neutral15.md)
+``case cyan60``
 
-- [case neutral20](/documentation/montage/color/atomic/neutral20.md)
+약간 어두운 시안색
 
-- [case neutral22](/documentation/montage/color/atomic/neutral22.md)
+``case cyan70``
 
-- [case neutral30](/documentation/montage/color/atomic/neutral30.md)
+중간 시안색
 
-- [case neutral40](/documentation/montage/color/atomic/neutral40.md)
+``case cyan80``
 
-- [case neutral5](/documentation/montage/color/atomic/neutral5.md)
+중간 밝기의 시안색
 
-- [case neutral50](/documentation/montage/color/atomic/neutral50.md)
+``case cyan90``
 
-- [case neutral60](/documentation/montage/color/atomic/neutral60.md)
+약간 밝은 시안색
 
-- [case neutral70](/documentation/montage/color/atomic/neutral70.md)
+``case cyan95``
 
-- [case neutral80](/documentation/montage/color/atomic/neutral80.md)
+밝은 시안색
 
-- [case neutral90](/documentation/montage/color/atomic/neutral90.md)
+``case cyan99``
 
-- [case neutral95](/documentation/montage/color/atomic/neutral95.md)
+매우 밝은 시안색
 
-- [case neutral99](/documentation/montage/color/atomic/neutral99.md)
+``case green0``
 
-- [case orange0](/documentation/montage/color/atomic/orange0.md)
+가장 어두운 초록색
 
-- [case orange10](/documentation/montage/color/atomic/orange10.md)
+``case green10``
 
-- [case orange100](/documentation/montage/color/atomic/orange100.md)
+거의 검은색 초록색
 
-- [case orange20](/documentation/montage/color/atomic/orange20.md)
+``case green100``
 
-- [case orange30](/documentation/montage/color/atomic/orange30.md)
+가장 밝은 초록색
 
-- [case orange39](/documentation/montage/color/atomic/orange39.md)
+``case green20``
 
-- [case orange40](/documentation/montage/color/atomic/orange40.md)
+거의 검은색에 가까운 초록색
 
-- [case orange50](/documentation/montage/color/atomic/orange50.md)
+``case green30``
 
-- [case orange60](/documentation/montage/color/atomic/orange60.md)
+매우 어두운 초록색
 
-- [case orange70](/documentation/montage/color/atomic/orange70.md)
+``case green40``
 
-- [case orange80](/documentation/montage/color/atomic/orange80.md)
+어두운 초록색
 
-- [case orange90](/documentation/montage/color/atomic/orange90.md)
+``case green50``
 
-- [case orange95](/documentation/montage/color/atomic/orange95.md)
+중간 어두운 초록색
 
-- [case orange99](/documentation/montage/color/atomic/orange99.md)
+``case green60``
 
-- [case pink0](/documentation/montage/color/atomic/pink0.md)
+약간 어두운 초록색
 
-- [case pink10](/documentation/montage/color/atomic/pink10.md)
+``case green70``
 
-- [case pink100](/documentation/montage/color/atomic/pink100.md)
+중간 초록색
 
-- [case pink20](/documentation/montage/color/atomic/pink20.md)
+``case green80``
 
-- [case pink30](/documentation/montage/color/atomic/pink30.md)
+중간 밝기의 초록색
 
-- [case pink40](/documentation/montage/color/atomic/pink40.md)
+``case green90``
 
-- [case pink46](/documentation/montage/color/atomic/pink46.md)
+약간 밝은 초록색
 
-- [case pink50](/documentation/montage/color/atomic/pink50.md)
+``case green95``
 
-- [case pink60](/documentation/montage/color/atomic/pink60.md)
+밝은 초록색
 
-- [case pink70](/documentation/montage/color/atomic/pink70.md)
+``case green99``
 
-- [case pink80](/documentation/montage/color/atomic/pink80.md)
+매우 밝은 초록색
 
-- [case pink90](/documentation/montage/color/atomic/pink90.md)
+``case lightBlue0``
 
-- [case pink95](/documentation/montage/color/atomic/pink95.md)
+가장 어두운 하늘색
 
-- [case pink99](/documentation/montage/color/atomic/pink99.md)
+``case lightBlue10``
 
-- [case purple0](/documentation/montage/color/atomic/purple0.md)
+거의 검은색 하늘색
 
-- [case purple10](/documentation/montage/color/atomic/purple10.md)
+``case lightBlue100``
 
-- [case purple100](/documentation/montage/color/atomic/purple100.md)
+가장 밝은 하늘색
 
-- [case purple20](/documentation/montage/color/atomic/purple20.md)
+``case lightBlue20``
 
-- [case purple30](/documentation/montage/color/atomic/purple30.md)
+거의 검은색에 가까운 하늘색
 
-- [case purple40](/documentation/montage/color/atomic/purple40.md)
+``case lightBlue30``
 
-- [case purple50](/documentation/montage/color/atomic/purple50.md)
+매우 어두운 하늘색
 
-- [case purple60](/documentation/montage/color/atomic/purple60.md)
+``case lightBlue40``
 
-- [case purple70](/documentation/montage/color/atomic/purple70.md)
+어두운 하늘색
 
-- [case purple80](/documentation/montage/color/atomic/purple80.md)
+``case lightBlue50``
 
-- [case purple90](/documentation/montage/color/atomic/purple90.md)
+중간 어두운 하늘색
 
-- [case purple95](/documentation/montage/color/atomic/purple95.md)
+``case lightBlue60``
 
-- [case purple99](/documentation/montage/color/atomic/purple99.md)
+약간 어두운 하늘색
 
-- [case red0](/documentation/montage/color/atomic/red0.md)
+``case lightBlue70``
 
-- [case red10](/documentation/montage/color/atomic/red10.md)
+중간 하늘색
 
-- [case red100](/documentation/montage/color/atomic/red100.md)
+``case lightBlue80``
 
-- [case red20](/documentation/montage/color/atomic/red20.md)
+중간 밝기의 하늘색
 
-- [case red30](/documentation/montage/color/atomic/red30.md)
+``case lightBlue90``
 
-- [case red40](/documentation/montage/color/atomic/red40.md)
+약간 밝은 하늘색
 
-- [case red50](/documentation/montage/color/atomic/red50.md)
+``case lightBlue95``
 
-- [case red60](/documentation/montage/color/atomic/red60.md)
+밝은 하늘색
 
-- [case red70](/documentation/montage/color/atomic/red70.md)
+``case lightBlue99``
 
-- [case red80](/documentation/montage/color/atomic/red80.md)
+매우 밝은 하늘색
 
-- [case red90](/documentation/montage/color/atomic/red90.md)
+``case lime0``
 
-- [case red95](/documentation/montage/color/atomic/red95.md)
+가장 어두운 라임색
 
-- [case red99](/documentation/montage/color/atomic/red99.md)
+``case lime10``
 
-- [case redOrange0](/documentation/montage/color/atomic/redorange0.md)
+거의 검은색 라임색
 
-- [case redOrange10](/documentation/montage/color/atomic/redorange10.md)
+``case lime100``
 
-- [case redOrange100](/documentation/montage/color/atomic/redorange100.md)
+가장 밝은 라임색
 
-- [case redOrange20](/documentation/montage/color/atomic/redorange20.md)
+``case lime20``
 
-- [case redOrange30](/documentation/montage/color/atomic/redorange30.md)
+거의 검은색에 가까운 라임색
 
-- [case redOrange40](/documentation/montage/color/atomic/redorange40.md)
+``case lime30``
 
-- [case redOrange48](/documentation/montage/color/atomic/redorange48.md)
+매우 어두운 라임색
 
-- [case redOrange50](/documentation/montage/color/atomic/redorange50.md)
+``case lime37``
 
-- [case redOrange60](/documentation/montage/color/atomic/redorange60.md)
+특별한 어두운 라임색
 
-- [case redOrange70](/documentation/montage/color/atomic/redorange70.md)
+``case lime40``
 
-- [case redOrange80](/documentation/montage/color/atomic/redorange80.md)
+어두운 라임색
 
-- [case redOrange90](/documentation/montage/color/atomic/redorange90.md)
+``case lime50``
 
-- [case redOrange95](/documentation/montage/color/atomic/redorange95.md)
+중간 어두운 라임색
 
-- [case redOrange99](/documentation/montage/color/atomic/redorange99.md)
+``case lime60``
 
-- [case violet0](/documentation/montage/color/atomic/violet0.md)
+약간 어두운 라임색
 
-- [case violet10](/documentation/montage/color/atomic/violet10.md)
+``case lime70``
 
-- [case violet100](/documentation/montage/color/atomic/violet100.md)
+중간 라임색
 
-- [case violet20](/documentation/montage/color/atomic/violet20.md)
+``case lime80``
 
-- [case violet30](/documentation/montage/color/atomic/violet30.md)
+중간 밝기의 라임색
 
-- [case violet40](/documentation/montage/color/atomic/violet40.md)
+``case lime90``
 
-- [case violet45](/documentation/montage/color/atomic/violet45.md)
+약간 밝은 라임색
 
-- [case violet50](/documentation/montage/color/atomic/violet50.md)
+``case lime95``
 
-- [case violet60](/documentation/montage/color/atomic/violet60.md)
+밝은 라임색
 
-- [case violet70](/documentation/montage/color/atomic/violet70.md)
+``case lime99``
 
-- [case violet80](/documentation/montage/color/atomic/violet80.md)
+매우 밝은 라임색
 
-- [case violet90](/documentation/montage/color/atomic/violet90.md)
+``case neutral0``
 
-- [case violet95](/documentation/montage/color/atomic/violet95.md)
+가장 어두운 중립 색상
 
-- [case violet99](/documentation/montage/color/atomic/violet99.md)
+``case neutral10``
 
-### Initializers 
+거의 검은색 중립 색상
 
-- [init?(rawValue: String)](/documentation/montage/color/atomic/init(rawvalue:).md)
+``case neutral100``
 
-### Instance Properties 
+가장 밝은 중립 색상
 
-- [var name: String](/documentation/montage/color/atomic/name.md)
+``case neutral15``
 
-### Instance Methods 
+거의 검은색에 가까운 중립 색상
 
-- [func resolve(UITraitCollection) -> UIColor](/documentation/montage/color/atomic/resolve(_:).md)
+``case neutral20``
 
-  주어진 UITraitCollection에 따라 UIColor를 반환합니다.
+매우 어두운 중립 색상
 
-### Default Implementations 
+``case neutral22``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/color/atomic/equatable-implementations.md)
+특별한 어두운 중립 색상
 
-- [API ReferenceRawRepresentable Implementations](/documentation/montage/color/atomic/rawrepresentable-implementations.md)
+``case neutral30``
 
-## Relationships 
+매우 어두운 중립 색상
 
-### Conforms To 
+``case neutral40``
 
-- [ColorResolvable](/documentation/montage/colorresolvable.md)
-- Swift.CaseIterable
-- Swift.Equatable
-- Swift.Hashable
-- Swift.RawRepresentable
+어두운 중립 색상
+
+``case neutral5``
+
+매우 어두운 중립 색상
+
+``case neutral50``
+
+중간 어두운 중립 색상
+
+``case neutral60``
+
+약간 어두운 중립 색상
+
+``case neutral70``
+
+중간 중립 색상
+
+``case neutral80``
+
+중간 밝기의 중립 색상
+
+``case neutral90``
+
+약간 밝은 중립 색상
+
+``case neutral95``
+
+밝은 중립 색상
+
+``case neutral99``
+
+매우 밝은 중립 색상
+
+``case orange0``
+
+가장 어두운 주황색
+
+``case orange10``
+
+거의 검은색 주황색
+
+``case orange100``
+
+가장 밝은 주황색
+
+``case orange20``
+
+거의 검은색에 가까운 주황색
+
+``case orange30``
+
+매우 어두운 주황색
+
+``case orange39``
+
+특별한 어두운 주황색
+
+``case orange40``
+
+어두운 주황색
+
+``case orange50``
+
+중간 어두운 주황색
+
+``case orange60``
+
+약간 어두운 주황색
+
+``case orange70``
+
+중간 주황색
+
+``case orange80``
+
+중간 밝기의 주황색
+
+``case orange90``
+
+약간 밝은 주황색
+
+``case orange95``
+
+밝은 주황색
+
+``case orange99``
+
+매우 밝은 주황색
+
+``case pink0``
+
+가장 어두운 분홍색
+
+``case pink10``
+
+거의 검은색 분홍색
+
+``case pink100``
+
+가장 밝은 분홍색
+
+``case pink20``
+
+거의 검은색에 가까운 분홍색
+
+``case pink30``
+
+매우 어두운 분홍색
+
+``case pink40``
+
+어두운 분홍색
+
+``case pink46``
+
+특별한 어두운 분홍색
+
+``case pink50``
+
+중간 어두운 분홍색
+
+``case pink60``
+
+약간 어두운 분홍색
+
+``case pink70``
+
+중간 분홍색
+
+``case pink80``
+
+중간 밝기의 분홍색
+
+``case pink90``
+
+약간 밝은 분홍색
+
+``case pink95``
+
+밝은 분홍색
+
+``case pink99``
+
+매우 밝은 분홍색
+
+``case purple0``
+
+가장 어두운 자주색
+
+``case purple10``
+
+거의 검은색 자주색
+
+``case purple100``
+
+가장 밝은 자주색
+
+``case purple20``
+
+거의 검은색에 가까운 자주색
+
+``case purple30``
+
+매우 어두운 자주색
+
+``case purple40``
+
+어두운 자주색
+
+``case purple50``
+
+중간 어두운 자주색
+
+``case purple60``
+
+약간 어두운 자주색
+
+``case purple70``
+
+중간 자주색
+
+``case purple80``
+
+중간 밝기의 자주색
+
+``case purple90``
+
+약간 밝은 자주색
+
+``case purple95``
+
+밝은 자주색
+
+``case purple99``
+
+매우 밝은 자주색
+
+``case red0``
+
+가장 어두운 빨간색
+
+``case red10``
+
+거의 검은색 빨간색
+
+``case red100``
+
+가장 밝은 빨간색
+
+``case red20``
+
+거의 검은색에 가까운 빨간색
+
+``case red30``
+
+매우 어두운 빨간색
+
+``case red40``
+
+어두운 빨간색
+
+``case red50``
+
+중간 어두운 빨간색
+
+``case red60``
+
+약간 어두운 빨간색
+
+``case red70``
+
+중간 빨간색
+
+``case red80``
+
+중간 밝기의 빨간색
+
+``case red90``
+
+약간 밝은 빨간색
+
+``case red95``
+
+밝은 빨간색
+
+``case red99``
+
+매우 밝은 빨간색
+
+``case redOrange0``
+
+가장 어두운 붉은 주황색
+
+``case redOrange10``
+
+거의 검은색 붉은 주황색
+
+``case redOrange100``
+
+가장 밝은 붉은 주황색
+
+``case redOrange20``
+
+거의 검은색에 가까운 붉은 주황색
+
+``case redOrange30``
+
+매우 어두운 붉은 주황색
+
+``case redOrange40``
+
+어두운 붉은 주황색
+
+``case redOrange48``
+
+특별한 어두운 붉은 주황색
+
+``case redOrange50``
+
+중간 어두운 붉은 주황색
+
+``case redOrange60``
+
+약간 어두운 붉은 주황색
+
+``case redOrange70``
+
+중간 붉은 주황색
+
+``case redOrange80``
+
+중간 밝기의 붉은 주황색
+
+``case redOrange90``
+
+약간 밝은 붉은 주황색
+
+``case redOrange95``
+
+밝은 붉은 주황색
+
+``case redOrange99``
+
+매우 밝은 붉은 주황색
+
+``case violet0``
+
+가장 어두운 보라색
+
+``case violet10``
+
+거의 검은색 보라색
+
+``case violet100``
+
+가장 밝은 보라색
+
+``case violet20``
+
+거의 검은색에 가까운 보라색
+
+``case violet30``
+
+매우 어두운 보라색
+
+``case violet40``
+
+어두운 보라색
+
+``case violet45``
+
+특별한 어두운 보라색
+
+``case violet50``
+
+중간 어두운 보라색
+
+``case violet60``
+
+약간 어두운 보라색
+
+``case violet70``
+
+중간 보라색
+
+``case violet80``
+
+중간 밝기의 보라색
+
+``case violet90``
+
+약간 밝은 보라색
+
+``case violet95``
+
+밝은 보라색
+
+``case violet99``
+
+매우 밝은 보라색
+
+### Initializers
+
+
+``init?(rawValue: String)``
+
+### Instance Properties
+
+
+``var name: String``
+
+Atomic 색상의 이름을 반환합니다.
+- **Return Value**
+
+  색상의 이름 문자열
+
+### Instance Methods
+
+
+``func resolve(UITraitCollection) -> UIColor``
+
+주어진 UITraitCollection에 따라 UIColor를 반환합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `_` | 색상을 해석할 UITraitCollection |
+- **Return Value**
+
+  해석된 UIColor 인스턴스
+
+### Default Implementations
+
+
+[Equatable Implementations](/documentation/montage/color/atomic/equatable-implementations.md)
+
+[RawRepresentable Implementations](/documentation/montage/color/atomic/rawrepresentable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`ColorResolvable`
+
+`Swift.CaseIterable`
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.RawRepresentable`
+
+
 

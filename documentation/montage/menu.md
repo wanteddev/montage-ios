@@ -1,27 +1,15 @@
 ---
-1title: menu
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Menu
+description: 드롭다운이나 컨텍스트 메뉴로 사용할 수 있는 메뉴 컴포넌트입니다.
 ---
 
-Structure
-
-# Menu 
-
-드롭다운이나 컨텍스트 메뉴로 사용할 수 있는 메뉴 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct Menu
+@MainActor struct Menu
 ```
 
-## Overview 
+## Overview
 
 일반, 라디오 버튼, 체크박스 형태로 메뉴 항목을 표시할 수 있으며, 메뉴 하단에 추가 액션 영역을 포함할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 기본 메뉴
@@ -52,50 +40,79 @@ Menu(
 )
 ```
 
-> **See Also**
+>  See Also
 >
-> Menu.Variant, Menu.Item
+> `Menu.Variant`, `Menu.Item`
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct Item](/documentation/montage/menu/item.md)
 
-  메뉴 항목의 데이터를 정의하는 구조체입니다.
+[``struct Item``](/documentation/montage/menu/item.md)
 
-### Initializers 
+메뉴 항목의 데이터를 정의하는 구조체입니다.
 
-- [init(variant: Variant, items: Binding<[Item]>, onSelectCell: ((Item) -> Void)?, cellModifier: (_ index: Int, _ cell: Cell) -> Cell)](/documentation/montage/menu/init(variant:items:onselectcell:cellmodifier:).md)
+### Initializers
 
-  메뉴 컴포넌트를 초기화합니다.
 
-### Instance Properties 
+``init(variant: Variant, items: Binding<[Item]>, onSelectCell: ((Item) -> Void)?, cellModifier: (_ index: Int, _ cell: Cell) -> Cell)``
 
-- [var body: some View](/documentation/montage/menu/body.md)
+메뉴 컴포넌트를 초기화합니다.
 
-### Instance Methods 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 메뉴의 표시 형태 (normal, radio, checkbox) |
+  | `items` | 메뉴 항목 배열에 대한 바인딩 |
+  | `onSelectCell` | 항목 선택 시 호출될 클로저 (선택 사항) |
+  | `cellModifier` | 각 셀을 커스터마이징하기 위한 클로저 (기본값: 수정 없음) |
 
-- [func menuActionArea(leadingContent: () -> any View, trailingContent: () -> any View) -> Menu](/documentation/montage/menu/menuactionarea(leadingcontent:trailingcontent:).md)
+### Instance Properties
 
-  메뉴 하단에 액션 버튼 영역을 추가합니다.
 
-### Enumerations 
+``var body: some View``
 
-- [enum Variant](/documentation/montage/menu/variant.md)
+### Instance Methods
 
-  메뉴의 표시 형태를 정의하는 열거형입니다.
 
-### Default Implementations 
+``func menuActionArea(leadingContent: () -> any View, trailingContent: () -> any View) -> Menu``
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+메뉴 하단에 액션 버튼 영역을 추가합니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `leadingContent` | 왼쪽에 표시할 콘텐츠를 반환하는 클로저 |
+  | `trailingContent` | 오른쪽에 표시할 콘텐츠를 반환하는 클로저 |
+- **Return Value**
 
-## Relationships 
+  액션 영역이 추가된 Menu
+- **Discussion**
 
-### Conforms To 
+  왼쪽과 오른쪽에 버튼이나 다른 뷰를 배치할 수 있습니다.
 
-- Swift.Sendable
-- SwiftUICore.View
+### Enumerations
+
+
+[``enum Variant``](/documentation/montage/menu/variant.md)
+
+메뉴의 표시 형태를 정의하는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/menu/view-implementations.md)
+
+[View Implementations](/documentation/montage/menu/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

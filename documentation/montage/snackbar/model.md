@@ -1,26 +1,15 @@
 ---
-1title: model
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: SnackBar.Model
+description: SnackBar의 데이터 모델을 정의하는 구조체입니다.
 ---
-
-Structure
-
-# SnackBar.Model 
-
-SnackBar의 데이터 모델을 정의하는 구조체입니다.
 
 ```swift
 struct Model
 ```
 
-## Overview 
+## Overview
 
 스낵바에 표시할 콘텐츠와 동작 방식을 설정할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 기본 스낵바 모델
@@ -43,25 +32,39 @@ SnackBar.Model(
 )
 ```
 
-## Topics 
+## Topics
 
-### Operators 
+### Operators
 
-- [static func == (`Self`, `Self`) -> Bool](/documentation/montage/snackbar/model/==(_:_:).md)
 
-### Initializers 
+``static func == (`Self`, `Self`) -> Bool``
 
-- [init(duration: Duration, heading: String?, description: String?, extraContents: (() -> any View)?, action: String)](/documentation/montage/snackbar/model/init(duration:heading:description:extracontents:action:).md)
+### Initializers
 
-  SnackBar 모델을 초기화합니다.
 
-### Default Implementations 
+``init(duration: Duration, heading: String?, description: String?, extraContents: (() -> any View)?, action: String)``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/snackbar/model/equatable-implementations.md)
+SnackBar 모델을 초기화합니다.
 
-## Relationships 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `duration` | 스낵바가 표시되는 시간 |
+  | `heading` | 스낵바의 제목 (선택 사항) |
+  | `description` | 스낵바의 설명 텍스트 (선택 사항) |
+  | `extraContents` | 스낵바에 표시할 추가 콘텐츠를 반환하는 클로저 (선택 사항) |
+  | `action` | 스낵바의 액션 버튼에 표시할 텍스트 |
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Equatable
+
+[Equatable Implementations](/documentation/montage/snackbar/model/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+
 

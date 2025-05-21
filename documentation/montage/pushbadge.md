@@ -1,27 +1,15 @@
 ---
-1title: pushbadge
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: PushBadge
+description: 푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입니다.
 ---
 
-Structure
-
-# PushBadge 
-
-푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct PushBadge
+@MainActor struct PushBadge
 ```
 
-## Overview 
+## Overview
 
 작은 점, ‘N’ 표시, 또는 숫자를 표시할 수 있으며 다양한 크기와 위치를 지원합니다. 주로 아이콘이나 버튼 주변에 새로운 알림이나 메시지가 있음을 나타내기 위해 사용됩니다.
-
-**사용 예시**:
 
 ```swift
 // 기본 점 형태 뱃지
@@ -36,66 +24,97 @@ PushBadge(variant: .number(5))
     .backgroundColor(.red)
 ```
 
-> **See Also**
+>  See Also
 >
-> PushBadge.Modifier, PushBadge.Variant, PushBadge.Size, PushBadge.Position
+> `PushBadge.Modifier`, `PushBadge.Variant`, `PushBadge.Size`, `PushBadge.Position`
 
-## Topics 
+## Topics
 
-### Structures 
+### Initializers
 
-- [struct Modifier](/documentation/montage/pushbadge/modifier.md)
 
-  다른 뷰에 PushBadge를 적용하기 위한 뷰 모디파이어입니다.
+``init(variant: Variant)``
 
-### Initializers 
+PushBadge를 초기화합니다.
 
-- [init(variant: Variant)](/documentation/montage/pushbadge/init(variant:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 뱃지의 표시 형태 (dot, new, number) |
 
-  PushBadge를 초기화합니다.
+### Instance Properties
 
-### Instance Properties 
 
-- [var body: some View](/documentation/montage/pushbadge/body.md)
+``var body: some View``
 
-### Instance Methods 
+### Instance Methods
 
-- [func backgroundColor(SwiftUI.Color) -> PushBadge](/documentation/montage/pushbadge/backgroundcolor(_:).md)
 
-  배경 색상을 설정합니다.
+``func backgroundColor(SwiftUI.Color) -> PushBadge``
 
-- [func fontColor(SwiftUI.Color) -> PushBadge](/documentation/montage/pushbadge/fontcolor(_:).md)
+배경 색상을 설정합니다.
 
-  텍스트 색상을 설정합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 배경 색상 |
+- **Return Value**
 
-- [func size(Size) -> PushBadge](/documentation/montage/pushbadge/size(_:).md)
+  배경 색상이 변경된 PushBadge
 
-  뱃지의 크기를 설정합니다.
+``func fontColor(SwiftUI.Color) -> PushBadge``
 
-### Enumerations 
+텍스트 색상을 설정합니다.
 
-- [enum Position](/documentation/montage/pushbadge/position.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 텍스트 색상 |
+- **Return Value**
 
-  뱃지의 위치를 정의하는 열거형입니다.
+  텍스트 색상이 변경된 PushBadge
 
-- [enum Size](/documentation/montage/pushbadge/size.md)
+``func size(Size) -> PushBadge``
 
-  뱃지의 크기를 정의하는 열거형입니다.
+뱃지의 크기를 설정합니다.
 
-- [enum Variant](/documentation/montage/pushbadge/variant.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 뱃지 크기 |
+- **Return Value**
 
-  뱃지의 표시 형태를 정의하는 열거형입니다.
+  크기가 변경된 PushBadge
 
-### Default Implementations 
+### Enumerations
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+[``enum Position``](/documentation/montage/pushbadge/position.md)
 
-## Relationships 
+뱃지의 위치를 정의하는 열거형입니다.
 
-### Conforms To 
+[``enum Size``](/documentation/montage/pushbadge/size.md)
 
-- Swift.Sendable
-- SwiftUICore.View
+뱃지의 크기를 정의하는 열거형입니다.
+
+[``enum Variant``](/documentation/montage/pushbadge/variant.md)
+
+뱃지의 표시 형태를 정의하는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/pushbadge/view-implementations.md)
+
+[View Implementations](/documentation/montage/pushbadge/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

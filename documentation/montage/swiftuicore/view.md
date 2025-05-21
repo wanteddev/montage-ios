@@ -1,144 +1,458 @@
 ---
-1title: view
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: View
 ---
-
-Extended Protocol
-
-# View 
-
-MontageSwiftUICore
 
 ```swift
 extension View
 ```
 
-## Topics 
+## Topics
 
-### Instance Methods 
+### Instance Methods
 
-- [func actionArea(model: ActionAreaModifier.Model) -> some View](/documentation/montage/swiftuicore/view/actionarea(model:).md)
 
-  현재 뷰에 하단 ActionArea를 적용합니다.
+``func actionArea(model: ActionArea.Model) -> some View``
 
-- [func asUIImage() -> UIImage](/documentation/montage/swiftuicore/view/asuiimage().md)
+현재 뷰에 하단 ActionArea를 적용합니다.
 
-  View를 UIImage로 변환합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `model` | ActionArea의 구성 모델 |
+- **Return Value**
 
-- [func bottomSheetModal(isPresented: Binding<Bool>, needHandle: Bool, resize: Modal.BottomSheet.Resize, actionAreaModel: ActionAreaModifier.Model?, () -> any View, navigation: (() -> Modal.Navigation)?) -> some View](/documentation/montage/swiftuicore/view/bottomsheetmodal(ispresented:needhandle:resize:actionareamodel:_:navigation:).md)
+  ActionArea가 적용된 뷰
+- **Discussion**
 
-  바텀 시트 모달을 표시합니다.
+``func asUIImage() -> UIImage``
 
-- [func carveLogForPreview(String, font: Font?, alignment: Alignment) -> some View](/documentation/montage/swiftuicore/view/carvelogforpreview(_:font:alignment:).md)
+View를 UIImage로 변환합니다.
+- **Return Value**
 
-  프리뷰에서 뷰 위에 로그를 출력합니다.
+  변환된 UIImage
 
-- [func disableSwipeBack(Bool) -> some View](/documentation/montage/swiftuicore/view/disableswipeback(_:).md)
+``func bottomSheetModal(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``
 
-  뷰에서 스와이프 백 제스처를 비활성화하는 modifier를 적용합니다.
+바텀 시트 모달을 표시합니다.
 
-- [func elevation(Elevation) -> Self](/documentation/montage/swiftuicore/view/elevation(_:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `needHandle` | 상단 핸들 표시 여부 (기본값: true) |
+  | `resize` | 모달 크기 조절 방식 (기본값: .hug) |
+  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
+- **Return Value**
 
-  Montage 디자인 시스템의 그림자 효과를 적용합니다.
+  바텀 시트 모달이 적용된 뷰
+- **Discussion**
 
-- [func fullModal(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionAreaModifier.Model?, () -> any View, navigation: (() -> Modal.Navigation)?) -> some View](/documentation/montage/swiftuicore/view/fullmodal(ispresented:ignoresedgeinsets:actionareamodel:_:navigation:).md)
+  화면 하단에서 올라오는 바텀 시트 형태의 모달을 표시합니다.
 
-  전체 화면 모달을 표시합니다.
+``func carveLogForPreview(String, font: Font?, alignment: Alignment) -> some View``
 
-- [func `if`(Bool) -> some View](/documentation/montage/swiftuicore/view/if(_:).md)
+프리뷰에서 뷰 위에 로그를 출력합니다.
 
-  조건이 true일 때만 View를 표시합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `message` | 출력할 메시지 |
+  | `font` | 폰트 |
+  | `alignment` | 정렬 |
+- **Return Value**
 
-- [func `if`(Bool, (Self) -> any View, else: ((Self) -> any View)?) -> some View](/documentation/montage/swiftuicore/view/if(_:_:else:).md)
+  로그가 출력된 View
 
-  조건에 따라 View를 변환합니다.
+``func disableSwipeBack(Bool) -> some View``
 
-- [func loading(Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) -> some View](/documentation/montage/swiftuicore/view/loading(_:type:dimmedcolor:).md)
+뷰에서 스와이프 백 제스처를 비활성화하는 modifier를 적용합니다.
 
-  현재 뷰에 로딩 인디케이터와 함께 로딩 오버레이를 적용합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `disabled` | 스와이프 백 제스처 비활성화 여부 |
+- **Return Value**
 
-- [func measureBoxForPreview() -> some View](/documentation/montage/swiftuicore/view/measureboxforpreview().md)
+  스와이프 백 제스처가 제어된 뷰
+- **Discussion**
 
-  프리뷰에서 뷰의 크기를 측정하여 뷰 위에 출력합니다.
+  네비게이션 컨트롤러의 스와이프 뒤로가기 제스처 인식기를 제어합니다.
 
-- [func measureForPreview(axis: Axis) -> some View](/documentation/montage/swiftuicore/view/measureforpreview(axis:).md)
+``func elevation(Elevation) -> Self``
 
-  프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
+Montage 디자인 시스템의 그림자 효과를 적용합니다.
 
-- [func modifying((Self) -> any View) -> some View](/documentation/montage/swiftuicore/view/modifying(_:)-40fac.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `elevation` | 적용할 그림자 효과 |
+- **Return Value**
 
-  View를 변환합니다.
+  그림자 효과가 적용된 View
 
-- [func modifying((Self) -> Self) -> Self](/documentation/montage/swiftuicore/view/modifying(_:)-5z8ib.md)
+``func fullModal(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``
 
-  View를 변환합니다.
+전체 화면 모달을 표시합니다.
 
-- [func onGeometryChange<T>(for: T.Type, of: (GeometryProxy) -> T, for: RunLoop.SchedulerTimeType.Stride, action: (_ newValue: T) -> Void) -> some View](/documentation/montage/swiftuicore/view/ongeometrychange(for:of:for:action:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
+  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
+- **Return Value**
 
-  View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
+  전체 화면 모달이 적용된 뷰
+- **Discussion**
 
-- [func paragraph(variant: Typography.Variant) -> some View](/documentation/montage/swiftuicore/view/paragraph(variant:).md)
+  화면 전체를 덮는 모달을 표시합니다.
 
-  Montage 디자인 시스템의 단락 스타일을 적용합니다.
+``func `if`(Bool) -> some View``
 
-- [func popupModal(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionAreaModifier.Model?, () -> any View, navigation: (() -> Modal.Navigation)?) -> some View](/documentation/montage/swiftuicore/view/popupmodal(ispresented:ignoresedgeinsets:actionareamodel:_:navigation:).md)
+조건이 true일 때만 View를 표시합니다.
 
-  팝업 형태의 모달을 표시합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `condition` | 표시 조건 |
+- **Return Value**
 
-- [func printSize(String) -> some View](/documentation/montage/swiftuicore/view/printsize(_:).md)
+  조건에 따라 표시되는 View
 
-  프리뷰에서 크기가 변경될 때마다 콘솔에 출력합니다.
+``func `if`(Bool, (Self) -> any View, else: ((Self) -> any View)?) -> some View``
 
-- [func printValue<V>(V, String) -> some View](/documentation/montage/swiftuicore/view/printvalue(_:_:).md)
+조건에 따라 View를 변환합니다.
 
-  프리뷰에서 값이 변경될 때마다 콘솔에 출력합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `condition` | 변환 조건 |
+  | `transform` | 조건이 true일 때 적용할 변환 |
+  | `alternative` | 조건이 false일 때 적용할 변환 (선택적) |
+- **Return Value**
 
-- [func pullToRefresh(scrollYOffset: Binding<CGFloat>, refresh: () async -> Void) -> some View](/documentation/montage/swiftuicore/view/pulltorefresh(scrollyoffset:refresh:).md)
+  변환된 View
 
-  스크롤 뷰에 풀-투-리프레시(Pull-to-Refresh) 기능을 추가합니다.
+``func loading(Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) -> some View``
 
-- [func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View](/documentation/montage/swiftuicore/view/pushbadge(variant:size:fontcolor:backgroundcolor:position:inset:).md)
+현재 뷰에 로딩 인디케이터와 함께 로딩 오버레이를 적용합니다.
 
-  현재 뷰에 푸시 알림 뱃지를 표시합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isLoading` | 로딩 상태를 제어하는 바인딩 불리언 값 |
+  | `type` | 로딩 애니메이션 종류 (.wanted 또는 .circular) |
+  | `dimmedColor` | 오버레이 배경색 (기본값: 투명) |
+- **Return Value**
 
-- [func recognizeViewForPreview(SwiftUI.Color, fill: Bool) -> some View](/documentation/montage/swiftuicore/view/recognizeviewforpreview(_:fill:).md)
+  로딩 기능이 적용된 뷰
+- **Discussion**
 
-  프리뷰에서 View의 frame을 인식합니다.
+  로딩 상태일 때 뷰 위에 반투명 배경과 로딩 애니메이션을 표시합니다. 로딩 중에는 사용자 상호작용이 비활성화됩니다.
 
-- [func scrollable(Axis, contentOffset: Binding<CGPoint>) -> some View](/documentation/montage/swiftuicore/view/scrollable(_:contentoffset:).md)
+``func measureBoxForPreview() -> some View``
 
-  뷰에 자동 스크롤 기능을 적용하는 modifier입니다.
+프리뷰에서 뷰의 크기를 측정하여 뷰 위에 출력합니다.
+- **Return Value**
 
-- [func skeleton(isPresented: Bool, kind: Skeleton.Kind, color: SwiftUI.Color?, opacity: CGFloat?, size: CGSize?) -> some View](/documentation/montage/swiftuicore/view/skeleton(ispresented:kind:color:opacity:size:).md)
+  뷰 크기가 그려진 View
 
-  현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
+``func measureForPreview(axis: Axis) -> some View``
 
-- [func skeleton(isPresented: Bool, skeletonView: () -> any View) -> some View](/documentation/montage/swiftuicore/view/skeleton(ispresented:skeletonview:).md)
+프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
 
-  현재 뷰에 커스텀 스켈레톤 로딩 UI를 적용합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `axis` | 측정할 축 |
+- **Return Value**
 
-- [func snackBar(Binding<SnackBar.Model?>, handler: () -> Void) -> some View](/documentation/montage/swiftuicore/view/snackbar(_:handler:).md)
+  뷰 크기가 그려진 View
 
-  현재 뷰에 SnackBar를 표시하는 modifier를 적용합니다.
+``func modifying((Self) -> any View) -> some View``
 
-- [func toast(Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) -> some View](/documentation/montage/swiftuicore/view/toast(_:location:duration:).md)
+View를 변환합니다.
 
-  현재 뷰에 Toast 메시지를 표시하는 modifier를 적용합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `transform` | 적용할 변환 |
+- **Return Value**
 
-- [func tooltip(isPresented: Binding<Bool>, message: String, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View](/documentation/montage/swiftuicore/view/tooltip(ispresented:message:showclosebutton:buttoninfo:).md)
+  변환된 View
 
-  iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적용합니다.
+``func modifying((Self) -> Self) -> Self``
 
-- [func tooltip(isPresented: Binding<Bool>, position: Tooltip.Position, message: String, showArrow: Bool, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View](/documentation/montage/swiftuicore/view/tooltip(ispresented:position:message:showarrow:showclosebutton:buttoninfo:).md)
+View를 변환합니다.
 
-  현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `transform` | 적용할 변환 |
+- **Return Value**
 
-- [func topNavigation(variant: Bar.TopNavigation.Variant, title: String, backgroundColorResolvable: ColorResolvable?, leadingButton: Bar.TopNavigation.Resource.LeadingButton?, trailingButtons: [Bar.TopNavigation.Resource.TrailingButton], withBottom: ActionAreaModifier.Model?) -> some View](/documentation/montage/swiftuicore/view/topnavigation(variant:title:backgroundcolorresolvable:leadingbutton:trailingbuttons:withbottom:).md)
+  변환된 View
 
-  현재 뷰에 TopNavigation 바를 적용합니다.
+``func onGeometryChange<T>(for: T.Type, of: (GeometryProxy) -> T, for: RunLoop.SchedulerTimeType.Stride, action: (_ newValue: T) -> Void) -> some View``
 
-- [func userInteractionDisabled(Bool) -> some View](/documentation/montage/swiftuicore/view/userinteractiondisabled(_:).md)
+View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `type` | 변환 타입 |
+  | `transform` | 지오메트리 변환 |
+  | `dueTime` | 디바운스 시간 |
+  | `action` | 변경 시 실행할 액션 |
+- **Return Value**
+
+  디바운스된 View
+
+``func paragraph(variant: Typography.Variant) -> some View``
+
+Montage 디자인 시스템의 단락 스타일을 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+- **Return Value**
+
+  단락 스타일이 적용된 View
+
+``func popupModal(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``
+
+팝업 모달을 표시합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `resize` | 모달 크기 조절 방식 (기본값: .hug) |
+  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
+  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
+- **Return Value**
+
+  팝업 모달이 적용된 뷰
+- **Discussion**
+
+  화면 중앙에 표시되는 팝업 형태의 모달을 표시합니다.
+
+``func printSize(String) -> some View``
+
+프리뷰에서 크기가 변경될 때마다 콘솔에 출력합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `label` | 출력할 레이블 |
+- **Return Value**
+
+  크기가 출력된 View
+
+``func printValue<V>(V, String) -> some View``
+
+프리뷰에서 값이 변경될 때마다 콘솔에 출력합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 출력할 값 |
+  | `label` | 출력할 레이블 |
+- **Return Value**
+
+  값이 출력된 View
+
+``func pullToRefresh(scrollYOffset: Binding<CGFloat>, refresh: () async -> Void) -> some View``
+
+스크롤 뷰에 풀-투-리프레시(Pull-to-Refresh) 기능을 추가합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `scrollYOffset` | 스크롤 뷰의 Y축 오프셋 바인딩. 당김 정도를 감지하는 데 사용됩니다. |
+  | `refresh` | 리프레시가 트리거될 때 실행될 비동기 클로저입니다. |
+- **Return Value**
+
+  풀-투-리프레시 기능이, 추가된 뷰
+- **Discussion**
+
+  사용자가 스크롤 뷰를 아래로 당기면 애니메이션과 함께 리프레시 기능을 제공합니다. iOS 18 이상에서 사용 가능하며, 로딩 애니메이션과 함께 당김 정도에 따른 시각적 피드백을 제공합니다.
+
+``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``
+
+현재 뷰에 푸시 알림 뱃지를 표시합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 뱃지의 표시 형태 (기본값: .dot) |
+  | `size` | 뱃지 크기 (기본값: .xsmall) |
+  | `fontColor` | 텍스트 색상 (기본값: staticWhite) |
+  | `backgroundColor` | 배경 색상 (기본값: primaryNormal) |
+  | `position` | 뱃지 위치 (기본값: .top(.trailing)) |
+  | `inset` | 위치 조정을 위한 여백 (기본값: .zero) |
+- **Return Value**
+
+  뱃지가 적용된 뷰
+- **Discussion**
+
+  뷰의 특정 위치에 알림 또는 메시지 표시용 뱃지를 추가합니다.
+
+``func recognizeViewForPreview(SwiftUI.Color, fill: Bool) -> some View``
+
+프리뷰에서 View의 frame을 인식합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 인식 색상 |
+  | `fill` | 배경 채우기 여부 |
+- **Return Value**
+
+  인식된 View
+
+``func scrollable(Axis, contentOffset: Binding<CGPoint>) -> some View``
+
+뷰에 자동 스크롤 기능을 적용하는 modifier입니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `axis` | 스크롤 방향 (.horizontal 또는 .vertical) |
+  | `contentOffset` | 콘텐츠 오프셋을 바인딩하는 CGPoint 값 |
+- **Return Value**
+
+  자동 스크롤 기능이 적용된 뷰
+- **Discussion**
+
+  콘텐츠 오프셋을 추적하고 스크롤이 필요한 경우에만 스크롤을 활성화합니다. 콘텐츠가 스크롤 뷰보다 작은 경우 스크롤이 비활성화됩니다.
+
+``func skeleton(isPresented: Bool, kind: Skeleton.Kind, color: SwiftUI.Color?, opacity: CGFloat?, size: CGSize?) -> some View``
+
+현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
+  | `kind` | 스켈레톤 종류 (텍스트, 사각형, 원형 등) |
+  | `color` | 스켈레톤 색상 (기본값: 시스템 색상) |
+  | `opacity` | 스켈레톤 투명도 (기본값: 1.0) |
+  | `size` | 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용) |
+- **Return Value**
+
+  스켈레톤 기능이 적용된 뷰
+
+``func skeleton(isPresented: Bool, skeletonView: () -> any View) -> some View``
+
+현재 뷰에 커스텀 스켈레톤 로딩 UI를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
+  | `skeletonView` | 커스텀 스켈레톤 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  스켈레톤 기능이 적용된 뷰
+
+``func snackBar(Binding<SnackBar.Model?>, handler: () -> Void) -> some View``
+
+현재 뷰에 SnackBar를 표시하는 modifier를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `model` | SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다. |
+  | `handler` | SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저 |
+- **Return Value**
+
+  SnackBar가 적용된 뷰
+- **Discussion**
+
+``func toast(Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) -> some View``
+
+현재 뷰에 Toast 메시지를 표시하는 modifier를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `model` | Toast 모델을 바인딩합니다. nil이 아닌 값이 설정되면 Toast가 표시됩니다. |
+  | `location` | Toast가 표시될 위치 (기본값: .bottom) |
+  | `duration` | Toast가 표시될 시간 (기본값: .short) |
+- **Return Value**
+
+  Toast가 적용된 뷰
+- **Discussion**
+
+``func tooltip(isPresented: Binding<Bool>, message: String, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``
+
+iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 툴팁의 표시 여부를 제어하는 바인딩 |
+  | `message` | 툴팁에 표시될 메시지 |
+  | `showCloseButton` | 닫기 버튼 표시 여부 (기본값: false) |
+  | `buttonInfo` | 툴팁에 추가할 버튼 정보 (선택 사항) |
+- **Return Value**
+
+  툴팁이 적용된 뷰
+
+``func tooltip(isPresented: Binding<Bool>, position: Tooltip.Position, message: String, showArrow: Bool, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``
+
+현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 툴팁의 표시 여부를 제어하는 바인딩 |
+  | `position` | 툴팁이 표시될 위치 및 화살표 위치 |
+  | `message` | 툴팁에 표시될 메시지 |
+  | `showArrow` | 화살표 표시 여부 (기본값: true) |
+  | `showCloseButton` | 닫기 버튼 표시 여부 (기본값: false) |
+  | `buttonInfo` | 툴팁에 추가할 버튼 정보 (선택 사항) |
+- **Return Value**
+
+  툴팁이 적용된 뷰
+
+``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColorResolvable: ColorResolvable?, leadingButton: TopNavigation.Resource.LeadingButton?, trailingButtons: [TopNavigation.Resource.TrailingButton], withBottom: ActionArea.Model?) -> some View``
+
+현재 뷰에 TopNavigation 바를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 내비게이션 바의 외관 스타일 (기본값: .normal) |
+  | `title` | 표시할 제목 |
+  | `backgroundColorResolvable` | 배경색 리졸버 (기본값: nil) |
+  | `leadingButton` | 좌측에 표시할 버튼 (기본값: nil) |
+  | `trailingButtons` | 우측에 표시할 버튼 배열 (기본값: []) |
+  | `model` | 하단 액션 영역에 대한 모델 (기본값: nil) |
+- **Return Value**
+
+  TopNavigation이 적용된 뷰
+
+``func userInteractionDisabled(Bool) -> some View``
+
+사용자 상호작용을 비활성화하는 modifier를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `disabled` | 상호작용 비활성화 여부 |
+- **Return Value**
+
+  사용자 상호작용이 비활성화된 뷰
+- **Discussion**
+
+  뷰의 터치 이벤트와 스와이프 백 제스처를 비활성화합니다.
 

@@ -1,53 +1,52 @@
 ---
-1title: verticalpadding
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Accordion.VerticalPadding
+description: 아코디언의 상하 여백을 나타내는 열거형입니다.
 ---
-
-Enumeration
-
-# Accordion.VerticalPadding 
-
-아코디언의 상하 여백을 나타내는 열거형입니다.
 
 ```swift
 enum VerticalPadding
 ```
 
-## Overview 
+## Overview
 
 아코디언 헤더의 상하 패딩 값을 설정합니다.
 
-- small: 좁은 여백 (8pt)
-- medium: 중간 여백 (12pt)
-- large: 넓은 여백 (16pt)
+## Topics
 
-## Topics 
+### Enumeration Cases
 
-### Enumeration Cases 
 
-- [case large](/documentation/montage/accordion/verticalpadding/large.md)
+``case large``
 
-- [case medium](/documentation/montage/accordion/verticalpadding/medium.md)
+넓은 여백
 
-- [case small](/documentation/montage/accordion/verticalpadding/small.md)
+``case medium``
 
-### Instance Properties 
+중간 여백
 
-- [var length: CGFloat](/documentation/montage/accordion/verticalpadding/length.md)
+``case small``
 
-  여백 값(포인트)을 반환합니다.
+좁은 여백
 
-### Default Implementations 
+### Instance Properties
 
-- [API ReferenceEquatable Implementations](/documentation/montage/accordion/verticalpadding/equatable-implementations.md)
 
-## Relationships 
+``var length: CGFloat``
 
-### Conforms To 
+여백 값(포인트)을 반환합니다.
 
-- Swift.Equatable
-- Swift.Hashable
+### Default Implementations
+
+
+[Equatable Implementations](/documentation/montage/accordion/verticalpadding/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

@@ -1,28 +1,22 @@
 ---
-1title: swiftuicore
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: SwiftUICore
 ---
 
-Extended Module
+## Topics
 
-# SwiftUICore 
+### Extended Protocols
 
-## Topics 
 
-### Extended Protocols 
+``extension View``
 
-- [extension View](/documentation/montage/swiftuicore/view.md)
+### Extended Structures
 
-### Extended Structures 
 
-- [extension SwiftUI.Color](/documentation/montage/swiftuicore/color.md)
+[``extension SwiftUI.Color``](/documentation/montage/swiftuicore/color.md)
 
-- [extension Font](/documentation/montage/swiftuicore/font.md)
+[``extension Font``](/documentation/montage/swiftuicore/font.md)
 
-- [extension Image](/documentation/montage/swiftuicore/image.md)
+[``extension Image``](/documentation/montage/swiftuicore/image.md)
 
-- [extension Text](/documentation/montage/swiftuicore/text.md)
+[``extension Text``](/documentation/montage/swiftuicore/text.md)
 

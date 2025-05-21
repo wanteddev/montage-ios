@@ -1,36 +1,69 @@
 ---
-1title: text
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Text
 ---
-
-Extended Structure
-
-# Text 
-
-MontageSwiftUICore
 
 ```swift
 extension Text
 ```
 
-## Topics 
+## Topics
 
-### Instance Methods 
+### Instance Methods
 
-- [func montage(variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic) -> Text](/documentation/montage/swiftuicore/text/montage(variant:weight:atomic:).md)
 
-  Montage 디자인 시스템의 스타일을 적용합니다.
+``func montage(variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic) -> Text``
 
-- [func montage(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Text](/documentation/montage/swiftuicore/text/montage(variant:weight:color:).md)
+Montage 디자인 시스템의 스타일을 적용합니다.
 
-  Montage 디자인 시스템의 스타일을 적용합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+  | `weight` | 폰트 두께 |
+  | `atomic` | 아토믹 색상 |
+- **Return Value**
 
-- [func montage(variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable) -> Text](/documentation/montage/swiftuicore/text/montage(variant:weight:colorresolver:).md)
+  스타일이 적용된 Text 인스턴스
 
-  Montage 디자인 시스템의 스타일을 적용합니다.
+``func montage(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Text``
 
-- [func montage(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> Text](/documentation/montage/swiftuicore/text/montage(variant:weight:semantic:).md)
+Montage 디자인 시스템의 스타일을 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+  | `weight` | 폰트 두께 |
+  | `color` | 색상 |
+- **Return Value**
+
+  스타일이 적용된 Text 인스턴스
+
+``func montage(variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable) -> Text``
+
+Montage 디자인 시스템의 스타일을 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+  | `weight` | 폰트 두께 |
+  | `colorResolver` | 색상 해석기 |
+- **Return Value**
+
+  스타일이 적용된 Text 인스턴스
+
+``func montage(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> Text``
+
+Montage 디자인 시스템의 스타일을 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+  | `weight` | 폰트 두께 |
+  | `semantic` | 시맨틱 색상 |
+- **Return Value**
+
+  스타일이 적용된 Text 인스턴스
 

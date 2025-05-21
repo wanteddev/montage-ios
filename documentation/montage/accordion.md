@@ -1,31 +1,17 @@
 ---
-1title: accordion
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Accordion
+description: 접을 수 있는 컨텐츠를 제공하는 아코디언 컴포넌트입니다.
 ---
 
-Structure
-
-# Accordion 
-
-접을 수 있는 컨텐츠를 제공하는 아코디언 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct Accordion
+@MainActor struct Accordion
 ```
 
-## Overview 
+## Overview
 
-Accordion은 제목과 함께 접을 수 있는 컨텐츠를 제공하는 컴포넌트입니다. 제목을 탭하면 컨텐츠가 확장되거나 축소됩니다. 설명 텍스트와 커스텀 컨텐츠를 함께 표시할 수 있습니다.
-
-## 개요 
+`Accordion`은 제목과 함께 접을 수 있는 컨텐츠를 제공하는 컴포넌트입니다. 제목을 탭하면 컨텐츠가 확장되거나 축소됩니다. 설명 텍스트와 커스텀 컨텐츠를 함께 표시할 수 있습니다.
 
 아코디언은 제한된 공간에서 많은 정보를 효율적으로 표시하기 위한 UI 패턴입니다. 사용자는 관심 있는 항목만 확장하여 볼 수 있습니다.
-
-## 사용 예시 
 
 ```swift
 // 기본 사용법
@@ -53,72 +39,154 @@ Accordion(title: "커스텀 스타일")
     .fillWidth()
 ```
 
-> **Note**
+>  Note
 >
-> 아코디언은 기본적으로 하단에 구분선을 갖고 있으며, hideDivider() 수정자를 통해 제거할 수 있습니다.
+> 아코디언은 기본적으로 하단에 구분선을 갖고 있으며, `hideDivider()` 수정자를 통해 제거할 수 있습니다.
 
-> **See Also**
+>  See Also
 >
-> Accordion.VerticalPadding
+> [Accordion.VerticalPadding](/documentation/montage/accordion/verticalpadding.md)
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(title: String, description: String?, content: (() -> any View)?)](/documentation/montage/accordion/init(title:description:content:).md)
 
-  아코디언을 생성합니다.
+``init(title: String, description: String?, content: (() -> any View)?)``
 
-### Instance Properties 
+아코디언을 생성합니다.
 
-- [var body: some View](/documentation/montage/accordion/body.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 아코디언의 제목 |
+  | `description` | 확장 시 표시될 설명 텍스트 (선택 사항) |
+  | `content` | 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항) |
 
-### Instance Methods 
+### Instance Properties
 
-- [func description(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion](/documentation/montage/accordion/description(_:weight:color:).md)
 
-  설명 텍스트의 타이포그래피 속성을 조정합니다.
+``var body: some View``
 
-- [func fillWidth(Bool) -> Accordion](/documentation/montage/accordion/fillwidth(_:).md)
+### Instance Methods
 
-  아코디언이 부모 컨테이너의 너비를 채우도록 설정합니다.
 
-- [func hideDivider(Bool) -> Accordion](/documentation/montage/accordion/hidedivider(_:).md)
+``func description(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion``
 
-  아코디언 하단의 구분선을 숨깁니다.
+설명 텍스트의 타이포그래피 속성을 조정합니다.
 
-- [func leadingIcon(Icon?, color: SwiftUI.Color?) -> Accordion](/documentation/montage/accordion/leadingicon(_:color:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 (기본값: .label1) |
+  | `weight` | 텍스트 굵기 (기본값: .regular) |
+  | `color` | 텍스트 색상 (기본값: .semantic(.labelNeutral)) |
+- **Return Value**
 
-  아코디언 제목 앞에 아이콘을 추가합니다.
+  수정된 아코디언 인스턴스
 
-- [func title(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion](/documentation/montage/accordion/title(_:weight:color:).md)
+``func fillWidth(Bool) -> Accordion``
 
-  타이틀 텍스트의 타이포그래피 속성을 조정합니다.
+아코디언이 부모 컨테이너의 너비를 채우도록 설정합니다.
 
-- [func trailingContent((() -> any View)?) -> Accordion](/documentation/montage/accordion/trailingcontent(_:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `fillWidth` | 너비를 채울지 여부 |
+- **Return Value**
 
-  아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
+  수정된 아코디언 인스턴스
+- **Discussion**
 
-- [func verticalPadding(VerticalPadding) -> Accordion](/documentation/montage/accordion/verticalpadding(_:).md)
+  이 수정자를 적용하면 좌우 20pt의 여백이 추가됩니다.
 
-  아코디언 헤더의 상하 여백 크기를 조정합니다.
+``func hideDivider(Bool) -> Accordion``
 
-### Enumerations 
+아코디언 하단의 구분선을 숨깁니다.
 
-- [enum VerticalPadding](/documentation/montage/accordion/verticalpadding.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `hideDivider` | 구분선을 숨길지 여부 (기본값: `true`) |
+- **Return Value**
 
-  아코디언의 상하 여백을 나타내는 열거형입니다.
+  수정된 아코디언 인스턴스
 
-### Default Implementations 
+``func leadingIcon(Icon?, color: SwiftUI.Color?) -> Accordion``
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+아코디언 제목 앞에 아이콘을 추가합니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `leadingIcon` | 표시할 아이콘 |
+  | `color` | 아이콘 색상 (기본값: nil - 기본 색상 사용) |
+- **Return Value**
 
-## Relationships 
+  수정된 아코디언 인스턴스
 
-### Conforms To 
+``func title(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion``
 
-- Swift.Sendable
-- SwiftUICore.View
+타이틀 텍스트의 타이포그래피 속성을 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 (기본값: .body2) |
+  | `weight` | 텍스트 굵기 (기본값: .bold) |
+  | `color` | 텍스트 색상 (기본값: .semantic(.labelNormal)) |
+- **Return Value**
+
+  수정된 아코디언 인스턴스
+
+``func trailingContent((() -> any View)?) -> Accordion``
+
+아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `trailingContent` | 표시할 커스텀 컨텐츠 뷰 |
+- **Return Value**
+
+  수정된 아코디언 인스턴스
+- **Discussion**
+
+  이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
+
+``func verticalPadding(VerticalPadding) -> Accordion``
+
+아코디언 헤더의 상하 여백 크기를 조정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `verticalPadding` | 상하 여백 크기 (기본값: .large) |
+- **Return Value**
+
+  수정된 아코디언 인스턴스
+
+### Enumerations
+
+
+[``enum VerticalPadding``](/documentation/montage/accordion/verticalpadding.md)
+
+아코디언의 상하 여백을 나타내는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/accordion/view-implementations.md)
+
+[View Implementations](/documentation/montage/accordion/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

@@ -1,27 +1,15 @@
 ---
-1title: segmentedcontrol
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: SegmentedControl
+description: 여러 옵션 중 하나를 선택할 수 있는 세그먼트 컨트롤 컴포넌트입니다.
 ---
 
-Structure
-
-# SegmentedControl 
-
-여러 옵션 중 하나를 선택할 수 있는 세그먼트 컨트롤 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct SegmentedControl
+@MainActor struct SegmentedControl
 ```
 
-## Overview 
+## Overview
 
 제한된 옵션 세트 내에서 선택할 수 있도록 하는 가로로 정렬된 버튼 그룹입니다. 각 세그먼트는 이미지와 텍스트를 포함할 수 있으며, 선택된 세그먼트는 시각적으로 강조됩니다.
-
-**사용 예시**:
 
 ```swift
 @State private var selectedIndex = 0
@@ -45,62 +33,101 @@ SegmentedControl(
 .size(.medium)
 ```
 
-> **Note**
+>  Note
 >
 > 기본 변형(.solid)은 배경이 있는 형태로, .outlined 변형은 테두리만 있는 형태로 표시됩니다.
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct Item](/documentation/montage/segmentedcontrol/item.md)
 
-  세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
+[``struct Item``](/documentation/montage/segmentedcontrol/item.md)
 
-### Initializers 
+세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
 
-- [init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)?)](/documentation/montage/segmentedcontrol/init(selectedindex:items:onselect:).md)
+### Initializers
 
-  항목 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
-- [init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)?)](/documentation/montage/segmentedcontrol/init(selectedindex:labels:onselect:).md)
+``init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)?)``
 
-  텍스트 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
+항목 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
-### Instance Properties 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
+  | `items` | 표시할 항목 배열 |
+  | `onSelect` | 항목 선택 시 호출될 클로저 (기본값: nil) |
 
-- [var body: some View](/documentation/montage/segmentedcontrol/body.md)
+``init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)?)``
 
-### Instance Methods 
+텍스트 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
-- [func size(Size) -> SegmentedControl](/documentation/montage/segmentedcontrol/size(_:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
+  | `labels` | 표시할 텍스트 배열 |
+  | `onSelect` | 항목 선택 시 호출될 클로저 (기본값: nil) |
 
-  세그먼트 컨트롤의 크기를 설정합니다.
+### Instance Properties
 
-- [func variant(Variant) -> SegmentedControl](/documentation/montage/segmentedcontrol/variant(_:).md)
 
-  세그먼트 컨트롤의 시각적 스타일을 설정합니다.
+``var body: some View``
 
-### Enumerations 
+### Instance Methods
 
-- [enum Size](/documentation/montage/segmentedcontrol/size.md)
 
-  세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
+``func size(Size) -> SegmentedControl``
 
-- [enum Variant](/documentation/montage/segmentedcontrol/variant.md)
+세그먼트 컨트롤의 크기를 설정합니다.
 
-  세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 적용할 크기 (.large, .medium, 또는 .small) |
+- **Return Value**
 
-### Default Implementations 
+  수정된 세그먼트 컨트롤 인스턴스
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+``func variant(Variant) -> SegmentedControl``
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+세그먼트 컨트롤의 시각적 스타일을 설정합니다.
 
-## Relationships 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 적용할 스타일 (.solid 또는 .outlined) |
+- **Return Value**
 
-### Conforms To 
+  수정된 세그먼트 컨트롤 인스턴스
 
-- Swift.Sendable
-- SwiftUICore.View
+### Enumerations
+
+
+[``enum Size``](/documentation/montage/segmentedcontrol/size.md)
+
+세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
+
+[``enum Variant``](/documentation/montage/segmentedcontrol/variant.md)
+
+세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/segmentedcontrol/view-implementations.md)
+
+[View Implementations](/documentation/montage/segmentedcontrol/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

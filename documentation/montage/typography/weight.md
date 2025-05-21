@@ -1,64 +1,58 @@
 ---
-1title: weight
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Typography.Weight
+description: 폰트 두께를 정의하는 열거형
 ---
-
-Enumeration
-
-# Typography.Weight 
-
-폰트 두께를 정의하는 열거형
 
 ```swift
 enum Weight
 ```
 
-## Overview 
+## Overview
 
 Weight는 텍스트의 시각적 강조를 위한 세 가지 기본 두께를 제공합니다. 텍스트의 중요도나 계층 구조에 따라 적절한 두께를 선택하여 사용합니다.
 
-- regular: 일반적인 본문 텍스트에 사용 (400)
-- medium: 중간 강조가 필요한 텍스트에 사용 (500)
-- bold: 강한 강조가 필요한 제목이나 중요 정보에 사용 (600/700)
+## Topics
 
-## Topics 
+### Enumeration Cases
 
-### Enumeration Cases 
 
-- [case bold](/documentation/montage/typography/weight/bold.md)
+``case bold``
 
-  굵은 두께 (SemiBold/Bold, 600/700)
+굵은 두께
 
-- [case medium](/documentation/montage/typography/weight/medium.md)
+``case medium``
 
-  중간 두께 (Medium, 500)
+중간 두께
 
-- [case regular](/documentation/montage/typography/weight/regular.md)
+``case regular``
 
-  일반 두께 (Regular, 400)
+일반 두께
 
-### Instance Properties 
+### Instance Properties
 
-- [var failbackWeight: UIFont.Weight](/documentation/montage/typography/weight/failbackweight.md)
 
-- [var fontWeight: Font.Weight](/documentation/montage/typography/weight/fontweight.md)
+``var failbackWeight: UIFont.Weight``
 
-- [var pretendardWeight: Pretendard.Weight](/documentation/montage/typography/weight/pretendardweight.md)
+``var fontWeight: Font.Weight``
 
-- [var uiFontWeight: UIFont.Weight](/documentation/montage/typography/weight/uifontweight.md)
+``var pretendardWeight: Pretendard.Weight``
 
-### Default Implementations 
+``var uiFontWeight: UIFont.Weight``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/typography/weight/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/typography/weight/equatable-implementations.md)
 
-- Swift.CaseIterable
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.CaseIterable`
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

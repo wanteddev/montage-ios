@@ -1,27 +1,15 @@
 ---
-1title: group
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Avatar.Group
+description: 여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.
 ---
 
-Structure
-
-# Avatar.Group 
-
-여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct Group
+@MainActor struct Group
 ```
 
-## Overview 
+## Overview
 
 최대 5개의 아바타를 부분적으로 겹쳐 표시하며, 각 아바타에 개별 탭 동작을 지정할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 기본 그룹 아바타
@@ -45,44 +33,71 @@ Avatar.Group(
 }
 ```
 
-> **Note**
+>  Note
 >
 > 아바타는 왼쪽에서 오른쪽으로 겹쳐서 표시되며, 마지막 아바타가 가장 앞에 표시됩니다.
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init([String], variant: Avatar.Variant, size: Size, onTap: ((_ index: Int) -> Void)?)](/documentation/montage/avatar/group/init(_:variant:size:ontap:).md)
 
-  그룹 아바타를 초기화합니다.
+``init([String], variant: Avatar.Variant, size: Size, onTap: ((_ index: Int) -> Void)?)``
 
-### Instance Properties 
+그룹 아바타를 초기화합니다.
 
-- [var body: some View](/documentation/montage/avatar/group/body.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `imageUrls` | 표시할 이미지의 URL 문자열 배열 (최대 5개) |
+  | `variant` | 아바타 유형 (.person, .company, .academy) |
+  | `size` | 그룹 아바타 크기 |
+  | `onTap` | 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨) (기본값: nil) |
 
-### Instance Methods 
+### Instance Properties
 
-- [func trailingContent(() -> any View) -> Avatar.Group](/documentation/montage/avatar/group/trailingcontent(_:).md)
 
-  그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
+``var body: some View``
 
-### Enumerations 
+### Instance Methods
 
-- [enum Size](/documentation/montage/avatar/group/size.md)
 
-  그룹 아바타의 크기와 간격을 정의하는 열거형입니다.
+``func trailingContent(() -> any View) -> Avatar.Group``
 
-### Default Implementations 
+그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `trailingContent` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  수정된 그룹 아바타 인스턴스
+- **Discussion**
 
-## Relationships 
+  이 수정자를 사용하여 아바타 그룹 옆에 추가 정보(예: “+3” 같은 추가 멤버 수)를 표시할 수 있습니다.
 
-### Conforms To 
+### Enumerations
 
-- Swift.Sendable
-- SwiftUICore.View
+
+[``enum Size``](/documentation/montage/avatar/group/size.md)
+
+그룹 아바타의 크기와 간격을 정의하는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/avatar/group/view-implementations.md)
+
+[View Implementations](/documentation/montage/avatar/group/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

@@ -1,49 +1,45 @@
 ---
-1title: variant-swift.enum
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Button.OutlinedUIButton.Variant
+description: 버튼의 외관을 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# Button.OutlinedUIButton.Variant `Deprecated`
-
-버튼의 외관을 결정하는 열거형입니다.
 
 ```swift
 enum Variant
 ```
 
-> **Deprecated**
+> **Deprecation**
 >
-> `Montage.Button.outlined()`를 사용하세요.
+>`Montage.Button.outlined()`를 사용하세요.
 
-## Overview 
+## Topics
 
-- primary: 주요 강조 스타일
-- secondary: 보조 강조 스타일
-- assistive: 보조 스타일
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+~~``case assistive``~~
 
-- [~~case assistive~~](/documentation/montage/button/outlineduibutton/variant-swift.enum/assistive.md)
+보조 스타일 - 덜 중요한 액션에 사용
 
-- [~~case primary~~](/documentation/montage/button/outlineduibutton/variant-swift.enum/primary.md)
+~~``case primary``~~
 
-- [~~case secondary~~](/documentation/montage/button/outlineduibutton/variant-swift.enum/secondary.md)
+기본 강조 스타일 - 주요 액션에 사용
 
-### Default Implementations 
+~~``case secondary``~~
 
-- [API ReferenceEquatable Implementations](/documentation/montage/button/outlineduibutton/variant-swift.enum/equatable-implementations.md)
+보조 강조 스타일 - 보조 액션에 사용
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
+[Equatable Implementations](/documentation/montage/button/outlineduibutton/variant-swift.enum/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

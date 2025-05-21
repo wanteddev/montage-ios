@@ -1,46 +1,41 @@
 ---
-1title: cornerstyle-swift.enum
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Button.SolidUIButton.CornerStyle
+description: 버튼 모서리의 곡률 스타일을 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# Button.SolidUIButton.CornerStyle `Deprecated`
-
-버튼 모서리의 곡률 스타일을 결정하는 열거형입니다.
 
 ```swift
 enum CornerStyle
 ```
 
-> **Deprecated**
+> **Deprecation**
 >
-> `Montage.Button.solid()`를 사용하세요.
+>`Montage.Button.solid()`를 사용하세요.
 
-## Overview 
+## Topics
 
-- legacy: 높이의 절반을 반지름으로 하는 원형 모서리
-- default: 버튼 크기에 따른 고정된 모서리 곡률
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+~~``case `default```~~
 
-- [~~case `default`~~](/documentation/montage/button/soliduibutton/cornerstyle-swift.enum/default.md)
+버튼 크기에 따른 고정된 모서리 곡률
 
-- [~~case legacy~~](/documentation/montage/button/soliduibutton/cornerstyle-swift.enum/legacy.md)
+~~``case legacy``~~
 
-### Default Implementations 
+높이의 절반을 반지름으로 하는 원형 모서리
 
-- [API ReferenceEquatable Implementations](/documentation/montage/button/soliduibutton/cornerstyle-swift.enum/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/button/soliduibutton/cornerstyle-swift.enum/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

@@ -1,51 +1,49 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Avatar.Size
+description: 아바타의 크기를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# Avatar.Size 
-
-아바타의 크기를 정의하는 열거형입니다.
 
 ```swift
 enum Size
 ```
 
-## Overview 
+## Topics
 
-- xsmall: 24x24
-- small: 32x32
-- medium: 40x40
-- large: 48x48
-- xlarge: 56x56
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case large``
 
-- [case large](/documentation/montage/avatar/size/large.md)
+큰 크기
 
-- [case medium](/documentation/montage/avatar/size/medium.md)
+``case medium``
 
-- [case small](/documentation/montage/avatar/size/small.md)
+중간 크기
 
-- [case xlarge](/documentation/montage/avatar/size/xlarge.md)
+``case small``
 
-- [case xsmall](/documentation/montage/avatar/size/xsmall.md)
+작은 크기
 
-### Default Implementations 
+``case xlarge``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/avatar/size/equatable-implementations.md)
+가장 큰 크기
 
-## Relationships 
+``case xsmall``
 
-### Conforms To 
+가장 작은 크기
 
-- Swift.Equatable
-- Swift.Hashable
+### Default Implementations
+
+
+[Equatable Implementations](/documentation/montage/avatar/size/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

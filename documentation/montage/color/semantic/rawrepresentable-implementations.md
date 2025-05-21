@@ -1,14 +1,16 @@
-API Collection
+---
+title: RawRepresentable Implementations
+---
 
-# RawRepresentable Implementations 
+## Topics
 
-## Topics 
+### Instance Properties
 
-### Instance Properties 
 
-- [var hashValue: Int](/documentation/montage/color/semantic/hashvalue.md)
+``var hashValue: Int``
 
-### Instance Methods 
+### Instance Methods
 
-- [func hash(into: inout Hasher)](/documentation/montage/color/semantic/hash(into:).md)
+
+``func hash(into: inout Hasher)``
 

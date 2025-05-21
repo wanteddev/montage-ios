@@ -1,42 +1,37 @@
 ---
-1title: singleselectiontype
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Select.SingleSelectionType
+description: variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# Select.SingleSelectionType 
-
-variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.
 
 ```swift
 enum SingleSelectionType
 ```
 
-## Overview 
+## Topics
 
-- checkmark: 체크마크로 선택 표시
-- radio: 라디오 버튼으로 선택 표시
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case checkmark``
 
-- [case checkmark](/documentation/montage/select/singleselectiontype/checkmark.md)
+체크마크로 선택 표시
 
-- [case radio](/documentation/montage/select/singleselectiontype/radio.md)
+``case radio``
 
-### Default Implementations 
+라디오 버튼으로 선택 표시
 
-- [API ReferenceEquatable Implementations](/documentation/montage/select/singleselectiontype/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/select/singleselectiontype/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

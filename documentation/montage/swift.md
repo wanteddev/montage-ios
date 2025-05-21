@@ -1,18 +1,11 @@
 ---
-1title: swift
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Swift
 ---
 
-Extended Module
+## Topics
 
-# Swift 
+### Extended Structures
 
-## Topics 
 
-### Extended Structures 
-
-- [extension Float](/documentation/montage/swift/float.md)
+[``extension Float``](/documentation/montage/swift/float.md)
 

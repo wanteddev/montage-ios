@@ -1,28 +1,28 @@
 ---
-1title: item
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: SegmentedControl.Item
+description: 세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
 ---
-
-Structure
-
-# SegmentedControl.Item 
-
-세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
 
 ```swift
 struct Item
 ```
 
-## Overview 
+## Overview
 
 각 항목은 이미지(선택 사항)와 텍스트로 구성됩니다.
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(image: Image?, title: String)](/documentation/montage/segmentedcontrol/item/init(image:title:).md)
+
+``init(image: Image?, title: String)``
+
+세그먼트 항목을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `image` | 표시할 이미지 (선택 사항) |
+  | `title` | 표시할 텍스트 |
 

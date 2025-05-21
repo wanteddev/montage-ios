@@ -1,49 +1,46 @@
 ---
-1title: variant
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Button.Text.Variant
+description: Text 스타일 버튼의 변형을 정의합니다.
 ---
-
-Enumeration
-
-# Button.Text.Variant 
-
-Text 스타일 버튼의 변형을 정의합니다.
 
 ```swift
 enum Variant
 ```
 
-## Overview 
+## Topics
 
-- .primary: 기본 강조 스타일 - 브랜드 컬러를 텍스트에 사용
-- .assistive: 보조 스타일 - 중요도가 낮은 텍스트 링크에 사용
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case assistive``
 
-- [case assistive](/documentation/montage/button/text/variant/assistive.md)
+보조 스타일 - 중요도가 낮은 텍스트 링크에 사용
 
-- [case primary](/documentation/montage/button/text/variant/primary.md)
+``case primary``
 
-### Initializers 
+기본 강조 스타일 - 브랜드 컬러를 텍스트에 사용
 
-- [init?(rawValue: String)](/documentation/montage/button/text/variant/init(rawvalue:).md)
+### Initializers
 
-### Default Implementations 
 
-- [API ReferenceEquatable Implementations](/documentation/montage/button/text/variant/equatable-implementations.md)
+``init?(rawValue: String)``
 
-- [API ReferenceRawRepresentable Implementations](/documentation/montage/button/text/variant/rawrepresentable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/button/text/variant/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
-- Swift.RawRepresentable
+[RawRepresentable Implementations](/documentation/montage/button/text/variant/rawrepresentable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.RawRepresentable`
+
+
 

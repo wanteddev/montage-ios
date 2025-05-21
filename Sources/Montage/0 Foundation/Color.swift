@@ -38,7 +38,7 @@ public enum Color {
     /// 이 색상들은 직접 사용하기보다는 Semantic 색상의 기반이 되는 
     /// 기본 색상 팔레트로 활용됩니다.
     ///
-    /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Atomic)](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-52196) 를 참고하세요.
+    /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Atomic](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-52196) 를 참고하세요.
     ///
     /// ```swift
     /// // UIKit에서 사용

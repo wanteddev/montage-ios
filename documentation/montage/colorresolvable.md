@@ -1,43 +1,36 @@
 ---
-1title: colorresolvable
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ColorResolvable
+description: 색상을 동적으로 해석할 수 있는 타입을 정의하는 프로토콜
 ---
-
-Protocol
-
-# ColorResolvable 
-
-색상을 동적으로 해석할 수 있는 타입을 정의하는 프로토콜
 
 ```swift
 protocol ColorResolvable
 ```
 
-## Overview 
+## Overview
 
 이 프로토콜을 준수하는 타입은 주어진 UITraitCollection에 따라 적절한 UIColor를 반환할 수 있어야 합니다.
 
-> **See Also**
+>  See Also
 >
-> Color.Atomic, Color.Semantic
+> `Color.Atomic`, `Color.Semantic`
 
-## Topics 
+## Topics
 
-### Instance Methods 
+### Instance Methods
 
-- [func resolve(UITraitCollection) -> UIColor](/documentation/montage/colorresolvable/resolve(_:).md)
 
-  주어진 UITraitCollection에 따라 UIColor를 반환합니다.
+``func resolve(UITraitCollection) -> UIColor``
 
-**Required**
+주어진 UITraitCollection에 따라 UIColor를 반환합니다.
 
-## Relationships 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `traitCollection` | 색상을 해석할 UITraitCollection |
+- **Return Value**
 
-### Conforming Types 
+  해석된 UIColor 인스턴스
 
-- [Color.Atomic](/documentation/montage/color/atomic.md)
-- [Color.Semantic](/documentation/montage/color/semantic.md)
+## Relationships
 

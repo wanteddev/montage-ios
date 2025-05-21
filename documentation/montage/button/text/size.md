@@ -1,49 +1,46 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Button.Text.Size
+description: Text 스타일 버튼의 크기를 정의합니다.
 ---
-
-Enumeration
-
-# Button.Text.Size 
-
-Text 스타일 버튼의 크기를 정의합니다.
 
 ```swift
 enum Size
 ```
 
-## Overview 
+## Topics
 
-- .small: 작은 크기
-- .medium: 중간 크기
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case medium``
 
-- [case medium](/documentation/montage/button/text/size/medium.md)
+중간 크기
 
-- [case small](/documentation/montage/button/text/size/small.md)
+``case small``
 
-### Initializers 
+작은 크기
 
-- [init?(rawValue: String)](/documentation/montage/button/text/size/init(rawvalue:).md)
+### Initializers
 
-### Default Implementations 
 
-- [API ReferenceEquatable Implementations](/documentation/montage/button/text/size/equatable-implementations.md)
+``init?(rawValue: String)``
 
-- [API ReferenceRawRepresentable Implementations](/documentation/montage/button/text/size/rawrepresentable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/button/text/size/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
-- Swift.RawRepresentable
+[RawRepresentable Implementations](/documentation/montage/button/text/size/rawrepresentable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.RawRepresentable`
+
+
 

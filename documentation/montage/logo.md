@@ -1,26 +1,15 @@
 ---
-1title: logo
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Logo
+description: Montage 디자인 시스템의 로고 세트
 ---
-
-Enumeration
-
-# Logo 
-
-Montage 디자인 시스템의 로고 세트
 
 ```swift
 enum Logo
 ```
 
-## Overview 
+## Overview
 
 Logo는 Wanted 브랜드의 공식 로고 이미지들을 정의합니다. 각 로고는 브랜드 아이덴티티를 일관되게 표현하기 위해 다양한 형태와 방향으로 제공됩니다.
-
-**사용 예시**:
 
 ```swift
 // UIKit에서 사용
@@ -34,40 +23,46 @@ Image.montage(.wantedCircleSymbol)
     .frame(width: 40, height: 40)
 ```
 
-> **Note**
+>  Note
 >
 > 로고를 사용할 때는 브랜드 가이드라인에 따라 적절한 여백과 비율을 유지해야 합니다.
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case wantedCircleSymbol](/documentation/montage/logo/wantedcirclesymbol.md)
 
-  Wanted 원형 심볼 로고
+``case wantedCircleSymbol``
 
-- [case wantedLogoHorizontal](/documentation/montage/logo/wantedlogohorizontal.md)
+Wanted 원형 심볼 로고
 
-  Wanted 가로형 로고
+``case wantedLogoHorizontal``
 
-- [case wantedLogoVertical](/documentation/montage/logo/wantedlogovertical.md)
+Wanted 가로형 로고
 
-  Wanted 세로형 로고
+``case wantedLogoVertical``
 
-### Instance Properties 
+Wanted 세로형 로고
 
-- [var name: String](/documentation/montage/logo/name.md)
+### Instance Properties
 
-  로고의 리소스 이름을 반환합니다.
 
-### Default Implementations 
+``var name: String``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/logo/equatable-implementations.md)
+로고의 리소스 이름을 반환합니다.
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
+[Equatable Implementations](/documentation/montage/logo/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

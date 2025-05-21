@@ -1,43 +1,25 @@
 ---
-title: contentbadgeuiview
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ContentBadgeUIView
+description: 컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다.
 ---
 
-Class
-
-# ContentBadgeUIView `Deprecated`
-
-컨텐츠의 카테고리를 표현할 때 사용할 수 있는 컨텐츠 뱃지입니다.
-
 ```swift
-@MainActor
-class ContentBadgeUIView
+@MainActor final class ContentBadgeUIView
 ```
 
-> **Deprecated**
+> **Deprecation**
 >
-> `Montage.ContentBadge`를 사용하세요.
+>`Montage.ContentBadge`를 사용하세요.
 
-## Overview 
+## Overview
 
 이 컴포넌트는 다양한 스타일과 크기를 지원하며, 텍스트와 함께 아이콘을 표시할 수 있습니다.
 
-## 개요 
+`ContentBadgeUIView`는 카테고리나 상태를 시각적으로 표현하기 위한 UI 컴포넌트입니다. Solid 또는 Outline 스타일로 표현할 수 있으며, 다양한 크기와 색상을 지원합니다.
 
-ContentBadgeUIView는 카테고리나 상태를 시각적으로 표현하기 위한 UI 컴포넌트입니다. Solid 또는 Outline 스타일로 표현할 수 있으며, 다양한 크기와 색상을 지원합니다.
-
-> **Warning**
+>  See Also
 >
-> 이 클래스는 더 이상 사용되지 않으며, 대신 Montage.ContentBadge를 사용하세요.
-
-> **See Also**
->
-> ContentBadge
-
-## 사용 예시 
+> [ContentBadge](/documentation/montage/contentbadge.md)
 
 ```swift
 // 기본 사용법
@@ -54,89 +36,157 @@ badge.leadingIcon = UIImage(named: "icon-category")
 badge.colorStyle = .accent(.blue, nil)
 ```
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [~~init()~~](/documentation/montage/contentbadgeuiview/init().md)
 
-  기본 초기화 메서드입니다.
+~~``init()``~~
 
-- [~~init?(coder: NSCoder)~~](/documentation/montage/contentbadgeuiview/init(coder:).md)
+기본 초기화 메서드입니다.
+- **Discussion**
 
-  Interface Builder와 함께 사용할 때 호출되는 초기화 메서드입니다.
+  이 메서드는 프레임을 `.zero`로 초기화하고 기본 UI 요소를 설정합니다.
 
-### Instance Properties 
+~~``init?(coder: NSCoder)``~~
 
-- [~~var colorStyle: ContentBadge.ColorStyle~~](/documentation/montage/contentbadgeuiview/colorstyle.md)
+Interface Builder와 함께 사용할 때 호출되는 초기화 메서드입니다.
 
-  뱃지에 적용될 색상 스타일입니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `coder` | 디코더 객체 |
 
-- [~~var intrinsicContentSize: CGSize~~](/documentation/montage/contentbadgeuiview/intrinsiccontentsize.md)
+### Instance Properties
 
-  뱃지의 기본 크기를 계산하여 반환합니다.
 
-- [~~var leadingIcon: UIImage?~~](/documentation/montage/contentbadgeuiview/leadingicon.md)
+~~``var colorStyle: ContentBadge.ColorStyle``~~
 
-  텍스트의 좌측에 표시될 아이콘입니다.
+뱃지에 적용될 색상 스타일입니다.
+- **Discussion**
+  >  See Also
+  >
+  > `ContentBadge.ColorStyle`
 
-- [~~var size: ContentBadge.Size~~](/documentation/montage/contentbadgeuiview/size.md)
 
-  뱃지의 크기입니다.
+~~``var intrinsicContentSize: CGSize``~~
 
-- [~~var text: String~~](/documentation/montage/contentbadgeuiview/text.md)
+뱃지의 기본 크기를 계산하여 반환합니다.
+- **Return Value**
 
-  뱃지에 표시될 텍스트입니다.
+  계산된 뱃지의 크기
+- **Discussion**
 
-- [~~var trailingIcon: UIImage?~~](/documentation/montage/contentbadgeuiview/trailingicon.md)
+  이 메서드는 텍스트 크기, 아이콘 크기, 여백을 고려하여 최적의 크기를 계산합니다.
 
-  텍스트의 우측에 표시될 아이콘입니다.
+~~``var leadingIcon: UIImage?``~~
 
-- [~~var variant: ContentBadge.Variant~~](/documentation/montage/contentbadgeuiview/variant.md)
+텍스트의 좌측에 표시될 아이콘입니다.
+- **Discussion**
 
-  뱃지의 외관 스타일입니다.
+  아이콘은 현재 색상 스타일에 맞게 색상이 자동으로 적용됩니다.
 
-### Instance Methods 
+~~``var size: ContentBadge.Size``~~
 
-- [~~func layoutSubviews()~~](/documentation/montage/contentbadgeuiview/layoutsubviews().md)
+뱃지의 크기입니다.
+- **Discussion**
+  >  See Also
+  >
+  > `ContentBadge.Size`
 
-  하위 뷰의 레이아웃이 변경될 때 호출되는 메서드입니다.
 
-- [~~func traitCollectionDidChange(UITraitCollection?)~~](/documentation/montage/contentbadgeuiview/traitcollectiondidchange(_:).md)
+~~``var text: String``~~
 
-  트레이트 컬렉션이 변경될 때 호출되는 메서드입니다.
+뱃지에 표시될 텍스트입니다.
 
-## Relationships 
+~~``var trailingIcon: UIImage?``~~
 
-### Inherits From 
+텍스트의 우측에 표시될 아이콘입니다.
+- **Discussion**
 
-- UIKit.UIView
+  아이콘은 현재 색상 스타일에 맞게 색상이 자동으로 적용됩니다.
 
-### Conforms To 
+~~``var variant: ContentBadge.Variant``~~
 
-- Foundation.NSCoding
-- ObjectiveC.NSObjectProtocol
-- QuartzCore.CALayerDelegate
-- Swift.CVarArg
-- Swift.CustomDebugStringConvertible
-- Swift.CustomStringConvertible
-- Swift.Equatable
-- Swift.Hashable
-- Swift.Sendable
-- UIKit.UIAccessibilityIdentification
-- UIKit.UIActivityItemsConfigurationProviding
-- UIKit.UIAppearance
-- UIKit.UIAppearanceContainer
-- UIKit.UICoordinateSpace
-- UIKit.UIDynamicItem
-- UIKit.UIFocusEnvironment
-- UIKit.UIFocusItem
-- UIKit.UIFocusItemContainer
-- UIKit.UILargeContentViewerItem
-- UIKit.UIPasteConfigurationSupporting
-- UIKit.UIPopoverPresentationControllerSourceItem
-- UIKit.UIResponderStandardEditActions
-- UIKit.UITraitChangeObservable
-- UIKit.UITraitEnvironment
-- UIKit.UIUserActivityRestoring
+뱃지의 외관 스타일입니다.
+- **Discussion**
+  >  See Also
+  >
+  > `ContentBadge.Variant`
+
+
+### Instance Methods
+
+
+~~``func layoutSubviews()``~~
+
+하위 뷰의 레이아웃이 변경될 때 호출되는 메서드입니다.
+
+~~``func traitCollectionDidChange(UITraitCollection?)``~~
+
+트레이트 컬렉션이 변경될 때 호출되는 메서드입니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `previousTraitCollection` | 이전 트레이트 컬렉션 |
+- **Discussion**
+
+  다크 모드와 라이트 모드 전환 시 UI를 업데이트합니다.
+
+## Relationships
+
+Conforms To
+
+`Foundation.NSCoding`
+
+`ObjectiveC.NSObjectProtocol`
+
+`QuartzCore.CALayerDelegate`
+
+`Swift.CVarArg`
+
+`Swift.CustomDebugStringConvertible`
+
+`Swift.CustomStringConvertible`
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.Sendable`
+
+`UIKit.UIAccessibilityIdentification`
+
+`UIKit.UIActivityItemsConfigurationProviding`
+
+`UIKit.UIAppearance`
+
+`UIKit.UIAppearanceContainer`
+
+`UIKit.UICoordinateSpace`
+
+`UIKit.UIDynamicItem`
+
+`UIKit.UIFocusEnvironment`
+
+`UIKit.UIFocusItem`
+
+`UIKit.UIFocusItemContainer`
+
+`UIKit.UILargeContentViewerItem`
+
+`UIKit.UIPasteConfigurationSupporting`
+
+`UIKit.UIPopoverPresentationControllerSourceItem`
+
+`UIKit.UIResponderStandardEditActions`
+
+`UIKit.UITraitChangeObservable`
+
+`UIKit.UITraitEnvironment`
+
+`UIKit.UIUserActivityRestoring`
+
+
 

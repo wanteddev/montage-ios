@@ -1,24 +1,22 @@
 ---
-1title: uiview
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: UIView
 ---
-
-Extended Class
-
-# UIView 
-
-MontageUIKit
 
 ```swift
 extension UIView
 ```
 
-## Topics 
+## Topics
 
-### Instance Methods 
+### Instance Methods
 
-- [func setElevation(Elevation?)](/documentation/montage/uikit/uiview/setelevation(_:).md)
+
+``func setElevation(Elevation?)``
+
+Montage 디자인 시스템의 그림자 효과를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `elevation` | 적용할 그림자 효과. nil인 경우 그림자가 제거됩니다. |
 

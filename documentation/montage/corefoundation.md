@@ -1,18 +1,11 @@
 ---
-1title: corefoundation
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: CoreFoundation
 ---
 
-Extended Module
+## Topics
 
-# CoreFoundation 
+### Extended Structures
 
-## Topics 
 
-### Extended Structures 
-
-- [extension CGFloat](/documentation/montage/corefoundation/cgfloat.md)
+[``extension CGFloat``](/documentation/montage/corefoundation/cgfloat.md)
 

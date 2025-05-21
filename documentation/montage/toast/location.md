@@ -1,33 +1,32 @@
 ---
-1title: location
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Toast.Location
+description: 토스트 메시지가 표시될 위치를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# Toast.Location 
-
-토스트 메시지가 표시될 위치를 정의하는 열거형입니다.
 
 ```swift
 enum Location
 ```
 
-## Overview 
+## Topics
 
-- top: 화면 상단에 표시
-- bottom: 화면 하단에 표시
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case bottom(offset: CGFloat)``
 
-- [case bottom(offset: CGFloat)](/documentation/montage/toast/location/bottom(offset:).md)
+화면 하단에 토스트 표시
 
-  화면 하단에 토스트 표시
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `offset` | 하단에서의 오프셋 값 (기본값: 0) |
 
-- [case top(offset: CGFloat)](/documentation/montage/toast/location/top(offset:).md)
+``case top(offset: CGFloat)``
+
+화면 상단에 토스트 표시
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `offset` | 상단에서의 오프셋 값 (기본값: 0) |
 

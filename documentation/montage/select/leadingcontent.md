@@ -1,34 +1,26 @@
 ---
-1title: leadingcontent
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Select.LeadingContent
+description: 왼쪽에 표시될 컨텐트 타입입니다.
 ---
-
-Enumeration
-
-# Select.LeadingContent 
-
-왼쪽에 표시될 컨텐트 타입입니다.
 
 ```swift
 enum LeadingContent
 ```
 
-## Overview 
+## Topics
 
-- icon: 아이콘 표시
-- iconButton: 아이콘 버튼 표시
-- custom: 사용자 정의 뷰 표시
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case custom(() -> any View)``
 
-- [case custom(() -> any View)](/documentation/montage/select/leadingcontent/custom(_:).md)
+사용자 정의 뷰 표시
 
-- [case icon(Icon)](/documentation/montage/select/leadingcontent/icon(_:).md)
+``case icon(Icon)``
 
-- [case iconButton(IconButton)](/documentation/montage/select/leadingcontent/iconbutton(_:).md)
+아이콘 표시
+
+``case iconButton(IconButton)``
+
+아이콘 버튼 표시
 

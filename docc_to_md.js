@@ -3,8 +3,8 @@ const path = require('path');
 
 // 링크 생성 함수
 function makeLink(title, url, deprecated = false) {
-  let link = `[${title}](${url})`;
-  if (deprecated) link = `~${link}~\n\n- \`Deprecated\``;
+  let link = `[${title}](${url}.md)`;
+  if (deprecated) link = `~~${link}~~\n\n`;
   return link;
 }
 
@@ -21,17 +21,104 @@ function renderTopicSection(section, references) {
     if (ref.abstract && Array.isArray(ref.abstract)) {
       desc = ref.abstract.map((a) => a.text || '').join(' ');
     }
+
+    let symbolDetails = '';
     if (ref.role === 'symbol' && ref.kind === 'symbol') {
-      // 함수/메서드/프로퍼티
-      md += `- [${(ref.fragments || []).map((f) => f.text).join('') || title}](${url})\n`;
-      if (desc) md += `  - ${desc}\n`;
-    } else if (ref.kind === 'symbol' && ref.role === 'symbol') {
-      // 클래스/열거형 등
-      md += `- ${makeLink(title, url, deprecated)}\n`;
-      if (desc) md += `  - ${desc}\n`;
+      // 심볼의 상세 정보를 가져오기
+      const symbolJsonPath = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data', `${url}.json`);
+      
+      try {
+        if (fs.existsSync(symbolJsonPath)) {
+          const symbolJson = JSON.parse(fs.readFileSync(symbolJsonPath, 'utf-8'));
+          
+          // 파라미터 정보 추가
+          if (symbolJson.primaryContentSections) {
+            const parameters = symbolJson.primaryContentSections.find(s => s.kind === 'parameters');
+            if (parameters) {
+              symbolDetails += '\n- **Parameters**\n';
+              symbolDetails += '  | Parameter | Description |\n';
+              symbolDetails += '  | --- | --- |\n';
+              parameters.parameters.forEach(param => {
+                if (param.name && param.content) {
+                  const paramText = renderInlineContent(param.content, symbolJson.references, { joinWith: '' });
+                  symbolDetails += `  | \`${param.name}\` | ${paramText} |\n`;
+                }
+              });
+            }
+
+            // 리턴값 정보 추가
+            const returnsSection = symbolJson.primaryContentSections.find(
+              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && c.text === 'Return Value')
+            );
+            if (returnsSection && returnsSection.content) {
+              symbolDetails += '- **Return Value**\n';
+              let found = false;
+              returnsSection.content.forEach(item => {
+                if (item.type === 'heading' && item.text === 'Return Value') {
+                  found = true;
+                  return;
+                }
+                if (found && item.type === 'paragraph' && item.inlineContent) {
+                  const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
+                  symbolDetails += `\n  ${returnText}\n`;
+                }
+              });
+            }
+
+            // Discussion 정보 추가
+            const discussionSection = symbolJson.primaryContentSections.find(
+              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && c.text === 'Discussion')
+            );
+            if (discussionSection && discussionSection.content) {
+              symbolDetails += '- **Discussion**\n';
+              let found = false;
+              discussionSection.content.forEach(item => {
+                if (item.type === 'heading' && item.text === 'Discussion') {
+                  found = true;
+                  return;
+                }
+                if (found) {
+                  if (item.type === 'paragraph' && item.inlineContent) {
+                    const discText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
+                    symbolDetails += `\n  ${discText}\n`;
+                  } else if (item.type === 'aside' && item.content) {
+                    // aside(노트 등) 처리 - 두 뎁스 들여쓰기
+                    const asideMd = renderAside([item], symbolJson.references)
+                      .split('\n')
+                      .map(line => line ? `  ${line}` : '')
+                      .join('\n');
+                    symbolDetails += asideMd;
+                  } else if (item.text) {
+                    symbolDetails += `\n  ${item.text}\n`;
+                  }
+                }
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error(`Error reading symbol details for ${url}:`, error);
+      }
+
+      const member = `\`\`${(ref.fragments || []).map((f) => f.text).join('') || title}\`\``;
+      if (section.title === 'Enumerations' ||
+         section.title === 'Structures' ||
+         section.title === 'Classes' ||
+         section.title === 'Extended Structures' ||
+         section.title === 'Extended Classes' ||
+         section.title === 'Protocols') {
+        // 클래스/열거형 등
+        md += `\n${makeLink(member, url, deprecated)}\n`;
+        if (desc) md += `\n${desc}\n`;
+      } else {
+        // 함수/메서드/프로퍼티
+        md += `\n${deprecated ? `~~${member}~~` : `${member}`}\n`;
+        if (desc) md += `\n${desc}\n`;
+        if (symbolDetails) md += symbolDetails;
+      }
     } else {
-      md += `- ${makeLink(title, url, deprecated)}\n`;
-      if (desc) md += `  - ${desc}\n`;
+      md += `\n${makeLink(title, url, deprecated)}\n`;
+      if (desc) md += `\n${desc}\n`;
     }
   }
   md += '\n';
@@ -47,7 +134,7 @@ function renderRelationships(sections, references) {
       for (const id of sec.identifiers) {
         const ref = references ? references[id] : null;
         if (ref) {
-          md += `\`${ref.title}\``;
+          md += `\`${ref.title}\`\n\n`;
         }
       }
       md += '\n\n';
@@ -70,7 +157,7 @@ function renderInlineContent(content, references, options = {}) {
           if (ic.type === 'reference' && ic.identifier) {
             const ref = references ? references[ic.identifier] : null;
             if (ref) {
-              return `[${ref.title}](${ref.url})`;
+              return `[${ref.title}](${ref.url}.md)`;
             }
           }
           return ic.text || '';
@@ -158,15 +245,23 @@ function renderFrontmatter(json) {
 function jsonToMarkdown(json) {
   let md = renderFrontmatter(json);
 
-  if (json.references) {
-    const isDeprecated = json.references[json.identifier.url]
-      ? json.references[json.identifier.url].deprecated
-      : false;
+  // 제목
+  // md += `${json.metadata.roleHeading}\n\n`;
+  // md += `# ${json.metadata.title}`;
 
-    if (isDeprecated) {
-      md += `\`deprecated\`\n\n`;
-    }
-  }
+  // if (json.references) {
+  //   const isDeprecated = json.references[json.identifier.url]
+  //     ? json.references[json.identifier.url].deprecated
+  //     : false;
+
+  //   if (isDeprecated) {
+  //     md += ` \`Deprecated\`\n\n`;
+  //   } else {
+  //     md += `\n\n`;
+  //   }
+  // } else {
+  //   md += `\n\n`;
+  // }
 
   // 선언부
   if (json.primaryContentSections) {
@@ -218,13 +313,21 @@ let count = 0;
 
 // 단일 파일 변환
 function convertFile(jsonPath) {
-  const relPath = path.relative('docc/data/documentation', jsonPath);
+  const relPath = path.relative('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation', jsonPath);
   const mdPath = path.join('documentation', relPath).replace(/\.json$/, '.md');
   const json = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-  const md = jsonToMarkdown(json);
-  fs.mkdirSync(path.dirname(mdPath), { recursive: true });
-  fs.writeFileSync(mdPath, md, 'utf-8');
-  count++;
+  if (json.metadata.roleHeading !== 'Initializer' &&
+     json.metadata.roleHeading !== 'Instance Method' &&
+     json.metadata.roleHeading !== 'Instance Property' &&
+     json.metadata.roleHeading !== 'Type Method' &&
+     json.metadata.roleHeading !== 'Type Property' &&
+     json.metadata.roleHeading !== 'Operator' &&
+     json.metadata.roleHeading !== 'Case' ) {
+    const md = jsonToMarkdown(json);
+    fs.mkdirSync(path.dirname(mdPath), { recursive: true });
+    fs.writeFileSync(mdPath, md, 'utf-8');
+    count++;
+  }
 }
 
 // 재귀적으로 montage/ 하위 모든 json 변환
@@ -238,7 +341,7 @@ function walk(dir) {
 
 // 시작점
 console.time('start');
-walk('docc/data/documentation');
+walk('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation');
 console.timeEnd('start');
 console.log(`변환 완료: ${count}개의 파일`);
 

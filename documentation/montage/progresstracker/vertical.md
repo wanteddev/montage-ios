@@ -1,27 +1,15 @@
 ---
-1title: vertical
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ProgressTracker.Vertical
+description: 수직 방향으로 단계별 진행 상태를 표시하는 컴포넌트입니다.
 ---
 
-Structure
-
-# ProgressTracker.Vertical 
-
-수직 방향으로 단계별 진행 상태를 표시하는 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct Vertical
+@MainActor struct Vertical
 ```
 
-## Overview 
+## Overview
 
-Vertical은 여러 단계로 구성된 프로세스의 진행 상태를 수직 레이아웃으로 표시합니다. 각 단계는 원형 아이콘과 수직선으로 연결되며, 완료된 단계는 체크 마크로 표시됩니다. 각 단계에 라벨과 추가 콘텐츠를 표시할 수 있어 풍부한 정보 제공이 가능합니다.
-
-**사용 예시**:
+`Vertical`은 여러 단계로 구성된 프로세스의 진행 상태를 수직 레이아웃으로 표시합니다. 각 단계는 원형 아이콘과 수직선으로 연결되며, 완료된 단계는 체크 마크로 표시됩니다. 각 단계에 라벨과 추가 콘텐츠를 표시할 수 있어 풍부한 정보 제공이 가능합니다.
 
 ```swift
 @State private var currentStep = 2
@@ -39,38 +27,51 @@ ProgressTracker.Vertical(
 )
 ```
 
-> **Note**
+>  Note
 >
 > 각 단계에는 라벨 외에도 추가 콘텐츠를 표시할 수 있어 복잡한 단계별 정보를 표현하는 데 적합합니다.
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct StepContent](/documentation/montage/progresstracker/vertical/stepcontent.md)
 
-  수직 진행 추적기의 각 단계에 표시되는 콘텐츠 컴포넌트입니다.
+[``struct StepContent``](/documentation/montage/progresstracker/vertical/stepcontent.md)
 
-### Initializers 
+수직 진행 추적기의 각 단계에 표시되는 콘텐츠 컴포넌트입니다.
 
-- [init(progress: Binding<Int>, stepContents: [StepContent])](/documentation/montage/progresstracker/vertical/init(progress:stepcontents:).md)
+### Initializers
 
-  수직 진행 추적기를 초기화합니다.
 
-### Instance Properties 
+``init(progress: Binding<Int>, stepContents: [StepContent])``
 
-- [var body: some View](/documentation/montage/progresstracker/vertical/body.md)
+수직 진행 추적기를 초기화합니다.
 
-### Default Implementations 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `progress` | 현재 진행 중인 단계 (1부터 시작) |
+  | `stepContents` | 각 단계의 콘텐츠 배열 |
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+### Instance Properties
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-## Relationships 
+``var body: some View``
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Sendable
-- SwiftUICore.View
+
+[View Implementations](/documentation/montage/progresstracker/vertical/view-implementations.md)
+
+[View Implementations](/documentation/montage/progresstracker/vertical/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

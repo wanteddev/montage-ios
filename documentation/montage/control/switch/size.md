@@ -1,42 +1,37 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Control.Switch.Size
+description: 스위치의 크기를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# Control.Switch.Size 
-
-스위치의 크기를 정의하는 열거형입니다.
 
 ```swift
 enum Size
 ```
 
-## Overview 
+## Topics
 
-- small: 작은 크기 (39x24)
-- medium: 중간 크기 (52x32)
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case medium``
 
-- [case medium](/documentation/montage/control/switch/size/medium.md)
+중간 크기
 
-- [case small](/documentation/montage/control/switch/size/small.md)
+``case small``
 
-### Default Implementations 
+작은 크기
 
-- [API ReferenceEquatable Implementations](/documentation/montage/control/switch/size/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/control/switch/size/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

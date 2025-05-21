@@ -1,26 +1,15 @@
 ---
-1title: spacing
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Spacing
+description: UI 요소 간의 간격을 정의하는 시스템
 ---
-
-Enumeration
-
-# Spacing 
-
-UI 요소 간의 간격을 정의하는 시스템
 
 ```swift
 enum Spacing
 ```
 
-## Overview 
+## Overview
 
 Spacing은 Montage 디자인 시스템에서 UI 요소 간의 일관된 간격을 제공하기 위한 규격화된 값들을 정의합니다. 모든 간격은 4포인트 기반의 스케일로 구성되어 있어 디자인의 일관성과 조화를 유지합니다.
-
-**사용 예시**:
 
 ```swift
 // UIKit에서 사용
@@ -33,90 +22,95 @@ Text("Hello, World!")
     .padding(.vertical, .spacing(.pt16))
 ```
 
-> **Note**
+>  Note
 >
 > 간격 이름의 숫자는 포인트 단위의 실제 간격 값을 나타냅니다. 예를 들어 pt16은 16포인트의 간격을 의미합니다.
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case pt01](/documentation/montage/spacing/pt01.md)
 
-  1포인트 간격
+``case pt01``
 
-- [case pt02](/documentation/montage/spacing/pt02.md)
+1포인트 간격
 
-  2포인트 간격
+``case pt02``
 
-- [case pt04](/documentation/montage/spacing/pt04.md)
+2포인트 간격
 
-  4포인트 간격
+``case pt04``
 
-- [case pt08](/documentation/montage/spacing/pt08.md)
+4포인트 간격
 
-  8포인트 간격
+``case pt08``
 
-- [case pt12](/documentation/montage/spacing/pt12.md)
+8포인트 간격
 
-  12포인트 간격
+``case pt12``
 
-- [case pt16](/documentation/montage/spacing/pt16.md)
+12포인트 간격
 
-  16포인트 간격 (기본 간격)
+``case pt16``
 
-- [case pt20](/documentation/montage/spacing/pt20.md)
+16포인트 간격 (기본 간격)
 
-  20포인트 간격
+``case pt20``
 
-- [case pt24](/documentation/montage/spacing/pt24.md)
+20포인트 간격
 
-  24포인트 간격
+``case pt24``
 
-- [case pt28](/documentation/montage/spacing/pt28.md)
+24포인트 간격
 
-  28포인트 간격
+``case pt28``
 
-- [case pt32](/documentation/montage/spacing/pt32.md)
+28포인트 간격
 
-  32포인트 간격
+``case pt32``
 
-- [case pt36](/documentation/montage/spacing/pt36.md)
+32포인트 간격
 
-  36포인트 간격
+``case pt36``
 
-- [case pt40](/documentation/montage/spacing/pt40.md)
+36포인트 간격
 
-  40포인트 간격
+``case pt40``
 
-- [case pt48](/documentation/montage/spacing/pt48.md)
+40포인트 간격
 
-  48포인트 간격
+``case pt48``
 
-- [case pt56](/documentation/montage/spacing/pt56.md)
+48포인트 간격
 
-  56포인트 간격
+``case pt56``
 
-- [case pt64](/documentation/montage/spacing/pt64.md)
+56포인트 간격
 
-  64포인트 간격
+``case pt64``
 
-- [case pt72](/documentation/montage/spacing/pt72.md)
+64포인트 간격
 
-  72포인트 간격
+``case pt72``
 
-- [case pt80](/documentation/montage/spacing/pt80.md)
+72포인트 간격
 
-  80포인트 간격
+``case pt80``
 
-### Default Implementations 
+80포인트 간격
 
-- [API ReferenceEquatable Implementations](/documentation/montage/spacing/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/spacing/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

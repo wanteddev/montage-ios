@@ -1,52 +1,52 @@
 ---
-1title: item
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Menu.Item
+description: 메뉴 항목의 데이터를 정의하는 구조체입니다.
 ---
-
-Structure
-
-# Menu.Item 
-
-메뉴 항목의 데이터를 정의하는 구조체입니다.
 
 ```swift
 struct Item
 ```
 
-## Overview 
+## Overview
 
 제목과 선택 상태를 포함합니다.
-
-**사용 예시**:
 
 ```swift
 Menu.Item(title: "메뉴 항목", isSelected: false)
 ```
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(title: String, isSelected: Bool)](/documentation/montage/menu/item/init(title:isselected:).md)
 
-  메뉴 항목을 초기화합니다.
+``init(title: String, isSelected: Bool)``
 
-### Instance Properties 
+메뉴 항목을 초기화합니다.
 
-- [var isSelected: Bool](/documentation/montage/menu/item/isselected.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 메뉴 항목에 표시될 텍스트 |
+  | `isSelected` | 초기 선택 상태 (기본값: false) |
 
-- [let title: String](/documentation/montage/menu/item/title.md)
+### Instance Properties
 
-### Default Implementations 
 
-- [API ReferenceEquatable Implementations](/documentation/montage/menu/item/equatable-implementations.md)
+``var isSelected: Bool``
 
-## Relationships 
+``let title: String``
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Equatable
+
+[Equatable Implementations](/documentation/montage/menu/item/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+
 

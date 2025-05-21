@@ -1,27 +1,15 @@
 ---
-1title: actionarea
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ActionArea
+description: 화면 하단에 사용자 액션 버튼을 표시하는 영역 컴포넌트입니다.
 ---
 
-Structure
-
-# ActionArea 
-
-화면 하단에 사용자 액션 버튼을 표시하는 영역 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct ActionArea
+@MainActor struct ActionArea
 ```
 
-## Overview 
+## Overview
 
 이 컴포넌트는 화면 하단에 위치하며 주요 액션 버튼과 보조 버튼을 표시합니다. 다양한 레이아웃 변형을 지원하고, 캡션 텍스트와 추가 콘텐츠를 포함할 수 있습니다.
-
-## 사용 예시 
 
 ```swift
 // 기본 강조 버튼 영역
@@ -46,58 +34,111 @@ ActionArea(variant: .cancel(
 })
 ```
 
-> **Note**
+>  Note
 >
 > 키보드가 표시될 때 자동으로 조정됩니다.
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct ButtonInfo](/documentation/montage/actionarea/buttoninfo.md)
 
-  ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
+[``struct ButtonInfo``](/documentation/montage/actionarea/buttoninfo.md)
 
-### Initializers 
+ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 
-- [init(variant: Variant)](/documentation/montage/actionarea/init(variant:).md)
+[``struct Model``](/documentation/montage/actionarea/model.md)
 
-  ActionArea 컴포넌트를 초기화합니다.
+ActionArea를 구성하기 위한 모델 구조체입니다.
 
-### Instance Properties 
+### Initializers
 
-- [var body: some View](/documentation/montage/actionarea/body.md)
 
-### Instance Methods 
+``init(variant: Variant)``
 
-- [func caption(String?) -> ActionArea](/documentation/montage/actionarea/caption(_:).md)
+ActionArea 컴포넌트를 초기화합니다.
 
-  버튼 위에 표시할 캡션 텍스트를 설정합니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 버튼 영역의 변형 스타일과 버튼 구성 |
+- **Return Value**
 
-- [func clearBackground(Bool) -> ActionArea](/documentation/montage/actionarea/clearbackground(_:).md)
+  구성된 ActionArea 인스턴스
 
-  배경을 투명하게 설정합니다.
+### Instance Properties
 
-- [func extra((() -> any View)?, divider: Bool) -> ActionArea](/documentation/montage/actionarea/extra(_:divider:).md)
 
-  버튼 위에 표시할 추가 콘텐츠를 설정합니다.
+``var body: some View``
 
-### Enumerations 
+### Instance Methods
 
-- [enum Variant](/documentation/montage/actionarea/variant.md)
 
-  ActionArea의 버튼 레이아웃 변형을 정의합니다.
+``func caption(String?) -> ActionArea``
 
-### Default Implementations 
+버튼 위에 표시할 캡션 텍스트를 설정합니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `caption` | 표시할 캡션 텍스트 |
+- **Return Value**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  수정된 ActionArea 인스턴스
 
-## Relationships 
+``func clearBackground(Bool) -> ActionArea``
 
-### Conforms To 
+배경을 투명하게 설정합니다.
 
-- Swift.Sendable
-- SwiftUICore.View
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `clearBackground` | 배경 투명 여부, 기본값은 `true` |
+- **Return Value**
+
+  수정된 ActionArea 인스턴스
+- **Discussion**
+
+  이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
+
+``func extra((() -> any View)?, divider: Bool) -> ActionArea``
+
+버튼 위에 표시할 추가 콘텐츠를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 추가 콘텐츠를 생성하는 클로저 |
+  | `divider` | 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true` |
+- **Return Value**
+
+  수정된 ActionArea 인스턴스
+
+### Enumerations
+
+
+[``enum BackgroundVisibility``](/documentation/montage/actionarea/backgroundvisibility.md)
+
+ActionArea의 배경 가시성을 제어하는 열거형입니다.
+
+[``enum Variant``](/documentation/montage/actionarea/variant.md)
+
+ActionArea의 버튼 레이아웃 변형을 정의합니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/actionarea/view-implementations.md)
+
+[View Implementations](/documentation/montage/actionarea/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

@@ -1,37 +1,37 @@
 ---
-1title: variant
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Category.Variant
+description: 카테고리 아이템의 종류를 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# Category.Variant 
-
-카테고리 아이템의 종류를 결정하는 열거형입니다.
 
 ```swift
 enum Variant
 ```
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case alternative](/documentation/montage/category/variant/alternative.md)
 
-- [case normal](/documentation/montage/category/variant/normal.md)
+``case alternative``
 
-### Default Implementations 
+대체 스타일
 
-- [API ReferenceEquatable Implementations](/documentation/montage/category/variant/equatable-implementations.md)
+``case normal``
 
-## Relationships 
+기본 스타일
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Equatable
-- Swift.Hashable
+
+[Equatable Implementations](/documentation/montage/category/variant/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

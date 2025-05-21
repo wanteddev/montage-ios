@@ -1,26 +1,15 @@
 ---
-1title: opacity
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Opacity
+description: 색상의 투명도를 정의한 열거형입니다.
 ---
-
-Enumeration
-
-# Opacity 
-
-색상의 투명도를 정의한 열거형입니다.
 
 ```swift
 enum Opacity
 ```
 
-## Overview 
+## Overview
 
 Montage 디자인 시스템에서 사용하는 정규화된 투명도 값을 제공합니다. 각 케이스는 백분율 형식으로 이름이 지정되어 있습니다 (예: p005는 5% 투명도).
-
-## 사용 예시 
 
 ```swift
 // CGFloat 값으로 변환
@@ -33,86 +22,91 @@ myView.alpha = .opacity(.p088)
 let transparentColor = UIColor.black.withAlphaComponent(.opacity(.p043))
 ```
 
-> **Note**
+>  Note
 >
 > 표준화된 투명도 값을 사용하면 디자인의 일관성을 유지하는 데 도움이 됩니다.
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case p000](/documentation/montage/opacity/p000.md)
 
-  0% 투명도 (완전 불투명)
+``case p000``
 
-- [case p005](/documentation/montage/opacity/p005.md)
+0% 투명도 (완전 불투명)
 
-  5% 투명도
+``case p005``
 
-- [case p008](/documentation/montage/opacity/p008.md)
+5% 투명도
 
-  8% 투명도
+``case p008``
 
-- [case p012](/documentation/montage/opacity/p012.md)
+8% 투명도
 
-  12% 투명도
+``case p012``
 
-- [case p016](/documentation/montage/opacity/p016.md)
+12% 투명도
 
-  16% 투명도
+``case p016``
 
-- [case p022](/documentation/montage/opacity/p022.md)
+16% 투명도
 
-  22% 투명도
+``case p022``
 
-- [case p028](/documentation/montage/opacity/p028.md)
+22% 투명도
 
-  28% 투명도
+``case p028``
 
-- [case p032](/documentation/montage/opacity/p032.md)
+28% 투명도
 
-  32% 투명도
+``case p032``
 
-- [case p035](/documentation/montage/opacity/p035.md)
+32% 투명도
 
-  35% 투명도
+``case p035``
 
-- [case p043](/documentation/montage/opacity/p043.md)
+35% 투명도
 
-  43% 투명도
+``case p043``
 
-- [case p052](/documentation/montage/opacity/p052.md)
+43% 투명도
 
-  52% 투명도
+``case p052``
 
-- [case p061](/documentation/montage/opacity/p061.md)
+52% 투명도
 
-  61% 투명도
+``case p061``
 
-- [case p074](/documentation/montage/opacity/p074.md)
+61% 투명도
 
-  74% 투명도
+``case p074``
 
-- [case p088](/documentation/montage/opacity/p088.md)
+74% 투명도
 
-  88% 투명도
+``case p088``
 
-- [case p097](/documentation/montage/opacity/p097.md)
+88% 투명도
 
-  97% 투명도
+``case p097``
 
-- [case p100](/documentation/montage/opacity/p100.md)
+97% 투명도
 
-  100% 투명도 (완전 투명)
+``case p100``
 
-### Default Implementations 
+100% 투명도 (완전 투명)
 
-- [API ReferenceEquatable Implementations](/documentation/montage/opacity/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/opacity/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

@@ -1,45 +1,41 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ContentBadge.Size
+description: 뱃지의 사이즈를 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# ContentBadge.Size 
-
-뱃지의 사이즈를 결정하는 열거형입니다.
 
 ```swift
 enum Size
 ```
 
-## Overview 
+## Overview
 
 - xsmall: 가장 작은 크기의 뱃지 (높이 22pt)
 - small: 중간 크기의 뱃지 (높이 24pt)
 - medium: 큰 크기의 뱃지 (높이 28pt)
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case medium](/documentation/montage/contentbadge/size/medium.md)
 
-- [case small](/documentation/montage/contentbadge/size/small.md)
+``case medium``
 
-- [case xsmall](/documentation/montage/contentbadge/size/xsmall.md)
+``case small``
 
-### Default Implementations 
+``case xsmall``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/contentbadge/size/equatable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/contentbadge/size/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

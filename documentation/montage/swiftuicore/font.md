@@ -1,28 +1,39 @@
 ---
-1title: font
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Font
 ---
-
-Extended Structure
-
-# Font 
-
-MontageSwiftUICore
 
 ```swift
 extension Font
 ```
 
-## Topics 
+## Topics
 
-### Type Methods 
+### Type Methods
 
-- [static func montage(size: CGFloat, weight: Typography.Weight) -> Font](/documentation/montage/swiftuicore/font/montage(size:weight:).md)
 
-  Montage 디자인 시스템의 폰트를 생성합니다.
+``static func montage(size: CGFloat, weight: Typography.Weight) -> Font``
 
-- [static func montage(variant: Typography.Variant, weight: Typography.Weight) -> Font?](/documentation/montage/swiftuicore/font/montage(variant:weight:).md)
+Montage 디자인 시스템의 폰트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 폰트 크기 |
+  | `weight` | 폰트 두께 |
+- **Return Value**
+
+  생성된 Font 인스턴스
+
+``static func montage(variant: Typography.Variant, weight: Typography.Weight) -> Font?``
+
+Montage 디자인 시스템의 폰트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+  | `weight` | 폰트 두께 |
+- **Return Value**
+
+  생성된 Font 인스턴스
 

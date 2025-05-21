@@ -1,49 +1,46 @@
 ---
-1title: duration
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: SnackBar.Duration
+description: SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# SnackBar.Duration 
-
-SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 
 ```swift
 enum Duration
 ```
 
-## Overview 
+## Topics
 
-- short: 짧은 표시 시간 (4초)
-- long: 긴 표시 시간 (16초)
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case long``
 
-- [case long](/documentation/montage/snackbar/duration/long.md)
+긴 표시 시간 (16초)
 
-- [case short](/documentation/montage/snackbar/duration/short.md)
+``case short``
 
-### Initializers 
+짧은 표시 시간 (4초)
 
-- [init?(rawValue: Double)](/documentation/montage/snackbar/duration/init(rawvalue:).md)
+### Initializers
 
-### Default Implementations 
 
-- [API ReferenceEquatable Implementations](/documentation/montage/snackbar/duration/equatable-implementations.md)
+``init?(rawValue: Double)``
 
-- [API ReferenceRawRepresentable Implementations](/documentation/montage/snackbar/duration/rawrepresentable-implementations.md)
+### Default Implementations
 
-## Relationships 
 
-### Conforms To 
+[Equatable Implementations](/documentation/montage/snackbar/duration/equatable-implementations.md)
 
-- Swift.Equatable
-- Swift.Hashable
-- Swift.RawRepresentable
+[RawRepresentable Implementations](/documentation/montage/snackbar/duration/rawrepresentable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+`Swift.RawRepresentable`
+
+
 

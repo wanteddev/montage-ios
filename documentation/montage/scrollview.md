@@ -1,27 +1,15 @@
 ---
-1title: scrollview
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ScrollView
+description: 스크롤 상태 추적과 오프셋 감지가 가능한 커스텀 스크롤 뷰입니다.
 ---
 
-Structure
-
-# ScrollView 
-
-스크롤 상태 추적과 오프셋 감지가 가능한 커스텀 스크롤 뷰입니다.
-
 ```swift
-@MainActor
-struct ScrollView
+@MainActor struct ScrollView
 ```
 
-## Overview 
+## Overview
 
 기본 SwiftUI 스크롤 뷰를 확장하여 스크롤 상태 추적, 오프셋 감지, 새로고침 등 추가 기능을 제공합니다.
-
-**사용 예시**:
 
 ```swift
 @State private var scrollStatus = ScrollView.ScrollStatus()
@@ -49,52 +37,91 @@ ScrollView(scrollStatus: $scrollStatus,
 }
 ```
 
-> **See Also**
+>  See Also
 >
-> ScrollView.ScrollStatus
+> `ScrollView.ScrollStatus`
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct ScrollStatus](/documentation/montage/scrollview/scrollstatus.md)
 
-  스크롤 뷰의 상태를 추적하는 구조체입니다.
+[``struct ScrollStatus``](/documentation/montage/scrollview/scrollstatus.md)
 
-### Initializers 
+스크롤 뷰의 상태를 추적하는 구조체입니다.
 
-- [init(scrollStatus: Binding<ScrollStatus>?, onOffsetChanged: (CGPoint) -> Void, content: () -> any View)](/documentation/montage/scrollview/init(scrollstatus:onoffsetchanged:content:).md)
+### Initializers
 
-  스크롤 뷰를 초기화합니다.
 
-### Instance Properties 
+``init(scrollStatus: Binding<ScrollStatus>?, onOffsetChanged: (CGPoint) -> Void, content: () -> any View)``
 
-- [var body: some View](/documentation/montage/scrollview/body.md)
+스크롤 뷰를 초기화합니다.
 
-### Instance Methods 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `scrollStatus` | 스크롤 상태를 추적하기 위한 바인딩 (선택 사항) |
+  | `onOffsetChanged` | 스크롤 오프셋이 변경될 때 호출되는 클로저 (기본값: 빈 클로저) |
+  | `content` | 스크롤 뷰에 표시할 콘텐츠를 반환하는 클로저 |
 
-- [func axis(Axis) -> ScrollView](/documentation/montage/scrollview/axis(_:).md)
+### Instance Properties
 
-  스크롤 방향을 설정합니다.
 
-- [func hidesIndicators(Bool) -> ScrollView](/documentation/montage/scrollview/hidesindicators(_:).md)
+``var body: some View``
 
-  스크롤 인디케이터 표시 여부를 설정합니다.
+### Instance Methods
 
-- [func onRefresh(() async -> Void) -> ScrollView](/documentation/montage/scrollview/onrefresh(_:).md)
 
-  당겨서 새로고침 동작을 설정합니다.
+``func axis(Axis) -> ScrollView``
 
-### Default Implementations 
+스크롤 방향을 설정합니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `axis` | 스크롤 방향 (.vertical 또는 .horizontal) |
+- **Return Value**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  수정된 스크롤 뷰
 
-## Relationships 
+``func hidesIndicators(Bool) -> ScrollView``
 
-### Conforms To 
+스크롤 인디케이터 표시 여부를 설정합니다.
 
-- Swift.Sendable
-- SwiftUICore.View
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `hidesIndicators` | 인디케이터를 숨길지 여부 (기본값: true) |
+- **Return Value**
+
+  수정된 스크롤 뷰
+
+``func onRefresh(() async -> Void) -> ScrollView``
+
+당겨서 새로고침 동작을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `perform` | 새로고침 시 실행할 비동기 작업 |
+- **Return Value**
+
+  수정된 스크롤 뷰
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/scrollview/view-implementations.md)
+
+[View Implementations](/documentation/montage/scrollview/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

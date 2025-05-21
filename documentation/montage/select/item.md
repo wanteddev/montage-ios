@@ -1,54 +1,58 @@
 ---
-1title: item
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Select.Item
+description: Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.
 ---
-
-Structure
-
-# Select.Item 
-
-아이템 타입입니다. Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.
 
 ```swift
 struct Item
 ```
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(text: String, icon: Icon?, isNegative: Bool, isSelected: Bool)](/documentation/montage/select/item/init(text:icon:isnegative:isselected:).md)
 
-  아이템 초기화
+``init(text: String, icon: Icon?, isNegative: Bool, isSelected: Bool)``
 
-### Instance Properties 
+아이템 초기화
 
-- [let icon: Icon?](/documentation/montage/select/item/icon.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 아이템 텍스트 |
+  | `icon` | 아이템 아이콘 (기본값: nil) |
+  | `isNegative` | 부정적 상태 여부 (기본값: false) |
+  | `isSelected` | 선택 여부 (기본값: false) |
 
-  아이템의 아이콘 (선택 사항)
+### Instance Properties
 
-- [let isNegative: Bool](/documentation/montage/select/item/isnegative.md)
 
-  부정적 상태 여부 (오류나 경고를 나타낼 때 사용)
+``let icon: Icon?``
 
-- [var isSelected: Bool](/documentation/montage/select/item/isselected.md)
+아이템의 아이콘 (선택 사항)
 
-  항목의 선택 여부
+``let isNegative: Bool``
 
-- [let text: String](/documentation/montage/select/item/text.md)
+부정적 상태 여부 (오류나 경고를 나타낼 때 사용)
 
-  아이템 텍스트 내용
+``var isSelected: Bool``
 
-### Default Implementations 
+항목의 선택 여부
 
-- [API ReferenceEquatable Implementations](/documentation/montage/select/item/equatable-implementations.md)
+``let text: String``
 
-## Relationships 
+아이템 텍스트 내용
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Equatable
+
+[Equatable Implementations](/documentation/montage/select/item/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+
 

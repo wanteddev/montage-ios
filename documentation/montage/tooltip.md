@@ -1,26 +1,15 @@
 ---
-1title: tooltip
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Tooltip
+description: UI 요소 주변에 추가 정보나 설명을 제공하는 툴팁 컴포넌트입니다.
 ---
-
-Enumeration
-
-# Tooltip 
-
-UI 요소 주변에 추가 정보나 설명을 제공하는 툴팁 컴포넌트입니다.
 
 ```swift
 enum Tooltip
 ```
 
-## Overview 
+## Overview
 
 툴팁은 사용자가 특정 UI 요소를 이해하는데 도움이 되는 짧은 설명을 보여주기 위해 사용됩니다. 화살표가 있는 말풍선 형태로 표시되며, 화살표의 위치와 방향을 설정할 수 있습니다. 또한 닫기 버튼과 액션 버튼을 추가할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 기본 툴팁 표시
@@ -57,19 +46,23 @@ Button("설정") {
 )
 ```
 
-> **See Also**
+>  See Also
 >
-> Tooltip.Position, Tooltip.ButtonInfo, Tooltip.Modifier
+> `Tooltip.Position`, `Tooltip.ButtonInfo`, `Tooltip.Modifier`
 
-## Topics 
+## Topics
 
-### Structures 
+### Structures
 
-- [struct ButtonInfo](/documentation/montage/tooltip/buttoninfo.md)
 
-  툴팁에 표시되는 버튼의 정보를 정의하는 구조체입니다.
+[``struct ButtonInfo``](/documentation/montage/tooltip/buttoninfo.md)
 
-### Enumerations 
+툴팁에 표시되는 버튼의 정보를 정의하는 구조체입니다.
 
-- [enum Position](/documentation/montage/tooltip/position.md)
+### Enumerations
+
+
+[``enum Position``](/documentation/montage/tooltip/position.md)
+
+툴팁이 표시될 위치를 정의하는 열거형입니다.
 

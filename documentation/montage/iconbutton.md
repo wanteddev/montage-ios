@@ -1,23 +1,13 @@
 ---
-1title: iconbutton
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: IconButton
+description: 다양한 스타일의 아이콘 버튼을 제공하는 컴포넌트입니다.
 ---
 
-Structure
-
-# IconButton 
-
-다양한 스타일의 아이콘 버튼을 제공하는 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct IconButton
+@MainActor struct IconButton
 ```
 
-## Overview 
+## Overview
 
 아이콘만 표시하는 간결한 버튼으로, 여러 변형과 스타일을 지원합니다:
 
@@ -34,34 +24,150 @@ IconButton(
 )
 ```
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(variant: IconButton.Variant, icon: Icon, disable: Bool, showPushBadge: Bool, padding: CGFloat, iconColor: SwiftUI.Color?, backgroundColor: SwiftUI.Color?, borderColor: SwiftUI.Color?, handler: (() -> Void)?)](/documentation/montage/iconbutton/init(variant:icon:disable:showpushbadge:padding:iconcolor:backgroundcolor:bordercolor:handler:).md)
 
-  아이콘 버튼을 생성합니다.
+``init(variant: IconButton.Variant, icon: Icon, handler: (() -> Void)?)``
 
-### Instance Properties 
+아이콘 버튼을 생성합니다.
 
-- [var body: some View](/documentation/montage/iconbutton/body.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 버튼의 외관 스타일, 기본값은 `.default` |
+  | `icon` | 표시할 아이콘 |
+  | `handler` | 버튼 탭 시 실행할 핸들러 |
+- **Return Value**
 
-### Enumerations 
+  구성된 아이콘 버튼 뷰
 
-- [enum Variant](/documentation/montage/iconbutton/variant.md)
+### Instance Properties
 
-  버튼의 외관을 결정하는 열거형입니다.
 
-### Default Implementations 
+``var body: some View``
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+### Instance Methods
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-## Relationships 
+``func backgroundColor(SwiftUI.Color) -> IconButton``
 
-### Conforms To 
+배경 색상을 설정합니다.
 
-- Swift.Sendable
-- SwiftUICore.View
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 설정할 색상 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > Outlined, soild variant에서만 사용 가능합니다.
+
+
+``func borderColor(SwiftUI.Color) -> IconButton``
+
+테두리 색상을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 설정할 색상 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > Outlined 에서만 사용 가능합니다.
+
+
+``func disable(Bool) -> IconButton``
+
+버튼의 비활성화 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 비활성화 여부, true이면 버튼이 비활성화됩니다. |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+
+``func iconColor(SwiftUI.Color) -> IconButton``
+
+아이콘 색상을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 설정할 색상 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+
+``func padding(CGFloat) -> IconButton``
+
+버튼의 패딩을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 패딩 값 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > Outlined, soild variant에서만 사용 가능합니다.
+
+
+``func showPushBadge(Bool) -> IconButton``
+
+푸시 뱃지 표시 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 푸시 뱃지 표시 여부 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > Normal variant에서만 사용 가능합니다.
+
+
+### Enumerations
+
+
+[``enum Size``](/documentation/montage/iconbutton/size.md)
+
+버튼 사이즈를 결정하는 열거형입니다.
+
+[``enum Variant``](/documentation/montage/iconbutton/variant.md)
+
+버튼의 외관을 결정하는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/iconbutton/view-implementations.md)
+
+[View Implementations](/documentation/montage/iconbutton/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

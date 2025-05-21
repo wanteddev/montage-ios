@@ -1,45 +1,41 @@
 ---
-1title: variant
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Menu.Variant
+description: 메뉴의 표시 형태를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# Menu.Variant 
-
-메뉴의 표시 형태를 정의하는 열거형입니다.
 
 ```swift
 enum Variant
 ```
 
-## Overview 
+## Topics
 
-- normal: 기본 메뉴 형태로, 선택 표시 없이 항목만 표시
-- radio: 라디오 버튼 형태로, 단일 항목만 선택 가능
-- checkbox: 체크박스 형태로, 다중 항목 선택 가능
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case checkbox``
 
-- [case checkbox](/documentation/montage/menu/variant/checkbox.md)
+체크박스 형태, 다중 항목 선택 가능
 
-- [case normal](/documentation/montage/menu/variant/normal.md)
+``case normal``
 
-- [case radio](/documentation/montage/menu/variant/radio.md)
+기본 메뉴 형태, 선택 표시 없이 항목만 표시
 
-### Default Implementations 
+``case radio``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/menu/variant/equatable-implementations.md)
+라디오 버튼 형태, 단일 항목만 선택 가능
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
+[Equatable Implementations](/documentation/montage/menu/variant/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

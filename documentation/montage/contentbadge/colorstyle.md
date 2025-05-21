@@ -1,53 +1,55 @@
 ---
-1title: colorstyle
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ContentBadge.ColorStyle
+description: 뱃지의 색상을 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# ContentBadge.ColorStyle 
-
-뱃지의 색상을 결정하는 열거형입니다.
 
 ```swift
 enum ColorStyle
 ```
 
-## Overview 
-
-- neutral: 중립적인 회색 계열 뱃지
-- accent: 강조 색상을 사용하는 뱃지
-
-**사용 예시**:
+## Overview
 
 ```swift
 ContentBadge(text: "이벤트")
     .colorStyle(.accent(SwiftUI.Color.red))
 ```
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case accent(SwiftUI.Color, background: SwiftUI.Color?)](/documentation/montage/contentbadge/colorstyle/accent(_:background:).md)
 
-  강조 색상 뱃지
+``case accent(SwiftUI.Color, background: SwiftUI.Color?)``
 
-- [case neutral(SwiftUI.Color?)](/documentation/montage/contentbadge/colorstyle/neutral(_:).md)
+강조 색상 뱃지
 
-  중립 색상 뱃지
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `contentColor` | 콘텐츠 색상 |
+  | `background` | 배경 색상 (nil일 경우 contentColor의 투명도를 조절하여 사용) |
 
-### Default Implementations 
+``case neutral(SwiftUI.Color?)``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/contentbadge/colorstyle/equatable-implementations.md)
+중립 색상 뱃지
 
-## Relationships 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `contentColor` | 콘텐츠 색상 (nil일 경우 기본 색상 사용) |
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Equatable
-- Swift.Hashable
+
+[Equatable Implementations](/documentation/montage/contentbadge/colorstyle/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

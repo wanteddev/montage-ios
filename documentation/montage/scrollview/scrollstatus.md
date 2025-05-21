@@ -1,54 +1,58 @@
 ---
-1title: scrollstatus
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: ScrollView.ScrollStatus
+description: 스크롤 뷰의 상태를 추적하는 구조체입니다.
 ---
-
-Structure
-
-# ScrollView.ScrollStatus 
-
-스크롤 뷰의 상태를 추적하는 구조체입니다.
 
 ```swift
 struct ScrollStatus
 ```
 
-## Overview 
+## Overview
 
 스크롤 방향, 스크롤 뷰 크기, 콘텐츠 크기, 오프셋 등의 정보를 포함합니다.
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init(axis: Axis, scrollViewSize: CGSize, contentSize: CGSize, contentOffset: CGPoint)](/documentation/montage/scrollview/scrollstatus/init(axis:scrollviewsize:contentsize:contentoffset:).md)
 
-  스크롤 상태를 초기화합니다.
+``init(axis: Axis, scrollViewSize: CGSize, contentSize: CGSize, contentOffset: CGPoint)``
 
-### Instance Properties 
+스크롤 상태를 초기화합니다.
 
-- [var axis: Axis](/documentation/montage/scrollview/scrollstatus/axis.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `axis` | 스크롤 방향 (기본값: .vertical) |
+  | `scrollViewSize` | 스크롤 뷰 크기 (기본값: .zero) |
+  | `contentSize` | 콘텐츠 크기 (기본값: .zero) |
+  | `contentOffset` | 콘텐츠 오프셋 (기본값: .zero) |
 
-- [var contentOffset: CGPoint](/documentation/montage/scrollview/scrollstatus/contentoffset.md)
+### Instance Properties
 
-- [var contentSize: CGSize](/documentation/montage/scrollview/scrollstatus/contentsize.md)
 
-- [var scrollViewSize: CGSize](/documentation/montage/scrollview/scrollstatus/scrollviewsize.md)
+``var axis: Axis``
 
-- [var scrolledToMax: Bool](/documentation/montage/scrollview/scrollstatus/scrolledtomax.md)
+``var contentOffset: CGPoint``
 
-  스크롤이 최대 위치에 도달했는지 여부입니다.
+``var contentSize: CGSize``
 
-### Default Implementations 
+``var scrollViewSize: CGSize``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/scrollview/scrollstatus/equatable-implementations.md)
+``var scrolledToMax: Bool``
 
-## Relationships 
+스크롤이 최대 위치에 도달했는지 여부입니다.
 
-### Conforms To 
+### Default Implementations
 
-- Swift.Equatable
+
+[Equatable Implementations](/documentation/montage/scrollview/scrollstatus/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+
 

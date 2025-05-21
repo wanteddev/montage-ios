@@ -1,44 +1,39 @@
 ---
-1title: variant
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: PushBadge.Variant
+description: 뱃지의 표시 형태를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# PushBadge.Variant 
-
-뱃지의 표시 형태를 정의하는 열거형입니다.
 
 ```swift
 enum Variant
 ```
 
-## Overview 
+## Topics
 
-- dot: 작은 점 형태의 뱃지
-- new: ‘N’ 문자를 표시하는 뱃지
-- number: 특정 숫자를 표시하는 뱃지
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case dot``
 
-- [case dot](/documentation/montage/pushbadge/variant/dot.md)
+작은 점 형태의 뱃지
 
-- [case new](/documentation/montage/pushbadge/variant/new.md)
+``case new``
 
-- [case number(Int)](/documentation/montage/pushbadge/variant/number(_:).md)
+‘N’ 문자를 표시하는 뱃지
 
-### Default Implementations 
+``case number(Int)``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/pushbadge/variant/equatable-implementations.md)
+특정 숫자를 표시하는 뱃지
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
+[Equatable Implementations](/documentation/montage/pushbadge/variant/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+
 

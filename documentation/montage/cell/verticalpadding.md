@@ -1,70 +1,64 @@
 ---
-1title: verticalpadding
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Cell.VerticalPadding
+description: 상하 여백을 나타내는 열거형입니다.
 ---
-
-Enumeration
-
-# Cell.VerticalPadding 
-
-상하 여백을 나타내는 열거형입니다.
 
 ```swift
 enum VerticalPadding
 ```
 
-## Overview 
+## Overview
 
 셀 컴포넌트의 상하 여백을 조정할 때 사용되며, 각 케이스는 다양한 크기의 여백을 제공합니다.
-
-**사용 예시**:
 
 ```swift
 Cell(title: "넓은 여백이 있는 셀")
     .verticalPadding(.large)
 ```
 
-> **Note**
->
-> 여백 크기는 none(0), small(8), medium(12), large(16)으로 정의됩니다.
+## Topics
 
-## Topics 
+### Enumeration Cases
 
-### Enumeration Cases 
 
-- [case large](/documentation/montage/cell/verticalpadding/large.md)
+``case large``
 
-  큰 여백 (16pt)
+큰 여백 (16pt)
 
-- [case medium](/documentation/montage/cell/verticalpadding/medium.md)
+``case medium``
 
-  중간 여백 (12pt)
+중간 여백 (12pt)
 
-- [case none](/documentation/montage/cell/verticalpadding/none.md)
+``case none``
 
-  여백 없음 (0pt)
+여백 없음 (0pt)
 
-- [case small](/documentation/montage/cell/verticalpadding/small.md)
+``case small``
 
-  작은 여백 (8pt)
+작은 여백 (8pt)
 
-### Instance Properties 
+### Instance Properties
 
-- [var length: CGFloat](/documentation/montage/cell/verticalpadding/length.md)
 
-  여백 값을 포인트 단위로 반환합니다.
+``var length: CGFloat``
 
-### Default Implementations 
+여백 값을 포인트 단위로 반환합니다.
+- **Return Value**
 
-- [API ReferenceEquatable Implementations](/documentation/montage/cell/verticalpadding/equatable-implementations.md)
+  선택한 여백 케이스에 해당하는 CGFloat 값
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
+[Equatable Implementations](/documentation/montage/cell/verticalpadding/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

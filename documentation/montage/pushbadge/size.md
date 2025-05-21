@@ -1,45 +1,41 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: PushBadge.Size
+description: 뱃지의 크기를 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# PushBadge.Size 
-
-뱃지의 크기를 정의하는 열거형입니다.
 
 ```swift
 enum Size
 ```
 
-## Overview 
+## Topics
 
-- xsmall: 가장 작은 크기 (dot: 4pt, text: 14pt)
-- small: 중간 크기 (dot: 6pt, text: 14pt)
-- medium: 큰 크기 (dot: 8pt, text: 20pt)
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case medium``
 
-- [case medium](/documentation/montage/pushbadge/size/medium.md)
+큰 크기
 
-- [case small](/documentation/montage/pushbadge/size/small.md)
+``case small``
 
-- [case xsmall](/documentation/montage/pushbadge/size/xsmall.md)
+중간 크기
 
-### Default Implementations 
+``case xsmall``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/pushbadge/size/equatable-implementations.md)
+가장 작은 크기
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
+[Equatable Implementations](/documentation/montage/pushbadge/size/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

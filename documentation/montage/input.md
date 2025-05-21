@@ -1,27 +1,15 @@
 ---
-1title: input
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Input
+description: 텍스트와 함께 표시되는 선택 컨트롤 컴포넌트입니다.
 ---
 
-Structure
-
-# Input 
-
-텍스트와 함께 표시되는 선택 컨트롤 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct Input
+@MainActor struct Input
 ```
 
-## Overview 
+## Overview
 
 체크박스, 체크마크, 라디오 버튼과 같은 컨트롤을 텍스트 레이블과 함께 표시합니다. 사용자가 텍스트를 클릭하여 컨트롤의 상태를 변경할 수 있습니다.
-
-**사용 예시**:
 
 ```swift
 // 체크박스와 텍스트
@@ -39,82 +27,210 @@ Input.radio(checked: false, text: "옵션 1")
 Input.checkmark($isChecked, text: "완료됨")
 ```
 
-> **Note**
+>  Note
 >
 > 컨트롤과 텍스트는 수직 정렬되어 표시됩니다.
 
-## Topics 
+## Topics
 
-### Instance Properties 
+### Instance Properties
 
-- [var body: some View](/documentation/montage/input/body.md)
 
-### Instance Methods 
+``var body: some View``
 
-- [func bold(Bool) -> Input](/documentation/montage/input/bold(_:).md)
+### Instance Methods
 
-  텍스트를 볼드체로 설정합니다.
 
-- [func disable(Bool) -> Input](/documentation/montage/input/disable(_:).md)
+``func bold(Bool) -> Input``
 
-  컴포넌트를 비활성화합니다.
+텍스트를 볼드체로 설정합니다.
 
-- [func size(Control.Size) -> Input](/documentation/montage/input/size(_:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isBold` | 볼드 적용 여부 (기본값: true) |
+- **Return Value**
 
-  컨트롤 사이즈를 설정합니다.
+  수정된 입력 컴포넌트
 
-- [func tight(Bool) -> Input](/documentation/montage/input/tight(_:).md)
+``func disable(Bool) -> Input``
 
-  컨트롤을 더 조밀한 레이아웃으로 표시합니다.
+컴포넌트를 비활성화합니다.
 
-- [func title(Typography.Variant?, weight: Typography.Weight?, color: SwiftUI.Color?) -> Input](/documentation/montage/input/title(_:weight:color:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isDisable` | 비활성화 여부 (기본값: true) |
+- **Return Value**
 
-  텍스트의 타이포그래피 속성을 설정합니다.
+  수정된 입력 컴포넌트
+- **Discussion**
 
-### Type Methods 
+  비활성화된 컴포넌트는 사용자 상호작용이 불가능하며, 시각적으로도 흐리게 표시됩니다.
 
-- [static func checkbox(Binding<Control.State>, text: String) -> Input](/documentation/montage/input/checkbox(_:text:)-319sq.md)
+``func size(Control.Size) -> Input``
 
-  상태 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
+컨트롤 사이즈를 설정합니다.
 
-- [static func checkbox(Binding<Bool>, text: String) -> Input](/documentation/montage/input/checkbox(_:text:)-4bkjc.md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 컨트롤 크기 (.medium 또는 .small) |
+- **Return Value**
 
-  불리언 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
+  수정된 입력 컴포넌트
 
-- [static func checkbox(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input](/documentation/montage/input/checkbox(checked:text:onselect:).md)
+``func tight(Bool) -> Input``
 
-  불리언 값을 이용해 체크박스와 텍스트를 생성합니다.
+컨트롤을 더 조밀한 레이아웃으로 표시합니다.
 
-- [static func checkbox(state: Control.State, text: String, onSelect: ((Control.State) -> Void)?) -> Input](/documentation/montage/input/checkbox(state:text:onselect:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `tight` | 조밀한 레이아웃 적용 여부 (기본값: true) |
+- **Return Value**
 
-  상태 값을 이용해 체크박스와 텍스트를 생성합니다.
+  수정된 입력 컴포넌트
 
-- [static func checkmark(Binding<Bool>, text: String) -> Input](/documentation/montage/input/checkmark(_:text:).md)
+``func title(Typography.Variant?, weight: Typography.Weight?, color: SwiftUI.Color?) -> Input``
 
-  불리언 바인딩을 이용해 체크마크와 텍스트를 생성합니다.
+텍스트의 타이포그래피 속성을 설정합니다.
 
-- [static func checkmark(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input](/documentation/montage/input/checkmark(checked:text:onselect:).md)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 (.body2 또는 .label1) |
+  | `weight` | 텍스트 굵기 |
+  | `color` | 텍스트 색상 |
+- **Return Value**
 
-  불리언 값을 이용해 체크마크와 텍스트를 생성합니다.
+  수정된 입력 컴포넌트
 
-- [static func radio(Binding<Bool>, text: String) -> Input](/documentation/montage/input/radio(_:text:).md)
+### Type Methods
 
-  불리언 바인딩을 이용해 라디오 버튼과 텍스트를 생성합니다.
 
-- [static func radio(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input](/documentation/montage/input/radio(checked:text:onselect:).md)
+``static func checkbox(Binding<Control.State>, text: String) -> Input``
 
-  불리언 값을 이용해 라디오 버튼과 텍스트를 생성합니다.
+상태 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
 
-### Default Implementations 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `state` | 체크박스 상태와 연결된 바인딩 |
+  | `text` | 표시할 텍스트 |
+- **Return Value**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  구성된 입력 컴포넌트
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+``static func checkbox(Binding<Bool>, text: String) -> Input``
 
-## Relationships 
+불리언 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
 
-### Conforms To 
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 체크박스 선택 상태와 연결된 바인딩 |
+  | `text` | 표시할 텍스트 |
+- **Return Value**
 
-- Swift.Sendable
-- SwiftUICore.View
+  구성된 입력 컴포넌트
+
+``static func checkbox(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``
+
+불리언 값을 이용해 체크박스와 텍스트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 체크박스의 초기 선택 상태 |
+  | `text` | 표시할 텍스트 |
+  | `onSelect` | 선택 상태 변경 시 호출되는 클로저 |
+- **Return Value**
+
+  구성된 입력 컴포넌트
+
+``static func checkbox(state: Control.State, text: String, onSelect: ((Control.State) -> Void)?) -> Input``
+
+상태 값을 이용해 체크박스와 텍스트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `state` | 체크박스의 초기 상태 |
+  | `text` | 표시할 텍스트 |
+  | `onSelect` | 선택 상태 변경 시 호출되는 클로저 |
+- **Return Value**
+
+  구성된 입력 컴포넌트
+
+``static func checkmark(Binding<Bool>, text: String) -> Input``
+
+불리언 바인딩을 이용해 체크마크와 텍스트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 체크마크 선택 상태와 연결된 바인딩 |
+  | `text` | 표시할 텍스트 |
+- **Return Value**
+
+  구성된 입력 컴포넌트
+
+``static func checkmark(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``
+
+불리언 값을 이용해 체크마크와 텍스트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 체크마크의 초기 선택 상태 |
+  | `text` | 표시할 텍스트 |
+  | `onSelect` | 선택 상태 변경 시 호출되는 클로저 |
+- **Return Value**
+
+  구성된 입력 컴포넌트
+
+``static func radio(Binding<Bool>, text: String) -> Input``
+
+불리언 바인딩을 이용해 라디오 버튼과 텍스트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 라디오 버튼 선택 상태와 연결된 바인딩 |
+  | `text` | 표시할 텍스트 |
+- **Return Value**
+
+  구성된 입력 컴포넌트
+
+``static func radio(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``
+
+불리언 값을 이용해 라디오 버튼과 텍스트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 라디오 버튼의 초기 선택 상태 |
+  | `text` | 표시할 텍스트 |
+  | `onSelect` | 선택 상태 변경 시 호출되는 클로저 |
+- **Return Value**
+
+  구성된 입력 컴포넌트
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/input/view-implementations.md)
+
+[View Implementations](/documentation/montage/input/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

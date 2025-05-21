@@ -1,41 +1,45 @@
 ---
-1title: size
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Category.Size
+description: 카테고리 사이즈를 결정하는 열거형입니다.
 ---
-
-Enumeration
-
-# Category.Size 
-
-카테고리 사이즈를 결정하는 열거형입니다.
 
 ```swift
 enum Size
 ```
 
-## Topics 
+## Topics
 
-### Enumeration Cases 
+### Enumeration Cases
 
-- [case large](/documentation/montage/category/size/large.md)
 
-- [case medium](/documentation/montage/category/size/medium.md)
+``case large``
 
-- [case small](/documentation/montage/category/size/small.md)
+큰 크기
 
-- [case xlarge](/documentation/montage/category/size/xlarge.md)
+``case medium``
 
-### Default Implementations 
+중간 크기
 
-- [API ReferenceEquatable Implementations](/documentation/montage/category/size/equatable-implementations.md)
+``case small``
 
-## Relationships 
+작은 크기
 
-### Conforms To 
+``case xlarge``
 
-- Swift.Equatable
-- Swift.Hashable
+큰 크기
+
+### Default Implementations
+
+
+[Equatable Implementations](/documentation/montage/category/size/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

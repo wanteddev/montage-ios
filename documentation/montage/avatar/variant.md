@@ -1,45 +1,41 @@
 ---
-1title: variant
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Avatar.Variant
+description: 아바타의 유형을 정의하는 열거형입니다.
 ---
-
-Enumeration
-
-# Avatar.Variant 
-
-아바타의 유형을 정의하는 열거형입니다.
 
 ```swift
 enum Variant
 ```
 
-## Overview 
+## Topics
 
-- person: 사용자 프로필 (원형)
-- company: 회사 프로필 (둥근 모서리 사각형)
-- academy: 학원 프로필 (둥근 모서리 사각형)
+### Enumeration Cases
 
-## Topics 
 
-### Enumeration Cases 
+``case academy``
 
-- [case academy](/documentation/montage/avatar/variant/academy.md)
+학원 프로필 (둥근 모서리 사각형)
 
-- [case company](/documentation/montage/avatar/variant/company.md)
+``case company``
 
-- [case person](/documentation/montage/avatar/variant/person.md)
+회사 프로필 (둥근 모서리 사각형)
 
-### Default Implementations 
+``case person``
 
-- [API ReferenceEquatable Implementations](/documentation/montage/avatar/variant/equatable-implementations.md)
+사용자 프로필 (원형)
 
-## Relationships 
+### Default Implementations
 
-### Conforms To 
 
-- Swift.Equatable
-- Swift.Hashable
+[Equatable Implementations](/documentation/montage/avatar/variant/equatable-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Equatable`
+
+`Swift.Hashable`
+
+
 

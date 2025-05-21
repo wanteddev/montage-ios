@@ -1,18 +1,11 @@
 ---
-1title: uigesturerecognizerdelegate-implementations
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: UIGestureRecognizerDelegate Implementations
 ---
 
-API Collection
+## Topics
 
-# UIGestureRecognizerDelegate Implementations 
+### Instance Methods
 
-## Topics 
 
-### Instance Methods 
-
-- [func gestureRecognizer(UIGestureRecognizer, shouldRecognizeSimultaneouslyWith: UIGestureRecognizer) -> Bool](/documentation/montage/button/outlineduibutton/gesturerecognizer(_:shouldrecognizesimultaneouslywith:).md)
+``func gestureRecognizer(UIGestureRecognizer, shouldRecognizeSimultaneouslyWith: UIGestureRecognizer) -> Bool``
 

@@ -1,27 +1,15 @@
 ---
-1title: playbadge
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: PlayBadge
+description: 재생 버튼이 있는 배지 컴포넌트입니다.
 ---
 
-Structure
-
-# PlayBadge 
-
-재생 버튼이 있는 배지 컴포넌트입니다.
-
 ```swift
-@MainActor
-struct PlayBadge
+@MainActor struct PlayBadge
 ```
 
-## Overview 
+## Overview
 
-PlayBadge는 미디어 콘텐츠에서 재생 기능을 나타내는 원형 아이콘을 제공합니다. 다양한 크기와 스타일로 커스터마이징할 수 있으며, 이미지나 비디오 위에 오버레이로 표시하기 적합합니다.
-
-**사용 예시**:
+`PlayBadge`는 미디어 콘텐츠에서 재생 기능을 나타내는 원형 아이콘을 제공합니다. 다양한 크기와 스타일로 커스터마이징할 수 있으며, 이미지나 비디오 위에 오버레이로 표시하기 적합합니다.
 
 ```swift
 // 기본 재생 배지
@@ -37,48 +25,87 @@ PlayBadge()
     .alternative(true)
 ```
 
-> **Note**
+>  Note
 >
 > 기본 스타일은 반투명 배경에 흰색 재생 아이콘을 사용합니다. alternative 스타일은 불투명 회색 배경을 사용합니다.
 
-## Topics 
+## Topics
 
-### Initializers 
+### Initializers
 
-- [init()](/documentation/montage/playbadge/init().md)
 
-  기본 설정의 재생 배지를 생성합니다.
+``init()``
 
-### Instance Properties 
+기본 설정의 재생 배지를 생성합니다.
+- **Discussion**
 
-- [var body: some View](/documentation/montage/playbadge/body.md)
+  초기화 시 기본 크기는 `.medium`이며, 반투명 배경의 기본 스타일이 적용됩니다.
 
-### Instance Methods 
+### Instance Properties
 
-- [func alternative(Bool) -> PlayBadge](/documentation/montage/playbadge/alternative(_:).md)
 
-  대체 스타일을 적용합니다.
+``var body: some View``
 
-- [func size(Size) -> PlayBadge](/documentation/montage/playbadge/size(_:).md)
+### Instance Methods
 
-  재생 배지의 크기를 설정합니다.
 
-### Enumerations 
+``func alternative(Bool) -> PlayBadge``
 
-- [enum Size](/documentation/montage/playbadge/size.md)
+대체 스타일을 적용합니다.
 
-  재생 배지의 크기를 정의하는 열거형입니다.
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `alternative` | 대체 스타일 적용 여부 (기본값: true) |
+- **Return Value**
 
-### Default Implementations 
+  수정된 PlayBadge 인스턴스
+- **Discussion**
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
+  기본 스타일은 반투명 배경을 사용하고, 대체 스타일은 불투명한 회색 배경을 사용합니다.
+  >  Note
+  >
+  > 기본값은 `false`입니다.
 
-- [View Implementations](/documentation/montage/swiftuicore/view.md)
 
-## Relationships 
+``func size(Size) -> PlayBadge``
 
-### Conforms To 
+재생 배지의 크기를 설정합니다.
 
-- Swift.Sendable
-- SwiftUICore.View
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 적용할 배지 크기 |
+- **Return Value**
+
+  수정된 PlayBadge 인스턴스
+- **Discussion**
+  >  Note
+  >
+  > 기본값은 `.medium`입니다.
+
+
+### Enumerations
+
+
+[``enum Size``](/documentation/montage/playbadge/size.md)
+
+재생 배지의 크기를 정의하는 열거형입니다.
+
+### Default Implementations
+
+
+[View Implementations](/documentation/montage/playbadge/view-implementations.md)
+
+[View Implementations](/documentation/montage/playbadge/view-implementations.md)
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
 

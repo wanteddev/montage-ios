@@ -1,18 +1,11 @@
 ---
-1title: animatable-implementations
-description: 
-image: 
-createdAt: 2025-05-13
-updatedAt: 2025-05-13
+title: Animatable Implementations
 ---
 
-API Collection
+## Topics
 
-# Animatable Implementations 
+### Instance Properties
 
-## Topics 
 
-### Instance Properties 
-
-- [var animatableData: EmptyAnimatableData](/documentation/montage/flowlayout/animatabledata.md)
+``var animatableData: EmptyAnimatableData``
 
