@@ -57,16 +57,16 @@ struct ModalNavigationPreview: View {
                     if case .floating = variants[variantIndex] {
                         HStack {
                             Text("alternative")
-                            Control.Switch($alternative)
+                            Switch($alternative)
                         }
                         HStack {
                             Text("background")
-                            Control.Switch($background)
+                            Switch($background)
                         }
                     }
                     HStack {
                         Text("leadingButton")
-                        Control.Switch($leadingButton)
+                        Switch($leadingButton)
                         SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
                             .size(.small)
                     }
@@ -90,7 +90,7 @@ struct ModalNavigationPreview: View {
         [.normal, .extended, .emphasized, .floating(alternative: alternative, background: background)]
     }
     
-    private var leadingButtons: [TopNavigation.Resource.LeadingButton] {
+    private var leadingButtons: [TopNavigation.Resource.LeadingButtonInfo] {
         [
             .back(action: {
                 presentationMode.wrappedValue.dismiss()
@@ -102,7 +102,7 @@ struct ModalNavigationPreview: View {
         ]
     }
     
-    private let actions: [TopNavigation.Resource.TrailingButton] = {
+    private let actions: [TopNavigation.Resource.TrailingButtonInfo] = {
         [
             .icon(.close, action: {}),
             .icon(.download, showPushBadge: true, action: {}),
@@ -112,8 +112,8 @@ struct ModalNavigationPreview: View {
 }
 
 extension ModalNavigation.Variant: CaseDescribable {}
-extension TopNavigation.Resource.LeadingButton: CaseDescribable {}
-extension TopNavigation.Resource.TrailingButton: CaseDescribable {}
+extension TopNavigation.Resource.LeadingButtonInfo: CaseDescribable {}
+extension TopNavigation.Resource.TrailingButtonInfo: CaseDescribable {}
 
 #Preview {
     ModalNavigationPreview()

@@ -120,7 +120,7 @@ struct TextFieldPreview: View {
                 .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
                 .icon(icon ? .verifiedCheckFill : nil)
                 .trailingButton(
-                    trailingButton ? TextField.TrailingButton(
+                    trailingButton ? TextField.TrailingButtonInfo(
                         variant: .primary,
                         title: "텍스트",
                         handler: { print("trailing button tapped") }

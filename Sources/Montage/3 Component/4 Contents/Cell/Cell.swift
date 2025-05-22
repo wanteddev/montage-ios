@@ -54,10 +54,7 @@ public struct Cell: View {
         /// 큰 여백 (16pt)
         case large
         
-        /// 여백 값을 포인트 단위로 반환합니다.
-        ///
-        /// - Returns: 선택한 여백 케이스에 해당하는 CGFloat 값
-        public var length: CGFloat {
+        var length: CGFloat {
             switch self {
             case .none: 0
             case .small: 8

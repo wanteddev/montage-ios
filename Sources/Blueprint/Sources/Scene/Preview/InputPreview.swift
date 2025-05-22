@@ -34,7 +34,7 @@ public struct InputPreview: View {
                     Text("Preview").bold()
                     Spacer()
                     Text("guide line").font(.caption)
-                    Control.Switch($guideLine)
+                    Switch($guideLine)
                 }
                 HStack {
                     Group {
@@ -94,15 +94,15 @@ public struct InputPreview: View {
                 }
                 HStack {
                     Text("small size")
-                    Control.Switch($isSmallSize)
+                    Switch($isSmallSize)
                     Text("disable")
-                    Control.Switch($isDisable)
+                    Switch($isDisable)
                 }
                 HStack {
                     Text("bold")
-                    Control.Switch($bold)
+                    Switch($bold)
                     Text("tight")
-                    Control.Switch($tight)
+                    Switch($tight)
                 }
                 HStack {
                     Text("text")
@@ -110,7 +110,7 @@ public struct InputPreview: View {
                 }
                 HStack {
                     Text("custom title typography")
-                    Control.Switch($customTypography)
+                    Switch($customTypography)
                 }
             }
             .padding(.horizontal)

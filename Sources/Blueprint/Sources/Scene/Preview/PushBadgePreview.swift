@@ -100,7 +100,7 @@ struct PushBadgePreview: View {
                 Divider()
                 HStack {
                     Text("inset(20,20)")
-                    Control.Switch($inset)
+                    Switch($inset)
                 }
             }
             .padding()

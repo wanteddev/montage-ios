@@ -43,7 +43,7 @@ struct AvatarPreview: View {
                     if variants[variantIndex] == .person {
                         HStack {
                             Text("pushBadge")
-                            Control.Switch($pushBadge)
+                            Switch($pushBadge)
                         }
                     }
                     HStack {
@@ -53,7 +53,7 @@ struct AvatarPreview: View {
                     }
                     HStack {
                         Text("invalid image url")
-                        Control.Switch($invalidUrl)
+                        Switch($invalidUrl)
                     }
                     HStack {
                         SwiftUI.ColorPicker("borderColor", selection: $borderColor)
@@ -88,7 +88,7 @@ struct AvatarGroupPreview: View {
     @State var invalidUrl: Bool = false
     
     let variants: [Avatar.Variant] = [.person, .company, .academy]
-    let sizes: [Avatar.Group.Size] = [.xsmall, .small]
+    let sizes: [GroupAvatar.Size] = [.xsmall, .small]
 
     var body: some View {
         Text("AvatarGroup").font(.title)
@@ -97,7 +97,7 @@ struct AvatarGroupPreview: View {
                 Text("Preview").bold()
                 HStack {
                     Spacer()
-                    Avatar.Group(imageUrls, variant: variants[variantIndex], size: sizes[sizeIndex]) {
+                    GroupAvatar(imageUrls, variant: variants[variantIndex], size: sizes[sizeIndex]) {
                         alertLabel = "Item at index \($0) pressed"
                         alertPresented.toggle()
                     }
@@ -131,13 +131,13 @@ struct AvatarGroupPreview: View {
                 }
                 HStack {
                     Text("random invalid image url")
-                    Control.Switch($invalidUrl)
+                    Switch($invalidUrl)
                 }
                 HStack {
                     Text("item count")
                     SwiftUI.Slider(value: $itemCount, in: 1...5)
                     Text("trailing content")
-                    Control.Switch($trailingContent)
+                    Switch($trailingContent)
                 }
             }
             .font(.caption)
@@ -157,7 +157,7 @@ struct AvatarGroupPreview: View {
 
 extension Avatar.Variant: CaseDescribable {}
 extension Avatar.Size: CaseDescribable {}
-extension Avatar.Group.Size: CaseDescribable {}
+extension GroupAvatar.Size: CaseDescribable {}
 
 #Preview {
     AvatarPreview()

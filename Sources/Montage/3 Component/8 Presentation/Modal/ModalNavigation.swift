@@ -105,8 +105,8 @@ public struct ModalNavigation: View {
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color? = nil
     private var needHandleArea = false
-    private var leadingButton: TopNavigation.Resource.LeadingButton? = nil
-    private var trailingButtons: [TopNavigation.Resource.TrailingButton] = []
+    private var leadingButton: TopNavigation.Resource.LeadingButtonInfo? = nil
+    private var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = []
     
     /// 내비게이션 바의 스타일을 설정합니다.
     ///
@@ -152,7 +152,7 @@ public struct ModalNavigation: View {
     ///
     /// - Parameter leadingButton: 왼쪽 버튼 설정
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func leadingButton(_ leadingButton: TopNavigation.Resource.LeadingButton?) -> Self {
+    public func leadingButton(_ leadingButton: TopNavigation.Resource.LeadingButtonInfo?) -> Self {
         var zelf = self
         zelf.leadingButton = leadingButton
         return zelf
@@ -162,7 +162,7 @@ public struct ModalNavigation: View {
     ///
     /// - Parameter actions: 오른쪽 버튼 배열 (최대 3개까지 표시)
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func trailingButtons(_ actions: [TopNavigation.Resource.TrailingButton]) -> Self {
+    public func trailingButtons(_ actions: [TopNavigation.Resource.TrailingButtonInfo]) -> Self {
         var zelf = self
         zelf.trailingButtons = Array(actions.prefix(3))
         return zelf
@@ -171,8 +171,8 @@ public struct ModalNavigation: View {
     private struct Contents: View {
         var variant: Variant
         var title: String
-        var leadingButton: TopNavigation.Resource.LeadingButton?
-        var trailingButtons: [TopNavigation.Resource.TrailingButton]
+        var leadingButton: TopNavigation.Resource.LeadingButtonInfo?
+        var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo]
         
         var body: some View {
             switch variant {

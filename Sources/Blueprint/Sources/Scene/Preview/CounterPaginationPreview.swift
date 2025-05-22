@@ -55,7 +55,7 @@ struct CounterPaginationPreview: View {
                 }
                 HStack {
                     Text("alternative")
-                    Control.Switch($isAlternative)
+                    Switch($isAlternative)
                 }
                 HStack {
                     Text("size")

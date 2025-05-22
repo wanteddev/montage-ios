@@ -86,10 +86,7 @@ public struct Thumbnail: View {
         /// 9:21 비율 (세로 울트라와이드)
         case r9x21
         
-        /// 비율 값을 CGFloat로 반환합니다.
-        ///
-        /// - Returns: 가로 길이를 세로 길이로 나눈 값
-        public var rawValue: CGFloat {
+        var rawValue: CGFloat {
             size.height / size.width
         }
         

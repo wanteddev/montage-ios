@@ -80,17 +80,17 @@ struct ThumbnailPreview: View {
                     
                     HStack {
                         Text("Radius")
-                        Control.Switch($radius)
+                        Switch($radius)
                     }
                     
                     HStack {
                         Text("Border")
-                        Control.Switch($border)
+                        Switch($border)
                     }
                     
                     HStack {
                         Text("Invalid URL (테스트용)")
-                        Control.Switch($invalidURL)
+                        Switch($invalidURL)
                     }
                 }
             }

@@ -111,7 +111,7 @@ struct TextAreaPreview: View {
                             Text("Placeholder :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($placeholder)
+                            Switch($placeholder)
                         }
                     }
                     HStack {
@@ -119,7 +119,7 @@ struct TextAreaPreview: View {
                             Text("Focus :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($focus) {
+                            Switch($focus) {
                                 focusState = $0
                             }
                         }
@@ -127,7 +127,7 @@ struct TextAreaPreview: View {
                             Text("Disable :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($disable)
+                            Switch($disable)
                         }
                     }
                     HStack {
@@ -135,13 +135,13 @@ struct TextAreaPreview: View {
                             Text("Heading :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($heading)
+                            Switch($heading)
                         }
                         HStack {
                             Text("RequiredBadge :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($requiredBadge)
+                            Switch($requiredBadge)
                         }
                     }
                     HStack {
@@ -149,12 +149,12 @@ struct TextAreaPreview: View {
                             Text("Description :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($description)
+                            Switch($description)
                         }
                         Text("Negative :")
                             .montage(variant: .headline2, weight: .medium)
                         Spacer()
-                        Control.Switch($negative)
+                        Switch($negative)
                     }
                     HStack {
                         HStack {
@@ -197,7 +197,7 @@ struct TextAreaPreview: View {
                             Text("limit")
                             SwiftUI.Slider(value: $limit, in: 10...1000, step: 10)
                             Text("overflow")
-                            Control.Switch($overflow)
+                            Switch($overflow)
                         }
                     }
                 }

@@ -43,17 +43,23 @@ public struct TextField: View {
     /// 텍스트 필드의 상태를 정의합니다.
     public enum Status {
         /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
+        ///
+        /// - Parameter description: 설명 텍스트, 기본값은 빈 문자열
         case normal(description: String = "")
         /// 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
+        ///
+        /// - Parameter description: 설명 텍스트, 기본값은 빈 문자열
         case positive(description: String = "")
         /// 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
+        ///
+        /// - Parameter description: 오류 설명 텍스트, 기본값은 빈 문자열
         case negative(description: String = "")
     }
     
     /// 텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.
     ///
     /// 이 구조체를 사용하여 오른쪽에 표시될 버튼의 스타일, 텍스트, 동작을 정의할 수 있습니다.
-    public struct TrailingButton {
+    public struct TrailingButtonInfo {
         fileprivate let variant: Button.Outlined.Variant
         fileprivate let title: String
         fileprivate let handler: (() -> Void)?
@@ -158,7 +164,7 @@ public struct TextField: View {
     private var description = false
     private var placeholder: String? = nil
     private var icon: Icon? = nil
-    private var trailingButton: TrailingButton? = nil
+    private var trailingButton: TrailingButtonInfo? = nil
     private var trailingContent: (() -> any View)? = nil
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
@@ -229,7 +235,7 @@ public struct TextField: View {
     /// - Parameter trailingButton: 표시할 버튼의 속성
     /// - Returns: 수정된 텍스트 필드 인스턴스
     /// - Note: `trailingContent`와 함께 사용될 경우 `trailingButton`이 우선적으로 표시됩니다.
-    public func trailingButton(_ trailingButton: TrailingButton?) -> Self {
+    public func trailingButton(_ trailingButton: TrailingButtonInfo?) -> Self {
         var zelf = self
         zelf.trailingButton = trailingButton
         return zelf
@@ -380,7 +386,7 @@ private extension TextField {
             
             if let trailingButton {
                 ZStack {
-                    TrailingButtonView(
+                    TrailingButton(
                         variant: trailingButton.variant,
                         title: trailingButton.title,
                         handler: trailingButton.handler
@@ -567,7 +573,7 @@ private extension TextField {
 
 // MARK: - Inner Views
 private extension TextField {
-    struct TrailingButtonView: View {
+    struct TrailingButton: View {
         private let variant: Button.Outlined.Variant
         private let title: String
         private let handler: (() -> Void)?

@@ -143,7 +143,7 @@ struct SelectPreview: View {
                     }
                     HStack {
                         Text("menuActionArea")
-                        Control.Switch($menuActionArea)
+                        Switch($menuActionArea)
                     }
                     if menuActionArea {
                         HStack {
@@ -160,7 +160,7 @@ struct SelectPreview: View {
                         )
                         .size(.small)
                         Text("overflow")
-                        Control.Switch($overflow)
+                        Switch($overflow)
                     }
                     HStack {
                         Text("menuButtonTitle")
@@ -169,17 +169,17 @@ struct SelectPreview: View {
                 }
                 HStack {
                     Text("heading")
-                    Control.Switch($heading)
+                    Switch($heading)
                     Text("requiredBadge")
-                    Control.Switch($requiredBadge)
+                    Switch($requiredBadge)
                 }
                 HStack {
                     Text("negative")
-                    Control.Switch($negative)
+                    Switch($negative)
                     Text("disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                     Text("description")
-                    Control.Switch($description)
+                    Switch($description)
                 }
                 HStack {
                     Text("leadingContent")
@@ -191,7 +191,7 @@ struct SelectPreview: View {
                 }
                 HStack {
                     Text("custom menu")
-                    Control.Switch($customMenu)
+                    Switch($customMenu)
                 }
                 HStack {
                     Text("menuResize")

@@ -54,13 +54,13 @@ struct SectionHeaderPreview: View {
                 }
                 HStack {
                     Text("titleColor")
-                    Control.Switch($titleColor)
+                    Switch($titleColor)
                 }
                 HStack {
                     Text("heading content")
-                    Control.Switch($headingContent)
+                    Switch($headingContent)
                     Text("trailing content")
-                    Control.Switch($trailingContent)
+                    Switch($trailingContent)
                 }
             }
             .padding(.horizontal)

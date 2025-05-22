@@ -101,9 +101,9 @@ struct FilterChipPreview: View {
                 
                 HStack {
                     Text("Active")
-                    Control.Switch($active)
+                    Switch($active)
                     Text("Disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                 }
                 
                 HStack {

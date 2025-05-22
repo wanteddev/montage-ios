@@ -22,7 +22,7 @@ struct SwitchPreview: View {
     @State private var sizeIndex: Int = 0
     @State private var disabled: Bool = false
     
-    private let sizes: [Control.Switch.Size] = [
+    private let sizes: [Switch.Size] = [
         .small, .medium
     ]
     
@@ -30,7 +30,7 @@ struct SwitchPreview: View {
         ScrollView {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
-                Control.Switch($isOn, size: sizes[sizeIndex]) {
+                Switch($isOn, size: sizes[sizeIndex]) {
                     print($0)
                 }
                 .disabled(disabled)
@@ -42,7 +42,7 @@ struct SwitchPreview: View {
                 }
                 HStack {
                     Text("disabled")
-                    Control.Switch($disabled)
+                    Switch($disabled)
                 }
             }
             .padding()
@@ -51,7 +51,7 @@ struct SwitchPreview: View {
     }
 }
 
-extension Control.Switch.Size: CaseDescribable {}
+extension Switch.Size: CaseDescribable {}
 
 #Preview {
     SwitchPreview()

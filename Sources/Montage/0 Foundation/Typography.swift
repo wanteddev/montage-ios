@@ -277,7 +277,7 @@ public extension Typography.Weight {
     }
 }
 
-public extension Typography.Variant {
+extension Typography.Variant {
     var lineSpacing: CGFloat {
         switch self {
         case .display1:

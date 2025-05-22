@@ -35,8 +35,8 @@ public struct TopNavigation: View {
     private let title: String
     private let scrollOffset: CGFloat
     private let backgroundColorResolvable: ColorResolvable?
-    private let leadingButton: Resource.LeadingButton?
-    private let trailingButtons: [Resource.TrailingButton]
+    private let leadingButton: Resource.LeadingButtonInfo?
+    private let trailingButtons: [Resource.TrailingButtonInfo]
     
     // MARK: - Computed properties
 
@@ -75,8 +75,8 @@ public struct TopNavigation: View {
         title: String = "",
         scrollOffset: CGFloat = .zero,
         backgroundColorResolvable: ColorResolvable? = nil,
-        leadingButton: Resource.LeadingButton? = nil,
-        trailingButtons: [Resource.TrailingButton] = []
+        leadingButton: Resource.LeadingButtonInfo? = nil,
+        trailingButtons: [Resource.TrailingButtonInfo] = []
     ) {
         self.variant = variant
         self.title = title
@@ -120,8 +120,8 @@ public struct TopNavigation: View {
         
         var variant: Variant
         var title: String
-        var leadingButton: Resource.LeadingButton? = nil
-        var trailingButtons: [Resource.TrailingButton]
+        var leadingButton: Resource.LeadingButtonInfo? = nil
+        var trailingButtons: [Resource.TrailingButtonInfo]
 
         private var titleSize: CGFloat {
             let componentSize: CGFloat = max(leadingButtonSize.width, totalSizeOfTrailingButtons.width)
@@ -211,12 +211,12 @@ public struct TopNavigation: View {
     }
     
     struct LeadingButton: View {
-        let action: Resource.LeadingButton?
+        let action: Resource.LeadingButtonInfo?
         let alternative: Bool
         let background: Bool
         
         init(
-            _ action: Resource.LeadingButton?,
+            _ action: Resource.LeadingButtonInfo?,
             _ alternative: Bool = false,
             _ background: Bool = false
         ) {
@@ -268,12 +268,12 @@ public struct TopNavigation: View {
     }
     
     struct TrailingButtons: View {
-        let buttons: [Resource.TrailingButton]
+        let buttons: [Resource.TrailingButtonInfo]
         let alternative: Bool
         let background: Bool
         
         init(
-            _ buttons: [Resource.TrailingButton],
+            _ buttons: [Resource.TrailingButtonInfo],
             _ alternative: Bool = false,
             _ background: Bool = false
         ) {
@@ -438,7 +438,7 @@ extension TopNavigation {
         ///     }
         /// )
         /// ```
-        public enum LeadingButton {
+        public enum LeadingButtonInfo {
             /// 뒤로가기 버튼
             /// - Parameters:
             ///  - action: 뒤로가기 버튼 클릭시 동작할 action입니다.
@@ -469,7 +469,7 @@ extension TopNavigation {
         ///     ]
         /// )
         /// ```
-        public enum TrailingButton: Hashable {
+        public enum TrailingButtonInfo: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
             ///  - icon: 아이콘 버튼의 아이콘입니다.
@@ -496,8 +496,8 @@ extension TopNavigation {
             }
             
             public static func == (
-                lhs: TopNavigation.Resource.TrailingButton,
-                rhs: TopNavigation.Resource.TrailingButton
+                lhs: TopNavigation.Resource.TrailingButtonInfo,
+                rhs: TopNavigation.Resource.TrailingButtonInfo
             ) -> Bool {
                 lhs.hashValue == rhs.hashValue
             }
@@ -554,8 +554,8 @@ extension TopNavigation {
         private let title: String
         private let showIndicator: Bool
         private let backgroundColorResolvable: ColorResolvable?
-        private let leadingButton: Resource.LeadingButton?
-        private let trailingButtons: [Resource.TrailingButton]
+        private let leadingButton: Resource.LeadingButtonInfo?
+        private let trailingButtons: [Resource.TrailingButtonInfo]
         private let actionAreaModel: ActionArea.Model?
         
         /// TopNavigationModifier를 초기화합니다.
@@ -573,8 +573,8 @@ extension TopNavigation {
             title: String,
             showIndicator: Bool = true,
             backgroundColorResolvable: ColorResolvable? = nil,
-            leadingButton: Resource.LeadingButton?,
-            trailingButtons: [Resource.TrailingButton],
+            leadingButton: Resource.LeadingButtonInfo?,
+            trailingButtons: [Resource.TrailingButtonInfo],
             actionAreaModel: ActionArea.Model? = nil
         ) {
             self.variant = variant
@@ -660,8 +660,8 @@ extension View {
         variant: TopNavigation.Variant = .normal,
         title: String,
         backgroundColorResolvable: ColorResolvable? = nil,
-        leadingButton: TopNavigation.Resource.LeadingButton? = nil,
-        trailingButtons: [TopNavigation.Resource.TrailingButton] = [],
+        leadingButton: TopNavigation.Resource.LeadingButtonInfo? = nil,
+        trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = [],
         withBottom model: ActionArea.Model? = nil
     ) -> some View {
         modifier(

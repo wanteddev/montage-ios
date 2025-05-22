@@ -72,7 +72,7 @@ struct MenuPreview: View {
             }
             HStack {
                 Text("menuActionArea")
-                Control.Switch($menuActionArea)
+                Switch($menuActionArea)
             }
             Spacer()
         }

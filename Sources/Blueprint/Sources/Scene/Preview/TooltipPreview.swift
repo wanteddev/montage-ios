@@ -191,7 +191,7 @@ struct TooltipPreview: View {
                 if #available(iOS 16.4, *) {
                     HStack {
                         Text("Use System API (position == nil)")
-                        Control.Switch($useSystemAPI)
+                        Switch($useSystemAPI)
                     }
                 }
                 
@@ -246,19 +246,19 @@ struct TooltipPreview: View {
                 if !usingSystemAPI() {
                     HStack {
                         Text("Adjust zIndex")
-                        Control.Switch($adjustZIndex)
+                        Switch($adjustZIndex)
                         Text("Show Arrow")
-                        Control.Switch($showArrow)
+                        Switch($showArrow)
                     }
                 }
                 
                 HStack {
                     Text("MultiLine Text")
-                    Control.Switch($showMultilineText)
+                    Switch($showMultilineText)
                     Text("Show Close Button")
-                    Control.Switch($showCloseButton)
+                    Switch($showCloseButton)
                     Text("Show Button")
-                    Control.Switch($showButton)
+                    Switch($showButton)
                 }
                 
                 if showButton {

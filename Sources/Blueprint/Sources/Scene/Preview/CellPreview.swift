@@ -71,31 +71,31 @@ struct CellPreview: View {
                 }
                 HStack {
                     Text("Caption")
-                    Control.Switch($caption)
+                    Switch($caption)
                     Text("Fill Width")
-                    Control.Switch($fillWidth)
+                    Switch($fillWidth)
                     Text("Chevron")
-                    Control.Switch($chevron)
+                    Switch($chevron)
                 }
                 HStack {
                     Text("Leading Content")
-                    Control.Switch($leadingContent)
+                    Switch($leadingContent)
                     Text("Trailing Content")
-                    Control.Switch($trailingContent)
+                    Switch($trailingContent)
                 }
                 HStack {
                     Text("Text Ellipsis")
-                    Control.Switch($textEllipsis)
+                    Switch($textEllipsis)
                     Text("Divider")
-                    Control.Switch($divider)
+                    Switch($divider)
                 }
                 HStack {
                     Text("Disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                     Text("Long Text")
-                    Control.Switch($longText)
+                    Switch($longText)
                     Text("Active")
-                    Control.Switch($active)
+                    Switch($active)
                 }
                 HStack {
                     Text("Vertical Alignment")

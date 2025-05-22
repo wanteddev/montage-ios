@@ -52,7 +52,7 @@ struct FullModalPreivew: View {
                         }
                         HStack {
                             Text("navigation")
-                            Control.Switch($navigation)
+                            Switch($navigation)
                             Spacer()
                         }
                         if navigation {
@@ -64,7 +64,7 @@ struct FullModalPreivew: View {
                         }
                         HStack {
                             Text("action")
-                            Control.Switch($action)
+                            Switch($action)
                             Spacer()
                         }
                         if action {
@@ -75,12 +75,12 @@ struct FullModalPreivew: View {
                             }
                             HStack {
                                 Text("caption")
-                                Control.Switch($caption)
+                                Switch($caption)
                                 Text("extra")
-                                Control.Switch($extra)
+                                Switch($extra)
                                 if extra {
                                     Text("extraDivider")
-                                    Control.Switch($extraDivider)
+                                    Switch($extraDivider)
                                 }
                             }
                         }

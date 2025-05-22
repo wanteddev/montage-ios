@@ -48,7 +48,7 @@ struct PopupModalPreivew: View {
                 }
                 HStack {
                     Text("navigation")
-                    Control.Switch($navigation)
+                    Switch($navigation)
                     if navigation {
                         SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
                             .size(.small)
@@ -59,7 +59,7 @@ struct PopupModalPreivew: View {
                     VStack(alignment: .trailing) {
                         HStack {
                             Text("actionArea")
-                            Control.Switch($actionArea)
+                            Switch($actionArea)
                             Spacer()
                         }
                         if actionArea {
@@ -67,12 +67,12 @@ struct PopupModalPreivew: View {
                                 .size(.small)
                             HStack {
                                 Text("caption")
-                                Control.Switch($caption)
+                                Switch($caption)
                                 Text("extra")
-                                Control.Switch($extra)
+                                Switch($extra)
                                 if extra {
                                     Text("divider")
-                                    Control.Switch($extraDivider)
+                                    Switch($extraDivider)
                                 }
                             }
                         }

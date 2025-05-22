@@ -57,8 +57,7 @@ public struct Accordion: View {
         /// 넓은 여백
         case large
         
-        /// 여백 값(포인트)을 반환합니다.
-        public var length: CGFloat {
+        var length: CGFloat {
             switch self {
             case .small: 8
             case .medium: 12

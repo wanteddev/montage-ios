@@ -464,17 +464,12 @@ public enum Color {
         /// 가장 어두운 붉은 주황색
         case redOrange0
         
-        /// Atomic 색상의 이름을 반환합니다.
-        ///
-        /// - Returns: 색상의 이름 문자열
-        public var name: String { rawValue }
-        
         /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
         ///
         /// - Parameter _: 색상을 해석할 UITraitCollection
         /// - Returns: 해석된 UIColor 인스턴스
         public func resolve(_: UITraitCollection) -> UIColor {
-            .load(name: name)
+            .load(name: rawValue)
         }
     }
     
@@ -805,11 +800,6 @@ public enum Color {
         ///
         case materialDimmer
         
-        /// Semantic 색상의 이름을 반환합니다.
-        ///
-        /// - Returns: 색상의 이름 문자열
-        public var name: String { rawValue }
-        
         /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
         ///
         /// - Parameter traitCollection: 색상을 해석할 UITraitCollection
@@ -935,7 +925,7 @@ public enum Color {
                 opacity = style == .dark ? .p074 : .p052
             }
             
-            return .load(name: atomicColor.name).withAlphaComponent(.opacity(opacity))
+            return .load(name: atomicColor.rawValue).withAlphaComponent(.opacity(opacity))
         }
     }
 }
