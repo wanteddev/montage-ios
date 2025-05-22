@@ -24,7 +24,7 @@ someView
     .loading(isLoading: $isLoadingState, type: .circular)
 ```
 
->  Note
+>  **Note**
 >
 > 다크 모드와 라이트 모드에 따라 자동으로 적절한 애니메이션 리소스를 선택합니다.
 
@@ -32,8 +32,9 @@ someView
 
 ### Initializers
 
+<details>
 
-``init(kind: Kind, size: CGSize?)``
+<summary>``init(kind: Kind, size: CGSize?)``</summary>
 
 Loading 컴포넌트를 초기화합니다.
 
@@ -42,16 +43,22 @@ Loading 컴포넌트를 초기화합니다.
   | --- | --- |
   | `kind` | 로딩 애니메이션의 종류 (.wanted 또는 .circular) |
   | `size` | 로딩 애니메이션의 크기 (nil일 경우 기본 크기 사용) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func foregroundColor(SwiftUI.Color?) -> Loading``
+<summary>``func foregroundColor(SwiftUI.Color?) -> Loading``</summary>
 
 로딩 애니메이션의 전경색을 설정합니다.
 
@@ -62,20 +69,45 @@ Loading 컴포넌트를 초기화합니다.
 - **Return Value**
 
   수정된 Loading 인스턴스
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Kind``](/documentation/montage/loading/kind.md)
+<summary>``enum Kind``</summary>
 
 로딩 애니메이션의 종류를 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case circular``</summary>
+
+원형 회전 로딩 애니메이션
+</details>
+<details>
+
+<summary>``case wanted``</summary>
+
+Wanted 브랜드 스타일의 로딩 애니메이션
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/loading/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/loading/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

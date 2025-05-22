@@ -1,5 +1,5 @@
 ---
-title: NormalCard
+title: Normal card
 description: 썸네일과 콘텐츠를 포함하는 기본 카드 컴포넌트입니다.
 ---
 
@@ -23,7 +23,7 @@ NormalCard(
 .overlay(caption: "New", buttonIcon: .heart)
 ```
 
->  Note
+>  **Note**
 >
 > 썸네일 이미지는 둥근 모서리로 표시되며, 콘텐츠 영역의 너비는 썸네일 너비에 맞춰집니다.
 
@@ -31,8 +31,9 @@ NormalCard(
 
 ### Initializers
 
+<details>
 
-``init(thumbnail: () -> Thumbnail, skeleton: Binding<Bool>, title: String)``
+<summary>``init(thumbnail: () -> Thumbnail, skeleton: Binding<Bool>, title: String)``</summary>
 
 Normal 카드를 초기화합니다.
 
@@ -42,16 +43,22 @@ Normal 카드를 초기화합니다.
   | `thumbnail` | 카드에 표시할 썸네일 이미지 |
   | `skeleton` | 스켈레톤 로딩 상태 바인딩 |
   | `title` | 카드 제목으로 표시할 뷰 |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func bottomContent((() -> any View)?) -> NormalCard``
+<summary>``func bottomContent((() -> any View)?) -> NormalCard``</summary>
 
 카드 하단에 표시할 콘텐츠를 설정합니다.
 
@@ -62,8 +69,10 @@ Normal 카드를 초기화합니다.
 - **Return Value**
 
   수정된 카드 인스턴스
+</details>
+<details>
 
-``func caption(String?) -> NormalCard``
+<summary>``func caption(String?) -> NormalCard``</summary>
 
 카드의 캡션(부제목)을 설정합니다.
 
@@ -74,8 +83,10 @@ Normal 카드를 초기화합니다.
 - **Return Value**
 
   수정된 카드 인스턴스
+</details>
+<details>
 
-``func extraCaption(String?) -> NormalCard``
+<summary>``func extraCaption(String?) -> NormalCard``</summary>
 
 카드의 추가 캡션을 설정합니다.
 
@@ -86,8 +97,10 @@ Normal 카드를 초기화합니다.
 - **Return Value**
 
   수정된 카드 인스턴스
+</details>
+<details>
 
-``func overlay(caption: String?, buttonIcon: Montage.Icon?, buttonColor: SwiftUI.Color, onTapButton: (() -> Void)?) -> NormalCard``
+<summary>``func overlay(caption: String?, buttonIcon: Montage.Icon?, buttonColor: SwiftUI.Color, onTapButton: (() -> Void)?) -> NormalCard``</summary>
 
 썸네일에 오버레이할 콘텐츠를 설정합니다.
 
@@ -101,8 +114,10 @@ Normal 카드를 초기화합니다.
 - **Return Value**
 
   수정된 카드 인스턴스
+</details>
+<details>
 
-``func subCaption(String?) -> NormalCard``
+<summary>``func subCaption(String?) -> NormalCard``</summary>
 
 카드의 보조 캡션을 설정합니다.
 
@@ -113,8 +128,10 @@ Normal 카드를 초기화합니다.
 - **Return Value**
 
   수정된 카드 인스턴스
+</details>
+<details>
 
-``func topContent((() -> any View)?) -> NormalCard``
+<summary>``func topContent((() -> any View)?) -> NormalCard``</summary>
 
 카드 상단에 표시할 콘텐츠를 설정합니다.
 
@@ -125,13 +142,15 @@ Normal 카드를 초기화합니다.
 - **Return Value**
 
   수정된 카드 인스턴스
+</details>
 
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/normalcard/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/normalcard/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

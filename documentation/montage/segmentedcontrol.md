@@ -1,5 +1,5 @@
 ---
-title: SegmentedControl
+title: Segmented control
 description: 여러 옵션 중 하나를 선택할 수 있는 세그먼트 컨트롤 컴포넌트입니다.
 ---
 
@@ -33,7 +33,7 @@ SegmentedControl(
 .size(.medium)
 ```
 
->  Note
+>  **Note**
 >
 > 기본 변형(.solid)은 배경이 있는 형태로, .outlined 변형은 테두리만 있는 형태로 표시됩니다.
 
@@ -41,15 +41,34 @@ SegmentedControl(
 
 ### Structures
 
+<details>
 
-[``struct Item``](/documentation/montage/segmentedcontrol/item.md)
+<summary>``struct Item``</summary>
 
 세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
+#### Initializers
 
+<details>
+
+<summary>``init(image: Image?, title: String)``</summary>
+
+세그먼트 항목을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `image` | 표시할 이미지 (선택 사항) |
+  | `title` | 표시할 텍스트 |
+</details>
+
+</details>
+
+___
 ### Initializers
 
+<details>
 
-``init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)?)``
+<summary>``init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)?)``</summary>
 
 항목 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
@@ -59,8 +78,10 @@ SegmentedControl(
   | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
   | `items` | 표시할 항목 배열 |
   | `onSelect` | 항목 선택 시 호출될 클로저 (기본값: nil) |
+</details>
+<details>
 
-``init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)?)``
+<summary>``init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)?)``</summary>
 
 텍스트 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
@@ -70,16 +91,22 @@ SegmentedControl(
   | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
   | `labels` | 표시할 텍스트 배열 |
   | `onSelect` | 항목 선택 시 호출될 클로저 (기본값: nil) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func size(Size) -> SegmentedControl``
+<summary>``func size(Size) -> SegmentedControl``</summary>
 
 세그먼트 컨트롤의 크기를 설정합니다.
 
@@ -90,8 +117,10 @@ SegmentedControl(
 - **Return Value**
 
   수정된 세그먼트 컨트롤 인스턴스
+</details>
+<details>
 
-``func variant(Variant) -> SegmentedControl``
+<summary>``func variant(Variant) -> SegmentedControl``</summary>
 
 세그먼트 컨트롤의 시각적 스타일을 설정합니다.
 
@@ -102,24 +131,77 @@ SegmentedControl(
 - **Return Value**
 
   수정된 세그먼트 컨트롤 인스턴스
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/segmentedcontrol/size.md)
+<summary>``enum Size``</summary>
 
 세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/segmentedcontrol/variant.md)
+<details>
+
+<summary>``case large``</summary>
+
+큰 크기
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case outlined``</summary>
+
+테두리만 있는 스타일
+</details>
+<details>
+
+<summary>``case solid``</summary>
+
+배경이 채워진 스타일
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/segmentedcontrol/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/segmentedcontrol/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

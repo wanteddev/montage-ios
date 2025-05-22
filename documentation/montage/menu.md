@@ -40,23 +40,54 @@ Menu(
 )
 ```
 
->  See Also
->
-> `Menu.Variant`, `Menu.Item`
-
 ## Topics
 
 ### Structures
 
+<details>
 
-[``struct Item``](/documentation/montage/menu/item.md)
+<summary>``struct Item``</summary>
 
 메뉴 항목의 데이터를 정의하는 구조체입니다.
+#### Initializers
 
+<details>
+
+<summary>``init(title: String, isSelected: Bool)``</summary>
+
+메뉴 항목을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 메뉴 항목에 표시될 텍스트 |
+  | `isSelected` | 초기 선택 상태 (기본값: false) |
+</details>
+
+#### Instance Properties
+
+<details>
+
+<summary>``var isSelected: Bool``</summary>
+</details>
+<details>
+
+<summary>``let title: String``</summary>
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Initializers
 
+<details>
 
-``init(variant: Variant, items: Binding<[Item]>, onSelectCell: ((Item) -> Void)?, cellModifier: (_ index: Int, _ cell: Cell) -> Cell)``
+<summary>``init(variant: Variant, items: Binding<[Item]>, onSelectCell: ((Item) -> Void)?, cellModifier: (_ index: Int, _ cell: Cell) -> Cell)``</summary>
 
 메뉴 컴포넌트를 초기화합니다.
 
@@ -67,16 +98,22 @@ Menu(
   | `items` | 메뉴 항목 배열에 대한 바인딩 |
   | `onSelectCell` | 항목 선택 시 호출될 클로저 (선택 사항) |
   | `cellModifier` | 각 셀을 커스터마이징하기 위한 클로저 (기본값: 수정 없음) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func menuActionArea(leadingContent: () -> any View, trailingContent: () -> any View) -> Menu``
+<summary>``func menuActionArea(leadingContent: () -> any View, trailingContent: () -> any View) -> Menu``</summary>
 
 메뉴 하단에 액션 버튼 영역을 추가합니다.
 
@@ -91,20 +128,51 @@ Menu(
 - **Discussion**
 
   왼쪽과 오른쪽에 버튼이나 다른 뷰를 배치할 수 있습니다.
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Variant``](/documentation/montage/menu/variant.md)
+<summary>``enum Variant``</summary>
 
 메뉴의 표시 형태를 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case checkbox``</summary>
+
+체크박스 형태, 다중 항목 선택 가능
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+기본 메뉴 형태, 선택 표시 없이 항목만 표시
+</details>
+<details>
+
+<summary>``case radio``</summary>
+
+라디오 버튼 형태, 단일 항목만 선택 가능
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/menu/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/menu/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

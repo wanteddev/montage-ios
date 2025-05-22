@@ -24,23 +24,17 @@ Avatar("https://example.com/profile.jpg", variant: .person)
     .pushBadge()
 ```
 
->  Note
+>  **Note**
 >
 > 이미지 로딩은 SDWebImage를 통해 처리되며, 탭 상호작용을 지원합니다.
 
 ## Topics
 
-### Structures
-
-
-[``struct Group``](/documentation/montage/avatar/group.md)
-
-여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.
-
 ### Initializers
 
+<details>
 
-``init(String, variant: Variant, size: Size, onTap: (() -> Void)?)``
+<summary>``init(String, variant: Variant, size: Size, onTap: (() -> Void)?)``</summary>
 
 아바타를 초기화합니다.
 
@@ -51,16 +45,22 @@ Avatar("https://example.com/profile.jpg", variant: .person)
   | `variant` | 아바타 유형 (.person, .company, .academy) |
   | `size` | 아바타 크기 (기본값: .small) |
   | `onTap` | 탭 시 실행할 액션 (기본값: nil) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func border(color: SwiftUI.Color, width: CGFloat) -> Avatar``
+<summary>``func border(color: SwiftUI.Color, width: CGFloat) -> Avatar``</summary>
 
 아바타에 테두리를 추가합니다.
 
@@ -72,8 +72,10 @@ Avatar("https://example.com/profile.jpg", variant: .person)
 - **Return Value**
 
   수정된 아바타 인스턴스
+</details>
+<details>
 
-``func pushBadge(Bool) -> Avatar``
+<summary>``func pushBadge(Bool) -> Avatar``</summary>
 
 푸시 알림 표시 뱃지를 아바타에 추가합니다.
 
@@ -87,24 +89,95 @@ Avatar("https://example.com/profile.jpg", variant: .person)
 - **Discussion**
 
   푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/avatar/size.md)
+<summary>``enum Size``</summary>
 
 아바타의 크기를 정의하는 열거형입니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/avatar/variant.md)
+<details>
+
+<summary>``case large``</summary>
+
+큰 크기
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+<details>
+
+<summary>``case xlarge``</summary>
+
+가장 큰 크기
+</details>
+<details>
+
+<summary>``case xsmall``</summary>
+
+가장 작은 크기
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 아바타의 유형을 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case academy``</summary>
+
+학원 프로필 (둥근 모서리 사각형)
+</details>
+<details>
+
+<summary>``case company``</summary>
+
+회사 프로필 (둥근 모서리 사각형)
+</details>
+<details>
+
+<summary>``case person``</summary>
+
+사용자 프로필 (원형)
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/avatar/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/avatar/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -27,7 +27,7 @@ Slider(
 .heading()
 ```
 
->  Note
+>  **Note**
 >
 > 슬라이더는 레이블 및 헤딩 옵션을 제공하며, 비활성화 상태를 지원합니다.
 
@@ -35,8 +35,9 @@ Slider(
 
 ### Initializers
 
+<details>
 
-``init(range: ClosedRange<CGFloat>, labelFormat: ((CGFloat) -> String)?, onChanged: ((CGFloat, CGFloat) -> Void)?)``
+<summary>``init(range: ClosedRange<CGFloat>, labelFormat: ((CGFloat) -> String)?, onChanged: ((CGFloat, CGFloat) -> Void)?)``</summary>
 
 슬라이더를 초기화합니다.
 
@@ -46,16 +47,22 @@ Slider(
   | `range` | 슬라이더가 표현하는 값의 범위 (기본값: 0…1) |
   | `labelFormat` | 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리) |
   | `onChanged` | 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func disable(Bool) -> Slider``
+<summary>``func disable(Bool) -> Slider``</summary>
 
 슬라이더의 활성화 상태를 설정합니다.
 
@@ -66,8 +73,10 @@ Slider(
 - **Return Value**
 
   수정된 슬라이더 인스턴스
+</details>
+<details>
 
-``func heading(Bool) -> Slider``
+<summary>``func heading(Bool) -> Slider``</summary>
 
 슬라이더 상단에 제목을 표시할지 여부를 설정합니다.
 
@@ -78,8 +87,10 @@ Slider(
 - **Return Value**
 
   수정된 슬라이더 인스턴스
+</details>
+<details>
 
-``func label(Bool) -> Slider``
+<summary>``func label(Bool) -> Slider``</summary>
 
 슬라이더 노브에 값 레이블을 표시할지 여부를 설정합니다.
 
@@ -90,13 +101,15 @@ Slider(
 - **Return Value**
 
   수정된 슬라이더 인스턴스
+</details>
 
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/slider/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/slider/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

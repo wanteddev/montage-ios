@@ -27,7 +27,7 @@ Category(
 .horizontalPadding()
 ```
 
->  Note
+>  **Note**
 >
 > 측면 그라데이션 효과와 아이콘 버튼을 추가할 수 있어 스크롤 가능한 콘텐츠임을 시각적으로 나타냅니다.
 
@@ -35,8 +35,9 @@ Category(
 
 ### Initializers
 
+<details>
 
-``init(selectedIndex: Binding<Int>, items: [String], actions: (Int) -> Void)``
+<summary>``init(selectedIndex: Binding<Int>, items: [String], actions: (Int) -> Void)``</summary>
 
 카테고리 컴포넌트를 초기화합니다.
 
@@ -46,16 +47,22 @@ Category(
   | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
   | `items` | 표시할 카테고리 항목 배열 |
   | `actions` | 항목 선택 시 호출될 클로저 (기본값: 빈 클로저) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func horizontalPadding(Bool) -> Category``
+<summary>``func horizontalPadding(Bool) -> Category``</summary>
 
 카테고리 컴포넌트의 좌우 패딩을 설정합니다.
 
@@ -66,8 +73,10 @@ Category(
 - **Return Value**
 
   수정된 카테고리 인스턴스
+</details>
+<details>
 
-``func iconButton(Icon, action: () -> Void) -> Category``
+<summary>``func iconButton(Icon, action: () -> Void) -> Category``</summary>
 
 카테고리 컴포넌트 오른쪽에 표시할 아이콘 버튼을 설정합니다.
 
@@ -79,8 +88,10 @@ Category(
 - **Return Value**
 
   수정된 카테고리 인스턴스
+</details>
+<details>
 
-``func size(Size) -> Category``
+<summary>``func size(Size) -> Category``</summary>
 
 카테고리 아이템 크기를 설정합니다.
 
@@ -91,8 +102,10 @@ Category(
 - **Return Value**
 
   수정된 카테고리 인스턴스
+</details>
+<details>
 
-``func variant(Variant) -> Category``
+<summary>``func variant(Variant) -> Category``</summary>
 
 카테고리 아이템 스타일을 설정합니다.
 
@@ -103,8 +116,10 @@ Category(
 - **Return Value**
 
   수정된 카테고리 인스턴스
+</details>
+<details>
 
-``func verticalPadding(Bool) -> Category``
+<summary>``func verticalPadding(Bool) -> Category``</summary>
 
 카테고리 컴포넌트의 상하 패딩을 설정합니다.
 
@@ -115,24 +130,83 @@ Category(
 - **Return Value**
 
   수정된 카테고리 인스턴스
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/category/size.md)
+<summary>``enum Size``</summary>
 
 카테고리 사이즈를 결정하는 열거형입니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/category/variant.md)
+<details>
+
+<summary>``case large``</summary>
+
+큰 크기
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+<details>
+
+<summary>``case xlarge``</summary>
+
+큰 크기
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 카테고리 아이템의 종류를 결정하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case alternative``</summary>
+
+대체 스타일
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+기본 스타일
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/category/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/category/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -10,8 +10,9 @@ extension Text
 
 ### Instance Methods
 
+<details>
 
-``func montage(variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic) -> Text``
+<summary>``func montage(variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic) -> Text``</summary>
 
 Montage 디자인 시스템의 스타일을 적용합니다.
 
@@ -24,8 +25,10 @@ Montage 디자인 시스템의 스타일을 적용합니다.
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
+</details>
+<details>
 
-``func montage(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Text``
+<summary>``func montage(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Text``</summary>
 
 Montage 디자인 시스템의 스타일을 적용합니다.
 
@@ -38,8 +41,10 @@ Montage 디자인 시스템의 스타일을 적용합니다.
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
+</details>
+<details>
 
-``func montage(variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable) -> Text``
+<summary>``func montage(variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable) -> Text``</summary>
 
 Montage 디자인 시스템의 스타일을 적용합니다.
 
@@ -52,8 +57,10 @@ Montage 디자인 시스템의 스타일을 적용합니다.
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
+</details>
+<details>
 
-``func montage(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> Text``
+<summary>``func montage(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> Text``</summary>
 
 Montage 디자인 시스템의 스타일을 적용합니다.
 
@@ -66,4 +73,5 @@ Montage 디자인 시스템의 스타일을 적용합니다.
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
+</details>
 

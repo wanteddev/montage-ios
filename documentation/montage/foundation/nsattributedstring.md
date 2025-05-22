@@ -1,5 +1,5 @@
 ---
-title: NSAttributedString
+title: N s attributed string
 description: Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성하는 확장입니다.
 ---
 
@@ -11,8 +11,9 @@ extension NSAttributedString
 
 ### Type Methods
 
+<details>
 
-``static func montage(String) -> NSAttributedString``
+<summary>``static func montage(String) -> NSAttributedString``</summary>
 
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
@@ -23,8 +24,10 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString
+</details>
+<details>
 
-``static func montage(String, variant: Typography.Variant, weight: Typography.Weight) -> NSAttributedString``
+<summary>``static func montage(String, variant: Typography.Variant, weight: Typography.Weight) -> NSAttributedString``</summary>
 
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
@@ -37,8 +40,10 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString
+</details>
+<details>
 
-``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic, lineBreakMode: NSLineBreakMode) -> NSAttributedString``
+<summary>``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, atomic: Color.Atomic, lineBreakMode: NSLineBreakMode) -> NSAttributedString``</summary>
 
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
@@ -53,8 +58,10 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString
+</details>
+<details>
 
-``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable, lineBreakMode: NSLineBreakMode) -> NSAttributedString``
+<summary>``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, colorResolver: ColorResolvable, lineBreakMode: NSLineBreakMode) -> NSAttributedString``</summary>
 
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
@@ -69,8 +76,10 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString
+</details>
+<details>
 
-``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic, lineBreakMode: NSLineBreakMode) -> NSAttributedString``
+<summary>``static func montage(String, variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic, lineBreakMode: NSLineBreakMode) -> NSAttributedString``</summary>
 
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
@@ -85,4 +94,5 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString
+</details>
 

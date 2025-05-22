@@ -1,5 +1,5 @@
 ---
-title: EmptyState
+title: Empty state
 description: 콘텐츠가 빈 상태일 때 사용자의 이해를 돕기 위한 컴포넌트입니다.
 ---
 
@@ -34,7 +34,7 @@ EmptyState(
 )
 ```
 
->  Note
+>  **Note**
 >
 > 컴포넌트가 기본적으로 화면 전체를 차지하므로 필요하다면 .frame modifier를 사용하여 크기를 조절하여 사용하시길 권장합니다.
 
@@ -42,8 +42,9 @@ EmptyState(
 
 ### Initializers
 
+<details>
 
-``init(image: (() -> any View)?, title: String?, description: String, button: (() -> any View)?)``
+<summary>``init(image: (() -> any View)?, title: String?, description: String, button: (() -> any View)?)``</summary>
 
 EmptyState 컴포넌트를 초기화합니다.
 
@@ -57,18 +58,23 @@ EmptyState 컴포넌트를 초기화합니다.
 - **Discussion**
 
   원하는 레이아웃을 구성하기 위해 이미지, 제목, 설명, 버튼을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 최대 2줄로 표시됩니다.
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/emptystate/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/emptystate/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

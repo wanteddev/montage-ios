@@ -1,5 +1,5 @@
 ---
-title: DotPagination
+title: Dot pagination
 description: 점 형태의 페이지 표시기 컴포넌트입니다.
 ---
 
@@ -19,7 +19,7 @@ DotPagination(selectedPage: $currentPage, totalPages: 10)
     .size(.normal)
 ```
 
->  Note
+>  **Note**
 >
 > 최대 표시 가능한 점의 개수는 5개이며, 페이지 수가 더 많을 경우 동적으로 조정됩니다.
 
@@ -27,8 +27,9 @@ DotPagination(selectedPage: $currentPage, totalPages: 10)
 
 ### Initializers
 
+<details>
 
-``init(selectedPage: Binding<Int>, totalPages: Int)``
+<summary>``init(selectedPage: Binding<Int>, totalPages: Int)``</summary>
 
 점 형태의 페이지네이션을 초기화합니다.
 
@@ -37,16 +38,22 @@ DotPagination(selectedPage: $currentPage, totalPages: 10)
   | --- | --- |
   | `selectedPage` | 현재 선택된 페이지 번호 (1부터 시작) |
   | `totalPages` | 전체 페이지 수 |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func size(Size) -> DotPagination``
+<summary>``func size(Size) -> DotPagination``</summary>
 
 점 페이지네이션의 크기를 설정합니다.
 
@@ -58,12 +65,14 @@ DotPagination(selectedPage: $currentPage, totalPages: 10)
 
   수정된 Dot 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.normal`입니다.
 
+</details>
+<details>
 
-``func variant(Variant) -> DotPagination``
+<summary>``func variant(Variant) -> DotPagination``</summary>
 
 점 페이지네이션의 색상 변형을 설정합니다.
 
@@ -75,28 +84,75 @@ DotPagination(selectedPage: $currentPage, totalPages: 10)
 
   수정된 Dot 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.normal`입니다.
 
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/dotpagination/size.md)
+<summary>``enum Size``</summary>
 
 점 페이지네이션의 크기를 지정하는 열거형입니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/dotpagination/variant.md)
+<details>
+
+<summary>``case normal``</summary>
+
+표준 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 점 페이지네이션의 색상 변형을 지정하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case normal``</summary>
+
+기본 스타일 (회색 배경에 검은색 점)
+</details>
+<details>
+
+<summary>``case white``</summary>
+
+흰색 스타일 (어두운 배경에 적합)
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/dotpagination/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/dotpagination/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -39,20 +39,17 @@ Accordion(title: "커스텀 스타일")
     .fillWidth()
 ```
 
->  Note
+>  **Note**
 >
 > 아코디언은 기본적으로 하단에 구분선을 갖고 있으며, `hideDivider()` 수정자를 통해 제거할 수 있습니다.
-
->  See Also
->
-> [Accordion.VerticalPadding](/documentation/montage/accordion/verticalpadding.md)
 
 ## Topics
 
 ### Initializers
 
+<details>
 
-``init(title: String, description: String?, content: (() -> any View)?)``
+<summary>``init(title: String, description: String?, content: (() -> any View)?)``</summary>
 
 아코디언을 생성합니다.
 
@@ -62,16 +59,22 @@ Accordion(title: "커스텀 스타일")
   | `title` | 아코디언의 제목 |
   | `description` | 확장 시 표시될 설명 텍스트 (선택 사항) |
   | `content` | 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func description(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion``
+<summary>``func description(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion``</summary>
 
 설명 텍스트의 타이포그래피 속성을 조정합니다.
 
@@ -84,8 +87,10 @@ Accordion(title: "커스텀 스타일")
 - **Return Value**
 
   수정된 아코디언 인스턴스
+</details>
+<details>
 
-``func fillWidth(Bool) -> Accordion``
+<summary>``func fillWidth(Bool) -> Accordion``</summary>
 
 아코디언이 부모 컨테이너의 너비를 채우도록 설정합니다.
 
@@ -99,8 +104,10 @@ Accordion(title: "커스텀 스타일")
 - **Discussion**
 
   이 수정자를 적용하면 좌우 20pt의 여백이 추가됩니다.
+</details>
+<details>
 
-``func hideDivider(Bool) -> Accordion``
+<summary>``func hideDivider(Bool) -> Accordion``</summary>
 
 아코디언 하단의 구분선을 숨깁니다.
 
@@ -111,8 +118,10 @@ Accordion(title: "커스텀 스타일")
 - **Return Value**
 
   수정된 아코디언 인스턴스
+</details>
+<details>
 
-``func leadingIcon(Icon?, color: SwiftUI.Color?) -> Accordion``
+<summary>``func leadingIcon(Icon?, color: SwiftUI.Color?) -> Accordion``</summary>
 
 아코디언 제목 앞에 아이콘을 추가합니다.
 
@@ -124,8 +133,10 @@ Accordion(title: "커스텀 스타일")
 - **Return Value**
 
   수정된 아코디언 인스턴스
+</details>
+<details>
 
-``func title(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion``
+<summary>``func title(Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Accordion``</summary>
 
 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
 
@@ -138,8 +149,10 @@ Accordion(title: "커스텀 스타일")
 - **Return Value**
 
   수정된 아코디언 인스턴스
+</details>
+<details>
 
-``func trailingContent((() -> any View)?) -> Accordion``
+<summary>``func trailingContent((() -> any View)?) -> Accordion``</summary>
 
 아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
 
@@ -153,8 +166,10 @@ Accordion(title: "커스텀 스타일")
 - **Discussion**
 
   이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
+</details>
+<details>
 
-``func verticalPadding(VerticalPadding) -> Accordion``
+<summary>``func verticalPadding(VerticalPadding) -> Accordion``</summary>
 
 아코디언 헤더의 상하 여백 크기를 조정합니다.
 
@@ -165,20 +180,51 @@ Accordion(title: "커스텀 스타일")
 - **Return Value**
 
   수정된 아코디언 인스턴스
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum VerticalPadding``](/documentation/montage/accordion/verticalpadding.md)
+<summary>``enum VerticalPadding``</summary>
 
 아코디언의 상하 여백을 나타내는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case large``</summary>
+
+넓은 여백
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 여백
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+좁은 여백
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/accordion/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/accordion/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -10,8 +10,9 @@ extension Image
 
 ### Type Methods
 
+<details>
 
-``static func montage(Logo) -> Image``
+<summary>``static func montage(Logo) -> Image``</summary>
 
 Montage 디자인 시스템의 로고를 생성합니다.
 
@@ -22,8 +23,10 @@ Montage 디자인 시스템의 로고를 생성합니다.
 - **Return Value**
 
   생성된 Image 인스턴스
+</details>
+<details>
 
-``static func montage(Icon) -> Image``
+<summary>``static func montage(Icon) -> Image``</summary>
 
 Montage 디자인 시스템의 아이콘을 생성합니다.
 
@@ -34,4 +37,5 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 - **Return Value**
 
   생성된 Image 인스턴스
+</details>
 

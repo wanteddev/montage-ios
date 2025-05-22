@@ -23,7 +23,7 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 .horizontalPadding(true)
 ```
 
->  Note
+>  **Note**
 >
 > 탭 컴포넌트는 스크롤 가능한 형태로 제공되며, 다수의 탭 항목을 지원합니다. `.resize(.hug)` 설정 시 항목 너비가 콘텐츠에 맞게 조정되고, `.resize(.fill)` 설정 시 전체 너비를 균등하게 분할합니다.
 
@@ -31,8 +31,9 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
 ### Initializers
 
+<details>
 
-``init(selectedIndex: Binding<Int>, items: [String], actions: (Int) -> Void)``
+<summary>``init(selectedIndex: Binding<Int>, items: [String], actions: (Int) -> Void)``</summary>
 
 탭 컴포넌트를 초기화합니다.
 
@@ -42,16 +43,22 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
   | `selectedIndex` | 현재 선택된 탭의 인덱스를 바인딩하는 변수 |
   | `items` | 탭 항목 텍스트 배열 |
   | `actions` | 탭 선택 시 호출되는 클로저, 선택된 인덱스를 파라미터로 받음 (기본값: 빈 클로저) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func horizontalPadding(Bool) -> Tab``
+<summary>``func horizontalPadding(Bool) -> Tab``</summary>
 
 탭 컴포넌트의 좌우 여백 사용 여부를 설정합니다.
 
@@ -63,12 +70,14 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
   수정된 Tab 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `false`입니다. `true`로 설정 시 좌우에 20pt 여백이 적용됩니다.
 
+</details>
+<details>
 
-``func iconButton(Icon, action: () -> Void) -> Tab``
+<summary>``func iconButton(Icon, action: () -> Void) -> Tab``</summary>
 
 탭 컴포넌트의 오른쪽에 아이콘 버튼을 추가합니다.
 
@@ -83,8 +92,10 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 - **Discussion**
 
   `.resize(.hug)` 모드에서만 표시됩니다.
+</details>
+<details>
 
-``func resize(Resize) -> Tab``
+<summary>``func resize(Resize) -> Tab``</summary>
 
 탭 아이템의 너비 조정 방식을 설정합니다.
 
@@ -96,12 +107,14 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
   수정된 Tab 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.hug`입니다.
 
+</details>
+<details>
 
-``func size(Size) -> Tab``
+<summary>``func size(Size) -> Tab``</summary>
 
 탭 컴포넌트의 크기를 설정합니다.
 
@@ -113,28 +126,81 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
   수정된 Tab 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.medium`입니다.
 
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Resize``](/documentation/montage/tab/resize.md)
+<summary>``enum Resize``</summary>
 
 탭 아이템 너비를 결정하는 열거형입니다.
+#### Enumeration Cases
 
-[``enum Size``](/documentation/montage/tab/size.md)
+<details>
+
+<summary>``case fill``</summary>
+
+전체 너비를 균등하게 분할하여 탭 아이템 배치
+</details>
+<details>
+
+<summary>``case hug``</summary>
+
+콘텐츠 크기에 맞게 탭 아이템의 너비 조정
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Size``</summary>
 
 탭 아이템의 크기를 결정하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case large``</summary>
+
+큰 크기
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/tab/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/tab/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -1,5 +1,5 @@
 ---
-title: PopupModal
+title: Popup modal
 description: 화면 중앙에 표시되는 팝업 모달 컴포넌트입니다.
 ---
 
@@ -49,16 +49,13 @@ YourView()
     )
 ```
 
->  See Also
->
-> `PopupModalModifier`, `ModalNavigation`, `ActionArea.Model`
-
 ## Topics
 
 ### Initializers
 
+<details>
 
-``init(() -> any View)``
+<summary>``init(() -> any View)``</summary>
 
 팝업 모달을 초기화합니다.
 
@@ -66,16 +63,22 @@ YourView()
   | Parameter | Description |
   | --- | --- |
   | `content` | 모달 내에 표시할 콘텐츠를 반환하는 클로저 |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func ignoresEdgeInsets(Bool) -> PopupModal``
+<summary>``func ignoresEdgeInsets(Bool) -> PopupModal``</summary>
 
 컨텐츠의 기본 여백을 무시할지 설정합니다.
 
@@ -86,8 +89,10 @@ YourView()
 - **Return Value**
 
   수정된 팝업 모달 뷰
+</details>
+<details>
 
-``func modalActionArea(ActionArea.Model?) -> PopupModal``
+<summary>``func modalActionArea(ActionArea.Model?) -> PopupModal``</summary>
 
 팝업 모달 하단에 액션 영역을 설정합니다.
 
@@ -98,8 +103,10 @@ YourView()
 - **Return Value**
 
   수정된 팝업 모달 뷰
+</details>
+<details>
 
-``func modalNavigation((() -> Montage.ModalNavigation)?) -> PopupModal``
+<summary>``func modalNavigation((() -> Montage.ModalNavigation)?) -> PopupModal``</summary>
 
 팝업 모달 상단에 내비게이션 바를 설정합니다.
 
@@ -110,8 +117,10 @@ YourView()
 - **Return Value**
 
   수정된 팝업 모달 뷰
+</details>
+<details>
 
-``func resize(Resize) -> PopupModal``
+<summary>``func resize(Resize) -> PopupModal``</summary>
 
 팝업 모달의 크기를 설정합니다.
 
@@ -122,20 +131,45 @@ YourView()
 - **Return Value**
 
   수정된 팝업 모달 뷰
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Resize``](/documentation/montage/popupmodal/resize.md)
+<summary>``enum Resize``</summary>
 
 팝업의 크기를 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case fixed(CGFloat)``</summary>
+
+지정한 높이로 고정됩니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `height` | 높이 |
+</details>
+<details>
+
+<summary>``case hug``</summary>
+
+컨텐츠 크기에 맞게 자동 조절됩니다.
+</details>
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/popupmodal/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/popupmodal/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

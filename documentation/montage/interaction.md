@@ -27,8 +27,9 @@ Interaction(
 
 ### Initializers
 
+<details>
 
-``init(state: State, variant: Variant, color: Color.Semantic)``
+<summary>``init(state: State, variant: Variant, color: Color.Semantic)``</summary>
 
 상호작용 장식 컴포넌트를 초기화합니다.
 
@@ -41,29 +42,97 @@ Interaction(
 - **Return Value**
 
   구성된 상호작용 장식 인스턴스
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum State``](/documentation/montage/interaction/state.md)
+<summary>``enum State``</summary>
 
 상호작용의 상태를 정의합니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/interaction/variant.md)
+<details>
+
+<summary>``case focused``</summary>
+
+포커스 상태 (키보드 포커스)
+</details>
+<details>
+
+<summary>``case hovered``</summary>
+
+호버 상태 (마우스 오버)
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+기본 상태 (아무 상호작용 없음)
+</details>
+<details>
+
+<summary>``case pressed``</summary>
+
+누름 상태 (클릭/터치)
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 상호작용 효과의 강도를 정의합니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case light``</summary>
+
+약한 강도
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+기본 강도
+</details>
+<details>
+
+<summary>``case strong``</summary>
+
+강한 강도
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/interaction/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/interaction/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

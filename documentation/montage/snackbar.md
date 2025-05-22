@@ -1,5 +1,5 @@
 ---
-title: SnackBar
+title: Snack bar
 description: 화면 하단에 임시로 표시되는 알림 메시지 컴포넌트입니다.
 ---
 
@@ -35,37 +35,101 @@ var body: some View {
 }
 ```
 
->  See Also
->
-> `SnackBar.Duration`, `SnackBar.Model`, `SnackBar.SnackBarModifier`
-
 ## Topics
 
 ### Structures
 
+<details>
 
-[``struct Model``](/documentation/montage/snackbar/model.md)
+<summary>``struct Model``</summary>
 
 SnackBar의 데이터 모델을 정의하는 구조체입니다.
+#### Operators
 
+<details>
+
+<summary>``static func == (`Self`, `Self`) -> Bool``</summary>
+</details>
+
+#### Initializers
+
+<details>
+
+<summary>``init(duration: Duration, heading: String?, description: String?, extraContents: (() -> any View)?, action: String)``</summary>
+
+SnackBar 모델을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `duration` | 스낵바가 표시되는 시간 |
+  | `heading` | 스낵바의 제목 (선택 사항) |
+  | `description` | 스낵바의 설명 텍스트 (선택 사항) |
+  | `extraContents` | 스낵바에 표시할 추가 콘텐츠를 반환하는 클로저 (선택 사항) |
+  | `action` | 스낵바의 액션 버튼에 표시할 텍스트 |
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Duration``](/documentation/montage/snackbar/duration.md)
+<summary>``enum Duration``</summary>
 
 SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case long``</summary>
+
+긴 표시 시간 (16초)
+</details>
+<details>
+
+<summary>``case short``</summary>
+
+짧은 표시 시간 (4초)
+</details>
+
+#### Initializers
+
+<details>
+
+<summary>``init?(rawValue: Double)``</summary>
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+[RawRepresentable Implementations](/docs/utility/ios/rawrepresentable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/snackbar/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/snackbar/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

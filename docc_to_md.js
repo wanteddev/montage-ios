@@ -9,8 +9,13 @@ function makeLink(title, url, deprecated = false) {
 }
 
 // 토픽 섹션 변환
-function renderTopicSection(section, references) {
-  let md = `### ${section.title}\n\n`;
+function renderTopicSection(section, references, depth = 0) {
+  if (section.title === 'Classes' ||
+    section.title === 'Extended Classes') {
+    // 클래스 표시 안함
+    return '';
+  }
+  let md = `###${'#'.repeat(depth)} ${section.title}\n\n`;
   for (const id of section.identifiers || []) {
     const ref = references ? references[id] : null;
     if (!ref) continue;
@@ -26,13 +31,13 @@ function renderTopicSection(section, references) {
     if (ref.role === 'symbol' && ref.kind === 'symbol') {
       // 심볼의 상세 정보를 가져오기
       const symbolJsonPath = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data', `${url}.json`);
-      
+      md += `<details>\n`;
       try {
         if (fs.existsSync(symbolJsonPath)) {
           const symbolJson = JSON.parse(fs.readFileSync(symbolJsonPath, 'utf-8'));
-          
-          // 파라미터 정보 추가
+
           if (symbolJson.primaryContentSections) {
+            // 파라미터 정보 추가
             const parameters = symbolJson.primaryContentSections.find(s => s.kind === 'parameters');
             if (parameters) {
               symbolDetails += '\n- **Parameters**\n';
@@ -95,29 +100,28 @@ function renderTopicSection(section, references) {
               });
             }
           }
+          if (symbolJson.topicSections) {
+            for (const sec of symbolJson.topicSections) {
+              symbolDetails += renderTopicSection(sec, symbolJson.references, depth + 1);
+            }
+          }
         }
       } catch (error) {
         console.error(`Error reading symbol details for ${url}:`, error);
       }
 
       const member = `\`\`${(ref.fragments || []).map((f) => f.text).join('') || title}\`\``;
-      if (section.title === 'Enumerations' ||
-         section.title === 'Structures' ||
-         section.title === 'Classes' ||
-         section.title === 'Extended Structures' ||
-         section.title === 'Extended Classes' ||
-         section.title === 'Protocols') {
-        // 클래스/열거형 등
-        md += `\n${makeLink(member, url, deprecated)}\n`;
-        if (desc) md += `\n${desc}\n`;
-      } else {
-        // 함수/메서드/프로퍼티
-        md += `\n${deprecated ? `~~${member}~~` : `${member}`}\n`;
-        if (desc) md += `\n${desc}\n`;
-        if (symbolDetails) md += symbolDetails;
-      }
+      md += `\n<summary>${deprecated ? `~~${member}~~` : `${member}`}</summary>\n`;
+      if (desc) md += `\n${desc}\n`;
+      if (symbolDetails) md += symbolDetails;
+      md += '</details>\n';
     } else {
-      md += `\n${makeLink(title, url, deprecated)}\n`;
+      const urlPathLastComponent = url.split('/').at(-1);
+      if (urlPathLastComponent.startsWith('UI')) {
+        // UIKit 관련 문서 제외
+        return;
+      }
+      md += `\n${makeLink(title, `/docs/utility/ios/${urlPathLastComponent}`, deprecated)}\n`;
       if (desc) md += `\n${desc}\n`;
     }
   }
@@ -186,7 +190,7 @@ function renderAside(content, references) {
         joinWith: '\n',
       });
       if (rendered.replace(/>\s*[,]*\s*$/g, '').trim()) {
-        md += `>  ${name}\n>\n`;
+        md += `>  **${name}**\n>\n`;
         md += rendered.replace(/>\s*[,]*\s*$/g, '').trim() + '\n\n';
       }
     }
@@ -230,8 +234,16 @@ function renderContentSections(sections, references) {
 // 메타데이터 → 프론트매터
 function renderFrontmatter(json) {
   let fm = `---\n`;
-  if (json.metadata && json.metadata.title)
-    fm += `title: ${json.metadata.title}\n`;
+  if (json.metadata && json.metadata.title) {
+    let title = json.metadata.title === 'Montage' ? 'Extended modules' : json.metadata.title;
+    // 카멜/파스칼 케이스를 센텐스 케이스로 변환
+    if (title.length > 0) {
+      title = title.replace(/([A-Z])/g, ' $1').trim();
+      title = title.toLowerCase();
+      title = title.charAt(0).toUpperCase() + title.slice(1);
+    }
+    fm += `title: ${title}\n`;
+  }
   if (json.abstract && Array.isArray(json.abstract)) {
     fm += `description: ${json.abstract.map((a) => a.text).join(' ')}\n`;
   }
@@ -244,24 +256,6 @@ function renderFrontmatter(json) {
 // 메인 변환 함수
 function jsonToMarkdown(json) {
   let md = renderFrontmatter(json);
-
-  // 제목
-  // md += `${json.metadata.roleHeading}\n\n`;
-  // md += `# ${json.metadata.title}`;
-
-  // if (json.references) {
-  //   const isDeprecated = json.references[json.identifier.url]
-  //     ? json.references[json.identifier.url].deprecated
-  //     : false;
-
-  //   if (isDeprecated) {
-  //     md += ` \`Deprecated\`\n\n`;
-  //   } else {
-  //     md += `\n\n`;
-  //   }
-  // } else {
-  //   md += `\n\n`;
-  // }
 
   // 선언부
   if (json.primaryContentSections) {
@@ -295,9 +289,16 @@ function jsonToMarkdown(json) {
   // Topics (topicSections)
   if (json.topicSections) {
     md += '## Topics\n\n';
-    for (const sec of json.topicSections) {
+    json.topicSections.forEach((sec, index, array) => {
+      if (json.metadata.title === 'Montage' && sec.title !== 'Extended Modules') {
+        return;
+      }
       md += renderTopicSection(sec, json.references);
-    }
+      // 마지막 섹션이 아닐 경우에만 구분선 추가
+      if (index < array.length - 1) {
+        md += '___\n';
+      }
+    });
   }
 
   // Relationships
@@ -314,20 +315,37 @@ let count = 0;
 // 단일 파일 변환
 function convertFile(jsonPath) {
   const relPath = path.relative('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation', jsonPath);
-  const mdPath = path.join('documentation', relPath).replace(/\.json$/, '.md');
+  let mdPath = path.join('documentation', relPath).replace(/\.json$/, '.md');
   const json = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-  if (json.metadata.roleHeading !== 'Initializer' &&
-     json.metadata.roleHeading !== 'Instance Method' &&
-     json.metadata.roleHeading !== 'Instance Property' &&
-     json.metadata.roleHeading !== 'Type Method' &&
-     json.metadata.roleHeading !== 'Type Property' &&
-     json.metadata.roleHeading !== 'Operator' &&
-     json.metadata.roleHeading !== 'Case' ) {
-    const md = jsonToMarkdown(json);
-    fs.mkdirSync(path.dirname(mdPath), { recursive: true });
-    fs.writeFileSync(mdPath, md, 'utf-8');
-    count++;
+  if (json.metadata.roleHeading === 'Initializer' ||
+    json.metadata.roleHeading === 'Instance Method' ||
+    json.metadata.roleHeading === 'Instance Property' ||
+    json.metadata.roleHeading === 'Type Method' ||
+    json.metadata.roleHeading === 'Type Property' ||
+    json.metadata.roleHeading === 'Operator' ||
+    json.metadata.roleHeading === 'Class' ||
+    json.metadata.roleHeading === 'Enumeration' ||
+    json.metadata.roleHeading === 'Case' ||
+    json.metadata.roleHeading === 'Structure' && json.metadata.title.split('.').length > 1) {
+    // Topic 섹션 항목들 별개 문서 생성 제외
+    return;
   }
+
+  const mdPathLastComponent = mdPath.split('/').at(-1);
+  if (mdPathLastComponent.startsWith('ui')) {
+    // UIKit 관련 문서 제외
+    return;
+  }
+  if (mdPathLastComponent.endsWith('implementations.md')) {
+    mdPath = `documentation/montage/protocolimplementations/${mdPathLastComponent}`
+  } else if (mdPathLastComponent.endsWith('montage.md')) {
+    mdPath = `documentation/extendedmodules.md`
+  }
+
+  const md = jsonToMarkdown(json);
+  fs.mkdirSync(path.dirname(mdPath), { recursive: true });
+  fs.writeFileSync(mdPath, md, 'utf-8');
+  count++;
 }
 
 // 재귀적으로 montage/ 하위 모든 json 변환

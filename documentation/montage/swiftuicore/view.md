@@ -10,8 +10,9 @@ extension View
 
 ### Instance Methods
 
+<details>
 
-``func actionArea(model: ActionArea.Model) -> some View``
+<summary>``func actionArea(model: ActionArea.Model) -> some View``</summary>
 
 현재 뷰에 하단 ActionArea를 적용합니다.
 
@@ -23,15 +24,19 @@ extension View
 
   ActionArea가 적용된 뷰
 - **Discussion**
+</details>
+<details>
 
-``func asUIImage() -> UIImage``
+<summary>``func asUIImage() -> UIImage``</summary>
 
 View를 UIImage로 변환합니다.
 - **Return Value**
 
   변환된 UIImage
+</details>
+<details>
 
-``func bottomSheetModal(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``
+<summary>``func bottomSheetModal(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 바텀 시트 모달을 표시합니다.
 
@@ -50,8 +55,10 @@ View를 UIImage로 변환합니다.
 - **Discussion**
 
   화면 하단에서 올라오는 바텀 시트 형태의 모달을 표시합니다.
+</details>
+<details>
 
-``func carveLogForPreview(String, font: Font?, alignment: Alignment) -> some View``
+<summary>``func carveLogForPreview(String, font: Font?, alignment: Alignment) -> some View``</summary>
 
 프리뷰에서 뷰 위에 로그를 출력합니다.
 
@@ -64,8 +71,10 @@ View를 UIImage로 변환합니다.
 - **Return Value**
 
   로그가 출력된 View
+</details>
+<details>
 
-``func disableSwipeBack(Bool) -> some View``
+<summary>``func disableSwipeBack(Bool) -> some View``</summary>
 
 뷰에서 스와이프 백 제스처를 비활성화하는 modifier를 적용합니다.
 
@@ -79,8 +88,10 @@ View를 UIImage로 변환합니다.
 - **Discussion**
 
   네비게이션 컨트롤러의 스와이프 뒤로가기 제스처 인식기를 제어합니다.
+</details>
+<details>
 
-``func elevation(Elevation) -> Self``
+<summary>``func elevation(Elevation) -> Self``</summary>
 
 Montage 디자인 시스템의 그림자 효과를 적용합니다.
 
@@ -91,8 +102,10 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Return Value**
 
   그림자 효과가 적용된 View
+</details>
+<details>
 
-``func fullModal(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``
+<summary>``func fullModal(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 전체 화면 모달을 표시합니다.
 
@@ -110,8 +123,10 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Discussion**
 
   화면 전체를 덮는 모달을 표시합니다.
+</details>
+<details>
 
-``func `if`(Bool) -> some View``
+<summary>``func `if`(Bool) -> some View``</summary>
 
 조건이 true일 때만 View를 표시합니다.
 
@@ -122,8 +137,10 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Return Value**
 
   조건에 따라 표시되는 View
+</details>
+<details>
 
-``func `if`(Bool, (Self) -> any View, else: ((Self) -> any View)?) -> some View``
+<summary>``func `if`(Bool, (Self) -> any View, else: ((Self) -> any View)?) -> some View``</summary>
 
 조건에 따라 View를 변환합니다.
 
@@ -136,8 +153,10 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Return Value**
 
   변환된 View
+</details>
+<details>
 
-``func loading(Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) -> some View``
+<summary>``func loading(Binding<Bool>, type: Loading.Kind, dimmedColor: SwiftUI.Color) -> some View``</summary>
 
 현재 뷰에 로딩 인디케이터와 함께 로딩 오버레이를 적용합니다.
 
@@ -153,15 +172,19 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Discussion**
 
   로딩 상태일 때 뷰 위에 반투명 배경과 로딩 애니메이션을 표시합니다. 로딩 중에는 사용자 상호작용이 비활성화됩니다.
+</details>
+<details>
 
-``func measureBoxForPreview() -> some View``
+<summary>``func measureBoxForPreview() -> some View``</summary>
 
 프리뷰에서 뷰의 크기를 측정하여 뷰 위에 출력합니다.
 - **Return Value**
 
   뷰 크기가 그려진 View
+</details>
+<details>
 
-``func measureForPreview(axis: Axis) -> some View``
+<summary>``func measureForPreview(axis: Axis) -> some View``</summary>
 
 프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
 
@@ -172,20 +195,10 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Return Value**
 
   뷰 크기가 그려진 View
+</details>
+<details>
 
-``func modifying((Self) -> any View) -> some View``
-
-View를 변환합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `transform` | 적용할 변환 |
-- **Return Value**
-
-  변환된 View
-
-``func modifying((Self) -> Self) -> Self``
+<summary>``func modifying((Self) -> any View) -> some View``</summary>
 
 View를 변환합니다.
 
@@ -196,8 +209,24 @@ View를 변환합니다.
 - **Return Value**
 
   변환된 View
+</details>
+<details>
 
-``func onGeometryChange<T>(for: T.Type, of: (GeometryProxy) -> T, for: RunLoop.SchedulerTimeType.Stride, action: (_ newValue: T) -> Void) -> some View``
+<summary>``func modifying((Self) -> Self) -> Self``</summary>
+
+View를 변환합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `transform` | 적용할 변환 |
+- **Return Value**
+
+  변환된 View
+</details>
+<details>
+
+<summary>``func onGeometryChange<T>(for: T.Type, of: (GeometryProxy) -> T, for: RunLoop.SchedulerTimeType.Stride, action: (_ newValue: T) -> Void) -> some View``</summary>
 
 View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 
@@ -211,8 +240,10 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 - **Return Value**
 
   디바운스된 View
+</details>
+<details>
 
-``func paragraph(variant: Typography.Variant) -> some View``
+<summary>``func paragraph(variant: Typography.Variant) -> some View``</summary>
 
 Montage 디자인 시스템의 단락 스타일을 적용합니다.
 
@@ -223,8 +254,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Return Value**
 
   단락 스타일이 적용된 View
+</details>
+<details>
 
-``func popupModal(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``
+<summary>``func popupModal(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 팝업 모달을 표시합니다.
 
@@ -243,8 +276,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Discussion**
 
   화면 중앙에 표시되는 팝업 형태의 모달을 표시합니다.
+</details>
+<details>
 
-``func printSize(String) -> some View``
+<summary>``func printSize(String) -> some View``</summary>
 
 프리뷰에서 크기가 변경될 때마다 콘솔에 출력합니다.
 
@@ -255,8 +290,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Return Value**
 
   크기가 출력된 View
+</details>
+<details>
 
-``func printValue<V>(V, String) -> some View``
+<summary>``func printValue<V>(V, String) -> some View``</summary>
 
 프리뷰에서 값이 변경될 때마다 콘솔에 출력합니다.
 
@@ -268,8 +305,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Return Value**
 
   값이 출력된 View
+</details>
+<details>
 
-``func pullToRefresh(scrollYOffset: Binding<CGFloat>, refresh: () async -> Void) -> some View``
+<summary>``func pullToRefresh(scrollYOffset: Binding<CGFloat>, refresh: () async -> Void) -> some View``</summary>
 
 스크롤 뷰에 풀-투-리프레시(Pull-to-Refresh) 기능을 추가합니다.
 
@@ -284,8 +323,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Discussion**
 
   사용자가 스크롤 뷰를 아래로 당기면 애니메이션과 함께 리프레시 기능을 제공합니다. iOS 18 이상에서 사용 가능하며, 로딩 애니메이션과 함께 당김 정도에 따른 시각적 피드백을 제공합니다.
+</details>
+<details>
 
-``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``
+<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
 
 현재 뷰에 푸시 알림 뱃지를 표시합니다.
 
@@ -304,8 +345,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Discussion**
 
   뷰의 특정 위치에 알림 또는 메시지 표시용 뱃지를 추가합니다.
+</details>
+<details>
 
-``func recognizeViewForPreview(SwiftUI.Color, fill: Bool) -> some View``
+<summary>``func recognizeViewForPreview(SwiftUI.Color, fill: Bool) -> some View``</summary>
 
 프리뷰에서 View의 frame을 인식합니다.
 
@@ -317,8 +360,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Return Value**
 
   인식된 View
+</details>
+<details>
 
-``func scrollable(Axis, contentOffset: Binding<CGPoint>) -> some View``
+<summary>``func scrollable(Axis, contentOffset: Binding<CGPoint>) -> some View``</summary>
 
 뷰에 자동 스크롤 기능을 적용하는 modifier입니다.
 
@@ -333,8 +378,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Discussion**
 
   콘텐츠 오프셋을 추적하고 스크롤이 필요한 경우에만 스크롤을 활성화합니다. 콘텐츠가 스크롤 뷰보다 작은 경우 스크롤이 비활성화됩니다.
+</details>
+<details>
 
-``func skeleton(isPresented: Bool, kind: Skeleton.Kind, color: SwiftUI.Color?, opacity: CGFloat?, size: CGSize?) -> some View``
+<summary>``func skeleton(isPresented: Bool, kind: Skeleton.Kind, color: SwiftUI.Color?, opacity: CGFloat?, size: CGSize?) -> some View``</summary>
 
 현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
 
@@ -349,8 +396,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Return Value**
 
   스켈레톤 기능이 적용된 뷰
+</details>
+<details>
 
-``func skeleton(isPresented: Bool, skeletonView: () -> any View) -> some View``
+<summary>``func skeleton(isPresented: Bool, skeletonView: () -> any View) -> some View``</summary>
 
 현재 뷰에 커스텀 스켈레톤 로딩 UI를 적용합니다.
 
@@ -362,8 +411,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 - **Return Value**
 
   스켈레톤 기능이 적용된 뷰
+</details>
+<details>
 
-``func snackBar(Binding<SnackBar.Model?>, handler: () -> Void) -> some View``
+<summary>``func snackBar(Binding<SnackBar.Model?>, handler: () -> Void) -> some View``</summary>
 
 현재 뷰에 SnackBar를 표시하는 modifier를 적용합니다.
 
@@ -376,8 +427,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 
   SnackBar가 적용된 뷰
 - **Discussion**
+</details>
+<details>
 
-``func toast(Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) -> some View``
+<summary>``func toast(Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) -> some View``</summary>
 
 현재 뷰에 Toast 메시지를 표시하는 modifier를 적용합니다.
 
@@ -391,8 +444,10 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 
   Toast가 적용된 뷰
 - **Discussion**
+</details>
+<details>
 
-``func tooltip(isPresented: Binding<Bool>, message: String, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``
+<summary>``func tooltip(isPresented: Binding<Bool>, message: String, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``</summary>
 
 iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적용합니다.
 
@@ -406,8 +461,10 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 - **Return Value**
 
   툴팁이 적용된 뷰
+</details>
+<details>
 
-``func tooltip(isPresented: Binding<Bool>, position: Tooltip.Position, message: String, showArrow: Bool, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``
+<summary>``func tooltip(isPresented: Binding<Bool>, position: Tooltip.Position, message: String, showArrow: Bool, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``</summary>
 
 현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
 
@@ -423,8 +480,10 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 - **Return Value**
 
   툴팁이 적용된 뷰
+</details>
+<details>
 
-``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColorResolvable: ColorResolvable?, leadingButton: TopNavigation.Resource.LeadingButton?, trailingButtons: [TopNavigation.Resource.TrailingButton], withBottom: ActionArea.Model?) -> some View``
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColorResolvable: ColorResolvable?, leadingButton: TopNavigation.Resource.LeadingButtonInfo?, trailingButtons: [TopNavigation.Resource.TrailingButtonInfo], withBottom: ActionArea.Model?) -> some View``</summary>
 
 현재 뷰에 TopNavigation 바를 적용합니다.
 
@@ -440,8 +499,10 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 - **Return Value**
 
   TopNavigation이 적용된 뷰
+</details>
+<details>
 
-``func userInteractionDisabled(Bool) -> some View``
+<summary>``func userInteractionDisabled(Bool) -> some View``</summary>
 
 사용자 상호작용을 비활성화하는 modifier를 적용합니다.
 
@@ -455,4 +516,5 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 - **Discussion**
 
   뷰의 터치 이벤트와 스와이프 백 제스처를 비활성화합니다.
+</details>
 

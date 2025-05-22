@@ -1,5 +1,5 @@
 ---
-title: ProgressIndicator
+title: Progress indicator
 description: 진행 상태를 시각적으로 표시하는 인디케이터 뷰
 ---
 
@@ -21,8 +21,9 @@ ProgressIndicator(percentage: $progress)
 
 ### Initializers
 
+<details>
 
-``init(percentage: Binding<CGFloat>)``
+<summary>``init(percentage: Binding<CGFloat>)``</summary>
 
 진행 상태 인디케이터를 초기화합니다.
 
@@ -30,18 +31,23 @@ ProgressIndicator(percentage: $progress)
   | Parameter | Description |
   | --- | --- |
   | `percentage` | 진행 상태를 나타내는 바인딩 값 (0.0 ~ 1.0 사이의 값) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/progressindicator/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/progressindicator/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

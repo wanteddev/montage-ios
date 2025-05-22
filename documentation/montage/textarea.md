@@ -1,5 +1,5 @@
 ---
-title: TextArea
+title: Text area
 description: 여러 줄의 텍스트 입력을 위한 컴포넌트입니다.
 ---
 
@@ -38,8 +38,9 @@ TextArea(text: $longText)
 
 ### Initializers
 
+<details>
 
-``init(text: Binding<String>, focus: FocusState<Bool>.Binding?)``
+<summary>``init(text: Binding<String>, focus: FocusState<Bool>.Binding?)``</summary>
 
 텍스트 영역을 초기화합니다.
 
@@ -51,16 +52,22 @@ TextArea(text: $longText)
 - **Return Value**
 
   구성된 텍스트 영역 인스턴스
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat, trailingResourceSpacing: CGFloat) -> TextArea``
+<summary>``func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat, trailingResourceSpacing: CGFloat) -> TextArea``</summary>
 
 텍스트 영역 하단에 표시할 UI 요소를 설정합니다.
 
@@ -74,8 +81,10 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
+</details>
+<details>
 
-``func description(String?) -> TextArea``
+<summary>``func description(String?) -> TextArea``</summary>
 
 텍스트 영역 하단에 표시할 설명 텍스트를 설정합니다.
 
@@ -86,8 +95,10 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
+</details>
+<details>
 
-``func disable(Bool) -> TextArea``
+<summary>``func disable(Bool) -> TextArea``</summary>
 
 텍스트 영역의 활성화 상태를 설정합니다.
 
@@ -98,8 +109,10 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
+</details>
+<details>
 
-``func heading(String?) -> TextArea``
+<summary>``func heading(String?) -> TextArea``</summary>
 
 텍스트 영역 위에 표시할 제목을 설정합니다.
 
@@ -110,8 +123,10 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
+</details>
+<details>
 
-``func negative(Bool) -> TextArea``
+<summary>``func negative(Bool) -> TextArea``</summary>
 
 텍스트 영역의 오류 상태를 설정합니다.
 
@@ -125,8 +140,10 @@ TextArea(text: $longText)
 - **Discussion**
 
   오류 상태일 때는 텍스트 영역이 적색 테두리로 강조됩니다.
+</details>
+<details>
 
-``func placeholder(String?) -> TextArea``
+<summary>``func placeholder(String?) -> TextArea``</summary>
 
 텍스트 영역에 입력된 텍스트가 없을 때 표시할 플레이스홀더를 설정합니다.
 
@@ -137,8 +154,10 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
+</details>
+<details>
 
-``func requiredBadge(Bool) -> TextArea``
+<summary>``func requiredBadge(Bool) -> TextArea``</summary>
 
 제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
 
@@ -150,12 +169,14 @@ TextArea(text: $longText)
 
   수정된 텍스트 영역 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
 
+</details>
+<details>
 
-``func resize(Resize) -> TextArea``
+<summary>``func resize(Resize) -> TextArea``</summary>
 
 텍스트 영역의 크기 조절 방식을 설정합니다.
 
@@ -166,24 +187,181 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Resize``](/documentation/montage/textarea/resize.md)
+<summary>``enum Resize``</summary>
 
 텍스트 영역의 크기 조절 방식을 정의합니다.
+#### Enumeration Cases
 
-[``enum Resource``](/documentation/montage/textarea/resource.md)
+<details>
+
+<summary>``case fixed(min: CGFloat, max: CGFloat)``</summary>
+
+텍스트 영역의 최소 및 최대 높이를 지정합니다. 초과 부분은 스크롤할 수 있습니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `min` | 최소 높이 |
+  | `max` | 최대 높이 |
+</details>
+<details>
+
+<summary>``case limit``</summary>
+
+최대 8줄까지 표시되며, 초과 부분은 스크롤할 수 있습니다.
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+줄 수 제한이 없으며, 입력된 텍스트에 따라 영역이 자동으로 확장됩니다.
+</details>
+
+</details>
+<details>
+
+<summary>``enum Resource``</summary>
 
 텍스트 영역 하단에 표시할 수 있는 UI 요소를 정의합니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case actionChip(ActionChip.Variant, title: String, handler: (() -> Void)?)``</summary>
+
+액션 칩
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 칩 변형 스타일 |
+  | `title` | 칩 텍스트 |
+  | `handler` | 칩 클릭 핸들러 |
+</details>
+<details>
+
+<summary>``case badge(ContentBadge.Variant, title: String)``</summary>
+
+뱃지
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 뱃지 변형 스타일 |
+  | `title` | 뱃지 텍스트 |
+</details>
+<details>
+
+<summary>``case characterCount(limit: Int?, overflow: Bool)``</summary>
+
+문자 수 카운터
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `limit` | 최대 문자 수 제한 (nil인 경우 제한 없음) |
+  | `overflow` | 최대 문자 수 초과 허용 여부 |
+</details>
+<details>
+
+<summary>``case filterChip(FilterChip.Variant, title: String, handler: (() -> Void)?)``</summary>
+
+필터 칩
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 칩 변형 스타일 |
+  | `title` | 칩 텍스트 |
+  | `handler` | 칩 클릭 핸들러 |
+</details>
+<details>
+
+<summary>``case icon(Icon, tintColor: SwiftUI.Color)``</summary>
+
+단순 아이콘
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `tintColor` | 아이콘 색상 |
+</details>
+<details>
+
+<summary>``case iconButton(placement: Placement, variant: IconButton.Variant?, icon: Icon, tintColor: SwiftUI.Color, handler: (() -> Void)?)``</summary>
+
+아이콘 버튼
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `placement` | 버튼 위치 |
+  | `variant` | 버튼 변형 스타일 |
+  | `icon` | 버튼 아이콘 |
+  | `tintColor` | 아이콘 색상 |
+  | `handler` | 버튼 클릭 핸들러 |
+</details>
+<details>
+
+<summary>``case textButton(placement: Placement, varaint: Button.Text.Variant?, title: String, handler: (() -> Void)?)``</summary>
+
+텍스트 버튼
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `placement` | 버튼 위치 |
+  | `varaint` | 버튼 변형 스타일 |
+  | `title` | 버튼 텍스트 |
+  | `handler` | 버튼 클릭 핸들러 |
+</details>
+
+#### Enumerations
+
+<details>
+
+<summary>``enum Placement``</summary>
+
+요소의 배치 위치를 정의합니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case leading``</summary>
+
+왼쪽에 배치
+</details>
+<details>
+
+<summary>``case trailing``</summary>
+
+오른쪽에 배치
+</details>
+
+##### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/textarea/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/textarea/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -1,5 +1,5 @@
 ---
-title: FilterChip
+title: Filter chip
 description: 필터링 기능을 제공하는 칩 컴포넌트입니다.
 ---
 
@@ -28,8 +28,9 @@ FilterChip(
 
 ### Initializers
 
+<details>
 
-``init(variant: Variant, size: Size, text: String, state: Binding<State>, handler: (() -> Void)?)``
+<summary>``init(variant: Variant, size: Size, text: String, state: Binding<State>, handler: (() -> Void)?)``</summary>
 
 필터 칩을 초기화합니다.
 
@@ -41,16 +42,22 @@ FilterChip(
   | `text` | 칩에 표시할 텍스트 |
   | `state` | 칩의 확장 상태 바인딩, 기본값은 `.constant(.normal)` |
   | `handler` | 칩 클릭 시 실행할 핸들러, 기본값은 `nil` |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func active(Bool, label: String?) -> FilterChip``
+<summary>``func active(Bool, label: String?) -> FilterChip``</summary>
 
 칩의 활성화 상태와 레이블을 설정합니다.
 
@@ -62,8 +69,10 @@ FilterChip(
 - **Return Value**
 
   수정된 칩 인스턴스
+</details>
+<details>
 
-``func activeColor(SwiftUI.Color) -> FilterChip``
+<summary>``func activeColor(SwiftUI.Color) -> FilterChip``</summary>
 
 칩의 활성화 상태 색상을 설정합니다.
 
@@ -74,8 +83,10 @@ FilterChip(
 - **Return Value**
 
   수정된 칩 인스턴스
+</details>
+<details>
 
-``func backgroundColor(SwiftUI.Color) -> FilterChip``
+<summary>``func backgroundColor(SwiftUI.Color) -> FilterChip``</summary>
 
 칩의 배경색을 설정합니다.
 
@@ -86,8 +97,10 @@ FilterChip(
 - **Return Value**
 
   수정된 칩 인스턴스
+</details>
+<details>
 
-``func disabled(Bool) -> FilterChip``
+<summary>``func disabled(Bool) -> FilterChip``</summary>
 
 칩의 비활성화 여부를 설정합니다.
 
@@ -98,8 +111,10 @@ FilterChip(
 - **Return Value**
 
   수정된 칩 인스턴스
+</details>
+<details>
 
-``func fontColor(SwiftUI.Color) -> FilterChip``
+<summary>``func fontColor(SwiftUI.Color) -> FilterChip``</summary>
 
 칩의 텍스트 색상을 설정합니다.
 
@@ -110,8 +125,10 @@ FilterChip(
 - **Return Value**
 
   수정된 칩 인스턴스
+</details>
+<details>
 
-``func iconColor(SwiftUI.Color) -> FilterChip``
+<summary>``func iconColor(SwiftUI.Color) -> FilterChip``</summary>
 
 아이콘의 색상을 설정합니다.
 
@@ -123,32 +140,122 @@ FilterChip(
 
   수정된 칩 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.semantic(.labelAlternative)`입니다.
 
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/filterchip/size.md)
+<summary>``enum Size``</summary>
 
 칩의 크기를 정의합니다.
+#### Enumeration Cases
 
-[``enum State``](/documentation/montage/filterchip/state.md)
+<details>
+
+<summary>``case large``</summary>
+
+큰 크기
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+<details>
+
+<summary>``case xsmall``</summary>
+
+가장 작은 크기
+</details>
+
+#### Initializers
+
+<details>
+
+<summary>``init?(rawValue: String)``</summary>
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+[RawRepresentable Implementations](/docs/utility/ios/rawrepresentable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum State``</summary>
 
 칩의 확장 상태를 정의합니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/filterchip/variant.md)
+<details>
+
+<summary>``case expand``</summary>
+
+확장된 상태 (드롭다운 표시)
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+기본 상태
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 칩의 외관을 결정하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case outlined``</summary>
+
+테두리만 있는 아웃라인 스타일
+</details>
+<details>
+
+<summary>``case solid``</summary>
+
+배경색이 있는 실선 스타일
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/filterchip/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/filterchip/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

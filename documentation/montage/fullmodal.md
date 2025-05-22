@@ -1,5 +1,5 @@
 ---
-title: FullModal
+title: Full modal
 description: 화면 전체를 덮는 풀스크린 모달 컴포넌트입니다.
 ---
 
@@ -49,16 +49,13 @@ YourView()
     )
 ```
 
->  See Also
->
-> `FullModalModifier`, `ModalNavigation`, `ActionArea.Model`
-
 ## Topics
 
 ### Initializers
 
+<details>
 
-``init(() -> any View)``
+<summary>``init(() -> any View)``</summary>
 
 풀스크린 모달을 초기화합니다.
 
@@ -66,16 +63,22 @@ YourView()
   | Parameter | Description |
   | --- | --- |
   | `content` | 모달 내에 표시할 콘텐츠를 반환하는 클로저 |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func ignoresEdgeInsets(Bool) -> FullModal``
+<summary>``func ignoresEdgeInsets(Bool) -> FullModal``</summary>
 
 컨텐츠의 기본 여백을 무시할지 설정합니다.
 
@@ -86,8 +89,10 @@ YourView()
 - **Return Value**
 
   수정된 풀스크린 모달 뷰
+</details>
+<details>
 
-``func modalActionArea(ActionArea.Model?) -> FullModal``
+<summary>``func modalActionArea(ActionArea.Model?) -> FullModal``</summary>
 
 풀스크린 모달 하단에 액션 영역을 설정합니다.
 
@@ -98,8 +103,10 @@ YourView()
 - **Return Value**
 
   수정된 풀스크린 모달 뷰
+</details>
+<details>
 
-``func modalNavigation((() -> Montage.ModalNavigation)?) -> FullModal``
+<summary>``func modalNavigation((() -> Montage.ModalNavigation)?) -> FullModal``</summary>
 
 풀스크린 모달 상단에 내비게이션 바를 설정합니다.
 
@@ -110,13 +117,15 @@ YourView()
 - **Return Value**
 
   수정된 풀스크린 모달 뷰
+</details>
 
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/fullmodal/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/fullmodal/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

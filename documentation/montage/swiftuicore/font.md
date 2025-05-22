@@ -10,8 +10,9 @@ extension Font
 
 ### Type Methods
 
+<details>
 
-``static func montage(size: CGFloat, weight: Typography.Weight) -> Font``
+<summary>``static func montage(size: CGFloat, weight: Typography.Weight) -> Font``</summary>
 
 Montage 디자인 시스템의 폰트를 생성합니다.
 
@@ -23,8 +24,10 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 - **Return Value**
 
   생성된 Font 인스턴스
+</details>
+<details>
 
-``static func montage(variant: Typography.Variant, weight: Typography.Weight) -> Font?``
+<summary>``static func montage(variant: Typography.Variant, weight: Typography.Weight) -> Font?``</summary>
 
 Montage 디자인 시스템의 폰트를 생성합니다.
 
@@ -36,4 +39,5 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 - **Return Value**
 
   생성된 Font 인스턴스
+</details>
 

@@ -30,8 +30,9 @@ VStack {
 
 ### Initializers
 
+<details>
 
-``init(Axis, variant: Variant)``
+<summary>``init(Axis, variant: Variant)``</summary>
 
 구분선 컴포넌트를 초기화합니다.
 
@@ -43,25 +44,53 @@ VStack {
 - **Return Value**
 
   구성된 구분선 인스턴스
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Variant``](/documentation/montage/divider/variant.md)
+<summary>``enum Variant``</summary>
 
 구분선의 두께 변형을 정의합니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case normal``</summary>
+
+표준 두께
+</details>
+<details>
+
+<summary>``case thick``</summary>
+
+두꺼운 두께
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/divider/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/divider/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

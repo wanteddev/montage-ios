@@ -27,7 +27,7 @@ Input.radio(checked: false, text: "옵션 1")
 Input.checkmark($isChecked, text: "완료됨")
 ```
 
->  Note
+>  **Note**
 >
 > 컨트롤과 텍스트는 수직 정렬되어 표시됩니다.
 
@@ -35,13 +35,17 @@ Input.checkmark($isChecked, text: "완료됨")
 
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func bold(Bool) -> Input``
+<summary>``func bold(Bool) -> Input``</summary>
 
 텍스트를 볼드체로 설정합니다.
 
@@ -52,8 +56,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   수정된 입력 컴포넌트
+</details>
+<details>
 
-``func disable(Bool) -> Input``
+<summary>``func disable(Bool) -> Input``</summary>
 
 컴포넌트를 비활성화합니다.
 
@@ -67,8 +73,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Discussion**
 
   비활성화된 컴포넌트는 사용자 상호작용이 불가능하며, 시각적으로도 흐리게 표시됩니다.
+</details>
+<details>
 
-``func size(Control.Size) -> Input``
+<summary>``func size(Control.Size) -> Input``</summary>
 
 컨트롤 사이즈를 설정합니다.
 
@@ -79,8 +87,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   수정된 입력 컴포넌트
+</details>
+<details>
 
-``func tight(Bool) -> Input``
+<summary>``func tight(Bool) -> Input``</summary>
 
 컨트롤을 더 조밀한 레이아웃으로 표시합니다.
 
@@ -91,8 +101,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   수정된 입력 컴포넌트
+</details>
+<details>
 
-``func title(Typography.Variant?, weight: Typography.Weight?, color: SwiftUI.Color?) -> Input``
+<summary>``func title(Typography.Variant?, weight: Typography.Weight?, color: SwiftUI.Color?) -> Input``</summary>
 
 텍스트의 타이포그래피 속성을 설정합니다.
 
@@ -105,11 +117,14 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   수정된 입력 컴포넌트
+</details>
 
+___
 ### Type Methods
 
+<details>
 
-``static func checkbox(Binding<Control.State>, text: String) -> Input``
+<summary>``static func checkbox(Binding<Control.State>, text: String) -> Input``</summary>
 
 상태 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
 
@@ -121,8 +136,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func checkbox(Binding<Bool>, text: String) -> Input``
+<summary>``static func checkbox(Binding<Bool>, text: String) -> Input``</summary>
 
 불리언 바인딩을 이용해 체크박스와 텍스트를 생성합니다.
 
@@ -134,8 +151,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func checkbox(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``
+<summary>``static func checkbox(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``</summary>
 
 불리언 값을 이용해 체크박스와 텍스트를 생성합니다.
 
@@ -148,8 +167,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func checkbox(state: Control.State, text: String, onSelect: ((Control.State) -> Void)?) -> Input``
+<summary>``static func checkbox(state: Control.State, text: String, onSelect: ((Control.State) -> Void)?) -> Input``</summary>
 
 상태 값을 이용해 체크박스와 텍스트를 생성합니다.
 
@@ -162,8 +183,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func checkmark(Binding<Bool>, text: String) -> Input``
+<summary>``static func checkmark(Binding<Bool>, text: String) -> Input``</summary>
 
 불리언 바인딩을 이용해 체크마크와 텍스트를 생성합니다.
 
@@ -175,8 +198,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func checkmark(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``
+<summary>``static func checkmark(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``</summary>
 
 불리언 값을 이용해 체크마크와 텍스트를 생성합니다.
 
@@ -189,8 +214,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func radio(Binding<Bool>, text: String) -> Input``
+<summary>``static func radio(Binding<Bool>, text: String) -> Input``</summary>
 
 불리언 바인딩을 이용해 라디오 버튼과 텍스트를 생성합니다.
 
@@ -202,8 +229,10 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
+<details>
 
-``static func radio(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``
+<summary>``static func radio(checked: Bool, text: String, onSelect: ((Bool) -> Void)?) -> Input``</summary>
 
 불리언 값을 이용해 라디오 버튼과 텍스트를 생성합니다.
 
@@ -216,13 +245,15 @@ Input.checkmark($isChecked, text: "완료됨")
 - **Return Value**
 
   구성된 입력 컴포넌트
+</details>
 
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/input/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/input/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

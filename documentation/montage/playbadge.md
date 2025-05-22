@@ -1,5 +1,5 @@
 ---
-title: PlayBadge
+title: Play badge
 description: 재생 버튼이 있는 배지 컴포넌트입니다.
 ---
 
@@ -25,7 +25,7 @@ PlayBadge()
     .alternative(true)
 ```
 
->  Note
+>  **Note**
 >
 > 기본 스타일은 반투명 배경에 흰색 재생 아이콘을 사용합니다. alternative 스타일은 불투명 회색 배경을 사용합니다.
 
@@ -33,23 +33,30 @@ PlayBadge()
 
 ### Initializers
 
+<details>
 
-``init()``
+<summary>``init()``</summary>
 
 기본 설정의 재생 배지를 생성합니다.
 - **Discussion**
 
   초기화 시 기본 크기는 `.medium`이며, 반투명 배경의 기본 스타일이 적용됩니다.
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func alternative(Bool) -> PlayBadge``
+<summary>``func alternative(Bool) -> PlayBadge``</summary>
 
 대체 스타일을 적용합니다.
 
@@ -63,12 +70,14 @@ PlayBadge()
 - **Discussion**
 
   기본 스타일은 반투명 배경을 사용하고, 대체 스타일은 불투명한 회색 배경을 사용합니다.
-  >  Note
+  >  **Note**
   >
   > 기본값은 `false`입니다.
 
+</details>
+<details>
 
-``func size(Size) -> PlayBadge``
+<summary>``func size(Size) -> PlayBadge``</summary>
 
 재생 배지의 크기를 설정합니다.
 
@@ -80,24 +89,55 @@ PlayBadge()
 
   수정된 PlayBadge 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.medium`입니다.
 
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/playbadge/size.md)
+<summary>``enum Size``</summary>
 
 재생 배지의 크기를 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case large``</summary>
+
+큰 크기 배지
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기 배지
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기 배지
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/playbadge/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/playbadge/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

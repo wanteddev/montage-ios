@@ -1,5 +1,5 @@
 ---
-title: ModalNavigation
+title: Modal navigation
 description: 모달 내에서 사용하는 내비게이션 바 컴포넌트입니다.
 ---
 
@@ -24,16 +24,13 @@ ModalNavigation(title: "제목")
     ])
 ```
 
->  See Also
->
-> `ModalNavigation.Variant`, `TopNavigation`
-
 ## Topics
 
 ### Initializers
 
+<details>
 
-``init(title: String, scrollOffset: Binding<CGFloat>)``
+<summary>``init(title: String, scrollOffset: Binding<CGFloat>)``</summary>
 
 내비게이션 바를 초기화합니다.
 
@@ -42,16 +39,22 @@ ModalNavigation(title: "제목")
   | --- | --- |
   | `title` | 내비게이션 바에 표시할 제목 |
   | `scrollOffset` | 스크롤 오프셋에 대한 바인딩 (기본값: .constant(0)) |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func backgroundColor(SwiftUI.Color) -> ModalNavigation``
+<summary>``func backgroundColor(SwiftUI.Color) -> ModalNavigation``</summary>
 
 내비게이션 바의 배경색을 설정합니다.
 
@@ -62,8 +65,10 @@ ModalNavigation(title: "제목")
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
+<details>
 
-``func leadingButton(TopNavigation.Resource.LeadingButton?) -> ModalNavigation``
+<summary>``func leadingButton(TopNavigation.Resource.LeadingButtonInfo?) -> ModalNavigation``</summary>
 
 내비게이션 바의 왼쪽 버튼을 설정합니다.
 
@@ -74,8 +79,10 @@ ModalNavigation(title: "제목")
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
+<details>
 
-``func needHandleArea(Bool) -> ModalNavigation``
+<summary>``func needHandleArea(Bool) -> ModalNavigation``</summary>
 
 바텀 시트의 핸들 영역 필요 여부를 설정합니다.
 
@@ -86,8 +93,10 @@ ModalNavigation(title: "제목")
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
+<details>
 
-``func scrollOffset(Binding<CGFloat>) -> ModalNavigation``
+<summary>``func scrollOffset(Binding<CGFloat>) -> ModalNavigation``</summary>
 
 스크롤 오프셋을 설정합니다.
 
@@ -98,8 +107,10 @@ ModalNavigation(title: "제목")
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
+<details>
 
-``func trailingButtons([TopNavigation.Resource.TrailingButton]) -> ModalNavigation``
+<summary>``func trailingButtons([TopNavigation.Resource.TrailingButtonInfo]) -> ModalNavigation``</summary>
 
 내비게이션 바의 오른쪽 버튼들을 설정합니다.
 
@@ -110,8 +121,10 @@ ModalNavigation(title: "제목")
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
+<details>
 
-``func variant(Variant) -> ModalNavigation``
+<summary>``func variant(Variant) -> ModalNavigation``</summary>
 
 내비게이션 바의 스타일을 설정합니다.
 
@@ -122,20 +135,63 @@ ModalNavigation(title: "제목")
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Variant``](/documentation/montage/modalnavigation/variant.md)
+<summary>``enum Variant``</summary>
 
 내비게이션 바의 외관을 정의하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case emphasized``</summary>
+
+강조된 큰 제목 스타일
+</details>
+<details>
+
+<summary>``case extended``</summary>
+
+제목이 별도 줄에 표시되는 확장된 스타일
+</details>
+<details>
+
+<summary>``case floating(alternative: Bool, background: Bool)``</summary>
+
+배경이 투명한 플로팅 스타일
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `alternative` | 대체 아이콘 사용 여부 (기본값: false) |
+  | `background` | 배경 표시 여부 (기본값: true) |
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+기본 스타일의 내비게이션 바
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/modalnavigation/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/modalnavigation/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

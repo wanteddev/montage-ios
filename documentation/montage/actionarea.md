@@ -1,5 +1,5 @@
 ---
-title: ActionArea
+title: Action area
 description: 화면 하단에 사용자 액션 버튼을 표시하는 영역 컴포넌트입니다.
 ---
 
@@ -34,7 +34,7 @@ ActionArea(variant: .cancel(
 })
 ```
 
->  Note
+>  **Note**
 >
 > 키보드가 표시될 때 자동으로 조정됩니다.
 
@@ -42,19 +42,83 @@ ActionArea(variant: .cancel(
 
 ### Structures
 
+<details>
 
-[``struct ButtonInfo``](/documentation/montage/actionarea/buttoninfo.md)
+<summary>``struct ButtonInfo``</summary>
 
 ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
+#### Initializers
 
-[``struct Model``](/documentation/montage/actionarea/model.md)
+<details>
+
+<summary>``init(text: String, action: (() -> Void))``</summary>
+
+기본 버튼 정보를 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 버튼에 표시할 텍스트 |
+  | `action` | 버튼 클릭 시 실행할 액션 |
+- **Return Value**
+
+  구성된 ButtonInfo 인스턴스
+</details>
+
+#### Type Methods
+
+<details>
+
+<summary>``static func custom((() -> any View)) -> ActionArea.ButtonInfo``</summary>
+
+커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `custom` | 커스텀 버튼 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  커스텀 뷰가 포함된 ButtonInfo 인스턴스
+- **Discussion**
+  >  **Note**
+  >
+  > 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
+
+</details>
+
+</details>
+<details>
+
+<summary>``struct Model``</summary>
 
 ActionArea를 구성하기 위한 모델 구조체입니다.
+#### Initializers
 
+<details>
+
+<summary>``init(variant: ActionArea.Variant, backgroundVisibility: BackgroundVisibility, caption: String?, extra: (() -> any View)?, extraDivider: Bool)``</summary>
+
+ActionArea 모델을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 버튼 레이아웃 변형 |
+  | `backgroundVisibility` | 배경 가시성 설정 |
+  | `caption` | 캡션 텍스트 |
+  | `extra` | 추가 콘텐츠를 생성하는 클로저 |
+  | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부 |
+</details>
+
+</details>
+
+___
 ### Initializers
 
+<details>
 
-``init(variant: Variant)``
+<summary>``init(variant: Variant)``</summary>
 
 ActionArea 컴포넌트를 초기화합니다.
 
@@ -65,16 +129,22 @@ ActionArea 컴포넌트를 초기화합니다.
 - **Return Value**
 
   구성된 ActionArea 인스턴스
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func caption(String?) -> ActionArea``
+<summary>``func caption(String?) -> ActionArea``</summary>
 
 버튼 위에 표시할 캡션 텍스트를 설정합니다.
 
@@ -85,8 +155,10 @@ ActionArea 컴포넌트를 초기화합니다.
 - **Return Value**
 
   수정된 ActionArea 인스턴스
+</details>
+<details>
 
-``func clearBackground(Bool) -> ActionArea``
+<summary>``func clearBackground(Bool) -> ActionArea``</summary>
 
 배경을 투명하게 설정합니다.
 
@@ -100,8 +172,10 @@ ActionArea 컴포넌트를 초기화합니다.
 - **Discussion**
 
   이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
+</details>
+<details>
 
-``func extra((() -> any View)?, divider: Bool) -> ActionArea``
+<summary>``func extra((() -> any View)?, divider: Bool) -> ActionArea``</summary>
 
 버튼 위에 표시할 추가 콘텐츠를 설정합니다.
 
@@ -113,24 +187,67 @@ ActionArea 컴포넌트를 초기화합니다.
 - **Return Value**
 
   수정된 ActionArea 인스턴스
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum BackgroundVisibility``](/documentation/montage/actionarea/backgroundvisibility.md)
+<summary>``enum BackgroundVisibility``</summary>
 
 ActionArea의 배경 가시성을 제어하는 열거형입니다.
+#### Enumeration Cases
 
-[``enum Variant``](/documentation/montage/actionarea/variant.md)
+<details>
+
+<summary>``case automatic``</summary>
+
+자동으로 배경 가시성을 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 가시성이 자동 처리됩니다.
+</details>
+<details>
+
+<summary>``case manual(Bool)``</summary>
+
+수동으로 배경 가시성을 설정합니다. true면 배경이 표시되고, false면 배경이 투명해집니다.
+</details>
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
 
 ActionArea의 버튼 레이아웃 변형을 정의합니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case cancel(main: ButtonInfo)``</summary>
+
+취소 버튼만 있는 간단한 레이아웃
+</details>
+<details>
+
+<summary>``case neutral(main: ButtonInfo, sub: ButtonInfo?, alternative: ButtonInfo?)``</summary>
+
+중립적인 스타일의 버튼 레이아웃
+</details>
+<details>
+
+<summary>``case strong(main: ButtonInfo, sub: ButtonInfo?, alternative: ButtonInfo?)``</summary>
+
+강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
+</details>
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/actionarea/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/actionarea/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

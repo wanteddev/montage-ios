@@ -1,5 +1,5 @@
 ---
-title: CounterPagination
+title: Counter pagination
 description: 숫자 카운터 형태의 페이지 표시기 컴포넌트입니다.
 ---
 
@@ -19,7 +19,7 @@ CounterPagination(selectedPage: $currentPage, totalPages: 10)
     .alternative(true)
 ```
 
->  Note
+>  **Note**
 >
 > 이 컴포넌트는 기본적으로 어두운 배경 위에서 잘 보이도록 설계되었습니다.
 
@@ -27,8 +27,9 @@ CounterPagination(selectedPage: $currentPage, totalPages: 10)
 
 ### Initializers
 
+<details>
 
-``init(selectedPage: Binding<Int>, totalPages: Int)``
+<summary>``init(selectedPage: Binding<Int>, totalPages: Int)``</summary>
 
 카운터 형태의 페이지네이션을 초기화합니다.
 
@@ -37,16 +38,22 @@ CounterPagination(selectedPage: $currentPage, totalPages: 10)
   | --- | --- |
   | `selectedPage` | 현재 선택된 페이지 번호 (1부터 시작) |
   | `totalPages` | 전체 페이지 수 |
+</details>
 
+___
 ### Instance Properties
 
+<details>
 
-``var body: some View``
+<summary>``var body: some View``</summary>
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func alternative(Bool) -> CounterPagination``
+<summary>``func alternative(Bool) -> CounterPagination``</summary>
 
 카운터 페이지네이션의 대체 스타일을 적용합니다.
 
@@ -60,12 +67,14 @@ CounterPagination(selectedPage: $currentPage, totalPages: 10)
 - **Discussion**
 
   기본 스타일은 반투명 배경을 사용하고, 대체 스타일은 좀 더 불투명한 회색 배경을 사용합니다.
-  >  Note
+  >  **Note**
   >
   > 기본값은 `false`입니다.
 
+</details>
+<details>
 
-``func size(Size) -> CounterPagination``
+<summary>``func size(Size) -> CounterPagination``</summary>
 
 카운터 페이지네이션의 크기를 설정합니다.
 
@@ -77,24 +86,49 @@ CounterPagination(selectedPage: $currentPage, totalPages: 10)
 
   수정된 Counter 인스턴스
 - **Discussion**
-  >  Note
+  >  **Note**
   >
   > 기본값은 `.medium`입니다.
 
+</details>
 
+___
 ### Enumerations
 
+<details>
 
-[``enum Size``](/documentation/montage/counterpagination/size.md)
+<summary>``enum Size``</summary>
 
 카운터 페이지네이션의 크기를 지정하는 열거형입니다.
+#### Enumeration Cases
 
+<details>
+
+<summary>``case medium``</summary>
+
+중간 크기
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+작은 크기
+</details>
+
+#### Default Implementations
+
+
+[Equatable Implementations](/docs/utility/ios/equatable-implementations.md)
+
+</details>
+
+___
 ### Default Implementations
 
 
-[View Implementations](/documentation/montage/counterpagination/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/counterpagination/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 

@@ -29,23 +29,23 @@ Button("메뉴") {
 }
 ```
 
->  See Also
->
-> `SwiftUI.Shape` 프로토콜
-
 ## Topics
 
 ### Initializers
 
+<details>
 
-``init()``
+<summary>``init()``</summary>
 
 삼각형을 초기화합니다.
+</details>
 
+___
 ### Instance Methods
 
+<details>
 
-``func path(in: CGRect) -> Path``
+<summary>``func path(in: CGRect) -> Path``</summary>
 
 삼각형 경로를 정의합니다.
 
@@ -59,17 +59,19 @@ Button("메뉴") {
 - **Discussion**
 
   삼각형은 기본적으로 아래쪽을 향하는 형태로 그려집니다. 방향을 변경하려면 rotationEffect 모디파이어를 사용하세요.
+</details>
 
+___
 ### Default Implementations
 
 
-[Animatable Implementations](/documentation/montage/triangle/animatable-implementations.md)
+[Animatable Implementations](/docs/utility/ios/animatable-implementations.md)
 
-[Shape Implementations](/documentation/montage/triangle/shape-implementations.md)
+[Shape Implementations](/docs/utility/ios/shape-implementations.md)
 
-[View Implementations](/documentation/montage/triangle/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
-[View Implementations](/documentation/montage/triangle/view-implementations.md)
+[View Implementations](/docs/utility/ios/view-implementations.md)
 
 ## Relationships
 
