@@ -25,8 +25,6 @@ import SwiftUI
 /// PushBadge(variant: .number(5))
 ///     .backgroundColor(.red)
 /// ```
-///
-/// - SeeAlso: `PushBadge.Modifier`, `PushBadge.Variant`, `PushBadge.Size`, `PushBadge.Position`
 public struct PushBadge: View {
     // MARK: - Types
     

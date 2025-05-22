@@ -27,8 +27,6 @@ import UIKit
 ///
 /// - Note: 텍스트 스타일을 적용할 때는 일관성을 위해 직접 폰트를 지정하기보다
 ///   Typography 시스템을 사용하는 것이 권장됩니다.
-///
-/// - SeeAlso: `Typography.Weight`, `Typography.Variant`
 public enum Typography {
     /// 폰트 두께를 정의하는 열거형
     ///

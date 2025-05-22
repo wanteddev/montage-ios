@@ -34,8 +34,6 @@ import SwiftUI
 ///         }
 /// }
 /// ```
-///
-/// - SeeAlso: `Toast.Model`, `Toast.Variant`, `Toast.Location`, `Toast.Duration`, `Toast.ToastModifier`
 public struct Toast: View {
     /// 토스트 메시지의 데이터 모델을 정의하는 구조체입니다.
     ///

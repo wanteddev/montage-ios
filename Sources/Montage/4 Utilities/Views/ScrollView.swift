@@ -37,8 +37,6 @@ import SwiftUI
 ///     try? await Task.sleep(nanoseconds: 2_000_000_000)
 /// }
 /// ```
-///
-/// - SeeAlso: `ScrollView.ScrollStatus`
 public struct ScrollView: View {
     // MARK: - Initializer
     private var externalScrollStatus: Binding<ScrollStatus>?

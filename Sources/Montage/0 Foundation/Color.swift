@@ -29,8 +29,6 @@ import UIKit
 /// - Note: 디자인 시스템 UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다
 ///   Semantic 색상을 사용하는 것이 권장됩니다. 이는 다크 모드와 같은 다양한 
 ///   환경에서 일관된 디자인을 유지하는 데 도움이 됩니다.
-///
-/// - SeeAlso: `Color.Atomic`, `Color.Semantic`
 public enum Color {
     /// 디자인 시스템에서 정의된 Atomic 컬러 팔레트
     ///
@@ -1016,8 +1014,6 @@ extension SwiftUI.Color {
 ///
 /// 이 프로토콜을 준수하는 타입은 주어진 UITraitCollection에 따라
 /// 적절한 UIColor를 반환할 수 있어야 합니다.
-///
-/// - SeeAlso: `Color.Atomic`, `Color.Semantic`
 public protocol ColorResolvable {
     /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
     ///

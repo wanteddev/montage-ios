@@ -47,8 +47,6 @@ import SwiftUI
 ///     )
 /// )
 /// ```
-///
-/// - SeeAlso: `Tooltip.Position`, `Tooltip.ButtonInfo`, `Tooltip.Modifier`
 public enum Tooltip {
     
     // MARK: - Types

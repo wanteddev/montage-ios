@@ -15,7 +15,6 @@ import UIKit
 /// Solid 또는 Outline 스타일로 표현할 수 있으며, 다양한 크기와 색상을 지원합니다.
 ///
 /// - Warning: 이 클래스는 더 이상 사용되지 않으며, 대신 `Montage.ContentBadge`를 사용하세요.
-/// - SeeAlso: ``ContentBadge``
 ///
 /// ```swift
 /// // 기본 사용법
@@ -43,8 +42,6 @@ public final class ContentBadgeUIView: UIView {
     ///
     /// - `.solid`: 배경색이 채워진 스타일
     /// - `.outline`: 테두리만 있는 스타일
-    /// 
-    /// - SeeAlso: ``ContentBadge.Variant``
     public var variant: ContentBadge.Variant = .solid {
         didSet {
             updateViews()
@@ -56,8 +53,6 @@ public final class ContentBadgeUIView: UIView {
     /// - `.xsmall`: 가장 작은 크기 (12pt 아이콘)
     /// - `.small`: 작은 크기 (14pt 아이콘)
     /// - `.medium`: 중간 크기 (16pt 아이콘)
-    ///
-    /// - SeeAlso: ``ContentBadge.Size``
     public var size: ContentBadge.Size = .small {
         didSet {
             setupUpdateableConstraints()
@@ -69,8 +64,6 @@ public final class ContentBadgeUIView: UIView {
     ///
     /// - `.neutral()`: 기본 중립 색상
     /// - `.accent(contentColor, enclosureColor)`: 커스텀 강조 색상
-    ///
-    /// - SeeAlso: ``ContentBadge.ColorStyle``
     public var colorStyle: ContentBadge.ColorStyle = .neutral() {
         didSet {
             updateViews()

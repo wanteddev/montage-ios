@@ -33,7 +33,6 @@ import SwiftUI
 /// ```
 ///
 /// - Note: 버튼은 다양한 수정자(modifier)를 사용하여 모양과 동작을 커스터마이즈할 수 있습니다.
-/// - SeeAlso: ``Typography``, ``Color``
 public struct Button: View {
     
     // MARK: - Types

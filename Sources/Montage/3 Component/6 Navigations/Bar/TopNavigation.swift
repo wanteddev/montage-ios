@@ -26,8 +26,6 @@ import SwiftUI
 ///     ]
 /// )
 /// ```
-///
-/// - SeeAlso: `TopNavigation.Variant`, `TopNavigation.Resource`
 public struct TopNavigation: View {
     // MARK: - Uninitialised properties
     

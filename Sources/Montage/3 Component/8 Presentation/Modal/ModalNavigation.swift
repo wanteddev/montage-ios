@@ -25,8 +25,6 @@ import SwiftUI
 ///         })
 ///     ])
 /// ```
-///
-/// - SeeAlso: `ModalNavigation.Variant`, `TopNavigation`
 public struct ModalNavigation: View {
     // MARK: - Types
     

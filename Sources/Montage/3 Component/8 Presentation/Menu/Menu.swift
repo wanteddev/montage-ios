@@ -40,8 +40,6 @@ import SwiftUI
 ///     items: $radioItems
 /// )
 /// ```
-///
-/// - SeeAlso: `Menu.Variant`, `Menu.Item`
 public struct Menu: View {
     /// 메뉴의 표시 형태를 정의하는 열거형입니다.
     public enum Variant {

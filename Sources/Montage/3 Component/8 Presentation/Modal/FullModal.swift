@@ -49,8 +49,6 @@ import SwiftUI
 ///         }
 ///     )
 /// ```
-///
-/// - SeeAlso: `FullModalModifier`, `ModalNavigation`, `ActionArea.Model`
 public struct FullModal: View {
     // MARK: - Initializer
     
@@ -130,8 +128,6 @@ public struct FullModal: View {
 ///     }
 /// )
 /// ```
-///
-/// - SeeAlso: `FullModal`
 struct FullModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let ignoresEdgeInsets: Bool

@@ -42,7 +42,6 @@ import SwiftUI
 /// ```
 ///
 /// - Note: 아코디언은 기본적으로 하단에 구분선을 갖고 있으며, `hideDivider()` 수정자를 통해 제거할 수 있습니다.
-/// - SeeAlso: ``VerticalPadding``
 public struct Accordion: View {
     // MARK: - Types
     

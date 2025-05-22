@@ -44,8 +44,6 @@ import SwiftUI
 ///         Text("바텀 시트 내용")
 ///     }
 /// ```
-///
-/// - SeeAlso: `BottomSheetModalModifier`, `ModalNavigation`, `ActionArea.Model`
 public struct BottomSheetModal: View {
     // MARK: - Types
     
@@ -301,8 +299,6 @@ public struct BottomSheetModal: View {
 ///     }
 /// )
 /// ```
-///
-/// - SeeAlso: `BottomSheetModal`
 struct BottomSheetModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let bottomSheetContent: () -> any View

@@ -22,8 +22,6 @@ import SwiftUI
 ///     .colorStyle(.accent(SwiftUI.Color.blue))
 ///     .leadingIcon(.check)
 /// ```
-///
-/// - SeeAlso: `ContentBadge.Variant`, `ContentBadge.Size`, `ContentBadge.ColorStyle`
 public struct ContentBadge: View {
     /// 뱃지의 외관을 결정하는 열거형 타입입니다.
     public enum Variant {

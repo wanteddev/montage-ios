@@ -29,8 +29,6 @@ import SwiftUI
 ///         .offset(y: -6)
 /// }
 /// ```
-///
-/// - SeeAlso: `SwiftUI.Shape` 프로토콜
 public struct Triangle: Shape {
     /// 삼각형을 초기화합니다.
     public init() {}

@@ -36,8 +36,6 @@ import SwiftUI
 ///         }
 /// }
 /// ```
-///
-/// - SeeAlso: `SnackBar.Duration`, `SnackBar.Model`, `SnackBar.SnackBarModifier`
 public struct SnackBar: View {
     /// SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
     public enum Duration: Double {

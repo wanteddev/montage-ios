@@ -48,8 +48,6 @@ import SwiftUI
 ///         }
 ///     )
 /// ```
-///
-/// - SeeAlso: `PopupModalModifier`, `ModalNavigation`, `ActionArea.Model`
 public struct PopupModal: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
     public enum Resize {
@@ -255,8 +253,6 @@ public struct PopupModal: View {
 ///     }
 /// )
 /// ```
-///
-/// - SeeAlso: `PopupModal`
 struct PopupModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let resize: PopupModal.Resize
