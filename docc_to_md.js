@@ -10,8 +10,7 @@ function makeLink(title, url, deprecated = false) {
 
 // 토픽 섹션 변환
 function renderTopicSection(section, references, depth = 0) {
-  if (section.title === 'Classes' ||
-    section.title === 'Extended Classes') {
+  if (section.title === 'Classes') {
     // 클래스 표시 안함
     return '';
   }
@@ -28,7 +27,8 @@ function renderTopicSection(section, references, depth = 0) {
     }
 
     let symbolDetails = '';
-    if (ref.role === 'symbol' && ref.kind === 'symbol') {
+    if (ref.title === 'UIKit') continue;
+    if (ref.kind === 'symbol') {
       // 심볼의 상세 정보를 가져오기
       const symbolJsonPath = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data', `${url}.json`);
       md += `<details>\n`;
@@ -121,7 +121,7 @@ function renderTopicSection(section, references, depth = 0) {
         // UIKit 관련 문서 제외
         return;
       }
-      md += `\n${makeLink(title, `/docs/utility/ios/${urlPathLastComponent}`, deprecated)}\n`;
+      md += `\n${makeLink(title, `/docs/utilities/ios/${urlPathLastComponent}`, deprecated)}\n`;
       if (desc) md += `\n${desc}\n`;
     }
   }
@@ -232,15 +232,33 @@ function renderContentSections(sections, references) {
 }
 
 // 메타데이터 → 프론트매터
-function renderFrontmatter(json) {
+function renderFrontmatter(json, isUtil = false) {
   let fm = `---\n`;
   if (json.metadata && json.metadata.title) {
-    let title = json.metadata.title === 'Montage' ? 'Extended modules' : json.metadata.title;
+    let title = json.metadata.title;
     // 카멜/파스칼 케이스를 센텐스 케이스로 변환
-    if (title.length > 0) {
-      title = title.replace(/([A-Z])/g, ' $1').trim();
-      title = title.toLowerCase();
-      title = title.charAt(0).toUpperCase() + title.slice(1);
+    if (title.length > 0 && !isUtil) {
+      // 1. 단어 경계에 공백 추가 (카멜/파스칼 케이스 → 단어 분리)
+      title = title
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+        .trim();
+
+      // 2. 각 단어별로 처리
+      title = title
+        .split(' ')
+        .map((word, idx) => {
+          // 2글자 이상 연속 대문자(약어)는 그대로, 나머지는 센텐스 케이스
+          if (/^[A-Z]{2,}$/.test(word)) {
+            return word;
+          }
+          // 첫 단어만 대문자, 나머지는 소문자
+          if (idx === 0) {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+          }
+          return word.toLowerCase();
+        })
+        .join(' ');
     }
     fm += `title: ${title}\n`;
   }
@@ -254,8 +272,13 @@ function renderFrontmatter(json) {
 }
 
 // 메인 변환 함수
-function jsonToMarkdown(json) {
-  let md = renderFrontmatter(json);
+function jsonToMarkdown(json, isUtil = false) {
+  let md = renderFrontmatter(json, isUtil);
+
+  if (isUtil) {
+    md += `${json.metadata.roleHeading}\n\n`;
+    md += `# ${json.metadata.title}\n\n`;
+  }
 
   // 선언부
   if (json.primaryContentSections) {
@@ -290,9 +313,6 @@ function jsonToMarkdown(json) {
   if (json.topicSections) {
     md += '## Topics\n\n';
     json.topicSections.forEach((sec, index, array) => {
-      if (json.metadata.title === 'Montage' && sec.title !== 'Extended Modules') {
-        return;
-      }
       md += renderTopicSection(sec, json.references);
       // 마지막 섹션이 아닐 경우에만 구분선 추가
       if (index < array.length - 1) {
@@ -310,13 +330,10 @@ function jsonToMarkdown(json) {
   return md;
 }
 
-let count = 0;
-
 // 단일 파일 변환
 function convertFile(jsonPath) {
-  const relPath = path.relative('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation', jsonPath);
-  let mdPath = path.join('documentation', relPath).replace(/\.json$/, '.md');
   const json = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+
   if (json.metadata.roleHeading === 'Initializer' ||
     json.metadata.roleHeading === 'Instance Method' ||
     json.metadata.roleHeading === 'Instance Property' ||
@@ -324,28 +341,44 @@ function convertFile(jsonPath) {
     json.metadata.roleHeading === 'Type Property' ||
     json.metadata.roleHeading === 'Operator' ||
     json.metadata.roleHeading === 'Class' ||
-    json.metadata.roleHeading === 'Enumeration' ||
+    json.metadata.roleHeading === 'Enumeration' && json.metadata.title.split('.').length > 1 ||
     json.metadata.roleHeading === 'Case' ||
+    json.metadata.roleHeading === 'Extended Class' ||
+    json.metadata.roleHeading === 'Extended Structure' ||
+    json.metadata.roleHeading === 'Extended Enumeration' ||
+    json.metadata.roleHeading === 'Extended Protocol' ||
     json.metadata.roleHeading === 'Structure' && json.metadata.title.split('.').length > 1) {
     // Topic 섹션 항목들 별개 문서 생성 제외
     return;
   }
 
-  const mdPathLastComponent = mdPath.split('/').at(-1);
-  if (mdPathLastComponent.startsWith('ui')) {
+  // 심볼명(클래스/구조체/프로토콜 등)에서 Swift 파일명 추출
+  const jsonFileName = jsonPath.split('/').at(-1);
+  if (jsonFileName.startsWith('ui') || jsonFileName.endsWith('montage.json')) {
     // UIKit 관련 문서 제외
     return;
   }
-  if (mdPathLastComponent.endsWith('implementations.md')) {
-    mdPath = `documentation/montage/protocolimplementations/${mdPathLastComponent}`
-  } else if (mdPathLastComponent.endsWith('montage.md')) {
-    mdPath = `documentation/extendedmodules.md`
+
+  let mdPath;
+  if (json.metadata && json.metadata.title && swiftFileMap[json.metadata.title]) {
+    // Swift 파일 구조와 동일하게 저장
+    const swiftFilePath = swiftFileMap[json.metadata.title].replace(/[0-9] /g, '').toLowerCase();
+    if (swiftFilePath.includes('utilities')) {
+      if (swiftFilePath.includes('components')) {
+        mdPath = path.join('documentation', swiftFilePath, 'ios', jsonFileName.replace(/\.json$/, '.md').toLowerCase());
+      } else {
+        mdPath = path.join('documentation', swiftFilePath.replace(/(utilities).*$/, '$1'), 'ios', jsonFileName.replace(/\.json$/, '.md').toLowerCase());
+      }
+    } else {
+      mdPath = path.join('documentation', swiftFilePath, jsonFileName.replace(/\.json$/, '').toLowerCase(), 'ios.md');
+    }
+  } else {
+    mdPath = path.join('documentation/utilities/ios/', jsonFileName.replace(/\.json$/, '.md'));
   }
 
-  const md = jsonToMarkdown(json);
+  const md = jsonToMarkdown(json, mdPath.includes('utilities'));
   fs.mkdirSync(path.dirname(mdPath), { recursive: true });
   fs.writeFileSync(mdPath, md, 'utf-8');
-  count++;
 }
 
 // 재귀적으로 montage/ 하위 모든 json 변환
@@ -357,9 +390,21 @@ function walk(dir) {
   });
 }
 
-// 시작점
-console.time('start');
-walk('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation');
-console.timeEnd('start');
-console.log(`변환 완료: ${count}개의 파일`);
+function walkSwiftFiles(dir, relBase = '') {
+  fs.readdirSync(dir).forEach((file) => {
+    const fullPath = path.join(dir, file);
+    const relPath = path.join(relBase, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      walkSwiftFiles(fullPath, relPath);
+    } else if (file.endsWith('.swift')) {
+      swiftFileMap[file.replace(/\.swift$/, '')] = relBase; // ex: Button.swift: 3 Component/Button/
+    }
+  });
+}
 
+const montageSrcRoot = path.join(__dirname, 'Sources/Montage');
+const swiftFileMap = {};
+
+walkSwiftFiles(montageSrcRoot);
+
+walk('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation');
