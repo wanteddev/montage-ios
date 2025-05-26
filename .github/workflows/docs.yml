@@ -1,0 +1,65 @@
+name: Generate Document & PR
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  generate-document:
+    runs-on: [self-hosted, utility]
+
+    env:
+      GIT_USER_NAME: 'github-actions[bot]'
+      GIT_USER_EMAIL: 'github-actions[bot]@users.noreply.github.com'
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run generate_docc.sh
+        run: |
+          ./generate_docc.sh
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Create feature/documentation branch
+        run: |
+          git checkout develop
+          git pull origin develop
+          git checkout -b feature/documentation/${{ steps.get_tag.outputs.tag }}
+
+      - name: Run docc_to_md.js
+        run: |
+          node docc_to_md.js
+
+      - name: Commit and push markdown docs
+        run: |
+          git config user.name "${GIT_USER_NAME}"
+          git config user.email "${GIT_USER_EMAIL}"
+          git add .
+          git commit -m "docs: convert docc to markdown [ci skip]" || echo "No changes to commit"; exit 1
+          git push origin HEAD
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: feature/documentation/${{ steps.get_tag.outputs.tag }}
+          title: "docs: docc to markdown for ${{ steps.get_tag.outputs.tag }}"
+          body: |
+            Montage ${{ steps.get_tag.outputs.tag }} 최신 문서 반영 PR입니다. 

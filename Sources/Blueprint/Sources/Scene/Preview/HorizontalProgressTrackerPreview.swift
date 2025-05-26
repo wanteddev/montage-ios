@@ -14,9 +14,9 @@ struct HorizontalProgressTrackerPreview: View {
     init() {}
     var body: some View {
         VStack(spacing: 20) {
-            ProgressTracker.Horizontal(progress: $progress, labels: labels)
+            HorizontalProgressTracker(progress: $progress, labels: labels)
             
-            ProgressTracker.Horizontal(progress: $progress, count: 4)
+            HorizontalProgressTracker(progress: $progress, count: 4)
             
             Spacer(minLength: 0)
             HStack {

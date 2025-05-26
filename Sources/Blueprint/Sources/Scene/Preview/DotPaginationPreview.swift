@@ -17,15 +17,15 @@ struct DotPaginationPreview: View {
             Grid(horizontalSpacing: 30, verticalSpacing: 10) {
                 ForEach(1...9, id: \.self) { totalPages in
                     GridRow {
-                        Pagination.Dot(selectedPage: $selectedPage, totalPages: totalPages)
-                        Pagination.Dot(selectedPage: $selectedPage, totalPages: totalPages)
+                        DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
+                        DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
                             .size(.small)
                     }
                     GridRow {
                         Group {
-                            Pagination.Dot(selectedPage: $selectedPage, totalPages: totalPages)
+                            DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
                                 .variant(.white)
-                            Pagination.Dot(selectedPage: $selectedPage, totalPages: totalPages)
+                            DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
                                 .variant(.white).size(.small)
                         }
                         .background {

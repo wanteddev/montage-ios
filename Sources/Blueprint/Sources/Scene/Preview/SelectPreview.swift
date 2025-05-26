@@ -50,7 +50,7 @@ struct SelectPreview: View {
         ]
     }
     
-    private let bottomSheetResizes: [Modal.BottomSheet.Resize] = [
+    private let bottomSheetResizes: [BottomSheetModal.Resize] = [
         .hug,
         .fixedRatio(0.6),
         .fixedHeight(200),
@@ -143,12 +143,12 @@ struct SelectPreview: View {
                     }
                     HStack {
                         Text("menuActionArea")
-                        Control.Switch($menuActionArea)
+                        Switch($menuActionArea)
                     }
                     if menuActionArea {
                         HStack {
                             Text("menuButtonTitle")
-                            TextInput.TextField(text: $menuButtonTitle)
+                            TextField(text: $menuButtonTitle)
                         }
                     }
                 case .multiple:
@@ -160,26 +160,26 @@ struct SelectPreview: View {
                         )
                         .size(.small)
                         Text("overflow")
-                        Control.Switch($overflow)
+                        Switch($overflow)
                     }
                     HStack {
                         Text("menuButtonTitle")
-                        TextInput.TextField(text: $menuButtonTitle)
+                        TextField(text: $menuButtonTitle)
                     }
                 }
                 HStack {
                     Text("heading")
-                    Control.Switch($heading)
+                    Switch($heading)
                     Text("requiredBadge")
-                    Control.Switch($requiredBadge)
+                    Switch($requiredBadge)
                 }
                 HStack {
                     Text("negative")
-                    Control.Switch($negative)
+                    Switch($negative)
                     Text("disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                     Text("description")
-                    Control.Switch($description)
+                    Switch($description)
                 }
                 HStack {
                     Text("leadingContent")
@@ -191,7 +191,7 @@ struct SelectPreview: View {
                 }
                 HStack {
                     Text("custom menu")
-                    Control.Switch($customMenu)
+                    Switch($customMenu)
                 }
                 HStack {
                     Text("menuResize")

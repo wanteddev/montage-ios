@@ -1,0 +1,17 @@
+{
+  "name": "montage",
+  "version": "1.0.0",
+  "description": "Wanted One Design System",
+  "main": "screenshot_script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "playwright": "^1.52.0",
+    "turndown": "^7.2.0"
+  }
+}

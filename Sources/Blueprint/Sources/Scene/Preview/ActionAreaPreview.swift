@@ -161,24 +161,24 @@ struct ActionAreaPreview: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("BGColor(for Test) :")
-                        Control.Switch($backgroundColor)
+                        Switch($backgroundColor)
                     }
                     HStack {
                         Text("Content Bottom Padding(for Test) :")
-                        Control.Switch($contentBottomPadding)
+                        Switch($contentBottomPadding)
                     }
                     Text("Options").bold()
                     AnyView(variantOptionView())
                     HStack {
                         if variant.isStrongOrNeutral {
                             Text("Caption :")
-                            Control.Switch($caption)
+                            Switch($caption)
                         }
                         Text("Extra :")
-                        Control.Switch($extra)
+                        Switch($extra)
                         if extra {
                             Text("Extra Divider :")
-                            Control.Switch($extraDivider)
+                            Switch($extraDivider)
                         }
                     }
                     HStack {
@@ -192,7 +192,7 @@ struct ActionAreaPreview: View {
                     if gradientIndex == 1 {
                         HStack {
                             Text("clear")
-                            Control.Switch($hideGradient)
+                            Switch($hideGradient)
                         }
                     }
                 }
@@ -205,7 +205,7 @@ struct ActionAreaPreview: View {
                         Color.clear
                         VStack {
                             ForEach(0..<30, id: \.self) {
-                                TextInput.TextField(text: .constant("Item \($0)"))
+                                TextField(text: .constant("Item \($0)"))
                             }
                         }
                         .padding(.bottom, contentBottomPadding ? 30 : 0)

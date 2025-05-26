@@ -86,7 +86,7 @@ public struct SkeletonPreview: View {
                     Text("Options").bold()
                     HStack {
                         Text("show skeleton")
-                        Control.Switch($isPresented)
+                        Switch($isPresented)
                     }
                     HStack {
                         Text("kind")
@@ -97,7 +97,7 @@ public struct SkeletonPreview: View {
                     case .text:
                         HStack {
                             Text("text")
-                            TextInput.TextField(text: $text)
+                            TextField(text: $text)
                         }
                         HStack {
                             Text("align")

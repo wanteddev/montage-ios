@@ -58,7 +58,7 @@ struct TopNavigationPreview: View {
     @State var actionAreaExtra = false
     
     
-    private var v: Bar.TopNavigation.Variant {
+    private var v: TopNavigation.Variant {
         switch variant {
         case .normal: return .normal
         case .extended: return .extended
@@ -66,7 +66,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var leadingButton: Bar.TopNavigation.Resource.LeadingButton {
+    private var leadingButton: TopNavigation.Resource.LeadingButtonInfo {
         switch leading {
         case .back: return .back(action: { presentationMode.wrappedValue.dismiss() })
         case .icon: return .icon(.arrowLeft, action: { presentationMode.wrappedValue.dismiss()})
@@ -74,7 +74,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var trailingButton: [Bar.TopNavigation.Resource.TrailingButton] {
+    private var trailingButton: [TopNavigation.Resource.TrailingButtonInfo] {
         return trailing.map {
             switch $0 {
             case .icon: return .icon(.bell, disable: trailingButtonDisable, action: { closure() })
@@ -83,7 +83,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var actionAreaModel: ActionAreaModifier.Model? {
+    private var actionAreaModel: ActionArea.Model? {
         if actionArea {
             .init(
                 variant: .strong(
@@ -195,7 +195,7 @@ struct TopNavigationPreview: View {
                     selection: $selectedBackgroundColorName,
                     content: {
                         ForEach(Color.Semantic.allCases, id: \.self) { color in
-                            Text(color.name)
+                            Text(color.rawValue)
                         }
                     }
                 )
@@ -214,13 +214,13 @@ struct TopNavigationPreview: View {
             if actionArea {
                 HStack {
                     Text("sub")
-                    Control.Switch($actionAreaSub)
+                    Switch($actionAreaSub)
                     Text("alt")
-                    Control.Switch($actionAreaAlt)
+                    Switch($actionAreaAlt)
                     Text("caption")
-                    Control.Switch($actionAreaCaption)
+                    Switch($actionAreaCaption)
                     Text("extra")
-                    Control.Switch($actionAreaExtra)
+                    Switch($actionAreaExtra)
                 }
             }
             VStack(spacing: 0) {

@@ -5,3 +5,6 @@
 xcuserdata/
 Derived
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+package-lock.json
+node_modules
+docc/

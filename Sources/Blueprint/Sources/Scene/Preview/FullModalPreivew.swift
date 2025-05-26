@@ -52,7 +52,7 @@ struct FullModalPreivew: View {
                         }
                         HStack {
                             Text("navigation")
-                            Control.Switch($navigation)
+                            Switch($navigation)
                             Spacer()
                         }
                         if navigation {
@@ -64,7 +64,7 @@ struct FullModalPreivew: View {
                         }
                         HStack {
                             Text("action")
-                            Control.Switch($action)
+                            Switch($action)
                             Spacer()
                         }
                         if action {
@@ -75,12 +75,12 @@ struct FullModalPreivew: View {
                             }
                             HStack {
                                 Text("caption")
-                                Control.Switch($caption)
+                                Switch($caption)
                                 Text("extra")
-                                Control.Switch($extra)
+                                Switch($extra)
                                 if extra {
                                     Text("extraDivider")
-                                    Control.Switch($extraDivider)
+                                    Switch($extraDivider)
                                 }
                             }
                         }
@@ -106,7 +106,7 @@ struct FullModalPreivew: View {
             },
             navigation: navigation
             ? {
-                Modal.Navigation(title: "제목")
+                ModalNavigation(title: "제목")
                     .variant(navigationVariants[navVariantIndex])
                     .leadingButton(.back(action: {}))
                     .trailingButtons([
@@ -151,7 +151,7 @@ struct FullModalPreivew: View {
         }
     }
     
-    private let navigationVariants: [Modal.Navigation.Variant] = [
+    private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
         .extended,
         .emphasized,

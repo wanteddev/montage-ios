@@ -51,19 +51,19 @@ struct SliderPreview: View {
                 }
                 HStack {
                     Text("unit")
-                    TextInput.TextField(text: $unit)
+                    TextField(text: $unit)
                 }
                 HStack {
                     Text("heading")
-                    Control.Switch($heading)
+                    Switch($heading)
                 }
                 HStack {
                     Text("label")
-                    Control.Switch($label)
+                    Switch($label)
                 }
                 HStack {
                     Text("disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                 }
             }
             .padding(.horizontal)

@@ -2,10 +2,10 @@ import SwiftUI
 import Montage
 
 struct FilterChipPreview: View {
-    @State private var variant: Chip.Filter.Variant = .solid
-    @State private var size: Chip.Filter.Size = .medium
+    @State private var variant: FilterChip.Variant = .solid
+    @State private var size: FilterChip.Size = .medium
     @State private var text = "텍스트"
-    @State private var state: Chip.Filter.State = .normal
+    @State private var state: FilterChip.State = .normal
     @State private var active = false
     @State private var activeLabel: String? = nil
     @State private var disable = false
@@ -17,7 +17,7 @@ struct FilterChipPreview: View {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
                 
-                Chip.Filter(
+                FilterChip(
                     variant: variant,
                     size: size,
                     text: text,
@@ -83,7 +83,7 @@ struct FilterChipPreview: View {
                 
                 HStack {
                     Text("Text")
-                    TextInput.TextField(text: $text)
+                    TextField(text: $text)
                         .placeholder("텍스트를 입력하세요")
                 }
                 
@@ -101,14 +101,14 @@ struct FilterChipPreview: View {
                 
                 HStack {
                     Text("Active")
-                    Control.Switch($active)
+                    Switch($active)
                     Text("Disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                 }
                 
                 HStack {
                     Text("Active Label")
-                    TextInput.TextField(text: Binding(
+                    TextField(text: Binding(
                         get: { activeLabel ?? "" },
                         set: { activeLabel = $0.isEmpty ? nil : $0 }
                     ))

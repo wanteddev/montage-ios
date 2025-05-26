@@ -77,12 +77,12 @@ struct BottomSheetModalPreview: View {
                         }
                         HStack {
                             Text("handle")
-                            Control.Switch($handle)
+                            Switch($handle)
                             Spacer()
                         }
                         HStack {
                             Text("navigation")
-                            Control.Switch($navigation)
+                            Switch($navigation)
                             if navigation {
                                 SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
                                     .size(.small)
@@ -93,7 +93,7 @@ struct BottomSheetModalPreview: View {
                             VStack(alignment: .trailing) {
                                 HStack {
                                     Text("actionArea")
-                                    Control.Switch($actionArea)
+                                    Switch($actionArea)
                                     if actionArea {
                                         SegmentedControl(selectedIndex: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
                                             .size(.small)
@@ -102,12 +102,12 @@ struct BottomSheetModalPreview: View {
                                 if actionArea {
                                     HStack {
                                         Text("caption")
-                                        Control.Switch($caption)
+                                        Switch($caption)
                                         Text("extra")
-                                        Control.Switch($extra)
+                                        Switch($extra)
                                         if extra {
                                             Text("divider")
-                                            Control.Switch($extraDivider)
+                                            Switch($extraDivider)
                                         }
                                     }
                                 }
@@ -131,7 +131,7 @@ struct BottomSheetModalPreview: View {
                         ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { _ in
                             HStack {
                                 Text("텍스트입니다")
-                                TextInput.TextField(text: $text)
+                                TextField(text: $text)
                             }
                         }
                     }
@@ -139,7 +139,7 @@ struct BottomSheetModalPreview: View {
             },
             navigation: navigation
             ? {
-                Modal.Navigation(title: "제목")
+                ModalNavigation(title: "제목")
                     .variant(navigationVariants[navVariantIndex])
                     .leadingButton(.back(action: {}))
                     .trailingButtons([
@@ -185,14 +185,14 @@ struct BottomSheetModalPreview: View {
         }
     }
     
-    private let navigationVariants: [Modal.Navigation.Variant] = [
+    private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
         .extended,
         .emphasized,
         .floating(alternative: false, background: false)
     ]
     
-    private var bottomSheetResizes: [Modal.BottomSheet.Resize] {
+    private var bottomSheetResizes: [BottomSheetModal.Resize] {
         [
             .hug,
             .fixedRatio(fixedRatio),
@@ -211,7 +211,7 @@ struct BottomSheetModalPreview: View {
     }
 }
 
-extension Modal.BottomSheet.Resize: CaseDescribable {}
+extension BottomSheetModal.Resize: CaseDescribable {}
 
 #Preview {
     BottomSheetModalPreview()
