@@ -30,7 +30,7 @@ struct ControlPreview: View {
                     Text("Preview").bold()
                     Spacer()
                     Text("guide line").font(.caption)
-                    Control.Switch($guideLine)
+                    Switch($guideLine)
                 }
                 HStack {
                     Spacer()
@@ -79,9 +79,9 @@ struct ControlPreview: View {
                 }
                 HStack {
                     Text("disabled")
-                    Control.Switch($disabled)
+                    Switch($disabled)
                     Text("tight")
-                    Control.Switch($tight)
+                    Switch($tight)
                 }
             }
             .padding(.horizontal)

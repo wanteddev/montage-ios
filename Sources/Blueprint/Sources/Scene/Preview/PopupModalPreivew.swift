@@ -13,7 +13,7 @@ struct PopupModalPreivew: View {
 
     @State private var itemCountsIndex: Int = 0
     
-    @State private var resize: Modal.Popup.Resize = .hug
+    @State private var resize: PopupModal.Resize = .hug
     @State private var navigation = true
     @State private var navVariantIndex = 0
     
@@ -41,14 +41,14 @@ struct PopupModalPreivew: View {
                 HStack {
                     Text("resize")
                     Picker("resize", selection: $resize) {
-                        Text("hug").tag(Modal.Popup.Resize.hug)
-                        Text("fixed(300)").tag(Modal.Popup.Resize.fixed(300))
+                        Text("hug").tag(PopupModal.Resize.hug)
+                        Text("fixed(300)").tag(PopupModal.Resize.fixed(300))
                     }
                     .pickerStyle(.segmented)
                 }
                 HStack {
                     Text("navigation")
-                    Control.Switch($navigation)
+                    Switch($navigation)
                     if navigation {
                         SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
                             .size(.small)
@@ -59,7 +59,7 @@ struct PopupModalPreivew: View {
                     VStack(alignment: .trailing) {
                         HStack {
                             Text("actionArea")
-                            Control.Switch($actionArea)
+                            Switch($actionArea)
                             Spacer()
                         }
                         if actionArea {
@@ -67,12 +67,12 @@ struct PopupModalPreivew: View {
                                 .size(.small)
                             HStack {
                                 Text("caption")
-                                Control.Switch($caption)
+                                Switch($caption)
                                 Text("extra")
-                                Control.Switch($extra)
+                                Switch($extra)
                                 if extra {
                                     Text("divider")
-                                    Control.Switch($extraDivider)
+                                    Switch($extraDivider)
                                 }
                             }
                         }
@@ -112,7 +112,7 @@ struct PopupModalPreivew: View {
                     ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
                         HStack {
                             Text("Item \(index)")
-                            TextInput.TextField(text: .constant(""))
+                            TextField(text: .constant(""))
                         }
                     }
                 }
@@ -120,7 +120,7 @@ struct PopupModalPreivew: View {
             },
             navigation: navigation
             ? {
-                Modal.Navigation(title: "제목")
+                ModalNavigation(title: "제목")
                     .variant(navigationVariants[navVariantIndex])
                     .leadingButton(.back(action: {}))
                     .trailingButtons([
@@ -165,7 +165,7 @@ struct PopupModalPreivew: View {
         }
     }
     
-    private let navigationVariants: [Modal.Navigation.Variant] = [
+    private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
         .extended,
         .emphasized,
@@ -181,7 +181,7 @@ struct PopupModalPreivew: View {
     }
 }
 
-extension Modal.Popup.Resize: @retroactive Hashable {
+extension PopupModal.Resize: @retroactive Hashable {
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .hug:
@@ -192,7 +192,7 @@ extension Modal.Popup.Resize: @retroactive Hashable {
         }
     }
     
-    public static func == (lhs: Modal.Popup.Resize, rhs: Modal.Popup.Resize) -> Bool {
+    public static func == (lhs: PopupModal.Resize, rhs: PopupModal.Resize) -> Bool {
         switch (lhs, rhs) {
         case (.hug, .hug): return true
         case (.fixed(let l), .fixed(let r)): return l == r

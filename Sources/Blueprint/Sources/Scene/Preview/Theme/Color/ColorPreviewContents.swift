@@ -23,95 +23,95 @@ final class ColorPreviewContents {
     private let atomicColorSet: [AtomicColorGroup] = [
         .init(
             groupName: "Common",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "common") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "common") }
         ),
         .init(
             groupName: "Netural",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "neutral") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "neutral") }
         ),
         .init(
             groupName: "Cool Neutral",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "coolNeutral") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "coolNeutral") }
         ),
         .init(
             groupName: "Red",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "red") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "red") }
         ),
         .init(
             groupName: "Red Orange",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "redOrange") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "redOrange") }
         ),
         .init(
             groupName: "Orange",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "orange") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "orange") }
         ),
         .init(
             groupName: "Lime",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "lime") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "lime") }
         ),
         .init(
             groupName: "Green",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "green") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "green") }
         ),
         .init(
             groupName: "Cyan",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "cyan") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "cyan") }
         ),
         .init(
             groupName: "Light Blue",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "lightBlue") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "lightBlue") }
         ),
         .init(
             groupName: "Blue",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "blue") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "blue") }
         ),
         .init(
             groupName: "Violet",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "violet") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "violet") }
         ),
         .init(
             groupName: "Purple",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "purple") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "purple") }
         ),
         .init(
             groupName: "Pink",
-            colorSets: Color.Atomic.allCases.filter { $0.name.starts(with: "pink") }
+            colorSets: Color.Atomic.allCases.filter { $0.rawValue.starts(with: "pink") }
         )
     ]
     
     private let sementicColorSet: [SemanticColorGroup] = [
         .init(
             groupName: "Primary",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "primary") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "primary") }
         ),
         .init(
             groupName: "Label",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "label") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "label") }
         ),
         .init(
             groupName: "Background",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "background") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "background") }
         ),
         .init(
             groupName: "Interaction",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "interaction") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "interaction") }
         ),
         .init(
             groupName: "Line",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "line") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "line") }
 
         ),
         .init(
             groupName: "Status",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "status") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "status") }
         ),
         .init(
             groupName: "Accent",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "accent") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "accent") }
         ),
         .init(
             groupName: "Inverse",
-            colorSets: Color.Semantic.allCases.filter { $0.name.starts(with: "inverse") }
+            colorSets: Color.Semantic.allCases.filter { $0.rawValue.starts(with: "inverse") }
         )
     ]
     
@@ -134,7 +134,7 @@ final class ColorPreviewContents {
                     name: colorGroup.groupName,
                     colors: colorGroup.colorSets.map { colorSet in
                         .init(
-                            name: colorSet.name.trimmingCharacters(in: .letters),
+                            name: colorSet.rawValue.trimmingCharacters(in: .letters),
                             color: .atomic(colorSet),
                             axis: .vertical
                         )
@@ -148,7 +148,7 @@ final class ColorPreviewContents {
                     name: colorGroup.groupName,
                     colors: colorGroup.colorSets.map { colorSet in
                         .init(
-                            name: colorSet.name,
+                            name: colorSet.rawValue,
                             color: .semantic(colorSet),
                             axis: .horizontal
                         )

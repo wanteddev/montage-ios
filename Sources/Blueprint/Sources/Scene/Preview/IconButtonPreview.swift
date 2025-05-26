@@ -29,7 +29,7 @@ struct IconButtonPreview: View {
         ]
     }
     
-    private let sizes: [IconButton.Variant.Size] = [
+    private let sizes: [IconButton.Size] = [
         .small,
         .medium,
         .custom(size: 8)
@@ -127,17 +127,17 @@ struct IconButtonPreview: View {
                 if isBackground {
                     HStack {
                         Text("alternative")
-                        Control.Switch($alternative)
+                        Switch($alternative)
                     }
                 }
                 HStack {
                     Text("disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                 }
                 if isNormal {
                     HStack {
                         Text("pushBadge")
-                        Control.Switch($showPushBadge)
+                        Switch($showPushBadge)
                     }
                 }
                 if isOutlinedOrSolid {
@@ -147,7 +147,7 @@ struct IconButtonPreview: View {
                     }
                     HStack {
                         Text("backgroundColor")
-                        Control.Switch(Binding(
+                        Switch(Binding(
                             get: { backgroundColor != nil },
                             set: { backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil }
                         ))
@@ -156,7 +156,7 @@ struct IconButtonPreview: View {
                 if isOutlined {
                     HStack {
                         Text("borderColor")
-                        Control.Switch(Binding(
+                        Switch(Binding(
                             get: { borderColor != nil },
                             set: { borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil }
                         ))
@@ -164,7 +164,7 @@ struct IconButtonPreview: View {
                 }
                 HStack {
                     Text("iconColor")
-                    Control.Switch(Binding(
+                    Switch(Binding(
                         get: { iconColor != nil },
                         set: { iconColor = $0 ? .semantic(.accentForegroundCyan) : nil }
                     ))
@@ -178,7 +178,7 @@ struct IconButtonPreview: View {
 }
 
 extension IconButton.Variant: CaseDescribable {}
-extension IconButton.Variant.Size: CaseDescribable {}
+extension IconButton.Size: CaseDescribable {}
 
 #Preview {
     IconButtonPreview()

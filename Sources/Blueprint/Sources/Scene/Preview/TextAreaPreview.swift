@@ -20,7 +20,7 @@ struct TextAreaPreview: View {
             self.rawValue.capitalized
         }
         
-        var r: TextInput.TextArea.Resize {
+        var r: TextArea.Resize {
             switch self {
             case .normal: .normal
             case .limit: .limit
@@ -29,7 +29,7 @@ struct TextAreaPreview: View {
         }
     }
     
-    var resources: [TextInput.TextArea.Resource?] {
+    var resources: [TextArea.Resource?] {
         [
             .none,
             .characterCount(limit: Int(limit), overflow: overflow),
@@ -77,7 +77,7 @@ struct TextAreaPreview: View {
                     Text("Preview").bold()
                     Spacer()
                 }
-                TextInput.TextArea(text: $text, focus: $focusState)
+                TextArea(text: $text, focus: $focusState)
                     .resize(resize.r)
                     .negative(negative)
                     .disable(disable)
@@ -111,7 +111,7 @@ struct TextAreaPreview: View {
                             Text("Placeholder :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($placeholder)
+                            Switch($placeholder)
                         }
                     }
                     HStack {
@@ -119,7 +119,7 @@ struct TextAreaPreview: View {
                             Text("Focus :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($focus) {
+                            Switch($focus) {
                                 focusState = $0
                             }
                         }
@@ -127,7 +127,7 @@ struct TextAreaPreview: View {
                             Text("Disable :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($disable)
+                            Switch($disable)
                         }
                     }
                     HStack {
@@ -135,13 +135,13 @@ struct TextAreaPreview: View {
                             Text("Heading :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($heading)
+                            Switch($heading)
                         }
                         HStack {
                             Text("RequiredBadge :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($requiredBadge)
+                            Switch($requiredBadge)
                         }
                     }
                     HStack {
@@ -149,12 +149,12 @@ struct TextAreaPreview: View {
                             Text("Description :")
                                 .montage(variant: .headline2, weight: .medium)
                             Spacer()
-                            Control.Switch($description)
+                            Switch($description)
                         }
                         Text("Negative :")
                             .montage(variant: .headline2, weight: .medium)
                         Spacer()
-                        Control.Switch($negative)
+                        Switch($negative)
                     }
                     HStack {
                         HStack {
@@ -197,7 +197,7 @@ struct TextAreaPreview: View {
                             Text("limit")
                             SwiftUI.Slider(value: $limit, in: 10...1000, step: 10)
                             Text("overflow")
-                            Control.Switch($overflow)
+                            Switch($overflow)
                         }
                     }
                 }
@@ -218,7 +218,7 @@ struct TextAreaPreview: View {
     }
 }
 
-extension TextInput.TextArea.Resource {
+extension TextArea.Resource {
     var isCharacterCount: Bool {
         if case .characterCount = self {
             return true
@@ -228,7 +228,7 @@ extension TextInput.TextArea.Resource {
     }
 }
 
-extension TextInput.TextArea.Resource: CaseDescribable {}
+extension TextArea.Resource: CaseDescribable {}
 
 #Preview {
     TextAreaPreview()

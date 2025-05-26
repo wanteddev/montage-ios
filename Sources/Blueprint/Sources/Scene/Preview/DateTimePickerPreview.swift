@@ -55,7 +55,7 @@ struct DateTimePickerPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("wheel style date picker")
-                    Control.Switch($datePickerStyleIsWheel)
+                    Switch($datePickerStyleIsWheel)
                 }
             }
             .padding(.horizontal)

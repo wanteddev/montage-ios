@@ -45,14 +45,14 @@ struct PushBadgePreview: View {
                         .frame(width: 50, height: 50)
                         .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet))
                         .opacity(0.3)
-                        .modifier(PushBadge.Modifier(
+                        .pushBadge(
                             variant: variants[variantIndex],
                             size: sizes[sizeIndex],
                             fontColor: fontColor,
                             backgroundColor: backgroundColor,
                             position: positionYs[positionYIndex],
                             inset: inset ? .init(width: 20, height: 20) : .zero
-                        ))
+                        )
                     Spacer()
                 }
                 Text("Options").bold()
@@ -100,7 +100,7 @@ struct PushBadgePreview: View {
                 Divider()
                 HStack {
                     Text("inset(20,20)")
-                    Control.Switch($inset)
+                    Switch($inset)
                 }
             }
             .padding()

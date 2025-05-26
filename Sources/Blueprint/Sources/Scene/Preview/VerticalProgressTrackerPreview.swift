@@ -18,18 +18,18 @@ struct VerticalProgressTrackerPreview: View {
         VStack {
             HStack {
                 Text("Label")
-                Control.Switch($isLabelExist) {
+                Switch($isLabelExist) {
                     isLabelExist = $0
                     isAccessoryExist = $0
                 }
                 Text("Label Accessory")
-                Control.Switch($isAccessoryExist) { isAccessoryExist = $0 }
+                Switch($isAccessoryExist) { isAccessoryExist = $0 }
                 Text("Content")
-                Control.Switch($isContentExist) { isContentExist = $0 }
+                Switch($isContentExist) { isContentExist = $0 }
             }
             .font(.caption)
             
-            ProgressTracker.Vertical(
+            VerticalProgressTracker(
                 progress: $progress,
                 stepContents: [
                     .init(
@@ -45,7 +45,7 @@ struct VerticalProgressTrackerPreview: View {
                         },
                         contentView: {
                             isContentExist
-                            ? AnyView(TextInput.TextArea(text: .constant("테스트 텍스트입니다.")))
+                            ? AnyView(TextArea(text: .constant("테스트 텍스트입니다.")))
                             : AnyView(EmptyView())
                         }
                     ),

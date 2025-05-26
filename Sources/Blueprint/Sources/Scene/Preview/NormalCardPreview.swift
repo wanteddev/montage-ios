@@ -32,7 +32,7 @@ struct NormalCardPreview: View {
                 
                 HStack(spacing: 0) {
                     Spacer(minLength: 0)
-                    Card.Normal(
+                    NormalCard(
                         thumbnail: {
                             Thumbnail(urlString: invalidImageUrl ? "https://invalid-url" : imageUrl, ratio: .r4x3)
                                 .width(thumbnailWidth)
@@ -73,12 +73,12 @@ struct NormalCardPreview: View {
                 Group {
                     HStack {
                         Text("skeleton")
-                        Control.Switch($skeletonIsOn)
+                        Switch($skeletonIsOn)
                     }
                     
                     HStack {
                         Text("invalid image URL")
-                        Control.Switch($invalidImageUrl)
+                        Switch($invalidImageUrl)
                     }
                     
                     HStack {
@@ -89,34 +89,34 @@ struct NormalCardPreview: View {
                     
                     HStack {
                         Text("multiline title")
-                        Control.Switch($multilineTitle)
+                        Switch($multilineTitle)
                         
                         Text("caption")
-                        Control.Switch($showCaption)
+                        Switch($showCaption)
                     }
                     
                     HStack {
                         Text("sub caption")
-                        Control.Switch($showSubCaption)
+                        Switch($showSubCaption)
                         
                         Text("extra caption")
-                        Control.Switch($showExtraCaption)
+                        Switch($showExtraCaption)
                     }
                     
                     HStack {
                         Text("top content")
-                        Control.Switch($showTopContent)
+                        Switch($showTopContent)
                         
                         Text("bottom content")
-                        Control.Switch($showBottomContent)
+                        Switch($showBottomContent)
                     }
                     
                     HStack {
                         Text("overlay caption")
-                        Control.Switch($showOverlayCaption)
+                        Switch($showOverlayCaption)
                         
                         Text("overlay button")
-                        Control.Switch($showOverlayButton)
+                        Switch($showOverlayButton)
                     }
                 }
                 .font(.caption)

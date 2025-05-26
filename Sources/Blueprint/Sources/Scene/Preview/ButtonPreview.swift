@@ -173,37 +173,37 @@ struct ButtonPreview: View {
                 }
                 HStack {
                     Text("iconOnly")
-                    Control.Switch($iconOnly)
+                    Switch($iconOnly)
                     Text("disable")
-                    Control.Switch($disable)
+                    Switch($disable)
                     Text("loading")
-                    Control.Switch($loading)
+                    Switch($loading)
                 }
                 if !iconOnly {
                     HStack {
                         Text("leadingIcon")
-                        Control.Switch($leadingIcon)
+                        Switch($leadingIcon)
                         Text("trailingIcon")
-                        Control.Switch($trailingIcon)
+                        Switch($trailingIcon)
                     }
                 }
                 Divider()
                 Text("color")
                 HStack {
                     Text("content")
-                    Control.Switch($contentColor)
+                    Switch($contentColor)
                     Text("background")
-                    Control.Switch($backgroundColor)
+                    Switch($backgroundColor)
                     Text("border")
-                    Control.Switch($borderColor)
+                    Switch($borderColor)
                 }
                 Divider()
                 Text("font")
                 HStack {
                     Text("variant")
-                    Control.Switch($fontVariant)
+                    Switch($fontVariant)
                     Text("weight")
-                    Control.Switch($fontWeight)
+                    Switch($fontWeight)
                 }
             }
             .font(.caption)

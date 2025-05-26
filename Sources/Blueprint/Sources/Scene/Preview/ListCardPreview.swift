@@ -28,7 +28,7 @@ struct ListCardPreview: View {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
                 
-                Card.List(
+                ListCard(
                     thumbnail: {
                         Thumbnail(urlString: invalidImageUrl ? "https://invalid-url" : imageUrl, ratio: .r4x3)
                             .width(thumbnailWidth)
@@ -63,12 +63,12 @@ struct ListCardPreview: View {
                 Group {
                     HStack {
                         Text("skeleton")
-                        Control.Switch($skeletonIsOn)
+                        Switch($skeletonIsOn)
                     }
                     
                     HStack {
                         Text("invalid image URL")
-                        Control.Switch($invalidImageUrl)
+                        Switch($invalidImageUrl)
                     }
                     
                     HStack {
@@ -79,29 +79,29 @@ struct ListCardPreview: View {
                     
                     HStack {
                         Text("multiline title")
-                        Control.Switch($multilineTitle)
+                        Switch($multilineTitle)
                         
                         Text("caption")
-                        Control.Switch($showCaption)
+                        Switch($showCaption)
                         
                         Text("extra caption")
-                        Control.Switch($showExtraCaption)
+                        Switch($showExtraCaption)
                     }
                     
                     HStack {
                         Text("top content")
-                        Control.Switch($showTopContent)
+                        Switch($showTopContent)
                         
                         Text("bottom content")
-                        Control.Switch($showBottomContent)
+                        Switch($showBottomContent)
                     }
                     
                     HStack {
                         Text("leading content")
-                        Control.Switch($showLeadingContent)
+                        Switch($showLeadingContent)
                         
                         Text("trailing content")
-                        Control.Switch($showTrailingContent)
+                        Switch($showTrailingContent)
                     }
                 }
                 .font(.caption)
