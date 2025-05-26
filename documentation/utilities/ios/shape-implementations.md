@@ -8,10 +8,6 @@ title: Shape Implementations
 
 <details>
 
-<summary>``var body: _ShapeView<Self, ForegroundStyle>``</summary>
-</details>
-<details>
-
 <summary>``var layoutDirectionBehavior: LayoutDirectionBehavior``</summary>
 </details>
 

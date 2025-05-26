@@ -1205,11 +1205,6 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 <summary>``func resolve(UITraitCollection) -> UIColor``</summary>
 
 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `_` | 색상을 해석할 UITraitCollection |
 - **Return Value**
 
   해석된 UIColor 인스턴스
