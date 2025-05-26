@@ -13,6 +13,7 @@ jobs:
     env:
       GIT_USER_NAME: 'github-actions[bot]'
       GIT_USER_EMAIL: 'github-actions[bot]@users.noreply.github.com'
+      GH_TOKEN: ${{ github.token }}
       
     steps:
       - name: Checkout
@@ -26,40 +27,69 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run generate_docc.sh
+      - name: Install GitHub CLI
         run: |
-          ./generate_docc.sh
+          brew install gh
 
-      - name: Get latest tag
-        id: get_tag
+      - name: Get milestone version
+        id: get_version
         run: |
-          TAG=$(git describe --tags --abbrev=0)
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          PR_NUMBER=$(gh pr list --state merged --limit 1 --json number --jq '.[0].number')
+          MILESTONE=$(gh pr view $PR_NUMBER --json milestone --jq '.milestone.title')
+          VERSION="v${MILESTONE}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Create feature/documentation branch
+      - name: Create and checkout feature branch
+        id: create_branch
         run: |
           git checkout develop
           git pull origin develop
-          git checkout -b feature/documentation/${{ steps.get_tag.outputs.tag }}
+          BRANCH_NAME="feature/documentation/${{ steps.get_version.outputs.version }}"
+          if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
+            git checkout $BRANCH_NAME
+            git reset --hard origin/$BRANCH_NAME
+          else
+            git checkout -b $BRANCH_NAME
+          fi
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+      - name: Run generate_docc.sh
+        run: |
+          if ! ./generate_docc.sh; then
+            echo "Failed to generate docc documentation"
+            exit 1
+          fi
 
       - name: Run docc_to_md.js
         run: |
-          node docc_to_md.js
+          if ! node docc_to_md.js; then
+            echo "Failed to convert docc to markdown"
+            exit 1
+          fi
 
       - name: Commit and push markdown docs
+        id: commit
         run: |
           git config user.name "${GIT_USER_NAME}"
           git config user.email "${GIT_USER_EMAIL}"
           git add .
-          git commit -m "docs: convert docc to markdown [ci skip]" || echo "No changes to commit"; exit 1
-          git push origin HEAD
+          if git diff --staged --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "docs: convert docc to markdown [ci skip]"
+            git push origin HEAD --force
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: develop
-          branch: feature/documentation/${{ steps.get_tag.outputs.tag }}
-          title: "docs: docc to markdown for ${{ steps.get_tag.outputs.tag }}"
-          body: |
-            Montage ${{ steps.get_tag.outputs.tag }} 최신 문서 반영 PR입니다. 
+        if: steps.commit.outputs.changes == 'true'
+        run: |
+          PR_EXISTS=$(gh pr list --head feature/documentation/${{ steps.get_version.outputs.version }} --json number --jq 'length')
+          if [ "$PR_EXISTS" -eq "0" ]; then
+            gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
+              --title "docs: docc to markdown for ${{ steps.get_version.outputs.version }}" \
+              --body "Montage ${{ steps.get_version.outputs.version }} 최신 문서 반영 PR입니다." \
+              --label "documentation"
+          else
+            echo "PR already exists for branch feature/documentation/${{ steps.get_version.outputs.version }}"
+          fi
