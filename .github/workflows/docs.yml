@@ -8,7 +8,7 @@ on:
 
 jobs:
   generate-document:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, utility]
 
     env:
       GIT_USER_NAME: 'github-actions[bot]'
