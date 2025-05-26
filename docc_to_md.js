@@ -3,7 +3,7 @@ const path = require('path');
 
 // 링크 생성 함수
 function makeLink(title, url, deprecated = false) {
-  let link = `[${title}](${url}.md)`;
+  let link = `[${title}](${url})`;
   if (deprecated) link = `~~${link}~~\n\n`;
   return link;
 }
@@ -274,11 +274,6 @@ function renderFrontmatter(json, isUtil = false) {
 // 메인 변환 함수
 function jsonToMarkdown(json, isUtil = false) {
   let md = renderFrontmatter(json, isUtil);
-
-  if (isUtil) {
-    md += `${json.metadata.roleHeading}\n\n`;
-    md += `# ${json.metadata.title}\n\n`;
-  }
 
   // 선언부
   if (json.primaryContentSections) {
