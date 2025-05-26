@@ -187,6 +187,7 @@ public enum Icon: String, CaseIterable {
     case folderStarFill
     case full
     case globe
+    case globeFill
     case graduation
     case graduationFill
     case handle
@@ -268,6 +269,8 @@ public enum Icon: String, CaseIterable {
     case navigationMypage
     case navigationRecruit
     case navigationSocial
+    case palette
+    case paletteFill
     case pause
     case pencil
     case pencilFill
@@ -307,6 +310,7 @@ public enum Icon: String, CaseIterable {
     case squareHangul
     case squareKana
     case squareLatin
+    case squareLatinFill
     case squareMore
     case squarePlay
     case squarePlus
@@ -338,6 +342,8 @@ public enum Icon: String, CaseIterable {
     case umbrellaFill
     case underline
     case upload
+    case utility
+    case utilityFill
     case verifiedCheck
     case verifiedCheckFill
     case verifiedStar
@@ -345,6 +351,8 @@ public enum Icon: String, CaseIterable {
     case video
     case webinar
     case write
+    case zepFast
+    case zepFastFill
 
     /// 아이콘의 리소스 이름을 반환합니다.
     public var name: String { rawValue }
