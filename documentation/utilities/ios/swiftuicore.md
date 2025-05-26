@@ -2,10 +2,6 @@
 title: SwiftUICore
 ---
 
-Extended Module
-
-# SwiftUICore
-
 ## Topics
 
 ### Extended Protocols

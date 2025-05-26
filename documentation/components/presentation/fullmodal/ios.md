@@ -123,9 +123,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 

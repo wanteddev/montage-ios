@@ -1306,9 +1306,9 @@ ___
 ### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations.md)
+[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
 
 ## Relationships
 

@@ -64,7 +64,7 @@ ___
 ### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 ## Relationships
 

@@ -72,6 +72,8 @@ jobs:
         run: |
           git config user.name "${GIT_USER_NAME}"
           git config user.email "${GIT_USER_EMAIL}"
+          git config --global pull.rebase false
+          git config --global merge.ff false
           git add .
           if git diff --staged --quiet; then
             echo "changes=false" >> $GITHUB_OUTPUT

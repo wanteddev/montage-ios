@@ -2,10 +2,6 @@
 title: Foundation
 ---
 
-Extended Module
-
-# Foundation
-
 ## Topics
 
 ### Extended Classes

@@ -1218,9 +1218,9 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations.md)
+[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
 
 </details>
 <details>
@@ -1717,9 +1717,9 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations.md)
+[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
 
 </details>
 

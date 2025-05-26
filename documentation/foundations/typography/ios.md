@@ -148,7 +148,7 @@ Text("Hello, World!")
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 <details>
@@ -199,7 +199,7 @@ Text("Hello, World!")
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 

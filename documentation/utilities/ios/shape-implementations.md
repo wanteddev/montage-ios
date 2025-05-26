@@ -2,10 +2,6 @@
 title: Shape Implementations
 ---
 
-API Collection
-
-# Shape Implementations
-
 ## Topics
 
 ### Instance Properties
