@@ -27,14 +27,14 @@ struct ProgressTrackerStepper: View {
                 .fill(backgroundColor)
                 .frame(width: 20, height: 20)
             if state == .complete {
-                Image.montage(.checkThick)
+                Image.icon(.checkThick)
                     .resizable()
                     .renderingMode(.template)
                     .frame(width: 14, height: 14)
                     .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
             } else {
                 Text(String(step))
-                    .montage(variant: .caption1, weight: .bold, semantic: .staticWhite)
+                    .typography(variant: .caption1, weight: .bold, semantic: .staticWhite)
                     .frame(height: 16, alignment: .center)
             }
         }

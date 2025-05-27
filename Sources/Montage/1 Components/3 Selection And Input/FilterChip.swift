@@ -94,11 +94,11 @@ public struct FilterChip: View {
     public var body: some View {
         HStack(spacing: contentSpacing) {
             Text(active && activeLabel != nil ? activeLabel! : text)
-                .montage(variant: typoVariant, weight: .medium, color: fontColor)
+                .typography(variant: typoVariant, weight: .medium, color: fontColor)
                 .paragraph(variant: typoVariant)
                 .padding(.horizontal, textPadding)
             
-            Image.montage(state.wrappedValue == .normal ? .caretDown : .caretUp)
+            Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)
                 .resizable()
                 .foregroundStyle(iconColor)
                 .frame(width: imageSize, height: imageSize)

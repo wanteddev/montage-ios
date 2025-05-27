@@ -15,7 +15,7 @@ extension NSAttributedString {
         color: UIColor,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
-        let font = UIFont.montage(variant: variant, weight: weight)
+        let font = UIFont.font(variant: variant, weight: weight)
         let lineHeight = Typography.getLineHeight(variant: variant)
 
         // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/

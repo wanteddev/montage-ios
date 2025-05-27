@@ -55,7 +55,7 @@ public struct PlayBadge: View {
     
     // MARK: - Body
     public var body: some View {
-        Image.montage(.play)
+        Image.icon(.play)
             .resizable()
             .renderingMode(.template)
             .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))

@@ -95,7 +95,7 @@ extension TypographyPreviewPresenter {
         _ text: String,
         _ combination: Contents.Combination
     ) -> NSAttributedString {
-        .montage(
+        .attributedString(
             text,
             variant: combination.variant,
             weight: combination.weight

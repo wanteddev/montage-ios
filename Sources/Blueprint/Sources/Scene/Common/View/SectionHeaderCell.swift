@@ -13,7 +13,7 @@ import Montage
 final class SectionHeaderCell: BaseCollectionViewCell, CodebaseCollectionCell {
     private lazy var headerTextLabel: UILabel = {
         let view = UILabel()
-        view.font = .montage(variant: .body1, weight: .bold)
+        view.font = .font(variant: .body1, weight: .bold)
         view.textColor = .semantic(.labelNormal)
         return view
     }()

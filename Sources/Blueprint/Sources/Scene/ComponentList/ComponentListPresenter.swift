@@ -55,11 +55,11 @@ extension ComponentListPresenter {
     private func getItemStateFont(_ state: ComponentState) -> UIFont? {
         switch state {
         case .pending:
-            return .montage(variant: .body2, weight: .regular)
+            return .font(variant: .body2, weight: .regular)
         case .previewNotReady:
-            return .montage(variant: .body1, weight: .regular)
+            return .font(variant: .body1, weight: .regular)
         case .completed:
-            return .montage(variant: .body1, weight: .bold)
+            return .font(variant: .body1, weight: .bold)
         }
     }
 }

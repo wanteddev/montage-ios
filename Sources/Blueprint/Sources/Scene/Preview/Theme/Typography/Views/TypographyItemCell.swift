@@ -21,7 +21,7 @@ final class TypographyItemCell: BaseCollectionViewCell, CodebaseCollectionCell {
     
     private lazy var nameLabel: UILabel = {
         let view = UILabel()
-        view.font = .montage(variant: .heading2, weight: .bold)
+        view.font = .font(variant: .heading2, weight: .bold)
         view.textColor = .semantic(.labelAlternative)
         return view
     }()

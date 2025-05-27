@@ -138,7 +138,7 @@ extension OpacityPreviewController: OpacityPreviewDisplayLogic {
         let alpha = CGFloat(viewModel.displayAlpha)
         slider.tintColor = viewModel.displayColor
         colorBlockView.backgroundColor = viewModel.displayColor.withAlphaComponent(alpha)
-        alphaNameLabel.attributedText = .montage(
+        alphaNameLabel.attributedText = .attributedString(
             viewModel.displayAlphaName,
             variant: .title3,
             weight: .medium

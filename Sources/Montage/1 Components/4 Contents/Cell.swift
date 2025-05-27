@@ -23,7 +23,7 @@ import SwiftUI
 /// // 리딩 콘텐츠와 액티브 상태의 셀
 /// Cell(title: "커스텀 셀")
 ///     .leadingContent {
-///         Image.montage(.user)
+///         Image.icon(.user)
 ///             .frame(width: 24, height: 24)
 ///     }
 ///     .active(true)
@@ -106,7 +106,7 @@ public struct Cell: View {
                         
                         if let caption {
                             Text(caption)
-                                .montage(
+                                .typography(
                                     variant: .label2,
                                     semantic: .labelAlternative
                                 )
@@ -120,7 +120,7 @@ public struct Cell: View {
                     }
                     
                     VStack {
-                        Image.montage(.chevronRightTightSmall)
+                        Image.icon(.chevronRightTightSmall)
                             .resizable()
                             .renderingMode(.template)
                             .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
@@ -406,12 +406,12 @@ extension Cell {
         if let highlightText {
             let attributedString: AttributedString = {
                 var string = AttributedString(stringLiteral: title)
-                string.font = .montage(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
+                string.font = .font(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
                 string.foregroundColor = .semantic(normalTitleColor)
                 guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
                     return string
                 }
-                string[range].font = .montage(variant: titleTypography.variant, weight: .bold)
+                string[range].font = .font(variant: titleTypography.variant, weight: .bold)
                 string[range].foregroundColor = .semantic(normalTitleColor)
                 return string
             }()
@@ -420,7 +420,7 @@ extension Cell {
                 .paragraph(variant: titleTypography.variant)
         } else {
             return Text(title)
-                .montage(
+                .typography(
                     variant: titleTypography.variant,
                     weight: active ? .medium : titleTypography.weight,
                     semantic: normalTitleColor

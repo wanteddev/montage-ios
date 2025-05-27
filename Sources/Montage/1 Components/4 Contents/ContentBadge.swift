@@ -123,15 +123,15 @@ public struct ContentBadge: View {
     public var body: some View {
         HStack(spacing: contentItemSpacing) {
             if let leadingIcon {
-                Image.montage(leadingIcon)
+                Image.icon(leadingIcon)
                     .resizable()
                     .foregroundStyle(contentColor)
                     .frame(width: iconSize.width, height: iconSize.height)
             }
             Text(text)
-                .montage(variant: typoVariant, weight: .medium, color: contentColor)
+                .typography(variant: typoVariant, weight: .medium, color: contentColor)
             if let trailingIcon {
-                Image.montage(trailingIcon)
+                Image.icon(trailingIcon)
                     .resizable()
                     .foregroundStyle(contentColor)
                     .frame(width: iconSize.width, height: iconSize.height)

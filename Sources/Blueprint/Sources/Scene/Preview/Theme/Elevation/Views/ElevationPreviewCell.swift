@@ -33,7 +33,7 @@ final class ElevationPreviewCell: BaseCollectionViewCell, CodebaseCollectionCell
     
     private lazy var nameLabel: UILabel = {
         let view = UILabel()
-        view.font = .montage(variant: .title3, weight: .regular)
+        view.font = .font(variant: .title3, weight: .regular)
         view.textColor = .semantic(.labelStrong)
         return view
     }()

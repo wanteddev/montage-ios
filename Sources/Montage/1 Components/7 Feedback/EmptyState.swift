@@ -22,7 +22,7 @@ import SwiftUI
 /// // 모든 요소를 사용한 예시
 /// EmptyState(
 ///     image: { 
-///         Image.montage(.emptyBox)
+///         Image.icon(.emptyBox)
 ///             .resizable()
 ///             .frame(width: 120, height: 120)
 ///     },
@@ -80,7 +80,7 @@ public struct EmptyState: View {
                         HStack {
                             Spacer()
                             Text(title)
-                                .montage(variant: .headline1, weight: .bold)
+                                .typography(variant: .headline1, weight: .bold)
                                 .multilineTextAlignment(.center)
                             Spacer()
                         }
@@ -89,7 +89,7 @@ public struct EmptyState: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .montage(variant: .body2, semantic: .labelAlternative)
+                            .typography(variant: .body2, semantic: .labelAlternative)
                             .paragraph(variant: .body2)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)

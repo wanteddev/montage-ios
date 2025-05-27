@@ -31,7 +31,7 @@ import SwiftUI
 /// ))
 /// .extra({ 
 ///     Text("추가 정보")
-///         .montage(variant: .label2) 
+///         .typography(variant: .label2) 
 /// })
 /// ```
 ///
@@ -267,7 +267,7 @@ private extension ActionArea {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
                 Text(caption)
-                    .montage(variant: .label2, semantic: .labelAlternative)
+                    .typography(variant: .label2, semantic: .labelAlternative)
                     .paragraph(variant: .label2)
             }
         }

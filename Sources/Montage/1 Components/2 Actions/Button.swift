@@ -489,7 +489,7 @@ public struct Button: View {
                 }
                 if let text {
                     SwiftUI.Text(text)
-                        .montage(
+                        .typography(
                             variant: fontVariant ?? typoVariant,
                             weight: fontWeight ?? typoWeight,
                             color: foregroundColor
@@ -631,7 +631,7 @@ private extension Button {
     }
 
     func icon(_ i: Icon) -> some View {
-        Image.montage(i)
+        Image.icon(i)
             .resizable()
             .frame(
                 width: iconSize.width,

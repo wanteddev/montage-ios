@@ -56,14 +56,14 @@ struct ActionChipPreview: View {
                 }
                 .modifying {
                     if leadingImage {
-                        $0.leadingImage(Image.montage(.bell))
+                        $0.leadingImage(Image.icon(.bell))
                     } else {
                         $0
                     }
                 }
                 .modifying {
                     if trailingImage {
-                        $0.trailingImage(Image.montage(.bell))
+                        $0.trailingImage(Image.icon(.bell))
                     } else {
                         $0
                     }

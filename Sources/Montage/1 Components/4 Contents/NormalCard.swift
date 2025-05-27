@@ -166,7 +166,7 @@ public struct NormalCard: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .montage(variant: .body1, weight: .bold, semantic: .labelNormal)
+                            .typography(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .paragraph(variant: .body1)
                             .lineLimit(2)
                             .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: textAreaWidth, height: 22))
@@ -174,7 +174,7 @@ public struct NormalCard: View {
                         VStack(alignment: .leading, spacing: 2) {
                             if let caption {
                                 Text(caption)
-                                    .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .paragraph(variant: .label2)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 18))
@@ -182,7 +182,7 @@ public struct NormalCard: View {
                             
                             if let subCaption {
                                 Text(subCaption)
-                                    .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .paragraph(variant: .label2)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
@@ -190,7 +190,7 @@ public struct NormalCard: View {
                             
                             if let extraCaption {
                                 Text(extraCaption)
-                                    .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .paragraph(variant: .label2)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
@@ -261,7 +261,7 @@ extension NormalCard {
                                 if let caption {
                                     HStack(spacing: 0) {
                                         Text(caption)
-                                            .montage(variant: .caption2, weight: .bold, semantic: .staticWhite)
+                                            .typography(variant: .caption2, weight: .bold, semantic: .staticWhite)
                                             .paragraph(variant: .caption2)
                                         Spacer(minLength: 0)
                                     }

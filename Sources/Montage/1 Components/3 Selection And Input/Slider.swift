@@ -70,7 +70,7 @@ public struct Slider: View {
         VStack(spacing: 32) {
             if heading {
                 Text(headingLabel)
-                    .montage(
+                    .typography(
                         variant: .headline2,
                         weight: .bold,
                         semantic: disable ? .interactionDisable : .labelNormal
@@ -365,7 +365,7 @@ public struct Slider: View {
         
         var body: some View {
             let textView = Text(title)
-                .montage(
+                .typography(
                     variant: .label1,
                     weight: .medium,
                     semantic: disable ? .interactionDisable : .labelNormal

@@ -34,11 +34,11 @@ struct SnackBarPreview: View {
                     TextField(text: $description)
                     Toggle(isOn: $showExtraContents) {
                         Text("extral contents(icon)")
-                            .montage(semantic: .labelAssistive)
+                            .typography(semantic: .labelAssistive)
                     }
                     Toggle(isOn: $showPlaceholder) {
                         Text("show snackBar placeholder")
-                            .montage(semantic: .labelAssistive)
+                            .typography(semantic: .labelAssistive)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -49,7 +49,7 @@ struct SnackBarPreview: View {
                         heading: heading.isEmpty ? nil : heading,
                         description: description.isEmpty ? nil : description,
                         extraContents: {
-                            showExtraContents ? Image.montage(.company) : nil
+                            showExtraContents ? Image.icon(.company) : nil
                         },
                         action: "액션"
                     )

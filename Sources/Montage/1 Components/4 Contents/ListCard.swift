@@ -146,14 +146,14 @@ public struct ListCard: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .montage(variant: .body1, weight: .bold, semantic: .labelNormal)
+                            .typography(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .paragraph(variant: .body1)
                             .lineLimit(1)
                             .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: textAreaWidth, height: 20))
                         
                         if let caption {
                             Text(caption)
-                                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .paragraph(variant: .label2)
                                 .lineLimit(1)
                                 .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
@@ -161,7 +161,7 @@ public struct ListCard: View {
                         
                         if let extraCaption {
                             Text(extraCaption)
-                                .montage(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .paragraph(variant: .label2)
                                 .lineLimit(1)
                                 .skeleton(

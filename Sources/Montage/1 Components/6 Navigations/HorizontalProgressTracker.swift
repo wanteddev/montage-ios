@@ -91,7 +91,7 @@ public struct HorizontalProgressTracker: View {
     
     private func text(at index: Int, alignment: TextAlignment) -> some View {
         Text(labels[index])
-            .montage(variant: .label2, weight: .bold, color: labelColor(at: index))
+            .typography(variant: .label2, weight: .bold, color: labelColor(at: index))
             .multilineTextAlignment(alignment)
             .if(!labels[index].isEmpty)
     }

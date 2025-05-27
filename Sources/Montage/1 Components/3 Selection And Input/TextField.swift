@@ -275,11 +275,11 @@ public struct TextField: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .montage(variant: .label1, weight: .bold, semantic: .labelNeutral)
+                        .typography(variant: .label1, weight: .bold, semantic: .labelNeutral)
                         .paragraph(variant: .label1)
                     if requiredBadge {
                         Text("*")
-                            .montage(variant: .label1, weight: .medium, semantic: .statusNegative)
+                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
                     }
                 }
             }
@@ -291,7 +291,7 @@ public struct TextField: View {
                 case .positive(let caption), .negative(let caption), .normal(let caption):
                     if caption.isEmpty == false {
                         Text(caption)
-                            .montage(
+                            .typography(
                                 variant: .caption1,
                                 color: captionTextColor
                             )
@@ -311,7 +311,7 @@ private extension TextField {
             ZStack {
                 HStack(spacing: 9) {
                     if let icon {
-                        Image.montage(icon)
+                        Image.icon(icon)
                             .resizable()
                             .frame(width: 22, height: 22)
                             .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
@@ -322,7 +322,7 @@ private extension TextField {
                         prompt: {
                             if let placeholder {
                                 Text(placeholder)
-                                    .montage(
+                                    .typography(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
@@ -333,7 +333,7 @@ private extension TextField {
                         }()
                     )
                     .autocorrectionDisabled(fixAutocorrection)
-                    .font(.montage(variant: .body1, weight: .regular))
+                    .font(.font(variant: .body1, weight: .regular))
                     .foregroundStyle(fieldTextColor)
                     .focused($textFieldFocusState)
                     .frame(minHeight: 24)
@@ -352,7 +352,7 @@ private extension TextField {
                     } else {
                         if let trailingIcon, let trailingIconColor {
                             Image
-                                .montage(trailingIcon)
+                                .icon(trailingIcon)
                                 .resizable()
                                 .frame(width: 22, height: 22)
                                 .foregroundStyle(trailingIconColor)
@@ -486,7 +486,7 @@ private extension TextField {
                                         if let title = autoCompletionDataSource.sectionTitleAt?(section) {
                                             HStack {
                                                 Text(title)
-                                                    .montage(
+                                                    .typography(
                                                         variant: .caption1,
                                                         weight: .bold,
                                                         color: .semantic(.labelAlternative)
@@ -588,7 +588,7 @@ private extension TextField {
         
         var body: some View {
             Text(title)
-                .montage(variant: .body1, weight: typoWeight, semantic: textColor)
+                .typography(variant: .body1, weight: typoWeight, semantic: textColor)
                 .paragraph(variant: .body1)
                 .padding(.horizontal, 19)
                 .padding(.vertical, 12)

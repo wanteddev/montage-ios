@@ -306,7 +306,7 @@ private extension Tooltip.Modifier {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 6) {
                 Text(message)
-                    .montage(
+                    .typography(
                         variant: .label1,
                         weight: .medium,
                         semantic: contentColor
@@ -334,7 +334,7 @@ private extension Tooltip.Modifier {
                     buttonInfo.action()
                 }, label: {
                     Text(buttonInfo.title)
-                        .montage(
+                        .typography(
                             variant: .label1,
                             weight: .bold,
                             semantic: .inverseLabel

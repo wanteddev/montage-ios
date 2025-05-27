@@ -949,14 +949,6 @@ extension UIColor {
     public static func semantic(_ type: Color.Semantic) -> UIColor {
         .init(dynamicProvider: type.resolve)
     }
-
-    /// ColorResolvable 프로토콜을 준수하는 타입에 해당하는 UIColor를 생성합니다.
-    ///
-    /// - Parameter type: 생성할 색상 타입
-    /// - Returns: 동적으로 생성된 UIColor 인스턴스
-    public static func montage(_ type: ColorResolvable) -> UIColor {
-        .init(dynamicProvider: type.resolve)
-    }
 }
 
 extension UIColor {
@@ -991,14 +983,6 @@ extension SwiftUI.Color {
     public static func semantic(_ type: Color.Semantic) -> SwiftUI.Color {
         SwiftUI.Color(UIColor.semantic(type))
     }
-
-    /// ColorResolvable 프로토콜을 준수하는 타입에 해당하는 SwiftUI.Color를 생성합니다.
-    ///
-    /// - Parameter type: 생성할 색상 타입
-    /// - Returns: 동적으로 생성된 SwiftUI.Color 인스턴스
-    public static func montage(_ type: ColorResolvable) -> SwiftUI.Color {
-        SwiftUI.Color(UIColor.montage(type))
-    }
 }
 
 extension SwiftUI.Color {
@@ -1014,7 +998,7 @@ extension SwiftUI.Color {
 ///
 /// 이 프로토콜을 준수하는 타입은 주어진 UITraitCollection에 따라
 /// 적절한 UIColor를 반환할 수 있어야 합니다.
-public protocol ColorResolvable {
+protocol ColorResolvable {
     /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
     ///
     /// - Parameter traitCollection: 색상을 해석할 UITraitCollection

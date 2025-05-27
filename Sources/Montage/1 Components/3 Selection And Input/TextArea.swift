@@ -321,10 +321,10 @@ public struct TextArea: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .montage(variant: .label1, weight: .bold, semantic: .labelNeutral)
+                        .typography(variant: .label1, weight: .bold, semantic: .labelNeutral)
                     if requiredBadge {
                         Text("*")
-                            .montage(variant: .label1, weight: .medium, semantic: .statusNegative)
+                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
                     }
                 }
             }
@@ -333,7 +333,7 @@ public struct TextArea: View {
             
             if let description {
                 Text(description)
-                    .montage(
+                    .typography(
                         variant: .caption1,
                         semantic: negative ? .statusNegative : .labelAlternative
                     )
@@ -359,7 +359,7 @@ public struct TextArea: View {
                         alignment: resize.alignment
                     )
                     .foregroundStyle(editorTextColor)
-                    .font(.montage(variant: .body1Reading))
+                    .font(.font(variant: .body1Reading))
                     .lineSpacing(Typography.Variant.body1Reading.lineSpacing)
                     .if(!disable) {
                         $0.focused(focus)
@@ -384,7 +384,7 @@ public struct TextArea: View {
                 
                 if $text.wrappedValue.isEmpty, let placeholder {
                     Text(placeholder)
-                        .montage(
+                        .typography(
                             variant: .body1Reading,
                             color: placeholderTextColor
                         )
@@ -524,7 +524,7 @@ public struct TextArea: View {
             case .characterCount(let limit, let overflow):
                 HStack(spacing: 0) {
                     Text(String(typedCharacters))
-                        .montage(
+                        .typography(
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
@@ -536,7 +536,7 @@ public struct TextArea: View {
                         .paragraph(variant: .label2)
                     if let limit {
                         Text("/\(String(limit))")
-                            .montage(
+                            .typography(
                                 variant: .label2,
                                 weight: .medium,
                                 semantic: disable ? .labelDisable : .labelAlternative
@@ -580,7 +580,7 @@ public struct TextArea: View {
                 )
                 .iconColor(tintColor)
             case let .icon(icon, tintColor):
-                Image.montage(icon)
+                Image.icon(icon)
                     .resizable()
                     .foregroundColor(tintColor)
                     .frame(width: 22, height: 22)

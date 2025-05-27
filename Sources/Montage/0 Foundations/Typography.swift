@@ -18,11 +18,11 @@ import UIKit
 /// ```swift
 /// // UIKit에서 사용
 /// let label = UILabel()
-/// label.font = UIFont.montage(.body1, .regular)
+/// label.font = UIFont.font(.body1, .regular)
 ///
 /// // SwiftUI에서 사용
 /// Text("Hello, World!")
-///     .montage(.heading1, .bold)
+///     .typography.heading1, .bold)
 /// ```
 ///
 /// - Note: 텍스트 스타일을 적용할 때는 일관성을 위해 직접 폰트를 지정하기보다
@@ -330,7 +330,7 @@ public extension UIFont {
     ///   - size: 폰트 크기
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 nil 반환
-    static func montage(size: CGFloat, weight: Typography.Weight) -> UIFont? {
+    static func font(size: CGFloat, weight: Typography.Weight) -> UIFont? {
         UIFont(name: weight.pretendardWeight.fontName, size: size)
     }
 
@@ -340,7 +340,7 @@ public extension UIFont {
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 시스템 폰트로 대체
-    static func montage(
+    static func font(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
     ) -> UIFont {
@@ -360,7 +360,7 @@ public extension Font {
     ///   - size: 폰트 크기
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 Font 인스턴스
-    static func montage(size: CGFloat, weight: Typography.Weight) -> Font {
+    static func font(size: CGFloat, weight: Typography.Weight) -> Font {
         .custom(weight.pretendardWeight.fontName, size: size)
     }
 
@@ -370,7 +370,7 @@ public extension Font {
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 Font 인스턴스
-    static func montage(
+    static func font(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
     ) -> Font? {
@@ -388,20 +388,20 @@ public extension UILabel {
     ///   - string: 표시할 문자열
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
-    ///   - colorResolver: 색상 해석기
+    ///   - color: 색상
     /// - Returns: 생성된 UILabel 인스턴스
-    static func montage(
+    static func label(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        colorResolver: ColorResolvable
+        color: UIColor = .semantic(.labelNormal)
     ) -> UILabel {
         let label = UIKit.UILabel()
-        label.attributedText = .montage(
+        label.attributedText = .attributedString(
             string,
             variant: variant,
             weight: weight,
-            colorResolver: colorResolver
+            color: SwiftUI.Color(uiColor: color)
         )
         return label
     }
@@ -414,13 +414,13 @@ public extension UILabel {
     ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 생성된 UILabel 인스턴스
-    static func montage(
+    static func label(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
     ) -> UILabel {
-        montage(string, variant: variant, weight: weight, colorResolver: semantic)
+        label(string, variant: variant, weight: weight, color: .semantic(semantic))
     }
     
     /// Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
@@ -431,48 +431,13 @@ public extension UILabel {
     ///   - weight: 폰트 두께
     ///   - atomic: 아토믹 색상
     /// - Returns: 생성된 UILabel 인스턴스
-    static func montage(
+    static func label(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         atomic: Color.Atomic = .red0
     ) -> UILabel {
-        montage(string, variant: variant, weight: weight, colorResolver: atomic)
-    }
-    
-    /// Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
-    ///
-    /// - Parameters:
-    ///   - string: 표시할 문자열
-    ///   - variant: 텍스트 변형
-    ///   - weight: 폰트 두께
-    /// - Returns: 생성된 UILabel 인스턴스
-    static func montage(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular
-    ) -> UILabel {
-        montage(
-            string,
-            variant: variant,
-            weight: weight,
-            semantic: .labelNormal
-        )
-    }
-    
-    /// Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
-    ///
-    /// - Parameter string: 표시할 문자열
-    /// - Returns: 생성된 UILabel 인스턴스
-    static func montage(
-        _ string: String
-    ) -> UILabel {
-        montage(
-            string,
-            variant: .body1,
-            weight: .regular,
-            semantic: .labelNormal
-        )
+        label(string, variant: variant, weight: weight, color: .atomic(atomic))
     }
 }
 
@@ -485,12 +450,12 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - color: 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func montage(
+    func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
     ) -> Text {
-        font(.montage(variant: variant, weight: weight))
+        font(.font(variant: variant, weight: weight))
             .tracking(Typography.getTracking(variant: variant))
             .foregroundColor(color)
     }
@@ -500,29 +465,14 @@ public extension Text {
     /// - Parameters:
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
-    ///   - colorResolver: 색상 해석기
-    /// - Returns: 스타일이 적용된 Text 인스턴스
-    func montage(
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        colorResolver: ColorResolvable
-    ) -> Text {
-        montage(variant: variant, weight: weight, color: .init(uiColor: colorResolver.resolve(.current)))
-    }
-    
-    /// Montage 디자인 시스템의 스타일을 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: 텍스트 변형
-    ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func montage(
+    func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
     ) -> Text {
-        montage(variant: variant, weight: weight, color: .semantic(semantic))
+        typography(variant: variant, weight: weight, color: .semantic(semantic))
     }
     
     /// Montage 디자인 시스템의 스타일을 적용합니다.
@@ -532,12 +482,12 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - atomic: 아토믹 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func montage(
+    func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         atomic: Color.Atomic
     ) -> Text {
-        montage(variant: variant, weight: weight, color: .atomic(atomic))
+        typography(variant: variant, weight: weight, color: .atomic(atomic))
     }
 }
 
@@ -560,21 +510,21 @@ public extension NSAttributedString {
     ///   - string: 변환할 문자열
     ///   - variant: 타이포그래피 변형 (기본값: .body1)
     ///   - weight: 폰트 두께 (기본값: .regular)
-    ///   - colorResolver: 색상 해석기
+    ///   - color: 색상
     ///   - lineBreakMode: 줄바꿈 모드 (기본값: .byWordWrapping)
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func montage(
+    static func attributedString(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        colorResolver: ColorResolvable,
+        color: SwiftUI.Color = .semantic(.labelNormal),
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         _montage(
             string,
             variant: variant,
             weight: weight,
-            color: colorResolver.resolve(.current),
+            color: color.uiColor,
             lineBreakMode: lineBreakMode
         )
     }
@@ -588,18 +538,18 @@ public extension NSAttributedString {
     ///   - semantic: 의미론적 색상
     ///   - lineBreakMode: 줄바꿈 모드 (기본값: .byWordWrapping)
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func montage(
+    static func attributedString(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
-        montage(
+        attributedString(
             string,
             variant: variant,
             weight: weight,
-            colorResolver: semantic,
+            color: .semantic(semantic),
             lineBreakMode: lineBreakMode
         )
     }
@@ -613,56 +563,19 @@ public extension NSAttributedString {
     ///   - atomic: 원자적 색상
     ///   - lineBreakMode: 줄바꿈 모드 (기본값: .byWordWrapping)
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func montage(
+    static func attributedString(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         atomic: Color.Atomic,
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
-        montage(
+        attributedString(
             string,
             variant: variant,
             weight: weight,
-            colorResolver: atomic,
+            color: .atomic(atomic),
             lineBreakMode: lineBreakMode
-        )
-    }
-
-    /// Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
-    ///
-    /// - Parameters:
-    ///   - string: 변환할 문자열
-    ///   - variant: 타이포그래피 변형 (기본값: .body1)
-    ///   - weight: 폰트 두께 (기본값: .regular)
-    /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func montage(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular
-    ) -> NSAttributedString {
-        montage(
-            string,
-            variant: variant,
-            weight: weight,
-            semantic: .labelNormal,
-            lineBreakMode: .byWordWrapping
-        )
-    }
-
-    /// Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
-    ///
-    /// - Parameter string: 변환할 문자열
-    /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func montage(
-        _ string: String
-    ) -> NSAttributedString {
-        montage(
-            string,
-            variant: .body1,
-            weight: .regular,
-            semantic: .labelNormal,
-            lineBreakMode: .byWordWrapping
         )
     }
 }

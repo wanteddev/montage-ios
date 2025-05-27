@@ -62,7 +62,7 @@ public struct SnackBar: View {
     ///     heading: "알림",
     ///     description: "새로운 메시지가 도착했습니다.",
     ///     extraContents: {
-    ///         Image.montage(.bell)
+    ///         Image.icon(.bell)
     ///             .resizable()
     ///             .frame(width: 24, height: 24)
     ///     },
@@ -172,12 +172,12 @@ public struct SnackBar: View {
                         VStack(alignment: .leading, spacing: .zero) {
                             if let heading {
                                 Text(heading)
-                                    .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
+                                    .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
                                     .paragraph(variant: .body2)
                             }
                             if let description {
                                 Text(description)
-                                    .montage(variant: .label2, weight: .regular, semantic: .staticWhite)
+                                    .typography(variant: .label2, weight: .regular, semantic: .staticWhite)
                                     .paragraph(variant: .label2)
                                     .lineLimit(2)
                             }
@@ -212,7 +212,7 @@ public struct SnackBar: View {
         
         var body: some View {
             Text(action)
-                .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
+                .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
                 .paragraph(variant: .body2)
                 .background(
                     Interaction(
@@ -366,7 +366,7 @@ struct SnackBar_Previews: PreviewProvider {
             SnackBar(
                 description: "메시지에 마침표를 찍어요.",
                 extraContents: {
-                    Image.montage(.android).resizable().frame(width: 32, height: 32)
+                    Image.icon(.android).resizable().frame(width: 32, height: 32)
                 },
                 action: "텍스트",
                 handler: {}
@@ -375,7 +375,7 @@ struct SnackBar_Previews: PreviewProvider {
                 heading: "메시지에 마침표를 찍어요.",
                 description: "설명은 필요할 때만 써요.",
                 extraContents: {
-                    Image.montage(.android).resizable().frame(width: 32, height: 32)
+                    Image.icon(.android).resizable().frame(width: 32, height: 32)
                 },
                 action: "텍스트",
                 handler: {}
@@ -384,7 +384,7 @@ struct SnackBar_Previews: PreviewProvider {
                 heading: "흠",
                 description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방",
                 extraContents: {
-                    Image.montage(.android).resizable().frame(width: 32, height: 32)
+                    Image.icon(.android).resizable().frame(width: 32, height: 32)
                 },
                 action: "텍스트",
                 handler: {}

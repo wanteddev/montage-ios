@@ -41,6 +41,6 @@ final class ColorPickerCell: BaseCollectionViewCell, CodebaseCollectionCell {
     
     func configure(from viewModel: ColorPicker.ViewModel.Item) {
         colorChipView.backgroundColor = viewModel.color
-        textLabel.attributedText = .montage(viewModel.name)
+        textLabel.attributedText = .attributedString(viewModel.name)
     }
 }
