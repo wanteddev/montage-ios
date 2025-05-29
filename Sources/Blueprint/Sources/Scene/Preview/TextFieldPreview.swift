@@ -48,7 +48,7 @@ struct TextFieldPreview: View {
                 return nil
             case .icon:
                 return {
-                    Image.montage(.logoApple)
+                    Image.icon(.logoApple)
                         .resizable()
                         .frame(width: 22, height: 22)
                         .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
@@ -56,14 +56,14 @@ struct TextFieldPreview: View {
             case .text:
                 return {
                     Text("텍스트")
-                        .montage(variant: .body1, weight: .medium, semantic: .labelAssistive)
+                        .typography(variant: .body1, weight: .medium, semantic: .labelAssistive)
                         .paragraph(variant: .body1)
                 }
             case .timer:
                 return {
                     let second = 431
                     return Text(String(format: "%02d:%02d", (second / 60), (second % 60)))
-                        .montage(variant: .label1, weight: .bold, semantic: .primaryNormal)
+                        .typography(variant: .label1, weight: .bold, semantic: .primaryNormal)
                         .paragraph(variant: .label1)
                 }
             case .badge:
@@ -150,7 +150,7 @@ struct TextFieldPreview: View {
                                 .leadingContent {
                                     Group {
                                         if indexPath.section == 0 {
-                                            Image.montage(.search)
+                                            Image.icon(.search)
                                                 .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
                                         } else {
                                             Avatar("", variant: .company, size: .medium)
@@ -183,7 +183,7 @@ struct TextFieldPreview: View {
                     
                     HStack {
                         Text("Status :")
-                            .montage(variant: .headline2, weight: .medium)
+                            .typography(variant: .headline2, weight: .medium)
                         Menu(variant.selectableTitle) {
                             ForEach(Variant.allCases, id: \.self) { v in
                                 Button {
@@ -196,7 +196,7 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("Disable :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Button {
                                 disable.toggle()
                             } label: {
@@ -207,7 +207,7 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("Heading :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Button {
                                 heading.toggle()
                             } label: {
@@ -217,7 +217,7 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("RequiredBadge :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Button {
                                 requiredBadge.toggle()
                             } label: {
@@ -228,7 +228,7 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("Icon :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Button {
                                 icon.toggle()
                             } label: {
@@ -238,7 +238,7 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("Placeholder :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Button {
                                 placeholder.toggle()
                             } label: {
@@ -249,7 +249,7 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("TrailingButton :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Button {
                                 trailingButton.toggle()
                             } label: {
@@ -258,7 +258,7 @@ struct TextFieldPreview: View {
                         }
                         Spacer()
                         Text("TrailingContent :")
-                            .montage(variant: .headline2, weight: .medium)
+                            .typography(variant: .headline2, weight: .medium)
                         Menu(trailingContent.selectableTitle) {
                             ForEach(Content.allCases, id: \.self) { c in
                                 Button {
@@ -271,7 +271,7 @@ struct TextFieldPreview: View {
                     }
                     HStack {
                         Text("AutoComplete :")
-                            .montage(variant: .headline2, weight: .medium)
+                            .typography(variant: .headline2, weight: .medium)
                         Button {
                             usingSuggestions.toggle()
                         } label: {

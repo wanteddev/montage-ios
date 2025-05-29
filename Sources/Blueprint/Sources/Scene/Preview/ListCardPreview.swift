@@ -54,7 +54,7 @@ struct ListCardPreview: View {
                     Control.checkbox(state: .unchecked)
                 } : nil)
                 .trailingContent(showTrailingContent ? {
-                    Image.montage(.chevronRight)
+                    Image.icon(.chevronRight)
                         .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
                 } : nil)
                 

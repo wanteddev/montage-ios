@@ -239,14 +239,14 @@ public struct Select: View {
             if !heading.isEmpty {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .montage(
+                        .typography(
                             variant: .label1,
                             weight: .bold,
                             semantic: .labelNormal
                         )
                     if requiredBadge {
                         Text("*")
-                            .montage(
+                            .typography(
                                 variant: .label1,
                                 weight: .medium,
                                 semantic: .statusNegative
@@ -273,7 +273,7 @@ public struct Select: View {
                     Group {
                         switch leadingContent {
                         case .icon(let icon):
-                            Image.montage(icon)
+                            Image.icon(icon)
                                 .resizable()
                                 .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
                                 .padding(1)
@@ -293,7 +293,7 @@ public struct Select: View {
                         HStack {
                             if selectedItems.isEmpty {
                                 Text(placeholder)
-                                    .montage(
+                                    .typography(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
@@ -304,7 +304,7 @@ public struct Select: View {
                                 case .single:
                                     if let text = selectedItems.first?.text {
                                         Text(text)
-                                            .montage(
+                                            .typography(
                                                 variant: .body1,
                                                 weight: .regular,
                                                 color: textColor
@@ -315,7 +315,7 @@ public struct Select: View {
                                     Group {
                                         if render == .text {
                                             Text(selectedItems.map { $0.text }.joined(separator: ", "))
-                                                .montage(
+                                                .typography(
                                                     variant: .body1,
                                                     weight: .regular,
                                                     color: textColor
@@ -359,7 +359,7 @@ public struct Select: View {
                     }
                     
                     if !selectedItems.isEmpty, negative {
-                        Image.montage(.circleExclamationFill)
+                        Image.icon(.circleExclamationFill)
                             .resizable()
                             .padding(1)
                             .frame(width: 24, height: 24)
@@ -396,7 +396,7 @@ public struct Select: View {
             
             if !description.isEmpty {
                 Text(description)
-                    .montage(
+                    .typography(
                         variant: .caption1,
                         weight: .regular,
                         semantic: negative ? .statusNegative : .labelAlternative
@@ -481,7 +481,7 @@ public struct Select: View {
                                 .trailingContent { active in
                                     Group {
                                         if active {
-                                            Image.montage(.check)
+                                            Image.icon(.check)
                                                 .resizable()
                                                 .foregroundStyle(SwiftUI.Color.semantic(.primaryNormal))
                                                 .frame(width: 24, height: 24)
@@ -553,9 +553,9 @@ public struct Select: View {
                 .backgroundColor(backgroundColor(item))
                 .fontColor(fontColor(item))
                 .imageColor(iconColor(item))
-                .trailingImage(Image.montage(.closeThick))
+                .trailingImage(Image.icon(.closeThick))
                 .if(item.icon != nil) {
-                    $0.leadingImage(Image.montage(item.icon!))
+                    $0.leadingImage(Image.icon(item.icon!))
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {

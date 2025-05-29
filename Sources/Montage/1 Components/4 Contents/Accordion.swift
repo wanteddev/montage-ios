@@ -213,7 +213,7 @@ public struct Accordion: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(alignment: .top, spacing: 8) {
                     if let leadingIcon {
-                        Image.montage(leadingIcon)
+                        Image.icon(leadingIcon)
                             .resizable()
                             .if(leadingIconColor != nil) {
                                 $0.foregroundStyle(leadingIconColor!)
@@ -223,7 +223,7 @@ public struct Accordion: View {
                     }
                     
                     Text(title)
-                        .montage(
+                        .typography(
                             variant: titleTypography.variant,
                             weight: titleTypography.weight,
                             color: titleTypography.color
@@ -243,7 +243,7 @@ public struct Accordion: View {
                     )
                     
                     if trailingContentSize == .zero {
-                        Image.montage(.chevronDown)
+                        Image.icon(.chevronDown)
                             .resizable()
                             .frame(width: 20, height: 20)
                             .padding(2)
@@ -269,7 +269,7 @@ public struct Accordion: View {
                     VStack(alignment: .leading, spacing: 0) {
                         if let description, !description.isEmpty {
                             Text(description)
-                                .montage(
+                                .typography(
                                     variant: descriptionTypography.variant,
                                     weight: descriptionTypography.weight,
                                     color: descriptionTypography.color

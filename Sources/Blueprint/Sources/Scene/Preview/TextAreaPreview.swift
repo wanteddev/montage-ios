@@ -95,7 +95,7 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Resize :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Menu(resize.description) {
                                 ForEach(Resize.allCases, id: \.self) { r in
@@ -109,7 +109,7 @@ struct TextAreaPreview: View {
                         }
                         HStack {
                             Text("Placeholder :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($placeholder)
                         }
@@ -117,7 +117,7 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Focus :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($focus) {
                                 focusState = $0
@@ -125,7 +125,7 @@ struct TextAreaPreview: View {
                         }
                         HStack {
                             Text("Disable :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($disable)
                         }
@@ -133,13 +133,13 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Heading :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($heading)
                         }
                         HStack {
                             Text("RequiredBadge :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($requiredBadge)
                         }
@@ -147,19 +147,19 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Description :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($description)
                         }
                         Text("Negative :")
-                            .montage(variant: .headline2, weight: .medium)
+                            .typography(variant: .headline2, weight: .medium)
                         Spacer()
                         Switch($negative)
                     }
                     HStack {
                         HStack {
                             Text("Leading :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Menu(resources[leadingResourceIndex]?.description ?? "none") {
                                 ForEach(resources.indices, id: \.self) { index in
@@ -170,11 +170,11 @@ struct TextAreaPreview: View {
                                     }
                                 }
                             }
-                            .font(.montage(variant: .label1))
+                            .font(.font(variant: .label1))
                         }
                         HStack {
                             Text("Trailing :")
-                                .montage(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Menu(resources[trailingResourceIndex]?.description ?? "none") {
                                 ForEach(resources.indices, id: \.self) { index in
@@ -185,7 +185,7 @@ struct TextAreaPreview: View {
                                     }
                                 }
                             }
-                            .font(.montage(variant: .label1))
+                            .font(.font(variant: .label1))
                         }
                     }
                     if resources[leadingResourceIndex]?.isCharacterCount == true ||

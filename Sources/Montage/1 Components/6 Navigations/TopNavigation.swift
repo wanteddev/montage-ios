@@ -32,7 +32,7 @@ public struct TopNavigation: View {
     private let variant: Variant
     private let title: String
     private let scrollOffset: CGFloat
-    private let backgroundColorResolvable: ColorResolvable?
+    private let backgroundColor: SwiftUI.Color?
     private let leadingButton: Resource.LeadingButtonInfo?
     private let trailingButtons: [Resource.TrailingButtonInfo]
     
@@ -40,12 +40,8 @@ public struct TopNavigation: View {
 
     private var scrolled: Bool { scrollOffset < .zero }
     
-    private var backgroundColor: SwiftUI.Color {
-        if let backgroundColorResolvable {
-            .init(uiColor: backgroundColorResolvable.resolve(.current))
-        } else {
-            SwiftUI.Color.semantic(.backgroundNormal)
-        }
+    private var background: SwiftUI.Color {
+        backgroundColor ?? SwiftUI.Color.semantic(.backgroundNormal)
     }
     
     private var backgroundOpacity: CGFloat {
@@ -65,21 +61,21 @@ public struct TopNavigation: View {
     ///   - variant: 내비게이션 바의 외관 스타일
     ///   - title: 표시할 제목
     ///   - scrollOffset: 스크롤 오프셋 값
-    ///   - backgroundColorResolvable: 배경색 리졸버
+    ///   - backgroundColor: 배경색
     ///   - leadingButton: 좌측에 표시할 버튼
     ///   - trailingButtons: 우측에 표시할 버튼 배열 (최대 3개까지 표시)
     public init(
         variant: Variant = .normal,
         title: String = "",
         scrollOffset: CGFloat = .zero,
-        backgroundColorResolvable: ColorResolvable? = nil,
+        backgroundColor: SwiftUI.Color? = nil,
         leadingButton: Resource.LeadingButtonInfo? = nil,
         trailingButtons: [Resource.TrailingButtonInfo] = []
     ) {
         self.variant = variant
         self.title = title
         self.scrollOffset = scrollOffset
-        self.backgroundColorResolvable = backgroundColorResolvable
+        self.backgroundColor = backgroundColor
         self.leadingButton = leadingButton
         self.trailingButtons = Array(trailingButtons.prefix(3))
     }
@@ -97,7 +93,7 @@ public struct TopNavigation: View {
                 ZStack {
                     Rectangle().fill(.ultraThinMaterial)
                         .opacity(backgroundOpacity)
-                    backgroundColor
+                    background
                         .opacity(backgroundOpacity * 0.70)
                 }
                 .ignoresSafeArea(.container, edges: .top)
@@ -198,7 +194,7 @@ public struct TopNavigation: View {
         
         private var titleView: some View {
             Text(title)
-                .montage(
+                .typography(
                     variant: variant.typoVaraint,
                     weight: variant.typoWeight,
                     semantic: .labelStrong
@@ -345,7 +341,7 @@ public struct TopNavigation: View {
                     action()
                 } label: {
                     Text(text)
-                        .montage(
+                        .typography(
                             variant: .body2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)
@@ -551,7 +547,7 @@ extension TopNavigation {
         private let variant: Variant
         private let title: String
         private let showIndicator: Bool
-        private let backgroundColorResolvable: ColorResolvable?
+        private let backgroundColor: SwiftUI.Color?
         private let leadingButton: Resource.LeadingButtonInfo?
         private let trailingButtons: [Resource.TrailingButtonInfo]
         private let actionAreaModel: ActionArea.Model?
@@ -562,7 +558,7 @@ extension TopNavigation {
         ///   - variant: 내비게이션 바의 외관 스타일
         ///   - title: 표시할 제목
         ///   - showIndicator: 인디케이터 표시 여부
-        ///   - backgroundColorResolvable: 배경색 리졸버
+        ///   - backgroundColor: 배경색
         ///   - leadingButton: 좌측에 표시할 버튼
         ///   - trailingButtons: 우측에 표시할 버튼 배열
         ///   - actionAreaModel: 액션 영역 모델
@@ -570,7 +566,7 @@ extension TopNavigation {
             variant: Variant,
             title: String,
             showIndicator: Bool = true,
-            backgroundColorResolvable: ColorResolvable? = nil,
+            backgroundColor: SwiftUI.Color? = nil,
             leadingButton: Resource.LeadingButtonInfo?,
             trailingButtons: [Resource.TrailingButtonInfo],
             actionAreaModel: ActionArea.Model? = nil
@@ -578,7 +574,7 @@ extension TopNavigation {
             self.variant = variant
             self.title = title
             self.showIndicator = showIndicator
-            self.backgroundColorResolvable = backgroundColorResolvable
+            self.backgroundColor = backgroundColor
             self.leadingButton = leadingButton
             self.trailingButtons = trailingButtons
             self.actionAreaModel = actionAreaModel
@@ -601,7 +597,7 @@ extension TopNavigation {
                             .padding(.top, navigationHeight)
                     }
                     .background(
-                        backgroundColor
+                        background
                     )
                     
                     VStack(alignment: .leading, spacing: .zero) {
@@ -609,7 +605,7 @@ extension TopNavigation {
                             variant: variant,
                             title: title,
                             scrollOffset: scrollStatus.contentOffset.y,
-                            backgroundColorResolvable: backgroundColorResolvable,
+                            backgroundColor: backgroundColor,
                             leadingButton: leadingButton,
                             trailingButtons: trailingButtons
                         )
@@ -631,12 +627,8 @@ extension TopNavigation {
             }
         }
         
-        private var backgroundColor: SwiftUI.Color {
-            if let backgroundColorResolvable {
-                .init(uiColor: backgroundColorResolvable.resolve(.current))
-            } else {
-                .clear
-            }
+        private var background: SwiftUI.Color {
+            backgroundColor ?? .clear
         }
     }
 }
@@ -649,7 +641,7 @@ extension View {
     /// - Parameters:
     ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
     ///   - title: 표시할 제목
-    ///   - backgroundColorResolvable: 배경색 리졸버 (기본값: nil)
+    ///   - backgroundColor: 배경색 (기본값: nil)
     ///   - leadingButton: 좌측에 표시할 버튼 (기본값: nil)
     ///   - trailingButtons: 우측에 표시할 버튼 배열 (기본값: [])
     ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
@@ -657,7 +649,7 @@ extension View {
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
         title: String,
-        backgroundColorResolvable: ColorResolvable? = nil,
+        backgroundColor: SwiftUI.Color? = nil,
         leadingButton: TopNavigation.Resource.LeadingButtonInfo? = nil,
         trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = [],
         withBottom model: ActionArea.Model? = nil
@@ -666,7 +658,7 @@ extension View {
             TopNavigation.TopNavigationModifier(
                 variant: variant,
                 title: title,
-                backgroundColorResolvable: backgroundColorResolvable,
+                backgroundColor: backgroundColor,
                 leadingButton: leadingButton,
                 trailingButtons: trailingButtons,
                 actionAreaModel: model

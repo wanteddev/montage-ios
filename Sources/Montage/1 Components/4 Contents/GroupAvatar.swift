@@ -29,7 +29,7 @@ import SwiftUI
 ///     }
 /// )
 /// .trailingContent {
-///     Text("+3").montage(variant: .body2)
+///     Text("+3").typography(variant: .body2)
 /// }
 /// ```
 ///

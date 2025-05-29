@@ -2,13 +2,15 @@ name: Generate Document & PR
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - '*'
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
 
 jobs:
   generate-document:
     runs-on: [self-hosted, utility]
+    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
 
     env:
       GIT_USER_NAME: 'github-actions[bot]'

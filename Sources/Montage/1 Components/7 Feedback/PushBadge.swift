@@ -168,8 +168,8 @@ public struct PushBadge: View {
 private extension PushBadge {
     var font: Font? {
         switch size {
-        case .xsmall, .small: .montage(variant: .caption2, weight: .bold)
-        case .medium: .montage(variant: .label1, weight: .bold)
+        case .xsmall, .small: .font(variant: .caption2, weight: .bold)
+        case .medium: .font(variant: .label1, weight: .bold)
         }
     }
     
@@ -323,7 +323,7 @@ extension View {
     /// Button("메시지") { }
     ///     .pushBadge(variant: .number(3), position: .top(.leading))
     ///
-    /// Image.montage(.bell)
+    /// Image.icon(.bell)
     ///     .pushBadge()  // 기본값: 우측 상단에 빨간 점
     /// ```
     public func pushBadge(

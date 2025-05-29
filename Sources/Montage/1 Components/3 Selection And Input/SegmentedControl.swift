@@ -25,8 +25,8 @@ import SwiftUI
 /// SegmentedControl(
 ///     selectedIndex: $selectedIndex,
 ///     items: [
-///         .init(image: .montage(.home), title: "홈"),
-///         .init(image: .montage(.person), title: "프로필"),
+///         .init(image: .icon(.home), title: "홈"),
+///         .init(image: .icon(.person), title: "프로필"),
 ///         .init(title: "설정")
 ///     ]
 /// )
@@ -123,7 +123,7 @@ public struct SegmentedControl: View {
                             .padding(.vertical, 2)
                         
                         Text(items[index].title)
-                            .montage(
+                            .typography(
                                 variant: buttonTitleFont,
                                 weight: .medium,
                                 color: buttonForegroundColor(isSelected: selectedIndex == index)
@@ -341,8 +341,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .montage(.android), title: "Android"),
-                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(image: .icon(.android), title: "Android"),
+                    .init(image: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -352,8 +352,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .montage(.android), title: "Android"),
-                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(image: .icon(.android), title: "Android"),
+                    .init(image: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -364,8 +364,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .montage(.android), title: "Android"),
-                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(image: .icon(.android), title: "Android"),
+                    .init(image: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -376,8 +376,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .montage(.android), title: "Android"),
-                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(image: .icon(.android), title: "Android"),
+                    .init(image: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -388,8 +388,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .montage(.android), title: "Android"),
-                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(image: .icon(.android), title: "Android"),
+                    .init(image: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -401,8 +401,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .montage(.android), title: "Android"),
-                    .init(image: .montage(.logoApple), title: "iOS"),
+                    .init(image: .icon(.android), title: "Android"),
+                    .init(image: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],

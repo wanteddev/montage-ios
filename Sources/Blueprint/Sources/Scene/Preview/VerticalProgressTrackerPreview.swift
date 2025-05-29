@@ -68,7 +68,7 @@ struct VerticalProgressTrackerPreview: View {
                                 HStack {
                                     Spacer(minLength: 0)
                                     Text("뭐라 뭐라 디스크립션")
-                                        .montage(variant: .caption1)
+                                        .typography(variant: .caption1)
                                 }
                             )
                             : AnyView(EmptyView())
@@ -89,7 +89,7 @@ struct VerticalProgressTrackerPreview: View {
                             isContentExist
                             ? AnyView(
                                 Text("Hel\nlo\nWor\nld!")
-                                    .montage(variant: .title1)
+                                    .typography(variant: .title1)
                                     .paragraph(variant: .title1)
                                     .fixedSize()
                             )

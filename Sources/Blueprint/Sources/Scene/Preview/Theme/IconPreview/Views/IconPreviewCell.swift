@@ -38,7 +38,7 @@ final class IconPreviewCell: BaseCollectionViewCell, CodebaseCollectionCell {
     
     private lazy var nameLabel: UILabel = {
         let view = UILabel()
-        view.font = .montage()
+        view.font = .font()
         view.textColor = .semantic(.labelStrong)
         return view
     }()
@@ -69,8 +69,8 @@ final class IconPreviewCell: BaseCollectionViewCell, CodebaseCollectionCell {
 
 extension IconPreviewCell {
     func configure(with viewModel: IconPreview.ViewModel.Item) {
-        iconImageView.image = .montage(viewModel.icon)
-        nameLabel.text = viewModel.icon.name
+        iconImageView.image = .icon(viewModel.icon)
+        nameLabel.text = viewModel.icon.rawValue
         
         updateAppearance(viewModel.appearance)
         

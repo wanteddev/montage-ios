@@ -42,7 +42,7 @@ struct CellPreview: View {
                 .fillWidth(fillWidth)
                 .chevron(chevron)
                 .leadingContent(leadingContent ? {
-                    Image.montage(.star)
+                    Image.icon(.star)
                         .resizable()
                         .frame(width: 56, height: 56)
                         .scaledToFit()

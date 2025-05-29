@@ -54,21 +54,21 @@ public struct CounterPagination: View {
     public var body: some View {
         HStack(spacing: 4) {
             Text("\(selectedPage)")
-                .montage(
+                .typography(
                     variant: typography,
                     weight: .bold,
                     color: .semantic(.staticWhite).opacity(alternative ? 88 : 74)
                 )
                 .paragraph(variant: typography)
             Text("/")
-                .montage(
+                .typography(
                     variant: typography,
                     weight: .regular,
                     color: .semantic(.staticWhite).opacity(alternative ? 52 : 28)
                 )
                 .paragraph(variant: typography)
             Text("\(totalPages)")
-                .montage(
+                .typography(
                     variant: typography,
                     weight: .bold,
                     color: .semantic(.staticWhite).opacity(alternative ? 88 : 74)

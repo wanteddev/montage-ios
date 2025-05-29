@@ -179,7 +179,7 @@ public struct IconButton: View {
     }
     
     public var body: some View {
-        Image.montage(icon)
+        Image.icon(icon)
             .resizable()
             .if(variant.isBackground) {
                 $0.padding(2)

@@ -152,7 +152,7 @@ public struct Toast: View {
                 HStack(alignment: .center, spacing: 8) {
                     Icon(variant)
                     Text(message)
-                        .montage(variant: .body2, weight: .bold, semantic: .staticWhite)
+                        .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
                         .paragraph(variant: .body2)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -186,7 +186,7 @@ public struct Toast: View {
                             .staticWhite
                         }
                     }()
-                    Image.montage(icon)
+                    Image.icon(icon)
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.semantic(tintColor))
                         .frame(width: 22, height: 22)
@@ -198,7 +198,7 @@ public struct Toast: View {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
-                    Image.montage(.circleCheckFill)
+                    Image.icon(.circleCheckFill)
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.atomic(.green60))
                         .frame(width: 22, height: 22)
@@ -208,7 +208,7 @@ public struct Toast: View {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
-                    Image.montage(.triangleExclamationFill)
+                    Image.icon(.triangleExclamationFill)
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.atomic(.orange60))
                         .frame(width: 22, height: 22)
@@ -218,7 +218,7 @@ public struct Toast: View {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
-                    Image.montage(.circleExclamationFill)
+                    Image.icon(.circleExclamationFill)
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.atomic(.red60))
                         .frame(width: 22, height: 22)

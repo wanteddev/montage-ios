@@ -218,7 +218,7 @@ public struct Control: View {
     public var body: some View {
         Group {
             if let icon {
-                Image.montage(icon)
+                Image.icon(icon)
                     .resizable()
                     .renderingMode(.template)
                     .scaledToFill()

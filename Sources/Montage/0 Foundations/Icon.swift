@@ -17,16 +17,16 @@ import UIKit
 /// ```swift
 /// // UIKit에서 사용
 /// let imageView = UIImageView()
-/// imageView.image = UIImage.montage(.home)
+/// imageView.image = UIImage.icon(.home)
 ///
 /// // SwiftUI에서 사용
-/// Image.montage(.heart)
+/// Image.icon(.heart)
 ///     .foregroundColor(.red)
 ///     .frame(width: 24, height: 24)
 ///
 /// // 버튼에 아이콘 사용
 /// Button(action: {}) {
-///     Image.montage(.download)
+///     Image.icon(.download)
 /// }
 /// ```
 ///
@@ -353,9 +353,6 @@ public enum Icon: String, CaseIterable {
     case write
     case zepFast
     case zepFastFill
-
-    /// 아이콘의 리소스 이름을 반환합니다.
-    public var name: String { rawValue }
 }
 
 // MARK: - UIKit Extensions
@@ -364,8 +361,8 @@ extension UIImage {
     ///
     /// - Parameter type: 생성할 아이콘 타입
     /// - Returns: 생성된 UIImage 인스턴스
-    public static func montage(_ type: Icon) -> UIImage {
-        load(name: type.name)
+    public static func icon(_ type: Icon) -> UIImage {
+        load(name: type.rawValue)
     }
 }
 
@@ -375,7 +372,7 @@ extension Image {
     ///
     /// - Parameter type: 생성할 아이콘 타입
     /// - Returns: 생성된 Image 인스턴스
-    public static func montage(_ type: Icon) -> Image {
-        load(name: type.name)
+    public static func icon(_ type: Icon) -> Image {
+        load(name: type.rawValue)
     }
 }

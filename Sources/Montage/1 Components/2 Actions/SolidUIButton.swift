@@ -394,19 +394,19 @@ extension Button.SolidUIButton {
                 trailingIconView.isHidden = true
                 
                 uniqueIconView.isHidden = false
-                uniqueIconView.image = .montage(uniqueIcon)
+                uniqueIconView.image = .icon(uniqueIcon)
             }
         } else {
             if let leadingIcon {
                 leadingIconView.isHidden = false
-                leadingIconView.image = .montage(leadingIcon)
+                leadingIconView.image = .icon(leadingIcon)
             } else {
                 leadingIconView.isHidden = true
             }
             
             if let trailingIcon {
                 trailingIconView.isHidden = false
-                trailingIconView.image = .montage(trailingIcon)
+                trailingIconView.image = .icon(trailingIcon)
             } else {
                 trailingIconView.isHidden = true
             }
