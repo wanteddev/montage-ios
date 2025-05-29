@@ -41,9 +41,6 @@ VStack {
   | --- | --- |
   | `axis` | 구분선의 방향 (`.horizontal` 또는 `.vertical`) |
   | `variant` | 구분선의 두께 변형, 기본값은 `.normal` |
-- **Return Value**
-
-  구성된 구분선 인스턴스
 </details>
 
 ___
@@ -80,7 +77,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
@@ -88,9 +85,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 

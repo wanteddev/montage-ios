@@ -22,7 +22,7 @@ Cell(title: "설명이 있는 셀")
 // 리딩 콘텐츠와 액티브 상태의 셀
 Cell(title: "커스텀 셀")
     .leadingContent {
-        Image.montage(.user)
+        Image.icon(.user)
             .frame(width: 24, height: 24)
     }
     .active(true)
@@ -409,7 +409,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
@@ -417,9 +417,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 
