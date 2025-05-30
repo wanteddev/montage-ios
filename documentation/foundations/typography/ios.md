@@ -14,11 +14,11 @@ Typography는 Montage 디자인 시스템에서 사용되는 모든 텍스트 �
 ```swift
 // UIKit에서 사용
 let label = UILabel()
-label.font = UIFont.montage(.body1, .regular)
+label.font = UIFont.font(.body1, .regular)
 
 // SwiftUI에서 사용
 Text("Hello, World!")
-    .montage(.heading1, .bold)
+    .typography.heading1, .bold)
 ```
 
 >  **Note**
@@ -148,7 +148,7 @@ Text("Hello, World!")
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 <details>
@@ -199,7 +199,7 @@ Text("Hello, World!")
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 

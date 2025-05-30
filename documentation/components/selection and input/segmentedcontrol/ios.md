@@ -24,8 +24,8 @@ SegmentedControl(
 SegmentedControl(
     selectedIndex: $selectedIndex,
     items: [
-        .init(image: .montage(.home), title: "홈"),
-        .init(image: .montage(.person), title: "프로필"),
+        .init(image: .icon(.home), title: "홈"),
+        .init(image: .icon(.person), title: "프로필"),
         .init(title: "설정")
     ]
 )
@@ -165,7 +165,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 <details>
@@ -191,7 +191,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
@@ -199,9 +199,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 

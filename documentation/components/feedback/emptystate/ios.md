@@ -20,7 +20,7 @@ EmptyState(
 // 모든 요소를 사용한 예시
 EmptyState(
     image: { 
-        Image.montage(.emptyBox)
+        Image.icon(.emptyBox)
             .resizable()
             .frame(width: 120, height: 120)
     },
@@ -72,9 +72,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 

@@ -3,10 +3,6 @@ title: Triangle
 description: 삼각형 모양을 그리는 Shape 컴포넌트입니다.
 ---
 
-Structure
-
-# Triangle
-
 ```swift
 struct Triangle
 ```
@@ -69,13 +65,13 @@ ___
 ### Default Implementations
 
 
-[Animatable Implementations](/docs/utilities/ios/animatable-implementations.md)
+[Animatable Implementations](/docs/utilities/ios/animatable-implementations)
 
-[Shape Implementations](/docs/utilities/ios/shape-implementations.md)
+[Shape Implementations](/docs/utilities/ios/shape-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 

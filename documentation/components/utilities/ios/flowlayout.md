@@ -3,10 +3,6 @@ title: FlowLayout
 description: 항목들을 자동으로 여러 줄에 배치하는 흐름 레이아웃 컴포넌트입니다.
 ---
 
-Structure
-
-# FlowLayout
-
 ```swift
 struct FlowLayout
 ```
@@ -106,9 +102,9 @@ ___
 ### Default Implementations
 
 
-[Animatable Implementations](/docs/utilities/ios/animatable-implementations.md)
+[Animatable Implementations](/docs/utilities/ios/animatable-implementations)
 
-[Layout Implementations](/docs/utilities/ios/layout-implementations.md)
+[Layout Implementations](/docs/utilities/ios/layout-implementations)
 
 ## Relationships
 

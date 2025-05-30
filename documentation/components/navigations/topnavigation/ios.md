@@ -32,7 +32,7 @@ TopNavigation(
 
 <details>
 
-<summary>``init(variant: Variant, title: String, scrollOffset: CGFloat, backgroundColorResolvable: ColorResolvable?, leadingButton: Resource.LeadingButtonInfo?, trailingButtons: [Resource.TrailingButtonInfo])``</summary>
+<summary>``init(variant: Variant, title: String, scrollOffset: CGFloat, backgroundColor: SwiftUI.Color?, leadingButton: Resource.LeadingButtonInfo?, trailingButtons: [Resource.TrailingButtonInfo])``</summary>
 
 TopNavigation을 초기화합니다.
 
@@ -42,7 +42,7 @@ TopNavigation을 초기화합니다.
   | `variant` | 내비게이션 바의 외관 스타일 |
   | `title` | 표시할 제목 |
   | `scrollOffset` | 스크롤 오프셋 값 |
-  | `backgroundColorResolvable` | 배경색 리졸버 |
+  | `backgroundColor` | 배경색 |
   | `leadingButton` | 좌측에 표시할 버튼 |
   | `trailingButtons` | 우측에 표시할 버튼 배열 (최대 3개까지 표시) |
 </details>
@@ -134,7 +134,7 @@ text 형태의 Action입니다.
 ##### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
@@ -174,7 +174,7 @@ TopNavigation의 외관을 결정하는 열거형입니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations.md)
+[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
@@ -182,9 +182,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations.md)
+[View Implementations](/docs/utilities/ios/view-implementations)
 
 ## Relationships
 
