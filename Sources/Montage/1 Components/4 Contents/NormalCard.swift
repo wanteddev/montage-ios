@@ -257,7 +257,7 @@ extension NormalCard {
                 .if(!caption.isNilOrEmpty || buttonIcon != nil) {
                     $0.overlay(alignment: .top) {
                         ZStack {
-                            HStack(spacing: 4) {
+                            HStack(alignment: .top, spacing: 4) {
                                 if let caption {
                                     HStack(spacing: 0) {
                                         Text(caption)
