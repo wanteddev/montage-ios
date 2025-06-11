@@ -599,9 +599,7 @@ private extension TextField {
                         color: .labelNormal
                     )
                 )
-                .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-                    handler?()
-                })
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         }
         
         var textColor: Color.Semantic {

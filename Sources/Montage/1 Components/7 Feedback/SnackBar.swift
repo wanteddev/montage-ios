@@ -223,9 +223,7 @@ public struct SnackBar: View {
                     .padding(.horizontal, -7)
                     .padding(.vertical, -4)
                 )
-                .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-                    handler?()
-                })
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         }
     }
     

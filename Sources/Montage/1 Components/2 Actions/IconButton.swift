@@ -222,9 +222,7 @@ public struct IconButton: View {
                 height: variant.iconSize.height + variant.backgroundOffset + padding
             )
             .allowsHitTesting(disable == false)
-            .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-                handler?()
-            })
+            .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
     }
 }
 

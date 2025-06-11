@@ -528,9 +528,7 @@ public struct Button: View {
             .padding(.vertical, -interactionVerticalOffset)
             .padding(.horizontal, -interactionHorizontalOffset)
         }
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-            handler?()
-        })
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         .allowsHitTesting(!disable && !loading)
     }
 }

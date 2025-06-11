@@ -124,9 +124,7 @@ public struct ActionChip: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-            handler?()
-        })
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         .disabled(disable)
     }
     

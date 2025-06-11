@@ -245,12 +245,13 @@ public struct Control: View {
             .clipShape(Circle())
             .frame(width: interactionSize.width, height: interactionSize.height)
         }
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed, onSimultaneousTap: {
             let newState: State = state.isUnchecked ? .checked : .unchecked
             stateBinding?.wrappedValue = newState
             checkedBinding?.wrappedValue = state.isUnchecked
-            onSelect?(newState)
-        })
+        }, action: onSelect == nil ? nil : {
+            onSelect?(state.isUnchecked ? .checked : .unchecked)
+        }))
         .disabled(disable)
     }
     
