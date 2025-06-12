@@ -148,9 +148,7 @@ public struct Cell: View {
         .contentShape(Rectangle())
         .allowsHitTesting(disable == false)
         .opacity(disable ? 0.43 : 1)
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-            onTap?()
-        })
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
     }
     
     // MARK: - Modifiers

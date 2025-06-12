@@ -163,9 +163,7 @@ public struct Avatar: View {
                 .clipShape(RoundedRectangle(cornerRadius: variant.interactionCornerRadius(size: size)))
             }
         }
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
-            onTap?()
-        })
+        .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
     }
     
     private var pushBadge = false
