@@ -23,6 +23,5 @@ jobs:
             -scheme Montage \
             -sdk iphonesimulator \
             -destination "platform=iOS Simulator,name=iPhone 13,OS=latest" \
-            -enableCodeCoverage YES \
             -derivedDataPath "./DerivedData" \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcbeautify;
