@@ -105,6 +105,14 @@ public struct TopNavigation: View {
                     .frame(height: 0.5)
             }
         }
+        .onAppear {
+            Task { @MainActor in
+                if let vc = UIApplication.topViewController() {
+                    vc.navigationController?.setNavigationBarHidden(true, animated: false)
+                    vc.setNavigationBar(type: .hideShadow)
+                }
+            }
+        }
     }
     
     struct Contents: View {
@@ -665,4 +673,72 @@ extension View {
             )
         )
     }
+}
+
+fileprivate extension UIApplication {
+    class func topViewController(
+        base: UIViewController? = UIApplication.keyWindow?.rootViewController
+    ) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return topViewController(base: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(base: selected)
+            }
+        }
+        if let presented = base?.presentedViewController {
+            return topViewController(base: presented)
+        }
+        return base
+    }
+}
+
+fileprivate extension UIViewController {
+    /*
+     기존 navigationBar의 shadowImage와 backgroundImage를 제어하는 방식은
+     iOS 12 이전 버전에서 사용하는 방식이라 iOS 13에서 뒤로가기 시 네비게이션 바의 색상이 깨지는 현상이 발생
+     iOS 13에서 UINavigationBarAppearance가 추가되어 네비게이션의 속성을 정의할 수 있음
+     
+     standardAppearance : 기본 네비게이션
+     scrollEdgeAppearance : Large Title 형태의 네비게이션
+     compactAppearance : 가로모드 일 때 타이틀만 있는 네비게이션
+     */
+    
+    func setNavigationBar(
+        type: NavigationType,
+        backgroundColor: UIColor = .semantic(.backgroundNormal),
+        tintColor: UIColor = .semantic(.labelStrong)
+    ) {
+        let navigationAppearance = UINavigationBarAppearance()
+        
+        switch type {
+        case .default:
+            // 불투명 네비게이션 바
+            navigationAppearance.configureWithOpaqueBackground()
+            navigationController?.navigationBar.barTintColor = tintColor
+            navigationAppearance.backgroundColor = backgroundColor
+        case .transparent:
+            // 투명 네비게이션 바
+            navigationAppearance.configureWithTransparentBackground()
+            navigationController?.navigationBar.barTintColor = .clear
+        case .hideShadow:
+            // 하단 라인 제거
+            navigationAppearance.configureWithTransparentBackground()
+            navigationController?.navigationBar.barTintColor = tintColor
+            navigationAppearance.backgroundColor = backgroundColor
+        }
+        
+        navigationAppearance.titleTextAttributes = [.foregroundColor: tintColor]
+        navigationController?.navigationBar.standardAppearance = navigationAppearance
+        
+        // iOS 15에서 standardAppearance만 설정한 경우 barTintColor 적용이 안되는 이슈가 있다고 하여 함께 설정함
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationAppearance
+    }
+}
+
+fileprivate enum NavigationType {
+    case `default`
+    case transparent
+    case hideShadow
 }
