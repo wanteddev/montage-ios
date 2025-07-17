@@ -257,28 +257,24 @@ extension NormalCard {
                 .if(!caption.isNilOrEmpty || buttonIcon != nil) {
                     $0.overlay(alignment: .top) {
                         ZStack {
-                            HStack(alignment: .top, spacing: 4) {
+                            HStack(alignment: .top, spacing: 0) {
                                 if let caption {
-                                    HStack(spacing: 0) {
-                                        Text(caption)
-                                            .typography(variant: .caption2, weight: .bold, semantic: .staticWhite)
-                                            .paragraph(variant: .caption2)
-                                        Spacer(minLength: 0)
-                                    }
-                                    .padding(.bottom, 6)
+                                    Text(caption)
+                                        .typography(variant: .caption2, weight: .bold, semantic: .staticWhite)
+                                        .paragraph(variant: .caption2)
+                                        .padding(.bottom, 6)
                                 }
                                 
+                                Spacer(minLength: 4)
+                                
                                 if let buttonIcon {
-                                    HStack(spacing: 0) {
-                                        Spacer(minLength: 0)
-                                        Montage.IconButton(
-                                            variant: .normal(size: 20),
-                                            icon: buttonIcon
-                                        ) {
-                                            onTapButton?()
-                                        }
-                                        .iconColor(buttonColor)
+                                    Montage.IconButton(
+                                        variant: .normal(size: 20),
+                                        icon: buttonIcon
+                                    ) {
+                                        onTapButton?()
                                     }
+                                    .iconColor(buttonColor)
                                 }
                             }
                             .padding(.all, 10)
