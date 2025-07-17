@@ -204,6 +204,7 @@ public enum Icon: String, CaseIterable {
     case inbox
     case instance
     case keyboard
+    case leftSide
     case like
     case likeFill
     case lineHorizontal
@@ -271,6 +272,8 @@ public enum Icon: String, CaseIterable {
     case navigationSocial
     case palette
     case paletteFill
+    case passport
+    case passportFill
     case pause
     case pencil
     case pencilFill
@@ -352,6 +355,8 @@ public enum Icon: String, CaseIterable {
     case webinar
     case write
     case zepFast
+    case zepFastFill
+
     case zepFastFill
 }
 
