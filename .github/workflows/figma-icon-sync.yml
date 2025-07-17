@@ -12,6 +12,48 @@ jobs:
   sync:
     uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@main
     with:
-      platform: ios
-      pr_name: 'feat: add icons synced from figma'
+      output_dir: output
     secrets: inherit
+
+  parse:
+    runs-on: ubuntu-latest
+    needs: sync
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: output
+          key: ${{ needs.sync.outputs.figma-output-cache-key }}
+
+      - name: Node.js install
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: node icon_sync.js
+
+      - run: git config user.name "github-actions[bot]"
+      - run: git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create Branch And Commit
+        run: |
+          git branch feature/code-connect/${{ github.run_id }}
+          git checkout feature/code-connect/${{ github.run_id }}
+          git add .
+          git commit -m "feat: add icons synced from figma" --no-verify
+          git push origin feature/code-connect/${{ github.run_id }}
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Create New PR
+        run: |
+          gh pr create -B ${{ steps.extract_branch.outputs.branch }} -H feature/code-connect/${{ github.run_id }} --title "feat: add icons synced from figma" --body "add icons synced from figma"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
