@@ -97,6 +97,14 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case arrowUpRight``</summary>
+</details>
+<details>
+
+<summary>``case arrowUpRightThick``</summary>
+</details>
+<details>
+
 <summary>``case arrowUpThick``</summary>
 </details>
 <details>
@@ -410,6 +418,14 @@ Button(action: {}) {
 <details>
 
 <summary>``case circleQuestionFill``</summary>
+</details>
+<details>
+
+<summary>``case circleUpRight``</summary>
+</details>
+<details>
+
+<summary>``case circleUpRightFill``</summary>
 </details>
 <details>
 
@@ -1086,6 +1102,10 @@ Button(action: {}) {
 <details>
 
 <summary>``case reset``</summary>
+</details>
+<details>
+
+<summary>``case rightSide``</summary>
 </details>
 <details>
 
