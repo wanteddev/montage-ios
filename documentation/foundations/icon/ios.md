@@ -721,6 +721,10 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case leftSide``</summary>
+</details>
+<details>
+
 <summary>``case like``</summary>
 </details>
 <details>
@@ -986,6 +990,14 @@ Button(action: {}) {
 <details>
 
 <summary>``case paletteFill``</summary>
+</details>
+<details>
+
+<summary>``case passport``</summary>
+</details>
+<details>
+
+<summary>``case passportFill``</summary>
 </details>
 <details>
 
