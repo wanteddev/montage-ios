@@ -48,6 +48,8 @@ public enum Icon: String, CaseIterable {
     case arrowTurnDownLeft
     case arrowTurnDownRight
     case arrowUp
+    case arrowUpRight
+    case arrowUpRightThick
     case arrowUpThick
     case attachment
     case bell
@@ -127,6 +129,8 @@ public enum Icon: String, CaseIterable {
     case circlePoint
     case circleQuestion
     case circleQuestionFill
+    case circleUpRight
+    case circleUpRightFill
     case clock
     case clockFill
     case close
@@ -296,6 +300,7 @@ public enum Icon: String, CaseIterable {
     case quote
     case refresh
     case reset
+    case rightSide
     case search
     case searchThick
     case send
