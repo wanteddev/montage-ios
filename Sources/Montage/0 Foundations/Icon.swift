@@ -154,6 +154,7 @@ public enum Icon: String, CaseIterable {
     case copy
     case crown
     case crownFill
+    case deepSearch
     case desktop
     case desktopFill
     case diamond
