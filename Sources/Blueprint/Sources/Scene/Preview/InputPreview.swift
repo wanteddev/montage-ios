@@ -36,7 +36,7 @@ public struct InputPreview: View {
                     Text("guide line").font(.caption)
                     Switch($guideLine)
                 }
-                HStack {
+                VStack {
                     Group {
                         Input.checkbox(
                             state: state,

@@ -221,7 +221,9 @@ public struct Input: View {
                     )
                     .paragraph(variant: titleTypography.variant)
                     .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, size == .medium ? 1 : 0)
+                    .contentShape(Rectangle())
                     .onTapGesture {
                         guard isDisable == false else { return }
                         stateBinding?.wrappedValue = state.isUnchecked ? .checked : .unchecked
