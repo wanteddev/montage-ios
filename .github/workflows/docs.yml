@@ -89,16 +89,18 @@ jobs:
         run: |
           PR_EXISTS=$(gh pr list --head feature/documentation/${{ steps.get_version.outputs.version }} --json number --jq 'length')
           if [ "$PR_EXISTS" -eq "0" ]; then
-            PR_URL=$(gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
+            # PR 생성 및 URL 캡처
+            PR_OUTPUT=$(gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
               --title "docs: docc to markdown for ${{ steps.get_version.outputs.version }}" \
               --body "Montage ${{ steps.get_version.outputs.version }} 최신 문서 반영 PR입니다." \
-              --label "documentation" \
-              --json url --jq '.url')
+              --label "documentation")
+            PR_URL=$(echo "$PR_OUTPUT" | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*')
             echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
           else
             echo "PR already exists for branch feature/documentation/${{ steps.get_version.outputs.version }}"
             # 기존 PR URL 가져오기
-            PR_URL=$(gh pr list --head feature/documentation/${{ steps.get_version.outputs.version }} --json url --jq '.[0].url')
+            PR_OUTPUT=$(gh pr list --head feature/documentation/${{ steps.get_version.outputs.version }} --json url --jq '.[0].url')
+            PR_URL=$(echo "$PR_OUTPUT" | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*')
             echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
           fi
 
