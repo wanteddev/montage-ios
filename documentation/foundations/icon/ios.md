@@ -521,6 +521,10 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case deepSearch``</summary>
+</details>
+<details>
+
 <summary>``case desktop``</summary>
 </details>
 <details>
