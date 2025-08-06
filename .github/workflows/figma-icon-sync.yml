@@ -2,6 +2,11 @@ name: Figma Icon Sync
 
 on:
   workflow_dispatch:
+    inputs:
+      jira_issue:
+        description: 'Jira 이슈 번호 (예: PI-77691)'
+        required: false
+        type: string
 
 permissions:
   packages: write
@@ -39,12 +44,26 @@ jobs:
       - run: git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Create Branch And Commit
+        id: commit
         run: |
-          git branch feature/code-connect/${{ github.run_id }}
-          git checkout feature/code-connect/${{ github.run_id }}
+          # 브랜치명 생성 (Jira 이슈 번호가 있으면 사용, 없으면 run_id 사용)
+          if [ -n "${{ github.event.inputs.jira_issue }}" ]; then
+            BRANCH_NAME="feature/${{ github.event.inputs.jira_issue }}"
+          else
+            BRANCH_NAME="feature/code-connect/${{ github.run_id }}"
+          fi
+          
+          git branch $BRANCH_NAME
+          git checkout $BRANCH_NAME
           git add .
-          git commit -m "feat: add icons synced from figma" --no-verify
-          git push origin feature/code-connect/${{ github.run_id }}
+          if git diff --staged --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "feat: add icons synced from figma" --no-verify
+            git push origin $BRANCH_NAME
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
       - name: Extract branch name
         shell: bash
@@ -52,8 +71,53 @@ jobs:
         id: extract_branch
 
       - name: Create New PR
+        if: steps.commit.outputs.changes == 'true'
+        id: create_pr
         run: |
-          gh pr create -B ${{ steps.extract_branch.outputs.branch }} -H feature/code-connect/${{ github.run_id }} --title "feat: add icons synced from figma" --body "add icons synced from figma"
+          # PR body 생성 (Jira 이슈 링크 포함)
+          PR_BODY="add icons synced from figma"
+          if [ -n "${{ github.event.inputs.jira_issue }}" ]; then
+            PR_BODY="https://wantedlab.atlassian.net/browse/${{ github.event.inputs.jira_issue }}"
+          fi
+          
+          PR_URL=$(gh pr create -B ${{ steps.extract_branch.outputs.branch }} -H ${{ steps.commit.outputs.branch_name }} --title "feat: add icons synced from figma" --body "$PR_BODY" --json url --jq '.url')
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+
+      - name: Send Slack notification for icon sync changes
+        if: steps.commit.outputs.changes == 'true'
+        run: |
+          # Slack webhook URL (Fastfile에서 가져온 IOS_DEVELOPERS URL)
+          SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+          
+          # JSON 페이로드 생성
+          PAYLOAD=$(cat <<EOF
+          {
+            "text": ":appleinc2: 🎨 Figma 아이콘 동기화 PR이 생성되었습니다.",
+            "attachments": [
+              {
+                "fields": [
+                  {
+                    "title": "브랜치",
+                    "value": "${{ steps.commit.outputs.branch_name }}",
+                    "short": true
+                  },
+                  {
+                    "title": "PR 링크",
+                    "value": "${{ steps.create_pr.outputs.pr_url }}",
+                    "short": true
+                  }
+                ],
+                "color": "good"
+              }
+            ]
+          }
+          EOF
+          )
+          
+          # Slack에 메시지 전송
+          curl -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" \
+            "$SLACK_WEBHOOK_URL"
