@@ -360,8 +360,6 @@ public enum Icon: String, CaseIterable {
     case video
     case webinar
     case write
-    case zepFast
-    case zepFastFill
 }
 
 // MARK: - UIKit Extensions
