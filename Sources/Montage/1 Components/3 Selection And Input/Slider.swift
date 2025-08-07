@@ -19,8 +19,9 @@ import SwiftUI
 ///
 /// // 사용자 정의 범위 및 레이블 포맷이 있는 슬라이더
 /// Slider(
-///     range: 0...100,
-///     labelFormat: { "\(Int($0))%" },
+///     isRangeSlider: true,
+///     valueRange: 0...100,
+///     labelFormatter: { "\(Int($0))%" },
 ///     onChanged: { low, high in
 ///         print("범위: \(low) ~ \(high)")
 ///     }
