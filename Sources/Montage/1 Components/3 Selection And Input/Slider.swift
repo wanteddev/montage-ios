@@ -81,13 +81,6 @@ public struct Slider: View {
         self.valueRange = minValue...maxValue
         self.labelFormatter = labelFormatter ?? { String(format: "%.1f", $0) }
         self.onChanged = onChanged
-        
-        if variant == .value {
-            _thumbRatio2 = State<Double>(initialValue: 0.0)
-        } else {
-            _thumbRatio1 = State<Double>(initialValue: 0.0)
-            _thumbRatio2 = State<Double>(initialValue: 1.0)
-        }
     }
     
     // MARK: - Constants
@@ -224,6 +217,12 @@ public struct Slider: View {
                 }
             }
             .onAppear {
+                if variant == .value {
+                    thumbRatio2 = 0.0
+                } else {
+                    thumbRatio1 = 0.0
+                    thumbRatio2 = 1.0
+                }
                 updateValues()
             }
             .onChange(of: lowThumbRatio) { _ in
