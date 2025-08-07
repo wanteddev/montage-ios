@@ -53,7 +53,6 @@ jobs:
             BRANCH_NAME="feature/code-connect/${{ github.run_id }}"
           fi
           
-          git branch $BRANCH_NAME
           git checkout -B $BRANCH_NAME
           git add .
           if git diff --staged --quiet; then
@@ -80,9 +79,8 @@ jobs:
             PR_BODY="https://wantedlab.atlassian.net/browse/${{ github.event.inputs.jira_issue }}"
           fi
           
-          # PR 생성 및 URL 캡처
-          PR_OUTPUT=$(gh pr create -B ${{ steps.extract_branch.outputs.branch }} -H ${{ steps.commit.outputs.branch_name }} --title "feat: add icons synced from figma" --body "$PR_BODY")
-          PR_URL=$(echo "$PR_OUTPUT" | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*')
+          # PR 생성 및 URL 직접 가져오기
+          PR_URL=$(gh pr create -B ${{ steps.extract_branch.outputs.branch }} -H ${{ steps.commit.outputs.branch_name }} --title "feat: add icons synced from figma" --body "$PR_BODY" --json url --jq '.url')
           echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
