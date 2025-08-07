@@ -82,7 +82,7 @@ jobs:
           fi
           
           # 현재 브랜치에 연결된 PR URL을 가져오기 시도 (브랜치 명시적 지정)
-          PR_URL=$(gh pr view -H "${{ steps.commit.outputs.branch_name }}"" --json url --jq '.url' 2>/dev/null || echo "")
+          PR_URL=$(gh pr view -H "${{ steps.commit.outputs.branch_name }}" --json url --jq '.url' 2>/dev/null || echo "")
           
           if [ -z "$PR_URL" ]; then
             # 기존 PR이 없으면 새로운 PR 생성
