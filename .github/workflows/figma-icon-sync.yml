@@ -48,7 +48,9 @@ jobs:
         run: |
           # 브랜치명 생성 (Jira 이슈 번호가 있으면 사용, 없으면 run_id 사용)
           if [ -n "${{ github.event.inputs.jira_issue }}" ]; then
-            BRANCH_NAME="feature/${{ github.event.inputs.jira_issue }}"
+            # Jira 이슈 번호에서 공백과 특수문자를 하이픈으로 변환하여 안전한 브랜치명 생성
+            SANITIZED_JIRA_ISSUE=$(echo "${{ github.event.inputs.jira_issue }}" | tr '[:space:]/\\' '-')
+            BRANCH_NAME="feature/$SANITIZED_JIRA_ISSUE"
           else
             BRANCH_NAME="feature/code-connect/${{ github.run_id }}"
           fi
@@ -79,8 +81,8 @@ jobs:
             PR_BODY="https://wantedlab.atlassian.net/browse/${{ github.event.inputs.jira_issue }}"
           fi
           
-          # 현재 브랜치에 연결된 PR URL을 가져오기 시도
-          PR_URL=$(gh pr view --json url --jq '.url' 2>/dev/null || echo "")
+          # 현재 브랜치에 연결된 PR URL을 가져오기 시도 (브랜치 명시적 지정)
+          PR_URL=$(gh pr view -H ${{ steps.commit.outputs.branch_name }} --json url --jq '.url' 2>/dev/null || echo "")
           
           if [ -z "$PR_URL" ]; then
             # 기존 PR이 없으면 새로운 PR 생성
