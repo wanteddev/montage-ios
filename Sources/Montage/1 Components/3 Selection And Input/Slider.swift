@@ -35,9 +35,9 @@ public struct Slider: View {
     /// 슬라이더의 변형을 정의합니다.
     public enum Variant {
         /// 단일 값 슬라이더 (노브 하나)
-        case single
+        case value
         /// 범위 값 슬라이더 (노브 두 개)
-        case double
+        case range
     }
     
     // MARK: - Initializer
@@ -49,12 +49,12 @@ public struct Slider: View {
     /// 슬라이더를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 슬라이더의 변형 (기본값: .single - 단일 값 슬라이더)
+    ///   - variant: 슬라이더의 변형 (기본값: .value - 단일 값 슬라이더)
     ///   - valueRange: 슬라이더가 표현하는 값의 범위 (기본값: 0...1)
     ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
     ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil)
     public init(
-        _ variant: Variant = .single,
+        _ variant: Variant = .value,
         valueRange: ClosedRange<CGFloat> = 0...1,
         labelFormatter: ((CGFloat) -> String)? = nil,
         onChanged: ((CGFloat, CGFloat) -> Void)? = nil
@@ -71,7 +71,7 @@ public struct Slider: View {
     ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
     ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil)
     public init(
-        _ variant: Variant = .single,
+        _ variant: Variant = .value,
         minValue: CGFloat = 0,
         maxValue: CGFloat = 1,
         labelFormatter: ((CGFloat) -> String)? = nil,
@@ -82,7 +82,7 @@ public struct Slider: View {
         self.labelFormatter = labelFormatter ?? { String(format: "%.1f", $0) }
         self.onChanged = onChanged
         
-        if variant == .single {
+        if variant == .value {
             _thumbRatio2 = State<Double>(initialValue: 0.0)
         } else {
             _thumbRatio1 = State<Double>(initialValue: 0.0)
@@ -139,7 +139,7 @@ public struct Slider: View {
                             Rectangle()
                                 .frame(width: geo.size.width + 12, height: Slider.diameter + 12)
                             Group {
-                                if variant == .double {
+                                if variant == .range {
                                     Circle().stroke(lineWidth: 2)
                                         .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                         .offset(x: max(0, lineLength * thumbRatio1) + 5, y: 5)
@@ -155,7 +155,7 @@ public struct Slider: View {
                 }
                 
                 // thumbs
-                if variant == .double {
+                if variant == .range {
                     Thumb(
                         title: label ? labelFormatter(value(from: thumbRatio1)) : nil,
                         value: thumbRatio1,
@@ -201,7 +201,7 @@ public struct Slider: View {
                             .frame(width: geo.size.width + 12, height: geo.size.height + 12)
                             .offset(x: -6, y: -6)
                         Group {
-                            if variant == .double {
+                            if variant == .range {
                                 Circle().stroke(lineWidth: 2)
                                     .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                     .offset(x: max(0, lineLength * thumbRatio1) - 1, y: -1)

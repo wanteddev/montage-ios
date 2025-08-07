@@ -32,7 +32,7 @@ struct SliderPreview: View {
                     .label(label)
                     .disable(disable)
                 } else {
-                    Slider(.double, minValue: CGFloat(lowerBound), maxValue: CGFloat(upperBound), labelFormatter: { value in
+                    Slider(.range, minValue: CGFloat(lowerBound), maxValue: CGFloat(upperBound), labelFormatter: { value in
                         "\(Int(value.rounded()))\(unit)"
                     })
                     .heading(heading)
