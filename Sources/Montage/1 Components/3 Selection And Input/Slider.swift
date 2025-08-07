@@ -31,17 +31,8 @@ import SwiftUI
 ///
 /// - Note: 슬라이더는 레이블 및 헤딩 옵션을 제공하며, 비활성화 상태를 지원합니다.
 public struct Slider: View {
-    // MARK: - Types
-    /// 슬라이더의 변형을 정의합니다.
-    public enum Variant {
-        /// 단일 값 슬라이더 (노브 하나)
-        case value
-        /// 범위 값 슬라이더 (노브 두 개)
-        case range
-    }
-    
     // MARK: - Initializer
-    private var variant: Variant
+    private let isRangeSlider: Bool
     private let valueRange: ClosedRange<CGFloat>
     private let labelFormatter: (CGFloat) -> String
     private let onChanged: ((CGFloat, CGFloat) -> Void)?
@@ -49,35 +40,41 @@ public struct Slider: View {
     /// 슬라이더를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 슬라이더의 변형 (기본값: .value - 단일 값 슬라이더)
+    ///   - isRangeSlider: 슬라이더의 변형 (기본값: false - 단일 값 슬라이더)
     ///   - valueRange: 슬라이더가 표현하는 값의 범위 (기본값: 0...1)
     ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
     ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil)
     public init(
-        _ variant: Variant = .value,
+        isRangeSlider: Bool = false,
         valueRange: ClosedRange<CGFloat> = 0...1,
         labelFormatter: ((CGFloat) -> String)? = nil,
         onChanged: ((CGFloat, CGFloat) -> Void)? = nil
     ) {
-        self.init(variant, minValue: valueRange.lowerBound, maxValue: valueRange.upperBound, labelFormatter: labelFormatter, onChanged: onChanged)
+        self.init(
+            isRangeSlider: isRangeSlider,
+            minValue: valueRange.lowerBound,
+            maxValue: valueRange.upperBound,
+            labelFormatter: labelFormatter,
+            onChanged: onChanged
+        )
     }
     
     /// 슬라이더를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 슬라이더의 변형 (기본값: .single - 단일 값 슬라이더)
+    ///   - isRangeSlider: 슬라이더의 변형 (기본값: false - 단일 값 슬라이더)
     ///   - minValue: 슬라이더의 최소값 (기본값: 0)
     ///   - maxValue: 슬라이더의 최대값 (기본값: 1)
     ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
     ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil)
     public init(
-        _ variant: Variant = .value,
+        isRangeSlider: Bool = false,
         minValue: CGFloat = 0,
         maxValue: CGFloat = 1,
         labelFormatter: ((CGFloat) -> String)? = nil,
         onChanged: ((CGFloat, CGFloat) -> Void)? = nil
     ) {
-        self.variant = variant
+        self.isRangeSlider = isRangeSlider
         self.valueRange = minValue...maxValue
         self.labelFormatter = labelFormatter ?? { String(format: "%.1f", $0) }
         self.onChanged = onChanged
@@ -132,7 +129,7 @@ public struct Slider: View {
                             Rectangle()
                                 .frame(width: geo.size.width + 12, height: Slider.diameter + 12)
                             Group {
-                                if variant == .range {
+                                if isRangeSlider {
                                     Circle().stroke(lineWidth: 2)
                                         .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                         .offset(x: max(0, lineLength * thumbRatio1) + 5, y: 5)
@@ -148,7 +145,7 @@ public struct Slider: View {
                 }
                 
                 // thumbs
-                if variant == .range {
+                if isRangeSlider {
                     Thumb(
                         title: label ? labelFormatter(value(from: thumbRatio1)) : nil,
                         value: thumbRatio1,
@@ -194,7 +191,7 @@ public struct Slider: View {
                             .frame(width: geo.size.width + 12, height: geo.size.height + 12)
                             .offset(x: -6, y: -6)
                         Group {
-                            if variant == .range {
+                            if isRangeSlider {
                                 Circle().stroke(lineWidth: 2)
                                     .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                     .offset(x: max(0, lineLength * thumbRatio1) - 1, y: -1)
@@ -217,11 +214,11 @@ public struct Slider: View {
                 }
             }
             .onAppear {
-                if variant == .value {
+                if isRangeSlider {
                     thumbRatio2 = 0.0
+                    thumbRatio2 = 1.0
                 } else {
                     thumbRatio1 = 0.0
-                    thumbRatio2 = 1.0
                 }
                 updateValues()
             }
