@@ -107,9 +107,6 @@ jobs:
       - name: Send Slack notification for documentation changes
         if: steps.commit.outputs.changes == 'true'
         run: |
-          # Slack webhook URL (Fastfile에서 가져온 IOS_DEVELOPERS URL)
-          SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
-          
           # JSON 페이로드 생성
           PAYLOAD=$(cat <<EOF
           {
@@ -148,4 +145,4 @@ jobs:
           # Slack에 메시지 전송
           curl -X POST -H 'Content-type: application/json' \
             --data "$PAYLOAD" \
-            "$SLACK_WEBHOOK_URL"
+            "${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}"
