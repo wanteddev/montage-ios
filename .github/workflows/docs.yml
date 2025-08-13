@@ -36,8 +36,8 @@ jobs:
       - name: Get milestone version
         id: get_version
         run: |
-          PR_NUMBER=$(gh pr list --state merged --limit 1 | head -1 | sed 's/.*#\([0-9]*\).*/\1/')
-          MILESTONE=$(gh pr view $PR_NUMBER | grep -o 'Milestone:.*' | sed 's/Milestone: *//')
+          PR_NUMBER=$(gh pr list --state merged --limit 1 | awk 'NR==1 {print $1}' | sed 's/#//')
+          MILESTONE=$(gh pr view $PR_NUMBER | awk '/^milestone:/ {print $2}')
           VERSION="v${MILESTONE}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -96,7 +96,10 @@ jobs:
             gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
               --title "docs: docc to markdown for ${{ steps.get_version.outputs.version }}" \
               --body "Montage ${{ steps.get_version.outputs.version }} 최신 문서 반영 PR입니다." \
-              --label "documentation"
+              --label "documentation" \
+              --label "in review" \
+              --milestone "${{ steps.get_version.outputs.version }}" \
+              --assignee "github-actions[bot]"
             
             # 생성된 PR의 URL 가져오기
             PR_URL=$(gh pr view | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*' | head -1)
