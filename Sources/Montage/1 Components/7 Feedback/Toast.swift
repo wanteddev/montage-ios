@@ -218,7 +218,7 @@ public struct Toast: View {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
-                    Image.icon(.circleExclamationFill)
+                    Image.icon(.circleCloseFill)
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.atomic(.red60))
                         .frame(width: 22, height: 22)
