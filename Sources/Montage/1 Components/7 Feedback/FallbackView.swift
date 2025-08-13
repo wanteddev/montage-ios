@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-/// 콘텐츠가 빈 상태일 때 사용자의 이해를 돕기 위한 컴포넌트입니다.
+/// 콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.
 ///
-/// 빈 화면, 데이터 없음, 검색 결과 없음 등의 상태를 시각적으로 표현하고 
-/// 사용자에게 적절한 안내를 제공합니다. 이미지, 제목, 설명, 버튼 요소를 조합하여 
-/// 다양한 상황에 맞는 빈 상태 화면을 구성할 수 있습니다.
-///
+/// 데이터 없음, 검색 결과 없음(Empty) 뿐 아니라 404/네트워크 오류 등의 상태를 시각적으로 표현하고
+/// 사용자에게 적절한 안내/복구 액션을 제공합니다. 이미지, 제목, 설명, 버튼 요소를 조합하여
+/// 다양한 상황에 맞는 대체(Fallback) 화면을 구성할 수 있습니다.
+/// 
 /// ```swift
 /// // 기본 사용법
 /// FallbackView(
@@ -104,8 +104,7 @@ public struct FallbackView: View {
             .padding(.vertical, 12)
             
             if image != nil {
-                Spacer()
-                    .frame(height: 20)
+                SwiftUI.Color.clear.frame(height: 20)
             }
             
             Spacer()
@@ -115,8 +114,8 @@ public struct FallbackView: View {
 
 #Preview {
     FallbackView(
-        title: "타이틀이 들어갈수도 있고, 안들어dasfasdasfasda갈 수 도 있어요.",
-        description: "상황에 대한 설명이 들어fdsasdasfasdasfasdasf asdasfasdafasd가요.\n설명은 최대 두 줄로 작성해요."
+        title: "타이틀이 들어갈수도 있고, 안들어갈 수 도 있어요.",
+        description: "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요."
     ) {
         Button.outlined(text: "텍스트")
     }
