@@ -17,8 +17,9 @@ Slider()
 
 // 사용자 정의 범위 및 레이블 포맷이 있는 슬라이더
 Slider(
-    range: 0...100,
-    labelFormat: { "\(Int($0))%" },
+    isRangeSlider: true,
+    valueRange: 0...100,
+    labelFormatter: { "\(Int($0))%" },
     onChanged: { low, high in
         print("범위: \(low) ~ \(high)")
     }
@@ -37,15 +38,31 @@ Slider(
 
 <details>
 
-<summary>``init(range: ClosedRange<CGFloat>, labelFormat: ((CGFloat) -> String)?, onChanged: ((CGFloat, CGFloat) -> Void)?)``</summary>
+<summary>``init(isRangeSlider: Bool, minValue: CGFloat, maxValue: CGFloat, labelFormatter: ((CGFloat) -> String)?, onChanged: ((CGFloat, CGFloat) -> Void)?)``</summary>
 
 슬라이더를 초기화합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `range` | 슬라이더가 표현하는 값의 범위 (기본값: 0…1) |
-  | `labelFormat` | 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리) |
+  | `isRangeSlider` | 슬라이더의 변형 (기본값: false - 단일 값 슬라이더) |
+  | `minValue` | 슬라이더의 최소값 (기본값: 0) |
+  | `maxValue` | 슬라이더의 최대값 (기본값: 1) |
+  | `labelFormatter` | 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리) |
+  | `onChanged` | 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil) |
+</details>
+<details>
+
+<summary>``init(isRangeSlider: Bool, valueRange: ClosedRange<CGFloat>, labelFormatter: ((CGFloat) -> String)?, onChanged: ((CGFloat, CGFloat) -> Void)?)``</summary>
+
+슬라이더를 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isRangeSlider` | 슬라이더의 변형 (기본값: false - 단일 값 슬라이더) |
+  | `valueRange` | 슬라이더가 표현하는 값의 범위 (기본값: 0…1) |
+  | `labelFormatter` | 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리) |
   | `onChanged` | 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil) |
 </details>
 
