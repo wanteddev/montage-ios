@@ -38,13 +38,13 @@ class ComponentListContents {
         case avatar, card, cell, thumbnail, accordion, playBadge, sectionHeader, contentBadge
         case loading, skeleton, pullToRefresh
         case topNavigation, progressIndicator, tab, pagination, progressTracker, category
-        case pushBadge, emptyState, snackbar, toast, tooltip
+        case pushBadge, fallbackView, snackbar, toast, tooltip
         case modal, menu
         
         var state: ComponentState {
             switch self {
             case .typography, .color, .icon, .grid, .elevation, .switch, .input, .control, .flowLayout,
-                    .button, .iconButton, .thumbnail, .emptyState, .pushBadge, .chip, .topNavigation,
+                    .button, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
                     .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
                     .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
@@ -72,7 +72,7 @@ class ComponentListContents {
                 return .loading
             case .topNavigation, .progressIndicator, .tab, .pagination, .progressTracker, .category:
                 return .navigations
-            case .pushBadge, .emptyState, .snackbar, .toast, .tooltip:
+            case .pushBadge, .fallbackView, .snackbar, .toast, .tooltip:
                 return .feedback
             case .modal, .menu:
                 return .presentation

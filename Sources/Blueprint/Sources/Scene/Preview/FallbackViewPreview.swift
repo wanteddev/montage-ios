@@ -1,5 +1,5 @@
 //
-//  EmptyState.swift
+//  FallbackViewPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 11/25/24.
@@ -8,9 +8,9 @@
 import SwiftUI
 import Montage
 
-struct EmptyStatePreview: View {
+struct FallbackViewPreview: View {
     var body: some View {
-        EmptyState(
+        FallbackView(
             image: {
                 AsyncImage(url: URL(string: "https://static.wanted.co.kr/images/error/lighthouse.png")) {
                     $0.image?.resizable()
@@ -28,5 +28,5 @@ struct EmptyStatePreview: View {
 }
 
 #Preview {
-    EmptyStatePreview()
+    FallbackViewPreview()
 }

@@ -1,5 +1,5 @@
 //
-//  EmptyState.swift
+//  FallbackView.swift
 //  Montage
 //
 //  Created by Sanghoon Ahn on 10/21/24.
@@ -15,12 +15,12 @@ import SwiftUI
 ///
 /// ```swift
 /// // 기본 사용법
-/// EmptyState(
+/// FallbackView(
 ///     description: "검색 결과가 없습니다."
 /// )
 ///
 /// // 모든 요소를 사용한 예시
-/// EmptyState(
+/// FallbackView(
 ///     image: { 
 ///         Image.icon(.emptyBox)
 ///             .resizable()
@@ -38,13 +38,13 @@ import SwiftUI
 ///
 /// - Note: 컴포넌트가 기본적으로 화면 전체를 차지하므로 필요하다면
 ///   .frame modifier를 사용하여 크기를 조절하여 사용하시길 권장합니다.
-public struct EmptyState: View {
+public struct FallbackView: View {
     private let image: (() -> any View)?
     private let title: String?
     private let description: String
     private let button: (() -> any View)?
     
-    /// EmptyState 컴포넌트를 초기화합니다.
+    /// FallbackView 컴포넌트를 초기화합니다.
     ///
     /// 원하는 레이아웃을 구성하기 위해 이미지, 제목, 설명, 버튼을 선택적으로 제공할 수 있습니다.
     /// 설명은 필수이며, 최대 2줄로 표시됩니다.
@@ -114,7 +114,7 @@ public struct EmptyState: View {
 }
 
 #Preview {
-    EmptyState(
+    FallbackView(
         title: "타이틀이 들어갈수도 있고, 안들어dasfasdasfasda갈 수 도 있어요.",
         description: "상황에 대한 설명이 들어fdsasdasfasdasfasdasf asdasfasdafasd가요.\n설명은 최대 두 줄로 작성해요."
     ) {

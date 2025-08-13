@@ -67,8 +67,8 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: AvatarPreview())
         case .skeleton:
             vc = UIHostingController(rootView: SkeletonPreview())
-        case .emptyState:
-            vc = UIHostingController(rootView: EmptyStatePreview())
+        case .fallbackView:
+            vc = UIHostingController(rootView: FallbackViewPreview())
         case .toast:
             vc = UIHostingController(rootView: ToastPreview())
         case .snackbar:
