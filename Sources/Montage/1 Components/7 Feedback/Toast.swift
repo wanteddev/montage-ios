@@ -53,7 +53,7 @@ public struct Toast: View {
         private let id = UUID()
         let variant: Toast.Variant
         let message: String
-        
+
         /// Toast 모델을 초기화합니다.
         ///
         /// - Parameters:
@@ -75,28 +75,28 @@ public struct Toast: View {
         ///   - icon: 표시할 아이콘 (선택 사항)
         ///   - tint: 아이콘의 색상 (선택 사항)
         case normal(Montage.Icon? = nil, tint: Montage.Color.Semantic? = nil)
-        
+
         /// 성공 메시지를 위한 녹색 체크 아이콘 스타일
         case positive
-        
+
         /// 주의 메시지를 위한 주황색 경고 아이콘 스타일
         case cautionary
-        
+
         /// 오류 메시지를 위한 빨간색 경고 아이콘 스타일
         case negative
     }
-    
+
     /// 토스트 메시지가 표시될 위치를 정의하는 열거형입니다.
     public enum Location {
         /// 화면 상단에 토스트 표시
         /// - Parameter offset: 상단에서의 오프셋 값 (기본값: 0)
         case top(offset: CGFloat = .zero)
-        
+
         /// 화면 하단에 토스트 표시
         /// - Parameter offset: 하단에서의 오프셋 값 (기본값: 0)
         case bottom(offset: CGFloat = .zero)
     }
-    
+
     /// 토스트 메시지의 표시 시간을 정의하는 열거형입니다.
     public enum Duration {
         /// 짧은 표시 시간 (3초)
@@ -104,11 +104,11 @@ public struct Toast: View {
         /// 긴 표시 시간 (5초)
         case long
     }
-    
+
     private let variant: Variant
     private let message: String
     private let location: Location
-    
+
     init(
         _ variant: Variant = .normal(),
         message: String = "",
@@ -118,7 +118,7 @@ public struct Toast: View {
         self.message = message
         self.location = location
     }
-    
+
     public var body: some View {
         switch location {
         case .top(let offset):
@@ -137,16 +137,16 @@ public struct Toast: View {
             }
         }
     }
-    
+
     fileprivate struct Contents: View {
         private let variant: Variant
         private let message: String
-        
+
         init(_ variant: Variant, _ message: String) {
             self.variant = variant
             self.message = message
         }
-        
+
         var body: some View {
             ZStack(alignment: .leading) {
                 HStack(alignment: .center, spacing: 8) {
@@ -167,14 +167,14 @@ public struct Toast: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
-    
+
     private struct Icon: View {
         private let variant: Variant
-        
+
         init(_ variant: Variant) {
             self.variant = variant
         }
-        
+
         var body: some View {
             switch variant {
             case let .normal(icon, tint):
@@ -194,35 +194,23 @@ public struct Toast: View {
                     EmptyView()
                 }
             case .positive:
-                ZStack {
-                    Circle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
-                        .frame(width: 11, height: 11)
-                    Image.icon(.circleCheckFill)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.atomic(.green60))
-                        .frame(width: 22, height: 22)
-                }
+                badgedIcon(.circleCheckFill, .green60)
             case .cautionary:
-                ZStack {
-                    Circle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
-                        .frame(width: 11, height: 11)
-                    Image.icon(.triangleExclamationFill)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.atomic(.orange60))
-                        .frame(width: 22, height: 22)
-                }
+                badgedIcon(.triangleExclamationFill, .orange60)
             case .negative:
-                ZStack {
-                    Circle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
-                        .frame(width: 11, height: 11)
-                    Image.icon(.circleCloseFill)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.atomic(.red60))
-                        .frame(width: 22, height: 22)
-                }
+                badgedIcon(.circleCloseFill, .red60)
+            }
+        }
+
+        private func badgedIcon(_ icon: Montage.Icon, _ color: Color.Atomic) -> some View {
+            ZStack {
+                Circle()
+                    .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+                    .frame(width: 11, height: 11)
+                Image.icon(icon)
+                    .resizable()
+                    .foregroundStyle(SwiftUI.Color.atomic(color))
+                    .frame(width: 22, height: 22)
             }
         }
     }
@@ -232,7 +220,8 @@ public struct Toast: View {
 
         var body: some View {
             ZStack {
-                SwiftUI.Color.semantic(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
+                SwiftUI.Color.semantic(.inverseBackground).opacity(
+                    colorScheme == .light ? 0.5 : 0.46)
                 SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
             }
             .background(
@@ -275,7 +264,7 @@ extension Toast {
         @Binding private var model: Toast.Model?
         private let location: Toast.Location
         private let duration: Toast.Duration
-        
+
         /// ToastModifier를 초기화합니다.
         ///
         /// - Parameters:
@@ -319,7 +308,7 @@ extension Toast {
                     }
                 }
         }
-        
+
         private var durationTime: TimeInterval {
             switch duration {
             case .short: 3
