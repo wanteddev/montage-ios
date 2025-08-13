@@ -9,13 +9,13 @@ import SwiftUI
 import Montage
 
 struct SliderPreview: View {
+    @State private var variantIndex: Int = 0
     @State private var heading = true
     @State private var label = true
     @State private var disable = false
     @State private var lowerBound: Int = 0
     @State private var upperBound: Int = 10
     @State private var unit = "km"
-    @State private var range: ClosedRange<CGFloat> = 0...10
     
     var body: some View {
         SwiftUI.ScrollView {
@@ -24,12 +24,21 @@ struct SliderPreview: View {
                     Text("Preview").bold()
                     Spacer()
                 }
-                Slider(range: range) { value in
-                    "\(Int(value.rounded()))\(unit)"
+                if variantIndex == 0 {
+                    Slider(minValue: CGFloat(lowerBound), maxValue: CGFloat(upperBound), labelFormatter: { value in
+                        "\(Int(value.rounded()))\(unit)"
+                    })
+                    .heading(heading)
+                    .label(label)
+                    .disable(disable)
+                } else {
+                    Slider(isRangeSlider: true, minValue: CGFloat(lowerBound), maxValue: CGFloat(upperBound), labelFormatter: { value in
+                        "\(Int(value.rounded()))\(unit)"
+                    })
+                    .heading(heading)
+                    .label(label)
+                    .disable(disable)
                 }
-                .heading(heading)
-                .label(label)
-                .disable(disable)
             }
             .padding(.horizontal)
             VStack(alignment: .leading) {
@@ -54,6 +63,11 @@ struct SliderPreview: View {
                     TextField(text: $unit)
                 }
                 HStack {
+                    Text("variant")
+                    SegmentedControl(selectedIndex: $variantIndex, labels: ["single", "double"])
+                        .size(.small)
+                }
+                HStack {
                     Text("heading")
                     Switch($heading)
                 }
@@ -73,7 +87,6 @@ struct SliderPreview: View {
                 if lowerBound > upperBound {
                     upperBound = lowerBound
                 }
-                range = CGFloat(lowerBound)...CGFloat(upperBound)
             }
         }
         .onChange(of: upperBound) { _ in
@@ -81,7 +94,6 @@ struct SliderPreview: View {
                 if lowerBound > upperBound {
                     lowerBound = upperBound
                 }
-                range = CGFloat(lowerBound)...CGFloat(upperBound)
             }
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))

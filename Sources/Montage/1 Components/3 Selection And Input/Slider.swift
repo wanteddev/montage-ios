@@ -19,8 +19,9 @@ import SwiftUI
 ///
 /// // 사용자 정의 범위 및 레이블 포맷이 있는 슬라이더
 /// Slider(
-///     range: 0...100,
-///     labelFormat: { "\(Int($0))%" },
+///     isRangeSlider: true,
+///     valueRange: 0...100,
+///     labelFormatter: { "\(Int($0))%" },
 ///     onChanged: { low, high in
 ///         print("범위: \(low) ~ \(high)")
 ///     }
@@ -32,23 +33,51 @@ import SwiftUI
 /// - Note: 슬라이더는 레이블 및 헤딩 옵션을 제공하며, 비활성화 상태를 지원합니다.
 public struct Slider: View {
     // MARK: - Initializer
-    private let range: ClosedRange<CGFloat>
-    private let labelFormat: (CGFloat) -> String
+    private let isRangeSlider: Bool
+    private let valueRange: ClosedRange<CGFloat>
+    private let labelFormatter: (CGFloat) -> String
     private let onChanged: ((CGFloat, CGFloat) -> Void)?
     
     /// 슬라이더를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - range: 슬라이더가 표현하는 값의 범위 (기본값: 0...1)
-    ///   - labelFormat: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
+    ///   - isRangeSlider: 슬라이더의 변형 (기본값: false - 단일 값 슬라이더)
+    ///   - valueRange: 슬라이더가 표현하는 값의 범위 (기본값: 0...1)
+    ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
     ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil)
     public init(
-        range: ClosedRange<CGFloat> = 0 ... 1,
-        labelFormat: ((CGFloat) -> String)? = nil,
+        isRangeSlider: Bool = false,
+        valueRange: ClosedRange<CGFloat> = 0...1,
+        labelFormatter: ((CGFloat) -> String)? = nil,
         onChanged: ((CGFloat, CGFloat) -> Void)? = nil
     ) {
-        self.range = range
-        self.labelFormat = labelFormat ?? { String(format: "%.1f", $0) }
+        self.init(
+            isRangeSlider: isRangeSlider,
+            minValue: valueRange.lowerBound,
+            maxValue: valueRange.upperBound,
+            labelFormatter: labelFormatter,
+            onChanged: onChanged
+        )
+    }
+    
+    /// 슬라이더를 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - isRangeSlider: 슬라이더의 변형 (기본값: false - 단일 값 슬라이더)
+    ///   - minValue: 슬라이더의 최소값 (기본값: 0)
+    ///   - maxValue: 슬라이더의 최대값 (기본값: 1)
+    ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저 (기본값: 소수점 한 자리)
+    ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저 (기본값: nil)
+    public init(
+        isRangeSlider: Bool = false,
+        minValue: CGFloat = 0,
+        maxValue: CGFloat = 1,
+        labelFormatter: ((CGFloat) -> String)? = nil,
+        onChanged: ((CGFloat, CGFloat) -> Void)? = nil
+    ) {
+        self.isRangeSlider = isRangeSlider
+        self.valueRange = minValue...maxValue
+        self.labelFormatter = labelFormatter ?? { String(format: "%.1f", $0) }
         self.onChanged = onChanged
     }
     
@@ -101,9 +130,11 @@ public struct Slider: View {
                             Rectangle()
                                 .frame(width: geo.size.width + 12, height: Slider.diameter + 12)
                             Group {
-                                Circle().stroke(lineWidth: 2)
-                                    .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
-                                    .offset(x: max(0, lineLength * thumbRatio1) + 5, y: 5)
+                                if isRangeSlider {
+                                    Circle().stroke(lineWidth: 2)
+                                        .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
+                                        .offset(x: max(0, lineLength * thumbRatio1) + 5, y: 5)
+                                }
                                 Circle().stroke(lineWidth: 2)
                                     .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                     .offset(x: max(0, lineLength * thumbRatio2) + 5, y: 5)
@@ -115,26 +146,28 @@ public struct Slider: View {
                 }
                 
                 // thumbs
-                Thumb(
-                    title: label ? labelFormat(value(from: thumbRatio1)) : nil,
-                    value: thumbRatio1,
-                    maxValue: lineLength,
-                    disable: disable
-                )
-                .zIndex(focusedThumb == 1 ? 1 : 0)
-                .offset(x: max(0, lineLength * thumbRatio1))
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged {
-                            thumbRatio1 = thumbRatio(from: $0.location.x)
-                            focusedThumb = 1
-                        }.onEnded {
-                            thumbRatio1 = thumbRatio(from: $0.location.x)
-                        }
-                )
+                if isRangeSlider {
+                    Thumb(
+                        title: label ? labelFormatter(value(from: thumbRatio1)) : nil,
+                        value: thumbRatio1,
+                        maxValue: lineLength,
+                        disable: disable
+                    )
+                    .zIndex(focusedThumb == 1 ? 1 : 0)
+                    .offset(x: max(0, lineLength * thumbRatio1))
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged {
+                                thumbRatio1 = thumbRatio(from: $0.location.x)
+                                focusedThumb = 1
+                            }.onEnded {
+                                thumbRatio1 = thumbRatio(from: $0.location.x)
+                            }
+                    )
+                }
                 
                 Thumb(
-                    title: label ? labelFormat(value(from: thumbRatio2)) : nil,
+                    title: label ? labelFormatter(value(from: thumbRatio2)) : nil,
                     value: thumbRatio2,
                     maxValue: lineLength,
                     disable: disable
@@ -159,14 +192,16 @@ public struct Slider: View {
                             .frame(width: geo.size.width + 12, height: geo.size.height + 12)
                             .offset(x: -6, y: -6)
                         Group {
-                            Circle().stroke(lineWidth: 2)
-                                .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
-                                .offset(x: max(0, lineLength * thumbRatio1) - 1, y: -1)
-                                .blendMode(
-                                    focusedThumb == 2 && distanceBetweenThumbs <= Slider
-                                        .diameter + 12 ? .normal : .destinationOut
-                                )
-                                .zIndex(focusedThumb == 1 ? 1 : 0)
+                            if isRangeSlider {
+                                Circle().stroke(lineWidth: 2)
+                                    .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
+                                    .offset(x: max(0, lineLength * thumbRatio1) - 1, y: -1)
+                                    .blendMode(
+                                        focusedThumb == 2 && distanceBetweenThumbs <= Slider
+                                            .diameter + 12 ? .normal : .destinationOut
+                                    )
+                                    .zIndex(focusedThumb == 1 ? 1 : 0)
+                            }
                             Circle().stroke(lineWidth: 2)
                                 .frame(width: Slider.diameter + 2, height: Slider.diameter + 2)
                                 .offset(x: max(0, lineLength * thumbRatio2) - 1, y: -1)
@@ -180,6 +215,12 @@ public struct Slider: View {
                 }
             }
             .onAppear {
+                if isRangeSlider {
+                    thumbRatio2 = 0.0
+                    thumbRatio2 = 1.0
+                } else {
+                    thumbRatio1 = 0.0
+                }
                 updateValues()
             }
             .onChange(of: lowThumbRatio) { _ in
@@ -232,12 +273,12 @@ public struct Slider: View {
     // MARK: - private
     
     private func updateValues() {
-        lowValue = (range.upperBound - range.lowerBound) * lowThumbRatio + range.lowerBound
-        highValue = (range.upperBound - range.lowerBound) * highThumbRatio + range.lowerBound
+        lowValue = (valueRange.upperBound - valueRange.lowerBound) * lowThumbRatio + valueRange.lowerBound
+        highValue = (valueRange.upperBound - valueRange.lowerBound) * highThumbRatio + valueRange.lowerBound
     }
     
     private func value(from thumbRatio: CGFloat) -> CGFloat {
-        (range.upperBound - range.lowerBound) * thumbRatio + range.lowerBound
+        (valueRange.upperBound - valueRange.lowerBound) * thumbRatio + valueRange.lowerBound
     }
     
     private var distanceBetweenThumbs: CGFloat {
@@ -245,7 +286,7 @@ public struct Slider: View {
     }
     
     private var headingLabel: String {
-        "\(labelFormat(lowValue)) ~ \(labelFormat(highValue))"
+        "\(labelFormatter(lowValue)) ~ \(labelFormatter(highValue))"
     }
     
     private var lowThumbRatio: CGFloat {
