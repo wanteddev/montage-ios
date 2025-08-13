@@ -49,6 +49,7 @@ jobs:
           BRANCH_NAME="feature/documentation/${{ steps.get_version.outputs.version }}"
           if git show-ref --verify --quiet refs/heads/$BRANCH_NAME; then
             git checkout $BRANCH_NAME
+            git fetch origin $BRANCH_NAME
             git reset --hard origin/$BRANCH_NAME
           else
             git checkout -b $BRANCH_NAME
@@ -83,15 +84,63 @@ jobs:
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create Pull Request
+      - name: Create or Get Pull Request URL
         if: steps.commit.outputs.changes == 'true'
+        id: create_pr
         run: |
-          PR_EXISTS=$(gh pr list --head feature/documentation/${{ steps.get_version.outputs.version }} --json number --jq 'length')
-          if [ "$PR_EXISTS" -eq "0" ]; then
-            gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
+          # 현재 브랜치에 연결된 PR URL을 가져오기 시도
+          PR_URL=$(gh pr view --json url --jq '.url' 2>/dev/null || echo "")
+          
+          if [ -z "$PR_URL" ]; then
+            # 기존 PR이 없으면 새로운 PR 생성
+            PR_URL=$(gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
               --title "docs: docc to markdown for ${{ steps.get_version.outputs.version }}" \
               --body "Montage ${{ steps.get_version.outputs.version }} 최신 문서 반영 PR입니다." \
-              --label "documentation"
-          else
-            echo "PR already exists for branch feature/documentation/${{ steps.get_version.outputs.version }}"
+              --label "documentation" \
+              --json url --jq '.url')
           fi
+          
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+
+      - name: Send Slack notification for documentation changes
+        if: steps.commit.outputs.changes == 'true'
+        run: |
+          # JSON 페이로드 생성
+          PAYLOAD=$(cat <<EOF
+          {
+            "text": ":appleinc2: 📚 Montage 문서 업데이트 PR이 생성되었습니다.",
+            "attachments": [
+              {
+                "fields": [
+                  {
+                    "title": "버전",
+                    "value": "${{ steps.get_version.outputs.version }}",
+                    "short": true
+                  },
+                  {
+                    "title": "브랜치",
+                    "value": "${{ steps.create_branch.outputs.branch_name }}",
+                    "short": true
+                  },
+                  {
+                    "title": "PR 링크",
+                    "value": "${{ steps.create_pr.outputs.pr_url }}",
+                    "short": true
+                  },
+                  {
+                    "title": "주의사항",
+                    "value": "1. 배포하기 전에 머지해주세요.\n2. Montage 디자인 시스템 사이트에 반영될 수 있도록 담당자에게 전달해주세요.",
+                    "short": false
+                  }
+                ],
+                "color": "warning"
+              }
+            ]
+          }
+          EOF
+          )
+          
+          # Slack에 메시지 전송
+          curl -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" \
+            "${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}"
