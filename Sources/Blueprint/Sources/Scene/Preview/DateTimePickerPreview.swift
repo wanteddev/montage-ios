@@ -10,57 +10,71 @@ import Montage
 
 struct DateTimePickerPreview: View {
     @State private var selectedDate = Date()
-    @State private var datePickerStyleIsWheel = false
+    @State private var datePickerStyleIndex = 0
     @State private var graphicalDatePickerPresented = false
     @State private var wheelDatePickerPresented = false
     @State private var timePickerPresented = false
 
+    let datePickerStyles: [any DatePickerStyle] = [.compact, .wheel, .graphical]
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
-                HStack {
-                    Spacer()
-                    Text(selectedDate.formatted("yyyy.MM.dd"))
-                        .padding(8)
-                        .foregroundColor(.white)
-                        .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.blue))
-                        .onTapGesture {
-                            graphicalDatePickerPresented.toggle()
-                        }
-                    
-                    Text(selectedDate.formatted("hh:mm:ss"))
-                        .padding(8)
-                        .foregroundColor(.white)
-                        .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.blue))
-                        .onTapGesture {
-                            timePickerPresented.toggle()
-                        }
-                    Spacer()
+                if !graphicalDatePickerPresented {
+                    datePicker
                 }
-                .bottomSheetModal(isPresented: $graphicalDatePickerPresented) {
-                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .date) {}
-                        .labelsHidden()
-                        .if(datePickerStyleIsWheel) {
-                            $0.datePickerStyle(.wheel)
-                        } else: {
-                            $0.datePickerStyle(.graphical)
-                        }
-                }
-                .bottomSheetModal(isPresented: $timePickerPresented) {
-                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .hourAndMinute) {}
-                        .labelsHidden()
-                        .datePickerStyle(.wheel)
-                }
+                
                 Text("Options").bold()
                 HStack {
-                    Text("wheel style date picker")
-                    Switch($datePickerStyleIsWheel)
+                    Text("style")
+                    SegmentedControl(
+                        selectedIndex: $datePickerStyleIndex,
+                        labels: datePickerStyles.map { String(describing: $0).replacingOccurrences(of: "DatePickerStyle()", with: "") }
+                    )
+                    .size(.small)
+                }
+                HStack {
+                    Text("bottomSheet")
+                    Switch($graphicalDatePickerPresented)
+                }
+                .bottomSheetModal(isPresented: $graphicalDatePickerPresented) {
+                    datePicker
                 }
             }
             .padding(.horizontal)
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
+    }
+    
+    var datePicker: some View {
+        VStack(alignment: .leading) {
+            Text("Preview").bold()
+            HStack {
+                Spacer(minLength: 0)
+                VStack {
+                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .hourAndMinute) {}
+                        .labelsHidden()
+                        .modifying({
+                            switch datePickerStyleIndex {
+                            case 0: $0.datePickerStyle(.compact)
+                            case 1: $0.datePickerStyle(.wheel)
+                            case 2: $0.datePickerStyle(.graphical)
+                            default: $0.datePickerStyle(.automatic)
+                            }
+                        })
+                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .date) {}
+                        .labelsHidden()
+                        .modifying({
+                            switch datePickerStyleIndex {
+                            case 0: $0.datePickerStyle(.compact)
+                            case 1: $0.datePickerStyle(.wheel)
+                            case 2: $0.datePickerStyle(.graphical)
+                            default: $0.datePickerStyle(.automatic)
+                            }
+                        })
+                }
+                Spacer(minLength: 0)
+            }
+        }
     }
 }
 
