@@ -16,7 +16,7 @@ extension NSAttributedString {
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         let font = UIFont.font(variant: variant, weight: weight)
-        let lineHeight = Typography.getLineHeight(variant: variant)
+        let lineHeight = variant.lineHeight
 
         // http://blog.eppz.eu/uilabel-line-height-letter-spacing-and-more-uilabel-typography-extensions/
         let baselineOffset: CGFloat
@@ -29,7 +29,7 @@ extension NSAttributedString {
         }
 
         let foregroundColor = color
-        let tracking = Typography.getTracking(variant: variant)
+        let tracking = variant.tracking
 
         return .init(string: string, attributes: [
             .font: font,

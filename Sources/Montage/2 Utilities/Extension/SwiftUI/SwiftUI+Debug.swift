@@ -15,8 +15,8 @@ extension View {
     ///   - fill: 배경 채우기 여부
     /// - Returns: 인식된 View
     @ViewBuilder
-    public func recognizeViewForPreview(_ color: SwiftUI.Color = .blue, fill: Bool = false) -> some View {
-        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+    public func recognizeView(_ color: SwiftUI.Color = .blue, fill: Bool = false, drawOnPreviewOnly: Bool = true) -> some View {
+        if !drawOnPreviewOnly || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
             if fill {
                 background(color)
             } else {
@@ -36,13 +36,14 @@ extension View {
     ///   - font: 폰트
     ///   - alignment: 정렬
     /// - Returns: 로그가 출력된 View
-    public func carveLogForPreview(
+    public func carveLog(
         _ message: String,
         font: Font? = nil,
-        alignment: Alignment = .center
+        alignment: Alignment = .center,
+        drawOnPreviewOnly: Bool = true
     ) -> some View {
         Group {
-            if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            if !drawOnPreviewOnly || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
                 ZStack(alignment: alignment) {
                     self
                     SwiftUI.Button {
@@ -106,23 +107,22 @@ extension View {
     ///
     /// - Parameter axis: 측정할 축
     /// - Returns: 뷰 크기가 그려진 View
-    public func measureForPreview(axis: Axis) -> some View {
-        modifier(MeasureModifier(axis: axis))
-    }
-
-    /// 프리뷰에서 뷰의 크기를 측정하여 뷰 위에 출력합니다.
-    ///
-    /// - Returns: 뷰 크기가 그려진 View
-    public func measureBoxForPreview() -> some View {
-        modifier(MeasureBoxModifier())
+    public func dimensioning(axis: Axis? = nil, drawOnPreviewOnly: Bool = true) -> some View {
+        Group {
+            if !drawOnPreviewOnly || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+                modifier(DimensionModifier(axis: axis))
+            } else {
+                self
+            }
+        }
     }
 }
 
-private struct MeasureModifier: ViewModifier {
+private struct DimensionModifier: ViewModifier {
     @State private var size: CGSize = .zero
 
-    private let axis: Axis
-    init(axis: Axis) {
+    private let axis: Axis?
+    init(axis: Axis? = nil) {
         self.axis = axis
     }
 
@@ -130,24 +130,16 @@ private struct MeasureModifier: ViewModifier {
         content
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
             .overlay {
-                MeasureView(axis: axis, value: axis == .horizontal ? size.width : size.height)
+                if let axis {
+                    DimensionView(axis: axis, value: axis == .horizontal ? size.width : size.height)
+                } else {
+                    DimensionBoxView(width: size.width, height: size.height)
+                }
             }
     }
 }
 
-private struct MeasureBoxModifier: ViewModifier {
-    @State private var size: CGSize = .zero
-
-    func body(content: Content) -> some View {
-        content
-            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { size = $0 })
-            .overlay {
-                MeasureBoxView(width: size.width, height: size.height)
-            }
-    }
-}
-
-struct MeasureView: View {
+struct DimensionView: View {
     private let axis: Axis
     private let value: CGFloat
 
@@ -157,54 +149,52 @@ struct MeasureView: View {
     }
 
     var body: some View {
-        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
-            switch axis {
-            case .horizontal:
-                ZStack {
-                    HStack(spacing: 0) {
-                        Rectangle()
-                            .frame(width: 1)
-                        Rectangle()
-                            .frame(height: 1)
-                            .frame(width: CGFloat(value - 2))
-                        Rectangle()
-                            .frame(width: 1)
-                    }
-                    .frame(width: CGFloat(value))
-                    Text("\(String(format: "%.1f", value))")
-                        .font(.system(size: 6))
-                        .background {
-                            Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
-                        }
-                }
-                .foregroundStyle(.red)
-            case .vertical:
-                ZStack {
-                    VStack(spacing: 0) {
-                        Rectangle()
-                            .frame(height: 1)
-                        Rectangle()
-                            .frame(width: 1)
-                            .frame(height: CGFloat(value - 2))
-                        Rectangle()
-                            .frame(height: 1)
-                    }
-                    .frame(height: CGFloat(value))
+        switch axis {
+        case .horizontal:
+            ZStack {
+                HStack(spacing: 0) {
                     Rectangle()
-                        .frame(width: 1, height: CGFloat(value))
-                    Text("\(String(format: "%.1f", value))")
-                        .font(.system(size: 6))
-                        .background {
-                            Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
-                        }
+                        .frame(width: 1)
+                    Rectangle()
+                        .frame(height: 1)
+                        .frame(width: CGFloat(value - 2))
+                    Rectangle()
+                        .frame(width: 1)
                 }
-                .foregroundStyle(.red)
+                .frame(width: CGFloat(value))
+                Text("\(String(format: "%.1f", value))")
+                    .font(.system(size: 10))
+                    .background {
+                        Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
+                    }
             }
+            .foregroundStyle(.red)
+        case .vertical:
+            ZStack {
+                VStack(spacing: 0) {
+                    Rectangle()
+                        .frame(height: 1)
+                    Rectangle()
+                        .frame(width: 1)
+                        .frame(height: CGFloat(value - 2))
+                    Rectangle()
+                        .frame(height: 1)
+                }
+                .frame(height: CGFloat(value))
+                Rectangle()
+                    .frame(width: 1, height: CGFloat(value))
+                Text("\(String(format: "%.1f", value))")
+                    .font(.system(size: 10))
+                    .background {
+                        Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
+                    }
+            }
+            .foregroundStyle(.red)
         }
     }
 }
 
-private struct MeasureBoxView: View {
+private struct DimensionBoxView: View {
     private let width: CGFloat
     private let height: CGFloat
     init(width: CGFloat, height: CGFloat) {
@@ -213,16 +203,14 @@ private struct MeasureBoxView: View {
     }
 
     var body: some View {
-        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
-            Rectangle()
-                .stroke()
-                .frame(width: CGFloat(width), height: CGFloat(height))
-                .overlay {
-                    Text("\(String(format: "%.1f", width))x\(String(format: "%.1f", height))")
-                        .font(.system(size: 6))
-                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
-                }
-                .foregroundStyle(.red)
-        }
+        Rectangle()
+            .stroke()
+            .frame(width: CGFloat(width), height: CGFloat(height))
+            .overlay {
+                Text("\(String(format: "%.1f", width))x\(String(format: "%.1f", height))")
+                    .font(.system(size: 6))
+                    .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
+            }
+            .foregroundStyle(.red)
     }
 }

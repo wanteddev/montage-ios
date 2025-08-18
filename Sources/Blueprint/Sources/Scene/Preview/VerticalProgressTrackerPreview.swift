@@ -89,8 +89,8 @@ struct VerticalProgressTrackerPreview: View {
                             isContentExist
                             ? AnyView(
                                 Text("Hel\nlo\nWor\nld!")
-                                    .typography(variant: .title1)
-                                    .paragraph(variant: .title1)
+                                    .typography(variant: .display3)
+                                    .paragraph(variant: .display3)
                                     .fixedSize()
                             )
                             : AnyView(EmptyView())

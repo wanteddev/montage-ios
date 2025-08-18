@@ -60,6 +60,8 @@ public enum Typography {
         case display1
         /// 큰 디스플레이 텍스트
         case display2
+        /// 중간 디스플레이 텍스트
+        case display3
         /// 대제목
         case title1
         /// 중간 제목
@@ -92,151 +94,170 @@ public enum Typography {
         case caption1
         /// 작은 캡션 텍스트
         case caption2
+        
+        /// 각 변형에 대한 폰트 크기
+        public var fontSize: CGFloat {
+            switch self {
+            case .display1:
+                56
+            case .display2:
+                40
+            case .display3:
+                36
+            case .title1:
+                32
+            case .title2:
+                28
+            case .title3:
+                24
+            case .heading1:
+                22
+            case .heading2:
+                20
+            case .headline1:
+                18
+            case .headline2:
+                17
+            case .body1:
+                16
+            case .body1Reading:
+                16
+            case .body2:
+                15
+            case .body2Reading:
+                15
+            case .label1:
+                14
+            case .label1Reading:
+                14
+            case .label2:
+                13
+            case .caption1:
+                12
+            case .caption2:
+                11
+            }
+        }
+        
+        /// 각 변형에 대한 자간 (letter spacing)
+        public var tracking: CGFloat {
+            let sementicSize = fontSize
+            let letterSpacingEm: CGFloat
+            
+            switch self {
+            case .display1:
+                letterSpacingEm = -0.0319
+            case .display2:
+                letterSpacingEm = -0.0282
+            case .display3:
+                letterSpacingEm = -0.027
+            case .title1:
+                letterSpacingEm = -0.0253
+            case .title2:
+                letterSpacingEm = -0.0236
+            case .title3:
+                letterSpacingEm = -0.023
+            case .heading1:
+                letterSpacingEm = -0.0194
+            case .heading2:
+                letterSpacingEm = -0.012
+            case .headline1:
+                letterSpacingEm = -0.002
+            case .headline2:
+                letterSpacingEm = 0
+            case .body1:
+                letterSpacingEm = 0.0057
+            case .body1Reading:
+                letterSpacingEm = 0.0057
+            case .body2:
+                letterSpacingEm = 0.0096
+            case .body2Reading:
+                letterSpacingEm = 0.0096
+            case .label1:
+                letterSpacingEm = 0.0145
+            case .label1Reading:
+                letterSpacingEm = 0.0145
+            case .label2:
+                letterSpacingEm = 0.0194
+            case .caption1:
+                letterSpacingEm = 0.0252
+            case .caption2:
+                letterSpacingEm = 0.0311
+            }
+            
+            return sementicSize * letterSpacingEm
+        }
+        
+        /// 각 변형에 대한 행 높이
+        public var lineHeight: CGFloat {
+            switch self {
+            case .display1:
+                72
+            case .display2:
+                52
+            case .display3:
+                48
+            case .title1:
+                44
+            case .title2:
+                38
+            case .title3:
+                32
+            case .heading1:
+                30
+            case .heading2:
+                28
+            case .headline1:
+                26
+            case .headline2:
+                24
+            case .body1:
+                24
+            case .body1Reading:
+                26
+            case .body2:
+                22
+            case .body2Reading:
+                24
+            case .label1:
+                20
+            case .label1Reading:
+                22
+            case .label2:
+                18
+            case .caption1:
+                16
+            case .caption2:
+                14
+            }
+        }
+        
+        /// 각 변형에 대한 폰트 높이
+        public var fontHeight: CGFloat {
+            UIFont.pretendard(ofSize: fontSize, weight: .regular)?.fontHeight ?? 0
+        }
+        
+        /// 각 변형에 대한 행간 높이
+        public var lineSpacing: CGFloat {
+            lineHeight - fontHeight
+        }
     }
 
     static func getSementicWeight(variant: Variant, weight: Weight) -> Pretendard.Weight {
         switch (variant, weight) {
-        case (.title1, .bold), (.title2, .bold), (.title3, .bold):
+        case (.display3, .bold), (.title2, .bold), (.title3, .bold):
             .bold
         default:
             weight.pretendardWeight
         }
     }
     
-    static func getFailbackWeight(variant: Variant, weight: Weight) -> UIFont.Weight {
+    static func getFallbackWeight(variant: Variant, weight: Weight) -> UIFont.Weight {
         switch (variant, weight) {
-        case (.title1, .bold), (.title2, .bold), (.title3, .bold):
+        case (.display3, .bold), (.title2, .bold), (.title3, .bold):
             .bold
         default:
-            weight.failbackWeight
-        }
-    }
-    
-    static func getSementicSize(variant: Variant) -> CGFloat {
-        switch variant {
-        case .display1:
-            56
-        case .display2:
-            40
-        case .title1:
-            36
-        case .title2:
-            28
-        case .title3:
-            24
-        case .heading1:
-            22
-        case .heading2:
-            20
-        case .headline1:
-            18
-        case .headline2:
-            17
-        case .body1:
-            16
-        case .body1Reading:
-            16
-        case .body2:
-            15
-        case .body2Reading:
-            15
-        case .label1:
-            14
-        case .label1Reading:
-            14
-        case .label2:
-            13
-        case .caption1:
-            12
-        case .caption2:
-            11
-        }
-    }
-    
-    static func getTracking(variant: Variant) -> CGFloat {
-        let sementicSize = getSementicSize(variant: variant)
-        let letterSpacingEm: CGFloat
-        
-        switch variant {
-        case .display1:
-            letterSpacingEm = -0.0319
-        case .display2:
-            letterSpacingEm = -0.0282
-        case .title1:
-            letterSpacingEm = -0.027
-        case .title2:
-            letterSpacingEm = -0.0236
-        case .title3:
-            letterSpacingEm = -0.023
-        case .heading1:
-            letterSpacingEm = -0.0194
-        case .heading2:
-            letterSpacingEm = -0.012
-        case .headline1:
-            letterSpacingEm = -0.002
-        case .headline2:
-            letterSpacingEm = 0
-        case .body1:
-            letterSpacingEm = 0.0057
-        case .body1Reading:
-            letterSpacingEm = 0.0057
-        case .body2:
-            letterSpacingEm = 0.0096
-        case .body2Reading:
-            letterSpacingEm = 0.0096
-        case .label1:
-            letterSpacingEm = 0.0145
-        case .label1Reading:
-            letterSpacingEm = 0.0145
-        case .label2:
-            letterSpacingEm = 0.0194
-        case .caption1:
-            letterSpacingEm = 0.0252
-        case .caption2:
-            letterSpacingEm = 0.0311
-        }
-        
-        return sementicSize * letterSpacingEm
-    }
-    
-    static func getLineHeight(variant: Variant) -> CGFloat {
-        switch variant {
-        case .display1:
-            72
-        case .display2:
-            52
-        case .title1:
-            48
-        case .title2:
-            38
-        case .title3:
-            32
-        case .heading1:
-            30
-        case .heading2:
-            28
-        case .headline1:
-            26
-        case .headline2:
-            24
-        case .body1:
-            24
-        case .body1Reading:
-            26
-        case .body2:
-            22
-        case .body2Reading:
-            24
-        case .label1:
-            20
-        case .label1Reading:
-            22
-        case .label2:
-            18
-        case .caption1:
-            16
-        case .caption2:
-            14
+            weight.fallbackWeight
         }
     }
 }
@@ -266,59 +287,12 @@ public extension Typography.Weight {
         }
     }
     
-    var failbackWeight: UIFont.Weight {
+    var fallbackWeight: UIFont.Weight {
         switch self {
         case .regular: .regular
         case .medium: .medium
         case .bold: .semibold
         }
-    }
-}
-
-extension Typography.Variant {
-    var lineSpacing: CGFloat {
-        switch self {
-        case .display1:
-            5
-        case .display2:
-            4.6667
-        case .title1:
-            5
-        case .title2:
-            4.6667
-        case .title3:
-            3.3333
-        case .heading1:
-            3.6667
-        case .heading2:
-            4
-        case .headline2:
-            1.6667
-        case .headline1:
-            1.6667
-        case .body1:
-            5
-        case .body1Reading:
-            7
-        case .body2:
-            4
-        case .body2Reading:
-            6
-        case .label1:
-            3.3333
-        case .label1Reading:
-            5.3333
-        case .label2:
-            3.3333
-        case .caption1:
-            1.6667
-        case .caption2:
-            1
-        }
-    }
-    
-    var padding: CGFloat {
-        lineSpacing / 2
     }
 }
 
@@ -345,8 +319,8 @@ public extension UIFont {
         weight: Typography.Weight = .regular
     ) -> UIFont {
         let sementicWeight = Typography.getSementicWeight(variant: variant, weight: weight)
-        let failbackWeight = Typography.getFailbackWeight(variant: variant, weight: weight)
-        let sementicSize = Typography.getSementicSize(variant: variant)
+        let failbackWeight = Typography.getFallbackWeight(variant: variant, weight: weight)
+        let sementicSize = variant.fontSize
         return UIFont(name: sementicWeight.fontName, size: sementicSize) ??
             .systemFont(ofSize: sementicSize, weight: failbackWeight)
     }
@@ -375,7 +349,7 @@ public extension Font {
         weight: Typography.Weight = .regular
     ) -> Font? {
         let sementicWeight = Typography.getSementicWeight(variant: variant, weight: weight)
-        let sementicSize = Typography.getSementicSize(variant: variant)
+        let sementicSize = variant.fontSize
         return .custom(sementicWeight.fontName, size: sementicSize)
     }
 }
@@ -454,10 +428,11 @@ public extension Text {
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
-    ) -> Text {
+    ) -> some View {
         font(.font(variant: variant, weight: weight))
-            .tracking(Typography.getTracking(variant: variant))
+            .tracking(variant.tracking)
             .foregroundColor(color)
+            .lineSpacing(variant.lineSpacing).padding(.vertical, variant.lineSpacing / 2)
     }
     
     /// Montage 디자인 시스템의 스타일을 적용합니다.
@@ -471,7 +446,7 @@ public extension Text {
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
-    ) -> Text {
+    ) -> some View {
         typography(variant: variant, weight: weight, color: .semantic(semantic))
     }
     
@@ -486,7 +461,7 @@ public extension Text {
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         atomic: Color.Atomic
-    ) -> Text {
+    ) -> some View {
         typography(variant: variant, weight: weight, color: .atomic(atomic))
     }
 }
@@ -498,7 +473,7 @@ public extension View {
     /// - Parameter variant: 텍스트 변형
     /// - Returns: 단락 스타일이 적용된 View
     func paragraph(variant: Typography.Variant) -> some View {
-        lineSpacing(variant.lineSpacing).padding(.vertical, variant.padding)
+        self
     }
 }
 
@@ -577,5 +552,23 @@ public extension NSAttributedString {
             color: .atomic(atomic),
             lineBreakMode: lineBreakMode
         )
+    }
+}
+
+private extension UIFont {
+    /// 폰트의 실제 높이를 반환합니다 (가장 빠른 방법)
+    var lineHeight: CGFloat {
+        let baseLineHeight = ascender - descender
+        
+        // SwiftUI는 기본적으로 약간의 추가 여백을 포함
+        // 일반적으로 1-2pt 정도의 추가 여백
+        let additionalPadding: CGFloat = 0.2
+        
+        return baseLineHeight + additionalPadding
+    }
+    
+    /// 폰트의 전체 높이를 반환합니다 (lineHeight + leading)
+    var fontHeight: CGFloat {
+        return lineHeight + leading
     }
 }
