@@ -230,7 +230,7 @@ public enum Skeleton {
             self.kind = kind
             self.color = color ?? .semantic(.fillNormal)
             self.opacity = opacity ?? 1
-            self.size = size
+            self.size = size?.isNegativeOrNonfinite == true ? nil : size
         }
         
         @State private var contentSize: CGSize = .zero

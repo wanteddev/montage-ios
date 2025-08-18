@@ -157,7 +157,7 @@ struct DimensionView: View {
                         .frame(width: 1)
                     Rectangle()
                         .frame(height: 1)
-                        .frame(width: CGFloat(value - 2))
+                        .frame(width: CGFloat(max(0, value - 2)))
                     Rectangle()
                         .frame(width: 1)
                 }
@@ -176,7 +176,7 @@ struct DimensionView: View {
                         .frame(height: 1)
                     Rectangle()
                         .frame(width: 1)
-                        .frame(height: CGFloat(value - 2))
+                        .frame(height: CGFloat(max(0, value - 2)))
                     Rectangle()
                         .frame(height: 1)
                 }
