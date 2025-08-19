@@ -85,11 +85,19 @@ public struct DotPagination: View {
     }
     
     private func leadingPadding(at index: Int) -> CGFloat {
-        !visibleAreaIndices.contains(index) || index == visibleAreaIndices.first ? 0 : 5
+        if !visibleAreaIndices.contains(index) || index == visibleAreaIndices.first {
+            0
+        } else {
+            size == .normal ? 5 : 3
+        }
     }
     
     private func trailingPadding(at index: Int) -> CGFloat {
-        !visibleAreaIndices.contains(index) || index == visibleAreaIndices.last ? 0 : 5
+        if !visibleAreaIndices.contains(index) || index == visibleAreaIndices.last {
+            0
+        } else {
+            size == .normal ? 5 : 3
+        }
     }
 
     private var visibleAreaIndices: [Int] {
