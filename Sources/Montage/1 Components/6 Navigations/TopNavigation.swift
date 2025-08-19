@@ -203,7 +203,7 @@ public struct TopNavigation: View {
         private var titleView: some View {
             Text(title)
                 .paragraph(
-                    variant: variant.typoVaraint,
+                    variant: variant.typoVariant,
                     weight: variant.typoWeight,
                     semantic: .labelStrong
                 )
@@ -506,7 +506,7 @@ extension TopNavigation {
 }
 
 extension TopNavigation.Variant {
-    var typoVaraint: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .normal: .headline2
         case .extended: .title3

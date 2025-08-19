@@ -415,6 +415,7 @@ extension Cell {
                 }()
                 
                 Text(attributedString)
+                    .tracking(titleTypography.variant.tracking)
                     .adjustLineHeight(variant: titleTypography.variant)
             } else {
                 Text(title)

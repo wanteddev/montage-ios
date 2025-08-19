@@ -63,6 +63,7 @@ struct TextFieldPreview: View {
                     let second = 431
                     return Text(String(format: "%02d:%02d", (second / 60), (second % 60)))
                         .paragraph(variant: .label1, weight: .bold, semantic: .primaryNormal)
+                        .monospacedDigit()
                 }
             case .badge:
                 return {

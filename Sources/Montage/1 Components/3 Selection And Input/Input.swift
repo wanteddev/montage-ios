@@ -211,6 +211,7 @@ public struct Input: View {
                         singleLineHeight = $0
                     })
                     .opacity(0)
+                    .accessibilityHidden(true)
                     
                 Text(text)
                     .paragraph(

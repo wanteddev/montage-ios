@@ -319,10 +319,10 @@ public extension UIFont {
         weight: Typography.Weight = .regular
     ) -> UIFont {
         let sementicWeight = Typography.getSementicWeight(variant: variant, weight: weight)
-        let failbackWeight = Typography.getFallbackWeight(variant: variant, weight: weight)
+        let fallbackWeight = Typography.getFallbackWeight(variant: variant, weight: weight)
         let sementicSize = variant.fontSize
         return UIFont(name: sementicWeight.fontName, size: sementicSize) ??
-            .systemFont(ofSize: sementicSize, weight: failbackWeight)
+            .systemFont(ofSize: sementicSize, weight: fallbackWeight)
     }
 }
 
@@ -529,19 +529,10 @@ public extension NSAttributedString {
 }
 
 private extension UIFont {
-    /// 폰트의 실제 높이를 반환합니다 (가장 빠른 방법)
-    var lineHeight: CGFloat {
-        let baseLineHeight = ascender - descender
-        
-        // SwiftUI는 기본적으로 약간의 추가 여백을 포함
-        // 일반적으로 1-2pt 정도의 추가 여백
-        let additionalPadding: CGFloat = 0.2
-        
-        return baseLineHeight + additionalPadding
-    }
-    
-    /// 폰트의 전체 높이를 반환합니다 (lineHeight + leading)
     var fontHeight: CGFloat {
-        return lineHeight + leading
+        let baseLineHeight = ascender - descender
+        // SwiftUI 기본 여백 보정 (경험치 기반)
+        let additionalPadding: CGFloat = 0.2
+        return baseLineHeight + additionalPadding + leading
     }
 }

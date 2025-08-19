@@ -87,7 +87,7 @@ public struct ActionChip: View {
                     .renderingMode(.template)
                     .scaledToFit()
                     .frame(width: imageSize, height: imageSize)
-                    .foregroundColor(imageColor)
+                    .foregroundStyle(imageColor)
             }
             
             Text(text)
@@ -100,7 +100,7 @@ public struct ActionChip: View {
                     .renderingMode(.template)
                     .scaledToFit()
                     .frame(width: imageSize, height: imageSize)
-                    .foregroundColor(imageColor)
+                    .foregroundStyle(imageColor)
             }
         }
         .padding(contentPadding)

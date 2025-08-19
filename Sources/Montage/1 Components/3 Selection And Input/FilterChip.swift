@@ -93,7 +93,7 @@ public struct FilterChip: View {
     
     public var body: some View {
         HStack(spacing: contentSpacing) {
-            Text(active && activeLabel != nil ? activeLabel! : text)
+            Text(active ? (activeLabel ?? text) : text)
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
             

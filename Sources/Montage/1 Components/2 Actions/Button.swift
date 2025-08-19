@@ -726,7 +726,7 @@ private extension Button {
     var interactionHorizontalOffset: CGFloat { style == .text ? 7 : 0 }
     
     var loadingSize: CGSize {
-        let textHeight = (fontVariant ?? typoVariant).fontSize
+        let textHeight = (fontVariant ?? typoVariant).fontHeight
         return .init(width: textHeight, height: textHeight)
     }
 }

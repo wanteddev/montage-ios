@@ -187,7 +187,7 @@ public struct ModalNavigation: View {
                         TopNavigation.LeadingButton(leadingButton)
                         Text(title)
                             .paragraph(
-                                variant: variant.typoVaraint,
+                                variant: variant.typoVariant,
                                 weight: variant.typoWeight,
                                 semantic: .labelStrong
                             )
@@ -228,7 +228,7 @@ private extension ModalNavigation.Variant {
         }
     }
     
-    var typoVaraint: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .normal: .headline2
         case .extended: .title3

@@ -487,7 +487,7 @@ private extension TextField {
                                                     .paragraph(
                                                         variant: .caption1,
                                                         weight: .bold,
-                                                        color: .semantic(.labelAlternative)
+                                                        semantic: .labelAlternative
                                                     )
                                                 Spacer()
                                             }

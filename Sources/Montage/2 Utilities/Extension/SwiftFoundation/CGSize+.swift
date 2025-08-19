@@ -6,7 +6,7 @@
 //  Copyright © 2025 WantedLab Inc. All rights reserved.
 //
 
-import Foundation
+import CoreGraphics
 
 extension CGSize {
     var isNegativeOrNonfinite: Bool {

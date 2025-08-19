@@ -57,19 +57,19 @@ public struct CounterPagination: View {
                 .paragraph(
                     variant: typography,
                     weight: .bold,
-                    color: .semantic(.staticWhite).opacity(alternative ? 88 : 74)
+                    color: .semantic(.staticWhite).opacity(alternative ? 0.88 : 0.74)
                 )
             Text("/")
                 .paragraph(
                     variant: typography,
                     weight: .regular,
-                    color: .semantic(.staticWhite).opacity(alternative ? 52 : 28)
+                    color: .semantic(.staticWhite).opacity(alternative ? 0.52 : 0.28)
                 )
             Text("\(totalPages)")
                 .paragraph(
                     variant: typography,
                     weight: .bold,
-                    color: .semantic(.staticWhite).opacity(alternative ? 88 : 74)
+                    color: .semantic(.staticWhite).opacity(alternative ? 0.88 : 0.74)
                 )
         }
         .padding(.horizontal, horizontalPadding)

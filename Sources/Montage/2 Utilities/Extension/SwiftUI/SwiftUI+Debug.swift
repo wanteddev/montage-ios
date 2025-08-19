@@ -139,7 +139,7 @@ private struct DimensionModifier: ViewModifier {
     }
 }
 
-struct DimensionView: View {
+private struct DimensionView: View {
     private let axis: Axis
     private let value: CGFloat
 

@@ -298,6 +298,7 @@ public struct Select: View {
                                         weight: .regular,
                                         color: placeholderTextColor
                                     )
+                                    .lineLimit(1)
                             } else {
                                 switch variant {
                                 case .single:
@@ -308,6 +309,7 @@ public struct Select: View {
                                                 weight: .regular,
                                                 color: textColor
                                             )
+                                            .lineLimit(1)
                                     }
                                 case .multiple(let render, let overflow, _):
                                     Group {
