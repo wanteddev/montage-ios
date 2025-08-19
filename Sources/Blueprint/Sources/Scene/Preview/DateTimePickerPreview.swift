@@ -10,57 +10,67 @@ import Montage
 
 struct DateTimePickerPreview: View {
     @State private var selectedDate = Date()
-    @State private var datePickerStyleIsWheel = false
-    @State private var graphicalDatePickerPresented = false
-    @State private var wheelDatePickerPresented = false
-    @State private var timePickerPresented = false
+    @State private var datePickerStyleIndex = 0
+    @State private var isBottomSheetPresented = false
 
+    private let styleLabels = ["Compact", "Wheel", "Graphical"]
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
-                HStack {
-                    Spacer()
-                    Text(selectedDate.formatted("yyyy.MM.dd"))
-                        .padding(8)
-                        .foregroundColor(.white)
-                        .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.blue))
-                        .onTapGesture {
-                            graphicalDatePickerPresented.toggle()
-                        }
-                    
-                    Text(selectedDate.formatted("hh:mm:ss"))
-                        .padding(8)
-                        .foregroundColor(.white)
-                        .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.blue))
-                        .onTapGesture {
-                            timePickerPresented.toggle()
-                        }
-                    Spacer()
+                if !isBottomSheetPresented {
+                    datePicker
                 }
-                .bottomSheetModal(isPresented: $graphicalDatePickerPresented) {
-                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .date) {}
-                        .labelsHidden()
-                        .if(datePickerStyleIsWheel) {
-                            $0.datePickerStyle(.wheel)
-                        } else: {
-                            $0.datePickerStyle(.graphical)
-                        }
-                }
-                .bottomSheetModal(isPresented: $timePickerPresented) {
-                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .hourAndMinute) {}
-                        .labelsHidden()
-                        .datePickerStyle(.wheel)
-                }
+                
                 Text("Options").bold()
                 HStack {
-                    Text("wheel style date picker")
-                    Switch($datePickerStyleIsWheel)
+                    Text("style")
+                    SegmentedControl(
+                        selectedIndex: $datePickerStyleIndex,
+                        labels: styleLabels
+                    )
+                    .size(.small)
+                }
+                HStack {
+                    Text("bottomSheet")
+                    Switch($isBottomSheetPresented)
+                }
+                .bottomSheetModal(isPresented: $isBottomSheetPresented) {
+                    datePicker
                 }
             }
             .padding(.horizontal)
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
+    }
+    
+    private var datePicker: some View {
+        VStack(alignment: .leading) {
+            Text("Preview").bold()
+            HStack {
+                Spacer(minLength: 0)
+                VStack {
+                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .hourAndMinute) {}
+                        .labelsHidden()
+                        .applyDatePickerStyle(index: datePickerStyleIndex)
+                    DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .date) {}
+                        .labelsHidden()
+                        .applyDatePickerStyle(index: datePickerStyleIndex)
+                }
+                Spacer(minLength: 0)
+            }
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applyDatePickerStyle(index: Int) -> some View {
+        switch index {
+        case 0: self.datePickerStyle(.compact)
+        case 1: self.datePickerStyle(.wheel)
+        case 2: self.datePickerStyle(.graphical)
+        default: self.datePickerStyle(.automatic)
+        }
     }
 }
 
