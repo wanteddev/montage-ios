@@ -172,13 +172,11 @@ public struct SnackBar: View {
                         VStack(alignment: .leading, spacing: .zero) {
                             if let heading {
                                 Text(heading)
-                                    .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
-                                    .paragraph(variant: .body2)
+                                    .paragraph(variant: .body2, weight: .bold, semantic: .staticWhite)
                             }
                             if let description {
                                 Text(description)
-                                    .typography(variant: .label2, weight: .regular, semantic: .staticWhite)
-                                    .paragraph(variant: .label2)
+                                    .paragraph(variant: .label2, weight: .regular, semantic: .staticWhite)
                                     .lineLimit(2)
                             }
                         }
@@ -212,8 +210,7 @@ public struct SnackBar: View {
         
         var body: some View {
             Text(action)
-                .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
-                .paragraph(variant: .body2)
+                .paragraph(variant: .body2, weight: .bold, semantic: .staticWhite)
                 .background(
                     Interaction(
                         state: isPressed ? .pressed : .normal,

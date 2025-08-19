@@ -202,11 +202,10 @@ public struct Input: View {
 
             ZStack {
                 Text(text)
-                    .typography(
+                    .paragraph(
                         variant: titleTypography.variant,
                         weight: isBold ? .bold : titleTypography.weight
                     )
-                    .paragraph(variant: titleTypography.variant)
                     .lineLimit(1)
                     .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                         singleLineHeight = $0
@@ -214,12 +213,11 @@ public struct Input: View {
                     .opacity(0)
                     
                 Text(text)
-                    .typography(
+                    .paragraph(
                         variant: titleTypography.variant,
                         weight: isBold ? .bold : titleTypography.weight,
                         color: titleTypography.color
                     )
-                    .paragraph(variant: titleTypography.variant)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, size == .medium ? 1 : 0)

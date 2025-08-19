@@ -91,8 +91,7 @@ public struct ActionChip: View {
             }
             
             Text(text)
-                .typography(variant: typoVariant, weight: .medium, color: fontColor)
-                .paragraph(variant: typoVariant)
+                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
             
             if let trailingImage = trailingImage {

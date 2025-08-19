@@ -202,12 +202,11 @@ public struct TopNavigation: View {
         
         private var titleView: some View {
             Text(title)
-                .typography(
+                .paragraph(
                     variant: variant.typoVaraint,
                     weight: variant.typoWeight,
                     semantic: .labelStrong
                 )
-                .paragraph(variant: variant.typoVaraint)
                 .lineLimit(1)
         }
     }
@@ -349,12 +348,11 @@ public struct TopNavigation: View {
                     action()
                 } label: {
                     Text(text)
-                        .typography(
+                        .paragraph(
                             variant: .body2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)
                         )
-                        .paragraph(variant: .body2)
                         .if(alternative) {
                             $0.opacity(0.88)
                         } else: {

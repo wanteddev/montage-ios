@@ -186,12 +186,11 @@ public struct ModalNavigation: View {
                     HStack(spacing: 20) {
                         TopNavigation.LeadingButton(leadingButton)
                         Text(title)
-                            .typography(
+                            .paragraph(
                                 variant: variant.typoVaraint,
                                 weight: variant.typoWeight,
                                 semantic: .labelStrong
                             )
-                            .paragraph(variant: variant.typoVaraint)
                             .lineLimit(1)
                             .frame(height: 24, alignment: variant.textAlignment)
                         Spacer(minLength: 0)

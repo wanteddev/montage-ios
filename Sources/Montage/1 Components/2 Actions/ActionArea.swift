@@ -267,8 +267,7 @@ private extension ActionArea {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
                 Text(caption)
-                    .typography(variant: .label2, semantic: .labelAlternative)
-                    .paragraph(variant: .label2)
+                    .paragraph(variant: .label2, semantic: .labelAlternative)
             }
         }
     }

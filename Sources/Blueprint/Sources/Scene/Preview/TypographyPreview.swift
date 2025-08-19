@@ -47,14 +47,12 @@ struct TypographyPreview: View {
                     
                     HStack(spacing: 1) {
                         Text([String](repeating: " ", count: Int(lineCount)).joined(separator: "\n"))
-                            .typography(variant: variant)
-                            .paragraph(variant: variant)
+                            .adjustLineHeight(variant: variant)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(width: 30)
                             .dimensioning(axis: .vertical, drawOnPreviewOnly: false)
                         Text([String](repeating: "AA", count: Int(lineCount)).joined(separator: "\n"))
-                            .typography(variant: variant)
-                            .paragraph(variant: variant)
+                            .adjustLineHeight(variant: variant)
                             .frame(width: 69)
                             .fixedSize(horizontal: false, vertical: true)
                             .border(.red, width: 1)

@@ -396,28 +396,11 @@ public extension UILabel {
     ) -> UILabel {
         label(string, variant: variant, weight: weight, color: .semantic(semantic))
     }
-    
-    /// Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
-    ///
-    /// - Parameters:
-    ///   - string: 표시할 문자열
-    ///   - variant: 텍스트 변형
-    ///   - weight: 폰트 두께
-    ///   - atomic: 아토믹 색상
-    /// - Returns: 생성된 UILabel 인스턴스
-    static func label(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        atomic: Color.Atomic = .red0
-    ) -> UILabel {
-        label(string, variant: variant, weight: weight, color: .atomic(atomic))
-    }
 }
 
 // MARK: - SwiftUI Text Extensions
 public extension Text {
-    /// Montage 디자인 시스템의 스타일을 적용합니다.
+    /// 타이포그래피 변형에 따른 스타일을 적용합니다.
     ///
     /// - Parameters:
     ///   - variant: 텍스트 변형
@@ -428,14 +411,13 @@ public extension Text {
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
-    ) -> some View {
+    ) -> Text {
         font(.font(variant: variant, weight: weight))
             .tracking(variant.tracking)
             .foregroundColor(color)
-            .lineSpacing(variant.lineSpacing).padding(.vertical, variant.lineSpacing / 2)
     }
     
-    /// Montage 디자인 시스템의 스타일을 적용합니다.
+    /// 타이포그래피 변형에 따른 스타일을 적용합니다.
     ///
     /// - Parameters:
     ///   - variant: 텍스트 변형
@@ -446,34 +428,50 @@ public extension Text {
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
-    ) -> some View {
+    ) -> Text {
         typography(variant: variant, weight: weight, color: .semantic(semantic))
     }
     
-    /// Montage 디자인 시스템의 스타일을 적용합니다.
+    /// 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
     ///
     /// - Parameters:
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
-    ///   - atomic: 아토믹 색상
-    /// - Returns: 스타일이 적용된 Text 인스턴스
-    func typography(
+    ///   - color: 색상
+    /// - Returns: 단락 스타일이 적용된 View
+    func paragraph(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        atomic: Color.Atomic
+        color: SwiftUI.Color
     ) -> some View {
-        typography(variant: variant, weight: weight, color: .atomic(atomic))
+        typography(variant: variant, weight: weight, color: color)
+            .adjustLineHeight(variant: variant)
+    }
+    
+    /// 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 텍스트 변형
+    ///   - weight: 폰트 두께
+    ///   - semantic: 시맨틱 색상
+    /// - Returns: 단락 스타일이 적용된 View
+    func paragraph(
+        variant: Typography.Variant = .body1,
+        weight: Typography.Weight = .regular,
+        semantic: Color.Semantic = .labelNormal
+    ) -> some View {
+        typography(variant: variant, weight: weight, color: .semantic(semantic))
+            .adjustLineHeight(variant: variant)
     }
 }
 
-// MARK: - SwiftUI View Extensions
 public extension View {
-    /// Montage 디자인 시스템의 단락 스타일을 적용합니다.
+    /// 타이포그래피 변형에 따른 줄 높이를 적용합니다.
     ///
     /// - Parameter variant: 텍스트 변형
-    /// - Returns: 단락 스타일이 적용된 View
-    func paragraph(variant: Typography.Variant) -> some View {
-        self
+    /// - Returns: 줄 높이가 적용된 View
+    func adjustLineHeight(variant: Typography.Variant) -> some View {
+        lineSpacing(variant.lineSpacing).padding(.vertical, variant.lineSpacing / 2)
     }
 }
 
@@ -525,31 +523,6 @@ public extension NSAttributedString {
             variant: variant,
             weight: weight,
             color: .semantic(semantic),
-            lineBreakMode: lineBreakMode
-        )
-    }
-
-    /// Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
-    ///
-    /// - Parameters:
-    ///   - string: 변환할 문자열
-    ///   - variant: 타이포그래피 변형 (기본값: .body1)
-    ///   - weight: 폰트 두께 (기본값: .regular)
-    ///   - atomic: 원자적 색상
-    ///   - lineBreakMode: 줄바꿈 모드 (기본값: .byWordWrapping)
-    /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func attributedString(
-        _ string: String,
-        variant: Typography.Variant = .body1,
-        weight: Typography.Weight = .regular,
-        atomic: Color.Atomic,
-        lineBreakMode: NSLineBreakMode = .byWordWrapping
-    ) -> NSAttributedString {
-        attributedString(
-            string,
-            variant: variant,
-            weight: weight,
-            color: .atomic(atomic),
             lineBreakMode: lineBreakMode
         )
     }

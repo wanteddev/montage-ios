@@ -56,15 +56,13 @@ struct TextFieldPreview: View {
             case .text:
                 return {
                     Text("텍스트")
-                        .typography(variant: .body1, weight: .medium, semantic: .labelAssistive)
-                        .paragraph(variant: .body1)
+                        .paragraph(variant: .body1, weight: .medium, semantic: .labelAssistive)
                 }
             case .timer:
                 return {
                     let second = 431
                     return Text(String(format: "%02d:%02d", (second / 60), (second % 60)))
-                        .typography(variant: .label1, weight: .bold, semantic: .primaryNormal)
-                        .paragraph(variant: .label1)
+                        .paragraph(variant: .label1, weight: .bold, semantic: .primaryNormal)
                 }
             case .badge:
                 return {

@@ -89,8 +89,7 @@ public struct EmptyState: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .typography(variant: .body2, semantic: .labelAlternative)
-                            .paragraph(variant: .body2)
+                            .paragraph(variant: .body2, semantic: .labelAlternative)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                         Spacer()
