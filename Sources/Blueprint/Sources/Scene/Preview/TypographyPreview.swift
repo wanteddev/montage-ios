@@ -47,15 +47,15 @@ struct TypographyPreview: View {
                     
                     HStack(spacing: 1) {
                         Text([String](repeating: " ", count: Int(lineCount)).joined(separator: "\n"))
-                            .adjustLineHeight(variant: variant)
+                            .paragraph(variant: variant)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(width: 30)
                             .dimensioning(axis: .vertical, drawOnPreviewOnly: false)
                         Text([String](repeating: "AA", count: Int(lineCount)).joined(separator: "\n"))
-                            .adjustLineHeight(variant: variant)
+                            .paragraph(variant: variant)
                             .frame(width: 69)
                             .fixedSize(horizontal: false, vertical: true)
-                            .border(.red, width: 1)
+                            .border(.red, width: 1 / UIScreen.main.scale)
                         SwiftUI.Color.clear
                             .frame(width: 30, height: variant.lineHeight * lineCount)
                             .dimensioning(axis: .vertical, drawOnPreviewOnly: false)
@@ -68,6 +68,9 @@ struct TypographyPreview: View {
         .layoutPriority(1)
     }
 }
+
+import Pretendard
 #Preview {
-    TypographyPreview()
+    _ = try? Pretendard.registerFonts()
+    return TypographyPreview()
 }

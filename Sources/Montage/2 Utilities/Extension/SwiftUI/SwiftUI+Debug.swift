@@ -148,18 +148,20 @@ private struct DimensionView: View {
         self.value = value
     }
 
+    private let hairline = 1 / UIScreen.main.scale
+    
     var body: some View {
         switch axis {
         case .horizontal:
             ZStack {
                 HStack(spacing: 0) {
                     Rectangle()
-                        .frame(width: 1)
+                        .frame(width: hairline)
                     Rectangle()
-                        .frame(height: 1)
+                        .frame(height: hairline)
                         .frame(width: CGFloat(max(0, value - 2)))
                     Rectangle()
-                        .frame(width: 1)
+                        .frame(width: hairline)
                 }
                 .frame(width: CGFloat(value))
                 Text("\(String(format: "%.1f", value))")
@@ -173,12 +175,12 @@ private struct DimensionView: View {
             ZStack {
                 VStack(spacing: 0) {
                     Rectangle()
-                        .frame(height: 1)
+                        .frame(height: hairline)
                     Rectangle()
-                        .frame(width: 1)
+                        .frame(width: hairline)
                         .frame(height: CGFloat(max(0, value - 2)))
                     Rectangle()
-                        .frame(height: 1)
+                        .frame(height: hairline)
                 }
                 .frame(height: CGFloat(value))
                 Rectangle()
