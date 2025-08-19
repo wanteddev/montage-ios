@@ -11,15 +11,13 @@ import Montage
 struct DateTimePickerPreview: View {
     @State private var selectedDate = Date()
     @State private var datePickerStyleIndex = 0
-    @State private var graphicalDatePickerPresented = false
-    @State private var wheelDatePickerPresented = false
-    @State private var timePickerPresented = false
+    @State private var isBottomSheetPresented = false
 
-    let datePickerStyles: [any DatePickerStyle] = [.compact, .wheel, .graphical]
+    private let styleLabels = ["Compact", "Wheel", "Graphical"]
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                if !graphicalDatePickerPresented {
+                if !isBottomSheetPresented {
                     datePicker
                 }
                 
@@ -28,15 +26,15 @@ struct DateTimePickerPreview: View {
                     Text("style")
                     SegmentedControl(
                         selectedIndex: $datePickerStyleIndex,
-                        labels: datePickerStyles.map { String(describing: $0).replacingOccurrences(of: "DatePickerStyle()", with: "") }
+                        labels: styleLabels
                     )
                     .size(.small)
                 }
                 HStack {
                     Text("bottomSheet")
-                    Switch($graphicalDatePickerPresented)
+                    Switch($isBottomSheetPresented)
                 }
-                .bottomSheetModal(isPresented: $graphicalDatePickerPresented) {
+                .bottomSheetModal(isPresented: $isBottomSheetPresented) {
                     datePicker
                 }
             }
@@ -45,7 +43,7 @@ struct DateTimePickerPreview: View {
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
     
-    var datePicker: some View {
+    private var datePicker: some View {
         VStack(alignment: .leading) {
             Text("Preview").bold()
             HStack {
@@ -53,27 +51,25 @@ struct DateTimePickerPreview: View {
                 VStack {
                     DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .hourAndMinute) {}
                         .labelsHidden()
-                        .modifying({
-                            switch datePickerStyleIndex {
-                            case 0: $0.datePickerStyle(.compact)
-                            case 1: $0.datePickerStyle(.wheel)
-                            case 2: $0.datePickerStyle(.graphical)
-                            default: $0.datePickerStyle(.automatic)
-                            }
-                        })
+                        .applyDatePickerStyle(index: datePickerStyleIndex)
                     DatePicker(selection: $selectedDate, in: Date.now...Date.distantFuture, displayedComponents: .date) {}
                         .labelsHidden()
-                        .modifying({
-                            switch datePickerStyleIndex {
-                            case 0: $0.datePickerStyle(.compact)
-                            case 1: $0.datePickerStyle(.wheel)
-                            case 2: $0.datePickerStyle(.graphical)
-                            default: $0.datePickerStyle(.automatic)
-                            }
-                        })
+                        .applyDatePickerStyle(index: datePickerStyleIndex)
                 }
                 Spacer(minLength: 0)
             }
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applyDatePickerStyle(index: Int) -> some View {
+        switch index {
+        case 0: self.datePickerStyle(.compact)
+        case 1: self.datePickerStyle(.wheel)
+        case 2: self.datePickerStyle(.graphical)
+        default: self.datePickerStyle(.automatic)
         }
     }
 }
