@@ -275,8 +275,7 @@ public struct TextField: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .typography(variant: .label1, weight: .bold, semantic: .labelNeutral)
-                        .paragraph(variant: .label1)
+                        .paragraph(variant: .label1, weight: .bold, semantic: .labelNeutral)
                     if requiredBadge {
                         Text("*")
                             .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
@@ -291,11 +290,10 @@ public struct TextField: View {
                 case .positive(let caption), .negative(let caption), .normal(let caption):
                     if caption.isEmpty == false {
                         Text(caption)
-                            .typography(
+                            .paragraph(
                                 variant: .caption1,
                                 color: captionTextColor
                             )
-                            .paragraph(variant: .caption1)
                     }
                 }
             }
@@ -486,12 +484,11 @@ private extension TextField {
                                         if let title = autoCompletionDataSource.sectionTitleAt?(section) {
                                             HStack {
                                                 Text(title)
-                                                    .typography(
+                                                    .paragraph(
                                                         variant: .caption1,
                                                         weight: .bold,
-                                                        color: .semantic(.labelAlternative)
+                                                        semantic: .labelAlternative
                                                     )
-                                                    .paragraph(variant: .caption1)
                                                 Spacer()
                                             }
                                             .padding(.horizontal, 1)
@@ -588,8 +585,7 @@ private extension TextField {
         
         var body: some View {
             Text(title)
-                .typography(variant: .body1, weight: typoWeight, semantic: textColor)
-                .paragraph(variant: .body1)
+                .paragraph(variant: .body1, weight: typoWeight, semantic: textColor)
                 .padding(.horizontal, 19)
                 .padding(.vertical, 12)
                 .background(

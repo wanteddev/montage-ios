@@ -293,34 +293,33 @@ public struct Select: View {
                         HStack {
                             if selectedItems.isEmpty {
                                 Text(placeholder)
-                                    .typography(
+                                    .paragraph(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
                                     )
-                                    .paragraph(variant: .body1)
+                                    .lineLimit(1)
                             } else {
                                 switch variant {
                                 case .single:
                                     if let text = selectedItems.first?.text {
                                         Text(text)
-                                            .typography(
+                                            .paragraph(
                                                 variant: .body1,
                                                 weight: .regular,
                                                 color: textColor
                                             )
-                                            .paragraph(variant: .body1)
+                                            .lineLimit(1)
                                     }
                                 case .multiple(let render, let overflow, _):
                                     Group {
                                         if render == .text {
                                             Text(selectedItems.map { $0.text }.joined(separator: ", "))
-                                                .typography(
+                                                .paragraph(
                                                     variant: .body1,
                                                     weight: .regular,
                                                     color: textColor
                                                 )
-                                                .paragraph(variant: .body1)
                                                 .if(!overflow) {
                                                     $0.lineLimit(1)
                                                 }

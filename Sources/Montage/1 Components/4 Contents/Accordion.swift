@@ -223,12 +223,11 @@ public struct Accordion: View {
                     }
                     
                     Text(title)
-                        .typography(
+                        .paragraph(
                             variant: titleTypography.variant,
                             weight: titleTypography.weight,
                             color: titleTypography.color
                         )
-                        .paragraph(variant: titleTypography.variant)
                     Spacer(minLength: 0)
                     
                     Group {
@@ -269,12 +268,11 @@ public struct Accordion: View {
                     VStack(alignment: .leading, spacing: 0) {
                         if let description, !description.isEmpty {
                             Text(description)
-                                .typography(
+                                .paragraph(
                                     variant: descriptionTypography.variant,
                                     weight: descriptionTypography.weight,
                                     color: descriptionTypography.color
                                 )
-                                .paragraph(variant: descriptionTypography.variant)
                         }
                         
                         Spacer().frame(height: 12)

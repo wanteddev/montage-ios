@@ -87,12 +87,11 @@ public struct ActionChip: View {
                     .renderingMode(.template)
                     .scaledToFit()
                     .frame(width: imageSize, height: imageSize)
-                    .foregroundColor(imageColor)
+                    .foregroundStyle(imageColor)
             }
             
             Text(text)
-                .typography(variant: typoVariant, weight: .medium, color: fontColor)
-                .paragraph(variant: typoVariant)
+                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
             
             if let trailingImage = trailingImage {
@@ -101,7 +100,7 @@ public struct ActionChip: View {
                     .renderingMode(.template)
                     .scaledToFit()
                     .frame(width: imageSize, height: imageSize)
-                    .foregroundColor(imageColor)
+                    .foregroundStyle(imageColor)
             }
         }
         .padding(contentPadding)

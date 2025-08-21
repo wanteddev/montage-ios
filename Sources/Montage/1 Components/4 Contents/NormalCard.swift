@@ -166,32 +166,28 @@ public struct NormalCard: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .typography(variant: .body1, weight: .bold, semantic: .labelNormal)
-                            .paragraph(variant: .body1)
+                            .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(2)
                             .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: textAreaWidth, height: 22))
                         
                         VStack(alignment: .leading, spacing: 2) {
                             if let caption {
                                 Text(caption)
-                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                                    .paragraph(variant: .label2)
+                                    .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 18))
                             }
                             
                             if let subCaption {
                                 Text(subCaption)
-                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                                    .paragraph(variant: .label2)
+                                    .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
                             }
                             
                             if let extraCaption {
                                 Text(extraCaption)
-                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                                    .paragraph(variant: .label2)
+                                    .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
                             }
@@ -260,8 +256,7 @@ extension NormalCard {
                             HStack(alignment: .top, spacing: 0) {
                                 if let caption {
                                     Text(caption)
-                                        .typography(variant: .caption2, weight: .bold, semantic: .staticWhite)
-                                        .paragraph(variant: .caption2)
+                                        .paragraph(variant: .caption2, weight: .bold, semantic: .staticWhite)
                                         .padding(.bottom, 6)
                                 }
                                 

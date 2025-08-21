@@ -106,11 +106,10 @@ public struct Cell: View {
                         
                         if let caption {
                             Text(caption)
-                                .typography(
+                                .paragraph(
                                     variant: .label2,
                                     semantic: .labelAlternative
                                 )
-                                .paragraph(variant: .label2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
@@ -401,29 +400,31 @@ extension Cell {
     }
     
     private var titleView: some View {
-        if let highlightText {
-            let attributedString: AttributedString = {
-                var string = AttributedString(stringLiteral: title)
-                string.font = .font(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
-                string.foregroundColor = .semantic(normalTitleColor)
-                guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
+        Group {
+            if let highlightText {
+                let attributedString: AttributedString = {
+                    var string = AttributedString(stringLiteral: title)
+                    string.font = .font(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
+                    string.foregroundColor = .semantic(normalTitleColor)
+                    guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
+                        return string
+                    }
+                    string[range].font = .font(variant: titleTypography.variant, weight: .bold)
+                    string[range].foregroundColor = .semantic(normalTitleColor)
                     return string
-                }
-                string[range].font = .font(variant: titleTypography.variant, weight: .bold)
-                string[range].foregroundColor = .semantic(normalTitleColor)
-                return string
-            }()
-            
-            return Text(attributedString)
-                .paragraph(variant: titleTypography.variant)
-        } else {
-            return Text(title)
-                .typography(
-                    variant: titleTypography.variant,
-                    weight: active ? .medium : titleTypography.weight,
-                    semantic: normalTitleColor
-                )
-                .paragraph(variant: titleTypography.variant)
+                }()
+                
+                Text(attributedString)
+                    .tracking(titleTypography.variant.tracking)
+                    .adjustLineHeight(variant: titleTypography.variant)
+            } else {
+                Text(title)
+                    .paragraph(
+                        variant: titleTypography.variant,
+                        weight: active ? .medium : titleTypography.weight,
+                        semantic: normalTitleColor
+                    )
+            }
         }
     }
 }

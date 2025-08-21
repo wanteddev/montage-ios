@@ -384,11 +384,10 @@ public struct TextArea: View {
                 
                 if $text.wrappedValue.isEmpty, let placeholder {
                     Text(placeholder)
-                        .typography(
+                        .paragraph(
                             variant: .body1Reading,
                             color: placeholderTextColor
                         )
-                        .paragraph(variant: .body1Reading)
                         .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
                         .allowsHitTesting(false)
                 }
@@ -524,7 +523,7 @@ public struct TextArea: View {
             case .characterCount(let limit, let overflow):
                 HStack(spacing: 0) {
                     Text(String(typedCharacters))
-                        .typography(
+                        .paragraph(
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
@@ -533,15 +532,13 @@ public struct TextArea: View {
                                 : .labelAlternative
                             )
                         )
-                        .paragraph(variant: .label2)
                     if let limit {
                         Text("/\(String(limit))")
-                            .typography(
+                            .paragraph(
                                 variant: .label2,
                                 weight: .medium,
                                 semantic: disable ? .labelDisable : .labelAlternative
                             )
-                            .paragraph(variant: .label2)
                     }
                 }
                 .padding(.horizontal, 4)

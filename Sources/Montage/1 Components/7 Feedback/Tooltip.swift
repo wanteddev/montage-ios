@@ -306,12 +306,11 @@ private extension Tooltip.Modifier {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 6) {
                 Text(message)
-                    .typography(
+                    .paragraph(
                         variant: .label1,
                         weight: .medium,
                         semantic: contentColor
                     )
-                    .paragraph(variant: .label1)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 2)
@@ -334,12 +333,11 @@ private extension Tooltip.Modifier {
                     buttonInfo.action()
                 }, label: {
                     Text(buttonInfo.title)
-                        .typography(
+                        .paragraph(
                             variant: .label1,
                             weight: .bold,
                             semantic: .inverseLabel
                         )
-                        .paragraph(variant: .label1)
                         .opacity(0.61)
                         .frame(height: 20)
                         .padding(.horizontal, 2)

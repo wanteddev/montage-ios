@@ -77,8 +77,7 @@ public struct SectionHeader: View {
             HStack(spacing: 0) {
                 HStack(alignment: .bottom, spacing: 16) {
                     Text(title)
-                        .typography(variant: variant, weight: .bold, color: titleColor)
-                        .paragraph(variant: variant)
+                        .paragraph(variant: variant, weight: .bold, color: titleColor)
                         .multilineTextAlignment(.leading)
                         .layoutPriority(1)
                     

@@ -152,8 +152,7 @@ public struct Toast: View {
                 HStack(alignment: .center, spacing: 8) {
                     Icon(variant)
                     Text(message)
-                        .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
-                        .paragraph(variant: .body2)
+                        .paragraph(variant: .body2, weight: .bold, semantic: .staticWhite)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.vertical, 5)
@@ -218,7 +217,7 @@ public struct Toast: View {
                     Circle()
                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
                         .frame(width: 11, height: 11)
-                    Image.icon(.circleExclamationFill)
+                    Image.icon(.circleCloseFill)
                         .resizable()
                         .foregroundStyle(SwiftUI.Color.atomic(.red60))
                         .frame(width: 22, height: 22)
