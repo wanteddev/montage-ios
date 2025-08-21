@@ -39,6 +39,8 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = IconPreviewBuilder().build()
         case .elevation:
             vc = ElevationPreviewBuilder().build()
+        case .shadow:
+            vc = UIHostingController(rootView: ShadowPreview())
         case .switch:
             vc = UIHostingController(rootView: SwitchPreview())
         case .input:
