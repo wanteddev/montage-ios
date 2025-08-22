@@ -31,7 +31,7 @@ class ComponentListContents {
     }
     
     enum ComponentType: String, CapitalizedTitleFetchable, CaseIterable {
-        case typography, color, icon, grid, elevation
+        case typography, color, icon, grid, elevation, shadow
         case divider, flowLayout
         case actionArea, button, iconButton, chip
         case control, `switch`, input, segmentedControl, select, slider, textField, textArea, dateTimePicker
@@ -43,7 +43,7 @@ class ComponentListContents {
         
         var state: ComponentState {
             switch self {
-            case .typography, .color, .icon, .grid, .elevation, .switch, .input, .control, .flowLayout,
+            case .typography, .color, .icon, .grid, .elevation, .shadow, .switch, .input, .control, .flowLayout,
                     .button, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
                     .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
                     .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
@@ -58,7 +58,7 @@ class ComponentListContents {
         
         var category: CategoryType {
             switch self {
-            case .typography, .color, .icon, .grid, .elevation:
+            case .typography, .color, .icon, .grid, .elevation, .shadow:
                 return .theme
             case .divider, .flowLayout:
                 return .layout
