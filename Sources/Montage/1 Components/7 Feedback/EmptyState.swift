@@ -80,7 +80,7 @@ public struct EmptyState: View {
                         HStack {
                             Spacer()
                             Text(title)
-                                .paragraph(variant: .headline1, weight: .bold)
+                                .paragraphNew(variant: .headline1, weight: .bold)
                                 .multilineTextAlignment(.center)
                             Spacer()
                         }
@@ -89,7 +89,7 @@ public struct EmptyState: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .paragraph(variant: .body2, semantic: .labelAlternative)
+                            .paragraphNew(variant: .body2, semantic: .labelAlternative)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                         Spacer()

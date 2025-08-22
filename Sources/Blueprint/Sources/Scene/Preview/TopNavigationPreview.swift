@@ -114,7 +114,7 @@ struct TopNavigationPreview: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Varint :")
-                    .typography(variant: .headline2, weight: .medium)
+                    .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(variant.selectableTitle) {
                     ForEach(Variant.allCases, id: \.self) { v in
@@ -129,7 +129,7 @@ struct TopNavigationPreview: View {
             if case .floating = variant {
                 HStack {
                     Text("Alternative :")
-                        .typography(variant: .headline2, weight: .medium)
+                        .typographyNew(variant: .headline2, weight: .medium)
                     Spacer()
                     Button {
                         alternative.toggle()
@@ -139,7 +139,7 @@ struct TopNavigationPreview: View {
                 }
                 HStack {
                     Text("Background :")
-                        .typography(variant: .headline2, weight: .medium)
+                        .typographyNew(variant: .headline2, weight: .medium)
                     Spacer()
                     Button {
                         background.toggle()
@@ -150,7 +150,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("LeadingButton :")
-                    .typography(variant: .headline2, weight: .medium)
+                    .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(leading.selectableTitle) {
                     ForEach(LeadingButton.allCases, id: \.self) { action in
@@ -164,7 +164,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("Add TrailingButton: ")
-                    .typography(variant: .headline2, weight: .medium)
+                    .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu("추가") {
                     ForEach(TrailingButton.allCases, id: \.self) { action in
@@ -178,7 +178,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("TrailingButton Disable: ")
-                    .typography(variant: .headline2, weight: .medium)
+                    .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
                     trailingButtonDisable.toggle()
@@ -188,7 +188,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("BackgroundColor: ")
-                    .typography(variant: .headline2, weight: .medium)
+                    .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Picker(
                     "BackgroundColor",
@@ -203,7 +203,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("ActionArea:")
-                    .typography(variant: .headline2, weight: .medium)
+                    .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
                     actionArea.toggle()

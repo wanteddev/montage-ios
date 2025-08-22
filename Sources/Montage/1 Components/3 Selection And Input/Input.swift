@@ -202,7 +202,7 @@ public struct Input: View {
 
             ZStack {
                 Text(text)
-                    .paragraph(
+                    .paragraphNew(
                         variant: titleTypography.variant,
                         weight: isBold ? .bold : titleTypography.weight
                     )
@@ -214,7 +214,7 @@ public struct Input: View {
                     .accessibilityHidden(true)
                     
                 Text(text)
-                    .paragraph(
+                    .paragraphNew(
                         variant: titleTypography.variant,
                         weight: isBold ? .bold : titleTypography.weight,
                         color: titleTypography.color

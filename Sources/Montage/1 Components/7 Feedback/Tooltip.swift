@@ -306,7 +306,7 @@ private extension Tooltip.Modifier {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 6) {
                 Text(message)
-                    .paragraph(
+                    .paragraphNew(
                         variant: .label1,
                         weight: .medium,
                         semantic: contentColor
@@ -333,7 +333,7 @@ private extension Tooltip.Modifier {
                     buttonInfo.action()
                 }, label: {
                     Text(buttonInfo.title)
-                        .paragraph(
+                        .paragraphNew(
                             variant: .label1,
                             weight: .bold,
                             semantic: .inverseLabel

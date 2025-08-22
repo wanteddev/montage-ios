@@ -36,7 +36,7 @@ struct DotPaginationPreview: View {
                         }
                     }
                     Text("\(selectedPage)/\(totalPages)")
-                        .typography(variant: .caption1)
+                        .typographyNew(variant: .caption1)
                 }
                 
                 HStack {

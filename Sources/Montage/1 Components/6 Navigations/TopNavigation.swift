@@ -202,7 +202,7 @@ public struct TopNavigation: View {
         
         private var titleView: some View {
             Text(title)
-                .paragraph(
+                .paragraphNew(
                     variant: variant.typoVariant,
                     weight: variant.typoWeight,
                     semantic: .labelStrong
@@ -348,7 +348,7 @@ public struct TopNavigation: View {
                     action()
                 } label: {
                     Text(text)
-                        .paragraph(
+                        .paragraphNew(
                             variant: .body2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)
