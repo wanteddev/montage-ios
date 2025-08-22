@@ -27,7 +27,7 @@ class ComponentListContents {
     }
     
     enum CategoryType: String, CapitalizedTitleFetchable, CaseIterable {
-        case theme, layout, actions, selectionAndInput, contents, loading, navigations, feedback, presentation
+        case theme, layout, actions, selectionAndInput, contents, loading, navigations, feedback, presentation, utility
     }
     
     enum ComponentType: String, CapitalizedTitleFetchable, CaseIterable {
@@ -40,6 +40,7 @@ class ComponentListContents {
         case topNavigation, progressIndicator, tab, pagination, progressTracker, category
         case pushBadge, fallbackView, snackbar, toast, tooltip
         case modal, menu
+        case framedStyle
         
         var state: ComponentState {
             switch self {
@@ -49,7 +50,7 @@ class ComponentListContents {
                     .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
                     .pagination, .accordion, .category, .playBadge, .sectionHeader, .menu, .modal,
-                    .contentBadge, .card:
+                    .contentBadge, .card, .framedStyle:
                 return .completed
             case .divider:
                 return .previewNotReady
@@ -76,6 +77,8 @@ class ComponentListContents {
                 return .feedback
             case .modal, .menu:
                 return .presentation
+            case .framedStyle:
+                return .utility
             }
         }
     }
