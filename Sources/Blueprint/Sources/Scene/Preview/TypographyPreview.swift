@@ -38,14 +38,17 @@ struct TypographyPreview: View {
                     VStack{
                         Text("\(variant)")
                             .typographyNew(weight: .bold)
-                        Text("lineSpacing:\(String(format: "%.1f", variant.lineSpacing))")
-                        Text("fontHeight:\(String(format: "%.1f", variant.fontHeight))")
-                        Text("lineHeight:\(String(format: "%.1f", variant.lineHeight))")
+                        Text("fontSize:\(variant.fontSize, specifier: "%.0f")")
+                        Text("fontHeight:\(variant.fontHeight, specifier: "%.1f")")
+                        Text("lineSpacing:\(variant.lineSpacing, specifier: "%.1f")")
+                        Text("lineHeight:\(variant.lineHeight, specifier: "%.1f")")
+                        Text("letterSpacing:\(variant.tracking, specifier: "%.1f")")
                     }
+                    .monospacedDigit()
                     .font(.system(size: 10, weight: .medium))
                     .frame(width: 109)
                     
-                    HStack(spacing: 1) {
+                    HStack(alignment: .top, spacing: 1) {
                         Text([String](repeating: " ", count: Int(lineCount)).joined(separator: "\n"))
                             .paragraphNew(variant: variant)
                             .fixedSize(horizontal: false, vertical: true)
