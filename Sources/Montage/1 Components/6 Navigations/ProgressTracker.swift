@@ -34,7 +34,7 @@ struct ProgressTrackerStepper: View {
                     .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
             } else {
                 Text(String(step))
-                    .typography(variant: .caption1, weight: .bold, semantic: .staticWhite)
+                    .typographyNew(variant: .caption1, weight: .bold, semantic: .staticWhite)
                     .frame(height: 16, alignment: .center)
             }
         }

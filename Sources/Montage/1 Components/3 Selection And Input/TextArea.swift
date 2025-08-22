@@ -321,10 +321,10 @@ public struct TextArea: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .typography(variant: .label1, weight: .bold, semantic: .labelNeutral)
+                        .typographyNew(variant: .label1, weight: .bold, semantic: .labelNeutral)
                     if requiredBadge {
                         Text("*")
-                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
+                            .typographyNew(variant: .label1, weight: .medium, semantic: .statusNegative)
                     }
                 }
             }
@@ -333,7 +333,7 @@ public struct TextArea: View {
             
             if let description {
                 Text(description)
-                    .typography(
+                    .typographyNew(
                         variant: .caption1,
                         semantic: negative ? .statusNegative : .labelAlternative
                     )
@@ -384,7 +384,7 @@ public struct TextArea: View {
                 
                 if $text.wrappedValue.isEmpty, let placeholder {
                     Text(placeholder)
-                        .paragraph(
+                        .paragraphNew(
                             variant: .body1Reading,
                             color: placeholderTextColor
                         )
@@ -523,7 +523,7 @@ public struct TextArea: View {
             case .characterCount(let limit, let overflow):
                 HStack(spacing: 0) {
                     Text(String(typedCharacters))
-                        .paragraph(
+                        .paragraphNew(
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
@@ -534,7 +534,7 @@ public struct TextArea: View {
                         )
                     if let limit {
                         Text("/\(String(limit))")
-                            .paragraph(
+                            .paragraphNew(
                                 variant: .label2,
                                 weight: .medium,
                                 semantic: disable ? .labelDisable : .labelAlternative

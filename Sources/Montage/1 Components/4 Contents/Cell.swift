@@ -106,7 +106,7 @@ public struct Cell: View {
                         
                         if let caption {
                             Text(caption)
-                                .paragraph(
+                                .paragraphNew(
                                     variant: .label2,
                                     semantic: .labelAlternative
                                 )
@@ -419,7 +419,7 @@ extension Cell {
                     .adjustLineHeight(variant: titleTypography.variant)
             } else {
                 Text(title)
-                    .paragraph(
+                    .paragraphNew(
                         variant: titleTypography.variant,
                         weight: active ? .medium : titleTypography.weight,
                         semantic: normalTitleColor

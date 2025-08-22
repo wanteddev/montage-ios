@@ -34,11 +34,11 @@ struct SnackBarPreview: View {
                     TextField(text: $description)
                     Toggle(isOn: $showExtraContents) {
                         Text("extral contents(icon)")
-                            .typography(semantic: .labelAssistive)
+                            .typographyNew(semantic: .labelAssistive)
                     }
                     Toggle(isOn: $showPlaceholder) {
                         Text("show snackBar placeholder")
-                            .typography(semantic: .labelAssistive)
+                            .typographyNew(semantic: .labelAssistive)
                     }
                 }
                 .padding(.horizontal, 20)

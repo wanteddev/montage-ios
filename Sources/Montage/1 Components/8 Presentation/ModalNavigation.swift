@@ -186,7 +186,7 @@ public struct ModalNavigation: View {
                     HStack(spacing: 20) {
                         TopNavigation.LeadingButton(leadingButton)
                         Text(title)
-                            .paragraph(
+                            .paragraphNew(
                                 variant: variant.typoVariant,
                                 weight: variant.typoWeight,
                                 semantic: .labelStrong

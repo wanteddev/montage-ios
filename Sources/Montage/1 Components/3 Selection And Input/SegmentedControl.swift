@@ -123,7 +123,7 @@ public struct SegmentedControl: View {
                             .padding(.vertical, 2)
                         
                         Text(items[index].title)
-                            .paragraph(
+                            .paragraphNew(
                                 variant: buttonTitleFont,
                                 weight: .medium,
                                 color: buttonForegroundColor(isSelected: selectedIndex == index)

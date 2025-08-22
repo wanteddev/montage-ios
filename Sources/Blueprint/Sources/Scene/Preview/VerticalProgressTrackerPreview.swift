@@ -68,7 +68,7 @@ struct VerticalProgressTrackerPreview: View {
                                 HStack {
                                     Spacer(minLength: 0)
                                     Text("뭐라 뭐라 디스크립션")
-                                        .typography(variant: .caption1)
+                                        .typographyNew(variant: .caption1)
                                 }
                             )
                             : AnyView(EmptyView())

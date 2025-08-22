@@ -223,7 +223,7 @@ public struct Accordion: View {
                     }
                     
                     Text(title)
-                        .paragraph(
+                        .paragraphNew(
                             variant: titleTypography.variant,
                             weight: titleTypography.weight,
                             color: titleTypography.color
@@ -268,7 +268,7 @@ public struct Accordion: View {
                     VStack(alignment: .leading, spacing: 0) {
                         if let description, !description.isEmpty {
                             Text(description)
-                                .paragraph(
+                                .paragraphNew(
                                     variant: descriptionTypography.variant,
                                     weight: descriptionTypography.weight,
                                     color: descriptionTypography.color

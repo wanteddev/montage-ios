@@ -129,7 +129,7 @@ public struct ContentBadge: View {
                     .frame(width: iconSize.width, height: iconSize.height)
             }
             Text(text)
-                .typography(variant: typoVariant, weight: .medium, color: contentColor)
+                .typographyNew(variant: typoVariant, weight: .medium, color: contentColor)
             if let trailingIcon {
                 Image.icon(trailingIcon)
                     .resizable()

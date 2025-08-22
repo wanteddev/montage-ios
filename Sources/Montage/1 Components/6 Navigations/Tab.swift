@@ -100,7 +100,7 @@ public struct Tab: View {
                                     ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                                         ZStack {
                                             Text(item)
-                                                .typography(
+                                                .typographyNew(
                                                     variant: itemFontVariant,
                                                     weight: .bold,
                                                     semantic: index == selectedIndex ? .labelStrong :

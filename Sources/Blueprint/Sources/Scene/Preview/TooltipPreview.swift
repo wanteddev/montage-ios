@@ -186,7 +186,7 @@ struct TooltipPreview: View {
         VStack(alignment: .leading) {
             Text("Options").bold()
             Text("iOS 16.4 이상에서는 position 값 유무에 따라 툴팁의 동작이나 가능한 옵션이 현저히 다릅니다. position 값이 nil인 경우 시스템 API를 사용하여 툴팁을 표시하기 때문입니다.")
-                .typography(variant: .caption1, color: .semantic(.labelAlternative))
+                .typographyNew(variant: .caption1, color: .semantic(.labelAlternative))
             VStack(alignment: .leading, spacing: 12) {
                 if #available(iOS 16.4, *) {
                     HStack {
@@ -197,10 +197,10 @@ struct TooltipPreview: View {
                 
                 if usingSystemAPI() {
                     Text("position은 nil인 경우 anchor가 되는 뷰의 위치에 따라 iOS 시스템이 툴팁의 위치를 자동으로 결정합니다.\n또한, showArrow는 항상 true로 동작하고, zIndex를 조정할 필요가 없습니다.")
-                        .typography(variant: .caption1, color: .semantic(.labelAlternative))
+                        .typographyNew(variant: .caption1, color: .semantic(.labelAlternative))
                 } else {
                     Text("주어진 position 값에 따라 툴팁의 위치가 결정되며, showArrow 옵션을 false 로 주면 화살표가 사라집니다.\n또한, position이 .trailing이거나 .bottom인 경우 zIndex를 조정해야 툴팁이 주변 뷰에 가려지지 않습니다.")
-                        .typography(variant: .caption1, color: .semantic(.labelAlternative))
+                        .typographyNew(variant: .caption1, color: .semantic(.labelAlternative))
                 }
                 
                 if usingSystemAPI() {
