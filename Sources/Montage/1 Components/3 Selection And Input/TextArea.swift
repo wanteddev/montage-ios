@@ -499,19 +499,10 @@ public struct TextArea: View {
                     }
                 }
                 Spacer()
-                if negative {
-                    IconButton(
-                        variant: .default,
-                        icon: .circleExclamationFill,
-                        handler: nil
-                    )
-                    .iconColor(disable ? .semantic(.labelDisable) : .semantic(.statusNegative))
-                } else {
-                    if trailingResources.isEmpty == false {
-                        HStack(spacing: trailingResourceSpacing) {
-                            ForEach(trailingResources.indices, id: \.self) { index in
-                                component(trailingResources[index])
-                            }
+                if trailingResources.isEmpty == false {
+                    HStack(spacing: trailingResourceSpacing) {
+                        ForEach(trailingResources.indices, id: \.self) { index in
+                            component(trailingResources[index])
                         }
                     }
                 }
