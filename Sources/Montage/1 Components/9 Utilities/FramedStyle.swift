@@ -64,14 +64,6 @@ struct FramedStyleModifier: ViewModifier {
                     .background(backgroundColor)
                     .clipShape(RoundedRectangle(cornerRadius: borderRadius))
             }
-            .if(!disabled) {
-                $0.overlay(
-                    RoundedRectangle(cornerRadius: borderRadius)
-                        .inset(by: -1)
-                        .stroke(borderColor, lineWidth: 2)
-                        .opacity(0.22)
-                )
-            }
             .shadow(shadowLevel)
             .disabled(disabled)
     }
