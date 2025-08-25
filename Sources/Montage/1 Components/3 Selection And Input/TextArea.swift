@@ -287,6 +287,7 @@ public struct TextArea: View {
             zelf.characterCounterOverflow = overflow
         } else {
             zelf.characterCounterLimit = nil
+            zelf.characterCounterOverflow = false
         }
         return zelf
     }
@@ -445,7 +446,8 @@ public struct TextArea: View {
     
     private var filteredTrailingResources: [Resource] {
         if leadingResources.contains(where: \.isCharacterCount) &&
-            trailingResources.contains(where: \.isCharacterCount) {
+            trailingResources.contains(where: \.isCharacterCount)
+        {
             trailingResources.filter { $0.isCharacterCount == false }
         } else {
             trailingResources
