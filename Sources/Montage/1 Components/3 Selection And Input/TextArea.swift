@@ -280,8 +280,8 @@ public struct TextArea: View {
         zelf.trailingResources = Array(trailingResources.prefix(3))
         zelf.trailingResourceSpacing = trailingResourceSpacing
         
-        let bottomResouces = leadingResources + zelf.filteredTrailingResources
-        if let characterCounter = bottomResouces.first(where: \.isCharacterCount),
+        let bottomResources = leadingResources + zelf.filteredTrailingResources
+        if let characterCounter = bottomResources.first(where: \.isCharacterCount),
            case let .characterCount(limit, overflow) = characterCounter {
             zelf.characterCounterLimit = limit
             zelf.characterCounterOverflow = overflow
@@ -444,9 +444,9 @@ public struct TextArea: View {
     }
     
     private var filteredTrailingResources: [Resource] {
-        if trailingResources.contains(where: \.isCharacterCount) &&
-            leadingResources.contains(where: \.isCharacterCount) {
-            Array(trailingResources.drop(while: \.isCharacterCount))
+        if leadingResources.contains(where: \.isCharacterCount) &&
+            trailingResources.contains(where: \.isCharacterCount) {
+            trailingResources.filter { $0.isCharacterCount == false }
         } else {
             trailingResources
         }
