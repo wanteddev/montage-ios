@@ -97,12 +97,12 @@ public struct TextArea: View {
         /// 텍스트 버튼
         /// - Parameters:
         ///   - placement: 버튼 위치
-        ///   - varaint: 버튼 변형 스타일
+        ///   - variant: 버튼 변형 스타일
         ///   - title: 버튼 텍스트
         ///   - handler: 버튼 클릭 핸들러
         case textButton(
             placement: Placement = .leading,
-            varaint: Button.Text.Variant? = .assistive,
+            variant: Button.Text.Variant? = .assistive,
             title: String,
             handler: (() -> Void)? = nil
         )
@@ -280,7 +280,7 @@ public struct TextArea: View {
         zelf.trailingResources = Array(trailingResources.prefix(3))
         zelf.trailingResourceSpacing = trailingResourceSpacing
         
-        let bottomResouces = leadingResources + filteredTrailingResources
+        let bottomResouces = leadingResources + zelf.filteredTrailingResources
         if let characterCounter = bottomResouces.first(where: \.isCharacterCount),
            case let .characterCount(limit, overflow) = characterCounter {
             zelf.characterCounterLimit = limit
@@ -398,7 +398,6 @@ public struct TextArea: View {
             if leadingResources.isEmpty == false || trailingResources.isEmpty == false {
                 Bottom(
                     typedCharacters: $typedCharacters,
-                    negative,
                     disable,
                     leadingResources,
                     leadingResourceSpacing,
@@ -464,7 +463,6 @@ public struct TextArea: View {
     private struct Bottom: View {
         @Binding private var typedCharacters: Int
         
-        private let negative: Bool
         private let disable: Bool
         private let leadingResources: [Resource]
         private let leadingResourceSpacing: CGFloat
@@ -473,7 +471,6 @@ public struct TextArea: View {
         
         init(
             typedCharacters: Binding<Int>,
-            _ negative: Bool,
             _ disable: Bool,
             _ leadingResources: [Resource],
             _ leadingResourceSpacing: CGFloat,
@@ -481,7 +478,6 @@ public struct TextArea: View {
             _ trailingResourceSpacing: CGFloat
         ) {
             _typedCharacters = typedCharacters
-            self.negative = negative
             self.disable = disable
             self.leadingResources = leadingResources
             self.leadingResourceSpacing = leadingResourceSpacing
