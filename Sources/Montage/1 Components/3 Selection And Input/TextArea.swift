@@ -455,7 +455,7 @@ public struct TextArea: View {
     }
     
     private func updateText(limit: Int?, overflow: Bool) {
-        if !overflow && text.count > limit ?? .max {
+        if !overflow && text.count > (limit ?? .max) {
             text = String(text.prefix(limit ?? .max))
         }
     }
@@ -517,7 +517,7 @@ public struct TextArea: View {
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
-                                overflow && typedCharacters > limit ?? .max
+                                overflow && typedCharacters > (limit ?? .max)
                                 ? .statusNegative
                                 : .labelAlternative
                             )
@@ -651,12 +651,12 @@ public struct TextArea: View {
             }
 
             func textViewDidBeginEditing(_ textView: UITextView) {
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? .greatestFiniteMagnitude)
             }
             
             func textViewDidChange(_ textView: UITextView) {
                 let parentText = parent.text
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? .greatestFiniteMagnitude)
                 parent.text = textView.text
                 // Binding된 값이 변하지 않으면, TextView에 Binding된 값 표시
                 if parentText == parent.text {
@@ -671,11 +671,11 @@ public struct TextArea: View {
             context _: Context
         ) -> CGSize? {
             var newSize = uiView.sizeThatFits(
-                CGSize(width: proposal.width ?? 0, height: CGFloat.greatestFiniteMagnitude)
+                CGSize(width: proposal.width ?? uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)
             )
             newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
             return CGSize(
-                width: proposal.width ?? 0,
+                width: proposal.width ?? uiView.bounds.width,
                 height: newSize.height
             )
         }
