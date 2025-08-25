@@ -280,7 +280,7 @@ public struct TextArea: View {
         zelf.trailingResources = Array(trailingResources.prefix(3))
         zelf.trailingResourceSpacing = trailingResourceSpacing
         
-        let bottomResources = leadingResources + zelf.filteredTrailingResources
+        let bottomResources = zelf.leadingResources + zelf.filteredTrailingResources
         if let characterCounter = bottomResources.first(where: \.isCharacterCount),
            case let .characterCount(limit, overflow) = characterCounter {
             zelf.characterCounterLimit = limit
@@ -517,7 +517,7 @@ public struct TextArea: View {
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
-                                overflow && typedCharacters > limit ?? 0
+                                overflow && typedCharacters > limit ?? .max
                                 ? .statusNegative
                                 : .labelAlternative
                             )
@@ -622,6 +622,8 @@ public struct TextArea: View {
             }
             context.coordinator.parent.limit = limit
             context.coordinator.parent.overflow = overflow
+            context.coordinator.minHeight = minHeight
+            context.coordinator.maxHeight = maxHeight
         }
         
         func makeCoordinator() -> Coordinator {
