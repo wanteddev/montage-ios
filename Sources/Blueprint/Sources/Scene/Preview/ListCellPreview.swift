@@ -54,7 +54,7 @@ struct ListCellPreview: View {
                 .divider(divider)
                 .disable(disable)
                 .interactionPadding(interactionPadding)
-                .active(active)
+                .selected(active)
                 .if(!highlightText.isEmpty) {
                     $0.highlight(highlightText)
                 }

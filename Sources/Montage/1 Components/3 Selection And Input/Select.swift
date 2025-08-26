@@ -477,7 +477,7 @@ public struct Select: View {
                     case .single(let selectionType, _):
                         switch selectionType {
                         case .checkmark:
-                            cell.active(items[index].isSelected)
+                            cell.selected(items[index].isSelected)
                                 .trailingContent { active in
                                     Group {
                                         if active {

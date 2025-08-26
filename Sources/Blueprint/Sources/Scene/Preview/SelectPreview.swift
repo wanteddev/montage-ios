@@ -110,7 +110,7 @@ struct SelectPreview: View {
                                     items[index].isSelected.toggle()
                                 }
                             }
-                            .active(items[index].isSelected)
+                            .selected(items[index].isSelected)
                             .trailingContent { active in
                                 Control.checkmark(checked: active)
                             }

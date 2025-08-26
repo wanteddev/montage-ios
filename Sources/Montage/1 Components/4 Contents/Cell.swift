@@ -26,7 +26,7 @@ import SwiftUI
 ///         Image.icon(.user)
 ///             .frame(width: 24, height: 24)
 ///     }
-///     .active(true)
+///     .selected(true)
 ///     .chevron(true)
 ///     .onTap {
 ///         print("셀이 탭되었습니다")
@@ -116,7 +116,7 @@ public struct ListCell: View {
                     }
                     
                     if let trailingContent {
-                        AnyView(trailingContent(active))
+                        AnyView(trailingContent(selected))
                     }
                     
                     VStack {
@@ -159,7 +159,7 @@ public struct ListCell: View {
     private var textEllipsis = false
     private var caption: String? = nil
     private var disable = false
-    private var active = false
+    private var selected = false
     private var divider = false
     private var chevron = false
     private var leadingContent: (() -> any View)? = nil
@@ -291,19 +291,19 @@ public struct ListCell: View {
         return zelf
     }
 
-    /// 셀을 활성화 상태로 설정합니다.
+    /// 셀을 선택된 상태로 설정합니다.
     ///
-    /// 활성화된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다.
-    /// `trailingContent` 클로저의 파라미터로 활성화 상태 여부가 전달됩니다.
+    /// 선택된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다.
+    /// `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
     ///
     /// - Parameters:
-    ///   - active: 활성화 여부 
+    ///   - selected: 선택 여부
     /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다.
-    public func active(_ active: Bool = true) -> Self {
+    public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
-        zelf.active = active
+        zelf.selected = selected
         return zelf
     }
     
@@ -351,10 +351,10 @@ public struct ListCell: View {
     /// 셀 우측에 추가 콘텐츠를 표시합니다.
     ///
     /// 배지, 스위치, 토글 등 추가 UI 요소를 셀 타이틀 뒤에 배치할 수 있습니다.
-    /// 클로저 파라미터를 통해 셀의 활성화 상태를 전달받을 수 있습니다.
+    /// 클로저 파라미터를 통해 셀의 선택된 상태를 전달받을 수 있습니다.
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (활성화 상태를 파라미터로 받음)
+    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음)
     /// - Returns: 수정된 ListCell 인스턴스
     public func trailingContent(_ contents: ((Bool) -> any View)? = nil) -> Self {
         var zelf = self
@@ -396,7 +396,7 @@ extension ListCell {
         if disable {
             .labelAlternative
         } else {
-            active ? .primaryNormal : titleTypography.color
+            selected ? .primaryNormal : titleTypography.color
         }
     }
     
@@ -404,7 +404,7 @@ extension ListCell {
         if let highlightText {
             let attributedString: AttributedString = {
                 var string = AttributedString(stringLiteral: title)
-                string.font = .font(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
+                string.font = .font(variant: titleTypography.variant, weight: selected ? .medium : titleTypography.weight)
                 string.foregroundColor = .semantic(normalTitleColor)
                 guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
                     return string
@@ -420,7 +420,7 @@ extension ListCell {
             return Text(title)
                 .typography(
                     variant: titleTypography.variant,
-                    weight: active ? .medium : titleTypography.weight,
+                    weight: selected ? .medium : titleTypography.weight,
                     semantic: normalTitleColor
                 )
                 .paragraph(variant: titleTypography.variant)
