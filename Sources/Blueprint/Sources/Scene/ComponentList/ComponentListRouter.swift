@@ -109,8 +109,6 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: PlayBadgePreview())
         case .sectionHeader:
             vc = UIHostingController(rootView: SectionHeaderPreview())
-        case .menu:
-            vc = UIHostingController(rootView: MenuPreview())
         case .modal:
             vc = UIHostingController(rootView: ModalPreview())
         case .flowLayout:

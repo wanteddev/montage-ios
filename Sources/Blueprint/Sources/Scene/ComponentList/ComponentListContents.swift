@@ -39,7 +39,7 @@ class ComponentListContents {
         case loading, skeleton, pullToRefresh
         case topNavigation, progressIndicator, tab, pagination, progressTracker, category
         case pushBadge, fallbackView, snackbar, toast, tooltip
-        case modal, menu
+        case modal
         case framedStyle
         
         var state: ComponentState {
@@ -49,8 +49,8 @@ class ComponentListContents {
                     .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
                     .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
-                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .menu, .modal,
-                    .contentBadge, .card, .framedStyle:
+                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
+                    .contentBadge, .card:
                 return .completed
             case .divider:
                 return .previewNotReady
@@ -75,7 +75,7 @@ class ComponentListContents {
                 return .navigations
             case .pushBadge, .fallbackView, .snackbar, .toast, .tooltip:
                 return .feedback
-            case .modal, .menu:
+            case .modal:
                 return .presentation
             case .framedStyle:
                 return .utility

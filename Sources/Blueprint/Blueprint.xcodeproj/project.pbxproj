@@ -33,7 +33,6 @@
 		4D9083502DAF9D7000DF22A4 /* CaseDescribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */; };
 		4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */; };
 		4D937A002DB7AB43005C14DD /* NormalCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */; };
-		4D9A234B2D5365250063F529 /* MenuPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9A234A2D5365250063F529 /* MenuPreview.swift */; };
 		4DA40B252D3E0535004C73E5 /* InputPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA40B242D3E0535004C73E5 /* InputPreview.swift */; };
 		4DA40B272D3E2F72004C73E5 /* SectionHeaderPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA40B262D3E2F6A004C73E5 /* SectionHeaderPreview.swift */; };
 		4DA44F1B2D12CC91009FE3DB /* PullToRefreshPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA44F1A2D12CC91009FE3DB /* PullToRefreshPreview.swift */; };
@@ -171,7 +170,6 @@
 		4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseDescribable.swift; sourceTree = "<group>"; };
 		4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardPreview.swift; sourceTree = "<group>"; };
 		4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalCardPreview.swift; sourceTree = "<group>"; };
-		4D9A234A2D5365250063F529 /* MenuPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPreview.swift; sourceTree = "<group>"; };
 		4D9F46AC2CE32750000DBA7D /* Blueprint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blueprint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D9F46BC2CE32752000DBA7D /* BlueprintTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlueprintTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D9F46C62CE32752000DBA7D /* BlueprintUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlueprintUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -592,7 +590,6 @@
 				4DA40B242D3E0535004C73E5 /* InputPreview.swift */,
 				4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */,
 				4DCFAAFB2CE603A100F7A4CD /* LoadingPreview.swift */,
-				4D9A234A2D5365250063F529 /* MenuPreview.swift */,
 				4DC668AD2D684BA500461189 /* ModalNavigationPreview.swift */,
 				4DC668AB2D6849BF00461189 /* ModalPreview.swift */,
 				4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */,
@@ -834,7 +831,6 @@
 				4DCFAAFA2CE6016900F7A4CD /* CellPreview.swift in Sources */,
 				4DF7C5212CE340F0002B241B /* TypographyPreviewPresenter.swift in Sources */,
 				4DF7C5232CE340F0002B241B /* IconPreviewWorker.swift in Sources */,
-				4D9A234B2D5365250063F529 /* MenuPreview.swift in Sources */,
 				4DF7C5242CE340F0002B241B /* SectionHeaderCell.swift in Sources */,
 				4D45DB152D915B13002B1686 /* PushBadgePreview.swift in Sources */,
 				4DF7C5252CE340F0002B241B /* ColorPickerModels.swift in Sources */,
