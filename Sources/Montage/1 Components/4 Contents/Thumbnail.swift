@@ -201,6 +201,9 @@ public struct Thumbnail: View {
                     SwiftUI.Color.semantic(.fillAlternative)
                 }
             }
+            .if (thumbnailWidth > 0) {
+                $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
+            }
             .clipped()
             .cornerRadius(radius ? 12 : 0)
             .overlay {
@@ -208,7 +211,6 @@ public struct Thumbnail: View {
                     .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: border ? 1 : 0)
             }
         }
-        .frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
     }
     
     private var thumbnailWidth: CGFloat {
