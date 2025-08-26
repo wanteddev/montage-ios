@@ -31,7 +31,6 @@ struct TextAreaPreview: View {
     
     var resources: [TextArea.Resource?] {
         [
-            .none,
             .characterCount(limit: Int(limit), overflow: overflow),
             .textButton(
                 title: "Text",
@@ -65,8 +64,8 @@ struct TextAreaPreview: View {
     @State private var requiredBadge: Bool = false
     @State private var description: Bool = false
     @State private var placeholder: Bool = true
-    @State private var leadingResourceIndex = 0
-    @State private var trailingResourceIndex = 0
+    @State private var leadingResources = [TextArea.Resource]()
+    @State private var trailingResources = [TextArea.Resource]()
     @State private var limit: CGFloat = 10
     @State private var overflow: Bool = false
     
@@ -84,8 +83,8 @@ struct TextAreaPreview: View {
                     .heading(heading ? "제목" : nil)
                     .requiredBadge(requiredBadge)
                     .bottomResources(
-                        leading: [resources[leadingResourceIndex]].compactMap { $0 },
-                        trailing: [resources[trailingResourceIndex]].compactMap { $0 }
+                        leading: leadingResources,
+                        trailing: trailingResources
                     )
                     .description(description ? "메세지에 마침표를 찍어요." : nil)
                     .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
@@ -161,35 +160,44 @@ struct TextAreaPreview: View {
                             Text("Leading :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Menu(resources[leadingResourceIndex]?.description ?? "none") {
+                            Menu("add") {
                                 ForEach(resources.indices, id: \.self) { index in
                                     Button {
-                                        leadingResourceIndex = index
+                                        if let resource = resources[index] {
+                                            leadingResources.append(resource)
+                                        }
                                     } label: {
                                         Text(resources[index]?.description ?? "none")
                                     }
                                 }
                             }
-                            .font(.font(variant: .label1))
+                            Button("reset") {
+                                leadingResources.removeAll()
+                            }
                         }
                         HStack {
                             Text("Trailing :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Menu(resources[trailingResourceIndex]?.description ?? "none") {
+                            Menu("add") {
                                 ForEach(resources.indices, id: \.self) { index in
                                     Button {
-                                        trailingResourceIndex = index
+                                        if let resource = resources[index] {
+                                            trailingResources.append(resource)
+                                        }
                                     } label: {
                                         Text(resources[index]?.description ?? "none")
                                     }
                                 }
                             }
-                            .font(.font(variant: .label1))
+                            Button("reset") {
+                                trailingResources.removeAll()
+                            }
                         }
                     }
-                    if resources[leadingResourceIndex]?.isCharacterCount == true ||
-                        resources[trailingResourceIndex]?.isCharacterCount == true
+                    .font(.font(variant: .label1))
+                    if leadingResources.contains(where: { $0.isCharacterCount }) ||
+                        trailingResources.contains(where: { $0.isCharacterCount })
                     {
                         HStack {
                             Text("characterCount")

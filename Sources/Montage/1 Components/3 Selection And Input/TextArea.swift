@@ -651,12 +651,12 @@ public struct TextArea: View {
             }
 
             func textViewDidBeginEditing(_ textView: UITextView) {
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? .greatestFiniteMagnitude)
+                textView.isScrollEnabled = textView.contentSize.height >= (maxHeight ?? .greatestFiniteMagnitude)
             }
             
             func textViewDidChange(_ textView: UITextView) {
                 let parentText = parent.text
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? .greatestFiniteMagnitude)
+                textView.isScrollEnabled = textView.contentSize.height >= (maxHeight ?? .greatestFiniteMagnitude)
                 parent.text = textView.text
                 // Binding된 값이 변하지 않으면, TextView에 Binding된 값 표시
                 if parentText == parent.text {
