@@ -486,9 +486,10 @@ extension TopNavigation {
             
             public func hash(into hasher: inout Hasher) {
                 switch self {
-                case let .icon(i, d, _, _):
+                case let .icon(i, d, s, _):
                     hasher.combine(i)
                     hasher.combine(d)
+                    hasher.combine(s)
                 case let .text(t, d, _):
                     hasher.combine(t)
                     hasher.combine(d)
