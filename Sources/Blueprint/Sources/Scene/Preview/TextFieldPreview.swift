@@ -140,7 +140,7 @@ struct TextFieldPreview: View {
                                 suggestions.count
                             },
                             cellForItemAt: { indexPath in
-                                Cell(title: suggestions[indexPath.row]) {
+                                ListCell(title: suggestions[indexPath.row]) {
                                     self.text = suggestions[indexPath.row]
                                     Task {
                                         autoCompletionDataSource = nil
@@ -162,13 +162,13 @@ struct TextFieldPreview: View {
                                 }
                             },
                             headerView: {
-                                Cell(title: "'\(text)' 사용하기") {
+                                ListCell(title: "'\(text)' 사용하기") {
                                     autoCompletionDataSource = nil
                                 }
                                 .highlight(text)
                             },
                             footerView: {
-                                Cell(title: "'\(text)' 사용하기") {
+                                ListCell(title: "'\(text)' 사용하기") {
                                     autoCompletionDataSource = nil
                                 }
                                 .highlight(text)

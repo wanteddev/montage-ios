@@ -87,8 +87,8 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: SelectPreview())
         case .segmentedControl:
             vc = UIHostingController(rootView: SegmentedControlPreview())
-        case .cell:
-            vc = UIHostingController(rootView: CellPreview())
+        case .listCell:
+            vc = UIHostingController(rootView: ListCellPreview())
         case .tab:
             vc = UIHostingController(rootView: TabPreview())
         case .slider:

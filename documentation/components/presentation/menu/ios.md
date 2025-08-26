@@ -87,7 +87,7 @@ ___
 
 <details>
 
-<summary>``init(variant: Variant, items: Binding<[Item]>, onSelectCell: ((Item) -> Void)?, cellModifier: (_ index: Int, _ cell: Cell) -> Cell)``</summary>
+<summary>``init(variant: Variant, items: Binding<[Item]>, onSelectCell: ((Item) -> Void)?, cellModifier: (_ index: Int, _ cell: ListCell) -> ListCell)``</summary>
 
 메뉴 컴포넌트를 초기화합니다.
 
