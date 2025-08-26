@@ -207,8 +207,10 @@ public struct Thumbnail: View {
             .clipped()
             .cornerRadius(radius ? 12 : 0)
             .overlay {
-                RoundedRectangle(cornerRadius: radius ? 12 : 0)
-                    .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: border ? 1 : 0)
+                if border {
+                    RoundedRectangle(cornerRadius: radius ? 12 : 0)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: 1)
+                }
             }
         }
     }
