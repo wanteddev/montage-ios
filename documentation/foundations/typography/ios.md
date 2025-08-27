@@ -86,6 +86,12 @@ Text("Hello, World!")
 </details>
 <details>
 
+<summary>``case display3``</summary>
+
+중간 디스플레이 텍스트
+</details>
+<details>
+
 <summary>``case heading1``</summary>
 
 주요 헤딩
@@ -145,6 +151,39 @@ Text("Hello, World!")
 소제목
 </details>
 
+#### Instance Properties
+
+<details>
+
+<summary>``var fontHeight: CGFloat``</summary>
+
+각 변형에 대한 폰트 높이
+</details>
+<details>
+
+<summary>``var fontSize: CGFloat``</summary>
+
+각 변형에 대한 폰트 크기
+</details>
+<details>
+
+<summary>``var lineHeight: CGFloat``</summary>
+
+각 변형에 대한 행 높이
+</details>
+<details>
+
+<summary>``var lineSpacing: CGFloat``</summary>
+
+각 변형에 대한 행간 높이
+</details>
+<details>
+
+<summary>``var tracking: CGFloat``</summary>
+
+각 변형에 대한 자간 (letter spacing)
+</details>
+
 #### Default Implementations
 
 
@@ -181,7 +220,7 @@ Text("Hello, World!")
 
 <details>
 
-<summary>``var failbackWeight: UIFont.Weight``</summary>
+<summary>``var fallbackWeight: UIFont.Weight``</summary>
 </details>
 <details>
 
