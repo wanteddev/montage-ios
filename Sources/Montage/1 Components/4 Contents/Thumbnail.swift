@@ -213,9 +213,12 @@ public struct Thumbnail: View {
                 }
             }
         }
+        .if (thumbnailWidth > 0) {
+            $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
+        }
     }
     
     private var thumbnailWidth: CGFloat {
-        width ?? proposedWidth
+        min(width ?? proposedWidth, proposedWidth)
     }
 }
