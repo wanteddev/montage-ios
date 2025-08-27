@@ -1,5 +1,5 @@
 //
-//  CellInteractionModifier.swift
+//  ListCellInteractionModifier.swift
 //  Montage
 //
 //  Created by 김삼열 on 1/3/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CellInteractionModifier: ViewModifier {
+struct ListCellInteractionModifier: ViewModifier {
     @Binding private var pressed: Bool
     private let fillWidth: Bool
     private let interactionPadding: CGFloat

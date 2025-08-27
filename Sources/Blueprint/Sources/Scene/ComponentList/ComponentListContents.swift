@@ -50,7 +50,7 @@ class ComponentListContents {
                     .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
                     .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
-                    .contentBadge, .card:
+                    .contentBadge, .card, .framedStyle:
                 return .completed
             case .divider:
                 return .previewNotReady

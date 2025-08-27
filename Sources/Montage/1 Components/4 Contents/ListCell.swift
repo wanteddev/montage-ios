@@ -20,17 +20,16 @@ import SwiftUI
 /// ListCell(title: "설명이 있는 셀")
 ///     .caption("부가 설명 텍스트")
 ///
-/// // 리딩 콘텐츠와 액티브 상태의 셀
-/// ListCell(title: "커스텀 셀")
-///     .leadingContent {
-///         Image.icon(.user)
-///             .frame(width: 24, height: 24)
-///     }
-///     .selected(true)
-///     .chevron(true)
-///     .onTap {
-///         print("셀이 탭되었습니다")
-///     }
+/// // 리딩 콘텐츠와 선택 상태의 셀
+/// ListCell(title: "커스텀 셀", onTap: {
+///     print("셀이 탭되었습니다")
+/// })
+/// .leadingContent {
+///     Image.icon(.person)
+///         .frame(width: 24, height: 24)
+/// }
+/// .selected(true)
+/// .chevron(true)
 /// ```
 ///
 /// - Note: `ListCell`은 인터랙션 효과, 구분선, 강조 표시 등 다양한 시각적 요소를 지원합니다.
@@ -140,7 +139,7 @@ public struct ListCell: View {
                 .if(divider)
         }
         .padding(.horizontal, fillWidth ? 20 : 0)
-        .modifier(CellInteractionModifier(
+        .modifier(ListCellInteractionModifier(
             pressed: $isPressed,
             fillWidth: fillWidth,
             interactionPadding: interactionPadding
