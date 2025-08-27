@@ -22,7 +22,7 @@ struct ListCellPreview: View {
     @State private var disable = false
     @State private var longText = false
     @State private var interactionPadding: CGFloat = 12
-    @State private var active = false
+    @State private var selected = false
     @State private var highlightText: String = ""
 
     let verticalPaddings: [ListCell.VerticalPadding] = [.none, .small, .medium, .large]
@@ -54,7 +54,7 @@ struct ListCellPreview: View {
                 .divider(divider)
                 .disable(disable)
                 .interactionPadding(interactionPadding)
-                .selected(active)
+                .selected(selected)
                 .if(!highlightText.isEmpty) {
                     $0.highlight(highlightText)
                 }
@@ -94,8 +94,8 @@ struct ListCellPreview: View {
                     Switch($disable)
                     Text("Long Text")
                     Switch($longText)
-                    Text("Active")
-                    Switch($active)
+                    Text("Selected")
+                    Switch($selected)
                 }
                 HStack {
                     Text("Vertical Alignment")
