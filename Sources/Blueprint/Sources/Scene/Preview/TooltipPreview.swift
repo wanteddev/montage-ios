@@ -22,7 +22,7 @@ struct TooltipPreview: View {
     @State private var showButton: Bool = true
     @State private var buttonText: String = "확인"
     
-    private let normalText: String = "메시지에 마침표를 찍어요."
+    private let normalText: String = "툴팁이다!!!"
     private let multilineText: String = "긴 내용이 필요한 경우 이 영역을 써요. 본래 내용이 입력되기 전까지 공간을 차지하고, 배치를 확인하기 위한 텍스트입니다."
     
     var positions: [Tooltip.Position] {
@@ -37,6 +37,7 @@ struct TooltipPreview: View {
     let verticalAlignments: [VerticalAlignment] = [.top, .center, .bottom]
     let horizontalAlignments: [HorizontalAlignment] = [.leading, .center, .trailing]
     
+    @State private var modeIndex = 0
     @State private var positionIndex: Int = 3
     @State private var arrowPositionIndex: Int = 1
     @State private var vAlignIndex: Int = 1
@@ -46,65 +47,42 @@ struct TooltipPreview: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("Preview").bold()
-            if usingSystemAPI() {
-                if #available(iOS 16.4, *) {
-                    VStack(alignment: HAlign.allCases[hAlignIndex] == .leading ? .leading : HAlign.allCases[hAlignIndex] == .trailing ? .trailing : .center) {
-                        if VAlign.allCases[vAlignIndex] != .top {
-                            Spacer(minLength: 0)
-                            zIndexTestingButton
-                        }
-                        HStack {
-                            if HAlign.allCases[hAlignIndex] != .leading {
-                                Spacer(minLength: 0)
-                                zIndexTestingButton
-                            }
-                            iconButton
-                            if HAlign.allCases[hAlignIndex] != .trailing {
-                                zIndexTestingButton
-                                Spacer(minLength: 0)
-                            }
-                        }
-                        if VAlign.allCases[vAlignIndex] != .bottom {
-                            zIndexTestingButton
-                            Spacer(minLength: 0)
-                        }
-                    }
-                    optionSheet
-                } else {
-                    // Fallback on earlier versions
-                }
-            } else {
-                ZStack {
-                    SwiftUI.Color.clear
-                    VStack {
-                        Spacer(minLength: 0)
+            ZStack {
+                SwiftUI.Color.clear
+                VStack {
+                    Spacer(minLength: 0)
+                    zIndexTestingButton
+                    HStack {
                         zIndexTestingButton
-                        HStack {
-                            zIndexTestingButton
-                            iconButton
-                                .modifying {
-                                    if usingSystemAPI() {
-                                        $0
-                                    } else {
-                                        adjustZIndex ? $0.zIndex(1) : $0
-                                    }
+                        iconButton
+                            .modifying { origin in
+                                if adjustZIndex {
+                                    origin.zIndex(1)
+                                } else {
+                                    origin
                                 }
-                            zIndexTestingButton
-                        }
-                        .modifying {
-                            if usingSystemAPI() {
-                                $0
-                            } else {
-                                adjustZIndex ? $0.zIndex(1) : $0
                             }
-                        }
                         zIndexTestingButton
-                        Spacer(minLength: 0)
                     }
+                    .modifying { origin in
+                        if adjustZIndex {
+                            origin.zIndex(1)
+                        } else {
+                            origin
+                        }
+                    }
+                    zIndexTestingButton
+                        
+                    Spacer(minLength: 0)
                 }
-                optionSheet
+                .background(
+                    HStack(spacing: 0) {
+                        SwiftUI.Color.green
+                        SwiftUI.Color.red
+                    }
+                )
             }
-            
+            optionSheet
         }
         .font(.caption)
         .padding()
@@ -116,47 +94,33 @@ struct TooltipPreview: View {
             show.toggle()
         }
         .modifying {
-            if usingSystemAPI() {
-                if #available(iOS 16.4, *) {
-                    $0.tooltip(
-                        isPresented: $show,
-                        message: showMultilineText ? multilineText : normalText,
-                        showCloseButton: showCloseButton,
-                        buttonInfo: showButton ? Tooltip.ButtonInfo(title: buttonText, action: {
-                            print("버튼 클릭됨")
-                            show = false
-                        }) : nil
-                    )
-                } else {
-                    $0
-                }
-            } else {
-                $0.tooltip(
-                    isPresented: $show,
-                    position: positions[positionIndex],
-                    message: showMultilineText ? multilineText : normalText,
-                    showArrow: showArrow,
-                    showCloseButton: showCloseButton,
-                    buttonInfo: showButton ? Tooltip.ButtonInfo(title: buttonText, action: {
-                        print("버튼 클릭됨")
-                        show = false
-                    }) : nil
-                )
-            }
+            $0.tooltip(
+                isPresented: $show,
+                mode: modeIndex == 0 ? .click : .always,
+                position: positions[positionIndex],
+                message: showMultilineText ? multilineText : normalText,
+                showArrow: showArrow,
+                showCloseButton: showCloseButton,
+                buttonInfo: showButton ? Tooltip.ButtonInfo(title: buttonText, action: {
+                    print("버튼 클릭됨")
+                    show = false
+                }) : nil
+            )
         }
-        .modifying {
-            if usingSystemAPI() {
-                $0
+        .modifying { origin in
+            if adjustZIndex {
+                origin.zIndex(1)
             } else {
-                adjustZIndex ? $0.zIndex(1) : $0
+                origin
             }
         }
     }
     
     var zIndexTestingButton: some View {
-        Button("zIndex 테스트 버튼") {
+        Button.solid(variant: .assistive, text: "zIndex\n테스트 버튼") {
             alertPresented = true
         }
+        .contentColor(.white)
         .alert("버튼이 툴팁에 의해 가려지고 툴팁을 통과해서 눌리지 않아야 합니다.", isPresented: $alertPresented) {
             Button("확인") {
                 alertPresented = false
@@ -166,64 +130,23 @@ struct TooltipPreview: View {
     
     var optionSheet: some View {
         VStack(alignment: .leading) {
-            if usingSystemAPI() {
-                Button("Show Options") {
-                    optionsPresented.toggle()
-                }
-            } else {
-                options
-            }
+            options
         }
         .font(.caption)
-        .if(usingSystemAPI()) {
-            $0.bottomSheetModal(isPresented: $optionsPresented, resize: .hug) {
-                options
-            }
-        }
     }
     
     var options: some View {
         VStack(alignment: .leading) {
             Text("Options").bold()
-            Text("iOS 16.4 이상에서는 position 값 유무에 따라 툴팁의 동작이나 가능한 옵션이 현저히 다릅니다. position 값이 nil인 경우 시스템 API를 사용하여 툴팁을 표시하기 때문입니다.")
-                .typography(variant: .caption1, color: .semantic(.labelAlternative))
+            
             VStack(alignment: .leading, spacing: 12) {
-                if #available(iOS 16.4, *) {
-                    HStack {
-                        Text("Use System API (position == nil)")
-                        Switch($useSystemAPI)
-                    }
-                }
                 
-                if usingSystemAPI() {
-                    Text("position은 nil인 경우 anchor가 되는 뷰의 위치에 따라 iOS 시스템이 툴팁의 위치를 자동으로 결정합니다.\n또한, showArrow는 항상 true로 동작하고, zIndex를 조정할 필요가 없습니다.")
-                        .typography(variant: .caption1, color: .semantic(.labelAlternative))
-                } else {
-                    Text("주어진 position 값에 따라 툴팁의 위치가 결정되며, showArrow 옵션을 false 로 주면 화살표가 사라집니다.\n또한, position이 .trailing이거나 .bottom인 경우 zIndex를 조정해야 툴팁이 주변 뷰에 가려지지 않습니다.")
-                        .typography(variant: .caption1, color: .semantic(.labelAlternative))
-                }
                 
-                if usingSystemAPI() {
-                    Text("Anchor Position")
                     HStack {
-                        Text("Vertical")
-                        SegmentedControl(
-                            selectedIndex: $vAlignIndex,
-                            labels: VAlign.allCases.map(\.rawValue)
-                        )
-                        .size(.small)
+                        Text("Mode")
+                        SegmentedControl(selectedIndex: $modeIndex, labels: ["click", "always"])
+                            .size(.small)
                     }
-                    
-                    HStack {
-                        Text("Horizontal")
-                        SegmentedControl(
-                            selectedIndex: $hAlignIndex,
-                            labels: HAlign.allCases.map(\.rawValue)
-                        )
-                        .size(.small)
-                    }
-                } else {
-                    
                     HStack {
                         Text("Position")
                         SegmentedControl(
@@ -241,16 +164,13 @@ struct TooltipPreview: View {
                         )
                         .size(.small)
                     }
-                }
                 
-                if !usingSystemAPI() {
-                    HStack {
+                HStack {
                         Text("Adjust zIndex")
                         Switch($adjustZIndex)
                         Text("Show Arrow")
                         Switch($showArrow)
                     }
-                }
                 
                 HStack {
                     Text("MultiLine Text")
@@ -269,14 +189,6 @@ struct TooltipPreview: View {
                     }
                 }
             }
-        }
-    }
-    
-    func usingSystemAPI() -> Bool {
-        if #available(iOS 16.4, *) {
-            useSystemAPI
-        } else {
-            false
         }
     }
 }

@@ -11,13 +11,13 @@ import SwiftUI
 struct FloatModifier<V: Equatable>: ViewModifier {
     enum DismissPolicy {
         case after(seconds: TimeInterval)
-        case onTap
+        case onTouchOutside
         case onViewDisappear
         case manually
 
-        var isOnTap: Bool {
+        var isOnTouchOutside: Bool {
             switch self {
-            case .onTap: true
+            case .onTouchOutside: true
             default: false
             }
         }
@@ -93,7 +93,6 @@ struct FloatModifier<V: Equatable>: ViewModifier {
     }
 
     func present() {
-        // TODO: setup과 present 분리
         floatRootView?.removeFromSuperview()
         let floatHC = FloatHostingController(rootView: AnyView(floatView()))
         self.floatHC = floatHC
@@ -101,7 +100,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
            let topView = UIApplication.windows?.first {
             let hitTestingView = HitTestingView()
             floatRootView = hitTestingView
-            if dismissPolicy.isOnTap {
+            if dismissPolicy.isOnTouchOutside {
                 floatRootView?.onHitTest = {
                     if $0 == nil {
                         floatHC.hide(animation: dismissingAnimation, completion: onDismiss)

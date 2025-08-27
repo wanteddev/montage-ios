@@ -422,7 +422,7 @@ private extension TextField {
                     get: { "\(String(describing: autoCompletionDataSource)),\(autoCompletionContentHeight)" },
                     set: { _ in }
                 ),
-                dismissPolicy: .onTap,
+                dismissPolicy: .onTouchOutside,
                 onDismiss: {
                     textFieldFocusState = false
                     autoCompletionDataSource = nil
