@@ -19,13 +19,13 @@ struct ShadowPreview: View {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundStyle(SwiftUI.Color.white)
                     .frame(width: 80, height: 80)
-                    .shadow(ShadowModifier.Level.allCases[levelIndex])
+                    .shadow(ShadowLevel.allCases[levelIndex])
             }
             .frame(maxWidth: .infinity)
             
             Text("Options").bold()
             
-            SegmentedControl(selectedIndex: $levelIndex, labels: ShadowModifier.Level.allCases.map(\.description))
+            SegmentedControl(selectedIndex: $levelIndex, labels: ShadowLevel.allCases.map(\.description))
                 .size(.small)
             
             Spacer()
@@ -34,7 +34,7 @@ struct ShadowPreview: View {
     }
 }
 
-extension ShadowModifier.Level: CaseDescribable {}
+extension ShadowLevel: CaseDescribable {}
 
 #Preview {
     ShadowPreview()
