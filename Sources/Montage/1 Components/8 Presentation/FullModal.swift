@@ -57,7 +57,7 @@ public struct FullModal: View {
     /// 풀스크린 모달을 초기화합니다.
     ///
     /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
-    public init(_ content: @escaping () -> any View) {
+    public init(@ViewBuilder _ content: @escaping () -> any View) {
         self.content = content
     }
     
@@ -146,7 +146,7 @@ struct FullModalModifier: ViewModifier {
     init(
         isPresented: Binding<Bool>,
         ignoresEdgeInsets: Bool = false,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil,
         actionAreaModel: ActionArea.Model? = nil
     ) {
@@ -161,7 +161,7 @@ struct FullModalModifier: ViewModifier {
         content
             .fullScreenCover(isPresented: $isPresented) {
                 FullModal {
-                    AnyView(fullContent())
+                    fullContent()
                 }
                 .ignoresEdgeInsets(ignoresEdgeInsets)
                 .modalNavigation(navigation)

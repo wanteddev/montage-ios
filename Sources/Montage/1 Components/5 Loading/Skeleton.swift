@@ -240,16 +240,6 @@ public enum Skeleton {
                 content
                     .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                     .hidden()
-                    .modifying {
-                        if isPresented {
-                            $0.frame(
-                                width: size?.width ?? contentSize.width,
-                                height: size?.height ?? contentSize.height
-                            )
-                        } else {
-                            $0
-                        }
-                    }
                 content
                     .skeleton(isPresented: isPresented) {
                         Skeleton.SkeletonView(kind)
@@ -270,11 +260,11 @@ public enum Skeleton {
         }
     }
     
-    struct SkeletonModifier: ViewModifier {
+    struct SkeletonModifier<V: View>: ViewModifier {
         private var isPresented: Bool
-        @ViewBuilder private let skeletonView: () -> any View
+        @ViewBuilder private let skeletonView: () -> V
 
-        init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> any View) {
+        init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
             self.isPresented = isPresented
             self.skeletonView = skeletonView
         }
@@ -283,7 +273,7 @@ public enum Skeleton {
         
         func body(content: Content) -> some View {
             if isPresented {
-                AnyView(skeletonView())
+                skeletonView()
                     .opacity(animationOpacity)
                     .onChange(of: animationOpacity) { _ in
                         if animationOpacity == 1 {
@@ -323,9 +313,9 @@ extension View {
     ///   - isPresented: 스켈레톤 표시 여부를 제어하는 불리언 값
     ///   - skeletonView: 커스텀 스켈레톤 뷰를 생성하는 클로저
     /// - Returns: 스켈레톤 기능이 적용된 뷰
-    public func skeleton(
+    public func skeleton<V: View>(
         isPresented: Bool,
-        @ViewBuilder skeletonView: @escaping () -> any View
+        @ViewBuilder skeletonView: @escaping () -> V
     ) -> some View {
         modifier(Skeleton.SkeletonModifier(isPresented: isPresented, skeletonView: skeletonView))
     }

@@ -71,6 +71,7 @@ public struct SectionHeader: View {
     
     // MARK: - Body
     @State private var contentSize: CGSize = .zero
+    @State private var trailingContentEmpty = true
     
     public var body: some View {
         ZStack {
@@ -81,18 +82,13 @@ public struct SectionHeader: View {
                         .multilineTextAlignment(.leading)
                         .layoutPriority(1)
                     
-                    if let headingContent {
-                        AnyView(headingContent())
-                    }
+                    headingContent()
                 }
                     
-                if let trailingContent {
-                    Spacer(minLength: 16)
-                    
-                    AnyView(trailingContent())
-                } else {
-                    Spacer(minLength: 0)
-                }
+                Spacer(minLength: trailingContentEmpty ? 0 : 16)
+                
+                trailingContent()
+                    .ifEmptyView { trailingContentEmpty = $0 }
             }
             .frame(minHeight: height)
         }
@@ -102,8 +98,8 @@ public struct SectionHeader: View {
     
     private var size: Size = .medium
     private var titleColor: SwiftUI.Color = .semantic(.labelStrong)
-    private var headingContent: (() -> any View)? = nil
-    private var trailingContent: (() -> any View)? = nil
+    private var headingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 섹션 헤더의 크기를 설정합니다.
     ///
@@ -144,9 +140,9 @@ public struct SectionHeader: View {
     /// - Parameters:
     ///   - content: 표시할 콘텐츠를 생성하는 클로저
     /// - Returns: 수정된 SectionHeader 인스턴스
-    public func headingContent(_ content: (() -> any View)? = nil) -> Self {
+    public func headingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.headingContent = content
+        zelf.headingContent = { AnyView(content()) }
         return zelf
     }
 
@@ -157,9 +153,9 @@ public struct SectionHeader: View {
     /// - Parameters:
     ///   - content: 표시할 콘텐츠를 생성하는 클로저
     /// - Returns: 수정된 SectionHeader 인스턴스
-    public func trailingContent(_ content: (() -> any View)? = nil) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = content
+        zelf.trailingContent = { AnyView(content()) }
         return zelf
     }
 

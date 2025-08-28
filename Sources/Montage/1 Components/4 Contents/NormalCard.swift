@@ -58,8 +58,8 @@ public struct NormalCard: View {
     private var overlayButtonIcon: Montage.Icon?
     private var overlayButtonColor: SwiftUI.Color = .semantic(.staticWhite)
     private var onTapOverlayButton: (() -> Void)?
-    private var topContent: (() -> any View)?
-    private var bottomContent: (() -> any View)?
+    private var topContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var bottomContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 카드의 캡션(부제목)을 설정합니다.
     ///
@@ -117,9 +117,9 @@ public struct NormalCard: View {
     ///
     /// - Parameter content: 상단에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func topContent(_ content: (() -> any View)? = nil) -> Self {
+    public func topContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.topContent = content
+        zelf.topContent = { AnyView(content()) }
         return zelf
     }
     
@@ -127,9 +127,9 @@ public struct NormalCard: View {
     ///
     /// - Parameter content: 하단에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func bottomContent(_ content: (() -> any View)? = nil) -> Self {
+    public func bottomContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.bottomContent = content
+        zelf.bottomContent = { AnyView(content()) }
         return zelf
     }
     
@@ -158,11 +158,9 @@ public struct NormalCard: View {
             
             GridRow {
                 VStack(alignment: .leading, spacing: 6) {
-                    if let topContent {
-                        AnyView(topContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                            .padding(.top, 2)
-                    }
+                    topContent()
+                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                        .padding(.top, 2)
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
@@ -195,11 +193,9 @@ public struct NormalCard: View {
                         .if(!caption.isNilOrEmpty || !subCaption.isNilOrEmpty || !extraCaption.isNilOrEmpty)
                     }
                     
-                    if let bottomContent {
-                        AnyView(bottomContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                            .padding(.top, 2)
-                    }
+                    bottomContent()
+                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                        .padding(.top, 2)
                 }
                 .padding(.horizontal, horizontalPadding)
                 .frame(maxWidth: thumbnailWidth, alignment: .leading)

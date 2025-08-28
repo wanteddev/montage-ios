@@ -125,7 +125,13 @@ struct TextFieldPreview: View {
                         handler: { print("trailing button tapped") }
                     ) : nil
                 )
-                .trailingContent(trailingContent.c)
+                .trailingContent {
+                    if let content = trailingContent.c {
+                        AnyView(content())
+                    } else {
+                        EmptyView()
+                    }
+                }
                 .onChange(of: text) { text in
                     if usingSuggestions {
                         let suggestions = candidates

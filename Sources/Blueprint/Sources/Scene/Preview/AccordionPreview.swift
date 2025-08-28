@@ -44,9 +44,13 @@ struct AccordionPreview: View {
                     .hideDivider(hideDivider)
                     .fillWidth(fillWidth)
                     .leadingIcon(leadingIcon ? .alignJustify : nil)
-                    .trailingContent(trailingContent ? {
-                        ContentBadge(variant: .solid, text: "뱃지")
-                    } : nil)
+                    .trailingContent {
+                        if trailingContent {
+                            ContentBadge(variant: .solid, text: "뱃지")
+                        } else {
+                            EmptyView()
+                        }
+                    }
                 }
                 Text("Options").bold()
                 HStack {

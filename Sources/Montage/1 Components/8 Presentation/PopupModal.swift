@@ -64,7 +64,7 @@ public struct PopupModal: View {
     /// 팝업 모달을 초기화합니다.
     ///
     /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
-    public init(_ content: @escaping () -> any View) {
+    public init(@ViewBuilder _ content: @escaping () -> any View) {
         self.content = content
     }
 
@@ -274,7 +274,7 @@ struct PopupModalModifier: ViewModifier {
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil,
         actionAreaModel: ActionArea.Model? = nil
     ) {
@@ -293,7 +293,7 @@ struct PopupModalModifier: ViewModifier {
         content
             .fullScreenCover(isPresented: $fullScreenCoverPresented) {
                 PopupModal {
-                    AnyView(popupContent())
+                    popupContent()
                 }
                 .resize(resize)
                 .ignoresEdgeInsets(ignoresEdgeInsets)

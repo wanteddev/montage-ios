@@ -89,9 +89,7 @@ public struct Cell: View {
         ZStack(alignment: .bottom) {
             ZStack {
                 HStack(alignment: verticalAlignment, spacing: 8) {
-                    if let leadingContent {
-                        AnyView(leadingContent())
-                    }
+                    leadingContent()
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Group {
@@ -114,9 +112,7 @@ public struct Cell: View {
                         }
                     }
                     
-                    if let trailingContent {
-                        AnyView(trailingContent(active))
-                    }
+                    trailingContent(active)
                     
                     VStack {
                         Image.icon(.chevronRightTightSmall)
@@ -161,8 +157,8 @@ public struct Cell: View {
     private var active = false
     private var divider = false
     private var chevron = false
-    private var leadingContent: (() -> any View)? = nil
-    private var trailingContent: ((Bool) -> any View)? = nil
+    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContent: (Bool) -> AnyView = { _ in AnyView(EmptyView()) }
     private var interactionPadding: CGFloat = 12
     private var verticalAlignment: VerticalAlignment = .top
     private var highlightText: String? = nil
@@ -341,9 +337,9 @@ public struct Cell: View {
     /// - Parameters:
     ///   - contents: 표시할 콘텐츠를 생성하는 클로저
     /// - Returns: 수정된 Cell 인스턴스
-    public func leadingContent(_ contents: (() -> any View)? = nil) -> Self {
+    public func leadingContent<V: View>(@ViewBuilder _ contents: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leadingContent = contents
+        zelf.leadingContent = { AnyView(contents()) }
         return zelf
     }
     
@@ -353,11 +349,11 @@ public struct Cell: View {
     /// 클로저 파라미터를 통해 셀의 활성화 상태를 전달받을 수 있습니다.
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (활성화 상태를 파라미터로 받음)
+    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음)
     /// - Returns: 수정된 Cell 인스턴스
-    public func trailingContent(_ contents: ((Bool) -> any View)? = nil) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ contents: @escaping (Bool) -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = contents
+        zelf.trailingContent = { AnyView(contents($0)) }
         return zelf
     }
     

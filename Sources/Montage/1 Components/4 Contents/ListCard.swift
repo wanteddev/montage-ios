@@ -53,10 +53,10 @@ public struct ListCard: View {
     
     private var caption: String?
     private var extraCaption: String?
-    private var topContent: (() -> any View)? = nil
-    private var bottomContent: (() -> any View)? = nil
-    private var leadingContent: (() -> any View)? = nil
-    private var trailingContent: (() -> any View)? = nil
+    private var topContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var bottomContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 카드의 캡션(부제목)을 설정합니다.
     ///
@@ -82,9 +82,9 @@ public struct ListCard: View {
     ///
     /// - Parameter content: 상단에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func topContent(_ content: (() -> any View)? = nil) -> Self {
+    public func topContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.topContent = content
+        zelf.topContent = { AnyView(content()) }
         return zelf
     }
     
@@ -92,9 +92,9 @@ public struct ListCard: View {
     ///
     /// - Parameter content: 하단에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func bottomContent(_ content: (() -> any View)? = nil) -> Self {
+    public func bottomContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.bottomContent = content
+        zelf.bottomContent = { AnyView(content()) }
         return zelf
     }
     
@@ -102,9 +102,9 @@ public struct ListCard: View {
     ///
     /// - Parameter content: 왼쪽에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func leadingContent(_ content: (() -> any View)? = nil) -> Self {
+    public func leadingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leadingContent = content
+        zelf.leadingContent = { AnyView(content()) }
         return zelf
     }
     
@@ -112,9 +112,9 @@ public struct ListCard: View {
     ///
     /// - Parameter content: 오른쪽에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func trailingContent(_ content: (() -> any View)? = nil) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = content
+        zelf.trailingContent = { AnyView(content()) }
         return zelf
     }
     
@@ -124,9 +124,7 @@ public struct ListCard: View {
 
     public var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            if let leadingContent {
-                AnyView(leadingContent())
-            }
+            leadingContent()
             
             thumbnail()
                 .radius()
@@ -139,10 +137,8 @@ public struct ListCard: View {
                     .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { textAreaWidth = $0 })
                     
                 VStack(alignment: .leading, spacing: 8) {
-                    if let topContent {
-                        AnyView(topContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                    }
+                    topContent()
+                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
@@ -169,22 +165,19 @@ public struct ListCard: View {
                         }
                     }
                     
-                    if let bottomContent {
-                        AnyView(bottomContent())
-                            .skeleton(
-                                isPresented: skeleton,
-                                kind: .rectangle(cornerRadius: 3),
+                    bottomContent()
+                        .skeleton(
+                            isPresented: skeleton,
+                            kind: .rectangle(cornerRadius: 3),
                                 size: CGSize(width: 48, height: 20)
                             )
-                    }
+                    
                 }
                 .frame(maxWidth: textAreaWidth, alignment: .leading)
             }
             .layoutPriority(1)
             
-            if let trailingContent {
-                AnyView(trailingContent())
-            }
+            trailingContent()
         }
     }
 }

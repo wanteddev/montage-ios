@@ -43,20 +43,28 @@ struct NormalCardPreview: View {
                     .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
                     .subCaption(showSubCaption ? "서브 캡션" : nil)
                     .extraCaption(showExtraCaption ? "추가 캡션" : nil)
-                    .topContent(showTopContent ? {
-                        HStack {
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
+                    .topContent {
+                        if showTopContent {
+                            HStack {
+                                ContentBadge(text: "텍스트")
+                                ContentBadge(text: "텍스트")
+                                ContentBadge(text: "텍스트")
+                            }
+                        } else {
+                            EmptyView()
                         }
-                    } : nil)
-                    .bottomContent(showBottomContent ? {
-                        HStack {
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
+                    }
+                    .bottomContent {
+                        if showBottomContent {
+                            HStack {
+                                ContentBadge(text: "텍스트")
+                                ContentBadge(text: "텍스트")
+                                ContentBadge(text: "텍스트")
+                            }
+                        } else {
+                            EmptyView()
                         }
-                    } : nil)
+                    }
                     .if(showOverlayCaption || showOverlayButton) {
                         $0.overlay(
                             caption: showOverlayCaption ? "합격보상금 100만원" : nil,

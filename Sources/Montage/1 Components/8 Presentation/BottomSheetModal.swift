@@ -81,7 +81,7 @@ public struct BottomSheetModal: View {
     /// 바텀 시트 모달을 초기화합니다.
     ///
     /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
-    public init(_ content: @escaping () -> any View) {
+    public init(@ViewBuilder _ content: @escaping () -> any View) {
         self.content = content
     }
     
@@ -320,7 +320,7 @@ struct BottomSheetModalModifier: ViewModifier {
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
     init(
         isPresented: Binding<Bool>,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> any View,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
@@ -371,7 +371,7 @@ extension View {
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
         actionAreaModel: ActionArea.Model? = nil,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> any View,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {
         modifier(

@@ -95,8 +95,8 @@ public struct TextField: View {
         fileprivate let sectionTitleAt: ((Int) -> String)?
         fileprivate let numberOfItemsInSection: (Int) -> Int
         fileprivate let cellForItemAt: (IndexPath) -> any View
-        fileprivate let headerView: (() -> any View)?
-        fileprivate let footerView: (() -> any View)?
+        fileprivate let headerView: () -> AnyView
+        fileprivate let footerView: () -> AnyView
         fileprivate let maxHeight: CGFloat
         
         /// 자동완성 데이터 소스를 초기화합니다.
@@ -123,8 +123,8 @@ public struct TextField: View {
             self.sectionTitleAt = sectionTitleAt
             self.numberOfItemsInSection = numberOfItemsInSection
             self.cellForItemAt = cellForItemAt
-            self.headerView = headerView
-            self.footerView = footerView
+            self.headerView = headerView.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
+            self.footerView = footerView.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
             self.maxHeight = maxHeight
         }
         
@@ -165,7 +165,7 @@ public struct TextField: View {
     private var placeholder: String? = nil
     private var icon: Icon? = nil
     private var trailingButton: TrailingButtonInfo? = nil
-    private var trailingContent: (() -> any View)? = nil
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
     
@@ -246,9 +246,9 @@ public struct TextField: View {
     /// - Parameter trailingContent: 표시할 커스텀 콘텐츠를 생성하는 클로저
     /// - Returns: 수정된 텍스트 필드 인스턴스
     /// - Note: `trailingButton`과 함께 사용하는 경우 `trailingContent`가 무시됩니다.
-    public func trailingContent(_ trailingContent: (() -> any View)?) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = trailingContent
+        zelf.trailingContent = { AnyView(trailingContent()) }
         return zelf
     }
     
@@ -357,9 +357,7 @@ private extension TextField {
                         }
                     }
                     
-                    if let trailingContent {
-                        AnyView(trailingContent())
-                    }
+                    trailingContent()
                 }
                 .padding(.all, 12)
                 .overlay {
@@ -471,9 +469,8 @@ private extension TextField {
         Group {
             if let autoCompletionDataSource {
                 VStack(alignment: .leading, spacing: 4) {
-                    if let headerView = autoCompletionDataSource.headerView,
-                       autoCompletionDataSource.totalNumberOfItems > 0 {
-                        AnyView(headerView())
+                    if autoCompletionDataSource.totalNumberOfItems > 0 {
+                        autoCompletionDataSource.headerView()
                     }
                     LazyVStack(alignment: .leading, spacing: 4, pinnedViews: [.sectionHeaders]) {
                         ForEach(0 ..< autoCompletionDataSource.numberOfSections, id: \.self) { section in
@@ -508,9 +505,8 @@ private extension TextField {
                             }
                         }
                     }
-                    if let footerView = autoCompletionDataSource.footerView,
-                       autoCompletionDataSource.totalNumberOfItems > 0 {
-                        AnyView(footerView())
+                    if autoCompletionDataSource.totalNumberOfItems > 0 {
+                        autoCompletionDataSource.footerView()
                     }
                 }
                 .padding(.horizontal, autoCompletionDataSource.totalNumberOfItems == 0 ? 0 : 20)

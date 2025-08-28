@@ -69,7 +69,7 @@ public struct Accordion: View {
     
     private let title: String
     private let description: String?
-    @ViewBuilder private let content: (() -> any View)?
+    private let content: () -> AnyView
     
     /// 아코디언을 생성합니다.
     /// 
@@ -84,7 +84,7 @@ public struct Accordion: View {
     ) {
         self.title = title
         self.description = description
-        self.content = content
+        self.content = content.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
     }
     
     // MARK: - Modifiers
@@ -104,7 +104,7 @@ public struct Accordion: View {
     private var hideDivider = false
     private var leadingIcon: Icon? = nil
     private var leadingIconColor: SwiftUI.Color? = nil
-    private var trailingContent: (() -> any View)? = nil
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
     ///
@@ -195,9 +195,9 @@ public struct Accordion: View {
     ///
     /// - Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
     /// - Returns: 수정된 아코디언 인스턴스
-    public func trailingContent(_ trailingContent: (() -> any View)? = nil) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = trailingContent
+        zelf.trailingContent = { AnyView(trailingContent()) }
         return zelf
     }
     
@@ -205,8 +205,8 @@ public struct Accordion: View {
     
     @State private var isPressed = false
     @State private var isExpanded = false
-    @State private var trailingContentSize: CGSize = .zero
-    @State private var contentSize: CGSize = .zero
+    @State private var trailingContentEmpty = true
+    @State private var isContentEmpty = true
     
     public var body: some View {
         ZStack(alignment: .bottom) {
@@ -230,18 +230,10 @@ public struct Accordion: View {
                         )
                     Spacer(minLength: 0)
                     
-                    Group {
-                        if let trailingContent {
-                            AnyView(trailingContent())
-                        }
-                    }
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { trailingContentSize = $0 }
-                    )
+                    trailingContent()
+                        .ifEmptyView { trailingContentEmpty = $0 }
                     
-                    if trailingContentSize == .zero {
+                    if trailingContentEmpty {
                         Image.icon(.chevronDown)
                             .resizable()
                             .frame(width: 20, height: 20)
@@ -265,7 +257,7 @@ public struct Accordion: View {
                 })
                 
                 if isExpanded {
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: 12) {
                         if let description, !description.isEmpty {
                             Text(description)
                                 .paragraphNew(
@@ -275,21 +267,10 @@ public struct Accordion: View {
                                 )
                         }
                         
-                        Spacer().frame(height: 12)
-                            .if(description.isNilOrEmpty == false && contentSize != .zero)
-                        
-                        Group {
-                            if let content {
-                                AnyView(content())
-                            }
-                        }
-                        .onGeometryChange(
-                            for: CGSize.self,
-                            of: { $0.size },
-                            action: { contentSize = $0 }
-                        )
+                        content()
+                            .ifEmptyView { isContentEmpty = $0 }
                     }
-                    .padding(.bottom, description.isNilOrEmpty && contentSize == .zero ? 0 : 16)
+                    .padding(.bottom, description.isNilOrEmpty && isContentEmpty ? 0 : 16)
                     .padding(.horizontal, fillWidth ? 20 : 0)
                 }
             }

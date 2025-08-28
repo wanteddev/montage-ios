@@ -93,6 +93,16 @@ extension View {
     ) -> some View where T: Equatable {
         modifier(DebouncedGeometryChangeModifier(for: type, of: transform, for: dueTime, action: action))
     }
+    
+    /// View의 크기가 .zero일 때 액션을 수행합니다.
+    ///
+    /// - Parameter action: 크기가 .zero일 때 실행할 액션
+    /// - Returns: 수정된 View
+    public func ifEmptyView(_ action: @escaping (Bool) -> Void) -> some View {
+        onGeometryChange(
+            for: Bool.self,
+            of: { $0.size == .zero },
+            action: { action($0) }
+        )
+    }
 }
-
-
