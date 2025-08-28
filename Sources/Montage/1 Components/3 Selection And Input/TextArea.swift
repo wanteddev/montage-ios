@@ -97,12 +97,12 @@ public struct TextArea: View {
         /// 텍스트 버튼
         /// - Parameters:
         ///   - placement: 버튼 위치
-        ///   - varaint: 버튼 변형 스타일
+        ///   - variant: 버튼 변형 스타일
         ///   - title: 버튼 텍스트
         ///   - handler: 버튼 클릭 핸들러
         case textButton(
             placement: Placement = .leading,
-            varaint: Button.Text.Variant? = .assistive,
+            variant: Button.Text.Variant? = .assistive,
             title: String,
             handler: (() -> Void)? = nil
         )
@@ -280,13 +280,14 @@ public struct TextArea: View {
         zelf.trailingResources = Array(trailingResources.prefix(3))
         zelf.trailingResourceSpacing = trailingResourceSpacing
         
-        let bottomResouces = leadingResources + filteredTrailingResources
-        if let characterCounter = bottomResouces.first(where: \.isCharacterCount),
+        let bottomResources = zelf.leadingResources + zelf.filteredTrailingResources
+        if let characterCounter = bottomResources.first(where: \.isCharacterCount),
            case let .characterCount(limit, overflow) = characterCounter {
             zelf.characterCounterLimit = limit
             zelf.characterCounterOverflow = overflow
         } else {
             zelf.characterCounterLimit = nil
+            zelf.characterCounterOverflow = false
         }
         return zelf
     }
@@ -398,7 +399,6 @@ public struct TextArea: View {
             if leadingResources.isEmpty == false || trailingResources.isEmpty == false {
                 Bottom(
                     typedCharacters: $typedCharacters,
-                    negative,
                     disable,
                     leadingResources,
                     leadingResourceSpacing,
@@ -445,16 +445,17 @@ public struct TextArea: View {
     }
     
     private var filteredTrailingResources: [Resource] {
-        if trailingResources.contains(where: \.isCharacterCount) &&
-            leadingResources.contains(where: \.isCharacterCount) {
-            Array(trailingResources.drop(while: \.isCharacterCount))
+        if leadingResources.contains(where: \.isCharacterCount) &&
+            trailingResources.contains(where: \.isCharacterCount)
+        {
+            trailingResources.filter { $0.isCharacterCount == false }
         } else {
             trailingResources
         }
     }
     
     private func updateText(limit: Int?, overflow: Bool) {
-        if !overflow && text.count > limit ?? .max {
+        if !overflow && text.count > (limit ?? .max) {
             text = String(text.prefix(limit ?? .max))
         }
     }
@@ -464,7 +465,6 @@ public struct TextArea: View {
     private struct Bottom: View {
         @Binding private var typedCharacters: Int
         
-        private let negative: Bool
         private let disable: Bool
         private let leadingResources: [Resource]
         private let leadingResourceSpacing: CGFloat
@@ -473,7 +473,6 @@ public struct TextArea: View {
         
         init(
             typedCharacters: Binding<Int>,
-            _ negative: Bool,
             _ disable: Bool,
             _ leadingResources: [Resource],
             _ leadingResourceSpacing: CGFloat,
@@ -481,7 +480,6 @@ public struct TextArea: View {
             _ trailingResourceSpacing: CGFloat
         ) {
             _typedCharacters = typedCharacters
-            self.negative = negative
             self.disable = disable
             self.leadingResources = leadingResources
             self.leadingResourceSpacing = leadingResourceSpacing
@@ -499,19 +497,10 @@ public struct TextArea: View {
                     }
                 }
                 Spacer()
-                if negative {
-                    IconButton(
-                        variant: .default,
-                        icon: .circleExclamationFill,
-                        handler: nil
-                    )
-                    .iconColor(disable ? .semantic(.labelDisable) : .semantic(.statusNegative))
-                } else {
-                    if trailingResources.isEmpty == false {
-                        HStack(spacing: trailingResourceSpacing) {
-                            ForEach(trailingResources.indices, id: \.self) { index in
-                                component(trailingResources[index])
-                            }
+                if trailingResources.isEmpty == false {
+                    HStack(spacing: trailingResourceSpacing) {
+                        ForEach(trailingResources.indices, id: \.self) { index in
+                            component(trailingResources[index])
                         }
                     }
                 }
@@ -528,7 +517,7 @@ public struct TextArea: View {
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
-                                overflow && typedCharacters > limit ?? 0
+                                overflow && typedCharacters > (limit ?? .max)
                                 ? .statusNegative
                                 : .labelAlternative
                             )
@@ -633,6 +622,8 @@ public struct TextArea: View {
             }
             context.coordinator.parent.limit = limit
             context.coordinator.parent.overflow = overflow
+            context.coordinator.minHeight = minHeight
+            context.coordinator.maxHeight = maxHeight
         }
         
         func makeCoordinator() -> Coordinator {
@@ -660,12 +651,12 @@ public struct TextArea: View {
             }
 
             func textViewDidBeginEditing(_ textView: UITextView) {
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                textView.isScrollEnabled = textView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
             }
             
             func textViewDidChange(_ textView: UITextView) {
                 let parentText = parent.text
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                textView.isScrollEnabled = textView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
                 parent.text = textView.text
                 // Binding된 값이 변하지 않으면, TextView에 Binding된 값 표시
                 if parentText == parent.text {
@@ -680,11 +671,11 @@ public struct TextArea: View {
             context _: Context
         ) -> CGSize? {
             var newSize = uiView.sizeThatFits(
-                CGSize(width: proposal.width ?? 0, height: CGFloat.greatestFiniteMagnitude)
+                CGSize(width: proposal.width ?? uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)
             )
             newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
             return CGSize(
-                width: proposal.width ?? 0,
+                width: proposal.width ?? uiView.bounds.width,
                 height: newSize.height
             )
         }
