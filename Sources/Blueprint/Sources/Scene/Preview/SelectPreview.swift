@@ -97,7 +97,7 @@ struct SelectPreview: View {
                 .bottomSheetModal(isPresented: $showSheet, {
                     VStack {
                         ForEach(items.indices, id: \.self) { index in
-                            Cell(title: items[index].text) {
+                            ListCell(title: items[index].text) {
                                 switch variants[variantIndex] {
                                 case .single:
                                     items = items.map {
@@ -110,7 +110,7 @@ struct SelectPreview: View {
                                     items[index].isSelected.toggle()
                                 }
                             }
-                            .active(items[index].isSelected)
+                            .selected(items[index].isSelected)
                             .trailingContent { active in
                                 Control.checkmark(checked: active)
                             }

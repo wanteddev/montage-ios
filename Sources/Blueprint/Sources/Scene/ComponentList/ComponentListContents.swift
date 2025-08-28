@@ -35,11 +35,11 @@ class ComponentListContents {
         case divider, flowLayout
         case actionArea, button, iconButton, chip
         case control, `switch`, input, segmentedControl, select, slider, textField, textArea, dateTimePicker
-        case avatar, card, cell, thumbnail, accordion, playBadge, sectionHeader, contentBadge
+        case avatar, card, listCell, thumbnail, accordion, playBadge, sectionHeader, contentBadge
         case loading, skeleton, pullToRefresh
         case topNavigation, progressIndicator, tab, pagination, progressTracker, category
         case pushBadge, fallbackView, snackbar, toast, tooltip
-        case modal, menu
+        case modal
         case framedStyle
         
         var state: ComponentState {
@@ -47,9 +47,9 @@ class ComponentListContents {
             case .typography, .color, .icon, .grid, .elevation, .shadow, .switch, .input, .control, .flowLayout,
                     .button, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
                     .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
-                    .textArea, .textField, .select, .segmentedControl, .cell, .tab, .slider,
+                    .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
                     .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
-                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .menu, .modal,
+                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
                     .contentBadge, .card, .framedStyle:
                 return .completed
             case .divider:
@@ -67,7 +67,7 @@ class ComponentListContents {
                 return .actions
             case .control, .switch, .input, .segmentedControl, .select, .slider, .textField, .textArea, .dateTimePicker:
                 return .selectionAndInput
-            case .avatar, .card, .cell, .thumbnail, .accordion, .playBadge, .sectionHeader, .contentBadge:
+            case .avatar, .card, .listCell, .thumbnail, .accordion, .playBadge, .sectionHeader, .contentBadge:
                 return .contents
             case .loading, .skeleton, .pullToRefresh:
                 return .loading
@@ -75,7 +75,7 @@ class ComponentListContents {
                 return .navigations
             case .pushBadge, .fallbackView, .snackbar, .toast, .tooltip:
                 return .feedback
-            case .modal, .menu:
+            case .modal:
                 return .presentation
             case .framedStyle:
                 return .utility

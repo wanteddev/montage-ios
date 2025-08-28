@@ -1,5 +1,5 @@
 //
-//  Cell.swift
+//  ListCell.swift
 //  Montage
 //
 //  Created by Sanghoon Ahn on 8/19/24.
@@ -9,39 +9,38 @@ import SwiftUI
 
 /// 텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.
 ///
-/// `Cell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다.
+/// `ListCell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다.
 /// 타이틀, 부가 설명, 좌측 콘텐츠, 우측 콘텐츠 등을 포함할 수 있으며 다양한 스타일로 커스터마이징할 수 있습니다.
 ///
 /// ```swift
 /// // 기본 셀
-/// Cell(title: "기본 셀")
+/// ListCell(title: "기본 셀")
 ///
 /// // 추가 설명이 있는 셀
-/// Cell(title: "설명이 있는 셀")
+/// ListCell(title: "설명이 있는 셀")
 ///     .caption("부가 설명 텍스트")
 ///
-/// // 리딩 콘텐츠와 액티브 상태의 셀
-/// Cell(title: "커스텀 셀")
-///     .leadingContent {
-///         Image.icon(.user)
-///             .frame(width: 24, height: 24)
-///     }
-///     .active(true)
-///     .chevron(true)
-///     .onTap {
-///         print("셀이 탭되었습니다")
-///     }
+/// // 리딩 콘텐츠와 선택 상태의 셀
+/// ListCell(title: "커스텀 셀", onTap: {
+///     print("셀이 탭되었습니다")
+/// })
+/// .leadingContent {
+///     Image.icon(.person)
+///         .frame(width: 24, height: 24)
+/// }
+/// .selected(true)
+/// .chevron(true)
 /// ```
 ///
-/// - Note: `Cell`은 인터랙션 효과, 구분선, 강조 표시 등 다양한 시각적 요소를 지원합니다.
-public struct Cell: View {
+/// - Note: `ListCell`은 인터랙션 효과, 구분선, 강조 표시 등 다양한 시각적 요소를 지원합니다.
+public struct ListCell: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
     ///
     /// 셀 컴포넌트의 상하 여백을 조정할 때 사용되며, 각 케이스는 다양한 크기의 여백을 제공합니다.
     ///
     /// ```swift
-    /// Cell(title: "넓은 여백이 있는 셀")
+    /// ListCell(title: "넓은 여백이 있는 셀")
     ///     .verticalPadding(.large)
     /// ```
     public enum VerticalPadding {
@@ -116,7 +115,7 @@ public struct Cell: View {
                     }
                     
                     if let trailingContent {
-                        AnyView(trailingContent(active))
+                        AnyView(trailingContent(selected))
                     }
                     
                     VStack {
@@ -140,7 +139,7 @@ public struct Cell: View {
                 .if(divider)
         }
         .padding(.horizontal, fillWidth ? 20 : 0)
-        .modifier(CellInteractionModifier(
+        .modifier(ListCellInteractionModifier(
             pressed: $isPressed,
             fillWidth: fillWidth,
             interactionPadding: interactionPadding
@@ -159,7 +158,7 @@ public struct Cell: View {
     private var textEllipsis = false
     private var caption: String? = nil
     private var disable = false
-    private var active = false
+    private var selected = false
     private var divider = false
     private var chevron = false
     private var leadingContent: (() -> any View)? = nil
@@ -172,7 +171,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - variant: 적용할 Typography 변형 스타일
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `.body1`입니다.
     public func titleVariant(_ variant: Typography.Variant) -> Self {
@@ -185,7 +184,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - weight: 적용할 텍스트 두께
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `.regular`입니다.
     public func titleWeight(_ weight: Typography.Weight) -> Self {
@@ -198,7 +197,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - color: 적용할 텍스트 색상
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `.labelNormal`입니다.
     public func titleColor(_ color: Color.Semantic) -> Self {
@@ -211,7 +210,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - verticalPadding: 적용할 상하 여백 크기
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `.medium` 입니다.
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
@@ -224,7 +223,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - verticalAlignment: 적용할 수직 정렬 방식
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `.top`입니다.
     public func verticalAlign(_ verticalAlignment: VerticalAlignment) -> Self {
@@ -239,7 +238,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - fillWidth: 좌우 여백 적용 여부
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다.
     public func fillWidth(_ fillWidth: Bool = true) -> Self {
@@ -254,7 +253,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - textEllipsis: 텍스트 생략 처리 여부
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다. `false`인 경우 좌우 콘텐츠는 상단 정렬됩니다.
     public func textEllipsis(_ textEllipsis: Bool = true) -> Self {
@@ -269,7 +268,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - caption: 표시할 캡션 텍스트 (nil 설정 시 캡션 제거)
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     public func caption(_ caption: String? = nil) -> Self {
         var zelf = self
         zelf.caption = caption
@@ -282,7 +281,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - disable: 비활성화 여부
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다.
     public func disable(_ disable: Bool = true) -> Self {
@@ -291,19 +290,19 @@ public struct Cell: View {
         return zelf
     }
 
-    /// 셀을 활성화 상태로 설정합니다.
+    /// 셀을 선택된 상태로 설정합니다.
     ///
-    /// 활성화된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다.
-    /// `trailingContent` 클로저의 파라미터로 활성화 상태 여부가 전달됩니다.
+    /// 선택된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다.
+    /// `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
     ///
     /// - Parameters:
-    ///   - active: 활성화 여부 
-    /// - Returns: 수정된 Cell 인스턴스
+    ///   - selected: 선택 여부
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다.
-    public func active(_ active: Bool = true) -> Self {
+    public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
-        zelf.active = active
+        zelf.selected = selected
         return zelf
     }
     
@@ -311,7 +310,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - divider: 구분선 표시 여부 
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다.
     public func divider(_ divider: Bool = true) -> Self {
@@ -326,7 +325,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - chevron: 화살표 표시 여부 
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 `false`입니다.
     public func chevron(_ chevron: Bool = true) -> Self {
@@ -341,7 +340,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - contents: 표시할 콘텐츠를 생성하는 클로저
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     public func leadingContent(_ contents: (() -> any View)? = nil) -> Self {
         var zelf = self
         zelf.leadingContent = contents
@@ -351,11 +350,11 @@ public struct Cell: View {
     /// 셀 우측에 추가 콘텐츠를 표시합니다.
     ///
     /// 배지, 스위치, 토글 등 추가 UI 요소를 셀 타이틀 뒤에 배치할 수 있습니다.
-    /// 클로저 파라미터를 통해 셀의 활성화 상태를 전달받을 수 있습니다.
+    /// 클로저 파라미터를 통해 셀의 선택된 상태를 전달받을 수 있습니다.
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (활성화 상태를 파라미터로 받음)
-    /// - Returns: 수정된 Cell 인스턴스
+    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음)
+    /// - Returns: 수정된 ListCell 인스턴스
     public func trailingContent(_ contents: ((Bool) -> any View)? = nil) -> Self {
         var zelf = self
         zelf.trailingContent = contents
@@ -366,7 +365,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - padding: 적용할 패딩 값 (포인트 단위)
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 기본값은 12입니다.
     public func interactionPadding(_ padding: CGFloat) -> Self {
@@ -382,7 +381,7 @@ public struct Cell: View {
     ///
     /// - Parameters:
     ///   - text: 강조할 텍스트 문자열
-    /// - Returns: 수정된 Cell 인스턴스
+    /// - Returns: 수정된 ListCell 인스턴스
     public func highlight(_ text: String) -> Self {
         var zelf = self
         zelf.highlightText = text
@@ -391,12 +390,12 @@ public struct Cell: View {
 }
 
 // MARK: - Private
-extension Cell {
+extension ListCell {
     private var normalTitleColor: Color.Semantic {
         if disable {
             .labelAlternative
         } else {
-            active ? .primaryNormal : titleTypography.color
+            selected ? .primaryNormal : titleTypography.color
         }
     }
     
@@ -404,7 +403,7 @@ extension Cell {
         if let highlightText {
             let attributedString: AttributedString = {
                 var string = AttributedString(stringLiteral: title)
-                string.font = .font(variant: titleTypography.variant, weight: active ? .medium : titleTypography.weight)
+                string.font = .font(variant: titleTypography.variant, weight: selected ? .medium : titleTypography.weight)
                 string.foregroundColor = .semantic(normalTitleColor)
                 guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
                     return string
@@ -420,7 +419,7 @@ extension Cell {
             return Text(title)
                 .typography(
                     variant: titleTypography.variant,
-                    weight: active ? .medium : titleTypography.weight,
+                    weight: selected ? .medium : titleTypography.weight,
                     semantic: normalTitleColor
                 )
                 .paragraph(variant: titleTypography.variant)

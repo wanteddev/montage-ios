@@ -459,7 +459,7 @@ public struct Select: View {
         VStack(spacing: 4) {
             ForEach(items.indices, id: \.self) { index in
                 Group {
-                    let cell = Cell(title: items[index].text) {
+                    let cell = ListCell(title: items[index].text) {
                         switch variant {
                         case .single(_, let primaryButtonTitle):
                             deselectAll()
@@ -477,7 +477,7 @@ public struct Select: View {
                     case .single(let selectionType, _):
                         switch selectionType {
                         case .checkmark:
-                            cell.active(items[index].isSelected)
+                            cell.selected(items[index].isSelected)
                                 .trailingContent { active in
                                     Group {
                                         if active {

@@ -1,5 +1,5 @@
 //
-//  CellPreview.swift
+//  ListCellPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 11/13/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Montage
 
-struct CellPreview: View {
+struct ListCellPreview: View {
     @State private var isOn: Bool = true
     @State private var caption = false
     @State private var verticalPaddingIndex = 1
@@ -22,10 +22,10 @@ struct CellPreview: View {
     @State private var disable = false
     @State private var longText = false
     @State private var interactionPadding: CGFloat = 12
-    @State private var active = false
+    @State private var selected = false
     @State private var highlightText: String = ""
 
-    let verticalPaddings: [Cell.VerticalPadding] = [.none, .small, .medium, .large]
+    let verticalPaddings: [ListCell.VerticalPadding] = [.none, .small, .medium, .large]
     let verticalAlignments: [VerticalAlignment] = [.top, .center, .bottom]
 
     var body: some View {
@@ -33,7 +33,7 @@ struct CellPreview: View {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
 
-                Cell(title: longText ? "이것은 세 줄 이상으로 표현될 수 있는 긴 문장입니다. 충분히 길어야 줄 바꿈이 됩니다. 더욱 더 많이 길어야 합니다." : "텍스트", onTap: {
+                ListCell(title: longText ? "이것은 세 줄 이상으로 표현될 수 있는 긴 문장입니다. 충분히 길어야 줄 바꿈이 됩니다. 더욱 더 많이 길어야 합니다." : "텍스트", onTap: {
                     print("helloworld")
                 })
                 .caption(caption ? "캡션" : nil)
@@ -54,7 +54,7 @@ struct CellPreview: View {
                 .divider(divider)
                 .disable(disable)
                 .interactionPadding(interactionPadding)
-                .active(active)
+                .selected(selected)
                 .if(!highlightText.isEmpty) {
                     $0.highlight(highlightText)
                 }
@@ -94,8 +94,8 @@ struct CellPreview: View {
                     Switch($disable)
                     Text("Long Text")
                     Switch($longText)
-                    Text("Active")
-                    Switch($active)
+                    Text("Selected")
+                    Switch($selected)
                 }
                 HStack {
                     Text("Vertical Alignment")
@@ -133,8 +133,8 @@ struct CellPreview: View {
     }
 }
 
-extension Cell.VerticalPadding: CaseDescribable {}
+extension ListCell.VerticalPadding: CaseDescribable {}
 
 #Preview {
-    CellPreview()
+    ListCellPreview()
 }

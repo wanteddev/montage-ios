@@ -87,8 +87,8 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: SelectPreview())
         case .segmentedControl:
             vc = UIHostingController(rootView: SegmentedControlPreview())
-        case .cell:
-            vc = UIHostingController(rootView: CellPreview())
+        case .listCell:
+            vc = UIHostingController(rootView: ListCellPreview())
         case .tab:
             vc = UIHostingController(rootView: TabPreview())
         case .slider:
@@ -109,8 +109,6 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: PlayBadgePreview())
         case .sectionHeader:
             vc = UIHostingController(rootView: SectionHeaderPreview())
-        case .menu:
-            vc = UIHostingController(rootView: MenuPreview())
         case .modal:
             vc = UIHostingController(rootView: ModalPreview())
         case .flowLayout:
