@@ -219,6 +219,6 @@ public struct Thumbnail: View {
     }
     
     private var thumbnailWidth: CGFloat {
-        min(width ?? proposedWidth, proposedWidth)
+        width ?? proposedWidth
     }
 }
