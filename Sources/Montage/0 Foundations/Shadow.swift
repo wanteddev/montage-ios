@@ -69,15 +69,15 @@ struct ShadowModifier: ViewModifier {
         case .none:
             return .zero
         case .xsmall:
-            return layer == .ambient ? .zero : 0.1
+            return layer == .ambient ? .zero : 0.05
         case .small:
-            return 0.06
+            return 0.03
         case .medium:
-            return 0.07
+            return 0.035
         case .large:
-            return 0.08
+            return 0.04
         case .xlarge:
-            return layer == .ambient ? 0.1 : 0.12
+            return layer == .ambient ? 0.05 : 0.06
         }
     }
     
@@ -86,15 +86,15 @@ struct ShadowModifier: ViewModifier {
         case .none:
             return .zero
         case .xsmall:
-            return layer == .ambient ? .zero : 1
+            return layer == .ambient ? .zero : 0.5
         case .small:
-            return layer == .ambient ? 2 : 3
+            return layer == .ambient ? 1 : 2.5
         case .medium:
-            return layer == .ambient ? 3 : 7.5
+            return layer == .ambient ? 2 : 6
         case .large:
-            return layer == .ambient ? 5 : 12
+            return layer == .ambient ? 3 : 9
         case .xlarge:
-            return layer == .ambient ? 7.5 : 19
+            return layer == .ambient ? 5 : 14
         }
     }
     
