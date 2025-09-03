@@ -12,9 +12,7 @@ import Montage
 
 struct TooltipPreview: View {
     @State private var show: Bool = false
-    @State private var optionsPresented = false
     
-    @State private var useSystemAPI: Bool = false
     @State private var showMultilineText: Bool = true
     @State private var adjustZIndex: Bool = true
     @State private var showArrow: Bool = true
@@ -106,6 +104,9 @@ struct TooltipPreview: View {
                     show = false
                 }) : nil
             )
+            .onChange(of: modeIndex) { _ in
+                show = false
+            }
         }
         .modifying { origin in
             if adjustZIndex {
