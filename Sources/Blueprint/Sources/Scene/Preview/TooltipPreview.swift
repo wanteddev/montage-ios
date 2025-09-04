@@ -15,6 +15,7 @@ struct TooltipPreview: View {
     
     @State private var showMultilineText: Bool = true
     @State private var adjustZIndex: Bool = true
+    @State private var background: Bool = true
     @State private var showArrow: Bool = true
     @State private var showCloseButton: Bool = true
     @State private var showButton: Bool = true
@@ -73,12 +74,14 @@ struct TooltipPreview: View {
                         
                     Spacer(minLength: 0)
                 }
-                .background(
-                    HStack(spacing: 0) {
-                        SwiftUI.Color.green
-                        SwiftUI.Color.red
+                .if(background) {
+                    $0.background {
+                        HStack(spacing: 0) {
+                            SwiftUI.Color.green
+                            SwiftUI.Color.red
+                        }
                     }
-                )
+                }
             }
             optionSheet
         }
@@ -167,11 +170,13 @@ struct TooltipPreview: View {
                     }
                 
                 HStack {
-                        Text("Adjust zIndex")
-                        Switch($adjustZIndex)
-                        Text("Show Arrow")
-                        Switch($showArrow)
-                    }
+                    Text("Adjust zIndex")
+                    Switch($adjustZIndex)
+                    Text("Background\n(for Test)")
+                    Switch($background)
+                    Text("Show Arrow")
+                    Switch($showArrow)
+                }
                 
                 HStack {
                     Text("MultiLine Text")
