@@ -59,13 +59,13 @@ public struct PopupModal: View {
         case fixed(CGFloat)
     }
     
-    private let content: () -> any View
+    private let content: () -> AnyView
 
     /// 팝업 모달을 초기화합니다.
     ///
     /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
-    public init(@ViewBuilder _ content: @escaping () -> any View) {
-        self.content = content
+    public init<V: View>(@ViewBuilder _ content: @escaping () -> V) {
+        self.content = { AnyView(content()) }
     }
 
     @State private var navigationHeight: CGFloat = 0
@@ -78,34 +78,30 @@ public struct PopupModal: View {
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
-                Group {
-                    let contentView = AnyView(content())
-                        .padding(contentEdgeInsets)
-                        .onGeometryChange(
-                            for: CGFloat.self,
-                            of: { $0.size.height },
-                            action: { contentHeight = $0 }
-                        )
-                    
-                    ZStack(alignment: .top) {
-                        ScrollView(onOffsetChanged: {
-                            contentOffset = $0.y
-                        }, content: {
-                            VStack(spacing: 0) {
-                                SwiftUI.Color.clear
-                                    .frame(height: navigationHeight)
-                                HStack(spacing: 0) {
-                                    Spacer(minLength: 0)
-                                    contentView
-                                    Spacer(minLength: 0)
-                                }
+                ZStack(alignment: .top) {
+                    ScrollView(onOffsetChanged: {
+                        contentOffset = $0.y
+                    }, content: {
+                        VStack(spacing: 0) {
+                            SwiftUI.Color.clear
+                                .frame(height: navigationHeight)
+                            HStack(spacing: 0) {
+                                Spacer(minLength: 0)
+                                content()
+                                    .padding(contentEdgeInsets)
+                                    .onGeometryChange(
+                                        for: CGFloat.self,
+                                        of: { $0.size.height },
+                                        action: { contentHeight = $0 }
+                                    )
+                                Spacer(minLength: 0)
                             }
-                        })
-                        .hidesIndicators()
-                        .scrollDisabled(!scrollable)
-                        
-                        navigationView
-                    }
+                        }
+                    })
+                    .hidesIndicators()
+                    .scrollDisabled(!scrollable)
+                    
+                    navigationView
                 }
                 
                 if let actionAreaModel {
@@ -257,7 +253,7 @@ struct PopupModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let resize: PopupModal.Resize
     private let ignoresEdgeInsets: Bool
-    private let popupContent: () -> any View
+    private let popupContent: () -> AnyView
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
     
@@ -270,18 +266,18 @@ struct PopupModalModifier: ViewModifier {
     ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
     ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
-    init(
+    init<V: View>(
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        @ViewBuilder _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil,
         actionAreaModel: ActionArea.Model? = nil
     ) {
         _isPresented = isPresented
         self.resize = resize
         self.ignoresEdgeInsets = ignoresEdgeInsets
-        popupContent = content
+        popupContent = { AnyView(content()) }
         self.navigation = navigation
         self.actionAreaModel = actionAreaModel
     }
@@ -364,12 +360,12 @@ extension View {
     ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
     /// - Returns: 팝업 모달이 적용된 뷰
-    public func popupModal(
+    public func popupModal<V: View>(
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {
         modifier(

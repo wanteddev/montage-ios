@@ -276,29 +276,15 @@ public enum Skeleton {
             if isPresented {
                 skeletonView()
                     .opacity(animationOpacity)
-                    .onChange(of: animationOpacity) { _ in
-                        if animationOpacity == 1 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
-                                    animationOpacity = 0.5
-                                }
-                            }
-                        } else if animationOpacity == 0.5 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
-                                    animationOpacity = 1
-                                }
-                            }
-                        }
-                    }
                     .onAppear {
-                        if !didLoad {
-                            didLoad = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
-                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
-                                    animationOpacity = 0.5
-                                }
+                        withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)
+                            .repeatForever(autoreverses: true)) {
+                                animationOpacity = 0.5
                             }
+                    }
+                    .onDisappear {
+                        withAnimation(.none) {
+                            animationOpacity = 1
                         }
                     }
             } else {

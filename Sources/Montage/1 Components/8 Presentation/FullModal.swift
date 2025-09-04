@@ -52,13 +52,13 @@ import SwiftUI
 public struct FullModal: View {
     // MARK: - Initializer
     
-    private var content: () -> any View
+    private var content: () -> AnyView
     
     /// 풀스크린 모달을 초기화합니다.
     ///
     /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
-    public init(@ViewBuilder _ content: @escaping () -> any View) {
-        self.content = content
+    public init<V: View>(@ViewBuilder _ content: @escaping () -> V) {
+        self.content = { AnyView(content()) }
     }
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
@@ -131,7 +131,7 @@ public struct FullModal: View {
 struct FullModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let ignoresEdgeInsets: Bool
-    private let fullContent: () -> any View
+    private let fullContent: () -> AnyView
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
     
@@ -143,16 +143,16 @@ struct FullModalModifier: ViewModifier {
     ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
     ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
-    init(
+    init<V: View>(
         isPresented: Binding<Bool>,
         ignoresEdgeInsets: Bool = false,
-        @ViewBuilder _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil,
         actionAreaModel: ActionArea.Model? = nil
     ) {
         _isPresented = isPresented
         self.ignoresEdgeInsets = ignoresEdgeInsets
-        fullContent = content
+        fullContent = { AnyView(content()) }
         self.navigation = navigation
         self.actionAreaModel = actionAreaModel
     }
@@ -184,11 +184,11 @@ extension View {
     ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
     /// - Returns: 전체 화면 모달이 적용된 뷰
-    public func fullModal(
+    public func fullModal<V: View>(
         isPresented: Binding<Bool>,
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {
         modifier(

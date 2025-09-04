@@ -281,7 +281,7 @@ public struct Accordion: View {
                                 )
                         }
                         
-                        if description?.count ?? 0 > 0 && !isContentEmpty {
+                        if !description.isNilOrEmpty && !isContentEmpty {
                             Spacer(minLength: 12)
                         }
                         

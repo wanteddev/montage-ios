@@ -21,7 +21,7 @@ struct PopupModalPreivew: View {
     @State private var buttonsIndex = 0
     @State private var caption = false
     @State private var extra = false
-    @State private var extraDivider = false
+    @State private var extraDivider = true
     
     @State private var refreshTask: Task<(), Never>?
 
