@@ -234,7 +234,6 @@ public struct TextField: View {
     ///
     /// - Parameter trailingButton: 표시할 버튼의 속성
     /// - Returns: 수정된 텍스트 필드 인스턴스
-    /// - Note: `trailingContent`와 함께 사용될 경우 `trailingButton`이 우선적으로 표시됩니다.
     public func trailingButton(_ trailingButton: TrailingButtonInfo?) -> Self {
         var zelf = self
         zelf.trailingButton = trailingButton
@@ -245,7 +244,6 @@ public struct TextField: View {
     ///
     /// - Parameter trailingContent: 표시할 커스텀 콘텐츠를 생성하는 클로저
     /// - Returns: 수정된 텍스트 필드 인스턴스
-    /// - Note: `trailingButton`과 함께 사용하는 경우 `trailingContent`가 무시됩니다.
     public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
         zelf.trailingContent = { AnyView(trailingContent()) }

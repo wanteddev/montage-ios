@@ -285,8 +285,6 @@ private extension ActionArea {
             self.variant = variant
         }
         
-        @State var isCustomEmpty = true
-        
         var body: some View {
             Group {
                 switch variant {
@@ -342,10 +340,7 @@ private extension ActionArea {
         }
         
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
-            buttonInfo.custom()
-                .ifEmptyView{ isCustomEmpty = $0 }
-            
-            if isCustomEmpty {
+            CustomOrFallback(custom: buttonInfo.custom) {
                 Button.solid(
                     variant: .primary,
                     size: .large,
@@ -357,10 +352,7 @@ private extension ActionArea {
         }
         
         @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
-            buttonInfo.custom()
-                .ifEmptyView{ isCustomEmpty = $0 }
-            
-            if isCustomEmpty {
+            CustomOrFallback(custom: buttonInfo.custom) {
                 Button.outlined(
                     variant: .secondary,
                     size: .large,
@@ -372,10 +364,7 @@ private extension ActionArea {
         }
         
         @ViewBuilder private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
-            buttonInfo.custom()
-                .ifEmptyView{ isCustomEmpty = $0 }
-            
-            if isCustomEmpty {
+            CustomOrFallback(custom: buttonInfo.custom) {
                 Button.outlined(
                     variant: .assistive,
                     size: .large,
@@ -389,10 +378,7 @@ private extension ActionArea {
         }
         
         @ViewBuilder private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
-            buttonInfo.custom()
-                .ifEmptyView{ isCustomEmpty = $0 }
-            
-            if isCustomEmpty {
+            CustomOrFallback(custom: buttonInfo.custom) {
                 Button.text(
                     variant: .assistive,
                     size: .small,
@@ -400,6 +386,20 @@ private extension ActionArea {
                     handler: buttonInfo.action
                 )
                 .padding(.vertical, 8)
+            }
+        }
+    }
+    
+    private struct CustomOrFallback<Fallback: View>: View {
+        let custom: () -> AnyView
+        @ViewBuilder var fallback: () -> Fallback
+        @State private var isEmpty = true
+        
+        var body: some View {
+            ZStack {
+                fallback().opacity(isEmpty ? 1 : 0)
+                custom()
+                    .ifEmptyView { isEmpty = $0 }
             }
         }
     }

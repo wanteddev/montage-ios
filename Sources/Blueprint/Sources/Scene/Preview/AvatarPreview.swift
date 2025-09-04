@@ -66,13 +66,13 @@ struct AvatarPreview: View {
             }
             .hidesIndicators()
             
-            AvatarGroupPreview()
+            GroupAvatarPreview()
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
-struct AvatarGroupPreview: View {
+struct GroupAvatarPreview: View {
     let url1 = "https://static.wanted.co.kr/images/company/3778/brr1yf93dsndmgce__1080_790.png"
     let url2 = "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg"
     let url3 = "https://static.wanted.co.kr/images/school/PNG_162.png"
@@ -91,7 +91,7 @@ struct AvatarGroupPreview: View {
     let sizes: [GroupAvatar.Size] = [.xsmall, .small]
 
     var body: some View {
-        Text("AvatarGroup").font(.title)
+        Text("GroupAvatar").font(.title)
         ScrollView {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
