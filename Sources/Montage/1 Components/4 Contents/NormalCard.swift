@@ -205,7 +205,7 @@ public struct NormalCard: View {
     
     private var horizontalPadding: CGFloat = 2
     private var textAreaWidth: CGFloat {
-        thumbnailWidth - horizontalPadding * 2
+        max(0, thumbnailWidth - horizontalPadding * 2)
     }
 }
 

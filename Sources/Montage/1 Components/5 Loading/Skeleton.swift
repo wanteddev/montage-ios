@@ -148,7 +148,7 @@ public enum Skeleton {
         public init(_ kind: Kind) {
             self.kind = kind
         }
-
+        
         // MARK: - Body
         
         @State private var size: CGSize = .zero
@@ -210,13 +210,13 @@ public enum Skeleton {
             return zelf
         }
     }
-
+    
     struct PredefinedSkeletonModifier: ViewModifier {
         private let kind: Skeleton.Kind
         private let color: SwiftUI.Color
         private let opacity: CGFloat
         private let size: CGSize?
-
+        
         private var isPresented: Bool
         
         init(
@@ -263,13 +263,14 @@ public enum Skeleton {
     struct SkeletonModifier<V: View>: ViewModifier {
         private var isPresented: Bool
         @ViewBuilder private let skeletonView: () -> V
-
+        
         init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
             self.isPresented = isPresented
             self.skeletonView = skeletonView
         }
         
         @State var animationOpacity: CGFloat = 1
+        @State var didLoad: Bool = false
         
         func body(content: Content) -> some View {
             if isPresented {
@@ -291,9 +292,12 @@ public enum Skeleton {
                         }
                     }
                     .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
-                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
-                                animationOpacity = 0.5
+                        if !didLoad {
+                            didLoad = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
+                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
+                                    animationOpacity = 0.5
+                                }
                             }
                         }
                     }
@@ -319,7 +323,7 @@ extension View {
     ) -> some View {
         modifier(Skeleton.SkeletonModifier(isPresented: isPresented, skeletonView: skeletonView))
     }
-
+    
     /// 현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
     ///
     /// - Parameters:

@@ -20,7 +20,7 @@ struct FullModalPreivew: View {
     @State private var buttonsIndex = 0
     @State private var caption = false
     @State private var extra = false
-    @State private var extraDivider = false
+    @State private var extraDivider = true
     
     @State private var refreshTask: Task<(), Never>?
     
@@ -34,10 +34,12 @@ struct FullModalPreivew: View {
             ? .init(
                 variant: variant,
                 caption: caption ? "caption" : nil,
-                extra: extra ? {
-                    Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                        .frame(height: 50)
-                } : nil,
+                extra: {
+                    if extra {
+                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                            .frame(height: 50)
+                    }
+                },
                 extraDivider: extraDivider
             )
             : nil,

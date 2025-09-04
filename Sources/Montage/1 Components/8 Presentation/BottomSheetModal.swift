@@ -105,39 +105,29 @@ public struct BottomSheetModal: View {
                             .frame(width: 40, height: 5)
                     }
                 }
-                Group {
-                    let contentView = AnyView(content())
-                        .padding(contentEdgeInsets)
-                        .onGeometryChange(
-                            for: CGFloat.self,
-                            of: { $0.size.height },
-                            action: { contentHeight = $0 }
-                        )
-                    
-                    if bottomSheetContentHeight > bottomSheetMaxHeight ||
-                        (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
-                        ZStack(alignment: .top) {
-                            ScrollView(scrollStatus: $scrollStatus) {
-                                VStack(spacing: 0) {
-                                    SwiftUI.Color.clear
-                                        .frame(height: navigationHeight)
-                                    HStack(spacing: 0) {
-                                        Spacer(minLength: 0)
-                                        contentView
-                                        Spacer(minLength: 0)
-                                    }
+                if bottomSheetContentHeight > bottomSheetMaxHeight ||
+                    (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
+                    ZStack(alignment: .top) {
+                        ScrollView(scrollStatus: $scrollStatus) {
+                            VStack(spacing: 0) {
+                                SwiftUI.Color.clear
+                                    .frame(height: navigationHeight)
+                                HStack(spacing: 0) {
+                                    Spacer(minLength: 0)
+                                    contentContainer()
+                                    Spacer(minLength: 0)
                                 }
                             }
-                            
-                            navigationView
                         }
-                    } else {
-                        VStack(spacing: 0) {
-                            navigationView
-                            contentView
-                            if bottomSheetContentHeight <= bottomSheetMaxHeight {
-                                Spacer(minLength: 0)
-                            }
+                        
+                        navigationView
+                    }
+                } else {
+                    VStack(spacing: 0) {
+                        navigationView
+                        contentContainer()
+                        if bottomSheetContentHeight <= bottomSheetMaxHeight {
+                            Spacer(minLength: 0)
                         }
                     }
                 }
@@ -224,6 +214,7 @@ public struct BottomSheetModal: View {
     
     // MARK: - Private
     
+    @ViewBuilder
     private var navigationView: some View {
         Group {
             if let navigation {
@@ -233,6 +224,17 @@ public struct BottomSheetModal: View {
             }
         }
         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
+    }
+    
+    @ViewBuilder
+    private func contentContainer() -> some View {
+        AnyView(content())
+            .padding(contentEdgeInsets)
+            .onGeometryChange(
+                for: CGFloat.self,
+                of: { $0.size.height },
+                action: { contentHeight = $0 }
+            )
     }
     
     private var contentEdgeInsets: EdgeInsets {
@@ -340,7 +342,7 @@ struct BottomSheetModalModifier: ViewModifier {
         content
             .sheet(isPresented: $isPresented) {
                 BottomSheetModal {
-                    AnyView(bottomSheetContent())
+                    bottomSheetContent()
                 }
                 .needHandle(needHandle)
                 .resize(resize)

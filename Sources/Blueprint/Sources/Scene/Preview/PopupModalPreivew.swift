@@ -100,10 +100,12 @@ struct PopupModalPreivew: View {
             ? .init(
                 variant: actionAreaVariant,
                 caption: caption ? "caption" : nil,
-                extra: extra ? {
-                    Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                        .frame(height: 50)
-                } : nil,
+                extra: {
+                    if extra {
+                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                            .frame(height: 50)
+                    }
+                },
                 extraDivider: extraDivider
             )
             : nil,

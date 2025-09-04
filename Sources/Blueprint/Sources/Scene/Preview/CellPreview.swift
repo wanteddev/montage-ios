@@ -42,24 +42,16 @@ struct CellPreview: View {
                 .fillWidth(fillWidth)
                 .chevron(chevron)
                 .leadingContent {
-                    Group {
-                        if leadingContent {
-                            Image.icon(.star)
-                                .resizable()
-                                .frame(width: 56, height: 56)
-                                .scaledToFit()
-                        } else {
-                            EmptyView()
-                        }
+                    if leadingContent {
+                        Image.icon(.star)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                            .scaledToFit()
                     }
                 }
                 .trailingContent { selected in
-                    Group {
-                        if trailingContent {
-                            Control.checkmark(checked: selected)
-                        } else {
-                            EmptyView()
-                        }
+                    if trailingContent {
+                        Control.checkmark(checked: selected)
                     }
                 }
                 .textEllipsis(textEllipsis)

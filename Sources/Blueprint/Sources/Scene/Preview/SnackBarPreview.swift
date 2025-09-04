@@ -41,7 +41,7 @@ struct SnackBarPreview: View {
                         TextField(text: $description)
                     }
                     Toggle(isOn: $showExtraContents) {
-                        Text("extral contents(icon)")
+                        Text("extra contents(icon)")
                     }
                     Toggle(isOn: $showPlaceholder) {
                         Text("show snackBar placeholder")

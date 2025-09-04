@@ -44,8 +44,6 @@ struct ListCardPreview: View {
                             ContentBadge(text: "텍스트")
                             ContentBadge(text: "텍스트")
                         }
-                    } else {
-                        EmptyView()
                     }
                 }
                 .bottomContent {
@@ -54,23 +52,17 @@ struct ListCardPreview: View {
                             ContentBadge(text: "텍스트")
                             ContentBadge(text: "텍스트")
                         }
-                    } else {
-                        EmptyView()
                     }
                 }
                 .leadingContent {
                     if showLeadingContent {
                         Control.checkbox(state: .unchecked)
-                    } else {
-                        EmptyView()
                     }
                 }
                 .trailingContent {
                     if showTrailingContent {
                         Image.icon(.chevronRight)
                             .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
-                    } else {
-                        EmptyView()
                     }
                 }
                 

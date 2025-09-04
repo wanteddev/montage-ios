@@ -141,11 +141,9 @@ public struct VerticalProgressTracker: View {
                     HStack(alignment: .top, spacing: 0) {
                         ProgressTrackerStepper(step: index + 1, state: state(at: index))
                         
-                        if index >= 0 && index < stepContents.count {
-                            stepContents[index]
-                                .status(state(at: index))
-                                .padding(.leading, 8)
-                        }
+                        stepContents[safe: index]?
+                            .status(state(at: index))
+                            .padding(.leading, 8)
                         
                         Spacer(minLength: 0)
                     }

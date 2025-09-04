@@ -94,7 +94,7 @@ public struct TextField: View {
         fileprivate let numberOfSections: Int
         fileprivate let sectionTitleAt: ((Int) -> String)?
         fileprivate let numberOfItemsInSection: (Int) -> Int
-        fileprivate let cellForItemAt: (IndexPath) -> any View
+        fileprivate let cellForItemAt: (IndexPath) -> AnyView
         fileprivate let headerView: () -> AnyView
         fileprivate let footerView: () -> AnyView
         fileprivate let maxHeight: CGFloat
@@ -106,15 +106,13 @@ public struct TextField: View {
         ///   - sectionTitleAt: 섹션 제목을 반환하는 클로저
         ///   - numberOfItemsInSection: 각 섹션의 항목 수를 반환하는 클로저
         ///   - cellForItemAt: 각 항목의 뷰를 반환하는 클로저
-        ///   - headerView: 헤더 뷰를 반환하는 클로저
-        ///   - footerView: 푸터 뷰를 반환하는 클로저
         ///   - maxHeight: 자동완성 목록의 최대 높이, 기본값은 400
         /// - Returns: 구성된 자동완성 데이터 소스 인스턴스
-        public init(
+        public init<V: View>(
             numberOfSections: Int = 1,
             sectionTitleAt: ((Int) -> String)? = nil,
             numberOfItemsInSection: @escaping (Int) -> Int,
-            cellForItemAt: @escaping (IndexPath) -> any View,
+            @ViewBuilder cellForItemAt: @escaping (IndexPath) -> V,
             headerView: (() -> any View)? = nil,
             footerView: (() -> any View)? = nil,
             maxHeight: CGFloat = 400
@@ -122,7 +120,7 @@ public struct TextField: View {
             self.numberOfSections = numberOfSections
             self.sectionTitleAt = sectionTitleAt
             self.numberOfItemsInSection = numberOfItemsInSection
-            self.cellForItemAt = cellForItemAt
+            self.cellForItemAt = { AnyView(cellForItemAt($0)) }
             self.headerView = headerView.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
             self.footerView = footerView.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
             self.maxHeight = maxHeight
@@ -147,9 +145,7 @@ public struct TextField: View {
     /// - Returns: 구성된 텍스트 필드 인스턴스
     public init(
         text: Binding<String>,
-        autoCompletionDataSource: Binding<AutoCompletionDataSource?> = .constant(
-            nil
-        )
+        autoCompletionDataSource: Binding<AutoCompletionDataSource?> = .constant(nil)
     ) {
         _text = text
         _autoCompletionDataSource = autoCompletionDataSource
@@ -161,7 +157,6 @@ public struct TextField: View {
     private var disable = false
     private var heading: String? = nil
     private var requiredBadge = false
-    private var description = false
     private var placeholder: String? = nil
     private var icon: Icon? = nil
     private var trailingButton: TrailingButtonInfo? = nil
@@ -495,7 +490,7 @@ private extension TextField {
                                         VStack(spacing: 4) {
                                             ForEach(0 ..< itemCount, id: \.self) { item in
                                                 let indexPath = IndexPath(item: item, section: section)
-                                                AnyView(autoCompletionDataSource.cellForItemAt(indexPath))
+                                                autoCompletionDataSource.cellForItemAt(indexPath)
                                             }
                                         }
                                     }

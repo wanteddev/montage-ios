@@ -191,7 +191,7 @@ struct ActionAreaPreview: View {
                 Text("Preview").bold()
                     .padding(.horizontal)
                 ScrollView(scrollStatus: $scrollStatus) {
-                    VStack {
+                    LazyVStack {
                         ForEach(0..<30, id: \.self) {
                             TextField(text: .constant("Item \($0)"))
                         }
@@ -204,10 +204,12 @@ struct ActionAreaPreview: View {
                         gradientIndex == 0 ? !scrollStatus.scrolledToMax : !hideGradient
                     ),
                     caption: caption ? "caption" : nil,
-                    extra: extra ? {
-                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                            .frame(height: 50)
-                    } : nil,
+                    extra: {
+                        if extra {
+                            Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                                .frame(height: 50)
+                        }
+                    },
                     extraDivider: extraDivider
                 ))
             }

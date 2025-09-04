@@ -70,7 +70,6 @@ public struct SectionHeader: View {
     }
     
     // MARK: - Body
-    @State private var contentSize: CGSize = .zero
     @State private var trailingContentEmpty = true
     
     public var body: some View {

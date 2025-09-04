@@ -72,19 +72,33 @@ public struct Accordion: View {
     private let content: () -> AnyView
     
     /// 아코디언을 생성합니다.
-    /// 
+    ///
+    /// - Parameters:
+    ///   - title: 아코디언의 제목
+    ///   - description: 확장 시 표시될 설명 텍스트 (선택 사항)
+    public init(
+        title: String,
+        description: String? = nil
+    ) {
+        self.title = title
+        self.description = description
+        self.content = { AnyView(EmptyView()) }
+    }
+    
+    /// 아코디언을 생성합니다.
+    ///
     /// - Parameters:
     ///   - title: 아코디언의 제목
     ///   - description: 확장 시 표시될 설명 텍스트 (선택 사항)
     ///   - content: 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항)
-    public init(
+    public init<V: View>(
         title: String,
         description: String? = nil,
-        content: (() -> any View)? = nil
+        @ViewBuilder content: @escaping () -> V
     ) {
         self.title = title
         self.description = description
-        self.content = content.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
+        self.content = { AnyView(content()) }
     }
     
     // MARK: - Modifiers
@@ -257,7 +271,7 @@ public struct Accordion: View {
                 })
                 
                 if isExpanded {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 0) {
                         if let description, !description.isEmpty {
                             Text(description)
                                 .paragraphNew(
@@ -267,6 +281,10 @@ public struct Accordion: View {
                                 )
                         }
                         
+                        if description?.count ?? 0 > 0 && !isContentEmpty {
+                            Spacer(minLength: 12)
+                        }
+                        
                         content()
                             .ifEmptyView { isContentEmpty = $0 }
                     }
@@ -274,7 +292,7 @@ public struct Accordion: View {
                     .padding(.horizontal, fillWidth ? 20 : 0)
                 }
             }
-                
+            
             Rectangle()
                 .frame(height: 1)
                 .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))

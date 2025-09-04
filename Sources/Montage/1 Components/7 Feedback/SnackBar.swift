@@ -88,13 +88,34 @@ public struct SnackBar: View {
             duration: Duration = .short,
             heading: String? = nil,
             description: String? = nil,
-            extraContents: (() -> any View)? = nil,
             action: String
         ) {
             self.duration = duration
             self.heading = heading
             self.description = description
-            self.extraContents = extraContents.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
+            self.extraContents = { AnyView(EmptyView()) }
+            self.action = action
+        }
+        
+        /// SnackBar 모델을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - duration: 스낵바가 표시되는 시간
+        ///   - heading: 스낵바의 제목 (선택 사항)
+        ///   - description: 스낵바의 설명 텍스트 (선택 사항)
+        ///   - extraContents: 스낵바에 표시할 추가 콘텐츠를 반환하는 클로저 (선택 사항)
+        ///   - action: 스낵바의 액션 버튼에 표시할 텍스트
+        public init<V: View>(
+            duration: Duration = .short,
+            heading: String? = nil,
+            description: String? = nil,
+            @ViewBuilder extraContents: @escaping () -> V,
+            action: String
+        ) {
+            self.duration = duration
+            self.heading = heading
+            self.description = description
+            self.extraContents = { AnyView(extraContents()) }
             self.action = action
         }
         

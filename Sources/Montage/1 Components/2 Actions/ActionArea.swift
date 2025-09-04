@@ -217,19 +217,39 @@ extension ActionArea {
         ///   - variant: 버튼 레이아웃 변형
         ///   - backgroundVisibility: 배경 가시성 설정
         ///   - caption: 캡션 텍스트
-        ///   - extra: 추가 콘텐츠를 생성하는 클로저
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
         public init(
             variant: ActionArea.Variant,
             backgroundVisibility: BackgroundVisibility = .automatic,
             caption: String? = nil,
-            extra: (() -> any View)? = nil,
-            extraDivider: Bool = false
+            extraDivider: Bool = true
         ) {
             self.variant = variant
             self.backgroundVisibility = backgroundVisibility
             self.caption = caption
-            self.extra = extra.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
+            self.extra = { AnyView(EmptyView()) }
+            self.extraDivider = extraDivider
+        }
+        
+        /// ActionArea 모델을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 버튼 레이아웃 변형
+        ///   - backgroundVisibility: 배경 가시성 설정
+        ///   - caption: 캡션 텍스트
+        ///   - extra: 추가 콘텐츠를 생성하는 클로저
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        public init<V: View>(
+            variant: ActionArea.Variant,
+            backgroundVisibility: BackgroundVisibility = .automatic,
+            caption: String? = nil,
+            @ViewBuilder extra: @escaping () -> V,
+            extraDivider: Bool = true
+        ) {
+            self.variant = variant
+            self.backgroundVisibility = backgroundVisibility
+            self.caption = caption
+            self.extra = { AnyView(extra()) }
             self.extraDivider = extraDivider
         }
     }
@@ -397,9 +417,11 @@ private extension ActionArea {
         
         var body: some View {
             ZStack {
-                fallback().opacity(isEmpty ? 1 : 0)
                 custom()
                     .ifEmptyView { isEmpty = $0 }
+                if isEmpty {
+                    fallback()
+                }
             }
         }
     }
