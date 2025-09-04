@@ -127,8 +127,7 @@ public struct PopupModal: View {
         }
         .padding(.horizontal, 20)
         .modifying {
-            print("resize: \(resize)")
-            return if case .fixed(let height) = resize {
+            if case .fixed(let height) = resize {
                 $0.frame(height: height)
             } else {
                 $0.frame(maxHeight: min(popupMaxHeight, popupContentHeight))
