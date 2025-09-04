@@ -197,18 +197,15 @@ public enum Tooltip {
                             if mode == .click {
                                 original
                                     .modifier(
-                                        FloatModifier(
+                                        FloatModifier<Bool>(
                                             isPresented: $isPresented,
-                                            updatingValue: Binding(
-                                                get: { isPresented ? "\(showArrow),\(position),\(colorScheme),\(originFrame.size))" : nil },
-                                                set: { _ in }
-                                            ),
+                                            updatingValue: .constant(nil),
                                             dismissPolicy: .onTouchOutside,
                                             presentingAnimation: .easeInOut,
                                             dismissingAnimation: .easeInOut,
                                             onDismiss: nil,
                                             floatView: {
-                                                TooltipContentView(
+                                                TooltipView(
                                                     isPresented: $isPresented,
                                                     buttonInfo: buttonInfo,
                                                     position: position,
@@ -225,7 +222,7 @@ public enum Tooltip {
                             } else {
                                 if isPresented {
                                     original.overlay {
-                                        TooltipContentView(
+                                        TooltipView(
                                             isPresented: $isPresented,
                                             buttonInfo: buttonInfo,
                                             position: position,
@@ -246,13 +243,12 @@ public enum Tooltip {
     }
 }
 
-struct TooltipContentView: View {
-    private let margin: CGFloat = 4
+struct TooltipView: View {
+    private let margin: CGFloat = 5
     private let cornerRadius: CGFloat = 8
     private let arrowWidth: CGFloat = 12
     private let arrowHeight: CGFloat = 7
-    private let arrowVerticalPadding: CGFloat = 1
-    private let arrowHorizontalPadding: CGFloat = 12
+    private let arrowEdgePadding: CGFloat = 12
     private let lowerLayerColor: SwiftUI.Color = .semantic(.primaryNormal).opacity(0.05)
     private let upperLayerColor: SwiftUI.Color = .semantic(.inverseBackground).opacity(0.74)
     private let contentColor: SwiftUI.Color = .semantic(.inverseLabel)
@@ -386,31 +382,15 @@ struct TooltipContentView: View {
     var offsetHorizontal: CGFloat {
         switch position {
         case .leading:
-            -(
-                originSize.width / 2
-                    + contentSize.width / 2
-                    + arrowVerticalPadding
-                    + margin
-            )
-
+            -(originSize.width / 2 + contentSize.width / 2 + margin)
         case .trailing:
-            originSize.width / 2
-                + contentSize.width / 2
-                + arrowVerticalPadding
-                + margin
-
+            originSize.width / 2 + contentSize.width / 2 + margin
         case .top(let arrowPosition), .bottom(let arrowPosition):
             switch arrowPosition {
             case .leading:
-                contentSize.width / 2
-                    - arrowWidth
-                    - arrowHorizontalPadding
+                contentSize.width / 2 - arrowWidth / 2 - arrowEdgePadding
             case .trailing:
-                -(
-                    contentSize.width / 2
-                        - arrowWidth
-                        - arrowHorizontalPadding
-                )
+                -(contentSize.width / 2 - arrowWidth / 2 - arrowEdgePadding)
             default:
                 .zero
             }
@@ -422,38 +402,21 @@ struct TooltipContentView: View {
         case .leading(let arrowPosition), .trailing(let arrowPosition):
             switch arrowPosition {
             case .top:
-                contentSize.height / 2
-                    - arrowWidth / 2
-                    - arrowHorizontalPadding
+                contentSize.height / 2 - arrowWidth / 2 - arrowEdgePadding
             case .bottom:
-                -(
-                    contentSize.height / 2
-                        - arrowWidth / 2
-                        - arrowHorizontalPadding
-                )
+                -(contentSize.height / 2 - arrowWidth / 2 - arrowEdgePadding)
             default:
                 .zero
             }
-
         case .top:
-            -(
-                contentSize.height / 2
-                + originSize.height / 2
-                    + arrowVerticalPadding
-                    + margin
-            )
-
+            -(contentSize.height / 2 + originSize.height / 2 + margin)
         case .bottom:
-            contentSize.height / 2
-            + originSize.height / 2
-                + arrowVerticalPadding
-                + margin
+            contentSize.height / 2 + originSize.height / 2 + margin
         }
     }
 }
 
 struct TooltipBubbleShape: Shape {
-    // 내부 표현 (Sendable 안전)
     enum Direction { case top, bottom, leading, trailing }
     enum HAlign { case leading, center, trailing }
     enum VAlign { case top, center, bottom }
@@ -464,10 +427,8 @@ struct TooltipBubbleShape: Shape {
     private let hAlign: HAlign
     private let vAlign: VAlign
 
-    // 기본 화살표 규격 (TooltipContentView 와 동일 값)
     var arrowWidth: CGFloat
     var arrowHeight: CGFloat
-    /// 가장자리로부터 화살표가 시작되는 여백(코너 라운드와 겹침 방지)
     var arrowEdgePadding: CGFloat
 
     init(
@@ -556,40 +517,54 @@ struct TooltipBubbleShape: Shape {
             arrowCenter = CGPoint(x: direction == .leading ? arrowRect.midX : arrowRect.midX, y: centerY)
         }
         
-        // 하나의 연결된 Path로 버블 + 화살표 그리기
+        let arrowCornerRadius: CGFloat = 1
         switch direction {
         case .top:
-            // 버블 바디 (위쪽 화살표가 있는 부분 제외하고 라운드 사각형)
             path.addPath(Path(roundedRect: bodyRect, cornerRadius: cornerRadius))
             
-            // 화살표 추가
-            path.move(to: CGPoint(x: arrowCenter.x - arrowWidth / 2, y: bodyRect.maxY))
-            path.addLine(to: CGPoint(x: arrowCenter.x, y: rect.maxY))
-            path.addLine(to: CGPoint(x: arrowCenter.x + arrowWidth / 2, y: bodyRect.maxY))
+            let arrowLeft = CGPoint(x: arrowCenter.x - arrowWidth / 2, y: bodyRect.maxY)
+            let arrowTip = CGPoint(x: arrowCenter.x, y: rect.maxY)
+            let arrowRight = CGPoint(x: arrowCenter.x + arrowWidth / 2, y: bodyRect.maxY)
+            
+            path.move(to: arrowLeft)
+            path.addArc(tangent1End: arrowTip, tangent2End: arrowRight, radius: arrowCornerRadius)
+            path.addLine(to: arrowRight)
             path.closeSubpath()
             
         case .bottom:
             path.addPath(Path(roundedRect: bodyRect, cornerRadius: cornerRadius))
             
-            path.move(to: CGPoint(x: arrowCenter.x - arrowWidth / 2, y: bodyRect.minY))
-            path.addLine(to: CGPoint(x: arrowCenter.x, y: rect.minY))
-            path.addLine(to: CGPoint(x: arrowCenter.x + arrowWidth / 2, y: bodyRect.minY))
+            let arrowLeft = CGPoint(x: arrowCenter.x - arrowWidth / 2, y: bodyRect.minY)
+            let arrowTip = CGPoint(x: arrowCenter.x, y: rect.minY)
+            let arrowRight = CGPoint(x: arrowCenter.x + arrowWidth / 2, y: bodyRect.minY)
+            
+            path.move(to: arrowLeft)
+            path.addArc(tangent1End: arrowTip, tangent2End: arrowRight, radius: arrowCornerRadius)
+            path.addLine(to: arrowRight)
             path.closeSubpath()
             
         case .leading:
             path.addPath(Path(roundedRect: bodyRect, cornerRadius: cornerRadius))
             
-            path.move(to: CGPoint(x: bodyRect.maxX, y: arrowCenter.y - arrowWidth / 2))
-            path.addLine(to: CGPoint(x: rect.maxX, y: arrowCenter.y))
-            path.addLine(to: CGPoint(x: bodyRect.maxX, y: arrowCenter.y + arrowWidth / 2))
+            let arrowTop = CGPoint(x: bodyRect.maxX, y: arrowCenter.y - arrowWidth / 2)
+            let arrowTip = CGPoint(x: rect.maxX, y: arrowCenter.y)
+            let arrowBottom = CGPoint(x: bodyRect.maxX, y: arrowCenter.y + arrowWidth / 2)
+            
+            path.move(to: arrowTop)
+            path.addArc(tangent1End: arrowTip, tangent2End: arrowBottom, radius: arrowCornerRadius)
+            path.addLine(to: arrowBottom)
             path.closeSubpath()
             
         case .trailing:
             path.addPath(Path(roundedRect: bodyRect, cornerRadius: cornerRadius))
             
-            path.move(to: CGPoint(x: bodyRect.minX, y: arrowCenter.y - arrowWidth / 2))
-            path.addLine(to: CGPoint(x: rect.minX, y: arrowCenter.y))
-            path.addLine(to: CGPoint(x: bodyRect.minX, y: arrowCenter.y + arrowWidth / 2))
+            let arrowTop = CGPoint(x: bodyRect.minX, y: arrowCenter.y - arrowWidth / 2)
+            let arrowTip = CGPoint(x: rect.minX, y: arrowCenter.y)
+            let arrowBottom = CGPoint(x: bodyRect.minX, y: arrowCenter.y + arrowWidth / 2)
+            
+            path.move(to: arrowTop)
+            path.addArc(tangent1End: arrowTip, tangent2End: arrowBottom, radius: arrowCornerRadius)
+            path.addLine(to: arrowBottom)
             path.closeSubpath()
         }
         
