@@ -1,5 +1,5 @@
 //
-//  FullModalPreivew.swift
+//  FullModalPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 2/21/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Montage
 
-struct FullModalPreivew: View {
+struct FullModalPreview: View {
     @State private var show = true
     
     @State private var itemCountsIndex: Int = 0
@@ -170,5 +170,5 @@ struct FullModalPreivew: View {
 }
 
 #Preview {
-    FullModalPreivew()
+    FullModalPreview()
 }

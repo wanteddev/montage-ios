@@ -32,11 +32,11 @@ struct ModalPreview: View {
             let rootView: (any View)?
             switch subViewTitle {
             case "Popup Modal":
-                rootView = PopupModalPreivew()
+                rootView = PopupModalPreview()
             case "Bottom Sheet Modal":
                 rootView = BottomSheetModalPreview()
             case "Full Modal":
-                rootView = FullModalPreivew()
+                rootView = FullModalPreview()
             case "Modal Navigation":
                 rootView = ModalNavigationPreview()
             default:

@@ -1,5 +1,5 @@
 //
-//  PopupModalPreivew.swift
+//  PopupModalPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 2/21/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Montage
 
-struct PopupModalPreivew: View {
+struct PopupModalPreview: View {
     @State private var show = false
 
     @State private var itemCountsIndex: Int = 0
@@ -204,5 +204,5 @@ extension PopupModal.Resize: @retroactive Hashable {
 }
 
 #Preview {
-    PopupModalPreivew()
+    PopupModalPreview()
 }

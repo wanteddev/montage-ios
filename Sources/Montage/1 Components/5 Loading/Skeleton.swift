@@ -151,7 +151,6 @@ public enum Skeleton {
         
         // MARK: - Body
         
-        @State private var size: CGSize = .zero
         public var body: some View {
             Group {
                 switch kind {
@@ -217,7 +216,7 @@ public enum Skeleton {
         private let opacity: CGFloat
         private let size: CGSize?
         
-        private var isPresented: Bool
+        private let isPresented: Bool
         
         init(
             isPresented: Bool,
@@ -261,7 +260,7 @@ public enum Skeleton {
     }
     
     struct SkeletonModifier<V: View>: ViewModifier {
-        private var isPresented: Bool
+        private let isPresented: Bool
         @ViewBuilder private let skeletonView: () -> V
         
         init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
@@ -270,7 +269,6 @@ public enum Skeleton {
         }
         
         @State var animationOpacity: CGFloat = 1
-        @State var didLoad: Bool = false
         
         func body(content: Content) -> some View {
             if isPresented {
