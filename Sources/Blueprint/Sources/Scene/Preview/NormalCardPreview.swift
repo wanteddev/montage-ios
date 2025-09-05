@@ -50,8 +50,6 @@ struct NormalCardPreview: View {
                                 ContentBadge(text: "텍스트")
                                 ContentBadge(text: "텍스트")
                             }
-                        } else {
-                            EmptyView()
                         }
                     }
                     .bottomContent {
@@ -61,8 +59,6 @@ struct NormalCardPreview: View {
                                 ContentBadge(text: "텍스트")
                                 ContentBadge(text: "텍스트")
                             }
-                        } else {
-                            EmptyView()
                         }
                     }
                     .if(showOverlayCaption || showOverlayButton) {

@@ -53,11 +53,9 @@ struct SnackBarPreview: View {
                             heading: heading.isEmpty ? nil : heading,
                             description: description.isEmpty ? nil : description,
                             extraContents: {
-                                Group {
-                                    if showExtraContents {
-                                        Image.icon(.company)
-                                            .foregroundColor(SwiftUI.Color.white)
-                                    }
+                                if showExtraContents {
+                                    Image.icon(.company)
+                                        .foregroundColor(SwiftUI.Color.white)
                                 }
                             },
                             action: "액션"

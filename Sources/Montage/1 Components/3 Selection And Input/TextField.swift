@@ -461,8 +461,9 @@ private extension TextField {
     var autoCompletionContent: some View {
         Group {
             if let autoCompletionDataSource {
+                let itemCount = autoCompletionDataSource.totalNumberOfItems
                 VStack(alignment: .leading, spacing: 4) {
-                    if autoCompletionDataSource.totalNumberOfItems > 0 {
+                    if itemCount > 0 {
                         autoCompletionDataSource.headerView()
                     }
                     LazyVStack(alignment: .leading, spacing: 4, pinnedViews: [.sectionHeaders]) {
@@ -498,12 +499,12 @@ private extension TextField {
                             }
                         }
                     }
-                    if autoCompletionDataSource.totalNumberOfItems > 0 {
+                    if itemCount > 0 {
                         autoCompletionDataSource.footerView()
                     }
                 }
-                .padding(.horizontal, autoCompletionDataSource.totalNumberOfItems == 0 ? 0 : 20)
-                .padding(.vertical, autoCompletionDataSource.totalNumberOfItems == 0 ? 0 : 8)
+                .padding(.horizontal, itemCount == 0 ? 0 : 20)
+                .padding(.vertical, itemCount == 0 ? 0 : 8)
             }
         }
     }

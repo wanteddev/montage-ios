@@ -100,7 +100,7 @@ struct FullModalPreview: View {
                     }
                     
                     VStack(spacing: 0) {
-                        ForEach(0...itemCounts[itemCountsIndex], id: \.self) { _ in
+                        ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { _ in
                             Text("텍스트입니다")
                         }
                     }

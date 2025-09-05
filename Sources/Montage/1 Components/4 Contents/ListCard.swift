@@ -121,7 +121,9 @@ public struct ListCard: View {
     // MARK: - Body
     
     @State private var textAreaWidth: CGFloat = 0
-
+    @State private var hasTopContent: Bool = false
+    @State private var hasBottomContent: Bool = false
+    
     public var body: some View {
         HStack(alignment: .center, spacing: 12) {
             leadingContent()
@@ -138,7 +140,15 @@ public struct ListCard: View {
                     
                 VStack(alignment: .leading, spacing: 8) {
                     topContent()
-                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                        .ifEmptyView { isEmpty in hasTopContent = !isEmpty }
+                        .if(hasTopContent) {
+                            $0.skeleton(
+                                isPresented: skeleton,
+                                kind: .rectangle(cornerRadius: 3),
+                                size: CGSize(width: 48, height: 20)
+                            )
+                            .frame(alignment: .leading)
+                        }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
@@ -166,11 +176,14 @@ public struct ListCard: View {
                     }
                     
                     bottomContent()
-                        .skeleton(
-                            isPresented: skeleton,
-                            kind: .rectangle(cornerRadius: 3),
+                        .ifEmptyView { isEmpty in hasBottomContent = !isEmpty }
+                        .if(hasBottomContent) {
+                            $0.skeleton(
+                                isPresented: skeleton,
+                                kind: .rectangle(cornerRadius: 3),
                                 size: CGSize(width: 48, height: 20)
                             )
+                        }
                     
                 }
                 .frame(maxWidth: textAreaWidth, alignment: .leading)

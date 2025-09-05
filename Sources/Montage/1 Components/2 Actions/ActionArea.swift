@@ -54,7 +54,6 @@ public struct ActionArea: View, KeyboardReadable {
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
-    @State private var captionHeight: CGFloat = .zero
     @State private var gradientOpacity: CGFloat = 1
     @State private var isExtraEmpty = true
     
@@ -86,7 +85,7 @@ public struct ActionArea: View, KeyboardReadable {
                         .frame(height: 40)
                         .offset(y: -20)
                     }
-                    .opacity(clearBackground ? 0 : gradientOpacity)
+                    .opacity(gradientOpacity)
             }
             
             VStack(spacing: 16) {

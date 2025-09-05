@@ -236,32 +236,44 @@ public enum Skeleton {
         
         func body(content: Content) -> some View {
             ZStack {
-                content
-                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-                    .hidden()
-                content
-                    .skeleton(isPresented: isPresented) {
-                        Skeleton.SkeletonView(kind)
-                            .color(color)
-                            .opacity(opacity)
-                    }
-                    .modifying {
-                        if isPresented {
-                            $0.frame(
-                                width: size?.width ?? contentSize.width,
-                                height: size?.height ?? contentSize.height
+                if isPresented {
+                    if let size {
+                        SwiftUI.Color.clear
+                            .skeleton(isPresented: isPresented) {
+                                Skeleton.SkeletonView(kind)
+                                    .color(color)
+                                    .opacity(opacity)
+                            }
+                            .frame(
+                                width: size.width,
+                                height: size.height
                             )
-                        } else {
-                            $0
-                        }
+                    } else {
+                        content
+                            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+                            .hidden()
+                        
+                        content
+                            .skeleton(isPresented: isPresented) {
+                                Skeleton.SkeletonView(kind)
+                                    .color(color)
+                                    .opacity(opacity)
+                            }
+                            .frame(
+                                width: contentSize.width,
+                                height: contentSize.height
+                            )
                     }
+                } else {
+                    content
+                }
             }
         }
     }
     
     struct SkeletonModifier<V: View>: ViewModifier {
         private let isPresented: Bool
-        @ViewBuilder private let skeletonView: () -> V
+        private let skeletonView: () -> V
         
         init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
             self.isPresented = isPresented

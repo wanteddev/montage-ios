@@ -136,6 +136,8 @@ public struct NormalCard: View {
     // MARK: - Body
     
     @State private var thumbnailWidth: CGFloat = 0
+    @State private var hasTopContent: Bool = false
+    @State private var hasBottomContent: Bool = false
     
     public var body: some View {
         Grid(alignment: .leading, verticalSpacing: 6) {
@@ -159,8 +161,11 @@ public struct NormalCard: View {
             GridRow {
                 VStack(alignment: .leading, spacing: 6) {
                     topContent()
-                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                        .padding(.top, 2)
+                        .ifEmptyView { isEmpty in hasTopContent = !isEmpty }
+                        .if(hasTopContent) {
+                            $0.skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                                .padding(.top, 2)
+                        }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
@@ -194,8 +199,11 @@ public struct NormalCard: View {
                     }
                     
                     bottomContent()
-                        .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                        .padding(.top, 2)
+                        .ifEmptyView { isEmpty in hasBottomContent = !isEmpty }
+                        .if(hasBottomContent) {
+                            $0.skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                                .padding(.top, 2)
+                        }
                 }
                 .padding(.horizontal, horizontalPadding)
                 .frame(maxWidth: thumbnailWidth, alignment: .leading)
