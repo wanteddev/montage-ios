@@ -147,7 +147,6 @@ public struct ListCard: View {
                                 kind: .rectangle(cornerRadius: 3),
                                 size: CGSize(width: 48, height: 20)
                             )
-                            .frame(alignment: .leading)
                         }
                     
                     VStack(alignment: .leading, spacing: 4) {

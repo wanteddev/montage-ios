@@ -236,36 +236,17 @@ public enum Skeleton {
         
         func body(content: Content) -> some View {
             ZStack {
+                content
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
+                    .opacity(isPresented ? 0 : 1)
+                
                 if isPresented {
-                    if let size {
-                        SwiftUI.Color.clear
-                            .skeleton(isPresented: isPresented) {
-                                Skeleton.SkeletonView(kind)
-                                    .color(color)
-                                    .opacity(opacity)
-                            }
-                            .frame(
-                                width: size.width,
-                                height: size.height
-                            )
-                    } else {
-                        content
-                            .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-                            .hidden()
-                        
-                        content
-                            .skeleton(isPresented: isPresented) {
-                                Skeleton.SkeletonView(kind)
-                                    .color(color)
-                                    .opacity(opacity)
-                            }
-                            .frame(
-                                width: contentSize.width,
-                                height: contentSize.height
-                            )
-                    }
-                } else {
-                    content
+                    let w = size?.width ?? contentSize.width
+                    let h = size?.height ?? contentSize.height
+                    Skeleton.SkeletonView(kind)
+                        .color(color)
+                        .opacity(opacity)
+                        .frame(width: w, height: h)
                 }
             }
         }
@@ -280,7 +261,7 @@ public enum Skeleton {
             self.skeletonView = skeletonView
         }
         
-        @State var animationOpacity: CGFloat = 1
+        @State private var animationOpacity: CGFloat = 1
         
         func body(content: Content) -> some View {
             if isPresented {

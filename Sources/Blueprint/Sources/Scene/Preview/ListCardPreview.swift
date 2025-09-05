@@ -42,14 +42,12 @@ struct ListCardPreview: View {
                     if showTopContent {
                         HStack {
                             ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
                         }
                     }
                 }
                 .bottomContent {
                     if showBottomContent {
                         HStack {
-                            ContentBadge(text: "텍스트")
                             ContentBadge(text: "텍스트")
                         }
                     }
