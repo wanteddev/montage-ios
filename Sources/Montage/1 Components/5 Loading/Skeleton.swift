@@ -264,22 +264,21 @@ public enum Skeleton {
         @State private var animationOpacity: CGFloat = 1
         
         func body(content: Content) -> some View {
-            if isPresented {
-                skeletonView()
-                    .opacity(animationOpacity)
-                    .onAppear {
-                        withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)
-                            .repeatForever(autoreverses: true)) {
-                                animationOpacity = 0.5
-                            }
-                    }
-                    .onDisappear {
-                        withAnimation(.none) {
-                            animationOpacity = 1
+            ZStack {
+                content.opacity(isPresented ? 0 : 1)
+                if isPresented {
+                    skeletonView()
+                        .opacity(animationOpacity)
+                        .onAppear {
+                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)
+                                .repeatForever(autoreverses: true)) {
+                                    animationOpacity = 0.5
+                                }
                         }
-                    }
-            } else {
-                content
+                        .onDisappear {
+                            withAnimation(.none) { animationOpacity = 1 }
+                        }
+                }
             }
         }
     }
