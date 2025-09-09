@@ -243,10 +243,14 @@ public enum Skeleton {
                 if isPresented {
                     let w = size?.width ?? contentSize.width
                     let h = size?.height ?? contentSize.height
-                    Skeleton.SkeletonView(kind)
-                        .color(color)
-                        .opacity(opacity)
+                    SwiftUI.Color.clear
                         .frame(width: w, height: h)
+                        .skeleton(isPresented: isPresented) {
+                            Skeleton.SkeletonView(kind)
+                                .color(color)
+                                .opacity(opacity)
+                                .frame(width: w, height: h)
+                        }
                 }
             }
         }
@@ -270,7 +274,7 @@ public enum Skeleton {
                     skeletonView()
                         .opacity(animationOpacity)
                         .onAppear {
-                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)
+                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 1)
                                 .repeatForever(autoreverses: true)) {
                                     animationOpacity = 0.5
                                 }
