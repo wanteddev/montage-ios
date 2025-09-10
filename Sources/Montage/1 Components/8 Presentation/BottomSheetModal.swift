@@ -76,13 +76,13 @@ public struct BottomSheetModal: View {
     
     // MARK: - Initializer
     
-    private var content: () -> any View
+    private var content: () -> AnyView
     
     /// 바텀 시트 모달을 초기화합니다.
     ///
     /// - Parameter content: 모달 내에 표시할 콘텐츠를 반환하는 클로저
-    public init(_ content: @escaping () -> any View) {
-        self.content = content
+    public init<V: View>(@ViewBuilder _ content: @escaping () -> V) {
+        self.content = { AnyView(content()) }
     }
     
     // MARK: - Body
@@ -105,39 +105,29 @@ public struct BottomSheetModal: View {
                             .frame(width: 40, height: 5)
                     }
                 }
-                Group {
-                    let contentView = AnyView(content())
-                        .padding(contentEdgeInsets)
-                        .onGeometryChange(
-                            for: CGFloat.self,
-                            of: { $0.size.height },
-                            action: { contentHeight = $0 }
-                        )
-                    
-                    if bottomSheetContentHeight > bottomSheetMaxHeight ||
-                        (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
-                        ZStack(alignment: .top) {
-                            ScrollView(scrollStatus: $scrollStatus) {
-                                VStack(spacing: 0) {
-                                    SwiftUI.Color.clear
-                                        .frame(height: navigationHeight)
-                                    HStack(spacing: 0) {
-                                        Spacer(minLength: 0)
-                                        contentView
-                                        Spacer(minLength: 0)
-                                    }
+                if bottomSheetContentHeight > bottomSheetMaxHeight ||
+                    (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
+                    ZStack(alignment: .top) {
+                        ScrollView(scrollStatus: $scrollStatus) {
+                            VStack(spacing: 0) {
+                                SwiftUI.Color.clear
+                                    .frame(height: navigationHeight)
+                                HStack(spacing: 0) {
+                                    Spacer(minLength: 0)
+                                    contentContainer()
+                                    Spacer(minLength: 0)
                                 }
                             }
-                            
-                            navigationView
                         }
-                    } else {
-                        VStack(spacing: 0) {
-                            navigationView
-                            contentView
-                            if bottomSheetContentHeight <= bottomSheetMaxHeight {
-                                Spacer(minLength: 0)
-                            }
+                        
+                        navigationView
+                    }
+                } else {
+                    VStack(spacing: 0) {
+                        navigationView
+                        contentContainer()
+                        if bottomSheetContentHeight <= bottomSheetMaxHeight {
+                            Spacer(minLength: 0)
                         }
                     }
                 }
@@ -224,6 +214,7 @@ public struct BottomSheetModal: View {
     
     // MARK: - Private
     
+    @ViewBuilder
     private var navigationView: some View {
         Group {
             if let navigation {
@@ -233,6 +224,17 @@ public struct BottomSheetModal: View {
             }
         }
         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
+    }
+    
+    @ViewBuilder
+    private func contentContainer() -> some View {
+        content()
+            .padding(contentEdgeInsets)
+            .onGeometryChange(
+                for: CGFloat.self,
+                of: { $0.size.height },
+                action: { contentHeight = $0 }
+            )
     }
     
     private var contentEdgeInsets: EdgeInsets {
@@ -301,7 +303,7 @@ public struct BottomSheetModal: View {
 /// ```
 struct BottomSheetModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
-    private let bottomSheetContent: () -> any View
+    private let bottomSheetContent: () -> AnyView
     private let needHandle: Bool
     private let resize: BottomSheetModal.Resize
     private let ignoresEdgeInsets: Bool
@@ -318,9 +320,9 @@ struct BottomSheetModalModifier: ViewModifier {
     ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
     ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
     ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
-    init(
+    init<V: View>(
         isPresented: Binding<Bool>,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> V,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
@@ -328,7 +330,7 @@ struct BottomSheetModalModifier: ViewModifier {
         actionAreaModel: ActionArea.Model? = nil
     ) {
         _isPresented = isPresented
-        bottomSheetContent = content
+        bottomSheetContent = { AnyView(content()) }
         self.needHandle = needHandle
         self.resize = resize
         self.ignoresEdgeInsets = ignoresEdgeInsets
@@ -340,7 +342,7 @@ struct BottomSheetModalModifier: ViewModifier {
         content
             .sheet(isPresented: $isPresented) {
                 BottomSheetModal {
-                    AnyView(bottomSheetContent())
+                    bottomSheetContent()
                 }
                 .needHandle(needHandle)
                 .resize(resize)
@@ -366,12 +368,12 @@ extension View {
     ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
     /// - Returns: 바텀 시트 모달이 적용된 뷰
-    public func bottomSheetModal(
+    public func bottomSheetModal<V: View>(
         isPresented: Binding<Bool>,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
         actionAreaModel: ActionArea.Model? = nil,
-        _ content: @escaping () -> any View,
+        @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {
         modifier(

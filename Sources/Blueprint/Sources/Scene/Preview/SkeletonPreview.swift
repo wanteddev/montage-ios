@@ -18,10 +18,11 @@ public struct SkeletonPreview: View {
     @State private var color: SwiftUI.Color = .semantic(.fillNormal)
     @State private var opacity: CGFloat = 1
     
-    private let kinds: [Skeleton.Kind] = [
+    private let kinds: [Skeleton.Kind?] = [
         .text(),
         .rectangle(),
-        .circle
+        .circle,
+        .none
     ]
     
     private let alignments: [Skeleton.Align] = [
@@ -79,6 +80,15 @@ public struct SkeletonPreview: View {
                                 color: color,
                                 opacity: opacity
                             )
+                    case .none:
+                        Triangle()
+                            .fill(.blue)
+                            .frame(width: 100, height: 100)
+                            .skeleton(isPresented: isPresented) {
+                                Triangle()
+                                    .fill(color)
+                                    .frame(width: 100, height: 100)
+                            }
                     }
                 }
                 .padding()
@@ -90,7 +100,7 @@ public struct SkeletonPreview: View {
                     }
                     HStack {
                         Text("kind")
-                        SegmentedControl(selectedIndex: $kindIndex, labels: kinds.map(\.description))
+                        SegmentedControl(selectedIndex: $kindIndex, labels: kinds.map { $0?.description ?? "custom" })
                             .size(.small)
                     }
                     switch kinds[kindIndex] {

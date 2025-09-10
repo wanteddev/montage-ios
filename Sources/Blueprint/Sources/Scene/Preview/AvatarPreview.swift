@@ -66,18 +66,15 @@ struct AvatarPreview: View {
             }
             .hidesIndicators()
             
-            AvatarGroupPreview()
+            GroupAvatarPreview()
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
-struct AvatarGroupPreview: View {
-    let url1 = "https://static.wanted.co.kr/images/company/3778/brr1yf93dsndmgce__1080_790.png"
-    let url2 = "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg"
-    let url3 = "https://static.wanted.co.kr/images/school/PNG_162.png"
-    let url4 = "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fwdes%2F0_5.c4c61c5a.png&w=100&q=100"
-    let url5 = "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fschool%2FPNG_195.png&w=120&q=90"
+struct GroupAvatarPreview: View {
+    private let allUrls = [        "https://static.wanted.co.kr/images/company/3778/brr1yf93dsndmgce__1080_790.png",        "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg",        "https://static.wanted.co.kr/images/school/PNG_162.png",        "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fwdes%2F0_5.c4c61c5a.png&w=100&q=100",        "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fschool%2FPNG_195.png&w=120&q=90"
+    ]
     
     @State var variantIndex: Int = 0
     @State var sizeIndex: Int = 0
@@ -91,7 +88,7 @@ struct AvatarGroupPreview: View {
     let sizes: [GroupAvatar.Size] = [.xsmall, .small]
 
     var body: some View {
-        Text("AvatarGroup").font(.title)
+        Text("GroupAvatar").font(.title)
         ScrollView {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
@@ -135,7 +132,7 @@ struct AvatarGroupPreview: View {
                 }
                 HStack {
                     Text("item count")
-                    SwiftUI.Slider(value: $itemCount, in: 1...5)
+                    SwiftUI.Slider(value: $itemCount, in: 1...CGFloat(allUrls.count))
                     Text("trailing content")
                     Switch($trailingContent)
                 }
@@ -147,7 +144,7 @@ struct AvatarGroupPreview: View {
     }
     
     var imageUrls: [String] {
-        var urls = Array([url1, url2, url3, url4, url5].prefix(Int(itemCount)))
+        var urls = Array(allUrls.prefix(Int(itemCount)))
         if invalidUrl {
             urls[Int.random(in: 0..<urls.count)] = "https://invalid-url"
         }

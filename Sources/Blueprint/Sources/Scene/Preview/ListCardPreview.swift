@@ -38,25 +38,31 @@ struct ListCardPreview: View {
                 )
                 .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
                 .extraCaption(showExtraCaption ? "추가 캡션" : nil)
-                .topContent(showTopContent ? {
-                    HStack {
-                        ContentBadge(text: "텍스트")
-                        ContentBadge(text: "텍스트")
+                .topContent {
+                    if showTopContent {
+                        HStack {
+                            ContentBadge(text: "텍스트")
+                        }
                     }
-                } : nil)
-                .bottomContent(showBottomContent ? {
-                    HStack {
-                        ContentBadge(text: "텍스트")
-                        ContentBadge(text: "텍스트")
+                }
+                .bottomContent {
+                    if showBottomContent {
+                        HStack {
+                            ContentBadge(text: "텍스트")
+                        }
                     }
-                } : nil)
-                .leadingContent(showLeadingContent ? {
-                    Control.checkbox(state: .unchecked)
-                } : nil)
-                .trailingContent(showTrailingContent ? {
-                    Image.icon(.chevronRight)
-                        .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
-                } : nil)
+                }
+                .leadingContent {
+                    if showLeadingContent {
+                        Control.checkbox(state: .unchecked)
+                    }
+                }
+                .trailingContent {
+                    if showTrailingContent {
+                        Image.icon(.chevronRight)
+                            .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
+                    }
+                }
                 
                 Text("Options").bold()
                 

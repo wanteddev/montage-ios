@@ -39,7 +39,7 @@ struct TopNavigationPreview: View {
             self.rawValue.capitalized
         }
     }
-
+    
     @Environment(\.presentationMode) var presentationMode
     
     @State var variant: Variant = .normal
@@ -92,11 +92,13 @@ struct TopNavigationPreview: View {
                     alternative: actionAreaAlt ? .init(text: "대체", action: {}) : nil
                 ),
                 caption: actionAreaCaption ? "캡션" : nil,
-                extra: actionAreaExtra ? {
-                    Rectangle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                        .frame(height: 100)
-                } : nil,
+                extra: {
+                    if actionAreaExtra {
+                        Rectangle()
+                            .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                            .frame(height: 100)
+                    }
+                },
                 extraDivider: true
             )
         } else {

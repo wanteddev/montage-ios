@@ -69,22 +69,36 @@ public struct Accordion: View {
     
     private let title: String
     private let description: String?
-    @ViewBuilder private let content: (() -> any View)?
+    private let content: () -> AnyView
     
     /// 아코디언을 생성합니다.
-    /// 
+    ///
+    /// - Parameters:
+    ///   - title: 아코디언의 제목
+    ///   - description: 확장 시 표시될 설명 텍스트 (선택 사항)
+    public init(
+        title: String,
+        description: String? = nil
+    ) {
+        self.title = title
+        self.description = description
+        self.content = { AnyView(EmptyView()) }
+    }
+    
+    /// 아코디언을 생성합니다.
+    ///
     /// - Parameters:
     ///   - title: 아코디언의 제목
     ///   - description: 확장 시 표시될 설명 텍스트 (선택 사항)
     ///   - content: 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항)
-    public init(
+    public init<V: View>(
         title: String,
         description: String? = nil,
-        content: (() -> any View)? = nil
+        @ViewBuilder content: @escaping () -> V
     ) {
         self.title = title
         self.description = description
-        self.content = content
+        self.content = { AnyView(content()) }
     }
     
     // MARK: - Modifiers
@@ -104,7 +118,7 @@ public struct Accordion: View {
     private var hideDivider = false
     private var leadingIcon: Icon? = nil
     private var leadingIconColor: SwiftUI.Color? = nil
-    private var trailingContent: (() -> any View)? = nil
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
     ///
@@ -195,9 +209,9 @@ public struct Accordion: View {
     ///
     /// - Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
     /// - Returns: 수정된 아코디언 인스턴스
-    public func trailingContent(_ trailingContent: (() -> any View)? = nil) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = trailingContent
+        zelf.trailingContent = { AnyView(trailingContent()) }
         return zelf
     }
     
@@ -205,8 +219,8 @@ public struct Accordion: View {
     
     @State private var isPressed = false
     @State private var isExpanded = false
-    @State private var trailingContentSize: CGSize = .zero
-    @State private var contentSize: CGSize = .zero
+    @State private var trailingContentEmpty = true
+    @State private var isContentEmpty = true
     
     public var body: some View {
         ZStack(alignment: .bottom) {
@@ -230,18 +244,10 @@ public struct Accordion: View {
                         )
                     Spacer(minLength: 0)
                     
-                    Group {
-                        if let trailingContent {
-                            AnyView(trailingContent())
-                        }
-                    }
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { trailingContentSize = $0 }
-                    )
+                    trailingContent()
+                        .ifEmptyView { trailingContentEmpty = $0 }
                     
-                    if trailingContentSize == .zero {
+                    if trailingContentEmpty {
                         Image.icon(.chevronDown)
                             .resizable()
                             .frame(width: 20, height: 20)
@@ -275,25 +281,18 @@ public struct Accordion: View {
                                 )
                         }
                         
-                        Spacer().frame(height: 12)
-                            .if(description.isNilOrEmpty == false && contentSize != .zero)
-                        
-                        Group {
-                            if let content {
-                                AnyView(content())
-                            }
+                        if !description.isNilOrEmpty && !isContentEmpty {
+                            Spacer(minLength: 12)
                         }
-                        .onGeometryChange(
-                            for: CGSize.self,
-                            of: { $0.size },
-                            action: { contentSize = $0 }
-                        )
+                        
+                        content()
+                            .ifEmptyView { isContentEmpty = $0 }
                     }
-                    .padding(.bottom, description.isNilOrEmpty && contentSize == .zero ? 0 : 16)
+                    .padding(.bottom, description.isNilOrEmpty && isContentEmpty ? 0 : 16)
                     .padding(.horizontal, fillWidth ? 20 : 0)
                 }
             }
-                
+            
             Rectangle()
                 .frame(height: 1)
                 .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))

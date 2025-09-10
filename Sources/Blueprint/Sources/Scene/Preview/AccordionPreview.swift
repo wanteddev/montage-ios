@@ -29,24 +29,28 @@ struct AccordionPreview: View {
                     Accordion(
                         title: multilineTitle ? "제목이 두 줄이\n될 수도 있다고 합니다" : "제목",
                         description: description ? "제목에 대한 상세 내용을 입력해주세요.\n긴 컨텐츠라면 접은 상태를 기본 값으로 사용하세요." : nil,
-                        content: content ? {
-                            recursive ?
-                            Group {
-                                Accordion(title: "1.제목", description: "컨텐츠에 아코디언이 또 들어갈 수도 있지요.")
-                                Accordion(title: "2.제목", content: { dummyContent })
-                                Accordion(title: "3.제목(fillWidth = true)", content: { dummyContent })
-                                    .fillWidth()
-                            } :
-                            dummyContent
-                        } : nil
+                        content: {
+                            if content {
+                                if recursive {
+                                    Accordion(title: "1.제목", description: "컨텐츠에 아코디언이 또 들어갈 수도 있지요.")
+                                    Accordion(title: "2.제목", content: { dummyContent })
+                                    Accordion(title: "3.제목(fillWidth = true)", content: { dummyContent })
+                                        .fillWidth()
+                                } else {
+                                    dummyContent
+                                }
+                            }
+                        }
                     )
                     .verticalPadding(verticalPaddings[verticalPaddingIndex])
                     .hideDivider(hideDivider)
                     .fillWidth(fillWidth)
                     .leadingIcon(leadingIcon ? .alignJustify : nil)
-                    .trailingContent(trailingContent ? {
-                        ContentBadge(variant: .solid, text: "뱃지")
-                    } : nil)
+                    .trailingContent {
+                        if trailingContent {
+                            ContentBadge(variant: .solid, text: "뱃지")
+                        }
+                    }
                 }
                 Text("Options").bold()
                 HStack {

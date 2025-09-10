@@ -9,7 +9,7 @@ import SwiftUI
 import Montage
 
 struct SectionHeaderPreview: View {
-    @State var title: String = "제목"
+    @State var title: String = "제목sdlkhfalksdflkasdklfkalddsdcfls"
     @State var sizeIndex: Int = 2
     @State var headingContent = false
     @State var titleColor = false
@@ -30,10 +30,16 @@ struct SectionHeaderPreview: View {
                     Spacer()
                 }
                 SectionHeader(title: title)
-                    .headingContent(headingContent ? {
-                        FilterChip(variant: .outlined, size : .small, text: "텍스트")
-                    } : nil)
-                    .trailingContent(trailingContent ? { ContentBadge(text: "텍스트") } : nil)
+                    .headingContent {
+                        if headingContent {
+                            FilterChip(variant: .outlined, size : .small, text: "텍스트")
+                        }
+                    }
+                    .trailingContent {
+                        if trailingContent {
+                            ContentBadge(text: "텍스트")
+                        }
+                    }
                     .size(sizes[sizeIndex])
                     .if(titleColor) {
                         $0.titleColor(.semantic(.accentBackgroundPink))

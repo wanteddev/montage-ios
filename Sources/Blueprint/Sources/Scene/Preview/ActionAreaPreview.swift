@@ -69,8 +69,6 @@ struct ActionAreaPreview: View {
         @State private var mainToastModel: Toast.Model?
         @State private var subToastModel: Toast.Model?
         @State private var alternativeToastModel: Toast.Model?
-        @State private var backgroundColor = false
-        @State private var contentBottomPadding = true
         @State private var caption = false
         @State private var extra = false
         @State private var extraDivider = true
@@ -159,14 +157,6 @@ struct ActionAreaPreview: View {
         var body: some View {
             VStack(alignment: .leading, spacing: .zero) {
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("BGColor(for Test) :")
-                        Switch($backgroundColor)
-                    }
-                    HStack {
-                        Text("Content Bottom Padding(for Test) :")
-                        Switch($contentBottomPadding)
-                    }
                     Text("Options").bold()
                     AnyView(variantOptionView())
                     HStack {
@@ -201,15 +191,12 @@ struct ActionAreaPreview: View {
                 Text("Preview").bold()
                     .padding(.horizontal)
                 ScrollView(scrollStatus: $scrollStatus) {
-                    ZStack {
-                        Color.clear
-                        VStack {
-                            ForEach(0..<30, id: \.self) {
-                                TextField(text: .constant("Item \($0)"))
-                            }
+                    LazyVStack {
+                        ForEach(0..<30, id: \.self) {
+                            TextField(text: .constant("Item \($0)"))
                         }
-                        .padding(.bottom, contentBottomPadding ? 30 : 0)
                     }
+                    .padding()
                 }
                 .actionArea(model: .init(
                     variant: p,
@@ -217,13 +204,14 @@ struct ActionAreaPreview: View {
                         gradientIndex == 0 ? !scrollStatus.scrolledToMax : !hideGradient
                     ),
                     caption: caption ? "caption" : nil,
-                    extra: extra ? {
-                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                            .frame(height: 50)
-                    } : nil,
+                    extra: {
+                        if extra {
+                            Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                                .frame(height: 50)
+                        }
+                    },
                     extraDivider: extraDivider
                 ))
-                .background(backgroundColor ? Color.orange : SwiftUI.Color.semantic(.backgroundNormal))
             }
             .toast($mainToastModel)
             .toast($subToastModel)
