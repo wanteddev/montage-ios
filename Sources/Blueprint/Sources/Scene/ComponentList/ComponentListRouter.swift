@@ -32,7 +32,7 @@ extension ComponentListRouter: ComponentListRoutingLogic {
         
         switch itemType {
         case .typography:
-            vc = TypographyPreviewBuilder().build()
+            vc = UIHostingController(rootView: TypographyPreview())
         case .color:
             vc = ColorPreviewBuilder().build()
         case .icon, .grid:

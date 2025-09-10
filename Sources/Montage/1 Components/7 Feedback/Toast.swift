@@ -152,8 +152,7 @@ public struct Toast: View {
                 HStack(alignment: .center, spacing: 8) {
                     Icon(variant)
                     Text(message)
-                        .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
-                        .paragraph(variant: .body2)
+                        .paragraphNew(variant: .body2, weight: .bold, semantic: .staticWhite)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.vertical, 5)

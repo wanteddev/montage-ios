@@ -41,15 +41,19 @@ struct ListCellPreview: View {
                 .verticalAlign(verticalAlignments[verticalAlignmentIndex])
                 .fillWidth(fillWidth)
                 .chevron(chevron)
-                .leadingContent(leadingContent ? {
-                    Image.icon(.star)
-                        .resizable()
-                        .frame(width: 56, height: 56)
-                        .scaledToFit()
-                } : nil)
-                .trailingContent(trailingContent ? {
-                    Control.checkmark(checked: $0)
-                } : nil)
+                .leadingContent {
+                    if leadingContent {
+                        Image.icon(.star)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                            .scaledToFit()
+                    }
+                }
+                .trailingContent { selected in
+                    if trailingContent {
+                        Control.checkmark(checked: selected)
+                    }
+                }
                 .textEllipsis(textEllipsis)
                 .divider(divider)
                 .disable(disable)

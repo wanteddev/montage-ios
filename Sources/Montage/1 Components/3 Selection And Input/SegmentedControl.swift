@@ -123,12 +123,11 @@ public struct SegmentedControl: View {
                             .padding(.vertical, 2)
                         
                         Text(items[index].title)
-                            .typography(
+                            .paragraphNew(
                                 variant: buttonTitleFont,
                                 weight: .medium,
                                 color: buttonForegroundColor(isSelected: selectedIndex == index)
                             )
-                            .paragraph(variant: buttonTitleFont)
                     }
                     .padding(buttonInsets)
                     .frame(width: max(0, buttonWidth))

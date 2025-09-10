@@ -1,5 +1,5 @@
 //
-//  PopupModalPreivew.swift
+//  PopupModalPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 2/21/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Montage
 
-struct PopupModalPreivew: View {
+struct PopupModalPreview: View {
     @State private var show = false
 
     @State private var itemCountsIndex: Int = 0
@@ -21,7 +21,7 @@ struct PopupModalPreivew: View {
     @State private var buttonsIndex = 0
     @State private var caption = false
     @State private var extra = false
-    @State private var extraDivider = false
+    @State private var extraDivider = true
     
     @State private var refreshTask: Task<(), Never>?
 
@@ -100,10 +100,12 @@ struct PopupModalPreivew: View {
             ? .init(
                 variant: actionAreaVariant,
                 caption: caption ? "caption" : nil,
-                extra: extra ? {
-                    Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                        .frame(height: 50)
-                } : nil,
+                extra: {
+                    if extra {
+                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                            .frame(height: 50)
+                    }
+                },
                 extraDivider: extraDivider
             )
             : nil,
@@ -202,5 +204,5 @@ extension PopupModal.Resize: @retroactive Hashable {
 }
 
 #Preview {
-    PopupModalPreivew()
+    PopupModalPreview()
 }

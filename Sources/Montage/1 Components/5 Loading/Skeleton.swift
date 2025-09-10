@@ -148,10 +148,9 @@ public enum Skeleton {
         public init(_ kind: Kind) {
             self.kind = kind
         }
-
+        
         // MARK: - Body
         
-        @State private var size: CGSize = .zero
         public var body: some View {
             Group {
                 switch kind {
@@ -210,14 +209,14 @@ public enum Skeleton {
             return zelf
         }
     }
-
+    
     struct PredefinedSkeletonModifier: ViewModifier {
         private let kind: Skeleton.Kind
         private let color: SwiftUI.Color
         private let opacity: CGFloat
         private let size: CGSize?
-
-        private var isPresented: Bool
+        
+        private let isPresented: Bool
         
         init(
             isPresented: Bool,
@@ -230,7 +229,7 @@ public enum Skeleton {
             self.kind = kind
             self.color = color ?? .semantic(.fillNormal)
             self.opacity = opacity ?? 1
-            self.size = size
+            self.size = (size?.isNegativeOrNonfinite ?? false) ? nil : size
         }
         
         @State private var contentSize: CGSize = .zero
@@ -239,76 +238,51 @@ public enum Skeleton {
             ZStack {
                 content
                     .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
-                    .hidden()
-                    .modifying {
-                        if isPresented {
-                            $0.frame(
-                                width: size?.width ?? contentSize.width,
-                                height: size?.height ?? contentSize.height
-                            )
-                        } else {
-                            $0
+                    .opacity(isPresented ? 0 : 1)
+                
+                if isPresented {
+                    let w = size?.width ?? contentSize.width
+                    let h = size?.height ?? contentSize.height
+                    SwiftUI.Color.clear
+                        .frame(width: w, height: h)
+                        .skeleton(isPresented: isPresented) {
+                            Skeleton.SkeletonView(kind)
+                                .color(color)
+                                .opacity(opacity)
+                                .frame(width: w, height: h)
                         }
-                    }
-                content
-                    .skeleton(isPresented: isPresented) {
-                        Skeleton.SkeletonView(kind)
-                            .color(color)
-                            .opacity(opacity)
-                    }
-                    .modifying {
-                        if isPresented {
-                            $0.frame(
-                                width: size?.width ?? contentSize.width,
-                                height: size?.height ?? contentSize.height
-                            )
-                        } else {
-                            $0
-                        }
-                    }
+                }
             }
         }
     }
     
-    struct SkeletonModifier: ViewModifier {
-        private var isPresented: Bool
-        @ViewBuilder private let skeletonView: () -> any View
-
-        init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> any View) {
+    struct SkeletonModifier<V: View>: ViewModifier {
+        private let isPresented: Bool
+        private let skeletonView: () -> V
+        
+        init(isPresented: Bool, @ViewBuilder skeletonView: @escaping () -> V) {
             self.isPresented = isPresented
             self.skeletonView = skeletonView
         }
         
-        @State var animationOpacity: CGFloat = 1
+        @State private var animationOpacity: CGFloat = 1
         
         func body(content: Content) -> some View {
-            if isPresented {
-                AnyView(skeletonView())
-                    .opacity(animationOpacity)
-                    .onChange(of: animationOpacity) { _ in
-                        if animationOpacity == 1 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
+            ZStack {
+                content.opacity(isPresented ? 0 : 1)
+                if isPresented {
+                    skeletonView()
+                        .opacity(animationOpacity)
+                        .onAppear {
+                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 1)
+                                .repeatForever(autoreverses: true)) {
                                     animationOpacity = 0.5
                                 }
-                            }
-                        } else if animationOpacity == 0.5 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
-                                    animationOpacity = 1
-                                }
-                            }
                         }
-                    }
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
-                            withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 2)) {
-                                animationOpacity = 0.5
-                            }
+                        .onDisappear {
+                            withAnimation(.none) { animationOpacity = 1 }
                         }
-                    }
-            } else {
-                content
+                }
             }
         }
     }
@@ -323,13 +297,13 @@ extension View {
     ///   - isPresented: 스켈레톤 표시 여부를 제어하는 불리언 값
     ///   - skeletonView: 커스텀 스켈레톤 뷰를 생성하는 클로저
     /// - Returns: 스켈레톤 기능이 적용된 뷰
-    public func skeleton(
+    public func skeleton<V: View>(
         isPresented: Bool,
-        @ViewBuilder skeletonView: @escaping () -> any View
+        @ViewBuilder skeletonView: @escaping () -> V
     ) -> some View {
         modifier(Skeleton.SkeletonModifier(isPresented: isPresented, skeletonView: skeletonView))
     }
-
+    
     /// 현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
     ///
     /// - Parameters:

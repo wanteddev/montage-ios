@@ -30,7 +30,7 @@ ActionArea(variant: .cancel(
 ))
 .extra({ 
     Text("추가 정보")
-        .typography(variant: .label2) 
+        .typographyNew(variant: .label2) 
 })
 ```
 

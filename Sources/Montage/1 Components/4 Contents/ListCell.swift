@@ -88,9 +88,7 @@ public struct ListCell: View {
         ZStack(alignment: .bottom) {
             ZStack {
                 HStack(alignment: verticalAlignment, spacing: 8) {
-                    if let leadingContent {
-                        AnyView(leadingContent())
-                    }
+                    leadingContent()
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Group {
@@ -105,18 +103,15 @@ public struct ListCell: View {
                         
                         if let caption {
                             Text(caption)
-                                .typography(
+                                .paragraphNew(
                                     variant: .label2,
                                     semantic: .labelAlternative
                                 )
-                                .paragraph(variant: .label2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                     
-                    if let trailingContent {
-                        AnyView(trailingContent(selected))
-                    }
+                    trailingContent(selected)
                     
                     VStack {
                         Image.icon(.chevronRightTightSmall)
@@ -161,8 +156,8 @@ public struct ListCell: View {
     private var selected = false
     private var divider = false
     private var chevron = false
-    private var leadingContent: (() -> any View)? = nil
-    private var trailingContent: ((Bool) -> any View)? = nil
+    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContent: (Bool) -> AnyView = { _ in AnyView(EmptyView()) }
     private var interactionPadding: CGFloat = 12
     private var verticalAlignment: VerticalAlignment = .top
     private var highlightText: String? = nil
@@ -341,9 +336,9 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - contents: 표시할 콘텐츠를 생성하는 클로저
     /// - Returns: 수정된 ListCell 인스턴스
-    public func leadingContent(_ contents: (() -> any View)? = nil) -> Self {
+    public func leadingContent<V: View>(@ViewBuilder _ contents: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leadingContent = contents
+        zelf.leadingContent = { AnyView(contents()) }
         return zelf
     }
     
@@ -355,9 +350,9 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음)
     /// - Returns: 수정된 ListCell 인스턴스
-    public func trailingContent(_ contents: ((Bool) -> any View)? = nil) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ contents: @escaping (Bool) -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = contents
+        zelf.trailingContent = { AnyView(contents($0)) }
         return zelf
     }
     
@@ -400,29 +395,31 @@ extension ListCell {
     }
     
     private var titleView: some View {
-        if let highlightText {
-            let attributedString: AttributedString = {
-                var string = AttributedString(stringLiteral: title)
-                string.font = .font(variant: titleTypography.variant, weight: selected ? .medium : titleTypography.weight)
-                string.foregroundColor = .semantic(normalTitleColor)
-                guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
+        Group {
+            if let highlightText {
+                let attributedString: AttributedString = {
+                    var string = AttributedString(stringLiteral: title)
+                    string.font = .font(variant: titleTypography.variant, weight: selected ? .medium : titleTypography.weight)
+                    string.foregroundColor = .semantic(normalTitleColor)
+                    guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
+                        return string
+                    }
+                    string[range].font = .font(variant: titleTypography.variant, weight: .bold)
+                    string[range].foregroundColor = .semantic(normalTitleColor)
                     return string
-                }
-                string[range].font = .font(variant: titleTypography.variant, weight: .bold)
-                string[range].foregroundColor = .semantic(normalTitleColor)
-                return string
-            }()
-            
-            return Text(attributedString)
-                .paragraph(variant: titleTypography.variant)
-        } else {
-            return Text(title)
-                .typography(
-                    variant: titleTypography.variant,
-                    weight: selected ? .medium : titleTypography.weight,
-                    semantic: normalTitleColor
-                )
-                .paragraph(variant: titleTypography.variant)
+                }()
+                
+                Text(attributedString)
+                    .tracking(titleTypography.variant.tracking)
+                    .adjustLineHeight(variant: titleTypography.variant)
+            } else {
+                Text(title)
+                    .paragraphNew(
+                        variant: titleTypography.variant,
+                        weight: selected ? .medium : titleTypography.weight,
+                        semantic: normalTitleColor
+                    )
+            }
         }
     }
 }

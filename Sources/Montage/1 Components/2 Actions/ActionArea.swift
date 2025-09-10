@@ -31,7 +31,7 @@ import SwiftUI
 /// ))
 /// .extra({ 
 ///     Text("추가 정보")
-///         .typography(variant: .label2) 
+///         .typographyNew(variant: .label2) 
 /// })
 /// ```
 ///
@@ -54,25 +54,26 @@ public struct ActionArea: View, KeyboardReadable {
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
-    @State private var captionHeight: CGFloat = .zero
     @State private var gradientOpacity: CGFloat = 1
+    @State private var isExtraEmpty = true
     
     public var body: some View {
         VStack(spacing: 0) {
-            if let extra = extra {
-                ZStack(alignment: .top) {
-                    AnyView(extra())
-                        .padding([.top, .horizontal], 20)
-                        .padding(.bottom, 24)
-                        .background(backgroundColor)
-                    
-                    if extraDivider {
-                        Rectangle()
-                            .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral))
-                            .frame(height: 1)
-                    }
+            ZStack(alignment: .top) {
+                extra()
+                    .padding([.top, .horizontal], 20)
+                    .padding(.bottom, 24)
+                    .background(backgroundColor)
+                    .ifEmptyView { isExtraEmpty = $0 }
+                
+                if !isExtraEmpty && extraDivider {
+                    Rectangle()
+                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral))
+                        .frame(height: 1)
                 }
-            } else {
+            }
+            
+            if isExtraEmpty {
                 SwiftUI.Color.semantic(.backgroundElevated)
                     .frame(height: 0)
                     .overlay {
@@ -84,7 +85,7 @@ public struct ActionArea: View, KeyboardReadable {
                         .frame(height: 40)
                         .offset(y: -20)
                     }
-                    .opacity(clearBackground ? 0 : gradientOpacity)
+                    .opacity(gradientOpacity)
             }
             
             VStack(spacing: 16) {
@@ -108,7 +109,7 @@ public struct ActionArea: View, KeyboardReadable {
     
     private var clearBackground = false
     private var caption: String?
-    private var extra: (() -> any View)?
+    private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
     
     /// 배경을 투명하게 설정합니다.
@@ -139,9 +140,9 @@ public struct ActionArea: View, KeyboardReadable {
     ///   - content: 표시할 추가 콘텐츠를 생성하는 클로저
     ///   - divider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func extra(_ content: (() -> any View)?, divider: Bool = true) -> Self {
+    public func extra<V: View>(@ViewBuilder _ content: @escaping () -> V, divider: Bool = true) -> Self {
         var zelf = self
-        zelf.extra = content
+        zelf.extra = { AnyView(content()) }
         zelf.extraDivider = divider
         return zelf
     }
@@ -172,7 +173,7 @@ extension ActionArea {
     public struct ButtonInfo {
         internal let text: String
         internal let action: () -> Void
-        internal var custom: (() -> any View)?
+        internal var custom: () -> AnyView
         
         /// 기본 버튼 정보를 초기화합니다.
         ///
@@ -180,21 +181,10 @@ extension ActionArea {
         ///   - text: 버튼에 표시할 텍스트
         ///   - action: 버튼 클릭 시 실행할 액션
         /// - Returns: 구성된 ButtonInfo 인스턴스
-        public init(
-            text: String,
-            action: @escaping (() -> Void)
-        ) {
+        public init(text: String, action: @escaping (() -> Void)) {
             self.text = text
             self.action = action
-            custom = nil
-        }
-        
-        private init(
-            custom: @escaping (() -> any View)
-        ) {
-            text = ""
-            action = {}
-            self.custom = custom
+            custom = { AnyView(EmptyView()) }
         }
         
         /// 커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.
@@ -202,10 +192,10 @@ extension ActionArea {
         /// - Parameter custom: 커스텀 버튼 뷰를 생성하는 클로저
         /// - Returns: 커스텀 뷰가 포함된 ButtonInfo 인스턴스
         /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
-        public static func custom(
-            _ custom: @escaping (() -> any View)
-        ) -> Self {
-            self.init(custom: custom)
+        public static func custom<V: View>(@ViewBuilder _ custom: @escaping () -> V) -> Self {
+            var zelf = self.init(text: "", action: {})
+            zelf.custom = { AnyView(custom()) }
+            return zelf
         }
     }
     
@@ -217,8 +207,28 @@ extension ActionArea {
         let variant: ActionArea.Variant
         let backgroundVisibility: BackgroundVisibility
         let caption: String?
-        let extra: (() -> any View)?
+        let extra: () -> AnyView
         let extraDivider: Bool
+        
+        /// ActionArea 모델을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - variant: 버튼 레이아웃 변형
+        ///   - backgroundVisibility: 배경 가시성 설정
+        ///   - caption: 캡션 텍스트
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        public init(
+            variant: ActionArea.Variant,
+            backgroundVisibility: BackgroundVisibility = .automatic,
+            caption: String? = nil,
+            extraDivider: Bool = true
+        ) {
+            self.variant = variant
+            self.backgroundVisibility = backgroundVisibility
+            self.caption = caption
+            self.extra = { AnyView(EmptyView()) }
+            self.extraDivider = extraDivider
+        }
         
         /// ActionArea 모델을 초기화합니다.
         ///
@@ -228,17 +238,17 @@ extension ActionArea {
         ///   - caption: 캡션 텍스트
         ///   - extra: 추가 콘텐츠를 생성하는 클로저
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
-        public init(
+        public init<V: View>(
             variant: ActionArea.Variant,
             backgroundVisibility: BackgroundVisibility = .automatic,
             caption: String? = nil,
-            extra: (() -> any View)? = nil,
-            extraDivider: Bool = false
+            @ViewBuilder extra: @escaping () -> V,
+            extraDivider: Bool = true
         ) {
             self.variant = variant
             self.backgroundVisibility = backgroundVisibility
             self.caption = caption
-            self.extra = extra
+            self.extra = { AnyView(extra()) }
             self.extraDivider = extraDivider
         }
     }
@@ -267,13 +277,10 @@ private extension ActionArea {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
                 Text(caption)
-                    .typography(variant: .label2, semantic: .labelAlternative)
-                    .paragraph(variant: .label2)
+                    .paragraphNew(variant: .label2, semantic: .labelAlternative)
             }
         }
     }
-    
-    private var showExtraContents: Bool { extra != nil }
     
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
@@ -283,7 +290,7 @@ private extension ActionArea {
     }
     
     private var backgroundColor: SwiftUI.Color {
-        !clearBackground || showExtraContents ? .semantic(.backgroundElevated) : .clear
+        !clearBackground || !isExtraEmpty ? .semantic(.backgroundElevated) : .clear
     }
 }
 
@@ -351,68 +358,68 @@ private extension ActionArea {
             assistiveOutlinedButton(main)
         }
         
-        private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
-            Group {
-                if let customButton = buttonInfo.custom {
-                    AnyView(customButton())
-                } else {
-                    Button.solid(
-                        variant: .primary,
-                        size: .large,
-                        text: buttonInfo.text,
-                        handler: buttonInfo.action
-                    )
-                    .fill(horizontal: true, vertical: false)
+        @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
+            CustomOrFallback(custom: buttonInfo.custom) {
+                Button.solid(
+                    variant: .primary,
+                    size: .large,
+                    text: buttonInfo.text,
+                    handler: buttonInfo.action
+                )
+                .fill(horizontal: true, vertical: false)
+            }
+        }
+        
+        @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
+            CustomOrFallback(custom: buttonInfo.custom) {
+                Button.outlined(
+                    variant: .secondary,
+                    size: .large,
+                    text: buttonInfo.text,
+                    handler: buttonInfo.action
+                )
+                .fill(horizontal: true, vertical: false)
+            }
+        }
+        
+        @ViewBuilder private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
+            CustomOrFallback(custom: buttonInfo.custom) {
+                Button.outlined(
+                    variant: .assistive,
+                    size: .large,
+                    text: buttonInfo.text,
+                    handler: buttonInfo.action
+                )
+                .if(fillWidth) {
+                    $0.fill(horizontal: true, vertical: false)
                 }
             }
         }
         
-        private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
-            Group {
-                if let customButton = buttonInfo.custom {
-                    AnyView(customButton())
-                } else {
-                    Button.outlined(
-                        variant: .secondary,
-                        size: .large,
-                        text: buttonInfo.text,
-                        handler: buttonInfo.action
-                    )
-                    .fill(horizontal: true, vertical: false)
-                }
+        @ViewBuilder private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
+            CustomOrFallback(custom: buttonInfo.custom) {
+                Button.text(
+                    variant: .assistive,
+                    size: .small,
+                    text: buttonInfo.text,
+                    handler: buttonInfo.action
+                )
+                .padding(.vertical, 8)
             }
         }
+    }
+    
+    private struct CustomOrFallback<Fallback: View>: View {
+        let custom: () -> AnyView
+        @ViewBuilder var fallback: () -> Fallback
+        @State private var isEmpty = true
         
-        private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
-            Group {
-                if let customButton = buttonInfo.custom {
-                    AnyView(customButton())
-                } else {
-                    Button.outlined(
-                        variant: .assistive,
-                        size: .large,
-                        text: buttonInfo.text,
-                        handler: buttonInfo.action
-                    )
-                    .if(fillWidth) {
-                        $0.fill(horizontal: true, vertical: false)
-                    }
-                }
-            }
-        }
-        
-        private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
-            Group {
-                if let customButton = buttonInfo.custom {
-                    AnyView(customButton())
-                } else {
-                    Button.text(
-                        variant: .assistive,
-                        size: .small,
-                        text: buttonInfo.text,
-                        handler: buttonInfo.action
-                    )
-                    .padding(.vertical, 8)
+        var body: some View {
+            ZStack {
+                custom()
+                    .ifEmptyView { isEmpty = $0 }
+                if isEmpty {
+                    fallback()
                 }
             }
         }

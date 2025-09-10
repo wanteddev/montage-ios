@@ -186,12 +186,11 @@ public struct ModalNavigation: View {
                     HStack(spacing: 20) {
                         TopNavigation.LeadingButton(leadingButton)
                         Text(title)
-                            .typography(
-                                variant: variant.typoVaraint,
+                            .paragraphNew(
+                                variant: variant.typoVariant,
                                 weight: variant.typoWeight,
                                 semantic: .labelStrong
                             )
-                            .paragraph(variant: variant.typoVaraint)
                             .lineLimit(1)
                             .frame(height: 24, alignment: variant.textAlignment)
                         Spacer(minLength: 0)
@@ -229,7 +228,7 @@ private extension ModalNavigation.Variant {
         }
     }
     
-    var typoVaraint: Typography.Variant {
+    var typoVariant: Typography.Variant {
         switch self {
         case .normal: .headline2
         case .extended: .title3

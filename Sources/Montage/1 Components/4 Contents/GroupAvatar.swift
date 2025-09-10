@@ -29,7 +29,7 @@ import SwiftUI
 ///     }
 /// )
 /// .trailingContent {
-///     Text("+3").typography(variant: .body2)
+///     Text("+3").typographyNew(variant: .body2)
 /// }
 /// ```
 ///
@@ -115,15 +115,13 @@ public struct GroupAvatar: View {
                 height: avatartSize.containerSize.height
             )
             
-            if let trailingContent {
-                AnyView(trailingContent())
-            }
+            trailingContent()
         }
     }
     
     // MARK: - Modifiers
     
-    private var trailingContent: (() -> any View)?
+    private var trailingContent: () -> AnyView =  { AnyView(EmptyView()) }
     
     /// 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
     ///
@@ -131,9 +129,9 @@ public struct GroupAvatar: View {
     ///
     /// - Parameter trailingContent: 표시할 뷰를 생성하는 클로저
     /// - Returns: 수정된 그룹 아바타 인스턴스
-    public func trailingContent(_ trailingContent: @escaping () -> any View) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = trailingContent
+        zelf.trailingContent = { AnyView(trailingContent()) }
         return zelf
     }
 }

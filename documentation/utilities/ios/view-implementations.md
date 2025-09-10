@@ -479,6 +479,20 @@ title: View Implementations
 </details>
 <details>
 
+<summary>``func adjustLineHeight(variant: Typography.Variant) -> some View``</summary>
+
+타이포그래피 변형에 따른 줄 높이를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 텍스트 변형 |
+- **Return Value**
+
+  줄 높이가 적용된 View
+</details>
+<details>
+
 <summary>``func alert<S, A>(S, isPresented: Binding<Bool>, actions: () -> A) -> some View``</summary>
 </details>
 <details>
@@ -734,7 +748,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func carveLogForPreview(String, font: Font?, alignment: Alignment) -> some View``</summary>
+<summary>``func carveLog(String, font: Font?, alignment: Alignment, drawOnPreviewOnly: Bool) -> some View``</summary>
 
 프리뷰에서 뷰 위에 로그를 출력합니다.
 
@@ -975,6 +989,20 @@ View를 UIImage로 변환합니다.
 <details>
 
 <summary>``func dialogSuppressionToggle(isSuppressed: Binding<Bool>) -> some View``</summary>
+</details>
+<details>
+
+<summary>``func dimensioning(axis: Axis?, drawOnPreviewOnly: Bool) -> some View``</summary>
+
+프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `axis` | 측정할 축 |
+- **Return Value**
+
+  뷰 크기가 그려진 View
 </details>
 <details>
 
@@ -1715,29 +1743,6 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 </details>
 <details>
 
-<summary>``func measureBoxForPreview() -> some View``</summary>
-
-프리뷰에서 뷰의 크기를 측정하여 뷰 위에 출력합니다.
-- **Return Value**
-
-  뷰 크기가 그려진 View
-</details>
-<details>
-
-<summary>``func measureForPreview(axis: Axis) -> some View``</summary>
-
-프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `axis` | 측정할 축 |
-- **Return Value**
-
-  뷰 크기가 그려진 View
-</details>
-<details>
-
 <summary>``func menuActionDismissBehavior(MenuActionDismissBehavior) -> some View``</summary>
 </details>
 <details>
@@ -2141,20 +2146,6 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func paragraph(variant: Typography.Variant) -> some View``</summary>
-
-Montage 디자인 시스템의 단락 스타일을 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 텍스트 변형 |
-- **Return Value**
-
-  단락 스타일이 적용된 View
-</details>
-<details>
-
 <summary>``func persistentSystemOverlays(Visibility) -> some View``</summary>
 </details>
 <details>
@@ -2362,7 +2353,7 @@ Montage 디자인 시스템의 단락 스타일을 적용합니다.
 </details>
 <details>
 
-<summary>``func recognizeViewForPreview(SwiftUI.Color, fill: Bool) -> some View``</summary>
+<summary>``func recognizeView(SwiftUI.Color, fill: Bool, drawOnPreviewOnly: Bool) -> some View``</summary>
 
 프리뷰에서 View의 frame을 인식합니다.
 

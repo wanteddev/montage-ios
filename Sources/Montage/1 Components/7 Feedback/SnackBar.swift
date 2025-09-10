@@ -71,9 +71,9 @@ public struct SnackBar: View {
     /// ```
     public struct Model: Equatable {
         let duration: Duration
-        var heading: String? = nil
-        var description: String? = nil
-        var extraContents: (() -> any View)? = nil
+        let heading: String?
+        let description: String?
+        let extraContents: () -> AnyView
         let action: String
         
         /// SnackBar 모델을 초기화합니다.
@@ -88,13 +88,34 @@ public struct SnackBar: View {
             duration: Duration = .short,
             heading: String? = nil,
             description: String? = nil,
-            extraContents: (() -> any View)? = nil,
             action: String
         ) {
             self.duration = duration
             self.heading = heading
             self.description = description
-            self.extraContents = extraContents
+            self.extraContents = { AnyView(EmptyView()) }
+            self.action = action
+        }
+        
+        /// SnackBar 모델을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - duration: 스낵바가 표시되는 시간
+        ///   - heading: 스낵바의 제목 (선택 사항)
+        ///   - description: 스낵바의 설명 텍스트 (선택 사항)
+        ///   - extraContents: 스낵바에 표시할 추가 콘텐츠를 반환하는 클로저 (선택 사항)
+        ///   - action: 스낵바의 액션 버튼에 표시할 텍스트
+        public init<V: View>(
+            duration: Duration = .short,
+            heading: String? = nil,
+            description: String? = nil,
+            @ViewBuilder extraContents: @escaping () -> V,
+            action: String
+        ) {
+            self.duration = duration
+            self.heading = heading
+            self.description = description
+            self.extraContents = { AnyView(extraContents()) }
             self.action = action
         }
         
@@ -107,7 +128,7 @@ public struct SnackBar: View {
     
     private var heading: String?
     private var description: String?
-    private var extraContents: (() -> any View)?
+    private var extraContents: () -> AnyView
     private let action: String
     private let handler: () -> Void
     
@@ -120,7 +141,7 @@ public struct SnackBar: View {
     ) {
         self.heading = heading
         self.description = description
-        self.extraContents = extraContents
+        self.extraContents = extraContents.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
         self.action = action
         self.handler = handler
     }
@@ -142,14 +163,14 @@ public struct SnackBar: View {
     fileprivate struct Contents: View {
         private var heading: String?
         private var description: String?
-        private var extraContents: (() -> any View)?
+        private var extraContents: () -> AnyView
         private let action: String
         private let handler: (() -> Void)?
         
         public init(
             heading: String? = nil,
             description: String? = nil,
-            extraContents: (() -> any View)? = nil,
+            extraContents: @escaping () -> AnyView,
             action: String,
             handler: (() -> Void)? = nil
         ) {
@@ -163,22 +184,18 @@ public struct SnackBar: View {
         var body: some View {
             ZStack {
                 HStack(alignment: .center, spacing: .zero) {
-                    if let extraContents {
-                        AnyView(extraContents())
-                        Spacer()
-                            .frame(width: 12)
-                    }
+                    extraContents()
+                        .padding(.trailing, 12)
+                    
                     ZStack(alignment: .center) {
                         VStack(alignment: .leading, spacing: .zero) {
                             if let heading {
                                 Text(heading)
-                                    .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
-                                    .paragraph(variant: .body2)
+                                    .paragraphNew(variant: .body2, weight: .bold, semantic: .staticWhite)
                             }
                             if let description {
                                 Text(description)
-                                    .typography(variant: .label2, weight: .regular, semantic: .staticWhite)
-                                    .paragraph(variant: .label2)
+                                    .paragraphNew(variant: .label2, weight: .regular, semantic: .staticWhite)
                                     .lineLimit(2)
                             }
                         }
@@ -212,8 +229,7 @@ public struct SnackBar: View {
         
         var body: some View {
             Text(action)
-                .typography(variant: .body2, weight: .bold, semantic: .staticWhite)
-                .paragraph(variant: .body2)
+                .paragraphNew(variant: .body2, weight: .bold, semantic: .staticWhite)
                 .background(
                     Interaction(
                         state: isPressed ? .pressed : .normal,
@@ -343,50 +359,6 @@ public struct SnackBar: View {
             
             animationWorkItem?.cancel()
             animationWorkItem = nil
-        }
-    }
-}
-
-struct SnackBar_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            SnackBar(
-                heading: "메시지에 마침표를 찍어요.",
-                description: "설명은 필요할 때만 써요.",
-                action: "텍스트",
-                handler: {}
-            )
-            SnackBar(
-                description: "메시지가 두 줄 이상 길어지는 경우 예외적으로 사용해요.",
-                action: "텍스트",
-                handler: {}
-            )
-            SnackBar(
-                description: "메시지에 마침표를 찍어요.",
-                extraContents: {
-                    Image.icon(.android).resizable().frame(width: 32, height: 32)
-                },
-                action: "텍스트",
-                handler: {}
-            )
-            SnackBar(
-                heading: "메시지에 마침표를 찍어요.",
-                description: "설명은 필요할 때만 써요.",
-                extraContents: {
-                    Image.icon(.android).resizable().frame(width: 32, height: 32)
-                },
-                action: "텍스트",
-                handler: {}
-            )
-            SnackBar(
-                heading: "흠",
-                description: "흠 이게 몇줄까지되는걸까용가리어카메라이터보닥트리오리꽥꼬ㅒㄱ고양이는띠방",
-                extraContents: {
-                    Image.icon(.android).resizable().frame(width: 32, height: 32)
-                },
-                action: "텍스트",
-                handler: {}
-            )
         }
     }
 }

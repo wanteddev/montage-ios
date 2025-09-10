@@ -489,7 +489,7 @@ public struct Button: View {
                 }
                 if let text {
                     SwiftUI.Text(text)
-                        .typography(
+                        .typographyNew(
                             variant: fontVariant ?? typoVariant,
                             weight: fontWeight ?? typoWeight,
                             color: foregroundColor
@@ -726,7 +726,7 @@ private extension Button {
     var interactionHorizontalOffset: CGFloat { style == .text ? 7 : 0 }
     
     var loadingSize: CGSize {
-        let textHeight = Typography.getSementicSize(variant: fontVariant ?? typoVariant)
+        let textHeight = (fontVariant ?? typoVariant).fontHeight
         return .init(width: textHeight, height: textHeight)
     }
 }

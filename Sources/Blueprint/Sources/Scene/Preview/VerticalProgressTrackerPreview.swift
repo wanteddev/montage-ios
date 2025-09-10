@@ -35,65 +35,48 @@ struct VerticalProgressTrackerPreview: View {
                     .init(
                         label: isLabelExist ? "처음이에요\n진짜" : "",
                         labelAccessoryView: {
-                            isAccessoryExist
-                            ? AnyView(
-                                ContentBadge(variant: .solid, text: "뱃지")
-                                    .size(.small)
-                                    .colorStyle(.neutral())
-                            )
-                            : AnyView(EmptyView())
+                            ContentBadge(variant: .solid, text: "뱃지")
+                                .size(.small)
+                                .colorStyle(.neutral())
+                                .if(isAccessoryExist)
                         },
                         contentView: {
-                            isContentExist
-                            ? AnyView(TextArea(text: .constant("테스트 텍스트입니다.")))
-                            : AnyView(EmptyView())
+                            TextArea(text: .constant("테스트 텍스트입니다."))
+                                .if(isContentExist)
                         }
                     ),
                     .init(
                         label: isLabelExist ? "중간" : "",
                         labelAccessoryView: { AnyView(EmptyView()) },
                         contentView: {
-                            isContentExist
-                            ? AnyView(
-                                Avatar("https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg", variant: .person, size: .small)
-                            )
-                            : AnyView(EmptyView())
+                            Avatar("https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg", variant: .person, size: .small)
+                                .if(isContentExist)
                         }
                     ),
                     .init(
                         label: isLabelExist ? "또\n중간" : "",
                         labelAccessoryView: {
-                            isAccessoryExist
-                            ? AnyView(
-                                HStack {
-                                    Spacer(minLength: 0)
-                                    Text("뭐라 뭐라 디스크립션")
-                                        .typography(variant: .caption1)
-                                }
-                            )
-                            : AnyView(EmptyView())
+                            HStack {
+                                Spacer(minLength: 0)
+                                Text("뭐라 뭐라 디스크립션")
+                                    .typographyNew(variant: .caption1)
+                            }
+                            .if(isAccessoryExist)
                         },
                         contentView: {
-                            isContentExist
-                            ? AnyView(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(SwiftUI.Color.gray)
-                            )
-                            : AnyView(EmptyView())
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(SwiftUI.Color.gray)
+                                .if(isContentExist)
                         }
                     ),
                     .init(
                         label: isLabelExist ? "끝입니다\n정말\n정말\n끝" : "",
-                        labelAccessoryView: { AnyView(EmptyView()) },
                         contentView: {
-                            isContentExist
-                            ? AnyView(
-                                Text("Hel\nlo\nWor\nld!")
-                                    .typography(variant: .title1)
-                                    .paragraph(variant: .title1)
-                                    .fixedSize()
-                            )
-                            : AnyView(EmptyView())
+                            Text("Hel\nlo\nWor\nld!")
+                                .typographyNew(variant: .title1)
+                                .paragraphNew(variant: .title1)
+                                .fixedSize()
+                                .if(isContentExist)
                         }
                     )
                 ]

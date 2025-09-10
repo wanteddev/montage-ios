@@ -58,8 +58,8 @@ public struct NormalCard: View {
     private var overlayButtonIcon: Montage.Icon?
     private var overlayButtonColor: SwiftUI.Color = .semantic(.staticWhite)
     private var onTapOverlayButton: (() -> Void)?
-    private var topContent: (() -> any View)?
-    private var bottomContent: (() -> any View)?
+    private var topContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var bottomContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 카드의 캡션(부제목)을 설정합니다.
     ///
@@ -117,9 +117,9 @@ public struct NormalCard: View {
     ///
     /// - Parameter content: 상단에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func topContent(_ content: (() -> any View)? = nil) -> Self {
+    public func topContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.topContent = content
+        zelf.topContent = { AnyView(content()) }
         return zelf
     }
     
@@ -127,15 +127,17 @@ public struct NormalCard: View {
     ///
     /// - Parameter content: 하단에 표시할 콘텐츠 뷰를 반환하는 클로저
     /// - Returns: 수정된 카드 인스턴스
-    public func bottomContent(_ content: (() -> any View)? = nil) -> Self {
+    public func bottomContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.bottomContent = content
+        zelf.bottomContent = { AnyView(content()) }
         return zelf
     }
     
     // MARK: - Body
     
     @State private var thumbnailWidth: CGFloat = 0
+    @State private var hasTopContent: Bool = false
+    @State private var hasBottomContent: Bool = false
     
     public var body: some View {
         Grid(alignment: .leading, verticalSpacing: 6) {
@@ -158,40 +160,37 @@ public struct NormalCard: View {
             
             GridRow {
                 VStack(alignment: .leading, spacing: 6) {
-                    if let topContent {
-                        AnyView(topContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                            .padding(.top, 2)
-                    }
+                    topContent()
+                        .ifEmptyView { isEmpty in hasTopContent = !isEmpty }
+                        .if(hasTopContent) {
+                            $0.skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                                .padding(.top, 2)
+                        }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .typography(variant: .body1, weight: .bold, semantic: .labelNormal)
-                            .paragraph(variant: .body1)
+                            .paragraphNew(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(2)
                             .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: textAreaWidth, height: 22))
                         
                         VStack(alignment: .leading, spacing: 2) {
                             if let caption {
                                 Text(caption)
-                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                                    .paragraph(variant: .label2)
+                                    .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 18))
                             }
                             
                             if let subCaption {
                                 Text(subCaption)
-                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                                    .paragraph(variant: .label2)
+                                    .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
                             }
                             
                             if let extraCaption {
                                 Text(extraCaption)
-                                    .typography(variant: .label2, weight: .medium, semantic: .labelAlternative)
-                                    .paragraph(variant: .label2)
+                                    .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                     .lineLimit(1)
                                     .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
                             }
@@ -199,11 +198,12 @@ public struct NormalCard: View {
                         .if(!caption.isNilOrEmpty || !subCaption.isNilOrEmpty || !extraCaption.isNilOrEmpty)
                     }
                     
-                    if let bottomContent {
-                        AnyView(bottomContent())
-                            .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                            .padding(.top, 2)
-                    }
+                    bottomContent()
+                        .ifEmptyView { isEmpty in hasBottomContent = !isEmpty }
+                        .if(hasBottomContent) {
+                            $0.skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
+                                .padding(.top, 2)
+                        }
                 }
                 .padding(.horizontal, horizontalPadding)
                 .frame(maxWidth: thumbnailWidth, alignment: .leading)
@@ -213,7 +213,7 @@ public struct NormalCard: View {
     
     private var horizontalPadding: CGFloat = 2
     private var textAreaWidth: CGFloat {
-        thumbnailWidth - horizontalPadding * 2
+        max(0, thumbnailWidth - horizontalPadding * 2)
     }
 }
 
@@ -260,8 +260,7 @@ extension NormalCard {
                             HStack(alignment: .top, spacing: 0) {
                                 if let caption {
                                     Text(caption)
-                                        .typography(variant: .caption2, weight: .bold, semantic: .staticWhite)
-                                        .paragraph(variant: .caption2)
+                                        .paragraphNew(variant: .caption2, weight: .bold, semantic: .staticWhite)
                                         .padding(.bottom, 6)
                                 }
                                 

@@ -239,14 +239,14 @@ public struct Select: View {
             if !heading.isEmpty {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .typography(
+                        .typographyNew(
                             variant: .label1,
                             weight: .bold,
                             semantic: .labelNormal
                         )
                     if requiredBadge {
                         Text("*")
-                            .typography(
+                            .typographyNew(
                                 variant: .label1,
                                 weight: .medium,
                                 semantic: .statusNegative
@@ -293,34 +293,33 @@ public struct Select: View {
                         HStack {
                             if selectedItems.isEmpty {
                                 Text(placeholder)
-                                    .typography(
+                                    .paragraphNew(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
                                     )
-                                    .paragraph(variant: .body1)
+                                    .lineLimit(1)
                             } else {
                                 switch variant {
                                 case .single:
                                     if let text = selectedItems.first?.text {
                                         Text(text)
-                                            .typography(
+                                            .paragraphNew(
                                                 variant: .body1,
                                                 weight: .regular,
                                                 color: textColor
                                             )
-                                            .paragraph(variant: .body1)
+                                            .lineLimit(1)
                                     }
                                 case .multiple(let render, let overflow, _):
                                     Group {
                                         if render == .text {
                                             Text(selectedItems.map { $0.text }.joined(separator: ", "))
-                                                .typography(
+                                                .paragraphNew(
                                                     variant: .body1,
                                                     weight: .regular,
                                                     color: textColor
                                                 )
-                                                .paragraph(variant: .body1)
                                                 .if(!overflow) {
                                                     $0.lineLimit(1)
                                                 }
@@ -396,7 +395,7 @@ public struct Select: View {
             
             if !description.isEmpty {
                 Text(description)
-                    .typography(
+                    .typographyNew(
                         variant: .caption1,
                         weight: .regular,
                         semantic: negative ? .statusNegative : .labelAlternative

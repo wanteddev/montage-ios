@@ -46,8 +46,8 @@ public struct VerticalProgressTracker: View {
     /// - Note: 콘텐츠 뷰를 통해 각 단계에 맞는 복잡한 UI를 표시할 수 있습니다.
     public struct StepContent: View {
         private let label: String
-        private let labelAccessoryView: (() -> any View)?
-        private let contentView: (() -> any View)?
+        private let labelAccessoryView: () -> AnyView
+        private let contentView: () -> AnyView
         
         /// 단계 콘텐츠를 초기화합니다.
         ///
@@ -61,8 +61,8 @@ public struct VerticalProgressTracker: View {
             contentView: (() -> any View)? = nil
         ) {
             self.label = label
-            self.labelAccessoryView = labelAccessoryView
-            self.contentView = contentView
+            self.labelAccessoryView = labelAccessoryView.map { view in { AnyView(view()) }} ?? { AnyView(EmptyView()) }
+            self.contentView = contentView.map { view in { AnyView(view()) }} ?? { AnyView(EmptyView()) }
         }
         
         public var body: some View {
@@ -70,16 +70,12 @@ public struct VerticalProgressTracker: View {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .center, spacing: 6) {
                         text
-                        if let labelAccessoryView {
-                            AnyView(labelAccessoryView())
-                        }
+                        labelAccessoryView()
                     }
                     .frame(height: 20)
                     .if(!label.isEmpty)
                     
-                    if let contentView {
-                        AnyView(contentView())
-                    }
+                    contentView()
                 }
             }
         }
@@ -93,7 +89,7 @@ public struct VerticalProgressTracker: View {
         
         private var text: some View {
             Text(label)
-                .typography(variant: .label2, weight: .bold, color: labelColor)
+                .typographyNew(variant: .label2, weight: .bold, color: labelColor)
                 .lineLimit(1)
                 .fixedSize()
         }
@@ -145,11 +141,9 @@ public struct VerticalProgressTracker: View {
                     HStack(alignment: .top, spacing: 0) {
                         ProgressTrackerStepper(step: index + 1, state: state(at: index))
                         
-                        if index >= 0 && index < stepContents.count {
-                            stepContents[index]
-                                .status(state(at: index))
-                                .padding(.leading, 8)
-                        }
+                        stepContents[safe: index]?
+                            .status(state(at: index))
+                            .padding(.leading, 8)
                         
                         Spacer(minLength: 0)
                     }

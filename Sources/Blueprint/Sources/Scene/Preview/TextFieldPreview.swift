@@ -56,15 +56,14 @@ struct TextFieldPreview: View {
             case .text:
                 return {
                     Text("텍스트")
-                        .typography(variant: .body1, weight: .medium, semantic: .labelAssistive)
-                        .paragraph(variant: .body1)
+                        .paragraphNew(variant: .body1, weight: .medium, semantic: .labelAssistive)
                 }
             case .timer:
                 return {
                     let second = 431
                     return Text(String(format: "%02d:%02d", (second / 60), (second % 60)))
-                        .typography(variant: .label1, weight: .bold, semantic: .primaryNormal)
-                        .paragraph(variant: .label1)
+                        .paragraphNew(variant: .label1, weight: .bold, semantic: .primaryNormal)
+                        .monospacedDigit()
                 }
             case .badge:
                 return {
@@ -126,7 +125,13 @@ struct TextFieldPreview: View {
                         handler: { print("trailing button tapped") }
                     ) : nil
                 )
-                .trailingContent(trailingContent.c)
+                .trailingContent {
+                    if let content = trailingContent.c {
+                        AnyView(content())
+                    } else {
+                        EmptyView()
+                    }
+                }
                 .onChange(of: text) { text in
                     if usingSuggestions {
                         let suggestions = candidates
@@ -183,7 +188,7 @@ struct TextFieldPreview: View {
                     
                     HStack {
                         Text("Status :")
-                            .typography(variant: .headline2, weight: .medium)
+                            .typographyNew(variant: .headline2, weight: .medium)
                         Menu(variant.selectableTitle) {
                             ForEach(Variant.allCases, id: \.self) { v in
                                 Button {
@@ -196,7 +201,7 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("Disable :")
-                                .typography(variant: .headline2, weight: .medium)
+                                .typographyNew(variant: .headline2, weight: .medium)
                             Button {
                                 disable.toggle()
                             } label: {
@@ -207,7 +212,7 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("Heading :")
-                                .typography(variant: .headline2, weight: .medium)
+                                .typographyNew(variant: .headline2, weight: .medium)
                             Button {
                                 heading.toggle()
                             } label: {
@@ -217,7 +222,7 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("RequiredBadge :")
-                                .typography(variant: .headline2, weight: .medium)
+                                .typographyNew(variant: .headline2, weight: .medium)
                             Button {
                                 requiredBadge.toggle()
                             } label: {
@@ -228,7 +233,7 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("Icon :")
-                                .typography(variant: .headline2, weight: .medium)
+                                .typographyNew(variant: .headline2, weight: .medium)
                             Button {
                                 icon.toggle()
                             } label: {
@@ -238,7 +243,7 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("Placeholder :")
-                                .typography(variant: .headline2, weight: .medium)
+                                .typographyNew(variant: .headline2, weight: .medium)
                             Button {
                                 placeholder.toggle()
                             } label: {
@@ -249,7 +254,7 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("TrailingButton :")
-                                .typography(variant: .headline2, weight: .medium)
+                                .typographyNew(variant: .headline2, weight: .medium)
                             Button {
                                 trailingButton.toggle()
                             } label: {
@@ -258,7 +263,7 @@ struct TextFieldPreview: View {
                         }
                         Spacer()
                         Text("TrailingContent :")
-                            .typography(variant: .headline2, weight: .medium)
+                            .typographyNew(variant: .headline2, weight: .medium)
                         Menu(trailingContent.selectableTitle) {
                             ForEach(Content.allCases, id: \.self) { c in
                                 Button {
@@ -271,7 +276,7 @@ struct TextFieldPreview: View {
                     }
                     HStack {
                         Text("AutoComplete :")
-                            .typography(variant: .headline2, weight: .medium)
+                            .typographyNew(variant: .headline2, weight: .medium)
                         Button {
                             usingSuggestions.toggle()
                         } label: {

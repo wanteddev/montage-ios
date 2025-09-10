@@ -318,12 +318,11 @@ struct TooltipView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 8) {
                 Text(message)
-                    .typography(
+                    .paragraphNew(
                         variant: .label1,
                         weight: .medium,
                         color: contentColor
                     )
-                    .paragraph(variant: .label1)
                     .lineLimit(nil)
                     .padding(.horizontal, 2)
                     .fixedSize(horizontal: false, vertical: true)
@@ -347,12 +346,11 @@ struct TooltipView: View {
                     buttonInfo.action()
                 }, label: {
                     Text(buttonInfo.title)
-                        .typography(
+                        .paragraphNew(
                             variant: .label1,
                             weight: .bold,
                             color: contentColor
                         )
-                        .paragraph(variant: .label1)
                         .opacity(0.61)
                         .frame(height: 20)
                         .padding(.horizontal, 2)
