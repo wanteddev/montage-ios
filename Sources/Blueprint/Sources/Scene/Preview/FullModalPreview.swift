@@ -110,7 +110,11 @@ struct FullModalPreview: View {
             ? {
                 ModalNavigation(title: "제목")
                     .variant(navigationVariants[navVariantIndex])
-                    .leadingButton(.back(action: {}))
+                    .leading {
+                        TopNavigation.LeadingButton(
+                            .back(action: {})
+                        )
+                    }
                     .trailingButtons([
                         .icon(.plus, action: {}),
                         .icon(.minus, action: {}),

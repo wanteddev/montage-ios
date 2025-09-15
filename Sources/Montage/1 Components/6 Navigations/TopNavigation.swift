@@ -9,15 +9,15 @@ import SwiftUI
 
 /// 상단에 표시되는 내비게이션 바 컴포넌트입니다.
 ///
-/// 제목, 뒤로가기 버튼, 추가 액션 버튼 등을 포함할 수 있으며, 다양한 외관 스타일을 지원합니다.
+/// 제목, 뒤로가기, 추가 액션 버튼 등을 포함할 수 있으며, 다양한 외관 스타일을 지원합니다.
 /// 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 ///
 /// ```swift
 /// TopNavigation(
 ///     variant: .normal,
 ///     title: "제목",
-///     leadingButton: .back {
-///         // 뒤로가기 동작
+///     leading: {
+///         // 뒤로가기 동작 컴포넌트
 ///     },
 ///     trailingButtons: [
 ///         .icon(.search) {
@@ -33,7 +33,6 @@ public struct TopNavigation: View {
     private let title: String
     private let scrollOffset: CGFloat
     private let backgroundColor: SwiftUI.Color?
-    private let leadingButton: Resource.LeadingButtonInfo?
     private let trailingButtons: [Resource.TrailingButtonInfo]
     
     // MARK: - Computed properties
@@ -62,30 +61,40 @@ public struct TopNavigation: View {
     ///   - title: 표시할 제목
     ///   - scrollOffset: 스크롤 오프셋 값
     ///   - backgroundColor: 배경색
-    ///   - leadingButton: 좌측에 표시할 버튼
+    ///   - leading: 좌측에 표시할 컨텐츠
     ///   - trailingButtons: 우측에 표시할 버튼 배열 (최대 3개까지 표시)
     public init(
         variant: Variant = .normal,
         title: String = "",
         scrollOffset: CGFloat = .zero,
         backgroundColor: SwiftUI.Color? = nil,
-        leadingButton: Resource.LeadingButtonInfo? = nil,
+        leading: (() -> any View)? = nil,
         trailingButtons: [Resource.TrailingButtonInfo] = []
     ) {
         self.variant = variant
         self.title = title
         self.scrollOffset = scrollOffset
         self.backgroundColor = backgroundColor
-        self.leadingButton = leadingButton
+        self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
         self.trailingButtons = Array(trailingButtons.prefix(3))
     }
     
+    // MARK: - Modifiers
+    
+    private var leading: () -> AnyView
+    
+    public func leading<V: View>(@ViewBuilder content: @escaping () -> V) -> Self {
+        var zelf = self
+        zelf.leading = { AnyView(content()) }
+        return zelf
+    }
+
     public var body: some View {
         ZStack(alignment: .bottom) {
             Contents(
                 variant: variant,
                 title: title,
-                leadingButton: leadingButton,
+                leading: leading,
                 trailingButtons: trailingButtons
             )
             .padding(.all, 16)
@@ -122,7 +131,7 @@ public struct TopNavigation: View {
         
         var variant: Variant
         var title: String
-        var leadingButton: Resource.LeadingButtonInfo? = nil
+        var leading: () -> AnyView
         var trailingButtons: [Resource.TrailingButtonInfo]
 
         private var titleSize: CGFloat {
@@ -145,7 +154,7 @@ public struct TopNavigation: View {
                 switch variant {
                 case .normal:
                     HStack(spacing: .zero) {
-                        LeadingButton(leadingButton)
+                        leading()
                             .onGeometryChange(
                                 for: CGSize.self,
                                 of: { $0.size },
@@ -164,7 +173,7 @@ public struct TopNavigation: View {
                 case .extended:
                     VStack(spacing: 20) {
                         HStack {
-                            LeadingButton(leadingButton)
+                            leading()
                             Spacer()
                             TrailingButtons(trailingButtons)
                         }
@@ -178,7 +187,7 @@ public struct TopNavigation: View {
                 case let .floating(alternative, background):
                     ZStack {
                         HStack(spacing: .zero) {
-                            LeadingButton(leadingButton, alternative, background)
+                            leading()
                                 .onGeometryChange(
                                     for: CGSize.self,
                                     of: { $0.size },
@@ -211,12 +220,12 @@ public struct TopNavigation: View {
         }
     }
     
-    struct LeadingButton: View {
+    public struct LeadingButton: View {
         let action: Resource.LeadingButtonInfo?
         let alternative: Bool
         let background: Bool
         
-        init(
+        public init(
             _ action: Resource.LeadingButtonInfo?,
             _ alternative: Bool = false,
             _ background: Bool = false
@@ -226,7 +235,7 @@ public struct TopNavigation: View {
             self.background = background
         }
         
-        var body: some View {
+        public var body: some View {
             if let action {
                 Group {
                     switch action {
@@ -555,7 +564,7 @@ extension TopNavigation {
         private let title: String
         private let showIndicator: Bool
         private let backgroundColor: SwiftUI.Color?
-        private let leadingButton: Resource.LeadingButtonInfo?
+        private let leading: (() -> any View)?
         private let trailingButtons: [Resource.TrailingButtonInfo]
         private let actionAreaModel: ActionArea.Model?
         
@@ -574,7 +583,7 @@ extension TopNavigation {
             title: String,
             showIndicator: Bool = true,
             backgroundColor: SwiftUI.Color? = nil,
-            leadingButton: Resource.LeadingButtonInfo?,
+            leading: (() -> any View)? = nil,
             trailingButtons: [Resource.TrailingButtonInfo],
             actionAreaModel: ActionArea.Model? = nil
         ) {
@@ -582,7 +591,7 @@ extension TopNavigation {
             self.title = title
             self.showIndicator = showIndicator
             self.backgroundColor = backgroundColor
-            self.leadingButton = leadingButton
+            self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
             self.trailingButtons = trailingButtons
             self.actionAreaModel = actionAreaModel
         }
@@ -613,7 +622,7 @@ extension TopNavigation {
                             title: title,
                             scrollOffset: scrollStatus.contentOffset.y,
                             backgroundColor: backgroundColor,
-                            leadingButton: leadingButton,
+                            leading: leading,
                             trailingButtons: trailingButtons
                         )
                         .onGeometryChange(
@@ -657,7 +666,7 @@ extension View {
         variant: TopNavigation.Variant = .normal,
         title: String,
         backgroundColor: SwiftUI.Color? = nil,
-        leadingButton: TopNavigation.Resource.LeadingButtonInfo? = nil,
+        leading: (() -> any View)? = nil,
         trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = [],
         withBottom model: ActionArea.Model? = nil
     ) -> some View {
@@ -666,7 +675,7 @@ extension View {
                 variant: variant,
                 title: title,
                 backgroundColor: backgroundColor,
-                leadingButton: leadingButton,
+                leading: leading,
                 trailingButtons: trailingButtons,
                 actionAreaModel: model
             )

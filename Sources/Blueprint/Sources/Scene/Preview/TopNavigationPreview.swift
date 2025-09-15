@@ -66,11 +66,82 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var leadingButton: TopNavigation.Resource.LeadingButtonInfo {
+    private var leadingButton: () -> any View {
         switch leading {
-        case .back: return .back(action: { presentationMode.wrappedValue.dismiss() })
-        case .icon: return .icon(.arrowLeft, action: { presentationMode.wrappedValue.dismiss()})
-        case .text: return .text("뒤로", action: { presentationMode.wrappedValue.dismiss()})
+        case .back:
+            return {
+                IconButton(
+                    variant: background
+                    ? .background(size: 24, isAlternative: alternative)
+                    : .default,
+                    icon: background ? .chevronLeftThick : .chevronLeft
+                ) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .frame(width: 24, height: 24)
+            }
+        case .icon:
+            return {
+                IconButton(
+                    variant: background
+                    ? .background(size: 24, isAlternative: alternative)
+                    : .default,
+                    icon: .bell
+                ) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .frame(width: 24, height: 24)
+            }
+        case .text:
+            return {
+                if background {
+                    SwiftUI.Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Text("텍스트")
+                            .paragraphNew(
+                                variant: .body2,
+                                weight: .medium,
+                                semantic: (alternative ? .staticWhite : .labelAlternative)
+                            )
+                            .if(alternative) {
+                                $0.opacity(0.88)
+                            } else: {
+                                $0.blendMode(.plusDarker)
+                            }
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .modifying { original in
+                                Group {
+                                    if alternative {
+                                        original.background(
+                                            SwiftUI.Color.atomic(.coolNeutral30)
+                                                .opacity(0.61)
+                                        )
+                                    } else {
+                                        original.background(
+                                            ZStack {
+                                                SwiftUI.Color.semantic(.staticBlack)
+                                                    .opacity(0.05)
+                                                SwiftUI.Color.semantic(.staticWhite)
+                                                    .opacity(0.35)
+                                            }
+                                        )
+                                        .background(.thinMaterial)
+                                    }
+                                }
+                                .clipShape(RoundedRectangle(cornerRadius: 1000))
+                            }
+                    }
+                } else {
+                    Button.text(text: "텍스트") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .contentColor(.semantic(.labelNormal))
+                    .fontVariant(.headline2)
+                    .fontWeight(.regular)
+                }
+            }
         }
     }
     
@@ -240,7 +311,7 @@ struct TopNavigationPreview: View {
             variant: v,
             title: "제목",
             backgroundColor: backgroundColor,
-            leadingButton: leadingButton,
+            leading: leadingButton,
             trailingButtons: trailingButton,
             withBottom: actionAreaModel
         )

@@ -60,9 +60,14 @@ public struct ModalNavigation: View {
     /// - Parameters:
     ///   - title: 내비게이션 바에 표시할 제목
     ///   - scrollOffset: 스크롤 오프셋에 대한 바인딩 (기본값: .constant(0))
-    public init(title: String, scrollOffset: Binding<CGFloat> = .constant(0)) {
+    public init(
+        title: String,
+        scrollOffset: Binding<CGFloat> = .constant(0),
+        leading: (() -> any View)? = nil
+    ) {
         self.title = title
         _scrollOffset = scrollOffset
+        self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
     }
     
     // MARK: - Body
@@ -72,7 +77,7 @@ public struct ModalNavigation: View {
             Contents(
                 variant: variant,
                 title: title,
-                leadingButton: leadingButton,
+                leading: leading,
                 trailingButtons: trailingButtons
             )
             .if(needHandleArea) {
@@ -103,7 +108,7 @@ public struct ModalNavigation: View {
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color? = nil
     private var needHandleArea = false
-    private var leadingButton: TopNavigation.Resource.LeadingButtonInfo? = nil
+    private var leading: () -> AnyView
     private var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = []
     
     /// 내비게이션 바의 스타일을 설정합니다.
@@ -146,13 +151,13 @@ public struct ModalNavigation: View {
         return zelf
     }
     
-    /// 내비게이션 바의 왼쪽 버튼을 설정합니다.
+    /// 내비게이션 바의 왼쪽 버튼 영역을 설정합니다.
     ///
-    /// - Parameter leadingButton: 왼쪽 버튼 설정
+    /// - Parameter content: 왼쪽에 노출될 컨텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func leadingButton(_ leadingButton: TopNavigation.Resource.LeadingButtonInfo?) -> Self {
+    public func leading<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leadingButton = leadingButton
+        zelf.leading = leading
         return zelf
     }
     
@@ -169,7 +174,7 @@ public struct ModalNavigation: View {
     private struct Contents: View {
         var variant: Variant
         var title: String
-        var leadingButton: TopNavigation.Resource.LeadingButtonInfo?
+        var leading: () -> AnyView
         var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo]
         
         var body: some View {
@@ -178,13 +183,13 @@ public struct ModalNavigation: View {
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
                     title: title,
-                    leadingButton: leadingButton,
+                    leading: leading,
                     trailingButtons: trailingButtons
                 )
             case .emphasized:
                 ZStack {
                     HStack(spacing: 20) {
-                        TopNavigation.LeadingButton(leadingButton)
+                        leading()
                         Text(title)
                             .paragraphNew(
                                 variant: variant.typoVariant,

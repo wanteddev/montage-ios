@@ -46,7 +46,15 @@ struct ModalNavigationPreview: View {
                 )
                 .variant(variants[variantIndex])
                 .trailingButtons(Array(actions.prefix(trailingButtonCount).reversed()))
-                .leadingButton(leadingButton ? leadingButtons[leadingButtonTypeIndex] : nil)
+                .leading {
+                    Group {
+                        if leadingButton {
+                            TopNavigation.LeadingButton.init(
+                                leadingButtons[leadingButtonTypeIndex]
+                            )
+                        }
+                    }
+                }
                 
                 VStack(alignment: .leading) {
                     HStack {
