@@ -35,6 +35,8 @@
 		4D9083502DAF9D7000DF22A4 /* CaseDescribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */; };
 		4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */; };
 		4D937A002DB7AB43005C14DD /* NormalCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */; };
+		4D97CE702E77E48000AAFD56 /* FullModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D97CE6E2E77E48000AAFD56 /* FullModalPreview.swift */; };
+		4D97CE712E77E48000AAFD56 /* PopupModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D97CE6F2E77E48000AAFD56 /* PopupModalPreview.swift */; };
 		4D9A234B2D5365250063F529 /* MenuPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9A234A2D5365250063F529 /* MenuPreview.swift */; };
 		4DA40B252D3E0535004C73E5 /* InputPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA40B242D3E0535004C73E5 /* InputPreview.swift */; };
 		4DA40B272D3E2F72004C73E5 /* SectionHeaderPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA40B262D3E2F6A004C73E5 /* SectionHeaderPreview.swift */; };
@@ -45,7 +47,6 @@
 		4DC668AC2D6849C400461189 /* ModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC668AB2D6849BF00461189 /* ModalPreview.swift */; };
 		4DC668AE2D684BB100461189 /* ModalNavigationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC668AD2D684BA500461189 /* ModalNavigationPreview.swift */; };
 		4DC668B02D68935100461189 /* PopupModalPreivew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC668AF2D68935100461189 /* PopupModalPreivew.swift */; };
-		4DC668B22D68A61900461189 /* FullModalPreivew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC668B12D68A61900461189 /* FullModalPreivew.swift */; };
 		4DCAEA7B2E4D822A007C24BF /* TypographyPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCAEA7A2E4D822A007C24BF /* TypographyPreview.swift */; };
 		4DCFAAF72CE600D600F7A4CD /* SegmentedControlPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCFAAF62CE600D600F7A4CD /* SegmentedControlPreview.swift */; };
 		4DCFAAFA2CE6016900F7A4CD /* CellPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCFAAF92CE6016900F7A4CD /* CellPreview.swift */; };
@@ -167,6 +168,8 @@
 		4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseDescribable.swift; sourceTree = "<group>"; };
 		4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardPreview.swift; sourceTree = "<group>"; };
 		4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalCardPreview.swift; sourceTree = "<group>"; };
+		4D97CE6E2E77E48000AAFD56 /* FullModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullModalPreview.swift; sourceTree = "<group>"; };
+		4D97CE6F2E77E48000AAFD56 /* PopupModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupModalPreview.swift; sourceTree = "<group>"; };
 		4D9A234A2D5365250063F529 /* MenuPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPreview.swift; sourceTree = "<group>"; };
 		4D9F46AC2CE32750000DBA7D /* Blueprint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blueprint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D9F46BC2CE32752000DBA7D /* BlueprintTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlueprintTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,7 +183,6 @@
 		4DC668AB2D6849BF00461189 /* ModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPreview.swift; sourceTree = "<group>"; };
 		4DC668AD2D684BA500461189 /* ModalNavigationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigationPreview.swift; sourceTree = "<group>"; };
 		4DC668AF2D68935100461189 /* PopupModalPreivew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupModalPreivew.swift; sourceTree = "<group>"; };
-		4DC668B12D68A61900461189 /* FullModalPreivew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullModalPreivew.swift; sourceTree = "<group>"; };
 		4DCAEA7A2E4D822A007C24BF /* TypographyPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyPreview.swift; sourceTree = "<group>"; };
 		4DCFAAF62CE600D600F7A4CD /* SegmentedControlPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlPreview.swift; sourceTree = "<group>"; };
 		4DCFAAF92CE6016900F7A4CD /* CellPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellPreview.swift; sourceTree = "<group>"; };
@@ -290,6 +292,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D97CE602E77BACD00AAFD56 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				4DC668AF2D68935100461189 /* PopupModalPreivew.swift */,
+				4D12BFA82E6A7A79000BB0F6 /* PopupModalPreview.swift */,
+				4D12BFA72E6A7A79000BB0F6 /* FullModalPreview.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		4D9F46A32CE32750000DBA7D = {
 			isa = PBXGroup;
 			children = (
@@ -298,6 +310,7 @@
 				4DF7C4762CE340F0002B241B /* Resources */,
 				4D9F47F42CE3284C000DBA7D /* Frameworks */,
 				4D9F46AD2CE32750000DBA7D /* Products */,
+				4D97CE602E77BACD00AAFD56 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -532,13 +545,13 @@
 		4DF7C4FD2CE340F0002B241B /* Preview */ = {
 			isa = PBXGroup;
 			children = (
-				4D6372C62DBA655200E66D22 /* CardPreview.swift */,
 				4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */,
 				4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */,
 				4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */,
 				4DD3E95C2CF45F5500F97C50 /* AvatarPreview.swift */,
 				4DC668A92D673E8F00461189 /* BottomSheetModalPreview.swift */,
 				4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */,
+				4D6372C62DBA655200E66D22 /* CardPreview.swift */,
 				4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */,
 				4DCFAAF92CE6016900F7A4CD /* CellPreview.swift */,
 				4DF7C4BC2CE340F0002B241B /* ChipPreview.swift */,
@@ -550,7 +563,7 @@
 				4D1AB4ED2CF492CC00311591 /* EmptyStatePreview.swift */,
 				4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */,
 				4D4B71FC2DA649080069C4F7 /* FlowLayoutPreview.swift */,
-				4DC668B12D68A61900461189 /* FullModalPreivew.swift */,
+				4D97CE6E2E77E48000AAFD56 /* FullModalPreview.swift */,
 				4D5597492D19A33500CFBCA5 /* HorizontalProgressTrackerPreview.swift */,
 				4D853DF62D96491E004549CF /* IconButtonPreview.swift */,
 				4DA40B242D3E0535004C73E5 /* InputPreview.swift */,
@@ -563,6 +576,7 @@
 				4DF7C4C72CE340F0002B241B /* Opacity */,
 				4D5597532D1E7F9400CFBCA5 /* PaginationPreview.swift */,
 				4DD95C842DAFB50C00F2EF87 /* PlayBadgePreview.swift */,
+				4D97CE6F2E77E48000AAFD56 /* PopupModalPreview.swift */,
 				4DB87ADB2CEC8F6800DEC2A4 /* ProgressIndicatorPreview.swift */,
 				4DA44F1E2D195832009FE3DB /* ProgressTrackerPreview.swift */,
 				4DA44F1A2D12CC91009FE3DB /* PullToRefreshPreview.swift */,
@@ -858,6 +872,8 @@
 				4DC668AE2D684BB100461189 /* ModalNavigationPreview.swift in Sources */,
 				4DF7C55C2CE340F0002B241B /* ComponentListContents.swift in Sources */,
 				4DF7C55D2CE340F0002B241B /* TooltipPreview.swift in Sources */,
+				4D97CE702E77E48000AAFD56 /* FullModalPreview.swift in Sources */,
+				4D97CE712E77E48000AAFD56 /* PopupModalPreview.swift in Sources */,
 				4DF7C55E2CE340F0002B241B /* OpacityPreviewInteractor.swift in Sources */,
 				4DF7C5602CE340F0002B241B /* SelectPreview.swift in Sources */,
 				4DF7C5612CE340F0002B241B /* ColorPreviewInteractor.swift in Sources */,
