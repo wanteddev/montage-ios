@@ -19,10 +19,14 @@ import SwiftUI
 ///     leading: {
 ///         // 뒤로가기 동작 컴포넌트
 ///     },
-///     trailingButtons: [
-///         .icon(.search) {
-///             // 검색 동작
-///         }
+///     trailing: [
+///         {
+///           // 컴포넌트1
+///         },
+///         {
+///           // 컴포넌트2
+///         },
+///         ...
 ///     ]
 /// )
 /// ```
@@ -33,7 +37,6 @@ public struct TopNavigation: View {
     private let title: String
     private let scrollOffset: CGFloat
     private let backgroundColor: SwiftUI.Color?
-    private let trailingButtons: [Resource.TrailingButtonInfo]
     
     // MARK: - Computed properties
 
@@ -62,30 +65,37 @@ public struct TopNavigation: View {
     ///   - scrollOffset: 스크롤 오프셋 값
     ///   - backgroundColor: 배경색
     ///   - leading: 좌측에 표시할 컨텐츠
-    ///   - trailingButtons: 우측에 표시할 버튼 배열 (최대 3개까지 표시)
+    ///   - trailings: 우측에 표시할 버튼 배열 (최대 3개까지 표시)
     public init(
         variant: Variant = .normal,
         title: String = "",
         scrollOffset: CGFloat = .zero,
         backgroundColor: SwiftUI.Color? = nil,
         leading: (() -> any View)? = nil,
-        trailingButtons: [Resource.TrailingButtonInfo] = []
+        trailings: [(() -> any View)] = []
     ) {
         self.variant = variant
         self.title = title
         self.scrollOffset = scrollOffset
         self.backgroundColor = backgroundColor
         self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
-        self.trailingButtons = Array(trailingButtons.prefix(3))
+        self.trailings = trailings.prefix(3).map { view in { AnyView(view()) } }
     }
     
     // MARK: - Modifiers
     
     private var leading: () -> AnyView
+    private var trailings: [() -> AnyView]
     
     public func leading<V: View>(@ViewBuilder content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.leading = { AnyView(content()) }
+        return zelf
+    }
+    
+    public func trailing<V: View>(contents: [() -> V]) -> Self {
+        var zelf = self
+        zelf.trailings = contents.prefix(3).map{ view in { AnyView(view()) } }
         return zelf
     }
 
@@ -95,7 +105,7 @@ public struct TopNavigation: View {
                 variant: variant,
                 title: title,
                 leading: leading,
-                trailingButtons: trailingButtons
+                trailings: trailings
             )
             .padding(.all, 16)
             .background {
@@ -125,17 +135,17 @@ public struct TopNavigation: View {
     }
     
     struct Contents: View {
-        @State private var leadingButtonSize: CGSize = .zero
-        @State private var totalSizeOfTrailingButtons: CGSize = .zero
+        @State private var leadingSize: CGSize = .zero
+        @State private var totalSizeOfTrailings: CGSize = .zero
         @State private var screenWidth: CGFloat = 0
         
         var variant: Variant
         var title: String
         var leading: () -> AnyView
-        var trailingButtons: [Resource.TrailingButtonInfo]
+        var trailings: [() -> AnyView]
 
         private var titleSize: CGFloat {
-            let componentSize: CGFloat = max(leadingButtonSize.width, totalSizeOfTrailingButtons.width)
+            let componentSize: CGFloat = max(leadingSize.width, totalSizeOfTrailings.width)
             let componentWitdh: CGFloat = componentSize * 2
             let horizontalPadding: CGFloat = 16 * 2
             let titleHorizontalPadding: CGFloat = 4 * 2
@@ -158,15 +168,15 @@ public struct TopNavigation: View {
                             .onGeometryChange(
                                 for: CGSize.self,
                                 of: { $0.size },
-                                action: { leadingButtonSize = $0 }
+                                action: { leadingSize = $0 }
                             )
                         Spacer()
-                        TrailingButtons(trailingButtons)
-                            .onGeometryChange(
-                                for: CGSize.self,
-                                of: { $0.size },
-                                action: { totalSizeOfTrailingButtons = $0 }
-                            )
+                        TrailingContents(trailings)
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { totalSizeOfTrailings = $0 }
+                        )
                     }
                     titleView
                         .frame(width: titleSize, height: 24)
@@ -175,7 +185,7 @@ public struct TopNavigation: View {
                         HStack {
                             leading()
                             Spacer()
-                            TrailingButtons(trailingButtons)
+                            TrailingContents(trailings)
                         }
                         HStack {
                             titleView
@@ -191,14 +201,14 @@ public struct TopNavigation: View {
                                 .onGeometryChange(
                                     for: CGSize.self,
                                     of: { $0.size },
-                                    action: { leadingButtonSize = $0 }
+                                    action: { leadingSize = $0 }
                                 )
                             Spacer()
-                            TrailingButtons(trailingButtons, alternative, background)
+                            TrailingContents(trailings)
                                 .onGeometryChange(
                                     for: CGSize.self,
                                     of: { $0.size },
-                                    action: { totalSizeOfTrailingButtons = $0 }
+                                    action: { totalSizeOfTrailings = $0 }
                                 )
                         }
                         .frame(height: 24)
@@ -262,9 +272,9 @@ public struct TopNavigation: View {
                     case let .text(t, action):
                         TrailingTextButton(
                             text: t,
-                            action: action,
                             background: background,
-                            alternative: alternative
+                            alternative: alternative,
+                            action: action
                         )
                         .frame(height: 24)
                     }
@@ -277,129 +287,134 @@ public struct TopNavigation: View {
         }
     }
     
-    struct TrailingButtons: View {
-        let buttons: [Resource.TrailingButtonInfo]
-        let alternative: Bool
-        let background: Bool
+    struct TrailingContents: View {
+        let contents: [() -> AnyView]
         
-        init(
-            _ buttons: [Resource.TrailingButtonInfo],
-            _ alternative: Bool = false,
-            _ background: Bool = false
-        ) {
-            self.buttons = buttons
-            self.alternative = alternative
-            self.background = background
+        init(_ contents:  [() -> AnyView]) {
+            self.contents = contents
         }
 
         var body: some View {
-            if buttons.isEmpty == false {
-                HStack(alignment: .center, spacing: 16) {
-                    ForEach(buttons, id: \.self) { button in
-                        Group {
-                            switch button {
-                            case let .icon(i, d, s, action):
-                                IconButton(
-                                    variant: background ?
-                                        .background(size: 24, isAlternative: alternative) : .default,
-                                    icon: i
-                                ) {
-                                    action()
-                                }
-                                .disable(d)
-                                .showPushBadge(s)
-                                .frame(width: 24, height: 24)
-                            case let .text(t, d, action):
-                                TrailingTextButton(
-                                    text: t,
-                                    action: action,
-                                    background: background,
-                                    alternative: alternative,
-                                    disable: d
-                                )
-                                .frame(height: 24)
-                            }
-                        }
-                    }
+            HStack(alignment: .center, spacing: 16) {
+                ForEach(contents.indices, id: \.self) { i in
+                    Group { contents[i]() }
                 }
-                .contentShape(Rectangle().scale(2), eoFill: true)
-            } else {
-                SwiftUI.Color.clear
-                    .frame(width: 24, height: 24)
             }
+            .contentShape(Rectangle().scale(2), eoFill: true)
         }
     }
     
-    private struct TrailingTextButton: View {
+    public struct TrailingTextButton: View {
         private let text: String
-        private let action: () -> Void
         private let background: Bool
         private let alternative: Bool
         private let disable: Bool
+        private let action: () -> Void
         
-        init(
+        public init(
             text: String,
-            action: @escaping () -> Void,
-            background: Bool,
-            alternative: Bool,
-            disable: Bool = false
+            background: Bool = false,
+            alternative: Bool = false,
+            disable: Bool = false,
+            action: @escaping () -> Void
         ) {
             self.text = text
-            self.action = action
             self.background = background
             self.alternative = alternative
             self.disable = disable
+            self.action = action
         }
 
-        var body: some View {
-            if background {
-                SwiftUI.Button {
-                    action()
-                } label: {
-                    Text(text)
-                        .paragraphNew(
-                            variant: .body2,
-                            weight: .medium,
-                            semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)
-                        )
-                        .if(alternative) {
-                            $0.opacity(0.88)
-                        } else: {
-                            $0.blendMode(.plusDarker)
-                        }
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .modifying { original in
-                            Group {
-                                if alternative {
-                                    original.background(
-                                        SwiftUI.Color.atomic(.coolNeutral30)
-                                            .opacity(0.61)
-                                    )
-                                } else {
-                                    original.background(
-                                        ZStack {
-                                            SwiftUI.Color.semantic(.staticBlack)
-                                                .opacity(0.05)
-                                            SwiftUI.Color.semantic(.staticWhite)
-                                                .opacity(0.35)
-                                        }
-                                    )
-                                    .background(.thinMaterial)
-                                }
+        public var body: some View {
+            Group {
+                if background {
+                    SwiftUI.Button {
+                        action()
+                    } label: {
+                        Text(text)
+                            .paragraphNew(
+                                variant: .body2,
+                                weight: .medium,
+                                semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)
+                            )
+                            .if(alternative) {
+                                $0.opacity(0.88)
+                            } else: {
+                                $0.blendMode(.plusDarker)
                             }
-                            .clipShape(RoundedRectangle(cornerRadius: 1000))
-                        }
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .modifying { original in
+                                Group {
+                                    if alternative {
+                                        original.background(
+                                            SwiftUI.Color.atomic(.coolNeutral30)
+                                                .opacity(0.61)
+                                        )
+                                    } else {
+                                        original.background(
+                                            ZStack {
+                                                SwiftUI.Color.semantic(.staticBlack)
+                                                    .opacity(0.05)
+                                                SwiftUI.Color.semantic(.staticWhite)
+                                                    .opacity(0.35)
+                                            }
+                                        )
+                                        .background(.thinMaterial)
+                                    }
+                                }
+                                .clipShape(RoundedRectangle(cornerRadius: 1000))
+                            }
+                    }
+                } else {
+                    Button.text(text: text) {
+                        action()
+                    }
+                    .disable(disable)
+                    .contentColor(.semantic(.labelNormal))
+                    .fontVariant(.headline2)
+                    .fontWeight(.regular)
                 }
-            } else {
-                Button.text(text: text) {
-                    action()
-                }
-                .disable(disable)
-                .contentColor(.semantic(.labelNormal))
-                .fontVariant(.headline2)
-                .fontWeight(.regular)
             }
+            .frame(height: 24)
+        }
+    }
+    
+    public struct TrailingIconButton: View {
+        private let icon: Icon
+        private let disable: Bool
+        private let background: Bool
+        private let alternative: Bool
+        private let showPushBadge: Bool
+        private let action: () -> Void
+        
+        public init(
+            icon: Icon,
+            disable: Bool = false,
+            background: Bool = false,
+            alternative: Bool = false,
+            showPushBadge: Bool = false,
+            action: @escaping () -> Void
+        ) {
+            self.icon = icon
+            self.disable = disable
+            self.background = background
+            self.alternative = alternative
+            self.showPushBadge = showPushBadge
+            self.action = action
+        }
+        
+        public var body: some View {
+            IconButton(
+                variant: background ?
+                    .background(size: 24, isAlternative: alternative) : .default,
+                icon: icon
+            ) {
+                action()
+            }
+            .disable(disable)
+            .showPushBadge(showPushBadge)
+            .frame(width: 24, height: 24)
         }
     }
 }
@@ -565,7 +580,7 @@ extension TopNavigation {
         private let showIndicator: Bool
         private let backgroundColor: SwiftUI.Color?
         private let leading: (() -> any View)?
-        private let trailingButtons: [Resource.TrailingButtonInfo]
+        private let trailings: [() -> any View]
         private let actionAreaModel: ActionArea.Model?
         
         /// TopNavigationModifier를 초기화합니다.
@@ -575,8 +590,8 @@ extension TopNavigation {
         ///   - title: 표시할 제목
         ///   - showIndicator: 인디케이터 표시 여부
         ///   - backgroundColor: 배경색
-        ///   - leadingButton: 좌측에 표시할 버튼
-        ///   - trailingButtons: 우측에 표시할 버튼 배열
+        ///   - leading: 좌측에 표시할 버튼
+        ///   - trailings: 우측에 표시할 버튼 배열
         ///   - actionAreaModel: 액션 영역 모델
         init(
             variant: Variant,
@@ -584,7 +599,7 @@ extension TopNavigation {
             showIndicator: Bool = true,
             backgroundColor: SwiftUI.Color? = nil,
             leading: (() -> any View)? = nil,
-            trailingButtons: [Resource.TrailingButtonInfo],
+            trailings: [() -> any View] = [],
             actionAreaModel: ActionArea.Model? = nil
         ) {
             self.variant = variant
@@ -592,7 +607,7 @@ extension TopNavigation {
             self.showIndicator = showIndicator
             self.backgroundColor = backgroundColor
             self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
-            self.trailingButtons = trailingButtons
+            self.trailings = trailings.prefix(3).map { view in { AnyView(view()) } }
             self.actionAreaModel = actionAreaModel
         }
         
@@ -623,7 +638,7 @@ extension TopNavigation {
                             scrollOffset: scrollStatus.contentOffset.y,
                             backgroundColor: backgroundColor,
                             leading: leading,
-                            trailingButtons: trailingButtons
+                            trailings: trailings
                         )
                         .onGeometryChange(
                             for: CGSize.self,
@@ -658,8 +673,8 @@ extension View {
     ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
     ///   - title: 표시할 제목
     ///   - backgroundColor: 배경색 (기본값: nil)
-    ///   - leadingButton: 좌측에 표시할 버튼 (기본값: nil)
-    ///   - trailingButtons: 우측에 표시할 버튼 배열 (기본값: [])
+    ///   - leading: 좌측에 표시할 컴포넌트 (기본값: nil)
+    ///   - trailings: 우측에 표시할 컴포넌트 (기본값: [])
     ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
@@ -667,7 +682,7 @@ extension View {
         title: String,
         backgroundColor: SwiftUI.Color? = nil,
         leading: (() -> any View)? = nil,
-        trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = [],
+        trailings: [() -> any View] = [],
         withBottom model: ActionArea.Model? = nil
     ) -> some View {
         modifier(
@@ -676,7 +691,7 @@ extension View {
                 title: title,
                 backgroundColor: backgroundColor,
                 leading: leading,
-                trailingButtons: trailingButtons,
+                trailings: trailings,
                 actionAreaModel: model
             )
         )

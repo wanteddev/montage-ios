@@ -115,11 +115,30 @@ struct FullModalPreview: View {
                             .back(action: {})
                         )
                     }
-                    .trailingButtons([
-                        .icon(.plus, action: {}),
-                        .icon(.minus, action: {}),
-                        .icon(.close, action: { show = false })
-                    ])
+                    .trailings(
+                        [
+                            {
+                                TopNavigation.TrailingIconButton(
+                                    icon: .plus,
+                                    action: {}
+                                )
+                            },
+                            {
+                                TopNavigation.TrailingIconButton(
+                                    icon: .minus,
+                                    action: {}
+                                )
+                            },
+                            {
+                                TopNavigation.TrailingIconButton(
+                                    icon: .close,
+                                    action: {
+                                        show = false
+                                    }
+                                )
+                            }
+                        ]
+                    )
             }
             : nil
         )

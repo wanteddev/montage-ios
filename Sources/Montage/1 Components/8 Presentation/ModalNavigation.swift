@@ -16,14 +16,18 @@ import SwiftUI
 /// ```swift
 /// ModalNavigation(title: "제목")
 ///     .variant(.normal)
-///     .leadingButton(.back {
-///         // 뒤로가기 동작
-///     })
-///     .trailingButtons([
-///         .icon(.close, action: {
-///             // 닫기 동작
-///         })
-///     ])
+///     leading: {
+///         // 뒤로가기 동작 컴포넌트
+///     },
+///     trailing: [
+///         {
+///           // 컴포넌트1
+///         },
+///         {
+///           // 컴포넌트2
+///         },
+///         ...
+///     ]
 /// ```
 public struct ModalNavigation: View {
     // MARK: - Types
@@ -78,7 +82,7 @@ public struct ModalNavigation: View {
                 variant: variant,
                 title: title,
                 leading: leading,
-                trailingButtons: trailingButtons
+                trailings: trailings
             )
             .if(needHandleArea) {
                 $0.padding(.top, 10)
@@ -109,7 +113,7 @@ public struct ModalNavigation: View {
     private var backgroundColor: SwiftUI.Color? = nil
     private var needHandleArea = false
     private var leading: () -> AnyView
-    private var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = []
+    private var trailings: [() -> AnyView] = []
     
     /// 내비게이션 바의 스타일을 설정합니다.
     ///
@@ -161,13 +165,13 @@ public struct ModalNavigation: View {
         return zelf
     }
     
-    /// 내비게이션 바의 오른쪽 버튼들을 설정합니다.
+    /// 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
     ///
-    /// - Parameter actions: 오른쪽 버튼 배열 (최대 3개까지 표시)
+    /// - Parameter contents: 오른쪽에 노출될 컨텐츠 배열 (최대 3개까지 표시)
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func trailingButtons(_ actions: [TopNavigation.Resource.TrailingButtonInfo]) -> Self {
+    public func trailings<V: View>(_ contents: [() -> V]) -> Self {
         var zelf = self
-        zelf.trailingButtons = Array(actions.prefix(3))
+        zelf.trailings = contents.prefix(3).map { view in { AnyView(view()) } }
         return zelf
     }
     
@@ -175,7 +179,7 @@ public struct ModalNavigation: View {
         var variant: Variant
         var title: String
         var leading: () -> AnyView
-        var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo]
+        var trailings: [() -> AnyView]
         
         var body: some View {
             switch variant {
@@ -184,7 +188,7 @@ public struct ModalNavigation: View {
                     variant: variant.topNavigationVariant,
                     title: title,
                     leading: leading,
-                    trailingButtons: trailingButtons
+                    trailings: trailings
                 )
             case .emphasized:
                 ZStack {
@@ -199,7 +203,11 @@ public struct ModalNavigation: View {
                             .lineLimit(1)
                             .frame(height: 24, alignment: variant.textAlignment)
                         Spacer(minLength: 0)
-                        TopNavigation.TrailingButtons(trailingButtons)
+                        Group {
+                            ForEach(trailings.indices, id: \.self) { i in
+                                trailings[i]()
+                            }
+                        }
                     }
                 }
             }

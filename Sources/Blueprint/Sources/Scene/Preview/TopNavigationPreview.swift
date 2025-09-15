@@ -21,7 +21,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    enum LeadingButton: String, CaseIterable {
+    enum LeadingContentsKind: String, CaseIterable {
         case back
         case icon
         case text
@@ -45,9 +45,9 @@ struct TopNavigationPreview: View {
     @State var variant: Variant = .normal
     @State var alternative: Bool = false
     @State var background: Bool = false
-    @State var leading: LeadingButton = .back
+    @State var leading: LeadingContentsKind = .back
     @State var trailing: [TrailingButton] = []
-    @State var trailingButtonDisable: Bool = false
+    @State var trailingContentDisable: Bool = false
     @State var toast: Toast.Model? = nil
     @State var backgroundColor: SwiftUI.Color? = nil
     @State var selectedBackgroundColorName: Montage.Color.Semantic = .backgroundNormal
@@ -66,7 +66,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var leadingButton: () -> any View {
+    private var leadingContent: () -> any View {
         switch leading {
         case .back:
             return {
@@ -145,11 +145,24 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var trailingButton: [TopNavigation.Resource.TrailingButtonInfo] {
+    private var trailingContents: [() -> any View] {
         return trailing.map {
             switch $0 {
-            case .icon: return .icon(.bell, disable: trailingButtonDisable, action: { closure() })
-            case .text: return .text("알림", disable: trailingButtonDisable, action: { closure() })
+            case .icon: {
+                TopNavigation.TrailingIconButton(
+                    icon: .bell,
+                    action: { closure() }
+                )
+            }
+            case .text: {
+                TopNavigation.TrailingTextButton(
+                    text: "알림",
+                    disable: trailingContentDisable,
+                    action: {
+                        closure()
+                    }
+                )
+            }
             }
         }
     }
@@ -226,7 +239,7 @@ struct TopNavigationPreview: View {
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(leading.selectableTitle) {
-                    ForEach(LeadingButton.allCases, id: \.self) { action in
+                    ForEach(LeadingContentsKind.allCases, id: \.self) { action in
                         Button {
                             leading = action
                         } label: {
@@ -254,9 +267,9 @@ struct TopNavigationPreview: View {
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
-                    trailingButtonDisable.toggle()
+                    trailingContentDisable.toggle()
                 } label: {
-                    Text(trailingButtonDisable ? "true" : "false")
+                    Text(trailingContentDisable ? "true" : "false")
                 }
             }
             HStack {
@@ -311,8 +324,8 @@ struct TopNavigationPreview: View {
             variant: v,
             title: "제목",
             backgroundColor: backgroundColor,
-            leading: leadingButton,
-            trailingButtons: trailingButton,
+            leading: leadingContent,
+            trailings: trailingContents,
             withBottom: actionAreaModel
         )
         .toast($toast)

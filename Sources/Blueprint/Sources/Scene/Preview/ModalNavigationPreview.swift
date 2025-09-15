@@ -45,7 +45,6 @@ struct ModalNavigationPreview: View {
                     scrollOffset: $contentOffset
                 )
                 .variant(variants[variantIndex])
-                .trailingButtons(Array(actions.prefix(trailingButtonCount).reversed()))
                 .leading {
                     Group {
                         if leadingButton {
@@ -55,6 +54,29 @@ struct ModalNavigationPreview: View {
                         }
                     }
                 }
+                .trailings(
+                    actions.map { kind -> (() -> AnyView) in
+                        switch kind {
+                        case let .icon(i, d, s, a):
+                            {
+                                AnyView(TopNavigation.TrailingIconButton(
+                                    icon: i,
+                                    disable: d,
+                                    showPushBadge: s,
+                                    action: a
+                                ))
+                            }
+                        case let .text(t, d, a):
+                            {
+                                AnyView(TopNavigation.TrailingTextButton(
+                                    text: t,
+                                    disable: d,
+                                    action: a
+                                ))
+                            }
+                        }
+                    }
+                )
                 
                 VStack(alignment: .leading) {
                     HStack {
