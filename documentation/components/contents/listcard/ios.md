@@ -58,7 +58,7 @@ ___
 
 <details>
 
-<summary>``func bottomContent((() -> any View)?) -> ListCard``</summary>
+<summary>``func bottomContent<V>(() -> V) -> ListCard``</summary>
 
 카드 하단에 표시할 콘텐츠를 설정합니다.
 
@@ -100,7 +100,7 @@ ___
 </details>
 <details>
 
-<summary>``func leadingContent((() -> any View)?) -> ListCard``</summary>
+<summary>``func leadingContent<V>(() -> V) -> ListCard``</summary>
 
 카드 왼쪽(썸네일 앞)에 표시할 콘텐츠를 설정합니다.
 
@@ -114,7 +114,7 @@ ___
 </details>
 <details>
 
-<summary>``func topContent((() -> any View)?) -> ListCard``</summary>
+<summary>``func topContent<V>(() -> V) -> ListCard``</summary>
 
 카드 상단에 표시할 콘텐츠를 설정합니다.
 
@@ -128,7 +128,7 @@ ___
 </details>
 <details>
 
-<summary>``func trailingContent((() -> any View)?) -> ListCard``</summary>
+<summary>``func trailingContent<V>(() -> V) -> ListCard``</summary>
 
 카드 오른쪽에 표시할 콘텐츠를 설정합니다.
 

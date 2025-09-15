@@ -66,7 +66,7 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 
 <details>
 
-<summary>``static func custom((() -> any View)) -> ActionArea.ButtonInfo``</summary>
+<summary>``static func custom<V>(() -> V) -> ActionArea.ButtonInfo``</summary>
 
 커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.
 
@@ -94,7 +94,7 @@ ActionArea를 구성하기 위한 모델 구조체입니다.
 
 <details>
 
-<summary>``init(variant: ActionArea.Variant, backgroundVisibility: BackgroundVisibility, caption: String?, extra: (() -> any View)?, extraDivider: Bool)``</summary>
+<summary>``init<V>(variant: ActionArea.Variant, backgroundVisibility: BackgroundVisibility, caption: String?, extra: () -> V, extraDivider: Bool)``</summary>
 
 ActionArea 모델을 초기화합니다.
 
@@ -105,6 +105,20 @@ ActionArea 모델을 초기화합니다.
   | `backgroundVisibility` | 배경 가시성 설정 |
   | `caption` | 캡션 텍스트 |
   | `extra` | 추가 콘텐츠를 생성하는 클로저 |
+  | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부 |
+</details>
+<details>
+
+<summary>``init(variant: ActionArea.Variant, backgroundVisibility: BackgroundVisibility, caption: String?, extraDivider: Bool)``</summary>
+
+ActionArea 모델을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 버튼 레이아웃 변형 |
+  | `backgroundVisibility` | 배경 가시성 설정 |
+  | `caption` | 캡션 텍스트 |
   | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부 |
 </details>
 
@@ -169,7 +183,7 @@ ___
 </details>
 <details>
 
-<summary>``func extra((() -> any View)?, divider: Bool) -> ActionArea``</summary>
+<summary>``func extra<V>(() -> V, divider: Bool) -> ActionArea``</summary>
 
 버튼 위에 표시할 추가 콘텐츠를 설정합니다.
 
