@@ -102,12 +102,13 @@ public struct TopNavigation: View {
     
     /// 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
     ///
-    /// 최대 3개까지의 뷰를 배열로 전달할 수 있으며, 각 요소는 클로저 형태로 제공되어야 합니다.
-    /// 내부적으로 `AnyView`로 타입이 지워져 렌더링됩니다.
+    /// 최대 3개까지의 뷰를 클로저 배열로 전달할 수 있으며,
+    /// 각 클로저는 다양한 타입의 View를 반환할 수 있습니다 (`any View`).
+    /// 내부적으로는 모든 View를 `AnyView`로 타입을 지운 후 렌더링합니다.
     ///
     /// - Parameter contents: trailing 영역에 표시할 뷰들을 반환하는 클로저 배열
     /// - Returns: 수정된 인스턴스를 반환합니다.
-    public func trailing<V: View>(_ contents: [() -> V]) -> Self {
+    public func trailings(_ contents: [() -> any View]) -> Self {
         var zelf = self
         zelf.trailings = contents.prefix(3).map{ view in { AnyView(view()) } }
         return zelf
@@ -243,15 +244,14 @@ public struct TopNavigation: View {
 
         var body: some View {
             HStack(alignment: .center, spacing: 16) {
-                ForEach(contents.indices, id: \.self) { i in
-                    Group { contents[i]() }
+                ForEach(Array(contents.enumerated()), id: \.offset) { _, makeView in
+                    makeView()
                 }
             }
             .contentShape(Rectangle().scale(2), eoFill: true) // 터치영역 확장
         }
     }
 }
-
 
 extension TopNavigation {
     /// 내비게이션 바의 제목 컴포넌트입니다.
@@ -720,7 +720,7 @@ extension TopNavigation {
                         )
                         .title { title() }
                         .leading { leading() }
-                        .trailing(trailings)
+                        .trailings(trailings)
                         .onGeometryChange(
                             for: CGSize.self,
                             of: { $0.size },

@@ -14,20 +14,18 @@ import SwiftUI
 /// 다양한 스타일을 지원합니다.
 ///
 /// ```swift
-/// ModalNavigation(title: "제목")
+/// ModalNavigation()
 ///     .variant(.normal)
-///     leading: {
+///     .title {
+///         ModalNavigation.TitleView(variant: .normal, title: "제목")
+///     }
+///     .leading {
 ///         // 뒤로가기 동작 컴포넌트
-///     },
-///     trailing: [
-///         {
-///           // 컴포넌트1
-///         },
-///         {
-///           // 컴포넌트2
-///         },
-///         ...
-///     ]
+///     }
+///     .trailings([
+///         { /* 컴포넌트1 */ },
+///         { /* 컴포넌트2 */ }
+///     ])
 /// ```
 public struct ModalNavigation: View {
     // MARK: - Types
@@ -61,8 +59,9 @@ public struct ModalNavigation: View {
     /// 내비게이션 바를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - title: 내비게이션 바에 표시할 제목
-    ///   - scrollOffset: 스크롤 오프셋에 대한 바인딩 (기본값: .constant(0))
+    ///   - title: 타이틀 영역을 구성하는 뷰 빌더 (없으면 빈 뷰)
+    ///   - scrollOffset: 스크롤 오프셋 바인딩 (기본값: .constant(0))
+    ///   - leading: 왼쪽 영역을 구성하는 뷰 빌더 (없으면 빈 뷰)
     public init(
         title: (() -> any View)? = nil,
         scrollOffset: Binding<CGFloat> = .constant(0),
@@ -161,7 +160,7 @@ public struct ModalNavigation: View {
     /// - Returns: 수정된 내비게이션 바 뷰
     public func title<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.title = title
+        zelf.title = { AnyView(content()) }
         return zelf
     }
     
@@ -171,17 +170,21 @@ public struct ModalNavigation: View {
     /// - Returns: 수정된 내비게이션 바 뷰
     public func leading<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leading = leading
+        zelf.leading = { AnyView(content()) }
         return zelf
     }
     
     /// 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
     ///
+    /// 최대 3개까지의 뷰를 클로저 배열로 전달할 수 있으며,
+    /// 각 클로저는 다양한 타입의 View를 반환할 수 있습니다 (`any View`).
+    /// 내부적으로는 모든 View를 `AnyView`로 타입을 지운 후 렌더링합니다.
+    ///
     /// - Parameter contents: 오른쪽에 노출될 컨텐츠 배열 (최대 3개까지 표시)
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func trailings<V: View>(_ contents: [() -> V]) -> Self {
+    public func trailings(_ contents: [() -> any View]) -> Self {
         var zelf = self
-        zelf.trailings = contents.prefix(3).map { view in { AnyView(view()) } }
+        zelf.trailings = contents.prefix(3).map { content in { AnyView(content()) } }
         return zelf
     }
     
@@ -207,8 +210,8 @@ public struct ModalNavigation: View {
                         title()
                         Spacer(minLength: 0)
                         Group {
-                            ForEach(trailings.indices, id: \.self) { i in
-                                trailings[i]()
+                            ForEach(Array(trailings.enumerated()), id: \.offset) { _, makeView in
+                                makeView()
                             }
                         }
                     }
@@ -284,15 +287,6 @@ private extension ModalNavigation.Variant {
         case .extended: .bold
         case .floating: .bold
         case .emphasized: .bold
-        }
-    }
-    
-    var textAlignment: Alignment {
-        switch self {
-        case .normal: .center
-        case .extended: .leading
-        case .floating: .center
-        case .emphasized: .leading
         }
     }
 }
