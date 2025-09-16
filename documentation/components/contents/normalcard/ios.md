@@ -58,7 +58,7 @@ ___
 
 <details>
 
-<summary>``func bottomContent((() -> any View)?) -> NormalCard``</summary>
+<summary>``func bottomContent<V>(() -> V) -> NormalCard``</summary>
 
 카드 하단에 표시할 콘텐츠를 설정합니다.
 
@@ -131,7 +131,7 @@ ___
 </details>
 <details>
 
-<summary>``func topContent((() -> any View)?) -> NormalCard``</summary>
+<summary>``func topContent<V>(() -> V) -> NormalCard``</summary>
 
 카드 상단에 표시할 콘텐츠를 설정합니다.
 
