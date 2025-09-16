@@ -55,7 +55,21 @@ SnackBar의 데이터 모델을 정의하는 구조체입니다.
 
 <details>
 
-<summary>``init(duration: Duration, heading: String?, description: String?, extraContents: (() -> any View)?, action: String)``</summary>
+<summary>``init(duration: Duration, heading: String?, description: String?, action: String)``</summary>
+
+SnackBar 모델을 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `duration` | 스낵바가 표시되는 시간 |
+  | `heading` | 스낵바의 제목 (선택 사항) |
+  | `description` | 스낵바의 설명 텍스트 (선택 사항) |
+  | `action` | 스낵바의 액션 버튼에 표시할 텍스트 |
+</details>
+<details>
+
+<summary>``init<V>(duration: Duration, heading: String?, description: String?, extraContents: () -> V, action: String)``</summary>
 
 SnackBar 모델을 초기화합니다.
 

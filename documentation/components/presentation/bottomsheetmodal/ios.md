@@ -51,7 +51,7 @@ YourView()
 
 <details>
 
-<summary>``init(() -> any View)``</summary>
+<summary>``init<V>(() -> V)``</summary>
 
 바텀 시트 모달을 초기화합니다.
 
