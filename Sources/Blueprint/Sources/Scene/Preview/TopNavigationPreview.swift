@@ -322,7 +322,12 @@ struct TopNavigationPreview: View {
         .padding(.all, 20)
         .topNavigation(
             variant: v,
-            title: "제목",
+            title: {
+                TopNavigation.TitleView(
+                    variant: v,
+                    title: "제목"
+                )
+            },
             backgroundColor: backgroundColor,
             leading: leadingContent,
             trailings: trailingContents,

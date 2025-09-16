@@ -122,8 +122,14 @@ struct PopupModalPreview: View {
             },
             navigation: navigation
             ? {
-                ModalNavigation(title: "제목")
+                ModalNavigation()
                     .variant(navigationVariants[navVariantIndex])
+                    .title({
+                        ModalNavigation.TitleView(
+                            variant: navigationVariants[navVariantIndex],
+                            title: "제목"
+                        )
+                    })
                     .leading {
                         TopNavigation.LeadingButton(
                             .back(action: {})

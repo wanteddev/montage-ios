@@ -15,26 +15,20 @@ import SwiftUI
 /// ```swift
 /// TopNavigation(
 ///     variant: .normal,
-///     title: "제목",
-///     leading: {
-///         // 뒤로가기 동작 컴포넌트
-///     },
-///     trailing: [
-///         {
-///           // 컴포넌트1
-///         },
-///         {
-///           // 컴포넌트2
-///         },
-///         ...
-///     ]
+///     scrollOffset: (*optional),
+///     backgroundColor: (*optional)
 /// )
+/// .title { 제목 컴포넌트 }
+/// .leading { 왼쪽 영역 컴포넌트 }
+/// .trailing([
+///     { 컴포넌트1 },
+///     { 컴포넌트2 } ...
+/// ])
 /// ```
 public struct TopNavigation: View {
     // MARK: - Uninitialised properties
     
     private let variant: Variant
-    private let title: String
     private let scrollOffset: CGFloat
     private let backgroundColor: SwiftUI.Color?
     
@@ -68,32 +62,52 @@ public struct TopNavigation: View {
     ///   - trailings: 우측에 표시할 버튼 배열 (최대 3개까지 표시)
     public init(
         variant: Variant = .normal,
-        title: String = "",
         scrollOffset: CGFloat = .zero,
-        backgroundColor: SwiftUI.Color? = nil,
-        leading: (() -> any View)? = nil,
-        trailings: [(() -> any View)] = []
+        backgroundColor: SwiftUI.Color? = nil
     ) {
         self.variant = variant
-        self.title = title
         self.scrollOffset = scrollOffset
         self.backgroundColor = backgroundColor
-        self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
-        self.trailings = trailings.prefix(3).map { view in { AnyView(view()) } }
     }
     
     // MARK: - Modifiers
     
-    private var leading: () -> AnyView
-    private var trailings: [() -> AnyView]
+    private var title: () -> AnyView  = { AnyView(EmptyView()) }
+    private var leading: () -> AnyView  = { AnyView(EmptyView()) }
+    private var trailings: [() -> AnyView] = []
     
+    /// 내비게이션 영역의 타이틀 뷰를 설정합니다.
+    ///
+    /// 타이틀에는 텍스트 또는 커스텀 뷰를 사용할 수 있으며, ViewBuilder를 통해 정의됩니다.
+    ///
+    /// - Parameter content: 표시할 타이틀 뷰를 반환하는 클로저
+    /// - Returns: 수정된 인스턴스를 반환합니다.
+    public func title<V: View>(@ViewBuilder content: @escaping () -> V) -> Self {
+        var zelf = self
+        zelf.title = { AnyView(content()) }
+        return zelf
+    }
+    
+    /// 내비게이션 영역의 왼쪽(leading) 영역에 표시할 뷰를 설정합니다.
+    ///
+    /// 주로 아이콘이나 취소 버튼 등을 배치할 수 있으며, ViewBuilder를 통해 정의됩니다.
+    ///
+    /// - Parameter content: leading 영역에 표시할 뷰를 반환하는 클로저
+    /// - Returns: 수정된 인스턴스를 반환합니다.
     public func leading<V: View>(@ViewBuilder content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.leading = { AnyView(content()) }
         return zelf
     }
     
-    public func trailing<V: View>(contents: [() -> V]) -> Self {
+    /// 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
+    ///
+    /// 최대 3개까지의 뷰를 배열로 전달할 수 있으며, 각 요소는 클로저 형태로 제공되어야 합니다.
+    /// 내부적으로 `AnyView`로 타입이 지워져 렌더링됩니다.
+    ///
+    /// - Parameter contents: trailing 영역에 표시할 뷰들을 반환하는 클로저 배열
+    /// - Returns: 수정된 인스턴스를 반환합니다.
+    public func trailing<V: View>(_ contents: [() -> V]) -> Self {
         var zelf = self
         zelf.trailings = contents.prefix(3).map{ view in { AnyView(view()) } }
         return zelf
@@ -140,7 +154,7 @@ public struct TopNavigation: View {
         @State private var screenWidth: CGFloat = 0
         
         var variant: Variant
-        var title: String
+        var title: () -> AnyView
         var leading: () -> AnyView
         var trailings: [() -> AnyView]
 
@@ -178,7 +192,7 @@ public struct TopNavigation: View {
                             action: { totalSizeOfTrailings = $0 }
                         )
                     }
-                    titleView
+                    title()
                         .frame(width: titleSize, height: 24)
                 case .extended:
                     VStack(spacing: 20) {
@@ -188,7 +202,7 @@ public struct TopNavigation: View {
                             TrailingContents(trailings)
                         }
                         HStack {
-                            titleView
+                            title()
                                 .frame(height: 24, alignment: variant.textAlignment)
                             Spacer()
                         }
@@ -212,14 +226,55 @@ public struct TopNavigation: View {
                                 )
                         }
                         .frame(height: 24)
-                        titleView
+                        title()
                             .frame(width: titleSize, height: 24)
                     }
                 }
             }
         }
+    }
+    
+    struct TrailingContents: View {
+        let contents: [() -> AnyView]
         
-        private var titleView: some View {
+        init(_ contents:  [() -> AnyView]) {
+            self.contents = contents
+        }
+
+        var body: some View {
+            HStack(alignment: .center, spacing: 16) {
+                ForEach(contents.indices, id: \.self) { i in
+                    Group { contents[i]() }
+                }
+            }
+            .contentShape(Rectangle().scale(2), eoFill: true) // 터치영역 확장
+        }
+    }
+}
+
+
+extension TopNavigation {
+    /// 내비게이션 바의 제목 컴포넌트입니다.
+    ///
+    /// 전달받은 스타일(variant)에 따라 타이포그래피가 동적으로 적용되며,
+    /// 최대 한 줄로 제한된 제목 텍스트를 보여줍니다.
+    ///
+    /// ```swift
+    /// TitleView(variant: .normal, title: "제목")
+    /// ```
+    public struct TitleView: View {
+        let variant: Variant
+        let title: String
+        
+        public init(
+            variant: Variant,
+            title: String
+        ) {
+            self.variant = variant
+            self.title = title
+        }
+        
+        public var body: some View {
             Text(title)
                 .paragraphNew(
                     variant: variant.typoVariant,
@@ -230,6 +285,20 @@ public struct TopNavigation: View {
         }
     }
     
+    /// 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다.
+    ///
+    /// 뒤로가기, 아이콘 버튼, 텍스트 버튼 등의 다양한 형태를 지원하며,
+    /// 배경 및 대체 스타일도 옵션으로 제공합니다.
+    ///
+    /// ```swift
+    /// LeadingButton(
+    ///     .back { dismiss() },
+    ///     true,   // alternative 스타일
+    ///     false   // background 없음
+    /// )
+    /// ```
+    ///
+    /// 버튼이 없을 경우에는 투명한 공간을 차지하여 레이아웃이 유지됩니다.
     public struct LeadingButton: View {
         let action: Resource.LeadingButtonInfo?
         let alternative: Bool
@@ -287,23 +356,21 @@ public struct TopNavigation: View {
         }
     }
     
-    struct TrailingContents: View {
-        let contents: [() -> AnyView]
-        
-        init(_ contents:  [() -> AnyView]) {
-            self.contents = contents
-        }
-
-        var body: some View {
-            HStack(alignment: .center, spacing: 16) {
-                ForEach(contents.indices, id: \.self) { i in
-                    Group { contents[i]() }
-                }
-            }
-            .contentShape(Rectangle().scale(2), eoFill: true)
-        }
-    }
-    
+    /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.
+    ///
+    /// 배경이 있는 스타일과 없는 스타일을 모두 지원하며,
+    /// alternative 색상 스타일 및 disable 처리도 가능합니다.
+    ///
+    /// ```swift
+    /// TrailingTextButton(
+    ///     text: "확인",
+    ///     background: true,
+    ///     alternative: false,
+    ///     disable: false
+    /// ) {
+    ///     // 버튼 액션
+    /// }
+    /// ```
     public struct TrailingTextButton: View {
         private let text: String
         private let background: Bool
@@ -380,6 +447,20 @@ public struct TopNavigation: View {
         }
     }
     
+    /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.
+    ///
+    /// 배경 스타일, alternative 색상, 비활성화(disable), 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
+    ///
+    /// ```swift
+    /// TrailingIconButton(
+    ///     icon: .bell,
+    ///     background: true,
+    ///     alternative: false,
+    ///     showPushBadge: true
+    /// ) {
+    ///     // 버튼 액션
+    /// }
+    /// ```
     public struct TrailingIconButton: View {
         private let icon: Icon
         private let disable: Bool
@@ -576,26 +657,26 @@ extension TopNavigation {
     /// ```
     struct TopNavigationModifier: ViewModifier {
         private let variant: Variant
-        private let title: String
+        private let title: (() -> AnyView)
         private let showIndicator: Bool
         private let backgroundColor: SwiftUI.Color?
-        private let leading: (() -> any View)?
-        private let trailings: [() -> any View]
+        private let leading: (() -> AnyView)
+        private let trailings: [() -> AnyView]
         private let actionAreaModel: ActionArea.Model?
         
         /// TopNavigationModifier를 초기화합니다.
         ///
         /// - Parameters:
         ///   - variant: 내비게이션 바의 외관 스타일
-        ///   - title: 표시할 제목
+        ///   - title: 제목 영역
         ///   - showIndicator: 인디케이터 표시 여부
         ///   - backgroundColor: 배경색
-        ///   - leading: 좌측에 표시할 버튼
-        ///   - trailings: 우측에 표시할 버튼 배열
+        ///   - leading: 좌측에 표시할 컴포넌트
+        ///   - trailings: 우측에 표시할 컴포넌트 배열
         ///   - actionAreaModel: 액션 영역 모델
         init(
             variant: Variant,
-            title: String,
+            title: (() -> any View)? = nil,
             showIndicator: Bool = true,
             backgroundColor: SwiftUI.Color? = nil,
             leading: (() -> any View)? = nil,
@@ -603,7 +684,7 @@ extension TopNavigation {
             actionAreaModel: ActionArea.Model? = nil
         ) {
             self.variant = variant
-            self.title = title
+            self.title = title.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
             self.showIndicator = showIndicator
             self.backgroundColor = backgroundColor
             self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
@@ -634,12 +715,12 @@ extension TopNavigation {
                     VStack(alignment: .leading, spacing: .zero) {
                         TopNavigation(
                             variant: variant,
-                            title: title,
                             scrollOffset: scrollStatus.contentOffset.y,
-                            backgroundColor: backgroundColor,
-                            leading: leading,
-                            trailings: trailings
+                            backgroundColor: backgroundColor
                         )
+                        .title { title() }
+                        .leading { leading() }
+                        .trailing(trailings)
                         .onGeometryChange(
                             for: CGSize.self,
                             of: { $0.size },
@@ -679,7 +760,7 @@ extension View {
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
-        title: String,
+        title: (() -> any View)? = nil,
         backgroundColor: SwiftUI.Color? = nil,
         leading: (() -> any View)? = nil,
         trailings: [() -> any View] = [],

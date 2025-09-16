@@ -55,8 +55,7 @@ public struct ModalNavigation: View {
     }
     
     // MARK: - Initialisers
-    
-    private let title: String
+
     @Binding private var scrollOffset: CGFloat
     
     /// 내비게이션 바를 초기화합니다.
@@ -65,11 +64,11 @@ public struct ModalNavigation: View {
     ///   - title: 내비게이션 바에 표시할 제목
     ///   - scrollOffset: 스크롤 오프셋에 대한 바인딩 (기본값: .constant(0))
     public init(
-        title: String,
+        title: (() -> any View)? = nil,
         scrollOffset: Binding<CGFloat> = .constant(0),
         leading: (() -> any View)? = nil
     ) {
-        self.title = title
+        self.title = title.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
         _scrollOffset = scrollOffset
         self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
     }
@@ -112,6 +111,7 @@ public struct ModalNavigation: View {
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color? = nil
     private var needHandleArea = false
+    private var title: () -> AnyView
     private var leading: () -> AnyView
     private var trailings: [() -> AnyView] = []
     
@@ -155,6 +155,16 @@ public struct ModalNavigation: View {
         return zelf
     }
     
+    /// 내비게이션 바의 타이틀  영역을 설정합니다.
+    ///
+    /// - Parameter content: 타이틀 영역에 컨텐츠
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func title<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
+        var zelf = self
+        zelf.title = title
+        return zelf
+    }
+    
     /// 내비게이션 바의 왼쪽 버튼 영역을 설정합니다.
     ///
     /// - Parameter content: 왼쪽에 노출될 컨텐츠
@@ -177,7 +187,7 @@ public struct ModalNavigation: View {
     
     private struct Contents: View {
         var variant: Variant
-        var title: String
+        var title: () -> AnyView
         var leading: () -> AnyView
         var trailings: [() -> AnyView]
         
@@ -194,14 +204,7 @@ public struct ModalNavigation: View {
                 ZStack {
                     HStack(spacing: 20) {
                         leading()
-                        Text(title)
-                            .paragraphNew(
-                                variant: variant.typoVariant,
-                                weight: variant.typoWeight,
-                                semantic: .labelStrong
-                            )
-                            .lineLimit(1)
-                            .frame(height: 24, alignment: variant.textAlignment)
+                        title()
                         Spacer(minLength: 0)
                         Group {
                             ForEach(trailings.indices, id: \.self) { i in
@@ -211,6 +214,31 @@ public struct ModalNavigation: View {
                     }
                 }
             }
+        }
+    }
+}
+
+extension ModalNavigation {
+    public struct TitleView: View {
+        let variant: Variant
+        let title: String
+        
+        public init(
+            variant: Variant,
+            title: String
+        ) {
+            self.variant = variant
+            self.title = title
+        }
+        
+        public var body: some View {
+            Text(title)
+                .paragraphNew(
+                    variant: variant.typoVariant,
+                    weight: variant.typoWeight,
+                    semantic: .labelStrong
+                )
+                .lineLimit(1)
         }
     }
 }
