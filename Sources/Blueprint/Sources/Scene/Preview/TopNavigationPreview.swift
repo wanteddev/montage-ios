@@ -329,8 +329,8 @@ struct TopNavigationPreview: View {
                 )
             },
             backgroundColor: backgroundColor,
-            leading: leadingContent,
-            trailings: trailingContents,
+            leadingContent: leadingContent,
+            trailingContents: trailingContents,
             withBottom: actionAreaModel
         )
         .toast($toast)

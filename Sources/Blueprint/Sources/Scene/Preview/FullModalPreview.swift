@@ -116,12 +116,12 @@ struct FullModalPreview: View {
                             title: "제목"
                         )
                     })
-                    .leading {
+                    .leadingContent {
                         TopNavigation.LeadingButton(
                             .back(action: {})
                         )
                     }
-                    .trailings(
+                    .trailingContents(
                         [
                             {
                                 TopNavigation.TrailingIconButton(

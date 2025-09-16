@@ -48,7 +48,7 @@ struct ModalNavigationPreview: View {
                             title: "제목"
                         )
                     })
-                    .leading {
+                    .leadingContent {
                         Group {
                             if leadingButton {
                                 TopNavigation.LeadingButton.init(
@@ -57,7 +57,7 @@ struct ModalNavigationPreview: View {
                             }
                         }
                     }
-                    .trailings(
+                    .trailingContents(
                         actions.map { kind -> (() -> AnyView) in
                             switch kind {
                             case let .icon(i, d, s, a):

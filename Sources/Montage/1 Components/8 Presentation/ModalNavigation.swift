@@ -19,10 +19,10 @@ import SwiftUI
 ///     .title {
 ///         ModalNavigation.TitleView(variant: .normal, title: "제목")
 ///     }
-///     .leading {
+///     .leadingContent {
 ///         // 뒤로가기 동작 컴포넌트
 ///     }
-///     .trailings([
+///     .trailingContents([
 ///         { /* 컴포넌트1 */ },
 ///         { /* 컴포넌트2 */ }
 ///     ])
@@ -59,17 +59,9 @@ public struct ModalNavigation: View {
     /// 내비게이션 바를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - title: 타이틀 영역을 구성하는 뷰 빌더 (없으면 빈 뷰)
     ///   - scrollOffset: 스크롤 오프셋 바인딩 (기본값: .constant(0))
-    ///   - leading: 왼쪽 영역을 구성하는 뷰 빌더 (없으면 빈 뷰)
-    public init(
-        title: (() -> any View)? = nil,
-        scrollOffset: Binding<CGFloat> = .constant(0),
-        leading: (() -> any View)? = nil
-    ) {
-        self.title = title.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
+    public init(scrollOffset: Binding<CGFloat> = .constant(0)) {
         _scrollOffset = scrollOffset
-        self.leading = leading.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
     }
     
     // MARK: - Body
@@ -79,8 +71,8 @@ public struct ModalNavigation: View {
             Contents(
                 variant: variant,
                 title: title,
-                leading: leading,
-                trailings: trailings
+                leadingContent: leadingContent,
+                trailingContents: trailingContents
             )
             .if(needHandleArea) {
                 $0.padding(.top, 10)
@@ -110,9 +102,9 @@ public struct ModalNavigation: View {
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color? = nil
     private var needHandleArea = false
-    private var title: () -> AnyView
-    private var leading: () -> AnyView
-    private var trailings: [() -> AnyView] = []
+    private var title: () -> AnyView = { AnyView(EmptyView()) }
+    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContents: [() -> AnyView] = []
     
     /// 내비게이션 바의 스타일을 설정합니다.
     ///
@@ -154,9 +146,9 @@ public struct ModalNavigation: View {
         return zelf
     }
     
-    /// 내비게이션 바의 타이틀  영역을 설정합니다.
+    /// 내비게이션 바의 타이틀 영역을 설정합니다.
     ///
-    /// - Parameter content: 타이틀 영역에 컨텐츠
+    /// - Parameter content: 타이틀 영역에 표시될 콘텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
     public func title<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
@@ -168,9 +160,9 @@ public struct ModalNavigation: View {
     ///
     /// - Parameter content: 왼쪽에 노출될 컨텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func leading<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
+    public func leadingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leading = { AnyView(content()) }
+        zelf.leadingContent = { AnyView(content()) }
         return zelf
     }
     
@@ -182,17 +174,27 @@ public struct ModalNavigation: View {
     ///
     /// - Parameter contents: 오른쪽에 노출될 컨텐츠 배열 (최대 3개까지 표시)
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func trailings(_ contents: [() -> any View]) -> Self {
+    public func trailingContents(_ contents: [() -> any View]) -> Self {
         var zelf = self
-        zelf.trailings = contents.prefix(3).map { content in { AnyView(content()) } }
+        zelf.trailingContents = contents.prefix(3).map { content in { AnyView(content()) } }
         return zelf
+    }
+    
+    /// 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
+    ///
+    /// 이 메서드는 배열 버전(`trailingContents(_:)`)에 대한 편의 오버로딩입니다.
+    ///
+    /// - Parameter contents: 오른쪽에 노출될 컨텐츠 클로저들 (최대 3개까지 표시)
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func trailingContents(_ contents: (() -> any View)...) -> Self {
+        trailingContents(contents)
     }
     
     private struct Contents: View {
         var variant: Variant
         var title: () -> AnyView
-        var leading: () -> AnyView
-        var trailings: [() -> AnyView]
+        var leadingContent: () -> AnyView
+        var trailingContents: [() -> AnyView]
         
         var body: some View {
             switch variant {
@@ -200,17 +202,17 @@ public struct ModalNavigation: View {
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
                     title: title,
-                    leading: leading,
-                    trailings: trailings
+                    leadingContent: leadingContent,
+                    trailingContents: trailingContents
                 )
             case .emphasized:
                 ZStack {
                     HStack(spacing: 20) {
-                        leading()
+                        leadingContent()
                         title()
                         Spacer(minLength: 0)
                         Group {
-                            ForEach(Array(trailings.enumerated()), id: \.offset) { _, makeView in
+                            ForEach(Array(trailingContents.enumerated()), id: \.offset) { _, makeView in
                                 makeView()
                             }
                         }
