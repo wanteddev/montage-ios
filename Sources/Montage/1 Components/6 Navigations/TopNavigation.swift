@@ -430,6 +430,7 @@ extension TopNavigation {
                                 .clipShape(RoundedRectangle(cornerRadius: 1000))
                             }
                     }
+                    .disabled(disable)
                 } else {
                     Button.text(text: text) {
                         action()
