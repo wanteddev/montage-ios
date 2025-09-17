@@ -15,20 +15,33 @@ import SwiftUI
 /// ```swift
 /// TopNavigation(
 ///     variant: .normal,
-///     scrollOffset: // 기본값 .zero,
-///     backgroundColor: // 기본값 nil
+///     scrollOffset: $scrollOffset,
+///     backgroundColor: .white
 /// )
-/// .title { 제목 컴포넌트 }
-/// .leadingContent { 왼쪽 영역 컴포넌트 }
-/// .trailingContents([
-///     { 컴포넌트1 },
-///     { 컴포넌트2 } ...
-/// ])
+/// .title ( /* 제목 텍스트 */ )
+/// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
+/// .trailingContents(
+///     { /* 컴포넌트1 },
+///     { /* 컴포넌트2 } ...
+/// )
+/// ```
+/// ```swift
+///TopNavigation(
+///    variant: .normal,
+///    scrollOffset: $scrollOffset,
+///    backgroundColor: .white
+///)
+///.title { /* 제목 컴포넌트 */ }
+///.leadingContent { /* 왼쪽 영역 컴포넌트 */ }
+///.trailingContents(
+///    { /* 컴포넌트1 },
+///    { /* 컴포넌트2 } ...
+///)
 /// ```
 public struct TopNavigation: View {
     // MARK: - Uninitialised properties
     
-    private let variant: Variant
+    
     private let scrollOffset: CGFloat
     private let backgroundColor: SwiftUI.Color?
     
@@ -58,20 +71,49 @@ public struct TopNavigation: View {
     ///   - scrollOffset: 스크롤 오프셋 값
     ///   - backgroundColor: 배경색
     public init(
-        variant: Variant = .normal,
         scrollOffset: CGFloat = .zero,
         backgroundColor: SwiftUI.Color? = nil
     ) {
-        self.variant = variant
         self.scrollOffset = scrollOffset
         self.backgroundColor = backgroundColor
     }
     
     // MARK: - Modifiers
     
+    private var variant: Variant = .normal
     private var title: () -> AnyView  = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView  = { AnyView(EmptyView()) }
     private var trailingContents: [() -> AnyView] = []
+
+    /// 내비게이션 바의 스타일(Variant)을 설정합니다.
+    ///
+    /// `.normal`, `.extended`, `.floating`, `.emphasized` 중 하나의 스타일을 지정할 수 있으며,
+    /// 스타일에 따라 내비게이션의 외형과 정렬 방식 등이 달라집니다.
+    ///
+    /// - Parameter variant: 적용할 내비게이션 스타일
+    /// - Returns: 수정된 내비게이션 바 인스턴스
+    public func variant(_ variant: Variant) -> Self {
+        var zelf = self
+        zelf.variant = variant
+        return zelf
+    }
+    
+    /// 텍스트 기반 타이틀을 설정합니다.
+    ///
+    /// 전달된 텍스트는 `TopNavigation.TitleView`로 감싸져 렌더링되며,
+    /// Variant를 함께 지정하여 텍스트의 타이포 스타일이나 정렬 등을 조절할 수 있습니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 타이틀에 적용할 스타일 (기본값: `.normal`)
+    ///   - text: 타이틀에 표시할 문자열
+    /// - Returns: 수정된 내비게이션 바 인스턴스
+    public func title(variant: Variant = .normal, text: String) -> Self {
+        var zelf = self
+        zelf.title = {
+            AnyView(TitleView(variant: variant, title: text))
+        }
+        return zelf
+    }
     
     /// 내비게이션 영역의 타이틀 뷰를 설정합니다.
     ///
@@ -111,12 +153,14 @@ public struct TopNavigation: View {
 
     /// 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
     ///
-    /// 이 메서드는 배열 버전(`trailingContents(_:)`)에 대한 편의 오버로딩입니다.
+    /// 최대 3개까지의 뷰를 클로저를 , 로 구분하여 전달할 수 있으며,
+    /// 각 클로저는 다양한 타입의 View를 반환할 수 있습니다 (`any View`).
+    /// 내부적으로는 모든 View를 `AnyView`로 타입을 지운 후 렌더링합니다.
     ///
-    /// - Parameter contents: 오른쪽에 노출될 컨텐츠 클로저들 (최대 3개까지 표시)
-    /// - Returns: 수정된 내비게이션 바 뷰
+    /// - Parameter contents: trailing 영역에 표시할 뷰들을 반환하는 클로저들
+    /// - Returns: 수정된 인스턴스를 반환합니다.
     public func trailingContents(_ contents: (() -> any View)...) -> Self {
-        trailingContents(contents)
+        trailingContents(contents.prefix(3).map{ view in { AnyView(view()) } })
     }
 
     func trailingContents(_ contents: [() -> AnyView]) -> Self {
@@ -198,11 +242,11 @@ public struct TopNavigation: View {
                             )
                         Spacer()
                         TrailingContents(trailingContents)
-                        .onGeometryChange(
-                            for: CGSize.self,
-                            of: { $0.size },
-                            action: { totalSizeOfTrailings = $0 }
-                        )
+                            .onGeometryChange(
+                                for: CGSize.self,
+                                of: { $0.size },
+                                action: { totalSizeOfTrailings = $0 }
+                            )
                     }
                     title()
                         .frame(width: titleSize, height: 24)
@@ -729,10 +773,10 @@ extension TopNavigation {
                     
                     VStack(alignment: .leading, spacing: .zero) {
                         TopNavigation(
-                            variant: variant,
                             scrollOffset: scrollStatus.contentOffset.y,
                             backgroundColor: backgroundColor
                         )
+                        .variant(variant)
                         .title { title() }
                         .leadingContent { leadingContent() }
                         .trailingContents(trailingContents)
@@ -785,6 +829,36 @@ extension View {
             TopNavigation.TopNavigationModifier(
                 variant: variant,
                 title: title.map { v in { AnyView(v()) } },
+                backgroundColor: backgroundColor,
+                leadingContent: leadingContent.map { v in { AnyView(v()) } },
+                trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
+                actionAreaModel: model
+            )
+        )
+    }
+
+    /// 현재 뷰에 TopNavigation 바를 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
+    ///   - title: 표시할 텍스트 타이틀 (기본값: nil)
+    ///   - backgroundColor: 배경색 (기본값: nil)
+    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
+    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
+    ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
+    /// - Returns: TopNavigation이 적용된 뷰
+    public func topNavigation(
+        variant: TopNavigation.Variant = .normal,
+        title: String,
+        backgroundColor: SwiftUI.Color? = nil,
+        leadingContent: (() -> any View)? = nil,
+        trailingContents: [() -> any View] = [],
+        withBottom model: ActionArea.Model? = nil
+    ) -> some View {
+        modifier(
+            TopNavigation.TopNavigationModifier(
+                variant: variant,
+                title:  { AnyView(TopNavigation.TitleView(variant: variant, title: title)) },
                 backgroundColor: backgroundColor,
                 leadingContent: leadingContent.map { v in { AnyView(v()) } },
                 trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
