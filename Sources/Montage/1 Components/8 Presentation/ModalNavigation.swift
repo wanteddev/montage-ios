@@ -229,7 +229,7 @@ extension ModalNavigation {
         let title: String
         
         public init(
-            variant: Variant,
+            variant: Variant = .normal,
             title: String
         ) {
             self.variant = variant

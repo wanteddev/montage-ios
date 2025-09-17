@@ -58,7 +58,7 @@ struct ModalNavigationPreview: View {
                         }
                     }
                     .trailingContents(
-                        actions.map { kind -> (() -> AnyView) in
+                        Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
                             switch kind {
                             case let .icon(i, d, s, a):
                                 {

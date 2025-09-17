@@ -15,12 +15,12 @@ import SwiftUI
 /// ```swift
 /// TopNavigation(
 ///     variant: .normal,
-///     scrollOffset: (*optional),
-///     backgroundColor: (*optional)
+///     scrollOffset: // 기본값 .zero,
+///     backgroundColor: // 기본값 nil
 /// )
 /// .title { 제목 컴포넌트 }
 /// .leadingContent { 왼쪽 영역 컴포넌트 }
-/// .trailing([
+/// .trailingContents([
 ///     { 컴포넌트1 },
 ///     { 컴포넌트2 } ...
 /// ])
@@ -106,8 +106,22 @@ public struct TopNavigation: View {
     /// - Parameter contents: trailing 영역에 표시할 뷰들을 반환하는 클로저 배열
     /// - Returns: 수정된 인스턴스를 반환합니다.
     public func trailingContents(_ contents: [() -> any View]) -> Self {
+        trailingContents(contents.prefix(3).map{ view in { AnyView(view()) } })
+    }
+
+    /// 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
+    ///
+    /// 이 메서드는 배열 버전(`trailingContents(_:)`)에 대한 편의 오버로딩입니다.
+    ///
+    /// - Parameter contents: 오른쪽에 노출될 컨텐츠 클로저들 (최대 3개까지 표시)
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func trailingContents(_ contents: (() -> any View)...) -> Self {
+        trailingContents(contents)
+    }
+
+    func trailingContents(_ contents: [() -> AnyView]) -> Self {
         var zelf = self
-        zelf.trailingContents = contents.prefix(3).map{ view in { AnyView(view()) } }
+        zelf.trailingContents = Array(contents.prefix(3))
         return zelf
     }
 
@@ -158,10 +172,10 @@ public struct TopNavigation: View {
 
         private var titleSize: CGFloat {
             let componentSize: CGFloat = max(leadingSize.width, totalSizeOfTrailings.width)
-            let componentWitdh: CGFloat = componentSize * 2
+            let componentWidth: CGFloat = componentSize * 2
             let horizontalPadding: CGFloat = 16 * 2
             let titleHorizontalPadding: CGFloat = 4 * 2
-            return max(screenWidth - (componentWitdh + horizontalPadding + titleHorizontalPadding), 0)
+            return max(screenWidth - (componentWidth + horizontalPadding + titleHorizontalPadding), 0)
         }
         
         var body: some View {
@@ -206,7 +220,7 @@ public struct TopNavigation: View {
                         }
                         .padding(.horizontal, 4)
                     }
-                case let .floating(alternative, background):
+                case .floating:
                     ZStack {
                         HStack(spacing: .zero) {
                             leadingContent()
@@ -262,9 +276,9 @@ extension TopNavigation {
     public struct TitleView: View {
         let variant: Variant
         let title: String
-        
+
         public init(
-            variant: Variant,
+            variant: Variant = .normal,
             title: String
         ) {
             self.variant = variant
@@ -504,10 +518,8 @@ extension TopNavigation {
     /// 내비게이션 바의 다양한 레이아웃과 시각적 스타일을 정의합니다.
     ///
     /// ```swift
-    /// TopNavigation(
-    ///     variant: .floating(alternative: true, background: true),
-    ///     title: "제목"
-    /// )
+    /// TopNavigation(variant: .floating)
+    ///     .title { ... }
     /// ```
     public enum Variant: Equatable {
         /// 기본 내비게이션 바 스타일
@@ -515,9 +527,6 @@ extension TopNavigation {
         /// 확장된 내비게이션 바 스타일 (제목이 별도의 줄에 표시됨)
         case extended
         /// 플로팅 스타일의 내비게이션 바
-        /// - Parameters:
-        ///   - alternative: 대체 색상 사용 여부
-        ///   - background: 배경색 적용 여부
         case floating(alternative: Bool = false, background: Bool = false)
         
         fileprivate var isFloating: Bool {
@@ -536,9 +545,7 @@ extension TopNavigation {
         ///
         /// ```swift
         /// TopNavigation(
-        ///     leadingButton: .back {
-        ///         // 뒤로가기 동작
-        ///     }
+        ///     leadingContent: { .. }
         /// )
         /// ```
         public enum LeadingButtonInfo {
@@ -603,7 +610,14 @@ extension TopNavigation {
                 lhs: TopNavigation.Resource.TrailingButtonInfo,
                 rhs: TopNavigation.Resource.TrailingButtonInfo
             ) -> Bool {
-                lhs.hashValue == rhs.hashValue
+                switch (lhs, rhs) {
+                case let (.icon(li, ld, ls, _), .icon(ri, rd, rs, _)):
+                    return li == ri && ld == rd && ls == rs
+                case let (.text(lt, ld, _), .text(rt, rd, _)):
+                    return lt == rt && ld == rd
+                default:
+                    return false
+                }
             }
         }
     }
@@ -645,18 +659,24 @@ extension TopNavigation {
     ///     .modifier(
     ///         TopNavigation.TopNavigationModifier(
     ///             variant: .normal,
-    ///             title: "제목",
-    ///             leadingButton: .back { 
-    ///                 // 뒤로가기 동작
+    ///             title: {
+    ///                 TopNavigation.TitleView(variant: .normal, title: "제목")
     ///             },
-    ///             trailingButtons: []
+    ///             leadingContent: {
+    ///                 TopNavigation.LeadingButton(.back(action: {}))
+    ///             },
+    ///             trailingContents: [
+    ///                 {
+    ///                     TopNavigation.TrailingIconButton(icon: .bell, action: {})
+    ///                 }
+    ///                 ...
+    ///             ]
     ///         )
     ///     )
     /// ```
     struct TopNavigationModifier: ViewModifier {
         private let variant: Variant
         private let title: (() -> AnyView)
-        private let showIndicator: Bool
         private let backgroundColor: SwiftUI.Color?
         private let leadingContent: (() -> AnyView)
         private let trailingContents: [() -> AnyView]
@@ -667,26 +687,23 @@ extension TopNavigation {
         /// - Parameters:
         ///   - variant: 내비게이션 바의 외관 스타일
         ///   - title: 제목 영역
-        ///   - showIndicator: 인디케이터 표시 여부
         ///   - backgroundColor: 배경색
         ///   - leadingContent: 좌측에 표시할 컴포넌트
         ///   - trailingContents: 우측에 표시할 컴포넌트 배열
         ///   - actionAreaModel: 액션 영역 모델
         init(
             variant: Variant,
-            title: (() -> any View)? = nil,
-            showIndicator: Bool = true,
+            title: (() -> AnyView)? = nil,
             backgroundColor: SwiftUI.Color? = nil,
-            leadingContent: (() -> any View)? = nil,
-            trailingContents: [() -> any View] = [],
+            leadingContent: (() -> AnyView)? = nil,
+            trailingContents: [() -> AnyView] = [],
             actionAreaModel: ActionArea.Model? = nil
         ) {
             self.variant = variant
-            self.title = title.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
-            self.showIndicator = showIndicator
+            self.title = title ?? { AnyView(EmptyView()) }
             self.backgroundColor = backgroundColor
-            self.leadingContent = leadingContent.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
-            self.trailingContents = trailingContents.prefix(3).map { view in { AnyView(view()) } }
+            self.leadingContent = leadingContent ?? { AnyView(EmptyView()) }
+            self.trailingContents = Array(trailingContents.prefix(3))
             self.actionAreaModel = actionAreaModel
         }
         
@@ -750,10 +767,10 @@ extension View {
     ///
     /// - Parameters:
     ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
-    ///   - title: 표시할 제목
+    ///   - title: 표시할 제목 컴포넌트 클로저 (기본값: nil)
     ///   - backgroundColor: 배경색 (기본값: nil)
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 (기본값: nil)
-    ///   - trailingContents: 우측에 표시할 컴포넌트 (기본값: [])
+    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
+    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
     ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
@@ -767,10 +784,10 @@ extension View {
         modifier(
             TopNavigation.TopNavigationModifier(
                 variant: variant,
-                title: title,
+                title: title.map { v in { AnyView(v()) } },
                 backgroundColor: backgroundColor,
-                leadingContent: leadingContent,
-                trailingContents: trailingContents,
+                leadingContent: leadingContent.map { v in { AnyView(v()) } },
+                trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
                 actionAreaModel: model
             )
         )

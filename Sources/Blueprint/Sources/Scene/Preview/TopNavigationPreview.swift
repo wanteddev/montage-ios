@@ -47,7 +47,7 @@ struct TopNavigationPreview: View {
     @State var background: Bool = false
     @State var leading: LeadingContentsKind = .back
     @State var trailing: [TrailingButton] = []
-    @State var trailingContentDisable: Bool = false
+    @State var trailingContentsDisable: Bool = false
     @State var toast: Toast.Model? = nil
     @State var backgroundColor: SwiftUI.Color? = nil
     @State var selectedBackgroundColorName: Montage.Color.Semantic = .backgroundNormal
@@ -151,13 +151,14 @@ struct TopNavigationPreview: View {
             case .icon: {
                 TopNavigation.TrailingIconButton(
                     icon: .bell,
+                    disable: trailingContentsDisable,
                     action: { closure() }
                 )
             }
             case .text: {
                 TopNavigation.TrailingTextButton(
                     text: "알림",
-                    disable: trailingContentDisable,
+                    disable: trailingContentsDisable,
                     action: {
                         closure()
                     }
@@ -199,7 +200,7 @@ struct TopNavigationPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Varint :")
+                Text("Variant :")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(variant.selectableTitle) {
@@ -235,7 +236,7 @@ struct TopNavigationPreview: View {
                 }
             }
             HStack {
-                Text("LeadingButton :")
+                Text("LeadingContent :")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(leading.selectableTitle) {
@@ -249,7 +250,7 @@ struct TopNavigationPreview: View {
                 }
             }
             HStack {
-                Text("Add TrailingButton: ")
+                Text("Add TrailingContents : ")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu("추가") {
@@ -263,13 +264,13 @@ struct TopNavigationPreview: View {
                 }
             }
             HStack {
-                Text("TrailingButton Disable: ")
+                Text("TrailingContents Disable: ")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
-                    trailingContentDisable.toggle()
+                    trailingContentsDisable.toggle()
                 } label: {
-                    Text(trailingContentDisable ? "true" : "false")
+                    Text(trailingContentsDisable ? "true" : "false")
                 }
             }
             HStack {

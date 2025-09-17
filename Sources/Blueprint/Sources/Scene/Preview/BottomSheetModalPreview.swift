@@ -153,28 +153,26 @@ struct BottomSheetModalPreview: View {
                         TopNavigation.LeadingButton(.back(action: {}))
                     }
                     .trailingContents(
-                        [
-                            {
-                                TopNavigation.TrailingIconButton(
-                                    icon: .plus,
-                                    action: {}
-                                )
-                            },
-                            {
-                                TopNavigation.TrailingIconButton(
-                                    icon: .minus,
-                                    action: {}
-                                )
-                            },
-                            {
-                                TopNavigation.TrailingIconButton(
-                                    icon: .close,
-                                    action: {
-                                        show = false
-                                    }
-                                )
-                            }
-                        ]
+                        {
+                            TopNavigation.TrailingIconButton(
+                                icon: .plus,
+                                action: {}
+                            )
+                        },
+                        {
+                            TopNavigation.TrailingIconButton(
+                                icon: .minus,
+                                action: {}
+                            )
+                        },
+                        {
+                            TopNavigation.TrailingIconButton(
+                                icon: .close,
+                                action: {
+                                    show = false
+                                }
+                            )
+                        }
                     )
             }
             : nil
