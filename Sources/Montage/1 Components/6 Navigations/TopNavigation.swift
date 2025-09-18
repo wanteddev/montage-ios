@@ -14,10 +14,10 @@ import SwiftUI
 ///
 /// ```swift
 /// TopNavigation(
-///     variant: .normal,
 ///     scrollOffset: $scrollOffset,
 ///     backgroundColor: .white
 /// )
+/// .variant(.normal)
 /// .title ( /* 제목 텍스트 */ )
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -27,10 +27,10 @@ import SwiftUI
 /// ```
 /// ```swift
 ///TopNavigation(
-///    variant: .normal,
 ///    scrollOffset: $scrollOffset,
 ///    backgroundColor: .white
 ///)
+///.variant(.floating())
 ///.title { /* 제목 컴포넌트 */ }
 ///.leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 ///.trailingContents(
@@ -100,17 +100,15 @@ public struct TopNavigation: View {
     
     /// 텍스트 기반 타이틀을 설정합니다.
     ///
-    /// 전달된 텍스트는 `TopNavigation.TitleView`로 감싸져 렌더링되며,
-    /// Variant를 함께 지정하여 텍스트의 타이포 스타일이나 정렬 등을 조절할 수 있습니다.
+    /// 전달된 텍스트는 `TopNavigation.TitleView`로 감싸져 렌더링됩니다.
     ///
     /// - Parameters:
-    ///   - variant: 타이틀에 적용할 스타일 (기본값: `.normal`)
     ///   - text: 타이틀에 표시할 문자열
     /// - Returns: 수정된 내비게이션 바 인스턴스
-    public func title(variant: Variant = .normal, text: String) -> Self {
+    public func title(text: String) -> Self {
         var zelf = self
         zelf.title = {
-            AnyView(TitleView(variant: variant, title: text))
+            AnyView(TitleView(variant: self.variant, title: text))
         }
         return zelf
     }
@@ -562,7 +560,8 @@ extension TopNavigation {
     /// 내비게이션 바의 다양한 레이아웃과 시각적 스타일을 정의합니다.
     ///
     /// ```swift
-    /// TopNavigation(variant: .floating)
+    /// TopNavigation
+    ///     .variant(.floating())
     ///     .title { ... }
     /// ```
     public enum Variant: Equatable {
@@ -588,9 +587,9 @@ extension TopNavigation {
         /// 뒤로가기 버튼, 아이콘 버튼, 텍스트 버튼을 지원합니다.
         ///
         /// ```swift
-        /// TopNavigation(
-        ///     leadingContent: { .. }
-        /// )
+        /// TopNavigation()
+        ///     .leadingContent: { /* ... */ }
+        ///
         /// ```
         public enum LeadingButtonInfo {
             /// 뒤로가기 버튼
@@ -613,14 +612,10 @@ extension TopNavigation {
         ///
         /// ```swift
         /// TopNavigation(
-        ///     trailingButtons: [
-        ///         .icon(.search) {
-        ///             // 검색 동작
-        ///         },
-        ///         .text("완료") {
-        ///             // 완료 동작
-        ///         }
-        ///     ]
+        ///     .trailingContents(
+        ///         { TopNavigation.TrailingIconButton(icon: .search) { /* ... */ } },
+        ///         { TopNavigation.TrailingTextButton(text: "완료") { /* ... */ } }
+        ///     )
         /// )
         /// ```
         public enum TrailingButtonInfo: Hashable {
@@ -704,7 +699,7 @@ extension TopNavigation {
     ///         TopNavigation.TopNavigationModifier(
     ///             variant: .normal,
     ///             title: {
-    ///                 TopNavigation.TitleView(variant: .normal, title: "제목")
+    ///                 TopNavigation.TitleView(title: "제목")
     ///             },
     ///             leadingContent: {
     ///                 TopNavigation.LeadingButton(.back(action: {}))
