@@ -33,6 +33,7 @@ import UIKit
 /// - Note: Fill로 끝나는 아이콘 이름은 채워진 스타일의 아이콘을 나타냅니다.
 /// 동일한 아이콘의 윤곽선 버전과 채워진 버전이 모두 제공되는 경우가 많습니다.
 public enum Icon: String, CaseIterable {
+    case aiReview
     case alignCenter
     case alignJustify
     case alignLeft
