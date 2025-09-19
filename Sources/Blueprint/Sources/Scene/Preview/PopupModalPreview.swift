@@ -122,14 +122,43 @@ struct PopupModalPreview: View {
             },
             navigation: navigation
             ? {
-                ModalNavigation(title: "제목")
+                ModalNavigation()
                     .variant(navigationVariants[navVariantIndex])
-                    .leadingButton(.back(action: {}))
-                    .trailingButtons([
-                        .icon(.plus, action: {}),
-                        .icon(.minus, action: {}),
-                        .icon(.close, action: { show = false })
-                    ])
+                    .title({
+                        ModalNavigation.TitleView(
+                            variant: navigationVariants[navVariantIndex],
+                            title: "제목"
+                        )
+                    })
+                    .leadingContent {
+                        TopNavigation.LeadingButton(
+                            .back(action: {})
+                        )
+                    }
+                    .trailingContents(
+                        [
+                            {
+                                TopNavigation.TrailingIconButton(
+                                    icon: .plus,
+                                    action: {}
+                                )
+                            },
+                            {
+                                TopNavigation.TrailingIconButton(
+                                    icon: .minus,
+                                    action: {}
+                                )
+                            },
+                            {
+                                TopNavigation.TrailingIconButton(
+                                    icon: .close,
+                                    action: {
+                                        show = false
+                                    }
+                                )
+                            }
+                        ]
+                    )
             }
             : nil
         )

@@ -40,13 +40,46 @@ struct ModalNavigationPreview: View {
             )
             
             VStack(spacing: 0) {
-                ModalNavigation(
-                    title: "제목",
-                    scrollOffset: $contentOffset
-                )
-                .variant(variants[variantIndex])
-                .trailingButtons(Array(actions.prefix(trailingButtonCount).reversed()))
-                .leadingButton(leadingButton ? leadingButtons[leadingButtonTypeIndex] : nil)
+                ModalNavigation(scrollOffset: $contentOffset)
+                    .variant(variants[variantIndex])
+                    .title({
+                        ModalNavigation.TitleView(
+                            variant: variants[variantIndex],
+                            title: "제목"
+                        )
+                    })
+                    .leadingContent {
+                        Group {
+                            if leadingButton {
+                                TopNavigation.LeadingButton.init(
+                                    leadingButtons[leadingButtonTypeIndex]
+                                )
+                            }
+                        }
+                    }
+                    .trailingContents(
+                        Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
+                            switch kind {
+                            case let .icon(i, d, s, a):
+                                {
+                                    AnyView(TopNavigation.TrailingIconButton(
+                                        icon: i,
+                                        disable: d,
+                                        showPushBadge: s,
+                                        action: a
+                                    ))
+                                }
+                            case let .text(t, d, a):
+                                {
+                                    AnyView(TopNavigation.TrailingTextButton(
+                                        text: t,
+                                        disable: d,
+                                        action: a
+                                    ))
+                                }
+                            }
+                        }
+                    )
                 
                 VStack(alignment: .leading) {
                     HStack {
