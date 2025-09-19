@@ -3039,7 +3039,7 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 </details>
 <details>
 
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingButton: TopNavigation.Resource.LeadingButtonInfo?, trailingButtons: [TopNavigation.Resource.TrailingButtonInfo], withBottom: ActionArea.Model?) -> some View``</summary>
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?) -> some View``</summary>
 
 현재 뷰에 TopNavigation 바를 적용합니다.
 
@@ -3047,10 +3047,29 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
   | Parameter | Description |
   | --- | --- |
   | `variant` | 내비게이션 바의 외관 스타일 (기본값: .normal) |
-  | `title` | 표시할 제목 |
+  | `title` | 표시할 제목 컴포넌트 클로저 (기본값: nil) |
   | `backgroundColor` | 배경색 (기본값: nil) |
-  | `leadingButton` | 좌측에 표시할 버튼 (기본값: nil) |
-  | `trailingButtons` | 우측에 표시할 버튼 배열 (기본값: []) |
+  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저 (기본값: nil) |
+  | `trailingContents` | 우측에 표시할 컴포넌트 클로저 (기본값: []) |
+  | `model` | 하단 액션 영역에 대한 모델 (기본값: nil) |
+- **Return Value**
+
+  TopNavigation이 적용된 뷰
+</details>
+<details>
+
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?) -> some View``</summary>
+
+현재 뷰에 TopNavigation 바를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 내비게이션 바의 외관 스타일 (기본값: .normal) |
+  | `title` | 표시할 텍스트 타이틀 (기본값: nil) |
+  | `backgroundColor` | 배경색 (기본값: nil) |
+  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저 (기본값: nil) |
+  | `trailingContents` | 우측에 표시할 컴포넌트 클로저 (기본값: []) |
   | `model` | 하단 액션 영역에 대한 모델 (기본값: nil) |
 - **Return Value**
 

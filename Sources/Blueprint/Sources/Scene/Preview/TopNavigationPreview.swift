@@ -21,7 +21,7 @@ struct TopNavigationPreview: View {
         }
     }
     
-    enum LeadingButton: String, CaseIterable {
+    enum LeadingContentsKind: String, CaseIterable {
         case back
         case icon
         case text
@@ -45,9 +45,9 @@ struct TopNavigationPreview: View {
     @State var variant: Variant = .normal
     @State var alternative: Bool = false
     @State var background: Bool = false
-    @State var leading: LeadingButton = .back
+    @State var leading: LeadingContentsKind = .back
     @State var trailing: [TrailingButton] = []
-    @State var trailingButtonDisable: Bool = false
+    @State var trailingContentsDisable: Bool = false
     @State var toast: Toast.Model? = nil
     @State var backgroundColor: SwiftUI.Color? = nil
     @State var selectedBackgroundColorName: Montage.Color.Semantic = .backgroundNormal
@@ -66,19 +66,104 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var leadingButton: TopNavigation.Resource.LeadingButtonInfo {
+    private var leadingContent: () -> any View {
         switch leading {
-        case .back: return .back(action: { presentationMode.wrappedValue.dismiss() })
-        case .icon: return .icon(.arrowLeft, action: { presentationMode.wrappedValue.dismiss()})
-        case .text: return .text("뒤로", action: { presentationMode.wrappedValue.dismiss()})
+        case .back:
+            return {
+                IconButton(
+                    variant: background
+                    ? .background(size: 24, isAlternative: alternative)
+                    : .default,
+                    icon: background ? .chevronLeftThick : .chevronLeft
+                ) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .frame(width: 24, height: 24)
+            }
+        case .icon:
+            return {
+                IconButton(
+                    variant: background
+                    ? .background(size: 24, isAlternative: alternative)
+                    : .default,
+                    icon: .bell
+                ) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .frame(width: 24, height: 24)
+            }
+        case .text:
+            return {
+                if background {
+                    SwiftUI.Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Text("텍스트")
+                            .paragraphNew(
+                                variant: .body2,
+                                weight: .medium,
+                                semantic: (alternative ? .staticWhite : .labelAlternative)
+                            )
+                            .if(alternative) {
+                                $0.opacity(0.88)
+                            } else: {
+                                $0.blendMode(.plusDarker)
+                            }
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .modifying { original in
+                                Group {
+                                    if alternative {
+                                        original.background(
+                                            SwiftUI.Color.atomic(.coolNeutral30)
+                                                .opacity(0.61)
+                                        )
+                                    } else {
+                                        original.background(
+                                            ZStack {
+                                                SwiftUI.Color.semantic(.staticBlack)
+                                                    .opacity(0.05)
+                                                SwiftUI.Color.semantic(.staticWhite)
+                                                    .opacity(0.35)
+                                            }
+                                        )
+                                        .background(.thinMaterial)
+                                    }
+                                }
+                                .clipShape(RoundedRectangle(cornerRadius: 1000))
+                            }
+                    }
+                } else {
+                    Button.text(text: "텍스트") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .contentColor(.semantic(.labelNormal))
+                    .fontVariant(.headline2)
+                    .fontWeight(.regular)
+                }
+            }
         }
     }
     
-    private var trailingButton: [TopNavigation.Resource.TrailingButtonInfo] {
+    private var trailingContents: [() -> any View] {
         return trailing.map {
             switch $0 {
-            case .icon: return .icon(.bell, disable: trailingButtonDisable, action: { closure() })
-            case .text: return .text("알림", disable: trailingButtonDisable, action: { closure() })
+            case .icon: {
+                TopNavigation.TrailingIconButton(
+                    icon: .bell,
+                    disable: trailingContentsDisable,
+                    action: { closure() }
+                )
+            }
+            case .text: {
+                TopNavigation.TrailingTextButton(
+                    text: "알림",
+                    disable: trailingContentsDisable,
+                    action: {
+                        closure()
+                    }
+                )
+            }
             }
         }
     }
@@ -115,7 +200,7 @@ struct TopNavigationPreview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Varint :")
+                Text("Variant :")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(variant.selectableTitle) {
@@ -151,11 +236,11 @@ struct TopNavigationPreview: View {
                 }
             }
             HStack {
-                Text("LeadingButton :")
+                Text("LeadingContent :")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(leading.selectableTitle) {
-                    ForEach(LeadingButton.allCases, id: \.self) { action in
+                    ForEach(LeadingContentsKind.allCases, id: \.self) { action in
                         Button {
                             leading = action
                         } label: {
@@ -165,7 +250,7 @@ struct TopNavigationPreview: View {
                 }
             }
             HStack {
-                Text("Add TrailingButton: ")
+                Text("Add TrailingContents : ")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu("추가") {
@@ -179,13 +264,13 @@ struct TopNavigationPreview: View {
                 }
             }
             HStack {
-                Text("TrailingButton Disable: ")
+                Text("TrailingContents Disable: ")
                     .typographyNew(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
-                    trailingButtonDisable.toggle()
+                    trailingContentsDisable.toggle()
                 } label: {
-                    Text(trailingButtonDisable ? "true" : "false")
+                    Text(trailingContentsDisable ? "true" : "false")
                 }
             }
             HStack {
@@ -238,10 +323,15 @@ struct TopNavigationPreview: View {
         .padding(.all, 20)
         .topNavigation(
             variant: v,
-            title: "제목",
+            title: {
+                TopNavigation.TitleView(
+                    variant: v,
+                    title: "제목"
+                )
+            },
             backgroundColor: backgroundColor,
-            leadingButton: leadingButton,
-            trailingButtons: trailingButton,
+            leadingContent: leadingContent,
+            trailingContents: trailingContents,
             withBottom: actionAreaModel
         )
         .toast($toast)

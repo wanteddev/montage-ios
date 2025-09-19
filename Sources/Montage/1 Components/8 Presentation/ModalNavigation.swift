@@ -14,15 +14,17 @@ import SwiftUI
 /// 다양한 스타일을 지원합니다.
 ///
 /// ```swift
-/// ModalNavigation(title: "제목")
+/// ModalNavigation()
 ///     .variant(.normal)
-///     .leadingButton(.back {
-///         // 뒤로가기 동작
-///     })
-///     .trailingButtons([
-///         .icon(.close, action: {
-///             // 닫기 동작
-///         })
+///     .title {
+///         ModalNavigation.TitleView(variant: .normal, title: "제목")
+///     }
+///     .leadingContent {
+///         // 뒤로가기 동작 컴포넌트
+///     }
+///     .trailingContents([
+///         { /* 컴포넌트1 */ },
+///         { /* 컴포넌트2 */ }
 ///     ])
 /// ```
 public struct ModalNavigation: View {
@@ -51,17 +53,14 @@ public struct ModalNavigation: View {
     }
     
     // MARK: - Initialisers
-    
-    private let title: String
+
     @Binding private var scrollOffset: CGFloat
     
     /// 내비게이션 바를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - title: 내비게이션 바에 표시할 제목
-    ///   - scrollOffset: 스크롤 오프셋에 대한 바인딩 (기본값: .constant(0))
-    public init(title: String, scrollOffset: Binding<CGFloat> = .constant(0)) {
-        self.title = title
+    ///   - scrollOffset: 스크롤 오프셋 바인딩 (기본값: .constant(0))
+    public init(scrollOffset: Binding<CGFloat> = .constant(0)) {
         _scrollOffset = scrollOffset
     }
     
@@ -72,8 +71,8 @@ public struct ModalNavigation: View {
             Contents(
                 variant: variant,
                 title: title,
-                leadingButton: leadingButton,
-                trailingButtons: trailingButtons
+                leadingContent: leadingContent,
+                trailingContents: trailingContents
             )
             .if(needHandleArea) {
                 $0.padding(.top, 10)
@@ -103,8 +102,9 @@ public struct ModalNavigation: View {
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color? = nil
     private var needHandleArea = false
-    private var leadingButton: TopNavigation.Resource.LeadingButtonInfo? = nil
-    private var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo] = []
+    private var title: () -> AnyView = { AnyView(EmptyView()) }
+    private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var trailingContents: [() -> AnyView] = []
     
     /// 내비게이션 바의 스타일을 설정합니다.
     ///
@@ -146,31 +146,55 @@ public struct ModalNavigation: View {
         return zelf
     }
     
-    /// 내비게이션 바의 왼쪽 버튼을 설정합니다.
+    /// 내비게이션 바의 타이틀 영역을 설정합니다.
     ///
-    /// - Parameter leadingButton: 왼쪽 버튼 설정
+    /// - Parameter content: 타이틀 영역에 표시될 콘텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func leadingButton(_ leadingButton: TopNavigation.Resource.LeadingButtonInfo?) -> Self {
+    public func title<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.leadingButton = leadingButton
+        zelf.title = { AnyView(content()) }
         return zelf
     }
     
-    /// 내비게이션 바의 오른쪽 버튼들을 설정합니다.
+    /// 내비게이션 바의 왼쪽 버튼 영역을 설정합니다.
     ///
-    /// - Parameter actions: 오른쪽 버튼 배열 (최대 3개까지 표시)
+    /// - Parameter content: 왼쪽에 노출될 컨텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func trailingButtons(_ actions: [TopNavigation.Resource.TrailingButtonInfo]) -> Self {
+    public func leadingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingButtons = Array(actions.prefix(3))
+        zelf.leadingContent = { AnyView(content()) }
         return zelf
+    }
+    
+    /// 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
+    ///
+    /// 최대 3개까지의 뷰를 클로저 배열로 전달할 수 있으며,
+    /// 각 클로저는 다양한 타입의 View를 반환할 수 있습니다 (`any View`).
+    /// 내부적으로는 모든 View를 `AnyView`로 타입을 지운 후 렌더링합니다.
+    ///
+    /// - Parameter contents: 오른쪽에 노출될 컨텐츠 배열 (최대 3개까지 표시)
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func trailingContents(_ contents: [() -> any View]) -> Self {
+        var zelf = self
+        zelf.trailingContents = contents.prefix(3).map { content in { AnyView(content()) } }
+        return zelf
+    }
+    
+    /// 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
+    ///
+    /// 이 메서드는 배열 버전(`trailingContents(_:)`)에 대한 편의 오버로딩입니다.
+    ///
+    /// - Parameter contents: 오른쪽에 노출될 컨텐츠 클로저들 (최대 3개까지 표시)
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func trailingContents(_ contents: (() -> any View)...) -> Self {
+        trailingContents(contents)
     }
     
     private struct Contents: View {
         var variant: Variant
-        var title: String
-        var leadingButton: TopNavigation.Resource.LeadingButtonInfo?
-        var trailingButtons: [TopNavigation.Resource.TrailingButtonInfo]
+        var title: () -> AnyView
+        var leadingContent: () -> AnyView
+        var trailingContents: [() -> AnyView]
         
         var body: some View {
             switch variant {
@@ -178,26 +202,48 @@ public struct ModalNavigation: View {
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
                     title: title,
-                    leadingButton: leadingButton,
-                    trailingButtons: trailingButtons
+                    leadingContent: leadingContent,
+                    trailingContents: trailingContents
                 )
             case .emphasized:
                 ZStack {
                     HStack(spacing: 20) {
-                        TopNavigation.LeadingButton(leadingButton)
-                        Text(title)
-                            .paragraphNew(
-                                variant: variant.typoVariant,
-                                weight: variant.typoWeight,
-                                semantic: .labelStrong
-                            )
-                            .lineLimit(1)
-                            .frame(height: 24, alignment: variant.textAlignment)
+                        leadingContent()
+                        title()
                         Spacer(minLength: 0)
-                        TopNavigation.TrailingButtons(trailingButtons)
+                        Group {
+                            ForEach(Array(trailingContents.enumerated()), id: \.offset) { _, makeView in
+                                makeView()
+                            }
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+extension ModalNavigation {
+    public struct TitleView: View {
+        let variant: Variant
+        let title: String
+        
+        public init(
+            variant: Variant = .normal,
+            title: String
+        ) {
+            self.variant = variant
+            self.title = title
+        }
+        
+        public var body: some View {
+            Text(title)
+                .paragraphNew(
+                    variant: variant.typoVariant,
+                    weight: variant.typoWeight,
+                    semantic: .labelStrong
+                )
+                .lineLimit(1)
         }
     }
 }
@@ -243,15 +289,6 @@ private extension ModalNavigation.Variant {
         case .extended: .bold
         case .floating: .bold
         case .emphasized: .bold
-        }
-    }
-    
-    var textAlignment: Alignment {
-        switch self {
-        case .normal: .center
-        case .extended: .leading
-        case .floating: .center
-        case .emphasized: .leading
         }
     }
 }

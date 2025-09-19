@@ -92,6 +92,15 @@ jobs:
           PR_URL=$(gh pr view 2>/dev/null | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*' | head -1 || echo "")
           
           if [ -z "$PR_URL" ]; then
+            # milestone 존재 여부 확인 및 생성
+            MILESTONE_TITLE="${{ steps.get_version.outputs.version }}"
+            if ! gh api repos/:owner/:repo/milestones --jq ".[] | select(.title==\"$MILESTONE_TITLE\")" | grep -q "$MILESTONE_TITLE"; then
+              echo "Creating milestone: $MILESTONE_TITLE"
+              gh api repos/:owner/:repo/milestones -f title="$MILESTONE_TITLE" -f description="Montage $MILESTONE_TITLE 릴리즈"
+            else
+              echo "Milestone already exists: $MILESTONE_TITLE"
+            fi
+            
             # 기존 PR이 없으면 새로운 PR 생성
             gh pr create --base develop --head feature/documentation/${{ steps.get_version.outputs.version }} \
               --title "docs: docc to markdown for ${{ steps.get_version.outputs.version }}" \
