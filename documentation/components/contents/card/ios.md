@@ -1,5 +1,5 @@
 ---
-title: Normal card
+title: Card
 description: 썸네일과 콘텐츠를 포함하는 기본 카드 컴포넌트입니다.
 ---
 
