@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  Card.swift
 //  Montage
 //
 //  Created by Sanghoon Ahn on 10/24/24.
@@ -15,7 +15,7 @@ import SwiftUI
 /// ```swift
 /// @State private var isLoading = false
 ///
-/// NormalCard(
+/// Card(
 ///     thumbnail: { Thumbnail(.image(Image("sample"))) },
 ///     skeleton: $isLoading,
 ///     title: "카드 제목"
@@ -25,15 +25,15 @@ import SwiftUI
 /// ```
 ///
 /// - Note: 썸네일 이미지는 둥근 모서리로 표시되며, 콘텐츠 영역의 너비는 썸네일 너비에 맞춰집니다.
-public struct NormalCard: View {
-    
+public struct Card: View {
+
     // MARK: - Initializer
-    
+
     private let thumbnail: () -> Thumbnail
     @Binding private var skeleton: Bool
     private let title: String
 
-    /// Normal 카드를 초기화합니다.
+    /// 카드를 초기화합니다.
     ///
     /// - Parameters:
     ///   - thumbnail: 카드에 표시할 썸네일 이미지
@@ -48,9 +48,9 @@ public struct NormalCard: View {
         _skeleton = skeleton
         self.title = title
     }
-    
+
     // MARK: - Modifiers
-    
+
     private var caption: String?
     private var subCaption: String?
     private var extraCaption: String?
@@ -60,7 +60,7 @@ public struct NormalCard: View {
     private var onTapOverlayButton: (() -> Void)?
     private var topContent: () -> AnyView = { AnyView(EmptyView()) }
     private var bottomContent: () -> AnyView = { AnyView(EmptyView()) }
-    
+
     /// 카드의 캡션(부제목)을 설정합니다.
     ///
     /// - Parameter caption: 표시할 캡션 문자열
@@ -70,7 +70,7 @@ public struct NormalCard: View {
         zelf.caption = caption
         return zelf
     }
-    
+
     /// 카드의 보조 캡션을 설정합니다.
     ///
     /// - Parameter subCaption: 표시할 보조 캡션 문자열
@@ -80,7 +80,7 @@ public struct NormalCard: View {
         zelf.subCaption = subCaption
         return zelf
     }
-    
+
     /// 카드의 추가 캡션을 설정합니다.
     ///
     /// - Parameter extraCaption: 표시할 추가 캡션 문자열
@@ -90,7 +90,7 @@ public struct NormalCard: View {
         zelf.extraCaption = extraCaption
         return zelf
     }
-    
+
     /// 썸네일에 오버레이할 콘텐츠를 설정합니다.
     ///
     /// - Parameters:
@@ -112,7 +112,7 @@ public struct NormalCard: View {
         zelf.onTapOverlayButton = onTapButton
         return zelf
     }
-    
+
     /// 카드 상단에 표시할 콘텐츠를 설정합니다.
     ///
     /// - Parameter content: 상단에 표시할 콘텐츠 뷰를 반환하는 클로저
@@ -122,7 +122,7 @@ public struct NormalCard: View {
         zelf.topContent = { AnyView(content()) }
         return zelf
     }
-    
+
     /// 카드 하단에 표시할 콘텐츠를 설정합니다.
     ///
     /// - Parameter content: 하단에 표시할 콘텐츠 뷰를 반환하는 클로저
@@ -132,13 +132,13 @@ public struct NormalCard: View {
         zelf.bottomContent = { AnyView(content()) }
         return zelf
     }
-    
+
     // MARK: - Body
-    
+
     @State private var thumbnailWidth: CGFloat = 0
     @State private var hasTopContent: Bool = false
     @State private var hasBottomContent: Bool = false
-    
+
     public var body: some View {
         Grid(alignment: .leading, verticalSpacing: 6) {
             GridRow {
@@ -156,53 +156,79 @@ public struct NormalCard: View {
                     .skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 12))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { thumbnailWidth = $0 })
-            
+            .onGeometryChange(
+                for: CGFloat.self, of: { $0.size.width }, action: { thumbnailWidth = $0 })
+
             GridRow {
                 VStack(alignment: .leading, spacing: 6) {
                     topContent()
                         .ifEmptyView { isEmpty in hasTopContent = !isEmpty }
                         .if(hasTopContent) {
-                            $0.skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                                .padding(.top, 2)
+                            $0.skeleton(
+                                isPresented: skeleton, kind: .rectangle(cornerRadius: 3),
+                                size: CGSize(width: 48, height: 20)
+                            )
+                            .padding(.top, 2)
                         }
-                    
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
                             .paragraphNew(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(2)
-                            .skeleton(isPresented: skeleton, kind: .text(lengths: [._100]), size: CGSize(width: textAreaWidth, height: 22))
-                        
+                            .skeleton(
+                                isPresented: skeleton, kind: .text(lengths: [._100]),
+                                size: CGSize(width: textAreaWidth, height: 22))
+
                         VStack(alignment: .leading, spacing: 2) {
                             if let caption {
                                 Text(caption)
-                                    .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .paragraphNew(
+                                        variant: .label2, weight: .medium,
+                                        semantic: .labelAlternative
+                                    )
                                     .lineLimit(1)
-                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 18))
+                                    .skeleton(
+                                        isPresented: skeleton, kind: .text(lengths: [._50]),
+                                        size: CGSize(width: textAreaWidth, height: 18))
                             }
-                            
+
                             if let subCaption {
                                 Text(subCaption)
-                                    .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .paragraphNew(
+                                        variant: .label2, weight: .medium,
+                                        semantic: .labelAlternative
+                                    )
                                     .lineLimit(1)
-                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
+                                    .skeleton(
+                                        isPresented: skeleton, kind: .text(lengths: [._25]),
+                                        size: CGSize(width: textAreaWidth, height: 18))
                             }
-                            
+
                             if let extraCaption {
                                 Text(extraCaption)
-                                    .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                    .paragraphNew(
+                                        variant: .label2, weight: .medium,
+                                        semantic: .labelAlternative
+                                    )
                                     .lineLimit(1)
-                                    .skeleton(isPresented: skeleton, kind: .text(lengths: [._25]), size: CGSize(width: textAreaWidth, height: 18))
+                                    .skeleton(
+                                        isPresented: skeleton, kind: .text(lengths: [._25]),
+                                        size: CGSize(width: textAreaWidth, height: 18))
                             }
                         }
-                        .if(!caption.isNilOrEmpty || !subCaption.isNilOrEmpty || !extraCaption.isNilOrEmpty)
+                        .if(
+                            !caption.isNilOrEmpty || !subCaption.isNilOrEmpty
+                                || !extraCaption.isNilOrEmpty)
                     }
-                    
+
                     bottomContent()
                         .ifEmptyView { isEmpty in hasBottomContent = !isEmpty }
                         .if(hasBottomContent) {
-                            $0.skeleton(isPresented: skeleton, kind: .rectangle(cornerRadius: 3), size: CGSize(width: 48, height: 20))
-                                .padding(.top, 2)
+                            $0.skeleton(
+                                isPresented: skeleton, kind: .rectangle(cornerRadius: 3),
+                                size: CGSize(width: 48, height: 20)
+                            )
+                            .padding(.top, 2)
                         }
                 }
                 .padding(.horizontal, horizontalPadding)
@@ -210,14 +236,14 @@ public struct NormalCard: View {
             }
         }
     }
-    
+
     private var horizontalPadding: CGFloat = 2
     private var textAreaWidth: CGFloat {
         max(0, thumbnailWidth - horizontalPadding * 2)
     }
 }
 
-extension NormalCard {
+extension Card {
     /// 썸네일 이미지 위에 그라데이션 오버레이와 콘텐츠를 표시하는 모디파이어입니다.
     ///
     /// 썸네일 상단에 어두운 그라데이션 배경과 함께 캡션 텍스트, 버튼 등을 표시합니다.
@@ -249,9 +275,10 @@ extension NormalCard {
         }
 
         private let gradientColors: [SwiftUI.Color] = [
-            1.0, 0.97, 0.95, 0.92, 0.89, 0.86, 0.82, 0.77, 0.71, 0.64, 0.57, 0.48, 0.38, 0.26, 0.14, 0
+            1.0, 0.97, 0.95, 0.92, 0.89, 0.86, 0.82, 0.77, 0.71, 0.64, 0.57, 0.48, 0.38, 0.26, 0.14,
+            0,
         ].map { .semantic(.staticBlack).opacity($0) }
-        
+
         public func body(content: Content) -> some View {
             content
                 .if(!caption.isNilOrEmpty || buttonIcon != nil) {
@@ -260,12 +287,15 @@ extension NormalCard {
                             HStack(alignment: .top, spacing: 0) {
                                 if let caption {
                                     Text(caption)
-                                        .paragraphNew(variant: .caption2, weight: .bold, semantic: .staticWhite)
+                                        .paragraphNew(
+                                            variant: .caption2, weight: .bold,
+                                            semantic: .staticWhite
+                                        )
                                         .padding(.bottom, 6)
                                 }
-                                
+
                                 Spacer(minLength: 4)
-                                
+
                                 if let buttonIcon {
                                     Montage.IconButton(
                                         variant: .normal(size: 20),
@@ -291,4 +321,3 @@ extension NormalCard {
         }
     }
 }
-
