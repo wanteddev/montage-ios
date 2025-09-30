@@ -35,7 +35,7 @@ Card(
 
 <summary>``init(thumbnail: () -> Thumbnail, skeleton: Binding<Bool>, title: String)``</summary>
 
-Normal 카드를 초기화합니다.
+카드를 초기화합니다.
 
 - **Parameters**
   | Parameter | Description |
