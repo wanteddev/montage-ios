@@ -94,7 +94,7 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Resize :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Menu(resize.description) {
                                 ForEach(Resize.allCases, id: \.self) { r in
@@ -108,7 +108,7 @@ struct TextAreaPreview: View {
                         }
                         HStack {
                             Text("Placeholder :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($placeholder)
                         }
@@ -116,7 +116,7 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Focus :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($focus) {
                                 focusState = $0
@@ -124,7 +124,7 @@ struct TextAreaPreview: View {
                         }
                         HStack {
                             Text("Disable :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($disable)
                         }
@@ -132,13 +132,13 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Heading :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($heading)
                         }
                         HStack {
                             Text("RequiredBadge :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($requiredBadge)
                         }
@@ -146,19 +146,19 @@ struct TextAreaPreview: View {
                     HStack {
                         HStack {
                             Text("Description :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Switch($description)
                         }
                         Text("Negative :")
-                            .typographyNew(variant: .headline2, weight: .medium)
+                            .typography(variant: .headline2, weight: .medium)
                         Spacer()
                         Switch($negative)
                     }
                     HStack {
                         HStack {
                             Text("Leading :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Menu("add") {
                                 ForEach(resources.indices, id: \.self) { index in
@@ -177,7 +177,7 @@ struct TextAreaPreview: View {
                         }
                         HStack {
                             Text("Trailing :")
-                                .typographyNew(variant: .headline2, weight: .medium)
+                                .typography(variant: .headline2, weight: .medium)
                             Spacer()
                             Menu("add") {
                                 ForEach(resources.indices, id: \.self) { index in

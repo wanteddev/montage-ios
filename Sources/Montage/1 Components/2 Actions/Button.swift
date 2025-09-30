@@ -489,7 +489,7 @@ public struct Button: View {
                 }
                 if let text {
                     SwiftUI.Text(text)
-                        .typographyNew(
+                        .typography(
                             variant: fontVariant ?? typoVariant,
                             weight: fontWeight ?? typoWeight,
                             color: foregroundColor

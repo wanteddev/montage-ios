@@ -239,14 +239,14 @@ public struct Select: View {
             if !heading.isEmpty {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .typographyNew(
+                        .typography(
                             variant: .label1,
                             weight: .bold,
                             semantic: .labelNormal
                         )
                     if requiredBadge {
                         Text("*")
-                            .typographyNew(
+                            .typography(
                                 variant: .label1,
                                 weight: .medium,
                                 semantic: .statusNegative
@@ -293,7 +293,7 @@ public struct Select: View {
                         HStack {
                             if selectedItems.isEmpty {
                                 Text(placeholder)
-                                    .paragraphNew(
+                                    .paragraph(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
@@ -304,7 +304,7 @@ public struct Select: View {
                                 case .single:
                                     if let text = selectedItems.first?.text {
                                         Text(text)
-                                            .paragraphNew(
+                                            .paragraph(
                                                 variant: .body1,
                                                 weight: .regular,
                                                 color: textColor
@@ -315,7 +315,7 @@ public struct Select: View {
                                     Group {
                                         if render == .text {
                                             Text(selectedItems.map { $0.text }.joined(separator: ", "))
-                                                .paragraphNew(
+                                                .paragraph(
                                                     variant: .body1,
                                                     weight: .regular,
                                                     color: textColor
@@ -395,7 +395,7 @@ public struct Select: View {
             
             if !description.isEmpty {
                 Text(description)
-                    .typographyNew(
+                    .typography(
                         variant: .caption1,
                         weight: .regular,
                         semantic: negative ? .statusNegative : .labelAlternative

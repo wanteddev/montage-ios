@@ -238,7 +238,7 @@ extension ModalNavigation {
         
         public var body: some View {
             Text(title)
-                .paragraphNew(
+                .paragraph(
                     variant: variant.typoVariant,
                     weight: variant.typoWeight,
                     semantic: .labelStrong

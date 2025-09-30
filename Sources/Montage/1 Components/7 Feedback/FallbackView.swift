@@ -81,7 +81,7 @@ public struct FallbackView: View {
                         HStack {
                             Spacer()
                             Text(title)
-                                .paragraphNew(variant: .headline1, weight: .bold)
+                                .paragraph(variant: .headline1, weight: .bold)
                                 .multilineTextAlignment(.center)
                             Spacer()
                         }
@@ -90,7 +90,7 @@ public struct FallbackView: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .paragraphNew(variant: .body2, semantic: .labelAlternative)
+                            .paragraph(variant: .body2, semantic: .labelAlternative)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                         Spacer()

@@ -329,7 +329,7 @@ extension TopNavigation {
         
         public var body: some View {
             Text(title)
-                .paragraphNew(
+                .paragraph(
                     variant: variant.typoVariant,
                     weight: variant.typoWeight,
                     semantic: .labelStrong
@@ -452,7 +452,7 @@ extension TopNavigation {
                         action()
                     } label: {
                         Text(text)
-                            .paragraphNew(
+                            .paragraph(
                                 variant: .body2,
                                 weight: .medium,
                                 semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)

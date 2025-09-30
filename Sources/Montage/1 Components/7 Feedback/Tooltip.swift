@@ -318,7 +318,7 @@ struct TooltipView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 8) {
                 Text(message)
-                    .paragraphNew(
+                    .paragraph(
                         variant: .label1,
                         weight: .medium,
                         color: contentColor
@@ -346,7 +346,7 @@ struct TooltipView: View {
                     buttonInfo.action()
                 }, label: {
                     Text(buttonInfo.title)
-                        .paragraphNew(
+                        .paragraph(
                             variant: .label1,
                             weight: .bold,
                             color: contentColor

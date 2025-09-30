@@ -173,7 +173,7 @@ public struct Card: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .paragraphNew(variant: .body1, weight: .bold, semantic: .labelNormal)
+                            .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(2)
                             .skeleton(
                                 isPresented: skeleton, kind: .text(lengths: [._100]),
@@ -182,7 +182,7 @@ public struct Card: View {
                         VStack(alignment: .leading, spacing: 2) {
                             if let caption {
                                 Text(caption)
-                                    .paragraphNew(
+                                    .paragraph(
                                         variant: .label2, weight: .medium,
                                         semantic: .labelAlternative
                                     )
@@ -194,7 +194,7 @@ public struct Card: View {
 
                             if let subCaption {
                                 Text(subCaption)
-                                    .paragraphNew(
+                                    .paragraph(
                                         variant: .label2, weight: .medium,
                                         semantic: .labelAlternative
                                     )
@@ -206,7 +206,7 @@ public struct Card: View {
 
                             if let extraCaption {
                                 Text(extraCaption)
-                                    .paragraphNew(
+                                    .paragraph(
                                         variant: .label2, weight: .medium,
                                         semantic: .labelAlternative
                                     )
@@ -287,7 +287,7 @@ extension Card {
                             HStack(alignment: .top, spacing: 0) {
                                 if let caption {
                                     Text(caption)
-                                        .paragraphNew(
+                                        .paragraph(
                                             variant: .caption2, weight: .bold,
                                             semantic: .staticWhite
                                         )

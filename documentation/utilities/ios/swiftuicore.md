@@ -665,7 +665,7 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 
 <details>
 
-<summary>``func paragraphNew(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> some View``</summary>
+<summary>``func paragraph(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> some View``</summary>
 
 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
 
@@ -681,7 +681,7 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 </details>
 <details>
 
-<summary>``func paragraphNew(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> some View``</summary>
+<summary>``func paragraph(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> some View``</summary>
 
 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
 
@@ -697,7 +697,7 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 </details>
 <details>
 
-<summary>``func typographyNew(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Text``</summary>
+<summary>``func typography(variant: Typography.Variant, weight: Typography.Weight, color: SwiftUI.Color) -> Text``</summary>
 
 타이포그래피 변형에 따른 스타일을 적용합니다.
 
@@ -713,7 +713,7 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 </details>
 <details>
 
-<summary>``func typographyNew(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> Text``</summary>
+<summary>``func typography(variant: Typography.Variant, weight: Typography.Weight, semantic: Color.Semantic) -> Text``</summary>
 
 타이포그래피 변형에 따른 스타일을 적용합니다.
 
