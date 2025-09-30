@@ -49,7 +49,19 @@ Accordion(title: "커스텀 스타일")
 
 <details>
 
-<summary>``init(title: String, description: String?, content: (() -> any View)?)``</summary>
+<summary>``init(title: String, description: String?)``</summary>
+
+아코디언을 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 아코디언의 제목 |
+  | `description` | 확장 시 표시될 설명 텍스트 (선택 사항) |
+</details>
+<details>
+
+<summary>``init<V>(title: String, description: String?, content: () -> V)``</summary>
 
 아코디언을 생성합니다.
 
@@ -152,7 +164,7 @@ ___
 </details>
 <details>
 
-<summary>``func trailingContent((() -> any View)?) -> Accordion``</summary>
+<summary>``func trailingContent<V>(() -> V) -> Accordion``</summary>
 
 아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
 

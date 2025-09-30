@@ -706,7 +706,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func bottomSheetModal(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func bottomSheetModal<V>(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 바텀 시트 모달을 표시합니다.
 
@@ -1345,7 +1345,7 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 </details>
 <details>
 
-<summary>``func fullModal(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func fullModal<V>(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 전체 화면 모달을 표시합니다.
 
@@ -1513,6 +1513,25 @@ Montage 디자인 시스템의 그림자 효과를 적용합니다.
 - **Return Value**
 
   변환된 View
+</details>
+<details>
+
+<summary>``func ifEmptyView((Bool) -> Void) -> some View``</summary>
+
+View의 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 때 액션을 수행합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `action` | 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 때 실행할 액션 클로져. 파라메터로는 View 크기가 .zero인지 여부가 전달됩니다. |
+- **Return Value**
+
+  수정된 View
+- **Discussion**
+  >  **Note**
+  >
+  > opacity(0), hidden() 등 시각적으로 비어 보이지만 사이즈를 가지는 케이스는 감지되지 않습니다.
+
 </details>
 <details>
 
@@ -2170,7 +2189,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func popupModal(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> any View, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func popupModal<V>(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 팝업 모달을 표시합니다.
 
@@ -2732,7 +2751,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func skeleton(isPresented: Bool, skeletonView: () -> any View) -> some View``</summary>
+<summary>``func skeleton<V>(isPresented: Bool, skeletonView: () -> V) -> some View``</summary>
 
 현재 뷰에 커스텀 스켈레톤 로딩 UI를 적용합니다.
 
@@ -3020,7 +3039,7 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 </details>
 <details>
 
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingButton: TopNavigation.Resource.LeadingButtonInfo?, trailingButtons: [TopNavigation.Resource.TrailingButtonInfo], withBottom: ActionArea.Model?) -> some View``</summary>
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?) -> some View``</summary>
 
 현재 뷰에 TopNavigation 바를 적용합니다.
 
@@ -3028,10 +3047,29 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
   | Parameter | Description |
   | --- | --- |
   | `variant` | 내비게이션 바의 외관 스타일 (기본값: .normal) |
-  | `title` | 표시할 제목 |
+  | `title` | 표시할 제목 컴포넌트 클로저 (기본값: nil) |
   | `backgroundColor` | 배경색 (기본값: nil) |
-  | `leadingButton` | 좌측에 표시할 버튼 (기본값: nil) |
-  | `trailingButtons` | 우측에 표시할 버튼 배열 (기본값: []) |
+  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저 (기본값: nil) |
+  | `trailingContents` | 우측에 표시할 컴포넌트 클로저 (기본값: []) |
+  | `model` | 하단 액션 영역에 대한 모델 (기본값: nil) |
+- **Return Value**
+
+  TopNavigation이 적용된 뷰
+</details>
+<details>
+
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?) -> some View``</summary>
+
+현재 뷰에 TopNavigation 바를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 내비게이션 바의 외관 스타일 (기본값: .normal) |
+  | `title` | 표시할 텍스트 타이틀 (기본값: nil) |
+  | `backgroundColor` | 배경색 (기본값: nil) |
+  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저 (기본값: nil) |
+  | `trailingContents` | 우측에 표시할 컴포넌트 클로저 (기본값: []) |
   | `model` | 하단 액션 영역에 대한 모델 (기본값: nil) |
 - **Return Value**
 

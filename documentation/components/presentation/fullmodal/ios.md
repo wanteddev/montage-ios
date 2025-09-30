@@ -55,7 +55,7 @@ YourView()
 
 <details>
 
-<summary>``init(() -> any View)``</summary>
+<summary>``init<V>(() -> V)``</summary>
 
 풀스크린 모달을 초기화합니다.
 

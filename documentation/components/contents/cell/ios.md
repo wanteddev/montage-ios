@@ -222,7 +222,7 @@ ___
 </details>
 <details>
 
-<summary>``func leadingContent((() -> any View)?) -> ListCell``</summary>
+<summary>``func leadingContent<V>(() -> V) -> ListCell``</summary>
 
 셀 좌측에 추가 콘텐츠를 표시합니다.
 
@@ -317,14 +317,14 @@ ___
 </details>
 <details>
 
-<summary>``func trailingContent(((Bool) -> any View)?) -> ListCell``</summary>
+<summary>``func trailingContent<V>((Bool) -> V) -> ListCell``</summary>
 
 셀 우측에 추가 콘텐츠를 표시합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 표시할 콘텐츠를 생성하는 클로저 (활성화 상태를 파라미터로 받음) |
+  | `contents` | 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음) |
 - **Return Value**
 
   수정된 ListCell 인스턴스

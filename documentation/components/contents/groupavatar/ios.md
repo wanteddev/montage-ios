@@ -69,7 +69,7 @@ ___
 
 <details>
 
-<summary>``func trailingContent(() -> any View) -> GroupAvatar``</summary>
+<summary>``func trailingContent<V>(() -> V) -> GroupAvatar``</summary>
 
 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
 

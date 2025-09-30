@@ -64,7 +64,7 @@ ___
 
 <details>
 
-<summary>``func headingContent((() -> any View)?) -> SectionHeader``</summary>
+<summary>``func headingContent<V>(() -> V) -> SectionHeader``</summary>
 
 헤더 타이틀 옆에 추가 콘텐츠를 표시합니다.
 
@@ -121,7 +121,7 @@ ___
 </details>
 <details>
 
-<summary>``func trailingContent((() -> any View)?) -> SectionHeader``</summary>
+<summary>``func trailingContent<V>(() -> V) -> SectionHeader``</summary>
 
 헤더의 오른쪽에 추가적인 콘텐츠를 표시합니다.
 

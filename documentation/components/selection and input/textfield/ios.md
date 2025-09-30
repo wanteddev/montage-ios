@@ -57,7 +57,7 @@ TextField(text: $inputText)
 
 <details>
 
-<summary>``init(numberOfSections: Int, sectionTitleAt: ((Int) -> String)?, numberOfItemsInSection: (Int) -> Int, cellForItemAt: (IndexPath) -> any View, headerView: (() -> any View)?, footerView: (() -> any View)?, maxHeight: CGFloat)``</summary>
+<summary>``init<V>(numberOfSections: Int, sectionTitleAt: ((Int) -> String)?, numberOfItemsInSection: (Int) -> Int, cellForItemAt: (IndexPath) -> V, headerView: (() -> any View)?, footerView: (() -> any View)?, maxHeight: CGFloat)``</summary>
 
 자동완성 데이터 소스를 초기화합니다.
 
@@ -68,8 +68,6 @@ TextField(text: $inputText)
   | `sectionTitleAt` | 섹션 제목을 반환하는 클로저 |
   | `numberOfItemsInSection` | 각 섹션의 항목 수를 반환하는 클로저 |
   | `cellForItemAt` | 각 항목의 뷰를 반환하는 클로저 |
-  | `headerView` | 헤더 뷰를 반환하는 클로저 |
-  | `footerView` | 푸터 뷰를 반환하는 클로저 |
   | `maxHeight` | 자동완성 목록의 최대 높이, 기본값은 400 |
 </details>
 
@@ -254,15 +252,10 @@ ___
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
-- **Discussion**
-  >  **Note**
-  >
-  > `trailingContent`와 함께 사용될 경우 `trailingButton`이 우선적으로 표시됩니다.
-
 </details>
 <details>
 
-<summary>``func trailingContent((() -> any View)?) -> TextField``</summary>
+<summary>``func trailingContent<V>(() -> V) -> TextField``</summary>
 
 텍스트 필드 오른쪽에 표시할 커스텀 콘텐츠를 설정합니다.
 
@@ -273,11 +266,6 @@ ___
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
-- **Discussion**
-  >  **Note**
-  >
-  > `trailingButton`과 함께 사용하는 경우 `trailingContent`가 무시됩니다.
-
 </details>
 
 ___
