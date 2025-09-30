@@ -6,20 +6,26 @@
 //  Copyright © 2024 WantedLab Inc. All rights reserved.
 //
 
-import SwiftUI
-
 import Montage
+import SwiftUI
 
 struct SnackBarPreview: View {
     @State private var heading: String = "제목"
     @State private var description: String = "설명"
     @State private var snackBarModel: SnackBar.Model?
     @State private var showExtraContents: Bool = true
-    @State private var showPlaceholder: Bool = false
-    
+    @State private var showBackgroundImage: Bool = false
+    @State private var locationOption: LocationOption = .bottom
+    @State private var offset: Double = 0
+
+    enum LocationOption: String, CaseIterable {
+        case top = "Top"
+        case bottom = "Bottom"
+    }
+
     var body: some View {
         ZStack {
-            if showPlaceholder {
+            if showBackgroundImage {
                 VStack {
                     Spacer()
                     Image("placeholder")
@@ -41,10 +47,23 @@ struct SnackBarPreview: View {
                         TextField(text: $description)
                     }
                     Toggle(isOn: $showExtraContents) {
-                        Text("extra contents(icon)")
+                        Text("extraContents")
                     }
-                    Toggle(isOn: $showPlaceholder) {
-                        Text("show snackBar placeholder")
+                    Toggle(isOn: $showBackgroundImage) {
+                        Text("show Background Image (for test)")
+                    }
+                    HStack {
+                        Text("location")
+                        Picker("Location", selection: $locationOption) {
+                            ForEach(LocationOption.allCases, id: \.self) { option in
+                                Text(option.rawValue).tag(option)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    VStack(alignment: .leading) {
+                        Text("offset: \(Int(offset))")
+                        Slider(value: $offset, in: 0...200, step: 10)
                     }
                     Button.outlined(
                         text: "스낵바 노출"
@@ -61,7 +80,7 @@ struct SnackBarPreview: View {
                             action: "액션"
                         )
                     }
-                    
+
                     Spacer()
                 }
                 .padding(.horizontal)
@@ -69,6 +88,7 @@ struct SnackBarPreview: View {
         }
         .snackBar(
             $snackBarModel,
+            location: locationOption == .top ? .top(offset: offset) : .bottom(offset: offset),
             handler: {
                 print("modify model nil to dismiss")
             }
