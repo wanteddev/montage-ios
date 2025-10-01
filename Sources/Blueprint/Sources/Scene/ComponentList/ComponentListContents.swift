@@ -12,7 +12,7 @@ protocol CapitalizedTitleFetchable: RawRepresentable<String> {}
 
 enum ComponentState: Int, Comparable {
     case completed, previewNotReady, pending
-    
+
     static func < (_ lhs: ComponentState, _ rhs: ComponentState) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
@@ -20,43 +20,47 @@ enum ComponentState: Int, Comparable {
 
 class ComponentListContents {
     var searchTerm: String?
-    
+
     struct CategoryItemSet {
         let category: CategoryType
         let items: [ComponentType]
     }
-    
+
     enum CategoryType: String, CapitalizedTitleFetchable, CaseIterable {
-        case theme, layout, actions, selectionAndInput, contents, loading, navigations, feedback, presentation, utility
+        case theme, layout, actions, selectionAndInput, contents, loading, navigations, feedback,
+            presentation, utility
     }
-    
+
     enum ComponentType: String, CapitalizedTitleFetchable, CaseIterable {
         case typography, color, icon, grid, elevation, shadow
         case divider, flowLayout
         case actionArea, button, iconButton, chip
-        case control, `switch`, input, segmentedControl, select, slider, textField, textArea, dateTimePicker
-        case avatar, card, listCell, thumbnail, accordion, playBadge, sectionHeader, contentBadge
+        case control, `switch`, input, segmentedControl, select, slider, textField, textArea,
+            dateTimePicker
+        case avatar, card, listCard, listCell, thumbnail, accordion, playBadge, sectionHeader,
+            contentBadge
         case loading, skeleton, pullToRefresh
         case topNavigation, progressIndicator, tab, pagination, progressTracker, category
         case pushBadge, fallbackView, snackbar, toast, tooltip
         case modal
         case framedStyle
-        
+
         var state: ComponentState {
             switch self {
-            case .typography, .color, .icon, .grid, .elevation, .shadow, .switch, .input, .control, .flowLayout,
-                    .button, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
-                    .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
-                    .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
-                    .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
-                    .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
-                    .contentBadge, .card, .framedStyle:
+            case .typography, .color, .icon, .grid, .elevation, .shadow, .switch, .input, .control,
+                .flowLayout,
+                .button, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
+                .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
+                .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
+                .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
+                .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
+                .contentBadge, .card, .listCard, .framedStyle:
                 return .completed
             case .divider:
                 return .previewNotReady
             }
         }
-        
+
         var category: CategoryType {
             switch self {
             case .typography, .color, .icon, .grid, .elevation, .shadow:
@@ -65,9 +69,11 @@ class ComponentListContents {
                 return .layout
             case .actionArea, .button, .iconButton, .chip:
                 return .actions
-            case .control, .switch, .input, .segmentedControl, .select, .slider, .textField, .textArea, .dateTimePicker:
+            case .control, .switch, .input, .segmentedControl, .select, .slider, .textField,
+                .textArea, .dateTimePicker:
                 return .selectionAndInput
-            case .avatar, .card, .listCell, .thumbnail, .accordion, .playBadge, .sectionHeader, .contentBadge:
+            case .avatar, .card, .listCard, .listCell, .thumbnail, .accordion, .playBadge,
+                .sectionHeader, .contentBadge:
                 return .contents
             case .loading, .skeleton, .pullToRefresh:
                 return .loading
@@ -82,7 +88,7 @@ class ComponentListContents {
             }
         }
     }
-    
+
     var usableCategoryItems: [CategoryItemSet] {
         CategoryType.allCases
             .map { category in
@@ -90,11 +96,15 @@ class ComponentListContents {
                     category: category,
                     items: ComponentType.allCases
                         .filter { $0.category == category }
-                        .sorted { $0.state < $1.state || $0.state == $1.state && $0.title < $1.title }
+                        .sorted {
+                            $0.state < $1.state || $0.state == $1.state && $0.title < $1.title
+                        }
                         .filter {
-                            searchTerm?.isEmpty != false ||
-                            $0.category.rawValue.lowercased().contains(searchTerm?.lowercased() ?? "") ||
-                            $0.title.lowercased().contains(searchTerm?.lowercased() ?? "") }
+                            searchTerm?.isEmpty != false
+                                || $0.category.rawValue.lowercased().contains(
+                                    searchTerm?.lowercased() ?? "")
+                                || $0.title.lowercased().contains(searchTerm?.lowercased() ?? "")
+                        }
                 )
             }
     }
@@ -103,7 +113,8 @@ class ComponentListContents {
 extension CapitalizedTitleFetchable {
     var title: String {
         let firstLetter = rawValue.prefix(1).uppercased()
-        let remainingLetters = rawValue.dropFirst().map { $0.isUppercase ? " \($0)" : "\($0)" }.joined()
+        let remainingLetters = rawValue.dropFirst().map { $0.isUppercase ? " \($0)" : "\($0)" }
+            .joined()
         return firstLetter + remainingLetters
     }
 }

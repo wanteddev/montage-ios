@@ -10,14 +10,14 @@
 //  see http://clean-swift.com
 //
 
-import SwiftUI
 import Montage
+import SwiftUI
 
 // MARK: - ComponentListRouter
 
 final class ComponentListRouter: NSObject {
     weak var viewController: UIViewController?
-    
+
     /// 자유롭게 다른 scene builder 추가하기 (Freely add builders of different scenes)
     init(viewController: UIViewController) {
         self.viewController = viewController
@@ -29,7 +29,7 @@ final class ComponentListRouter: NSObject {
 extension ComponentListRouter: ComponentListRoutingLogic {
     func routeToComponent(_ itemType: ComponentListContents.ComponentType) {
         let vc: UIViewController
-        
+
         switch itemType {
         case .typography:
             vc = UIHostingController(rootView: TypographyPreview())
@@ -115,12 +115,14 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: FlowLayoutPreview())
         case .card:
             vc = UIHostingController(rootView: CardPreview())
+        case .listCard:
+            vc = UIHostingController(rootView: ListCardPreview())
         case .framedStyle:
             vc = UIHostingController(rootView: FramedStylePreview())
         case .divider:
             return
         }
-        
+
         vc.navigationItem.title = itemType.title
         vc.navigationItem.largeTitleDisplayMode = .never
         viewController?.navigationController?.pushViewController(vc, animated: true)
