@@ -33,6 +33,9 @@ import UIKit
 /// - Note: Fill로 끝나는 아이콘 이름은 채워진 스타일의 아이콘을 나타냅니다.
 /// 동일한 아이콘의 윤곽선 버전과 채워진 버전이 모두 제공되는 경우가 많습니다.
 public enum Icon: String, CaseIterable {
+    case agent
+    case agentColor
+    case agentSearch
     case aiReview
     case alignCenter
     case alignJustify
@@ -301,6 +304,9 @@ public enum Icon: String, CaseIterable {
     case question
     case quote
     case refresh
+    case regex
+    case replace
+    case replaceAll
     case reset
     case rightSide
     case search
@@ -327,6 +333,7 @@ public enum Icon: String, CaseIterable {
     case squarePlusFill
     case star
     case starFill
+    case storage
     case strikethrough
     case sun
     case tag
@@ -360,6 +367,7 @@ public enum Icon: String, CaseIterable {
     case verifiedStarFill
     case video
     case webinar
+    case wholeWord
     case write
     case zepFast
     case zepFastFill
