@@ -37,6 +37,18 @@ Button(action: {}) {
 
 <details>
 
+<summary>``case agent``</summary>
+</details>
+<details>
+
+<summary>``case agentColor``</summary>
+</details>
+<details>
+
+<summary>``case agentSearch``</summary>
+</details>
+<details>
+
 <summary>``case aiReview``</summary>
 </details>
 <details>
@@ -1109,6 +1121,18 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case regex``</summary>
+</details>
+<details>
+
+<summary>``case replace``</summary>
+</details>
+<details>
+
+<summary>``case replaceAll``</summary>
+</details>
+<details>
+
 <summary>``case reset``</summary>
 </details>
 <details>
@@ -1210,6 +1234,10 @@ Button(action: {}) {
 <details>
 
 <summary>``case starFill``</summary>
+</details>
+<details>
+
+<summary>``case storage``</summary>
 </details>
 <details>
 
@@ -1342,6 +1370,10 @@ Button(action: {}) {
 <details>
 
 <summary>``case webinar``</summary>
+</details>
+<details>
+
+<summary>``case wholeWord``</summary>
 </details>
 <details>
 
