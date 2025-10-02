@@ -30,6 +30,7 @@
 		4D5D8C9E2D2E5D9E00108C92 /* CategoryPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */; };
 		4D6372C72DBA655200E66D22 /* CardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6372C62DBA655200E66D22 /* CardPreview.swift */; };
 		4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D853DF62D96491E004549CF /* IconButtonPreview.swift */; };
+		4D88E6632E8E3D1B00EA0E67 /* IconPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D88E6622E8E3D1400EA0E67 /* IconPreview.swift */; };
 		4D9083502DAF9D7000DF22A4 /* CaseDescribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */; };
 		4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */; };
 		4D937A002DB7AB43005C14DD /* NormalCardPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */; };
@@ -56,10 +57,8 @@
 		4DF7C5042CE340F0002B241B /* ColorPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4DF2CE340F0002B241B /* ColorPreviewViewController.swift */; };
 		4DF7C5062CE340F0002B241B /* OpacityPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4C22CE340F0002B241B /* OpacityPreviewModels.swift */; };
 		4DF7C5072CE340F0002B241B /* UICollectionView+Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C47A2CE340F0002B241B /* UICollectionView+Register.swift */; };
-		4DF7C5082CE340F0002B241B /* IconPreviewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4EB2CE340F0002B241B /* IconPreviewBuilder.swift */; };
 		4DF7C5092CE340F0002B241B /* ComponentItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C48E2CE340F0002B241B /* ComponentItemCell.swift */; };
 		4DF7C50A2CE340F0002B241B /* ElevationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E72CE340F0002B241B /* ElevationPreviewViewController.swift */; };
-		4DF7C50B2CE340F0002B241B /* IconPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4ED2CE340F0002B241B /* IconPreviewModels.swift */; };
 		4DF7C50C2CE340F0002B241B /* OpacityPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4C52CE340F0002B241B /* OpacityPreviewViewController.swift */; };
 		4DF7C50D2CE340F0002B241B /* OpacityPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4C32CE340F0002B241B /* OpacityPreviewPresenter.swift */; };
 		4DF7C50E2CE340F0002B241B /* ElevationPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E62CE340F0002B241B /* ElevationPreviewPresenter.swift */; };
@@ -68,7 +67,6 @@
 		4DF7C5122CE340F0002B241B /* TextAreaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AA2CE340F0002B241B /* TextAreaPreview.swift */; };
 		4DF7C5142CE340F0002B241B /* ColorPickerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4862CE340F0002B241B /* ColorPickerRouter.swift */; };
 		4DF7C5152CE340F0002B241B /* ComponentListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4942CE340F0002B241B /* ComponentListPresenter.swift */; };
-		4DF7C5162CE340F0002B241B /* IconPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4F02CE340F0002B241B /* IconPreviewViewController.swift */; };
 		4DF7C5182CE340F0002B241B /* ActionAreaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */; };
 		4DF7C5192CE340F0002B241B /* ColorPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4852CE340F0002B241B /* ColorPickerPresenter.swift */; };
 		4DF7C51C2CE340F0002B241B /* TopNavigationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */; };
@@ -76,7 +74,6 @@
 		4DF7C51E2CE340F0002B241B /* UINavitaionController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C47B2CE340F0002B241B /* UINavitaionController+.swift */; };
 		4DF7C51F2CE340F0002B241B /* ColorPreviewContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4DB2CE340F0002B241B /* ColorPreviewContents.swift */; };
 		4DF7C5202CE340F0002B241B /* ColorChipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4D82CE340F0002B241B /* ColorChipCell.swift */; };
-		4DF7C5232CE340F0002B241B /* IconPreviewWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4F12CE340F0002B241B /* IconPreviewWorker.swift */; };
 		4DF7C5242CE340F0002B241B /* SectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C48B2CE340F0002B241B /* SectionHeaderCell.swift */; };
 		4DF7C5252CE340F0002B241B /* ColorPickerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4842CE340F0002B241B /* ColorPickerModels.swift */; };
 		4DF7C52B2CE340F0002B241B /* ElevationPreviewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E52CE340F0002B241B /* ElevationPreviewModels.swift */; };
@@ -84,7 +81,6 @@
 		4DF7C52D2CE340F0002B241B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4FF2CE340F0002B241B /* AppDelegate.swift */; };
 		4DF7C5352CE340F0002B241B /* ColorPreviewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4DA2CE340F0002B241B /* ColorPreviewBuilder.swift */; };
 		4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4772CE340F0002B241B /* Collection+.swift */; };
-		4DF7C5372CE340F0002B241B /* IconPreviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4EE2CE340F0002B241B /* IconPreviewPresenter.swift */; };
 		4DF7C5382CE340F0002B241B /* ComponentListWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4972CE340F0002B241B /* ComponentListWorker.swift */; };
 		4DF7C5392CE340F0002B241B /* SnackBarPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A82CE340F0002B241B /* SnackBarPreview.swift */; };
 		4DF7C53A2CE340F0002B241B /* OpacityPreviewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4C42CE340F0002B241B /* OpacityPreviewRouter.swift */; };
@@ -97,7 +93,6 @@
 		4DF7C5432CE340F0002B241B /* ColorPickerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4822CE340F0002B241B /* ColorPickerBuilder.swift */; };
 		4DF7C5442CE340F0002B241B /* ElevationPreviewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E32CE340F0002B241B /* ElevationPreviewBuilder.swift */; };
 		4DF7C5452CE340F0002B241B /* ColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4872CE340F0002B241B /* ColorPickerViewController.swift */; };
-		4DF7C5462CE340F0002B241B /* IconPreviewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4EC2CE340F0002B241B /* IconPreviewInteractor.swift */; };
 		4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */; };
 		4DF7C54A2CE340F0002B241B /* ButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */; };
 		4DF7C54B2CE340F0002B241B /* ColorPickerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4832CE340F0002B241B /* ColorPickerInteractor.swift */; };
@@ -108,7 +103,6 @@
 		4DF7C5522CE340F0002B241B /* TextFieldPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */; };
 		4DF7C5552CE340F0002B241B /* SwitchPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4CC2CE340F0002B241B /* SwitchPreview.swift */; };
 		4DF7C5562CE340F0002B241B /* ReusableView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4792CE340F0002B241B /* ReusableView+.swift */; };
-		4DF7C5582CE340F0002B241B /* IconPreviewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4EF2CE340F0002B241B /* IconPreviewRouter.swift */; };
 		4DF7C5592CE340F0002B241B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C48A2CE340F0002B241B /* BaseViewController.swift */; };
 		4DF7C55A2CE340F0002B241B /* ChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4BC2CE340F0002B241B /* ChipPreview.swift */; };
 		4DF7C55C2CE340F0002B241B /* ComponentListContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4912CE340F0002B241B /* ComponentListContents.swift */; };
@@ -118,7 +112,6 @@
 		4DF7C5612CE340F0002B241B /* ColorPreviewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4DC2CE340F0002B241B /* ColorPreviewInteractor.swift */; };
 		4DF7C5632CE340F0002B241B /* ComponentListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4952CE340F0002B241B /* ComponentListRouter.swift */; };
 		4DF7C5642CE340F0002B241B /* ElevationPreviewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E42CE340F0002B241B /* ElevationPreviewInteractor.swift */; };
-		4DF7C5662CE340F0002B241B /* IconPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4E92CE340F0002B241B /* IconPreviewCell.swift */; };
 		4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */; };
 		4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */; };
 /* End PBXBuildFile section */
@@ -160,6 +153,7 @@
 		4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPreview.swift; sourceTree = "<group>"; };
 		4D6372C62DBA655200E66D22 /* CardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPreview.swift; sourceTree = "<group>"; };
 		4D853DF62D96491E004549CF /* IconButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonPreview.swift; sourceTree = "<group>"; };
+		4D88E6622E8E3D1400EA0E67 /* IconPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreview.swift; sourceTree = "<group>"; };
 		4D90834F2DAF9D7000DF22A4 /* CaseDescribable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseDescribable.swift; sourceTree = "<group>"; };
 		4D9379FD2DB7A7EC005C14DD /* ListCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCardPreview.swift; sourceTree = "<group>"; };
 		4D9379FF2DB7AB43005C14DD /* NormalCardPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalCardPreview.swift; sourceTree = "<group>"; };
@@ -242,14 +236,6 @@
 		4DF7C4E52CE340F0002B241B /* ElevationPreviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationPreviewModels.swift; sourceTree = "<group>"; };
 		4DF7C4E62CE340F0002B241B /* ElevationPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationPreviewPresenter.swift; sourceTree = "<group>"; };
 		4DF7C4E72CE340F0002B241B /* ElevationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationPreviewViewController.swift; sourceTree = "<group>"; };
-		4DF7C4E92CE340F0002B241B /* IconPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewCell.swift; sourceTree = "<group>"; };
-		4DF7C4EB2CE340F0002B241B /* IconPreviewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewBuilder.swift; sourceTree = "<group>"; };
-		4DF7C4EC2CE340F0002B241B /* IconPreviewInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewInteractor.swift; sourceTree = "<group>"; };
-		4DF7C4ED2CE340F0002B241B /* IconPreviewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewModels.swift; sourceTree = "<group>"; };
-		4DF7C4EE2CE340F0002B241B /* IconPreviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewPresenter.swift; sourceTree = "<group>"; };
-		4DF7C4EF2CE340F0002B241B /* IconPreviewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewRouter.swift; sourceTree = "<group>"; };
-		4DF7C4F02CE340F0002B241B /* IconPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewViewController.swift; sourceTree = "<group>"; };
-		4DF7C4F12CE340F0002B241B /* IconPreviewWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPreviewWorker.swift; sourceTree = "<group>"; };
 		4DF7C4FF2CE340F0002B241B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4DF7C5002CE340F0002B241B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		4DF7C56A2CE342EA002B241B /* Blueprint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Blueprint-Info.plist"; sourceTree = "<group>"; };
@@ -492,35 +478,12 @@
 			path = Elevation;
 			sourceTree = "<group>";
 		};
-		4DF7C4EA2CE340F0002B241B /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				4DF7C4E92CE340F0002B241B /* IconPreviewCell.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		4DF7C4F22CE340F0002B241B /* IconPreview */ = {
-			isa = PBXGroup;
-			children = (
-				4DF7C4EA2CE340F0002B241B /* Views */,
-				4DF7C4EB2CE340F0002B241B /* IconPreviewBuilder.swift */,
-				4DF7C4EC2CE340F0002B241B /* IconPreviewInteractor.swift */,
-				4DF7C4ED2CE340F0002B241B /* IconPreviewModels.swift */,
-				4DF7C4EE2CE340F0002B241B /* IconPreviewPresenter.swift */,
-				4DF7C4EF2CE340F0002B241B /* IconPreviewRouter.swift */,
-				4DF7C4F02CE340F0002B241B /* IconPreviewViewController.swift */,
-				4DF7C4F12CE340F0002B241B /* IconPreviewWorker.swift */,
-			);
-			path = IconPreview;
-			sourceTree = "<group>";
-		};
 		4DF7C4FC2CE340F0002B241B /* Theme */ = {
 			isa = PBXGroup;
 			children = (
+				4D88E6622E8E3D1400EA0E67 /* IconPreview.swift */,
 				4DF7C4E02CE340F0002B241B /* Color */,
 				4DF7C4E82CE340F0002B241B /* Elevation */,
-				4DF7C4F22CE340F0002B241B /* IconPreview */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -757,11 +720,9 @@
 				4DCFAAFC2CE603AA00F7A4CD /* LoadingPreview.swift in Sources */,
 				4DF7C5062CE340F0002B241B /* OpacityPreviewModels.swift in Sources */,
 				4DF7C5072CE340F0002B241B /* UICollectionView+Register.swift in Sources */,
-				4DF7C5082CE340F0002B241B /* IconPreviewBuilder.swift in Sources */,
 				4DCAEA7B2E4D822A007C24BF /* TypographyPreview.swift in Sources */,
 				4DF7C5092CE340F0002B241B /* ComponentItemCell.swift in Sources */,
 				4DF7C50A2CE340F0002B241B /* ElevationPreviewViewController.swift in Sources */,
-				4DF7C50B2CE340F0002B241B /* IconPreviewModels.swift in Sources */,
 				4DF7C50C2CE340F0002B241B /* OpacityPreviewViewController.swift in Sources */,
 				4DF7C50D2CE340F0002B241B /* OpacityPreviewPresenter.swift in Sources */,
 				4D1AB4EB2CF4900C00311591 /* SkeletonPreview.swift in Sources */,
@@ -772,7 +733,6 @@
 				4DD95C852DAFB50C00F2EF87 /* PlayBadgePreview.swift in Sources */,
 				4DF7C5142CE340F0002B241B /* ColorPickerRouter.swift in Sources */,
 				4DF7C5152CE340F0002B241B /* ComponentListPresenter.swift in Sources */,
-				4DF7C5162CE340F0002B241B /* IconPreviewViewController.swift in Sources */,
 				4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */,
 				4DCFAB012CE74BC900F7A4CD /* TabPreview.swift in Sources */,
 				4DF7C5182CE340F0002B241B /* ActionAreaPreview.swift in Sources */,
@@ -788,7 +748,6 @@
 				4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */,
 				4DA44F1B2D12CC91009FE3DB /* PullToRefreshPreview.swift in Sources */,
 				4DCFAAFA2CE6016900F7A4CD /* CellPreview.swift in Sources */,
-				4DF7C5232CE340F0002B241B /* IconPreviewWorker.swift in Sources */,
 				4D9A234B2D5365250063F529 /* MenuPreview.swift in Sources */,
 				4DF7C5242CE340F0002B241B /* SectionHeaderCell.swift in Sources */,
 				4D45DB152D915B13002B1686 /* PushBadgePreview.swift in Sources */,
@@ -798,13 +757,13 @@
 				4DF7C52C2CE340F0002B241B /* ColorPickerCell.swift in Sources */,
 				4DF7C52D2CE340F0002B241B /* AppDelegate.swift in Sources */,
 				4D0952672D7ABCCB00BB6044 /* ControlPreview.swift in Sources */,
+				4D88E6632E8E3D1B00EA0E67 /* IconPreview.swift in Sources */,
 				4DC668AA2D673E8F00461189 /* BottomSheetModalPreview.swift in Sources */,
 				4DB87ADC2CEC8F6B00DEC2A4 /* ProgressIndicatorPreview.swift in Sources */,
 				4D5597542D1E7F9400CFBCA5 /* PaginationPreview.swift in Sources */,
 				4DF7C5352CE340F0002B241B /* ColorPreviewBuilder.swift in Sources */,
 				4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */,
 				4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */,
-				4DF7C5372CE340F0002B241B /* IconPreviewPresenter.swift in Sources */,
 				4DF7C5382CE340F0002B241B /* ComponentListWorker.swift in Sources */,
 				4DF7C5392CE340F0002B241B /* SnackBarPreview.swift in Sources */,
 				4DA40B272D3E2F72004C73E5 /* SectionHeaderPreview.swift in Sources */,
@@ -819,7 +778,6 @@
 				4DF7C5432CE340F0002B241B /* ColorPickerBuilder.swift in Sources */,
 				4DF7C5442CE340F0002B241B /* ElevationPreviewBuilder.swift in Sources */,
 				4DF7C5452CE340F0002B241B /* ColorPickerViewController.swift in Sources */,
-				4DF7C5462CE340F0002B241B /* IconPreviewInteractor.swift in Sources */,
 				4DCFAAF72CE600D600F7A4CD /* SegmentedControlPreview.swift in Sources */,
 				4D6372C72DBA655200E66D22 /* CardPreview.swift in Sources */,
 				4D1AB4F12CF494DE00311591 /* SliderPreview.swift in Sources */,
@@ -844,7 +802,6 @@
 				4DF7C5552CE340F0002B241B /* SwitchPreview.swift in Sources */,
 				4DF7C5562CE340F0002B241B /* ReusableView+.swift in Sources */,
 				4D1AB4EE2CF492CC00311591 /* EmptyStatePreview.swift in Sources */,
-				4DF7C5582CE340F0002B241B /* IconPreviewRouter.swift in Sources */,
 				4DA40B252D3E0535004C73E5 /* InputPreview.swift in Sources */,
 				4DF7C5592CE340F0002B241B /* BaseViewController.swift in Sources */,
 				4DF7C55A2CE340F0002B241B /* ChipPreview.swift in Sources */,
@@ -860,7 +817,6 @@
 				4DF7C5632CE340F0002B241B /* ComponentListRouter.swift in Sources */,
 				4DF7C5642CE340F0002B241B /* ElevationPreviewInteractor.swift in Sources */,
 				4D55974A2D19A33500CFBCA5 /* HorizontalProgressTrackerPreview.swift in Sources */,
-				4DF7C5662CE340F0002B241B /* IconPreviewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
