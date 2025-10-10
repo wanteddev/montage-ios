@@ -59,7 +59,7 @@ struct VerticalProgressTrackerPreview: View {
                             HStack {
                                 Spacer(minLength: 0)
                                 Text("뭐라 뭐라 디스크립션")
-                                    .typographyNew(variant: .caption1)
+                                    .typography(variant: .caption1)
                             }
                             .if(isAccessoryExist)
                         },
@@ -73,8 +73,8 @@ struct VerticalProgressTrackerPreview: View {
                         label: isLabelExist ? "끝입니다\n정말\n정말\n끝" : "",
                         contentView: {
                             Text("Hel\nlo\nWor\nld!")
-                                .typographyNew(variant: .title1)
-                                .paragraphNew(variant: .title1)
+                                .typography(variant: .title1)
+                                .paragraph(variant: .title1)
                                 .fixedSize()
                                 .if(isContentExist)
                         }

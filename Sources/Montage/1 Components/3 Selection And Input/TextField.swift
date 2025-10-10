@@ -268,10 +268,10 @@ public struct TextField: View {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .paragraphNew(variant: .label1, weight: .bold, semantic: .labelNeutral)
+                        .paragraph(variant: .label1, weight: .bold, semantic: .labelNeutral)
                     if requiredBadge {
                         Text("*")
-                            .typographyNew(variant: .label1, weight: .medium, semantic: .statusNegative)
+                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
                     }
                 }
             }
@@ -283,7 +283,7 @@ public struct TextField: View {
                 case .positive(let caption), .negative(let caption), .normal(let caption):
                     if caption.isEmpty == false {
                         Text(caption)
-                            .paragraphNew(
+                            .paragraph(
                                 variant: .caption1,
                                 color: captionTextColor
                             )
@@ -313,7 +313,7 @@ private extension TextField {
                         prompt: {
                             if let placeholder {
                                 Text(placeholder)
-                                    .typographyNew(
+                                    .typography(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
@@ -475,7 +475,7 @@ private extension TextField {
                                         if let title = autoCompletionDataSource.sectionTitleAt?(section) {
                                             HStack {
                                                 Text(title)
-                                                    .paragraphNew(
+                                                    .paragraph(
                                                         variant: .caption1,
                                                         weight: .bold,
                                                         semantic: .labelAlternative
@@ -575,7 +575,7 @@ private extension TextField {
         
         var body: some View {
             Text(title)
-                .paragraphNew(variant: .body1, weight: typoWeight, semantic: textColor)
+                .paragraph(variant: .body1, weight: typoWeight, semantic: textColor)
                 .padding(.horizontal, 19)
                 .padding(.vertical, 12)
                 .background(

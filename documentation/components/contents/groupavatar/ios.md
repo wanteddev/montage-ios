@@ -29,7 +29,7 @@ GroupAvatar(
     }
 )
 .trailingContent {
-    Text("+3").typographyNew(variant: .body2)
+    Text("+3").typography(variant: .body2)
 }
 ```
 

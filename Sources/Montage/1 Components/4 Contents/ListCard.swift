@@ -151,20 +151,20 @@ public struct ListCard: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .paragraphNew(variant: .body1, weight: .bold, semantic: .labelNormal)
+                            .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(1)
                             .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: textAreaWidth, height: 20))
                         
                         if let caption {
                             Text(caption)
-                                .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .lineLimit(1)
                                 .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
                         }
                         
                         if let extraCaption {
                             Text(extraCaption)
-                                .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .lineLimit(1)
                                 .skeleton(
                                     isPresented: skeleton,

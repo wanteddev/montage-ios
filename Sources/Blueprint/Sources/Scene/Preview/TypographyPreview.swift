@@ -37,7 +37,7 @@ struct TypographyPreview: View {
                 HStack(spacing: 4) {
                     VStack{
                         Text("\(variant)")
-                            .typographyNew(weight: .bold)
+                            .typography(weight: .bold)
                         Text("fontSize:\(variant.fontSize, specifier: "%.0f")")
                         Text("fontHeight:\(variant.fontHeight, specifier: "%.1f")")
                         Text("lineSpacing:\(variant.lineSpacing, specifier: "%.1f")")
@@ -50,12 +50,12 @@ struct TypographyPreview: View {
                     
                     HStack(alignment: .top, spacing: 1) {
                         Text([String](repeating: " ", count: Int(lineCount)).joined(separator: "\n"))
-                            .paragraphNew(variant: variant)
+                            .paragraph(variant: variant)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(width: 30)
                             .dimensioning(axis: .vertical, drawOnPreviewOnly: false)
                         Text([String](repeating: "AA", count: Int(lineCount)).joined(separator: "\n"))
-                            .paragraphNew(variant: variant)
+                            .paragraph(variant: variant)
                             .frame(width: 69)
                             .fixedSize(horizontal: false, vertical: true)
                             .border(.red, width: 1 / UIScreen.main.scale)

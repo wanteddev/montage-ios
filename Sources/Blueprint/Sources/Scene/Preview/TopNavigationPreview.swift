@@ -99,7 +99,7 @@ struct TopNavigationPreview: View {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Text("텍스트")
-                            .paragraphNew(
+                            .paragraph(
                                 variant: .body2,
                                 weight: .medium,
                                 semantic: (alternative ? .staticWhite : .labelAlternative)
@@ -201,7 +201,7 @@ struct TopNavigationPreview: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Variant :")
-                    .typographyNew(variant: .headline2, weight: .medium)
+                    .typography(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(variant.selectableTitle) {
                     ForEach(Variant.allCases, id: \.self) { v in
@@ -216,7 +216,7 @@ struct TopNavigationPreview: View {
             if case .floating = variant {
                 HStack {
                     Text("Alternative :")
-                        .typographyNew(variant: .headline2, weight: .medium)
+                        .typography(variant: .headline2, weight: .medium)
                     Spacer()
                     Button {
                         alternative.toggle()
@@ -226,7 +226,7 @@ struct TopNavigationPreview: View {
                 }
                 HStack {
                     Text("Background :")
-                        .typographyNew(variant: .headline2, weight: .medium)
+                        .typography(variant: .headline2, weight: .medium)
                     Spacer()
                     Button {
                         background.toggle()
@@ -237,7 +237,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("LeadingContent :")
-                    .typographyNew(variant: .headline2, weight: .medium)
+                    .typography(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu(leading.selectableTitle) {
                     ForEach(LeadingContentsKind.allCases, id: \.self) { action in
@@ -251,7 +251,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("Add TrailingContents : ")
-                    .typographyNew(variant: .headline2, weight: .medium)
+                    .typography(variant: .headline2, weight: .medium)
                 Spacer()
                 Menu("추가") {
                     ForEach(TrailingButton.allCases, id: \.self) { action in
@@ -265,7 +265,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("TrailingContents Disable: ")
-                    .typographyNew(variant: .headline2, weight: .medium)
+                    .typography(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
                     trailingContentsDisable.toggle()
@@ -275,7 +275,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("BackgroundColor: ")
-                    .typographyNew(variant: .headline2, weight: .medium)
+                    .typography(variant: .headline2, weight: .medium)
                 Spacer()
                 Picker(
                     "BackgroundColor",
@@ -290,7 +290,7 @@ struct TopNavigationPreview: View {
             }
             HStack {
                 Text("ActionArea:")
-                    .typographyNew(variant: .headline2, weight: .medium)
+                    .typography(variant: .headline2, weight: .medium)
                 Spacer()
                 Button {
                     actionArea.toggle()

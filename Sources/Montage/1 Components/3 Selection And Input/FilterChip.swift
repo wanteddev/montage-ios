@@ -94,7 +94,7 @@ public struct FilterChip: View {
     public var body: some View {
         HStack(spacing: contentSpacing) {
             Text(active ? (activeLabel ?? text) : text)
-                .paragraphNew(variant: typoVariant, weight: .medium, color: fontColor)
+                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
             
             Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)

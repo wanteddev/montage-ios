@@ -89,7 +89,7 @@ public struct VerticalProgressTracker: View {
         
         private var text: some View {
             Text(label)
-                .typographyNew(variant: .label2, weight: .bold, color: labelColor)
+                .typography(variant: .label2, weight: .bold, color: labelColor)
                 .lineLimit(1)
                 .fixedSize()
         }

@@ -262,24 +262,9 @@ public enum Typography {
     }
 }
 
-public extension Typography.Weight {
-    var uiFontWeight: UIFont.Weight {
-        switch self {
-        case .regular: .regular
-        case .medium: .medium
-        case .bold: .bold
-        }
-    }
-
-    var fontWeight: Font.Weight {
-        switch self {
-        case .regular: .regular
-        case .medium: .medium
-        case .bold: .bold
-        }
-    }
-    
-    var pretendardWeight: Pretendard.Weight {
+extension Typography.Weight {
+    /// Pretendard 폰트 두께 매핑
+    public var pretendardWeight: Pretendard.Weight {
         switch self {
         case .regular: .regular
         case .medium: .medium
@@ -287,7 +272,7 @@ public extension Typography.Weight {
         }
     }
     
-    var fallbackWeight: UIFont.Weight {
+    fileprivate var fallbackWeight: UIFont.Weight {
         switch self {
         case .regular: .regular
         case .medium: .medium
@@ -407,7 +392,7 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - color: 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func typographyNew(
+    func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
@@ -424,12 +409,12 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func typographyNew(
+    func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
     ) -> Text {
-        typographyNew(variant: variant, weight: weight, color: .semantic(semantic))
+        typography(variant: variant, weight: weight, color: .semantic(semantic))
     }
     
     /// 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
@@ -439,12 +424,12 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - color: 색상
     /// - Returns: 단락 스타일이 적용된 View
-    func paragraphNew(
+    func paragraph(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
     ) -> some View {
-        typographyNew(variant: variant, weight: weight, color: color)
+        typography(variant: variant, weight: weight, color: color)
             .adjustLineHeight(variant: variant)
     }
     
@@ -455,12 +440,12 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 단락 스타일이 적용된 View
-    func paragraphNew(
+    func paragraph(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
     ) -> some View {
-        typographyNew(variant: variant, weight: weight, color: .semantic(semantic))
+        typography(variant: variant, weight: weight, color: .semantic(semantic))
             .adjustLineHeight(variant: variant)
     }
 }
