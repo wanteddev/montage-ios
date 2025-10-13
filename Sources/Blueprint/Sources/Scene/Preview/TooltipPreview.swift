@@ -91,7 +91,7 @@ struct TooltipPreview: View {
     }
     
     var iconButton: some View {
-        Button.solid(variant: .primary, size: .small, text: "Push") {
+        Button(color: .primary, size: .small, text: "Push") {
             show.toggle()
         }
         .modifying {
@@ -121,7 +121,7 @@ struct TooltipPreview: View {
     }
     
     var zIndexTestingButton: some View {
-        Button.solid(variant: .assistive, text: "zIndex\n테스트 버튼") {
+        Button(color: .assistive, text: "zIndex\n테스트 버튼") {
             alertPresented = true
         }
         .contentColor(.white)

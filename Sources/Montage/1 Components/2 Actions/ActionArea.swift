@@ -360,8 +360,8 @@ private extension ActionArea {
         
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.solid(
-                    variant: .primary,
+                Button(
+                    color: .primary,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -372,8 +372,9 @@ private extension ActionArea {
         
         @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.outlined(
-                    variant: .secondary,
+                Button(
+                    variant: .outlined,
+                    color: .primary,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -384,8 +385,9 @@ private extension ActionArea {
         
         @ViewBuilder private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.outlined(
-                    variant: .assistive,
+                Button(
+                    variant: .outlined,
+                    color: .assistive,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -398,8 +400,8 @@ private extension ActionArea {
         
         @ViewBuilder private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.text(
-                    variant: .assistive,
+                TextButton(
+                    color: .assistive,
                     size: .small,
                     text: buttonInfo.text,
                     handler: buttonInfo.action

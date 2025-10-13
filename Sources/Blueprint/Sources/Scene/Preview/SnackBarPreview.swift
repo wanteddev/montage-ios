@@ -65,7 +65,8 @@ struct SnackBarPreview: View {
                         Text("offset: \(Int(offset))")
                         Slider(value: $offset, in: 0...200, step: 10)
                     }
-                    Button.outlined(
+                    Button(
+                        variant: .outlined,
                         text: "스낵바 노출"
                     ) {
                         snackBarModel = .init(

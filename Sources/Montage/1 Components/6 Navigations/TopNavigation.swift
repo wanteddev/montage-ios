@@ -488,7 +488,7 @@ extension TopNavigation {
                     }
                     .disabled(disable)
                 } else {
-                    Button.text(text: text) {
+                    TextButton(text: text) {
                         action()
                     }
                     .disable(disable)

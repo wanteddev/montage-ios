@@ -308,7 +308,7 @@ ___
 </details>
 <details>
 
-<summary>``case textButton(placement: Placement, varaint: Button.Text.Variant?, title: String, handler: (() -> Void)?)``</summary>
+<summary>``case textButton(placement: Placement, variant: TextButton.Variant?, title: String, handler: (() -> Void)?)``</summary>
 
 텍스트 버튼
 

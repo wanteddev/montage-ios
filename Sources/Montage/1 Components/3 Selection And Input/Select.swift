@@ -416,8 +416,9 @@ public struct Select: View {
                             defaultMenuPresented.toggle()
                         }),
                         sub: .custom {
-                            Button.outlined(
-                                variant: .assistive,
+                            Button(
+                                variant: .outlined,
+                                color: .assistive,
                                 size: .large,
                                 icon: .refresh
                             ) {
