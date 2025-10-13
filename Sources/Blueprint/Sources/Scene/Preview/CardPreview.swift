@@ -82,12 +82,12 @@ struct CardPreview: View {
                 Group {
                     HStack {
                         Text("skeleton")
-                        Switch($skeletonIsOn)
+                        Control.switch(checked: skeletonIsOn) { skeletonIsOn = $0 }
                     }
 
                     HStack {
                         Text("invalid image URL")
-                        Switch($invalidImageUrl)
+                        Control.switch(checked: invalidImageUrl) { invalidImageUrl = $0 }
                     }
 
                     HStack {
@@ -98,34 +98,34 @@ struct CardPreview: View {
 
                     HStack {
                         Text("multiline title")
-                        Switch($multilineTitle)
+                        Control.switch(checked: multilineTitle) { multilineTitle = $0 }
 
                         Text("caption")
-                        Switch($showCaption)
+                        Control.switch(checked: showCaption) { showCaption = $0 }
                     }
 
                     HStack {
                         Text("sub caption")
-                        Switch($showSubCaption)
+                        Control.switch(checked: showSubCaption) { showSubCaption = $0 }
 
                         Text("extra caption")
-                        Switch($showExtraCaption)
+                        Control.switch(checked: showExtraCaption) { showExtraCaption = $0 }
                     }
 
                     HStack {
                         Text("top content")
-                        Switch($showTopContent)
+                        Control.switch(checked: showTopContent) { showTopContent = $0 }
 
                         Text("bottom content")
-                        Switch($showBottomContent)
+                        Control.switch(checked: showBottomContent) { showBottomContent = $0 }
                     }
 
                     HStack {
                         Text("overlay caption")
-                        Switch($showOverlayCaption)
+                        Control.switch(checked: showOverlayCaption) { showOverlayCaption = $0 }
 
                         Text("overlay button")
-                        Switch($showOverlayButton)
+                        Control.switch(checked: showOverlayButton) { showOverlayButton = $0 }
                     }
                 }
                 .font(.caption)

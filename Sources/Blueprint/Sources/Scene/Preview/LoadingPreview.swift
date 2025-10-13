@@ -42,12 +42,14 @@ struct LoadingPreview: View {
             
             VStack {
                 VStack {
-                    Input.radio(checked: loadingType == .circular, text: "circular") { _ in
+                    Control.radio(checked: loadingType == .circular) { _ in
                         loadingType = .circular
                     }
-                    Input.radio(checked: loadingType == .wanted, text: "wanted") { _ in
+                    .label("circular")
+                    Control.radio(checked: loadingType == .wanted) { _ in
                         loadingType = .wanted
                     }
+                    .label("wanted")
                 }
                 .padding(28)
                 Button {

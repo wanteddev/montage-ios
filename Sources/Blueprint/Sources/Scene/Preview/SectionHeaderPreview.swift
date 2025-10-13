@@ -60,13 +60,13 @@ struct SectionHeaderPreview: View {
                 }
                 HStack {
                     Text("titleColor")
-                    Switch($titleColor)
+                    Control.switch(checked: titleColor) { titleColor = $0 }
                 }
                 HStack {
                     Text("heading content")
-                    Switch($headingContent)
+                    Control.switch(checked: headingContent) { headingContent = $0 }
                     Text("trailing content")
-                    Switch($trailingContent)
+                    Control.switch(checked: trailingContent) { trailingContent = $0 }
                 }
             }
             .padding(.horizontal)

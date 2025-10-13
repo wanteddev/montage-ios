@@ -74,23 +74,23 @@ struct TextButtonPreview: View {
                 }
                 HStack {
                     Text("disable")
-                    Switch($disable)
+                    Control.switch(checked: disable) { disable = $0 }
                     Text("loading")
-                    Switch($loading)
+                    Control.switch(checked: loading) { loading = $0 }
                 }
                 HStack {
                     Text("leadingIcon")
-                    Switch($leadingIcon)
+                    Control.switch(checked: leadingIcon) { leadingIcon = $0 }
                     Text("trailingIcon")
-                    Switch($trailingIcon)
+                    Control.switch(checked: trailingIcon) { trailingIcon = $0 }
                 }
                 HStack {
                     Text("content color")
-                    Switch($contentColor)
+                    Control.switch(checked: contentColor) { contentColor = $0 }
                     Text("font variant")
-                    Switch($fontVariant)
+                    Control.switch(checked: fontVariant) { fontVariant = $0 }
                     Text("font weight")
-                    Switch($fontWeight)
+                    Control.switch(checked: fontWeight) { fontWeight = $0 }
                 }
             }
             .font(.caption)

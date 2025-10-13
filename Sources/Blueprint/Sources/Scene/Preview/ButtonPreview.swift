@@ -148,37 +148,37 @@ struct ButtonPreview: View {
                 }
                 HStack {
                     Text("iconOnly")
-                    Switch($iconOnly)
+                    Control.switch(checked: iconOnly) { iconOnly = $0 }
                     Text("disable")
-                    Switch($disable)
+                    Control.switch(checked: disable) { disable = $0 }
                     Text("loading")
-                    Switch($loading)
+                    Control.switch(checked: loading) { loading = $0 }
                 }
                 if !iconOnly {
                     HStack {
                         Text("leadingIcon")
-                        Switch($leadingIcon)
+                        Control.switch(checked: leadingIcon) { leadingIcon = $0 }
                         Text("trailingIcon")
-                        Switch($trailingIcon)
+                        Control.switch(checked: trailingIcon) { trailingIcon = $0 }
                     }
                 }
                 Divider()
                 Text("color")
                 HStack {
                     Text("content")
-                    Switch($contentColor)
+                    Control.switch(checked: contentColor) { contentColor = $0 }
                     Text("background")
-                    Switch($backgroundColor)
+                    Control.switch(checked: backgroundColor) { backgroundColor = $0 }
                     Text("border")
-                    Switch($borderColor)
+                    Control.switch(checked: borderColor) { borderColor = $0 }
                 }
                 Divider()
                 Text("font")
                 HStack {
                     Text("variant")
-                    Switch($fontVariant)
+                    Control.switch(checked: fontVariant) { fontVariant = $0 }
                     Text("weight")
-                    Switch($fontWeight)
+                    Control.switch(checked: fontWeight) { fontWeight = $0 }
                 }
             }
             .font(.caption)

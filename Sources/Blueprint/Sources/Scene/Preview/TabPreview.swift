@@ -65,11 +65,11 @@ struct TabPreview: View {
                     }
                     HStack {
                         Text("fill")
-                        Switch($resize)
+                        Control.switch(checked: resize) { resize = $0 }
                         Text("icon")
-                        Switch($icon)
+                        Control.switch(checked: icon) { icon = $0 }
                         Text("horizontalPadding")
-                        Switch($horizontalPadding)
+                        Control.switch(checked: horizontalPadding) { horizontalPadding = $0 }
                         Spacer(minLength: 0)
                     }
                 }

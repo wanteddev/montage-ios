@@ -301,13 +301,13 @@ struct TopNavigationPreview: View {
             if actionArea {
                 HStack {
                     Text("sub")
-                    Switch($actionAreaSub)
+                    Control.switch(checked: actionAreaSub) { actionAreaSub = $0 }
                     Text("alt")
-                    Switch($actionAreaAlt)
+                    Control.switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
                     Text("caption")
-                    Switch($actionAreaCaption)
+                    Control.switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
                     Text("extra")
-                    Switch($actionAreaExtra)
+                    Control.switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
                 }
             }
             VStack(spacing: 0) {

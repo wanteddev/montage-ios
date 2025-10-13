@@ -69,12 +69,12 @@ struct ListCardPreview: View {
                 Group {
                     HStack {
                         Text("skeleton")
-                        Switch($skeletonIsOn)
+                        Control.switch(checked: skeletonIsOn) { skeletonIsOn = $0 }
                     }
                     
                     HStack {
                         Text("invalid image URL")
-                        Switch($invalidImageUrl)
+                        Control.switch(checked: invalidImageUrl) { invalidImageUrl = $0 }
                     }
                     
                     HStack {
@@ -85,29 +85,29 @@ struct ListCardPreview: View {
                     
                     HStack {
                         Text("multiline title")
-                        Switch($multilineTitle)
+                        Control.switch(checked: multilineTitle) { multilineTitle = $0 }
                         
                         Text("caption")
-                        Switch($showCaption)
+                        Control.switch(checked: showCaption) { showCaption = $0 }
                         
                         Text("extra caption")
-                        Switch($showExtraCaption)
+                        Control.switch(checked: showExtraCaption) { showExtraCaption = $0 }
                     }
                     
                     HStack {
                         Text("top content")
-                        Switch($showTopContent)
+                        Control.switch(checked: showTopContent) { showTopContent = $0 }
                         
                         Text("bottom content")
-                        Switch($showBottomContent)
+                        Control.switch(checked: showBottomContent) { showBottomContent = $0 }
                     }
                     
                     HStack {
                         Text("leading content")
-                        Switch($showLeadingContent)
+                        Control.switch(checked: showLeadingContent) { showLeadingContent = $0 }
                         
                         Text("trailing content")
-                        Switch($showTrailingContent)
+                        Control.switch(checked: showTrailingContent) { showTrailingContent = $0 }
                     }
                 }
                 .font(.caption)

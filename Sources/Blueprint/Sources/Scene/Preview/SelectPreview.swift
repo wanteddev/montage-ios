@@ -143,7 +143,7 @@ struct SelectPreview: View {
                     }
                     HStack {
                         Text("menuActionArea")
-                        Switch($menuActionArea)
+                        Control.switch(checked: menuActionArea) { menuActionArea = $0 }
                     }
                     if menuActionArea {
                         HStack {
@@ -160,7 +160,7 @@ struct SelectPreview: View {
                         )
                         .size(.small)
                         Text("overflow")
-                        Switch($overflow)
+                        Control.switch(checked: overflow) { overflow = $0 }
                     }
                     HStack {
                         Text("menuButtonTitle")
@@ -169,17 +169,17 @@ struct SelectPreview: View {
                 }
                 HStack {
                     Text("heading")
-                    Switch($heading)
+                    Control.switch(checked: heading) { heading = $0 }
                     Text("requiredBadge")
-                    Switch($requiredBadge)
+                    Control.switch(checked: requiredBadge) { requiredBadge = $0 }
                 }
                 HStack {
                     Text("negative")
-                    Switch($negative)
+                    Control.switch(checked: negative) { negative = $0 }
                     Text("disable")
-                    Switch($disable)
+                    Control.switch(checked: disable) { disable = $0 }
                     Text("description")
-                    Switch($description)
+                    Control.switch(checked: description) { description = $0 }
                 }
                 HStack {
                     Text("leadingContent")
@@ -191,7 +191,7 @@ struct SelectPreview: View {
                 }
                 HStack {
                     Text("custom menu")
-                    Switch($customMenu)
+                    Control.switch(checked: customMenu) { customMenu = $0 }
                 }
                 HStack {
                     Text("menuResize")

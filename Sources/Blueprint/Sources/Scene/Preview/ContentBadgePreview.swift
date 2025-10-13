@@ -61,7 +61,7 @@ struct ContentBadgePreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("solid")
-                    Switch($isSolid)
+                    Control.switch(checked: isSolid) { isSolid = $0 }
                 }
                 HStack {
                     Text("size")
@@ -79,11 +79,11 @@ struct ContentBadgePreview: View {
                 }
                 HStack {
                     Text("leadingIcon")
-                    Switch($leadingIcon)
+                    Control.switch(checked: leadingIcon) { leadingIcon = $0 }
                 }
                 HStack {
                     Text("trailingIcon")
-                    Switch($trailingIcon)
+                    Control.switch(checked: trailingIcon) { trailingIcon = $0 }
                 }
             }
             .padding(.horizontal)

@@ -48,7 +48,7 @@ struct PopupModalPreview: View {
                 }
                 HStack {
                     Text("navigation")
-                    Switch($navigation)
+                    Control.switch(checked: navigation) { navigation = $0 }
                     if navigation {
                         SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
                             .size(.small)
@@ -59,7 +59,7 @@ struct PopupModalPreview: View {
                     VStack(alignment: .trailing) {
                         HStack {
                             Text("actionArea")
-                            Switch($actionArea)
+                            Control.switch(checked: actionArea) { actionArea = $0 }
                             Spacer()
                         }
                         if actionArea {
@@ -67,12 +67,12 @@ struct PopupModalPreview: View {
                                 .size(.small)
                             HStack {
                                 Text("caption")
-                                Switch($caption)
+                                Control.switch(checked: caption) { caption = $0 }
                                 Text("extra")
-                                Switch($extra)
+                                Control.switch(checked: extra) { extra = $0 }
                                 if extra {
                                     Text("divider")
-                                    Switch($extraDivider)
+                                    Control.switch(checked: extraDivider) { extraDivider = $0 }
                                 }
                             }
                         }

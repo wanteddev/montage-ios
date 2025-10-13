@@ -44,17 +44,17 @@ struct CategoryPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("guideLine")
-                    Switch($showGuideLine)
+                    Control.switch(checked: showGuideLine) { showGuideLine = $0 }
                     Text("alternative")
-                    Switch($isAlternative)
+                    Control.switch(checked: isAlternative) { isAlternative = $0 }
                     Text("icon")
-                    Switch($icon)
+                    Control.switch(checked: icon) { icon = $0 }
                 }
                 HStack {
                     Text("horizontalPadding")
-                    Switch($horizontalPadding)
+                    Control.switch(checked: horizontalPadding) { horizontalPadding = $0 }
                     Text("vertical padding")
-                    Switch($verticalPadding)
+                    Control.switch(checked: verticalPadding) { verticalPadding = $0 }
                 }
                 HStack {
                     Text("size")
