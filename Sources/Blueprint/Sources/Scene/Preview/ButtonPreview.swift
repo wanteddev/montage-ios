@@ -12,6 +12,7 @@ import SwiftUI
 import Montage
 
 struct ButtonPreview: View {
+    @State private var variantIndex = 0
     @State private var colorIndex = 0
     @State private var sizeIndex = 0
     @State private var iconOnly = false
@@ -25,6 +26,7 @@ struct ButtonPreview: View {
     @State private var fontWeight = false
     @State private var loading = false
     
+    private let variants: [Montage.Button.Variant] = [.solid, .outlined]
     private let colors: [Montage.Button.Color] = [.primary, .assistive]
     private let sizes: [Montage.Button.Size] = [.small, .medium, .large]
     
@@ -33,103 +35,59 @@ struct ButtonPreview: View {
             VStack(alignment: .leading) {
                 Text("Preview").bold()
                 
-                Grid {
-                    let color = colors[colorIndex]
-                    let size = sizes[sizeIndex]
-                    
-                    if let solidColor = Button.Color(rawValue: color.description),
-                       let solidSize = Button.Size(rawValue: size.description) {
-                        GridRow {
-                            Spacer(minLength: 0)
-                            
-                            Text("SolidButton")
-                            if iconOnly {
-                                Button(
-                                    color: solidColor,
-                                    size: solidSize,
-                                    icon: .apps
-                                ) {
-                                    print("tapped")
-                                }
-                                .disable(disable)
-                                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                                .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                                .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                                .fontVariant(fontVariant ? .heading1 : nil)
-                                .fontWeight(fontWeight ? .regular : nil)
-                                .loading(loading)
-                            } else {
-                                Button(
-                                    color: solidColor,
-                                    size: solidSize,
-                                    text: "텍스트",
-                                    leadingIcon: leadingIcon ? .apps : nil,
-                                    trailingIcon: trailingIcon ? .apps : nil
-                                ) {
-                                    print("tapped")
-                                }
-                                .disable(disable)
-                                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                                .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                                .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                                .fontVariant(fontVariant ? .heading1 : nil)
-                                .fontWeight(fontWeight ? .regular : nil)
-                                .loading(loading)
-                            }
-                            
-                            Spacer(minLength: 0)
+                let color = colors[colorIndex]
+                let size = sizes[sizeIndex]
+                
+                HStack {
+                    Spacer(minLength: 0)
+                    if iconOnly {
+                        Button(
+                            variant: variants[variantIndex],
+                            color: color,
+                            size: size,
+                            icon: .apps
+                        ) {
+                            print("tapped")
                         }
+                        .disable(disable)
+                        .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                        .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                        .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                        .fontVariant(fontVariant ? .heading1 : nil)
+                        .fontWeight(fontWeight ? .regular : nil)
+                        .loading(loading)
+                    } else {
+                        Button(
+                            variant: variants[variantIndex],
+                            color: color,
+                            size: size,
+                            text: "텍스트",
+                            leadingIcon: leadingIcon ? .apps : nil,
+                            trailingIcon: trailingIcon ? .apps : nil
+                        ) {
+                            print("tapped")
+                        }
+                        .disable(disable)
+                        .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                        .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                        .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                        .fontVariant(fontVariant ? .heading1 : nil)
+                        .fontWeight(fontWeight ? .regular : nil)
+                        .loading(loading)
                     }
                     
-                    if let outlinedColor = Button.Color(rawValue: color.description),
-                       let outlinedSize = Button.Size(rawValue: size.description) {
-                        GridRow {
-                            Spacer(minLength: 0)
-                            
-                            Text("OutlinedButton")
-                            if iconOnly {
-                                Button(
-                                    variant: .outlined,
-                                    color: outlinedColor,
-                                    size: outlinedSize,
-                                    icon: .apps
-                                ) {
-                                    print("tapped")
-                                }
-                                .disable(disable)
-                                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                                .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                                .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                                .fontVariant(fontVariant ? .heading1 : nil)
-                                .fontWeight(fontWeight ? .regular : nil)
-                                .loading(loading)
-                            } else {
-                                Button(
-                                    variant: .outlined,
-                                    color: outlinedColor,
-                                    size: outlinedSize,
-                                    text: "텍스트",
-                                    leadingIcon: leadingIcon ? .apps : nil,
-                                    trailingIcon: trailingIcon ? .apps : nil
-                                ) {
-                                    print("tapped")
-                                }
-                                .disable(disable)
-                                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                                .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                                .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                                .fontVariant(fontVariant ? .heading1 : nil)
-                                .fontWeight(fontWeight ? .regular : nil)
-                                .loading(loading)
-                            }
-                            
-                            Spacer(minLength: 0)
-                        }
-                    }
-                    
+                    Spacer(minLength: 0)
                 }
                 
                 Text("Options").bold()
+                HStack {
+                    Text("variant")
+                    SegmentedControl(
+                        selectedIndex: $variantIndex,
+                        labels: variants.map(\.description)
+                    )
+                    .size(.small)
+                }
                 HStack {
                     Text("color")
                     SegmentedControl(
@@ -192,6 +150,7 @@ struct ButtonPreview: View {
     }
 }
 
+extension Montage.Button.Variant: CaseDescribable {}
 extension Montage.Button.Color: CaseDescribable {}
 extension Montage.Button.Size: CaseDescribable {}
 
