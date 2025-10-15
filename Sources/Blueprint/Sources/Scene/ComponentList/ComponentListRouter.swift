@@ -34,11 +34,9 @@ extension ComponentListRouter: ComponentListRoutingLogic {
         case .typography:
             vc = UIHostingController(rootView: TypographyPreview())
         case .color:
-            vc = ColorPreviewBuilder().build()
+            vc = UIHostingController(rootView: ColorPreview())
         case .icon, .grid:
             vc = UIHostingController(rootView: IconPreview())
-        case .elevation:
-            vc = ElevationPreviewBuilder().build()
         case .shadow:
             vc = UIHostingController(rootView: ShadowPreview())
         case .control:

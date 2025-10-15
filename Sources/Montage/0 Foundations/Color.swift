@@ -36,8 +36,6 @@ public enum Color {
     /// 이 색상들은 직접 사용하기보다는 Semantic 색상의 기반이 되는 
     /// 기본 색상 팔레트로 활용됩니다.
     ///
-    /// 전체 팔레트 색상을 한번에 보려면 Figma의 [Color - Atomic](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-52196) 를 참고하세요.
-    ///
     /// ```swift
     /// // UIKit에서 사용
     /// view.backgroundColor = UIColor.atomic(.blue50)
@@ -477,8 +475,6 @@ public enum Color {
     /// 적절한 색상을 제공합니다. 다크 모드와 라이트 모드에서 
     /// 자동으로 적절한 색상으로 변환됩니다.
     ///
-    /// 각 컬러 모드별 색상은 Figma의 [Color - Semantic](https://www.figma.com/design/EyggXAhHnZLnMvqvjzYg7U/Wanted-Design-System--Community-?node-id=15625-32983) 를 참고하세요.
-    ///
     /// ```swift
     /// // UIKit에서 사용
     /// label.textColor = UIColor.semantic(.labelNormal)
@@ -493,309 +489,119 @@ public enum Color {
     ///   우선적으로 사용하는 것이 권장됩니다.
     public enum Semantic: String, CaseIterable, ColorResolvable {
         /// 정적 흰색 색상
-        ///
-        /// Figma상의 `.color-semantic-static-white` 토큰과 대응되는 값입니다.
-        /// 
         case staticWhite
-        
         /// 정적 검은색 색상
-        ///
-        /// Figma상의 `.color-semantic-static-black` 토큰과 대응되는 값입니다.
-        ///
         case staticBlack
-        
+
         /// 기본 주요 색상
-        ///
-        /// Figma상의 `.color-semantic-primary-normal` 토큰과 대응되는 값입니다.
-        ///
         case primaryNormal
-        
         /// 강조된 주요 색상
-        ///
-        /// Figma상의 `.color-semantic-primary-strong` 토큰과 대응되는 값입니다.
-        ///
         case primaryStrong
-        
         /// 매우 강조된 주요 색상
-        ///
-        /// Figma상의 `.color-semantic-primary-heavy` 토큰과 대응되는 값입니다.
-        ///
         case primaryHeavy
-        
+
         /// 기본 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-label-normal` 토큰과 대응되는 값입니다.
-        ///
         case labelNormal
-        
         /// 강조된 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-label-strong` 토큰과 대응되는 값입니다.
-        ///
         case labelStrong
-        
         /// 중립적인 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-label-neutral` 토큰과 대응되는 값입니다.
-        ///
         case labelNeutral
-        
         /// 대체 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-label-alternative` 토큰과 대응되는 값입니다.
-        ///
         case labelAlternative
-        
         /// 보조 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-label-assistive` 토큰과 대응되는 값입니다.
-        ///
         case labelAssistive
-        
         /// 비활성화된 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-label-disable` 토큰과 대응되는 값입니다.
-        ///
         case labelDisable
-        
+
         /// 기본 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-background-normal-normal` 토큰과 대응되는 값입니다.
-        ///
         case backgroundNormal
-        
         /// 대체 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-background-normal-alternative` 토큰과 대응되는 값입니다.
-        ///
         case backgroundNormalAlternative
-        
         /// 상승된 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-background-elevated-normal` 토큰과 대응되는 값입니다.
-        ///
         case backgroundElevated
-        
         /// 상승된 대체 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-background-elevated-alternative` 토큰과 대응되는 값입니다.
-        ///
         case backgroundElevatedAlternative
+        /// 투명 배경 색상
+        case backgroundTransparent
+        /// 투명 대체 배경 색상
+        case backgroundTransparentAlternative
         
         /// 비활성화된 상호작용 색상
-        ///
-        /// Figma상의 `.color-semantic-interaction-inactive` 토큰과 대응되는 값입니다.
-        ///
         case interactionInactive
-        
         /// 비활성화된 상호작용 색상
-        ///
-        /// Figma상의 `.color-semantic-interaction-disable` 토큰과 대응되는 값입니다.
-        ///
         case interactionDisable
-        
+
         /// 기본 선 색상
-        ///
-        /// Figma상의 `.color-semantic-line-normal` 토큰과 대응되는 값입니다.
-        ///
         case lineNormal
-        
         /// 중립적인 선 색상
-        ///
-        /// Figma상의 `.color-semantic-line-neutral` 토큰과 대응되는 값입니다.
-        ///
         case lineNeutral
-        
         /// 대체 선 색상
-        ///
-        /// Figma상의 `.color-semantic-line-alternative` 토큰과 대응되는 값입니다.
-        ///
         case lineAlternative
-        
         /// 기본 실선 색상
-        ///
-        /// Figma상의 `.color-semantic-line-solid-normal` 토큰과 대응되는 값입니다.
-        ///
         case lineSolidNormal
-        
         /// 중립적인 실선 색상
-        ///
-        /// Figma상의 `.color-semantic-line-solid-neutral` 토큰과 대응되는 값입니다.
-        ///
         case lineSolidNeutral
-        
         /// 대체 실선 색상
-        ///
-        /// Figma상의 `.color-semantic-line-solid-alternative` 토큰과 대응되는 값입니다.
-        ///
         case lineSolidAlternative
-        
+
         /// 긍정적인 상태 색상
-        ///
-        /// Figma상의 `.color-semantic-status-positive` 토큰과 대응되는 값입니다.
-        ///
         case statusPositive
-        
         /// 주의 상태 색상
-        ///
-        /// Figma상의 `.color-semantic-status-cautionary` 토큰과 대응되는 값입니다.
-        ///
         case statusCautionary
-        
         /// 부정적인 상태 색상
-        ///
-        /// Figma상의 `.color-semantic-status-negative` 토큰과 대응되는 값입니다.
-        ///
         case statusNegative
-        
+
         /// 빨간색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-red` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundRed
-        
         /// 붉은 주황색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-redOrange` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundRedOrange
-
         /// 주황색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-orange` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundOrange
-
         /// 라임색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-lime` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundLime
-        
         /// 초록색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-green` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundGreen
-
         /// 시안색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-cyan` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundCyan
-
         /// 하늘색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-lightBlue` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundLightBlue
-        
         /// 파란색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-blue` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundBlue
-
         /// 보라색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-violet` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundViolet
-        
         /// 자주색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-purple` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundPurple
-        
         /// 분홍색 강조 전경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-foreground-pink` 토큰과 대응되는 값입니다.
-        ///
         case accentForegroundPink
-        
         /// 붉은 주황색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-redOrange` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundRedOrange
-        
         /// 라임색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-lime` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundLime
-
         /// 시안색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-cyan` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundCyan
-
         /// 하늘색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-lightBlue` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundLightBlue
-
         /// 보라색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-violet` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundViolet
-        
         /// 자주색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-purple` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundPurple
-
         /// 분홍색 강조 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-accent-background-pink` 토큰과 대응되는 값입니다.
-        ///
         case accentBackgroundPink
-        
+
         /// 역전된 주요 색상
-        ///
-        /// Figma상의 `.color-semantic-inverse-primary` 토큰과 대응되는 값입니다.
-        ///
         case inversePrimary
-        
         /// 역전된 배경 색상
-        ///
-        /// Figma상의 `.color-semantic-inverse-background` 토큰과 대응되는 값입니다.
-        ///
         case inverseBackground
-        
         /// 역전된 라벨 색상
-        ///
-        /// Figma상의 `.color-semantic-inverse-label` 토큰과 대응되는 값입니다.
-        ///
         case inverseLabel
-        
+
         /// 기본 채우기 색상
-        ///
-        /// Figma상의 `.color-semantic-fill-normal` 토큰과 대응되는 값입니다.
-        ///
         case fillNormal
-        
         /// 강조된 채우기 색상
-        ///
-        /// Figma상의 `.color-semantic-fill-strong` 토큰과 대응되는 값입니다.
-        ///
         case fillStrong
-        
         /// 대체 채우기 색상
-        ///
-        /// Figma상의 `.color-semantic-fill-alternative` 토큰과 대응되는 값입니다.
-        ///
         case fillAlternative
-        
         /// 어두운 재질 색상
-        ///
-        /// Figma상의 `.color-semantic-material-dimmer` 토큰과 대응되는 값입니다.
-        ///
         case materialDimmer
         
         /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
@@ -842,6 +648,12 @@ public enum Color {
                 atomicColor = style == .dark ? .coolNeutral17 : .common100
             case .backgroundElevatedAlternative:
                 atomicColor = style == .dark ? .coolNeutral7 : .coolNeutral99
+            case .backgroundTransparent:
+                atomicColor = style == .dark ? .coolNeutral17 : .common100
+                opacity = style == .dark ? .p061 : .p008
+            case .backgroundTransparentAlternative:
+                atomicColor = style == .dark ? .coolNeutral17 : .common100
+                opacity = style == .dark ? .p061 : .p028
             case .interactionInactive:
                 atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
             case .interactionDisable:
