@@ -11,14 +11,14 @@ import Montage
 struct CategoryPreview: View {
     @State var showGuideLine: Bool = false
     @State var selectedIndex: Int = 0
-    @State var items: [String] = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"]
+    @State var items: [Select.Item] = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"].map { Select.Item(text: $0) }
     @State var isAlternative: Bool = false
     @State var sizeIndex: Int = 1
     @State var horizontalPadding: Bool = false
     @State var verticalPadding: Bool = false
     @State var icon: Bool = false
     @State var alertPresented = false
-    
+
     private let sizes: [Montage.Category.Size] = [
         .small, .medium, .large, .xlarge
     ]
@@ -29,15 +29,17 @@ struct CategoryPreview: View {
                 Text("Preview").bold()
                     .padding(.horizontal)
                 
-                Category(selectedIndex: $selectedIndex, items: items)
-                    .variant(isAlternative ? .alternative : .normal)
-                    .size(sizes[sizeIndex])
-                    .horizontalPadding(horizontalPadding)
-                    .verticalPadding(verticalPadding)
-                    .if(icon) {
-                        $0.iconButton(.apps, action: { alertPresented.toggle() })
-                    }
-                    .border(showGuideLine ? .blue : .clear)
+                Category(selectedIndex: $selectedIndex, items: items.map(\.text), itemModifier: { index, actionChip in
+                    actionChip.disabled(items[index].isSelected)
+                })
+                .variant(isAlternative ? .alternative : .normal)
+                .size(sizes[sizeIndex])
+                .horizontalPadding(horizontalPadding)
+                .verticalPadding(verticalPadding)
+                .if(icon) {
+                    $0.iconButton(.apps, action: { alertPresented.toggle() })
+                }
+                .border(showGuideLine ? .blue : .clear)
             }
             
             VStack(alignment: .leading) {
@@ -60,6 +62,17 @@ struct CategoryPreview: View {
                     Text("size")
                     SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
                         .size(.small)
+                }
+                HStack {
+                    Text("disabled")
+                    Select(
+                        variant: .multiple(
+                            render: .chip,
+                            overflow: false,
+                            menuPrimaryButtonTitle: "확인"
+                        ),
+                        items: $items
+                    )
                 }
             }
             .padding(.horizontal)
