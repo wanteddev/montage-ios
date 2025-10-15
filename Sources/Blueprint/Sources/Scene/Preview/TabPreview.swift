@@ -11,7 +11,7 @@ import Montage
 struct TabPreview: View {
     @State var selectedIndex = 0
     @State var sizeIndex = 1
-    @State var items: [String] = []
+    @State var items: [Select.Item] = []
     @State var count: CGFloat = 2
     @State var resize = false
     @State var horizontalPadding: Bool = false
@@ -33,7 +33,10 @@ struct TabPreview: View {
                 .padding(.horizontal)
                 Montage.Tab(
                     selectedIndex: $selectedIndex,
-                    items: items
+                    items: items.map(\.text),
+                    itemDisabled: { index in
+                        items[index].isSelected
+                    }
                 )
                 .size(sizes[sizeIndex])
                 .resize(resize ? .fill : .hug)
@@ -44,10 +47,10 @@ struct TabPreview: View {
                     }
                 }
                 .onAppear(perform: {
-                    items = Array(1...Int(count.rounded())).map { "Tab \($0)" }
+                    items = Array(1...Int(count.rounded())).map { .init(text: "Tab \($0)") }
                 })
                 .onChange(of: count) { _ in
-                    items = Array(1...Int(count.rounded())).map { "Tab \($0)" }
+                    items = Array(1...Int(count.rounded())).map { .init(text: "Tab \($0)") }
                     resize = false
                     icon = false
                     horizontalPadding = false
@@ -71,6 +74,17 @@ struct TabPreview: View {
                         Text("horizontalPadding")
                         Control.switch(checked: horizontalPadding) { horizontalPadding = $0 }
                         Spacer(minLength: 0)
+                    }
+                    HStack {
+                        Text("disabled items")
+                        Select(
+                            variant: .multiple(
+                                render: .chip,
+                                overflow: false,
+                                menuPrimaryButtonTitle: "확인"
+                            ),
+                            items: $items
+                        )
                     }
                 }
                 .padding()

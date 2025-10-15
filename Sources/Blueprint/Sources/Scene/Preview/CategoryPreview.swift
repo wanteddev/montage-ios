@@ -64,7 +64,7 @@ struct CategoryPreview: View {
                         .size(.small)
                 }
                 HStack {
-                    Text("disabled")
+                    Text("disabled items")
                     Select(
                         variant: .multiple(
                             render: .chip,
