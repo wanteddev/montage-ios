@@ -79,12 +79,12 @@ struct BottomSheetModalPreview: View {
                         }
                         HStack {
                             Text("handle")
-                            Switch($handle)
+                            Control.switch(checked: handle) { handle = $0 }
                             Spacer()
                         }
                         HStack {
                             Text("navigation")
-                            Switch($navigation)
+                            Control.switch(checked: navigation) { navigation = $0 }
                             if navigation {
                                 SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
                                     .size(.small)
@@ -95,7 +95,7 @@ struct BottomSheetModalPreview: View {
                             VStack(alignment: .trailing) {
                                 HStack {
                                     Text("actionArea")
-                                    Switch($actionArea)
+                                    Control.switch(checked: actionArea) { actionArea = $0 }
                                     if actionArea {
                                         SegmentedControl(selectedIndex: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
                                             .size(.small)
@@ -104,12 +104,12 @@ struct BottomSheetModalPreview: View {
                                 if actionArea {
                                     HStack {
                                         Text("caption")
-                                        Switch($caption)
+                                        Control.switch(checked: caption) { caption = $0 }
                                         Text("extra")
-                                        Switch($extra)
+                                        Control.switch(checked: extra) { extra = $0 }
                                         if extra {
                                             Text("divider")
-                                            Switch($extraDivider)
+                                            Control.switch(checked: extraDivider) { extraDivider = $0 }
                                         }
                                     }
                                 }

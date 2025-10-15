@@ -15,9 +15,13 @@ struct ControlPreview: View {
     @State private var state: Control.State = .unchecked
     @State private var checked: Bool = false
     @State private var selected: Bool = false
+    @State private var switched: Bool = false
     @State private var sizeIndex = 0
     @State private var disabled: Bool = false
     @State private var tight: Bool = false
+    @State private var label: String = ""
+    @State private var bold: Bool = false
+    @State private var customTypography = false
     @State private var guideLine: Bool = true
     
     private let sizes: [Control.Size] = [.small, .medium]
@@ -30,34 +34,71 @@ struct ControlPreview: View {
                     Text("Preview").bold()
                     Spacer()
                     Text("guide line").font(.caption)
-                    Switch($guideLine)
+                    Control.switch(checked: guideLine) { guideLine = $0 }
                 }
-                HStack {
-                    Spacer()
-                    Group {
+                VStack {
+                    HStack {
+                        Spacer()
                         Control.checkbox(
-                            $state,
+                            state: state,
                             size: sizes[sizeIndex]
-                        )
+                        ) {
+                            state = $0
+                        }
                         .disable(disabled)
+                        .bold(bold)
                         .tight(tight)
+                        .label(label)
+                        .if(customTypography) {
+                            $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
+                        }
+                        .border(guideLine ? Color.blue : Color.clear)
+                        Spacer()
+                    }
+                    HStack {
+                        Spacer()
                         Control.checkmark(
                             checked: checked,
                             size: sizes[sizeIndex]
                         ) {
-                            self.checked = $0
+                            checked = $0
                         }
                         .disable(disabled)
+                        .bold(bold)
                         .tight(tight)
-                        Control.radio(
-                            $selected,
-                            size: sizes[sizeIndex]
-                        )
-                        .disable(disabled)
-                        .tight(tight)
+                        .label(label)
+                        .if(customTypography) {
+                            $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
+                        }
+                        .border(guideLine ? Color.blue : Color.clear)
+                        Spacer()
                     }
+                    HStack {
+                        Spacer()
+                        Control.radio(
+                            checked: selected,
+                            size: sizes[sizeIndex]
+                        ) {
+                            selected = $0
+                        }
+                        .disable(disabled)
+                        .bold(bold)
+                        .tight(tight)
+                        .label(label)
+                        .if(customTypography) {
+                            $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
+                        }
+                        .border(guideLine ? Color.blue : Color.clear)
+                        Spacer()
+                    }
+                    Control.switch(
+                        checked: switched,
+                        size: sizes[sizeIndex]
+                    ) {
+                        switched = $0
+                    }
+                    .disable(disabled)
                     .border(guideLine ? Color.blue : Color.clear)
-                    Spacer()
                 }
                 Text("Options").bold()
                 HStack {
@@ -66,6 +107,7 @@ struct ControlPreview: View {
                         state = states[$0]
                         checked = $0 != 0
                         selected = $0 != 0
+                        switched = $0 != 0
                     }
                     .size(.small)
                 }
@@ -79,9 +121,19 @@ struct ControlPreview: View {
                 }
                 HStack {
                     Text("disabled")
-                    Switch($disabled)
+                    Control.switch(checked: disabled) { disabled = $0 }
+                    Text("bold")
+                    Control.switch(checked: bold) { bold = $0 }
                     Text("tight")
-                    Switch($tight)
+                    Control.switch(checked: tight) { tight = $0 }
+                }
+                HStack {
+                    Text("label")
+                    TextField(text: $label)
+                }
+                HStack {
+                    Text("custom label typography")
+                    Control.switch(checked: customTypography) { customTypography = $0 }
                 }
             }
             .padding(.horizontal)
@@ -94,9 +146,6 @@ extension Control.Size: CaseDescribable {}
 extension Control.Variant: CaseDescribable {}
 extension Control.State: CaseDescribable {}
 
-struct CheckboxPreview_Previews: PreviewProvider {
-    @State static private var isOn: Bool = true
-    static var previews: some View {
-        ControlPreview()
-    }
+#Preview {
+    ControlPreview()
 }

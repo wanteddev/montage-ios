@@ -171,20 +171,20 @@ struct TooltipPreview: View {
                 
                 HStack {
                     Text("Adjust zIndex")
-                    Switch($adjustZIndex)
+                    Control.switch(checked: adjustZIndex) { adjustZIndex = $0 }
                     Text("Background\n(for Test)")
-                    Switch($background)
+                    Control.switch(checked: background) { background = $0 }
                     Text("Show Arrow")
-                    Switch($showArrow)
+                    Control.switch(checked: showArrow) { showArrow = $0 }
                 }
                 
                 HStack {
                     Text("MultiLine Text")
-                    Switch($showMultilineText)
+                    Control.switch(checked: showMultilineText) { showMultilineText = $0 }
                     Text("Show Close Button")
-                    Switch($showCloseButton)
+                    Control.switch(checked: showCloseButton) { showCloseButton = $0 }
                     Text("Show Button")
-                    Switch($showButton)
+                    Control.switch(checked: showButton) { showButton = $0 }
                 }
                 
                 if showButton {

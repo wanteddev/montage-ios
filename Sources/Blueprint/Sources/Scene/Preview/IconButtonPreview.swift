@@ -127,17 +127,17 @@ struct IconButtonPreview: View {
                 if isBackground {
                     HStack {
                         Text("alternative")
-                        Switch($alternative)
+                        Control.switch(checked: alternative) { alternative = $0 }
                     }
                 }
                 HStack {
                     Text("disable")
-                    Switch($disable)
+                    Control.switch(checked: disable) { disable = $0 }
                 }
                 if isNormal {
                     HStack {
                         Text("pushBadge")
-                        Switch($showPushBadge)
+                        Control.switch(checked: showPushBadge) { showPushBadge = $0 }
                     }
                 }
                 if isOutlinedOrSolid {
@@ -147,27 +147,24 @@ struct IconButtonPreview: View {
                     }
                     HStack {
                         Text("backgroundColor")
-                        Switch(Binding(
-                            get: { backgroundColor != nil },
-                            set: { backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil }
-                        ))
+                        Control.switch(checked: backgroundColor != nil) {
+                            backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil
+                        }
                     }
                 }
                 if isOutlined {
                     HStack {
                         Text("borderColor")
-                        Switch(Binding(
-                            get: { borderColor != nil },
-                            set: { borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil }
-                        ))
+                        Control.switch(checked: borderColor != nil) {
+                            borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil
+                        }
                     }
                 }
                 HStack {
                     Text("iconColor")
-                    Switch(Binding(
-                        get: { iconColor != nil },
-                        set: { iconColor = $0 ? .semantic(.accentForegroundCyan) : nil }
-                    ))
+                    Control.switch(checked: iconColor != nil) {
+                        iconColor = $0 ? .semantic(.accentForegroundCyan) : nil
+                    }
                 }
             }
             .font(.caption)

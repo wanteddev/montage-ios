@@ -96,7 +96,7 @@ public struct SkeletonPreview: View {
                     Text("Options").bold()
                     HStack {
                         Text("show skeleton")
-                        Switch($isPresented)
+                        Control.switch(checked: isPresented) { isPresented = $0 }
                     }
                     HStack {
                         Text("kind")

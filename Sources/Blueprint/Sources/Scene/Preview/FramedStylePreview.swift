@@ -53,7 +53,7 @@ struct FramedStylePreview: View {
             }
             HStack {
                 Text("disabled")
-                Switch($disabled)
+                Control.switch(checked: disabled) { disabled = $0 }
             }
             
             Spacer()

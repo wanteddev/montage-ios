@@ -35,7 +35,7 @@ class ComponentListContents {
         case typography, color, icon, grid, elevation, shadow
         case divider, flowLayout
         case actionArea, button, textButton, iconButton, chip
-        case control, `switch`, input, segmentedControl, select, slider, textField, textArea,
+        case control, segmentedControl, select, slider, textField, textArea,
             dateTimePicker
         case avatar, card, listCard, listCell, thumbnail, accordion, playBadge, sectionHeader,
             contentBadge
@@ -47,7 +47,7 @@ class ComponentListContents {
 
         var state: ComponentState {
             switch self {
-            case .typography, .color, .icon, .grid, .elevation, .shadow, .switch, .input, .control,
+            case .typography, .color, .icon, .grid, .elevation, .shadow, .control,
                 .flowLayout,
                 .button, .textButton, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
                 .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
@@ -69,7 +69,7 @@ class ComponentListContents {
                 return .layout
             case .actionArea, .button, .textButton, .iconButton, .chip:
                 return .actions
-            case .control, .switch, .input, .segmentedControl, .select, .slider, .textField,
+            case .control, .segmentedControl, .select, .slider, .textField,
                 .textArea, .dateTimePicker:
                 return .selectionAndInput
             case .avatar, .card, .listCard, .listCell, .thumbnail, .accordion, .playBadge,

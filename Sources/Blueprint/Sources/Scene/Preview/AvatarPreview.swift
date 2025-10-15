@@ -43,7 +43,7 @@ struct AvatarPreview: View {
                     if variants[variantIndex] == .person {
                         HStack {
                             Text("pushBadge")
-                            Switch($pushBadge)
+                            Control.switch(checked: pushBadge) { pushBadge = $0 }
                         }
                     }
                     HStack {
@@ -53,7 +53,7 @@ struct AvatarPreview: View {
                     }
                     HStack {
                         Text("invalid image url")
-                        Switch($invalidUrl)
+                        Control.switch(checked: invalidUrl) { invalidUrl = $0 }
                     }
                     HStack {
                         SwiftUI.ColorPicker("borderColor", selection: $borderColor)
@@ -128,13 +128,13 @@ struct GroupAvatarPreview: View {
                 }
                 HStack {
                     Text("random invalid image url")
-                    Switch($invalidUrl)
+                    Control.switch(checked: invalidUrl) { invalidUrl = $0 }
                 }
                 HStack {
                     Text("item count")
                     SwiftUI.Slider(value: $itemCount, in: 1...CGFloat(allUrls.count))
                     Text("trailing content")
-                    Switch($trailingContent)
+                    Control.switch(checked: trailingContent) { trailingContent = $0 }
                 }
             }
             .font(.caption)

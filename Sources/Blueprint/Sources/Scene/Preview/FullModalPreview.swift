@@ -54,7 +54,7 @@ struct FullModalPreview: View {
                         }
                         HStack {
                             Text("navigation")
-                            Switch($navigation)
+                            Control.switch(checked: navigation) { navigation = $0 }
                             Spacer()
                         }
                         if navigation {
@@ -66,7 +66,7 @@ struct FullModalPreview: View {
                         }
                         HStack {
                             Text("action")
-                            Switch($action)
+                            Control.switch(checked: action) { action = $0 }
                             Spacer()
                         }
                         if action {
@@ -77,12 +77,12 @@ struct FullModalPreview: View {
                             }
                             HStack {
                                 Text("caption")
-                                Switch($caption)
+                                Control.switch(checked: caption) { caption = $0 }
                                 Text("extra")
-                                Switch($extra)
+                                Control.switch(checked: extra) { extra = $0 }
                                 if extra {
                                     Text("extraDivider")
-                                    Switch($extraDivider)
+                                    Control.switch(checked: extraDivider) { extraDivider = $0 }
                                 }
                             }
                         }

@@ -110,7 +110,7 @@ struct TextAreaPreview: View {
                             Text("Placeholder :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Switch($placeholder)
+                            Control.switch(checked: placeholder) { placeholder = $0 }
                         }
                     }
                     HStack {
@@ -118,7 +118,7 @@ struct TextAreaPreview: View {
                             Text("Focus :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Switch($focus) {
+                            Control.switch(checked: focus) {
                                 focusState = $0
                             }
                         }
@@ -126,7 +126,7 @@ struct TextAreaPreview: View {
                             Text("Disable :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Switch($disable)
+                            Control.switch(checked: disable) { disable = $0 }
                         }
                     }
                     HStack {
@@ -134,13 +134,13 @@ struct TextAreaPreview: View {
                             Text("Heading :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Switch($heading)
+                            Control.switch(checked: heading) { heading = $0 }
                         }
                         HStack {
                             Text("RequiredBadge :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Switch($requiredBadge)
+                            Control.switch(checked: requiredBadge) { requiredBadge = $0 }
                         }
                     }
                     HStack {
@@ -148,12 +148,12 @@ struct TextAreaPreview: View {
                             Text("Description :")
                                 .typography(variant: .headline2, weight: .medium)
                             Spacer()
-                            Switch($description)
+                            Control.switch(checked: description) { description = $0 }
                         }
                         Text("Negative :")
                             .typography(variant: .headline2, weight: .medium)
                         Spacer()
-                        Switch($negative)
+                        Control.switch(checked: negative) { negative = $0 }
                     }
                     HStack {
                         HStack {
@@ -205,7 +205,7 @@ struct TextAreaPreview: View {
                             Text("limit")
                             SwiftUI.Slider(value: $limit, in: 10...1000, step: 10)
                             Text("overflow")
-                            Switch($overflow)
+                            Control.switch(checked: overflow) { overflow = $0 }
                         }
                     }
                 }

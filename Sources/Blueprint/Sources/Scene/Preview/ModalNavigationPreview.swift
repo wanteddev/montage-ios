@@ -90,16 +90,16 @@ struct ModalNavigationPreview: View {
                     if case .floating = variants[variantIndex] {
                         HStack {
                             Text("alternative")
-                            Switch($alternative)
+                            Control.switch(checked: alternative) { alternative = $0 }
                         }
                         HStack {
                             Text("background")
-                            Switch($background)
+                            Control.switch(checked: background) { background = $0 }
                         }
                     }
                     HStack {
                         Text("leadingButton")
-                        Switch($leadingButton)
+                        Control.switch(checked: leadingButton) { leadingButton = $0 }
                         SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
                             .size(.small)
                     }

@@ -10,12 +10,10 @@ import SwiftUI
 
 struct PressActionDetectingModifier: ViewModifier {
     @Binding var isPressed: Bool
-    private let onSimultaneousTap: (() -> Void)?
     private let action: (() -> Void)?
     
-    init(isPressed: Binding<Bool>, onSimultaneousTap: (() -> Void)? = nil, action: (() -> Void)?) {
+    init(isPressed: Binding<Bool>, action: (() -> Void)?) {
         self._isPressed = isPressed
-        self.onSimultaneousTap = onSimultaneousTap
         self.action = action
     }
     
@@ -42,11 +40,6 @@ struct PressActionDetectingModifier: ViewModifier {
                             isPressed = false
                         }
                 )
-                .simultaneousGesture(TapGesture(count: 1)
-                    .onEnded { _ in
-                        onSimultaneousTap?()
-                    }
-                )
                 .if(action != nil) { view in
                     view.onTapGesture {
                         action?()
@@ -54,7 +47,6 @@ struct PressActionDetectingModifier: ViewModifier {
                 }
         } else {
             SwiftUI.Button {
-                onSimultaneousTap?()
                 action?()
             } label: {
                 content

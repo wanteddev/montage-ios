@@ -100,7 +100,7 @@ struct PushBadgePreview: View {
                 Divider()
                 HStack {
                     Text("inset(20,20)")
-                    Switch($inset)
+                    Control.switch(checked: inset) { inset = $0 }
                 }
             }
             .padding()

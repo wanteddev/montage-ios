@@ -55,19 +55,19 @@ struct AccordionPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("multilineTitle")
-                    Switch($multilineTitle)
+                    Control.switch(checked: multilineTitle) { multilineTitle = $0 }
                 }
                 HStack {
                     Text("description")
-                    Switch($description)
+                    Control.switch(checked: description) { description = $0 }
                     Text("content")
-                    Switch($content)
+                    Control.switch(checked: content) { content = $0 }
                 }
                 HStack {
                     Text("leadingIcon")
-                    Switch($leadingIcon)
+                    Control.switch(checked: leadingIcon) { leadingIcon = $0 }
                     Text("trailingContent")
-                    Switch($trailingContent)
+                    Control.switch(checked: trailingContent) { trailingContent = $0 }
                 }
                 HStack {
                     Text("verticalPadding")
@@ -79,11 +79,11 @@ struct AccordionPreview: View {
                 }
                 HStack {
                     Text("hideDivider")
-                    Switch($hideDivider)
+                    Control.switch(checked: hideDivider) { hideDivider = $0 }
                     Text("fillWidth")
-                    Switch($fillWidth)
+                    Control.switch(checked: fillWidth) { fillWidth = $0 }
                     Text("recursive")
-                    Switch($recursive)
+                    Control.switch(checked: recursive) { recursive = $0 }
                 }
                 Spacer(minLength: 0)
             }

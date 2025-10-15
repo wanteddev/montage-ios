@@ -75,31 +75,31 @@ struct ListCellPreview: View {
                 }
                 HStack {
                     Text("Caption")
-                    Switch($caption)
+                    Control.switch(checked: caption) { caption = $0 }
                     Text("Fill Width")
-                    Switch($fillWidth)
+                    Control.switch(checked: fillWidth) { fillWidth = $0 }
                     Text("Chevron")
-                    Switch($chevron)
+                    Control.switch(checked: chevron) { chevron = $0 }
                 }
                 HStack {
                     Text("Leading Content")
-                    Switch($leadingContent)
+                    Control.switch(checked: leadingContent) { leadingContent = $0 }
                     Text("Trailing Content")
-                    Switch($trailingContent)
+                    Control.switch(checked: trailingContent) { trailingContent = $0 }
                 }
                 HStack {
                     Text("Text Ellipsis")
-                    Switch($textEllipsis)
+                    Control.switch(checked: textEllipsis) { textEllipsis = $0 }
                     Text("Divider")
-                    Switch($divider)
+                    Control.switch(checked: divider) { divider = $0 }
                 }
                 HStack {
                     Text("Disable")
-                    Switch($disable)
+                    Control.switch(checked: disable) { disable = $0 }
                     Text("Long Text")
-                    Switch($longText)
+                    Control.switch(checked: longText) { longText = $0 }
                     Text("Selected")
-                    Switch($selected)
+                    Control.switch(checked: selected) { selected = $0 }
                 }
                 HStack {
                     Text("Vertical Alignment")
