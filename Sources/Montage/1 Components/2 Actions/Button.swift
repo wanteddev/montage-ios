@@ -403,12 +403,7 @@ private extension Button {
                 if let customBorderColor {
                     customBorderColor
                 } else {
-                    switch color {
-                    case .primary:
-                        .semantic(.primaryNormal)
-                    case .assistive:
-                        .semantic(.lineNeutral)
-                    }
+                    .semantic(.lineNeutral)
                 }
             }
         } else {
