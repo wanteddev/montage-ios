@@ -54,6 +54,7 @@ public struct Category: View {
     
     @Binding private var selectedIndex: Int
     private let items: [String]
+    private let itemModifier: (_ index: Int, _ actionChip: ActionChip) -> ActionChip
     private let actions: (Int) -> Void
     
     /// 카테고리 컴포넌트를 초기화합니다.
@@ -65,10 +66,12 @@ public struct Category: View {
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
+        itemModifier: @escaping (_ index: Int, _ actionChip: ActionChip) -> ActionChip = { $1 },
         actions: @escaping (Int) -> Void = { _ in }
     ) {
         _selectedIndex = selectedIndex
         self.items = items
+        self.itemModifier = itemModifier
         self.actions = actions
     }
     
@@ -82,16 +85,19 @@ public struct Category: View {
                 HStack(spacing: 0) {
                     HStack(spacing: itemSpacing) {
                         ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                            ItemView(
-                                variant: variant,
-                                size: size,
-                                isSelected: index == selectedIndex,
-                                title: item
+                            ActionChip(
+                                variant: chipVariant(index == selectedIndex),
+                                size: chipSize,
+                                text: item
                             ) {
                                 withAnimation(animation) {
                                     selectedIndex = index
                                 }
                                 actions(index)
+                            }
+                            .active(index == selectedIndex)
+                            .modifying {
+                                itemModifier(index, $0)
                             }
                             .contentShape(Rectangle())
                         }
@@ -220,36 +226,21 @@ private extension Category {
         default: 24
         }
     }
-    
-    // MARK: - Inner View
-    
-    struct ItemView: View {
-        let variant: Variant
-        let size: Size
-        let isSelected: Bool
-        let title: String
-        let onTap: () -> Void
-
-        var body: some View {
-            ActionChip(variant: chipVariant, size: chipSize, text: title, handler: onTap)
-                .active(isSelected)
+      
+    func chipVariant(_ isSelected: Bool) -> ActionChip.Variant {
+        if variant == .normal && isSelected {
+            .solid
+        } else {
+            .outlined
         }
-        
-        var chipVariant: ActionChip.Variant {
-            if variant == .normal && isSelected {
-                .solid
-            } else {
-                .outlined
-            }
-        }
-        
-        var chipSize: ActionChip.Size {
-            switch size {
-            case .small: .xsmall
-            case .medium: .small
-            case .large: .medium
-            case .xlarge: .large
-            }
+    }
+    
+    var chipSize: ActionChip.Size {
+        switch size {
+        case .small: .xsmall
+        case .medium: .small
+        case .large: .medium
+        case .xlarge: .large
         }
     }
 }
