@@ -9,8 +9,9 @@ import SwiftUI
 import Montage
 
 struct FramedStylePreview: View {
-    @State private var sizeIndex: Int = 0
+    @State private var isBackgroundClear = false
     @State private var statusIndex: Int = 0
+    @State private var borderRadius: CGFloat = 0
     @State private var shadowIndex: Int = 0
     @State private var selected: Bool = false
     @State private var disabled: Bool = false
@@ -21,34 +22,36 @@ struct FramedStylePreview: View {
             Text("Preview").bold()
             
             ZStack {
-                Text("Preview")
                 Rectangle()
-                    .foregroundColor(.semantic(.accentBackgroundViolet).opacity(0.08))
+                    .foregroundColor(isBackgroundClear ? .clear : .semantic(.backgroundNormalAlternative))
                     .frame(height: 80)
+                Text("Preview")
             }
             .framedStyle(
-                    size: FramedStyleSize.allCases[sizeIndex],
-                    status: FramedStyleStatus.allCases[statusIndex],
-                    shadowLevel: ShadowLevel.allCases[shadowIndex],
-                    disabled: disabled
-                )
-                .padding(.horizontal, 16)
+                status: FramedStyleStatus.allCases[statusIndex],
+                borderRadius: borderRadius,
+                shadowLevel: ShadowLevel.allCases[shadowIndex],
+                disabled: disabled
+            )
             
             Text("Options").bold()
             
             HStack {
-                Text("size")
-                SegmentedControl(selectedIndex: $sizeIndex, labels: FramedStyleSize.allCases.map(\.description))
-                    .size(.small)
-            }
-            HStack {
-                Text("shadow")
-                SegmentedControl(selectedIndex: $shadowIndex, labels: ShadowLevel.allCases.map(\.description))
-                    .size(.small)
+                Text("isBackgroundClear(for test only)")
+                Control.switch(checked: isBackgroundClear) { isBackgroundClear = $0 }
             }
             HStack {
                 Text("status")
                 SegmentedControl(selectedIndex: $statusIndex, labels: FramedStyleStatus.allCases.map(\.description))
+                    .size(.small)
+            }
+            HStack {
+                Text("borderRadius")
+                Slider(value: $borderRadius, in: 0...20, step: 1)
+            }
+            HStack {
+                Text("shadow")
+                SegmentedControl(selectedIndex: $shadowIndex, labels: ShadowLevel.allCases.map(\.description))
                     .size(.small)
             }
             HStack {
@@ -62,7 +65,6 @@ struct FramedStylePreview: View {
     }
 }
 
-extension FramedStyleSize: CaseDescribable {}
 extension FramedStyleStatus: CaseDescribable {}
     
 #Preview {

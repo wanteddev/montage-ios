@@ -8,20 +8,6 @@
 
 import SwiftUI
 
-/// 프레임의 크기를 정의하는 열거형입니다.
-///
-/// 각 크기마다 다른 패딩, 테두리 반경, 그림자 레벨이 적용됩니다.
-public enum FramedStyleSize: CaseIterable {
-    /// 작은 크기
-    case small
-    /// 중간 크기
-    case medium
-    /// 큰 크기
-    case large
-    /// 매우 큰 크기
-    case xlarge
-}
-
 /// 프레임의 상태를 정의하는 열거형입니다.
 ///
 /// 각 상태마다 다른 테두리 색상과 스타일이 적용됩니다.
@@ -37,82 +23,33 @@ public enum FramedStyleStatus: CaseIterable {
 // MARK: - ViewModifier
 
 struct FramedStyleModifier: ViewModifier {
-    private let size: FramedStyleSize
     private let status: FramedStyleStatus
+    private let borderRadius: CGFloat
     private let shadowLevel: ShadowLevel
     private let disabled: Bool
     
     init(
-        size: FramedStyleSize = .medium,
         status: FramedStyleStatus = .normal,
+        borderRadius: CGFloat = 0,
         shadowLevel: ShadowLevel = .xsmall,
         disabled: Bool = false
     ) {
-        self.size = size
         self.status = status
+        self.borderRadius = borderRadius
         self.shadowLevel = shadowLevel
         self.disabled = disabled
     }
     
     func body(content: Content) -> some View {
         content
-            .padding(.horizontal, horizontalPadding)
-            .padding(.vertical, verticalPadding)
-            .background {
+            .overlay {
                 RoundedRectangle(cornerRadius: borderRadius)
                     .strokeBorder(borderColor, lineWidth: borderWidth)
-                    .background(backgroundColor)
-                    .clipShape(RoundedRectangle(cornerRadius: borderRadius))
+                    .opacity(disabled ? 0.43 : 1)
             }
+            .clipShape(RoundedRectangle(cornerRadius: borderRadius))
             .shadow(shadowLevel)
             .disabled(disabled)
-    }
-    
-    private var borderRadius: CGFloat {
-        switch size {
-        case .small:
-            return 10
-        case .medium:
-            return 14
-        case .large:
-            return 16
-        case .xlarge:
-            return 20
-        }
-    }
-    
-    private var horizontalPadding: CGFloat {
-        switch size {
-        case .small:
-            return 12
-        case .medium:
-            return 16
-        case .large:
-            return 20
-        case .xlarge:
-            return 24
-        }
-    }
-    
-    private var verticalPadding: CGFloat {
-        switch size {
-        case .small:
-            return 4
-        case .medium:
-            return 4
-        case .large:
-            return 4
-        case .xlarge:
-            return 8
-        }
-    }
-    
-    private var backgroundColor: SwiftUI.Color {
-        if disabled {
-            .semantic(.interactionDisable)
-        } else {
-            .semantic(.backgroundNormal)
-        }
     }
     
     private var borderWidth: CGFloat {
@@ -140,20 +77,22 @@ extension View {
     /// 다양한 크기와 상태를 설정할 수 있어 다양한 UI 요소에 활용할 수 있습니다.
     ///
     /// - Parameters:
-    ///   - size: 프레임 크기 (기본값: .medium)
     ///   - status: 프레임 상태 (기본값: .normal)
+    ///   - borderRadius: 테두리 반경 (기본값: 0)
     ///   - shadowLevel: 그림자 레벨 (기본값: .xsmall)
     ///   - disabled: 비활성화 상태 여부 (기본값: false)
     /// - Returns: 프레임 스타일이 적용된 뷰
     ///
+    /// - Note: 그림자는 원본 View 배경색의 opacity가 동일하게 적용됩니다.
+    /// 
     /// ```swift
     /// // 기본 사용법
     /// Text("입력 필드")
     ///     .framedStyle()
     ///
-    /// // 큰 프레임에 그림자 적용
+    /// // 프레임에 그림자 적용
     /// Button("확인") { }
-    ///     .framedStyle(size: .large, shadowLevel: .medium)
+    ///     .framedStyle(shadowLevel: .medium)
     ///
     /// // 선택된 상태의 프레임
     /// Rectangle()
@@ -168,19 +107,19 @@ extension View {
     /// Text("오류 메시지")
     ///     .framedStyle(status: .negative)
     ///
-    /// // 작은 크기의 선택된 프레임
+    /// // 둥근 모서리가 있는 선택된 프레임
     /// Text("선택된 항목")
-    ///     .framedStyle(size: .small, status: .selected)
+    ///     .framedStyle(borderRadius: 16, status: .selected)
     /// ```
     public func framedStyle(
-        size: FramedStyleSize = .medium,
         status: FramedStyleStatus = .normal,
+        borderRadius: CGFloat = 0,
         shadowLevel: ShadowLevel = .xsmall,
         disabled: Bool = false
     ) -> some View {
         modifier(FramedStyleModifier(
-            size: size,
             status: status,
+            borderRadius: borderRadius,
             shadowLevel: shadowLevel,
             disabled: disabled
         ))
