@@ -55,7 +55,8 @@ struct ToastPreview: View {
                     Toggle(isOn: $toastShortDuration) {
                         Text("short duration")
                     }
-                    Button.outlined(
+                    Button(
+                        variant: .outlined,
                         text: "토스트 띄우기"
                     ) {
                         toastModel = Toast.Model(variants[variantIndex], message: "토스트는 이렇게 생겼습니다.")

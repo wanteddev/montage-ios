@@ -100,7 +100,7 @@ struct GroupAvatarPreview: View {
                     }
                     .if(trailingContent) {
                         $0.trailingContent {
-                            Button.text(variant: .assistive, size: .small, text: "외 30명이 좋아합니다") {
+                            TextButton(color: .assistive, size: .small, text: "외 30명이 좋아합니다") {
                                 alertLabel = "TextButton pressed"
                                 alertPresented.toggle()
                             }

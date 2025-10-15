@@ -134,15 +134,16 @@ struct ActionAreaPreview: View {
             case .custom:
                 return .strong(
                     main: .custom {
-                        Button.outlined(
-                            variant: .secondary,
+                        Button(
+                            variant: .outlined, 
+                            color: .primary,
                             text: "커스텀 메인"
                         )
                         .fill(horizontal: true)
                     },
                     sub: .custom {
-                        Button.solid(
-                            variant: .primary,
+                        Button(
+                            color: .primary,
                             text: "커스텀 서브"
                         )
                         .contentColor(.semantic(.accentBackgroundLime))

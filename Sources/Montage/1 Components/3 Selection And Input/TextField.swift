@@ -60,7 +60,7 @@ public struct TextField: View {
     ///
     /// 이 구조체를 사용하여 오른쪽에 표시될 버튼의 스타일, 텍스트, 동작을 정의할 수 있습니다.
     public struct TrailingButtonInfo {
-        fileprivate let variant: Button.Outlined.Variant
+        fileprivate let variant: Button.Color
         fileprivate let title: String
         fileprivate let handler: (() -> Void)?
         
@@ -72,7 +72,7 @@ public struct TextField: View {
         ///   - handler: 버튼 클릭 시 실행할 핸들러
         /// - Returns: 구성된 트레일링 버튼 인스턴스
         public init(
-            variant: Button.Outlined.Variant,
+            variant: Button.Color,
             title: String,
             handler: (() -> Void)? = nil
         ) {
@@ -561,11 +561,11 @@ private extension TextField {
 // MARK: - Inner Views
 private extension TextField {
     struct TrailingButton: View {
-        private let variant: Button.Outlined.Variant
+        private let variant: Button.Color
         private let title: String
         private let handler: (() -> Void)?
         
-        init(variant: Button.Outlined.Variant, title: String, handler: (() -> Void)?) {
+        init(variant: Button.Color, title: String, handler: (() -> Void)?) {
             self.variant = variant
             self.title = title
             self.handler = handler
@@ -590,7 +590,7 @@ private extension TextField {
         
         var textColor: Color.Semantic {
             switch variant {
-            case .primary, .secondary:
+            case .primary:
                 .primaryNormal
             case .assistive:
                 .labelNormal
@@ -599,7 +599,7 @@ private extension TextField {
         
         var typoWeight: Typography.Weight {
             switch variant {
-            case .primary, .secondary: .bold
+            case .primary: .bold
             case .assistive: .medium
             }
         }

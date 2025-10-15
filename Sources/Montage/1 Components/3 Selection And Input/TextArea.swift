@@ -102,7 +102,7 @@ public struct TextArea: View {
         ///   - handler: 버튼 클릭 핸들러
         case textButton(
             placement: Placement = .leading,
-            variant: Button.Text.Variant? = .assistive,
+            variant: TextButton.Color? = .assistive,
             title: String,
             handler: (() -> Void)? = nil
         )
@@ -532,8 +532,8 @@ public struct TextArea: View {
                 }
                 .padding(.horizontal, 4)
             case let .textButton(placement, variant, title, handler):
-                Button.text(
-                    variant: {
+                TextButton(
+                    color: {
                         if let variant {
                             variant
                         } else {

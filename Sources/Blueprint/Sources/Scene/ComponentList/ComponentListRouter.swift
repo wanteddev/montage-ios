@@ -49,6 +49,8 @@ extension ComponentListRouter: ComponentListRoutingLogic {
             vc = UIHostingController(rootView: ControlPreview())
         case .button:
             vc = UIHostingController(rootView: ButtonPreview())
+        case .textButton:
+            vc = UIHostingController(rootView: TextButtonPreview())
         case .iconButton:
             vc = UIHostingController(rootView: IconButtonPreview())
         case .chip:

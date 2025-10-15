@@ -12,7 +12,7 @@ import SwiftUI
 import Montage
 
 struct ButtonPreview: View {
-    @State private var variantIndex = 0
+    @State private var colorIndex = 0
     @State private var sizeIndex = 0
     @State private var iconOnly = false
     @State private var leadingIcon = false
@@ -25,7 +25,7 @@ struct ButtonPreview: View {
     @State private var fontWeight = false
     @State private var loading = false
     
-    private let variants: [Montage.Button.Variant] = [.primary, .secondary, .assistive]
+    private let colors: [Montage.Button.Color] = [.primary, .assistive]
     private let sizes: [Montage.Button.Size] = [.small, .medium, .large]
     
     var body: some View {
@@ -34,18 +34,18 @@ struct ButtonPreview: View {
                 Text("Preview").bold()
                 
                 Grid {
-                    let variant = variants[variantIndex]
+                    let color = colors[colorIndex]
                     let size = sizes[sizeIndex]
                     
-                    if let solidVariant = Button.Solid.Variant(rawValue: variant.description),
-                       let solidSize = Button.Solid.Size(rawValue: size.description) {
+                    if let solidColor = Button.Color(rawValue: color.description),
+                       let solidSize = Button.Size(rawValue: size.description) {
                         GridRow {
                             Spacer(minLength: 0)
                             
                             Text("SolidButton")
                             if iconOnly {
-                                Button.solid(
-                                    variant: solidVariant,
+                                Button(
+                                    color: solidColor,
                                     size: solidSize,
                                     icon: .apps
                                 ) {
@@ -59,8 +59,8 @@ struct ButtonPreview: View {
                                 .fontWeight(fontWeight ? .regular : nil)
                                 .loading(loading)
                             } else {
-                                Button.solid(
-                                    variant: solidVariant,
+                                Button(
+                                    color: solidColor,
                                     size: solidSize,
                                     text: "텍스트",
                                     leadingIcon: leadingIcon ? .apps : nil,
@@ -81,15 +81,16 @@ struct ButtonPreview: View {
                         }
                     }
                     
-                    if let outlinedVariant = Button.Outlined.Variant(rawValue: variant.description),
-                       let outlinedSize = Button.Outlined.Size(rawValue: size.description) {
+                    if let outlinedColor = Button.Color(rawValue: color.description),
+                       let outlinedSize = Button.Size(rawValue: size.description) {
                         GridRow {
                             Spacer(minLength: 0)
                             
                             Text("OutlinedButton")
                             if iconOnly {
-                                Button.outlined(
-                                    variant: outlinedVariant,
+                                Button(
+                                    variant: .outlined,
+                                    color: outlinedColor,
                                     size: outlinedSize,
                                     icon: .apps
                                 ) {
@@ -103,8 +104,9 @@ struct ButtonPreview: View {
                                 .fontWeight(fontWeight ? .regular : nil)
                                 .loading(loading)
                             } else {
-                                Button.outlined(
-                                    variant: outlinedVariant,
+                                Button(
+                                    variant: .outlined,
+                                    color: outlinedColor,
                                     size: outlinedSize,
                                     text: "텍스트",
                                     leadingIcon: leadingIcon ? .apps : nil,
@@ -125,41 +127,14 @@ struct ButtonPreview: View {
                         }
                     }
                     
-                    if let textVariant = Button.Text.Variant(rawValue: variant.description),
-                       let textSize = Button.Text.Size(rawValue: size.description) {
-                        GridRow {
-                            Spacer(minLength: 0)
-                            
-                            Text("TextButton")
-                            Button.text(
-                                variant: textVariant,
-                                size: textSize,
-                                text: "텍스트",
-                                leadingIcon: leadingIcon ? .apps : nil,
-                                trailingIcon: trailingIcon ? .apps : nil
-                            ) {
-                                print("tapped")
-                            }
-                            .disable(disable)
-                            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                            .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                            .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                            .fontVariant(fontVariant ? .heading1 : nil)
-                            .fontWeight(fontWeight ? .regular : nil)
-                            .loading(loading)
-                            .padding(.vertical, 4)
-                            
-                            Spacer(minLength: 0)
-                        }
-                    }
                 }
                 
                 Text("Options").bold()
                 HStack {
-                    Text("variant")
+                    Text("color")
                     SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
+                        selectedIndex: $colorIndex,
+                        labels: colors.map(\.description)
                     )
                     .size(.small)
                 }
@@ -217,7 +192,7 @@ struct ButtonPreview: View {
     }
 }
 
-extension Montage.Button.Variant: CaseDescribable {}
+extension Montage.Button.Color: CaseDescribable {}
 extension Montage.Button.Size: CaseDescribable {}
 
 #Preview {

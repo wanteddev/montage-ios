@@ -95,7 +95,7 @@ TextField(text: $inputText)
 
 <details>
 
-<summary>``init(variant: Button.Outlined.Variant, title: String, handler: (() -> Void)?)``</summary>
+<summary>``init(variant: Button.Variant, title: String, handler: (() -> Void)?)``</summary>
 
 트레일링 버튼을 초기화합니다.
 

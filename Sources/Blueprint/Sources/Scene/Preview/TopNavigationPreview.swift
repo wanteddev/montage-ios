@@ -134,7 +134,7 @@ struct TopNavigationPreview: View {
                             }
                     }
                 } else {
-                    Button.text(text: "텍스트") {
+                    TextButton(text: "텍스트") {
                         presentationMode.wrappedValue.dismiss()
                     }
                     .contentColor(.semantic(.labelNormal))

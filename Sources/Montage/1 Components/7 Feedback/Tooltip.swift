@@ -472,7 +472,6 @@ struct TooltipBubbleShape: Shape {
         var path = Path()
         
         // 콘텐츠 영역을 기준으로 버블과 화살표 영역 계산
-        let bubbleRect = rect
         let arrowRect: CGRect
         
         switch direction {

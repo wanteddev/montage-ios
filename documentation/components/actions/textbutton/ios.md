@@ -1,75 +1,40 @@
 ---
-title: Button
-description: 사용자가 상호작용할 수 있는 버튼 컴포넌트입니다.
+title: Text button
+description: Text 스타일의 버튼 컴포넌트입니다.
 ---
 
 ```swift
-@MainActor struct Button
+@MainActor struct TextButton
 ```
 
 ## Overview
 
-세 가지 스타일로 제공됩니다:
-
-- `solid`: 색상이 채워진 버튼
-- `outlined`: 테두리만 있는 버튼
+Text만 있는 스타일의 버튼으로, 가벼운 액션이나 링크 형태의 액션에 적합합니다.
 
 ```swift
-// 기본 솔리드 버튼
-Button(text: "확인", handler: { print("버튼 클릭") })
-
-// 아웃라인 버튼
-Button(variant: .outlined, color: .primary, size: .medium, text: "취소")
-
-// 아이콘 버튼
-Button(icon: .bell, handler: { print("알림 보기") })
-
-// 로딩 상태 설정
-Button(text: "저장")
-    .loading(true)
+TextButton(text: "더 보기", handler: { showMore() })
+TextButton(color: .assistive, text: "상세보기", trailingIcon: .chevronRight)
 ```
-
->  **Note**
->
-> 버튼은 다양한 수정자(modifier)를 사용하여 모양과 동작을 커스터마이즈할 수 있습니다.
 
 ## Topics
 
-___
 ### Initializers
 
 <details>
 
-<summary>``init(variant: Variant, color: Color, size: Size, icon: Icon, handler: (() -> Void)?)``</summary>
+<summary>``init(color: Color, size: Size, text: String, leadingIcon: Icon?, trailingIcon: Icon?, handler: (() -> Void)?)``</summary>
 
-텍스트가 없고 아이콘만 있는 버튼을 생성합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `color` | 버튼의 변형, 기본값은 `.primary` |
-  | `size` | 버튼의 크기, 기본값은 `.large` |
-  | `icon` | 버튼에 표시할 아이콘 |
-  | `handler` | 버튼 탭 시 실행할 핸들러 |
-- **Discussion**
-</details>
-<details>
-
-<summary>``init(variant: Variant, color: Color, size: Size, text: String?, leadingIcon: Icon?, trailingIcon: Icon?, handler: (() -> Void)?)``</summary>
-
-버튼을 생성합니다.
+Text 스타일의 버튼을 생성합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `variant` | 버튼의 스타일, 기본값은 `.solid` |
-  | `color` | 버튼의 변형, 기본값은 `.primary` |
-  | `size` | 버튼의 크기, 기본값은 `.large` |
+  | `color` | 버튼의 스타일, 기본값은 `.primary` |
+  | `size` | 버튼의 크기, 기본값은 `.medium` |
   | `text` | 버튼에 표시할 텍스트 |
   | `leadingIcon` | 텍스트 앞에 표시할 아이콘 |
   | `trailingIcon` | 텍스트 뒤에 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
-- **Discussion**
 </details>
 
 ___
@@ -85,41 +50,7 @@ ___
 
 <details>
 
-<summary>``func backgroundColor(SwiftUI.Color?) -> Button``</summary>
-
-버튼 배경색을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `backgroundColor` | 설정할 배경색 |
-- **Return Value**
-
-  수정된 버튼 인스턴스
-- **Discussion**
-
-  Solid 스타일 버튼에 가장 효과적으로 적용됩니다.
-</details>
-<details>
-
-<summary>``func borderColor(SwiftUI.Color?) -> Button``</summary>
-
-버튼 테두리 색상을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `borderColor` | 설정할 테두리 색상 |
-- **Return Value**
-
-  수정된 버튼 인스턴스
-- **Discussion**
-
-  Outlined 스타일 버튼에 가장 효과적으로 적용됩니다.
-</details>
-<details>
-
-<summary>``func contentColor(SwiftUI.Color?) -> Button``</summary>
+<summary>``func contentColor(SwiftUI.Color?) -> TextButton``</summary>
 
 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
 
@@ -134,7 +65,7 @@ ___
 </details>
 <details>
 
-<summary>``func disable(Bool) -> Button``</summary>
+<summary>``func disable(Bool) -> TextButton``</summary>
 
 버튼을 비활성화 상태로 설정합니다.
 
@@ -151,7 +82,7 @@ ___
 </details>
 <details>
 
-<summary>``func fill(horizontal: Bool, vertical: Bool) -> Button``</summary>
+<summary>``func fill(horizontal: Bool, vertical: Bool) -> TextButton``</summary>
 
 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
 
@@ -169,7 +100,7 @@ ___
 </details>
 <details>
 
-<summary>``func fontVariant(Typography.Variant?) -> Button``</summary>
+<summary>``func fontVariant(Typography.Variant?) -> TextButton``</summary>
 
 버튼 텍스트의 폰트 변형을 설정합니다.
 
@@ -186,7 +117,7 @@ ___
 </details>
 <details>
 
-<summary>``func fontWeight(Typography.Weight?) -> Button``</summary>
+<summary>``func fontWeight(Typography.Weight?) -> TextButton``</summary>
 
 버튼 텍스트의 폰트 두께를 설정합니다.
 
@@ -203,7 +134,7 @@ ___
 </details>
 <details>
 
-<summary>``func loading(Bool) -> Button``</summary>
+<summary>``func loading(Bool) -> TextButton``</summary>
 
 버튼을 로딩 상태로 설정합니다.
 
@@ -226,20 +157,20 @@ ___
 
 <summary>``enum Color``</summary>
 
-버튼의 색상 스타일을 정의합니다.
+Text 버튼의 색상 스타일을 정의합니다.
 #### Enumeration Cases
 
 <details>
 
 <summary>``case assistive``</summary>
 
-보조 스타일 - 덜 중요한 액션에 사용
+보조 스타일 - 중요도가 낮은 텍스트 링크에 사용
 </details>
 <details>
 
 <summary>``case primary``</summary>
 
-기본 강조 스타일 - 주요 액션에 사용
+기본 강조 스타일 - 브랜드 컬러를 텍스트에 사용
 </details>
 
 #### Initializers
@@ -261,15 +192,9 @@ ___
 
 <summary>``enum Size``</summary>
 
-버튼의 크기를 정의합니다.
+Text 스타일 버튼의 크기를 정의합니다.
 #### Enumeration Cases
 
-<details>
-
-<summary>``case large``</summary>
-
-큰 크기
-</details>
 <details>
 
 <summary>``case medium``</summary>
@@ -281,41 +206,6 @@ ___
 <summary>``case small``</summary>
 
 작은 크기
-</details>
-
-#### Initializers
-
-<details>
-
-<summary>``init?(rawValue: String)``</summary>
-</details>
-
-#### Default Implementations
-
-
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
-
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
-
-</details>
-<details>
-
-<summary>``enum Variant``</summary>
-
-버튼의 변형을 정의합니다.
-#### Enumeration Cases
-
-<details>
-
-<summary>``case outlined``</summary>
-
-테두리가 있는 형태 - 최소한의 강조가 필요한 액션에 사용
-</details>
-<details>
-
-<summary>``case solid``</summary>
-
-배경 색상이 채워진 형태 - 주요 액션에 사용
 </details>
 
 #### Initializers
