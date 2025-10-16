@@ -369,7 +369,7 @@ public struct TextArea: View {
                         typedCharacters = text.count
                     }
                     .scrollContentBackground(.hidden)
-                    .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
+                    .background(disable ? SwiftUI.Color.semantic(.fillAlternative) : .clear)
                     .padding(.horizontal, -4.5)
                     .padding(.top, -4)
                     .padding(.bottom, -6)
@@ -389,7 +389,7 @@ public struct TextArea: View {
                             variant: .body1Reading,
                             color: placeholderTextColor
                         )
-                        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
+                        .background(disable ? SwiftUI.Color.semantic(.fillAlternative) : .clear)
                         .allowsHitTesting(false)
                 }
             }
@@ -411,9 +411,14 @@ public struct TextArea: View {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(editorStrokeColor, lineWidth: focus.wrappedValue ? 2 : 1)
         }
-        .background(
-            disable ? SwiftUI.Color.semantic(.interactionDisable) : SwiftUI.Color.clear
-        )
+        .background {
+            if disable {
+                SwiftUI.Color.semantic(.fillAlternative)
+            } else {
+                SwiftUI.Color.semantic(.backgroundTransparent)
+                    .background(.ultraThinMaterial)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .allowsHitTesting(disable == false)
         .contentShape(RoundedRectangle(cornerRadius: 12))
