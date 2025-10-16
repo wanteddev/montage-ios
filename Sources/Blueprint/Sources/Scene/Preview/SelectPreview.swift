@@ -212,6 +212,7 @@ struct SelectPreview: View {
             }
             .padding(.horizontal)
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .navigationTitle("Select/Multiple")
         .onChange(of: itemCountClassIndex) { _ in
             switch ItemCountClass.allCases[itemCountClassIndex] {
@@ -255,8 +256,6 @@ struct SelectPreview: View {
                 ]
             }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

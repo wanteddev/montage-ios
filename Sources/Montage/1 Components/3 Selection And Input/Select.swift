@@ -376,10 +376,15 @@ public struct Select: View {
                     .frame(height: 24)
                 }
                 .padding(.all, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
-                )
+                .background {
+                    if disable {
+                        SwiftUI.Color.semantic(.fillAlternative)
+                    } else {
+                        SwiftUI.Color.semantic(.backgroundTransparent)
+                            .background(.ultraThinMaterial)
+                    }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
