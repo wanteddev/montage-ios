@@ -9,27 +9,32 @@ import SwiftUI
 import Montage
 
 struct ProgressTrackerPreview: View {
-    enum Item: Identifiable {
+    enum TrackerType: String, CaseIterable, Identifiable {
         case horizontal
         case vertical
-        var id: Self { self }
+        
+        var id: String { self.rawValue }
     }
     
-    @State private var selection: Item?
     init() {}
+    
     var body: some View {
-        List {
-            SwiftUI.Button("Horizontal") { selection = .horizontal }
-            SwiftUI.Button("Vertical") { selection = .vertical }
+        List(TrackerType.allCases) { type in
+            NavigationLink(
+                destination: {
+                    switch type {
+                    case .horizontal:
+                        HorizontalProgressTrackerPreview()
+                    case .vertical:
+                        VerticalProgressTrackerPreview()
+                    }
+                },
+                label: {
+                    Text(type.rawValue.capitalized)
+                }
+            )
         }
-        .sheet(item: $selection, onDismiss: { selection = nil }) { item in
-            switch item {
-            case .horizontal:
-                HorizontalProgressTrackerPreview()
-            case .vertical:
-                VerticalProgressTrackerPreview()
-            }
-        }
+        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

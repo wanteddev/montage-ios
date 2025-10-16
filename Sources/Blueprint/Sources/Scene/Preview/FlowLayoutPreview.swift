@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct FlowLayoutPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var itemCount: CGFloat = 96
     @State private var spacing: CGFloat = 8
     @State private var lineSpacing: CGFloat = 8
@@ -16,7 +17,16 @@ struct FlowLayoutPreview: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 ScrollView {
                     ZStack {
                         SwiftUI.Color.clear
@@ -29,7 +39,6 @@ struct FlowLayoutPreview: View {
                                     .fontColor(.white)
                             }
                         }
-                        .border(.blue)
                     }
                 }
                 Text("Options").bold()
@@ -48,7 +57,7 @@ struct FlowLayoutPreview: View {
             }
             .padding(.horizontal)
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

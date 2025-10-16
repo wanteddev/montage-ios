@@ -11,11 +11,11 @@ import SwiftUI
 import Montage
 
 struct TooltipPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var show: Bool = false
     
     @State private var showMultilineText: Bool = true
     @State private var adjustZIndex: Bool = true
-    @State private var background: Bool = true
     @State private var showArrow: Bool = true
     @State private var showCloseButton: Bool = true
     @State private var showButton: Bool = true
@@ -45,7 +45,16 @@ struct TooltipPreview: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Preview").bold()
+            HStack {
+                Text("Preview").bold()
+                Spacer()
+                Button(action: {
+                    showTransparentChecker.toggle()
+                }) {
+                    Image(systemName: "checkerboard.rectangle")
+                        .foregroundColor(.semantic(.primaryNormal))
+                }
+            }
             ZStack {
                 SwiftUI.Color.clear
                 VStack {
@@ -74,20 +83,12 @@ struct TooltipPreview: View {
                         
                     Spacer(minLength: 0)
                 }
-                .if(background) {
-                    $0.background {
-                        HStack(spacing: 0) {
-                            SwiftUI.Color.green
-                            SwiftUI.Color.red
-                        }
-                    }
-                }
             }
             optionSheet
         }
         .font(.caption)
         .padding()
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 200, checkerColor: .red)
     }
     
     var iconButton: some View {
@@ -124,7 +125,7 @@ struct TooltipPreview: View {
         Button(color: .assistive, text: "zIndex\n테스트 버튼") {
             alertPresented = true
         }
-        .contentColor(.white)
+        .contentColor(.semantic(.primaryNormal))
         .alert("버튼이 툴팁에 의해 가려지고 툴팁을 통과해서 눌리지 않아야 합니다.", isPresented: $alertPresented) {
             Button("확인") {
                 alertPresented = false
@@ -143,37 +144,33 @@ struct TooltipPreview: View {
         VStack(alignment: .leading) {
             Text("Options").bold()
             
-            VStack(alignment: .leading, spacing: 12) {
-                
-                
-                    HStack {
-                        Text("Mode")
-                        SegmentedControl(selectedIndex: $modeIndex, labels: ["click", "always"])
-                            .size(.small)
-                    }
-                    HStack {
-                        Text("Position")
-                        SegmentedControl(
-                            selectedIndex: $positionIndex,
-                            labels: positions.map(\.description)
-                        )
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Mode")
+                    SegmentedControl(selectedIndex: $modeIndex, labels: ["click", "always"])
                         .size(.small)
-                    }
-                    
-                    HStack {
-                        Text("Arrow Position")
-                        SegmentedControl(
-                            selectedIndex: $arrowPositionIndex,
-                            labels: positions[positionIndex].arrowPositions
-                        )
-                        .size(.small)
-                    }
+                }
+                HStack {
+                    Text("Position")
+                    SegmentedControl(
+                        selectedIndex: $positionIndex,
+                        labels: positions.map(\.description)
+                    )
+                    .size(.small)
+                }
+                
+                HStack {
+                    Text("Arrow Position")
+                    SegmentedControl(
+                        selectedIndex: $arrowPositionIndex,
+                        labels: positions[positionIndex].arrowPositions
+                    )
+                    .size(.small)
+                }
                 
                 HStack {
                     Text("Adjust zIndex")
                     Control.switch(checked: adjustZIndex) { adjustZIndex = $0 }
-                    Text("Background\n(for Test)")
-                    Control.switch(checked: background) { background = $0 }
                     Text("Show Arrow")
                     Control.switch(checked: showArrow) { showArrow = $0 }
                 }

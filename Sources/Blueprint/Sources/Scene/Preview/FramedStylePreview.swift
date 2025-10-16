@@ -9,7 +9,7 @@ import SwiftUI
 import Montage
 
 struct FramedStylePreview: View {
-    @State private var isBackgroundClear = false
+    @State private var showTransparentChecker: Bool = false
     @State private var statusIndex: Int = 0
     @State private var borderRadius: CGFloat = 0
     @State private var shadowIndex: Int = 0
@@ -19,7 +19,16 @@ struct FramedStylePreview: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Preview").bold()
+            HStack {
+                Text("Preview").bold()
+                Spacer()
+                Button(action: {
+                    showTransparentChecker.toggle()
+                }) {
+                    Image(systemName: "checkerboard.rectangle")
+                        .foregroundColor(.semantic(.primaryNormal))
+                }
+            }
             
             ZStack {
                 Rectangle()
@@ -62,6 +71,7 @@ struct FramedStylePreview: View {
             Spacer()
         }
         .padding(.horizontal, 16)
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

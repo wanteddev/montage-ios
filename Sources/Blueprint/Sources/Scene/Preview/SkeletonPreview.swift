@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 public struct SkeletonPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var isPresented = true
     @State private var text = "텍스트 스켈레톤 테스트"
     @State private var kindIndex = 0
@@ -42,6 +43,12 @@ public struct SkeletonPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 .padding(.horizontal)
                 Group {
@@ -159,6 +166,7 @@ public struct SkeletonPreview: View {
         .onChange(of: lineNumber) { _ in
             lengthIndices = [Int](repeating: 0, count: lineNumber)
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

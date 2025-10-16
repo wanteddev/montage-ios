@@ -42,10 +42,11 @@ struct ActionAreaPreview: View {
     }
 
     @State var variantIndex: Int = 0
+    @State private var showTransparentChecker: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
-            Preview(variant: VariantKind.allCases[variantIndex]) {
+            Preview(variant: VariantKind.allCases[variantIndex], showTransparentChecker: $showTransparentChecker) {
                 HStack {
                     Text("Variant: ")
                     Menu(VariantKind.allCases[variantIndex].selectableTitle) {
@@ -60,11 +61,13 @@ struct ActionAreaPreview: View {
                 }
             }
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
     
     struct Preview: View {
         let variant: VariantKind
+        @Binding var showTransparentChecker: Bool
         let variantOptionView: () -> any View
         @State private var mainToastModel: Toast.Model?
         @State private var subToastModel: Toast.Model?
@@ -189,8 +192,17 @@ struct ActionAreaPreview: View {
                 }
                 .padding([.bottom, .horizontal], 20)
                 
-                Text("Preview").bold()
-                    .padding(.horizontal)
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
+                .padding(.horizontal)
                 ScrollView(scrollStatus: $scrollStatus) {
                     LazyVStack {
                         ForEach(0..<30, id: \.self) {

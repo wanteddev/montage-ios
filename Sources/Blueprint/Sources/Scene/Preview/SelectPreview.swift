@@ -11,7 +11,7 @@ import SwiftUI
 import Montage
 
 struct SelectPreview: View {
-    
+    @State private var showTransparentChecker: Bool = false
     @State private var showSheet: Bool = false
     @State private var negative: Bool = false
     @State private var variantIndex: Int = 0
@@ -78,6 +78,12 @@ struct SelectPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 Select(
                     menuPresented: customMenu ? $showSheet : nil,
@@ -249,6 +255,7 @@ struct SelectPreview: View {
                 ]
             }
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

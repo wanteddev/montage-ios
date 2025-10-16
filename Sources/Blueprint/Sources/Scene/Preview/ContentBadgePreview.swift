@@ -14,6 +14,7 @@ import SwiftUI
 import Montage
 
 struct ContentBadgePreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var isSolid: Bool = true
     @State private var sizeIndex: Int = 0
     @State private var colorStyleIndex: Int = 0
@@ -34,6 +35,12 @@ struct ContentBadgePreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 ContentBadge(
                     variant: isSolid ? .solid : .outlined,
@@ -93,6 +100,7 @@ struct ContentBadgePreview: View {
                 }
             }
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
     

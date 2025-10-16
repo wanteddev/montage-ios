@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct FullModalPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var show = true
     
     @State private var itemCountsIndex: Int = 0
@@ -148,6 +149,7 @@ struct FullModalPreview: View {
             }
             : nil
         )
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
     
     private var variant: ActionArea.Variant {

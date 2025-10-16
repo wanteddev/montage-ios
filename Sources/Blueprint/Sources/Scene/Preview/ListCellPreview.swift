@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct ListCellPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var isOn: Bool = true
     @State private var caption = false
     @State private var verticalPaddingIndex = 1
@@ -31,7 +32,16 @@ struct ListCellPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
 
                 ListCell(title: longText ? "이것은 세 줄 이상으로 표현될 수 있는 긴 문장입니다. 충분히 길어야 줄 바꿈이 됩니다. 더욱 더 많이 길어야 합니다." : "텍스트", onTap: {
                     print("helloworld")
@@ -133,6 +143,7 @@ struct ListCellPreview: View {
             .font(.caption)
             .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

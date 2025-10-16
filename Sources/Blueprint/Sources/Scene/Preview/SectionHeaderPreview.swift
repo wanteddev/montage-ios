@@ -9,7 +9,8 @@ import SwiftUI
 import Montage
 
 struct SectionHeaderPreview: View {
-    @State var title: String = "제목sdlkhfalksdflkasdklfkalddsdcfls"
+    @State private var showTransparentChecker: Bool = false
+    @State var title: String = "제목"
     @State var sizeIndex: Int = 2
     @State var headingContent = false
     @State var titleColor = false
@@ -28,6 +29,12 @@ struct SectionHeaderPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 SectionHeader(title: title)
                     .headingContent {
@@ -71,6 +78,7 @@ struct SectionHeaderPreview: View {
             }
             .padding(.horizontal)
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

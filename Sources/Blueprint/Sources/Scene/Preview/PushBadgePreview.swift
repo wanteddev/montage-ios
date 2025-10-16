@@ -26,6 +26,7 @@ struct PushBadgePreview: View {
         .leading, .center, .trailing
     ]
     
+    @State private var showTransparentChecker: Bool = false
     @State var variantIndex = 0
     @State var number = 1.0
     @State var sizeIndex = 0
@@ -38,7 +39,16 @@ struct PushBadgePreview: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 HStack {
                     Spacer()
                     Rectangle()
@@ -105,6 +115,7 @@ struct PushBadgePreview: View {
             }
             .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

@@ -83,6 +83,7 @@ struct TextFieldPreview: View {
         }
     }
     
+    @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
     @State private var variant: Variant = .normal
     @State private var disable: Bool = false
@@ -107,6 +108,12 @@ struct TextFieldPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 TextField(
                     text: $text,
@@ -292,7 +299,7 @@ struct TextFieldPreview: View {
             }
             .padding()
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

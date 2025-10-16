@@ -9,27 +9,32 @@ import SwiftUI
 import Montage
 
 struct PaginationPreview: View {
-    enum Item: Identifiable {
+    enum PaginationType: String, CaseIterable, Identifiable {
         case dot
         case counter
-        var id: Self { self }
+        
+        var id: String { self.rawValue }
     }
     
-    @State private var selection: Item?
     init() {}
+    
     var body: some View {
-        List {
-            SwiftUI.Button("Dot") { selection = .dot }
-            SwiftUI.Button("Counter") { selection = .counter }
+        List(PaginationType.allCases) { type in
+            NavigationLink(
+                destination: {
+                    switch type {
+                    case .dot:
+                        DotPaginationPreview()
+                    case .counter:
+                        CounterPaginationPreview()
+                    }
+                },
+                label: {
+                    Text(type.rawValue.capitalized)
+                }
+            )
         }
-        .sheet(item: $selection, onDismiss: { selection = nil }) { item in
-            switch item {
-            case .dot:
-                DotPaginationPreview()
-            case .counter:
-                CounterPaginationPreview()
-            }
-        }
+        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

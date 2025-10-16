@@ -2,6 +2,7 @@ import SwiftUI
 import Montage
 
 struct FilterChipPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var variant: FilterChip.Variant = .solid
     @State private var size: FilterChip.Size = .medium
     @State private var text = "텍스트"
@@ -15,29 +16,42 @@ struct FilterChipPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
-                
-                FilterChip(
-                    variant: variant,
-                    size: size,
-                    text: text,
-                    state: $state
-                )
-                .active(active, label: activeLabel)
-                .disabled(disable)
-                .modifying {
-                    if fontColor == .clear {
-                        $0
-                    } else {
-                        $0.fontColor(fontColor)
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
                     }
                 }
-                .modifying {
-                    if iconColor == .clear {
-                        $0
-                    } else {
-                        $0.iconColor(iconColor)
+                
+                HStack {
+                    Spacer()
+                    FilterChip(
+                        variant: variant,
+                        size: size,
+                        text: text,
+                        state: $state
+                    )
+                    .active(active, label: activeLabel)
+                    .disabled(disable)
+                    .modifying {
+                        if fontColor == .clear {
+                            $0
+                        } else {
+                            $0.fontColor(fontColor)
+                        }
                     }
+                    .modifying {
+                        if iconColor == .clear {
+                            $0
+                        } else {
+                            $0.iconColor(iconColor)
+                        }
+                    }
+                    Spacer()
                 }
                 
                 Text("Options").bold()
@@ -123,6 +137,7 @@ struct FilterChipPreview: View {
             .font(.caption)
             .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

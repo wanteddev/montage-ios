@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct ThumbnailPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var selectedRatio: Thumbnail.Ratio = .r1x1
     @State private var radius: Bool = true
     @State private var border: Bool = true
@@ -16,7 +17,7 @@ struct ThumbnailPreview: View {
     
     var imageURL: String {
         if invalidURL {
-            "https://invalid-url-that-does-not-exist.com/image.jpg"
+            "https://invalid-url"
         } else {
             "https://upload.wikimedia.org/wikipedia/commons/7/7d/%22_The_Calutron_Girls%22_Y-12_Oak_Ridge_1944_Large_Format_%2832093954911%29_%282%29.jpg"
         }
@@ -28,6 +29,12 @@ struct ThumbnailPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 
                 HStack(spacing: 0) {
@@ -96,6 +103,7 @@ struct ThumbnailPreview: View {
             }
             .padding(.horizontal)
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

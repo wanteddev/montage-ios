@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct IconButtonPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
     @State private var customSize: CGFloat = 24
     @State private var sizeIndex = 0
@@ -63,7 +64,16 @@ struct IconButtonPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 
                 HStack {
                     Spacer(minLength: 0)
@@ -115,7 +125,7 @@ struct IconButtonPreview: View {
                 HStack {
                     Text("size")
                     if variantIndex == 0 || variantIndex == 1 {
-                        SwiftUI.Slider(value: $customSize, in: 10...30, step: 1)
+                        SwiftUI.Slider(value: $customSize, in: 10...128, step: 1)
                     } else {
                         SegmentedControl(
                             selectedIndex: $sizeIndex,
@@ -170,6 +180,7 @@ struct IconButtonPreview: View {
             .font(.caption)
             .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct TabPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State var selectedIndex = 0
     @State var sizeIndex = 1
     @State var items: [String] = []
@@ -29,6 +30,12 @@ struct TabPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 .padding(.horizontal)
                 Montage.Tab(
@@ -76,6 +83,7 @@ struct TabPreview: View {
                 .padding()
             }
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

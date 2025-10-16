@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct ModalNavigationPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var contentOffset: CGFloat = 0
     @State private var scrollViewTopPadding: CGFloat = 0
     @State private var variantIndex = 0
@@ -20,68 +21,85 @@ struct ModalNavigationPreview: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        ZStack(alignment: .top) {
-            ScrollView(
-                onOffsetChanged: { offset in
-                    contentOffset = offset.y
-                },
-                content: {
-                    SwiftUI.Color.clear
-                        .frame(height: scrollViewTopPadding)
-                    
-                    ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
-                        ZStack {
-                            SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
-                            Text("Item \(index)")
-                                .padding()
+        ZStack {
+            ZStack(alignment: .top) {
+                ScrollView(
+                    onOffsetChanged: { offset in
+                        contentOffset = offset.y
+                    },
+                    content: {
+                        SwiftUI.Color.clear
+                            .frame(height: scrollViewTopPadding)
+                        
+                        ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
+                            ZStack {
+                                SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                                Text("Item \(index)")
+                                    .padding()
+                            }
                         }
                     }
-                }
-            )
-            
-            VStack(spacing: 0) {
-                ModalNavigation(scrollOffset: $contentOffset)
-                    .variant(variants[variantIndex])
-                    .title({
-                        ModalNavigation.TitleView(
-                            variant: variants[variantIndex],
-                            title: "제목"
+                )
+                
+                VStack {
+                    ModalNavigation(scrollOffset: $contentOffset)
+                        .variant(variants[variantIndex])
+                        .title({
+                            ModalNavigation.TitleView(
+                                variant: variants[variantIndex],
+                                title: "제목"
+                            )
+                        })
+                        .leadingContent {
+                            Group {
+                                if leadingButton {
+                                    TopNavigation.LeadingButton.init(
+                                        leadingButtons[leadingButtonTypeIndex]
+                                    )
+                                }
+                            }
+                        }
+                        .trailingContents(
+                            Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
+                                switch kind {
+                                case let .icon(i, d, s, a):
+                                    {
+                                        AnyView(TopNavigation.TrailingIconButton(
+                                            icon: i,
+                                            disable: d,
+                                            showPushBadge: s,
+                                            action: a
+                                        ))
+                                    }
+                                case let .text(t, d, a):
+                                    {
+                                        AnyView(TopNavigation.TrailingTextButton(
+                                            text: t,
+                                            disable: d,
+                                            action: a
+                                        ))
+                                    }
+                                }
+                            }
                         )
-                    })
-                    .leadingContent {
-                        Group {
-                            if leadingButton {
-                                TopNavigation.LeadingButton.init(
-                                    leadingButtons[leadingButtonTypeIndex]
-                                )
-                            }
-                        }
-                    }
-                    .trailingContents(
-                        Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
-                            switch kind {
-                            case let .icon(i, d, s, a):
-                                {
-                                    AnyView(TopNavigation.TrailingIconButton(
-                                        icon: i,
-                                        disable: d,
-                                        showPushBadge: s,
-                                        action: a
-                                    ))
-                                }
-                            case let .text(t, d, a):
-                                {
-                                    AnyView(TopNavigation.TrailingTextButton(
-                                        text: t,
-                                        disable: d,
-                                        action: a
-                                    ))
-                                }
-                            }
-                        }
-                    )
+                }
+                .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
+            }
+            
+            VStack {
+                Spacer()
                 
                 VStack(alignment: .leading) {
+                    HStack {
+                        Text("Options").bold()
+                        Spacer()
+                        Button(action: {
+                            showTransparentChecker.toggle()
+                        }) {
+                            Image(systemName: "checkerboard.rectangle")
+                                .foregroundColor(.semantic(.primaryNormal))
+                        }
+                    }
                     HStack {
                         Text("variant")
                         SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
@@ -110,12 +128,11 @@ struct ModalNavigationPreview: View {
                         
                     }
                 }
-                .padding(.horizontal)
-                .background(SwiftUI.Color.semantic(.backgroundNormal))
+                .padding()
+                .background(SwiftUI.Color.semantic(.backgroundElevated))
             }
-            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .navigationBarHidden(true)
     }
     
