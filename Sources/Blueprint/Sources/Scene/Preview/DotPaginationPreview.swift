@@ -42,7 +42,6 @@ struct DotPaginationPreview: View {
                     }
                     
                     Text("\(selectedPage) / \(totalPages)")
-                        .typography(variant: .body1, weight: .medium)
                 }
                 
                 Text("Options").bold()

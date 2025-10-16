@@ -369,7 +369,6 @@ public struct TextArea: View {
                         typedCharacters = text.count
                     }
                     .scrollContentBackground(.hidden)
-                    .background(disable ? SwiftUI.Color.semantic(.fillAlternative) : .clear)
                     .padding(.horizontal, -4.5)
                     .padding(.top, -4)
                     .padding(.bottom, -6)
@@ -389,7 +388,6 @@ public struct TextArea: View {
                             variant: .body1Reading,
                             color: placeholderTextColor
                         )
-                        .background(disable ? SwiftUI.Color.semantic(.fillAlternative) : .clear)
                         .allowsHitTesting(false)
                 }
             }

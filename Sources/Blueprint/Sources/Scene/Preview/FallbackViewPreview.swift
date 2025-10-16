@@ -12,7 +12,6 @@ struct FallbackViewPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var showImage: Bool = true
     @State private var showTitle: Bool = true
-    @State private var showDescription: Bool = true
     @State private var showButton: Bool = true
     
     var body: some View {
@@ -39,7 +38,7 @@ struct FallbackViewPreview: View {
                         .frame(height: 320)
                     } : nil,
                     title: showTitle ? "타이틀이 들어갈수도 있고, 안들어갈 수도 있어요." : nil,
-                    description: showDescription ? "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요." : ""
+                    description: "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요."
                 ) {
                     Group {
                         if showButton {
@@ -55,11 +54,6 @@ struct FallbackViewPreview: View {
                     Control.switch(checked: showImage) { showImage = $0 }
                     Text("Title")
                     Control.switch(checked: showTitle) { showTitle = $0 }
-                }
-                
-                HStack {
-                    Text("Description")
-                    Control.switch(checked: showDescription) { showDescription = $0 }
                     Text("Button")
                     Control.switch(checked: showButton) { showButton = $0 }
                 }

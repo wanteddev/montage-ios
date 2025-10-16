@@ -64,11 +64,30 @@ class CheckerPatternCache {
     private init() {}
     
     func image(for size: CGSize, checkerSize: CGFloat, checkerColor: Color) -> UIImage {
-        let key = "\(size.width)x\(size.height)_\(checkerSize)" as NSString
+        let colorKey = colorToHexString(checkerColor)
+        let key = "\(size.width)x\(size.height)_\(checkerSize)_\(colorKey)" as NSString
         if let cached = cache.object(forKey: key) { return cached }
         let newImage = generateCheckerPattern(size: size, checkerSize: checkerSize, checkerColor: checkerColor)
         cache.setObject(newImage, forKey: key)
         return newImage
+    }
+    
+    private func colorToHexString(_ color: Color) -> String {
+        let uiColor = UIColor(color)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        return String(
+            format: "%02X%02X%02X%02X",
+            Int(red * 255),
+            Int(green * 255),
+            Int(blue * 255),
+            Int(alpha * 255)
+        )
     }
     
     private func generateCheckerPattern(size: CGSize, checkerSize: CGFloat, checkerColor: Color) -> UIImage {
