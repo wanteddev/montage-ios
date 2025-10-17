@@ -380,7 +380,7 @@ public struct Select: View {
                     if disable {
                         SwiftUI.Color.semantic(.fillAlternative)
                     } else {
-                        SwiftUI.Color.semantic(.backgroundTransparent)
+                        SwiftUI.Color.white.opacity(0.6)
                             .background(.ultraThinMaterial)
                     }
                 }
