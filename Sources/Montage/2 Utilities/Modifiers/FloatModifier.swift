@@ -87,24 +87,36 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             }
             .onDisappear {
                 if case .onViewDisappear = dismissPolicy {
-                    floatHC?.hide(animation: dismissingAnimation, completion: onDismiss)
+                    floatHC?.hide(animation: dismissingAnimation) {
+                        dismiss()
+                    }
                 }
             }
     }
 
     func present() {
+        animationWorkItem?.cancel()
+        animationWorkItem = nil
+        floatRootView?.onHitTest = nil
         floatRootView?.removeFromSuperview()
-        let floatHC = FloatHostingController(rootView: AnyView(floatView()))
+        floatRootView = nil
+        floatHC = nil
+        
+        let floatHC: FloatHostingController<AnyView> = FloatHostingController(rootView: AnyView(floatView()))
         self.floatHC = floatHC
         if let hostingView = floatHC.view,
            let topView = UIApplication.windows?.first {
             let hitTestingView = HitTestingView()
             floatRootView = hitTestingView
             if dismissPolicy.isOnTouchOutside {
-                floatRootView?.onHitTest = {
+                floatRootView?.onHitTest = { [weak floatHC, weak hitTestingView] in
                     if $0 == nil {
-                        floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
+                        floatHC?.hide(animation: dismissingAnimation) {
+                            updatingValue.wrappedValue = nil
+                            onDismiss?()
+                        }
                         isPresented = false
+                        hitTestingView?.onHitTest = nil
                     }
                 }
             }
@@ -115,28 +127,35 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             floatHC.show(animation: presentingAnimation)
 
             if case .after(let seconds) = dismissPolicy {
-                animationWorkItem?.cancel()
-
-                animationWorkItem = DispatchWorkItem {
-                    floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
+                let workItem = DispatchWorkItem { [weak floatHC, weak hitTestingView] in
+                    floatHC?.hide(animation: dismissingAnimation) {
+                        updatingValue.wrappedValue = nil
+                        onDismiss?()
+                    }
                     isPresented = false
-
-                    animationWorkItem = nil
+                    hitTestingView?.onHitTest = nil
                 }
+                
+                animationWorkItem = workItem
 
-                if let animationWorkItem {
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + seconds,
-                        execute: animationWorkItem
-                    )
-                }
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + seconds,
+                    execute: workItem
+                )
             }
         }
     }
 
     func dismiss() {
+        animationWorkItem?.cancel()
+        animationWorkItem = nil
+        floatRootView?.onHitTest = nil
         floatRootView?.removeFromSuperview()
+        floatRootView = nil
+        floatHC = nil
         isPresented = false
+        updatingValue.wrappedValue = nil
+        onDismiss?()
     }
 }
 

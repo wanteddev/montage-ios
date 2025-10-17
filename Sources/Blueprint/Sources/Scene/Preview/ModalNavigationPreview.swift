@@ -21,7 +21,7 @@ struct ModalNavigationPreview: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        ZStack {
+        VStack(spacing: 0) {
             ZStack(alignment: .top) {
                 ScrollView(
                     onOffsetChanged: { offset in
@@ -38,8 +38,10 @@ struct ModalNavigationPreview: View {
                                     .padding()
                             }
                         }
+                        .padding(.horizontal)
                     }
                 )
+                .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
                 
                 VStack {
                     ModalNavigation(scrollOffset: $contentOffset)
@@ -86,53 +88,48 @@ struct ModalNavigationPreview: View {
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
             }
             
-            VStack {
-                Spacer()
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Options").bold()
-                        Spacer()
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
-                    }
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
-                            .size(.small)
-                    }
-                    if case .floating = variants[variantIndex] {
-                        HStack {
-                            Text("alternative")
-                            Control.switch(checked: alternative) { alternative = $0 }
-                        }
-                        HStack {
-                            Text("background")
-                            Control.switch(checked: background) { background = $0 }
-                        }
-                    }
-                    HStack {
-                        Text("leadingButton")
-                        Control.switch(checked: leadingButton) { leadingButton = $0 }
-                        SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
-                            .size(.small)
-                    }
-                    HStack {
-                        Text("trailingButton")
-                        SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
-                            .size(.small)
-                        
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Options").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
                     }
                 }
-                .padding()
-                .background(SwiftUI.Color.semantic(.backgroundElevated))
+                HStack {
+                    Text("variant")
+                    SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
+                        .size(.small)
+                }
+                if case .floating = variants[variantIndex] {
+                    HStack {
+                        Text("alternative")
+                        Control.switch(checked: alternative) { alternative = $0 }
+                    }
+                    HStack {
+                        Text("background")
+                        Control.switch(checked: background) { background = $0 }
+                    }
+                }
+                HStack {
+                    Text("leadingButton")
+                    Control.switch(checked: leadingButton) { leadingButton = $0 }
+                    SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
+                        .size(.small)
+                }
+                HStack {
+                    Text("trailingButton")
+                    SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
+                        .size(.small)
+                    
+                }
             }
+            .padding()
+            .background(.regularMaterial)
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .navigationBarHidden(true)
     }
     

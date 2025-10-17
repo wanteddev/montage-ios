@@ -23,7 +23,7 @@ struct TextFieldPreview: View {
         
         var v: Montage.TextField.Status {
             switch self {
-            case .normal: .normal(description: "메세지에 마침표를 찍어요.")
+            case .normal: .normal()
             case .positive: .positive(description: "성공 메세지를 나타내요.")
             case .negative: .negative(description: "에러 메세지를 나타내요.")
             }
@@ -194,8 +194,7 @@ struct TextFieldPreview: View {
                     Text("Options").bold()
                     
                     HStack {
-                        Text("Status :")
-                            .typography(variant: .headline2, weight: .medium)
+                        Text("Status")
                         Menu(variant.selectableTitle) {
                             ForEach(Variant.allCases, id: \.self) { v in
                                 Button {
@@ -207,70 +206,39 @@ struct TextFieldPreview: View {
                         }
                         Spacer()
                         HStack {
-                            Text("Disable :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Button {
-                                disable.toggle()
-                            } label: {
-                                Text(disable ? "On" : "Off")
-                            }
+                            Text("Disable")
+                            Control.switch(checked: disable) { disable = $0 }
                         }
                     }
                     HStack {
                         HStack {
-                            Text("Heading :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Button {
-                                heading.toggle()
-                            } label: {
-                                Text(heading ? "On" : "Off")
-                            }
+                            Text("Heading")
+                            Control.switch(checked: heading) { heading = $0 }
                         }
                         Spacer()
                         HStack {
-                            Text("RequiredBadge :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Button {
-                                requiredBadge.toggle()
-                            } label: {
-                                Text(requiredBadge ? "On" : "Off")
-                            }
+                            Text("RequiredBadge")
+                            Control.switch(checked: requiredBadge) { requiredBadge = $0 }
                         }
                     }
                     HStack {
                         HStack {
-                            Text("Icon :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Button {
-                                icon.toggle()
-                            } label: {
-                                Text(icon ? "On" : "Off")
-                            }
+                            Text("Icon")
+                            Control.switch(checked: icon) { icon = $0 }
                         }
                         Spacer()
                         HStack {
-                            Text("Placeholder :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Button {
-                                placeholder.toggle()
-                            } label: {
-                                Text(placeholder ? "On" : "Off")
-                            }
+                            Text("Placeholder")
+                            Control.switch(checked: placeholder) { placeholder = $0 }
                         }
                     }
                     HStack {
                         HStack {
-                            Text("TrailingButton :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Button {
-                                trailingButton.toggle()
-                            } label: {
-                                Text(trailingButton ? "On" : "Off")
-                            }
+                            Text("TrailingButton")
+                            Control.switch(checked: trailingButton) { trailingButton = $0 }
                         }
                         Spacer()
-                        Text("TrailingContent :")
-                            .typography(variant: .headline2, weight: .medium)
+                        Text("TrailingContent")
                         Menu(trailingContent.selectableTitle) {
                             ForEach(Content.allCases, id: \.self) { c in
                                 Button {
@@ -282,13 +250,8 @@ struct TextFieldPreview: View {
                         }
                     }
                     HStack {
-                        Text("AutoComplete :")
-                            .typography(variant: .headline2, weight: .medium)
-                        Button {
-                            usingSuggestions.toggle()
-                        } label: {
-                            Text(usingSuggestions ? "On" : "Off")
-                        }
+                        Text("AutoComplete")
+                        Control.switch(checked: usingSuggestions) { usingSuggestions = $0 }
                     }
                     if usingSuggestions {
                         Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")

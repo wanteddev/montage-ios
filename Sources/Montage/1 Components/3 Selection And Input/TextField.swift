@@ -362,11 +362,6 @@ private extension TextField {
                             .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                     }
                 }
-                .onGeometryChange(
-                    for: CGRect.self,
-                    of: { $0.frame(in: .global) },
-                    action: { textFieldFrame = $0 }
-                )
             }
             .contentShape(RoundedRectangle(cornerRadius: 12))
             .onTapGesture {
@@ -392,6 +387,11 @@ private extension TextField {
             }
         }
         .frame(minHeight: 48)
+        .onGeometryChange(
+            for: CGRect.self,
+            of: { $0.frame(in: .global) },
+            action: { textFieldFrame = $0 }
+        )
         .background {
             if disable {
                 SwiftUI.Color.semantic(.fillAlternative)
@@ -415,14 +415,21 @@ private extension TextField {
             FloatModifier(
                 isPresented: (autoCompletionDataSource?.totalNumberOfItems ?? 0) > 0 && textFieldFocusState,
                 updatingValue: Binding(
-                    get: { "\(String(describing: autoCompletionDataSource)),\(autoCompletionContentHeight)" },
-                    set: { _ in }
+                    get: {
+                        if autoCompletionDataSource == nil || autoCompletionContentHeight == 0 {
+                            nil as String?
+                        } else {
+                            "\(String(describing: autoCompletionDataSource)),\(autoCompletionContentHeight)"
+                        }
+                    },
+                    set: {
+                        if $0 == nil {
+                            autoCompletionDataSource = nil
+                            autoCompletionContentHeight = 0
+                        }
+                    }
                 ),
                 dismissPolicy: .onTouchOutside,
-                onDismiss: {
-                    textFieldFocusState = false
-                    autoCompletionDataSource = nil
-                },
                 floatView: {
                     SwiftUI.ScrollView {
                         autoCompletionContent
@@ -431,12 +438,12 @@ private extension TextField {
                         width: textFieldFrame.width,
                         height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
-                    .background {
+                    .background(SwiftUI.Color.semantic(.backgroundNormal))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay {
                         RoundedRectangle(cornerRadius: 12)
                             .strokeBorder(SwiftUI.Color.semantic(.lineAlternative))
                     }
-                    .background(SwiftUI.Color.semantic(.backgroundNormal))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .position(
                         x: textFieldFrame.midX,
