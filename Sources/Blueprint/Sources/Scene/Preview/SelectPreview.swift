@@ -68,8 +68,8 @@ struct SelectPreview: View {
     
     @State private var items: [Select.Item] = [
         .init(text: "값1"),
-        .init(text: "값2"),
-        .init(text: "값3")
+        .init(text: "값2(icon)", icon: .apps),
+        .init(text: "값3(negative)", isNegative: true)
     ]
     
     var body: some View {
@@ -219,14 +219,14 @@ struct SelectPreview: View {
             case .few:
                 items = [
                     .init(text: "값1"),
-                    .init(text: "값2"),
-                    .init(text: "값3")
+                    .init(text: "값2(icon)", icon: .apps),
+                    .init(text: "값3(negative)", isNegative: true)
                 ]
             case .medium:
                 items = [
                     .init(text: "값1"),
-                    .init(text: "값2"),
-                    .init(text: "값3"),
+                    .init(text: "값2(icon)", icon: .apps),
+                    .init(text: "값3(negative)", isNegative: true),
                     .init(text: "값4"),
                     .init(text: "값5"),
                     .init(text: "값6"),
@@ -238,8 +238,8 @@ struct SelectPreview: View {
             case .many:
                 items = [
                     .init(text: "값1"),
-                    .init(text: "값2"),
-                    .init(text: "값3"),
+                    .init(text: "값2(icon)", icon: .apps),
+                    .init(text: "값3(negative)", isNegative: true),
                     .init(text: "값4"),
                     .init(text: "값5"),
                     .init(text: "값6"),
