@@ -94,6 +94,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             }
     }
 
+    @MainActor
     func present() {
         animationWorkItem?.cancel()
         animationWorkItem = nil
@@ -105,18 +106,17 @@ struct FloatModifier<V: Equatable>: ViewModifier {
         let floatHC: FloatHostingController<AnyView> = FloatHostingController(rootView: AnyView(floatView()))
         self.floatHC = floatHC
         if let hostingView = floatHC.view,
-           let topView = UIApplication.windows?.first {
+           let windowScene = UIApplication.shared.connectedScenes
+               .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+           let topView = windowScene.windows.first(where: { $0.isKeyWindow }) {
             let hitTestingView = HitTestingView()
             floatRootView = hitTestingView
             if dismissPolicy.isOnTouchOutside {
-                floatRootView?.onHitTest = { [weak floatHC, weak hitTestingView] in
+                floatRootView?.onHitTest = { [weak floatHC] in
                     if $0 == nil {
                         floatHC?.hide(animation: dismissingAnimation) {
-                            updatingValue.wrappedValue = nil
-                            onDismiss?()
+                            isPresented = false
                         }
-                        isPresented = false
-                        hitTestingView?.onHitTest = nil
                     }
                 }
             }
@@ -127,13 +127,10 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             floatHC.show(animation: presentingAnimation)
 
             if case .after(let seconds) = dismissPolicy {
-                let workItem = DispatchWorkItem { [weak floatHC, weak hitTestingView] in
+                let workItem = DispatchWorkItem { [weak floatHC] in
                     floatHC?.hide(animation: dismissingAnimation) {
-                        updatingValue.wrappedValue = nil
-                        onDismiss?()
+                        isPresented = false
                     }
-                    isPresented = false
-                    hitTestingView?.onHitTest = nil
                 }
                 
                 animationWorkItem = workItem
@@ -145,7 +142,8 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             }
         }
     }
-
+    
+    @MainActor
     func dismiss() {
         animationWorkItem?.cancel()
         animationWorkItem = nil
