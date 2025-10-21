@@ -203,7 +203,7 @@ struct TopNavigationPreview: View {
             VStack(alignment: .leading) {
                 ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
                     ZStack {
-                        SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                        SwiftUI.Color.semantic(.allCases[index]).opacity(0.3)
                         Text("Item \(index)")
                             .padding()
                     }

@@ -141,8 +141,17 @@ struct TextFieldPreview: View {
                 }
                 .onChange(of: text) { text in
                     if usingSuggestions {
+                        guard usingSuggestions else {
+                            autoCompletionDataSource = nil
+                            return
+                        }
+                        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !trimmed.isEmpty else {
+                            autoCompletionDataSource = nil
+                            return
+                        }
                         let suggestions = candidates
-                            .filter { $0.lowercased().contains(text.lowercased()) }
+                            .filter { $0.lowercased().contains(trimmed.lowercased()) }
                         autoCompletionDataSource = .init(
                             numberOfSections: 2,
                             sectionTitleAt: { section in
@@ -158,7 +167,7 @@ struct TextFieldPreview: View {
                                         autoCompletionDataSource = nil
                                     }
                                 }
-                                .highlight(text)
+                                .highlight(trimmed)
                                 .leadingContent {
                                     Group {
                                         if indexPath.section == 0 {
@@ -174,16 +183,16 @@ struct TextFieldPreview: View {
                                 }
                             },
                             headerView: {
-                                ListCell(title: "'\(text)' 사용하기") {
+                                ListCell(title: "'\(trimmed)' 사용하기") {
                                     autoCompletionDataSource = nil
                                 }
-                                .highlight(text)
+                                .highlight(trimmed)
                             },
                             footerView: {
-                                ListCell(title: "'\(text)' 사용하기") {
+                                ListCell(title: "'\(trimmed)' 사용하기") {
                                     autoCompletionDataSource = nil
                                 }
-                                .highlight(text)
+                                .highlight(trimmed)
                             },
                             maxHeight: 200
                         )

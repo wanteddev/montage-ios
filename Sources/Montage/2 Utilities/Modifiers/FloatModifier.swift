@@ -75,7 +75,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
         content
             .onChange(of: updatingValue.wrappedValue) {
                 if $0 != nil {
-                    present()
+                    isPresented = true
                 }
             }
             .onChange(of: isPresented) {
@@ -88,7 +88,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             .onDisappear {
                 if case .onViewDisappear = dismissPolicy {
                     floatHC?.hide(animation: dismissingAnimation) {
-                        dismiss()
+                        isPresented = false
                     }
                 }
             }
