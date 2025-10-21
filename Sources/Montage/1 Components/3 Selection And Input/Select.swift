@@ -376,10 +376,15 @@ public struct Select: View {
                     .frame(height: 24)
                 }
                 .padding(.all, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .foregroundStyle(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
-                )
+                .background {
+                    if disable {
+                        SwiftUI.Color.semantic(.fillAlternative)
+                    } else {
+                        SwiftUI.Color.white.opacity(0.6)
+                            .background(.ultraThinMaterial)
+                    }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
@@ -550,12 +555,18 @@ public struct Select: View {
                     size: .xsmall,
                     text: item.text
                 )
-                .backgroundColor(backgroundColor(item))
                 .fontColor(fontColor(item))
                 .imageColor(iconColor(item))
                 .trailingImage(Image.icon(.closeThick))
-                .if(item.icon != nil) {
-                    $0.leadingImage(Image.icon(item.icon!))
+                .modifying {
+                    var mutated = $0
+                    if let icon = item.icon {
+                        mutated = mutated.leadingImage(Image.icon(icon))
+                    }
+                    if item.isNegative {
+                        mutated = mutated.backgroundColor(.semantic(.statusNegative).opacity(0.05))
+                    }
+                    return mutated
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -570,15 +581,6 @@ public struct Select: View {
                 return .semantic(.statusNegative)
             } else {
                 return .semantic(.labelAlternative)
-            }
-        }
-        
-        private func backgroundColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .clear }
-            if item.isNegative {
-                return .semantic(.statusNegative).opacity(0.05)
-            } else {
-                return .clear
             }
         }
         
