@@ -37,7 +37,7 @@ struct ColorPreview: View {
                 Button(action: {
                     showTransparentChecker.toggle()
                 }) {
-                    Image(systemName: showTransparentChecker ? "cube.transparent.fill" : "cube.transparent")
+                    Image(systemName: "checkerboard.rectangle")
                         .foregroundColor(.semantic(.primaryNormal))
                 }
             }

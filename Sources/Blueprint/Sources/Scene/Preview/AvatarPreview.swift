@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct AvatarPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State var variantIndex: Int = 0
     @State var sizeIndex: Int = 0
     @State var customSize: CGFloat = 100
@@ -25,7 +26,16 @@ struct AvatarPreview: View {
             Text("Avatar").font(.title)
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Preview").bold()
+                    HStack {
+                        Text("Preview").bold()
+                        Spacer()
+                        Button(action: {
+                            showTransparentChecker.toggle()
+                        }) {
+                            Image(systemName: "checkerboard.rectangle")
+                                .foregroundColor(.semantic(.primaryNormal))
+                        }
+                    }
                     HStack {
                         Spacer()
                         Avatar(invalidUrl ? "https://invalid-url" : "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg", variant: variants[variantIndex], size: sizes[sizeIndex])
@@ -68,6 +78,7 @@ struct AvatarPreview: View {
             
             GroupAvatarPreview()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

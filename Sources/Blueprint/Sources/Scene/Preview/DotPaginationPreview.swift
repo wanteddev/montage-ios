@@ -9,54 +9,99 @@ import SwiftUI
 import Montage
 
 struct DotPaginationPreview: View {
-    @State var selectedPage: Int = 1
+    @State private var showTransparentChecker: Bool = false
+    @State private var selectedPage: Int = 1
+    @State private var totalPages: Int = 5
+    @State private var variantIndex: Int = 0
+    @State private var sizeIndex: Int = 0
+    
+    private let variants: [DotPagination.Variant] = [.normal, .white]
+    private let sizes: [DotPagination.Size] = [.normal, .small]
     
     var body: some View {
-        ZStack {
-            SwiftUI.Color.clear
-            Grid(horizontalSpacing: 30, verticalSpacing: 10) {
-                ForEach(1...9, id: \.self) { totalPages in
-                    GridRow {
-                        DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
-                        DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
-                            .size(.small)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
                     }
-                    GridRow {
-                        Group {
-                            DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
-                                .variant(.white)
-                            DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
-                                .variant(.white).size(.small)
-                        }
-                        .background {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(SwiftUI.Color.blue.opacity(0.5))
-                                .frame(height: 20)
-                                .padding(-10)
-                        }
+                }
+                
+                VStack(spacing: 20) {
+                    HStack {
+                        Spacer()
+                        DotPagination(selectedPage: $selectedPage, totalPages: totalPages)
+                            .variant(variants[variantIndex])
+                            .size(sizes[sizeIndex])
+                        Spacer()
                     }
-                    Text("\(selectedPage)/\(totalPages)")
-                        .typography(variant: .caption1)
+                    
+                    Text("\(selectedPage) / \(totalPages)")
+                }
+                
+                Text("Options").bold()
+                
+                HStack {
+                    Text("variant")
+                    SegmentedControl(
+                        selectedIndex: $variantIndex,
+                        labels: variants.map(\.description)
+                    )
+                    .size(.small)
                 }
                 
                 HStack {
-                    SwiftUI.Button("Previous") {
+                    Text("size")
+                    SegmentedControl(
+                        selectedIndex: $sizeIndex,
+                        labels: sizes.map(\.description)
+                    )
+                    .size(.small)
+                }
+                
+                HStack {
+                    Text("totalPages")
+                    SwiftUI.Slider(value: Binding(
+                        get: { Double(totalPages) },
+                        set: { totalPages = Int($0) }
+                    ), in: 1...10, step: 1)
+                    Text("\(totalPages)")
+                        .frame(width: 30)
+                }
+                
+                HStack {
+                    Spacer()
+                    Button(variant: .outlined, text: "Previous") {
                         if selectedPage > 1 {
                             selectedPage -= 1
                         }
                     }
-                    SwiftUI.Button("Next") {
-                        if selectedPage < 9 {
+                    .disable(selectedPage <= 1)
+                    
+                    Button(variant: .outlined, text: "Next") {
+                        if selectedPage < totalPages {
                             selectedPage += 1
                         }
                     }
+                    .disable(selectedPage >= totalPages)
+                    Spacer()
                 }
             }
-            
+            .font(.caption)
+            .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
+
+extension DotPagination.Variant: CaseDescribable {}
+extension DotPagination.Size: CaseDescribable {}
 
 #Preview {
     DotPaginationPreview()

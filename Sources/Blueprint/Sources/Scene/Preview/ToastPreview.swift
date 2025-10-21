@@ -11,10 +11,10 @@ import SwiftUI
 import Montage
 
 struct ToastPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var toastModel: Toast.Model?
     @State private var variantIndex: Int = 0
     @State private var toastShortDuration: Bool = false
-    @State private var showBGImage: Bool = false
     @State private var icon = false
     
     var variants: [Toast.Variant] {
@@ -28,32 +28,32 @@ struct ToastPreview: View {
     
     var body: some View {
         ZStack {
-            if showBGImage {
-                VStack {
-                    Spacer()
-                    Image("placeholder")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 140)
-                }
-            }
             ScrollView {
-                VStack(spacing: 12) {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Options").bold()
+                        Spacer()
+                        Button(action: {
+                            showTransparentChecker.toggle()
+                        }) {
+                            Image(systemName: "checkerboard.rectangle")
+                                .foregroundColor(.semantic(.primaryNormal))
+                        }
+                    }
                     HStack {
                         Text("variant")
                         SegmentedControl(selectedIndex: $variantIndex, labels: variants.map { $0.description })
                             .size(.small)
                     }
                     if case .normal = variants[variantIndex] {
-                        Toggle(isOn: $icon) {
+                        HStack {
                             Text("show icon")
+                            Control.switch(checked: icon) { icon = $0 }
                         }
                     }
-                    Toggle(isOn: $showBGImage) {
-                        Text("show background Image")
-                    }
-                    Toggle(isOn: $toastShortDuration) {
+                    HStack {
                         Text("short duration")
+                        Control.switch(checked: toastShortDuration) { toastShortDuration = $0 }
                     }
                     Button(
                         variant: .outlined,
@@ -66,7 +66,7 @@ struct ToastPreview: View {
             }
         }
         .toast($toastModel, duration: toastShortDuration ? .short : .long)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

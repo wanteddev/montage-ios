@@ -9,11 +9,10 @@ import SwiftUI
 import Montage
 
 struct PlayBadgePreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State var sizeIndex: Int = 0
     @State var isAlternative: Bool = false
-    @State var backgroundImageIndex = 0
     
-    let images = ["none", "wantedCircleSymbol", "Background", "placeholder"]
     let sizes: [PlayBadge.Size] = [
         .small,
         .medium,
@@ -23,22 +22,24 @@ struct PlayBadgePreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
-                ZStack {
-                    Image(images[backgroundImageIndex])
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
+                HStack {
+                    Spacer()
                     PlayBadge()
                         .size(sizes[sizeIndex])
                         .alternative(isAlternative)
+                    Spacer()
                 }
-                .frame(height: 400)
                 Text("Options").bold()
-                HStack {
-                    Text("bg Image")
-                    SegmentedControl(selectedIndex: $backgroundImageIndex, labels: images)
-                        .size(.small)
-                }
                 HStack {
                     Text("alternative")
                     Control.switch(checked: isAlternative) { isAlternative = $0 }
@@ -51,6 +52,7 @@ struct PlayBadgePreview: View {
             }
         }
         .padding()
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

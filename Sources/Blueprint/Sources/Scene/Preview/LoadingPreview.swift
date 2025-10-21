@@ -9,14 +9,26 @@ import SwiftUI
 import Montage
 
 struct LoadingPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State var alertPresented: Bool = false
     @State var isLoading: Bool = false
     @State var loadingType: Loading.Kind = .circular
+    @State var dimmer: Bool = true
     
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
-                Text("'로딩 시작'버튼을 눌러보세요.")
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
+                .padding(.horizontal)
                 
                 Spacer()
                 
@@ -38,10 +50,12 @@ struct LoadingPreview: View {
                 
                 Spacer()
             }
-            .loading($isLoading, type: loadingType, dimmedColor: .semantic(.materialDimmer))
+            .loading($isLoading, type: loadingType, dimmedColor: dimmer ? .semantic(.materialDimmer) : .clear)
             
-            VStack {
-                VStack {
+            VStack(alignment: .leading) {
+                Text("Options").bold()
+                HStack {
+                    Text("type")
                     Control.radio(checked: loadingType == .circular) { _ in
                         loadingType = .circular
                     }
@@ -51,7 +65,12 @@ struct LoadingPreview: View {
                     }
                     .label("wanted")
                 }
-                .padding(28)
+                HStack {
+                    Text("dimmer")
+                    Control.switch(checked: dimmer) { newValue in
+                        dimmer = newValue
+                    }
+                }
                 Button {
                     isLoading.toggle()
                 } label: {
@@ -64,11 +83,12 @@ struct LoadingPreview: View {
                         .foregroundStyle(.gray)
                 }
             }
+            .padding(.horizontal)
         }
         .alert(isLoading ? "😅지금은 얼럿이 뜨면 안되는데..??" : "👌지금은 얼럿 뜨는게 정상!ㅋㅋ", isPresented: $alertPresented) {
             
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

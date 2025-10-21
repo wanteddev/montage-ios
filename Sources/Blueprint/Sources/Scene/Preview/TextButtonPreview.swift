@@ -12,6 +12,7 @@ import SwiftUI
 import Montage
 
 struct TextButtonPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var colorIndex = 0
     @State private var sizeIndex = 0
     @State private var leadingIcon = false
@@ -30,7 +31,16 @@ struct TextButtonPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 
                     let color = colors[colorIndex]
                     let size = sizes[sizeIndex]
@@ -96,6 +106,7 @@ struct TextButtonPreview: View {
             .font(.caption)
             .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

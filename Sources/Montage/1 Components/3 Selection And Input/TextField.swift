@@ -392,7 +392,14 @@ private extension TextField {
             }
         }
         .frame(minHeight: 48)
-        .background(backgroundColor)
+        .background {
+            if disable {
+                SwiftUI.Color.semantic(.fillAlternative)
+            } else {
+                SwiftUI.Color.semantic(.backgroundTransparent)
+                    .background(.ultraThinMaterial)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         .allowsHitTesting(disable == false)
@@ -441,12 +448,6 @@ private extension TextField {
                 }
             )
         )
-    }
-    
-    var backgroundColor: SwiftUI.Color {
-        disable
-        ? .semantic(.interactionDisable)
-        : customBackgroundColor ?? .semantic(.backgroundNormal)
     }
     
     var captionTextColor: SwiftUI.Color {

@@ -10,11 +10,11 @@ import Montage
 import SwiftUI
 
 struct SnackBarPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var heading: String = "제목"
     @State private var description: String = "설명"
     @State private var snackBarModel: SnackBar.Model?
     @State private var showExtraContents: Bool = true
-    @State private var showBackgroundImage: Bool = false
     @State private var locationOption: LocationOption = .bottom
     @State private var offset: Double = 0
 
@@ -25,19 +25,18 @@ struct SnackBarPreview: View {
 
     var body: some View {
         ZStack {
-            if showBackgroundImage {
-                VStack {
-                    Spacer()
-                    Image("placeholder")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 200)
-                }
-            }
             VStack(spacing: 25) {
-                VStack {
-                    Text("Options").bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Options").bold()
+                        Spacer()
+                        Button(action: {
+                            showTransparentChecker.toggle()
+                        }) {
+                            Image(systemName: "checkerboard.rectangle")
+                                .foregroundColor(.semantic(.primaryNormal))
+                        }
+                    }
                     HStack {
                         Text("heading")
                         TextField(text: $heading)
@@ -46,11 +45,11 @@ struct SnackBarPreview: View {
                         Text("description")
                         TextField(text: $description)
                     }
-                    Toggle(isOn: $showExtraContents) {
+                    HStack {
                         Text("extraContents")
-                    }
-                    Toggle(isOn: $showBackgroundImage) {
-                        Text("show Background Image (for test)")
+                        Control.switch(checked: showExtraContents) {
+                            showExtraContents = $0
+                        }
                     }
                     HStack {
                         Text("location")
@@ -94,7 +93,7 @@ struct SnackBarPreview: View {
                 print("modify model nil to dismiss")
             }
         )
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

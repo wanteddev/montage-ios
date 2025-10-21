@@ -11,6 +11,7 @@ import SwiftUI
 import Montage
 
 struct ControlPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var stateIndex = 0
     @State private var state: Control.State = .unchecked
     @State private var checked: Bool = false
@@ -22,7 +23,7 @@ struct ControlPreview: View {
     @State private var label: String = ""
     @State private var bold: Bool = false
     @State private var customTypography = false
-    @State private var guideLine: Bool = true
+    @State private var guideLine: Bool = false
     
     private let sizes: [Control.Size] = [.small, .medium]
     private let states: [Control.State] = [.unchecked, .checked, .indeterminate]
@@ -33,8 +34,15 @@ struct ControlPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
-                    Text("guide line").font(.caption)
-                    Control.switch(checked: guideLine) { guideLine = $0 }
+                    Button(action: { guideLine.toggle() }) {
+                        Image(systemName: "rectangle.dashed")
+                    }
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 VStack {
                     HStack {
@@ -138,6 +146,7 @@ struct ControlPreview: View {
             }
             .padding(.horizontal)
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct AccordionPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var multilineTitle = false
     @State private var description = true
     @State private var content = true
@@ -24,7 +25,16 @@ struct AccordionPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 Group {
                     Accordion(
                         title: multilineTitle ? "제목이 두 줄이\n될 수도 있다고 합니다" : "제목",
@@ -90,7 +100,7 @@ struct AccordionPreview: View {
             .font(.caption)
             .padding()
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
     
     var dummyContent: some View {

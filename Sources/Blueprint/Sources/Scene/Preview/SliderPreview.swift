@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct SliderPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var variantIndex: Int = 0
     @State private var heading = true
     @State private var label = true
@@ -23,6 +24,12 @@ struct SliderPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 if variantIndex == 0 {
                     Slider(minValue: CGFloat(lowerBound), maxValue: CGFloat(upperBound), labelFormatter: { value in
@@ -96,6 +103,7 @@ struct SliderPreview: View {
                 }
             }
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

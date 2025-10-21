@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct DateTimePickerPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var selectedDate = Date()
     @State private var datePickerStyleIndex = 0
     @State private var isBottomSheetPresented = false
@@ -40,12 +41,22 @@ struct DateTimePickerPreview: View {
             }
             .padding(.horizontal)
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
     
     private var datePicker: some View {
         VStack(alignment: .leading) {
-            Text("Preview").bold()
+            HStack {
+                Text("Preview").bold()
+                Spacer()
+                Button(action: {
+                    showTransparentChecker.toggle()
+                }) {
+                    Image(systemName: "checkerboard.rectangle")
+                        .foregroundColor(.semantic(.primaryNormal))
+                }
+            }
             HStack {
                 Spacer(minLength: 0)
                 VStack {

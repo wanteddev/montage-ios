@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct BottomSheetModalPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var show = true
     
     @State private var text: String = ""
@@ -177,6 +178,7 @@ struct BottomSheetModalPreview: View {
             }
             : nil
         )
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
     

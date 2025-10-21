@@ -9,12 +9,10 @@ import SwiftUI
 import Montage
 
 struct CounterPaginationPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State var selectedPage: Int = 1
     @State var sizeIndex: Int = 0
     @State var isAlternative: Bool = false
-    @State var backgroundImageIndex = 0
-    
-    let images = ["none", "wantedCircleSymbol", "Background", "placeholder"]
     
     private let sizes: [CounterPagination.Size] = [
         .small,
@@ -24,22 +22,24 @@ struct CounterPaginationPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
-                ZStack {
-                    Image(images[backgroundImageIndex])
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 400)
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
+                HStack {
+                    Spacer()
                     CounterPagination(selectedPage: $selectedPage, totalPages: 10)
                         .size(sizes[sizeIndex])
                         .alternative(isAlternative)
+                    Spacer()
                 }
                 Text("Options").bold()
-                HStack {
-                    Text("bg Image")
-                    SegmentedControl(selectedIndex: $backgroundImageIndex, labels: images)
-                        .size(.small)
-                }
                 HStack {
                     Text("page")
                     SwiftUI.Button("Previous") {
@@ -65,6 +65,7 @@ struct CounterPaginationPreview: View {
             }
         }
         .padding()
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

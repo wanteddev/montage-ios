@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct CategoryPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State var showGuideLine: Bool = false
     @State var selectedIndex: Int = 0
     @State var items: [Select.Item] = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"].map { Select.Item(text: $0) }
@@ -26,8 +27,17 @@ struct CategoryPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
-                    .padding(.horizontal)
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
+                .padding(.horizontal)
                 
                 Category(selectedIndex: $selectedIndex, items: items.map(\.text), itemModifier: { index, actionChip in
                     actionChip.disabled(items[index].isSelected)
@@ -78,6 +88,7 @@ struct CategoryPreview: View {
             .padding(.horizontal)
             .alert("icon Button Pressed", isPresented: $alertPresented) {}
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

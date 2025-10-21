@@ -2,6 +2,7 @@ import SwiftUI
 import Montage
 
 struct ActionChipPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var variant: ActionChip.Variant = .solid
     @State private var size: ActionChip.Size = .medium
     @State private var text = "텍스트"
@@ -17,56 +18,69 @@ struct ActionChipPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 
-                ActionChip(
-                    variant: variant,
-                    size: size,
-                    text: text
-                )
-                .active(active)
-                .disabled(disable)
-                .modifying {
-                    if backgroundColor == .clear {
-                        $0
-                    } else {
-                        $0.backgroundColor(backgroundColor)
+                HStack {
+                    Spacer()
+                    ActionChip(
+                        variant: variant,
+                        size: size,
+                        text: text
+                    )
+                    .active(active)
+                    .disabled(disable)
+                    .modifying {
+                        if backgroundColor == .clear {
+                            $0
+                        } else {
+                            $0.backgroundColor(backgroundColor)
+                        }
                     }
-                }
-                .modifying {
-                    if fontColor == .clear {
-                        $0
-                    } else {
-                        $0.fontColor(fontColor)
+                    .modifying {
+                        if fontColor == .clear {
+                            $0
+                        } else {
+                            $0.fontColor(fontColor)
+                        }
                     }
-                }
-                .modifying {
-                    if activeColor == .clear {
-                        $0
-                    } else {
-                        $0.activeColor(activeColor)
+                    .modifying {
+                        if activeColor == .clear {
+                            $0
+                        } else {
+                            $0.activeColor(activeColor)
+                        }
                     }
-                }
-                .modifying {
-                    if imageColor == .clear {
-                        $0
-                    } else {
-                        $0.imageColor(imageColor)
+                    .modifying {
+                        if imageColor == .clear {
+                            $0
+                        } else {
+                            $0.imageColor(imageColor)
+                        }
                     }
-                }
-                .modifying {
-                    if leadingImage {
-                        $0.leadingImage(Image.icon(.bell))
-                    } else {
-                        $0
+                    .modifying {
+                        if leadingImage {
+                            $0.leadingImage(Image.icon(.bell))
+                        } else {
+                            $0
+                        }
                     }
-                }
-                .modifying {
-                    if trailingImage {
-                        $0.trailingImage(Image.icon(.bell))
-                    } else {
-                        $0
+                    .modifying {
+                        if trailingImage {
+                            $0.trailingImage(Image.icon(.bell))
+                        } else {
+                            $0
+                        }
                     }
+                    Spacer()
                 }
                 
                 Text("Options").bold()
@@ -140,6 +154,7 @@ struct ActionChipPreview: View {
             .font(.caption)
             .padding()
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

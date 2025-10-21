@@ -9,27 +9,27 @@ import SwiftUI
 import Montage
 
 struct VerticalProgressTrackerPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var progress: Int = 1
     @State private var isLabelExist = true
     @State private var isAccessoryExist = true
     @State private var isContentExist = true
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Label")
-                Control.switch(checked: isLabelExist) {
-                    isLabelExist = $0
-                    isAccessoryExist = $0
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
-                Text("Label Accessory")
-                Control.switch(checked: isAccessoryExist) { isAccessoryExist = $0 }
-                Text("Content")
-                Control.switch(checked: isContentExist) { isContentExist = $0 }
-            }
-            .font(.caption)
-            
-            VerticalProgressTracker(
+                
+                VerticalProgressTracker(
                 progress: $progress,
                 stepContents: [
                     .init(
@@ -81,13 +81,41 @@ struct VerticalProgressTrackerPreview: View {
                     )
                 ]
             )
-            Spacer(minLength: 0)
+            
+            Text("Options").bold()
+            
             HStack {
-                SwiftUI.Button("Prev") { progress = max(1, progress - 1) }
-                SwiftUI.Button("Next") { progress = min(progress + 1, 5) }
+                Text("Label")
+                Control.switch(checked: isLabelExist) {
+                    isLabelExist = $0
+                    isAccessoryExist = $0
+                }
+                Text("Label Accessory")
+                Control.switch(checked: isAccessoryExist) { isAccessoryExist = $0 }
+                Text("Content")
+                Control.switch(checked: isContentExist) { isContentExist = $0 }
             }
+            
+            HStack {
+                Spacer()
+                Button(variant: .outlined, text: "Previous") {
+                    progress = max(1, progress - 1)
+                }
+                .disable(progress <= 1)
+                
+                Button(variant: .outlined, text: "Next") {
+                    progress = min(progress + 1, 5)
+                }
+                .disable(progress >= 5)
+                Spacer()
+            }
+            
+            Spacer(minLength: 0)
+            }
+            .font(.caption)
+            .padding()
         }
-        .padding()
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }

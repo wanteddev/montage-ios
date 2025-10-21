@@ -54,6 +54,7 @@ struct TextAreaPreview: View {
         ]
     }
     
+    @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
     @State private var resize: Resize = .normal
     @State private var negative: Bool = false
@@ -75,6 +76,12 @@ struct TextAreaPreview: View {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
                 TextArea(text: $text, focus: $focusState)
                     .resize(resize.r)
@@ -222,7 +229,7 @@ struct TextAreaPreview: View {
                 text = ""
             }
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

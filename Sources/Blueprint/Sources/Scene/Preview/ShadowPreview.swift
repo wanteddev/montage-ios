@@ -9,11 +9,21 @@ import SwiftUI
 import Montage
 
 struct ShadowPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var levelIndex = 0
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Preview").bold()
+            HStack {
+                Text("Preview").bold()
+                Spacer()
+                Button(action: {
+                    showTransparentChecker.toggle()
+                }) {
+                    Image(systemName: "checkerboard.rectangle")
+                        .foregroundColor(.semantic(.primaryNormal))
+                }
+            }
             
             VStack {
                 RoundedRectangle(cornerRadius: 12)
@@ -31,6 +41,7 @@ struct ShadowPreview: View {
             Spacer()
         }
         .padding(.horizontal)
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

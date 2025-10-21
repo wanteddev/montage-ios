@@ -10,6 +10,7 @@ import SwiftUI
 import Montage
 
 struct ListCardPreview: View {
+    @State private var showTransparentChecker: Bool = false
     @State private var multilineTitle: Bool = false
     @State private var skeletonIsOn: Bool = false
     @State private var showCaption: Bool = false
@@ -26,7 +27,16 @@ struct ListCardPreview: View {
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
-                Text("Preview").bold()
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
+                }
                 
                 ListCard(
                     thumbnail: {
@@ -117,6 +127,7 @@ struct ListCardPreview: View {
                 skeletonIsOn = false
             }
         }
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
