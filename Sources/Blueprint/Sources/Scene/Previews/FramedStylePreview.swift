@@ -13,9 +13,7 @@ struct FramedStylePreview: View {
     @State private var statusIndex: Int = 0
     @State private var borderRadius: CGFloat = 0
     @State private var shadowIndex: Int = 0
-    @State private var selected: Bool = false
     @State private var disabled: Bool = false
-    @State private var negative: Bool = false
     
     var body: some View {
         ScrollView {

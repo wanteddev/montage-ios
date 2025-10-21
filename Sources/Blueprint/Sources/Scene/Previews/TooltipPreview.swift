@@ -102,12 +102,8 @@ struct TooltipPreview: View {
                 show = false
             }
         }
-        .modifying { origin in
-            if adjustZIndex {
-                origin.zIndex(1)
-            } else {
-                origin
-            }
+        .if(adjustZIndex) {
+            $0.zIndex(1)
         }
     }
     

@@ -19,7 +19,7 @@ import SwiftUI
 ///     size: .medium,
 ///     text: "액션"
 /// )
-/// .backgroundColor(.semantic(.primary))
+/// .backgroundColor(.semantic(.primaryNormal))
 /// .fontColor(.semantic(.staticWhite))
 /// .leadingImage(Image(systemName: "heart"))
 /// ```

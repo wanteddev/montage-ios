@@ -82,7 +82,7 @@ public struct Button: View {
     ///
     /// - Parameters:
     ///   - variant: 버튼의 스타일, 기본값은 `.solid`
-    ///   - color: 버튼의 변형, 기본값은 `.primary`
+    ///   - color: 버튼의 색상 스타일, 기본값은 `.primary`
     ///   - size: 버튼의 크기, 기본값은 `.large`
     ///   - text: 버튼에 표시할 텍스트
     ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
@@ -117,7 +117,8 @@ public struct Button: View {
     /// ```
     ///
     /// - Parameters:
-    ///   - color: 버튼의 변형, 기본값은 `.primary`
+    ///   - variant: 버튼의 스타일, 기본값은 `.solid`
+    ///   - color: 버튼의 색상 스타일, 기본값은 `.primary`
     ///   - size: 버튼의 크기, 기본값은 `.large`
     ///   - icon: 버튼에 표시할 아이콘
     ///   - handler: 버튼 탭 시 실행할 핸들러

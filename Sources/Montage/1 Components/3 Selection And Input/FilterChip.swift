@@ -20,7 +20,7 @@ import SwiftUI
 ///     text: "카테고리",
 ///     state: $state
 /// )
-/// .backgroundColor(.semantic(.primary))
+/// .backgroundColor(.semantic(.primaryNormal))
 /// .fontColor(.semantic(.staticWhite))
 /// .active(true)
 /// .activeLabel("최신순")

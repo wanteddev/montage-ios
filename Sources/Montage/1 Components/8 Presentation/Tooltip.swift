@@ -11,40 +11,37 @@ import SwiftUI
 ///
 /// 툴팁은 사용자가 특정 UI 요소를 이해하는데 도움이 되는 짧은 설명을 보여주기 위해 사용됩니다.
 /// 화살표가 있는 말풍선 형태로 표시되며, 화살표의 위치와 방향을 설정할 수 있습니다.
-/// 또한 닫기 버튼과 액션 버튼을 추가할 수 있습니다.
 ///
 /// ```swift
-/// // 기본 툴팁 표시
+/// // 버튼을 클릭하면 표시되는 툴팁 (click 모드)
 /// @State private var showTooltip = false
 ///
-/// Button("도움말") {
+/// Button {
 ///     showTooltip.toggle()
-/// }
-/// .modifier(
-///     Tooltip.Modifier(
-///         isPresented: $showTooltip,
-///         position: .top(),
-///         message: "이 버튼을 클릭하면 도움말이 표시됩니다."
-///     )
+/// }, label: {
+///     HStack {
+///         Text("Montage")
+///         Image.icon(.circleInfo)
+///     }
+/// })
+/// .tooltip(
+///     isPresented: $showTooltip,
+///     mode: .click,
+///     position: .top(),
+///     message: "Montage는 컴포넌트 기반의 디자인 시스템입니다."
 /// )
 ///
-/// // 버튼이 있는 툴팁
+/// // 화면에 진입하면 표시되는 툴팁 (always 모드)
 /// Button("설정") {
 ///     showTooltip.toggle()
+///     setupSomething() // 설정 화면으로 이동
 /// }
-/// .modifier(
-///     Tooltip.Modifier(
-///         isPresented: $showTooltip,
-///         position: .bottom(arrowPosition: .leading),
-///         message: "서비스 이용을 위해 설정이 필요합니다.",
-///         showCloseButton: true,
-///         buttonInfo: Tooltip.ButtonInfo(
-///             title: "설정하기",
-///             action: {
-///                 // 설정 화면으로 이동
-///             }
-///         )
-///     )
+/// .tooltip(
+///     isPresented: $showTooltip,
+///     mode: .always,
+///     position: .bottom(arrowPosition: .leading),
+///     size: .small,
+///     message: "서비스 이용을 위해 설정이 필요합니다."
 /// )
 /// ```
 public enum Tooltip {
@@ -53,9 +50,9 @@ public enum Tooltip {
     
     /// 툴팁의 표시 모드를 정의하는 열거형입니다.
     public enum ActionMode {
-        /// 클릭 시에 표시되는 툴팁. 백그라운드를 터치하거나 스크롤을 할 시 닫힙니다.
+        /// 백그라운드를 터치하거나 스크롤을 할 시 닫힙니다. 주로 클릭 시에 표시되는 툴팁에 사용됩니다.
         case click
-        /// 화면이 노출될 때 항상 표시되는 툴팁. 툴팁에 있는 버튼을 통해서만 닫힙니다.
+        /// 바인딩으로만 닫힘을 제어할 수 있습니다. 주로 화면이 노출될 때 항상 표시되는 툴팁에 사용됩니다.
         case always
     }
 
@@ -139,32 +136,12 @@ public enum Tooltip {
             }
         }
     }
-    
-    /// 툴팁에 표시되는 버튼의 정보를 정의하는 구조체입니다.
-    public struct ButtonInfo: Equatable {
-        public let title: String
-        public let action: () -> Void
-        
-        /// ButtonInfo를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - title: 버튼에 표시될 텍스트
-        ///   - action: 버튼 클릭 시 실행될 동작
-        public init(title: String, action: @escaping () -> Void) {
-            self.title = title
-            self.action = action
-        }
-        
-        public static func == (lhs: Tooltip.ButtonInfo, rhs: Tooltip.ButtonInfo) -> Bool {
-            lhs.title == rhs.title
-        }
-    }
 
     struct Modifier: ViewModifier {
         // MARK: - Initializer
 
         @Binding private var isPresented: Bool
-        private let mode: ActionMode?
+        private let mode: ActionMode
         private let position: Position
         private let size: Size
         private let message: String
@@ -184,7 +161,6 @@ public enum Tooltip {
         }
 
         @State private var originFrame: CGRect = .zero
-        @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
         // MARK: - Body
 
@@ -305,7 +281,6 @@ struct TooltipView: View {
                             arrowBaseRadius: 4
                         )
                     )
-//                    .frame(width: tooltipSize.width, height: tooltipSize.height)
             }
             .frame(maxWidth: 280)
             .fixedSize(horizontal: true, vertical: false)
@@ -574,11 +549,10 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 툴팁의 표시 여부를 제어하는 바인딩
+    ///   - mode: 툴팁의 표시 모드
     ///   - position: 툴팁이 표시될 위치 및 화살표 위치
+    ///   - size: 툴팁의 크기, 기본값은 `.medium`
     ///   - message: 툴팁에 표시될 메시지
-    ///   - showArrow: 화살표 표시 여부 (기본값: true)
-    ///   - showCloseButton: 닫기 버튼 표시 여부 (기본값: false)
-    ///   - buttonInfo: 툴팁에 추가할 버튼 정보 (선택 사항)
     /// - Returns: 툴팁이 적용된 뷰
     public func tooltip(
         isPresented: Binding<Bool>,
