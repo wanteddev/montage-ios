@@ -1,0 +1,85 @@
+//
+//  TransparentCheckerPatternModifier.swift
+//  Views
+//
+//  Created by 김삼열 on 10/16/25.
+//  Copyright © 2025 WantedLab Inc. All rights reserved.
+//
+
+import SwiftUI
+
+struct TransparentCheckerPatternModifier: ViewModifier {
+    private let isPresented: Bool
+    private let checkerSize: CGFloat
+    
+    init(isPresented: Bool, checkerSize: CGFloat = 8) {
+        self.isPresented = isPresented
+        self.checkerSize = checkerSize
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .background(
+                // 투명도 체커 패턴
+                Group {
+                    if isPresented {
+                        GeometryReader { geometry in
+                            let width = geometry.size.width
+                            let height = geometry.size.height
+                            
+                            // 캐시된 체커 패턴 이미지 사용
+                            Image(uiImage: CheckerPatternCache.shared.image(for: CGSize(width: width, height: height), checkerSize: checkerSize))
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        }
+                    }
+                }
+            )
+    }
+}
+
+class CheckerPatternCache {
+    static let shared = CheckerPatternCache()
+    private let cache = NSCache<NSString, UIImage>()
+    
+    private init() {}
+    
+    func image(for size: CGSize, checkerSize: CGFloat) -> UIImage {
+        let key = "\(size.width)x\(size.height)_\(checkerSize)" as NSString
+        if let cached = cache.object(forKey: key) { return cached }
+        let newImage = generateCheckerPattern(size: size, checkerSize: checkerSize)
+        cache.setObject(newImage, forKey: key)
+        return newImage
+    }
+    
+    private func generateCheckerPattern(size: CGSize, checkerSize: CGFloat) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { context in
+            let cgContext = context.cgContext
+            
+            // 흰색 배경
+            cgContext.setFillColor(UIColor.white.cgColor)
+            cgContext.fill(CGRect(origin: .zero, size: size))
+            
+            // 회색 체커 패턴
+            cgContext.setFillColor(UIColor.gray.withAlphaComponent(0.3).cgColor)
+            
+            let rows = Int(size.height / checkerSize) + 1
+            let cols = Int(size.width / checkerSize) + 1
+            
+            for row in 0..<rows {
+                for col in 0..<cols {
+                    if (row + col) % 2 == 1 {
+                        let rect = CGRect(
+                            x: CGFloat(col) * checkerSize,
+                            y: CGFloat(row) * checkerSize,
+                            width: checkerSize,
+                            height: checkerSize
+                        )
+                        cgContext.fill(rect)
+                    }
+                }
+            }
+        }
+    }
+}
