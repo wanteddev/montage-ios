@@ -199,32 +199,18 @@ struct TopNavigationPreview: View {
     }
     
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Preview").bold()
-                        Spacer()
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
-                    }
-                    
-                    VStack(spacing: 0) {
-                        ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
-                            ZStack {
-                                SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
-                                Text("Item \(index)")
-                                    .padding()
-                            }
-                        }
+        VStack(spacing: 0) {
+            VStack(alignment: .leading) {
+                ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
+                    ZStack {
+                        SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                        Text("Item \(index)")
+                            .padding()
                     }
                 }
-                .padding()
             }
+            .padding(.horizontal)
+            .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
             .topNavigation(
                 variant: v,
                 title: {
@@ -239,126 +225,107 @@ struct TopNavigationPreview: View {
                 withBottom: actionAreaModel
             )
             
-            VStack {
-                Spacer()
-                VStack(alignment: .leading) {
+            VStack(alignment: .leading) {
+                HStack {
                     Text("Options").bold()
-                    
-                    HStack {
-                        Text("Variant :")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Menu(variant.selectableTitle) {
-                            ForEach(Variant.allCases, id: \.self) { v in
-                                Button {
-                                    variant = v
-                                } label: {
-                                    Text(v.selectableTitle)
-                                }
-                            }
-                        }
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
                     }
-                    if case .floating = variant {
-                        HStack {
-                            Text("Alternative :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
+                }
+                HStack {
+                    Text("Variant")
+                    Spacer()
+                    Menu(variant.selectableTitle) {
+                        ForEach(Variant.allCases, id: \.self) { v in
                             Button {
-                                alternative.toggle()
+                                variant = v
                             } label: {
-                                Text(alternative ? "On" : "Off")
+                                Text(v.selectableTitle)
                             }
-                        }
-                        HStack {
-                            Text("Background :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Button {
-                                background.toggle()
-                            } label: {
-                                Text(background ? "On" : "Off")
-                            }
-                        }
-                    }
-                    HStack {
-                        Text("LeadingContent :")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Menu(leading.selectableTitle) {
-                            ForEach(LeadingContentsKind.allCases, id: \.self) { action in
-                                Button {
-                                    leading = action
-                                } label: {
-                                    Text(action.selectableTitle)
-                                }
-                            }
-                        }
-                    }
-                    HStack {
-                        Text("Add TrailingContents : ")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Menu("추가") {
-                            ForEach(TrailingButton.allCases, id: \.self) { action in
-                                Button {
-                                    trailing.append(action)
-                                } label: {
-                                    Text(action.selectableTitle)
-                                }
-                            }
-                        }
-                    }
-                    HStack {
-                        Text("TrailingContents Disable: ")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Button {
-                            trailingContentsDisable.toggle()
-                        } label: {
-                            Text(trailingContentsDisable ? "true" : "false")
-                        }
-                    }
-                    HStack {
-                        Text("BackgroundColor: ")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Picker(
-                            "BackgroundColor",
-                            selection: $selectedBackgroundColorName,
-                            content: {
-                                ForEach(Color.Semantic.allCases, id: \.self) { color in
-                                    Text(color.rawValue)
-                                }
-                            }
-                        )
-                        .pickerStyle(.menu)
-                    }
-                    HStack {
-                        Text("ActionArea:")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Button {
-                            actionArea.toggle()
-                        } label: {
-                            Text(actionArea ? "On" : "Off")
-                        }
-                    }
-                    if actionArea {
-                        HStack {
-                            Text("sub")
-                            Control.switch(checked: actionAreaSub) { actionAreaSub = $0 }
-                            Text("alt")
-                            Control.switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
-                            Text("caption")
-                            Control.switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
-                            Text("extra")
-                            Control.switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
                         }
                     }
                 }
-                .padding()
-                .background(SwiftUI.Color.semantic(.backgroundElevated))
+                if case .floating = variant {
+                    HStack {
+                        Text("Alternative")
+                        Spacer()
+                        Control.switch(checked: alternative) { alternative = $0 }
+                    }
+                    HStack {
+                        Text("Background")
+                        Spacer()
+                        Control.switch(checked: background) { background = $0 }
+                    }
+                }
+                HStack {
+                    Text("LeadingContent")
+                    Spacer()
+                    Menu(leading.selectableTitle) {
+                        ForEach(LeadingContentsKind.allCases, id: \.self) { action in
+                            Button {
+                                leading = action
+                            } label: {
+                                Text(action.selectableTitle)
+                            }
+                        }
+                    }
+                }
+                HStack {
+                    Text("Add TrailingContents")
+                    Spacer()
+                    Menu("추가") {
+                        ForEach(TrailingButton.allCases, id: \.self) { action in
+                            Button {
+                                trailing.append(action)
+                            } label: {
+                                Text(action.selectableTitle)
+                            }
+                        }
+                    }
+                }
+                HStack {
+                    Text("TrailingContents Disable")
+                    Spacer()
+                    Control.switch(checked: trailingContentsDisable) { trailingContentsDisable = $0 }
+                }
+                HStack {
+                    Text("BackgroundColor")
+                    Spacer()
+                    Picker(
+                        "BackgroundColor",
+                        selection: $selectedBackgroundColorName,
+                        content: {
+                            ForEach(Color.Semantic.allCases, id: \.self) { color in
+                                Text(color.rawValue)
+                            }
+                        }
+                    )
+                    .pickerStyle(.menu)
+                }
+                HStack {
+                    Text("ActionArea")
+                    Spacer()
+                    Control.switch(checked: actionArea) { actionArea = $0 }
+                }
+                if actionArea {
+                    HStack {
+                        Text("sub")
+                        Control.switch(checked: actionAreaSub) { actionAreaSub = $0 }
+                        Text("alt")
+                        Control.switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
+                        Text("caption")
+                        Control.switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
+                        Text("extra")
+                        Control.switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
+                    }
+                }
             }
+            .padding()
+            .background(.regularMaterial)
         }
         .toast($toast)
         .navigationBarHidden(true)
@@ -367,8 +334,6 @@ struct TopNavigationPreview: View {
         ) { color in
             backgroundColor = .semantic(color)
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
