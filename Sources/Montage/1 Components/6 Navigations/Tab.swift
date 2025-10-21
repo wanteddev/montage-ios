@@ -66,6 +66,7 @@ public struct Tab: View {
     // MARK: - Initializer
     @Binding private var selectedIndex: Int
     private let items: [String]
+    private let itemDisabled: (_ index: Int) -> Bool
     private let actions: (Int) -> Void
 
     /// 탭 컴포넌트를 초기화합니다.
@@ -73,14 +74,20 @@ public struct Tab: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 탭의 인덱스를 바인딩하는 변수
     ///   - items: 탭 항목 텍스트 배열
+    ///   - itemDisabled: 탭 항목 비활성화 여부를 결정하는 클로저, 인덱스를 파라미터로 받음 (기본값: 빈 클로저)
     ///   - actions: 탭 선택 시 호출되는 클로저, 선택된 인덱스를 파라미터로 받음 (기본값: 빈 클로저)
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
+        itemDisabled: @escaping (_ index: Int) -> Bool = { _ in false },
         actions: @escaping (Int) -> Void = { _ in }
     ) {
         _selectedIndex = selectedIndex
         self.items = items
+        self.itemDisabled = { index in
+            guard index >= 0, index < items.count else { return false }
+            return itemDisabled(index)
+        }
         self.actions = actions
     }
     
@@ -103,8 +110,7 @@ public struct Tab: View {
                                                 .typography(
                                                     variant: itemFontVariant,
                                                     weight: .bold,
-                                                    semantic: index == selectedIndex ? .labelStrong :
-                                                        .labelAssistive
+                                                    color: itemTextColor(index)
                                                 )
                                                 .multilineTextAlignment(.center)
                                                 .frame(height: itemHeight)
@@ -115,6 +121,7 @@ public struct Tab: View {
                                         }
                                         .contentShape(Rectangle())
                                         .onTapGesture {
+                                            guard !itemDisabled(index) else { return }
                                             withAnimation(animation) {
                                                 selectedIndex = index
                                             }
@@ -133,7 +140,7 @@ public struct Tab: View {
                                 }
                                 SwiftUI.Divider()
                                     .frame(width: itemWidths[safe: selectedIndex] ?? 0, height: 2)
-                                    .background(SwiftUI.Color.semantic(.labelStrong))
+                                    .background(activeItemBarColor(selectedIndex))
                                     .offset(
                                         x: itemWidths.enumerated()
                                             .filter { $0.offset < selectedIndex }
@@ -251,6 +258,20 @@ private extension Tab {
         case .small: 40
         case .medium: 48
         case .large: 56
+        }
+    }
+    
+    func activeItemBarColor(_ index: Int) -> SwiftUI.Color {
+        .semantic(itemDisabled(index) ? .fillAlternative : .labelStrong)
+    }
+    
+    func itemTextColor(_ index: Int) -> SwiftUI.Color {
+        if itemDisabled(index) {
+            .semantic(.labelDisable)
+        } else if index == selectedIndex {
+            .semantic(.labelStrong)
+        } else {
+            .semantic(.labelAssistive)
         }
     }
     
