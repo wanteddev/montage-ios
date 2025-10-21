@@ -131,13 +131,18 @@ struct BottomSheetModalPreview: View {
                     .font(.caption)
                     
                     VStack(spacing: 0) {
-                        ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { _ in
-                            HStack {
-                                Text("텍스트입니다")
-                                TextField(text: $text)
+                        ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
+                            ZStack {
+                                let color = Color.Semantic.allCases[index % Color.Semantic.allCases.count]
+                                Rectangle()
+                                    .foregroundStyle(SwiftUI.Color.semantic(color))
+                                Text(color.rawValue)
+                                    .shadow(color: .white, radius: 1)
                             }
+                            .frame(height: 48)
                         }
                     }
+                    .border(.black)
                 }
             },
             navigation: navigation
@@ -231,7 +236,7 @@ struct BottomSheetModalPreview: View {
         ]
     }
     
-    private var itemCounts = [1, 5, 10]
+    private var itemCounts = [1, 5, 100]
     
     private enum ActionAreaButtons: String, CaseIterable {
         case main
