@@ -140,54 +140,61 @@ struct TextFieldPreview: View {
                     }
                 }
                 .onChange(of: text) { text in
-                    if usingSuggestions {
-                        let suggestions = candidates
-                            .filter { $0.lowercased().contains(text.lowercased()) }
-                        autoCompletionDataSource = .init(
-                            numberOfSections: 2,
-                            sectionTitleAt: { section in
-                                "\(section+1)번째 섹션"
-                            },
-                            numberOfItemsInSection: { _ in
-                                suggestions.count
-                            },
-                            cellForItemAt: { indexPath in
-                                ListCell(title: suggestions[indexPath.row]) {
-                                    self.text = suggestions[indexPath.row]
-                                    Task {
-                                        autoCompletionDataSource = nil
-                                    }
-                                }
-                                .highlight(text)
-                                .leadingContent {
-                                    Group {
-                                        if indexPath.section == 0 {
-                                            Image.icon(.search)
-                                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
-                                        } else {
-                                            Avatar("", variant: .company, size: .medium)
-                                        }
-                                    }
-                                }
-                                .if(indexPath.section == 1) {
-                                    $0.caption("캡션")
-                                }
-                            },
-                            headerView: {
-                                ListCell(title: "'\(text)' 사용하기") {
-                                    autoCompletionDataSource = nil
-                                }
-                                .highlight(text)
-                            },
-                            footerView: {
-                                ListCell(title: "'\(text)' 사용하기") {
-                                    autoCompletionDataSource = nil
-                                }
-                                .highlight(text)
-                            },
-                            maxHeight: 200
-                        )
+                    guard usingSuggestions else {
+                        autoCompletionDataSource = nil
+                        return
                     }
+                    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !trimmed.isEmpty else {
+                        autoCompletionDataSource = nil
+                        return
+                    }
+                    let suggestions = candidates
+                        .filter { $0.lowercased().contains(trimmed.lowercased()) }
+                    autoCompletionDataSource = .init(
+                        numberOfSections: 2,
+                        sectionTitleAt: { section in
+                            "\(section+1)번째 섹션"
+                        },
+                        numberOfItemsInSection: { _ in
+                            suggestions.count
+                        },
+                        cellForItemAt: { indexPath in
+                            ListCell(title: suggestions[indexPath.row]) {
+                                self.text = suggestions[indexPath.row]
+                                Task {
+                                    autoCompletionDataSource = nil
+                                }
+                            }
+                            .highlight(trimmed)
+                            .leadingContent {
+                                Group {
+                                    if indexPath.section == 0 {
+                                        Image.icon(.search)
+                                            .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                                    } else {
+                                        Avatar("", variant: .company, size: .medium)
+                                    }
+                                }
+                            }
+                            .if(indexPath.section == 1) {
+                                $0.caption("캡션")
+                            }
+                        },
+                        headerView: {
+                            ListCell(title: "'\(trimmed)' 사용하기") {
+                                autoCompletionDataSource = nil
+                            }
+                            .highlight(trimmed)
+                        },
+                        footerView: {
+                            ListCell(title: "'\(trimmed)' 사용하기") {
+                                autoCompletionDataSource = nil
+                            }
+                            .highlight(trimmed)
+                        },
+                        maxHeight: 200
+                    )
                 }
                 
                 VStack(alignment: .leading, spacing: 12) {

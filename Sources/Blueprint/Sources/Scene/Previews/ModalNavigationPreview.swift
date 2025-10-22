@@ -31,11 +31,13 @@ struct ModalNavigationPreview: View {
                         SwiftUI.Color.clear
                             .frame(height: scrollViewTopPadding)
                         
-                        ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
-                            ZStack {
-                                SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
-                                Text("Item \(index)")
-                                    .padding()
+                        LazyVStack(spacing: 0) {
+                            ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
+                                ZStack {
+                                    SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                                    Text("Item \(index)")
+                                        .padding()
+                                }
                             }
                         }
                         .padding(.horizontal)

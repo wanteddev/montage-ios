@@ -99,68 +99,9 @@ public struct SkeletonPreview: View {
                     }
                 }
                 .padding()
-                VStack(alignment: .leading) {
-                    Text("Options").bold()
-                    HStack {
-                        Text("show skeleton")
-                        Control.switch(checked: isPresented) { isPresented = $0 }
-                    }
-                    HStack {
-                        Text("kind")
-                        SegmentedControl(selectedIndex: $kindIndex, labels: kinds.map { $0?.description ?? "custom" })
-                            .size(.small)
-                    }
-                    switch kinds[kindIndex] {
-                    case .text:
-                        HStack {
-                            Text("text")
-                            TextField(text: $text)
-                        }
-                        HStack {
-                            Text("align")
-                            SegmentedControl(
-                                selectedIndex: $alignmentIndex,
-                                labels: alignments.map(\.description)
-                            )
-                            .size(.small)
-                        }
-                        ForEach(0..<lineNumber, id: \.self) { index in
-                            HStack {
-                                Text("length of line \(index + 1)")
-                                SegmentedControl(selectedIndex: $lengthIndices[safe: index] ?? .constant(0), labels: lengths.map { "\(Int($0.rawValue * 100))%" })
-                                    .size(.small)
-                            }
-                        }
-                        HStack {
-                            VStack(spacing: 0) {
-                                Text("cornerRadius")
-                                Text(String(format: "%.1f", cornerRadius))
-                            }
-                            Slider(value: $cornerRadius, in: 0...20)
-                        }
-                    case .rectangle:
-                        HStack {
-                            VStack(spacing: 0) {
-                                Text("cornerRadius")
-                                Text(String(format: "%.1f", cornerRadius))
-                            }
-                            Slider(value: $cornerRadius, in: 0...20)
-                        }
-                    default:
-                        EmptyView()
-                    }
-                    HStack {
-                        SwiftUI.ColorPicker("color", selection: $color)
-                    }
-                    HStack {
-                        VStack(spacing: 0) {
-                            Text("opacity")
-                            Text(String(format: "%.1f", opacity))
-                        }
-                        Slider(value: $opacity, in: 0...1)
-                    }
-                }
-                .padding(.horizontal)
+                
+                options
+                    .padding(.horizontal)
             }
         }
         .onChange(of: lineNumber) { _ in
@@ -168,6 +109,70 @@ public struct SkeletonPreview: View {
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
+    }
+    
+    var options: some View {
+        VStack(alignment: .leading) {
+            Text("Options").bold()
+            HStack {
+                Text("show skeleton")
+                Control.switch(checked: isPresented) { isPresented = $0 }
+            }
+            HStack {
+                Text("kind")
+                SegmentedControl(selectedIndex: $kindIndex, labels: kinds.map { $0?.description ?? "custom" })
+                    .size(.small)
+            }
+            switch kinds[kindIndex] {
+            case .text:
+                HStack {
+                    Text("text")
+                    TextField(text: $text)
+                }
+                HStack {
+                    Text("align")
+                    SegmentedControl(
+                        selectedIndex: $alignmentIndex,
+                        labels: alignments.map(\.description)
+                    )
+                    .size(.small)
+                }
+                ForEach(0..<lineNumber, id: \.self) { index in
+                    HStack {
+                        Text("length of line \(index + 1)")
+                        SegmentedControl(selectedIndex: $lengthIndices[safe: index] ?? .constant(0), labels: lengths.map { "\(Int($0.rawValue * 100))%" })
+                            .size(.small)
+                    }
+                }
+                HStack {
+                    VStack(spacing: 0) {
+                        Text("cornerRadius")
+                        Text(String(format: "%.1f", cornerRadius))
+                    }
+                    Slider(value: $cornerRadius, in: 0...20)
+                }
+            case .rectangle:
+                HStack {
+                    VStack(spacing: 0) {
+                        Text("cornerRadius")
+                        Text(String(format: "%.1f", cornerRadius))
+                    }
+                    Slider(value: $cornerRadius, in: 0...20)
+                }
+            default:
+                EmptyView()
+            }
+            HStack {
+                SwiftUI.ColorPicker("color", selection: $color)
+            }
+            HStack {
+                VStack(spacing: 0) {
+                    Text("opacity")
+                    Text(String(format: "%.1f", opacity))
+                }
+                Slider(value: $opacity, in: 0...1)
+            }
+        }
     }
 }
 

@@ -11,19 +11,13 @@ import SwiftUI
 import Montage
 
 struct TooltipPreview: View {
-    @State private var showTransparentChecker: Bool = false
-    @State private var show: Bool = false
-    
-    @State private var showMultilineText: Bool = true
-    @State private var adjustZIndex: Bool = true
-    @State private var showArrow: Bool = true
-    @State private var showCloseButton: Bool = true
-    @State private var showButton: Bool = true
-    @State private var buttonText: String = "확인"
-    
-    private let normalText: String = "툴팁이다!!!"
+    private let normalText: String = "툴팁"
     private let multilineText: String = "긴 내용이 필요한 경우 이 영역을 써요. 본래 내용이 입력되기 전까지 공간을 차지하고, 배치를 확인하기 위한 텍스트입니다."
     
+    var sizes: [Tooltip.Size] {
+        [.small, .medium]
+    }
+        
     var positions: [Tooltip.Position] {
         [
             .leading(arrowPosition: verticalAlignments[arrowPositionIndex]),
@@ -36,58 +30,59 @@ struct TooltipPreview: View {
     let verticalAlignments: [VerticalAlignment] = [.top, .center, .bottom]
     let horizontalAlignments: [HorizontalAlignment] = [.leading, .center, .trailing]
     
+    @State private var showTransparentChecker: Bool = false
+    @State private var show: Bool = false
+    @State private var alertPresented: Bool = false
+    
     @State private var modeIndex = 0
     @State private var positionIndex: Int = 3
     @State private var arrowPositionIndex: Int = 1
     @State private var vAlignIndex: Int = 1
     @State private var hAlignIndex: Int = 1
-    @State private var alertPresented: Bool = false
+    @State private var sizeIndex: Int = 1
+    @State private var showMultilineText: Bool = true
+    @State private var adjustZIndex: Bool = true
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Preview").bold()
-                Spacer()
-                Button(action: {
-                    showTransparentChecker.toggle()
-                }) {
-                    Image(systemName: "checkerboard.rectangle")
-                        .foregroundColor(.semantic(.primaryNormal))
+        ScrollView {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Preview").bold()
+                    Spacer()
+                    Button(action: {
+                        showTransparentChecker.toggle()
+                    }) {
+                        Image(systemName: "checkerboard.rectangle")
+                            .foregroundColor(.semantic(.primaryNormal))
+                    }
                 }
-            }
-            ZStack {
-                SwiftUI.Color.clear
-                VStack {
-                    Spacer(minLength: 0)
-                    zIndexTestingButton
-                    HStack {
+                .padding(.horizontal)
+                HStack {
+                    Spacer()
+                    VStack {
                         zIndexTestingButton
-                        iconButton
-                            .modifying { origin in
-                                if adjustZIndex {
-                                    origin.zIndex(1)
-                                } else {
-                                    origin
+                        HStack {
+                            zIndexTestingButton
+                            iconButton
+                                .if(adjustZIndex) {
+                                    $0.zIndex(1)
                                 }
-                            }
+                            zIndexTestingButton
+                        }
+                        .if(adjustZIndex) {
+                            $0.zIndex(1)
+                        }
                         zIndexTestingButton
                     }
-                    .modifying { origin in
-                        if adjustZIndex {
-                            origin.zIndex(1)
-                        } else {
-                            origin
-                        }
-                    }
-                    zIndexTestingButton
-                        
-                    Spacer(minLength: 0)
+                    Spacer()
                 }
+                .if(adjustZIndex) {
+                    $0.zIndex(1)
+                }
+                optionSheet
+                    .padding(.horizontal)
             }
-            optionSheet
         }
-        .font(.caption)
-        .padding()
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 200, checkerColor: .red)
     }
     
@@ -100,24 +95,15 @@ struct TooltipPreview: View {
                 isPresented: $show,
                 mode: modeIndex == 0 ? .click : .always,
                 position: positions[positionIndex],
-                message: showMultilineText ? multilineText : normalText,
-                showArrow: showArrow,
-                showCloseButton: showCloseButton,
-                buttonInfo: showButton ? Tooltip.ButtonInfo(title: buttonText, action: {
-                    print("버튼 클릭됨")
-                    show = false
-                }) : nil
+                size: sizes[sizeIndex],
+                message: showMultilineText ? multilineText : normalText
             )
             .onChange(of: modeIndex) { _ in
                 show = false
             }
         }
-        .modifying { origin in
-            if adjustZIndex {
-                origin.zIndex(1)
-            } else {
-                origin
-            }
+        .if(adjustZIndex) {
+            $0.zIndex(1)
         }
     }
     
@@ -137,7 +123,6 @@ struct TooltipPreview: View {
         VStack(alignment: .leading) {
             options
         }
-        .font(.caption)
     }
     
     var options: some View {
@@ -169,26 +154,19 @@ struct TooltipPreview: View {
                 }
                 
                 HStack {
-                    Text("Adjust zIndex")
-                    Control.switch(checked: adjustZIndex) { adjustZIndex = $0 }
-                    Text("Show Arrow")
-                    Control.switch(checked: showArrow) { showArrow = $0 }
+                    Text("Size")
+                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
+                        .size(.small)
                 }
                 
+                Divider()
+                Text("Options for testing").bold()
                 HStack {
                     Text("MultiLine Text")
                     Control.switch(checked: showMultilineText) { showMultilineText = $0 }
-                    Text("Show Close Button")
-                    Control.switch(checked: showCloseButton) { showCloseButton = $0 }
-                    Text("Show Button")
-                    Control.switch(checked: showButton) { showButton = $0 }
-                }
-                
-                if showButton {
-                    HStack {
-                        Text("Button Text")
-                        TextField(text: $buttonText)
-                            .placeholder("버튼 텍스트")
+                    if modeIndex == 1 {
+                        Text("Adjust zIndex")
+                        Control.switch(checked: adjustZIndex) { adjustZIndex = $0 }
                     }
                 }
             }
@@ -207,6 +185,8 @@ enum VAlign: String, CaseIterable {
     case center
     case bottom
 }
+
+extension Tooltip.Size: CaseDescribable {}
 
 extension Tooltip.Position: CaseDescribable {
     var arrowPositions: [String] {

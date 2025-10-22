@@ -41,7 +41,7 @@ struct IconPreview: View {
                 .listRowBackground(SwiftUI.Color.clear)
             }
             .listStyle(.plain)
-            .searchable(text: $searchText, prompt: "아이콘을 검색하세요.")
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
