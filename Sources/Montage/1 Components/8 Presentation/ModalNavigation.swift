@@ -68,17 +68,26 @@ public struct ModalNavigation: View {
     
     public var body: some View {
         ZStack(alignment: .bottom) {
-            Contents(
-                variant: variant,
-                title: title,
-                leadingContent: leadingContent,
-                trailingContents: trailingContents
-            )
-            .if(needHandleArea) {
-                $0.padding(.top, 10)
+            VStack(spacing: 0) {
+                if needHandleArea {
+                    ZStack(alignment: .bottom) {
+                        SwiftUI.Color.clear
+                            .frame(height: 12)
+                        RoundedRectangle(cornerRadius: 1000)
+                            .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                            .frame(width: 40, height: 5)
+                    }
+                }
+                
+                Contents(
+                    variant: variant,
+                    title: title,
+                    leadingContent: leadingContent,
+                    trailingContents: trailingContents
+                )
+                .padding(.vertical, 20)
+                .padding(.horizontal, 16)
             }
-            .padding(.vertical, 20)
-            .padding(.horizontal, 16)
             .background {
                 ZStack {
                     Rectangle().fill(.ultraThinMaterial)
@@ -100,7 +109,7 @@ public struct ModalNavigation: View {
     // MARK: - Modifiers
     
     private var variant: Variant = .normal
-    private var backgroundColor: SwiftUI.Color? = nil
+    private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNormal)
     private var needHandleArea = false
     private var title: () -> AnyView = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }

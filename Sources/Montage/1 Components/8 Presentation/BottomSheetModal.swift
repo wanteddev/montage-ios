@@ -96,7 +96,7 @@ public struct BottomSheetModal: View {
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
-                if needHandle {
+                if needHandle && navigation == nil {
                     ZStack(alignment: .bottom) {
                         SwiftUI.Color.clear
                             .frame(height: 12)
@@ -249,7 +249,9 @@ public struct BottomSheetModal: View {
     }
     
     private var maxDetentHeight: CGFloat {
-        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10
+        // 최대 높이에 도달할 경우 자동으로 스택 형태로 변경되는 것을 막기 위한 보정값 10.2 추가
+        // https://wantedx.slack.com/archives/C04TTGN5F1C/p1761040362320469?thread_ts=1761035208.156399&cid=C04TTGN5F1C
+        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10.2
     }
     
     private var bottomSheetMaxHeight: CGFloat {
@@ -259,14 +261,14 @@ public struct BottomSheetModal: View {
         case .fixedRatio(let ratio):
             maxDetentHeight * ratio
         case .fixedHeight(let height):
-            height
+            min(maxDetentHeight, height)
         case .flexible, .fill:
             maxDetentHeight
         }
     }
     
     private var bottomSheetContentHeight: CGFloat {
-        navigationHeight + contentHeight + actionAreaHeight + (needHandle ? 12 : 0)
+        (needHandle && navigation == nil ? 12 : 0) + navigationHeight + contentHeight + actionAreaHeight
     }
     
     private var detents: Set<PresentationDetent> {
