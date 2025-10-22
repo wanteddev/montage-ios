@@ -31,6 +31,7 @@
 		4D8100502EA74BC6004CAD92 /* ComponentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D81004E2EA74BC6004CAD92 /* ComponentListView.swift */; };
 		4D8100522EA7594D004CAD92 /* BlueprintApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100512EA7594D004CAD92 /* BlueprintApp.swift */; };
 		4D8100542EA76329004CAD92 /* ComponentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100532EA76329004CAD92 /* ComponentSection.swift */; };
+		4D8100562EA86106004CAD92 /* DividerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100552EA86106004CAD92 /* DividerPreview.swift */; };
 		4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D853DF62D96491E004549CF /* IconButtonPreview.swift */; };
 		4D88E5FA2E8BC34D00EA0E67 /* PopupModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D88E5F92E8BC34D00EA0E67 /* PopupModalPreview.swift */; };
 		4D88E5FB2E8BC34D00EA0E67 /* FullModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D88E5F82E8BC34D00EA0E67 /* FullModalPreview.swift */; };
@@ -112,6 +113,7 @@
 		4D81004E2EA74BC6004CAD92 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		4D8100512EA7594D004CAD92 /* BlueprintApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueprintApp.swift; sourceTree = "<group>"; };
 		4D8100532EA76329004CAD92 /* ComponentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentSection.swift; sourceTree = "<group>"; };
+		4D8100552EA86106004CAD92 /* DividerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerPreview.swift; sourceTree = "<group>"; };
 		4D853DF62D96491E004549CF /* IconButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonPreview.swift; sourceTree = "<group>"; };
 		4D88E5F82E8BC34D00EA0E67 /* FullModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullModalPreview.swift; sourceTree = "<group>"; };
 		4D88E5F92E8BC34D00EA0E67 /* PopupModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupModalPreview.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				4D0952662D7ABCCB00BB6044 /* ControlPreview.swift */,
 				4D5597552D1E802C00CFBCA5 /* CounterPaginationPreview.swift */,
 				4D55974D2D1E402C00CFBCA5 /* DateTimePickerPreview.swift */,
+				4D8100552EA86106004CAD92 /* DividerPreview.swift */,
 				4D5597512D1E7EC000CFBCA5 /* DotPaginationPreview.swift */,
 				4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */,
 				4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */,
@@ -494,6 +497,7 @@
 				4D88E6632E8E3D1B00EA0E67 /* IconPreview.swift in Sources */,
 				4DC668AA2D673E8F00461189 /* BottomSheetModalPreview.swift in Sources */,
 				4DB87ADC2CEC8F6B00DEC2A4 /* ProgressIndicatorPreview.swift in Sources */,
+				4D8100562EA86106004CAD92 /* DividerPreview.swift in Sources */,
 				4D5597542D1E7F9400CFBCA5 /* PaginationPreview.swift in Sources */,
 				4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */,
 				4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */,

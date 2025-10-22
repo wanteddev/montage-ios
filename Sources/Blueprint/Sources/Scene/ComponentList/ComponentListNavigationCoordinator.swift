@@ -61,7 +61,7 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .card: CardPreview()
         case .listCard: ListCardPreview()
         case .framedStyle: FramedStylePreview()
-        case .divider: Text("Divider preview not ready")
+        case .divider: DividerPreview()
         }
     }
 }

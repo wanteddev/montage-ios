@@ -36,7 +36,15 @@ struct ComponentListView: View {
         NavigationStack(path: $coordinator.path) {
             list
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-                .navigationTitle("Montage")
+                .navigationTitle("Blueprint")
+                .toolbar(content: {
+                    ToolbarItem(placement: .bottomBar) {
+                        VStack {
+                            (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
+                                .typography(variant: .caption2, weight: .regular)
+                        }
+                    }
+                })
                 .navigationBarTitleDisplayMode(.large)
                 .navigationDestination(for: Component.self) { componentType in
                     coordinator.destinationView(for: componentType)

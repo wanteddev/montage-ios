@@ -45,10 +45,8 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
                 .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
                 .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
                 .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
-                .contentBadge, .card, .listCard, .framedStyle:
+                .contentBadge, .card, .listCard, .framedStyle, .divider:
             return .completed
-        case .divider:
-            return .previewNotReady
         }
     }
     
