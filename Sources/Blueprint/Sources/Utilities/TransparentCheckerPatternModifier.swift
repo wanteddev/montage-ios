@@ -100,7 +100,7 @@ class CheckerPatternCache {
             cgContext.fill(CGRect(origin: .zero, size: size))
             
             // 회색 체커 패턴
-            cgContext.setFillColor(checkerColor.opacity(0.3).uiColor.cgColor)
+            cgContext.setFillColor(checkerColor.opacity(0.5).uiColor.cgColor)
             
             let rows = Int(size.height / checkerSize) + 1
             let cols = Int(size.width / checkerSize) + 1
