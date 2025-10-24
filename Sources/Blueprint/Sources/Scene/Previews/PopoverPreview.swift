@@ -13,10 +13,10 @@ struct PopoverPreview: View {
     @State private var isPresented: Bool = false
     @State private var variantIndex: Int = 0
     @State private var text: String = "메시지에 마침표를 찍어요."
-    @State private var heading: String = "제목"
+    @State private var heading: String = ""
     @State private var closeButton: Bool = true
     @State private var action: Bool = true
-    @State private var subAction: Bool = true
+    @State private var subAction: Bool = false
     @State private var page: Int = 1
     
     let variants = ["normal", "custom"]
@@ -82,7 +82,7 @@ struct PopoverPreview: View {
         VStack(spacing: 0) {
             ZStack(alignment: .topTrailing) {
                 Thumbnail(
-                    urlString: imageUrls[page - 1],
+                    urlString: imageUrls[safe: page - 1] ?? imageUrls[0],
                     ratio: .r3x2
                 )
                 IconButton(variant: .background(size: 20), icon: .closeThick) {
@@ -104,7 +104,7 @@ struct PopoverPreview: View {
                 }
                 
                 HStack(alignment: .bottom) {
-                    DotPagination(selectedPage: $page, totalPages: 3)
+                    DotPagination(selectedPage: $page, totalPages: imageUrls.count)
                         .size(.small)
                     Spacer()
                     Button(variant: .outlined, color: .assistive, size: .medium, text: "확인")
@@ -138,7 +138,7 @@ struct PopoverPreview: View {
                     
                     HStack {
                         Text("text")
-                        TextField(text: $text)
+                        TextArea(text: $text)
                     }
                     
                     HStack {

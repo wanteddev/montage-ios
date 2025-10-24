@@ -43,7 +43,6 @@ struct ComponentListView: View {
                     list
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Blueprint")
             .toolbar(content: {
                 ToolbarItem(placement: .bottomBar) {
@@ -94,6 +93,7 @@ struct ComponentListView: View {
         .listStyle(.plain)
         .background(Color.semantic(.backgroundNormal))
         .scrollContentBackground(.hidden)
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
     }
 }
 

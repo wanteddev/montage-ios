@@ -109,11 +109,17 @@ struct NormalPopoverModifier: ViewModifier {
             if action != nil || subAction != nil {
                 HStack(spacing: 16) {
                     Spacer()
-                    if let subAction {
-                        TextButton(color: .assistive, size: .small, text: subAction.title, handler: subAction.action)
-                    }
                     if let action {
-                        TextButton(color: .primary, size: .small, text: action.title, handler: action.action)
+                        if let subAction {
+                            TextButton(color: .assistive, size: .small, text: subAction.title) {
+                                isPresented = false
+                                subAction.action()
+                            }
+                        }
+                        TextButton(color: .primary, size: .small, text: action.title) {
+                            isPresented = false
+                            action.action()
+                        }
                     }
                 }
                 .padding(.top, 4)
@@ -271,10 +277,10 @@ extension View {
     /// - Returns: 일반적인 팝오버 모디파이어
     public func popoverNormal(
         isPresented: Binding<Bool>,
-        heading: String,
+        heading: String = "",
         text: String,
         closeButton: Bool = true,
-        action: (title: String, action: () -> Void)? = nil,
+        action: (title: String, action: () -> Void)?,
         subAction: (title: String, action: () -> Void)? = nil
     ) -> some View {
         modifier(
