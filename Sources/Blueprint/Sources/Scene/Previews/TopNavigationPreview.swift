@@ -13,7 +13,8 @@ import Montage
 struct TopNavigationPreview: View {
     enum Variant: String, CaseIterable {
         case normal
-        case extended
+        case display
+        case search
         case floating
         
         var selectableTitle: String {
@@ -62,7 +63,8 @@ struct TopNavigationPreview: View {
     private var v: TopNavigation.Variant {
         switch variant {
         case .normal: return .normal
-        case .extended: return .extended
+        case .display: return .display
+        case .search: return .search
         case .floating: return .floating(alternative: alternative, background: background)
         }
     }

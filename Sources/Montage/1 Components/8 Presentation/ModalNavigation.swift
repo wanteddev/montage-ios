@@ -274,7 +274,7 @@ private extension ModalNavigation.Variant {
     var topNavigationVariant: TopNavigation.Variant {
         switch self {
         case .normal: .normal
-        case .extended: .extended
+        case .extended: .display
         case .floating(let alternative, let background): .floating(
             alternative: alternative,
             background: background

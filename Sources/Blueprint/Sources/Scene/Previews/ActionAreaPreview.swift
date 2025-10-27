@@ -213,8 +213,8 @@ struct ActionAreaPreview: View {
                 }
                 .actionArea(model: .init(
                     variant: p,
-                    backgroundVisibility: .manual(
-                        gradientIndex == 0 ? !scrollStatus.scrolledToMax : !hideGradient
+                    backgroundTransparencyControl: .manual(
+                        gradientIndex == 0 ? scrollStatus.scrolledToMax : hideGradient
                     ),
                     caption: caption ? "caption" : nil,
                     extra: {

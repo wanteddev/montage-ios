@@ -87,7 +87,7 @@ public struct TopNavigation: View {
 
     /// 내비게이션 바의 스타일(Variant)을 설정합니다.
     ///
-    /// `.normal`, `.extended`, `.floating`, `.emphasized` 중 하나의 스타일을 지정할 수 있으며,
+    /// `.normal`, `.display`, `search`, `.floating` 중 하나의 스타일을 지정할 수 있으며,
     /// 스타일에 따라 내비게이션의 외형과 정렬 방식 등이 달라집니다.
     ///
     /// - Parameter variant: 적용할 내비게이션 스타일
@@ -181,7 +181,7 @@ public struct TopNavigation: View {
                     Rectangle().fill(.ultraThinMaterial)
                         .opacity(backgroundOpacity)
                     background
-                        .opacity(backgroundOpacity * 0.70)
+                        .opacity(backgroundOpacity * 0.7)
                 }
                 .ignoresSafeArea(.container, edges: .top)
             }
@@ -248,7 +248,7 @@ public struct TopNavigation: View {
                     }
                     title()
                         .frame(width: titleSize, height: 24)
-                case .extended:
+                case .display:
                     VStack(spacing: 20) {
                         HStack {
                             leadingContent()
@@ -262,6 +262,8 @@ public struct TopNavigation: View {
                         }
                         .padding(.horizontal, 4)
                     }
+                case .search:
+                    EmptyView()
                 case .floating:
                     ZStack {
                         HStack(spacing: .zero) {
@@ -567,15 +569,17 @@ extension TopNavigation {
     public enum Variant: Equatable {
         /// 기본 내비게이션 바 스타일
         case normal
-        /// 확장된 내비게이션 바 스타일 (제목이 별도의 줄에 표시됨)
-        case extended
-        /// 플로팅 스타일의 내비게이션 바
+        /// 타이틀이 크게 표시되는 내비게이션 바 스타일
+        case display
+        /// 검색 내비게이션 바 스타일
+        case search
+        /// 플로팅 내비게이션 바 스타일
         case floating(alternative: Bool = false, background: Bool = false)
         
         fileprivate var isFloating: Bool {
             switch self {
             case .floating: true
-            case .normal, .extended: false
+            case .normal, .display, .search: false
             }
         }
     }
@@ -664,26 +668,22 @@ extension TopNavigation {
 
 extension TopNavigation.Variant {
     var typoVariant: Typography.Variant {
-        switch self {
-        case .normal: .headline2
-        case .extended: .title3
-        case .floating: .headline2
+        if case .display = self {
+            .title3
+        } else {
+            .headline2
         }
     }
     
     var typoWeight: Typography.Weight {
-        switch self {
-        case .normal: .bold
-        case .extended: .bold
-        case .floating: .bold
-        }
+        .bold
     }
     
     var textAlignment: Alignment {
-        switch self {
-        case .normal: .center
-        case .extended: .leading
-        case .floating: .center
+        if case .display = self {
+            .leading
+        } else {
+            .center
         }
     }
 }
@@ -807,7 +807,7 @@ extension View {
     /// - Parameters:
     ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
     ///   - title: 표시할 제목 컴포넌트 클로저 (기본값: nil)
-    ///   - backgroundColor: 배경색 (기본값: nil)
+    ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색 (기본값: nil)
     ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
     ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
     ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
