@@ -32,25 +32,38 @@ struct ComponentListView: View {
             }
     }
     
+    @FocusState private var searchFocused
+    
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            list
-                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-                .navigationTitle("Blueprint")
-                .toolbar(content: {
-                    ToolbarItem(placement: .bottomBar) {
-                        VStack {
-                            (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
-                                .typography(variant: .caption2, weight: .regular)
-                        }
-                    }
-                })
-                .navigationBarTitleDisplayMode(.large)
-                .navigationDestination(for: Component.self) { componentType in
-                    coordinator.destinationView(for: componentType)
-                        .navigationTitle(componentType.displayName)
-                        .navigationBarTitleDisplayMode(.inline)
+            Group {
+                if #available(iOS 18.0, *) {
+                    list.searchFocused($searchFocused)
+                } else {
+                    list
                 }
+            }
+            .navigationTitle("Blueprint")
+            .toolbar(content: {
+                ToolbarItem(placement: .bottomBar) {
+                    VStack {
+                        (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
+                            .typography(variant: .caption2, weight: .regular)
+                    }
+                }
+            })
+            .navigationBarTitleDisplayMode(.large)
+            .navigationDestination(for: Component.self) { componentType in
+                coordinator.destinationView(for: componentType)
+                    .navigationTitle(componentType.displayName)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .onAppear {
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    searchFocused = true
+                }
+            }
         }
     }
     
@@ -80,6 +93,7 @@ struct ComponentListView: View {
         .listStyle(.plain)
         .background(Color.semantic(.backgroundNormal))
         .scrollContentBackground(.hidden)
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
     }
 }
 

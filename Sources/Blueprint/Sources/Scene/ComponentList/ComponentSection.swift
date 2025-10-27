@@ -32,7 +32,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
          contentBadge
     case loading, skeleton, pullToRefresh
     case topNavigation, progressIndicator, tab, pagination, progressTracker, category
-    case pushBadge, fallbackView, snackbar, toast, tooltip
+    case pushBadge, fallbackView, snackbar, toast, tooltip, popover
     case modal
     case framedStyle
     
@@ -41,7 +41,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
         case .typography, .color, .icon, .shadow, .control,
                 .flowLayout,
                 .button, .textButton, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
-                .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .actionArea,
+                .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .popover, .actionArea,
                 .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
                 .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
                 .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
@@ -70,7 +70,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
             return .navigations
         case .pushBadge, .fallbackView, .snackbar, .toast:
             return .feedback
-        case .modal, .tooltip:
+        case .modal, .tooltip, .popover:
             return .presentation
         case .framedStyle:
             return .utility

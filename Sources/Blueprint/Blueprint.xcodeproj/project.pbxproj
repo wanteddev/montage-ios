@@ -31,6 +31,7 @@
 		4D8100502EA74BC6004CAD92 /* ComponentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D81004E2EA74BC6004CAD92 /* ComponentListView.swift */; };
 		4D8100522EA7594D004CAD92 /* BlueprintApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100512EA7594D004CAD92 /* BlueprintApp.swift */; };
 		4D8100542EA76329004CAD92 /* ComponentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100532EA76329004CAD92 /* ComponentSection.swift */; };
+		4D81005A2EA8760B004CAD92 /* PopoverPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100592EA875FF004CAD92 /* PopoverPreview.swift */; };
 		4D8100562EA86106004CAD92 /* DividerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100552EA86106004CAD92 /* DividerPreview.swift */; };
 		4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D853DF62D96491E004549CF /* IconButtonPreview.swift */; };
 		4D88E5FA2E8BC34D00EA0E67 /* PopupModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D88E5F92E8BC34D00EA0E67 /* PopupModalPreview.swift */; };
@@ -113,6 +114,7 @@
 		4D81004E2EA74BC6004CAD92 /* ComponentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentListView.swift; sourceTree = "<group>"; };
 		4D8100512EA7594D004CAD92 /* BlueprintApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueprintApp.swift; sourceTree = "<group>"; };
 		4D8100532EA76329004CAD92 /* ComponentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentSection.swift; sourceTree = "<group>"; };
+		4D8100592EA875FF004CAD92 /* PopoverPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverPreview.swift; sourceTree = "<group>"; };
 		4D8100552EA86106004CAD92 /* DividerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerPreview.swift; sourceTree = "<group>"; };
 		4D853DF62D96491E004549CF /* IconButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonPreview.swift; sourceTree = "<group>"; };
 		4D88E5F82E8BC34D00EA0E67 /* FullModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullModalPreview.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 		4DF7C4FD2CE340F0002B241B /* Previews */ = {
 			isa = PBXGroup;
 			children = (
+				4D8100592EA875FF004CAD92 /* PopoverPreview.swift */,
 				4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */,
 				4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */,
 				4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */,
@@ -487,6 +490,7 @@
 				4DF7C51C2CE340F0002B241B /* TopNavigationPreview.swift in Sources */,
 				4D5597522D1E7EC000CFBCA5 /* DotPaginationPreview.swift in Sources */,
 				4D0D251E2DB763FE00608CE5 /* ThumbnailPreview.swift in Sources */,
+				4D81005A2EA8760B004CAD92 /* PopoverPreview.swift in Sources */,
 				4D96F7CE2EA07D7B00DFECE8 /* TransparentCheckerPatternModifier.swift in Sources */,
 				4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */,
 				4DA44F1B2D12CC91009FE3DB /* PullToRefreshPreview.swift in Sources */,
