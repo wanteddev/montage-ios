@@ -60,10 +60,7 @@ public struct TopNavigation: View {
         case floating
         
         fileprivate var isFloating: Bool {
-            switch self {
-            case .floating: true
-            case .normal, .display, .search: false
-            }
+            self == .floating
         }
     }
     
@@ -247,11 +244,13 @@ public struct TopNavigation: View {
         backgroundColor ?? SwiftUI.Color.semantic(.backgroundNormal)
     }
     
+    @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
+    
     private var backgroundOpacity: CGFloat {
         if variant.isFloating {
             return 1
         } else {
-            let ratio = (scrollOffset / -32)
+            let ratio = (scrollOffset / -safeAreaInsets.top)
             return max(0, min(1, ratio))
         }
     }
@@ -484,8 +483,8 @@ public struct TopNavigation: View {
         
         var body: some View {
             HStack(alignment: .center, spacing: 16) {
-                ForEach(Array(contents.enumerated()), id: \.offset) { _, makeView in
-                    makeView()
+                ForEach(contents.indices, id: \.self) { index in
+                    contents[index]()
                         .contentShape(Rectangle().scale(2), eoFill: true) // 터치영역 확장
                 }
             }
@@ -735,9 +734,8 @@ extension TopNavigation.Variant {
     }
 }
 
-
 struct TopNavigationModifier: ViewModifier {
-    private let variant: Variant
+    private let variant: TopNavigation.Variant
     private let titleView: (() -> any View)?
     private let backgroundColor: SwiftUI.Color?
     private let leadingContent: (() -> any View)?
@@ -749,7 +747,7 @@ struct TopNavigationModifier: ViewModifier {
     private let onSubmit: (() -> Void)?
     
     init(
-        variant: Variant,
+        variant: TopNavigation.Variant,
         titleView: (() -> any View)?,
         backgroundColor: SwiftUI.Color?,
         leadingContent: (() -> any View)?,
@@ -838,9 +836,15 @@ struct TopNavigationModifier: ViewModifier {
             
             if let actionAreaModel {
                 ActionArea(variant: actionAreaModel.variant)
-                    .transparentBackground(scrollStatus.scrolledToMax)
                     .caption(actionAreaModel.caption)
                     .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                    .modifying {
+                        if case .manual(let transparency) = actionAreaModel.backgroundTransparencyControl {
+                            $0.transparentBackground(transparency)
+                        } else {
+                            $0.transparentBackground(scrollStatus.scrolledToMax)
+                        }
+                    }
             }
         }
     }

@@ -116,7 +116,7 @@ public struct ActionArea: View, KeyboardReadable {
     ///
     /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
     ///
-    /// - Parameter transparenBackground: 배경 투명 여부, 기본값은 `true`
+    /// - Parameter transparentBackground: 배경 투명 여부, 기본값은 `true`
     /// - Returns: 수정된 ActionArea 인스턴스
     public func transparentBackground(_ transparentBackground: Bool = true) -> Self {
         var zelf = self
@@ -253,6 +253,24 @@ extension ActionArea {
         }
     }
 }
+
+/// ActionArea의 배경 투명도를 제어하는 열거형입니다.
+public enum BackgroundTransparencyControl {
+    /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
+    case automatic
+    /// 수동으로 배경 투명도를 설정합니다. true면 배경이 투명해지고, false면 배경이 표시됩니다.
+    case manual(_ transparency: Bool)
+    
+    var isManual: Bool {
+        switch self {
+        case .automatic:
+            false
+        case .manual:
+            true
+        }
+    }
+}
+
 
 // MARK: - Private
 private extension ActionArea {
@@ -428,8 +446,8 @@ struct ActionAreaModifier: ViewModifier {
                 .caption(model.caption)
                 .extra(model.extra, divider: model.extraDivider)
                 .modifying {
-                    if case .manual(let visibility) = model.backgroundTransparencyControl {
-                        $0.transparentBackground(visibility)
+                    if case .manual(let transparency) = model.backgroundTransparencyControl {
+                        $0.transparentBackground(transparency)
                     } else {
                         $0
                     }

@@ -45,6 +45,15 @@ struct TopNavigationPreview: View {
     @State var actionAreaCaption = false
     @State var actionAreaExtra = false
     
+    private var currentVariant: TopNavigation.Variant {
+        let cases = TopNavigation.Variant.allCases
+        return cases[min(max(0, variantIndex), cases.count - 1)]
+    }
+    
+    private var isSearchVariant: Bool {
+        currentVariant == .search
+    }
+    
     private var trailingContents: [() -> any View] {
         return trailing.map {
             switch $0 {
@@ -56,7 +65,7 @@ struct TopNavigationPreview: View {
             }
             case .text: {
                 TopNavigation.TrailingTextButton(
-                    text: variantIndex == 2 ? "취소" : "알림",
+                    text: isSearchVariant ? "취소" : "알림",
                     action: {
                         closure()
                         focused = false
@@ -98,113 +107,124 @@ struct TopNavigationPreview: View {
     
     @State private var term = ""
     @State private var focused = false
+    @State private var showPreview = true
     
     var body: some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading) {
-                ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
-                    ZStack {
-                        SwiftUI.Color.semantic(.allCases[index]).opacity(0.3)
-                        Text("Item \(index)")
-                            .padding()
-                    }
-                }
-            }
-            .padding(.horizontal)
-            .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-            .topNavigation(
-                variant: TopNavigation.Variant.allCases[variantIndex],
-                title: title,
-                backgroundColor: backgroundColor,
-                leadingContent: leading ? {
-                    IconButton(
-                        variant: .default,
-                        icon: .chevronLeft
-                    ) {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    .frame(width: 24, height: 24)
-                } : nil,
-                trailingContents: trailingContents,
-                withBottom: actionAreaModel,
-                searchPlaceholder: "검색하세요",
-                searchTerm: $term,
-                searchFocused: $focused
-            ) {
-                print("\(term) 검색됨")
-            }
-            .onChange(of: focused) { newValue in
-                if variantIndex == 2 {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        trailing = newValue ? [.text] : []
-                    }
-                }
-            }
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Options").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                HStack {
-                    Text("variant")
-                    SegmentedControl(selectedIndex: $variantIndex, labels: TopNavigation.Variant.allCases.map(\.description))
-                        .size(.small)
-                }
-                HStack {
-                    Text("title")
-                    TextField(text: $title)
-                }
-                HStack {
-                    Text("leadingContent")
-                    Control.switch(checked: leading) { leading = $0 }
-                }
-                HStack {
-                    Text("trailingContents")
-                    Button(variant: .outlined, size: .small, text: "TextButton") {
-                        trailing.append(.text)
-                    }
-                    Button(variant: .outlined, size: .small, text: "IconButton") {
-                        trailing.append(.icon)
-                    }
-                    IconButton(variant: .outlined(size: .small), icon: .reset) {
-                        trailing = []
-                    }
-                }
-                HStack {
-                    ColorPicker(
-                        "backgroundColor",
-                        selection: $backgroundColor
-                    )
-                }
-                HStack {
-                    Text("actionArea")
-                    Control.switch(checked: actionArea) { actionArea = $0 }
-                }
-                if actionArea {
-                    HStack {
-                        Text("sub")
-                        Control.switch(checked: actionAreaSub) { actionAreaSub = $0 }
-                        Text("alt")
-                        Control.switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
-                        Text("caption")
-                        Control.switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
-                        Text("extra")
-                        Control.switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
-                    }
-                }
-            }
-            .padding()
-            .background(.regularMaterial)
+        SwiftUI.Button("TopNavigation Preview") {
+            showPreview = true
         }
-        .toast($toast)
-        .navigationBarHidden(true)
+        .fullScreenCover(isPresented: $showPreview) {
+            VStack(spacing: 0) {
+                VStack(alignment: .leading) {
+                    ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
+                        ZStack {
+                            SwiftUI.Color.semantic(.allCases[index]).opacity(0.3)
+                            Text("Item \(index)")
+                                .padding()
+                        }
+                    }
+                }
+                .padding(.horizontal)
+                .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+                .topNavigation(
+                    variant: currentVariant,
+                    title: title,
+                    backgroundColor: backgroundColor,
+                    leadingContent: leading ? {
+                        IconButton(
+                            variant: .default,
+                            icon: .chevronLeft
+                        ) {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        .frame(width: 24, height: 24)
+                    } : nil,
+                    trailingContents: trailingContents,
+                    withBottom: actionAreaModel,
+                    searchPlaceholder: "검색하세요",
+                    searchTerm: $term,
+                    searchFocused: $focused
+                ) {
+                    print("\(term) 검색됨")
+                }
+                .onChange(of: focused) { newValue in
+                    if isSearchVariant {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            trailing = newValue ? [.text] : []
+                        }
+                    }
+                }
+                
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Options").bold()
+                        Spacer()
+                        Button(action: {
+                            showPreview = false
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
+                        }
+                        Button(action: {
+                            showTransparentChecker.toggle()
+                        }) {
+                            Image(systemName: "checkerboard.rectangle")
+                                .foregroundColor(.semantic(.primaryNormal))
+                        }
+                    }
+                    HStack {
+                        Text("variant")
+                        SegmentedControl(selectedIndex: $variantIndex, labels: TopNavigation.Variant.allCases.map(\.description))
+                            .size(.small)
+                    }
+                    HStack {
+                        Text("title")
+                        TextField(text: $title)
+                    }
+                    HStack {
+                        Text("leadingContent")
+                        Control.switch(checked: leading) { leading = $0 }
+                    }
+                    HStack {
+                        Text("trailingContents")
+                        Button(variant: .outlined, size: .small, text: "TextButton") {
+                            trailing.append(.text)
+                        }
+                        Button(variant: .outlined, size: .small, text: "IconButton") {
+                            trailing.append(.icon)
+                        }
+                        IconButton(variant: .outlined(size: .small), icon: .reset) {
+                            trailing = []
+                        }
+                    }
+                    HStack {
+                        ColorPicker(
+                            "backgroundColor",
+                            selection: $backgroundColor
+                        )
+                    }
+                    HStack {
+                        Text("actionArea")
+                        Control.switch(checked: actionArea) { actionArea = $0 }
+                    }
+                    if actionArea {
+                        HStack {
+                            Text("sub")
+                            Control.switch(checked: actionAreaSub) { actionAreaSub = $0 }
+                            Text("alt")
+                            Control.switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
+                            Text("caption")
+                            Control.switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
+                            Text("extra")
+                            Control.switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
+                        }
+                    }
+                }
+                .padding()
+                .background(.regularMaterial)
+            }
+            .toast($toast)
+        }
     }
 }
 
