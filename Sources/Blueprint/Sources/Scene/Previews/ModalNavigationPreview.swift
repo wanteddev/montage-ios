@@ -48,12 +48,7 @@ struct ModalNavigationPreview: View {
                 VStack {
                     ModalNavigation(scrollOffset: $contentOffset)
                         .variant(variants[variantIndex])
-                        .title({
-                            ModalNavigation.TitleView(
-                                variant: variants[variantIndex],
-                                title: "제목"
-                            )
-                        })
+                        .title("제목")
                         .leadingContent {
                             Group {
                                 if leadingButton {

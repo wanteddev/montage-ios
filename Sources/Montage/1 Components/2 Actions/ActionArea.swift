@@ -98,16 +98,16 @@ public struct ActionArea: View, KeyboardReadable {
             .background(backgroundColor)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
-        .onChange(of: clearBackground) { clearBackground in
+        .onChange(of: transparentBackground) { transparentBackground in
             withAnimation(.easeInOut(duration: 0.5)) {
-                gradientOpacity = clearBackground ? 0 : 1
+                gradientOpacity = transparentBackground ? 0 : 1
             }
         }
     }
     
     // MARK: - Modifiers
     
-    private var clearBackground = false
+    private var transparentBackground = false
     private var caption: String?
     private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
@@ -116,11 +116,11 @@ public struct ActionArea: View, KeyboardReadable {
     ///
     /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
     ///
-    /// - Parameter clearBackground: 배경 투명 여부, 기본값은 `true`
+    /// - Parameter transparenBackground: 배경 투명 여부, 기본값은 `true`
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func clearBackground(_ clearBackground: Bool = true) -> Self {
+    public func transparentBackground(_ transparentBackground: Bool = true) -> Self {
         var zelf = self
-        zelf.clearBackground = clearBackground
+        zelf.transparentBackground = transparentBackground
         return zelf
     }
     
@@ -214,7 +214,7 @@ extension ActionArea {
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 설정
+        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식 (기본값: .automatic)
         ///   - caption: 캡션 텍스트
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
         public init(
@@ -273,7 +273,7 @@ private extension ActionArea {
     }
     
     private var backgroundColor: SwiftUI.Color {
-        !clearBackground || !isExtraEmpty ? .semantic(.backgroundElevated) : .clear
+        !transparentBackground || !isExtraEmpty ? .semantic(.backgroundElevated) : .clear
     }
 }
 
@@ -429,7 +429,7 @@ struct ActionAreaModifier: ViewModifier {
                 .extra(model.extra, divider: model.extraDivider)
                 .modifying {
                     if case .manual(let visibility) = model.backgroundTransparencyControl {
-                        $0.clearBackground(visibility)
+                        $0.transparentBackground(visibility)
                     } else {
                         $0
                     }

@@ -11,17 +11,6 @@ import SwiftUI
 import Montage
 
 struct TopNavigationPreview: View {
-    enum Variant: String, CaseIterable {
-        case normal
-        case display
-        case search
-        case floating
-        
-        var selectableTitle: String {
-            self.rawValue.capitalized
-        }
-    }
-    
     enum LeadingContentsKind: String, CaseIterable {
         case back
         case icon
@@ -44,109 +33,17 @@ struct TopNavigationPreview: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var showTransparentChecker: Bool = false
-    @State var variant: Variant = .normal
-    @State var alternative: Bool = false
-    @State var background: Bool = false
-    @State var leading: LeadingContentsKind = .back
+    @State private var title = "제목"
+    @State var variantIndex: Int = 0
+    @State var leading = false
     @State var trailing: [TrailingButton] = []
-    @State var trailingContentsDisable: Bool = false
     @State var toast: Toast.Model? = nil
-    @State var backgroundColor: SwiftUI.Color? = nil
-    @State var selectedBackgroundColorName: Montage.Color.Semantic = .backgroundNormal
+    @State var backgroundColor: SwiftUI.Color = .semantic(.backgroundNormal)
     @State var actionArea = false
     @State var actionAreaSub = false
     @State var actionAreaAlt = false
     @State var actionAreaCaption = false
     @State var actionAreaExtra = false
-    
-    
-    private var v: TopNavigation.Variant {
-        switch variant {
-        case .normal: return .normal
-        case .display: return .display
-        case .search: return .search
-        case .floating: return .floating(alternative: alternative, background: background)
-        }
-    }
-    
-    private var leadingContent: () -> any View {
-        switch leading {
-        case .back:
-            return {
-                IconButton(
-                    variant: background
-                    ? .background(size: 24, isAlternative: alternative)
-                    : .default,
-                    icon: background ? .chevronLeftThick : .chevronLeft
-                ) {
-                    presentationMode.wrappedValue.dismiss()
-                }
-                .frame(width: 24, height: 24)
-            }
-        case .icon:
-            return {
-                IconButton(
-                    variant: background
-                    ? .background(size: 24, isAlternative: alternative)
-                    : .default,
-                    icon: .bell
-                ) {
-                    presentationMode.wrappedValue.dismiss()
-                }
-                .frame(width: 24, height: 24)
-            }
-        case .text:
-            return {
-                if background {
-                    SwiftUI.Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Text("텍스트")
-                            .paragraph(
-                                variant: .body2,
-                                weight: .medium,
-                                semantic: (alternative ? .staticWhite : .labelAlternative)
-                            )
-                            .if(alternative) {
-                                $0.opacity(0.88)
-                            } else: {
-                                $0.blendMode(.plusDarker)
-                            }
-                            .padding(.vertical, 5)
-                            .padding(.horizontal, 10)
-                            .modifying { original in
-                                Group {
-                                    if alternative {
-                                        original.background(
-                                            SwiftUI.Color.atomic(.coolNeutral30)
-                                                .opacity(0.61)
-                                        )
-                                    } else {
-                                        original.background(
-                                            ZStack {
-                                                SwiftUI.Color.semantic(.staticBlack)
-                                                    .opacity(0.05)
-                                                SwiftUI.Color.semantic(.staticWhite)
-                                                    .opacity(0.35)
-                                            }
-                                        )
-                                        .background(.thinMaterial)
-                                    }
-                                }
-                                .clipShape(RoundedRectangle(cornerRadius: 1000))
-                            }
-                    }
-                } else {
-                    TextButton(text: "텍스트") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    .contentColor(.semantic(.labelNormal))
-                    .fontVariant(.headline2)
-                    .fontWeight(.regular)
-                }
-            }
-        }
-    }
     
     private var trailingContents: [() -> any View] {
         return trailing.map {
@@ -154,16 +51,15 @@ struct TopNavigationPreview: View {
             case .icon: {
                 TopNavigation.TrailingIconButton(
                     icon: .bell,
-                    disable: trailingContentsDisable,
                     action: { closure() }
                 )
             }
             case .text: {
                 TopNavigation.TrailingTextButton(
-                    text: "알림",
-                    disable: trailingContentsDisable,
+                    text: variantIndex == 2 ? "취소" : "알림",
                     action: {
                         closure()
+                        focused = false
                     }
                 )
             }
@@ -200,6 +96,9 @@ struct TopNavigationPreview: View {
         }
     }
     
+    @State private var term = ""
+    @State private var focused = false
+    
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading) {
@@ -214,18 +113,33 @@ struct TopNavigationPreview: View {
             .padding(.horizontal)
             .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
             .topNavigation(
-                variant: v,
-                title: {
-                    TopNavigation.TitleView(
-                        variant: v,
-                        title: "제목"
-                    )
-                },
+                variant: TopNavigation.Variant.allCases[variantIndex],
+                title: title,
                 backgroundColor: backgroundColor,
-                leadingContent: leadingContent,
+                leadingContent: leading ? {
+                    IconButton(
+                        variant: .default,
+                        icon: .chevronLeft
+                    ) {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .frame(width: 24, height: 24)
+                } : nil,
                 trailingContents: trailingContents,
-                withBottom: actionAreaModel
-            )
+                withBottom: actionAreaModel,
+                searchPlaceholder: "검색하세요",
+                searchTerm: $term,
+                searchFocused: $focused
+            ) {
+                print("\(term) 검색됨")
+            }
+            .onChange(of: focused) { newValue in
+                if variantIndex == 2 {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        trailing = newValue ? [.text] : []
+                    }
+                }
+            }
             
             VStack(alignment: .leading) {
                 HStack {
@@ -239,78 +153,38 @@ struct TopNavigationPreview: View {
                     }
                 }
                 HStack {
-                    Text("Variant")
-                    Spacer()
-                    Menu(variant.selectableTitle) {
-                        ForEach(Variant.allCases, id: \.self) { v in
-                            Button {
-                                variant = v
-                            } label: {
-                                Text(v.selectableTitle)
-                            }
-                        }
-                    }
+                    Text("variant")
+                    SegmentedControl(selectedIndex: $variantIndex, labels: TopNavigation.Variant.allCases.map(\.description))
+                        .size(.small)
                 }
-                if case .floating = variant {
-                    HStack {
-                        Text("Alternative")
-                        Spacer()
-                        Control.switch(checked: alternative) { alternative = $0 }
+                HStack {
+                    Text("title")
+                    TextField(text: $title)
+                }
+                HStack {
+                    Text("leadingContent")
+                    Control.switch(checked: leading) { leading = $0 }
+                }
+                HStack {
+                    Text("trailingContents")
+                    Button(variant: .outlined, size: .small, text: "TextButton") {
+                        trailing.append(.text)
                     }
-                    HStack {
-                        Text("Background")
-                        Spacer()
-                        Control.switch(checked: background) { background = $0 }
+                    Button(variant: .outlined, size: .small, text: "IconButton") {
+                        trailing.append(.icon)
+                    }
+                    IconButton(variant: .outlined(size: .small), icon: .reset) {
+                        trailing = []
                     }
                 }
                 HStack {
-                    Text("LeadingContent")
-                    Spacer()
-                    Menu(leading.selectableTitle) {
-                        ForEach(LeadingContentsKind.allCases, id: \.self) { action in
-                            Button {
-                                leading = action
-                            } label: {
-                                Text(action.selectableTitle)
-                            }
-                        }
-                    }
-                }
-                HStack {
-                    Text("Add TrailingContents")
-                    Spacer()
-                    Menu("추가") {
-                        ForEach(TrailingButton.allCases, id: \.self) { action in
-                            Button {
-                                trailing.append(action)
-                            } label: {
-                                Text(action.selectableTitle)
-                            }
-                        }
-                    }
-                }
-                HStack {
-                    Text("TrailingContents Disable")
-                    Spacer()
-                    Control.switch(checked: trailingContentsDisable) { trailingContentsDisable = $0 }
-                }
-                HStack {
-                    Text("BackgroundColor")
-                    Spacer()
-                    Picker(
-                        "BackgroundColor",
-                        selection: $selectedBackgroundColorName,
-                        content: {
-                            ForEach(Color.Semantic.allCases, id: \.self) { color in
-                                Text(color.rawValue)
-                            }
-                        }
+                    ColorPicker(
+                        "backgroundColor",
+                        selection: $backgroundColor
                     )
-                    .pickerStyle(.menu)
                 }
                 HStack {
-                    Text("ActionArea")
-                    Spacer()
+                    Text("actionArea")
                     Control.switch(checked: actionArea) { actionArea = $0 }
                 }
                 if actionArea {
@@ -331,11 +205,12 @@ struct TopNavigationPreview: View {
         }
         .toast($toast)
         .navigationBarHidden(true)
-        .onChange(
-            of: selectedBackgroundColorName
-        ) { color in
-            backgroundColor = .semantic(color)
-        }
+    }
+}
+
+extension TopNavigation.Variant: @retroactive CaseIterable, CaseDescribable {
+    public static var allCases: [TopNavigation.Variant] {
+        [.normal, .display, .search, .floating]
     }
 }
 

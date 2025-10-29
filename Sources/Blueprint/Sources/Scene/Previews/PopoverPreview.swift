@@ -88,7 +88,7 @@ struct PopoverPreview: View {
                 IconButton(variant: .background(size: 20), icon: .closeThick) {
                     isPresented = false
                 }
-                    .padding(.all, 14)
+                .padding(.all, 14)
             }
             
             VStack(spacing: 16) {

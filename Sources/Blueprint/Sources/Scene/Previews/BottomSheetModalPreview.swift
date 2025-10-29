@@ -149,12 +149,7 @@ struct BottomSheetModalPreview: View {
             ? {
                 ModalNavigation()
                     .variant(navigationVariants[navVariantIndex])
-                    .title({
-                        ModalNavigation.TitleView(
-                            variant: navigationVariants[navVariantIndex],
-                            title: "제목"
-                        )
-                    })
+                    .title("제목")
                     .leadingContent {
                         TopNavigation.LeadingButton(.back(action: {}))
                     }

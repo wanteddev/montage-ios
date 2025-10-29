@@ -16,16 +16,16 @@ import SwiftUI
 /// ```swift
 /// ModalNavigation()
 ///     .variant(.normal)
-///     .title {
-///         ModalNavigation.TitleView(variant: .normal, title: "제목")
+///     .titleView {
+///         Text("제목").bold()
 ///     }
 ///     .leadingContent {
 ///         // 뒤로가기 동작 컴포넌트
 ///     }
-///     .trailingContents([
+///     .trailingContents(
 ///         { /* 컴포넌트1 */ },
 ///         { /* 컴포넌트2 */ }
-///     ])
+///     )
 /// ```
 public struct ModalNavigation: View {
     // MARK: - Types
@@ -81,7 +81,8 @@ public struct ModalNavigation: View {
                 
                 Contents(
                     variant: variant,
-                    title: title,
+                    titleText: titleText,
+                    titleView: titleView,
                     leadingContent: leadingContent,
                     trailingContents: trailingContents
                 )
@@ -111,7 +112,8 @@ public struct ModalNavigation: View {
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNormal)
     private var needHandleArea = false
-    private var title: () -> AnyView = { AnyView(EmptyView()) }
+    private var titleText: String?
+    private var titleView: () -> AnyView = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var trailingContents: [() -> AnyView] = []
     
@@ -155,13 +157,23 @@ public struct ModalNavigation: View {
         return zelf
     }
     
+    /// 내비게이션 바의 타이틀을 설정합니다.
+    ///
+    /// - Parameter text: 타이틀
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func title(_ text: String) -> Self {
+        var zelf = self
+        zelf.titleText = text
+        return zelf
+    }
+    
     /// 내비게이션 바의 타이틀 영역을 설정합니다.
     ///
     /// - Parameter content: 타이틀 영역에 표시될 콘텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func title<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
+    public func titleView<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.title = { AnyView(content()) }
+        zelf.titleView = { AnyView(content()) }
         return zelf
     }
     
@@ -201,7 +213,8 @@ public struct ModalNavigation: View {
     
     private struct Contents: View {
         var variant: Variant
-        var title: () -> AnyView
+        var titleText: String?
+        var titleView: () -> AnyView
         var leadingContent: () -> AnyView
         var trailingContents: [() -> AnyView]
         
@@ -210,7 +223,8 @@ public struct ModalNavigation: View {
             case .normal, .extended, .floating:
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
-                    title: title,
+                    titleText: titleText,
+                    titleView: titleView,
                     leadingContent: leadingContent,
                     trailingContents: trailingContents
                 )
@@ -218,7 +232,7 @@ public struct ModalNavigation: View {
                 ZStack {
                     HStack(spacing: 20) {
                         leadingContent()
-                        title()
+                        titleContent
                         Spacer(minLength: 0)
                         Group {
                             ForEach(Array(trailingContents.enumerated()), id: \.offset) { _, makeView in
@@ -229,15 +243,24 @@ public struct ModalNavigation: View {
                 }
             }
         }
+        
+        @ViewBuilder
+        private var titleContent: some View {
+            if let titleText {
+                TitleView(variant: variant, title: titleText)
+            } else {
+                titleView()
+            }
+        }
     }
 }
 
 extension ModalNavigation {
-    public struct TitleView: View {
+    struct TitleView: View {
         let variant: Variant
         let title: String
         
-        public init(
+        init(
             variant: Variant = .normal,
             title: String
         ) {
@@ -245,7 +268,7 @@ extension ModalNavigation {
             self.title = title
         }
         
-        public var body: some View {
+        var body: some View {
             Text(title)
                 .paragraph(
                     variant: variant.typoVariant,
@@ -275,10 +298,7 @@ private extension ModalNavigation.Variant {
         switch self {
         case .normal: .normal
         case .extended: .display
-        case .floating(let alternative, let background): .floating(
-            alternative: alternative,
-            background: background
-        )
+        case .floating: .floating
         case .emphasized: .normal
         }
     }
