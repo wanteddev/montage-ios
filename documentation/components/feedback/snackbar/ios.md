@@ -1,6 +1,6 @@
 ---
 title: Snack bar
-description: 화면 하단에 임시로 표시되는 알림 메시지 컴포넌트입니다.
+description: 화면 상단 또는 하단에 임시로 표시되는 알림 메시지 컴포넌트입니다.
 ---
 
 ```swift
@@ -134,6 +134,37 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 [Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 [RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
+
+</details>
+<details>
+
+<summary>``enum Location``</summary>
+
+스낵바가 표시될 위치를 정의하는 열거형입니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case bottom(offset: CGFloat)``</summary>
+
+화면 하단에 스낵바 표시
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `offset` | 하단에서의 오프셋 값 (기본값: 0) |
+</details>
+<details>
+
+<summary>``case top(offset: CGFloat)``</summary>
+
+화면 상단에 스낵바 표시
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `offset` | 상단에서의 오프셋 값 (기본값: 0) |
+</details>
 
 </details>
 

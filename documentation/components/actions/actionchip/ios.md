@@ -17,7 +17,7 @@ ActionChip(
     size: .medium,
     text: "액션"
 )
-.backgroundColor(.semantic(.primary))
+.backgroundColor(.semantic(.primaryNormal))
 .fontColor(.semantic(.staticWhite))
 .leadingImage(Image(systemName: "heart"))
 ```
@@ -155,11 +155,6 @@ ___
 - **Return Value**
 
   수정된 칩 인스턴스
-- **Discussion**
-  >  **Note**
-  >
-  > 기본값은 `.semantic(.labelAlternative)`입니다.
-
 </details>
 <details>
 

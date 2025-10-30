@@ -120,17 +120,27 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func elevation(Elevation) -> Self``</summary>
+<summary>``func framedStyle(status: FramedStyleStatus, borderRadius: CGFloat, shadowLevel: ShadowLevel, disabled: Bool) -> some View``</summary>
 
-Montage 디자인 시스템의 그림자 효과를 적용합니다.
+현재 뷰에 프레임 스타일을 적용합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `elevation` | 적용할 그림자 효과 |
+  | `status` | 프레임 상태 (기본값: .normal) |
+  | `borderRadius` | 테두리 반경 (기본값: 0) |
+  | `shadowLevel` | 그림자 레벨 (기본값: .xsmall) |
+  | `disabled` | 비활성화 상태 여부 (기본값: false) |
 - **Return Value**
 
-  그림자 효과가 적용된 View
+  프레임 스타일이 적용된 뷰
+- **Discussion**
+
+  테두리, 배경, 그림자가 있는 프레임을 뷰에 적용하여 일관된 디자인을 제공합니다. 다양한 크기와 상태를 설정할 수 있어 다양한 UI 요소에 활용할 수 있습니다.
+  >  **Note**
+  >
+  > 그림자는 원본 View 배경색의 opacity가 동일하게 적용됩니다.
+
 </details>
 <details>
 
@@ -268,6 +278,40 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
+<summary>``func popoverCustom<V>(isPresented: Binding<Bool>, content: () -> V) -> some View``</summary>
+
+사용자 정의 팝오버 모디파이어를 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 팝오버 표시 여부에 대한 바인딩 |
+  | `content` | 팝오버 콘텐츠를 반환하는 클로저 |
+- **Return Value**
+
+  사용자 정의 팝오버 모디파이어
+</details>
+<details>
+
+<summary>``func popoverNormal(isPresented: Binding<Bool>, heading: String, text: String, closeButton: Bool, action: (title: String, action: () -> Void)?, subAction: (title: String, action: () -> Void)?) -> some View``</summary>
+
+일반적인 팝오버 모디파이어를 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 팝오버 표시 여부에 대한 바인딩 |
+  | `heading` | 팝오버 제목 |
+  | `text` | 팝오버 텍스트 |
+  | `closeButton` | 팝오버 닫기 버튼 표시 여부 |
+  | `action` | 팝오버 행동 버튼 표시 여부 |
+  | `subAction` | 팝오버 보조 행동 버튼 표시 여부 |
+- **Return Value**
+
+  일반적인 팝오버 모디파이어
+</details>
+<details>
+
 <summary>``func popupModal<V>(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 팝업 모달을 표시합니다.
@@ -392,6 +436,23 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
+<summary>``func shadow(ShadowLevel) -> some View``</summary>
+
+현재 뷰에 그림자를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `level` | 적용할 그림자 레벨 |
+- **Return Value**
+
+  그림자가 적용된 뷰
+- **Discussion**
+
+  지정된 레벨의 그림자를 뷰에 적용하여 깊이감을 줍니다. 키 그림자와 앰비언트 그림자가 조합되어 자연스러운 그림자 효과를 만듭니다.
+</details>
+<details>
+
 <summary>``func skeleton(isPresented: Bool, kind: Skeleton.Kind, color: SwiftUI.Color?, opacity: CGFloat?, size: CGSize?) -> some View``</summary>
 
 현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
@@ -425,7 +486,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func snackBar(Binding<SnackBar.Model?>, handler: () -> Void) -> some View``</summary>
+<summary>``func snackBar(Binding<SnackBar.Model?>, location: SnackBar.Location, handler: () -> Void) -> some View``</summary>
 
 현재 뷰에 SnackBar를 표시하는 modifier를 적용합니다.
 
@@ -433,6 +494,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | Parameter | Description |
   | --- | --- |
   | `model` | SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다. |
+  | `location` | SnackBar가 표시될 위치 (기본값: .bottom()) |
   | `handler` | SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저 |
 - **Return Value**
 
@@ -458,24 +520,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func tooltip(isPresented: Binding<Bool>, message: String, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``</summary>
-
-iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `isPresented` | 툴팁의 표시 여부를 제어하는 바인딩 |
-  | `message` | 툴팁에 표시될 메시지 |
-  | `showCloseButton` | 닫기 버튼 표시 여부 (기본값: false) |
-  | `buttonInfo` | 툴팁에 추가할 버튼 정보 (선택 사항) |
-- **Return Value**
-
-  툴팁이 적용된 뷰
-</details>
-<details>
-
-<summary>``func tooltip(isPresented: Binding<Bool>, position: Tooltip.Position, message: String, showArrow: Bool, showCloseButton: Bool, buttonInfo: Tooltip.ButtonInfo?) -> some View``</summary>
+<summary>``func tooltip(isPresented: Binding<Bool>, mode: Tooltip.ActionMode, position: Tooltip.Position, size: Tooltip.Size, message: String) -> some View``</summary>
 
 현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
 
@@ -483,18 +528,17 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 툴팁의 표시 여부를 제어하는 바인딩 |
+  | `mode` | 툴팁의 표시 모드 |
   | `position` | 툴팁이 표시될 위치 및 화살표 위치 |
+  | `size` | 툴팁의 크기, 기본값은 `.medium` |
   | `message` | 툴팁에 표시될 메시지 |
-  | `showArrow` | 화살표 표시 여부 (기본값: true) |
-  | `showCloseButton` | 닫기 버튼 표시 여부 (기본값: false) |
-  | `buttonInfo` | 툴팁에 추가할 버튼 정보 (선택 사항) |
 - **Return Value**
 
   툴팁이 적용된 뷰
 </details>
 <details>
 
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?) -> some View``</summary>
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
 
 현재 뷰에 TopNavigation 바를 적용합니다.
 
@@ -513,7 +557,7 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
 </details>
 <details>
 
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?) -> some View``</summary>
+<summary>``func topNavigation(variant: TopNavigation.Variant, titleView: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
 
 현재 뷰에 TopNavigation 바를 적용합니다.
 
@@ -521,8 +565,8 @@ iOS 16.4 이상에서 시스템 팝오버를 사용하는 툴팁 modifier를 적
   | Parameter | Description |
   | --- | --- |
   | `variant` | 내비게이션 바의 외관 스타일 (기본값: .normal) |
-  | `title` | 표시할 제목 컴포넌트 클로저 (기본값: nil) |
-  | `backgroundColor` | 배경색 (기본값: nil) |
+  | `titleView` | 표시할 제목 컴포넌트 클로저 (기본값: nil) |
+  | `backgroundColor` | TopNavigation이 적용된 전체 뷰의 배경색 (기본값: nil) |
   | `leadingContent` | 좌측에 표시할 컴포넌트 클로저 (기본값: nil) |
   | `trailingContents` | 우측에 표시할 컴포넌트 클로저 (기본값: []) |
   | `model` | 하단 액션 영역에 대한 모델 (기본값: nil) |

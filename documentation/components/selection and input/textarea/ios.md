@@ -308,7 +308,7 @@ ___
 </details>
 <details>
 
-<summary>``case textButton(placement: Placement, variant: TextButton.Variant?, title: String, handler: (() -> Void)?)``</summary>
+<summary>``case textButton(placement: Placement, variant: TextButton.Color?, title: String, handler: (() -> Void)?)``</summary>
 
 텍스트 버튼
 
@@ -316,7 +316,7 @@ ___
   | Parameter | Description |
   | --- | --- |
   | `placement` | 버튼 위치 |
-  | `varaint` | 버튼 변형 스타일 |
+  | `variant` | 버튼 변형 스타일 |
   | `title` | 버튼 텍스트 |
   | `handler` | 버튼 클릭 핸들러 |
 </details>
