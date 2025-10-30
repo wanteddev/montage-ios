@@ -76,7 +76,7 @@ public struct FallbackView: View {
                 .ifEmptyView { isImageEmpty = $0 }
             
             VStack(spacing: 24) {
-                VStack(spacing: 12) {
+                VStack(spacing: 10) {
                     if let title {
                         HStack {
                             Spacer()
