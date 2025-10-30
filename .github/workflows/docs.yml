@@ -46,7 +46,7 @@ jobs:
         run: |
           PR_NUMBER=$(gh pr list --state merged --limit 1 | awk 'NR==1 {print $1}' | sed 's/#//')
           MILESTONE=$(gh pr view $PR_NUMBER | awk '/^milestone:/ {print $2}')
-          VERSION="v${MILESTONE}"
+          VERSION="${MILESTONE}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create and checkout feature branch
@@ -103,10 +103,11 @@ jobs:
         if: steps.commit.outputs.changes == 'true'
         id: create_pr
         run: |
-          # 현재 브랜치에 연결된 PR URL을 가져오기 시도
-          PR_URL=$(gh pr view 2>/dev/null | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*' | head -1 || echo "")
+          # 현재 브랜치에 연결된 PR 상태 확인
+          PR_STATE=$(gh pr view --json state --jq '.state' 2>/dev/null || echo "NOT_FOUND")
           
-          if [ -z "$PR_URL" ]; then
+          # PR이 없거나 closed 상태인 경우 새로운 PR 생성
+          if [ "$PR_STATE" = "NOT_FOUND" ] || [ "$PR_STATE" = "CLOSED" ] || [ "$PR_STATE" = "MERGED" ]; then
             # milestone 존재 여부 확인 및 생성
             MILESTONE_TITLE="${{ steps.get_version.outputs.version }}"
             if ! gh api repos/:owner/:repo/milestones --jq ".[] | select(.title==\"$MILESTONE_TITLE\")" | grep -q "$MILESTONE_TITLE"; then
@@ -125,14 +126,18 @@ jobs:
             
             # 기존 PR이 없으면 새로운 PR 생성
             gh pr create --base $BASE_BRANCH --head feature/documentation/${{ steps.get_version.outputs.version }} \
-              --title "docs: docc to markdown for ${{ steps.get_version.outputs.version }}" \
-              --body "Montage ${{ steps.get_version.outputs.version }} 최신 문서 반영 PR입니다. 자동 생성된 문서 업데이트 PR입니다." \
+              --title "docs: docc to markdown for v${{ steps.get_version.outputs.version }}" \
+              --body "Montage v${{ steps.get_version.outputs.version }} 최신 문서 반영 PR입니다. 자동 생성된 문서 업데이트 PR입니다." \
               --label "documentation" \
               --label "in review" \
               --milestone "${{ steps.get_version.outputs.version }}"
             
             # 생성된 PR의 URL 가져오기
-            PR_URL=$(gh pr view | grep -o 'https://github.com/[^/]*/[^/]*/pull/[0-9]*' | head -1)
+            PR_URL=$(gh pr view --json url --jq '.url' 2>/dev/null)
+          else
+            # PR이 OPEN 상태인 경우 기존 PR URL 가져오기
+            PR_URL=$(gh pr view --json url --jq '.url' 2>/dev/null)
+            echo "Existing open PR found: $PR_URL"
           fi
           
           echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
