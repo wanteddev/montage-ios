@@ -37,7 +37,7 @@ struct TopNavigationPreview: View {
     @State var variantIndex: Int = 0
     @State var leading = false
     @State var trailing: [TrailingButton] = []
-    @State var toast: Toast.Model? = nil
+    @State var toast: Toast.Model?
     @State var backgroundColor: SwiftUI.Color = .semantic(.backgroundNormal)
     @State var actionArea = false
     @State var actionAreaSub = false
@@ -125,7 +125,11 @@ struct TopNavigationPreview: View {
                     }
                 }
                 .padding(.horizontal)
-                .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+                .transparentChecking(
+                    isPresented: showTransparentChecker,
+                    checkerSize: 202,
+                    checkerColor: .red
+                )
                 .topNavigation(
                     variant: currentVariant,
                     title: title,

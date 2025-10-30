@@ -255,7 +255,7 @@ public struct TopNavigation: View {
         }
     }
     
-    private var gradientMaskColors = [0, 1].map { SwiftUI.Color.black.opacity($0) }
+    private var gradientMaskColors = [0, 0.7, 1].map { SwiftUI.Color.black.opacity($0) }
     
     // MARK: - Inner Views
     
