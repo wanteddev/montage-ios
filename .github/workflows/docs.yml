@@ -4,18 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       base_branch:
-        description: 'Base branch to create documentation PR against'
+        description: 'Base branch to create documentation PR against (예: develop, main, release/1.0.0)'
         required: true
         default: 'develop'
-        type: choice
-        options:
-          - develop
-          - main
+        type: string
   pull_request:
     types: [closed]
     branches:
       - develop
       - main
+      - 'release/*'
 
 jobs:
   generate-document:
