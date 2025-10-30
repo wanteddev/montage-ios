@@ -113,7 +113,9 @@ public struct TopNavigation: View {
     /// - Parameters:
     ///   - text: 타이틀에 표시할 문자열
     /// - Returns: 수정된 내비게이션 바 인스턴스
-    public func title(text: String) -> Self {
+    ///
+    /// - Note: titleView(_:)와 함께 사용될 경우 이 메서드로 설정된 텍스트만 표시됩니다.
+    public func title(_ text: String) -> Self {
         var zelf = self
         zelf.titleText = text
         return zelf
@@ -125,6 +127,8 @@ public struct TopNavigation: View {
     ///
     /// - Parameter content: 표시할 타이틀 뷰를 반환하는 클로저
     /// - Returns: 수정된 인스턴스를 반환합니다.
+    ///
+    /// - Note: title(text:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
     public func titleView<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.titleView = { AnyView(content()) }

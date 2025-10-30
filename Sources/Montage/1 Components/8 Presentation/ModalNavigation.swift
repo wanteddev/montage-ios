@@ -151,6 +151,8 @@ public struct ModalNavigation: View {
     ///
     /// - Parameter needHandleArea: 핸들 영역 필요 여부
     /// - Returns: 수정된 내비게이션 바 뷰
+    ///
+    /// - Note: titleView(_:)와 함께 사용될 경우 이 메서드로 설정된 텍스트만 표시됩니다.
     public func needHandleArea(_ needHandleArea: Bool) -> Self {
         var zelf = self
         zelf.needHandleArea = needHandleArea
@@ -171,6 +173,8 @@ public struct ModalNavigation: View {
     ///
     /// - Parameter content: 타이틀 영역에 표시될 콘텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
+    ///
+    /// - Note: title(text:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
     public func titleView<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.titleView = { AnyView(content()) }
