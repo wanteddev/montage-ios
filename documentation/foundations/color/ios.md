@@ -1230,459 +1230,318 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 <summary>``case accentBackgroundCyan``</summary>
 
 시안색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-cyan` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentBackgroundLightBlue``</summary>
 
 하늘색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-lightBlue` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentBackgroundLime``</summary>
 
 라임색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-lime` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentBackgroundPink``</summary>
 
 분홍색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-pink` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentBackgroundPurple``</summary>
 
 자주색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-purple` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentBackgroundRedOrange``</summary>
 
 붉은 주황색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-redOrange` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentBackgroundViolet``</summary>
 
 보라색 강조 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-background-violet` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundBlue``</summary>
 
 파란색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-blue` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundCyan``</summary>
 
 시안색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-cyan` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundGreen``</summary>
 
 초록색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-green` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundLightBlue``</summary>
 
 하늘색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-lightBlue` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundLime``</summary>
 
 라임색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-lime` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundOrange``</summary>
 
 주황색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-orange` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundPink``</summary>
 
 분홍색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-pink` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundPurple``</summary>
 
 자주색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-purple` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundRed``</summary>
 
 빨간색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-red` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundRedOrange``</summary>
 
 붉은 주황색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-redOrange` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case accentForegroundViolet``</summary>
 
 보라색 강조 전경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-accent-foreground-violet` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case backgroundElevated``</summary>
 
 상승된 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-background-elevated-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case backgroundElevatedAlternative``</summary>
 
 상승된 대체 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-background-elevated-alternative` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case backgroundNormal``</summary>
 
 기본 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-background-normal-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case backgroundNormalAlternative``</summary>
 
 대체 배경 색상
-- **Discussion**
+</details>
+<details>
 
-  Figma상의 `.color-semantic-background-normal-alternative` 토큰과 대응되는 값입니다.
+<summary>``case backgroundTransparent``</summary>
+
+투명 배경 색상
+</details>
+<details>
+
+<summary>``case backgroundTransparentAlternative``</summary>
+
+투명 대체 배경 색상
 </details>
 <details>
 
 <summary>``case fillAlternative``</summary>
 
 대체 채우기 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-fill-alternative` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case fillNormal``</summary>
 
 기본 채우기 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-fill-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case fillStrong``</summary>
 
 강조된 채우기 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-fill-strong` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case interactionDisable``</summary>
 
 비활성화된 상호작용 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-interaction-disable` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case interactionInactive``</summary>
 
 비활성화된 상호작용 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-interaction-inactive` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case inverseBackground``</summary>
 
 역전된 배경 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-inverse-background` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case inverseLabel``</summary>
 
 역전된 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-inverse-label` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case inversePrimary``</summary>
 
 역전된 주요 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-inverse-primary` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case labelAlternative``</summary>
 
 대체 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-label-alternative` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case labelAssistive``</summary>
 
 보조 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-label-assistive` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case labelDisable``</summary>
 
 비활성화된 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-label-disable` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case labelNeutral``</summary>
 
 중립적인 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-label-neutral` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case labelNormal``</summary>
 
 기본 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-label-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case labelStrong``</summary>
 
 강조된 라벨 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-label-strong` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case lineAlternative``</summary>
 
 대체 선 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-line-alternative` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case lineNeutral``</summary>
 
 중립적인 선 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-line-neutral` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case lineNormal``</summary>
 
 기본 선 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-line-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case lineSolidAlternative``</summary>
 
 대체 실선 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-line-solid-alternative` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case lineSolidNeutral``</summary>
 
 중립적인 실선 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-line-solid-neutral` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case lineSolidNormal``</summary>
 
 기본 실선 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-line-solid-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case materialDimmer``</summary>
 
 어두운 재질 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-material-dimmer` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case primaryHeavy``</summary>
 
 매우 강조된 주요 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-primary-heavy` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case primaryNormal``</summary>
 
 기본 주요 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-primary-normal` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case primaryStrong``</summary>
 
 강조된 주요 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-primary-strong` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case staticBlack``</summary>
 
 정적 검은색 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-static-black` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case staticWhite``</summary>
 
 정적 흰색 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-static-white` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case statusCautionary``</summary>
 
 주의 상태 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-status-cautionary` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case statusNegative``</summary>
 
 부정적인 상태 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-status-negative` 토큰과 대응되는 값입니다.
 </details>
 <details>
 
 <summary>``case statusPositive``</summary>
 
 긍정적인 상태 색상
-- **Discussion**
-
-  Figma상의 `.color-semantic-status-positive` 토큰과 대응되는 값입니다.
 </details>
 
 #### Initializers
