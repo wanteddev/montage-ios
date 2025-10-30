@@ -9,7 +9,6 @@ import SwiftUI
 import Montage
 
 struct FullModalPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var show = true
     
     @State private var itemCountsIndex: Int = 0
@@ -24,6 +23,8 @@ struct FullModalPreview: View {
     @State private var extraDivider = true
     
     @State private var refreshTask: Task<(), Never>?
+    
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         SwiftUI.Button("PUSH") {
@@ -47,7 +48,16 @@ struct FullModalPreview: View {
             {
                 VStack {
                     VStack(alignment: .leading) {
-                        Text("Options").bold()
+                        HStack {
+                            Text("Options").bold()
+                            Spacer()
+                            Button(action: {
+                                show = false
+                                presentationMode.wrappedValue.dismiss()
+                            }) {
+                                Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
+                            }
+                        }
                         HStack {
                             SegmentedControl(selectedIndex: $itemCountsIndex, labels: itemCounts.map(\.description))
                                 .size(.small)
@@ -111,12 +121,7 @@ struct FullModalPreview: View {
             ? {
                 ModalNavigation()
                     .variant(navigationVariants[navVariantIndex])
-                    .title({
-                        ModalNavigation.TitleView(
-                            variant: navigationVariants[navVariantIndex],
-                            title: "제목"
-                        )
-                    })
+                    .title("제목")
                     .leadingContent {
                         TopNavigation.LeadingButton(
                             .back(action: {})
@@ -149,7 +154,6 @@ struct FullModalPreview: View {
             }
             : nil
         )
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
     
     private var variant: ActionArea.Variant {

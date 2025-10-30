@@ -196,7 +196,6 @@ public struct ActionChip: View {
     ///
     /// - Parameter color: 이미지에 적용할 색상
     /// - Returns: 수정된 칩 인스턴스
-    /// - Note: 기본값은 `.semantic(.labelAlternative)`입니다.
     public func imageColor(_ color: SwiftUI.Color) -> Self {
         var view = self
         view.customImageColor = color

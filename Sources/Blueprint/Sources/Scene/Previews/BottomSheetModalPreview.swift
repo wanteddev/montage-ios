@@ -9,7 +9,6 @@ import SwiftUI
 import Montage
 
 struct BottomSheetModalPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var show = true
     
     @State private var text: String = ""
@@ -30,6 +29,8 @@ struct BottomSheetModalPreview: View {
     @State private var extraDivider = true
     
     @State private var refreshTask: Task<(), Never>?
+    
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         SwiftUI.Button("PUSH") {
@@ -55,7 +56,16 @@ struct BottomSheetModalPreview: View {
             {
                 VStack {
                     VStack(alignment: .leading) {
-                        Text("Options").bold()
+                        HStack {
+                            Text("Options").bold()
+                            Spacer()
+                            Button(action: {
+                                show = false
+                                presentationMode.wrappedValue.dismiss()
+                            }) {
+                                Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
+                            }
+                        }
                         HStack {
                             Text("resize")
                             SegmentedControl(selectedIndex: $resizeIndex, labels: bottomSheetResizes.map(\.description))
@@ -149,12 +159,7 @@ struct BottomSheetModalPreview: View {
             ? {
                 ModalNavigation()
                     .variant(navigationVariants[navVariantIndex])
-                    .title({
-                        ModalNavigation.TitleView(
-                            variant: navigationVariants[navVariantIndex],
-                            title: "제목"
-                        )
-                    })
+                    .title("제목")
                     .leadingContent {
                         TopNavigation.LeadingButton(.back(action: {}))
                     }
@@ -183,7 +188,6 @@ struct BottomSheetModalPreview: View {
             }
             : nil
         )
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
     

@@ -19,120 +19,126 @@ struct ModalNavigationPreview: View {
     @State private var leadingButtonTypeIndex = 0
     @State private var trailingButtonCount = 1
     @Environment(\.presentationMode) var presentationMode
+    @State private var showPreview = true
     
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack(alignment: .top) {
-                ScrollView(
-                    onOffsetChanged: { offset in
-                        contentOffset = offset.y
-                    },
-                    content: {
-                        SwiftUI.Color.clear
-                            .frame(height: scrollViewTopPadding)
-                        
-                        LazyVStack(spacing: 0) {
-                            ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
-                                ZStack {
-                                    SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
-                                    Text("Item \(index)")
-                                        .padding()
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                )
-                .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-                
-                VStack {
-                    ModalNavigation(scrollOffset: $contentOffset)
-                        .variant(variants[variantIndex])
-                        .title({
-                            ModalNavigation.TitleView(
-                                variant: variants[variantIndex],
-                                title: "제목"
-                            )
-                        })
-                        .leadingContent {
-                            Group {
-                                if leadingButton {
-                                    TopNavigation.LeadingButton.init(
-                                        leadingButtons[leadingButtonTypeIndex]
-                                    )
-                                }
-                            }
-                        }
-                        .trailingContents(
-                            Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
-                                switch kind {
-                                case let .icon(i, d, s, a):
-                                    {
-                                        AnyView(TopNavigation.TrailingIconButton(
-                                            icon: i,
-                                            disable: d,
-                                            showPushBadge: s,
-                                            action: a
-                                        ))
-                                    }
-                                case let .text(t, d, a):
-                                    {
-                                        AnyView(TopNavigation.TrailingTextButton(
-                                            text: t,
-                                            disable: d,
-                                            action: a
-                                        ))
-                                    }
-                                }
-                            }
-                        )
-                }
-                .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
-            }
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Options").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                HStack {
-                    Text("variant")
-                    SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
-                        .size(.small)
-                }
-                if case .floating = variants[variantIndex] {
-                    HStack {
-                        Text("alternative")
-                        Control.switch(checked: alternative) { alternative = $0 }
-                    }
-                    HStack {
-                        Text("background")
-                        Control.switch(checked: background) { background = $0 }
-                    }
-                }
-                HStack {
-                    Text("leadingButton")
-                    Control.switch(checked: leadingButton) { leadingButton = $0 }
-                    SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
-                        .size(.small)
-                }
-                HStack {
-                    Text("trailingButton")
-                    SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
-                        .size(.small)
-                    
-                }
-            }
-            .padding()
-            .background(.regularMaterial)
+        SwiftUI.Button("TopNavigation Preview") {
+            showPreview = true
         }
-        .navigationBarHidden(true)
+        .fullScreenCover(isPresented: $showPreview) {
+            VStack(spacing: 0) {
+                ZStack(alignment: .top) {
+                    ScrollView(
+                        onOffsetChanged: { offset in
+                            contentOffset = offset.y
+                        },
+                        content: {
+                            SwiftUI.Color.clear
+                                .frame(height: scrollViewTopPadding)
+                            
+                            LazyVStack(spacing: 0) {
+                                ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
+                                    ZStack {
+                                        SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                                        Text("Item \(index)")
+                                            .padding()
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    )
+                    .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+                    
+                    VStack {
+                        ModalNavigation(scrollOffset: $contentOffset)
+                            .variant(variants[variantIndex])
+                            .title("제목")
+                            .leadingContent {
+                                Group {
+                                    if leadingButton {
+                                        TopNavigation.LeadingButton.init(
+                                            leadingButtons[leadingButtonTypeIndex]
+                                        )
+                                    }
+                                }
+                            }
+                            .trailingContents(
+                                Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
+                                    switch kind {
+                                    case let .icon(i, d, s, a):
+                                        {
+                                            AnyView(TopNavigation.TrailingIconButton(
+                                                icon: i,
+                                                disable: d,
+                                                showPushBadge: s,
+                                                action: a
+                                            ))
+                                        }
+                                    case let .text(t, d, a):
+                                        {
+                                            AnyView(TopNavigation.TrailingTextButton(
+                                                text: t,
+                                                disable: d,
+                                                action: a
+                                            ))
+                                        }
+                                    }
+                                }
+                            )
+                    }
+                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
+                }
+                
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Options").bold()
+                        Spacer()
+                        Button(action: {
+                            showPreview = false
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
+                        }
+                        Button(action: {
+                            showTransparentChecker.toggle()
+                        }) {
+                            Image(systemName: "checkerboard.rectangle")
+                                .foregroundColor(.semantic(.primaryNormal))
+                        }
+                    }
+                    HStack {
+                        Text("variant")
+                        SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
+                            .size(.small)
+                    }
+                    if case .floating = variants[variantIndex] {
+                        HStack {
+                            Text("alternative")
+                            Control.switch(checked: alternative) { alternative = $0 }
+                        }
+                        HStack {
+                            Text("background")
+                            Control.switch(checked: background) { background = $0 }
+                        }
+                    }
+                    HStack {
+                        Text("leadingButton")
+                        Control.switch(checked: leadingButton) { leadingButton = $0 }
+                        SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
+                            .size(.small)
+                    }
+                    HStack {
+                        Text("trailingButton")
+                        SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
+                            .size(.small)
+                        
+                    }
+                }
+                .padding()
+                .background(.regularMaterial)
+            }
+        }
     }
     
     private var variants: [ModalNavigation.Variant] {

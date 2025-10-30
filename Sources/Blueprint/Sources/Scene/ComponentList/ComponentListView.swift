@@ -84,8 +84,6 @@ struct ComponentListView: View {
                     } header: {
                         Text(categorySet.category.displayName)
                             .font(.font(variant: .body1, weight: .bold))
-                            .foregroundStyle(Color.semantic(.labelNormal))
-                            .textCase(nil)
                     }
                 }
             }

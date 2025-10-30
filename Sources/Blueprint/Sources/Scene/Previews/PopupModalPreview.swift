@@ -9,7 +9,6 @@ import SwiftUI
 import Montage
 
 struct PopupModalPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var show = false
 
     @State private var itemCountsIndex: Int = 0
@@ -92,6 +91,9 @@ struct PopupModalPreview: View {
                     }
                 }
             }
+            .onAppear {
+                show = true
+            }
             .font(.caption)
         }
         .popupModal(
@@ -125,12 +127,7 @@ struct PopupModalPreview: View {
             ? {
                 ModalNavigation()
                     .variant(navigationVariants[navVariantIndex])
-                    .title({
-                        ModalNavigation.TitleView(
-                            variant: navigationVariants[navVariantIndex],
-                            title: "제목"
-                        )
-                    })
+                    .title("제목")
                     .leadingContent {
                         TopNavigation.LeadingButton(
                             .back(action: {})
@@ -163,7 +160,6 @@ struct PopupModalPreview: View {
             }
             : nil
         )
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
     
     private var actionAreaVariant: ActionArea.Variant {

@@ -106,7 +106,7 @@ public struct PopupModal: View {
                 
                 if let actionAreaModel {
                     ActionArea(variant: actionAreaModel.variant)
-                        .clearBackground(scrolledToBottom)
+                        .transparentBackground(scrolledToBottom)
                         .caption(actionAreaModel.caption)
                         .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                         .padding(.bottom, 20)

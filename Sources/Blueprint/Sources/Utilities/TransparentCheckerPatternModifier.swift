@@ -9,12 +9,13 @@
 import SwiftUI
 
 extension View {
-    func transparentChecking(isPresented: Bool, checkerSize: CGFloat, checkerColor: Color) -> some View {
+    func transparentChecking(isPresented: Bool, checkerSize: CGFloat, checkerColor: Color, opacity: CGFloat = 0.5) -> some View {
         modifier(
             TransparentCheckerPatternModifier(
                 isPresented: isPresented,
                 checkerSize: checkerSize,
-                checkerColor: checkerColor
+                color: checkerColor,
+                opacity: opacity
             )
         )
     }
@@ -24,11 +25,13 @@ struct TransparentCheckerPatternModifier: ViewModifier {
     private let isPresented: Bool
     private let checkerSize: CGFloat
     private let checkerColor: Color
+    private let opacity: CGFloat
     
-    init(isPresented: Bool, checkerSize: CGFloat = 8, checkerColor: Color = .gray) {
+    init(isPresented: Bool, checkerSize: CGFloat = 8, color: Color = .gray, opacity: CGFloat = 0.5) {
         self.isPresented = isPresented
         self.checkerSize = checkerSize
-        self.checkerColor = checkerColor
+        self.checkerColor = color
+        self.opacity = opacity
     }
     
     func body(content: Content) -> some View {
@@ -44,7 +47,8 @@ struct TransparentCheckerPatternModifier: ViewModifier {
                             .image(
                                 for: CGSize(width: width, height: height),
                                 checkerSize: checkerSize,
-                                checkerColor: checkerColor
+                                color: checkerColor,
+                                opacity: opacity
                             )
                     )
                     .resizable()
@@ -63,11 +67,11 @@ class CheckerPatternCache {
     
     private init() {}
     
-    func image(for size: CGSize, checkerSize: CGFloat, checkerColor: Color) -> UIImage {
-        let colorKey = colorToHexString(checkerColor)
+    func image(for size: CGSize, checkerSize: CGFloat, color: Color, opacity: CGFloat) -> UIImage {
+        let colorKey = colorToHexString(color.opacity(opacity))
         let key = "\(size.width)x\(size.height)_\(checkerSize)_\(colorKey)" as NSString
         if let cached = cache.object(forKey: key) { return cached }
-        let newImage = generateCheckerPattern(size: size, checkerSize: checkerSize, checkerColor: checkerColor)
+        let newImage = generateCheckerPattern(size: size, checkerSize: checkerSize, color: color, opacity: opacity)
         cache.setObject(newImage, forKey: key)
         return newImage
     }
@@ -90,7 +94,7 @@ class CheckerPatternCache {
         )
     }
     
-    private func generateCheckerPattern(size: CGSize, checkerSize: CGFloat, checkerColor: Color) -> UIImage {
+    private func generateCheckerPattern(size: CGSize, checkerSize: CGFloat, color: Color, opacity: CGFloat) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { context in
             let cgContext = context.cgContext
@@ -100,7 +104,7 @@ class CheckerPatternCache {
             cgContext.fill(CGRect(origin: .zero, size: size))
             
             // 회색 체커 패턴
-            cgContext.setFillColor(checkerColor.opacity(0.5).uiColor.cgColor)
+            cgContext.setFillColor(color.opacity(opacity).uiColor.cgColor)
             
             let rows = Int(size.height / checkerSize) + 1
             let cols = Int(size.width / checkerSize) + 1
