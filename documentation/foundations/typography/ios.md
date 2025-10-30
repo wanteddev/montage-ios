@@ -220,19 +220,9 @@ Text("Hello, World!")
 
 <details>
 
-<summary>``var fallbackWeight: UIFont.Weight``</summary>
-</details>
-<details>
-
-<summary>``var fontWeight: Font.Weight``</summary>
-</details>
-<details>
-
 <summary>``var pretendardWeight: Pretendard.Weight``</summary>
-</details>
-<details>
 
-<summary>``var uiFontWeight: UIFont.Weight``</summary>
+Pretendard 폰트 두께 매핑
 </details>
 
 #### Default Implementations

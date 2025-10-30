@@ -33,7 +33,7 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
 <details>
 
-<summary>``init(selectedIndex: Binding<Int>, items: [String], actions: (Int) -> Void)``</summary>
+<summary>``init(selectedIndex: Binding<Int>, items: [String], itemDisabled: (_ index: Int) -> Bool, actions: (Int) -> Void)``</summary>
 
 탭 컴포넌트를 초기화합니다.
 
@@ -42,6 +42,7 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
   | --- | --- |
   | `selectedIndex` | 현재 선택된 탭의 인덱스를 바인딩하는 변수 |
   | `items` | 탭 항목 텍스트 배열 |
+  | `itemDisabled` | 탭 항목 비활성화 여부를 결정하는 클로저, 인덱스를 파라미터로 받음 (기본값: 빈 클로저) |
   | `actions` | 탭 선택 시 호출되는 클로저, 선택된 인덱스를 파라미터로 받음 (기본값: 빈 클로저) |
 </details>
 
