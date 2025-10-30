@@ -256,7 +256,7 @@ private extension ActionChip {
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.labelAlternative)
+            return customFontColor ?? .semantic(.labelNormal)
         }
     }
     
