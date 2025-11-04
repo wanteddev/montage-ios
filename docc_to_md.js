@@ -107,7 +107,7 @@ function renderTopicSection(section, references, depth = 0) {
           }
         }
       } catch (error) {
-        console.error(`Error reading symbol details for ${url}:`, error);
+        console.error(`✗ 심볼 상세 정보 읽기 실패 (${url}):`, error.message);
       }
 
       const member = `\`\`${(ref.fragments || []).map((f) => f.text).join('') || title}\`\``;
@@ -121,7 +121,7 @@ function renderTopicSection(section, references, depth = 0) {
         // UIKit 관련 문서 제외
         return;
       }
-      md += `\n${makeLink(title, `/docs/utilities/ios/${urlPathLastComponent}`, deprecated)}\n`;
+      md += `\n${makeLink(title, `/docs/utilities/ios-utilities/${urlPathLastComponent}`, deprecated)}\n`;
       if (desc) md += `\n${desc}\n`;
     }
   }
@@ -327,7 +327,8 @@ function jsonToMarkdown(json, isUtil = false) {
 
 // 단일 파일 변환
 function convertFile(jsonPath) {
-  const json = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+  try {
+    const json = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
 
   if (json.metadata.roleHeading === 'Initializer' ||
     json.metadata.roleHeading === 'Instance Method' ||
@@ -360,20 +361,24 @@ function convertFile(jsonPath) {
     const swiftFilePath = swiftFileMap[json.metadata.title].replace(/[0-9] /g, '').toLowerCase();
     if (swiftFilePath.includes('utilities')) {
       if (swiftFilePath.includes('components')) {
-        mdPath = path.join('documentation', swiftFilePath, 'ios', jsonFileName.replace(/\.json$/, '.md').toLowerCase());
+        mdPath = path.join('documentation/utilities/ios-utility-components', jsonFileName.replace(/\.json$/, '.md').toLowerCase());
       } else {
-        mdPath = path.join('documentation', swiftFilePath.replace(/(utilities).*$/, '$1'), 'ios', jsonFileName.replace(/\.json$/, '.md').toLowerCase());
+        mdPath = path.join('documentation', swiftFilePath.replace(/(utilities).*$/, '$1'), 'ios-utilities', jsonFileName.replace(/\.json$/, '.md').toLowerCase());
       }
     } else {
       mdPath = path.join('documentation', swiftFilePath, jsonFileName.replace(/\.json$/, '').toLowerCase(), 'ios.md');
     }
   } else {
-    mdPath = path.join('documentation/utilities/ios/', jsonFileName.replace(/\.json$/, '.md'));
+    mdPath = path.join('documentation/utilities/ios-utilities/', jsonFileName.replace(/\.json$/, '.md'));
   }
 
-  const md = jsonToMarkdown(json, mdPath.includes('utilities'));
-  fs.mkdirSync(path.dirname(mdPath), { recursive: true });
-  fs.writeFileSync(mdPath, md, 'utf-8');
+    const md = jsonToMarkdown(json, mdPath.includes('utilities'));
+    fs.mkdirSync(path.dirname(mdPath), { recursive: true });
+    fs.writeFileSync(mdPath, md, 'utf-8');
+    console.log(`✓ 변환 완료: ${mdPath}`);
+  } catch (error) {
+    console.error(`✗ 변환 실패: ${jsonPath}`, error.message);
+  }
 }
 
 // 재귀적으로 montage/ 하위 모든 json 변환
@@ -392,7 +397,22 @@ function walkSwiftFiles(dir, relBase = '') {
     if (fs.statSync(fullPath).isDirectory()) {
       walkSwiftFiles(fullPath, relPath);
     } else if (file.endsWith('.swift')) {
-      swiftFileMap[file.replace(/\.swift$/, '')] = relBase; // ex: Button.swift: 3 Component/Button/
+      // 파일명 기반 매핑 (기존 로직 유지)
+      swiftFileMap[file.replace(/\.swift$/, '')] = relBase;
+      
+      // Swift 파일 내부의 public 타입명 추출
+      try {
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        // public enum, struct, class, protocol, actor 등을 찾음
+        const typeRegex = /public\s+(enum|struct|class|protocol|actor)\s+(\w+)/g;
+        let match;
+        while ((match = typeRegex.exec(content)) !== null) {
+          const typeName = match[2];
+          swiftFileMap[typeName] = relBase;
+        }
+      } catch (error) {
+        console.error(`✗ Swift 파일 읽기 실패 (${fullPath}):`, error.message);
+      }
     }
   });
 }
@@ -400,6 +420,25 @@ function walkSwiftFiles(dir, relBase = '') {
 const montageSrcRoot = path.join(__dirname, 'Sources/Montage');
 const swiftFileMap = {};
 
-walkSwiftFiles(montageSrcRoot);
+console.log('='.repeat(50));
+console.log('📚 DocC → Markdown 변환 시작');
+console.log('='.repeat(50));
 
+// documentation 폴더 정리
+const documentationDir = path.join(__dirname, 'documentation');
+if (fs.existsSync(documentationDir)) {
+  console.log('🗑️  기존 documentation 폴더 삭제 중...');
+  fs.rmSync(documentationDir, { recursive: true, force: true });
+  console.log('✓ 삭제 완료\n');
+}
+
+console.log('📂 Swift 파일 매핑 시작...');
+walkSwiftFiles(montageSrcRoot);
+console.log(`✓ Swift 파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
+
+console.log('🔄 JSON → Markdown 변환 시작...');
 walk('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data/documentation');
+
+console.log('\n' + '='.repeat(50));
+console.log('✅ 모든 변환 작업 완료!');
+console.log('='.repeat(50));

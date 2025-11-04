@@ -27,7 +27,8 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .button: ButtonPreview()
         case .textButton: TextButtonPreview()
         case .iconButton: IconButtonPreview()
-        case .chip: ChipPreview()
+        case .actionChip: ActionChipPreview()
+        case .filterChip: FilterChipPreview()
         case .contentBadge: ContentBadgePreview()
         case .pushBadge: PushBadgePreview()
         case .thumbnail: ThumbnailPreview()
@@ -62,7 +63,7 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .listCard: ListCardPreview()
         case .framedStyle: FramedStylePreview()
         case .popover: PopoverPreview()
-        case .divider: DividerPreview()
+        case .modalNavigation: ModalNavigationPreview()
         }
     }
 }

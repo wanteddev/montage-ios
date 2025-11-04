@@ -205,7 +205,7 @@ extension ActionArea {
     /// 버튼 레이아웃, 배경 투명도, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
     public struct Model {
         let variant: ActionArea.Variant
-        let backgroundTransparencyControl: BackgroundTransparencyControl
+        let backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl
         let caption: String?
         let extra: () -> AnyView
         let extraDivider: Bool
@@ -219,7 +219,7 @@ extension ActionArea {
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
         public init(
             variant: ActionArea.Variant,
-            backgroundTransparencyControl: BackgroundTransparencyControl = .automatic,
+            backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
             caption: String? = nil,
             extraDivider: Bool = true
         ) {
@@ -240,7 +240,7 @@ extension ActionArea {
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
         public init<V: View>(
             variant: ActionArea.Variant,
-            backgroundTransparencyControl: BackgroundTransparencyControl = .automatic,
+            backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
             caption: String? = nil,
             @ViewBuilder extra: @escaping () -> V,
             extraDivider: Bool = true
@@ -252,25 +252,24 @@ extension ActionArea {
             self.extraDivider = extraDivider
         }
     }
-}
-
-/// ActionArea의 배경 투명도를 제어하는 열거형입니다.
-public enum BackgroundTransparencyControl {
-    /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
-    case automatic
-    /// 수동으로 배경 투명도를 설정합니다. true면 배경이 투명해지고, false면 배경이 표시됩니다.
-    case manual(_ transparency: Bool)
     
-    var isManual: Bool {
-        switch self {
-        case .automatic:
-            false
-        case .manual:
-            true
+    /// ActionArea의 배경 투명도를 제어하는 열거형입니다.
+    public enum BackgroundTransparencyControl {
+        /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
+        case automatic
+        /// 수동으로 배경 투명도를 설정합니다. true면 배경이 투명해지고, false면 배경이 표시됩니다.
+        case manual(_ transparency: Bool)
+        
+        var isManual: Bool {
+            switch self {
+            case .automatic:
+                false
+            case .manual:
+                true
+            }
         }
     }
 }
-
 
 // MARK: - Private
 private extension ActionArea {

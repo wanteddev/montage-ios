@@ -19,12 +19,10 @@ import SwiftUI
 ///
 /// var body: some View {
 ///     ContentView()
-///         .modifier(
-///             Toast.ToastModifier(
-///                 model: $toastModel,
-///                 location: .bottom(),
-///                 duration: .short
-///             )
+///         .toast(
+///             $toastModel,
+///             location: .bottom(),
+///             duration: .short
 ///         )
 ///         .onAppear {
 ///             toastModel = Toast.Model(
@@ -231,45 +229,11 @@ public struct Toast: View {
 }
 
 extension Toast {
-    /// Toast를 화면에 표시하기 위한 뷰 모디파이어입니다.
-    ///
-    /// 바인딩된 Model 값이 nil이 아닐 때 토스트를 표시하며,
-    /// 설정된 시간이 지나면 자동으로 사라집니다.
-    ///
-    /// ```swift
-    /// @State private var toastModel: Toast.Model?
-    ///
-    /// var body: some View {
-    ///     VStack {
-    ///         Button("토스트 표시") {
-    ///             toastModel = Toast.Model(
-    ///                 .cautionary,
-    ///                 message: "주의가 필요합니다."
-    ///             )
-    ///         }
-    ///     }
-    ///     .modifier(
-    ///         Toast.ToastModifier(
-    ///             model: $toastModel,
-    ///             location: .top(),
-    ///             duration: .long
-    ///         )
-    ///     )
-    /// }
-    /// ```
-    ///
-    /// - Note: 토스트가 표시될 때 진동 피드백이 발생합니다.
     struct ToastModifier: ViewModifier {
         @Binding private var model: Toast.Model?
         private let location: Toast.Location
         private let duration: Toast.Duration
 
-        /// ToastModifier를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - model: 표시할 토스트 모델에 대한 바인딩. nil이면 토스트가 표시되지 않습니다.
-        ///   - location: 토스트가 표시될 위치
-        ///   - duration: 토스트가 표시될 시간
         init(model: Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) {
             _model = model
             self.location = location

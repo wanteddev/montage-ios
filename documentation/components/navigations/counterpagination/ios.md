@@ -118,7 +118,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -126,9 +126,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

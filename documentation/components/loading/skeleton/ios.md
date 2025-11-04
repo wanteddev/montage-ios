@@ -97,9 +97,9 @@ contentView
 #### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 </details>
 
@@ -135,7 +135,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 <details>
@@ -193,9 +193,9 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
+[RawRepresentable Implementations](/docs/utilities/ios-utilities/rawrepresentable-implementations)
 
 </details>
 

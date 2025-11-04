@@ -21,7 +21,7 @@ Loading(kind: .wanted, size: CGSize(width: 100, height: 100))
 
 // 로딩 오버레이로 적용
 someView
-    .loading(isLoading: $isLoadingState, type: .circular)
+    .loading($isLoadingState, type: .circular)
 ```
 
 >  **Note**
@@ -97,7 +97,7 @@ Wanted 브랜드 스타일의 로딩 애니메이션
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -105,9 +105,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

@@ -28,7 +28,8 @@ Button("바텀 시트 열기") {
     }
     .resize(.flexible)
     .modalNavigation {
-        ModalNavigation(title: "제목")
+        ModalNavigation()
+            .title("제목")
     }
 }
 ```
@@ -200,9 +201,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

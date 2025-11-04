@@ -30,10 +30,13 @@ import SwiftUI
 ///         .padding()
 ///     }
 ///     .modalNavigation {
-///         ModalNavigation(title: "제목")
-///             .leadingButton(.back {
-///                 showFullModal = false
-///             })
+///         ModalNavigation()
+///             .title("제목")
+///             .leadingContent {
+///                 TopNavigation.LeadingButton(.back {
+///                     showFullModal = false
+///                 })
+///             }
 ///     }
 /// }
 /// ```
@@ -41,13 +44,11 @@ import SwiftUI
 /// 모디파이어를 사용하면 더 간편하게 구현할 수 있습니다:
 /// ```swift
 /// YourView()
-///     .modifier(
-///         FullModalModifier(
-///             isPresented: $showFullModal
-///         ) {
-///             Text("풀스크린 모달 내용")
-///         }
-///     )
+///     .fullModal(
+///         isPresented: $showFullModal
+///     ) {
+///         Text("풀스크린 모달 내용")
+///     }
 /// ```
 public struct FullModal: View {
     // MARK: - Initializer
@@ -110,24 +111,6 @@ public struct FullModal: View {
     }
 }
 
-/// 풀스크린 모달을 표시하기 위한 뷰 모디파이어입니다.
-///
-/// 이 모디파이어를 사용하면 풀스크린 모달을 쉽게 표시하고 설정할 수 있습니다.
-///
-/// ```swift
-/// @State private var showFullModal = false
-///
-/// Button("전체 화면 모달 열기") {
-///     showFullModal = true
-/// }
-/// .modifier(
-///     FullModalModifier(
-///         isPresented: $showFullModal
-///     ) {
-///         Text("풀스크린 모달 내용")
-///     }
-/// )
-/// ```
 struct FullModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let ignoresEdgeInsets: Bool
@@ -135,14 +118,6 @@ struct FullModalModifier: ViewModifier {
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
     
-    /// 풀스크린 모달 모디파이어를 초기화합니다.
-    ///
-    /// - Parameters:
-    ///   - isPresented: 풀스크린 모달 표시 여부에 대한 바인딩
-    ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
-    ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
-    ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
-    ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
     init<V: View>(
         isPresented: Binding<Bool>,
         ignoresEdgeInsets: Bool = false,

@@ -32,7 +32,6 @@
 		4D8100522EA7594D004CAD92 /* BlueprintApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100512EA7594D004CAD92 /* BlueprintApp.swift */; };
 		4D8100542EA76329004CAD92 /* ComponentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100532EA76329004CAD92 /* ComponentSection.swift */; };
 		4D81005A2EA8760B004CAD92 /* PopoverPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100592EA875FF004CAD92 /* PopoverPreview.swift */; };
-		4D8100562EA86106004CAD92 /* DividerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8100552EA86106004CAD92 /* DividerPreview.swift */; };
 		4D853DF72D96491E004549CF /* IconButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D853DF62D96491E004549CF /* IconButtonPreview.swift */; };
 		4D88E5FA2E8BC34D00EA0E67 /* PopupModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D88E5F92E8BC34D00EA0E67 /* PopupModalPreview.swift */; };
 		4D88E5FB2E8BC34D00EA0E67 /* FullModalPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D88E5F82E8BC34D00EA0E67 /* FullModalPreview.swift */; };
@@ -68,7 +67,6 @@
 		4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */; };
 		4DF7C54A2CE340F0002B241B /* ButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */; };
 		4DF7C5522CE340F0002B241B /* TextFieldPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */; };
-		4DF7C55A2CE340F0002B241B /* ChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4BC2CE340F0002B241B /* ChipPreview.swift */; };
 		4DF7C55D2CE340F0002B241B /* TooltipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */; };
 		4DF7C5602CE340F0002B241B /* SelectPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A62CE340F0002B241B /* SelectPreview.swift */; };
 		4DFA5A532E572464003BED22 /* ShadowPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFA5A522E572464003BED22 /* ShadowPreview.swift */; };
@@ -115,7 +113,6 @@
 		4D8100512EA7594D004CAD92 /* BlueprintApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueprintApp.swift; sourceTree = "<group>"; };
 		4D8100532EA76329004CAD92 /* ComponentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentSection.swift; sourceTree = "<group>"; };
 		4D8100592EA875FF004CAD92 /* PopoverPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverPreview.swift; sourceTree = "<group>"; };
-		4D8100552EA86106004CAD92 /* DividerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerPreview.swift; sourceTree = "<group>"; };
 		4D853DF62D96491E004549CF /* IconButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonPreview.swift; sourceTree = "<group>"; };
 		4D88E5F82E8BC34D00EA0E67 /* FullModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullModalPreview.swift; sourceTree = "<group>"; };
 		4D88E5F92E8BC34D00EA0E67 /* PopupModalPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupModalPreview.swift; sourceTree = "<group>"; };
@@ -156,7 +153,6 @@
 		4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TooltipPreview.swift; sourceTree = "<group>"; };
 		4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationPreview.swift; sourceTree = "<group>"; };
 		4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPreview.swift; sourceTree = "<group>"; };
-		4DF7C4BC2CE340F0002B241B /* ChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipPreview.swift; sourceTree = "<group>"; };
 		4DF7C56A2CE342EA002B241B /* Blueprint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Blueprint-Info.plist"; sourceTree = "<group>"; };
 		4DFA5A522E572464003BED22 /* ShadowPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowPreview.swift; sourceTree = "<group>"; };
 		4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionChipPreview.swift; sourceTree = "<group>"; };
@@ -261,13 +257,11 @@
 				4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */,
 				4D6372C62DBA655200E66D22 /* CardPreview.swift */,
 				4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */,
-				4DF7C4BC2CE340F0002B241B /* ChipPreview.swift */,
 				4D96F7C92E9FA8C300DFECE8 /* ColorPreview.swift */,
 				4D45DB182D917B91002B1686 /* ContentBadgePreview.swift */,
 				4D0952662D7ABCCB00BB6044 /* ControlPreview.swift */,
 				4D5597552D1E802C00CFBCA5 /* CounterPaginationPreview.swift */,
 				4D55974D2D1E402C00CFBCA5 /* DateTimePickerPreview.swift */,
-				4D8100552EA86106004CAD92 /* DividerPreview.swift */,
 				4D5597512D1E7EC000CFBCA5 /* DotPaginationPreview.swift */,
 				4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */,
 				4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */,
@@ -501,7 +495,6 @@
 				4D88E6632E8E3D1B00EA0E67 /* IconPreview.swift in Sources */,
 				4DC668AA2D673E8F00461189 /* BottomSheetModalPreview.swift in Sources */,
 				4DB87ADC2CEC8F6B00DEC2A4 /* ProgressIndicatorPreview.swift in Sources */,
-				4D8100562EA86106004CAD92 /* DividerPreview.swift in Sources */,
 				4D5597542D1E7F9400CFBCA5 /* PaginationPreview.swift in Sources */,
 				4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */,
 				4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */,
@@ -528,7 +521,6 @@
 				4D5D8C9E2D2E5D9E00108C92 /* CategoryPreview.swift in Sources */,
 				4D8100542EA76329004CAD92 /* ComponentSection.swift in Sources */,
 				4D88E6672E9CC90A00EA0E67 /* TextButtonPreview.swift in Sources */,
-				4DF7C55A2CE340F0002B241B /* ChipPreview.swift in Sources */,
 				4D45DB192D917B91002B1686 /* ContentBadgePreview.swift in Sources */,
 				4D8A16F12E586B370094B8B7 /* FramedStylePreview.swift in Sources */,
 				4DC668AE2D684BB100461189 /* ModalNavigationPreview.swift in Sources */,

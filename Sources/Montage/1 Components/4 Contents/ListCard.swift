@@ -16,12 +16,12 @@ import SwiftUI
 /// @State private var isLoading = false
 ///
 /// ListCard(
-///     thumbnail: { Thumbnail(.image(Image("sample")), variant: .square) },
+///     thumbnail: { Thumbnail(urlString: imageURL, ratio: .r1x1) },
 ///     skeleton: $isLoading,
 ///     title: "리스트 카드 제목"
 /// )
 /// .caption("부제목")
-/// .trailingContent { IconButton(icon: .arrowForward) }
+/// .trailingContent { IconButton(variant: .default, icon: .arrowRight) }
 /// ```
 ///
 /// - Note: 리스트 형태의 UI에 적합하며, 선택적으로 앞뒤에 추가 콘텐츠를 배치할 수 있습니다.

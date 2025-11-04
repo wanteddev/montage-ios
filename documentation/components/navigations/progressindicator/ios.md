@@ -45,9 +45,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

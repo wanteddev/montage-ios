@@ -17,12 +17,10 @@ description: 화면의 상단 또는 하단에 짧게 표시되는 알림 메시
 
 var body: some View {
     ContentView()
-        .modifier(
-            Toast.ToastModifier(
-                model: $toastModel,
-                location: .bottom(),
-                duration: .short
-            )
+        .toast(
+            $toastModel,
+            location: .bottom(),
+            duration: .short
         )
         .onAppear {
             toastModel = Toast.Model(
@@ -60,7 +58,7 @@ Toast 모델을 초기화합니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -98,7 +96,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 <details>
@@ -173,7 +171,7 @@ ___
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -181,9 +179,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

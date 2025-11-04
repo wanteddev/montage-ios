@@ -17,7 +17,7 @@ TopNavigation(
     backgroundColor: .white
 )
 .variant(.normal)
-.title(text: "제목")
+.title("제목")
 .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 .trailingContents(
     { /* 컴포넌트1 */ },
@@ -65,9 +65,9 @@ TopNavigation(
 #### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 </details>
 <details>
@@ -92,9 +92,9 @@ TopNavigation(
 #### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 </details>
 <details>
@@ -119,9 +119,9 @@ TopNavigation(
 #### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 </details>
 
@@ -357,7 +357,7 @@ text 형태의 Action입니다.
 ##### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -397,7 +397,7 @@ TopNavigation의 외관을 결정하는 열거형입니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -405,9 +405,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

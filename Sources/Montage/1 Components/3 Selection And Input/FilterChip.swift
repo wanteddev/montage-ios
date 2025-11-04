@@ -22,8 +22,7 @@ import SwiftUI
 /// )
 /// .backgroundColor(.semantic(.primaryNormal))
 /// .fontColor(.semantic(.staticWhite))
-/// .active(true)
-/// .activeLabel("최신순")
+/// .active(true, label: "최신순")
 /// ```
 ///
 public struct FilterChip: View {

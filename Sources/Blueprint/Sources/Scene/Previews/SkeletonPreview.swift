@@ -96,6 +96,8 @@ public struct SkeletonPreview: View {
                                     .fill(color)
                                     .frame(width: 100, height: 100)
                             }
+                    @unknown default:
+                        EmptyView()
                     }
                 }
                 .padding()
@@ -172,6 +174,18 @@ public struct SkeletonPreview: View {
                 }
                 Slider(value: $opacity, in: 0...1)
             }
+        }
+    }
+}
+
+struct Triangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.addLines([
+                CGPoint(x: rect.minX, y: rect.maxY),
+                CGPoint(x: rect.midX, y: rect.minY),
+                CGPoint(x: rect.maxX, y: rect.maxY),
+            ])
         }
     }
 }

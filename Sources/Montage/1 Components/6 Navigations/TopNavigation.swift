@@ -18,7 +18,7 @@ import SwiftUI
 ///     backgroundColor: .white
 /// )
 /// .variant(.normal)
-/// .title(text: "제목")
+/// .title("제목")
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
 ///     { /* 컴포넌트1 */ },
@@ -72,7 +72,6 @@ public struct TopNavigation: View {
     /// TopNavigation을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일
     ///   - scrollOffset: 스크롤 오프셋 값
     ///   - backgroundColor: 배경색
     public init(
@@ -870,6 +869,10 @@ extension View {
     ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
     ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
     ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
+    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트 (기본값: nil)
+    ///   - searchTerm: 검색어 바인딩 (기본값: nil)
+    ///   - searchFocused: 검색 필드 포커스 상태 바인딩 (기본값: nil)
+    ///   - onSearch: 검색 실행 시 호출될 클로저 (기본값: nil)
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
@@ -908,6 +911,10 @@ extension View {
     ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
     ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
     ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
+    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트 (기본값: nil)
+    ///   - searchTerm: 검색어 바인딩 (기본값: nil)
+    ///   - searchFocused: 검색 필드 포커스 상태 바인딩 (기본값: nil)
+    ///   - onSearch: 검색 실행 시 호출될 클로저 (기본값: nil)
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,

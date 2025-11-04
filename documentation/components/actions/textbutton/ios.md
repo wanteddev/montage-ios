@@ -35,6 +35,9 @@ Text 스타일의 버튼을 생성합니다.
   | `leadingIcon` | 텍스트 앞에 표시할 아이콘 |
   | `trailingIcon` | 텍스트 뒤에 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
+- **Return Value**
+
+  구성된 버튼 인스턴스
 </details>
 
 ___
@@ -183,9 +186,9 @@ Text 버튼의 색상 스타일을 정의합니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
+[RawRepresentable Implementations](/docs/utilities/ios-utilities/rawrepresentable-implementations)
 
 </details>
 <details>
@@ -218,9 +221,9 @@ Text 스타일 버튼의 크기를 정의합니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
+[RawRepresentable Implementations](/docs/utilities/ios-utilities/rawrepresentable-implementations)
 
 </details>
 
@@ -228,9 +231,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

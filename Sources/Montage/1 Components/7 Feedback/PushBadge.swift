@@ -54,10 +54,10 @@ public struct PushBadge: View {
     ///
     /// ```swift
     /// // 우측 상단에 위치
-    /// .modifier(PushBadge.Modifier(position: .top(.trailing)))
+    /// someView.pushBadge(position: .top(.trailing))
     /// 
     /// // 좌측 하단에 위치
-    /// .modifier(PushBadge.Modifier(position: .bottom(.leading)))
+    /// someView.pushBadge(position: .bottom(.leading))
     /// ```
     public enum Position {
         /// 상단 위치
@@ -199,20 +199,6 @@ private extension PushBadge {
 }
 
 extension PushBadge {
-    /// 다른 뷰에 PushBadge를 적용하기 위한 뷰 모디파이어입니다.
-    ///
-    /// 이 모디파이어를 사용하면 기존 뷰의 특정 위치에 뱃지를 표시할 수 있습니다.
-    ///
-    /// ```swift
-    /// IconButton(icon: .home)
-    ///     .modifier(
-    ///         PushBadge.Modifier(
-    ///             variant: .number(3),
-    ///             size: .small,
-    ///             position: .top(.trailing)
-    ///         )
-    ///     )
-    /// ```
     struct Modifier: ViewModifier {
         private let variant: Variant
         private let size: Size
@@ -221,15 +207,6 @@ extension PushBadge {
         private let position: Position
         private let inset: CGSize
         
-        /// PushBadge 모디파이어를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 뱃지의 표시 형태 (기본값: .dot)
-        ///   - size: 뱃지 크기 (기본값: .xsmall)
-        ///   - fontColor: 텍스트 색상 (기본값: staticWhite)
-        ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
-        ///   - position: 뱃지 위치 (기본값: .top(.trailing))
-        ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
         init(
             variant: Variant = .dot,
             size: Size = .xsmall,

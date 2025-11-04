@@ -40,13 +40,11 @@ import SwiftUI
 /// 모디파이어를 사용하면 더 간편하게 구현할 수 있으며, 애니메이션이 자동으로 처리됩니다:
 /// ```swift
 /// YourView()
-///     .modifier(
-///         PopupModalModifier(
-///             isPresented: $showPopup
-///         ) {
-///             Text("팝업 내용")
-///         }
-///     )
+///     .popupModal(
+///         isPresented: $showPopup
+///     ) {
+///         Text("팝업 내용")
+///     }
 /// ```
 public struct PopupModal: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
@@ -229,25 +227,6 @@ public struct PopupModal: View {
     }
 }
 
-/// 팝업 모달을 표시하기 위한 뷰 모디파이어입니다.
-///
-/// 이 모디파이어를 사용하면 팝업 모달을 자연스러운 애니메이션과 함께
-/// 표시하고 설정할 수 있습니다.
-///
-/// ```swift
-/// @State private var showPopup = false
-///
-/// Button("팝업 열기") {
-///     showPopup = true
-/// }
-/// .modifier(
-///     PopupModalModifier(
-///         isPresented: $showPopup
-///     ) {
-///         Text("팝업 내용")
-///     }
-/// )
-/// ```
 struct PopupModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let resize: PopupModal.Resize
@@ -256,15 +235,6 @@ struct PopupModalModifier: ViewModifier {
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
     
-    /// 팝업 모달 모디파이어를 초기화합니다.
-    ///
-    /// - Parameters:
-    ///   - isPresented: 팝업 모달 표시 여부에 대한 바인딩
-    ///   - resize: 팝업 모달의 크기 설정 (기본값: .hug)
-    ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
-    ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
-    ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
-    ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
     init<V: View>(
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,

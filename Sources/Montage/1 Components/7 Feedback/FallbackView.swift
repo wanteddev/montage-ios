@@ -29,7 +29,7 @@ import SwiftUI
 ///     title: "데이터가 없습니다.",
 ///     description: "새로운 항목을 추가해 보세요.",
 ///     button: {
-///         Button.filled(text: "추가하기") {
+///         Button(text: "추가하기") {
 ///             // 버튼 동작
 ///         }
 ///     }

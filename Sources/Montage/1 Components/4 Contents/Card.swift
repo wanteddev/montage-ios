@@ -16,7 +16,7 @@ import SwiftUI
 /// @State private var isLoading = false
 ///
 /// Card(
-///     thumbnail: { Thumbnail(.image(Image("sample"))) },
+///     thumbnail: { Thumbnail(urlString: imageURL, ratio: .r16x9) },
 ///     skeleton: $isLoading,
 ///     title: "카드 제목"
 /// )
@@ -244,25 +244,13 @@ public struct Card: View {
 }
 
 extension Card {
-    /// 썸네일 이미지 위에 그라데이션 오버레이와 콘텐츠를 표시하는 모디파이어입니다.
-    ///
-    /// 썸네일 상단에 어두운 그라데이션 배경과 함께 캡션 텍스트, 버튼 등을 표시합니다.
-    /// 주로 썸네일에 추가 정보나 액션 버튼을 제공하기 위해 사용됩니다.
-    ///
-    /// - Note: 그라데이션은 위에서 아래로 점점 투명해지는 형태로 적용됩니다.
     private struct ThumbnailOverlayModifier: ViewModifier {
         private let caption: String?
         private let buttonIcon: Montage.Icon?
         private let buttonColor: SwiftUI.Color
         private let onTapButton: (() -> Void)?
 
-        /// 오버레이 모디파이어를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - caption: 오버레이에 표시할 텍스트
-        ///   - buttonIcon: 오버레이에 표시할 버튼 아이콘
-        ///   - onTapButton: 버튼 탭 시 실행할 액션
-        public init(
+        init(
             caption: String? = nil,
             buttonIcon: Montage.Icon? = nil,
             buttonColor: SwiftUI.Color = .semantic(.staticWhite),
@@ -279,7 +267,7 @@ extension Card {
             0,
         ].map { .semantic(.staticBlack).opacity($0) }
 
-        public func body(content: Content) -> some View {
+        func body(content: Content) -> some View {
             content
                 .if(!caption.isNilOrEmpty || buttonIcon != nil) {
                     $0.overlay(alignment: .top) {

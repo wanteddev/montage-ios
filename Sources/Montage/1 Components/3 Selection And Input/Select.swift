@@ -18,10 +18,10 @@ import SwiftUI
 /// ]
 ///
 /// Select(
-///     variant: .single(.checkmark, nil),
-///     placeholder: "선택하세요",
+///     variant: .single(selectionType: .checkmark),
 ///     items: $items
 /// )
+/// .placeholder("선택하세요")
 /// ```
 public struct Select: View {
     // MARK: - Types

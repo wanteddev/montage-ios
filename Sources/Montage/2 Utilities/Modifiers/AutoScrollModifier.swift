@@ -54,20 +54,3 @@ struct AutoScrollModifier: ViewModifier {
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
     }
 }
-
-// MARK: - View Extension
-
-extension View {
-    /// 뷰에 자동 스크롤 기능을 적용하는 modifier입니다.
-    ///
-    /// 콘텐츠 오프셋을 추적하고 스크롤이 필요한 경우에만 스크롤을 활성화합니다.
-    /// 콘텐츠가 스크롤 뷰보다 작은 경우 스크롤이 비활성화됩니다.
-    ///
-    /// - Parameters:
-    ///   - axis: 스크롤 방향 (.horizontal 또는 .vertical)
-    ///   - contentOffset: 콘텐츠 오프셋을 바인딩하는 CGPoint 값
-    /// - Returns: 자동 스크롤 기능이 적용된 뷰
-    public func scrollable(_ axis: Axis, contentOffset: Binding<CGPoint>) -> some View {
-        modifier(AutoScrollModifier(axis: axis, contentOffset: contentOffset))
-    }
-}

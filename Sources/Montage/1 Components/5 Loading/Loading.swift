@@ -25,7 +25,7 @@ import Lottie
 ///
 /// // 로딩 오버레이로 적용
 /// someView
-///     .loading(isLoading: $isLoadingState, type: .circular)
+///     .loading($isLoadingState, type: .circular)
 /// ```
 ///
 /// - Note: 다크 모드와 라이트 모드에 따라 자동으로 적절한 애니메이션 리소스를 선택합니다.
@@ -50,10 +50,6 @@ public struct Loading: View {
         /// 원형 회전 로딩 애니메이션
         case circular
         
-        /// 현재 컬러 스킴에 따른 리소스 이름을 반환합니다.
-        ///
-        /// - Parameter colorScheme: 현재 적용된 컬러 스킴
-        /// - Returns: 로딩 애니메이션의 JSON 리소스 파일 이름
         func resourceName(_ colorScheme: ColorScheme) -> String {
             switch self {
             case .wanted: colorScheme == .light ? "loading-wanted-light.json" : "loading-wanted-dark.json"

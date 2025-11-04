@@ -17,13 +17,11 @@ description: 화면 상단 또는 하단에 임시로 표시되는 알림 메시
 
 var body: some View {
     ContentView()
-        .modifier(
-            SnackBar.SnackBarModifier(
-                model: $snackBarModel,
-                handler: {
-                    // 액션 버튼 클릭 시 실행할 코드
-                }
-            )
+        .snackBar(
+            $snackBarModel,
+            handler: {
+                // 액션 버튼 클릭 시 실행할 코드
+            }
         )
         .onAppear {
             snackBarModel = SnackBar.Model(
@@ -86,7 +84,7 @@ SnackBar 모델을 초기화합니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
 </details>
 
@@ -131,9 +129,9 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 #### Default Implementations
 
 
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
+[Equatable Implementations](/docs/utilities/ios-utilities/equatable-implementations)
 
-[RawRepresentable Implementations](/docs/utilities/ios/rawrepresentable-implementations)
+[RawRepresentable Implementations](/docs/utilities/ios-utilities/rawrepresentable-implementations)
 
 </details>
 <details>
@@ -172,9 +170,9 @@ ___
 ### Default Implementations
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 ## Relationships
 

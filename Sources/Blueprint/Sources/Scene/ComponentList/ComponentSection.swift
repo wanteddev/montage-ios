@@ -17,63 +17,43 @@ struct ComponentSection: Identifiable {
 }
 
 enum ComponentCategory: String, CaseIterable, Hashable {
-    case theme, layout, actions, selectionAndInput, contents, loading, navigations, feedback,
-         presentation, utility
+    case actions, selectionAndInput, contents, loading, navigations, feedback,
+         presentation, utilities
 }
 
 enum Component: String, CaseIterable, Hashable, Identifiable {
     var id: String { rawValue }
-    case typography, color, icon, shadow
-    case divider, flowLayout
-    case actionArea, button, textButton, iconButton, chip
-    case control, segmentedControl, select, slider, textField, textArea,
-         dateTimePicker
-    case avatar, card, listCard, listCell, thumbnail, accordion, playBadge, sectionHeader,
-         contentBadge
-    case loading, skeleton, pullToRefresh
-    case topNavigation, progressIndicator, tab, pagination, progressTracker, category
-    case pushBadge, fallbackView, snackbar, toast, tooltip, popover
-    case modal
-    case framedStyle
+    case actionArea, actionChip, button, iconButton, textButton
+    case control, filterChip, segmentedControl, select, slider, textArea, textField, dateTimePicker
+    case accordion, avatar, card, contentBadge, listCard, listCell, playBadge, sectionHeader, thumbnail
+    case loading, pullToRefresh, skeleton
+    case category, pagination, progressIndicator, progressTracker, tab, topNavigation
+    case fallbackView, pushBadge, snackbar, toast
+    case modal, popover, tooltip
+    case color, flowLayout, framedStyle, icon, modalNavigation, shadow, typography
     
     var state: ComponentState {
-        switch self {
-        case .typography, .color, .icon, .shadow, .control,
-                .flowLayout,
-                .button, .textButton, .iconButton, .thumbnail, .fallbackView, .pushBadge, .chip, .topNavigation,
-                .progressIndicator, .avatar, .toast, .snackbar, .tooltip, .popover, .actionArea,
-                .textArea, .textField, .select, .segmentedControl, .listCell, .tab, .slider,
-                .pullToRefresh, .skeleton, .loading, .progressTracker, .dateTimePicker,
-                .pagination, .accordion, .category, .playBadge, .sectionHeader, .modal,
-                .contentBadge, .card, .listCard, .framedStyle, .divider:
-            return .completed
-        }
+        .completed
     }
     
     var category: ComponentCategory {
         switch self {
-        case .typography, .color, .icon, .shadow:
-            return .theme
-        case .divider, .flowLayout:
-            return .layout
-        case .actionArea, .button, .textButton, .iconButton, .chip:
+        case .actionArea, .actionChip, .button, .iconButton, .textButton:
             return .actions
-        case .control, .segmentedControl, .select, .slider, .textField,
-                .textArea, .dateTimePicker:
+        case .control, .filterChip, .segmentedControl, .select, .slider, .textArea, .textField, .dateTimePicker:
             return .selectionAndInput
-        case .avatar, .card, .listCard, .listCell, .thumbnail, .accordion, .playBadge,
-                .sectionHeader, .contentBadge:
+        case .accordion, .avatar, .card, .contentBadge, .listCard, .listCell, .playBadge, .sectionHeader, .thumbnail:
             return .contents
-        case .loading, .skeleton, .pullToRefresh:
+        case .loading, .pullToRefresh, .skeleton:
             return .loading
-        case .topNavigation, .progressIndicator, .tab, .pagination, .progressTracker, .category:
+        case .category, .pagination, .progressIndicator, .progressTracker, .tab, .topNavigation:
             return .navigations
-        case .pushBadge, .fallbackView, .snackbar, .toast:
+        case .fallbackView, .pushBadge, .snackbar, .toast:
             return .feedback
-        case .modal, .tooltip, .popover:
+        case .modal, .popover, .tooltip:
             return .presentation
-        case .framedStyle:
-            return .utility
+        case .color, .flowLayout, .framedStyle, .icon, .modalNavigation, .shadow, .typography:
+            return .utilities
         }
     }
 }

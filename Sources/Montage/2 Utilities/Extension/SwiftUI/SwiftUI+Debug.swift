@@ -13,6 +13,7 @@ extension View {
     /// - Parameters:
     ///   - color: 인식 색상
     ///   - fill: 배경 채우기 여부
+    ///   - drawOnPreviewOnly: 프리뷰에서만 그릴지 여부 (기본값: true)
     /// - Returns: 인식된 View
     @ViewBuilder
     public func recognizeView(_ color: SwiftUI.Color = .blue, fill: Bool = false, drawOnPreviewOnly: Bool = true) -> some View {
@@ -35,6 +36,7 @@ extension View {
     ///   - message: 출력할 메시지
     ///   - font: 폰트
     ///   - alignment: 정렬
+    ///   - drawOnPreviewOnly: 프리뷰에서만 그릴지 여부 (기본값: true)
     /// - Returns: 로그가 출력된 View
     public func carveLog(
         _ message: String,
@@ -105,7 +107,9 @@ extension View {
 extension View {
     /// 프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
     ///
-    /// - Parameter axis: 측정할 축
+    /// - Parameters:
+    ///   - axis: 측정할 축
+    ///   - drawOnPreviewOnly: 프리뷰에서만 그릴지 여부 (기본값: true)
     /// - Returns: 뷰 크기가 그려진 View
     public func dimensioning(axis: Axis? = nil, drawOnPreviewOnly: Bool = true) -> some View {
         Group {

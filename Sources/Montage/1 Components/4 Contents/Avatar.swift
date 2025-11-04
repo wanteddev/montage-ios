@@ -196,10 +196,6 @@ public struct Avatar: View {
         return zelf
     }
     
-    /// 아바타의 상호작용 효과를 비활성화합니다.
-    ///
-    /// - Parameter interactionDisabled: 상호작용 비활성화 여부 (기본값: true)
-    /// - Returns: 수정된 아바타 인스턴스
     internal func interactionDisabled(_ interactionDisabled: Bool = true) -> Self {
         var zelf = self
         zelf.interactionDisabled = interactionDisabled

@@ -13,7 +13,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
     private let gradientInsets: EdgeInsets
     private let leadingGradientDisabled: Bool
     private let trailingGradientDisabled: Bool
-    
+
     init(
         gradientColors: [SwiftUI.Color]? = nil,
         gradientWidth: CGFloat,
@@ -21,25 +21,27 @@ struct GradientScrollEdgeModifier: ViewModifier {
         leadingGradientDisabled: Bool = false,
         trailingGradientDisabled: Bool = false
     ) {
-        self.gradientColors = gradientColors ?? [
-            1.0,
-            0.86,
-            0.73,
-            0.62,
-            0.52,
-            0.43,
-            0.35,
-            0.29,
-            0.23,
-            0.18,
-            0.14,
-            0.1,
-            0.07,
-            0.04,
-            0.02,
-            0.0
-        ]
-        .map { SwiftUI.Color.black.opacity($0) }
+        self.gradientColors =
+            gradientColors
+            ?? [
+                1.0,
+                0.86,
+                0.73,
+                0.62,
+                0.52,
+                0.43,
+                0.35,
+                0.29,
+                0.23,
+                0.18,
+                0.14,
+                0.1,
+                0.07,
+                0.04,
+                0.02,
+                0.0,
+            ]
+            .map { SwiftUI.Color.black.opacity($0) }
         self.gradientWidth = gradientWidth
         self.gradientInsets = gradientInsets
         self.leadingGradientDisabled = leadingGradientDisabled
@@ -51,9 +53,9 @@ struct GradientScrollEdgeModifier: ViewModifier {
     @State private var scrollViewWidth: CGFloat = .zero
     @State private var needsLeadingGradient = false
     @State private var needsTrailingGradient = false
-    
+
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
-    
+
     func body(content: Content) -> some View {
         content
             .onGeometryChange(
@@ -61,7 +63,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
                 of: { $0.size },
                 action: { contentWidth = $0.width }
             )
-            .scrollable(.horizontal, contentOffset: $contentOffset)
+            .modifier(AutoScrollModifier(axis: .horizontal, contentOffset: $contentOffset))
             .onGeometryChange(
                 for: CGSize.self,
                 of: { $0.size },
@@ -81,7 +83,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
                 setNeedsGradientIfNeeded()
             }
     }
-    
+
     private func gradientEdge() -> some View {
         HStack(spacing: 0) {
             Group {
@@ -96,10 +98,10 @@ struct GradientScrollEdgeModifier: ViewModifier {
                 }
             }
             .frame(width: gradientWidth)
-            
+
             Rectangle()
                 .frame(maxWidth: .infinity)
-            
+
             Group {
                 if needsTrailingGradient {
                     LinearGradient(
@@ -115,7 +117,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
         }
         .allowsHitTesting(false)
     }
-    
+
     private func setNeedsGradientIfNeeded() {
         // FloatingPoint 오차로 인해 오른쪽 끝까지 스크롤했을 때 그래디언트가 나타나는
         // 현상이 있어서 소수 아래 절삭한 상태로 비교함
@@ -130,7 +132,7 @@ struct GradientScrollEdgeModifier: ViewModifier {
         } else {
             needsLeadingGradient = false
         }
-        
+
         if leadingGradientDisabled {
             needsLeadingGradient = false
         }

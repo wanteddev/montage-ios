@@ -12,7 +12,6 @@ struct ModalPreview: View {
         case popupModal
         case bottomSheetModal
         case fullModal
-        case modalNavigation
         
         var id: String { self.rawValue }
     }
@@ -27,8 +26,6 @@ struct ModalPreview: View {
                     BottomSheetModalPreview()
                 case .fullModal:
                     FullModalPreview()
-                case .modalNavigation:
-                    ModalNavigationPreview()
                 }
             } label: {
                 Text(style.rawValue)
