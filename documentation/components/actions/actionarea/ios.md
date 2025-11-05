@@ -28,7 +28,7 @@ ActionArea(variant: .neutral(
 ActionArea(variant: .cancel(
     main: .init(text: "닫기", action: { dismiss() })
 ))
-.extra({ 
+.extra({
     Text("추가 정보")
         .typography(variant: .label2) 
 })

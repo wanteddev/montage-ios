@@ -29,7 +29,7 @@ import SwiftUI
 /// ActionArea(variant: .cancel(
 ///     main: .init(text: "닫기", action: { dismiss() })
 /// ))
-/// .extra({ 
+/// .extra({
 ///     Text("추가 정보")
 ///         .typography(variant: .label2) 
 /// })
@@ -38,9 +38,9 @@ import SwiftUI
 /// - Note: 키보드가 표시될 때 자동으로 조정됩니다.
 public struct ActionArea: View, KeyboardReadable {
     // MARK: - Initializers
-    
+
     private let variant: Variant
-    
+
     /// ActionArea 컴포넌트를 초기화합니다.
     ///
     /// - Parameter variant: 버튼 영역의 변형 스타일과 버튼 구성
@@ -48,15 +48,16 @@ public struct ActionArea: View, KeyboardReadable {
     public init(variant: Variant) {
         self.variant = variant
     }
-    
+
     // MARK: - Body
-    
+
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
+    @State private var backgroundOpacity: CGFloat = 1
     @State private var gradientOpacity: CGFloat = 1
     @State private var isExtraEmpty = true
-    
+
     public var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
@@ -65,14 +66,14 @@ public struct ActionArea: View, KeyboardReadable {
                     .padding(.bottom, 24)
                     .background(backgroundColor)
                     .ifEmptyView { isExtraEmpty = $0 }
-                
+
                 if !isExtraEmpty && extraDivider {
                     Rectangle()
                         .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral))
                         .frame(height: 1)
                 }
             }
-            
+
             if isExtraEmpty {
                 SwiftUI.Color.semantic(.backgroundElevated)
                     .frame(height: 0)
@@ -87,10 +88,10 @@ public struct ActionArea: View, KeyboardReadable {
                     }
                     .opacity(gradientOpacity)
             }
-            
+
             VStack(spacing: 16) {
                 captionView
-                
+
                 Buttons(variant)
             }
             .padding(.horizontal, 20)
@@ -100,18 +101,19 @@ public struct ActionArea: View, KeyboardReadable {
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
         .onChange(of: transparentBackground) { transparentBackground in
             withAnimation(.easeInOut(duration: 0.5)) {
+                backgroundOpacity = transparentBackground && isExtraEmpty ? 0 : 1
                 gradientOpacity = transparentBackground ? 0 : 1
             }
         }
     }
-    
+
     // MARK: - Modifiers
     
     private var transparentBackground = false
     private var caption: String?
     private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
-    
+
     /// 배경을 투명하게 설정합니다.
     ///
     /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
@@ -123,7 +125,7 @@ public struct ActionArea: View, KeyboardReadable {
         zelf.transparentBackground = transparentBackground
         return zelf
     }
-    
+
     /// 버튼 위에 표시할 캡션 텍스트를 설정합니다.
     ///
     /// - Parameter caption: 표시할 캡션 텍스트
@@ -133,7 +135,7 @@ public struct ActionArea: View, KeyboardReadable {
         zelf.caption = caption
         return zelf
     }
-    
+
     /// 버튼 위에 표시할 추가 콘텐츠를 설정합니다.
     ///
     /// - Parameters:
@@ -147,7 +149,7 @@ public struct ActionArea: View, KeyboardReadable {
         return zelf
     }
 }
-    
+
 // MARK: - Types
 extension ActionArea {
     /// ActionArea의 버튼 레이아웃 변형을 정의합니다.
@@ -158,7 +160,7 @@ extension ActionArea {
         case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 취소 버튼만 있는 간단한 레이아웃
         case cancel(main: ButtonInfo)
-        
+
         fileprivate var isCaptionAvailable: Bool {
             switch self {
             case .strong, .neutral: true
@@ -166,7 +168,7 @@ extension ActionArea {
             }
         }
     }
-    
+
     /// ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
     ///
     /// 버튼의 텍스트, 액션, 커스텀 뷰 등을 지정할 수 있습니다.
@@ -174,7 +176,7 @@ extension ActionArea {
         internal let text: String
         internal let action: () -> Void
         internal var custom: () -> AnyView
-        
+
         /// 기본 버튼 정보를 초기화합니다.
         ///
         /// - Parameters:
@@ -186,7 +188,7 @@ extension ActionArea {
             self.action = action
             custom = { AnyView(EmptyView()) }
         }
-        
+
         /// 커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.
         ///
         /// - Parameter custom: 커스텀 버튼 뷰를 생성하는 클로저
@@ -198,7 +200,7 @@ extension ActionArea {
             return zelf
         }
     }
-    
+
     /// ActionArea를 구성하기 위한 모델 구조체입니다.
     ///
     /// 이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다.
@@ -209,7 +211,7 @@ extension ActionArea {
         let caption: String?
         let extra: () -> AnyView
         let extraDivider: Bool
-        
+
         /// ActionArea 모델을 초기화합니다.
         ///
         /// - Parameters:
@@ -229,7 +231,7 @@ extension ActionArea {
             self.extra = { AnyView(EmptyView()) }
             self.extraDivider = extraDivider
         }
-        
+
         /// ActionArea 모델을 초기화합니다.
         ///
         /// - Parameters:
@@ -272,7 +274,7 @@ extension ActionArea {
 }
 
 // MARK: - Private
-private extension ActionArea {
+extension ActionArea {
     private var captionView: some View {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
@@ -281,29 +283,29 @@ private extension ActionArea {
             }
         }
     }
-    
+
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
                 .semantic(.backgroundElevated).opacity($0)
             }
     }
-    
+
     private var backgroundColor: SwiftUI.Color {
-        !transparentBackground || !isExtraEmpty ? .semantic(.backgroundElevated) : .clear
+        .semantic(.backgroundElevated).opacity(backgroundOpacity)
     }
 }
 
 // MARK: - Inner Views
 
-private extension ActionArea {
+extension ActionArea {
     private struct Buttons: View {
         private let variant: Variant
-        
-        init( _ variant: Variant) {
+
+        init(_ variant: Variant) {
             self.variant = variant
         }
-        
+
         var body: some View {
             Group {
                 switch variant {
@@ -316,7 +318,7 @@ private extension ActionArea {
                 }
             }
         }
-        
+
         @ViewBuilder
         private func strong(
             _ main: ButtonInfo,
@@ -333,7 +335,7 @@ private extension ActionArea {
                 }
             }
         }
-        
+
         @ViewBuilder
         private func neutral(
             _ main: ButtonInfo,
@@ -350,14 +352,14 @@ private extension ActionArea {
                 primarySolidButton(main)
             }
         }
-        
+
         @ViewBuilder
         private func cancel(
             _ main: ButtonInfo
         ) -> some View {
             assistiveOutlinedButton(main)
         }
-        
+
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 Button(
@@ -369,7 +371,7 @@ private extension ActionArea {
                 .fill(horizontal: true, vertical: false)
             }
         }
-        
+
         @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 Button(
@@ -382,7 +384,7 @@ private extension ActionArea {
                 .fill(horizontal: true, vertical: false)
             }
         }
-        
+
         @ViewBuilder private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 Button(
@@ -397,7 +399,7 @@ private extension ActionArea {
                 }
             }
         }
-        
+
         @ViewBuilder private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 TextButton(
@@ -410,12 +412,12 @@ private extension ActionArea {
             }
         }
     }
-    
+
     private struct CustomOrFallback<Fallback: View>: View {
         let custom: () -> AnyView
         @ViewBuilder var fallback: () -> Fallback
         @State private var isEmpty = true
-        
+
         var body: some View {
             ZStack {
                 custom()
@@ -434,13 +436,13 @@ struct ActionAreaModifier: ViewModifier {
     init(model: ActionArea.Model) {
         self.model = model
     }
-    
+
     // MARK: - Body
-        
+
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
             content
-            
+
             ActionArea(variant: model.variant)
                 .caption(model.caption)
                 .extra(model.extra, divider: model.extraDivider)

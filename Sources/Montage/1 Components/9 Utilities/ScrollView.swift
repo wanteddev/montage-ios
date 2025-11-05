@@ -75,15 +75,25 @@ public struct ScrollView: View {
                 .frame(width: 0, height: 0)
                 VStack {
                     AnyView(content())
+                        .background(
+                            GeometryReader { proxy in
+                                SwiftUI.Color.clear.preference(
+                                    key: ContentSizePreferenceKey.self,
+                                    value: proxy.size
+                                )
+                            }
+                        )
                 }
-                .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
-                    scrollStatus.wrappedValue.contentSize = $0
-                })
             }
         }
-        .onGeometryChange(for: CGSize.self, of: { $0.size }, for: .milliseconds(100), action: {
-            scrollStatus.wrappedValue.scrollViewSize = $0
-        })
+        .background(
+            GeometryReader { proxy in
+                SwiftUI.Color.clear.preference(
+                    key: ScrollViewSizePreferenceKey.self,
+                    value: proxy.size
+                )
+            }
+        )
         .coordinateSpace(name: "ScrollViewOrigin")
         .onChange(of: axis) {
             scrollStatus.wrappedValue.axis = $0
@@ -91,6 +101,12 @@ public struct ScrollView: View {
         .onPreferenceChange(OffsetPreferenceKey.self) {
             scrollStatus.wrappedValue.contentOffset = $0
             onOffsetChanged($0)
+        }
+        .onPreferenceChange(ContentSizePreferenceKey.self) {
+            scrollStatus.wrappedValue.contentSize = $0
+        }
+        .onPreferenceChange(ScrollViewSizePreferenceKey.self) {
+            scrollStatus.wrappedValue.scrollViewSize = $0
         }
         .if(onRefresh != nil) {
             if #available(iOS 18, *) {
@@ -198,4 +214,14 @@ private extension ScrollView {
 struct OffsetPreferenceKey: PreferenceKey {
     public static var defaultValue: CGPoint = .zero
     public static func reduce(value _: inout CGPoint, nextValue _: () -> CGPoint) {}
+}
+
+struct ContentSizePreferenceKey: PreferenceKey {
+    public static var defaultValue: CGSize = .zero
+    public static func reduce(value _: inout CGSize, nextValue _: () -> CGSize) {}
+}
+
+struct ScrollViewSizePreferenceKey: PreferenceKey {
+    public static var defaultValue: CGSize = .zero
+    public static func reduce(value _: inout CGSize, nextValue _: () -> CGSize) {}
 }
