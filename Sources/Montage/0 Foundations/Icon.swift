@@ -187,6 +187,7 @@ public enum Icon: String, CaseIterable {
     case fire
     case fireFill
     case flag
+    case flagFill
     case flipBackward
     case folder
     case folderFill
