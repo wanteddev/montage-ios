@@ -90,6 +90,7 @@ public struct FilterChip: View {
     
     @SwiftUI.State private var isPressed = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: contentSpacing) {
             Text(active ? (activeLabel ?? text) : text)

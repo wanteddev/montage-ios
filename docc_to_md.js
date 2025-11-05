@@ -15,7 +15,9 @@ function renderTopicSection(section, references, depth = 0) {
     return '';
   }
   let md = `###${'#'.repeat(depth)} ${section.title}\n\n`;
-  for (const id of section.identifiers || []) {
+  // 중복 제거를 위해 Set 사용
+  const uniqueIdentifiers = [...new Set(section.identifiers || [])];
+  for (const id of uniqueIdentifiers) {
     const ref = references ? references[id] : null;
     if (!ref) continue;
     let title = ref.title || '';

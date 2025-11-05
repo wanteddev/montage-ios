@@ -60,12 +60,12 @@ TopNavigation(
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 #### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
@@ -87,12 +87,12 @@ TopNavigation(
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 #### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
@@ -114,12 +114,12 @@ TopNavigation(
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 #### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
@@ -147,6 +147,8 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -404,8 +406,6 @@ TopNavigation의 외관을 결정하는 열거형입니다.
 ___
 ### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 

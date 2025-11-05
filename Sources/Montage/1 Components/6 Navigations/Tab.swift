@@ -96,6 +96,7 @@ public struct Tab: View {
     
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
             HStack(spacing: 0) {

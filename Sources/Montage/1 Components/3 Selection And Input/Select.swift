@@ -234,6 +234,7 @@ public struct Select: View {
     @State private var bottomSheetContentHeight: CGFloat = .zero
     @State private var pureBottomSheetHeight: CGFloat = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if !heading.isEmpty {

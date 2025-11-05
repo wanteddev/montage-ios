@@ -73,6 +73,7 @@ public struct PopupModal: View {
 
     private let popupMaxHeight: CGFloat = min(760, UIScreen.main.bounds.height - 40)
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {

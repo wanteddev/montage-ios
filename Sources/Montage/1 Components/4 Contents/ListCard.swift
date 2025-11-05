@@ -124,6 +124,7 @@ public struct ListCard: View {
     @State private var hasTopContent: Bool = false
     @State private var hasBottomContent: Bool = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(alignment: .center, spacing: 12) {
             leadingContent()

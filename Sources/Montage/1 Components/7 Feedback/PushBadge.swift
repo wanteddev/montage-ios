@@ -96,6 +96,7 @@ public struct PushBadge: View {
     
     // MARK: - Body
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         Group {
             switch variant {

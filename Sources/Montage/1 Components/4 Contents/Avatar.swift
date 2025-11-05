@@ -133,6 +133,7 @@ public struct Avatar: View {
     
     @State private var isPressed = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         WebImage(url: URL(string: imageUrl)) { image in
             image.resizable()

@@ -51,6 +51,8 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -104,8 +106,6 @@ Wanted 브랜드 스타일의 로딩 애니메이션
 ___
 ### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 

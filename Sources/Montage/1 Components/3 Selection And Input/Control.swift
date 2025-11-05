@@ -170,6 +170,7 @@ public struct Control: View {
     @SwiftUI.State private var isPressed = false
     private let switchSize: CGSize = .init(width: 51, height: 31)
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         switch variant {
         case .switch:

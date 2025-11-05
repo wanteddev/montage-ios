@@ -92,6 +92,7 @@ public struct Loading: View {
     
     @Environment(\.colorScheme) private var colorScheme
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         LottieView(animation: .named(kind.resourceName(colorScheme), bundle: .module))
             .playing(loopMode: .loop)

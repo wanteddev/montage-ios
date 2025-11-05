@@ -317,6 +317,7 @@ public struct TextArea: View {
     @State private var typedCharacters = 0
     @FocusState private var internalFocusState
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let heading {

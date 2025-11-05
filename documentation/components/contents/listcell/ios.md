@@ -58,6 +58,8 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -415,8 +417,6 @@ ___
 ___
 ### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 

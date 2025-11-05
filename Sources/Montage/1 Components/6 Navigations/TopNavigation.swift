@@ -198,6 +198,7 @@ public struct TopNavigation: View {
     
     @State private var defaultSearchTerm: String = ""
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
             Contents(
@@ -516,6 +517,7 @@ extension TopNavigation {
             self.action = action
         }
         
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             if let action {
                 Group {
@@ -577,6 +579,7 @@ extension TopNavigation {
             self.action = action
         }
 
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             TextButton(text: text) {
                 action()
@@ -619,6 +622,7 @@ extension TopNavigation {
             self.action = action
         }
         
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             IconButton(
                 variant: .default,

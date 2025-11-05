@@ -58,6 +58,7 @@ public struct ActionArea: View, KeyboardReadable {
     @State private var gradientOpacity: CGFloat = 1
     @State private var isExtraEmpty = true
 
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {

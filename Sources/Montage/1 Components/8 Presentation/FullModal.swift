@@ -64,6 +64,7 @@ public struct FullModal: View {
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
 
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         BottomSheetModal(content)
             .needHandle(false)

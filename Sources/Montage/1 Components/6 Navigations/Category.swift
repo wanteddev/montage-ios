@@ -80,6 +80,7 @@ public struct Category: View {
     
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ScrollViewReader { reader in
             HStack(spacing: 0) {

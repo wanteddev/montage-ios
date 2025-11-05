@@ -95,6 +95,7 @@ public struct Slider: View {
     @State private var lowValue: CGFloat = 0
     @State private var highValue: CGFloat = 0
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(spacing: 32) {
             if heading {

@@ -65,6 +65,7 @@ public struct VerticalProgressTracker: View {
             self.contentView = contentView.map { view in { AnyView(view()) }} ?? { AnyView(EmptyView()) }
         }
         
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             ZStack(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 12) {
@@ -120,6 +121,7 @@ public struct VerticalProgressTracker: View {
     @State private var lineLengths: [Int: CGFloat] = [:]
     @State private var stepperSize: CGSize = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .topLeading) {
             VStack(spacing: 0) {

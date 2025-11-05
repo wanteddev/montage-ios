@@ -80,6 +80,7 @@ public struct GroupAvatar: View {
     
     // MARK: - Body
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 10) {
             ZStack {

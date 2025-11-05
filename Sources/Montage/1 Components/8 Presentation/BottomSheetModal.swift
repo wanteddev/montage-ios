@@ -94,6 +94,7 @@ public struct BottomSheetModal: View {
     @State private var actionAreaHeight: CGFloat = 0
     @State private var scrollStatus: ScrollView.ScrollStatus = .init()
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {

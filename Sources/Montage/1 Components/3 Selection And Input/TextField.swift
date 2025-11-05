@@ -265,6 +265,7 @@ public struct TextField: View {
     @State private var autoCompletionContentHeight: CGFloat = .zero
     @State private var fixAutocorrection = false
 
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let heading {

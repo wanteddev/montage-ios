@@ -222,6 +222,7 @@ public struct Accordion: View {
     @State private var trailingContentEmpty = true
     @State private var isContentEmpty = true
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {

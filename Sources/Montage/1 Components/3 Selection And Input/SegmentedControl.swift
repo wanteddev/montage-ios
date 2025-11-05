@@ -105,6 +105,7 @@ public struct SegmentedControl: View {
     // MARK: - Body
     @State private var frameSize: CGSize = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 0) {
             ForEach(items.indices, id: \.self) { index in

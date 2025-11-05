@@ -36,7 +36,7 @@ ActionArea(variant: .cancel(
 
 >  **Note**
 >
-> 키보드가 표시될 때 자동으로 조정됩니다.
+> 키보드가 표시될 때 ActionArea가 위치가 자동으로 키보드 상단에 붙어있도록 조정됩니다.
 
 ## Topics
 
@@ -151,6 +151,8 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -258,8 +260,6 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 ___
 ### Default Implementations
 
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 [View Implementations](/docs/utilities/ios-utilities/view-implementations)
 

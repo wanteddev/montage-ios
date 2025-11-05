@@ -51,6 +51,7 @@ public struct HorizontalProgressTracker: View {
     @State private var stepperSize: CGSize = .zero
     @State private var textMaxHeight: CGFloat = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             HStack(alignment: .center, spacing: 0) {

@@ -66,6 +66,7 @@ public struct ModalNavigation: View {
     
     // MARK: - Body
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {

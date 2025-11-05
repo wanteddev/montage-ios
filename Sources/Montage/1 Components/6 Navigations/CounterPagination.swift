@@ -51,6 +51,7 @@ public struct CounterPagination: View {
         self.totalPages = totalPages
     }
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 4) {
             Text("\(selectedPage)")

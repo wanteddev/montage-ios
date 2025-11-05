@@ -68,6 +68,7 @@ public struct FallbackView: View {
     
     @State private var isImageEmpty = true
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .center, spacing: .zero) {
             Spacer()

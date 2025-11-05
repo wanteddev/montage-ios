@@ -72,6 +72,7 @@ public struct SectionHeader: View {
     // MARK: - Body
     @State private var trailingContentEmpty = true
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             HStack(spacing: 0) {
