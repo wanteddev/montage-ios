@@ -31,7 +31,14 @@ struct PressActionDetectingModifier: ViewModifier {
         /// 이에 대안을 찾고자 ButtonStyle을 사용하는 방법을 사용했다. 이 방법은 2번 조건을 만족하지 못하지만
         /// 천천히 눌렀을 때는 버튼의 외관이 잘 변경되고 빠르게 눌렀을 때만 안되는 것이기에 크리티컬하지는 않다고 판단하여 이렇게 구현했다.
         
-        if #available(iOS 18.0, *) {
+        if #available(iOS 26.0, *) {
+            content
+                .if(action != nil) { view in
+                    view.onTapGesture {
+                        action?()
+                    }
+                }
+        } else if #available(iOS 18.0, *) {
             content
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 0)
