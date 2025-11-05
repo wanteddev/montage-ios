@@ -81,19 +81,19 @@ public enum Tooltip {
     /// ```
     public enum Position: Equatable, Sendable {
         /// 왼쪽에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수직 위치 (기본값: .center)
+        /// - Parameter arrowPosition: 화살표의 수직 위치, 기본값은 `.center`
         case leading(arrowPosition: VerticalAlignment = .center)
         
         /// 오른쪽에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수직 위치 (기본값: .center)
+        /// - Parameter arrowPosition: 화살표의 수직 위치, 기본값은 `.center`
         case trailing(arrowPosition: VerticalAlignment = .center)
         
         /// 상단에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수평 위치 (기본값: .center)
+        /// - Parameter arrowPosition: 화살표의 수평 위치, 기본값은 `.center`
         case top(arrowPosition: HorizontalAlignment = .center)
         
         /// 하단에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수평 위치 (기본값: .center)
+        /// - Parameter arrowPosition: 화살표의 수평 위치, 기본값은 `.center`
         case bottom(arrowPosition: HorizontalAlignment = .center)
         
         fileprivate func getArrowAngleDegree() -> Double {

@@ -29,8 +29,6 @@ import SwiftUI
 ///             .opacity(0.7)
 ///     }
 /// ```
-///
-/// - Note: 스켈레톤 뷰는 로딩 상태일 때 부드러운 페이드 인/아웃 애니메이션을 제공합니다.
 public enum Skeleton {
     // MARK: - Types
     
@@ -106,12 +104,11 @@ public enum Skeleton {
     /// ```
     public enum Kind {
         /// 텍스트 줄을 나타내는 스켈레톤
-        ///
         /// - Parameters:
-        ///   - alignment: 텍스트 정렬 방식 (기본값: .leading)
-        ///   - lengths: 각 줄의 상대적 길이 (기본값: [._100])
-        ///   - cornerRadius: 모서리 둥글기 (기본값: 3)
-        ///   - lineNumber: 텍스트 줄 수 (기본값: 1)
+        ///   - alignment: 텍스트 정렬 방식, 기본값은 `.leading`
+        ///   - lengths: 각 줄의 상대적 길이, 기본값은 `[._100]`
+        ///   - cornerRadius: 모서리 둥글기, 기본값은 `3`
+        ///   - lineNumber: 텍스트 줄 수, 기본값은 `1`
         case text(
             alignment: Align = .leading,
             lengths: [Length] = [._100],
@@ -119,8 +116,7 @@ public enum Skeleton {
             lineNumber: Int = 1
         )
         /// 사각형 모양의 스켈레톤
-        ///
-        /// - Parameter cornerRadius: 모서리 둥글기 (기본값: 3)
+        /// - Parameter cornerRadius: 모서리 둥글기, 기본값은 `3`
         case rectangle(cornerRadius: CGFloat = 3)
         /// 원형 스켈레톤
         case circle
@@ -310,9 +306,9 @@ extension View {
     /// - Parameters:
     ///   - isPresented: 스켈레톤 표시 여부를 제어하는 불리언 값
     ///   - kind: 스켈레톤 종류 (텍스트, 사각형, 원형 등)
-    ///   - color: 스켈레톤 색상 (기본값: 시스템 색상)
-    ///   - opacity: 스켈레톤 투명도 (기본값: 1.0)
-    ///   - size: 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용)
+    ///   - color: 스켈레톤 색상, 기본값은 `nil` (.semantic(.fillNormal) 사용)
+    ///   - opacity: 스켈레톤 투명도, 기본값은 `nil`
+    ///   - size: 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 기본값은 `nil`
     /// - Returns: 스켈레톤 기능이 적용된 뷰
     public func skeleton(
         isPresented: Bool,

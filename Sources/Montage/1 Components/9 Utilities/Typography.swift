@@ -282,14 +282,14 @@ extension Typography.Weight {
 }
 
 // MARK: - UIKit Font Extensions
-public extension UIFont {
+extension UIFont {
     /// Montage 디자인 시스템의 폰트를 생성합니다.
     ///
     /// - Parameters:
     ///   - size: 폰트 크기
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 nil 반환
-    static func font(size: CGFloat, weight: Typography.Weight) -> UIFont? {
+    public static func font(size: CGFloat, weight: Typography.Weight) -> UIFont? {
         UIFont(name: weight.pretendardWeight.fontName, size: size)
     }
 
@@ -299,7 +299,7 @@ public extension UIFont {
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 시스템 폰트로 대체
-    static func font(
+    public static func font(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
     ) -> UIFont {
@@ -312,14 +312,14 @@ public extension UIFont {
 }
 
 // MARK: - SwiftUI Font Extensions
-public extension Font {
+extension Font {
     /// Montage 디자인 시스템의 폰트를 생성합니다.
     ///
     /// - Parameters:
     ///   - size: 폰트 크기
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 Font 인스턴스
-    static func font(size: CGFloat, weight: Typography.Weight) -> Font {
+    public static func font(size: CGFloat, weight: Typography.Weight) -> Font {
         .custom(weight.pretendardWeight.fontName, size: size)
     }
 
@@ -329,7 +329,7 @@ public extension Font {
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 Font 인스턴스
-    static func font(
+    public static func font(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
     ) -> Font? {
@@ -340,7 +340,7 @@ public extension Font {
 }
 
 // MARK: - UIKit Label Extensions
-public extension UILabel {
+extension UILabel {
     /// Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
     ///
     /// - Parameters:
@@ -349,7 +349,7 @@ public extension UILabel {
     ///   - weight: 폰트 두께
     ///   - color: 색상
     /// - Returns: 생성된 UILabel 인스턴스
-    static func label(
+    public static func label(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
@@ -373,7 +373,7 @@ public extension UILabel {
     ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 생성된 UILabel 인스턴스
-    static func label(
+    public static func label(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
@@ -384,7 +384,7 @@ public extension UILabel {
 }
 
 // MARK: - SwiftUI Text Extensions
-public extension Text {
+extension Text {
     /// 타이포그래피 변형에 따른 스타일을 적용합니다.
     ///
     /// - Parameters:
@@ -392,7 +392,7 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - color: 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func typography(
+    public func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
@@ -409,7 +409,7 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 스타일이 적용된 Text 인스턴스
-    func typography(
+    public func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
@@ -424,7 +424,7 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - color: 색상
     /// - Returns: 단락 스타일이 적용된 View
-    func paragraph(
+    public func paragraph(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         color: SwiftUI.Color
@@ -440,7 +440,7 @@ public extension Text {
     ///   - weight: 폰트 두께
     ///   - semantic: 시맨틱 색상
     /// - Returns: 단락 스타일이 적용된 View
-    func paragraph(
+    public func paragraph(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
         semantic: Color.Semantic = .labelNormal
@@ -450,28 +450,28 @@ public extension Text {
     }
 }
 
-public extension View {
+extension View {
     /// 타이포그래피 변형에 따른 줄 높이를 적용합니다.
     ///
     /// - Parameter variant: 텍스트 변형
     /// - Returns: 줄 높이가 적용된 View
-    func adjustLineHeight(variant: Typography.Variant) -> some View {
+    public func adjustLineHeight(variant: Typography.Variant) -> some View {
         lineSpacing(variant.lineSpacing).padding(.vertical, variant.lineSpacing / 2)
     }
 }
 
 /// Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성하는 확장입니다.
-public extension NSAttributedString {
+extension NSAttributedString {
     /// Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
     ///
     /// - Parameters:
     ///   - string: 변환할 문자열
-    ///   - variant: 타이포그래피 변형 (기본값: .body1)
-    ///   - weight: 폰트 두께 (기본값: .regular)
-    ///   - color: 색상
-    ///   - lineBreakMode: 줄바꿈 모드 (기본값: .byWordWrapping)
+    ///   - variant: 타이포그래피 변형, 기본값은 `.body1`
+    ///   - weight: 폰트 두께, 기본값은 `.regular`
+    ///   - color: 색상, 기본값은 `.semantic(.labelNormal)`
+    ///   - lineBreakMode: 줄바꿈 모드, 기본값은 `.byWordWrapping`
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func attributedString(
+    public static func attributedString(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
@@ -491,12 +491,12 @@ public extension NSAttributedString {
     ///
     /// - Parameters:
     ///   - string: 변환할 문자열
-    ///   - variant: 타이포그래피 변형 (기본값: .body1)
-    ///   - weight: 폰트 두께 (기본값: .regular)
+    ///   - variant: 타이포그래피 변형, 기본값은 `.body1`
+    ///   - weight: 폰트 두께, 기본값은 `.regular`
     ///   - semantic: 의미론적 색상
-    ///   - lineBreakMode: 줄바꿈 모드 (기본값: .byWordWrapping)
+    ///   - lineBreakMode: 줄바꿈 모드, 기본값은 `.byWordWrapping`
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
-    static func attributedString(
+    public static func attributedString(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,

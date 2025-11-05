@@ -30,14 +30,14 @@ public struct Select: View {
     public enum Variant {
         /// 단일 선택 모드
         /// - Parameters:
-        ///   - selectionType: 선택 표시 방식 (체크마크 또는 라디오 버튼), 기본값은 `.radio`
-        ///   - menuPrimaryButtonTitle: 확인 버튼 제목 (nil일 경우 버튼 표시 안 함), 기본값은 `nil`
+        ///   - selectionType: 선택 표시 방식, 기본값은 `.radio`
+        ///   - menuPrimaryButtonTitle: 확인 버튼 제목, 기본값은 `nil` (nil일 경우 버튼 표시 안 함)
         case single(selectionType: SingleSelectionType = .radio, menuPrimaryButtonTitle: String? = nil)
         
         /// 다중 선택 모드
         /// - Parameters:
-        ///   - render: 선택된 항목 표시 방식 (텍스트 또는 칩), 기본값은 .text
-        ///   - overflow: 선택된 항목이 여러 줄로 표시되는지 여부, 기본값은 false
+        ///   - render: 선택된 항목 표시 방식, 기본값은 `.text`
+        ///   - overflow: 선택된 항목이 여러 줄로 표시되는지 여부, 기본값은 `false`
         ///   - menuPrimaryButtonTitle: 확인 버튼 제목
         case multiple(render: Render = .text, overflow: Bool = false, menuPrimaryButtonTitle: String)
         
@@ -55,7 +55,7 @@ public struct Select: View {
     public struct Item: Equatable {
         /// 아이템 텍스트 내용
         public let text: String
-        /// 아이템의 아이콘 (선택 사항)
+        /// 아이템의 아이콘
         public let icon: Icon?
         /// 부정적 상태 여부 (오류나 경고를 나타낼 때 사용)
         public let isNegative: Bool
@@ -65,9 +65,9 @@ public struct Select: View {
         /// 아이템 초기화
         /// - Parameters:
         ///   - text: 아이템 텍스트
-        ///   - icon: 아이템 아이콘 (기본값: nil)
-        ///   - isNegative: 부정적 상태 여부 (기본값: false)
-        ///   - isSelected: 선택 여부 (기본값: false)
+        ///   - icon: 아이템 아이콘, 기본값은 `nil`
+        ///   - isNegative: 부정적 상태 여부, 기본값은 `false`
+        ///   - isSelected: 선택 여부, 기본값은 `false`
         public init(
             text: String,
             icon: Icon? = nil,
@@ -100,11 +100,14 @@ public struct Select: View {
     /// 왼쪽에 표시될 컨텐트 타입입니다.
     public enum LeadingContent {
         /// 아이콘 표시
-        case icon(Icon)
+        /// - Parameter icon: 표시할 아이콘
+        case icon(_ icon: Icon)
         /// 아이콘 버튼 표시
-        case iconButton(IconButton)
+        /// - Parameter iconButton: 표시할 아이콘 버튼
+        case iconButton(_ iconButton: IconButton)
         /// 사용자 정의 뷰 표시
-        case custom(() -> any View)
+        /// - Parameter content: 사용자 정의 뷰를 반환하는 클로저
+        case custom(_ content: () -> any View)
     }
 
     // MARK: - Initializer
@@ -116,10 +119,10 @@ public struct Select: View {
     
     /// Select 컴포넌트 초기화
     /// - Parameters:
-    ///   - menuPresented: 메뉴 표시 상태 바인딩 (기본값: nil)
+    ///   - menuPresented: 메뉴 표시 상태 바인딩, 기본값은 `nil`
     ///   - variant: 컴포넌트의 시각적/기능적 변형
     ///   - items: 선택 가능한 항목 배열 (바인딩)
-    ///   - onTapItem: 항목 선택 시 호출되는 클로저 (기본값: nil)
+    ///   - onTapItem: 항목 선택 시 호출되는 클로저, 기본값은 `nil`
     public init(
         menuPresented: Binding<Bool>? = nil,
         variant: Variant,
@@ -146,7 +149,7 @@ public struct Select: View {
     private var menuResize: BottomSheetModal.Resize = .hug
     
     /// negative 상태 여부를 조정합니다.
-    /// - Parameter negative: 부정적 상태 여부 (기본값: true)
+    /// - Parameter negative: 부정적 상태 여부, 기본값은 `true`
     /// - Returns: 수정된 Select 인스턴스
     public func negative(_ negative: Bool = true) -> Self {
         var zelf = self
@@ -164,7 +167,7 @@ public struct Select: View {
     }
     
     /// 활성화 여부를 조정합니다.
-    /// - Parameter disable: 비활성화 여부 (기본값: true)
+    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
     /// - Returns: 수정된 Select 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -182,7 +185,7 @@ public struct Select: View {
     }
     
     /// 필수 표시 노출 여부를 조정합니다.
-    /// - Parameter requiredBadge: 필수 표시 여부 (기본값: true)
+    /// - Parameter requiredBadge: 필수 표시 여부, 기본값은 `true`
     /// - Returns: 수정된 Select 인스턴스
     public func requiredBadge(_ requiredBadge: Bool = true) -> Self {
         var zelf = self

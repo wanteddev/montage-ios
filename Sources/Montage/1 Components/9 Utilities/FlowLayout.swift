@@ -23,19 +23,22 @@ import SwiftUI
 ///     }
 /// }
 /// ```
-public struct FlowLayout: Layout {
+public struct FlowLayout {
     private let spacing: CGFloat?
     private let lineSpacing: CGFloat
     
     /// FlowLayout을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - spacing: 항목 간 수평 간격. nil인 경우 시스템 기본 간격을 사용합니다. (기본값: nil)
-    ///   - lineSpacing: 줄 간 수직 간격 (기본값: 10.0)
+    ///   - spacing: 항목 간 수평 간격. nil인 경우 시스템 기본 간격을 사용합니다., 기본값은 `nil`
+    ///   - lineSpacing: 줄 간 수직 간격, 기본값은 `10.0`
     public init(spacing: CGFloat? = nil, lineSpacing: CGFloat = 10.0) {
         self.spacing = spacing
         self.lineSpacing = lineSpacing
     }
+}
+
+extension FlowLayout: Layout {
     
     /// 레이아웃 계산에 사용되는 캐시 구조체입니다.
     ///

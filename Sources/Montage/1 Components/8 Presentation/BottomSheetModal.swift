@@ -53,11 +53,9 @@ public struct BottomSheetModal: View {
         /// 컨텐츠 크기에 맞게 자동 조절됩니다.
         case hug
         /// 화면 높이의 특정 비율로 고정됩니다.
-        ///
         /// - Parameter ratio: 비율 (0.0 ~ 1.0)
         case fixedRatio(CGFloat)
         /// 지정한 높이로 고정됩니다.
-        ///
         /// - Parameter height: 높이
         case fixedHeight(CGFloat)
         /// 사용자가 드래그하여 크기를 조절할 수 있습니다.
@@ -337,11 +335,11 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
-    ///   - needHandle: 상단 핸들 표시 여부 (기본값: true)
-    ///   - resize: 모달 크기 조절 방식 (기본값: .hug)
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
+    ///   - needHandle: 상단 핸들 표시 여부, 기본값은 `true`
+    ///   - resize: 모달 크기 조절 방식, 기본값은 `.hug`
+    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 기본값은 `nil`
     ///   - content: 모달에 표시할 콘텐츠 클로저
-    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 기본값은 `nil`
     /// - Returns: 바텀 시트 모달이 적용된 뷰
     public func bottomSheetModal<V: View>(
         isPresented: Binding<Bool>,

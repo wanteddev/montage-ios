@@ -23,12 +23,10 @@ import SwiftUI
 /// .fontColor(.semantic(.staticWhite))
 /// .leadingImage(Image(systemName: "heart"))
 /// ```
-///
-/// - Note: 기본적으로 8pt의 패딩과 12pt의 모서리 반경을 가집니다.
 public struct ActionChip: View {
     /// 칩의 외관을 결정하는 열거형입니다.
     public enum Variant {
-        /// 배경색이 있는 실선 스타일
+        /// 배경색이 채워진 스타일
         case solid
         /// 테두리만 있는 아웃라인 스타일
         case outlined
@@ -48,10 +46,10 @@ public struct ActionChip: View {
     
     // MARK: - Properties
     
-    public let variant: Variant
-    public let size: Size
-    public let text: String
-    public let handler: (() -> Void)?
+    private let variant: Variant
+    private let size: Size
+    private let text: String
+    private let handler: (() -> Void)?
             
     // MARK: - Initializer
     

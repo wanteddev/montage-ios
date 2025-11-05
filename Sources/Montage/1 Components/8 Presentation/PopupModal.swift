@@ -52,7 +52,6 @@ public struct PopupModal: View {
         /// 컨텐츠 크기에 맞게 자동 조절됩니다.
         case hug
         /// 지정한 높이로 고정됩니다.
-        ///
         /// - Parameter height: 높이
         case fixed(CGFloat)
     }
@@ -324,11 +323,11 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
-    ///   - resize: 모달 크기 조절 방식 (기본값: .hug)
-    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
+    ///   - resize: 모달 크기 조절 방식, 기본값은 `.hug`
+    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부, 기본값은 `false`
+    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 기본값은 `nil`
     ///   - content: 모달에 표시할 콘텐츠 클로저
-    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 기본값은 `nil`
     /// - Returns: 팝업 모달이 적용된 뷰
     public func popupModal<V: View>(
         isPresented: Binding<Bool>,

@@ -20,10 +20,6 @@ HorizontalProgressTracker(
 )
 ```
 
->  **Note**
->
-> 현재 단계는 강조 표시되며, 이전 단계는 완료 상태로, 이후 단계는 비활성 상태로 표시됩니다.
-
 ## Topics
 
 ### Initializers
@@ -31,6 +27,7 @@ HorizontalProgressTracker(
 <details>
 
 <summary>``init(progress: Binding<Int>, count: Int)``</summary>
+
 
 라벨 없는 수평 진행 추적기를 초기화합니다.
 
@@ -43,6 +40,7 @@ HorizontalProgressTracker(
 <details>
 
 <summary>``init(progress: Binding<Int>, labels: [String])``</summary>
+
 
 수평 진행 추적기를 초기화합니다.
 
@@ -60,15 +58,11 @@ ___
 
 <summary>``var body: some View``</summary>
 
+
 뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
-### Default Implementations
-
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
-
 ## Relationships
 
 Conforms To

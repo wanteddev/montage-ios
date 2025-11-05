@@ -11,7 +11,7 @@ import SwiftUI
 ///
 /// `DotPagination`은 페이지 간 이동 및 현재 페이지 표시를 위한 점 형태의 페이지네이션 컴포넌트를 제공합니다.
 /// 현재 선택된 페이지는 강조 표시되며, 점을 탭하여 해당 페이지로 이동할 수 있습니다.
-/// 페이지 수가 많을 경우 표시되는 점의 개수와 크기가 자동으로 조정됩니다.
+/// 페이지 수가 많을 경우 표시되는 점의 개수(최대 5개)와 크기가 자동으로 조정됩니다.
 ///
 /// ```swift
 /// @State private var currentPage = 1
@@ -20,8 +20,6 @@ import SwiftUI
 ///     .variant(.normal)
 ///     .size(.normal)
 /// ```
-///
-/// - Note: 최대 표시 가능한 점의 개수는 5개이며, 페이지 수가 더 많을 경우 동적으로 조정됩니다.
 public struct DotPagination: View {
     /// 점 페이지네이션의 색상 변형을 지정하는 열거형입니다.
     ///
@@ -162,8 +160,6 @@ public struct DotPagination: View {
     /// - Parameters:
     ///   - variant: 적용할 색상 변형
     /// - Returns: 수정된 Dot 인스턴스
-    ///
-    /// - Note: 기본값은 `.normal`입니다.
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
         zelf.variant = variant
@@ -175,8 +171,6 @@ public struct DotPagination: View {
     /// - Parameters:
     ///   - size: 적용할 점 크기
     /// - Returns: 수정된 Dot 인스턴스
-    ///
-    /// - Note: 기본값은 `.normal`입니다.
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size

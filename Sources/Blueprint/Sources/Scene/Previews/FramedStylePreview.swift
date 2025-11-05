@@ -36,9 +36,9 @@ struct FramedStylePreview: View {
                     Text("Preview")
                 }
                 .framedStyle(
-                    status: FramedStyleStatus.allCases[statusIndex],
+                    status: FramedStyle.Status.allCases[statusIndex],
                     borderRadius: borderRadius,
-                    shadowLevel: ShadowLevel.allCases[shadowIndex],
+                    shadowLevel: Shadow.Level.allCases[shadowIndex],
                     disabled: disabled
                 )
                 
@@ -46,7 +46,7 @@ struct FramedStylePreview: View {
                 
                 HStack {
                     Text("status")
-                    SegmentedControl(selectedIndex: $statusIndex, labels: FramedStyleStatus.allCases.map(\.description))
+                    SegmentedControl(selectedIndex: $statusIndex, labels: FramedStyle.Status.allCases.map(\.description))
                         .size(.small)
                 }
                 HStack {
@@ -55,7 +55,7 @@ struct FramedStylePreview: View {
                 }
                 HStack {
                     Text("shadow")
-                    SegmentedControl(selectedIndex: $shadowIndex, labels: ShadowLevel.allCases.map(\.description))
+                    SegmentedControl(selectedIndex: $shadowIndex, labels: Shadow.Level.allCases.map(\.description))
                         .size(.small)
                 }
                 HStack {
@@ -71,7 +71,7 @@ struct FramedStylePreview: View {
     }
 }
 
-extension FramedStyleStatus: CaseDescribable {}
+extension FramedStyle.Status: CaseDescribable {}
     
 #Preview {
     FramedStylePreview()

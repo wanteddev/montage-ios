@@ -1,0 +1,130 @@
+//
+//  FramedStyle.swift
+//  Views
+//
+//  Created by 김삼열 on 8/22/25.
+//  Copyright © 2025 WantedLab Inc. All rights reserved.
+//
+
+import SwiftUI
+
+public enum FramedStyle {
+    /// 프레임의 상태를 정의하는 열거형입니다.
+    ///
+    /// 각 상태마다 다른 테두리 색상과 스타일이 적용됩니다.
+    public enum Status: CaseIterable {
+        /// 기본 상태
+        case normal
+        /// 선택된 상태
+        case selected
+        /// 부정적 상태 (오류, 경고 등)
+        case negative
+    }
+
+    // MARK: - ViewModifier
+
+    struct Modifier: ViewModifier {
+        private let status: FramedStyle.Status
+        private let borderRadius: CGFloat
+        private let shadowLevel: Shadow.Level
+        private let disabled: Bool
+
+        init(
+            status: FramedStyle.Status = .normal,
+            borderRadius: CGFloat = 0,
+            shadowLevel: Shadow.Level = .xsmall,
+            disabled: Bool = false
+        ) {
+            self.status = status
+            self.borderRadius = borderRadius
+            self.shadowLevel = shadowLevel
+            self.disabled = disabled
+        }
+
+        func body(content: Content) -> some View {
+            content
+                .overlay {
+                    RoundedRectangle(cornerRadius: borderRadius)
+                        .strokeBorder(borderColor, lineWidth: borderWidth)
+                        .opacity(disabled ? 0.43 : 1)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: borderRadius))
+                .shadow(shadowLevel)
+                .disabled(disabled)
+        }
+
+        private var borderWidth: CGFloat {
+            status == .selected ? 2 : 1
+        }
+
+        private var borderColor: SwiftUI.Color {
+            switch status {
+            case .normal:
+                .semantic(.lineNeutral)
+            case .selected:
+                .semantic(.primaryNormal).opacity(0.43)
+            case .negative:
+                .semantic(.statusNegative).opacity(0.28)
+            }
+        }
+    }
+}
+
+// MARK: - View Extension
+
+extension View {
+    /// 현재 뷰에 프레임 스타일을 적용합니다.
+    ///
+    /// 테두리, 배경, 그림자가 있는 프레임을 뷰에 적용하여 일관된 디자인을 제공합니다.
+    /// 다양한 크기와 상태를 설정할 수 있어 다양한 UI 요소에 활용할 수 있습니다.
+    ///
+    /// - Parameters:
+    ///   - status: 프레임 상태, 기본값은 `.normal`
+    ///   - borderRadius: 테두리 반경, 기본값은 `0`
+    ///   - shadowLevel: 그림자 레벨, 기본값은 `.xsmall`
+    ///   - disabled: 비활성화 상태 여부, 기본값은 `false`
+    /// - Returns: 프레임 스타일이 적용된 뷰
+    ///
+    /// - Note: 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.
+    ///
+    /// ```swift
+    /// // 기본 사용법
+    /// Text("입력 필드")
+    ///     .framedStyle()
+    ///
+    /// // 프레임에 그림자 적용
+    /// Button("확인") { }
+    ///     .framedStyle(shadowLevel: .medium)
+    ///
+    /// // 선택된 상태의 프레임
+    /// Rectangle()
+    ///     .frame(width: 200, height: 100)
+    ///     .framedStyle(status: .selected)
+    ///
+    /// // 비활성화된 프레임
+    /// Text("비활성화된 텍스트")
+    ///     .framedStyle(disabled: true)
+    ///
+    /// // 부정적 상태의 프레임 (오류 표시)
+    /// Text("오류 메시지")
+    ///     .framedStyle(status: .negative)
+    ///
+    /// // 둥근 모서리가 있는 선택된 프레임
+    /// Text("선택된 항목")
+    ///     .framedStyle(borderRadius: 16, status: .selected)
+    /// ```
+    public func framedStyle(
+        status: FramedStyle.Status = .normal,
+        borderRadius: CGFloat = 0,
+        shadowLevel: Shadow.Level = .xsmall,
+        disabled: Bool = false
+    ) -> some View {
+        modifier(
+            FramedStyle.Modifier(
+                status: status,
+                borderRadius: borderRadius,
+                shadowLevel: shadowLevel,
+                disabled: disabled
+            ))
+    }
+}

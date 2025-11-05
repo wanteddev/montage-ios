@@ -31,26 +31,19 @@ import SwiftUI
 /// .selected(true)
 /// .chevron(true)
 /// ```
-///
-/// - Note: `ListCell`은 인터랙션 효과, 구분선, 강조 표시 등 다양한 시각적 요소를 지원합니다.
 public struct ListCell: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
     ///
     /// 셀 컴포넌트의 상하 여백을 조정할 때 사용되며, 각 케이스는 다양한 크기의 여백을 제공합니다.
-    ///
-    /// ```swift
-    /// ListCell(title: "넓은 여백이 있는 셀")
-    ///     .verticalPadding(.large)
-    /// ```
     public enum VerticalPadding {
-        /// 여백 없음 (0pt)
+        /// 여백 없음
         case none
-        /// 작은 여백 (8pt)
+        /// 작은 여백
         case small
-        /// 중간 여백 (12pt)
+        /// 중간 여백
         case medium
-        /// 큰 여백 (16pt)
+        /// 큰 여백
         case large
         
         var length: CGFloat {
@@ -72,7 +65,7 @@ public struct ListCell: View {
     ///
     /// - Parameters:
     ///   - title: 셀에 표시할 제목 텍스트
-    ///   - onTap: 셀을 탭했을 때 실행할 클로저
+    ///   - onTap: 셀을 탭했을 때 실행할 클로저, 기본값은 `nil`
     public init(
         title: String,
         onTap: (() -> Void)? = nil
@@ -168,8 +161,6 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - variant: 적용할 Typography 변형 스타일
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `.body1`입니다.
     public func titleVariant(_ variant: Typography.Variant) -> Self {
         var zelf = self
         zelf.titleTypography.variant = variant
@@ -181,8 +172,6 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - weight: 적용할 텍스트 두께
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `.regular`입니다.
     public func titleWeight(_ weight: Typography.Weight) -> Self {
         var zelf = self
         zelf.titleTypography.weight = weight
@@ -194,8 +183,6 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - color: 적용할 텍스트 색상
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `.labelNormal`입니다.
     public func titleColor(_ color: Color.Semantic) -> Self {
         var zelf = self
         zelf.titleTypography.color = color
@@ -207,8 +194,6 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - verticalPadding: 적용할 상하 여백 크기
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `.medium` 입니다.
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
         zelf.verticalPadding = verticalPadding
@@ -220,8 +205,6 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - verticalAlignment: 적용할 수직 정렬 방식
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `.top`입니다.
     public func verticalAlign(_ verticalAlignment: VerticalAlignment) -> Self {
         var zelf = self
         zelf.verticalAlignment = verticalAlignment
@@ -230,13 +213,11 @@ public struct ListCell: View {
     
     /// 셀의 좌우 여백 사용 여부를 설정합니다.
     ///
-    /// `true`로 설정하면 좌우 20포인트의 여백이 적용됩니다.
-    ///
     /// - Parameters:
-    ///   - fillWidth: 좌우 여백 적용 여부
+    ///   - fillWidth: 좌우 여백 적용 여부, 기본값은 `true`
     /// - Returns: 수정된 ListCell 인스턴스
     ///
-    /// - Note: 기본값은 `false`입니다.
+    /// - Note: `true`로 설정하면 셀 내부에 좌우 20포인트의 여백이 적용되고 인터랙션 영역이 각진 모서리 사각형 모양의 셀 내부 영역으로 한정되며, `false`로 설정하면 셀 내부 여백이 없는 대신 인터랙션 영역이 둥근 모서리 사각형 모양으로 셀 영역 바깥까지 적용됩니다.
     public func fillWidth(_ fillWidth: Bool = true) -> Self {
         var zelf = self
         zelf.fillWidth = fillWidth
@@ -248,10 +229,10 @@ public struct ListCell: View {
     /// `true`로 설정하면 타이틀 텍스트가 2줄로 제한되고, 초과 텍스트는 생략됩니다.
     ///
     /// - Parameters:
-    ///   - textEllipsis: 텍스트 생략 처리 여부
+    ///   - textEllipsis: 텍스트 생략 처리 여부, 기본값은 `true`
     /// - Returns: 수정된 ListCell 인스턴스
     ///
-    /// - Note: 기본값은 `false`입니다. `false`인 경우 좌우 콘텐츠는 상단 정렬됩니다.
+    /// - Note: `false`인 경우 좌우 콘텐츠는 상단 정렬됩니다.
     public func textEllipsis(_ textEllipsis: Bool = true) -> Self {
         var zelf = self
         zelf.textEllipsis = textEllipsis
@@ -263,7 +244,7 @@ public struct ListCell: View {
     /// 캡션은 타이틀 아래에 작은 글씨로 표시되는 부가 설명 텍스트입니다.
     ///
     /// - Parameters:
-    ///   - caption: 표시할 캡션 텍스트 (nil 설정 시 캡션 제거)
+    ///   - caption: 표시할 캡션 텍스트, 기본값은 `nil` (nil 설정 시 캡션 제거)
     /// - Returns: 수정된 ListCell 인스턴스
     public func caption(_ caption: String? = nil) -> Self {
         var zelf = self
@@ -276,10 +257,8 @@ public struct ListCell: View {
     /// 비활성화된 셀은 탭 이벤트를 받지 않으며, 시각적으로 흐리게 표시됩니다.
     ///
     /// - Parameters:
-    ///   - disable: 비활성화 여부
+    ///   - disable: 비활성화 여부, 기본값은 `true`
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `false`입니다.
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
         zelf.disable = disable
@@ -292,10 +271,8 @@ public struct ListCell: View {
     /// `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
     ///
     /// - Parameters:
-    ///   - selected: 선택 여부
+    ///   - selected: 선택 여부, 기본값은 `true`
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `false`입니다.
     public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
         zelf.selected = selected
@@ -305,10 +282,8 @@ public struct ListCell: View {
     /// 셀 하단에 구분선을 추가합니다.
     ///
     /// - Parameters:
-    ///   - divider: 구분선 표시 여부 
+    ///   - divider: 구분선 표시 여부, 기본값은 `true`
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `false`입니다.
     public func divider(_ divider: Bool = true) -> Self {
         var zelf = self
         zelf.divider = divider
@@ -320,10 +295,8 @@ public struct ListCell: View {
     /// 주로 탭했을 때 다른 화면으로 이동하는 셀에 사용됩니다.
     ///
     /// - Parameters:
-    ///   - chevron: 화살표 표시 여부 
+    ///   - chevron: 화살표 표시 여부, 기본값은 `true`
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 `false`입니다.
     public func chevron(_ chevron: Bool = true) -> Self {
         var zelf = self
         zelf.chevron = chevron
@@ -362,8 +335,6 @@ public struct ListCell: View {
     /// - Parameters:
     ///   - padding: 적용할 패딩 값 (포인트 단위)
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 기본값은 12입니다.
     public func interactionPadding(_ padding: CGFloat) -> Self {
         var zelf = self
         zelf.interactionPadding = padding

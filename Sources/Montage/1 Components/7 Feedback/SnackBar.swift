@@ -46,11 +46,11 @@ public struct SnackBar: View {
     /// 스낵바가 표시될 위치를 정의하는 열거형입니다.
     public enum Location {
         /// 화면 상단에 스낵바 표시
-        /// - Parameter offset: 상단에서의 오프셋 값 (기본값: 0)
+        /// - Parameter offset: 상단에서의 오프셋 값, 기본값은 `.zero`
         case top(offset: CGFloat = .zero)
 
         /// 화면 하단에 스낵바 표시
-        /// - Parameter offset: 하단에서의 오프셋 값 (기본값: 0)
+        /// - Parameter offset: 하단에서의 오프셋 값, 기본값은 `.zero`
         case bottom(offset: CGFloat = .zero)
     }
 
@@ -88,10 +88,9 @@ public struct SnackBar: View {
         /// SnackBar 모델을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - duration: 스낵바가 표시되는 시간
-        ///   - heading: 스낵바의 제목 (선택 사항)
-        ///   - description: 스낵바의 설명 텍스트 (선택 사항)
-        ///   - extraContents: 스낵바에 표시할 추가 콘텐츠를 반환하는 클로저 (선택 사항)
+        ///   - duration: 스낵바가 표시되는 시간, 기본값은 `.short`
+        ///   - heading: 스낵바의 제목, 기본값은 `nil`
+        ///   - description: 스낵바의 설명 텍스트, 기본값은 `nil`
         ///   - action: 스낵바의 액션 버튼에 표시할 텍스트
         public init(
             duration: Duration = .short,
@@ -109,10 +108,9 @@ public struct SnackBar: View {
         /// SnackBar 모델을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - duration: 스낵바가 표시되는 시간
-        ///   - heading: 스낵바의 제목 (선택 사항)
-        ///   - description: 스낵바의 설명 텍스트 (선택 사항)
-        ///   - extraContents: 스낵바에 표시할 추가 콘텐츠를 반환하는 클로저 (선택 사항)
+        ///   - duration: 스낵바가 표시되는 시간, 기본값은 `.short`
+        ///   - heading: 스낵바의 제목, 기본값은 `nil`
+        ///   - description: 스낵바의 설명 텍스트, 기본값은 `nil`
         ///   - action: 스낵바의 액션 버튼에 표시할 텍스트
         public init<V: View>(
             duration: Duration = .short,
@@ -379,7 +377,7 @@ extension View {
     ///
     /// - Parameters:
     ///   - model: SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다.
-    ///   - location: SnackBar가 표시될 위치 (기본값: .bottom())
+    ///   - location: SnackBar가 표시될 위치, 기본값은 `.bottom(offset: .zero)`
     ///   - handler: SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저
     /// - Returns: SnackBar가 적용된 뷰
     ///

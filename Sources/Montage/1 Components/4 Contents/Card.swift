@@ -23,8 +23,6 @@ import SwiftUI
 /// .caption("부제목")
 /// .overlay(caption: "New", buttonIcon: .heart)
 /// ```
-///
-/// - Note: 썸네일 이미지는 둥근 모서리로 표시되며, 콘텐츠 영역의 너비는 썸네일 너비에 맞춰집니다.
 public struct Card: View {
 
     // MARK: - Initializer

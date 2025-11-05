@@ -24,13 +24,13 @@ enum ComponentCategory: String, CaseIterable, Hashable {
 enum Component: String, CaseIterable, Hashable, Identifiable {
     var id: String { rawValue }
     case actionArea, actionChip, button, iconButton, textButton
-    case control, filterChip, segmentedControl, select, slider, textArea, textField, dateTimePicker
+    case control, filterChip, segmentedControl, select, slider, textArea, textField, dateTimePicker, framedStyle
     case accordion, avatar, card, contentBadge, listCard, listCell, playBadge, sectionHeader, thumbnail
     case loading, pullToRefresh, skeleton
     case category, pagination, progressIndicator, progressTracker, tab, topNavigation
     case fallbackView, pushBadge, snackbar, toast
     case modal, popover, tooltip
-    case color, flowLayout, framedStyle, icon, modalNavigation, shadow, typography
+    case color, flowLayout, icon, modalNavigation, shadow, typography
     
     var state: ComponentState {
         .completed
@@ -40,7 +40,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
         switch self {
         case .actionArea, .actionChip, .button, .iconButton, .textButton:
             return .actions
-        case .control, .filterChip, .segmentedControl, .select, .slider, .textArea, .textField, .dateTimePicker:
+        case .control, .filterChip, .segmentedControl, .select, .slider, .textArea, .textField, .dateTimePicker, .framedStyle:
             return .selectionAndInput
         case .accordion, .avatar, .card, .contentBadge, .listCard, .listCell, .playBadge, .sectionHeader, .thumbnail:
             return .contents
@@ -52,7 +52,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
             return .feedback
         case .modal, .popover, .tooltip:
             return .presentation
-        case .color, .flowLayout, .framedStyle, .icon, .modalNavigation, .shadow, .typography:
+        case .color, .flowLayout, .icon, .modalNavigation, .shadow, .typography:
             return .utilities
         }
     }

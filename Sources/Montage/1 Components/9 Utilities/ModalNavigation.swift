@@ -37,9 +37,9 @@ public struct ModalNavigation: View {
         /// 제목이 별도 줄에 표시되는 확장된 스타일
         case extended
         /// 배경이 투명한 플로팅 스타일
-        ///
-        /// - Parameter alternative: 대체 아이콘 사용 여부 (기본값: false)
-        /// - Parameter background: 배경 표시 여부 (기본값: true)
+        /// - Parameters:
+        ///   - alternative: 대체 아이콘 사용 여부, 기본값은 `false`
+        ///   - background: 배경 표시 여부, 기본값은 `true`
         case floating(alternative: Bool = false, background: Bool = true)
         /// 강조된 큰 제목 스타일
         case emphasized
@@ -59,7 +59,7 @@ public struct ModalNavigation: View {
     /// 내비게이션 바를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - scrollOffset: 스크롤 오프셋 바인딩 (기본값: .constant(0))
+    ///   - scrollOffset: 스크롤 오프셋 바인딩, 기본값은 `.constant(0)`
     public init(scrollOffset: Binding<CGFloat> = .constant(0)) {
         _scrollOffset = scrollOffset
     }
@@ -175,7 +175,7 @@ public struct ModalNavigation: View {
     /// - Parameter content: 타이틀 영역에 표시될 콘텐츠
     /// - Returns: 수정된 내비게이션 바 뷰
     ///
-    /// - Note: title(text:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
+    /// - Note: title(_:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
     public func titleView<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.titleView = { AnyView(content()) }

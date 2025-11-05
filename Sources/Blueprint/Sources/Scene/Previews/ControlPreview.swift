@@ -58,7 +58,7 @@ struct ControlPreview: View {
                         .tight(tight)
                         .label(label)
                         .if(customTypography) {
-                            $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
+                            $0.labelTypography(.heading2, weight: .medium, color: .semantic(.accentBackgroundPink))
                         }
                         .border(guideLine ? Color.blue : Color.clear)
                         Spacer()

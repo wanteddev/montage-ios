@@ -65,7 +65,7 @@ public enum Spacing {
     case pt80
 }
 
-public extension CGFloat {
+extension CGFloat {
     /// Spacing 열거형 값에 해당하는 CGFloat 값을 반환합니다.
     ///
     /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
@@ -76,7 +76,7 @@ public extension CGFloat {
     ///
     /// - Parameter spacingComponent: 사용할 간격 열거형 값
     /// - Returns: 지정된 간격에 해당하는 CGFloat 값
-    static func spacing(_ spacingComponent: Spacing) -> CGFloat {
+    public static func spacing(_ spacingComponent: Spacing) -> CGFloat {
         switch spacingComponent {
         case .pt01:
             1
@@ -116,7 +116,7 @@ public extension CGFloat {
     }
 }
 
-public extension Float {
+extension Float {
     /// Spacing 열거형 값에 해당하는 Float 값을 반환합니다.
     ///
     /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
@@ -127,7 +127,7 @@ public extension Float {
     ///
     /// - Parameter spacingComponent: 사용할 간격 열거형 값
     /// - Returns: 지정된 간격에 해당하는 Float 값
-    static func spacing(_ spacingComponent: Spacing) -> Float {
+    public static func spacing(_ spacingComponent: Spacing) -> Float {
         switch spacingComponent {
         case .pt01:
             1

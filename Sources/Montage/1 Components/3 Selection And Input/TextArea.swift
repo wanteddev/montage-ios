@@ -90,16 +90,16 @@ public struct TextArea: View {
         
         /// 문자 수 카운터
         /// - Parameters:
-        ///   - limit: 최대 문자 수 제한 (nil인 경우 제한 없음)
-        ///   - overflow: 최대 문자 수 초과 허용 여부
+        ///   - limit: 최대 문자 수 제한, 기본값은 `nil` (제한 없음)
+        ///   - overflow: 최대 문자 수 초과 허용 여부, 기본값은 `false`
         case characterCount(limit: Int? = nil, overflow: Bool = false)
         
         /// 텍스트 버튼
         /// - Parameters:
-        ///   - placement: 버튼 위치
-        ///   - variant: 버튼 변형 스타일
+        ///   - placement: 버튼 위치, 기본값은 `.leading`
+        ///   - variant: 버튼 변형 스타일, 기본값은 `.assistive`
         ///   - title: 버튼 텍스트
-        ///   - handler: 버튼 클릭 핸들러
+        ///   - handler: 버튼 클릭 핸들러, 기본값은 `nil`
         case textButton(
             placement: Placement = .leading,
             variant: TextButton.Color? = .assistive,
@@ -109,11 +109,11 @@ public struct TextArea: View {
         
         /// 아이콘 버튼
         /// - Parameters:
-        ///   - placement: 버튼 위치
-        ///   - variant: 버튼 변형 스타일
+        ///   - placement: 버튼 위치, 기본값은 `.leading`
+        ///   - variant: 버튼 변형 스타일, 기본값은 `.solid(size: .small)`
         ///   - icon: 버튼 아이콘
-        ///   - tintColor: 아이콘 색상
-        ///   - handler: 버튼 클릭 핸들러
+        ///   - tintColor: 아이콘 색상, 기본값은 `.semantic(.labelAlternative)`
+        ///   - handler: 버튼 클릭 핸들러, 기본값은 `nil`
         case iconButton(
             placement: Placement = .leading,
             variant: IconButton.Variant? = .solid(size: .small),
@@ -125,40 +125,40 @@ public struct TextArea: View {
         /// 단순 아이콘
         /// - Parameters:
         ///   - icon: 표시할 아이콘
-        ///   - tintColor: 아이콘 색상
+        ///   - tintColor: 아이콘 색상, 기본값은 `.semantic(.labelAssistive)`
         case icon(
-            Icon,
+            _ icon: Icon,
             tintColor: SwiftUI.Color = .semantic(.labelAssistive)
         )
         
         /// 액션 칩
         /// - Parameters:
-        ///   - variant: 칩 변형 스타일
+        ///   - variant: 칩 변형 스타일, 기본값은 `.solid`
         ///   - title: 칩 텍스트
-        ///   - handler: 칩 클릭 핸들러
+        ///   - handler: 칩 클릭 핸들러, 기본값은 `nil`
         case actionChip(
-            ActionChip.Variant = .solid,
+            _ variant: ActionChip.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         
         /// 필터 칩
         /// - Parameters:
-        ///   - variant: 칩 변형 스타일
+        ///   - variant: 칩 변형 스타일, 기본값은 `.solid`
         ///   - title: 칩 텍스트
-        ///   - handler: 칩 클릭 핸들러
+        ///   - handler: 칩 클릭 핸들러, 기본값은 `nil`
         case filterChip(
-            FilterChip.Variant = .solid,
+            _ variant: FilterChip.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         
         /// 뱃지
         /// - Parameters:
-        ///   - variant: 뱃지 변형 스타일
+        ///   - variant: 뱃지 변형 스타일, 기본값은 `.solid`
         ///   - title: 뱃지 텍스트
         case badge(
-            ContentBadge.Variant = .solid,
+            _ variant: ContentBadge.Variant = .solid,
             title: String
         )
         
@@ -180,7 +180,7 @@ public struct TextArea: View {
     ///
     /// - Parameters:
     ///   - text: 텍스트 영역의 값을 바인딩
-    ///   - focus: 텍스트 영역의 포커스 상태를 바인딩 (선택 사항)
+    ///   - focus: 텍스트 영역의 포커스 상태를 바인딩, 기본값은 `nil`
     /// - Returns: 구성된 텍스트 영역 인스턴스
     public init(
         text: Binding<String>,
@@ -230,7 +230,7 @@ public struct TextArea: View {
     
     /// 텍스트 영역의 활성화 상태를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부, `true`이면 비활성화
+    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self

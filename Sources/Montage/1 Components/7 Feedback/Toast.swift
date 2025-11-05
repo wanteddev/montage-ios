@@ -55,7 +55,7 @@ public struct Toast: View {
         /// Toast 모델을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - variant: 토스트 메시지의 스타일 (기본값: .normal())
+        ///   - variant: 토스트 메시지의 스타일, 기본값은 `.normal()`
         ///   - message: 토스트에 표시할 메시지 텍스트
         public init(
             _ variant: Toast.Variant = .normal(),
@@ -70,8 +70,8 @@ public struct Toast: View {
     public enum Variant: Equatable {
         /// 기본 스타일의 토스트 (선택적으로 아이콘과 색상 지정 가능)
         /// - Parameters:
-        ///   - icon: 표시할 아이콘 (선택 사항)
-        ///   - tint: 아이콘의 색상 (선택 사항)
+        ///   - icon: 표시할 아이콘, 기본값은 `nil`
+        ///   - tint: 아이콘의 색상, 기본값은 `nil`
         case normal(Montage.Icon? = nil, tint: Montage.Color.Semantic? = nil)
 
         /// 성공 메시지를 위한 녹색 체크 아이콘 스타일
@@ -87,11 +87,11 @@ public struct Toast: View {
     /// 토스트 메시지가 표시될 위치를 정의하는 열거형입니다.
     public enum Location {
         /// 화면 상단에 토스트 표시
-        /// - Parameter offset: 상단에서의 오프셋 값 (기본값: 0)
+        /// - Parameter offset: 상단에서의 오프셋 값, 기본값은 `.zero`
         case top(offset: CGFloat = .zero)
 
         /// 화면 하단에 토스트 표시
-        /// - Parameter offset: 하단에서의 오프셋 값 (기본값: 0)
+        /// - Parameter offset: 하단에서의 오프셋 값, 기본값은 `.zero`
         case bottom(offset: CGFloat = .zero)
     }
 
@@ -289,8 +289,8 @@ extension View {
     ///
     /// - Parameters:
     ///   - model: Toast 모델을 바인딩합니다. nil이 아닌 값이 설정되면 Toast가 표시됩니다.
-    ///   - location: Toast가 표시될 위치 (기본값: .bottom)
-    ///   - duration: Toast가 표시될 시간 (기본값: .short)
+    ///   - location: Toast가 표시될 위치, 기본값은 `.bottom(offset: 0)`
+    ///   - duration: Toast가 표시될 시간, 기본값은 `.short`
     /// - Returns: Toast가 적용된 뷰
     ///
     /// ```swift

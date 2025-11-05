@@ -32,12 +32,13 @@ public struct ContentBadge: View {
     }
     
     /// 뱃지의 사이즈를 결정하는 열거형입니다.
-    ///
-    /// - xsmall: 가장 작은 크기의 뱃지 (높이 22pt)
-    /// - small: 중간 크기의 뱃지 (높이 24pt)
-    /// - medium: 큰 크기의 뱃지 (높이 28pt)
     public enum Size {
-        case xsmall, small, medium
+        /// - xsmall: 가장 작은 크기의 뱃지
+        case xsmall
+        /// - small: 중간 크기의 뱃지
+        case small
+        /// - medium: 큰 크기의 뱃지
+        case medium
     }
     
     /// 뱃지의 색상을 결정하는 열거형입니다.
@@ -48,13 +49,13 @@ public struct ContentBadge: View {
     /// ```
     public enum ColorStyle: Equatable, Hashable {
         /// 중립 색상 뱃지
-        /// - Parameter contentColor: 콘텐츠 색상 (nil일 경우 기본 색상 사용)
+        /// - Parameter contentColor: 콘텐츠 색상, 기본값은 `nil` (기본 색상 사용)
         case neutral(_ contentColor: SwiftUI.Color? = nil)
         
         /// 강조 색상 뱃지
         /// - Parameters:
         ///   - contentColor: 콘텐츠 색상
-        ///   - background: 배경 색상 (nil일 경우 contentColor의 투명도를 조절하여 사용)
+        ///   - background: 배경 색상, 기본값은 `nil` (contentColor의 투명도를 조절하여 사용)
         case accent(_ contentColor: SwiftUI.Color, background: SwiftUI.Color? = nil)
     }
     
@@ -63,7 +64,7 @@ public struct ContentBadge: View {
     /// ContentBadge를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 뱃지의 스타일 (solid 또는 outlined)
+    ///   - variant: 뱃지의 스타일, 기본값은 `.solid`
     ///   - text: 뱃지에 표시할 텍스트
     public init(variant: Variant = .solid, text: String) {
         self.variant = variant

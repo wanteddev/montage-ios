@@ -135,10 +135,7 @@ struct TopNavigationPreview: View {
                     title: title,
                     backgroundColor: backgroundColor,
                     leadingContent: leading ? {
-                        IconButton(
-                            variant: .default,
-                            icon: .chevronLeft
-                        ) {
+                        IconButton(icon: .chevronLeft) {
                             presentationMode.wrappedValue.dismiss()
                         }
                         .frame(width: 24, height: 24)

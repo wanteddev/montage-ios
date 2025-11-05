@@ -23,8 +23,6 @@ import SwiftUI
 /// .caption("부제목")
 /// .trailingContent { IconButton(variant: .default, icon: .arrowRight) }
 /// ```
-///
-/// - Note: 리스트 형태의 UI에 적합하며, 선택적으로 앞뒤에 추가 콘텐츠를 배치할 수 있습니다.
 public struct ListCard: View {
     
     // MARK: - Initializer

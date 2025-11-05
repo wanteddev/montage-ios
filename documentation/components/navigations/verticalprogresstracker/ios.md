@@ -27,10 +27,6 @@ VerticalProgressTracker(
 )
 ```
 
->  **Note**
->
-> 각 단계에는 라벨 외에도 추가 콘텐츠를 표시할 수 있어 복잡한 단계별 정보를 표현하는 데 적합합니다.
-
 ## Topics
 
 ### Structures
@@ -39,12 +35,14 @@ VerticalProgressTracker(
 
 <summary>``struct StepContent``</summary>
 
-수직 진행 추적기의 각 단계에 표시되는 콘텐츠 컴포넌트입니다.
+
+ 의 각 단계에 표시되는 콘텐츠 컴포넌트입니다.
 #### Initializers
 
 <details>
 
 <summary>``init(label: String, labelAccessoryView: (() -> any View)?, contentView: (() -> any View)?)``</summary>
+
 
 단계 콘텐츠를 초기화합니다.
 
@@ -62,13 +60,9 @@ VerticalProgressTracker(
 
 <summary>``var body: some View``</summary>
 
+
 뷰의 내용과 동작을 정의합니다.
 </details>
-
-#### Default Implementations
-
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
 
 </details>
 
@@ -79,7 +73,8 @@ ___
 
 <summary>``init(progress: Binding<Int>, stepContents: [StepContent])``</summary>
 
-수직 진행 추적기를 초기화합니다.
+
+ 를 초기화합니다.
 
 - **Parameters**
   | Parameter | Description |
@@ -95,15 +90,11 @@ ___
 
 <summary>``var body: some View``</summary>
 
+
 뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
-### Default Implementations
-
-
-[View Implementations](/docs/utilities/ios-utilities/view-implementations)
-
 ## Relationships
 
 Conforms To

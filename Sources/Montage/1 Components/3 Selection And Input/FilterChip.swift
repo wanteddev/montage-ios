@@ -143,7 +143,7 @@ public struct FilterChip: View {
     ///
     /// - Parameters:
     ///   - active: 활성화 여부
-    ///   - label: 활성화 상태일 때 표시할 레이블
+    ///   - label: 활성화 상태일 때 표시할 레이블, 기본값은 `nil`
     /// - Returns: 수정된 칩 인스턴스
     public func active(_ active: Bool, label: String? = nil) -> Self {
         var view = self
@@ -154,7 +154,7 @@ public struct FilterChip: View {
     
     /// 칩의 비활성화 여부를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부
+    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
     /// - Returns: 수정된 칩 인스턴스
     public func disabled(_ disable: Bool = true) -> Self {
         var view = self
@@ -196,7 +196,6 @@ public struct FilterChip: View {
     ///
     /// - Parameter color: 아이콘에 적용할 색상
     /// - Returns: 수정된 칩 인스턴스
-    /// - Note: 기본값은 `.semantic(.labelAlternative)`입니다.
     public func iconColor(_ color: SwiftUI.Color) -> Self {
         var view = self
         view.customIconColor = color

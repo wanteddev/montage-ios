@@ -40,8 +40,6 @@ import SwiftUI
 ///     .leadingIcon(.info)
 ///     .fillWidth()
 /// ```
-///
-/// - Note: 아코디언은 기본적으로 하단에 구분선을 갖고 있으며, `hideDivider()` 수정자를 통해 제거할 수 있습니다.
 public struct Accordion: View {
     // MARK: - Types
     
@@ -75,7 +73,7 @@ public struct Accordion: View {
     ///
     /// - Parameters:
     ///   - title: 아코디언의 제목
-    ///   - description: 확장 시 표시될 설명 텍스트 (선택 사항)
+    ///   - description: 확장 시 표시될 설명 텍스트, 기본값은 `nil`
     public init(
         title: String,
         description: String? = nil
@@ -89,8 +87,8 @@ public struct Accordion: View {
     ///
     /// - Parameters:
     ///   - title: 아코디언의 제목
-    ///   - description: 확장 시 표시될 설명 텍스트 (선택 사항)
-    ///   - content: 확장 시 표시될 커스텀 컨텐츠 뷰 (선택 사항)
+    ///   - description: 확장 시 표시될 설명 텍스트, 기본값은 `nil`
+    ///   - content: 확장 시 표시될 커스텀 컨텐츠 뷰
     public init<V: View>(
         title: String,
         description: String? = nil,
@@ -123,9 +121,9 @@ public struct Accordion: View {
     /// 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
     ///
     /// - Parameters:
-    ///   - variant: 텍스트 변형 (기본값: .body2)
-    ///   - weight: 텍스트 굵기 (기본값: .bold)
-    ///   - color: 텍스트 색상 (기본값: .semantic(.labelNormal))
+    ///   - variant: 텍스트 변형, 기본값은 `.body2`
+    ///   - weight: 텍스트 굵기, 기본값은 `.bold`
+    ///   - color: 텍스트 색상, 기본값은 `.semantic(.labelNormal)`
     /// - Returns: 수정된 아코디언 인스턴스
     public func title(
         _ variant: Typography.Variant = .body2,
@@ -142,9 +140,9 @@ public struct Accordion: View {
     /// 설명 텍스트의 타이포그래피 속성을 조정합니다.
     ///
     /// - Parameters:
-    ///   - variant: 텍스트 변형 (기본값: .label1)
-    ///   - weight: 텍스트 굵기 (기본값: .regular)
-    ///   - color: 텍스트 색상 (기본값: .semantic(.labelNeutral))
+    ///   - variant: 텍스트 변형, 기본값은 `.label1`
+    ///   - weight: 텍스트 굵기, 기본값은 `.regular`
+    ///   - color: 텍스트 색상, 기본값은 `.semantic(.labelNeutral)`
     /// - Returns: 수정된 아코디언 인스턴스
     public func description(
         _ variant: Typography.Variant = .label1,
@@ -160,7 +158,7 @@ public struct Accordion: View {
     
     /// 아코디언 헤더의 상하 여백 크기를 조정합니다.
     ///
-    /// - Parameter verticalPadding: 상하 여백 크기 (기본값: .large)
+    /// - Parameter verticalPadding: 상하 여백 크기, 기본값은 `.large`
     /// - Returns: 수정된 아코디언 인스턴스
     public func verticalPadding(_ verticalPadding: VerticalPadding) -> Self {
         var zelf = self
@@ -172,7 +170,7 @@ public struct Accordion: View {
     ///
     /// 이 수정자를 적용하면 좌우 20pt의 여백이 추가됩니다.
     ///
-    /// - Parameter fillWidth: 너비를 채울지 여부
+    /// - Parameter fillWidth: 너비를 채울지 여부, 기본값은 `true`
     /// - Returns: 수정된 아코디언 인스턴스
     public func fillWidth(_ fillWidth: Bool = true) -> Self {
         var zelf = self
@@ -182,7 +180,7 @@ public struct Accordion: View {
     
     /// 아코디언 하단의 구분선을 숨깁니다.
     ///
-    /// - Parameter hideDivider: 구분선을 숨길지 여부 (기본값: `true`)
+    /// - Parameter hideDivider: 구분선을 숨길지 여부, 기본값은 `true`
     /// - Returns: 수정된 아코디언 인스턴스
     public func hideDivider(_ hideDivider: Bool = true) -> Self {
         var zelf = self
@@ -193,8 +191,8 @@ public struct Accordion: View {
     /// 아코디언 제목 앞에 아이콘을 추가합니다.
     ///
     /// - Parameters:
-    ///   - leadingIcon: 표시할 아이콘
-    ///   - color: 아이콘 색상 (기본값: nil - 기본 색상 사용)
+    ///   - leadingIcon: 표시할 아이콘, 기본값은 `nil`
+    ///   - color: 아이콘 색상, 기본값은 `nil` (기본 색상 사용)
     /// - Returns: 수정된 아코디언 인스턴스
     public func leadingIcon(_ leadingIcon: Icon? = nil, color: SwiftUI.Color? = nil) -> Self {
         var zelf = self

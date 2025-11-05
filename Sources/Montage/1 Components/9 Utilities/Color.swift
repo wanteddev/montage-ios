@@ -26,7 +26,7 @@ import UIKit
 /// let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 /// ```
 ///
-/// - Note: 디자인 시스템 UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다
+/// - Note: UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다
 ///   Semantic 색상을 사용하는 것이 권장됩니다. 이는 다크 모드와 같은 다양한 
 ///   환경에서 일관된 디자인을 유지하는 데 도움이 됩니다.
 public enum Color {
@@ -462,9 +462,9 @@ public enum Color {
         
         /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
         ///
-        /// - Parameter _: 색상을 해석할 UITraitCollection
+        /// - Parameter traitCollection: 색상을 해석할 UITraitCollection
         /// - Returns: 해석된 UIColor 인스턴스
-        public func resolve(_: UITraitCollection) -> UIColor {
+        public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             .load(name: rawValue)
         }
     }
@@ -484,9 +484,6 @@ public enum Color {
     ///     .foregroundColor(.semantic(.primaryNormal))
     ///     .background(Color.semantic(.backgroundNormal))
     /// ```
-    ///
-    /// - Note: 컴포넌트 개발 시 Atomic 색상보다 Semantic 색상을 
-    ///   우선적으로 사용하는 것이 권장됩니다.
     public enum Semantic: String, CaseIterable, ColorResolvable {
         /// 정적 흰색 색상
         case staticWhite

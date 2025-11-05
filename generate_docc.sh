@@ -39,4 +39,5 @@ fi
 echo "DocC archived: $DOCC_ARCHIVE_PATH"
 echo "You can now host the documentation using the following command:"
 echo "  python3 -m http.server --directory $DOCC_ARCHIVE_PATH"
+echo "And access the documentation at http://localhost:8000/documentation/montage"
 exit 0

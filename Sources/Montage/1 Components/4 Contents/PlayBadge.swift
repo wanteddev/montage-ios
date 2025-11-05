@@ -25,9 +25,6 @@ import SwiftUI
 ///     .size(.medium)
 ///     .alternative(true)
 /// ```
-///
-/// - Note: 기본 스타일은 반투명 배경에 흰색 재생 아이콘을 사용합니다.
-///   alternative 스타일은 불투명 회색 배경을 사용합니다.
 public struct PlayBadge: View {
     // MARK: - Types
     /// 재생 배지의 크기를 정의하는 열거형입니다.
@@ -87,8 +84,6 @@ public struct PlayBadge: View {
     /// - Parameters:
     ///   - size: 적용할 배지 크기
     /// - Returns: 수정된 PlayBadge 인스턴스
-    ///
-    /// - Note: 기본값은 `.medium`입니다.
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size
@@ -100,10 +95,8 @@ public struct PlayBadge: View {
     /// 기본 스타일은 반투명 배경을 사용하고, 대체 스타일은 불투명한 회색 배경을 사용합니다.
     ///
     /// - Parameters:
-    ///   - alternative: 대체 스타일 적용 여부 (기본값: true)
+    ///   - alternative: 대체 스타일 적용 여부, 기본값은 `true`
     /// - Returns: 수정된 PlayBadge 인스턴스
-    ///
-    /// - Note: 기본값은 `false`입니다.
     public func alternative(_ alternative: Bool = true) -> Self {
         var zelf = self
         zelf.alternative = alternative

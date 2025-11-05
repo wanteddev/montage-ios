@@ -35,7 +35,8 @@ public struct PushBadge: View {
         /// 'N' 문자를 표시하는 뱃지
         case new
         /// 특정 숫자를 표시하는 뱃지
-        case number(Int)
+        /// - Parameter number: 표시할 숫자
+        case number(_ number: Int)
     }
     
     /// 뱃지의 크기를 정의하는 열거형입니다.
@@ -61,16 +62,16 @@ public struct PushBadge: View {
     /// ```
     public enum Position {
         /// 상단 위치
-        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
-        case top(HorizontalPosition = .center)
+        /// - Parameter horizontalPosition: 수평 위치, 기본값은 `.center`
+        case top(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 중앙 위치
-        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
-        case center(HorizontalPosition = .center)
+        /// - Parameter horizontalPosition: 수평 위치, 기본값은 `.center`
+        case center(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 하단 위치
-        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
-        case bottom(HorizontalPosition = .center)
+        /// - Parameter horizontalPosition: 수평 위치, 기본값은 `.center`
+        case bottom(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 수평 위치를 정의하는 열거형입니다.
         public enum HorizontalPosition {
@@ -289,12 +290,12 @@ extension View {
     /// 뷰의 특정 위치에 알림 또는 메시지 표시용 뱃지를 추가합니다.
     ///
     /// - Parameters:
-    ///   - variant: 뱃지의 표시 형태 (기본값: .dot)
-    ///   - size: 뱃지 크기 (기본값: .xsmall)
-    ///   - fontColor: 텍스트 색상 (기본값: staticWhite)
-    ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
-    ///   - position: 뱃지 위치 (기본값: .top(.trailing))
-    ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
+    ///   - variant: 뱃지의 표시 형태, 기본값은 `.dot`
+    ///   - size: 뱃지 크기, 기본값은 `.xsmall`
+    ///   - fontColor: 텍스트 색상, 기본값은 `.semantic(.staticWhite)`
+    ///   - backgroundColor: 배경 색상, 기본값은 `.semantic(.primaryNormal)`
+    ///   - position: 뱃지 위치, 기본값은 `.top(.trailing)`
+    ///   - inset: 위치 조정을 위한 여백, 기본값은 `.zero`
     /// - Returns: 뱃지가 적용된 뷰
     ///
     /// ```swift

@@ -23,10 +23,6 @@ import SwiftUI
 /// .resize(.fill)
 /// .horizontalPadding(true)
 /// ```
-///
-/// - Note: 탭 컴포넌트는 스크롤 가능한 형태로 제공되며, 다수의 탭 항목을 지원합니다.
-///   `.resize(.hug)` 설정 시 항목 너비가 콘텐츠에 맞게 조정되고, `.resize(.fill)` 설정 시
-///   전체 너비를 균등하게 분할합니다.
 public struct Tab: View {
     // MARK: - Types
     /// 탭 아이템 너비를 결정하는 열거형입니다.
@@ -37,8 +33,6 @@ public struct Tab: View {
     /// Tab(selectedIndex: $selectedTab, items: tabItems)
     ///     .resize(.fill) // 균등하게 분할
     /// ```
-    ///
-    /// - Note: `hug`는 콘텐츠 너비에 맞게 조정되며, `fill`은 사용 가능한 전체 너비를 균등하게 분할합니다.
     public enum Resize {
         /// 콘텐츠 크기에 맞게 탭 아이템의 너비 조정
         case hug
@@ -74,8 +68,8 @@ public struct Tab: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 탭의 인덱스를 바인딩하는 변수
     ///   - items: 탭 항목 텍스트 배열
-    ///   - itemDisabled: 탭 항목 비활성화 여부를 결정하는 클로저, 인덱스를 파라미터로 받음 (기본값: 빈 클로저)
-    ///   - actions: 탭 선택 시 호출되는 클로저, 선택된 인덱스를 파라미터로 받음 (기본값: 빈 클로저)
+    ///   - itemDisabled: 탭 항목 비활성화 여부를 결정하는 클로저, 인덱스를 파라미터로 받음, 기본값은 false를 리턴하는 클로저
+    ///   - actions: 탭 선택 시 호출되는 클로저, 선택된 인덱스를 파라미터로 받음, 기본값은 빈 클로저
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
@@ -202,8 +196,6 @@ public struct Tab: View {
     /// - Parameters:
     ///   - resize: 탭 아이템 너비 조정 방식
     /// - Returns: 수정된 Tab 인스턴스
-    ///
-    /// - Note: 기본값은 `.hug`입니다.
     public func resize(_ resize: Resize) -> Self {
         var zelf = self
         zelf.resize = resize
@@ -215,8 +207,6 @@ public struct Tab: View {
     /// - Parameters:
     ///   - size: 적용할 탭 크기
     /// - Returns: 수정된 Tab 인스턴스
-    ///
-    /// - Note: 기본값은 `.medium`입니다.
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size
@@ -226,10 +216,8 @@ public struct Tab: View {
     /// 탭 컴포넌트의 좌우 여백 사용 여부를 설정합니다.
     ///
     /// - Parameters:
-    ///   - horizontalPadding: 좌우 여백 사용 여부 (기본값: true)
+    ///   - horizontalPadding: 좌우 여백 사용 여부, 기본값은 `true`
     /// - Returns: 수정된 Tab 인스턴스
-    ///
-    /// - Note: 기본값은 `false`입니다. `true`로 설정 시 좌우에 20pt 여백이 적용됩니다.
     public func horizontalPadding(_ horizontalPadding: Bool = true) -> Self {
         var zelf = self
         zelf.horizontalPadding = horizontalPadding

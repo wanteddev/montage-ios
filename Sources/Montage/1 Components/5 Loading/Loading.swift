@@ -27,8 +27,6 @@ import Lottie
 /// someView
 ///     .loading($isLoadingState, type: .circular)
 /// ```
-///
-/// - Note: 다크 모드와 라이트 모드에 따라 자동으로 적절한 애니메이션 리소스를 선택합니다.
 public struct Loading: View {
     
     // MARK: - Type
@@ -147,7 +145,7 @@ extension View {
     /// - Parameters:
     ///   - isLoading: 로딩 상태를 제어하는 바인딩 불리언 값
     ///   - type: 로딩 애니메이션 종류 (.wanted 또는 .circular)
-    ///   - dimmedColor: 오버레이 배경색 (기본값: 투명)
+    ///   - dimmedColor: 오버레이 배경색, 기본값은 `.clear`
     /// - Returns: 로딩 기능이 적용된 뷰
     ///
     /// ```swift

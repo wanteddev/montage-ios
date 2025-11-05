@@ -35,7 +35,7 @@ import SwiftUI
 /// })
 /// ```
 ///
-/// - Note: 키보드가 표시될 때 자동으로 조정됩니다.
+/// - Note: 키보드가 표시될 때 ActionArea가 위치가 자동으로 키보드 상단에 붙어있도록 조정됩니다.
 public struct ActionArea: View, KeyboardReadable {
     // MARK: - Initializers
 
@@ -156,10 +156,19 @@ extension ActionArea {
     /// ActionArea의 버튼 레이아웃 변형을 정의합니다.
     public enum Variant {
         /// 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
+        /// - Parameters:
+        ///   - main: 주 버튼 정보
+        ///   - sub: 보조 버튼 정보, 기본값은 `nil`
+        ///   - alternative: 대체 버튼 정보, 기본값은 `nil`
         case strong(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 중립적인 스타일의 버튼 레이아웃
+        /// - Parameters:
+        ///   - main: 주 버튼 정보
+        ///   - sub: 보조 버튼 정보, 기본값은 `nil`
+        ///   - alternative: 대체 버튼 정보, 기본값은 `nil`
         case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 취소 버튼만 있는 간단한 레이아웃
+        /// - Parameter main: 주 버튼 정보
         case cancel(main: ButtonInfo)
 
         fileprivate var isCaptionAvailable: Bool {
@@ -217,9 +226,9 @@ extension ActionArea {
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식 (기본값: .automatic)
-        ///   - caption: 캡션 텍스트
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 기본값은 `.automatic`
+        ///   - caption: 캡션 텍스트, 기본값은 `nil`
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
         public init(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
@@ -237,10 +246,10 @@ extension ActionArea {
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 설정
-        ///   - caption: 캡션 텍스트
+        ///   - backgroundTransparencyControl: 배경 투명도 설정, 기본값은 `.automatic`
+        ///   - caption: 캡션 텍스트, 기본값은 `nil`
         ///   - extra: 추가 콘텐츠를 생성하는 클로저
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
         public init<V: View>(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,

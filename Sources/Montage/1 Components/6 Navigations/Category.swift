@@ -27,8 +27,6 @@ import SwiftUI
 /// .size(.medium)
 /// .horizontalPadding()
 /// ```
-///
-/// - Note: 측면 그라데이션 효과와 아이콘 버튼을 추가할 수 있어 스크롤 가능한 콘텐츠임을 시각적으로 나타냅니다.
 public struct Category: View {
     // MARK: - Types
     
@@ -62,8 +60,8 @@ public struct Category: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
     ///   - items: 표시할 카테고리 항목 배열
-    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 ActionChip을 파라미터로 받음 (기본값: 빈 클로저)
-    ///   - actions: 항목 선택 시 호출될 클로저 (기본값: 빈 클로저)
+    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 ActionChip을 파라미터로 받음, 기본값은 원본 ActionChip을 반환하는 클로저
+    ///   - actions: 항목 선택 시 호출될 클로저, 기본값은 빈 클로저
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
@@ -171,7 +169,7 @@ public struct Category: View {
     
     /// 카테고리 컴포넌트의 좌우 패딩을 설정합니다.
     ///
-    /// - Parameter horizontalPadding: 패딩 적용 여부 (기본값: true)
+    /// - Parameter horizontalPadding: 패딩 적용 여부, 기본값은 `true`
     /// - Returns: 수정된 카테고리 인스턴스
     public func horizontalPadding(_ horizontalPadding: Bool = true) -> Self {
         var zelf = self
@@ -181,7 +179,7 @@ public struct Category: View {
     
     /// 카테고리 컴포넌트의 상하 패딩을 설정합니다.
     ///
-    /// - Parameter verticalPadding: 패딩 적용 여부 (기본값: true)
+    /// - Parameter verticalPadding: 패딩 적용 여부, 기본값은 `true`
     /// - Returns: 수정된 카테고리 인스턴스
     public func verticalPadding(_ verticalPadding: Bool = true) -> Self {
         var zelf = self

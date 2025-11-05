@@ -127,7 +127,7 @@ public struct TopNavigation: View {
     /// - Parameter content: 표시할 타이틀 뷰를 반환하는 클로저
     /// - Returns: 수정된 인스턴스를 반환합니다.
     ///
-    /// - Note: title(text:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
+    /// - Note: title(_:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
     public func titleView<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.titleView = { AnyView(content()) }
@@ -513,6 +513,11 @@ extension TopNavigation {
     public struct LeadingButton: View {
         let action: Resource.LeadingButtonInfo?
         
+        /// 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - action: 버튼 액션
+        /// - Returns: LeadingButton 인스턴스
         public init(_ action: Resource.LeadingButtonInfo?) {
             self.action = action
         }
@@ -523,18 +528,12 @@ extension TopNavigation {
                 Group {
                     switch action {
                     case .back(let action):
-                        IconButton(
-                            variant: .default,
-                            icon: .chevronLeft
-                        ) {
+                        IconButton(icon: .chevronLeft) {
                             action()
                         }
                         .frame(width: 24, height: 24)
                     case let .icon(i, action):
-                        IconButton(
-                            variant: .default,
-                            icon: i
-                        ) {
+                        IconButton(icon: i) {
                             action()
                         }
                         .frame(width: 24, height: 24)
@@ -569,6 +568,13 @@ extension TopNavigation {
         private let disable: Bool
         private let action: () -> Void
         
+        /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - text: 버튼에 표시할 텍스트
+        ///   - disable: 버튼 비활성화 여부, 기본값은 `false`
+        ///   - action: 버튼 액션
+        /// - Returns: TrailingTextButton 인스턴스
         public init(
             text: String,
             disable: Bool = false,
@@ -610,6 +616,14 @@ extension TopNavigation {
         private let showPushBadge: Bool
         private let action: () -> Void
         
+        /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - icon: 아이콘 버튼의 아이콘
+        ///   - disable: 버튼 비활성화 여부, 기본값은 `false`
+        ///   - showPushBadge: PushBadge의 노출 여부, 기본값은 `false`
+        ///   - action: 아이콘 버튼 클릭시 동작할 액션
+        /// - Returns: TrailingIconButton 인스턴스
         public init(
             icon: Icon,
             disable: Bool = false,
@@ -624,10 +638,7 @@ extension TopNavigation {
         
         /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
-            IconButton(
-                variant: .default,
-                icon: icon
-            ) {
+            IconButton(icon: icon) {
                 action()
             }
             .disable(disable)
@@ -651,17 +662,18 @@ extension TopNavigation {
         /// ```
         public enum LeadingButtonInfo {
             /// 뒤로가기 버튼
-            /// - Parameters:
-            ///  - action: 뒤로가기 버튼 클릭시 동작할 action입니다.
+            /// - Parameter action: 뒤로가기 버튼 클릭시 동작할 액션
             case back(action: () -> Void)
             /// 아이콘 버튼
             /// - Parameters:
-            ///  - action: 아이콘 버튼 클릭시 동작할 action입니다.
-            case icon(Icon, action: () -> Void)
+            ///   - icon: 표시할 아이콘
+            ///   - action: 아이콘 버튼 클릭시 동작할 액션
+            case icon(_ icon: Icon, action: () -> Void)
             /// 텍스트 버튼
             /// - Parameters:
-            ///  - action: 텍스트 버튼 클릭시 동작할 action입니다.
-            case text(String, action: () -> Void)
+            ///   - text: 버튼에 표시할 텍스트
+            ///   - action: 텍스트 버튼 클릭시 동작할 액션
+            case text(_ text: String, action: () -> Void)
         }
         
         /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
@@ -678,18 +690,21 @@ extension TopNavigation {
         public enum TrailingButtonInfo: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
-            ///  - icon: 아이콘 버튼의 아이콘입니다.
-            ///  - disable: 버튼 비활성화 여부를 결정합니다. 기본값은 false입니다.
-            ///  - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
-            ///  - action: icon 클릭시 동작할 action입니다.
-            case icon(Icon, disable: Bool = false, showPushBadge: Bool = false, action: () -> Void)
+            ///   - icon: 아이콘 버튼의 아이콘
+            ///   - disable: 버튼 비활성화 여부, 기본값은 `false`
+            ///   - showPushBadge: PushBadge의 노출 여부, 기본값은 `false`
+            ///   - action: 아이콘 클릭시 동작할 액션
+            case icon(_ icon: Icon, disable: Bool = false, showPushBadge: Bool = false, action: () -> Void)
             /// text 형태의 Action입니다.
             /// - Parameters:
-            ///  - text: 텍스트 버튼의 텍스트입니다.
-            ///  - disable: 버튼 비활성화 여부를 결정합니다. 기본값은 false입니다.
-            ///  - action: text 클릭시 동작할 action입니다.
-            case text(String, disable: Bool = false, action: () -> Void)
+            ///   - text: 텍스트 버튼의 텍스트
+            ///   - disable: 버튼 비활성화 여부, 기본값은 `false`
+            ///   - action: 텍스트 클릭시 동작할 액션
+            case text(_ text: String, disable: Bool = false, action: () -> Void)
             
+            /// 해시 값을 생성합니다.
+            ///
+            /// - Parameter hasher: 해시 값을 생성할 해시 값
             public func hash(into hasher: inout Hasher) {
                 switch self {
                 case let .icon(i, d, s, _):
@@ -702,6 +717,12 @@ extension TopNavigation {
                 }
             }
             
+            /// 두 개의 TrailingButtonInfo 인스턴스를 비교합니다.
+            ///
+            /// - Parameters:
+            ///   - lhs: 비교할 첫 번째 TrailingButtonInfo 인스턴스
+            ///   - rhs: 비교할 두 번째 TrailingButtonInfo 인스턴스
+            /// - Returns: 두 인스턴스가 같은지 여부
             public static func == (
                 lhs: TopNavigation.Resource.TrailingButtonInfo,
                 rhs: TopNavigation.Resource.TrailingButtonInfo
@@ -867,16 +888,16 @@ extension View {
     /// 현재 뷰에 TopNavigation 바를 적용합니다.
     ///
     /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
-    ///   - titleView: 표시할 제목 컴포넌트 클로저 (기본값: nil)
-    ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색 (기본값: nil)
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
-    ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
-    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트 (기본값: nil)
-    ///   - searchTerm: 검색어 바인딩 (기본값: nil)
-    ///   - searchFocused: 검색 필드 포커스 상태 바인딩 (기본값: nil)
-    ///   - onSearch: 검색 실행 시 호출될 클로저 (기본값: nil)
+    ///   - variant: 내비게이션 바의 외관 스타일, 기본값은 `.normal`
+    ///   - titleView: 표시할 제목 컴포넌트 클로저, 기본값은 `nil`
+    ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색, 기본값은 `nil`
+    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 기본값은 `nil`
+    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 기본값은 `[]`
+    ///   - model: 하단 액션 영역에 대한 모델, 기본값은 `nil`
+    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 기본값은 `nil`
+    ///   - searchTerm: 검색어 바인딩, 기본값은 `nil`
+    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 기본값은 `nil`
+    ///   - onSearch: 검색 실행 시 호출될 클로저, 기본값은 `nil`
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
@@ -909,16 +930,16 @@ extension View {
     /// 현재 뷰에 TopNavigation 바를 적용합니다.
     ///
     /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
-    ///   - title: 표시할 텍스트 타이틀 (기본값: nil)
-    ///   - backgroundColor: 배경색 (기본값: nil)
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
-    ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
-    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트 (기본값: nil)
-    ///   - searchTerm: 검색어 바인딩 (기본값: nil)
-    ///   - searchFocused: 검색 필드 포커스 상태 바인딩 (기본값: nil)
-    ///   - onSearch: 검색 실행 시 호출될 클로저 (기본값: nil)
+    ///   - variant: 내비게이션 바의 외관 스타일, 기본값은 `.normal`
+    ///   - title: 표시할 텍스트 타이틀
+    ///   - backgroundColor: 배경색, 기본값은 `nil`
+    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 기본값은 `nil`
+    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 기본값은 `[]`
+    ///   - model: 하단 액션 영역에 대한 모델, 기본값은 `nil`
+    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 기본값은 `nil`
+    ///   - searchTerm: 검색어 바인딩, 기본값은 `nil`
+    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 기본값은 `nil`
+    ///   - onSearch: 검색 실행 시 호출될 클로저, 기본값은 `nil`
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
