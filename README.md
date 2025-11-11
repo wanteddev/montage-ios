@@ -1,34 +1,124 @@
-# ``Montage``
+# Montage
 
-Wanted One Design System
+Wanted Lab Design System for iOS
 
 ## Overview
 
-Montage는 원티드랩 내부에서 UI를 작성할 때 사용할 수 있는 디자인시스템 모듈입니다. 이 모듈은 미리 만들어진 여러 엘리먼트들과 시스템 UI 프레임워크의 Extension 등을 제공하여, 조직에서 요구되는 UI 결과물을 빠르고 일관성 있게 제작할 수 있도록 돕습니다.
+Montage는 원티드랩에서 만든 iOS 앱 개발을 위한 디자인시스템 모듈입니다. 미리 만들어진 UI 컴포넌트와 SwiftUI/UIKit Extension을 제공하여, 일관성 있고 빠른 UI 개발을 지원합니다. 디자인 시스템에 대한 자세한 내용은 https://montage.wanted.co.kr 에서 확인할 수 있습니다.
 
-Montage가 제공하는 여러 구성 요소와 사용 예시들을 한눈에 볼 수 있도록 샘플 앱 프로젝트를 제공하고 있습니다. [Sources/Blueprint](https://github.com/wanteddev/montage-ios/tree/develop/Sources/Blueprint) 폴더를 참고해 주세요.
+*Montage is a design system module for iOS app development created by Wanted Lab. It provides pre-built UI components and SwiftUI/UIKit extensions to help you build consistent and fast UI. For more information about the design system, visit https://montage.wanted.co.kr.*
 
-## Contribution
+Montage가 제공하는 여러 구성 요소와 사용 예시들을 한눈에 볼 수 있도록 샘플 앱 프로젝트를 제공하고 있습니다. [Sources/Blueprint](https://github.com/wanteddev/montage-ios/tree/main/Sources/Blueprint) 폴더를 참고해 주세요.
 
-Montage는 원티드랩의 내부 디자인시스템으로, 회사의 디자인 가이드라인과 제품 요구사항에 맞춰 개발되고 있습니다. 현재 외부 기여는 받고 있지 않으며, 프로젝트 기여는 원티드랩 내부 개발자 및 디자이너로 제한됩니다.
+*A sample app project is available to showcase all the components and usage examples provided by Montage. See the [Sources/Blueprint](https://github.com/wanteddev/montage-ios/tree/main/Sources/Blueprint) folder for reference.*
 
-### 내부 개발자 기여 절차
+## Requirements
 
-프로젝트에 기여하려면 다음 절차를 따라주시기 바랍니다:
+- iOS 16.0+
+- Swift 5.7+
+- Xcode 14.0+
 
-1. 프로젝트 저장소 클론: `git clone https://github.com/wanteddev/montage-ios.git`
-2. 작업 브랜치 생성: `git checkout -b [브랜치명]`
-3. 개발 작업 수행 및 커밋: `git commit -m '[작업 내용 설명]'`
-4. 원본 저장소에 푸시: `git push origin [브랜치명]`
-5. GitHub에서 Pull Request 생성 및 코드 리뷰 요청
-6. 리뷰 승인 후 머지
+## Installation
 
-### 코드 스타일
+### Swift Package Manager
 
-- 원티드랩의 Swift 스타일 가이드를 준수해주세요.
+Xcode에서 File > Add Packages... 메뉴를 선택하고 다음 URL을 입력하세요:
+
+*In Xcode, select File > Add Packages... and enter the following URL:*
+
+```
+https://github.com/wanteddev/montage-ios.git
+```
+
+또는 `Package.swift` 파일에 다음을 추가하세요:
+
+*Or add the following to your `Package.swift` file:*
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/wanteddev/montage-ios.git", from: "3.0.0")
+]
+```
+
+## Usage
+
+```swift
+import Montage
+
+// 사용 예시
+// *Usage example*
+```
+
+## Documentation
+
+자세한 API 문서는 [Components](https://montage.wanted.co.kr/docs/components), [Utilities](https://montage.wanted.co.kr/docs/utilities)에서 확인할 수 있습니다.
+
+*Detailed API documentation is available at [Components](https://montage.wanted.co.kr/docs/components) and [Utilities](https://montage.wanted.co.kr/docs/utilities).*
+
+로컬에서 문서 사이트를 호스팅하려면 [generate_docc.sh](https://github.com/wanteddev/montage-ios/blob/main/generate_docc.sh) 스크립트를 실행 후 지시사항을 따르세요:
+
+*To host the documentation site locally, run the [generate_docc.sh](https://github.com/wanteddev/montage-ios/blob/main/generate_docc.sh) script and follow the instructions:*
+
+```bash
+./generate_docc.sh
+```
+
+## Contributing
+
+Montage는 오픈소스 프로젝트이며, 모든 기여를 환영합니다!
+
+*Montage is an open source project and welcomes all contributions!*
+
+### Contribution Process
+
+1. 프로젝트 저장소 포크: GitHub에서 저장소를 포크하세요
+2. 프로젝트 클론: `git clone https://github.com/[your-username]/montage-ios.git`
+3. 작업 브랜치 생성: `git checkout -b [브랜치명]`
+4. 개발 작업 수행 및 커밋: `git commit -m '[작업 내용 설명]'`
+5. 포크한 저장소에 푸시: `git push origin [브랜치명]`
+6. GitHub에서 Pull Request 생성 및 코드 리뷰 요청
+7. 리뷰 승인 후 머지
+
+<!-- -->
+
+1. *Fork the repository on GitHub*
+2. *Clone your fork: `git clone https://github.com/[your-username]/montage-ios.git`*
+3. *Create a branch: `git checkout -b [branch-name]`*
+4. *Make your changes and commit: `git commit -m '[description of changes]'`*
+5. *Push to your fork: `git push origin [branch-name]`*
+6. *Create a Pull Request on GitHub and request a code review*
+7. *After approval, your changes will be merged*
+
+### Code Style
+
+- Swift 스타일 가이드를 준수해주세요.
 - public 함수, 구조체, 클래스, 프로토콜 등에 문서화 주석(Documentation Comments)을 추가해주세요. API 문서 작성 자동화 스크립트의 구현상 아래와 같은 규칙을 지켜주셔야 합니다.
   - 파일 이름과 파일에 선언된 대표 컴포넌트(UIView, View, ViewModifier, Layout 등) 이름이 동일해야 합니다.
   - 대표 컴포넌트와 연관된 타입이나 extension, protocol 등은 같은 파일에 정의하는 것을 원칙으로 합니다.
   - public 인 View 구조체는 Inner Type으로 정의하지 않습니다.
+  - 더 자세한 사항은 [DOCUMENTATION_GUIDELINES.md](https://github.com/wanteddev/montage-ios/tree/main/DOCUMENTATION_GUIDELINES.md) 파일을 참고하세요.
 
-모든 기여는 동료 개발자의 검토와 승인이 필요합니다. 기여해 주셔서 감사합니다.
+<!-- -->
+
+- *Follow Swift style guidelines.*
+- *Add documentation comments to public functions, structs, classes, protocols, etc. Due to the implementation of the API documentation automation script, please follow these rules:*
+  - *The file name must match the name of the main component (UIView, View, ViewModifier, Layout, etc.) declared in the file.*
+  - *Types, extensions, protocols, etc. related to the main component should be defined in the same file as a general rule.*
+  - *Public View structs should not be defined as Inner Types.*
+  - *For more details, please refer to the [DOCUMENTATION_GUIDELINES.md](https://github.com/wanteddev/montage-ios/tree/main/DOCUMENTATION_GUIDELINES.md) file.*
+
+모든 기여는 프로젝트 메인테이너의 검토와 승인이 필요합니다. 기여해 주셔서 감사합니다!
+
+*All contributions require review and approval from project maintainers. Thank you for contributing!*
+
+## License
+
+이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참고해 주세요.
+
+*This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.*
+
+## Contact
+
+문의사항이나 제안사항이 있으시면 [이슈](https://github.com/wanteddev/montage-ios/issues)를 생성해 주세요.
+
+*If you have any questions or suggestions, please create an [issue](https://github.com/wanteddev/montage-ios/issues).*
