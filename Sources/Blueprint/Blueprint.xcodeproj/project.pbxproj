@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4D0952672D7ABCCB00BB6044 /* ControlPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0952662D7ABCCB00BB6044 /* ControlPreview.swift */; };
 		4D0D251E2DB763FE00608CE5 /* ThumbnailPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0D251D2DB763F600608CE5 /* ThumbnailPreview.swift */; };
+		4D1031602EC457CD00C865E9 /* FilterButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D10315F2EC457CD00C865E9 /* FilterButtonPreview.swift */; };
+		4D1031612EC457CD00C865E9 /* ChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D10315E2EC457CD00C865E9 /* ChipPreview.swift */; };
 		4D1AB4EB2CF4900C00311591 /* SkeletonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1AB4EA2CF4900600311591 /* SkeletonPreview.swift */; };
 		4D1AB4F12CF494DE00311591 /* SliderPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1AB4F02CF494DE00311591 /* SliderPreview.swift */; };
 		4D45DAF12D910C2D002B1686 /* Montage in Frameworks */ = {isa = PBXBuildFile; productRef = 4D45DAF02D910C2D002B1686 /* Montage */; };
@@ -70,8 +72,6 @@
 		4DF7C55D2CE340F0002B241B /* TooltipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */; };
 		4DF7C5602CE340F0002B241B /* SelectPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A62CE340F0002B241B /* SelectPreview.swift */; };
 		4DFA5A532E572464003BED22 /* ShadowPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFA5A522E572464003BED22 /* ShadowPreview.swift */; };
-		4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */; };
-		4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +94,8 @@
 /* Begin PBXFileReference section */
 		4D0952662D7ABCCB00BB6044 /* ControlPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPreview.swift; sourceTree = "<group>"; };
 		4D0D251D2DB763F600608CE5 /* ThumbnailPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailPreview.swift; sourceTree = "<group>"; };
+		4D10315E2EC457CD00C865E9 /* ChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipPreview.swift; sourceTree = "<group>"; };
+		4D10315F2EC457CD00C865E9 /* FilterButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButtonPreview.swift; sourceTree = "<group>"; };
 		4D1AB4EA2CF4900600311591 /* SkeletonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonPreview.swift; sourceTree = "<group>"; };
 		4D1AB4F02CF494DE00311591 /* SliderPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderPreview.swift; sourceTree = "<group>"; };
 		4D45DB142D915B0B002B1686 /* PushBadgePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushBadgePreview.swift; sourceTree = "<group>"; };
@@ -155,8 +157,6 @@
 		4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPreview.swift; sourceTree = "<group>"; };
 		4DF7C56A2CE342EA002B241B /* Blueprint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Blueprint-Info.plist"; sourceTree = "<group>"; };
 		4DFA5A522E572464003BED22 /* ShadowPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowPreview.swift; sourceTree = "<group>"; };
-		4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionChipPreview.swift; sourceTree = "<group>"; };
-		4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterChipPreview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,15 +248,14 @@
 		4DF7C4FD2CE340F0002B241B /* Previews */ = {
 			isa = PBXGroup;
 			children = (
-				4D8100592EA875FF004CAD92 /* PopoverPreview.swift */,
 				4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */,
 				4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */,
-				4DFFE5652DBF82EF00DC6EB6 /* ActionChipPreview.swift */,
 				4DD3E95C2CF45F5500F97C50 /* AvatarPreview.swift */,
 				4DC668A92D673E8F00461189 /* BottomSheetModalPreview.swift */,
 				4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */,
 				4D6372C62DBA655200E66D22 /* CardPreview.swift */,
 				4D5D8C9D2D2E5D9E00108C92 /* CategoryPreview.swift */,
+				4D10315E2EC457CD00C865E9 /* ChipPreview.swift */,
 				4D96F7C92E9FA8C300DFECE8 /* ColorPreview.swift */,
 				4D45DB182D917B91002B1686 /* ContentBadgePreview.swift */,
 				4D0952662D7ABCCB00BB6044 /* ControlPreview.swift */,
@@ -264,7 +263,7 @@
 				4D55974D2D1E402C00CFBCA5 /* DateTimePickerPreview.swift */,
 				4D5597512D1E7EC000CFBCA5 /* DotPaginationPreview.swift */,
 				4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */,
-				4DFFE5672DBF975000DC6EB6 /* FilterChipPreview.swift */,
+				4D10315F2EC457CD00C865E9 /* FilterButtonPreview.swift */,
 				4D4B71FC2DA649080069C4F7 /* FlowLayoutPreview.swift */,
 				4D8A16F02E586B370094B8B7 /* FramedStylePreview.swift */,
 				4D88E5F82E8BC34D00EA0E67 /* FullModalPreview.swift */,
@@ -278,6 +277,7 @@
 				4DC668AB2D6849BF00461189 /* ModalPreview.swift */,
 				4D5597532D1E7F9400CFBCA5 /* PaginationPreview.swift */,
 				4DD95C842DAFB50C00F2EF87 /* PlayBadgePreview.swift */,
+				4D8100592EA875FF004CAD92 /* PopoverPreview.swift */,
 				4D88E5F92E8BC34D00EA0E67 /* PopupModalPreview.swift */,
 				4DB87ADB2CEC8F6800DEC2A4 /* ProgressIndicatorPreview.swift */,
 				4DA44F1E2D195832009FE3DB /* ProgressTrackerPreview.swift */,
@@ -486,7 +486,6 @@
 				4D0D251E2DB763FE00608CE5 /* ThumbnailPreview.swift in Sources */,
 				4D81005A2EA8760B004CAD92 /* PopoverPreview.swift in Sources */,
 				4D96F7CE2EA07D7B00DFECE8 /* TransparentCheckerPatternModifier.swift in Sources */,
-				4DFFE5682DBF975000DC6EB6 /* FilterChipPreview.swift in Sources */,
 				4DA44F1B2D12CC91009FE3DB /* PullToRefreshPreview.swift in Sources */,
 				4DCFAAFA2CE6016900F7A4CD /* ListCellPreview.swift in Sources */,
 				4D45DB152D915B13002B1686 /* PushBadgePreview.swift in Sources */,
@@ -496,7 +495,6 @@
 				4DC668AA2D673E8F00461189 /* BottomSheetModalPreview.swift in Sources */,
 				4DB87ADC2CEC8F6B00DEC2A4 /* ProgressIndicatorPreview.swift in Sources */,
 				4D5597542D1E7F9400CFBCA5 /* PaginationPreview.swift in Sources */,
-				4DFFE5662DBF82EF00DC6EB6 /* ActionChipPreview.swift in Sources */,
 				4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */,
 				4DF7C5392CE340F0002B241B /* SnackBarPreview.swift in Sources */,
 				4DA40B272D3E2F72004C73E5 /* SectionHeaderPreview.swift in Sources */,
@@ -508,6 +506,8 @@
 				4D88E5FA2E8BC34D00EA0E67 /* PopupModalPreview.swift in Sources */,
 				4D88E5FB2E8BC34D00EA0E67 /* FullModalPreview.swift in Sources */,
 				4DC668AC2D6849C400461189 /* ModalPreview.swift in Sources */,
+				4D1031602EC457CD00C865E9 /* FilterButtonPreview.swift in Sources */,
+				4D1031612EC457CD00C865E9 /* ChipPreview.swift in Sources */,
 				4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */,
 				4D8100522EA7594D004CAD92 /* BlueprintApp.swift in Sources */,
 				4DF7C54A2CE340F0002B241B /* ButtonPreview.swift in Sources */,

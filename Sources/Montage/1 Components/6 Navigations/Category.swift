@@ -52,7 +52,7 @@ public struct Category: View {
     
     @Binding private var selectedIndex: Int
     private let items: [String]
-    private let itemModifier: (_ index: Int, _ actionChip: ActionChip) -> ActionChip
+    private let itemModifier: (_ index: Int, _ chip: Chip) -> Chip
     private let actions: (Int) -> Void
     
     /// 카테고리 컴포넌트를 초기화합니다.
@@ -60,12 +60,12 @@ public struct Category: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
     ///   - items: 표시할 카테고리 항목 배열
-    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 ActionChip을 파라미터로 받음, 기본값은 원본 ActionChip을 반환하는 클로저
+    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 Chip을 파라미터로 받음, 기본값은 원본 Chip을 반환하는 클로저
     ///   - actions: 항목 선택 시 호출될 클로저, 기본값은 빈 클로저
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
-        itemModifier: @escaping (_ index: Int, _ actionChip: ActionChip) -> ActionChip = { $1 },
+        itemModifier: @escaping (_ index: Int, _ chip: Chip) -> Chip = { $1 },
         actions: @escaping (Int) -> Void = { _ in }
     ) {
         _selectedIndex = selectedIndex
@@ -85,7 +85,7 @@ public struct Category: View {
                 HStack(spacing: 0) {
                     HStack(spacing: itemSpacing) {
                         ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                            ActionChip(
+                            Chip(
                                 variant: chipVariant(index == selectedIndex),
                                 size: chipSize,
                                 text: item
@@ -227,7 +227,7 @@ private extension Category {
         }
     }
       
-    func chipVariant(_ isSelected: Bool) -> ActionChip.Variant {
+    func chipVariant(_ isSelected: Bool) -> Chip.Variant {
         if variant == .normal && isSelected {
             .solid
         } else {
@@ -235,7 +235,7 @@ private extension Category {
         }
     }
     
-    var chipSize: ActionChip.Size {
+    var chipSize: Chip.Size {
         switch size {
         case .small: .xsmall
         case .medium: .small

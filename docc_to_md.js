@@ -49,7 +49,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
     if (ref.title === 'UIKit') continue;
     if (ref.kind === 'symbol') {
       // 심볼의 상세 정보를 가져오기
-      const symbolJsonPath = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data', `${url}.json`);
+      const symbolJsonPath = path.join(dataRoot, `${url}.json`);
       md += `<details>\n`;
       try {
         if (fs.existsSync(symbolJsonPath)) {
@@ -833,7 +833,7 @@ function renderAssociatedExtensionsSection(title) {
     hashes.forEach(({ hash, signature }) => {
       const markdown = extensionMdMap[hash];
       if (markdown) items.push(markdown);
-      else console.warn(`✗ extension 심볼 MarkDown 누락: ${hash}, ${signature}`);
+      else console.warn(`⚠ extension 심볼 MarkDown 누락: ${hash}, ${signature}`);
     });
     if (items.length > 0) {
       const detailMarkdown = `<details>\n\n<summary>\`\`extension ${extendedType}\`\`</summary>\n\n${items.join('')}\n</details>\n\n`;
@@ -909,7 +909,7 @@ console.log('📂 Swift 타입-파일 매핑 시작...');
 walkSwiftFiles(montageSrcRoot);
 console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
 
-const dataRoot = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data');
+const dataRoot = path.join('.build/derived_data/Build/Products/Dev-iphoneos/Montage.doccarchive/data');
 const doccRoot = path.join(dataRoot, 'documentation');
 
 console.log('🔎 Extended Module 인덱싱 시작...');
@@ -919,15 +919,15 @@ console.log(`✓ 인덱싱 완료 (확장 심볼 ${Object.keys(extensionMdMap).l
 console.log('🔄 JSON → Markdown 변환 시작...');
 walk(doccRoot);
 
+Object.values(convertedSwiftFileMap).forEach((item) => {
+  if (!item.isConverted) {
+    console.warn(`⚠️ md 파일로 변환되지 않은 Swift 타입: ${item.componentTitle}`);
+    if (componentExtensionHashIndex[item.componentTitle]) {
+      console.log(renderAssociatedExtensionsSection(item.componentTitle));
+    }
+  }
+});
+
 console.log('\n' + '='.repeat(50));
 console.log('✅ 모든 변환 작업 완료!');
 console.log('='.repeat(50));
-
-// Object.values(convertedSwiftFileMap).forEach((item) => {
-//   if (!item.isConverted) {
-//     console.warn(`⚠️ md 파일로 변환되지 않은 Swift 타입: ${item.componentTitle}`);
-//     if (componentExtensionHashIndex[item.componentTitle]) {
-//       console.log(renderAssociatedExtensionsSection(item.componentTitle));
-//     }
-//   }
-// });

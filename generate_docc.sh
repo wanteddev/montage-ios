@@ -12,6 +12,7 @@ rm -rf "$CUSTOM_DERIVED_DATA" # 사용자 정의 DerivedData 삭제
 mkdir -p "$CUSTOM_DERIVED_DATA" # 디렉토리 다시 생성
 # xcodebuild docbuild를 사용하여 문서 생성 (-derivedDataPath 로 출력 위치 제어)
 xcodebuild docbuild \
+  -workspace "Workspace.xcworkspace" \
   -scheme "$SCHEME_NAME" \
   -destination 'generic/platform=iOS' \
   -derivedDataPath "$CUSTOM_DERIVED_DATA"
