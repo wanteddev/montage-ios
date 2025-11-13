@@ -909,7 +909,7 @@ console.log('📂 Swift 타입-파일 매핑 시작...');
 walkSwiftFiles(montageSrcRoot);
 console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
 
-const dataRoot = path.join('.build/derived_data/Build/Products/Dev-iphoneos/Montage.doccarchive/data');
+const dataRoot = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data');
 const doccRoot = path.join(dataRoot, 'documentation');
 
 console.log('🔎 Extended Module 인덱싱 시작...');

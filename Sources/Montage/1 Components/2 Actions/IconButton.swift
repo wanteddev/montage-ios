@@ -17,7 +17,6 @@ import SwiftUI
 ///
 /// ```swift
 /// IconButton(
-///     variant: .default,
 ///     icon: .arrowLeft,
 ///     handler: { print("뒤로 가기 버튼 탭됨") }
 /// )
