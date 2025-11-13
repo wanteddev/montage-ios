@@ -43,11 +43,11 @@ struct TextAreaPreview: View {
             .icon(
                 .chevronDown
             ),
-            .actionChip(
+            .chip(
                 title: "Action",
                 handler: {}
             ),
-            .filterChip(
+            .filterButton(
                 title: "Filter",
                 handler: {}
             )

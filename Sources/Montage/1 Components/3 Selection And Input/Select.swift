@@ -554,7 +554,7 @@ public struct Select: View {
         var body: some View {
             ForEach(items.indices, id: \.self) { index in
                 let item = items[index]
-                Montage.ActionChip(
+                Montage.Chip(
                     variant: .solid,
                     size: .xsmall,
                     text: item.text

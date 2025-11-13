@@ -1,36 +1,32 @@
 //
-//  Filter.swift
+//  Chip.swift
 //  Montage
 //
-//  Created by Euigyom Kim on 2023/04/24.
+//  Created by Euigyom Kim on 2023/04/18.
 //
 
 import Pretendard
 import SwiftUI
 
-/// 필터링 기능을 제공하는 칩 컴포넌트입니다.
+/// 칩 컴포넌트입니다.
 ///
-/// 이 컴포넌트는 사용자가 항목을 필터링하는 데 사용할 수 있는 탭 가능한 UI 요소입니다.
-/// 다양한 크기와 스타일을 지원하며, 활성/비활성 상태를 표시할 수 있습니다.
+/// 텍스트와 이미지를 포함하는 칩 형태의 버튼입니다.
+/// 다양한 크기와 스타일을 지원하며, 탭 이벤트를 처리할 수 있습니다.
 ///
 /// ```swift
-/// FilterChip(
+/// Chip(
 ///     variant: .solid,
 ///     size: .medium,
-///     text: "카테고리",
-///     state: $state
+///     text: "액션"
 /// )
 /// .backgroundColor(.semantic(.primaryNormal))
 /// .fontColor(.semantic(.staticWhite))
-/// .active(true, label: "최신순")
+/// .leadingImage(Image(systemName: "heart"))
 /// ```
-///
-public struct FilterChip: View {
-    // MARK: - Types
-
+public struct Chip: View {
     /// 칩의 외관을 결정하는 열거형입니다.
     public enum Variant {
-        /// 배경색이 있는 실선 스타일
+        /// 배경색이 채워진 스타일
         case solid
         /// 테두리만 있는 아웃라인 스타일
         case outlined
@@ -48,59 +44,63 @@ public struct FilterChip: View {
         case large
     }
     
-    /// 칩의 확장 상태를 정의합니다.
-    public enum State {
-        /// 기본 상태
-        case normal
-        /// 확장된 상태 (드롭다운 표시)
-        case expand
-    }
-    
-    // MARK: - Initializer
+    // MARK: - Properties
     
     private let variant: Variant
     private let size: Size
     private let text: String
-    private let state: Binding<State>
     private let handler: (() -> Void)?
+            
+    // MARK: - Initializer
     
-    /// 필터 칩을 초기화합니다.
+    /// 칩을 초기화합니다.
     ///
     /// - Parameters:
     ///   - variant: 칩의 외관 스타일, 기본값은 `.solid`
     ///   - size: 칩의 크기, 기본값은 `.medium`
     ///   - text: 칩에 표시할 텍스트
-    ///   - state: 칩의 확장 상태 바인딩, 기본값은 `.constant(.normal)`
     ///   - handler: 칩 클릭 시 실행할 핸들러, 기본값은 `nil`
+    /// - Returns: 구성된 칩 인스턴스
     public init(
         variant: Variant = .solid,
         size: Size = .medium,
         text: String,
-        state: Binding<State> = .constant(.normal),
         handler: (() -> Void)? = nil
     ) {
         self.variant = variant
         self.size = size
         self.text = text
-        self.state = state
         self.handler = handler
     }
     
     // MARK: - Body
     
-    @SwiftUI.State private var isPressed = false
+    @State private var isPressed = false
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: contentSpacing) {
-            Text(active ? (activeLabel ?? text) : text)
+            if let leadingImage = leadingImage {
+                leadingImage
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: imageSize, height: imageSize)
+                    .foregroundStyle(imageColor)
+            }
+            
+            Text(text)
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
             
-            Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)
-                .resizable()
-                .foregroundStyle(iconColor)
-                .frame(width: imageSize, height: imageSize)
+            if let trailingImage = trailingImage {
+                trailingImage
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: imageSize, height: imageSize)
+                    .foregroundStyle(imageColor)
+            }
         }
         .padding(contentPadding)
         .frame(
@@ -111,7 +111,8 @@ public struct FilterChip: View {
         .cornerRadius(cornerRadius)
         .overlay(
             RoundedRectangle(cornerRadius: cornerRadius)
-                .stroke(borderColor, lineWidth: borderWidth)
+                .inset(by: 0.5)
+                .stroke(borderColor, lineWidth: currentBorderWidth)
         )
         .opacity(disable ? 0.5 : 1.0)
         .contentShape(Rectangle())
@@ -129,36 +130,34 @@ public struct FilterChip: View {
     
     // MARK: - Modifiers
     
-    private var active = false
-    private var activeLabel: String?
     private var disable = false
+    private var active = false
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
-    private var customIconColor: SwiftUI.Color?
+    private var customImageColor: SwiftUI.Color?
+    private var leadingImage: Image?
+    private var trailingImage: Image?
     private var fillHorizontal = false
     private var fillVertical = false
     
-    /// 칩의 활성화 상태와 레이블을 설정합니다.
-    ///
-    /// - Parameters:
-    ///   - active: 활성화 여부
-    ///   - label: 활성화 상태일 때 표시할 레이블, 기본값은 `nil`
-    /// - Returns: 수정된 칩 인스턴스
-    public func active(_ active: Bool, label: String? = nil) -> Self {
-        var view = self
-        view.active = active
-        view.activeLabel = label
-        return view
-    }
-    
     /// 칩의 비활성화 여부를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부
     /// - Returns: 수정된 칩 인스턴스
     public func disabled(_ disable: Bool = true) -> Self {
         var view = self
         view.disable = disable
+        return view
+    }
+    
+    /// 칩의 선택 상태를 설정합니다.
+    ///
+    /// - Parameter active: 선택 상태 여부
+    /// - Returns: 수정된 칩 인스턴스
+    public func active(_ active: Bool = true) -> Self {
+        var view = self
+        view.active = active
         return view
     }
     
@@ -192,74 +191,38 @@ public struct FilterChip: View {
         return view
     }
     
-    /// 아이콘의 색상을 설정합니다.
+    /// 이미지의 색상을 설정합니다.
     ///
-    /// - Parameter color: 아이콘에 적용할 색상
+    /// - Parameter color: 이미지에 적용할 색상
     /// - Returns: 수정된 칩 인스턴스
-    public func iconColor(_ color: SwiftUI.Color) -> Self {
+    public func imageColor(_ color: SwiftUI.Color) -> Self {
         var view = self
-        view.customIconColor = color
+        view.customImageColor = color
+        return view
+    }
+    
+    /// 칩의 좌측에 이미지를 추가합니다.
+    ///
+    /// - Parameter image: 표시할 이미지
+    /// - Returns: 수정된 칩 인스턴스
+    public func leadingImage(_ image: Image) -> Self {
+        var view = self
+        view.leadingImage = image
+        return view
+    }
+    
+    /// 칩의 우측에 이미지를 추가합니다.
+    ///
+    /// - Parameter image: 표시할 이미지
+    /// - Returns: 수정된 칩 인스턴스
+    public func trailingImage(_ image: Image) -> Self {
+        var view = self
+        view.trailingImage = image
         return view
     }
 }
 
-extension FilterChip.Variant {
-    var backgroundColor: UIColor {
-        switch self {
-        case .solid:
-            .semantic(.fillAlternative)
-        case .outlined:
-            .clear
-        }
-    }
-
-    var borderWidth: CGFloat {
-        switch self {
-        case .solid:
-            .zero
-        case .outlined:
-            1
-        }
-    }
-    
-    var disableBackgroundColor: UIColor {
-        switch self {
-        case .solid:
-            .semantic(.interactionDisable)
-        case .outlined:
-            .clear
-        }
-    }
-    
-    var activeBackgroundColor: UIColor {
-        switch self {
-        case .solid:
-            .semantic(.inverseBackground)
-        case .outlined:
-            .semantic(.primaryNormal).withAlphaComponent(0.05)
-        }
-    }
-    
-    var activeTextUIColor: UIColor {
-        switch self {
-        case .solid:
-            .semantic(.inverseLabel)
-        case .outlined:
-            .semantic(.primaryNormal)
-        }
-    }
-    
-    var activeArrowColor: UIColor {
-        switch self {
-        case .solid:
-            .semantic(.inverseLabel)
-        case .outlined:
-            .semantic(.labelNormal)
-        }
-    }
-}
-
-private extension FilterChip {
+private extension Chip {
     var backgroundColor: SwiftUI.Color {
         if disable {
             switch variant {
@@ -291,17 +254,17 @@ private extension FilterChip {
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.labelAlternative)
+            return customFontColor ?? .semantic(.labelNormal)
         }
     }
     
-    var iconColor: SwiftUI.Color {
+    var imageColor: SwiftUI.Color {
         if disable {
             return .semantic(.labelDisable)
         } else if active {
             return activeContentColor
         } else {
-            return customIconColor ?? .semantic(.labelAlternative)
+            return customImageColor ?? .semantic(.labelAlternative)
         }
     }
     
@@ -313,7 +276,7 @@ private extension FilterChip {
             return customActiveColor ?? .semantic(.primaryNormal)
         }
     }
-    
+        
     var borderColor: SwiftUI.Color {
         guard variant == .outlined else { return .clear }
         if disable {
@@ -325,15 +288,15 @@ private extension FilterChip {
         }
     }
     
-    var borderWidth: CGFloat {
+    var currentBorderWidth: CGFloat {
         variant == .outlined ? 1 : 0
     }
     
     var imageSize: CGFloat {
         switch size {
         case .large: return 16
-        case .medium: return 16
-        case .small: return 16
+        case .medium: return 14
+        case .small: return 14
         case .xsmall: return 12
         }
     }
@@ -341,7 +304,7 @@ private extension FilterChip {
     var typoVariant: Typography.Variant {
         switch size {
         case .large: return .body2
-        case .medium: return .body2
+        case .medium: return .label1
         case .small: return .label1
         case .xsmall: return .caption1
         }
@@ -358,10 +321,10 @@ private extension FilterChip {
     
     var contentSpacing: CGFloat {
         switch size {
-        case .large: return 2
-        case .medium: return 2
-        case .small: return 1
-        case .xsmall: return 1
+        case .large: return 3
+        case .medium: return 3
+        case .small: return 2
+        case .xsmall: return 2
         }
     }
     
@@ -377,9 +340,10 @@ private extension FilterChip {
     var cornerRadius: CGFloat {
         switch size {
         case .large: return 10.0
-        case .medium: return 10.0
+        case .medium: return 8.0
         case .small: return 8.0
         case .xsmall: return 6.0
         }
     }
 }
+

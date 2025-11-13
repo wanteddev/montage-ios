@@ -131,24 +131,24 @@ public struct TextArea: View {
             tintColor: SwiftUI.Color = .semantic(.labelAssistive)
         )
         
-        /// 액션 칩
+        /// 칩
         /// - Parameters:
         ///   - variant: 칩 변형 스타일, 기본값은 `.solid`
         ///   - title: 칩 텍스트
         ///   - handler: 칩 클릭 핸들러, 기본값은 `nil`
-        case actionChip(
-            _ variant: ActionChip.Variant = .solid,
+        case chip(
+            _ variant: Chip.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         
-        /// 필터 칩
+        /// 필터 버튼
         /// - Parameters:
-        ///   - variant: 칩 변형 스타일, 기본값은 `.solid`
-        ///   - title: 칩 텍스트
-        ///   - handler: 칩 클릭 핸들러, 기본값은 `nil`
-        case filterChip(
-            _ variant: FilterChip.Variant = .solid,
+        ///   - variant: 버튼 변형 스타일, 기본값은 `.solid`
+        ///   - title: 버튼 텍스트
+        ///   - handler: 버튼 클릭 핸들러, 기본값은 `nil`
+        case filterButton(
+            _ variant: FilterButton.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
@@ -574,15 +574,15 @@ public struct TextArea: View {
                     .resizable()
                     .foregroundColor(tintColor)
                     .frame(width: 22, height: 22)
-            case let .actionChip(variant, title, handler):
-                ActionChip(
+            case let .chip(variant, title, handler):
+                Chip(
                     variant: variant,
                     size: .small,
                     text: title,
                     handler: handler
                 )
-            case let .filterChip(variant, title, handler):
-                FilterChip(
+            case let .filterButton(variant, title, handler):
+                FilterButton(
                     variant: variant,
                     size: .small,
                     text: title,

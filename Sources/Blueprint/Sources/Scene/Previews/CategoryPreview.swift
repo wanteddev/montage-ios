@@ -39,8 +39,8 @@ struct CategoryPreview: View {
                 }
                 .padding(.horizontal)
                 
-                Category(selectedIndex: $selectedIndex, items: items.map(\.text), itemModifier: { index, actionChip in
-                    actionChip.disabled(items[index].isSelected)
+                Category(selectedIndex: $selectedIndex, items: items.map(\.text), itemModifier: { index, chip in
+                    chip.disabled(items[index].isSelected)
                 })
                 .variant(isAlternative ? .alternative : .normal)
                 .size(sizes[sizeIndex])

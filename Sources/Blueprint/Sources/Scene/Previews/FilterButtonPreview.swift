@@ -1,19 +1,17 @@
 import SwiftUI
 import Montage
 
-struct ActionChipPreview: View {
+struct FilterButtonPreview: View {
     @State private var showTransparentChecker: Bool = false
-    @State private var variant: ActionChip.Variant = .solid
-    @State private var size: ActionChip.Size = .medium
+    @State private var variant: FilterButton.Variant = .solid
+    @State private var size: FilterButton.Size = .medium
     @State private var text = "텍스트"
-    @State private var disable = false
+    @State private var state: FilterButton.State = .normal
     @State private var active = false
-    @State private var backgroundColor: SwiftUI.Color = .clear
+    @State private var activeLabel: String? = nil
+    @State private var disable = false
+    @State private var iconColor: SwiftUI.Color = .clear
     @State private var fontColor: SwiftUI.Color = .clear
-    @State private var activeColor: SwiftUI.Color = .clear
-    @State private var leadingImage = false
-    @State private var trailingImage = false
-    @State private var imageColor: SwiftUI.Color = .clear
     
     var body: some View {
         SwiftUI.ScrollView {
@@ -31,20 +29,14 @@ struct ActionChipPreview: View {
                 
                 HStack {
                     Spacer()
-                    ActionChip(
+                    FilterButton(
                         variant: variant,
                         size: size,
-                        text: text
+                        text: text,
+                        state: $state
                     )
-                    .active(active)
+                    .active(active, label: activeLabel)
                     .disabled(disable)
-                    .modifying {
-                        if backgroundColor == .clear {
-                            $0
-                        } else {
-                            $0.backgroundColor(backgroundColor)
-                        }
-                    }
                     .modifying {
                         if fontColor == .clear {
                             $0
@@ -53,31 +45,10 @@ struct ActionChipPreview: View {
                         }
                     }
                     .modifying {
-                        if activeColor == .clear {
+                        if iconColor == .clear {
                             $0
                         } else {
-                            $0.activeColor(activeColor)
-                        }
-                    }
-                    .modifying {
-                        if imageColor == .clear {
-                            $0
-                        } else {
-                            $0.imageColor(imageColor)
-                        }
-                    }
-                    .modifying {
-                        if leadingImage {
-                            $0.leadingImage(Image.icon(.bell))
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if trailingImage {
-                            $0.trailingImage(Image.icon(.bell))
-                        } else {
-                            $0
+                            $0.iconColor(iconColor)
                         }
                     }
                     Spacer()
@@ -131,23 +102,35 @@ struct ActionChipPreview: View {
                 }
                 
                 HStack {
-                    Text("Disable")
-                    Control.switch(checked: disable) { disable = $0 }
-                    Text("Active")
-                    Control.switch(checked: active) { active = $0 }
+                    Text("State")
+                    SegmentedControl(
+                        selectedIndex: Binding(
+                            get: { state == .normal ? 0 : 1 },
+                            set: { state = $0 == 0 ? .normal : .expand }
+                        ),
+                        labels: ["Normal", "Expand"]
+                    )
+                    .size(.small)
                 }
                 
                 HStack {
-                    Text("Leading Image")
-                    Control.switch(checked: leadingImage) { leadingImage = $0 }
-                    Text("Trailing Image")
-                    Control.switch(checked: trailingImage) { trailingImage = $0 }
+                    Text("Active")
+                    Control.switch(checked: active) { active = $0 }
+                    Text("Disable")
+                    Control.switch(checked: disable) { disable = $0 }
                 }
                 
-                SwiftUI.ColorPicker("Background Color", selection: $backgroundColor)
+                HStack {
+                    Text("Active Label")
+                    TextField(text: Binding(
+                        get: { activeLabel ?? "" },
+                        set: { activeLabel = $0.isEmpty ? nil : $0 }
+                    ))
+                    .placeholder("활성화 상태일 때 표시할 텍스트")
+                }
+                
+                SwiftUI.ColorPicker("Icon Color", selection: $iconColor)
                 SwiftUI.ColorPicker("Font Color", selection: $fontColor)
-                SwiftUI.ColorPicker("Active Color", selection: $activeColor)
-                SwiftUI.ColorPicker("Image Color", selection: $imageColor)
                 
                 Spacer(minLength: 0)
             }
@@ -160,5 +143,6 @@ struct ActionChipPreview: View {
 }
 
 #Preview {
-    ActionChipPreview()
+    FilterButtonPreview()
 } 
+

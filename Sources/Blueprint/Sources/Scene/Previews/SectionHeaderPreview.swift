@@ -39,7 +39,7 @@ struct SectionHeaderPreview: View {
                 SectionHeader(title: title)
                     .headingContent {
                         if headingContent {
-                            FilterChip(variant: .outlined, size : .small, text: "텍스트")
+                            FilterButton(variant: .outlined, size : .small, text: "텍스트")
                         }
                     }
                     .trailingContent {
