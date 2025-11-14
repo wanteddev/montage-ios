@@ -36,7 +36,7 @@ ContentBadge를 초기화합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `variant` | 뱃지의 스타일, 기본값은 `.solid` |
+  | `variant` | 뱃지의 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `text` | 뱃지에 표시할 텍스트 |
 </details>
 
@@ -137,7 +137,7 @@ ___
   | Parameter | Description |
   | --- | --- |
   | `contentColor` | 콘텐츠 색상 |
-  | `background` | 배경 색상, 기본값은 `nil` (contentColor의 투명도를 조절하여 사용) |
+  | `background` | 배경 색상, 생략하면 기본값으로 `nil` 적용 (contentColor의 투명도를 조절하여 사용) |
 </details>
 <details>
 
@@ -149,7 +149,7 @@ ___
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `contentColor` | 콘텐츠 색상, 기본값은 `nil` (기본 색상 사용) |
+  | `contentColor` | 콘텐츠 색상, 생략하면 기본값으로 `nil` 적용 (기본 색상 사용) |
 </details>
 
 </details>

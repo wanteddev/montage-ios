@@ -46,13 +46,14 @@ public struct Loading: View {
         /// Wanted 브랜드 스타일의 로딩 애니메이션
         case wanted
         /// 원형 회전 로딩 애니메이션
-        case circular
+        /// - Parameters:
+        ///   - color: 애니메이션의 색상을 지정합니다. 생략하면 기본값으로 `nil` 적용 (기본 색상 사용)
+        case circular(color: SwiftUI.Color? = nil)
         
         func resourceName(_ colorScheme: ColorScheme) -> String {
             switch self {
             case .wanted: colorScheme == .light ? "loading-wanted-light.json" : "loading-wanted-dark.json"
-            case .circular: colorScheme == .light ? "loading-circular-light.json" :
-                "loading-circular-dark.json"
+            case .circular: colorScheme == .light ? "loading-circular-light.json" : "loading-circular-dark.json"
             }
         }
     }
@@ -66,24 +67,10 @@ public struct Loading: View {
     ///
     /// - Parameters:
     ///   - kind: 로딩 애니메이션의 종류 (.wanted 또는 .circular)
-    ///   - size: 로딩 애니메이션의 크기 (nil일 경우 기본 크기 사용)
+    ///   - size: 로딩 애니메이션의 크기 생략하면 기본값으로 `nil` 적용 (기본 크기 사용)
     public init(kind: Kind, size: CGSize? = nil) {
         self.kind = kind
         self.size = size
-    }
-    
-    // MARK: - Modifiers
-    private var foregroundColor: SwiftUI.Color?
-    
-    /// 로딩 애니메이션의 전경색을 설정합니다.
-    ///
-    /// - Parameters:
-    ///   - color: 적용할 색상
-    /// - Returns: 수정된 Loading 인스턴스
-    public func foregroundColor(_ color: SwiftUI.Color?) -> Self {
-        var zelf = self
-        zelf.foregroundColor = color
-        return zelf
     }
     
     // MARK: - Body
@@ -96,8 +83,14 @@ public struct Loading: View {
             .playing(loopMode: .loop)
             .if(size != nil) {
                 $0.resizable()
-                    .if(foregroundColor != nil) { $0.colorMultiply(foregroundColor!) }
                     .frame(width: size?.width, height: size?.height)
+            }
+            .modifying {
+                if case .circular(let color) = kind, let color {
+                    $0.colorMultiply(color)
+                } else {
+                    $0
+                }
             }
     }
     

@@ -254,6 +254,7 @@ public struct TopNavigation: View {
         if variant.isFloating {
             return 1
         } else {
+            guard safeAreaInsets.top > 0 else { return 0 }
             let ratio = (scrollOffset / -safeAreaInsets.top)
             return max(0, min(1, ratio))
         }

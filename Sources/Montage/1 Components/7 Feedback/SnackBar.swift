@@ -150,8 +150,11 @@ public struct SnackBar: View {
     ) {
         self.heading = heading
         self.description = description
-        self.extraContents =
-            extraContents.map { view in { AnyView(view()) } } ?? { AnyView(EmptyView()) }
+        if let extraContents {
+            self.extraContents = { AnyView(extraContents()) }
+        } else {
+            self.extraContents = { AnyView(EmptyView()) }
+        }
         self.action = action
         self.location = location
         self.handler = handler

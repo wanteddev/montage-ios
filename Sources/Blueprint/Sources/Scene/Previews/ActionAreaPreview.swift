@@ -76,7 +76,7 @@ struct ActionAreaPreview: View {
         @State private var extra = false
         @State private var extraDivider = true
         @State private var gradientIndex = 0
-        @State private var hideGradient = false
+        @State private var transparency = false
         
         private let mainTitle = "메인 액션"
         private let subTitle = "보조 액션"
@@ -165,18 +165,18 @@ struct ActionAreaPreview: View {
                     AnyView(variantOptionView())
                     HStack {
                         if variant.isStrongOrNeutral {
-                            Text("Caption :")
+                            Text("caption")
                             Control.switch(checked: caption) { caption = $0 }
                         }
-                        Text("Extra :")
+                        Text("extra")
                         Control.switch(checked: extra) { extra = $0 }
                         if extra {
-                            Text("Extra Divider :")
+                            Text("extraDivider")
                             Control.switch(checked: extraDivider) { extraDivider = $0 }
                         }
                     }
                     HStack {
-                        Text("Gradient : ")
+                        Text("background Transparency")
                         SegmentedControl(
                             selectedIndex: $gradientIndex,
                             labels: ["Scroll-synced", "Manually-controlled"]
@@ -185,8 +185,8 @@ struct ActionAreaPreview: View {
                     }
                     if gradientIndex == 1 {
                         HStack {
-                            Text("clear")
-                            Control.switch(checked: hideGradient) { hideGradient = $0 }
+                            Text("transparency")
+                            Control.switch(checked: transparency) { transparency = $0 }
                         }
                     }
                 }
@@ -211,11 +211,9 @@ struct ActionAreaPreview: View {
                     }
                     .padding()
                 }
-                .actionArea(model: .init(
+                .actionArea(
                     variant: p,
-                    backgroundTransparencyControl: .manual(
-                        gradientIndex == 0 ? scrollStatus.scrolledToMax : hideGradient
-                    ),
+                    backgroundTransparency: gradientIndex == 0 ? scrollStatus.scrolledToMax : transparency,
                     caption: caption ? "caption" : nil,
                     extra: {
                         if extra {
@@ -224,7 +222,7 @@ struct ActionAreaPreview: View {
                         }
                     },
                     extraDivider: extraDivider
-                ))
+                )
             }
             .toast($mainToastModel)
             .toast($subToastModel)

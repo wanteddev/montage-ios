@@ -338,7 +338,7 @@ public struct Button: View {
             .opacity(loading ? 0 : 1)
             
             if loading {
-                Loading(kind: .circular, size: loadingSize)
+                Loading(kind: .circular(), size: loadingSize)
                     .foregroundColor(loadingColor)
             }
         }

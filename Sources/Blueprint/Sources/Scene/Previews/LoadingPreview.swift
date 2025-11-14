@@ -12,7 +12,8 @@ struct LoadingPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State var alertPresented: Bool = false
     @State var isLoading: Bool = false
-    @State var loadingType: Loading.Kind = .circular
+    @State var loadingType: Loading.Kind = .circular()
+    @State var color: SwiftUI.Color = .clear
     @State var dimmer: Bool = true
     
     var body: some View {
@@ -56,14 +57,22 @@ struct LoadingPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("type")
-                    Control.radio(checked: loadingType == .circular) { _ in
-                        loadingType = .circular
+                    Control.radio(checked: loadingType.isCircular) { _ in
+                        loadingType = .circular(color: color == .clear ? nil : color)
                     }
                     .label("circular")
-                    Control.radio(checked: loadingType == .wanted) { _ in
+                    Control.radio(checked: !loadingType.isCircular) { _ in
                         loadingType = .wanted
                     }
                     .label("wanted")
+                }
+                if loadingType.isCircular {
+                    ColorPicker("color", selection: $color)
+                        .onChange(of: color) { newValue in
+                            if loadingType.isCircular {
+                                loadingType = .circular(color: color)
+                            }
+                        }
                 }
                 HStack {
                     Text("dimmer")
@@ -89,6 +98,16 @@ struct LoadingPreview: View {
             
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+    }
+}
+
+extension Loading.Kind {
+    var isCircular: Bool {
+        if case .circular = self {
+            return true
+        } else {
+            return false
+        }
     }
 }
 
