@@ -51,7 +51,6 @@ public struct ActionArea: View, KeyboardReadable {
 
     // MARK: - Body
 
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
     @State private var backgroundOpacity: CGFloat = 1

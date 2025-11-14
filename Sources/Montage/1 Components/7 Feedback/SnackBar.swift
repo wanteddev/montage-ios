@@ -290,7 +290,7 @@ public struct SnackBar: View {
         }
     }
 
-    struct SnackBarModifier: ViewModifier {
+    struct SnackBarModifier: ViewModifier, KeyboardReadable {
         @Binding var model: SnackBar.Model?
         @State private var animationWorkItem: DispatchWorkItem?
 
@@ -311,7 +311,9 @@ public struct SnackBar: View {
             self.location = location
             self.handler = handler
         }
-
+        
+        @State private var isKeyboardVisible: Bool = false
+        
         func body(content: Content) -> some View {
             GeometryReader { proxy in
                 content
@@ -325,6 +327,7 @@ public struct SnackBar: View {
                         guard newValue != nil else { return }
                         showSnackBar()
                     }
+                    .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
             }
         }
 
@@ -342,6 +345,7 @@ public struct SnackBar: View {
                         self.model = nil
                     }
                 )
+                .padding(.bottom, isKeyboardVisible ? 20 : 0)
             }
         }
 

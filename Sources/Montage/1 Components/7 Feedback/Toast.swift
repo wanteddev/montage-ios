@@ -32,7 +32,7 @@ import SwiftUI
 ///         }
 /// }
 /// ```
-public struct Toast: View {
+public struct Toast: View, KeyboardReadable {
     /// 토스트 메시지의 데이터 모델을 정의하는 구조체입니다.
     ///
     /// 토스트에 표시할 메시지와 스타일을 설정할 수 있습니다.
@@ -106,17 +106,22 @@ public struct Toast: View {
     private let variant: Variant
     private let message: String
     private let location: Location
+    private let keyboardPresentedOnAppear: Bool
 
     init(
         _ variant: Variant = .normal(),
         message: String = "",
-        _ location: Location = .bottom(offset: .zero)
+        _ location: Location = .bottom(offset: .zero),
+        keyboardPresentedOnAppear: Bool
     ) {
         self.variant = variant
         self.message = message
         self.location = location
+        self.keyboardPresentedOnAppear = keyboardPresentedOnAppear
     }
 
+    @State private var isKeyboardVisible: Bool = false
+    
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         switch location {
@@ -132,7 +137,13 @@ public struct Toast: View {
                 Spacer()
                 Contents(variant, message)
                     .padding(.horizontal, 20)
-                    .padding(.bottom, offset)
+                    .padding(.bottom, offset + (isKeyboardVisible ? 20 : 0))
+            }
+            .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
+            .onAppear {
+                if keyboardPresentedOnAppear {
+                    isKeyboardVisible = true
+                }
             }
         }
     }
@@ -230,7 +241,7 @@ public struct Toast: View {
 }
 
 extension Toast {
-    struct ToastModifier: ViewModifier {
+    struct ToastModifier: ViewModifier, KeyboardReadable {
         @Binding private var model: Toast.Model?
         private let location: Toast.Location
         private let duration: Toast.Duration
@@ -240,6 +251,8 @@ extension Toast {
             self.location = location
             self.duration = duration
         }
+        
+        @State private var isKeyboardVisible = false
 
         func body(content: Content) -> some View {
             content
@@ -259,7 +272,8 @@ extension Toast {
                                     Toast(
                                         model.variant,
                                         message: model.message,
-                                        location
+                                        location,
+                                        keyboardPresentedOnAppear: isKeyboardVisible
                                     )
                                 }
                             }
@@ -271,6 +285,7 @@ extension Toast {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
                 }
+                .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
         }
 
         private var durationTime: TimeInterval {

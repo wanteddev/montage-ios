@@ -88,7 +88,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             .onDisappear {
                 if case .onViewDisappear = dismissPolicy {
                     floatHC?.hide(animation: dismissingAnimation) {
-                        isPresented = false
+                        dismiss()
                     }
                 }
             }
@@ -115,7 +115,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
                 floatRootView?.onHitTest = { [weak floatHC] in
                     if $0 == nil {
                         floatHC?.hide(animation: dismissingAnimation) {
-                            isPresented = false
+                            dismiss()
                         }
                     }
                 }
@@ -129,7 +129,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             if case .after(let seconds) = dismissPolicy {
                 let workItem = DispatchWorkItem { [weak floatHC] in
                     floatHC?.hide(animation: dismissingAnimation) {
-                        isPresented = false
+                        dismiss()
                     }
                 }
                 
