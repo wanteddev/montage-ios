@@ -62,15 +62,15 @@ public struct PushBadge: View {
     /// ```
     public enum Position {
         /// 상단 위치
-        /// - Parameter horizontalPosition: 수평 위치, 기본값은 `.center`
+        /// - Parameter horizontalPosition: 수평 위치, 생략하면 기본값으로 `.center` 적용
         case top(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 중앙 위치
-        /// - Parameter horizontalPosition: 수평 위치, 기본값은 `.center`
+        /// - Parameter horizontalPosition: 수평 위치, 생략하면 기본값으로 `.center` 적용
         case center(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 하단 위치
-        /// - Parameter horizontalPosition: 수평 위치, 기본값은 `.center`
+        /// - Parameter horizontalPosition: 수평 위치, 생략하면 기본값으로 `.center` 적용
         case bottom(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 수평 위치를 정의하는 열거형입니다.
@@ -290,12 +290,12 @@ extension View {
     /// 뷰의 특정 위치에 알림 또는 메시지 표시용 뱃지를 추가합니다.
     ///
     /// - Parameters:
-    ///   - variant: 뱃지의 표시 형태, 기본값은 `.dot`
-    ///   - size: 뱃지 크기, 기본값은 `.xsmall`
-    ///   - fontColor: 텍스트 색상, 기본값은 `.semantic(.staticWhite)`
-    ///   - backgroundColor: 배경 색상, 기본값은 `.semantic(.primaryNormal)`
-    ///   - position: 뱃지 위치, 기본값은 `.top(.trailing)`
-    ///   - inset: 위치 조정을 위한 여백, 기본값은 `.zero`
+    ///   - variant: 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용
+    ///   - size: 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용
+    ///   - fontColor: 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용
+    ///   - backgroundColor: 배경 색상, 생략하면 기본값으로 `.semantic(.primaryNormal)` 적용
+    ///   - position: 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용
+    ///   - inset: 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용
     /// - Returns: 뱃지가 적용된 뷰
     ///
     /// ```swift

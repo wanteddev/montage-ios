@@ -39,10 +39,10 @@ public struct Slider: View {
     /// 슬라이더를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - isRangeSlider: 슬라이더의 변형, 기본값은 `false` (단일 값 슬라이더)
-    ///   - valueRange: 슬라이더가 표현하는 값의 범위, 기본값은 `0...1`
-    ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저, 기본값은 `nil` (소수점 한 자리)
-    ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저, 기본값은 `nil`
+    ///   - isRangeSlider: 슬라이더의 변형, 생략하면 기본값으로 `false` 적용 (단일 값 슬라이더)
+    ///   - valueRange: 슬라이더가 표현하는 값의 범위, 생략하면 기본값으로 `0...1` 적용
+    ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저, 생략하면 기본값으로 `nil` 적용 (소수점 한 자리)
+    ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     public init(
         isRangeSlider: Bool = false,
         valueRange: ClosedRange<CGFloat> = 0...1,
@@ -61,11 +61,11 @@ public struct Slider: View {
     /// 슬라이더를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - isRangeSlider: 슬라이더의 변형, 기본값은 `false` (단일 값 슬라이더)
-    ///   - minValue: 슬라이더의 최소값, 기본값은 `0`
-    ///   - maxValue: 슬라이더의 최대값, 기본값은 `1`
-    ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저, 기본값은 `nil` (소수점 한 자리)
-    ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저, 기본값은 `nil`
+    ///   - isRangeSlider: 슬라이더의 변형, 생략하면 기본값으로 `false` 적용 (단일 값 슬라이더)
+    ///   - minValue: 슬라이더의 최소값, 생략하면 기본값으로 `0` 적용
+    ///   - maxValue: 슬라이더의 최대값, 생략하면 기본값으로 `1` 적용
+    ///   - labelFormatter: 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저, 생략하면 기본값으로 `nil` 적용 (소수점 한 자리)
+    ///   - onChanged: 슬라이더 값이 변경될 때 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     public init(
         isRangeSlider: Bool = false,
         minValue: CGFloat = 0,
@@ -241,7 +241,7 @@ public struct Slider: View {
     
     /// 슬라이더 상단에 제목을 표시할지 여부를 설정합니다.
     ///
-    /// - Parameter heading: 제목 표시 여부, 기본값은 `true`
+    /// - Parameter heading: 제목 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 슬라이더 인스턴스
     public func heading(_ heading: Bool = true) -> Self {
         var zelf = self
@@ -251,7 +251,7 @@ public struct Slider: View {
     
     /// 슬라이더 노브에 값 레이블을 표시할지 여부를 설정합니다.
     ///
-    /// - Parameter label: 레이블 표시 여부, 기본값은 `true`
+    /// - Parameter label: 레이블 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 슬라이더 인스턴스
     public func label(_ label: Bool = true) -> Self {
         var zelf = self
@@ -261,7 +261,7 @@ public struct Slider: View {
     
     /// 슬라이더의 활성화 상태를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 슬라이더 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self

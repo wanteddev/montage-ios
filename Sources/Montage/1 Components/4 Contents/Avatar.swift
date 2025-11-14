@@ -118,8 +118,8 @@ public struct Avatar: View {
     /// - Parameters:
     ///   - imageUrl: 표시할 이미지의 URL 문자열
     ///   - variant: 아바타 유형 (.person, .company, .academy)
-    ///   - size: 아바타 크기, 기본값은 `.small`
-    ///   - onTap: 탭 시 실행할 액션, 기본값은 `nil`
+    ///   - size: 아바타 크기, 생략하면 기본값으로 `.small` 적용
+    ///   - onTap: 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용
     public init(_ imageUrl: String, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
         self.imageUrl = imageUrl
         self.variant = variant
@@ -174,7 +174,7 @@ public struct Avatar: View {
     ///
     /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
     ///
-    /// - Parameter pushBadge: 뱃지 표시 여부, 기본값은 `true`
+    /// - Parameter pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 아바타 인스턴스
     public func pushBadge(_ pushBadge: Bool = true) -> Self {
         var zelf = self
@@ -185,8 +185,8 @@ public struct Avatar: View {
     /// 아바타에 테두리를 추가합니다.
     ///
     /// - Parameters:
-    ///   - color: 테두리 색상, 기본값은 `.semantic(.lineAlternative)`
-    ///   - width: 테두리 두께, 기본값은 `1`
+    ///   - color: 테두리 색상, 생략하면 기본값으로 `.semantic(.lineAlternative)` 적용
+    ///   - width: 테두리 두께, 생략하면 기본값으로 `1` 적용
     /// - Returns: 수정된 아바타 인스턴스
     public func border(color: SwiftUI.Color = .semantic(.lineAlternative), width: CGFloat = 1) -> Self {
         var zelf = self

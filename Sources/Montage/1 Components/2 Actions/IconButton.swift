@@ -31,7 +31,7 @@ public struct IconButton: View {
     /// 아이콘 버튼을 생성합니다.
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 외관 스타일, 기본값은 `.normal(size: 24)`
+    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: 24)` 적용
     ///   - icon: 표시할 아이콘
     ///   - handler: 버튼 탭 시 실행할 핸들러
     /// - Returns: 구성된 아이콘 버튼 뷰
@@ -238,7 +238,7 @@ extension IconButton {
         /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
         /// - Parameters:
         ///   - size: 아이콘 크기 (픽셀)
-        ///   - isAlternative: 대체 스타일 사용 여부, 기본값은 `false`
+        ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
         case background(size: Int, isAlternative: Bool = false)
         
         /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘

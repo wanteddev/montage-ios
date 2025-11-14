@@ -1,5 +1,5 @@
 //
-//  Chips.swift
+//  Category.swift
 //  Montage
 //
 //  Created by 김삼열 on 1/6/25.
@@ -60,8 +60,8 @@ public struct Category: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
     ///   - items: 표시할 카테고리 항목 배열
-    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 Chip을 파라미터로 받음, 기본값은 원본 Chip을 반환하는 클로저
-    ///   - actions: 항목 선택 시 호출될 클로저, 기본값은 빈 클로저
+    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 Chip을 파라미터로 받음, 생략하면 기본값으로 원본 Chip을 반환하는 클로저 적용
+    ///   - actions: 항목 선택 시 호출될 클로저, 생략하면 기본값으로 빈 클로저 적용
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
@@ -169,7 +169,7 @@ public struct Category: View {
     
     /// 카테고리 컴포넌트의 좌우 패딩을 설정합니다.
     ///
-    /// - Parameter horizontalPadding: 패딩 적용 여부, 기본값은 `true`
+    /// - Parameter horizontalPadding: 패딩 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 카테고리 인스턴스
     public func horizontalPadding(_ horizontalPadding: Bool = true) -> Self {
         var zelf = self
@@ -179,7 +179,7 @@ public struct Category: View {
     
     /// 카테고리 컴포넌트의 상하 패딩을 설정합니다.
     ///
-    /// - Parameter verticalPadding: 패딩 적용 여부, 기본값은 `true`
+    /// - Parameter verticalPadding: 패딩 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 카테고리 인스턴스
     public func verticalPadding(_ verticalPadding: Bool = true) -> Self {
         var zelf = self

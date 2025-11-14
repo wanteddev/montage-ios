@@ -466,10 +466,10 @@ extension NSAttributedString {
     ///
     /// - Parameters:
     ///   - string: 변환할 문자열
-    ///   - variant: 타이포그래피 변형, 기본값은 `.body1`
-    ///   - weight: 폰트 두께, 기본값은 `.regular`
-    ///   - color: 색상, 기본값은 `.semantic(.labelNormal)`
-    ///   - lineBreakMode: 줄바꿈 모드, 기본값은 `.byWordWrapping`
+    ///   - variant: 타이포그래피 변형, 생략하면 기본값으로 `.body1` 적용
+    ///   - weight: 폰트 두께, 생략하면 기본값으로 `.regular` 적용
+    ///   - color: 색상, 생략하면 기본값으로 `.semantic(.labelNormal)` 적용
+    ///   - lineBreakMode: 줄바꿈 모드, 생략하면 기본값으로 `.byWordWrapping` 적용
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
     public static func attributedString(
         _ string: String,
@@ -491,10 +491,10 @@ extension NSAttributedString {
     ///
     /// - Parameters:
     ///   - string: 변환할 문자열
-    ///   - variant: 타이포그래피 변형, 기본값은 `.body1`
-    ///   - weight: 폰트 두께, 기본값은 `.regular`
+    ///   - variant: 타이포그래피 변형, 생략하면 기본값으로 `.body1` 적용
+    ///   - weight: 폰트 두께, 생략하면 기본값으로 `.regular` 적용
     ///   - semantic: 의미론적 색상
-    ///   - lineBreakMode: 줄바꿈 모드, 기본값은 `.byWordWrapping`
+    ///   - lineBreakMode: 줄바꿈 모드, 생략하면 기본값으로 `.byWordWrapping` 적용
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
     public static func attributedString(
         _ string: String,

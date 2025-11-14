@@ -119,7 +119,7 @@ public struct ActionArea: View, KeyboardReadable {
     ///
     /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
     ///
-    /// - Parameter transparentBackground: 배경 투명 여부, 기본값은 `true`
+    /// - Parameter transparentBackground: 배경 투명 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ActionArea 인스턴스
     public func transparentBackground(_ transparentBackground: Bool = true) -> Self {
         var zelf = self
@@ -141,7 +141,7 @@ public struct ActionArea: View, KeyboardReadable {
     ///
     /// - Parameters:
     ///   - content: 표시할 추가 콘텐츠를 생성하는 클로저
-    ///   - divider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
+    ///   - divider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ActionArea 인스턴스
     public func extra<V: View>(@ViewBuilder _ content: @escaping () -> V, divider: Bool = true) -> Self {
         var zelf = self
@@ -158,14 +158,14 @@ extension ActionArea {
         /// 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
         /// - Parameters:
         ///   - main: 주 버튼 정보
-        ///   - sub: 보조 버튼 정보, 기본값은 `nil`
-        ///   - alternative: 대체 버튼 정보, 기본값은 `nil`
+        ///   - sub: 보조 버튼 정보, 생략하면 기본값으로 `nil` 적용
+        ///   - alternative: 대체 버튼 정보, 생략하면 기본값으로 `nil` 적용
         case strong(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 중립적인 스타일의 버튼 레이아웃
         /// - Parameters:
         ///   - main: 주 버튼 정보
-        ///   - sub: 보조 버튼 정보, 기본값은 `nil`
-        ///   - alternative: 대체 버튼 정보, 기본값은 `nil`
+        ///   - sub: 보조 버튼 정보, 생략하면 기본값으로 `nil` 적용
+        ///   - alternative: 대체 버튼 정보, 생략하면 기본값으로 `nil` 적용
         case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 취소 버튼만 있는 간단한 레이아웃
         /// - Parameter main: 주 버튼 정보
@@ -226,9 +226,9 @@ extension ActionArea {
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 기본값은 `.automatic`
-        ///   - caption: 캡션 텍스트, 기본값은 `nil`
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
+        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
+        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
         public init(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
@@ -246,10 +246,10 @@ extension ActionArea {
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 설정, 기본값은 `.automatic`
-        ///   - caption: 캡션 텍스트, 기본값은 `nil`
+        ///   - backgroundTransparencyControl: 배경 투명도 설정, 생략하면 기본값으로 `.automatic` 적용
+        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
         ///   - extra: 추가 콘텐츠를 생성하는 클로저
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
         public init<V: View>(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,

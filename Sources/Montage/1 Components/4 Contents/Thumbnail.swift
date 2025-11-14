@@ -142,7 +142,7 @@ public struct Thumbnail: View {
     /// 썸네일에 둥근 모서리를 적용합니다.
     ///
     /// - Parameters:
-    ///   - radius: 둥근 모서리 적용 여부, 기본값은 `true`
+    ///   - radius: 둥근 모서리 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 Thumbnail 인스턴스
     public func radius(_ radius: Bool = true) -> Self {
         var zelf = self
@@ -153,7 +153,7 @@ public struct Thumbnail: View {
     /// 썸네일에 테두리를 적용합니다.
     ///
     /// - Parameters:
-    ///   - border: 테두리 적용 여부, 기본값은 `true`
+    ///   - border: 테두리 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 Thumbnail 인스턴스
     public func border(_ border: Bool = true) -> Self {
         var zelf = self

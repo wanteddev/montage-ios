@@ -67,11 +67,11 @@ public struct FilterButton: View {
     /// 필터 버튼을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 외관 스타일, 기본값은 `.solid`
-    ///   - size: 버튼의 크기, 기본값은 `.medium`
+    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.solid` 적용
+    ///   - size: 버튼의 크기, 생략하면 기본값으로 `.medium` 적용
     ///   - text: 버튼에 표시할 텍스트
-    ///   - state: 버튼의 확장 상태 바인딩, 기본값은 `.constant(.normal)`
-    ///   - handler: 버튼 클릭 시 실행할 핸들러, 기본값은 `nil`
+    ///   - state: 버튼의 확장 상태 바인딩, 생략하면 기본값으로 `.constant(.normal)` 적용
+    ///   - handler: 버튼 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용
     public init(
         variant: Variant = .solid,
         size: Size = .medium,
@@ -143,7 +143,7 @@ public struct FilterButton: View {
     ///
     /// - Parameters:
     ///   - active: 활성화 여부
-    ///   - label: 활성화 상태일 때 표시할 레이블, 기본값은 `nil`
+    ///   - label: 활성화 상태일 때 표시할 레이블, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func active(_ active: Bool, label: String? = nil) -> Self {
         var view = self
@@ -154,7 +154,7 @@ public struct FilterButton: View {
     
     /// 버튼의 비활성화 여부를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func disabled(_ disable: Bool = true) -> Self {
         var view = self

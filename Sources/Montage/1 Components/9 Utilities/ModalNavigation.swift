@@ -38,8 +38,8 @@ public struct ModalNavigation: View {
         case extended
         /// 배경이 투명한 플로팅 스타일
         /// - Parameters:
-        ///   - alternative: 대체 아이콘 사용 여부, 기본값은 `false`
-        ///   - background: 배경 표시 여부, 기본값은 `true`
+        ///   - alternative: 대체 아이콘 사용 여부, 생략하면 기본값으로 `false` 적용
+        ///   - background: 배경 표시 여부, 생략하면 기본값으로 `true` 적용
         case floating(alternative: Bool = false, background: Bool = true)
         /// 강조된 큰 제목 스타일
         case emphasized
@@ -59,7 +59,7 @@ public struct ModalNavigation: View {
     /// 내비게이션 바를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - scrollOffset: 스크롤 오프셋 바인딩, 기본값은 `.constant(0)`
+    ///   - scrollOffset: 스크롤 오프셋 바인딩, 생략하면 기본값으로 `.constant(0)` 적용
     public init(scrollOffset: Binding<CGFloat> = .constant(0)) {
         _scrollOffset = scrollOffset
     }

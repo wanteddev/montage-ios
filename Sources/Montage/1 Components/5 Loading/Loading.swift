@@ -145,7 +145,7 @@ extension View {
     /// - Parameters:
     ///   - isLoading: 로딩 상태를 제어하는 바인딩 불리언 값
     ///   - type: 로딩 애니메이션 종류 (.wanted 또는 .circular)
-    ///   - dimmedColor: 오버레이 배경색, 기본값은 `.clear`
+    ///   - dimmedColor: 오버레이 배경색, 생략하면 기본값으로 `.clear` 적용
     /// - Returns: 로딩 기능이 적용된 뷰
     ///
     /// ```swift

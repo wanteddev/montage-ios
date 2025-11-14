@@ -79,10 +79,10 @@ extension View {
     /// 다양한 크기와 상태를 설정할 수 있어 다양한 UI 요소에 활용할 수 있습니다.
     ///
     /// - Parameters:
-    ///   - status: 프레임 상태, 기본값은 `.normal`
-    ///   - borderRadius: 테두리 반경, 기본값은 `0`
-    ///   - shadowLevel: 그림자 레벨, 기본값은 `.xsmall`
-    ///   - disabled: 비활성화 상태 여부, 기본값은 `false`
+    ///   - status: 프레임 상태, 생략하면 기본값으로 `.normal` 적용
+    ///   - borderRadius: 테두리 반경, 생략하면 기본값으로 `0` 적용
+    ///   - shadowLevel: 그림자 레벨, 생략하면 기본값으로 `.xsmall` 적용
+    ///   - disabled: 비활성화 상태 여부, 생략하면 기본값으로 `false` 적용
     /// - Returns: 프레임 스타일이 적용된 뷰
     ///
     /// - Note: 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.

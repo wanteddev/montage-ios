@@ -47,10 +47,10 @@ public struct FallbackView: View {
     /// 설명은 필수이며, 최대 2줄로 표시됩니다.
     ///
     /// - Parameters:
-    ///   - image: 상단에 표시할 이미지 뷰를 반환하는 클로저, 기본값은 `nil`
-    ///   - title: 강조되어 표시할 제목, 기본값은 `nil`
+    ///   - image: 상단에 표시할 이미지 뷰를 반환하는 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - title: 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용
     ///   - description: 상황을 설명하는 텍스트
-    ///   - button: 하단에 표시할 버튼 뷰를 반환하는 클로저, 기본값은 `nil`
+    ///   - button: 하단에 표시할 버튼 뷰를 반환하는 클로저, 생략하면 기본값으로 `nil` 적용
     public init(
         image: (() -> any View)? = nil,
         title: String? = nil,

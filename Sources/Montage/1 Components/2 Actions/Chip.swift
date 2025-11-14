@@ -56,10 +56,10 @@ public struct Chip: View {
     /// 칩을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 칩의 외관 스타일, 기본값은 `.solid`
-    ///   - size: 칩의 크기, 기본값은 `.medium`
+    ///   - variant: 칩의 외관 스타일, 생략하면 기본값으로 `.solid` 적용
+    ///   - size: 칩의 크기, 생략하면 기본값으로 `.medium` 적용
     ///   - text: 칩에 표시할 텍스트
-    ///   - handler: 칩 클릭 시 실행할 핸들러, 기본값은 `nil`
+    ///   - handler: 칩 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 칩 인스턴스
     public init(
         variant: Variant = .solid,

@@ -90,16 +90,16 @@ public struct TextArea: View {
         
         /// 문자 수 카운터
         /// - Parameters:
-        ///   - limit: 최대 문자 수 제한, 기본값은 `nil` (제한 없음)
-        ///   - overflow: 최대 문자 수 초과 허용 여부, 기본값은 `false`
+        ///   - limit: 최대 문자 수 제한, 생략하면 기본값으로 `nil` 적용 (제한 없음)
+        ///   - overflow: 최대 문자 수 초과 허용 여부, 생략하면 기본값으로 `false` 적용
         case characterCount(limit: Int? = nil, overflow: Bool = false)
         
         /// 텍스트 버튼
         /// - Parameters:
-        ///   - placement: 버튼 위치, 기본값은 `.leading`
-        ///   - variant: 버튼 변형 스타일, 기본값은 `.assistive`
+        ///   - placement: 버튼 위치, 생략하면 기본값으로 `.leading` 적용
+        ///   - variant: 버튼 변형 스타일, 생략하면 기본값으로 `.assistive` 적용
         ///   - title: 버튼 텍스트
-        ///   - handler: 버튼 클릭 핸들러, 기본값은 `nil`
+        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case textButton(
             placement: Placement = .leading,
             variant: TextButton.Color? = .assistive,
@@ -109,11 +109,11 @@ public struct TextArea: View {
         
         /// 아이콘 버튼
         /// - Parameters:
-        ///   - placement: 버튼 위치, 기본값은 `.leading`
-        ///   - variant: 버튼 변형 스타일, 기본값은 `.solid(size: .small)`
+        ///   - placement: 버튼 위치, 생략하면 기본값으로 `.leading` 적용
+        ///   - variant: 버튼 변형 스타일, 생략하면 기본값으로 `.solid(size: .small)` 적용
         ///   - icon: 버튼 아이콘
-        ///   - tintColor: 아이콘 색상, 기본값은 `.semantic(.labelAlternative)`
-        ///   - handler: 버튼 클릭 핸들러, 기본값은 `nil`
+        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAlternative)` 적용
+        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case iconButton(
             placement: Placement = .leading,
             variant: IconButton.Variant? = .solid(size: .small),
@@ -125,7 +125,7 @@ public struct TextArea: View {
         /// 단순 아이콘
         /// - Parameters:
         ///   - icon: 표시할 아이콘
-        ///   - tintColor: 아이콘 색상, 기본값은 `.semantic(.labelAssistive)`
+        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAssistive)` 적용
         case icon(
             _ icon: Icon,
             tintColor: SwiftUI.Color = .semantic(.labelAssistive)
@@ -133,9 +133,9 @@ public struct TextArea: View {
         
         /// 칩
         /// - Parameters:
-        ///   - variant: 칩 변형 스타일, 기본값은 `.solid`
+        ///   - variant: 칩 변형 스타일, 생략하면 기본값으로 `.solid` 적용
         ///   - title: 칩 텍스트
-        ///   - handler: 칩 클릭 핸들러, 기본값은 `nil`
+        ///   - handler: 칩 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case chip(
             _ variant: Chip.Variant = .solid,
             title: String,
@@ -144,9 +144,9 @@ public struct TextArea: View {
         
         /// 필터 버튼
         /// - Parameters:
-        ///   - variant: 버튼 변형 스타일, 기본값은 `.solid`
+        ///   - variant: 버튼 변형 스타일, 생략하면 기본값으로 `.solid` 적용
         ///   - title: 버튼 텍스트
-        ///   - handler: 버튼 클릭 핸들러, 기본값은 `nil`
+        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case filterButton(
             _ variant: FilterButton.Variant = .solid,
             title: String,
@@ -155,7 +155,7 @@ public struct TextArea: View {
         
         /// 뱃지
         /// - Parameters:
-        ///   - variant: 뱃지 변형 스타일, 기본값은 `.solid`
+        ///   - variant: 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
         ///   - title: 뱃지 텍스트
         case badge(
             _ variant: ContentBadge.Variant = .solid,
@@ -180,7 +180,7 @@ public struct TextArea: View {
     ///
     /// - Parameters:
     ///   - text: 텍스트 영역의 값을 바인딩
-    ///   - focus: 텍스트 영역의 포커스 상태를 바인딩, 기본값은 `nil`
+    ///   - focus: 텍스트 영역의 포커스 상태를 바인딩, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 텍스트 영역 인스턴스
     public init(
         text: Binding<String>,
@@ -220,7 +220,7 @@ public struct TextArea: View {
     ///
     /// 오류 상태일 때는 텍스트 영역이 적색 테두리로 강조됩니다.
     ///
-    /// - Parameter negative: 오류 상태 여부, 기본값은 `true`
+    /// - Parameter negative: 오류 상태 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func negative(_ negative: Bool = true) -> Self {
         var zelf = self
@@ -230,7 +230,7 @@ public struct TextArea: View {
     
     /// 텍스트 영역의 활성화 상태를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -250,7 +250,7 @@ public struct TextArea: View {
     
     /// 제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
     ///
-    /// - Parameter requiredBadge: 필수 입력 뱃지 표시 여부, 기본값은 `true`
+    /// - Parameter requiredBadge: 필수 입력 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     /// - Note: 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
     public func requiredBadge(_ requiredBadge: Bool = true) -> Self {

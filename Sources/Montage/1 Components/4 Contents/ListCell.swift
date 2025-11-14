@@ -65,7 +65,7 @@ public struct ListCell: View {
     ///
     /// - Parameters:
     ///   - title: 셀에 표시할 제목 텍스트
-    ///   - onTap: 셀을 탭했을 때 실행할 클로저, 기본값은 `nil`
+    ///   - onTap: 셀을 탭했을 때 실행할 클로저, 생략하면 기본값으로 `nil` 적용
     public init(
         title: String,
         onTap: (() -> Void)? = nil
@@ -214,7 +214,7 @@ public struct ListCell: View {
     /// 셀의 좌우 여백 사용 여부를 설정합니다.
     ///
     /// - Parameters:
-    ///   - fillWidth: 좌우 여백 적용 여부, 기본값은 `true`
+    ///   - fillWidth: 좌우 여백 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: `true`로 설정하면 셀 내부에 좌우 20포인트의 여백이 적용되고 인터랙션 영역이 각진 모서리 사각형 모양의 셀 내부 영역으로 한정되며, `false`로 설정하면 셀 내부 여백이 없는 대신 인터랙션 영역이 둥근 모서리 사각형 모양으로 셀 영역 바깥까지 적용됩니다.
@@ -229,7 +229,7 @@ public struct ListCell: View {
     /// `true`로 설정하면 타이틀 텍스트가 2줄로 제한되고, 초과 텍스트는 생략됩니다.
     ///
     /// - Parameters:
-    ///   - textEllipsis: 텍스트 생략 처리 여부, 기본값은 `true`
+    ///   - textEllipsis: 텍스트 생략 처리 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: `false`인 경우 좌우 콘텐츠는 상단 정렬됩니다.
@@ -244,7 +244,7 @@ public struct ListCell: View {
     /// 캡션은 타이틀 아래에 작은 글씨로 표시되는 부가 설명 텍스트입니다.
     ///
     /// - Parameters:
-    ///   - caption: 표시할 캡션 텍스트, 기본값은 `nil` (nil 설정 시 캡션 제거)
+    ///   - caption: 표시할 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 (nil 설정 시 캡션 제거)
     /// - Returns: 수정된 ListCell 인스턴스
     public func caption(_ caption: String? = nil) -> Self {
         var zelf = self
@@ -257,7 +257,7 @@ public struct ListCell: View {
     /// 비활성화된 셀은 탭 이벤트를 받지 않으며, 시각적으로 흐리게 표시됩니다.
     ///
     /// - Parameters:
-    ///   - disable: 비활성화 여부, 기본값은 `true`
+    ///   - disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -271,7 +271,7 @@ public struct ListCell: View {
     /// `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
     ///
     /// - Parameters:
-    ///   - selected: 선택 여부, 기본값은 `true`
+    ///   - selected: 선택 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
@@ -282,7 +282,7 @@ public struct ListCell: View {
     /// 셀 하단에 구분선을 추가합니다.
     ///
     /// - Parameters:
-    ///   - divider: 구분선 표시 여부, 기본값은 `true`
+    ///   - divider: 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     public func divider(_ divider: Bool = true) -> Self {
         var zelf = self
@@ -295,7 +295,7 @@ public struct ListCell: View {
     /// 주로 탭했을 때 다른 화면으로 이동하는 셀에 사용됩니다.
     ///
     /// - Parameters:
-    ///   - chevron: 화살표 표시 여부, 기본값은 `true`
+    ///   - chevron: 화살표 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     public func chevron(_ chevron: Bool = true) -> Self {
         var zelf = self

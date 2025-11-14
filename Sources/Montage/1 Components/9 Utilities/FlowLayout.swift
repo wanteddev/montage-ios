@@ -30,8 +30,8 @@ public struct FlowLayout {
     /// FlowLayout을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - spacing: 항목 간 수평 간격. nil인 경우 시스템 기본 간격을 사용합니다., 기본값은 `nil`
-    ///   - lineSpacing: 줄 간 수직 간격, 기본값은 `10.0`
+    ///   - spacing: 항목 간 수평 간격. nil인 경우 시스템 기본 간격을 사용합니다., 생략하면 기본값으로 `nil` 적용
+    ///   - lineSpacing: 줄 간 수직 간격, 생략하면 기본값으로 `10.0` 적용
     public init(spacing: CGFloat? = nil, lineSpacing: CGFloat = 10.0) {
         self.spacing = spacing
         self.lineSpacing = lineSpacing

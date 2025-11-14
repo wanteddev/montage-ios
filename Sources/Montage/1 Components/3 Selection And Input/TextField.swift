@@ -43,13 +43,13 @@ public struct TextField: View {
     /// 텍스트 필드의 상태를 정의합니다.
     public enum Status {
         /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
-        /// - Parameter description: 설명 텍스트, 기본값은 `""`
+        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case normal(description: String = "")
         /// 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
-        /// - Parameter description: 설명 텍스트, 기본값은 `""`
+        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case positive(description: String = "")
         /// 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
-        /// - Parameter description: 오류 설명 텍스트, 기본값은 `""`
+        /// - Parameter description: 오류 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case negative(description: String = "")
     }
     
@@ -99,13 +99,13 @@ public struct TextField: View {
         /// 자동완성 데이터 소스를 초기화합니다.
         ///
         /// - Parameters:
-        ///   - numberOfSections: 섹션 수, 기본값은 `1`
-        ///   - sectionTitleAt: 섹션 제목을 반환하는 클로저, 기본값은 `nil`
+        ///   - numberOfSections: 섹션 수, 생략하면 기본값으로 `1` 적용
+        ///   - sectionTitleAt: 섹션 제목을 반환하는 클로저, 생략하면 기본값으로 `nil` 적용
         ///   - numberOfItemsInSection: 각 섹션의 항목 수를 반환하는 클로저
         ///   - cellForItemAt: 각 항목의 뷰를 반환하는 클로저
-        ///   - headerView: 헤더 뷰 클로저, 기본값은 `nil`
-        ///   - footerView: 푸터 뷰 클로저, 기본값은 `nil`
-        ///   - maxHeight: 자동완성 목록의 최대 높이, 기본값은 `400`
+        ///   - headerView: 헤더 뷰 클로저, 생략하면 기본값으로 `nil` 적용
+        ///   - footerView: 푸터 뷰 클로저, 생략하면 기본값으로 `nil` 적용
+        ///   - maxHeight: 자동완성 목록의 최대 높이, 생략하면 기본값으로 `400` 적용
         /// - Returns: 구성된 자동완성 데이터 소스 인스턴스
         public init<V: View>(
             numberOfSections: Int = 1,
@@ -140,7 +140,7 @@ public struct TextField: View {
     ///
     /// - Parameters:
     ///   - text: 텍스트 필드의 값을 바인딩
-    ///   - autoCompletionDataSource: 자동완성 데이터 소스를 바인딩, 기본값은 nil
+    ///   - autoCompletionDataSource: 자동완성 데이터 소스를 바인딩, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 텍스트 필드 인스턴스
     public init(
         text: Binding<String>,

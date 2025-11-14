@@ -102,8 +102,8 @@ public struct Control: View {
     ///
     /// - Parameters:
     ///   - state: 체크박스의 초기 상태
-    ///   - size: 체크박스 크기, 기본값은 `.medium`
-    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 기본값은 `nil`
+    ///   - size: 체크박스 크기, 생략하면 기본값으로 `.medium` 적용
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 체크박스 컨트롤
     public static func checkbox(
         state: State, size: Size = .medium, onSelect: ((State) -> Void)? = nil
@@ -115,8 +115,8 @@ public struct Control: View {
     ///
     /// - Parameters:
     ///   - checked: 체크박스의 초기 선택 상태
-    ///   - size: 체크박스 크기, 기본값은 `.medium`
-    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 기본값은 `nil`
+    ///   - size: 체크박스 크기, 생략하면 기본값으로 `.medium` 적용
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 체크박스 컨트롤
     public static func checkbox(
         checked: Bool, size: Size = .medium, onSelect: ((Bool) -> Void)? = nil
@@ -128,8 +128,8 @@ public struct Control: View {
     ///
     /// - Parameters:
     ///   - checked: 체크마크의 초기 선택 상태
-    ///   - size: 체크마크 크기, 기본값은 `.medium`
-    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 기본값은 `nil`
+    ///   - size: 체크마크 크기, 생략하면 기본값으로 `.medium` 적용
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 체크마크 컨트롤
     public static func checkmark(
         checked: Bool, size: Size = .medium, onSelect: ((Bool) -> Void)? = nil
@@ -141,8 +141,8 @@ public struct Control: View {
     ///
     /// - Parameters:
     ///   - checked: 라디오 버튼의 초기 선택 상태
-    ///   - size: 라디오 버튼 크기, 기본값은 `.medium`
-    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 기본값은 `nil`
+    ///   - size: 라디오 버튼 크기, 생략하면 기본값으로 `.medium` 적용
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 라디오 버튼 컨트롤
     public static func radio(
         checked: Bool, size: Size = .medium, onSelect: ((Bool) -> Void)? = nil
@@ -154,8 +154,8 @@ public struct Control: View {
     ///
     /// - Parameters:
     ///   - checked: 스위치의 초기 선택 상태
-    ///   - size: 스위치 크기, 기본값은 `.small`
-    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 기본값은 `nil`
+    ///   - size: 스위치 크기, 생략하면 기본값으로 `.small` 적용
+    ///   - onSelect: 선택 상태 변경 시 호출되는 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 스위치 컨트롤
     public static func `switch`(
         checked: Bool, size: Size = .small, onSelect: ((Bool) -> Void)? = nil
@@ -275,9 +275,9 @@ public struct Control: View {
     /// 레이블의 타이포그래피 속성을 설정합니다.
     ///
     /// - Parameters:
-    ///   - variant: 레이블 변형, 기본값은 `nil`
-    ///   - weight: 레이블 굵기, 기본값은 `nil`
-    ///   - color: 레이블 색상, 기본값은 `nil`
+    ///   - variant: 레이블 변형, 생략하면 기본값으로 `nil` 적용
+    ///   - weight: 레이블 굵기, 생략하면 기본값으로 `nil` 적용
+    ///   - color: 레이블 색상, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 수정된 입력 컴포넌트
     ///
     /// - Note: 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
@@ -295,7 +295,7 @@ public struct Control: View {
     
     /// 레이블을 볼드체로 설정합니다.
     ///
-    /// - Parameter isBold: 볼드 적용 여부, 기본값은 `true`
+    /// - Parameter isBold: 볼드 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 입력 컴포넌트
     ///
     /// - Note: 이 설정은 `labelTypography`에서 지정한 굵기보다 우선합니다.
@@ -312,7 +312,7 @@ public struct Control: View {
     /// - medium: 24px → 20px
     /// - small: 20px → 16px
     ///
-    /// - Parameter tight: 조밀한 레이아웃 적용 여부, 기본값은 `true`
+    /// - Parameter tight: 조밀한 레이아웃 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 컨트롤 인스턴스
     ///
     /// - Note: 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
@@ -326,7 +326,7 @@ public struct Control: View {
     ///
     /// 비활성화된 컨트롤은 사용자 상호작용이 불가능하며, 시각적으로도 흐리게 표시됩니다.
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 컨트롤 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self

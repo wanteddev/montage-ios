@@ -105,10 +105,10 @@ public enum Skeleton {
     public enum Kind {
         /// 텍스트 줄을 나타내는 스켈레톤
         /// - Parameters:
-        ///   - alignment: 텍스트 정렬 방식, 기본값은 `.leading`
-        ///   - lengths: 각 줄의 상대적 길이, 기본값은 `[._100]`
-        ///   - cornerRadius: 모서리 둥글기, 기본값은 `3`
-        ///   - lineNumber: 텍스트 줄 수, 기본값은 `1`
+        ///   - alignment: 텍스트 정렬 방식, 생략하면 기본값으로 `.leading` 적용
+        ///   - lengths: 각 줄의 상대적 길이, 생략하면 기본값으로 `[._100]` 적용
+        ///   - cornerRadius: 모서리 둥글기, 생략하면 기본값으로 `3` 적용
+        ///   - lineNumber: 텍스트 줄 수, 생략하면 기본값으로 `1` 적용
         case text(
             alignment: Align = .leading,
             lengths: [Length] = [._100],
@@ -116,7 +116,7 @@ public enum Skeleton {
             lineNumber: Int = 1
         )
         /// 사각형 모양의 스켈레톤
-        /// - Parameter cornerRadius: 모서리 둥글기, 기본값은 `3`
+        /// - Parameter cornerRadius: 모서리 둥글기, 생략하면 기본값으로 `3` 적용
         case rectangle(cornerRadius: CGFloat = 3)
         /// 원형 스켈레톤
         case circle
@@ -306,9 +306,9 @@ extension View {
     /// - Parameters:
     ///   - isPresented: 스켈레톤 표시 여부를 제어하는 불리언 값
     ///   - kind: 스켈레톤 종류 (텍스트, 사각형, 원형 등)
-    ///   - color: 스켈레톤 색상, 기본값은 `nil` (.semantic(.fillNormal) 사용)
-    ///   - opacity: 스켈레톤 투명도, 기본값은 `nil`
-    ///   - size: 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 기본값은 `nil`
+    ///   - color: 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.fillNormal) 사용)
+    ///   - opacity: 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용
+    ///   - size: 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용
     /// - Returns: 스켈레톤 기능이 적용된 뷰
     public func skeleton(
         isPresented: Bool,

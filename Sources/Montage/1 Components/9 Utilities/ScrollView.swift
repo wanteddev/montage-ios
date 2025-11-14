@@ -46,8 +46,8 @@ public struct ScrollView: View {
     /// 스크롤 뷰를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - scrollStatus: 스크롤 상태를 추적하기 위한 바인딩, 기본값은 `nil`
-    ///   - onOffsetChanged: 스크롤 오프셋이 변경될 때 호출되는 클로저, 기본값은 빈 클로저
+    ///   - scrollStatus: 스크롤 상태를 추적하기 위한 바인딩, 생략하면 기본값으로 `nil` 적용
+    ///   - onOffsetChanged: 스크롤 오프셋이 변경될 때 호출되는 클로저, 생략하면 기본값으로 빈 클로저 적용
     ///   - content: 스크롤 뷰에 표시할 콘텐츠를 반환하는 클로저
     public init(
         scrollStatus: Binding<ScrollStatus>? = nil,
@@ -139,7 +139,7 @@ public struct ScrollView: View {
 
     /// 스크롤 인디케이터 표시 여부를 설정합니다.
     ///
-    /// - Parameter hidesIndicators: 인디케이터를 숨길지 여부, 기본값은 `true`
+    /// - Parameter hidesIndicators: 인디케이터를 숨길지 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 스크롤 뷰
     public func hidesIndicators(_ hidesIndicators: Bool = true) -> Self {
         var zelf = self
@@ -175,10 +175,10 @@ public struct ScrollView: View {
         /// 스크롤 상태를 초기화합니다.
         ///
         /// - Parameters:
-        ///   - axis: 스크롤 방향, 기본값은 `.vertical`
-        ///   - scrollViewSize: 스크롤 뷰 크기, 기본값은 `.zero`
-        ///   - contentSize: 콘텐츠 크기, 기본값은 `.zero`
-        ///   - contentOffset: 콘텐츠 오프셋, 기본값은 `.zero`
+        ///   - axis: 스크롤 방향, 생략하면 기본값으로 `.vertical` 적용
+        ///   - scrollViewSize: 스크롤 뷰 크기, 생략하면 기본값으로 `.zero` 적용
+        ///   - contentSize: 콘텐츠 크기, 생략하면 기본값으로 `.zero` 적용
+        ///   - contentOffset: 콘텐츠 오프셋, 생략하면 기본값으로 `.zero` 적용
         public init(
             axis: Axis = .vertical,
             scrollViewSize: CGSize = .zero,

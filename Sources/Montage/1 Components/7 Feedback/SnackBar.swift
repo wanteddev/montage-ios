@@ -46,11 +46,11 @@ public struct SnackBar: View {
     /// 스낵바가 표시될 위치를 정의하는 열거형입니다.
     public enum Location {
         /// 화면 상단에 스낵바 표시
-        /// - Parameter offset: 상단에서의 오프셋 값, 기본값은 `.zero`
+        /// - Parameter offset: 상단에서의 오프셋 값, 생략하면 기본값으로 `.zero` 적용
         case top(offset: CGFloat = .zero)
 
         /// 화면 하단에 스낵바 표시
-        /// - Parameter offset: 하단에서의 오프셋 값, 기본값은 `.zero`
+        /// - Parameter offset: 하단에서의 오프셋 값, 생략하면 기본값으로 `.zero` 적용
         case bottom(offset: CGFloat = .zero)
     }
 
@@ -88,9 +88,9 @@ public struct SnackBar: View {
         /// SnackBar 모델을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - duration: 스낵바가 표시되는 시간, 기본값은 `.short`
-        ///   - heading: 스낵바의 제목, 기본값은 `nil`
-        ///   - description: 스낵바의 설명 텍스트, 기본값은 `nil`
+        ///   - duration: 스낵바가 표시되는 시간, 생략하면 기본값으로 `.short` 적용
+        ///   - heading: 스낵바의 제목, 생략하면 기본값으로 `nil` 적용
+        ///   - description: 스낵바의 설명 텍스트, 생략하면 기본값으로 `nil` 적용
         ///   - action: 스낵바의 액션 버튼에 표시할 텍스트
         public init(
             duration: Duration = .short,
@@ -108,9 +108,9 @@ public struct SnackBar: View {
         /// SnackBar 모델을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - duration: 스낵바가 표시되는 시간, 기본값은 `.short`
-        ///   - heading: 스낵바의 제목, 기본값은 `nil`
-        ///   - description: 스낵바의 설명 텍스트, 기본값은 `nil`
+        ///   - duration: 스낵바가 표시되는 시간, 생략하면 기본값으로 `.short` 적용
+        ///   - heading: 스낵바의 제목, 생략하면 기본값으로 `nil` 적용
+        ///   - description: 스낵바의 설명 텍스트, 생략하면 기본값으로 `nil` 적용
         ///   - action: 스낵바의 액션 버튼에 표시할 텍스트
         public init<V: View>(
             duration: Duration = .short,
@@ -159,33 +159,33 @@ public struct SnackBar: View {
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
+        VStack {
+            if case .bottom = location { Spacer() }
+
+            Contents(
+                heading: heading,
+                description: description,
+                extraContents: extraContents,
+                action: action,
+                handler: handler
+            )
+            .padding(.horizontal, 20)
+            .padding(locationEdge, locationOffset)
+
+            if case .top = location { Spacer() }
+        }
+    }
+
+    private var locationEdge: Edge.Set {
         switch location {
-        case .top(let offset):
-            VStack {
-                Contents(
-                    heading: heading,
-                    description: description,
-                    extraContents: extraContents,
-                    action: action,
-                    handler: handler
-                )
-                .padding(.horizontal, 20)
-                .padding(.top, offset)
-                Spacer()
-            }
-        case .bottom(let offset):
-            VStack {
-                Spacer()
-                Contents(
-                    heading: heading,
-                    description: description,
-                    extraContents: extraContents,
-                    action: action,
-                    handler: handler
-                )
-                .padding(.horizontal, 20)
-                .padding(.bottom, offset)
-            }
+        case .top: return .top
+        case .bottom: return .bottom
+        }
+    }
+
+    private var locationOffset: CGFloat {
+        switch location {
+        case .top(let offset), .bottom(let offset): return offset
         }
     }
 
@@ -377,7 +377,7 @@ extension View {
     ///
     /// - Parameters:
     ///   - model: SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다.
-    ///   - location: SnackBar가 표시될 위치, 기본값은 `.bottom(offset: .zero)`
+    ///   - location: SnackBar가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: .zero)` 적용
     ///   - handler: SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저
     /// - Returns: SnackBar가 적용된 뷰
     ///

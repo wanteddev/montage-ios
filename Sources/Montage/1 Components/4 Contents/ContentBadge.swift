@@ -49,13 +49,13 @@ public struct ContentBadge: View {
     /// ```
     public enum ColorStyle: Equatable, Hashable {
         /// 중립 색상 뱃지
-        /// - Parameter contentColor: 콘텐츠 색상, 기본값은 `nil` (기본 색상 사용)
+        /// - Parameter contentColor: 콘텐츠 색상, 생략하면 기본값으로 `nil` 적용 (기본 색상 사용)
         case neutral(_ contentColor: SwiftUI.Color? = nil)
         
         /// 강조 색상 뱃지
         /// - Parameters:
         ///   - contentColor: 콘텐츠 색상
-        ///   - background: 배경 색상, 기본값은 `nil` (contentColor의 투명도를 조절하여 사용)
+        ///   - background: 배경 색상, 생략하면 기본값으로 `nil` 적용 (contentColor의 투명도를 조절하여 사용)
         case accent(_ contentColor: SwiftUI.Color, background: SwiftUI.Color? = nil)
     }
     
@@ -64,7 +64,7 @@ public struct ContentBadge: View {
     /// ContentBadge를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 뱃지의 스타일, 기본값은 `.solid`
+    ///   - variant: 뱃지의 스타일, 생략하면 기본값으로 `.solid` 적용
     ///   - text: 뱃지에 표시할 텍스트
     public init(variant: Variant = .solid, text: String) {
         self.variant = variant

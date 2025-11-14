@@ -31,7 +31,7 @@ public struct Button: View {
     
     // MARK: - Types
     
-    internal enum _Variant: String {
+    internal enum InternalVariant: String {
         case solid, outlined, text
     }
     
@@ -63,7 +63,7 @@ public struct Button: View {
     
     // MARK: - Initializers
     
-    private let variant: _Variant
+    private let variant: InternalVariant
     private let color: Color
     private let size: Size
     private let text: String?
@@ -79,9 +79,9 @@ public struct Button: View {
     /// ```
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 스타일, 기본값은 `.solid`
-    ///   - color: 버튼의 색상 스타일, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.large`
+    ///   - variant: 버튼의 스타일, 생략하면 기본값으로 `.solid` 적용
+    ///   - color: 버튼의 색상 스타일, 생략하면 기본값으로 `.primary` 적용
+    ///   - size: 버튼의 크기, 생략하면 기본값으로 `.large` 적용
     ///   - text: 버튼에 표시할 텍스트
     ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
     ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
@@ -97,7 +97,7 @@ public struct Button: View {
         handler: (() -> Void)? = nil
     ) {
         self.init(
-            _Variant(rawValue: variant.rawValue) ?? .solid,
+            InternalVariant(rawValue: variant.rawValue) ?? .solid,
             color: color,
             size: size,
             text: text,
@@ -115,9 +115,9 @@ public struct Button: View {
     /// ```
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 스타일, 기본값은 `.solid`
-    ///   - color: 버튼의 색상 스타일, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.large`
+    ///   - variant: 버튼의 스타일, 생략하면 기본값으로 `.solid` 적용
+    ///   - color: 버튼의 색상 스타일, 생략하면 기본값으로 `.primary` 적용
+    ///   - size: 버튼의 크기, 생략하면 기본값으로 `.large` 적용
     ///   - icon: 버튼에 표시할 아이콘
     ///   - handler: 버튼 탭 시 실행할 핸들러
     /// - Returns: 구성된 버튼 인스턴스
@@ -129,7 +129,7 @@ public struct Button: View {
         handler: (() -> Void)? = nil
     ) {
         self.init(
-            _Variant(rawValue: variant.rawValue) ?? .solid,
+            InternalVariant(rawValue: variant.rawValue) ?? .solid,
             color: color,
             size: size,
             leadingIcon: icon,
@@ -138,7 +138,7 @@ public struct Button: View {
     }
     
     internal init(
-        _ variant: _Variant,
+        _ variant: InternalVariant,
         color: Color = .primary,
         size: Size = .medium,
         text: String? = nil,
@@ -176,7 +176,7 @@ public struct Button: View {
     ///     .disable(isFormInvalid)
     /// ```
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -277,7 +277,7 @@ public struct Button: View {
     ///     .loading(isLoading)
     /// ```
     ///
-    /// - Parameter loading: 로딩 상태 여부, 기본값은 `true`
+    /// - Parameter loading: 로딩 상태 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func loading(_ loading: Bool = true) -> Self {
         var zelf = self
@@ -300,8 +300,8 @@ public struct Button: View {
     /// ```
     ///
     /// - Parameters:
-    ///   - fillHorizontal: 수평 방향 채우기 여부, 기본값은 `false`
-    ///   - fillVertical: 수직 방향 채우기 여부, 기본값은 `false`
+    ///   - fillHorizontal: 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
+    ///   - fillVertical: 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
         var zelf = self

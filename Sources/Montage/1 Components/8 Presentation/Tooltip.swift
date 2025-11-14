@@ -81,19 +81,19 @@ public enum Tooltip {
     /// ```
     public enum Position: Equatable, Sendable {
         /// 왼쪽에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수직 위치, 기본값은 `.center`
+        /// - Parameter arrowPosition: 화살표의 수직 위치, 생략하면 기본값으로 `.center` 적용
         case leading(arrowPosition: VerticalAlignment = .center)
         
         /// 오른쪽에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수직 위치, 기본값은 `.center`
+        /// - Parameter arrowPosition: 화살표의 수직 위치, 생략하면 기본값으로 `.center` 적용
         case trailing(arrowPosition: VerticalAlignment = .center)
         
         /// 상단에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수평 위치, 기본값은 `.center`
+        /// - Parameter arrowPosition: 화살표의 수평 위치, 생략하면 기본값으로 `.center` 적용
         case top(arrowPosition: HorizontalAlignment = .center)
         
         /// 하단에 툴팁 표시
-        /// - Parameter arrowPosition: 화살표의 수평 위치, 기본값은 `.center`
+        /// - Parameter arrowPosition: 화살표의 수평 위치, 생략하면 기본값으로 `.center` 적용
         case bottom(arrowPosition: HorizontalAlignment = .center)
         
         fileprivate func getArrowAngleDegree() -> Double {
@@ -551,7 +551,7 @@ extension View {
     ///   - isPresented: 툴팁의 표시 여부를 제어하는 바인딩
     ///   - mode: 툴팁의 표시 모드
     ///   - position: 툴팁이 표시될 위치 및 화살표 위치
-    ///   - size: 툴팁의 크기, 기본값은 `.medium`
+    ///   - size: 툴팁의 크기, 생략하면 기본값으로 `.medium` 적용
     ///   - message: 툴팁에 표시될 메시지
     /// - Returns: 툴팁이 적용된 뷰
     public func tooltip(
