@@ -69,9 +69,7 @@ struct LoadingPreview: View {
                 if loadingType.isCircular {
                     ColorPicker("color", selection: $color)
                         .onChange(of: color) { newValue in
-                            if loadingType.isCircular {
-                                loadingType = .circular(color: color)
-                            }
+                            loadingType = .circular(color: newValue)
                         }
                 }
                 HStack {

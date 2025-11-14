@@ -25,7 +25,7 @@ import Lottie
 ///
 /// // 로딩 오버레이로 적용
 /// someView
-///     .loading($isLoadingState, type: .circular)
+///     .loading($isLoadingState, type: .circular(.blue))
 /// ```
 public struct Loading: View {
     
@@ -40,7 +40,7 @@ public struct Loading: View {
     /// Loading(kind: .wanted)
     ///
     /// // 원형 로딩 사용
-    /// Loading(kind: .circular)
+    /// Loading(kind: .circular())
     /// ```
     public enum Kind {
         /// Wanted 브랜드 스타일의 로딩 애니메이션
