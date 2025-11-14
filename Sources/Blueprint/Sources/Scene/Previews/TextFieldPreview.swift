@@ -269,7 +269,7 @@ struct TextFieldPreview: View {
             }
             .padding()
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
     }
 }
 

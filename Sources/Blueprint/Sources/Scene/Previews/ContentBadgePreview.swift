@@ -19,7 +19,9 @@ struct ContentBadgePreview: View {
     @State private var sizeIndex: Int = 0
     @State private var colorStyleIndex: Int = 0
     @State private var leadingIcon: Bool = false
+    @State private var leadingIconUsesTemplate: Bool = true
     @State private var trailingIcon: Bool = false
+    @State private var trailingIconUsesTemplate: Bool = true
     @State private var foregroundColor: SwiftUI.Color = .semantic(.labelAlternative)
     @State private var backgroundColor: SwiftUI.Color = .semantic(.accentBackgroundViolet)
     
@@ -51,15 +53,14 @@ struct ContentBadgePreview: View {
                     colorStyleIndex == 0 ? .neutral(foregroundColor) : .accent(foregroundColor, background: backgroundColor)
                 )
                 .modifying { original in
-                    if leadingIcon && trailingIcon {
-                        original.leadingIcon(.apps).trailingIcon(.apps)
-                    } else if leadingIcon {
-                        original.leadingIcon(.apps)
-                    } else if trailingIcon {
-                        original.trailingIcon(.apps)
-                    } else {
-                        original
+                    var mutated = original
+                    if leadingIcon {
+                        mutated = mutated.leadingIcon(.agentColor, usesTemplate: leadingIconUsesTemplate)
                     }
+                    if trailingIcon {
+                        mutated = mutated.trailingIcon(.agentColor, usesTemplate: trailingIconUsesTemplate)
+                    }
+                    return mutated
                 }
                 
             }
@@ -87,10 +88,22 @@ struct ContentBadgePreview: View {
                 HStack {
                     Text("leadingIcon")
                     Control.switch(checked: leadingIcon) { leadingIcon = $0 }
+                    if leadingIcon {
+                        Text("usesTemplate")
+                        Control.switch(checked: leadingIconUsesTemplate) {
+                            leadingIconUsesTemplate = $0
+                        }
+                    }
                 }
                 HStack {
                     Text("trailingIcon")
                     Control.switch(checked: trailingIcon) { trailingIcon = $0 }
+                    if trailingIcon {
+                        Text("usesTemplate")
+                        Control.switch(checked: trailingIconUsesTemplate) {
+                            trailingIconUsesTemplate = $0
+                        }
+                    }
                 }
             }
             .padding(.horizontal)

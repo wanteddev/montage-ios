@@ -67,11 +67,21 @@ class CheckerPatternCache {
     
     private init() {}
     
-    func image(for size: CGSize, checkerSize: CGFloat, color: Color, opacity: CGFloat) -> UIImage {
+    func image(
+        for size: CGSize,
+        checkerSize: CGFloat,
+        color: Color,
+        opacity: CGFloat
+    ) -> UIImage {
         let colorKey = colorToHexString(color.opacity(opacity))
         let key = "\(size.width)x\(size.height)_\(checkerSize)_\(colorKey)" as NSString
         if let cached = cache.object(forKey: key) { return cached }
-        let newImage = generateCheckerPattern(size: size, checkerSize: checkerSize, color: color, opacity: opacity)
+        let newImage = generateCheckerPattern(
+            size: size,
+            checkerSize: checkerSize,
+            color: color,
+            opacity: opacity
+        )
         cache.setObject(newImage, forKey: key)
         return newImage
     }
@@ -94,13 +104,18 @@ class CheckerPatternCache {
         )
     }
     
-    private func generateCheckerPattern(size: CGSize, checkerSize: CGFloat, color: Color, opacity: CGFloat) -> UIImage {
+    private func generateCheckerPattern(
+        size: CGSize,
+        checkerSize: CGFloat,
+        color: Color,
+        opacity: CGFloat
+    ) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { context in
             let cgContext = context.cgContext
             
             // 흰색 배경
-            cgContext.setFillColor(UIColor.white.cgColor)
+            cgContext.setFillColor(UIColor.semantic(.backgroundNormal).cgColor)
             cgContext.fill(CGRect(origin: .zero, size: size))
             
             // 회색 체커 패턴

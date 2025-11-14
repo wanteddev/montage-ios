@@ -76,7 +76,9 @@ public struct ContentBadge: View {
     private var size: Size = .small
     private var colorStyle: ColorStyle = .neutral()
     private var leadingIcon: Icon? = nil
+    private var leadingIconUsesTemplate = false
     private var trailingIcon: Icon? = nil
+    private var trailingIconUsesTemplate = false
     private var text: String
     
     /// 뱃지의 크기를 설정합니다.
@@ -101,21 +103,27 @@ public struct ContentBadge: View {
     
     /// 뱃지 텍스트 앞에 표시될 아이콘을 설정합니다.
     ///
-    /// - Parameter leadingIcon: 선행 아이콘
+    /// - Parameters
+    ///   - leadingIcon: 선행 아이콘
+    ///   - usesTemplate: 아이콘 색상에 template 렌더링 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 선행 아이콘이 추가된 ContentBadge
-    public func leadingIcon(_ leadingIcon: Icon) -> Self {
+    public func leadingIcon(_ leadingIcon: Icon, usesTemplate: Bool = true) -> Self {
         var zelf = self
         zelf.leadingIcon = leadingIcon
+        zelf.leadingIconUsesTemplate = usesTemplate
         return zelf
     }
     
     /// 뱃지 텍스트 뒤에 표시될 아이콘을 설정합니다.
     ///
-    /// - Parameter trailingIcon: 후행 아이콘
+    /// - Parameters:
+    ///   - trailingIcon: 후행 아이콘
+    ///   - usesTemplate: 아이콘 색상에 template 렌더링 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 후행 아이콘이 추가된 ContentBadge
-    public func trailingIcon(_ trailingIcon: Icon) -> Self {
+    public func trailingIcon(_ trailingIcon: Icon, usesTemplate: Bool = true) -> Self {
         var zelf = self
         zelf.trailingIcon = trailingIcon
+        zelf.trailingIconUsesTemplate = usesTemplate
         return zelf
     }
     
@@ -127,7 +135,13 @@ public struct ContentBadge: View {
             if let leadingIcon {
                 Image.icon(leadingIcon)
                     .resizable()
-                    .foregroundStyle(contentColor)
+                    .modifying {
+                        if leadingIconUsesTemplate {
+                            $0.foregroundStyle(contentColor)
+                        } else {
+                            $0.renderingMode(.original)
+                        }
+                    }
                     .frame(width: iconSize.width, height: iconSize.height)
             }
             Text(text)
@@ -135,7 +149,13 @@ public struct ContentBadge: View {
             if let trailingIcon {
                 Image.icon(trailingIcon)
                     .resizable()
-                    .foregroundStyle(contentColor)
+                    .modifying {
+                        if trailingIconUsesTemplate {
+                            $0.foregroundStyle(contentColor)
+                        } else {
+                            $0.renderingMode(.original)
+                        }
+                    }
                     .frame(width: iconSize.width, height: iconSize.height)
             }
         }
