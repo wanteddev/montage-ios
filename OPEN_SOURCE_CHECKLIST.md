@@ -15,12 +15,12 @@
 
 #### 이슈 템플릿 (Issue Templates)
 `.github/ISSUE_TEMPLATE/` 디렉토리에 다음 템플릿 추가 권장:
-- `bug_report.md` - 버그 리포트 템플릿
-- `feature_request.md` - 기능 요청 템플릿
-- `question.md` - 질문 템플릿
+- [x] `bug_report.md` - 버그 리포트 템플릿
+- [x] `feature_request.md` - 기능 요청 템플릿
+- [x] `question.md` - 질문 템플릿
 
 #### Pull Request 템플릿 (Pull Request Template)
-`.github/PULL_REQUEST_TEMPLATE.md` 파일 생성 권장
+- [x] `.github/PULL_REQUEST_TEMPLATE.md` 파일 생성 권장
 
 ### 2. 행동 강령 (Code of Conduct)
 `CODE_OF_CONDUCT.md` 파일 추가 권장
