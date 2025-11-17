@@ -257,6 +257,7 @@ public struct TextField: View {
     // MARK: - Body
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
+    @Environment(\.colorScheme) private var colorScheme
     @State private var textFieldFrame: CGRect = .zero
     @FocusState private var textFieldFocusState: Bool
     @State private var autoCompletionContentHeight: CGFloat = .zero
@@ -396,8 +397,13 @@ private extension TextField {
             if disable {
                 SwiftUI.Color.semantic(.fillAlternative)
             } else {
-                SwiftUI.Color.white.opacity(0.6)
-                    .background(.ultraThinMaterial)
+                if colorScheme == .light {
+                    SwiftUI.Color.atomic(.common100).opacity(0.6)
+                        .background(.ultraThinMaterial)
+                } else {
+                    SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                        .background(.ultraThinMaterial)
+                }
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
