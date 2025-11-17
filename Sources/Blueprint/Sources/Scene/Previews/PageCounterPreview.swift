@@ -1,24 +1,24 @@
 //
-//  CounterPaginationPreview.swift
+//  PageCounterPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 12/27/24.
 //
 
-import SwiftUI
 import Montage
+import SwiftUI
 
-struct CounterPaginationPreview: View {
+struct PageCounterPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State var selectedPage: Int = 1
     @State var sizeIndex: Int = 0
     @State var isAlternative: Bool = false
-    
-    private let sizes: [CounterPagination.Size] = [
+
+    private let sizes: [PageCounter.Size] = [
         .small,
-        .medium
+        .medium,
     ]
-    
+
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
@@ -34,7 +34,7 @@ struct CounterPaginationPreview: View {
                 }
                 HStack {
                     Spacer()
-                    CounterPagination(selectedPage: $selectedPage, totalPages: 10)
+                    PageCounter(selectedPage: $selectedPage, totalPages: 10)
                         .size(sizes[sizeIndex])
                         .alternative(isAlternative)
                     Spacer()
@@ -65,13 +65,15 @@ struct CounterPaginationPreview: View {
             }
         }
         .padding()
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+        .transparentChecking(
+            isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red
+        )
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
-extension CounterPagination.Size: CaseDescribable {}
+extension PageCounter.Size: CaseDescribable {}
 
 #Preview {
-    CounterPaginationPreview()
+    PageCounterPreview()
 }

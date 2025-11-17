@@ -36,6 +36,9 @@ Text 스타일의 버튼을 생성합니다.
   | `leadingIcon` | 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `trailingIcon` | 텍스트 뒤에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `handler` | 버튼 탭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용 |
+- **Return Value**
+
+  구성된 버튼 인스턴스
 </details>
 
 ___

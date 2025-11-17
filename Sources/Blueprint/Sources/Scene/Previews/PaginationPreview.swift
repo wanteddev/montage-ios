@@ -5,28 +5,29 @@
 //  Created by 김삼열 on 12/27/24.
 //
 
-import SwiftUI
 import Montage
+import Pretendard
+import SwiftUI
 
 struct PaginationPreview: View {
     enum PaginationType: String, CaseIterable, Identifiable {
         case dot
         case counter
-        
+
         var id: String { self.rawValue }
     }
-    
+
     init() {}
-    
+
     var body: some View {
         List(PaginationType.allCases) { type in
             NavigationLink(
                 destination: {
                     switch type {
                     case .dot:
-                        DotPaginationPreview()
+                        PaginationDotsPreview()
                     case .counter:
-                        CounterPaginationPreview()
+                        PageCounterPreview()
                     }
                 },
                 label: {
@@ -38,7 +39,6 @@ struct PaginationPreview: View {
     }
 }
 
-import Pretendard
 #Preview(body: {
     _ = try? Pretendard.registerFonts()
     return PaginationPreview()

@@ -40,6 +40,9 @@ IconButton(
   | `variant` | 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: 24)` 적용 |
   | `icon` | 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
+- **Return Value**
+
+  구성된 아이콘 버튼 뷰
 </details>
 
 ___

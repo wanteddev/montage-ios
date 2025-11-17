@@ -5,8 +5,8 @@
 //  Created by 김삼열 on 10/22/25.
 //
 
-import SwiftUI
 import Montage
+import SwiftUI
 
 struct PopoverPreview: View {
     @State private var showTransparentChecker: Bool = false
@@ -18,14 +18,14 @@ struct PopoverPreview: View {
     @State private var action: Bool = true
     @State private var subAction: Bool = false
     @State private var page: Int = 1
-    
+
     let variants = ["normal", "custom"]
     let imageUrls = [
         "https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3V0ZSUyMGNhdHxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000",
         "https://media.4-paws.org/d/2/5/f/d25ff020556e4b5eae747c55576f3b50886c0b90/cut%20cat%20serhio%2002-1813x1811-720x719.jpg",
-        "https://i.pinimg.com/736x/c3/bc/9b/c3bc9be28c74848841256c867da9fb43.jpg"
+        "https://i.pinimg.com/736x/c3/bc/9b/c3bc9be28c74848841256c867da9fb43.jpg",
     ]
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -40,7 +40,7 @@ struct PopoverPreview: View {
                     }
                 }
                 .padding(.horizontal)
-                
+
                 VStack(spacing: 24) {
                     Button(color: .primary, size: .medium, text: "Show") {
                         isPresented = true
@@ -52,14 +52,22 @@ struct PopoverPreview: View {
                                 heading: heading,
                                 text: text,
                                 closeButton: closeButton,
-                                action: action ? (title: "행동", action: {
-                                    print("Action tapped")
-                                    isPresented = false
-                                }) : nil,
-                                subAction: subAction ? (title: "보조행동", action: {
-                                    print("SubAction tapped")
-                                    isPresented = false
-                                }) : nil
+                                action: action
+                                    ? (
+                                        title: "행동",
+                                        action: {
+                                            print("Action tapped")
+                                            isPresented = false
+                                        }
+                                    ) : nil,
+                                subAction: subAction
+                                    ? (
+                                        title: "보조행동",
+                                        action: {
+                                            print("SubAction tapped")
+                                            isPresented = false
+                                        }
+                                    ) : nil
                             )
                         } else {
                             $0.popoverCustom(isPresented: $isPresented) {
@@ -69,14 +77,15 @@ struct PopoverPreview: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                
+
                 optionSheet
                     .padding(.horizontal)
             }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
+        .transparentChecking(
+            isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
     }
-    
+
     @ViewBuilder
     private var popoverContent: some View {
         VStack(spacing: 0) {
@@ -90,7 +99,7 @@ struct PopoverPreview: View {
                 }
                 .padding(.all, 14)
             }
-            
+
             VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("인재의 추가 정보를 확인하세요.")
@@ -102,9 +111,9 @@ struct PopoverPreview: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                
+
                 HStack(alignment: .bottom) {
-                    DotPagination(selectedPage: $page, totalPages: imageUrls.count)
+                    PaginationDots(selectedPage: $page, totalPages: imageUrls.count)
                         .size(.small)
                     Spacer()
                     Button(variant: .outlined, color: .assistive, size: .medium, text: "확인")
@@ -116,11 +125,11 @@ struct PopoverPreview: View {
         .background(.ultraThinMaterial)
         .background(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
     }
-    
+
     private var optionSheet: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Options").bold()
-            
+
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text("variant")
@@ -135,12 +144,12 @@ struct PopoverPreview: View {
                         Text("heading")
                         TextField(text: $heading)
                     }
-                    
+
                     HStack {
                         Text("text")
                         TextArea(text: $text)
                     }
-                    
+
                     HStack {
                         Text("closeButton")
                         Control.switch(checked: closeButton) { closeButton = $0 }
@@ -159,4 +168,3 @@ struct PopoverPreview: View {
 #Preview {
     PopoverPreview()
 }
-

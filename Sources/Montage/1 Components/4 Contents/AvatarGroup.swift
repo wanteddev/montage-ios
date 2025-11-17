@@ -1,5 +1,5 @@
 //
-//  GroupAvatar.swift
+//  AvatarGroup.swift
 //  Montage
 //
 //  Created by Sanghoon Ahn on 10/18/24.
@@ -13,14 +13,14 @@ import SwiftUI
 ///
 /// ```swift
 /// // 기본 그룹 아바타
-/// GroupAvatar(
+/// AvatarGroup(
 ///     ["https://example.com/user1.jpg", "https://example.com/user2.jpg"],
 ///     variant: .person,
 ///     size: .small
 /// )
 ///
 /// // 탭 동작과 후행 콘텐츠가 있는 그룹 아바타
-/// GroupAvatar(
+/// AvatarGroup(
 ///     imageUrls,
 ///     variant: .person,
 ///     size: .small,
@@ -32,16 +32,16 @@ import SwiftUI
 ///     Text("+3").typography(variant: .body2)
 /// }
 /// ```
-public struct GroupAvatar: View {
+public struct AvatarGroup: View {
     // MARK: - Types
-    
+
     /// 그룹 아바타의 크기와 간격을 정의하는 열거형입니다.
     public enum Size {
         /// 가장 작은 크기
         case xsmall
         /// 작은 크기
         case small
-        
+
         var space: CGFloat {
             switch self {
             case .xsmall: 6
@@ -49,14 +49,14 @@ public struct GroupAvatar: View {
             }
         }
     }
-    
+
     // MARK: - Initializer
-    
+
     private let imageUrls: [String]
     private let variant: Avatar.Variant
     private let size: Size
     private let onTap: ((_ index: Int) -> Void)?
-    
+
     /// 그룹 아바타를 초기화합니다.
     ///
     /// - Parameters:
@@ -75,9 +75,9 @@ public struct GroupAvatar: View {
         self.size = size
         self.onTap = onTap
     }
-    
+
     // MARK: - Body
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 10) {
@@ -88,7 +88,7 @@ public struct GroupAvatar: View {
                             onTap?(index)
                         }
                         .interactionDisabled()
-                        
+
                         if index < imageUrls.count - 1 {
                             RoundedRectangle(cornerRadius: variant.cornerRadius(size: avatartSize))
                                 .scaleEffect(1.1)
@@ -107,38 +107,42 @@ public struct GroupAvatar: View {
                     )
                 }
             }
-            .offset(x: -(avatartSize.containerSize.width - size.space) * CGFloat(imageUrls.count - 1) / 2)
+            .offset(
+                x: -(avatartSize.containerSize.width - size.space) * CGFloat(imageUrls.count - 1)
+                    / 2
+            )
             .frame(
                 width: avatartSize.containerSize
                     .width * CGFloat(imageUrls.count) - (size.space * CGFloat(imageUrls.count - 1)),
                 height: avatartSize.containerSize.height
             )
-            
+
             trailingContent()
         }
     }
-    
+
     // MARK: - Modifiers
-    
-    private var trailingContent: () -> AnyView =  { AnyView(EmptyView()) }
-    
+
+    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
+
     /// 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
     ///
     /// 이 수정자를 사용하여 아바타 그룹 옆에 추가 정보(예: "+3" 같은 추가 멤버 수)를 표시할 수 있습니다.
     ///
     /// - Parameter trailingContent: 표시할 뷰를 생성하는 클로저
     /// - Returns: 수정된 그룹 아바타 인스턴스
-    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
+    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self
+    {
         var zelf = self
         zelf.trailingContent = { AnyView(trailingContent()) }
         return zelf
     }
 }
 
-/// `GroupAvatar`의 내부 구현을 위한 확장입니다.
-private extension GroupAvatar {
+/// `AvatarGroup`의 내부 구현을 위한 확장입니다.
+extension AvatarGroup {
     /// 그룹 아바타 크기에 맞는 개별 아바타 크기를 반환합니다.
-    var avatartSize: Avatar.Size {
+    fileprivate var avatartSize: Avatar.Size {
         size == .xsmall ? .xsmall : .small
     }
 }

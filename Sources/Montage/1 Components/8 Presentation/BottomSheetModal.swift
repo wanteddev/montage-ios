@@ -154,7 +154,6 @@ public struct BottomSheetModal: View {
     private var navigation: (() -> Montage.ModalNavigation)?
     private var actionAreaModel: ActionArea.Model?
     private var ignoresEdgeInsets = false
-    private var fullModal = false
     
     /// 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
     ///
@@ -203,12 +202,6 @@ public struct BottomSheetModal: View {
     public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
         var zelf = self
         zelf.ignoresEdgeInsets = ignoresEdgeInsets
-        return zelf
-    }
-    
-    internal func fullModal(_ fullModal: Bool = true) -> Self {
-        var zelf = self
-        zelf.fullModal = fullModal
         return zelf
     }
     
@@ -286,42 +279,60 @@ public struct BottomSheetModal: View {
 
 struct BottomSheetModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
-    private let bottomSheetContent: () -> AnyView
+    private let isFullScreenCover: Bool
     private let needHandle: Bool
     private let resize: BottomSheetModal.Resize
     private let ignoresEdgeInsets: Bool
-    private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
+    private let navigation: (() -> ModalNavigation)?
+    private let bottomSheetContent: () -> AnyView
     
     init<V: View>(
         isPresented: Binding<Bool>,
-        @ViewBuilder _ content: @escaping () -> V,
+        isFullScreenCover: Bool = false,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        navigation: ( () -> ModalNavigation)? = nil,
-        actionAreaModel: ActionArea.Model? = nil
+        actionAreaModel: ActionArea.Model? = nil,
+        navigation: (() -> ModalNavigation)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
     ) {
         _isPresented = isPresented
-        bottomSheetContent = { AnyView(content()) }
+        self.isFullScreenCover = isFullScreenCover
         self.needHandle = needHandle
         self.resize = resize
         self.ignoresEdgeInsets = ignoresEdgeInsets
-        self.navigation = navigation
         self.actionAreaModel = actionAreaModel
+        self.navigation = navigation
+        bottomSheetContent = { AnyView(content()) }
     }
     
     func body(content: Content) -> some View {
         content
-            .sheet(isPresented: $isPresented) {
-                BottomSheetModal {
-                    bottomSheetContent()
+            .modifying {
+                if isFullScreenCover {
+                    $0.fullScreenCover(isPresented: $isPresented) {
+                        BottomSheetModal {
+                            bottomSheetContent()
+                        }
+                        .needHandle(false)
+                        .resize(.fill)
+                        .ignoresEdgeInsets(ignoresEdgeInsets)
+                        .modalNavigation(navigation)
+                        .modalActionArea(actionAreaModel)
+                    }
+                } else {
+                    $0.sheet(isPresented: $isPresented) {
+                        BottomSheetModal {
+                            bottomSheetContent()
+                        }
+                        .needHandle(needHandle)
+                        .resize(resize)
+                        .ignoresEdgeInsets(ignoresEdgeInsets)
+                        .modalNavigation(navigation)
+                        .modalActionArea(actionAreaModel)
+                    }
                 }
-                .needHandle(needHandle)
-                .resize(resize)
-                .ignoresEdgeInsets(ignoresEdgeInsets)
-                .modalNavigation(navigation)
-                .modalActionArea(actionAreaModel)
             }
     }
 }
@@ -337,26 +348,58 @@ extension View {
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
     ///   - needHandle: 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
+    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
     ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - content: 모달에 표시할 콘텐츠 클로저
     /// - Returns: 바텀 시트 모달이 적용된 뷰
     public func bottomSheetModal<V: View>(
         isPresented: Binding<Bool>,
         needHandle: Bool = true,
         resize: BottomSheetModal.Resize = .hug,
+        ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
-        @ViewBuilder _ content: @escaping () -> V,
-        navigation: (() -> ModalNavigation)? = nil
+        navigation: (() -> ModalNavigation)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
     ) -> some View {
         modifier(
             BottomSheetModalModifier(
                 isPresented: isPresented,
-                content,
                 needHandle: needHandle,
                 resize: resize,
+                actionAreaModel: actionAreaModel,
                 navigation: navigation,
-                actionAreaModel: actionAreaModel
+                content
+            )
+        )
+    }
+    
+    /// 전체 화면 모달을 표시합니다.
+    ///
+    /// 화면 전체를 덮는 바텀 시트 모달을 표시합니다.
+    ///
+    /// - Parameters:
+    ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
+    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
+    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
+    ///   - content: 모달에 표시할 콘텐츠 클로저
+    /// - Returns: 전체 화면 모달이 적용된 뷰
+    public func fullModal<V: View>(
+        isPresented: Binding<Bool>,
+        ignoresEdgeInsets: Bool = false,
+        actionAreaModel: ActionArea.Model? = nil,
+        navigation: (() -> ModalNavigation)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
+    ) -> some View {
+        modifier(
+            BottomSheetModalModifier(
+                isPresented: isPresented,
+                isFullScreenCover: true,
+                ignoresEdgeInsets: ignoresEdgeInsets,
+                actionAreaModel: actionAreaModel,
+                navigation: navigation,
+                content
             )
         )
     }

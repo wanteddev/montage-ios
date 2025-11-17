@@ -9,23 +9,20 @@ import SwiftUI
 
 struct ModalPreview: View {
     enum ModalStyle: String, CaseIterable, Identifiable {
-        case popupModal
-        case bottomSheetModal
-        case fullModal
-        
+        case popup
+        case bottomSheet
+
         var id: String { self.rawValue }
     }
-    
+
     var body: some View {
         List(ModalStyle.allCases) { style in
             NavigationLink {
                 switch style {
-                case .popupModal:
-                    PopupModalPreview()
-                case .bottomSheetModal:
+                case .popup:
+                    PopupPreview()
+                case .bottomSheet:
                     BottomSheetModalPreview()
-                case .fullModal:
-                    FullModalPreview()
                 }
             } label: {
                 Text(style.rawValue)

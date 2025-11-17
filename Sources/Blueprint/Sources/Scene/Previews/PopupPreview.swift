@@ -1,28 +1,28 @@
 //
-//  PopupModalPreview.swift
+//  PopupPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 2/21/25.
 //
 
-import SwiftUI
 import Montage
+import SwiftUI
 
-struct PopupModalPreview: View {
+struct PopupPreview: View {
     @State private var show = false
 
     @State private var itemCountsIndex: Int = 0
-    
-    @State private var resize: PopupModal.Resize = .hug
+
+    @State private var resize: Popup.Resize = .hug
     @State private var navigation = true
     @State private var navVariantIndex = 0
-    
+
     @State private var actionArea = true
     @State private var buttonsIndex = 0
     @State private var caption = false
     @State private var extra = false
     @State private var extraDivider = true
-    
+
     @State private var refreshTask: Task<(), Never>?
 
     var body: some View {
@@ -33,16 +33,18 @@ struct PopupModalPreview: View {
             VStack(alignment: .leading) {
                 Text("Options").bold()
                 HStack {
-                    SegmentedControl(selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" })
-                        .size(.small)
+                    SegmentedControl(
+                        selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
+                    )
+                    .size(.small)
                     Text("items")
                 }
-                
+
                 HStack {
                     Text("resize")
                     Picker("resize", selection: $resize) {
-                        Text("hug").tag(PopupModal.Resize.hug)
-                        Text("fixed(300)").tag(PopupModal.Resize.fixed(300))
+                        Text("hug").tag(Popup.Resize.hug)
+                        Text("fixed(300)").tag(Popup.Resize.fixed(300))
                     }
                     .pickerStyle(.segmented)
                 }
@@ -50,11 +52,14 @@ struct PopupModalPreview: View {
                     Text("navigation")
                     Control.switch(checked: navigation) { navigation = $0 }
                     if navigation {
-                        SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
-                            .size(.small)
+                        SegmentedControl(
+                            selectedIndex: $navVariantIndex,
+                            labels: navigationVariants.map(\.description)
+                        )
+                        .size(.small)
                     }
                 }
-                
+
                 HStack {
                     VStack(alignment: .trailing) {
                         HStack {
@@ -63,8 +68,11 @@ struct PopupModalPreview: View {
                             Spacer()
                         }
                         if actionArea {
-                            SegmentedControl(selectedIndex: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
-                                .size(.small)
+                            SegmentedControl(
+                                selectedIndex: $buttonsIndex,
+                                labels: ActionAreaButtons.allCases.map(\.rawValue)
+                            )
+                            .size(.small)
                             HStack {
                                 Text("caption")
                                 Control.switch(checked: caption) { caption = $0 }
@@ -80,7 +88,10 @@ struct PopupModalPreview: View {
                 }
             }
             .padding(.horizontal)
-            .onChange(of: "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)") { _ in
+            .onChange(
+                of:
+                    "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)"
+            ) { _ in
                 refreshTask?.cancel()
                 refreshTask = Task {
                     do {
@@ -96,22 +107,24 @@ struct PopupModalPreview: View {
             }
             .font(.caption)
         }
-        .popupModal(
+        .popup(
             isPresented: $show,
             resize: resize,
             actionAreaModel: actionArea
-            ? .init(
-                variant: actionAreaVariant,
-                caption: caption ? "caption" : nil,
-                extra: {
-                    if extra {
-                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                ? .init(
+                    variant: actionAreaVariant,
+                    caption: caption ? "caption" : nil,
+                    extra: {
+                        if extra {
+                            Rectangle().fill(
+                                SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08)
+                            )
                             .frame(height: 50)
-                    }
-                },
-                extraDivider: extraDivider
-            )
-            : nil,
+                        }
+                    },
+                    extraDivider: extraDivider
+                )
+                : nil,
             {
                 VStack {
                     ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
@@ -124,85 +137,97 @@ struct PopupModalPreview: View {
                 .background(SwiftUI.Color.semantic(.backgroundNormal))
             },
             navigation: navigation
-            ? {
-                ModalNavigation()
-                    .variant(navigationVariants[navVariantIndex])
-                    .title("제목")
-                    .leadingContent {
-                        TopNavigation.LeadingButton(
-                            .back(action: {})
+                ? {
+                    ModalNavigation()
+                        .variant(navigationVariants[navVariantIndex])
+                        .title("제목")
+                        .leadingContent {
+                            TopNavigation.LeadingButton(
+                                .back(action: {})
+                            )
+                        }
+                        .trailingContents(
+                            [
+                                {
+                                    TopNavigation.TrailingIconButton(
+                                        icon: .plus,
+                                        action: {}
+                                    )
+                                },
+                                {
+                                    TopNavigation.TrailingIconButton(
+                                        icon: .minus,
+                                        action: {}
+                                    )
+                                },
+                                {
+                                    TopNavigation.TrailingIconButton(
+                                        icon: .close,
+                                        action: {
+                                            show = false
+                                        }
+                                    )
+                                },
+                            ]
                         )
-                    }
-                    .trailingContents(
-                        [
-                            {
-                                TopNavigation.TrailingIconButton(
-                                    icon: .plus,
-                                    action: {}
-                                )
-                            },
-                            {
-                                TopNavigation.TrailingIconButton(
-                                    icon: .minus,
-                                    action: {}
-                                )
-                            },
-                            {
-                                TopNavigation.TrailingIconButton(
-                                    icon: .close,
-                                    action: {
-                                        show = false
-                                    }
-                                )
-                            }
-                        ]
-                    )
-            }
-            : nil
+                }
+                : nil
         )
     }
-    
+
     private var actionAreaVariant: ActionArea.Variant {
         switch ActionAreaButtons.allCases[buttonsIndex] {
         case .main:
-                .strong(
-                    main: .init(text: "눌러봐요", action: {
+            .strong(
+                main: .init(
+                    text: "눌러봐요",
+                    action: {
                         show = false
                     })
-                )
+            )
         case .mainAndSub:
-                .strong(
-                    main: .init(text: "눌러봐요", action: {
+            .strong(
+                main: .init(
+                    text: "눌러봐요",
+                    action: {
                         show = false
                     }),
-                    sub: .init(text: "취소", action: {
+                sub: .init(
+                    text: "취소",
+                    action: {
                         show = false
                     })
-                )
+            )
         case .mainSubAndAlternative:
-                .strong(
-                    main: .init(text: "눌러봐요", action: {
+            .strong(
+                main: .init(
+                    text: "눌러봐요",
+                    action: {
                         show = false
                     }),
-                    sub: .init(text: "취소", action: {
+                sub: .init(
+                    text: "취소",
+                    action: {
                         show = false
                     }),
-                    alternative: .init(text: "대체", action: {
+                alternative: .init(
+                    text: "대체",
+                    action: {
                         show = false
                     })
-                )
+            )
         }
     }
-    
+
     private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
         .extended,
         .emphasized,
-        .floating(alternative: true, background: true)
+        .floating(alternative: true, background: true),
     ]
-    
+
     private var itemCounts = [1, 5, 20]
-    
+
     private enum ActionAreaButtons: String, CaseIterable {
         case main
         case mainAndSub = "main/sub"
@@ -210,7 +235,7 @@ struct PopupModalPreview: View {
     }
 }
 
-extension PopupModal.Resize: @retroactive Hashable {
+extension Popup.Resize: @retroactive Hashable {
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .hug:
@@ -220,8 +245,8 @@ extension PopupModal.Resize: @retroactive Hashable {
             hasher.combine(height)
         }
     }
-    
-    public static func == (lhs: PopupModal.Resize, rhs: PopupModal.Resize) -> Bool {
+
+    public static func == (lhs: Popup.Resize, rhs: Popup.Resize) -> Bool {
         switch (lhs, rhs) {
         case (.hug, .hug): return true
         case (.fixed(let l), .fixed(let r)): return l == r
@@ -231,5 +256,5 @@ extension PopupModal.Resize: @retroactive Hashable {
 }
 
 #Preview {
-    PopupModalPreview()
+    PopupPreview()
 }

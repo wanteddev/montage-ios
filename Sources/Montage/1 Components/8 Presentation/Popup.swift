@@ -19,12 +19,12 @@ import SwiftUI
 ///     showPopup = true
 /// }
 /// .fullScreenCover(isPresented: $showPopup) {
-///     PopupModal {
+///     Popup {
 ///         VStack(spacing: 16) {
 ///             Text("알림")
 ///                 .font(.headline)
 ///             Text("중요한 메시지입니다.")
-///             
+///
 ///             Button("확인") {
 ///                 showPopup = false
 ///             }
@@ -40,13 +40,13 @@ import SwiftUI
 /// 모디파이어를 사용하면 더 간편하게 구현할 수 있으며, 애니메이션이 자동으로 처리됩니다:
 /// ```swift
 /// YourView()
-///     .popupModal(
+///     .popup(
 ///         isPresented: $showPopup
 ///     ) {
 ///         Text("팝업 내용")
 ///     }
 /// ```
-public struct PopupModal: View {
+public struct Popup: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
     public enum Resize {
         /// 컨텐츠 크기에 맞게 자동 조절됩니다.
@@ -55,7 +55,7 @@ public struct PopupModal: View {
         /// - Parameter height: 높이
         case fixed(CGFloat)
     }
-    
+
     private let content: () -> AnyView
 
     /// 팝업 모달을 초기화합니다.
@@ -71,46 +71,51 @@ public struct PopupModal: View {
     @State private var contentOffset: CGFloat = 0
 
     private let popupMaxHeight: CGFloat = min(760, UIScreen.main.bounds.height - 40)
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
-                    ScrollView(onOffsetChanged: {
-                        contentOffset = $0.y
-                    }, content: {
-                        VStack(spacing: 0) {
-                            SwiftUI.Color.clear
-                                .frame(height: navigationHeight)
-                            HStack(spacing: 0) {
-                                Spacer(minLength: 0)
-                                content()
-                                    .padding(contentEdgeInsets)
-                                    .onGeometryChange(
-                                        for: CGFloat.self,
-                                        of: { $0.size.height },
-                                        action: { contentHeight = $0 }
-                                    )
-                                Spacer(minLength: 0)
+                    ScrollView(
+                        onOffsetChanged: {
+                            contentOffset = $0.y
+                        },
+                        content: {
+                            VStack(spacing: 0) {
+                                SwiftUI.Color.clear
+                                    .frame(height: navigationHeight)
+                                HStack(spacing: 0) {
+                                    Spacer(minLength: 0)
+                                    content()
+                                        .padding(contentEdgeInsets)
+                                        .onGeometryChange(
+                                            for: CGFloat.self,
+                                            of: { $0.size.height },
+                                            action: { contentHeight = $0 }
+                                        )
+                                    Spacer(minLength: 0)
+                                }
                             }
                         }
-                    })
+                    )
                     .hidesIndicators()
                     .scrollDisabled(!scrollable)
-                    
+
                     navigationView
                 }
-                
+
                 if let actionAreaModel {
                     ActionArea(variant: actionAreaModel.variant)
                         .transparentBackground(scrolledToBottom)
                         .caption(actionAreaModel.caption)
                         .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                         .padding(.bottom, 20)
-                        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
-                            actionAreaHeight = $0
-                        })
+                        .onGeometryChange(
+                            for: CGFloat.self, of: { $0.size.height },
+                            action: {
+                                actionAreaHeight = $0
+                            })
                 }
             }
             .background(
@@ -139,14 +144,14 @@ public struct PopupModal: View {
             }
         }
     }
-    
+
     // MARK: - Modifiers
-    
+
     private var resize: Resize = .hug
     private var ignoresEdgeInsets = false
     private var navigation: (() -> Montage.ModalNavigation)?
     private var actionAreaModel: ActionArea.Model?
-    
+
     /// 팝업 모달의 크기를 설정합니다.
     ///
     /// - Parameter resize: 팝업 모달의 크기 설정
@@ -156,7 +161,7 @@ public struct PopupModal: View {
         zelf.resize = resize
         return zelf
     }
-    
+
     /// 컨텐츠의 기본 여백을 무시할지 설정합니다.
     ///
     /// - Parameter ignoresEdgeInsets: 여백 무시 여부
@@ -166,7 +171,7 @@ public struct PopupModal: View {
         zelf.ignoresEdgeInsets = ignoresEdgeInsets
         return zelf
     }
-    
+
     /// 팝업 모달 상단에 내비게이션 바를 설정합니다.
     ///
     /// - Parameter navigation: 내비게이션 바를 반환하는 클로저
@@ -176,7 +181,7 @@ public struct PopupModal: View {
         zelf.navigation = navigation
         return zelf
     }
-    
+
     /// 팝업 모달 하단에 액션 영역을 설정합니다.
     ///
     /// - Parameter actionAreaModel: 액션 영역 모델
@@ -186,9 +191,9 @@ public struct PopupModal: View {
         zelf.actionAreaModel = actionAreaModel
         return zelf
     }
-    
+
     // MARK: - Private
-    
+
     private var navigationView: some View {
         Group {
             if let navigation {
@@ -196,9 +201,10 @@ public struct PopupModal: View {
                     .scrollOffset($contentOffset)
             }
         }
-        .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
+        .onGeometryChange(
+            for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
     }
-    
+
     private var contentEdgeInsets: EdgeInsets {
         ignoresEdgeInsets
             ? .init(top: 0, leading: 0, bottom: 0, trailing: 0)
@@ -209,15 +215,15 @@ public struct PopupModal: View {
                 trailing: 20
             )
     }
-    
+
     private var popupContentHeight: CGFloat {
         navigationHeight + contentHeight + actionAreaHeight
     }
-    
+
     private var scrolledToBottom: Bool {
         Int(contentOffset) <= Int(popupMaxHeight) - Int(popupContentHeight)
     }
-    
+
     private var scrollable: Bool {
         if case .fixed(let height) = resize {
             popupContentHeight > height
@@ -227,17 +233,17 @@ public struct PopupModal: View {
     }
 }
 
-struct PopupModalModifier: ViewModifier {
+struct PopupModifier: ViewModifier {
     @Binding private var isPresented: Bool
-    private let resize: PopupModal.Resize
+    private let resize: Popup.Resize
     private let ignoresEdgeInsets: Bool
     private let popupContent: () -> AnyView
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
-    
+
     init<V: View>(
         isPresented: Binding<Bool>,
-        resize: PopupModal.Resize = .hug,
+        resize: Popup.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil,
@@ -250,14 +256,14 @@ struct PopupModalModifier: ViewModifier {
         self.navigation = navigation
         self.actionAreaModel = actionAreaModel
     }
-    
-        @State private var opacity: CGFloat = 0
-        @State private var fullScreenCoverPresented = false
+
+    @State private var opacity: CGFloat = 0
+    @State private var fullScreenCoverPresented = false
 
     func body(content: Content) -> some View {
         content
             .fullScreenCover(isPresented: $fullScreenCoverPresented) {
-                PopupModal {
+                Popup {
                     popupContent()
                 }
                 .resize(resize)
@@ -308,8 +314,8 @@ private struct DimmerBackgroundViewModifier: ViewModifier {
     }
 }
 
-private extension View {
-    func dimmerBackground() -> some View {
+extension View {
+    fileprivate func dimmerBackground() -> some View {
         modifier(DimmerBackgroundViewModifier())
     }
 }
@@ -329,16 +335,16 @@ extension View {
     ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 팝업 모달이 적용된 뷰
-    public func popupModal<V: View>(
+    public func popup<V: View>(
         isPresented: Binding<Bool>,
-        resize: PopupModal.Resize = .hug,
+        resize: Popup.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
         @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {
         modifier(
-            PopupModalModifier(
+            PopupModifier(
                 isPresented: isPresented,
                 resize: resize,
                 ignoresEdgeInsets: ignoresEdgeInsets,

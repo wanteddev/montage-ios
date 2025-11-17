@@ -106,7 +106,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func bottomSheetModal<V>(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func bottomSheetModal<V>(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
@@ -117,9 +117,10 @@ View를 UIImage로 변환합니다.
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
+  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
   | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용 |
-  | `content` | 모달에 표시할 콘텐츠 클로저 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
 - **Return Value**
 
   바텀 시트 모달이 적용된 뷰
@@ -234,7 +235,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func fullModal<V>(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func fullModal<V>(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
 
 
 전체 화면 모달을 표시합니다.
@@ -245,14 +246,14 @@ View를 UIImage로 변환합니다.
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
   | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
-  | `content` | 모달에 표시할 콘텐츠 클로저 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
 - **Return Value**
 
   전체 화면 모달이 적용된 뷰
 - **Discussion**
 
-  화면 전체를 덮는 모달을 표시합니다.
+  화면 전체를 덮는 바텀 시트 모달을 표시합니다.
 </details>
 <details>
 
@@ -424,7 +425,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func popupModal<V>(isPresented: Binding<Bool>, resize: PopupModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 
 팝업 모달을 표시합니다.

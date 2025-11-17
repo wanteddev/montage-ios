@@ -74,6 +74,9 @@ TextField(text: $inputText)
   | `headerView` | 헤더 뷰 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `footerView` | 푸터 뷰 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `maxHeight` | 자동완성 목록의 최대 높이, 생략하면 기본값으로 `400` 적용 |
+- **Return Value**
+
+  구성된 자동완성 데이터 소스 인스턴스
 </details>
 
 #### Instance Properties
@@ -108,6 +111,9 @@ TextField(text: $inputText)
   | `variant` | 버튼의 변형 스타일 |
   | `title` | 버튼에 표시할 텍스트 |
   | `handler` | 버튼 클릭 시 실행할 핸들러 |
+- **Return Value**
+
+  구성된 트레일링 버튼 인스턴스
 </details>
 
 </details>
@@ -127,6 +133,9 @@ ___
   | --- | --- |
   | `text` | 텍스트 필드의 값을 바인딩 |
   | `autoCompletionDataSource` | 자동완성 데이터 소스를 바인딩, 생략하면 기본값으로 `nil` 적용 |
+- **Return Value**
+
+  구성된 텍스트 필드 인스턴스
 </details>
 
 ___
