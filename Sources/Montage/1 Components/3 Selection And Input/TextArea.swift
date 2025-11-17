@@ -314,6 +314,7 @@ public struct TextArea: View {
     
     // MARK: - Body
     
+    @Environment(\.colorScheme) private var colorScheme
     @State private var typedCharacters = 0
     @FocusState private var internalFocusState
     
@@ -414,8 +415,13 @@ public struct TextArea: View {
             if disable {
                 SwiftUI.Color.semantic(.fillAlternative)
             } else {
-                SwiftUI.Color.white.opacity(0.6)
-                    .background(.ultraThinMaterial)
+                if colorScheme == .light {
+                    SwiftUI.Color.atomic(.common100).opacity(0.6)
+                        .background(.ultraThinMaterial)
+                } else {
+                    SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                        .background(.ultraThinMaterial)
+                }
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
