@@ -71,18 +71,17 @@ ___
 </details>
 <details>
 
-<summary>``func leadingIcon(Icon) -> ContentBadge``</summary>
+<summary>``func leadingIcon(Icon, usesTemplate: Bool) -> ContentBadge``</summary>
 
 
 뱃지 텍스트 앞에 표시될 아이콘을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `leadingIcon` | 선행 아이콘 |
 - **Return Value**
 
   선행 아이콘이 추가된 ContentBadge
+- **Discussion**
+  - Parameters
+
+
 </details>
 <details>
 
@@ -101,7 +100,7 @@ ___
 </details>
 <details>
 
-<summary>``func trailingIcon(Icon) -> ContentBadge``</summary>
+<summary>``func trailingIcon(Icon, usesTemplate: Bool) -> ContentBadge``</summary>
 
 
 뱃지 텍스트 뒤에 표시될 아이콘을 설정합니다.
@@ -110,6 +109,7 @@ ___
   | Parameter | Description |
   | --- | --- |
   | `trailingIcon` | 후행 아이콘 |
+  | `usesTemplate` | 아이콘 색상에 template 렌더링 적용 여부, 생략하면 기본값으로 `true` 적용 |
 - **Return Value**
 
   후행 아이콘이 추가된 ContentBadge
