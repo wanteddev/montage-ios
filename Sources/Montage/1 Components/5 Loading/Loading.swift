@@ -25,10 +25,8 @@ import Lottie
 ///
 /// // 로딩 오버레이로 적용
 /// someView
-///     .loading(isLoading: $isLoadingState, type: .circular)
+///     .loading($isLoadingState, type: .circular(.blue))
 /// ```
-///
-/// - Note: 다크 모드와 라이트 모드에 따라 자동으로 적절한 애니메이션 리소스를 선택합니다.
 public struct Loading: View {
     
     // MARK: - Type
@@ -42,23 +40,20 @@ public struct Loading: View {
     /// Loading(kind: .wanted)
     ///
     /// // 원형 로딩 사용
-    /// Loading(kind: .circular)
+    /// Loading(kind: .circular())
     /// ```
     public enum Kind {
         /// Wanted 브랜드 스타일의 로딩 애니메이션
         case wanted
         /// 원형 회전 로딩 애니메이션
-        case circular
+        /// - Parameters:
+        ///   - color: 애니메이션의 색상을 지정합니다. 생략하면 기본값으로 `nil` 적용 (기본 색상 사용)
+        case circular(color: SwiftUI.Color? = nil)
         
-        /// 현재 컬러 스킴에 따른 리소스 이름을 반환합니다.
-        ///
-        /// - Parameter colorScheme: 현재 적용된 컬러 스킴
-        /// - Returns: 로딩 애니메이션의 JSON 리소스 파일 이름
         func resourceName(_ colorScheme: ColorScheme) -> String {
             switch self {
             case .wanted: colorScheme == .light ? "loading-wanted-light.json" : "loading-wanted-dark.json"
-            case .circular: colorScheme == .light ? "loading-circular-light.json" :
-                "loading-circular-dark.json"
+            case .circular: colorScheme == .light ? "loading-circular-light.json" : "loading-circular-dark.json"
             }
         }
     }
@@ -72,37 +67,30 @@ public struct Loading: View {
     ///
     /// - Parameters:
     ///   - kind: 로딩 애니메이션의 종류 (.wanted 또는 .circular)
-    ///   - size: 로딩 애니메이션의 크기 (nil일 경우 기본 크기 사용)
+    ///   - size: 로딩 애니메이션의 크기 생략하면 기본값으로 `nil` 적용 (기본 크기 사용)
     public init(kind: Kind, size: CGSize? = nil) {
         self.kind = kind
         self.size = size
-    }
-    
-    // MARK: - Modifiers
-    private var foregroundColor: SwiftUI.Color?
-    
-    /// 로딩 애니메이션의 전경색을 설정합니다.
-    ///
-    /// - Parameters:
-    ///   - color: 적용할 색상
-    /// - Returns: 수정된 Loading 인스턴스
-    public func foregroundColor(_ color: SwiftUI.Color?) -> Self {
-        var zelf = self
-        zelf.foregroundColor = color
-        return zelf
     }
     
     // MARK: - Body
     
     @Environment(\.colorScheme) private var colorScheme
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         LottieView(animation: .named(kind.resourceName(colorScheme), bundle: .module))
             .playing(loopMode: .loop)
             .if(size != nil) {
                 $0.resizable()
-                    .if(foregroundColor != nil) { $0.colorMultiply(foregroundColor!) }
                     .frame(width: size?.width, height: size?.height)
+            }
+            .modifying {
+                if case .circular(let color) = kind, let color {
+                    $0.colorMultiply(color)
+                } else {
+                    $0
+                }
             }
     }
     
@@ -150,7 +138,7 @@ extension View {
     /// - Parameters:
     ///   - isLoading: 로딩 상태를 제어하는 바인딩 불리언 값
     ///   - type: 로딩 애니메이션 종류 (.wanted 또는 .circular)
-    ///   - dimmedColor: 오버레이 배경색 (기본값: 투명)
+    ///   - dimmedColor: 오버레이 배경색, 생략하면 기본값으로 `.clear` 적용
     /// - Returns: 로딩 기능이 적용된 뷰
     ///
     /// ```swift

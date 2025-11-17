@@ -27,17 +27,14 @@ Category(
 .horizontalPadding()
 ```
 
->  **Note**
->
-> 측면 그라데이션 효과와 아이콘 버튼을 추가할 수 있어 스크롤 가능한 콘텐츠임을 시각적으로 나타냅니다.
-
 ## Topics
 
 ### Initializers
 
 <details>
 
-<summary>``init(selectedIndex: Binding<Int>, items: [String], actions: (Int) -> Void)``</summary>
+<summary>``init(selectedIndex: Binding<Int>, items: [String], itemModifier: (_ index: Int, _ chip: Chip) -> Chip, actions: (Int) -> Void)``</summary>
+
 
 카테고리 컴포넌트를 초기화합니다.
 
@@ -46,7 +43,8 @@ Category(
   | --- | --- |
   | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
   | `items` | 표시할 카테고리 항목 배열 |
-  | `actions` | 항목 선택 시 호출될 클로저 (기본값: 빈 클로저) |
+  | `itemModifier` | 카테고리 항목 수정 클로저, 인덱스와 Chip을 파라미터로 받음, 생략하면 기본값으로 원본 Chip을 반환하는 클로저 적용 |
+  | `actions` | 항목 선택 시 호출될 클로저, 생략하면 기본값으로 빈 클로저 적용 |
 </details>
 
 ___
@@ -55,6 +53,9 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -64,12 +65,13 @@ ___
 
 <summary>``func horizontalPadding(Bool) -> Category``</summary>
 
+
 카테고리 컴포넌트의 좌우 패딩을 설정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `horizontalPadding` | 패딩 적용 여부 (기본값: true) |
+  | `horizontalPadding` | 패딩 적용 여부, 생략하면 기본값으로 `true` 적용 |
 - **Return Value**
 
   수정된 카테고리 인스턴스
@@ -77,6 +79,7 @@ ___
 <details>
 
 <summary>``func iconButton(Icon, action: () -> Void) -> Category``</summary>
+
 
 카테고리 컴포넌트 오른쪽에 표시할 아이콘 버튼을 설정합니다.
 
@@ -93,6 +96,7 @@ ___
 
 <summary>``func size(Size) -> Category``</summary>
 
+
 카테고리 아이템 크기를 설정합니다.
 
 - **Parameters**
@@ -106,6 +110,7 @@ ___
 <details>
 
 <summary>``func variant(Variant) -> Category``</summary>
+
 
 카테고리 아이템 스타일을 설정합니다.
 
@@ -121,12 +126,13 @@ ___
 
 <summary>``func verticalPadding(Bool) -> Category``</summary>
 
+
 카테고리 컴포넌트의 상하 패딩을 설정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `verticalPadding` | 패딩 적용 여부 (기본값: true) |
+  | `verticalPadding` | 패딩 적용 여부, 생략하면 기본값으로 `true` 적용 |
 - **Return Value**
 
   수정된 카테고리 인스턴스
@@ -139,6 +145,7 @@ ___
 
 <summary>``enum Size``</summary>
 
+
 카테고리 사이즈를 결정하는 열거형입니다.
 #### Enumeration Cases
 
@@ -146,11 +153,13 @@ ___
 
 <summary>``case large``</summary>
 
+
 큰 크기
 </details>
 <details>
 
 <summary>``case medium``</summary>
+
 
 중간 크기
 </details>
@@ -158,24 +167,22 @@ ___
 
 <summary>``case small``</summary>
 
+
 작은 크기
 </details>
 <details>
 
 <summary>``case xlarge``</summary>
 
+
 큰 크기
 </details>
-
-#### Default Implementations
-
-
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 <details>
 
 <summary>``enum Variant``</summary>
+
 
 카테고리 아이템의 종류를 결정하는 열거형입니다.
 #### Enumeration Cases
@@ -184,30 +191,20 @@ ___
 
 <summary>``case alternative``</summary>
 
+
 대체 스타일
 </details>
 <details>
 
 <summary>``case normal``</summary>
 
+
 기본 스타일
 </details>
-
-#### Default Implementations
-
-
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
 ___
-### Default Implementations
-
-
-[View Implementations](/docs/utilities/ios/view-implementations)
-
-[View Implementations](/docs/utilities/ios/view-implementations)
-
 ## Relationships
 
 Conforms To

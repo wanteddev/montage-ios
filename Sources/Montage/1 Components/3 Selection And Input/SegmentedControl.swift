@@ -33,8 +33,6 @@ import SwiftUI
 /// .variant(.outlined)
 /// .size(.medium)
 /// ```
-///
-/// - Note: 기본 변형(.solid)은 배경이 있는 형태로, .outlined 변형은 테두리만 있는 형태로 표시됩니다.
 public struct SegmentedControl: View {
     // MARK: - Types
     /// 세그먼트 컨트롤의 항목을 나타내는 구조체입니다.
@@ -47,7 +45,7 @@ public struct SegmentedControl: View {
         /// 세그먼트 항목을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - image: 표시할 이미지 (선택 사항)
+        ///   - image: 표시할 이미지, 생략하면 기본값으로 `nil` 적용
         ///   - title: 표시할 텍스트
         public init(image: Image? = nil, title: String) {
             self.image = image
@@ -83,7 +81,7 @@ public struct SegmentedControl: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
     ///   - items: 표시할 항목 배열
-    ///   - onSelect: 항목 선택 시 호출될 클로저 (기본값: nil)
+    ///   - onSelect: 항목 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
     public init(selectedIndex: Binding<Int>, items: [Item], onSelect: ((Int) -> Void)? = nil) {
         _selectedIndex = selectedIndex
         self.items = items
@@ -95,7 +93,7 @@ public struct SegmentedControl: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
     ///   - labels: 표시할 텍스트 배열
-    ///   - onSelect: 항목 선택 시 호출될 클로저 (기본값: nil)
+    ///   - onSelect: 항목 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
     public init(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)? = nil) {
         _selectedIndex = selectedIndex
         items = labels.map { Item(title: $0) }
@@ -105,6 +103,7 @@ public struct SegmentedControl: View {
     // MARK: - Body
     @State private var frameSize: CGSize = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 0) {
             ForEach(items.indices, id: \.self) { index in
@@ -123,7 +122,7 @@ public struct SegmentedControl: View {
                             .padding(.vertical, 2)
                         
                         Text(items[index].title)
-                            .paragraphNew(
+                            .paragraph(
                                 variant: buttonTitleFont,
                                 weight: .medium,
                                 color: buttonForegroundColor(isSelected: selectedIndex == index)
@@ -197,7 +196,7 @@ public struct SegmentedControl: View {
     
     /// 세그먼트 컨트롤의 시각적 스타일을 설정합니다.
     ///
-    /// - Parameter variant: 적용할 스타일 (.solid 또는 .outlined)
+    /// - Parameter variant: 적용할 스타일
     /// - Returns: 수정된 세그먼트 컨트롤 인스턴스
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
@@ -207,7 +206,7 @@ public struct SegmentedControl: View {
     
     /// 세그먼트 컨트롤의 크기를 설정합니다.
     ///
-    /// - Parameter size: 적용할 크기 (.large, .medium, 또는 .small)
+    /// - Parameter size: 적용할 크기
     /// - Returns: 수정된 세그먼트 컨트롤 인스턴스
     public func size(_ size: Size) -> Self {
         var zelf = self

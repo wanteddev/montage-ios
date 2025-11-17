@@ -14,60 +14,64 @@ import SwiftUI
 ///
 /// ```swift
 /// TopNavigation(
-///     scrollOffset: $scrollOffset,
+///     scrollOffset: 0,
 ///     backgroundColor: .white
 /// )
 /// .variant(.normal)
-/// .title ( /* 제목 텍스트 */ )
+/// .title("제목")
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
-///     { /* 컴포넌트1 },
-///     { /* 컴포넌트2 } ...
+///     { /* 컴포넌트1 */ },
+///     { /* 컴포넌트2 */ }
 /// )
 /// ```
 /// ```swift
-///TopNavigation(
-///    scrollOffset: $scrollOffset,
-///    backgroundColor: .white
-///)
-///.variant(.floating())
-///.title { /* 제목 컴포넌트 */ }
-///.leadingContent { /* 왼쪽 영역 컴포넌트 */ }
-///.trailingContents(
-///    { /* 컴포넌트1 },
-///    { /* 컴포넌트2 } ...
-///)
+/// TopNavigation(
+///     scrollOffset: 0,
+///     backgroundColor: .white
+/// )
+/// .variant(.floating)
+/// .titleView { /* 제목 컴포넌트 */ }
+/// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
+/// .trailingContents(
+///     { /* 컴포넌트1 */ },
+///     { /* 컴포넌트2 */ }
+/// )
 /// ```
 public struct TopNavigation: View {
-    // MARK: - Uninitialised properties
     
+    /// TopNavigation의 외관을 결정하는 열거형입니다.
+    ///
+    /// 내비게이션 바의 다양한 레이아웃과 시각적 스타일을 정의합니다.
+    ///
+    /// ```swift
+    /// TopNavigation
+    ///     .variant(.floating)
+    ///     .titleView { ... }
+    /// ```
+    public enum Variant: Equatable {
+        /// 기본 내비게이션 바 스타일
+        case normal
+        /// 타이틀이 크게 표시되는 내비게이션 바 스타일
+        case display
+        /// 검색 내비게이션 바 스타일
+        case search
+        /// 플로팅 내비게이션 바 스타일
+        case floating
+        
+        fileprivate var isFloating: Bool {
+            self == .floating
+        }
+    }
+    
+    // MARK: - Initializers
     
     private let scrollOffset: CGFloat
     private let backgroundColor: SwiftUI.Color?
-    
-    // MARK: - Computed properties
 
-    private var scrolled: Bool { scrollOffset < .zero }
-    
-    private var background: SwiftUI.Color {
-        backgroundColor ?? SwiftUI.Color.semantic(.backgroundNormal)
-    }
-    
-    private var backgroundOpacity: CGFloat {
-        if variant.isFloating {
-            return 0
-        } else {
-            let ratio = (scrollOffset / -32)
-            return max(0, min(1, ratio))
-        }
-    }
-
-    // MARK: - Initializers
-   
     /// TopNavigation을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일
     ///   - scrollOffset: 스크롤 오프셋 값
     ///   - backgroundColor: 배경색
     public init(
@@ -81,13 +85,18 @@ public struct TopNavigation: View {
     // MARK: - Modifiers
     
     private var variant: Variant = .normal
-    private var title: () -> AnyView  = { AnyView(EmptyView()) }
+    private var titleText: String?
+    private var titleView: () -> AnyView  = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView  = { AnyView(EmptyView()) }
     private var trailingContents: [() -> AnyView] = []
-
+    private var searchFieldPlaceholder: String?
+    private var searchTerm: Binding<String>?
+    private var searchFieldFocused: Binding<Bool>?
+    private var onSearch: (() -> Void)?
+    
     /// 내비게이션 바의 스타일(Variant)을 설정합니다.
     ///
-    /// `.normal`, `.extended`, `.floating`, `.emphasized` 중 하나의 스타일을 지정할 수 있으며,
+    /// `.normal`, `.display`, `.search`, `.floating` 중 하나의 스타일을 지정할 수 있으며,
     /// 스타일에 따라 내비게이션의 외형과 정렬 방식 등이 달라집니다.
     ///
     /// - Parameter variant: 적용할 내비게이션 스타일
@@ -100,16 +109,14 @@ public struct TopNavigation: View {
     
     /// 텍스트 기반 타이틀을 설정합니다.
     ///
-    /// 전달된 텍스트는 `TopNavigation.TitleView`로 감싸져 렌더링됩니다.
-    ///
     /// - Parameters:
     ///   - text: 타이틀에 표시할 문자열
     /// - Returns: 수정된 내비게이션 바 인스턴스
-    public func title(text: String) -> Self {
+    ///
+    /// - Note: titleView(_:)와 함께 사용될 경우 이 메서드로 설정된 텍스트만 표시됩니다.
+    public func title(_ text: String) -> Self {
         var zelf = self
-        zelf.title = {
-            AnyView(TitleView(variant: self.variant, title: text))
-        }
+        zelf.titleText = text
         return zelf
     }
     
@@ -119,9 +126,11 @@ public struct TopNavigation: View {
     ///
     /// - Parameter content: 표시할 타이틀 뷰를 반환하는 클로저
     /// - Returns: 수정된 인스턴스를 반환합니다.
-    public func title<V: View>(@ViewBuilder content: @escaping () -> V) -> Self {
+    ///
+    /// - Note: title(_:)와 함께 사용될 경우 title(_:) 메서드로 설정된 텍스트만 표시됩니다.
+    public func titleView<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.title = { AnyView(content()) }
+        zelf.titleView = { AnyView(content()) }
         return zelf
     }
     
@@ -131,7 +140,7 @@ public struct TopNavigation: View {
     ///
     /// - Parameter content: leadingContent 영역에 표시할 뷰를 반환하는 클로저
     /// - Returns: 수정된 인스턴스를 반환합니다.
-    public func leadingContent<V: View>(@ViewBuilder content: @escaping () -> V) -> Self {
+    public func leadingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var zelf = self
         zelf.leadingContent = { AnyView(content()) }
         return zelf
@@ -146,9 +155,11 @@ public struct TopNavigation: View {
     /// - Parameter contents: trailing 영역에 표시할 뷰들을 반환하는 클로저 배열
     /// - Returns: 수정된 인스턴스를 반환합니다.
     public func trailingContents(_ contents: [() -> any View]) -> Self {
-        trailingContents(contents.prefix(3).map{ view in { AnyView(view()) } })
+        var zelf = self
+        zelf.trailingContents = contents.prefix(3).map { content in { AnyView(content()) } }
+        return zelf
     }
-
+    
     /// 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
     ///
     /// 최대 3개까지의 뷰를 클로저를 , 로 구분하여 전달할 수 있으며,
@@ -158,42 +169,71 @@ public struct TopNavigation: View {
     /// - Parameter contents: trailing 영역에 표시할 뷰들을 반환하는 클로저들
     /// - Returns: 수정된 인스턴스를 반환합니다.
     public func trailingContents(_ contents: (() -> any View)...) -> Self {
-        trailingContents(contents.prefix(3).map{ view in { AnyView(view()) } })
+        trailingContents(contents)
     }
-
-    func trailingContents(_ contents: [() -> AnyView]) -> Self {
+    
+    /// 검색 필드의 속성과 동작을 설정합니다. variant가 `.search`일 때만 적용됩니다.
+    ///
+    /// - Parameters:
+    ///   - placeholder: 검색 필드에 표시할 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - searchTerm: 검색어 바인딩 변수
+    ///   - focused: 검색 필드의 포커스 상태 바인딩 변수, 생략하면 기본값으로 `nil` 적용
+    ///   - onSubmit: 검색어 제출 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+    /// - Returns: 수정된 인스턴스를 반환합니다.
+    public func searchField(
+        placeholder: String? = nil,
+        searchTerm: Binding<String>,
+        focused: Binding<Bool>? = nil,
+        onSubmit: (() -> Void)? = nil
+    ) -> Self {
         var zelf = self
-        zelf.trailingContents = Array(contents.prefix(3))
+        zelf.searchFieldPlaceholder = placeholder
+        zelf.searchTerm = searchTerm
+        zelf.searchFieldFocused = focused
+        zelf.onSearch = onSubmit
         return zelf
     }
-
+    
+    // MARK: - Body
+    
+    @State private var defaultSearchTerm: String = ""
+    
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
             Contents(
                 variant: variant,
-                title: title,
+                titleText: titleText,
+                titleView: titleView,
                 leadingContent: leadingContent,
-                trailingContents: trailingContents
+                trailingContents: trailingContents,
+                searchPlaceholder: searchFieldPlaceholder,
+                searchTerm: searchTerm ?? $defaultSearchTerm,
+                focused: searchFieldFocused,
+                onSubmit: onSearch
             )
-            .padding(.all, 16)
             .background {
                 ZStack {
                     Rectangle().fill(.ultraThinMaterial)
                         .opacity(backgroundOpacity)
-                    background
-                        .opacity(backgroundOpacity * 0.70)
+                    backgroundView
+                        .opacity(backgroundOpacity * 0.7)
+                }
+                .if(variant == .floating) {
+                    $0.mask {
+                        LinearGradient(
+                            colors: gradientMaskColors,
+                            startPoint: .init(x: 0, y: 1),
+                            endPoint: .init(x: 0, y: 0)
+                        )
+                    }
                 }
                 .ignoresSafeArea(.container, edges: .top)
-            }
-            
-            if scrolled && variant.isFloating == false {
-                Rectangle()
-                    .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral).opacity(backgroundOpacity))
-                    .frame(height: 0.5)
             }
         }
         .onAppear {
             Task { @MainActor in
+                // UIKit 네비게이션 바를 숨겨 SwiftUI TopNavigation과의 충돌을 방지합니다.
                 if let vc = UIApplication.topViewController() {
                     vc.navigationController?.setNavigationBarHidden(true, animated: false)
                     vc.setNavigationBar(type: .hideShadow)
@@ -202,89 +242,240 @@ public struct TopNavigation: View {
         }
     }
     
+    // MARK: - Computed properties
+    
+    private var backgroundView: SwiftUI.Color {
+        backgroundColor ?? SwiftUI.Color.semantic(.backgroundNormal)
+    }
+    
+    @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
+    
+    private var backgroundOpacity: CGFloat {
+        if variant.isFloating {
+            return 1
+        } else {
+            guard safeAreaInsets.top > 0 else { return 0 }
+            let ratio = (scrollOffset / -safeAreaInsets.top)
+            return max(0, min(1, ratio))
+        }
+    }
+    
+    private var gradientMaskColors = [0, 0.7, 1].map { SwiftUI.Color.black.opacity($0) }
+    
+    // MARK: - Inner Views
+    
     struct Contents: View {
+        
+        private let variant: Variant
+        private let titleText: String?
+        private let titleView: () -> AnyView
+        private let leadingContent: () -> AnyView
+        private let trailingContents: [() -> AnyView]
+        private let searchPlaceholder: String?
+        private let externalSearchTerm: Binding<String>?
+        private let externalFocused: Binding<Bool>?
+        private let onSubmit: (() -> Void)?
+        
+        init(
+            variant: Variant,
+            titleText: String? = nil,
+            titleView: @escaping () -> AnyView,
+            leadingContent: @escaping () -> AnyView,
+            trailingContents: [() -> AnyView],
+            searchPlaceholder: String? = nil,
+            searchTerm: Binding<String>? = nil,
+            focused: Binding<Bool>? = nil,
+            onSubmit: (() -> Void)? = nil
+        ) {
+            self.variant = variant
+            self.titleText = titleText
+            self.titleView = titleView
+            self.leadingContent = leadingContent
+            self.trailingContents = trailingContents
+            self.searchPlaceholder = searchPlaceholder
+            self.externalSearchTerm = searchTerm
+            self.externalFocused = focused
+            self.onSubmit = onSubmit
+        }
+        
+        private var actionItemsMaxWidth: CGFloat {
+            max(leadingSize.width, totalSizeOfTrailings.width)
+        }
+        
         @State private var leadingSize: CGSize = .zero
         @State private var totalSizeOfTrailings: CGSize = .zero
-        @State private var screenWidth: CGFloat = 0
+        @State private var internalSearchTerm = ""
+        @State private var internalFocused = false
+        @FocusState private var focusState: Bool
         
-        var variant: Variant
-        var title: () -> AnyView
-        var leadingContent: () -> AnyView
-        var trailingContents: [() -> AnyView]
-
-        private var titleSize: CGFloat {
-            let componentSize: CGFloat = max(leadingSize.width, totalSizeOfTrailings.width)
-            let componentWidth: CGFloat = componentSize * 2
-            let horizontalPadding: CGFloat = 16 * 2
-            let titleHorizontalPadding: CGFloat = 4 * 2
-            return max(screenWidth - (componentWidth + horizontalPadding + titleHorizontalPadding), 0)
+        private var searchTerm: Binding<String> {
+            externalSearchTerm ?? $internalSearchTerm
+        }
+        
+        private var focused: Binding<Bool> {
+            externalFocused ?? $internalFocused
         }
         
         var body: some View {
-            ZStack {
-                SwiftUI.Color.clear
-                    .frame(height: 1)
-                    .onGeometryChange(
-                        for: CGFloat.self,
-                        of: { $0.size.width },
-                        action: { screenWidth = $0 }
-                    )
+            Group {
                 switch variant {
                 case .normal:
-                    HStack(spacing: .zero) {
-                        leadingContent()
-                            .onGeometryChange(
-                                for: CGSize.self,
-                                of: { $0.size },
-                                action: { leadingSize = $0 }
-                            )
-                        Spacer()
-                        TrailingContents(trailingContents)
-                            .onGeometryChange(
-                                for: CGSize.self,
-                                of: { $0.size },
-                                action: { totalSizeOfTrailings = $0 }
-                            )
+                    ZStack {
+                        actionItems
+                        
+                        HStack(spacing: 6) {
+                            Spacer(minLength: actionItemsMaxWidth)
+                            titleContent
+                                .frame(height: 24)
+                                .padding(.vertical, 10)
+                            Spacer(minLength: actionItemsMaxWidth)
+                        }
                     }
-                    title()
-                        .frame(width: titleSize, height: 24)
-                case .extended:
-                    VStack(spacing: 20) {
-                        HStack {
-                            leadingContent()
-                            Spacer()
+                case .display:
+                    ZStack {
+                        actionItems
+                        
+                        HStack(spacing: 6) {
+                            titleContent
+                                .frame(height: 32, alignment: variant.textAlignment)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 16)
+                            Spacer(minLength: actionItemsMaxWidth)
+                        }
+                    }
+                case .search:
+                    HStack(spacing: 12) {
+                        leadingContent()
+                        
+                        searchField
+                        
+                        if trailingContents.isNotEmpty {
                             TrailingContents(trailingContents)
                         }
-                        HStack {
-                            title()
-                                .frame(height: 24, alignment: variant.textAlignment)
-                            Spacer()
-                        }
-                        .padding(.horizontal, 4)
                     }
                 case .floating:
-                    ZStack {
-                        HStack(spacing: .zero) {
-                            leadingContent()
-                                .onGeometryChange(
-                                    for: CGSize.self,
-                                    of: { $0.size },
-                                    action: { leadingSize = $0 }
-                                )
-                            Spacer()
-                            TrailingContents(trailingContents)
-                                .onGeometryChange(
-                                    for: CGSize.self,
-                                    of: { $0.size },
-                                    action: { totalSizeOfTrailings = $0 }
-                                )
-                        }
+                    actionItems
                         .frame(height: 24)
-                        title()
-                            .frame(width: titleSize, height: 24)
+                        .padding(.top, 16)
+                        .padding(.bottom, 20)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        
+        @ViewBuilder
+        private var titleContent: some View {
+            if let titleText {
+                TitleView(variant: variant, title: titleText)
+            } else {
+                titleView()
+            }
+        }
+        
+        @ViewBuilder
+        private var actionItems: some View {
+            HStack(spacing: .zero) {
+                if variant != .display {
+                    leadingContent()
+                        .onGeometryChange(
+                            for: CGSize.self,
+                            of: { $0.size },
+                            action: { leadingSize = $0 }
+                        )
+                }
+                Spacer()
+                TrailingContents(trailingContents)
+                    .onGeometryChange(
+                        for: CGSize.self,
+                        of: { $0.size },
+                        action: { totalSizeOfTrailings = $0 }
+                    )
+            }
+        }
+        
+        @ViewBuilder
+        private var searchField: some View {
+            HStack(alignment: .center, spacing: 4) {
+                Image.icon(.search)
+                    .resizable()
+                    .foregroundStyle(SwiftUI.Color.semantic( .labelAssistive))
+                    .frame(width: 20, height: 20)
+                    .padding(.horizontal, 2)
+                
+                ZStack(alignment: .trailing) {
+                    SwiftUI.TextField(
+                        "",
+                        text: searchTerm,
+                        prompt: {
+                            if let searchPlaceholder {
+                                Text(searchPlaceholder)
+                                    .typography(variant: .body1, weight: .regular, semantic: .labelAssistive)
+                            } else {
+                                nil
+                            }
+                        }()
+                    )
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .submitLabel(.search)
+                    .onSubmit(onSubmit ?? {})
+                    .font(.font(variant: .body1, weight: .regular))
+                    .foregroundStyle(SwiftUI.Color.semantic( .labelNormal))
+                    .frame(height: 24)
+                    .frame(maxWidth: .infinity)
+                    .focused($focusState)
+                    .onChange(of: focused.wrappedValue) {
+                        if focusState != $0 {
+                            focusState = $0
+                        }
+                    }
+                    .onChange(of: $focusState.wrappedValue) {
+                        if focused.wrappedValue != $0 {
+                            focused.wrappedValue = $0
+                        }
+                    }
+                    
+                    if searchTerm.wrappedValue.isNotEmpty {
+                        SwiftUI.Button {
+                            searchTerm.wrappedValue = ""
+                        } label: {
+                            Image.icon(.circleCloseFill)
+                                .resizable()
+                                .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
+                                .frame(width: 20, height: 20)
+                        }
                     }
                 }
             }
+            .padding(8)
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(SwiftUI.Color.semantic(.fillNormal))
+            }
+            .padding(.vertical, 8)
+        }
+    }
+    
+    struct TitleView: View {
+        let variant: Variant
+        let title: String
+        
+        init(
+            variant: Variant = .normal,
+            title: String
+        ) {
+            self.variant = variant
+            self.title = title
+        }
+        
+        var body: some View {
+            Text(title)
+                .paragraph(
+                    variant: variant.typoVariant,
+                    weight: variant.typoWeight,
+                    semantic: .labelStrong
+                )
+                .lineLimit(1)
         }
     }
     
@@ -294,108 +485,62 @@ public struct TopNavigation: View {
         init(_ contents:  [() -> AnyView]) {
             self.contents = contents
         }
-
+        
         var body: some View {
             HStack(alignment: .center, spacing: 16) {
-                ForEach(Array(contents.enumerated()), id: \.offset) { _, makeView in
-                    makeView()
+                ForEach(contents.indices, id: \.self) { index in
+                    contents[index]()
+                        .contentShape(Rectangle().scale(2), eoFill: true) // 터치영역 확장
                 }
             }
-            .contentShape(Rectangle().scale(2), eoFill: true) // 터치영역 확장
         }
     }
 }
 
-extension TopNavigation {
-    /// 내비게이션 바의 제목 컴포넌트입니다.
-    ///
-    /// 전달받은 스타일(variant)에 따라 타이포그래피가 동적으로 적용되며,
-    /// 최대 한 줄로 제한된 제목 텍스트를 보여줍니다.
-    ///
-    /// ```swift
-    /// TitleView(variant: .normal, title: "제목")
-    /// ```
-    public struct TitleView: View {
-        let variant: Variant
-        let title: String
+// MARK: - Resource Views
 
-        public init(
-            variant: Variant = .normal,
-            title: String
-        ) {
-            self.variant = variant
-            self.title = title
-        }
-        
-        public var body: some View {
-            Text(title)
-                .paragraphNew(
-                    variant: variant.typoVariant,
-                    weight: variant.typoWeight,
-                    semantic: .labelStrong
-                )
-                .lineLimit(1)
-        }
-    }
-    
+extension TopNavigation {
     /// 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다.
     ///
-    /// 뒤로가기, 아이콘 버튼, 텍스트 버튼 등의 다양한 형태를 지원하며,
-    /// 배경 및 대체 스타일도 옵션으로 제공합니다.
+    /// 뒤로가기, 아이콘 버튼, 텍스트 버튼 등의 다양한 형태를 제공합니다.
     ///
     /// ```swift
     /// LeadingButton(
-    ///     .back { dismiss() },
-    ///     true,   // alternative 스타일
-    ///     false   // background 없음
+    ///     .back { dismiss() }
     /// )
     /// ```
     ///
     /// 버튼이 없을 경우에는 투명한 공간을 차지하여 레이아웃이 유지됩니다.
     public struct LeadingButton: View {
         let action: Resource.LeadingButtonInfo?
-        let alternative: Bool
-        let background: Bool
         
-        public init(
-            _ action: Resource.LeadingButtonInfo?,
-            _ alternative: Bool = false,
-            _ background: Bool = false
-        ) {
+        /// 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - action: 버튼 액션
+        /// - Returns: LeadingButton 인스턴스
+        public init(_ action: Resource.LeadingButtonInfo?) {
             self.action = action
-            self.alternative = alternative
-            self.background = background
         }
         
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             if let action {
                 Group {
                     switch action {
                     case .back(let action):
-                        IconButton(
-                            variant: background
-                                ? .background(size: 24, isAlternative: alternative)
-                                : .default,
-                            icon: background ? .chevronLeftThick : .chevronLeft
-                        ) {
+                        IconButton(icon: .chevronLeft) {
                             action()
                         }
                         .frame(width: 24, height: 24)
                     case let .icon(i, action):
-                        IconButton(
-                            variant: background
-                                ? .background(size: 24, isAlternative: alternative)
-                                : .default,
-                            icon: i
-                        ) {
+                        IconButton(icon: i) {
                             action()
                         }
                         .frame(width: 24, height: 24)
                     case let .text(t, action):
                         TrailingTextButton(
                             text: t,
-                            background: background,
-                            alternative: alternative,
                             action: action
                         )
                         .frame(height: 24)
@@ -411,14 +556,9 @@ extension TopNavigation {
     
     /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.
     ///
-    /// 배경이 있는 스타일과 없는 스타일을 모두 지원하며,
-    /// alternative 색상 스타일 및 disable 처리도 가능합니다.
-    ///
     /// ```swift
     /// TrailingTextButton(
     ///     text: "확인",
-    ///     background: true,
-    ///     alternative: false,
     ///     disable: false
     /// ) {
     ///     // 버튼 액션
@@ -426,90 +566,46 @@ extension TopNavigation {
     /// ```
     public struct TrailingTextButton: View {
         private let text: String
-        private let background: Bool
-        private let alternative: Bool
         private let disable: Bool
         private let action: () -> Void
         
+        /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - text: 버튼에 표시할 텍스트
+        ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
+        ///   - action: 버튼 액션
+        /// - Returns: TrailingTextButton 인스턴스
         public init(
             text: String,
-            background: Bool = false,
-            alternative: Bool = false,
             disable: Bool = false,
             action: @escaping () -> Void
         ) {
             self.text = text
-            self.background = background
-            self.alternative = alternative
             self.disable = disable
             self.action = action
         }
 
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
-            Group {
-                if background {
-                    SwiftUI.Button {
-                        action()
-                    } label: {
-                        Text(text)
-                            .paragraphNew(
-                                variant: .body2,
-                                weight: .medium,
-                                semantic: disable ? .labelDisable : (alternative ? .staticWhite : .labelAlternative)
-                            )
-                            .if(alternative) {
-                                $0.opacity(0.88)
-                            } else: {
-                                $0.blendMode(.plusDarker)
-                            }
-                            .padding(.vertical, 5)
-                            .padding(.horizontal, 10)
-                            .modifying { original in
-                                Group {
-                                    if alternative {
-                                        original.background(
-                                            SwiftUI.Color.atomic(.coolNeutral30)
-                                                .opacity(0.61)
-                                        )
-                                    } else {
-                                        original.background(
-                                            ZStack {
-                                                SwiftUI.Color.semantic(.staticBlack)
-                                                    .opacity(0.05)
-                                                SwiftUI.Color.semantic(.staticWhite)
-                                                    .opacity(0.35)
-                                            }
-                                        )
-                                        .background(.thinMaterial)
-                                    }
-                                }
-                                .clipShape(RoundedRectangle(cornerRadius: 1000))
-                            }
-                    }
-                    .disabled(disable)
-                } else {
-                    Button.text(text: text) {
-                        action()
-                    }
-                    .disable(disable)
-                    .contentColor(.semantic(.labelNormal))
-                    .fontVariant(.headline2)
-                    .fontWeight(.regular)
-                }
+            TextButton(text: text) {
+                action()
             }
+            .disable(disable)
+            .contentColor(.semantic(.labelNormal))
+            .fontVariant(.headline2)
+            .fontWeight(.regular)
             .frame(height: 24)
         }
     }
     
     /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.
     ///
-    /// 배경 스타일, alternative 색상, 비활성화(disable), 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
+    /// 비활성화(disable), 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
     ///
     /// ```swift
     /// TrailingIconButton(
     ///     icon: .bell,
-    ///     background: true,
-    ///     alternative: false,
     ///     showPushBadge: true
     /// ) {
     ///     // 버튼 액션
@@ -518,33 +614,32 @@ extension TopNavigation {
     public struct TrailingIconButton: View {
         private let icon: Icon
         private let disable: Bool
-        private let background: Bool
-        private let alternative: Bool
         private let showPushBadge: Bool
         private let action: () -> Void
         
+        /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
+        ///
+        /// - Parameters:
+        ///   - icon: 아이콘 버튼의 아이콘
+        ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
+        ///   - showPushBadge: PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용
+        ///   - action: 아이콘 버튼 클릭시 동작할 액션
+        /// - Returns: TrailingIconButton 인스턴스
         public init(
             icon: Icon,
             disable: Bool = false,
-            background: Bool = false,
-            alternative: Bool = false,
             showPushBadge: Bool = false,
             action: @escaping () -> Void
         ) {
             self.icon = icon
             self.disable = disable
-            self.background = background
-            self.alternative = alternative
             self.showPushBadge = showPushBadge
             self.action = action
         }
         
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
-            IconButton(
-                variant: background ?
-                    .background(size: 24, isAlternative: alternative) : .default,
-                icon: icon
-            ) {
+            IconButton(icon: icon) {
                 action()
             }
             .disable(disable)
@@ -555,31 +650,6 @@ extension TopNavigation {
 }
 
 extension TopNavigation {
-    /// TopNavigation의 외관을 결정하는 열거형입니다.
-    ///
-    /// 내비게이션 바의 다양한 레이아웃과 시각적 스타일을 정의합니다.
-    ///
-    /// ```swift
-    /// TopNavigation
-    ///     .variant(.floating())
-    ///     .title { ... }
-    /// ```
-    public enum Variant: Equatable {
-        /// 기본 내비게이션 바 스타일
-        case normal
-        /// 확장된 내비게이션 바 스타일 (제목이 별도의 줄에 표시됨)
-        case extended
-        /// 플로팅 스타일의 내비게이션 바
-        case floating(alternative: Bool = false, background: Bool = false)
-        
-        fileprivate var isFloating: Bool {
-            switch self {
-            case .floating: true
-            case .normal, .extended: false
-            }
-        }
-    }
-    
     /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
     public enum Resource {
         /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
@@ -588,22 +658,23 @@ extension TopNavigation {
         ///
         /// ```swift
         /// TopNavigation()
-        ///     .leadingContent: { /* ... */ }
+        ///     .leadingContent { /* ... */ }
         ///
         /// ```
         public enum LeadingButtonInfo {
             /// 뒤로가기 버튼
-            /// - Parameters:
-            ///  - action: 뒤로가기 버튼 클릭시 동작할 action입니다.
+            /// - Parameter action: 뒤로가기 버튼 클릭시 동작할 액션
             case back(action: () -> Void)
             /// 아이콘 버튼
             /// - Parameters:
-            ///  - action: 아이콘 버튼 클릭시 동작할 action입니다.
-            case icon(Icon, action: () -> Void)
+            ///   - icon: 표시할 아이콘
+            ///   - action: 아이콘 버튼 클릭시 동작할 액션
+            case icon(_ icon: Icon, action: () -> Void)
             /// 텍스트 버튼
             /// - Parameters:
-            ///  - action: 텍스트 버튼 클릭시 동작할 action입니다.
-            case text(String, action: () -> Void)
+            ///   - text: 버튼에 표시할 텍스트
+            ///   - action: 텍스트 버튼 클릭시 동작할 액션
+            case text(_ text: String, action: () -> Void)
         }
         
         /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
@@ -611,28 +682,30 @@ extension TopNavigation {
         /// 아이콘 버튼과 텍스트 버튼을 지원합니다.
         ///
         /// ```swift
-        /// TopNavigation(
+        /// TopNavigation()
         ///     .trailingContents(
         ///         { TopNavigation.TrailingIconButton(icon: .search) { /* ... */ } },
         ///         { TopNavigation.TrailingTextButton(text: "완료") { /* ... */ } }
         ///     )
-        /// )
         /// ```
         public enum TrailingButtonInfo: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
-            ///  - icon: 아이콘 버튼의 아이콘입니다.
-            ///  - disable: 버튼 비활성화 여부를 결정합니다. 기본값은 false입니다.
-            ///  - showPushBadge: PushBadge의 노출 여부를 결정합니다. 기본값은 false입니다.
-            ///  - action: icon 클릭시 동작할 action입니다.
-            case icon(Icon, disable: Bool = false, showPushBadge: Bool = false, action: () -> Void)
+            ///   - icon: 아이콘 버튼의 아이콘
+            ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
+            ///   - showPushBadge: PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용
+            ///   - action: 아이콘 클릭시 동작할 액션
+            case icon(_ icon: Icon, disable: Bool = false, showPushBadge: Bool = false, action: () -> Void)
             /// text 형태의 Action입니다.
             /// - Parameters:
-            ///  - text: 텍스트 버튼의 텍스트입니다.
-            ///  - disable: 버튼 비활성화 여부를 결정합니다. 기본값은 false입니다.
-            ///  - action: text 클릭시 동작할 action입니다.
-            case text(String, disable: Bool = false, action: () -> Void)
+            ///   - text: 텍스트 버튼의 텍스트
+            ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
+            ///   - action: 텍스트 클릭시 동작할 액션
+            case text(_ text: String, disable: Bool = false, action: () -> Void)
             
+            /// 해시 값을 생성합니다.
+            ///
+            /// - Parameter hasher: 해시 값을 생성할 해시 값
             public func hash(into hasher: inout Hasher) {
                 switch self {
                 case let .icon(i, d, s, _):
@@ -645,6 +718,12 @@ extension TopNavigation {
                 }
             }
             
+            /// 두 개의 TrailingButtonInfo 인스턴스를 비교합니다.
+            ///
+            /// - Parameters:
+            ///   - lhs: 비교할 첫 번째 TrailingButtonInfo 인스턴스
+            ///   - rhs: 비교할 두 번째 TrailingButtonInfo 인스턴스
+            /// - Returns: 두 인스턴스가 같은지 여부
             public static func == (
                 lhs: TopNavigation.Resource.TrailingButtonInfo,
                 rhs: TopNavigation.Resource.TrailingButtonInfo
@@ -664,138 +743,143 @@ extension TopNavigation {
 
 extension TopNavigation.Variant {
     var typoVariant: Typography.Variant {
-        switch self {
-        case .normal: .headline2
-        case .extended: .title3
-        case .floating: .headline2
+        if case .display = self {
+            .title3
+        } else {
+            .headline2
         }
     }
     
     var typoWeight: Typography.Weight {
-        switch self {
-        case .normal: .bold
-        case .extended: .bold
-        case .floating: .bold
-        }
+        .bold
     }
     
     var textAlignment: Alignment {
-        switch self {
-        case .normal: .center
-        case .extended: .leading
-        case .floating: .center
+        if case .display = self {
+            .leading
+        } else {
+            .center
         }
     }
 }
 
-extension TopNavigation {
-    /// 컨텐츠 뷰에 TopNavigation을 적용하는 뷰 모디파이어입니다.
-    ///
-    /// 스크롤 감지 및 내비게이션 바 스타일링을 자동으로 처리합니다.
-    ///
-    /// ```swift
-    /// contentView
-    ///     .modifier(
-    ///         TopNavigation.TopNavigationModifier(
-    ///             variant: .normal,
-    ///             title: {
-    ///                 TopNavigation.TitleView(title: "제목")
-    ///             },
-    ///             leadingContent: {
-    ///                 TopNavigation.LeadingButton(.back(action: {}))
-    ///             },
-    ///             trailingContents: [
-    ///                 {
-    ///                     TopNavigation.TrailingIconButton(icon: .bell, action: {})
-    ///                 }
-    ///                 ...
-    ///             ]
-    ///         )
-    ///     )
-    /// ```
-    struct TopNavigationModifier: ViewModifier {
-        private let variant: Variant
-        private let title: (() -> AnyView)
-        private let backgroundColor: SwiftUI.Color?
-        private let leadingContent: (() -> AnyView)
-        private let trailingContents: [() -> AnyView]
-        private let actionAreaModel: ActionArea.Model?
-        
-        /// TopNavigationModifier를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 내비게이션 바의 외관 스타일
-        ///   - title: 제목 영역
-        ///   - backgroundColor: 배경색
-        ///   - leadingContent: 좌측에 표시할 컴포넌트
-        ///   - trailingContents: 우측에 표시할 컴포넌트 배열
-        ///   - actionAreaModel: 액션 영역 모델
-        init(
-            variant: Variant,
-            title: (() -> AnyView)? = nil,
-            backgroundColor: SwiftUI.Color? = nil,
-            leadingContent: (() -> AnyView)? = nil,
-            trailingContents: [() -> AnyView] = [],
-            actionAreaModel: ActionArea.Model? = nil
-        ) {
-            self.variant = variant
-            self.title = title ?? { AnyView(EmptyView()) }
-            self.backgroundColor = backgroundColor
-            self.leadingContent = leadingContent ?? { AnyView(EmptyView()) }
-            self.trailingContents = Array(trailingContents.prefix(3))
-            self.actionAreaModel = actionAreaModel
-        }
-        
-        // MARK: - Body
-        
-        @Environment(\.safeAreaInsets) private var safeAreaInsets
-
-        @State private var scrollStatus: ScrollView.ScrollStatus = .init()
-        @State private var navigationHeight: CGFloat = .zero
-        @State private var originBottomActionHeight: CGFloat = .zero
-        @State private var currentBottomActionHeight: CGFloat = .zero
-
-        func body(content: Content) -> some View {
-            VStack(spacing: 0) {
-                ZStack {
-                    ScrollView(scrollStatus: $scrollStatus) {
-                        content
-                            .padding(.top, navigationHeight)
-                    }
-                    .background(
-                        background
-                    )
-                    
-                    VStack(alignment: .leading, spacing: .zero) {
-                        TopNavigation(
-                            scrollOffset: scrollStatus.contentOffset.y,
-                            backgroundColor: backgroundColor
-                        )
-                        .variant(variant)
-                        .title { title() }
-                        .leadingContent { leadingContent() }
-                        .trailingContents(trailingContents)
-                        .onGeometryChange(
-                            for: CGSize.self,
-                            of: { $0.size },
-                            action: { navigationHeight = $0.height }
-                        )
-                        Spacer()
-                    }
+struct TopNavigationModifier: ViewModifier {
+    private let variant: TopNavigation.Variant
+    private let titleView: (() -> any View)?
+    private let backgroundColor: SwiftUI.Color?
+    private let leadingContent: (() -> any View)?
+    private let trailingContents: [() -> any View]
+    private let actionAreaModel: ActionArea.Model?
+    private let searchPlaceholder: String?
+    private let externalSearchTerm: Binding<String>?
+    private let externalFocused: Binding<Bool>?
+    private let onSubmit: (() -> Void)?
+    
+    init(
+        variant: TopNavigation.Variant,
+        titleView: (() -> any View)?,
+        backgroundColor: SwiftUI.Color?,
+        leadingContent: (() -> any View)?,
+        trailingContents: [() -> any View],
+        actionAreaModel: ActionArea.Model?,
+        searchPlaceholder: String?,
+        searchTerm: Binding<String>?,
+        searchFocused: Binding<Bool>?,
+        onSearch: (() -> Void)?
+    ) {
+        self.variant = variant
+        self.titleView = titleView
+        self.backgroundColor = backgroundColor
+        self.leadingContent = leadingContent
+        self.trailingContents = trailingContents
+        self.actionAreaModel = actionAreaModel
+        self.searchPlaceholder = searchPlaceholder
+        self.externalSearchTerm = searchTerm
+        self.externalFocused = searchFocused
+        self.onSubmit = onSearch
+    }
+    
+    // MARK: - Body
+    
+    @State private var scrollStatus: ScrollView.ScrollStatus = .init()
+    @State private var navigationHeight: CGFloat = .zero
+    @State private var internalSearchTerm = ""
+    @State private var internalFocused = false
+    
+    private var searchTerm: Binding<String> {
+        externalSearchTerm ?? $internalSearchTerm
+    }
+    
+    private var focused: Binding<Bool> {
+        externalFocused ?? $internalFocused
+    }
+    
+    func body(content: Content) -> some View {
+        VStack(spacing: 0) {
+            ZStack {
+                ScrollView(scrollStatus: $scrollStatus) {
+                    content
+                        .padding(.top, navigationHeight)
                 }
+                .background(
+                    background
+                )
                 
-                if let actionAreaModel {
-                    ActionArea(variant: actionAreaModel.variant)
-                        .clearBackground(scrollStatus.scrolledToMax)
-                        .caption(actionAreaModel.caption)
-                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                VStack(alignment: .leading, spacing: .zero) {
+                    TopNavigation(
+                        scrollOffset: scrollStatus.contentOffset.y,
+                        backgroundColor: backgroundColor
+                    )
+                    .variant(variant)
+                    .searchField(
+                        placeholder: searchPlaceholder,
+                        searchTerm: searchTerm,
+                        focused: focused,
+                        onSubmit: onSubmit
+                    )
+                    .modifying {
+                        var mutated = $0
+                        if let titleView {
+                            mutated = mutated.titleView {
+                                AnyView(titleView())
+                            }
+                        }
+                        if let leadingContent {
+                            mutated = mutated.leadingContent {
+                                AnyView(leadingContent())
+                            }
+                        }
+                        if trailingContents.isNotEmpty {
+                            mutated = mutated.trailingContents(trailingContents)
+                        }
+                        return mutated
+                    }
+                    .onGeometryChange(
+                        for: CGSize.self,
+                        of: { $0.size },
+                        action: { navigationHeight = $0.height }
+                    )
+                    Spacer()
                 }
             }
+            
+            if let actionAreaModel {
+                ActionArea(variant: actionAreaModel.variant)
+                    .caption(actionAreaModel.caption)
+                    .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                    .modifying {
+                        if case .manual(let transparency) = actionAreaModel.backgroundTransparencyControl {
+                            $0.transparentBackground(transparency)
+                        } else {
+                            $0.transparentBackground(scrollStatus.scrolledToMax)
+                        }
+                    }
+            }
         }
-        
-        private var background: SwiftUI.Color {
-            backgroundColor ?? .clear
-        }
+    }
+    
+    private var background: SwiftUI.Color {
+        backgroundColor ?? .clear
     }
 }
 
@@ -805,29 +889,41 @@ extension View {
     /// 현재 뷰에 TopNavigation 바를 적용합니다.
     ///
     /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
-    ///   - title: 표시할 제목 컴포넌트 클로저 (기본값: nil)
-    ///   - backgroundColor: 배경색 (기본값: nil)
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
-    ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
+    ///   - variant: 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용
+    ///   - titleView: 표시할 제목 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용
+    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
+    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
+    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
+    ///   - onSearch: 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
-        title: (() -> any View)? = nil,
+        titleView: (() -> any View)? = nil,
         backgroundColor: SwiftUI.Color? = nil,
         leadingContent: (() -> any View)? = nil,
         trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil
+        withBottom model: ActionArea.Model? = nil,
+        searchPlaceholder: String? = nil,
+        searchTerm: Binding<String>? = nil,
+        searchFocused: Binding<Bool>? = nil,
+        onSearch: (() -> Void)? = nil
     ) -> some View {
         modifier(
-            TopNavigation.TopNavigationModifier(
+            TopNavigationModifier(
                 variant: variant,
-                title: title.map { v in { AnyView(v()) } },
+                titleView: titleView.map { v in { AnyView(v()) } },
                 backgroundColor: backgroundColor,
                 leadingContent: leadingContent.map { v in { AnyView(v()) } },
                 trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model
+                actionAreaModel: model,
+                searchPlaceholder: searchPlaceholder,
+                searchTerm: searchTerm,
+                searchFocused: searchFocused,
+                onSearch: onSearch
             )
         )
     }
@@ -835,12 +931,16 @@ extension View {
     /// 현재 뷰에 TopNavigation 바를 적용합니다.
     ///
     /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일 (기본값: .normal)
-    ///   - title: 표시할 텍스트 타이틀 (기본값: nil)
-    ///   - backgroundColor: 배경색 (기본값: nil)
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저 (기본값: nil)
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저 (기본값: [])
-    ///   - model: 하단 액션 영역에 대한 모델 (기본값: nil)
+    ///   - variant: 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용
+    ///   - title: 표시할 텍스트 타이틀
+    ///   - backgroundColor: 배경색, 생략하면 기본값으로 `nil` 적용
+    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
+    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
+    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
+    ///   - onSearch: 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: TopNavigation이 적용된 뷰
     public func topNavigation(
         variant: TopNavigation.Variant = .normal,
@@ -848,16 +948,24 @@ extension View {
         backgroundColor: SwiftUI.Color? = nil,
         leadingContent: (() -> any View)? = nil,
         trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil
+        withBottom model: ActionArea.Model? = nil,
+        searchPlaceholder: String? = nil,
+        searchTerm: Binding<String>? = nil,
+        searchFocused: Binding<Bool>? = nil,
+        onSearch: (() -> Void)? = nil
     ) -> some View {
         modifier(
-            TopNavigation.TopNavigationModifier(
+            TopNavigationModifier(
                 variant: variant,
-                title:  { AnyView(TopNavigation.TitleView(variant: variant, title: title)) },
+                titleView: { AnyView(TopNavigation.TitleView(variant: variant, title: title)) },
                 backgroundColor: backgroundColor,
                 leadingContent: leadingContent.map { v in { AnyView(v()) } },
                 trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model
+                actionAreaModel: model,
+                searchPlaceholder: searchPlaceholder,
+                searchTerm: searchTerm,
+                searchFocused: searchFocused,
+                onSearch: onSearch
             )
         )
     }

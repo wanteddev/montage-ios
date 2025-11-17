@@ -31,9 +31,6 @@ import SwiftUI
 ///         .foregroundColor(.blue)
 /// }
 /// ```
-///
-/// - Note: 본 컴포넌트는 타이틀, 서브타이틀, 더보기 버튼, 커스텀 트레일링 콘텐츠를
-///   조합하여 다양한 형태의 섹션 헤더를 구성할 수 있습니다.
 public struct SectionHeader: View {
     // MARK: - Types
     
@@ -72,12 +69,13 @@ public struct SectionHeader: View {
     // MARK: - Body
     @State private var trailingContentEmpty = true
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             HStack(spacing: 0) {
                 HStack(alignment: .bottom, spacing: 16) {
                     Text(title)
-                        .paragraphNew(variant: variant, weight: .bold, color: titleColor)
+                        .paragraph(variant: variant, weight: .bold, color: titleColor)
                         .multilineTextAlignment(.leading)
                         .layoutPriority(1)
                     
@@ -108,8 +106,6 @@ public struct SectionHeader: View {
     /// - Parameters:
     ///   - size: 적용할 헤더 크기
     /// - Returns: 수정된 SectionHeader 인스턴스
-    ///
-    /// - Note: 기본값은 `.medium`입니다.
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size
@@ -124,8 +120,6 @@ public struct SectionHeader: View {
     /// - Parameters:
     ///   - color: 적용할 텍스트 색상
     /// - Returns: 수정된 SectionHeader 인스턴스
-    ///
-    /// - Note: 기본값은 `.semantic(.labelStrong)`입니다.
     public func titleColor(_ color: SwiftUI.Color) -> Self {
         var zelf = self
         zelf.titleColor = color

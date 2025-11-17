@@ -11,13 +11,13 @@ import SwiftUI
 struct FloatModifier<V: Equatable>: ViewModifier {
     enum DismissPolicy {
         case after(seconds: TimeInterval)
-        case onTap
+        case onTouchOutside
         case onViewDisappear
         case manually
 
-        var isOnTap: Bool {
+        var isOnTouchOutside: Bool {
             switch self {
-            case .onTap: true
+            case .onTouchOutside: true
             default: false
             }
         }
@@ -75,7 +75,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
         content
             .onChange(of: updatingValue.wrappedValue) {
                 if $0 != nil {
-                    present()
+                    isPresented = true
                 }
             }
             .onChange(of: isPresented) {
@@ -87,25 +87,36 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             }
             .onDisappear {
                 if case .onViewDisappear = dismissPolicy {
-                    floatHC?.hide(animation: dismissingAnimation, completion: onDismiss)
+                    floatHC?.hide(animation: dismissingAnimation) {
+                        dismiss()
+                    }
                 }
             }
     }
 
+    @MainActor
     func present() {
-        // TODO: setup과 present 분리
+        animationWorkItem?.cancel()
+        animationWorkItem = nil
+        floatRootView?.onHitTest = nil
         floatRootView?.removeFromSuperview()
-        let floatHC = FloatHostingController(rootView: AnyView(floatView()))
+        floatRootView = nil
+        floatHC = nil
+        
+        let floatHC: FloatHostingController<AnyView> = FloatHostingController(rootView: AnyView(floatView()))
         self.floatHC = floatHC
         if let hostingView = floatHC.view,
-           let topView = UIApplication.windows?.first {
+           let windowScene = UIApplication.shared.connectedScenes
+               .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+           let topView = windowScene.windows.first(where: { $0.isKeyWindow }) {
             let hitTestingView = HitTestingView()
             floatRootView = hitTestingView
-            if dismissPolicy.isOnTap {
-                floatRootView?.onHitTest = {
+            if dismissPolicy.isOnTouchOutside {
+                floatRootView?.onHitTest = { [weak floatHC] in
                     if $0 == nil {
-                        floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
-                        isPresented = false
+                        floatHC?.hide(animation: dismissingAnimation) {
+                            dismiss()
+                        }
                     }
                 }
             }
@@ -116,28 +127,33 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             floatHC.show(animation: presentingAnimation)
 
             if case .after(let seconds) = dismissPolicy {
-                animationWorkItem?.cancel()
-
-                animationWorkItem = DispatchWorkItem {
-                    floatHC.hide(animation: dismissingAnimation, completion: onDismiss)
-                    isPresented = false
-
-                    animationWorkItem = nil
+                let workItem = DispatchWorkItem { [weak floatHC] in
+                    floatHC?.hide(animation: dismissingAnimation) {
+                        dismiss()
+                    }
                 }
+                
+                animationWorkItem = workItem
 
-                if let animationWorkItem {
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + seconds,
-                        execute: animationWorkItem
-                    )
-                }
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + seconds,
+                    execute: workItem
+                )
             }
         }
     }
-
+    
+    @MainActor
     func dismiss() {
+        animationWorkItem?.cancel()
+        animationWorkItem = nil
+        floatRootView?.onHitTest = nil
         floatRootView?.removeFromSuperview()
+        floatRootView = nil
+        floatHC = nil
         isPresented = false
+        updatingValue.wrappedValue = nil
+        onDismiss?()
     }
 }
 

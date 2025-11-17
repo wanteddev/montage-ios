@@ -29,13 +29,9 @@ GroupAvatar(
     }
 )
 .trailingContent {
-    Text("+3").typographyNew(variant: .body2)
+    Text("+3").typography(variant: .body2)
 }
 ```
-
->  **Note**
->
-> 아바타는 왼쪽에서 오른쪽으로 겹쳐서 표시되며, 마지막 아바타가 가장 앞에 표시됩니다.
 
 ## Topics
 
@@ -45,15 +41,16 @@ GroupAvatar(
 
 <summary>``init([String], variant: Avatar.Variant, size: Size, onTap: ((_ index: Int) -> Void)?)``</summary>
 
+
 그룹 아바타를 초기화합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
   | `imageUrls` | 표시할 이미지의 URL 문자열 배열 (최대 5개) |
-  | `variant` | 아바타 유형 (.person, .company, .academy) |
+  | `variant` | 아바타 유형 |
   | `size` | 그룹 아바타 크기 |
-  | `onTap` | 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨) (기본값: nil) |
+  | `onTap` | 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용 |
 </details>
 
 ___
@@ -62,6 +59,9 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -70,6 +70,7 @@ ___
 <details>
 
 <summary>``func trailingContent<V>(() -> V) -> GroupAvatar``</summary>
+
 
 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
 
@@ -92,6 +93,7 @@ ___
 
 <summary>``enum Size``</summary>
 
+
 그룹 아바타의 크기와 간격을 정의하는 열거형입니다.
 #### Enumeration Cases
 
@@ -99,30 +101,20 @@ ___
 
 <summary>``case small``</summary>
 
+
 작은 크기
 </details>
 <details>
 
 <summary>``case xsmall``</summary>
 
+
 가장 작은 크기
 </details>
-
-#### Default Implementations
-
-
-[Equatable Implementations](/docs/utilities/ios/equatable-implementations)
 
 </details>
 
 ___
-### Default Implementations
-
-
-[View Implementations](/docs/utilities/ios/view-implementations)
-
-[View Implementations](/docs/utilities/ios/view-implementations)
-
 ## Relationships
 
 Conforms To

@@ -32,12 +32,13 @@ public struct ContentBadge: View {
     }
     
     /// 뱃지의 사이즈를 결정하는 열거형입니다.
-    ///
-    /// - xsmall: 가장 작은 크기의 뱃지 (높이 22pt)
-    /// - small: 중간 크기의 뱃지 (높이 24pt)
-    /// - medium: 큰 크기의 뱃지 (높이 28pt)
     public enum Size {
-        case xsmall, small, medium
+        /// - xsmall: 가장 작은 크기의 뱃지
+        case xsmall
+        /// - small: 중간 크기의 뱃지
+        case small
+        /// - medium: 큰 크기의 뱃지
+        case medium
     }
     
     /// 뱃지의 색상을 결정하는 열거형입니다.
@@ -48,13 +49,13 @@ public struct ContentBadge: View {
     /// ```
     public enum ColorStyle: Equatable, Hashable {
         /// 중립 색상 뱃지
-        /// - Parameter contentColor: 콘텐츠 색상 (nil일 경우 기본 색상 사용)
+        /// - Parameter contentColor: 콘텐츠 색상, 생략하면 기본값으로 `nil` 적용 (기본 색상 사용)
         case neutral(_ contentColor: SwiftUI.Color? = nil)
         
         /// 강조 색상 뱃지
         /// - Parameters:
         ///   - contentColor: 콘텐츠 색상
-        ///   - background: 배경 색상 (nil일 경우 contentColor의 투명도를 조절하여 사용)
+        ///   - background: 배경 색상, 생략하면 기본값으로 `nil` 적용 (contentColor의 투명도를 조절하여 사용)
         case accent(_ contentColor: SwiftUI.Color, background: SwiftUI.Color? = nil)
     }
     
@@ -63,7 +64,7 @@ public struct ContentBadge: View {
     /// ContentBadge를 초기화합니다.
     ///
     /// - Parameters:
-    ///   - variant: 뱃지의 스타일 (solid 또는 outlined)
+    ///   - variant: 뱃지의 스타일, 생략하면 기본값으로 `.solid` 적용
     ///   - text: 뱃지에 표시할 텍스트
     public init(variant: Variant = .solid, text: String) {
         self.variant = variant
@@ -75,7 +76,9 @@ public struct ContentBadge: View {
     private var size: Size = .small
     private var colorStyle: ColorStyle = .neutral()
     private var leadingIcon: Icon? = nil
+    private var leadingIconUsesTemplate = false
     private var trailingIcon: Icon? = nil
+    private var trailingIconUsesTemplate = false
     private var text: String
     
     /// 뱃지의 크기를 설정합니다.
@@ -100,40 +103,59 @@ public struct ContentBadge: View {
     
     /// 뱃지 텍스트 앞에 표시될 아이콘을 설정합니다.
     ///
-    /// - Parameter leadingIcon: 선행 아이콘
+    /// - Parameters
+    ///   - leadingIcon: 선행 아이콘
+    ///   - usesTemplate: 아이콘 색상에 template 렌더링 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 선행 아이콘이 추가된 ContentBadge
-    public func leadingIcon(_ leadingIcon: Icon) -> Self {
+    public func leadingIcon(_ leadingIcon: Icon, usesTemplate: Bool = true) -> Self {
         var zelf = self
         zelf.leadingIcon = leadingIcon
+        zelf.leadingIconUsesTemplate = usesTemplate
         return zelf
     }
     
     /// 뱃지 텍스트 뒤에 표시될 아이콘을 설정합니다.
     ///
-    /// - Parameter trailingIcon: 후행 아이콘
+    /// - Parameters:
+    ///   - trailingIcon: 후행 아이콘
+    ///   - usesTemplate: 아이콘 색상에 template 렌더링 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 후행 아이콘이 추가된 ContentBadge
-    public func trailingIcon(_ trailingIcon: Icon) -> Self {
+    public func trailingIcon(_ trailingIcon: Icon, usesTemplate: Bool = true) -> Self {
         var zelf = self
         zelf.trailingIcon = trailingIcon
+        zelf.trailingIconUsesTemplate = usesTemplate
         return zelf
     }
     
     // MARK: - Body
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: contentItemSpacing) {
             if let leadingIcon {
                 Image.icon(leadingIcon)
                     .resizable()
-                    .foregroundStyle(contentColor)
+                    .modifying {
+                        if leadingIconUsesTemplate {
+                            $0.foregroundStyle(contentColor)
+                        } else {
+                            $0.renderingMode(.original)
+                        }
+                    }
                     .frame(width: iconSize.width, height: iconSize.height)
             }
             Text(text)
-                .typographyNew(variant: typoVariant, weight: .medium, color: contentColor)
+                .typography(variant: typoVariant, weight: .medium, color: contentColor)
             if let trailingIcon {
                 Image.icon(trailingIcon)
                     .resizable()
-                    .foregroundStyle(contentColor)
+                    .modifying {
+                        if trailingIconUsesTemplate {
+                            $0.foregroundStyle(contentColor)
+                        } else {
+                            $0.renderingMode(.original)
+                        }
+                    }
                     .frame(width: iconSize.width, height: iconSize.height)
             }
         }

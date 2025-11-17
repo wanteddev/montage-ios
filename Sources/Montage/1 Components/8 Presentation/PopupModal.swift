@@ -40,13 +40,11 @@ import SwiftUI
 /// 모디파이어를 사용하면 더 간편하게 구현할 수 있으며, 애니메이션이 자동으로 처리됩니다:
 /// ```swift
 /// YourView()
-///     .modifier(
-///         PopupModalModifier(
-///             isPresented: $showPopup
-///         ) {
-///             Text("팝업 내용")
-///         }
-///     )
+///     .popupModal(
+///         isPresented: $showPopup
+///     ) {
+///         Text("팝업 내용")
+///     }
 /// ```
 public struct PopupModal: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
@@ -54,7 +52,6 @@ public struct PopupModal: View {
         /// 컨텐츠 크기에 맞게 자동 조절됩니다.
         case hug
         /// 지정한 높이로 고정됩니다.
-        ///
         /// - Parameter height: 높이
         case fixed(CGFloat)
     }
@@ -75,6 +72,7 @@ public struct PopupModal: View {
 
     private let popupMaxHeight: CGFloat = min(760, UIScreen.main.bounds.height - 40)
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
@@ -106,7 +104,7 @@ public struct PopupModal: View {
                 
                 if let actionAreaModel {
                     ActionArea(variant: actionAreaModel.variant)
-                        .clearBackground(scrolledToBottom)
+                        .transparentBackground(scrolledToBottom)
                         .caption(actionAreaModel.caption)
                         .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                         .padding(.bottom, 20)
@@ -123,8 +121,7 @@ public struct PopupModal: View {
         }
         .padding(.horizontal, 20)
         .modifying {
-            print("resize: \(resize)")
-            return if case .fixed(let height) = resize {
+            if case .fixed(let height) = resize {
                 $0.frame(height: height)
             } else {
                 $0.frame(maxHeight: min(popupMaxHeight, popupContentHeight))
@@ -230,25 +227,6 @@ public struct PopupModal: View {
     }
 }
 
-/// 팝업 모달을 표시하기 위한 뷰 모디파이어입니다.
-///
-/// 이 모디파이어를 사용하면 팝업 모달을 자연스러운 애니메이션과 함께
-/// 표시하고 설정할 수 있습니다.
-///
-/// ```swift
-/// @State private var showPopup = false
-///
-/// Button("팝업 열기") {
-///     showPopup = true
-/// }
-/// .modifier(
-///     PopupModalModifier(
-///         isPresented: $showPopup
-///     ) {
-///         Text("팝업 내용")
-///     }
-/// )
-/// ```
 struct PopupModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let resize: PopupModal.Resize
@@ -257,15 +235,6 @@ struct PopupModalModifier: ViewModifier {
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
     
-    /// 팝업 모달 모디파이어를 초기화합니다.
-    ///
-    /// - Parameters:
-    ///   - isPresented: 팝업 모달 표시 여부에 대한 바인딩
-    ///   - resize: 팝업 모달의 크기 설정 (기본값: .hug)
-    ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
-    ///   - content: 모달에 표시할 콘텐츠를 반환하는 클로저
-    ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
-    ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
     init<V: View>(
         isPresented: Binding<Bool>,
         resize: PopupModal.Resize = .hug,
@@ -354,11 +323,11 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
-    ///   - resize: 모달 크기 조절 방식 (기본값: .hug)
-    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
+    ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
+    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용
+    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
     ///   - content: 모달에 표시할 콘텐츠 클로저
-    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 팝업 모달이 적용된 뷰
     public func popupModal<V: View>(
         isPresented: Binding<Bool>,

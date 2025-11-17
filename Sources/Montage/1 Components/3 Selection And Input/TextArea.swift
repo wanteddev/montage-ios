@@ -90,30 +90,30 @@ public struct TextArea: View {
         
         /// 문자 수 카운터
         /// - Parameters:
-        ///   - limit: 최대 문자 수 제한 (nil인 경우 제한 없음)
-        ///   - overflow: 최대 문자 수 초과 허용 여부
+        ///   - limit: 최대 문자 수 제한, 생략하면 기본값으로 `nil` 적용 (제한 없음)
+        ///   - overflow: 최대 문자 수 초과 허용 여부, 생략하면 기본값으로 `false` 적용
         case characterCount(limit: Int? = nil, overflow: Bool = false)
         
         /// 텍스트 버튼
         /// - Parameters:
-        ///   - placement: 버튼 위치
-        ///   - varaint: 버튼 변형 스타일
+        ///   - placement: 버튼 위치, 생략하면 기본값으로 `.leading` 적용
+        ///   - variant: 버튼 변형 스타일, 생략하면 기본값으로 `.assistive` 적용
         ///   - title: 버튼 텍스트
-        ///   - handler: 버튼 클릭 핸들러
+        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case textButton(
             placement: Placement = .leading,
-            varaint: Button.Text.Variant? = .assistive,
+            variant: TextButton.Color? = .assistive,
             title: String,
             handler: (() -> Void)? = nil
         )
         
         /// 아이콘 버튼
         /// - Parameters:
-        ///   - placement: 버튼 위치
-        ///   - variant: 버튼 변형 스타일
+        ///   - placement: 버튼 위치, 생략하면 기본값으로 `.leading` 적용
+        ///   - variant: 버튼 변형 스타일, 생략하면 기본값으로 `.solid(size: .small)` 적용
         ///   - icon: 버튼 아이콘
-        ///   - tintColor: 아이콘 색상
-        ///   - handler: 버튼 클릭 핸들러
+        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAlternative)` 적용
+        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case iconButton(
             placement: Placement = .leading,
             variant: IconButton.Variant? = .solid(size: .small),
@@ -125,40 +125,40 @@ public struct TextArea: View {
         /// 단순 아이콘
         /// - Parameters:
         ///   - icon: 표시할 아이콘
-        ///   - tintColor: 아이콘 색상
+        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAssistive)` 적용
         case icon(
-            Icon,
+            _ icon: Icon,
             tintColor: SwiftUI.Color = .semantic(.labelAssistive)
         )
         
-        /// 액션 칩
+        /// 칩
         /// - Parameters:
-        ///   - variant: 칩 변형 스타일
+        ///   - variant: 칩 변형 스타일, 생략하면 기본값으로 `.solid` 적용
         ///   - title: 칩 텍스트
-        ///   - handler: 칩 클릭 핸들러
-        case actionChip(
-            ActionChip.Variant = .solid,
+        ///   - handler: 칩 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+        case chip(
+            _ variant: Chip.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         
-        /// 필터 칩
+        /// 필터 버튼
         /// - Parameters:
-        ///   - variant: 칩 변형 스타일
-        ///   - title: 칩 텍스트
-        ///   - handler: 칩 클릭 핸들러
-        case filterChip(
-            FilterChip.Variant = .solid,
+        ///   - variant: 버튼 변형 스타일, 생략하면 기본값으로 `.solid` 적용
+        ///   - title: 버튼 텍스트
+        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+        case filterButton(
+            _ variant: FilterButton.Variant = .solid,
             title: String,
             handler: (() -> Void)? = nil
         )
         
         /// 뱃지
         /// - Parameters:
-        ///   - variant: 뱃지 변형 스타일
+        ///   - variant: 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
         ///   - title: 뱃지 텍스트
         case badge(
-            ContentBadge.Variant = .solid,
+            _ variant: ContentBadge.Variant = .solid,
             title: String
         )
         
@@ -180,7 +180,7 @@ public struct TextArea: View {
     ///
     /// - Parameters:
     ///   - text: 텍스트 영역의 값을 바인딩
-    ///   - focus: 텍스트 영역의 포커스 상태를 바인딩 (선택 사항)
+    ///   - focus: 텍스트 영역의 포커스 상태를 바인딩, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 텍스트 영역 인스턴스
     public init(
         text: Binding<String>,
@@ -220,7 +220,7 @@ public struct TextArea: View {
     ///
     /// 오류 상태일 때는 텍스트 영역이 적색 테두리로 강조됩니다.
     ///
-    /// - Parameter negative: 오류 상태 여부, 기본값은 `true`
+    /// - Parameter negative: 오류 상태 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func negative(_ negative: Bool = true) -> Self {
         var zelf = self
@@ -230,7 +230,7 @@ public struct TextArea: View {
     
     /// 텍스트 영역의 활성화 상태를 설정합니다.
     ///
-    /// - Parameter disable: 비활성화 여부, `true`이면 비활성화
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -250,7 +250,7 @@ public struct TextArea: View {
     
     /// 제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
     ///
-    /// - Parameter requiredBadge: 필수 입력 뱃지 표시 여부, 기본값은 `true`
+    /// - Parameter requiredBadge: 필수 입력 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     /// - Note: 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
     public func requiredBadge(_ requiredBadge: Bool = true) -> Self {
@@ -280,13 +280,14 @@ public struct TextArea: View {
         zelf.trailingResources = Array(trailingResources.prefix(3))
         zelf.trailingResourceSpacing = trailingResourceSpacing
         
-        let bottomResouces = leadingResources + filteredTrailingResources
-        if let characterCounter = bottomResouces.first(where: \.isCharacterCount),
+        let bottomResources = zelf.leadingResources + zelf.filteredTrailingResources
+        if let characterCounter = bottomResources.first(where: \.isCharacterCount),
            case let .characterCount(limit, overflow) = characterCounter {
             zelf.characterCounterLimit = limit
             zelf.characterCounterOverflow = overflow
         } else {
             zelf.characterCounterLimit = nil
+            zelf.characterCounterOverflow = false
         }
         return zelf
     }
@@ -316,15 +317,16 @@ public struct TextArea: View {
     @State private var typedCharacters = 0
     @FocusState private var internalFocusState
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .typographyNew(variant: .label1, weight: .bold, semantic: .labelNeutral)
+                        .typography(variant: .label1, weight: .bold, semantic: .labelNeutral)
                     if requiredBadge {
                         Text("*")
-                            .typographyNew(variant: .label1, weight: .medium, semantic: .statusNegative)
+                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
                     }
                 }
             }
@@ -333,7 +335,7 @@ public struct TextArea: View {
             
             if let description {
                 Text(description)
-                    .typographyNew(
+                    .typography(
                         variant: .caption1,
                         semantic: negative ? .statusNegative : .labelAlternative
                     )
@@ -368,7 +370,6 @@ public struct TextArea: View {
                         typedCharacters = text.count
                     }
                     .scrollContentBackground(.hidden)
-                    .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
                     .padding(.horizontal, -4.5)
                     .padding(.top, -4)
                     .padding(.bottom, -6)
@@ -384,11 +385,10 @@ public struct TextArea: View {
                 
                 if $text.wrappedValue.isEmpty, let placeholder {
                     Text(placeholder)
-                        .paragraphNew(
+                        .paragraph(
                             variant: .body1Reading,
                             color: placeholderTextColor
                         )
-                        .background(disable ? SwiftUI.Color.semantic(.interactionDisable) : .clear)
                         .allowsHitTesting(false)
                 }
             }
@@ -397,7 +397,6 @@ public struct TextArea: View {
             if leadingResources.isEmpty == false || trailingResources.isEmpty == false {
                 Bottom(
                     typedCharacters: $typedCharacters,
-                    negative,
                     disable,
                     leadingResources,
                     leadingResourceSpacing,
@@ -411,9 +410,14 @@ public struct TextArea: View {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(editorStrokeColor, lineWidth: focus.wrappedValue ? 2 : 1)
         }
-        .background(
-            disable ? SwiftUI.Color.semantic(.interactionDisable) : SwiftUI.Color.clear
-        )
+        .background {
+            if disable {
+                SwiftUI.Color.semantic(.fillAlternative)
+            } else {
+                SwiftUI.Color.white.opacity(0.6)
+                    .background(.ultraThinMaterial)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .allowsHitTesting(disable == false)
         .contentShape(RoundedRectangle(cornerRadius: 12))
@@ -444,16 +448,17 @@ public struct TextArea: View {
     }
     
     private var filteredTrailingResources: [Resource] {
-        if trailingResources.contains(where: \.isCharacterCount) &&
-            leadingResources.contains(where: \.isCharacterCount) {
-            Array(trailingResources.drop(while: \.isCharacterCount))
+        if leadingResources.contains(where: \.isCharacterCount) &&
+            trailingResources.contains(where: \.isCharacterCount)
+        {
+            trailingResources.filter { $0.isCharacterCount == false }
         } else {
             trailingResources
         }
     }
     
     private func updateText(limit: Int?, overflow: Bool) {
-        if !overflow && text.count > limit ?? .max {
+        if !overflow && text.count > (limit ?? .max) {
             text = String(text.prefix(limit ?? .max))
         }
     }
@@ -463,7 +468,6 @@ public struct TextArea: View {
     private struct Bottom: View {
         @Binding private var typedCharacters: Int
         
-        private let negative: Bool
         private let disable: Bool
         private let leadingResources: [Resource]
         private let leadingResourceSpacing: CGFloat
@@ -472,7 +476,6 @@ public struct TextArea: View {
         
         init(
             typedCharacters: Binding<Int>,
-            _ negative: Bool,
             _ disable: Bool,
             _ leadingResources: [Resource],
             _ leadingResourceSpacing: CGFloat,
@@ -480,7 +483,6 @@ public struct TextArea: View {
             _ trailingResourceSpacing: CGFloat
         ) {
             _typedCharacters = typedCharacters
-            self.negative = negative
             self.disable = disable
             self.leadingResources = leadingResources
             self.leadingResourceSpacing = leadingResourceSpacing
@@ -498,19 +500,10 @@ public struct TextArea: View {
                     }
                 }
                 Spacer()
-                if negative {
-                    IconButton(
-                        variant: .default,
-                        icon: .circleExclamationFill,
-                        handler: nil
-                    )
-                    .iconColor(disable ? .semantic(.labelDisable) : .semantic(.statusNegative))
-                } else {
-                    if trailingResources.isEmpty == false {
-                        HStack(spacing: trailingResourceSpacing) {
-                            ForEach(trailingResources.indices, id: \.self) { index in
-                                component(trailingResources[index])
-                            }
+                if trailingResources.isEmpty == false {
+                    HStack(spacing: trailingResourceSpacing) {
+                        ForEach(trailingResources.indices, id: \.self) { index in
+                            component(trailingResources[index])
                         }
                     }
                 }
@@ -523,18 +516,18 @@ public struct TextArea: View {
             case .characterCount(let limit, let overflow):
                 HStack(spacing: 0) {
                     Text(String(typedCharacters))
-                        .paragraphNew(
+                        .paragraph(
                             variant: .label2,
                             weight: .medium,
                             semantic: disable ? .labelDisable : (
-                                overflow && typedCharacters > limit ?? 0
+                                overflow && typedCharacters > (limit ?? .max)
                                 ? .statusNegative
                                 : .labelAlternative
                             )
                         )
                     if let limit {
                         Text("/\(String(limit))")
-                            .paragraphNew(
+                            .paragraph(
                                 variant: .label2,
                                 weight: .medium,
                                 semantic: disable ? .labelDisable : .labelAlternative
@@ -543,8 +536,8 @@ public struct TextArea: View {
                 }
                 .padding(.horizontal, 4)
             case let .textButton(placement, variant, title, handler):
-                Button.text(
-                    variant: {
+                TextButton(
+                    color: {
                         if let variant {
                             variant
                         } else {
@@ -581,15 +574,15 @@ public struct TextArea: View {
                     .resizable()
                     .foregroundColor(tintColor)
                     .frame(width: 22, height: 22)
-            case let .actionChip(variant, title, handler):
-                ActionChip(
+            case let .chip(variant, title, handler):
+                Chip(
                     variant: variant,
                     size: .small,
                     text: title,
                     handler: handler
                 )
-            case let .filterChip(variant, title, handler):
-                FilterChip(
+            case let .filterButton(variant, title, handler):
+                FilterButton(
                     variant: variant,
                     size: .small,
                     text: title,
@@ -630,6 +623,8 @@ public struct TextArea: View {
             }
             context.coordinator.parent.limit = limit
             context.coordinator.parent.overflow = overflow
+            context.coordinator.minHeight = minHeight
+            context.coordinator.maxHeight = maxHeight
         }
         
         func makeCoordinator() -> Coordinator {
@@ -657,12 +652,12 @@ public struct TextArea: View {
             }
 
             func textViewDidBeginEditing(_ textView: UITextView) {
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                textView.isScrollEnabled = textView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
             }
             
             func textViewDidChange(_ textView: UITextView) {
                 let parentText = parent.text
-                textView.isScrollEnabled = textView.frame.height >= (maxHeight ?? 0)
+                textView.isScrollEnabled = textView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
                 parent.text = textView.text
                 // Binding된 값이 변하지 않으면, TextView에 Binding된 값 표시
                 if parentText == parent.text {
@@ -677,11 +672,11 @@ public struct TextArea: View {
             context _: Context
         ) -> CGSize? {
             var newSize = uiView.sizeThatFits(
-                CGSize(width: proposal.width ?? 0, height: CGFloat.greatestFiniteMagnitude)
+                CGSize(width: proposal.width ?? uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)
             )
             newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
             return CGSize(
-                width: proposal.width ?? 0,
+                width: proposal.width ?? uiView.bounds.width,
                 height: newSize.height
             )
         }

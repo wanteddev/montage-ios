@@ -19,12 +19,10 @@ import SwiftUI
 ///
 /// var body: some View {
 ///     ContentView()
-///         .modifier(
-///             Toast.ToastModifier(
-///                 model: $toastModel,
-///                 location: .bottom(),
-///                 duration: .short
-///             )
+///         .toast(
+///             $toastModel,
+///             location: .bottom(),
+///             duration: .short
 ///         )
 ///         .onAppear {
 ///             toastModel = Toast.Model(
@@ -34,7 +32,7 @@ import SwiftUI
 ///         }
 /// }
 /// ```
-public struct Toast: View {
+public struct Toast: View, KeyboardReadable {
     /// 토스트 메시지의 데이터 모델을 정의하는 구조체입니다.
     ///
     /// 토스트에 표시할 메시지와 스타일을 설정할 수 있습니다.
@@ -53,11 +51,11 @@ public struct Toast: View {
         private let id = UUID()
         let variant: Toast.Variant
         let message: String
-        
+
         /// Toast 모델을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - variant: 토스트 메시지의 스타일 (기본값: .normal())
+        ///   - variant: 토스트 메시지의 스타일, 생략하면 기본값으로 `.normal()` 적용
         ///   - message: 토스트에 표시할 메시지 텍스트
         public init(
             _ variant: Toast.Variant = .normal(),
@@ -72,31 +70,31 @@ public struct Toast: View {
     public enum Variant: Equatable {
         /// 기본 스타일의 토스트 (선택적으로 아이콘과 색상 지정 가능)
         /// - Parameters:
-        ///   - icon: 표시할 아이콘 (선택 사항)
-        ///   - tint: 아이콘의 색상 (선택 사항)
+        ///   - icon: 표시할 아이콘, 생략하면 기본값으로 `nil` 적용
+        ///   - tint: 아이콘의 색상, 생략하면 기본값으로 `nil` 적용
         case normal(Montage.Icon? = nil, tint: Montage.Color.Semantic? = nil)
-        
+
         /// 성공 메시지를 위한 녹색 체크 아이콘 스타일
         case positive
-        
+
         /// 주의 메시지를 위한 주황색 경고 아이콘 스타일
         case cautionary
-        
+
         /// 오류 메시지를 위한 빨간색 경고 아이콘 스타일
         case negative
     }
-    
+
     /// 토스트 메시지가 표시될 위치를 정의하는 열거형입니다.
     public enum Location {
         /// 화면 상단에 토스트 표시
-        /// - Parameter offset: 상단에서의 오프셋 값 (기본값: 0)
+        /// - Parameter offset: 상단에서의 오프셋 값, 생략하면 기본값으로 `.zero` 적용
         case top(offset: CGFloat = .zero)
-        
+
         /// 화면 하단에 토스트 표시
-        /// - Parameter offset: 하단에서의 오프셋 값 (기본값: 0)
+        /// - Parameter offset: 하단에서의 오프셋 값, 생략하면 기본값으로 `.zero` 적용
         case bottom(offset: CGFloat = .zero)
     }
-    
+
     /// 토스트 메시지의 표시 시간을 정의하는 열거형입니다.
     public enum Duration {
         /// 짧은 표시 시간 (3초)
@@ -104,21 +102,27 @@ public struct Toast: View {
         /// 긴 표시 시간 (5초)
         case long
     }
-    
+
     private let variant: Variant
     private let message: String
     private let location: Location
-    
+    private let keyboardPresentedOnAppear: Bool
+
     init(
         _ variant: Variant = .normal(),
         message: String = "",
-        _ location: Location = .bottom(offset: .zero)
+        _ location: Location = .bottom(offset: .zero),
+        keyboardPresentedOnAppear: Bool
     ) {
         self.variant = variant
         self.message = message
         self.location = location
+        self.keyboardPresentedOnAppear = keyboardPresentedOnAppear
     }
+
+    @State private var isKeyboardVisible: Bool = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         switch location {
         case .top(let offset):
@@ -133,26 +137,32 @@ public struct Toast: View {
                 Spacer()
                 Contents(variant, message)
                     .padding(.horizontal, 20)
-                    .padding(.bottom, offset)
+                    .padding(.bottom, offset + (isKeyboardVisible ? 20 : 0))
+            }
+            .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
+            .onAppear {
+                if keyboardPresentedOnAppear {
+                    isKeyboardVisible = true
+                }
             }
         }
     }
-    
+
     fileprivate struct Contents: View {
         private let variant: Variant
         private let message: String
-        
+
         init(_ variant: Variant, _ message: String) {
             self.variant = variant
             self.message = message
         }
-        
+
         var body: some View {
             ZStack(alignment: .leading) {
                 HStack(alignment: .center, spacing: 8) {
                     Icon(variant)
                     Text(message)
-                        .paragraphNew(variant: .body2, weight: .bold, semantic: .staticWhite)
+                        .paragraph(variant: .body2, weight: .bold, semantic: .staticWhite)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.vertical, 5)
@@ -166,14 +176,14 @@ public struct Toast: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
-    
+
     private struct Icon: View {
         private let variant: Variant
-        
+
         init(_ variant: Variant) {
             self.variant = variant
         }
-        
+
         var body: some View {
             switch variant {
             case let .normal(icon, tint):
@@ -193,35 +203,23 @@ public struct Toast: View {
                     EmptyView()
                 }
             case .positive:
-                ZStack {
-                    Circle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
-                        .frame(width: 11, height: 11)
-                    Image.icon(.circleCheckFill)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.atomic(.green60))
-                        .frame(width: 22, height: 22)
-                }
+                badgedIcon(.circleCheckFill, .green60)
             case .cautionary:
-                ZStack {
-                    Circle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
-                        .frame(width: 11, height: 11)
-                    Image.icon(.triangleExclamationFill)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.atomic(.orange60))
-                        .frame(width: 22, height: 22)
-                }
+                badgedIcon(.triangleExclamationFill, .orange60)
             case .negative:
-                ZStack {
-                    Circle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
-                        .frame(width: 11, height: 11)
-                    Image.icon(.circleCloseFill)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.atomic(.red60))
-                        .frame(width: 22, height: 22)
-                }
+                badgedIcon(.circleCloseFill, .red60)
+            }
+        }
+
+        private func badgedIcon(_ icon: Montage.Icon, _ color: Color.Atomic) -> some View {
+            ZStack {
+                Circle()
+                    .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+                    .frame(width: 11, height: 11)
+                Image.icon(icon)
+                    .resizable()
+                    .foregroundStyle(SwiftUI.Color.atomic(color))
+                    .frame(width: 22, height: 22)
             }
         }
     }
@@ -231,7 +229,8 @@ public struct Toast: View {
 
         var body: some View {
             ZStack {
-                SwiftUI.Color.semantic(.inverseBackground).opacity(colorScheme == .light ? 0.5 : 0.46)
+                SwiftUI.Color.semantic(.inverseBackground).opacity(
+                    colorScheme == .light ? 0.5 : 0.46)
                 SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
             }
             .background(
@@ -242,50 +241,18 @@ public struct Toast: View {
 }
 
 extension Toast {
-    /// Toast를 화면에 표시하기 위한 뷰 모디파이어입니다.
-    ///
-    /// 바인딩된 Model 값이 nil이 아닐 때 토스트를 표시하며,
-    /// 설정된 시간이 지나면 자동으로 사라집니다.
-    ///
-    /// ```swift
-    /// @State private var toastModel: Toast.Model?
-    ///
-    /// var body: some View {
-    ///     VStack {
-    ///         Button("토스트 표시") {
-    ///             toastModel = Toast.Model(
-    ///                 .cautionary,
-    ///                 message: "주의가 필요합니다."
-    ///             )
-    ///         }
-    ///     }
-    ///     .modifier(
-    ///         Toast.ToastModifier(
-    ///             model: $toastModel,
-    ///             location: .top(),
-    ///             duration: .long
-    ///         )
-    ///     )
-    /// }
-    /// ```
-    ///
-    /// - Note: 토스트가 표시될 때 진동 피드백이 발생합니다.
-    struct ToastModifier: ViewModifier {
+    struct ToastModifier: ViewModifier, KeyboardReadable {
         @Binding private var model: Toast.Model?
         private let location: Toast.Location
         private let duration: Toast.Duration
-        
-        /// ToastModifier를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - model: 표시할 토스트 모델에 대한 바인딩. nil이면 토스트가 표시되지 않습니다.
-        ///   - location: 토스트가 표시될 위치
-        ///   - duration: 토스트가 표시될 시간
+
         init(model: Binding<Toast.Model?>, location: Toast.Location, duration: Toast.Duration) {
             _model = model
             self.location = location
             self.duration = duration
         }
+        
+        @State private var isKeyboardVisible = false
 
         func body(content: Content) -> some View {
             content
@@ -305,7 +272,8 @@ extension Toast {
                                     Toast(
                                         model.variant,
                                         message: model.message,
-                                        location
+                                        location,
+                                        keyboardPresentedOnAppear: isKeyboardVisible
                                     )
                                 }
                             }
@@ -317,8 +285,9 @@ extension Toast {
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
                 }
+                .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
         }
-        
+
         private var durationTime: TimeInterval {
             switch duration {
             case .short: 3
@@ -335,8 +304,8 @@ extension View {
     ///
     /// - Parameters:
     ///   - model: Toast 모델을 바인딩합니다. nil이 아닌 값이 설정되면 Toast가 표시됩니다.
-    ///   - location: Toast가 표시될 위치 (기본값: .bottom)
-    ///   - duration: Toast가 표시될 시간 (기본값: .short)
+    ///   - location: Toast가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: 0)` 적용
+    ///   - duration: Toast가 표시될 시간, 생략하면 기본값으로 `.short` 적용
     /// - Returns: Toast가 적용된 뷰
     ///
     /// ```swift

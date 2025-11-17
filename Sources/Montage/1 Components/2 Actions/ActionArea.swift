@@ -31,11 +31,11 @@ import SwiftUI
 /// ))
 /// .extra({
 ///     Text("추가 정보")
-///         .typographyNew(variant: .label2)
+///         .typography(variant: .label2) 
 /// })
 /// ```
 ///
-/// - Note: 키보드가 표시될 때 자동으로 조정됩니다.
+/// - Note: 키보드가 표시될 때 ActionArea가 위치가 자동으로 키보드 상단에 붙어있도록 조정됩니다.
 public struct ActionArea: View, KeyboardReadable {
     // MARK: - Initializers
 
@@ -51,13 +51,13 @@ public struct ActionArea: View, KeyboardReadable {
 
     // MARK: - Body
 
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
     @State private var backgroundOpacity: CGFloat = 1
     @State private var gradientOpacity: CGFloat = 1
     @State private var isExtraEmpty = true
 
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
@@ -99,17 +99,20 @@ public struct ActionArea: View, KeyboardReadable {
             .background(backgroundColor)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
-        .onChange(of: clearBackground) { clearBackground in
-            withAnimation(.easeInOut(duration: 0.5)) {
-                backgroundOpacity = clearBackground && isExtraEmpty ? 0 : 1
-                gradientOpacity = clearBackground ? 0 : 1
-            }
+        .onAppear {
+            applyTransparentBackground(transparentBackground, animated: false)
+        }
+        .onChange(of: transparentBackground) { newValue in
+            applyTransparentBackground(newValue, animated: true)
+        }
+        .onChange(of: isExtraEmpty) { _ in
+            applyTransparentBackground(transparentBackground, animated: true)
         }
     }
 
     // MARK: - Modifiers
-
-    private var clearBackground = false
+    
+    private var transparentBackground = false
     private var caption: String?
     private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
@@ -118,11 +121,11 @@ public struct ActionArea: View, KeyboardReadable {
     ///
     /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
     ///
-    /// - Parameter clearBackground: 배경 투명 여부, 기본값은 `true`
+    /// - Parameter transparentBackground: 배경 투명 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func clearBackground(_ clearBackground: Bool = true) -> Self {
+    public func transparentBackground(_ transparentBackground: Bool = true) -> Self {
         var zelf = self
-        zelf.clearBackground = clearBackground
+        zelf.transparentBackground = transparentBackground
         return zelf
     }
 
@@ -140,11 +143,9 @@ public struct ActionArea: View, KeyboardReadable {
     ///
     /// - Parameters:
     ///   - content: 표시할 추가 콘텐츠를 생성하는 클로저
-    ///   - divider: 추가 콘텐츠 위에 구분선 표시 여부, 기본값은 `true`
+    ///   - divider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func extra<V: View>(@ViewBuilder _ content: @escaping () -> V, divider: Bool = true)
-        -> Self
-    {
+    public func extra<V: View>(@ViewBuilder _ content: @escaping () -> V, divider: Bool = true) -> Self {
         var zelf = self
         zelf.extra = { AnyView(content()) }
         zelf.extraDivider = divider
@@ -157,10 +158,19 @@ extension ActionArea {
     /// ActionArea의 버튼 레이아웃 변형을 정의합니다.
     public enum Variant {
         /// 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
+        /// - Parameters:
+        ///   - main: 주 버튼 정보
+        ///   - sub: 보조 버튼 정보, 생략하면 기본값으로 `nil` 적용
+        ///   - alternative: 대체 버튼 정보, 생략하면 기본값으로 `nil` 적용
         case strong(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 중립적인 스타일의 버튼 레이아웃
+        /// - Parameters:
+        ///   - main: 주 버튼 정보
+        ///   - sub: 보조 버튼 정보, 생략하면 기본값으로 `nil` 적용
+        ///   - alternative: 대체 버튼 정보, 생략하면 기본값으로 `nil` 적용
         case neutral(main: ButtonInfo, sub: ButtonInfo? = nil, alternative: ButtonInfo? = nil)
         /// 취소 버튼만 있는 간단한 레이아웃
+        /// - Parameter main: 주 버튼 정보
         case cancel(main: ButtonInfo)
 
         fileprivate var isCaptionAvailable: Bool {
@@ -206,10 +216,10 @@ extension ActionArea {
     /// ActionArea를 구성하기 위한 모델 구조체입니다.
     ///
     /// 이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다.
-    /// 버튼 레이아웃, 배경 가시성, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
+    /// 버튼 레이아웃, 배경 투명도, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
     public struct Model {
         let variant: ActionArea.Variant
-        let backgroundVisibility: BackgroundVisibility
+        let backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl
         let caption: String?
         let extra: () -> AnyView
         let extraDivider: Bool
@@ -218,52 +228,50 @@ extension ActionArea {
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundVisibility: 배경 가시성 설정
-        ///   - caption: 캡션 텍스트
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
+        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
         public init(
             variant: ActionArea.Variant,
-            backgroundVisibility: BackgroundVisibility = .automatic,
-            caption: String? = nil,
-            extraDivider: Bool = true
+            backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
+            caption: String? = nil
         ) {
             self.variant = variant
-            self.backgroundVisibility = backgroundVisibility
+            self.backgroundTransparencyControl = backgroundTransparencyControl
             self.caption = caption
             self.extra = { AnyView(EmptyView()) }
-            self.extraDivider = extraDivider
+            self.extraDivider = true
         }
 
         /// ActionArea 모델을 초기화합니다.
         ///
         /// - Parameters:
         ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundVisibility: 배경 가시성 설정
-        ///   - caption: 캡션 텍스트
+        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
+        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
         ///   - extra: 추가 콘텐츠를 생성하는 클로저
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부
+        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
         public init<V: View>(
             variant: ActionArea.Variant,
-            backgroundVisibility: BackgroundVisibility = .automatic,
+            backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
             caption: String? = nil,
             @ViewBuilder extra: @escaping () -> V,
             extraDivider: Bool = true
         ) {
             self.variant = variant
-            self.backgroundVisibility = backgroundVisibility
+            self.backgroundTransparencyControl = backgroundTransparencyControl
             self.caption = caption
             self.extra = { AnyView(extra()) }
             self.extraDivider = extraDivider
         }
     }
-
-    /// ActionArea의 배경 가시성을 제어하는 열거형입니다.
-    public enum BackgroundVisibility {
-        /// 자동으로 배경 가시성을 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 가시성이 자동 처리됩니다.
+    
+    /// ActionArea의 배경 투명도를 제어하는 열거형입니다.
+    public enum BackgroundTransparencyControl {
+        /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
         case automatic
-        /// 수동으로 배경 가시성을 설정합니다. true면 배경이 표시되고, false면 배경이 투명해집니다.
-        case manual(_ visible: Bool)
-
+        /// 수동으로 배경 투명도를 설정합니다. true면 배경이 투명해지고, false면 배경이 표시됩니다.
+        case manual(_ transparency: Bool)
+        
         var isManual: Bool {
             switch self {
             case .automatic:
@@ -281,7 +289,7 @@ extension ActionArea {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
                 Text(caption)
-                    .paragraphNew(variant: .label2, semantic: .labelAlternative)
+                    .paragraph(variant: .label2, semantic: .labelAlternative)
             }
         }
     }
@@ -295,6 +303,21 @@ extension ActionArea {
 
     private var backgroundColor: SwiftUI.Color {
         .semantic(.backgroundElevated).opacity(backgroundOpacity)
+    }
+    
+    private func applyTransparentBackground(_ transparentBackground: Bool, animated: Bool) {
+        let update = {
+            backgroundOpacity = (transparentBackground && isExtraEmpty) ? 0 : 1
+            gradientOpacity = transparentBackground ? 0 : 1
+        }
+
+        if animated {
+            withAnimation(.easeInOut(duration: 0.5)) {
+                update()
+            }
+        } else {
+            update()
+        }
     }
 }
 
@@ -311,11 +334,11 @@ extension ActionArea {
         var body: some View {
             Group {
                 switch variant {
-                case .strong(let main, let sub, let alternative):
+                case let .strong(main, sub, alternative):
                     strong(main, sub, alternative)
-                case .neutral(let main, let sub, let alternative):
+                case let .neutral(main, sub, alternative):
                     neutral(main, sub, alternative)
-                case .cancel(let main):
+                case let .cancel(main):
                     cancel(main)
                 }
             }
@@ -364,8 +387,8 @@ extension ActionArea {
 
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.solid(
-                    variant: .primary,
+                Button(
+                    color: .primary,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -376,8 +399,9 @@ extension ActionArea {
 
         @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.outlined(
-                    variant: .secondary,
+                Button(
+                    variant: .outlined,
+                    color: .primary,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -386,12 +410,11 @@ extension ActionArea {
             }
         }
 
-        @ViewBuilder private func assistiveOutlinedButton(
-            _ buttonInfo: ButtonInfo, fillWidth: Bool = true
-        ) -> some View {
+        @ViewBuilder private func assistiveOutlinedButton(_ buttonInfo: ButtonInfo, fillWidth: Bool = true) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.outlined(
-                    variant: .assistive,
+                Button(
+                    variant: .outlined,
+                    color: .assistive,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -404,8 +427,8 @@ extension ActionArea {
 
         @ViewBuilder private func assistiveTextButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
-                Button.text(
-                    variant: .assistive,
+                TextButton(
+                    color: .assistive,
                     size: .small,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -449,8 +472,8 @@ struct ActionAreaModifier: ViewModifier {
                 .caption(model.caption)
                 .extra(model.extra, divider: model.extraDivider)
                 .modifying {
-                    if case .manual(let visibility) = model.backgroundVisibility {
-                        $0.clearBackground(!visibility)
+                    if case .manual(let transparency) = model.backgroundTransparencyControl {
+                        $0.transparentBackground(transparency)
                     } else {
                         $0
                     }
@@ -465,20 +488,79 @@ extension View {
     /// 현재 뷰에 하단 ActionArea를 적용합니다.
     ///
     /// - Parameters:
-    ///   - model: ActionArea의 구성 모델
+    ///   - variant: ActionArea의 버튼 레이아웃 변형
+    ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `true` 적용
+    ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
     /// - Returns: ActionArea가 적용된 뷰
     ///
     /// ```swift
     /// contentView
-    ///     .actionArea(model: .init(
+    ///     .actionArea(
     ///         variant: .strong(
     ///             main: .init(text: "확인", action: { confirmAction() }),
     ///             sub: .init(text: "취소", action: { cancelAction() })
     ///         ),
     ///         caption: "변경 사항을 저장하시겠습니까?"
-    ///     ))
+    ///     )
     /// ```
-    public func actionArea(model: ActionArea.Model) -> some View {
-        modifier(ActionAreaModifier(model: model))
+    public func actionArea(
+        variant: ActionArea.Variant,
+        backgroundTransparency: Bool = true,
+        caption: String? = nil
+    ) -> some View {
+        modifier(
+            ActionAreaModifier(
+                model: .init(
+                    variant: variant,
+                    backgroundTransparencyControl: .manual(backgroundTransparency),
+                    caption: caption
+                )
+            )
+        )
+    }
+    
+    /// 현재 뷰에 하단 ActionArea를 적용합니다.
+    ///
+    /// - Parameters:
+    ///   - variant: ActionArea의 버튼 레이아웃 변형
+    ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `true` 적용
+    ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - extra: 추가 콘텐츠를 생성하는 클로저
+    ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: ActionArea가 적용된 뷰
+    ///
+    /// ```swift
+    /// contentView
+    ///     .actionArea(
+    ///         variant: .strong(
+    ///             main: .init(text: "확인", action: { confirmAction() }),
+    ///             sub: .init(text: "취소", action: { cancelAction() })
+    ///         ),
+    ///         caption: "변경 사항을 저장하시겠습니까?",
+    ///         extra: {
+    ///             Text("추가 정보")
+    ///                 .typography(variant: .label2)
+    ///         },
+    ///         extraDivider: true
+    ///     )
+    /// ```
+    public func actionArea<V: View>(
+        variant: ActionArea.Variant,
+        backgroundTransparency: Bool = true,
+        caption: String? = nil,
+        @ViewBuilder extra: @escaping () -> V,
+        extraDivider: Bool = true
+    ) -> some View {
+        modifier(
+            ActionAreaModifier(
+                model: .init(
+                    variant: variant,
+                    backgroundTransparencyControl: .manual(backgroundTransparency),
+                    caption: caption,
+                    extra: extra,
+                    extraDivider: extraDivider
+                )
+            )
+        )
     }
 }

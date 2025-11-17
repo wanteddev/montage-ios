@@ -12,104 +12,41 @@ import SwiftUI
 /// 세 가지 스타일로 제공됩니다:
 /// - `solid`: 색상이 채워진 버튼
 /// - `outlined`: 테두리만 있는 버튼
-/// - `text`: 텍스트만 있는 버튼
 ///
 /// ```swift
 /// // 기본 솔리드 버튼
-/// Button.solid(text: "확인", handler: { print("버튼 클릭") })
+/// Button(text: "확인", handler: { print("버튼 클릭") })
 ///
 /// // 아웃라인 버튼
-/// Button.outlined(variant: .primary, size: .medium, text: "취소")
-///
-/// // 텍스트 버튼
-/// Button.text(text: "더보기", trailingIcon: .chevronRight)
+/// Button(variant: .outlined, color: .primary, size: .medium, text: "취소")
 ///
 /// // 아이콘 버튼
-/// Button.solid(icon: .bell, handler: { print("알림 보기") })
+/// Button(icon: .bell, handler: { print("알림 보기") })
 ///
 /// // 로딩 상태 설정
-/// Button.solid(text: "저장")
+/// Button(text: "저장")
 ///     .loading(true)
 /// ```
-///
-/// - Note: 버튼은 다양한 수정자(modifier)를 사용하여 모양과 동작을 커스터마이즈할 수 있습니다.
 public struct Button: View {
     
     // MARK: - Types
     
-    /// Solid 스타일 버튼과 관련된 타입을 정의합니다.
-    public enum Solid {
-        /// Solid 스타일 버튼의 변형을 정의합니다.
-        public enum Variant: String {
-            /// 기본 강조 스타일 - 브랜드 컬러를 사용하는 가장 강조된 버튼
-            case primary
-            /// 보조 스타일 - 중요도가 낮은 보조 액션에 사용
-            case assistive
-        }
-        
-        /// Solid 스타일 버튼의 크기를 정의합니다.
-        public enum Size: String {
-            /// 작은 크기
-            case small
-            /// 중간 크기
-            case medium
-            /// 큰 크기
-            case large
-        }
-    }
-
-    /// Outlined 스타일 버튼과 관련된 타입을 정의합니다.
-    public enum Outlined {
-        /// Outlined 스타일 버튼의 변형을 정의합니다.
-        public enum Variant: String {
-            /// 기본 강조 스타일 - 브랜드 컬러의 테두리를 사용
-            case primary
-            /// 보조 강조 스타일 - 브랜드 컬러보다 덜 강조된 스타일
-            case secondary
-            /// 보조 스타일 - 중요도가 낮은 보조 액션에 사용
-            case assistive
-        }
-        
-        /// Outlined 스타일 버튼의 크기를 정의합니다.
-        public enum Size: String {
-            /// 작은 크기
-            case small
-            /// 중간 크기
-            case medium
-            /// 큰 크기
-            case large
-        }
-    }
-
-    /// Text 스타일 버튼과 관련된 타입을 정의합니다.
-    public enum Text {
-        /// Text 스타일 버튼의 변형을 정의합니다.
-        public enum Variant: String {
-            /// 기본 강조 스타일 - 브랜드 컬러를 텍스트에 사용
-            case primary
-            /// 보조 스타일 - 중요도가 낮은 텍스트 링크에 사용
-            case assistive
-        }
-        
-        /// Text 스타일 버튼의 크기를 정의합니다.
-        public enum Size: String {
-            /// 작은 크기
-            case small
-            /// 중간 크기
-            case medium
-        }
-    }
-    
-    internal enum Style {
+    internal enum InternalVariant: String {
         case solid, outlined, text
     }
     
     /// 버튼의 변형을 정의합니다.
     public enum Variant: String {
+        /// 배경 색상이 채워진 형태 - 주요 액션에 사용
+        case solid
+        /// 테두리가 있는 형태 - 최소한의 강조가 필요한 액션에 사용
+        case outlined
+    }
+    
+    /// 버튼의 색상 스타일을 정의합니다.
+    public enum Color: String {
         /// 기본 강조 스타일 - 주요 액션에 사용
         case primary
-        /// 보조 강조 스타일 - 보조 액션에 사용
-        case secondary
         /// 보조 스타일 - 덜 중요한 액션에 사용
         case assistive
     }
@@ -126,198 +63,96 @@ public struct Button: View {
     
     // MARK: - Initializers
     
-    private let style: Style
-    private let variant: Variant
+    private let variant: InternalVariant
+    private let color: Color
     private let size: Size
     private let text: String?
     private let leadingIcon: Icon?
     private let trailingIcon: Icon?
     private let handler: (() -> Void)?
     
+    /// 버튼을 생성합니다.
+    ///
+    /// ```swift
+    /// Button(variant: .solid, text: "로그인", handler: { loginUser() })
+    /// Button(variant: .outlined, color: .assistive, size: .small, text: "확인")
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 스타일, 생략하면 기본값으로 `.solid` 적용
+    ///   - color: 버튼의 색상 스타일, 생략하면 기본값으로 `.primary` 적용
+    ///   - size: 버튼의 크기, 생략하면 기본값으로 `.large` 적용
+    ///   - text: 버튼에 표시할 텍스트
+    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
+    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
+    public init(
+        variant: Variant = .solid,
+        color: Color = .primary,
+        size: Size = .large,
+        text: String? = nil,
+        leadingIcon: Icon? = nil,
+        trailingIcon: Icon? = nil,
+        handler: (() -> Void)? = nil
+    ) {
+        self.init(
+            InternalVariant(rawValue: variant.rawValue) ?? .solid,
+            color: color,
+            size: size,
+            text: text,
+            leadingIcon: leadingIcon,
+            trailingIcon: trailingIcon,
+            handler: handler
+        )
+    }
+    
+    /// 텍스트가 없고 아이콘만 있는 버튼을 생성합니다.
+    ///
+    /// ```swift
+    /// Button(variant: .solid, icon: .plus, handler: { addItem() })
+    /// Button(variant: .outlined, color: .assistive, size: .small, icon: .search)
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - variant: 버튼의 스타일, 생략하면 기본값으로 `.solid` 적용
+    ///   - color: 버튼의 색상 스타일, 생략하면 기본값으로 `.primary` 적용
+    ///   - size: 버튼의 크기, 생략하면 기본값으로 `.large` 적용
+    ///   - icon: 버튼에 표시할 아이콘
+    ///   - handler: 버튼 탭 시 실행할 핸들러
+    /// - Returns: 구성된 버튼 인스턴스
+    public init(
+        variant: Variant = .solid,
+        color: Color = .primary,
+        size: Size = .large,
+        icon: Icon,
+        handler: (() -> Void)? = nil
+    ) {
+        self.init(
+            InternalVariant(rawValue: variant.rawValue) ?? .solid,
+            color: color,
+            size: size,
+            leadingIcon: icon,
+            handler: handler
+        )
+    }
+    
     internal init(
-        style: Style,
-        variant: Variant = .primary,
+        _ variant: InternalVariant,
+        color: Color = .primary,
         size: Size = .medium,
         text: String? = nil,
         leadingIcon: Icon? = nil,
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
-        self.style = style
         self.variant = variant
+        self.color = color
         self.size = size
         self.leadingIcon = leadingIcon
         self.trailingIcon = trailingIcon
         self.text = text
         self.handler = handler
-    }
-    
-    /// Solid 스타일의 텍스트 버튼을 생성합니다.
-    ///
-    /// 배경색이 채워진 스타일의 버튼으로, 주요 액션이나 강조가 필요한 액션에 적합합니다.
-    ///
-    /// ```swift
-    /// Button.solid(text: "로그인", handler: { loginUser() })
-    /// Button.solid(variant: .assistive, size: .small, text: "확인")
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - variant: 버튼의 변형, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.large`
-    ///   - text: 버튼에 표시할 텍스트
-    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
-    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
-    ///   - handler: 버튼 탭 시 실행할 핸들러
-    /// - Returns: 구성된 버튼 인스턴스
-    public static func solid(
-        variant: Solid.Variant = .primary,
-        size: Solid.Size = .large,
-        text: String,
-        leadingIcon: Icon? = nil,
-        trailingIcon: Icon? = nil,
-        handler: (() -> Void)? = nil
-    ) -> Self {
-        .init(
-            style: .solid,
-            variant: .init(rawValue: variant.rawValue) ?? .primary,
-            size: .init(rawValue: size.rawValue) ?? .large,
-            text: text,
-            leadingIcon: leadingIcon,
-            trailingIcon: trailingIcon,
-            handler: handler
-        )
-    }
-    
-    /// Solid 스타일의 아이콘 버튼을 생성합니다.
-    ///
-    /// 배경색이 채워진 스타일의 아이콘 버튼으로, 공간이 제한적이거나 아이콘으로 충분히 의미가 전달될 때 사용합니다.
-    ///
-    /// ```swift
-    /// Button.solid(icon: .plus, handler: { addItem() })
-    /// Button.solid(variant: .assistive, size: .small, icon: .search)
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - variant: 버튼의 변형, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.large`
-    ///   - icon: 버튼에 표시할 아이콘
-    ///   - handler: 버튼 탭 시 실행할 핸들러
-    /// - Returns: 구성된 버튼 인스턴스
-    public static func solid(
-        variant: Solid.Variant = .primary,
-        size: Solid.Size = .large,
-        icon: Icon,
-        handler: (() -> Void)? = nil
-    ) -> Self {
-        .init(
-            style: .solid,
-            variant: .init(rawValue: variant.rawValue) ?? .primary,
-            size: .init(rawValue: size.rawValue) ?? .large,
-            leadingIcon: icon,
-            handler: handler
-        )
-    }
-    
-    /// Outlined 스타일의 텍스트 버튼을 생성합니다.
-    ///
-    /// 테두리만 있는 스타일의 버튼으로, 보조 액션이나 덜 강조된 액션에 적합합니다.
-    ///
-    /// ```swift
-    /// Button.outlined(text: "취소", handler: { dismiss() })
-    /// Button.outlined(variant: .secondary, size: .medium, text: "뒤로")
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - variant: 버튼의 변형, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.large`
-    ///   - text: 버튼에 표시할 텍스트
-    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
-    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
-    ///   - handler: 버튼 탭 시 실행할 핸들러
-    /// - Returns: 구성된 버튼 인스턴스
-    public static func outlined(
-        variant: Outlined.Variant = .primary,
-        size: Outlined.Size = .large,
-        text: String,
-        leadingIcon: Icon? = nil,
-        trailingIcon: Icon? = nil,
-        handler: (() -> Void)? = nil
-    ) -> Self {
-        .init(
-            style: .outlined,
-            variant: .init(rawValue: variant.rawValue) ?? .primary,
-            size: .init(rawValue: size.rawValue) ?? .large,
-            text: text,
-            leadingIcon: leadingIcon,
-            trailingIcon: trailingIcon,
-            handler: handler
-        )
-    }
-    
-    /// Outlined 스타일의 아이콘 버튼을 생성합니다.
-    ///
-    /// 테두리만 있는 스타일의 아이콘 버튼으로, 공간이 제한적이거나 보조적인 아이콘 액션에 적합합니다.
-    ///
-    /// ```swift
-    /// Button.outlined(icon: .share, handler: { shareContent() })
-    /// Button.outlined(variant: .assistive, size: .small, icon: .bookmark)
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - variant: 버튼의 변형, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.large`
-    ///   - icon: 버튼에 표시할 아이콘
-    ///   - handler: 버튼 탭 시 실행할 핸들러
-    /// - Returns: 구성된 버튼 인스턴스
-    public static func outlined(
-        variant: Outlined.Variant = .primary,
-        size: Outlined.Size = .large,
-        icon: Icon,
-        handler: (() -> Void)? = nil
-    ) -> Self {
-        .init(
-            style: .outlined,
-            variant: .init(rawValue: variant.rawValue) ?? .primary,
-            size: .init(rawValue: size.rawValue) ?? .large,
-            leadingIcon: icon,
-            handler: handler
-        )
-    }
-    
-    /// Text 스타일의 버튼을 생성합니다.
-    ///
-    /// 텍스트만 있는 스타일의 버튼으로, 가벼운 액션이나 링크 형태의 액션에 적합합니다.
-    ///
-    /// ```swift
-    /// Button.text(text: "더 보기", handler: { showMore() })
-    /// Button.text(variant: .assistive, text: "상세보기", trailingIcon: .chevronRight)
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - variant: 버튼의 변형, 기본값은 `.primary`
-    ///   - size: 버튼의 크기, 기본값은 `.medium`
-    ///   - text: 버튼에 표시할 텍스트
-    ///   - leadingIcon: 텍스트 앞에 표시할 아이콘
-    ///   - trailingIcon: 텍스트 뒤에 표시할 아이콘
-    ///   - handler: 버튼 탭 시 실행할 핸들러
-    /// - Returns: 구성된 버튼 인스턴스
-    public static func text(
-        variant: Text.Variant = .primary,
-        size: Text.Size = .medium,
-        text: String,
-        leadingIcon: Icon? = nil,
-        trailingIcon: Icon? = nil,
-        handler: (() -> Void)? = nil
-    ) -> Self {
-        .init(
-            style: .text,
-            variant: .init(rawValue: variant.rawValue) ?? .primary,
-            size: .init(rawValue: size.rawValue) ?? .medium,
-            text: text,
-            leadingIcon: leadingIcon,
-            trailingIcon: trailingIcon,
-            handler: handler
-        )
     }
     
     // MARK: - Modifiers
@@ -337,11 +172,11 @@ public struct Button: View {
     /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
     ///
     /// ```swift
-    /// Button.solid(text: "저장")
+    /// Button(text: "저장")
     ///     .disable(isFormInvalid)
     /// ```
     ///
-    /// - Parameter disable: 비활성화 여부, 기본값은 `true`
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func disable(_ disable: Bool = true) -> Self {
         var zelf = self
@@ -352,7 +187,7 @@ public struct Button: View {
     /// 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
     ///
     /// ```swift
-    /// Button.outlined(text: "복사")
+    /// Button(variant: .outlined, text: "복사")
     ///     .contentColor(.red)
     /// ```
     ///
@@ -369,7 +204,7 @@ public struct Button: View {
     /// Solid 스타일 버튼에 가장 효과적으로 적용됩니다.
     ///
     /// ```swift
-    /// Button.solid(text: "특별 액션")
+    /// Button(text: "특별 액션")
     ///     .backgroundColor(.blue)
     /// ```
     ///
@@ -386,7 +221,7 @@ public struct Button: View {
     /// Outlined 스타일 버튼에 가장 효과적으로 적용됩니다.
     ///
     /// ```swift
-    /// Button.outlined(text: "경고")
+    /// Button(variant: .outlined, text: "경고")
     ///     .borderColor(.red)
     /// ```
     ///
@@ -403,7 +238,7 @@ public struct Button: View {
     /// 텍스트의 크기와 스타일을 변경할 때 사용합니다.
     ///
     /// ```swift
-    /// Button.text(text: "중요 안내")
+    /// TextButton(text: "중요 안내")
     ///     .fontVariant(.heading)
     /// ```
     ///
@@ -420,7 +255,7 @@ public struct Button: View {
     /// 텍스트의 강조를 조절할 때 사용합니다.
     ///
     /// ```swift
-    /// Button.text(text: "중요 공지")
+    /// TextButton(text: "중요 공지")
     ///     .fontWeight(.bold)
     /// ```
     ///
@@ -438,11 +273,11 @@ public struct Button: View {
     /// 비동기 작업이 진행 중일 때 사용자에게 피드백을 제공하는 데 유용합니다.
     ///
     /// ```swift
-    /// Button.solid(text: "저장")
+    /// Button(text: "저장")
     ///     .loading(isLoading)
     /// ```
     ///
-    /// - Parameter loading: 로딩 상태 여부, 기본값은 `true`
+    /// - Parameter loading: 로딩 상태 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func loading(_ loading: Bool = true) -> Self {
         var zelf = self
@@ -456,17 +291,17 @@ public struct Button: View {
     ///
     /// ```swift
     /// // 부모 뷰의 가로 너비를 모두 채우는 버튼
-    /// Button.solid(text: "전체 확인")
+    /// Button(text: "전체 확인")
     ///     .fill(horizontal: true)
     ///
     /// // 가로, 세로 모두 채우는 버튼
-    /// Button.outlined(text: "영역 전체 채우기")
+    /// Button(variant: .outlined, text: "영역 전체 채우기")
     ///     .fill(horizontal: true, vertical: true)
     /// ```
     ///
     /// - Parameters:
-    ///   - fillHorizontal: 수평 방향 채우기 여부, 기본값은 `false`
-    ///   - fillVertical: 수직 방향 채우기 여부, 기본값은 `false`
+    ///   - fillHorizontal: 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
+    ///   - fillVertical: 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
         var zelf = self
@@ -479,6 +314,7 @@ public struct Button: View {
     
     @State private var isPressed = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             SwiftUI.Color.clear
@@ -489,7 +325,7 @@ public struct Button: View {
                 }
                 if let text {
                     SwiftUI.Text(text)
-                        .typographyNew(
+                        .typography(
                             variant: fontVariant ?? typoVariant,
                             weight: fontWeight ?? typoWeight,
                             color: foregroundColor
@@ -502,7 +338,7 @@ public struct Button: View {
             .opacity(loading ? 0 : 1)
             
             if loading {
-                Loading(kind: .circular, size: loadingSize)
+                Loading(kind: .circular(), size: loadingSize)
                     .foregroundColor(loadingColor)
             }
         }
@@ -535,7 +371,7 @@ public struct Button: View {
 
 private extension Button {
     var backgroundColor: SwiftUI.Color {
-        switch style {
+        switch variant {
         case .solid:
             if disable {
                 .semantic(.interactionDisable)
@@ -543,10 +379,9 @@ private extension Button {
                 if let customBackgroundColor {
                     customBackgroundColor
                 } else {
-                    switch variant {
+                    switch color {
                     case .primary: .semantic(.primaryNormal)
                     case .assistive: .semantic(.fillNormal)
-                    default: .clear
                     }
                 }
             }
@@ -561,19 +396,14 @@ private extension Button {
     }
     
     var borderColor: SwiftUI.Color {
-        if style == .outlined {
+        if variant == .outlined {
             if disable {
                 .semantic(.lineNormal)
             } else {
                 if let customBorderColor {
                     customBorderColor
                 } else {
-                    switch variant {
-                    case .primary:
-                        .semantic(.primaryNormal)
-                    case .secondary, .assistive:
-                        .semantic(.lineNeutral)
-                    }
+                    .semantic(.lineNeutral)
                 }
             }
         } else {
@@ -582,17 +412,16 @@ private extension Button {
     }
     
     var foregroundColor: SwiftUI.Color {
-        switch style {
+        switch variant {
         case .solid:
             if disable {
                 .semantic(.labelAssistive)
             } else if let contentColor {
                 contentColor
             } else {
-                switch variant {
+                switch color {
                 case .primary: .semantic(.staticWhite)
                 case .assistive: .semantic(.labelNeutral)
-                default: .clear
                 }
             }
         case .outlined, .text:
@@ -601,9 +430,9 @@ private extension Button {
             } else if let contentColor {
                 contentColor
             } else {
-                switch variant {
-                case .primary, .secondary: .semantic(.primaryNormal)
-                case .assistive: .semantic(style == .outlined ? .labelNormal : .labelAlternative)
+                switch color {
+                case .primary: .semantic(.primaryNormal)
+                case .assistive: .semantic(variant == .outlined ? .labelNormal : .labelAlternative)
                 }
             }
         }
@@ -613,15 +442,15 @@ private extension Button {
         if let contentColor {
             contentColor
         } else {
-            switch style {
+            switch variant {
             case .solid:
-                switch variant {
-                case .primary, .secondary: .semantic(.staticWhite)
+                switch color {
+                case .primary: .semantic(.staticWhite)
                 case .assistive: .semantic(.labelAssistive)
                 }
             default:
-                switch variant {
-                case .primary, .secondary: .semantic(.primaryNormal)
+                switch color {
+                case .primary: .semantic(.primaryNormal)
                 case .assistive: .semantic(.labelAssistive)
                 }
             }
@@ -643,7 +472,7 @@ private extension Button {
         case .small:
             .init(width: 16, height: 16)
         case .medium:
-                .init(width: style == .text ? 20 : 18, height: style == .text ? 20 : 18)
+                .init(width: variant == .text ? 20 : 18, height: variant == .text ? 20 : 18)
         case .large:
             .init(width: 20, height: 20)
         }
@@ -652,23 +481,23 @@ private extension Button {
     var typoVariant: Typography.Variant {
         switch size {
         case .small:
-            style == .text ? .label1 : .label2
+            variant == .text ? .label1 : .label2
         case .medium:
-            style == .text ? .body1 : .body2
+            variant == .text ? .body1 : .body2
         case .large:
             .body1
         }
     }
     
     var typoWeight: Typography.Weight {
-        switch variant {
-        case .primary, .secondary: .bold
-        case .assistive: style == .text ? .bold : .medium
+        switch color {
+        case .primary: .bold
+        case .assistive: variant == .text ? .bold : .medium
         }
     }
     
     var cornerRadius: CGFloat {
-        if style == .text {
+        if variant == .text {
             6.0
         } else {
             switch size {
@@ -681,14 +510,14 @@ private extension Button {
     
     var contentHeight: CGFloat {
         switch size {
-        case .small: style == .text ? 20 : 18
-        case .medium: style == .text ? 24 : 22
+        case .small: variant == .text ? 20 : 18
+        case .medium: variant == .text ? 24 : 22
         case .large: 24
         }
     }
     
     var edgeInsets: EdgeInsets {
-        if style == .text {
+        if variant == .text {
             .init()
         } else {
             switch size {
@@ -709,21 +538,21 @@ private extension Button {
     }
     
     var interactionVariant: Interaction.Variant {
-        switch variant {
-        case .primary: style == .solid ? .strong : .normal
-        case .secondary, .assistive: style == .solid ? .normal : .light
+        switch color {
+        case .primary: variant == .solid ? .strong : .normal
+        case .assistive: variant == .solid ? .normal : .light
         }
     }
     
-    var interactionColor: Color.Semantic {
-        switch variant {
-        case .primary: style == .solid ? .labelNormal : .primaryNormal
-        case .secondary, .assistive: .labelNormal
+    var interactionColor: Montage.Color.Semantic {
+        switch color {
+        case .primary: variant == .solid ? .labelNormal : .primaryNormal
+        case .assistive: .labelNormal
         }
     }
 
-    var interactionVerticalOffset: CGFloat { style == .text ? 4 : 0 }
-    var interactionHorizontalOffset: CGFloat { style == .text ? 7 : 0 }
+    var interactionVerticalOffset: CGFloat { variant == .text ? 4 : 0 }
+    var interactionHorizontalOffset: CGFloat { variant == .text ? 7 : 0 }
     
     var loadingSize: CGSize {
         let textHeight = (fontVariant ?? typoVariant).fontHeight

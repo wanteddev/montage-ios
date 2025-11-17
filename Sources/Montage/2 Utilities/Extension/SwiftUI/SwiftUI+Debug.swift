@@ -8,11 +8,12 @@
 import SwiftUI
 
 extension View {
-    /// 프리뷰에서 View의 frame을 인식합니다.
+    /// 화면에 View의 frame을 표시합니다.
     ///
     /// - Parameters:
-    ///   - color: 인식 색상
-    ///   - fill: 배경 채우기 여부
+    ///   - color: 표시 색상, 생략하면 기본값으로 `blue` 적용
+    ///   - fill: 배경 채우기 여부, 생략하면 기본값으로 `false` 적용
+    ///   - drawOnPreviewOnly: 프리뷰에서만 그릴지 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 인식된 View
     @ViewBuilder
     public func recognizeView(_ color: SwiftUI.Color = .blue, fill: Bool = false, drawOnPreviewOnly: Bool = true) -> some View {
@@ -33,8 +34,9 @@ extension View {
     ///
     /// - Parameters:
     ///   - message: 출력할 메시지
-    ///   - font: 폰트
-    ///   - alignment: 정렬
+    ///   - font: 폰트, 생략하면 기본값으로 `nil` 적용 (시스템 폰트 크기 12)
+    ///   - alignment: 정렬, 생략하면 기본값으로 `.center` 적용
+    ///   - drawOnPreviewOnly: 프리뷰에서만 그릴지 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 로그가 출력된 View
     public func carveLog(
         _ message: String,
@@ -85,7 +87,7 @@ extension View {
     ///
     /// - Parameters:
     ///   - value: 출력할 값
-    ///   - label: 출력할 레이블
+    ///   - label: 출력할 레이블, 생략하면 기본값으로 `"Unknown"` 적용
     /// - Returns: 값이 출력된 View
     public func printValue<V: Equatable>(_ value: V, _ label: String = "Unknown") -> some View {
         onChange(of: value) {
@@ -95,7 +97,7 @@ extension View {
 
     /// 프리뷰에서 크기가 변경될 때마다 콘솔에 출력합니다.
     ///
-    /// - Parameter label: 출력할 레이블
+    /// - Parameter label: 출력할 레이블, 생략하면 기본값으로 `"Unknown"` 적용
     /// - Returns: 크기가 출력된 View
     public func printSize(_ label: String = "Unknown") -> some View {
         onGeometryChange(for: CGSize.self, of: { $0.size }, action: { print("🐞\(label) = \($0)") })
@@ -105,7 +107,9 @@ extension View {
 extension View {
     /// 프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
     ///
-    /// - Parameter axis: 측정할 축
+    /// - Parameters:
+    ///   - axis: 측정할 축, 생략하면 기본값으로 `nil` 적용 (가로 및 세로 모두 측정)
+    ///   - drawOnPreviewOnly: 프리뷰에서만 그릴지 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 뷰 크기가 그려진 View
     public func dimensioning(axis: Axis? = nil, drawOnPreviewOnly: Bool = true) -> some View {
         Group {

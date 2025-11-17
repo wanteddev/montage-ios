@@ -1,5 +1,5 @@
 //
-//  Chips.swift
+//  Category.swift
 //  Montage
 //
 //  Created by 김삼열 on 1/6/25.
@@ -27,8 +27,6 @@ import SwiftUI
 /// .size(.medium)
 /// .horizontalPadding()
 /// ```
-///
-/// - Note: 측면 그라데이션 효과와 아이콘 버튼을 추가할 수 있어 스크롤 가능한 콘텐츠임을 시각적으로 나타냅니다.
 public struct Category: View {
     // MARK: - Types
     
@@ -54,6 +52,7 @@ public struct Category: View {
     
     @Binding private var selectedIndex: Int
     private let items: [String]
+    private let itemModifier: (_ index: Int, _ chip: Chip) -> Chip
     private let actions: (Int) -> Void
     
     /// 카테고리 컴포넌트를 초기화합니다.
@@ -61,14 +60,17 @@ public struct Category: View {
     /// - Parameters:
     ///   - selectedIndex: 현재 선택된 항목의 인덱스 바인딩
     ///   - items: 표시할 카테고리 항목 배열
-    ///   - actions: 항목 선택 시 호출될 클로저 (기본값: 빈 클로저)
+    ///   - itemModifier: 카테고리 항목 수정 클로저, 인덱스와 Chip을 파라미터로 받음, 생략하면 기본값으로 원본 Chip을 반환하는 클로저 적용
+    ///   - actions: 항목 선택 시 호출될 클로저, 생략하면 기본값으로 빈 클로저 적용
     public init(
         selectedIndex: Binding<Int>,
         items: [String],
+        itemModifier: @escaping (_ index: Int, _ chip: Chip) -> Chip = { $1 },
         actions: @escaping (Int) -> Void = { _ in }
     ) {
         _selectedIndex = selectedIndex
         self.items = items
+        self.itemModifier = itemModifier
         self.actions = actions
     }
     
@@ -76,22 +78,26 @@ public struct Category: View {
     
     private let animation: Animation = .timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ScrollViewReader { reader in
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
                     HStack(spacing: itemSpacing) {
                         ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                            ItemView(
-                                variant: variant,
-                                size: size,
-                                isSelected: index == selectedIndex,
-                                title: item
+                            Chip(
+                                variant: chipVariant(index == selectedIndex),
+                                size: chipSize,
+                                text: item
                             ) {
                                 withAnimation(animation) {
                                     selectedIndex = index
                                 }
                                 actions(index)
+                            }
+                            .active(index == selectedIndex)
+                            .modifying {
+                                itemModifier(index, $0)
                             }
                             .contentShape(Rectangle())
                         }
@@ -163,7 +169,7 @@ public struct Category: View {
     
     /// 카테고리 컴포넌트의 좌우 패딩을 설정합니다.
     ///
-    /// - Parameter horizontalPadding: 패딩 적용 여부 (기본값: true)
+    /// - Parameter horizontalPadding: 패딩 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 카테고리 인스턴스
     public func horizontalPadding(_ horizontalPadding: Bool = true) -> Self {
         var zelf = self
@@ -173,7 +179,7 @@ public struct Category: View {
     
     /// 카테고리 컴포넌트의 상하 패딩을 설정합니다.
     ///
-    /// - Parameter verticalPadding: 패딩 적용 여부 (기본값: true)
+    /// - Parameter verticalPadding: 패딩 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 카테고리 인스턴스
     public func verticalPadding(_ verticalPadding: Bool = true) -> Self {
         var zelf = self
@@ -220,36 +226,21 @@ private extension Category {
         default: 24
         }
     }
-    
-    // MARK: - Inner View
-    
-    struct ItemView: View {
-        let variant: Variant
-        let size: Size
-        let isSelected: Bool
-        let title: String
-        let onTap: () -> Void
-
-        var body: some View {
-            ActionChip(variant: chipVariant, size: chipSize, text: title, handler: onTap)
-                .active(isSelected)
+      
+    func chipVariant(_ isSelected: Bool) -> Chip.Variant {
+        if variant == .normal && isSelected {
+            .solid
+        } else {
+            .outlined
         }
-        
-        var chipVariant: ActionChip.Variant {
-            if variant == .normal && isSelected {
-                .solid
-            } else {
-                .outlined
-            }
-        }
-        
-        var chipSize: ActionChip.Size {
-            switch size {
-            case .small: .xsmall
-            case .medium: .small
-            case .large: .medium
-            case .xlarge: .large
-            }
+    }
+    
+    var chipSize: Chip.Size {
+        switch size {
+        case .small: .xsmall
+        case .medium: .small
+        case .large: .medium
+        case .xlarge: .large
         }
     }
 }

@@ -25,8 +25,6 @@ import SwiftUI
 /// Avatar("https://example.com/profile.jpg", variant: .person)
 ///     .pushBadge()
 /// ```
-///
-/// - Note: 이미지 로딩은 SDWebImage를 통해 처리되며, 탭 상호작용을 지원합니다.
 public struct Avatar: View {
     // MARK: - Types
     
@@ -120,8 +118,8 @@ public struct Avatar: View {
     /// - Parameters:
     ///   - imageUrl: 표시할 이미지의 URL 문자열
     ///   - variant: 아바타 유형 (.person, .company, .academy)
-    ///   - size: 아바타 크기 (기본값: .small)
-    ///   - onTap: 탭 시 실행할 액션 (기본값: nil)
+    ///   - size: 아바타 크기, 생략하면 기본값으로 `.small` 적용
+    ///   - onTap: 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용
     public init(_ imageUrl: String, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
         self.imageUrl = imageUrl
         self.variant = variant
@@ -133,6 +131,7 @@ public struct Avatar: View {
     
     @State private var isPressed = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         WebImage(url: URL(string: imageUrl)) { image in
             image.resizable()
@@ -175,7 +174,7 @@ public struct Avatar: View {
     ///
     /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
     ///
-    /// - Parameter pushBadge: 뱃지 표시 여부 (기본값: true)
+    /// - Parameter pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 아바타 인스턴스
     public func pushBadge(_ pushBadge: Bool = true) -> Self {
         var zelf = self
@@ -186,8 +185,8 @@ public struct Avatar: View {
     /// 아바타에 테두리를 추가합니다.
     ///
     /// - Parameters:
-    ///   - color: 테두리 색상 (기본값: .semantic(.lineAlternative))
-    ///   - width: 테두리 두께 (기본값: 1)
+    ///   - color: 테두리 색상, 생략하면 기본값으로 `.semantic(.lineAlternative)` 적용
+    ///   - width: 테두리 두께, 생략하면 기본값으로 `1` 적용
     /// - Returns: 수정된 아바타 인스턴스
     public func border(color: SwiftUI.Color = .semantic(.lineAlternative), width: CGFloat = 1) -> Self {
         var zelf = self
@@ -196,10 +195,6 @@ public struct Avatar: View {
         return zelf
     }
     
-    /// 아바타의 상호작용 효과를 비활성화합니다.
-    ///
-    /// - Parameter interactionDisabled: 상호작용 비활성화 여부 (기본값: true)
-    /// - Returns: 수정된 아바타 인스턴스
     internal func interactionDisabled(_ interactionDisabled: Bool = true) -> Self {
         var zelf = self
         zelf.interactionDisabled = interactionDisabled

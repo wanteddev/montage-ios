@@ -43,16 +43,13 @@ public struct TextField: View {
     /// 텍스트 필드의 상태를 정의합니다.
     public enum Status {
         /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
-        ///
-        /// - Parameter description: 설명 텍스트, 기본값은 빈 문자열
+        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case normal(description: String = "")
         /// 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
-        ///
-        /// - Parameter description: 설명 텍스트, 기본값은 빈 문자열
+        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case positive(description: String = "")
         /// 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
-        ///
-        /// - Parameter description: 오류 설명 텍스트, 기본값은 빈 문자열
+        /// - Parameter description: 오류 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case negative(description: String = "")
     }
     
@@ -60,7 +57,7 @@ public struct TextField: View {
     ///
     /// 이 구조체를 사용하여 오른쪽에 표시될 버튼의 스타일, 텍스트, 동작을 정의할 수 있습니다.
     public struct TrailingButtonInfo {
-        fileprivate let variant: Button.Outlined.Variant
+        fileprivate let variant: Button.Color
         fileprivate let title: String
         fileprivate let handler: (() -> Void)?
         
@@ -72,7 +69,7 @@ public struct TextField: View {
         ///   - handler: 버튼 클릭 시 실행할 핸들러
         /// - Returns: 구성된 트레일링 버튼 인스턴스
         public init(
-            variant: Button.Outlined.Variant,
+            variant: Button.Color,
             title: String,
             handler: (() -> Void)? = nil
         ) {
@@ -102,11 +99,13 @@ public struct TextField: View {
         /// 자동완성 데이터 소스를 초기화합니다.
         ///
         /// - Parameters:
-        ///   - numberOfSections: 섹션 수, 기본값은 1
-        ///   - sectionTitleAt: 섹션 제목을 반환하는 클로저
+        ///   - numberOfSections: 섹션 수, 생략하면 기본값으로 `1` 적용
+        ///   - sectionTitleAt: 섹션 제목을 반환하는 클로저, 생략하면 기본값으로 `nil` 적용
         ///   - numberOfItemsInSection: 각 섹션의 항목 수를 반환하는 클로저
         ///   - cellForItemAt: 각 항목의 뷰를 반환하는 클로저
-        ///   - maxHeight: 자동완성 목록의 최대 높이, 기본값은 400
+        ///   - headerView: 헤더 뷰 클로저, 생략하면 기본값으로 `nil` 적용
+        ///   - footerView: 푸터 뷰 클로저, 생략하면 기본값으로 `nil` 적용
+        ///   - maxHeight: 자동완성 목록의 최대 높이, 생략하면 기본값으로 `400` 적용
         /// - Returns: 구성된 자동완성 데이터 소스 인스턴스
         public init<V: View>(
             numberOfSections: Int = 1,
@@ -141,7 +140,7 @@ public struct TextField: View {
     ///
     /// - Parameters:
     ///   - text: 텍스트 필드의 값을 바인딩
-    ///   - autoCompletionDataSource: 자동완성 데이터 소스를 바인딩, 기본값은 nil
+    ///   - autoCompletionDataSource: 자동완성 데이터 소스를 바인딩, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 구성된 텍스트 필드 인스턴스
     public init(
         text: Binding<String>,
@@ -263,15 +262,16 @@ public struct TextField: View {
     @State private var autoCompletionContentHeight: CGFloat = .zero
     @State private var fixAutocorrection = false
 
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let heading {
                 HStack(spacing: 4) {
                     Text(heading)
-                        .paragraphNew(variant: .label1, weight: .bold, semantic: .labelNeutral)
+                        .paragraph(variant: .label1, weight: .bold, semantic: .labelNeutral)
                     if requiredBadge {
                         Text("*")
-                            .typographyNew(variant: .label1, weight: .medium, semantic: .statusNegative)
+                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
                     }
                 }
             }
@@ -283,7 +283,7 @@ public struct TextField: View {
                 case .positive(let caption), .negative(let caption), .normal(let caption):
                     if caption.isEmpty == false {
                         Text(caption)
-                            .paragraphNew(
+                            .paragraph(
                                 variant: .caption1,
                                 color: captionTextColor
                             )
@@ -313,7 +313,7 @@ private extension TextField {
                         prompt: {
                             if let placeholder {
                                 Text(placeholder)
-                                    .typographyNew(
+                                    .typography(
                                         variant: .body1,
                                         weight: .regular,
                                         color: placeholderTextColor
@@ -362,11 +362,6 @@ private extension TextField {
                             .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
                     }
                 }
-                .onGeometryChange(
-                    for: CGRect.self,
-                    of: { $0.frame(in: .global) },
-                    action: { textFieldFrame = $0 }
-                )
             }
             .contentShape(RoundedRectangle(cornerRadius: 12))
             .onTapGesture {
@@ -392,7 +387,19 @@ private extension TextField {
             }
         }
         .frame(minHeight: 48)
-        .background(backgroundColor)
+        .onGeometryChange(
+            for: CGRect.self,
+            of: { $0.frame(in: .global) },
+            action: { textFieldFrame = $0 }
+        )
+        .background {
+            if disable {
+                SwiftUI.Color.semantic(.fillAlternative)
+            } else {
+                SwiftUI.Color.white.opacity(0.6)
+                    .background(.ultraThinMaterial)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         .allowsHitTesting(disable == false)
@@ -408,14 +415,21 @@ private extension TextField {
             FloatModifier(
                 isPresented: (autoCompletionDataSource?.totalNumberOfItems ?? 0) > 0 && textFieldFocusState,
                 updatingValue: Binding(
-                    get: { "\(String(describing: autoCompletionDataSource)),\(autoCompletionContentHeight)" },
-                    set: { _ in }
+                    get: {
+                        if autoCompletionDataSource == nil || autoCompletionContentHeight == 0 {
+                            nil as String?
+                        } else {
+                            "\(String(describing: autoCompletionDataSource)),\(autoCompletionContentHeight)"
+                        }
+                    },
+                    set: {
+                        if $0 == nil {
+                            autoCompletionDataSource = nil
+                            autoCompletionContentHeight = 0
+                        }
+                    }
                 ),
-                dismissPolicy: .onTap,
-                onDismiss: {
-                    textFieldFocusState = false
-                    autoCompletionDataSource = nil
-                },
+                dismissPolicy: .onTouchOutside,
                 floatView: {
                     SwiftUI.ScrollView {
                         autoCompletionContent
@@ -424,12 +438,12 @@ private extension TextField {
                         width: textFieldFrame.width,
                         height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
-                    .background {
+                    .background(SwiftUI.Color.semantic(.backgroundNormal))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay {
                         RoundedRectangle(cornerRadius: 12)
                             .strokeBorder(SwiftUI.Color.semantic(.lineAlternative))
                     }
-                    .background(SwiftUI.Color.semantic(.backgroundNormal))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .position(
                         x: textFieldFrame.midX,
@@ -441,12 +455,6 @@ private extension TextField {
                 }
             )
         )
-    }
-    
-    var backgroundColor: SwiftUI.Color {
-        disable
-        ? .semantic(.interactionDisable)
-        : customBackgroundColor ?? .semantic(.backgroundNormal)
     }
     
     var captionTextColor: SwiftUI.Color {
@@ -475,7 +483,7 @@ private extension TextField {
                                         if let title = autoCompletionDataSource.sectionTitleAt?(section) {
                                             HStack {
                                                 Text(title)
-                                                    .paragraphNew(
+                                                    .paragraph(
                                                         variant: .caption1,
                                                         weight: .bold,
                                                         semantic: .labelAlternative
@@ -561,11 +569,11 @@ private extension TextField {
 // MARK: - Inner Views
 private extension TextField {
     struct TrailingButton: View {
-        private let variant: Button.Outlined.Variant
+        private let variant: Button.Color
         private let title: String
         private let handler: (() -> Void)?
         
-        init(variant: Button.Outlined.Variant, title: String, handler: (() -> Void)?) {
+        init(variant: Button.Color, title: String, handler: (() -> Void)?) {
             self.variant = variant
             self.title = title
             self.handler = handler
@@ -575,7 +583,7 @@ private extension TextField {
         
         var body: some View {
             Text(title)
-                .paragraphNew(variant: .body1, weight: typoWeight, semantic: textColor)
+                .paragraph(variant: .body1, weight: typoWeight, semantic: textColor)
                 .padding(.horizontal, 19)
                 .padding(.vertical, 12)
                 .background(
@@ -590,7 +598,7 @@ private extension TextField {
         
         var textColor: Color.Semantic {
             switch variant {
-            case .primary, .secondary:
+            case .primary:
                 .primaryNormal
             case .assistive:
                 .labelNormal
@@ -599,7 +607,7 @@ private extension TextField {
         
         var typoWeight: Typography.Weight {
             switch variant {
-            case .primary, .secondary: .bold
+            case .primary: .bold
             case .assistive: .medium
             }
         }

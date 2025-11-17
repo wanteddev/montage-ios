@@ -33,6 +33,7 @@ public struct ProgressIndicator: View {
 
     @State private var size: CGSize = .zero
 
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .leading) {
             Rectangle()

@@ -21,8 +21,6 @@ import SwiftUI
 ///     labels: ["회원 정보", "배송지 정보", "결제 정보", "주문 완료"]
 /// )
 /// ```
-///
-/// - Note: 현재 단계는 강조 표시되며, 이전 단계는 완료 상태로, 이후 단계는 비활성 상태로 표시됩니다.
 public struct HorizontalProgressTracker: View {
     @Binding private var progress: Int
     private let labels: [String]
@@ -51,6 +49,7 @@ public struct HorizontalProgressTracker: View {
     @State private var stepperSize: CGSize = .zero
     @State private var textMaxHeight: CGFloat = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             HStack(alignment: .center, spacing: 0) {
@@ -91,7 +90,7 @@ public struct HorizontalProgressTracker: View {
     
     private func text(at index: Int, alignment: TextAlignment) -> some View {
         Text(labels[index])
-            .typographyNew(variant: .label2, weight: .bold, color: labelColor(at: index))
+            .typography(variant: .label2, weight: .bold, color: labelColor(at: index))
             .multilineTextAlignment(alignment)
             .if(!labels[index].isEmpty)
     }

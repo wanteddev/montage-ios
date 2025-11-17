@@ -17,7 +17,6 @@ import SwiftUI
 ///
 /// ```swift
 /// IconButton(
-///     variant: .default,
 ///     icon: .arrowLeft,
 ///     handler: { print("뒤로 가기 버튼 탭됨") }
 /// )
@@ -32,12 +31,12 @@ public struct IconButton: View {
     /// 아이콘 버튼을 생성합니다.
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 외관 스타일, 기본값은 `.default`
+    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: 24)` 적용
     ///   - icon: 표시할 아이콘
     ///   - handler: 버튼 탭 시 실행할 핸들러
     /// - Returns: 구성된 아이콘 버튼 뷰
     public init(
-        variant: IconButton.Variant = .default,
+        variant: IconButton.Variant = .normal(size: 24),
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
@@ -178,6 +177,7 @@ public struct IconButton: View {
         variant.interactionOffset + padding
     }
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         Image.icon(icon)
             .resizable()
@@ -238,7 +238,7 @@ extension IconButton {
         /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
         /// - Parameters:
         ///   - size: 아이콘 크기 (픽셀)
-        ///   - isAlternative: 대체 스타일 사용 여부
+        ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
         case background(size: Int, isAlternative: Bool = false)
         
         /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
@@ -248,9 +248,6 @@ extension IconButton {
         /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
         /// - Parameter size: 아이콘 크기 (Size 열거형)
         case solid(size: Size)
-        
-        /// normal(size: 24)의 기본 variant입니다.
-        public static let `default` = Self.normal(size: 24)
         
         fileprivate var isBackground: Bool {
             switch self {
@@ -267,6 +264,7 @@ extension IconButton {
         /// 중간 크기
         case medium
         /// 사용자 지정 크기
+        /// - Parameter size: 아이콘 크기 (픽셀)
         case custom(size: Int)
     }
 }

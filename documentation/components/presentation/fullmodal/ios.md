@@ -28,10 +28,13 @@ Button("전체 화면 모달 열기") {
         .padding()
     }
     .modalNavigation {
-        ModalNavigation(title: "제목")
-            .leadingButton(.back {
-                showFullModal = false
-            })
+        ModalNavigation()
+            .title("제목")
+            .leadingContent {
+                TopNavigation.LeadingButton(.back {
+                    showFullModal = false
+                })
+            }
     }
 }
 ```
@@ -40,13 +43,11 @@ Button("전체 화면 모달 열기") {
 
 ```swift
 YourView()
-    .modifier(
-        FullModalModifier(
-            isPresented: $showFullModal
-        ) {
-            Text("풀스크린 모달 내용")
-        }
-    )
+    .fullModal(
+        isPresented: $showFullModal
+    ) {
+        Text("풀스크린 모달 내용")
+    }
 ```
 
 ## Topics
@@ -56,6 +57,7 @@ YourView()
 <details>
 
 <summary>``init<V>(() -> V)``</summary>
+
 
 풀스크린 모달을 초기화합니다.
 
@@ -71,6 +73,9 @@ ___
 <details>
 
 <summary>``var body: some View``</summary>
+
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
@@ -79,6 +84,7 @@ ___
 <details>
 
 <summary>``func ignoresEdgeInsets(Bool) -> FullModal``</summary>
+
 
 컨텐츠의 기본 여백을 무시할지 설정합니다.
 
@@ -94,6 +100,7 @@ ___
 
 <summary>``func modalActionArea(ActionArea.Model?) -> FullModal``</summary>
 
+
 풀스크린 모달 하단에 액션 영역을 설정합니다.
 
 - **Parameters**
@@ -108,6 +115,7 @@ ___
 
 <summary>``func modalNavigation((() -> Montage.ModalNavigation)?) -> FullModal``</summary>
 
+
 풀스크린 모달 상단에 내비게이션 바를 설정합니다.
 
 - **Parameters**
@@ -120,12 +128,38 @@ ___
 </details>
 
 ___
-### Default Implementations
+___
+### Associated Extensions
+
+<details>
+
+<summary>``extension View``</summary>
+
+<details>
+
+<summary>``func fullModal<V>(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+전체 화면 모달을 표시합니다.
 
-[View Implementations](/docs/utilities/ios/view-implementations)
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
+  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
+- **Return Value**
+
+  전체 화면 모달이 적용된 뷰
+- **Discussion**
+
+  화면 전체를 덮는 모달을 표시합니다.
+</details>
+
+
+</details>
 
 ## Relationships
 

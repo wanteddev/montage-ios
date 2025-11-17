@@ -35,7 +35,8 @@ public struct PushBadge: View {
         /// 'N' 문자를 표시하는 뱃지
         case new
         /// 특정 숫자를 표시하는 뱃지
-        case number(Int)
+        /// - Parameter number: 표시할 숫자
+        case number(_ number: Int)
     }
     
     /// 뱃지의 크기를 정의하는 열거형입니다.
@@ -54,23 +55,23 @@ public struct PushBadge: View {
     ///
     /// ```swift
     /// // 우측 상단에 위치
-    /// .modifier(PushBadge.Modifier(position: .top(.trailing)))
+    /// someView.pushBadge(position: .top(.trailing))
     /// 
     /// // 좌측 하단에 위치
-    /// .modifier(PushBadge.Modifier(position: .bottom(.leading)))
+    /// someView.pushBadge(position: .bottom(.leading))
     /// ```
     public enum Position {
         /// 상단 위치
-        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
-        case top(HorizontalPosition = .center)
+        /// - Parameter horizontalPosition: 수평 위치, 생략하면 기본값으로 `.center` 적용
+        case top(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 중앙 위치
-        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
-        case center(HorizontalPosition = .center)
+        /// - Parameter horizontalPosition: 수평 위치, 생략하면 기본값으로 `.center` 적용
+        case center(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 하단 위치
-        /// - Parameter horizontalPosition: 수평 위치 (기본값: center)
-        case bottom(HorizontalPosition = .center)
+        /// - Parameter horizontalPosition: 수평 위치, 생략하면 기본값으로 `.center` 적용
+        case bottom(_ horizontalPosition: HorizontalPosition = .center)
         
         /// 수평 위치를 정의하는 열거형입니다.
         public enum HorizontalPosition {
@@ -96,6 +97,7 @@ public struct PushBadge: View {
     
     // MARK: - Body
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         Group {
             switch variant {
@@ -199,20 +201,6 @@ private extension PushBadge {
 }
 
 extension PushBadge {
-    /// 다른 뷰에 PushBadge를 적용하기 위한 뷰 모디파이어입니다.
-    ///
-    /// 이 모디파이어를 사용하면 기존 뷰의 특정 위치에 뱃지를 표시할 수 있습니다.
-    ///
-    /// ```swift
-    /// IconButton(icon: .home)
-    ///     .modifier(
-    ///         PushBadge.Modifier(
-    ///             variant: .number(3),
-    ///             size: .small,
-    ///             position: .top(.trailing)
-    ///         )
-    ///     )
-    /// ```
     struct Modifier: ViewModifier {
         private let variant: Variant
         private let size: Size
@@ -221,15 +209,6 @@ extension PushBadge {
         private let position: Position
         private let inset: CGSize
         
-        /// PushBadge 모디파이어를 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 뱃지의 표시 형태 (기본값: .dot)
-        ///   - size: 뱃지 크기 (기본값: .xsmall)
-        ///   - fontColor: 텍스트 색상 (기본값: staticWhite)
-        ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
-        ///   - position: 뱃지 위치 (기본값: .top(.trailing))
-        ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
         init(
             variant: Variant = .dot,
             size: Size = .xsmall,
@@ -311,12 +290,12 @@ extension View {
     /// 뷰의 특정 위치에 알림 또는 메시지 표시용 뱃지를 추가합니다.
     ///
     /// - Parameters:
-    ///   - variant: 뱃지의 표시 형태 (기본값: .dot)
-    ///   - size: 뱃지 크기 (기본값: .xsmall)
-    ///   - fontColor: 텍스트 색상 (기본값: staticWhite)
-    ///   - backgroundColor: 배경 색상 (기본값: primaryNormal)
-    ///   - position: 뱃지 위치 (기본값: .top(.trailing))
-    ///   - inset: 위치 조정을 위한 여백 (기본값: .zero)
+    ///   - variant: 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용
+    ///   - size: 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용
+    ///   - fontColor: 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용
+    ///   - backgroundColor: 배경 색상, 생략하면 기본값으로 `.semantic(.primaryNormal)` 적용
+    ///   - position: 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용
+    ///   - inset: 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용
     /// - Returns: 뱃지가 적용된 뷰
     ///
     /// ```swift

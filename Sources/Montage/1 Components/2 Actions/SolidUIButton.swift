@@ -20,7 +20,7 @@ extension Button {
     /// button.size = .medium
     /// button.handler = { print("버튼이 탭되었습니다.") }
     /// ```
-    @available(*, deprecated, message: "`Montage.Button.solid()`를 사용하세요.")
+    @available(*, deprecated, message: "`Montage.Button()`를 사용하세요.")
     public class SolidUIButton: UIView {
         /// 버튼의 외관을 결정하는 열거형입니다.
         public enum Variant {

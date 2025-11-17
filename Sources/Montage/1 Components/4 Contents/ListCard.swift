@@ -16,15 +16,13 @@ import SwiftUI
 /// @State private var isLoading = false
 ///
 /// ListCard(
-///     thumbnail: { Thumbnail(.image(Image("sample")), variant: .square) },
+///     thumbnail: { Thumbnail(urlString: imageURL, ratio: .r1x1) },
 ///     skeleton: $isLoading,
 ///     title: "리스트 카드 제목"
 /// )
 /// .caption("부제목")
-/// .trailingContent { IconButton(icon: .arrowForward) }
+/// .trailingContent { IconButton(icon: .arrowRight) }
 /// ```
-///
-/// - Note: 리스트 형태의 UI에 적합하며, 선택적으로 앞뒤에 추가 콘텐츠를 배치할 수 있습니다.
 public struct ListCard: View {
     
     // MARK: - Initializer
@@ -124,6 +122,7 @@ public struct ListCard: View {
     @State private var hasTopContent: Bool = false
     @State private var hasBottomContent: Bool = false
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(alignment: .center, spacing: 12) {
             leadingContent()
@@ -151,20 +150,20 @@ public struct ListCard: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .paragraphNew(variant: .body1, weight: .bold, semantic: .labelNormal)
+                            .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(1)
                             .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: textAreaWidth, height: 20))
                         
                         if let caption {
                             Text(caption)
-                                .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .lineLimit(1)
                                 .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
                         }
                         
                         if let extraCaption {
                             Text(extraCaption)
-                                .paragraphNew(variant: .label2, weight: .medium, semantic: .labelAlternative)
+                                .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .lineLimit(1)
                                 .skeleton(
                                     isPresented: skeleton,

@@ -29,11 +29,9 @@ import SwiftUI
 ///     }
 /// )
 /// .trailingContent {
-///     Text("+3").typographyNew(variant: .body2)
+///     Text("+3").typography(variant: .body2)
 /// }
 /// ```
-///
-/// - Note: 아바타는 왼쪽에서 오른쪽으로 겹쳐서 표시되며, 마지막 아바타가 가장 앞에 표시됩니다.
 public struct GroupAvatar: View {
     // MARK: - Types
     
@@ -63,9 +61,9 @@ public struct GroupAvatar: View {
     ///
     /// - Parameters:
     ///   - imageUrls: 표시할 이미지의 URL 문자열 배열 (최대 5개)
-    ///   - variant: 아바타 유형 (.person, .company, .academy)
+    ///   - variant: 아바타 유형
     ///   - size: 그룹 아바타 크기
-    ///   - onTap: 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨) (기본값: nil)
+    ///   - onTap: 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용
     public init(
         _ imageUrls: [String],
         variant: Avatar.Variant,
@@ -80,6 +78,7 @@ public struct GroupAvatar: View {
     
     // MARK: - Body
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 10) {
             ZStack {

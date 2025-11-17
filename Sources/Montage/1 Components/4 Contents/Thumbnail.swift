@@ -28,8 +28,6 @@ import SwiftUI
 ///    .width(50)
 ///    .border(true)
 /// ```
-///
-/// - Note: 이미지 로딩에는 SDWebImage 라이브러리를 사용하며, 로드 실패 시 기본 플레이스홀더가 표시됩니다.
 public struct Thumbnail: View {
     
     // MARK: - Ratio Enum
@@ -48,8 +46,6 @@ public struct Thumbnail: View {
     /// Thumbnail(urlString: storyURL, ratio: .r9x16)
     ///    .width(400)
     /// ```
-    ///
-    /// - Note: 각 비율은 실제 픽셀 크기가 아닌 가로와 세로의 상대적 비율을 나타냅니다.
     public enum Ratio {
         /// 21:9 비율 (울트라와이드 영화)
         case r21x9
@@ -146,10 +142,8 @@ public struct Thumbnail: View {
     /// 썸네일에 둥근 모서리를 적용합니다.
     ///
     /// - Parameters:
-    ///   - radius: 둥근 모서리 적용 여부 (기본값: true)
+    ///   - radius: 둥근 모서리 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 Thumbnail 인스턴스
-    ///
-    /// - Note: 적용 시 12포인트 반경의 둥근 모서리가 적용됩니다.
     public func radius(_ radius: Bool = true) -> Self {
         var zelf = self
         zelf.radius = radius
@@ -159,16 +153,19 @@ public struct Thumbnail: View {
     /// 썸네일에 테두리를 적용합니다.
     ///
     /// - Parameters:
-    ///   - border: 테두리 적용 여부 (기본값: true)
+    ///   - border: 테두리 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 Thumbnail 인스턴스
-    ///
-    /// - Note: 적용 시 1포인트 두께의 .lineNormal 색상 테두리가 적용됩니다.
     public func border(_ border: Bool = true) -> Self {
         var zelf = self
         zelf.border = border
         return zelf
     }
     
+    /// 썸네일의 너비를 설정합니다.
+    ///
+    /// - Parameters:
+    ///   - width: 썸네일의 너비
+    /// - Returns: 수정된 Thumbnail 인스턴스
     public func width(_ width: CGFloat) -> Self {
         var zelf = self
         zelf.width = width
@@ -179,6 +176,7 @@ public struct Thumbnail: View {
     
     @State private var proposedWidth: CGFloat = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             SwiftUI.Color.clear

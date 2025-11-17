@@ -29,7 +29,8 @@ import SwiftUI
 ///     }
 ///     .resize(.flexible)
 ///     .modalNavigation {
-///         ModalNavigation(title: "제목")
+///         ModalNavigation()
+///             .title("제목")
 ///     }
 /// }
 /// ```
@@ -52,11 +53,9 @@ public struct BottomSheetModal: View {
         /// 컨텐츠 크기에 맞게 자동 조절됩니다.
         case hug
         /// 화면 높이의 특정 비율로 고정됩니다.
-        ///
         /// - Parameter ratio: 비율 (0.0 ~ 1.0)
         case fixedRatio(CGFloat)
         /// 지정한 높이로 고정됩니다.
-        ///
         /// - Parameter height: 높이
         case fixedHeight(CGFloat)
         /// 사용자가 드래그하여 크기를 조절할 수 있습니다.
@@ -93,10 +92,11 @@ public struct BottomSheetModal: View {
     @State private var actionAreaHeight: CGFloat = 0
     @State private var scrollStatus: ScrollView.ScrollStatus = .init()
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
-                if needHandle {
+                if needHandle && navigation == nil {
                     ZStack(alignment: .bottom) {
                         SwiftUI.Color.clear
                             .frame(height: 12)
@@ -134,7 +134,7 @@ public struct BottomSheetModal: View {
                 
                 if let actionAreaModel {
                     ActionArea(variant: actionAreaModel.variant)
-                        .clearBackground(scrollStatus.scrolledToMax)
+                        .transparentBackground(scrollStatus.scrolledToMax)
                         .caption(actionAreaModel.caption)
                         .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
@@ -249,7 +249,9 @@ public struct BottomSheetModal: View {
     }
     
     private var maxDetentHeight: CGFloat {
-        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10
+        // 최대 높이에 도달할 경우 자동으로 스택 형태로 변경되는 것을 막기 위한 보정값 10.2 추가
+        // https://wantedx.slack.com/archives/C04TTGN5F1C/p1761040362320469?thread_ts=1761035208.156399&cid=C04TTGN5F1C
+        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10.2
     }
     
     private var bottomSheetMaxHeight: CGFloat {
@@ -259,14 +261,14 @@ public struct BottomSheetModal: View {
         case .fixedRatio(let ratio):
             maxDetentHeight * ratio
         case .fixedHeight(let height):
-            height
+            min(maxDetentHeight, height)
         case .flexible, .fill:
             maxDetentHeight
         }
     }
     
     private var bottomSheetContentHeight: CGFloat {
-        navigationHeight + contentHeight + actionAreaHeight + (needHandle ? 12 : 0)
+        (needHandle && navigation == nil ? 12 : 0) + navigationHeight + contentHeight + actionAreaHeight
     }
     
     private var detents: Set<PresentationDetent> {
@@ -282,25 +284,6 @@ public struct BottomSheetModal: View {
     }
 }
 
-    /// 바텀 시트를 표시하기 위한 뷰 모디파이어입니다.
-///
-    /// 이 모디파이어를 사용하면 바텀 시트를 쉽게 표시하고 설정할 수 있습니다.
-///
-/// ```swift
-/// @State private var showBottomSheet = false
-///
-/// Button("바텀 시트 열기") {
-///     showBottomSheet = true
-/// }
-/// .modifier(
-///     BottomSheetModalModifier(
-///         isPresented: $showBottomSheet,
-///         resize: .hug
-///     ) {
-///         Text("바텀 시트 내용")
-///     }
-/// )
-/// ```
 struct BottomSheetModalModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let bottomSheetContent: () -> AnyView
@@ -310,16 +293,6 @@ struct BottomSheetModalModifier: ViewModifier {
     private let navigation: (() -> ModalNavigation)?
     private let actionAreaModel: ActionArea.Model?
     
-    /// 바텀 시트 모디파이어를 초기화합니다.
-    ///
-    /// - Parameters:
-    ///   - isPresented: 바텀 시트 표시 여부에 대한 바인딩
-    ///   - content: 바텀 시트에 표시할 콘텐츠를 반환하는 클로저
-    ///   - needHandle: 핸들 표시 여부 (기본값: true)
-    ///   - resize: 크기 조절 방식 (기본값: .hug)
-    ///   - ignoresEdgeInsets: 여백 무시 여부 (기본값: false)
-    ///   - navigation: 내비게이션 바를 반환하는 클로저 (선택 사항)
-    ///   - actionAreaModel: 액션 영역 모델 (선택 사항)
     init<V: View>(
         isPresented: Binding<Bool>,
         @ViewBuilder _ content: @escaping () -> V,
@@ -362,11 +335,11 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
-    ///   - needHandle: 상단 핸들 표시 여부 (기본값: true)
-    ///   - resize: 모달 크기 조절 방식 (기본값: .hug)
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
+    ///   - needHandle: 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
+    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
     ///   - content: 모달에 표시할 콘텐츠 클로저
-    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 바텀 시트 모달이 적용된 뷰
     public func bottomSheetModal<V: View>(
         isPresented: Binding<Bool>,

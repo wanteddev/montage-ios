@@ -28,10 +28,8 @@ import SwiftUI
 ///     ]
 /// )
 /// ```
-///
-/// - Note: 각 단계에는 라벨 외에도 추가 콘텐츠를 표시할 수 있어 복잡한 단계별 정보를 표현하는 데 적합합니다.
 public struct VerticalProgressTracker: View {
-    /// 수직 진행 추적기의 각 단계에 표시되는 콘텐츠 컴포넌트입니다.
+    /// `VerticalProgressTracker`의 각 단계에 표시되는 콘텐츠 컴포넌트입니다.
     ///
     /// 각 단계의 라벨, 라벨 보조 뷰, 그리고 추가 콘텐츠를 포함할 수 있습니다.
     ///
@@ -42,8 +40,6 @@ public struct VerticalProgressTracker: View {
     ///     contentView: { AddressInputView() }
     /// )
     /// ```
-    ///
-    /// - Note: 콘텐츠 뷰를 통해 각 단계에 맞는 복잡한 UI를 표시할 수 있습니다.
     public struct StepContent: View {
         private let label: String
         private let labelAccessoryView: () -> AnyView
@@ -65,6 +61,7 @@ public struct VerticalProgressTracker: View {
             self.contentView = contentView.map { view in { AnyView(view()) }} ?? { AnyView(EmptyView()) }
         }
         
+        /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             ZStack(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 12) {
@@ -89,7 +86,7 @@ public struct VerticalProgressTracker: View {
         
         private var text: some View {
             Text(label)
-                .typographyNew(variant: .label2, weight: .bold, color: labelColor)
+                .typography(variant: .label2, weight: .bold, color: labelColor)
                 .lineLimit(1)
                 .fixedSize()
         }
@@ -107,7 +104,7 @@ public struct VerticalProgressTracker: View {
     @Binding private var progress: Int
     private let stepContents: [StepContent]
     
-    /// 수직 진행 추적기를 초기화합니다.
+    /// `VerticalProgressTracker`를 초기화합니다.
     ///
     /// - Parameters:
     ///   - progress: 현재 진행 중인 단계 (1부터 시작)
@@ -120,6 +117,7 @@ public struct VerticalProgressTracker: View {
     @State private var lineLengths: [Int: CGFloat] = [:]
     @State private var stepperSize: CGSize = .zero
     
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .topLeading) {
             VStack(spacing: 0) {
