@@ -367,6 +367,7 @@ extension View {
                 isPresented: isPresented,
                 needHandle: needHandle,
                 resize: resize,
+                ignoresEdgeInsets: ignoresEdgeInsets,
                 actionAreaModel: actionAreaModel,
                 navigation: navigation,
                 content
