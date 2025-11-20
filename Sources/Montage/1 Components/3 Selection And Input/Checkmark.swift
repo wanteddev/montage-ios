@@ -37,11 +37,10 @@ public struct Checkmark: View {
             case .medium: .medium
             }
         }()
-        self.base = Control(
-            variant: .checkmark, checked: checked, size: mappedSize, onSelect: onSelect)
+        self.base = Control(variant: .checkmark, checked: checked, size: mappedSize, onSelect: onSelect)
     }
 
-    internal init(base: Control) {
+    private init(base: Control) {
         self.base = base
     }
 

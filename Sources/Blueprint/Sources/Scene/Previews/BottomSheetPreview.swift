@@ -11,8 +11,6 @@ import SwiftUI
 struct BottomSheetPreview: View {
     @State private var show = true
 
-    @State private var text: String = ""
-
     @State private var isFullModal = false
     @State private var resizeIndex = 0
     @State private var itemCountsIndex: Int = 0
