@@ -24,11 +24,11 @@
 
 ### 2. 행동 강령 (Code of Conduct)
 `CODE_OF_CONDUCT.md` 파일 추가 권장
-- Contributor Covenant 사용 권장 (가장 널리 사용됨)
+- [x] Contributor Covenant 사용 권장 (가장 널리 사용됨)
 
 ### 3. 보안 정책 (Security Policy)
 `SECURITY.md` 파일 추가 권장
-- 보안 취약점 신고 절차 명시
+- [x] 보안 취약점 신고 절차 명시
 
 ### 4. 변경 이력 (Changelog)
 GitHub Releases의 릴리스 노트로 충분합니다. (선택사항)
