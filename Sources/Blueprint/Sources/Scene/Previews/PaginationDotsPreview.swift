@@ -69,7 +69,12 @@ struct PaginationDotsPreview: View {
                     SwiftUI.Slider(
                         value: Binding(
                             get: { Double(totalPages) },
-                            set: { totalPages = Int($0) }
+                            set: {
+                                totalPages = Int($0)
+                                if selectedPage > totalPages {
+                                    selectedPage = totalPages
+                                }
+                            }
                         ), in: 1...10, step: 1)
                     Text("\(totalPages)")
                         .frame(width: 30)

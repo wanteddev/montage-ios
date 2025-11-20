@@ -93,11 +93,6 @@ ___
 - **Return Value**
 
   수정된 라디오 버튼 컴포넌트
-- **Discussion**
-  >  **Note**
-  >
-  > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
-
 </details>
 <details>
 

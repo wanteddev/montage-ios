@@ -243,6 +243,8 @@ extension Popup.Resize: @retroactive Hashable {
         case .fixed(let height):
             hasher.combine(1)
             hasher.combine(height)
+        @unknown default:
+            break
         }
     }
 

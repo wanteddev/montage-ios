@@ -29,8 +29,6 @@ struct BottomSheetPreview: View {
     @State private var extra = false
     @State private var extraDivider = true
 
-    @State private var refreshTask: Task<(), Never>?
-
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {

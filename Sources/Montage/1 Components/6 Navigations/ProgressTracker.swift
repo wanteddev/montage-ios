@@ -53,11 +53,20 @@ public struct ProgressTracker: View {
     @Binding private var progress: Int
     private let variant: Variant
 
+    // MARK: - Initializer
+
+    /// 진행 상태를 표시하는 컴포넌트를 생성합니다.
+    /// - Parameters:
+    ///   - progress: 진행 상태를 나타내는 바인딩 값 (1부터 시작하는 인덱스)
+    ///   - variant: 레이아웃 및 구성을 정의하는 옵션
     public init(progress: Binding<Int>, variant: Variant) {
         _progress = progress
         self.variant = variant
     }
 
+    // MARK: - Body
+
+    /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         switch variant {
         case .horizontal(let labels):
@@ -138,8 +147,6 @@ extension ProgressTracker {
             self.state = state
         }
 
-        @State private var textSize: CGSize = .zero
-
         var body: some View {
             ZStack {
                 Circle()
@@ -168,20 +175,20 @@ extension ProgressTracker {
             }
         }
     }
-    
+
     struct Horizontal: View {
         @Binding private var progress: Int
         private let labels: [String]
-        
+
         init(progress: Binding<Int>, labels: [String]) {
             _progress = progress
             self.labels = labels
         }
-        
+
         @State private var size: CGSize = .zero
         @State private var stepperSize: CGSize = .zero
         @State private var textMaxHeight: CGFloat = .zero
-        
+
         var body: some View {
             ZStack {
                 HStack(alignment: .center, spacing: 0) {
@@ -211,7 +218,7 @@ extension ProgressTracker {
                         }
                     }
                 }
-                
+
                 Group {
                     SwiftUI.Color.clear
                         .fixedSize(horizontal: false, vertical: true)
@@ -223,23 +230,23 @@ extension ProgressTracker {
                 .opacity(0)
             }
         }
-        
+
         private func text(at index: Int, alignment: TextAlignment) -> some View {
             Text(labels[index])
                 .typography(variant: .label2, weight: .bold, color: labelColor(at: index))
                 .multilineTextAlignment(alignment)
                 .if(!labels[index].isEmpty)
         }
-        
+
         private func labelColor(at index: Int) -> SwiftUI.Color {
             switch state(at: index) {
             case .complete, .inactive:
-                    .semantic(.labelAlternative)
+                .semantic(.labelAlternative)
             case .active:
-                    .semantic(.labelNormal)
+                .semantic(.labelNormal)
             }
         }
-        
+
         private func textAlignment(from horizontalAlignment: HorizontalAlignment) -> TextAlignment {
             switch horizontalAlignment {
             case .leading: .leading
@@ -247,7 +254,7 @@ extension ProgressTracker {
             default: .center
             }
         }
-        
+
         private func state(at index: Int) -> ProgressTracker.Stepper.Status {
             if index < progress - 1 {
                 .complete
@@ -257,7 +264,7 @@ extension ProgressTracker {
                 .active
             }
         }
-        
+
         private func line(before index: Int) -> some View {
             Group {
                 if index > 0 {
@@ -265,7 +272,7 @@ extension ProgressTracker {
                         .foregroundStyle(
                             SwiftUI.Color.semantic(
                                 state(at: index - 1) == .complete
-                                ? .primaryNormal : .lineSolidNormal
+                                    ? .primaryNormal : .lineSolidNormal
                             )
                         )
                 } else {
@@ -274,7 +281,7 @@ extension ProgressTracker {
             }
             .frame(height: 1)
         }
-        
+
         private func line(after index: Int) -> some View {
             Group {
                 if index < labels.count - 1 {
@@ -291,20 +298,20 @@ extension ProgressTracker {
             .frame(height: 1)
         }
     }
-    
+
     struct Vertical: View {
-        
+
         @Binding private var progress: Int
         private let stepContents: [ProgressTracker.VerticalStepContent]
-        
+
         init(progress: Binding<Int>, stepContents: [ProgressTracker.VerticalStepContent]) {
             _progress = progress
             self.stepContents = stepContents
         }
-        
+
         @State private var lineLengths: [Int: CGFloat] = [:]
         @State private var stepperSize: CGSize = .zero
-        
+
         var body: some View {
             ZStack(alignment: .topLeading) {
                 VStack(spacing: 0) {
@@ -320,16 +327,16 @@ extension ProgressTracker {
                     }
                 }
                 .frame(width: stepperSize.width)
-                
+
                 VStack(spacing: 0) {
                     ForEach(stepContents.indices, id: \.self) { index in
                         HStack(alignment: .top, spacing: 0) {
                             ProgressTracker.Stepper(step: index + 1, state: state(at: index))
-                            
+
                             stepContents[safe: index]?
                                 .status(state(at: index))
                                 .padding(.leading, 8)
-                            
+
                             Spacer(minLength: 0)
                         }
                         .padding(.bottom, index < stepContents.count - 1 ? 20 : 0)
@@ -340,7 +347,7 @@ extension ProgressTracker {
                         )
                     }
                 }
-                
+
                 Group {
                     ProgressTracker.Stepper(step: 0, state: state(at: 0))
                         .onGeometryChange(
@@ -349,7 +356,7 @@ extension ProgressTracker {
                 .opacity(0)
             }
         }
-        
+
         private func state(at index: Int) -> ProgressTracker.Stepper.Status {
             if index < progress - 1 {
                 .complete
@@ -359,7 +366,7 @@ extension ProgressTracker {
                 .active
             }
         }
-        
+
         private func line(after index: Int) -> some View {
             Rectangle()
                 .frame(width: 1)

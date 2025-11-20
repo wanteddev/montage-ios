@@ -99,8 +99,6 @@ public struct Radio: View {
     ///
     /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 라디오 버튼 컴포넌트
-    ///
-    /// - Note: 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
     public func disable(_ disable: Bool = true) -> Self {
         .init(base: base.disable(disable))
     }
