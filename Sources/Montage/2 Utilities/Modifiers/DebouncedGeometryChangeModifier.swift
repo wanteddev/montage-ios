@@ -6,34 +6,39 @@
 //  Copyright © 2025 WantedLab Inc. All rights reserved.
 //
 
-import Combine
 import SwiftUI
 
 struct DebouncedGeometryChangeModifier<T: Equatable>: ViewModifier {
-    private let size: PassthroughSubject<T, Never> = .init()
-    private var cancellables = Set<AnyCancellable>()
-
+    @State private var resizingTask: Task<(), Never>?
+    
     private let type: T.Type
     private let transform: (GeometryProxy) -> T
+    private let dueTime: ContinuousClock.Instant.Duration
+    private let action: (_ newValue: T) -> Void
 
     init(
         for type: T.Type,
         of transform: @escaping (GeometryProxy) -> T,
-        for dueTime: RunLoop.SchedulerTimeType.Stride,
+        for dueTime: ContinuousClock.Instant.Duration,
         action: @escaping (_ newValue: T) -> Void
     ) {
         self.type = type
         self.transform = transform
-        size.debounce(for: dueTime, scheduler: RunLoop.main)
-            .sink {
-                action($0)
-            }
-            .store(in: &cancellables)
+        self.dueTime = dueTime
+        self.action = action
     }
 
     func body(content: Content) -> some View {
         content.onGeometryChange(for: type, of: transform) { newValue in
-            size.send(newValue)
+            resizingTask?.cancel()
+            resizingTask = Task {
+                do {
+                    try await Task.sleep(for: dueTime)
+                    try Task.checkCancellation()
+                    action(newValue)
+                } catch {
+                }
+            }
         }
     }
 }

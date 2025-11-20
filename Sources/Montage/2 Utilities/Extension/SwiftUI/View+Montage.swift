@@ -88,7 +88,7 @@ extension View {
     public func onGeometryChange<T>(
         for type: T.Type,
         of transform: @escaping (GeometryProxy) -> T,
-        for dueTime: RunLoop.SchedulerTimeType.Stride,
+        for dueTime: ContinuousClock.Instant.Duration,
         action: @escaping (_ newValue: T) -> Void
     ) -> some View where T: Equatable {
         modifier(DebouncedGeometryChangeModifier(for: type, of: transform, for: dueTime, action: action))
