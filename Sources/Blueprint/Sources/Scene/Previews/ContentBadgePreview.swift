@@ -69,7 +69,7 @@ struct ContentBadgePreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("solid")
-                    Control.switch(checked: isSolid) { isSolid = $0 }
+                    Switch(checked: isSolid) { isSolid = $0 }
                 }
                 HStack {
                     Text("size")
@@ -87,20 +87,20 @@ struct ContentBadgePreview: View {
                 }
                 HStack {
                     Text("leadingIcon")
-                    Control.switch(checked: leadingIcon) { leadingIcon = $0 }
+                    Switch(checked: leadingIcon) { leadingIcon = $0 }
                     if leadingIcon {
                         Text("usesTemplate")
-                        Control.switch(checked: leadingIconUsesTemplate) {
+                        Switch(checked: leadingIconUsesTemplate) {
                             leadingIconUsesTemplate = $0
                         }
                     }
                 }
                 HStack {
                     Text("trailingIcon")
-                    Control.switch(checked: trailingIcon) { trailingIcon = $0 }
+                    Switch(checked: trailingIcon) { trailingIcon = $0 }
                     if trailingIcon {
                         Text("usesTemplate")
-                        Control.switch(checked: trailingIconUsesTemplate) {
+                        Switch(checked: trailingIconUsesTemplate) {
                             trailingIconUsesTemplate = $0
                         }
                     }

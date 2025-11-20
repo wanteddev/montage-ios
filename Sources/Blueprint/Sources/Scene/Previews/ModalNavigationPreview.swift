@@ -115,18 +115,18 @@ struct ModalNavigationPreview: View {
                     if case .floating = variants[variantIndex] {
                         HStack {
                             Text("alternative")
-                            Control.switch(checked: alternative) { alternative = $0 }
+                            Switch(checked: alternative) { alternative = $0 }
                         }
                         HStack {
                             Text("background")
-                            Control.switch(checked: background) { background = $0 }
+                            Switch(checked: background) { background = $0 }
                         }
                     }
                     HStack {
                         Text("leadingButton")
-                        Control.switch(checked: leadingButton) { leadingButton = $0 }
                         SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
                             .size(.small)
+                        Switch(checked: leadingButton) { leadingButton = $0 }
                     }
                     HStack {
                         Text("trailingButton")

@@ -92,12 +92,12 @@ struct CardPreview: View {
                 Group {
                     HStack {
                         Text("skeleton")
-                        Control.switch(checked: skeletonIsOn) { skeletonIsOn = $0 }
+                        Switch(checked: skeletonIsOn) { skeletonIsOn = $0 }
                     }
 
                     HStack {
                         Text("invalid image URL")
-                        Control.switch(checked: invalidImageUrl) { invalidImageUrl = $0 }
+                        Switch(checked: invalidImageUrl) { invalidImageUrl = $0 }
                     }
 
                     HStack {
@@ -108,34 +108,34 @@ struct CardPreview: View {
 
                     HStack {
                         Text("multiline title")
-                        Control.switch(checked: multilineTitle) { multilineTitle = $0 }
+                        Switch(checked: multilineTitle) { multilineTitle = $0 }
 
                         Text("caption")
-                        Control.switch(checked: showCaption) { showCaption = $0 }
+                        Switch(checked: showCaption) { showCaption = $0 }
                     }
 
                     HStack {
                         Text("sub caption")
-                        Control.switch(checked: showSubCaption) { showSubCaption = $0 }
+                        Switch(checked: showSubCaption) { showSubCaption = $0 }
 
                         Text("extra caption")
-                        Control.switch(checked: showExtraCaption) { showExtraCaption = $0 }
+                        Switch(checked: showExtraCaption) { showExtraCaption = $0 }
                     }
 
                     HStack {
                         Text("top content")
-                        Control.switch(checked: showTopContent) { showTopContent = $0 }
+                        Switch(checked: showTopContent) { showTopContent = $0 }
 
                         Text("bottom content")
-                        Control.switch(checked: showBottomContent) { showBottomContent = $0 }
+                        Switch(checked: showBottomContent) { showBottomContent = $0 }
                     }
 
                     HStack {
                         Text("overlay caption")
-                        Control.switch(checked: showOverlayCaption) { showOverlayCaption = $0 }
+                        Switch(checked: showOverlayCaption) { showOverlayCaption = $0 }
 
                         Text("overlay button")
-                        Control.switch(checked: showOverlayButton) { showOverlayButton = $0 }
+                        Switch(checked: showOverlayButton) { showOverlayButton = $0 }
                     }
                 }
                 .font(.caption)

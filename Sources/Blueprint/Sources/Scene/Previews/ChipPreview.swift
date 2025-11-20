@@ -132,16 +132,16 @@ struct ChipPreview: View {
                 
                 HStack {
                     Text("Disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                     Text("Active")
-                    Control.switch(checked: active) { active = $0 }
+                    Switch(checked: active) { active = $0 }
                 }
                 
                 HStack {
                     Text("Leading Image")
-                    Control.switch(checked: leadingImage) { leadingImage = $0 }
+                    Switch(checked: leadingImage) { leadingImage = $0 }
                     Text("Trailing Image")
-                    Control.switch(checked: trailingImage) { trailingImage = $0 }
+                    Switch(checked: trailingImage) { trailingImage = $0 }
                 }
                 
                 SwiftUI.ColorPicker("Background Color", selection: $backgroundColor)

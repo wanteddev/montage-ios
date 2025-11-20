@@ -51,11 +51,11 @@ struct FallbackViewPreview: View {
                 
                 HStack {
                     Text("Image")
-                    Control.switch(checked: showImage) { showImage = $0 }
+                    Switch(checked: showImage) { showImage = $0 }
                     Text("Title")
-                    Control.switch(checked: showTitle) { showTitle = $0 }
+                    Switch(checked: showTitle) { showTitle = $0 }
                     Text("Button")
-                    Control.switch(checked: showButton) { showButton = $0 }
+                    Switch(checked: showButton) { showButton = $0 }
                 }
             }
             .font(.caption)

@@ -50,7 +50,7 @@ struct PopupPreview: View {
                 }
                 HStack {
                     Text("navigation")
-                    Control.switch(checked: navigation) { navigation = $0 }
+                    Switch(checked: navigation) { navigation = $0 }
                     if navigation {
                         SegmentedControl(
                             selectedIndex: $navVariantIndex,
@@ -64,7 +64,7 @@ struct PopupPreview: View {
                     VStack(alignment: .trailing) {
                         HStack {
                             Text("actionArea")
-                            Control.switch(checked: actionArea) { actionArea = $0 }
+                            Switch(checked: actionArea) { actionArea = $0 }
                             Spacer()
                         }
                         if actionArea {
@@ -75,12 +75,12 @@ struct PopupPreview: View {
                             .size(.small)
                             HStack {
                                 Text("caption")
-                                Control.switch(checked: caption) { caption = $0 }
+                                Switch(checked: caption) { caption = $0 }
                                 Text("extra")
-                                Control.switch(checked: extra) { extra = $0 }
+                                Switch(checked: extra) { extra = $0 }
                                 if extra {
                                     Text("divider")
-                                    Control.switch(checked: extraDivider) { extraDivider = $0 }
+                                    Switch(checked: extraDivider) { extraDivider = $0 }
                                 }
                             }
                         }

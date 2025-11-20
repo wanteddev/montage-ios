@@ -33,9 +33,9 @@ struct DateTimePickerPreview: View {
                 }
                 HStack {
                     Text("bottomSheet")
-                    Control.switch(checked: isBottomSheetPresented) { isBottomSheetPresented = $0 }
+                    Switch(checked: isBottomSheetPresented) { isBottomSheetPresented = $0 }
                 }
-                .bottomSheetModal(isPresented: $isBottomSheetPresented) {
+                .bottomSheet(isPresented: $isBottomSheetPresented) {
                     datePicker
                 }
             }

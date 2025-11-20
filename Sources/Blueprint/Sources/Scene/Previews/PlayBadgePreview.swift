@@ -42,7 +42,7 @@ struct PlayBadgePreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("alternative")
-                    Control.switch(checked: isAlternative) { isAlternative = $0 }
+                    Switch(checked: isAlternative) { isAlternative = $0 }
                 }
                 HStack {
                     Text("size")

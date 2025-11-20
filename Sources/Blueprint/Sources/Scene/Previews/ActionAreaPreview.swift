@@ -166,13 +166,13 @@ struct ActionAreaPreview: View {
                     HStack {
                         if variant.isStrongOrNeutral {
                             Text("caption")
-                            Control.switch(checked: caption) { caption = $0 }
+                            Switch(checked: caption) { caption = $0 }
                         }
                         Text("extra")
-                        Control.switch(checked: extra) { extra = $0 }
+                        Switch(checked: extra) { extra = $0 }
                         if extra {
                             Text("extraDivider")
-                            Control.switch(checked: extraDivider) { extraDivider = $0 }
+                            Switch(checked: extraDivider) { extraDivider = $0 }
                         }
                     }
                     HStack {
@@ -186,7 +186,7 @@ struct ActionAreaPreview: View {
                     if gradientIndex == 1 {
                         HStack {
                             Text("transparency")
-                            Control.switch(checked: transparency) { transparency = $0 }
+                            Switch(checked: transparency) { transparency = $0 }
                         }
                     }
                 }

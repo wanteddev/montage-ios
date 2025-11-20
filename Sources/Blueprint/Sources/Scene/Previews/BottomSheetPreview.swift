@@ -1,67 +1,61 @@
 //
-//  BottomSheetModalPreview.swift
+//  BottomSheetPreview.swift
 //  Blueprint
 //
 //  Created by 김삼열 on 2/20/25.
 //
 
-import SwiftUI
 import Montage
+import SwiftUI
 
-struct BottomSheetModalPreview: View {
+struct BottomSheetPreview: View {
     @State private var show = true
-    
+
     @State private var text: String = ""
-    
+
     @State private var isFullModal = false
     @State private var resizeIndex = 0
     @State private var itemCountsIndex: Int = 0
     @State private var fixedRatio: CGFloat = 0.6
     @State private var fixedHeight: CGFloat = 200
     @State private var handle = false
-    
+
     @State private var navigation = false
     @State private var navVariantIndex = 0
-    
+
     @State private var actionArea = false
     @State private var buttonsIndex = 0
     @State private var caption = false
     @State private var extra = false
     @State private var extraDivider = true
-    
+
     @State private var refreshTask: Task<(), Never>?
-    
+
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         SwiftUI.Button("PUSH") {
             show.toggle()
         }
-        .if(isFullModal) {
-            $0.fullModal(
-                isPresented: $show,
-                actionAreaModel: actionArea ? actionAreaModel : nil,
-                navigation: navigation ? { navigationContent } : nil,
-                { modalContent }
-            )
-        }
-        .if(!isFullModal) {
-            $0.bottomSheetModal(
-                isPresented: $show,
-                needHandle: handle,
-                resize: bottomSheetResizes[resizeIndex],
-                actionAreaModel: actionArea ? actionAreaModel : nil,
-                navigation: navigation ? { navigationContent } : nil,
-                { modalContent }
-            )
-        }
+        .bottomSheet(
+            isPresented: $show,
+            isFullScreenCover: isFullModal,
+            needHandle: handle,
+            resize: bottomSheetResizes[resizeIndex],
+            actionAreaModel: actionArea ? actionAreaModel : nil,
+            navigation: navigation ? { navigationContent } : nil,
+            { modalContent }
+        )
+        .background(SwiftUI.Color.semantic(.backgroundNormal))
         .onChange(of: isFullModal) { _ in
             show = false
-            show = true
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(0.6))
+                show = true
+            }
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
-    
+
     private var navigationContent: ModalNavigation {
         ModalNavigation()
             .variant(navigationVariants[navVariantIndex])
@@ -92,7 +86,7 @@ struct BottomSheetModalPreview: View {
                 }
             )
     }
-    
+
     private var modalContent: some View {
         VStack {
             VStack(alignment: .leading) {
@@ -108,16 +102,20 @@ struct BottomSheetModalPreview: View {
                 }
                 HStack {
                     Text("fullModal")
-                    Control.switch(checked: isFullModal) { isFullModal = $0 }
+                    Switch(checked: isFullModal) { isFullModal = $0 }
                 }
                 HStack {
                     Text("resize")
-                    SegmentedControl(selectedIndex: $resizeIndex, labels: bottomSheetResizes.map(\.description))
-                        .size(.small)
+                    SegmentedControl(
+                        selectedIndex: $resizeIndex, labels: bottomSheetResizes.map(\.description)
+                    )
+                    .size(.small)
                 }
                 HStack {
-                    SegmentedControl(selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" })
-                        .size(.small)
+                    SegmentedControl(
+                        selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
+                    )
+                    .size(.small)
                     Text("items")
                 }
                 HStack {
@@ -134,56 +132,51 @@ struct BottomSheetModalPreview: View {
                 }
                 HStack {
                     Text("handle")
-                    Control.switch(checked: handle) { handle = $0 }
+                    Switch(checked: handle) { handle = $0 }
                     Spacer()
                 }
                 HStack {
                     Text("navigation")
-                    Control.switch(checked: navigation) { navigation = $0 }
+                    Switch(checked: navigation) { navigation = $0 }
                     if navigation {
-                        SegmentedControl(selectedIndex: $navVariantIndex, labels: navigationVariants.map(\.description))
-                            .size(.small)
+                        SegmentedControl(
+                            selectedIndex: $navVariantIndex,
+                            labels: navigationVariants.map(\.description)
+                        )
+                        .size(.small)
                     }
                 }
-                
+
                 HStack {
                     VStack(alignment: .trailing) {
                         HStack {
                             Text("actionArea")
-                            Control.switch(checked: actionArea) { actionArea = $0 }
+                            Switch(checked: actionArea) { actionArea = $0 }
                             if actionArea {
-                                SegmentedControl(selectedIndex: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
-                                    .size(.small)
+                                SegmentedControl(
+                                    selectedIndex: $buttonsIndex,
+                                    labels: ActionAreaButtons.allCases.map(\.rawValue)
+                                )
+                                .size(.small)
                             }
                         }
                         if actionArea {
                             HStack {
                                 Text("caption")
-                                Control.switch(checked: caption) { caption = $0 }
+                                Switch(checked: caption) { caption = $0 }
                                 Text("extra")
-                                Control.switch(checked: extra) { extra = $0 }
+                                Switch(checked: extra) { extra = $0 }
                                 if extra {
                                     Text("divider")
-                                    Control.switch(checked: extraDivider) { extraDivider = $0 }
+                                    Switch(checked: extraDivider) { extraDivider = $0 }
                                 }
                             }
                         }
                     }
                 }
             }
-            .onChange(of: "\(handle)\(isFullModal)\(resizeIndex)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(fixedRatio)\(fixedHeight)\(itemCountsIndex)") { _ in
-                refreshTask?.cancel()
-                refreshTask = Task {
-                    do {
-                        try await Task.sleep(for: .seconds(1))
-                        try Task.checkCancellation()
-                        show = true
-                    } catch {
-                    }
-                }
-            }
             .font(.caption)
-            
+
             VStack(spacing: 0) {
                 ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
                     ZStack {
@@ -199,7 +192,7 @@ struct BottomSheetModalPreview: View {
             .border(.black)
         }
     }
-    
+
     private var actionAreaModel: ActionArea.Model {
         .init(
             variant: actionAreaVariant,
@@ -213,58 +206,70 @@ struct BottomSheetModalPreview: View {
             extraDivider: extraDivider
         )
     }
-    
+
     private var actionAreaVariant: ActionArea.Variant {
         switch ActionAreaButtons.allCases[buttonsIndex] {
         case .main:
-                .strong(
-                    main: .init(text: "눌러봐요", action: {
+            .strong(
+                main: .init(
+                    text: "눌러봐요",
+                    action: {
                         show = false
                     })
-                )
+            )
         case .mainAndSub:
-                .strong(
-                    main: .init(text: "눌러봐요", action: {
+            .strong(
+                main: .init(
+                    text: "눌러봐요",
+                    action: {
                         show = false
                     }),
-                    sub: .init(text: "취소", action: {
+                sub: .init(
+                    text: "취소",
+                    action: {
                         show = false
                     })
-                )
+            )
         case .mainSubAndAlternative:
-                .strong(
-                    main: .init(text: "눌러봐요", action: {
+            .strong(
+                main: .init(
+                    text: "눌러봐요",
+                    action: {
                         show = false
                     }),
-                    sub: .init(text: "취소", action: {
+                sub: .init(
+                    text: "취소",
+                    action: {
                         show = false
                     }),
-                    alternative: .init(text: "대체", action: {
+                alternative: .init(
+                    text: "대체",
+                    action: {
                         show = false
                     })
-                )
+            )
         }
     }
-    
+
     private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
         .extended,
         .emphasized,
-        .floating(alternative: false, background: false)
+        .floating(alternative: false, background: false),
     ]
-    
-    private var bottomSheetResizes: [BottomSheetModal.Resize] {
+
+    private var bottomSheetResizes: [BottomSheet.Resize] {
         [
             .hug,
             .fixedRatio(fixedRatio),
             .fixedHeight(fixedHeight),
             .flexible,
-            .fill
+            .fill,
         ]
     }
-    
+
     private var itemCounts = [1, 5, 100]
-    
+
     private enum ActionAreaButtons: String, CaseIterable {
         case main
         case mainAndSub = "main/sub"
@@ -272,8 +277,8 @@ struct BottomSheetModalPreview: View {
     }
 }
 
-extension BottomSheetModal.Resize: CaseDescribable {}
+extension BottomSheet.Resize: CaseDescribable {}
 
 #Preview {
-    BottomSheetModalPreview()
+    BottomSheetPreview()
 }

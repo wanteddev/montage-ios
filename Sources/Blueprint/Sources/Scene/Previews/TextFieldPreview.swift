@@ -214,35 +214,35 @@ struct TextFieldPreview: View {
                         Spacer()
                         HStack {
                             Text("Disable")
-                            Control.switch(checked: disable) { disable = $0 }
+                            Switch(checked: disable) { disable = $0 }
                         }
                     }
                     HStack {
                         HStack {
                             Text("Heading")
-                            Control.switch(checked: heading) { heading = $0 }
+                            Switch(checked: heading) { heading = $0 }
                         }
                         Spacer()
                         HStack {
                             Text("RequiredBadge")
-                            Control.switch(checked: requiredBadge) { requiredBadge = $0 }
+                            Switch(checked: requiredBadge) { requiredBadge = $0 }
                         }
                     }
                     HStack {
                         HStack {
                             Text("Icon")
-                            Control.switch(checked: icon) { icon = $0 }
+                            Switch(checked: icon) { icon = $0 }
                         }
                         Spacer()
                         HStack {
                             Text("Placeholder")
-                            Control.switch(checked: placeholder) { placeholder = $0 }
+                            Switch(checked: placeholder) { placeholder = $0 }
                         }
                     }
                     HStack {
                         HStack {
                             Text("TrailingButton")
-                            Control.switch(checked: trailingButton) { trailingButton = $0 }
+                            Switch(checked: trailingButton) { trailingButton = $0 }
                         }
                         Spacer()
                         Text("TrailingContent")
@@ -258,7 +258,7 @@ struct TextFieldPreview: View {
                     }
                     HStack {
                         Text("AutoComplete")
-                        Control.switch(checked: usingSuggestions) { usingSuggestions = $0 }
+                        Switch(checked: usingSuggestions) { usingSuggestions = $0 }
                     }
                     if usingSuggestions {
                         Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")

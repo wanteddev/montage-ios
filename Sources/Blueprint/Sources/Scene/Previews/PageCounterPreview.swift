@@ -12,6 +12,7 @@ struct PageCounterPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State var selectedPage: Int = 1
     @State var sizeIndex: Int = 0
+    @State var totalPages: Int = 5
     @State var isAlternative: Bool = false
 
     private let sizes: [PageCounter.Size] = [
@@ -34,28 +35,44 @@ struct PageCounterPreview: View {
                 }
                 HStack {
                     Spacer()
-                    PageCounter(selectedPage: $selectedPage, totalPages: 10)
+                    PageCounter(selectedPage: $selectedPage, totalPages: totalPages)
                         .size(sizes[sizeIndex])
                         .alternative(isAlternative)
                     Spacer()
                 }
                 Text("Options").bold()
                 HStack {
-                    Text("page")
-                    SwiftUI.Button("Previous") {
+                    Spacer()
+                    Button(variant: .outlined, size: .small, text: "Previous") {
                         if selectedPage > 1 {
                             selectedPage -= 1
                         }
                     }
-                    SwiftUI.Button("Next") {
-                        if selectedPage < 10 {
+                    .disable(selectedPage <= 1)
+
+                    Button(variant: .outlined, size: .small, text: "Next") {
+                        if selectedPage < totalPages {
                             selectedPage += 1
                         }
                     }
+                    .disable(selectedPage >= totalPages)
+                    Spacer()
                 }
+
+                HStack {
+                    Text("totalPages")
+                    SwiftUI.Slider(
+                        value: Binding(
+                            get: { Double(totalPages) },
+                            set: { totalPages = Int($0) }
+                        ), in: 1...10, step: 1)
+                    Text("\(totalPages)")
+                        .frame(width: 30)
+                }
+
                 HStack {
                     Text("alternative")
-                    Control.switch(checked: isAlternative) { isAlternative = $0 }
+                    Switch(checked: isAlternative) { isAlternative = $0 }
                 }
                 HStack {
                     Text("size")

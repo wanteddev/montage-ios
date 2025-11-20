@@ -87,17 +87,17 @@ struct ThumbnailPreview: View {
                     
                     HStack {
                         Text("Radius")
-                        Control.switch(checked: radius) { radius = $0 }
+                        Switch(checked: radius) { radius = $0 }
                     }
                     
                     HStack {
                         Text("Border")
-                        Control.switch(checked: border) { border = $0 }
+                        Switch(checked: border) { border = $0 }
                     }
                     
                     HStack {
                         Text("Invalid URL (테스트용)")
-                        Control.switch(checked: invalidURL) { invalidURL = $0 }
+                        Switch(checked: invalidURL) { invalidURL = $0 }
                     }
                 }
             }

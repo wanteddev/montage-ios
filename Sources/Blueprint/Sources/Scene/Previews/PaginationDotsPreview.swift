@@ -45,6 +45,35 @@ struct PaginationDotsPreview: View {
                 }
 
                 Text("Options").bold()
+                
+                HStack {
+                    Spacer()
+                    Button(variant: .outlined, size: .small, text: "Previous") {
+                        if selectedPage > 1 {
+                            selectedPage -= 1
+                        }
+                    }
+                    .disable(selectedPage <= 1)
+                    
+                    Button(variant: .outlined, size: .small, text: "Next") {
+                        if selectedPage < totalPages {
+                            selectedPage += 1
+                        }
+                    }
+                    .disable(selectedPage >= totalPages)
+                    Spacer()
+                }
+                
+                HStack {
+                    Text("totalPages")
+                    SwiftUI.Slider(
+                        value: Binding(
+                            get: { Double(totalPages) },
+                            set: { totalPages = Int($0) }
+                        ), in: 1...10, step: 1)
+                    Text("\(totalPages)")
+                        .frame(width: 30)
+                }
 
                 HStack {
                     Text("variant")
@@ -62,35 +91,6 @@ struct PaginationDotsPreview: View {
                         labels: sizes.map(\.description)
                     )
                     .size(.small)
-                }
-
-                HStack {
-                    Text("totalPages")
-                    SwiftUI.Slider(
-                        value: Binding(
-                            get: { Double(totalPages) },
-                            set: { totalPages = Int($0) }
-                        ), in: 1...10, step: 1)
-                    Text("\(totalPages)")
-                        .frame(width: 30)
-                }
-
-                HStack {
-                    Spacer()
-                    Button(variant: .outlined, text: "Previous") {
-                        if selectedPage > 1 {
-                            selectedPage -= 1
-                        }
-                    }
-                    .disable(selectedPage <= 1)
-
-                    Button(variant: .outlined, text: "Next") {
-                        if selectedPage < totalPages {
-                            selectedPage += 1
-                        }
-                    }
-                    .disable(selectedPage >= totalPages)
-                    Spacer()
                 }
             }
             .font(.caption)

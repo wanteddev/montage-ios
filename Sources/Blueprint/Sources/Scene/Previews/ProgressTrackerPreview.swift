@@ -19,20 +19,29 @@ struct ProgressTrackerPreview: View {
     init() {}
     
     var body: some View {
-        List(TrackerType.allCases) { type in
-            NavigationLink(
-                destination: {
-                    switch type {
-                    case .horizontal:
-                        HorizontalProgressTrackerPreview()
-                    case .vertical:
-                        VerticalProgressTrackerPreview()
-                    }
-                },
-                label: {
-                    Text(type.rawValue.capitalized)
+        List {
+            Section {
+                ForEach(TrackerType.allCases) { type in
+                    NavigationLink(
+                        destination: {
+                            Group {
+                                switch type {
+                                case .horizontal:
+                                    HorizontalProgressTrackerPreview()
+                                case .vertical:
+                                    VerticalProgressTrackerPreview()
+                                }
+                            }
+                            .navigationTitle(type.rawValue.capitalized)
+                        },
+                        label: {
+                            Text(type.rawValue.capitalized)
+                        }
+                    )
                 }
-            )
+            } header: {
+                Text("variant")
+            }
         }
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }

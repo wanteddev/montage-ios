@@ -61,7 +61,7 @@ struct ListCellPreview: View {
                 }
                 .trailingContent { selected in
                     if trailingContent {
-                        Control.checkmark(checked: selected)
+                        Checkmark(checked: selected)
                     }
                 }
                 .textEllipsis(textEllipsis)
@@ -85,31 +85,31 @@ struct ListCellPreview: View {
                 }
                 HStack {
                     Text("Caption")
-                    Control.switch(checked: caption) { caption = $0 }
+                    Switch(checked: caption) { caption = $0 }
                     Text("Fill Width")
-                    Control.switch(checked: fillWidth) { fillWidth = $0 }
+                    Switch(checked: fillWidth) { fillWidth = $0 }
                     Text("Chevron")
-                    Control.switch(checked: chevron) { chevron = $0 }
+                    Switch(checked: chevron) { chevron = $0 }
                 }
                 HStack {
                     Text("Leading Content")
-                    Control.switch(checked: leadingContent) { leadingContent = $0 }
+                    Switch(checked: leadingContent) { leadingContent = $0 }
                     Text("Trailing Content")
-                    Control.switch(checked: trailingContent) { trailingContent = $0 }
+                    Switch(checked: trailingContent) { trailingContent = $0 }
                 }
                 HStack {
                     Text("Text Ellipsis")
-                    Control.switch(checked: textEllipsis) { textEllipsis = $0 }
+                    Switch(checked: textEllipsis) { textEllipsis = $0 }
                     Text("Divider")
-                    Control.switch(checked: divider) { divider = $0 }
+                    Switch(checked: divider) { divider = $0 }
                 }
                 HStack {
                     Text("Disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                     Text("Long Text")
-                    Control.switch(checked: longText) { longText = $0 }
+                    Switch(checked: longText) { longText = $0 }
                     Text("Selected")
-                    Control.switch(checked: selected) { selected = $0 }
+                    Switch(checked: selected) { selected = $0 }
                 }
                 HStack {
                     Text("Vertical Alignment")

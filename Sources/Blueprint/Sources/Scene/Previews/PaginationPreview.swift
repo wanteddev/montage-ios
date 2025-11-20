@@ -11,10 +11,14 @@ import SwiftUI
 
 struct PaginationPreview: View {
     enum PaginationType: String, CaseIterable, Identifiable {
-        case dot
-        case counter
+        case paginationDots
+        case pageCounter
 
         var id: String { self.rawValue }
+        
+        var displayName: String {
+            rawValue.prefix(1).uppercased() + rawValue.dropFirst()
+        }
     }
 
     init() {}
@@ -23,15 +27,18 @@ struct PaginationPreview: View {
         List(PaginationType.allCases) { type in
             NavigationLink(
                 destination: {
-                    switch type {
-                    case .dot:
-                        PaginationDotsPreview()
-                    case .counter:
-                        PageCounterPreview()
+                    Group {
+                        switch type {
+                        case .paginationDots:
+                            PaginationDotsPreview()
+                        case .pageCounter:
+                            PageCounterPreview()
+                        }
                     }
+                    .navigationTitle(type.displayName)
                 },
                 label: {
-                    Text(type.rawValue.capitalized)
+                    Text(type.displayName)
                 }
             )
         }

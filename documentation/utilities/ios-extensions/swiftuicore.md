@@ -23,7 +23,7 @@ title: SwiftUICore
   | Parameter | Description |
   | --- | --- |
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `true` 적용 |
+  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**
 
@@ -106,7 +106,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func bottomSheetModal<V>(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
+<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
@@ -115,6 +115,7 @@ View를 UIImage로 변환합니다.
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `isFullScreenCover` | 전체 화면 모달로 표시할지 여부, 생략하면 기본값으로 `false` 적용 |
   | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
@@ -232,28 +233,6 @@ View를 UIImage로 변환합니다.
       .framedStyle(borderRadius: 16, status: .selected)
   ```
 
-</details>
-<details>
-
-<summary>``func fullModal<V>(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
-
-
-전체 화면 모달을 표시합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
-  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
-  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
-  | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
-  | `content` | 모달에 표시할 콘텐츠 클로저 |
-- **Return Value**
-
-  전체 화면 모달이 적용된 뷰
-- **Discussion**
-
-  화면 전체를 덮는 바텀 시트 모달을 표시합니다.
 </details>
 <details>
 

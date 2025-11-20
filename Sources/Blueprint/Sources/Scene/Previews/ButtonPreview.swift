@@ -116,37 +116,37 @@ struct ButtonPreview: View {
                 }
                 HStack {
                     Text("iconOnly")
-                    Control.switch(checked: iconOnly) { iconOnly = $0 }
+                    Switch(checked: iconOnly) { iconOnly = $0 }
                     Text("disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                     Text("loading")
-                    Control.switch(checked: loading) { loading = $0 }
+                    Switch(checked: loading) { loading = $0 }
                 }
                 if !iconOnly {
                     HStack {
                         Text("leadingIcon")
-                        Control.switch(checked: leadingIcon) { leadingIcon = $0 }
+                        Switch(checked: leadingIcon) { leadingIcon = $0 }
                         Text("trailingIcon")
-                        Control.switch(checked: trailingIcon) { trailingIcon = $0 }
+                        Switch(checked: trailingIcon) { trailingIcon = $0 }
                     }
                 }
                 Divider()
                 Text("color")
                 HStack {
                     Text("content")
-                    Control.switch(checked: contentColor) { contentColor = $0 }
+                    Switch(checked: contentColor) { contentColor = $0 }
                     Text("background")
-                    Control.switch(checked: backgroundColor) { backgroundColor = $0 }
+                    Switch(checked: backgroundColor) { backgroundColor = $0 }
                     Text("border")
-                    Control.switch(checked: borderColor) { borderColor = $0 }
+                    Switch(checked: borderColor) { borderColor = $0 }
                 }
                 Divider()
                 Text("font")
                 HStack {
                     Text("variant")
-                    Control.switch(checked: fontVariant) { fontVariant = $0 }
+                    Switch(checked: fontVariant) { fontVariant = $0 }
                     Text("weight")
-                    Control.switch(checked: fontWeight) { fontWeight = $0 }
+                    Switch(checked: fontWeight) { fontWeight = $0 }
                 }
             }
             .font(.caption)

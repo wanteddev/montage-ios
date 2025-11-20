@@ -56,17 +56,17 @@ struct CategoryPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("guideLine")
-                    Control.switch(checked: showGuideLine) { showGuideLine = $0 }
+                    Switch(checked: showGuideLine) { showGuideLine = $0 }
                     Text("alternative")
-                    Control.switch(checked: isAlternative) { isAlternative = $0 }
+                    Switch(checked: isAlternative) { isAlternative = $0 }
                     Text("icon")
-                    Control.switch(checked: icon) { icon = $0 }
+                    Switch(checked: icon) { icon = $0 }
                 }
                 HStack {
                     Text("horizontalPadding")
-                    Control.switch(checked: horizontalPadding) { horizontalPadding = $0 }
+                    Switch(checked: horizontalPadding) { horizontalPadding = $0 }
                     Text("vertical padding")
-                    Control.switch(checked: verticalPadding) { verticalPadding = $0 }
+                    Switch(checked: verticalPadding) { verticalPadding = $0 }
                 }
                 HStack {
                     Text("size")

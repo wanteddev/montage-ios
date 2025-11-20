@@ -152,11 +152,11 @@ struct PopoverPreview: View {
 
                     HStack {
                         Text("closeButton")
-                        Control.switch(checked: closeButton) { closeButton = $0 }
+                        Switch(checked: closeButton) { closeButton = $0 }
                         Text("action")
-                        Control.switch(checked: action) { action = $0 }
+                        Switch(checked: action) { action = $0 }
                         Text("subAction")
-                        Control.switch(checked: subAction) { subAction = $0 }
+                        Switch(checked: subAction) { subAction = $0 }
                     }
                 }
             }

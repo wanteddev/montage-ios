@@ -29,7 +29,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
     case loading, pullToRefresh, skeleton
     case category, pagination, progressIndicator, progressTracker, tab, topNavigation
     case fallbackView, pushBadge, snackbar, toast
-    case modal, popover, tooltip
+    case bottomSheet, popup, popover, tooltip
     case color, flowLayout, icon, modalNavigation, shadow, typography
     
     var state: ComponentState {
@@ -50,7 +50,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
             return .navigations
         case .fallbackView, .pushBadge, .snackbar, .toast:
             return .feedback
-        case .modal, .popover, .tooltip:
+        case .bottomSheet, .popup, .popover, .tooltip:
             return .presentation
         case .color, .flowLayout, .icon, .modalNavigation, .shadow, .typography:
             return .utilities

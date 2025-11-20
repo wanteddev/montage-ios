@@ -19,7 +19,7 @@ import SwiftUI
 ///     showBottomSheet = true
 /// }
 /// .sheet(isPresented: $showBottomSheet) {
-///     BottomSheetModal {
+///     BottomSheet {
 ///         VStack(spacing: 16) {
 ///             Text("바텀 시트 내용")
 ///             Button("닫기") {
@@ -38,14 +38,14 @@ import SwiftUI
 /// 모디파이어를 사용하면 더 간편하게 구현할 수 있습니다:
 /// ```swift
 /// YourView()
-///     .bottomSheetModal(
+///     .bottomSheet(
 ///         isPresented: $showBottomSheet,
 ///         resize: .hug
 ///     ) {
 ///         Text("바텀 시트 내용")
 ///     }
 /// ```
-public struct BottomSheetModal: View {
+public struct BottomSheet: View {
     // MARK: - Types
     
     /// 바텀 시트의 크기를 정의하는 열거형입니다.
@@ -169,7 +169,7 @@ public struct BottomSheetModal: View {
     ///
     /// - Parameter resize: 크기 조절 방식
     /// - Returns: 수정된 바텀 시트 뷰
-    public func resize(_ resize: BottomSheetModal.Resize) -> Self {
+    public func resize(_ resize: BottomSheet.Resize) -> Self {
         var zelf = self
         zelf.resize = resize
         return zelf
@@ -277,11 +277,11 @@ public struct BottomSheetModal: View {
     }
 }
 
-struct BottomSheetModalModifier: ViewModifier {
+struct BottomSheetModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let isFullScreenCover: Bool
     private let needHandle: Bool
-    private let resize: BottomSheetModal.Resize
+    private let resize: BottomSheet.Resize
     private let ignoresEdgeInsets: Bool
     private let actionAreaModel: ActionArea.Model?
     private let navigation: (() -> ModalNavigation)?
@@ -291,7 +291,7 @@ struct BottomSheetModalModifier: ViewModifier {
         isPresented: Binding<Bool>,
         isFullScreenCover: Bool = false,
         needHandle: Bool = true,
-        resize: BottomSheetModal.Resize = .hug,
+        resize: BottomSheet.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
         navigation: (() -> ModalNavigation)? = nil,
@@ -312,7 +312,7 @@ struct BottomSheetModalModifier: ViewModifier {
             .modifying {
                 if isFullScreenCover {
                     $0.fullScreenCover(isPresented: $isPresented) {
-                        BottomSheetModal {
+                        BottomSheet {
                             bottomSheetContent()
                         }
                         .needHandle(false)
@@ -323,7 +323,7 @@ struct BottomSheetModalModifier: ViewModifier {
                     }
                 } else {
                     $0.sheet(isPresented: $isPresented) {
-                        BottomSheetModal {
+                        BottomSheet {
                             bottomSheetContent()
                         }
                         .needHandle(needHandle)
@@ -346,6 +346,7 @@ extension View {
     ///
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
+    ///   - isFullScreenCover: 전체 화면 모달로 표시할지 여부, 생략하면 기본값으로 `false` 적용
     ///   - needHandle: 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
     ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
@@ -353,50 +354,22 @@ extension View {
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - content: 모달에 표시할 콘텐츠 클로저
     /// - Returns: 바텀 시트 모달이 적용된 뷰
-    public func bottomSheetModal<V: View>(
+    public func bottomSheet<V: View>(
         isPresented: Binding<Bool>,
+        isFullScreenCover: Bool = false,
         needHandle: Bool = true,
-        resize: BottomSheetModal.Resize = .hug,
+        resize: BottomSheet.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
         navigation: (() -> ModalNavigation)? = nil,
         @ViewBuilder _ content: @escaping () -> V
     ) -> some View {
         modifier(
-            BottomSheetModalModifier(
+            BottomSheetModifier(
                 isPresented: isPresented,
+                isFullScreenCover: isFullScreenCover,
                 needHandle: needHandle,
                 resize: resize,
-                ignoresEdgeInsets: ignoresEdgeInsets,
-                actionAreaModel: actionAreaModel,
-                navigation: navigation,
-                content
-            )
-        )
-    }
-    
-    /// 전체 화면 모달을 표시합니다.
-    ///
-    /// 화면 전체를 덮는 바텀 시트 모달을 표시합니다.
-    ///
-    /// - Parameters:
-    ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
-    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델
-    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저
-    ///   - content: 모달에 표시할 콘텐츠 클로저
-    /// - Returns: 전체 화면 모달이 적용된 뷰
-    public func fullModal<V: View>(
-        isPresented: Binding<Bool>,
-        ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
-        navigation: (() -> ModalNavigation)? = nil,
-        @ViewBuilder _ content: @escaping () -> V
-    ) -> some View {
-        modifier(
-            BottomSheetModalModifier(
-                isPresented: isPresented,
-                isFullScreenCover: true,
                 ignoresEdgeInsets: ignoresEdgeInsets,
                 actionAreaModel: actionAreaModel,
                 navigation: navigation,

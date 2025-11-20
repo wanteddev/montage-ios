@@ -1,10 +1,10 @@
 ---
-title: Bottom sheet modal
+title: Bottom sheet
 description: 화면 하단에서 위로 올라오는 바텀 시트 모달 컴포넌트입니다.
 ---
 
 ```swift
-@MainActor struct BottomSheetModal
+@MainActor struct BottomSheet
 ```
 
 ## Overview
@@ -18,7 +18,7 @@ Button("바텀 시트 열기") {
     showBottomSheet = true
 }
 .sheet(isPresented: $showBottomSheet) {
-    BottomSheetModal {
+    BottomSheet {
         VStack(spacing: 16) {
             Text("바텀 시트 내용")
             Button("닫기") {
@@ -38,7 +38,7 @@ Button("바텀 시트 열기") {
 
 ```swift
 YourView()
-    .bottomSheetModal(
+    .bottomSheet(
         isPresented: $showBottomSheet,
         resize: .hug
     ) {
@@ -79,7 +79,7 @@ ___
 
 <details>
 
-<summary>``func ignoresEdgeInsets(Bool) -> BottomSheetModal``</summary>
+<summary>``func ignoresEdgeInsets(Bool) -> BottomSheet``</summary>
 
 
 컨텐츠의 기본 여백을 무시할지 설정합니다.
@@ -94,7 +94,7 @@ ___
 </details>
 <details>
 
-<summary>``func modalActionArea(ActionArea.Model?) -> BottomSheetModal``</summary>
+<summary>``func modalActionArea(ActionArea.Model?) -> BottomSheet``</summary>
 
 
 바텀 시트 하단에 액션 영역을 설정합니다.
@@ -109,7 +109,7 @@ ___
 </details>
 <details>
 
-<summary>``func modalNavigation((() -> Montage.ModalNavigation)?) -> BottomSheetModal``</summary>
+<summary>``func modalNavigation((() -> Montage.ModalNavigation)?) -> BottomSheet``</summary>
 
 
 바텀 시트 상단에 내비게이션 바를 설정합니다.
@@ -124,7 +124,7 @@ ___
 </details>
 <details>
 
-<summary>``func needHandle(Bool) -> BottomSheetModal``</summary>
+<summary>``func needHandle(Bool) -> BottomSheet``</summary>
 
 
 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
@@ -139,7 +139,7 @@ ___
 </details>
 <details>
 
-<summary>``func resize(BottomSheetModal.Resize) -> BottomSheetModal``</summary>
+<summary>``func resize(BottomSheet.Resize) -> BottomSheet``</summary>
 
 
 바텀 시트의 크기 조절 방식을 설정합니다.
@@ -222,7 +222,7 @@ ___
 
 <details>
 
-<summary>``func bottomSheetModal<V>(isPresented: Binding<Bool>, needHandle: Bool, resize: BottomSheetModal.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
+<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
@@ -231,6 +231,7 @@ ___
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `isFullScreenCover` | 전체 화면 모달로 표시할지 여부, 생략하면 기본값으로 `false` 적용 |
   | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
@@ -243,29 +244,6 @@ ___
 - **Discussion**
 
   화면 하단에서 올라오는 바텀 시트 형태의 모달을 표시합니다.
-</details>
-
-<details>
-
-<summary>``func fullModal<V>(isPresented: Binding<Bool>, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, () -> V) -> some View``</summary>
-
-
-전체 화면 모달을 표시합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
-  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
-  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델 |
-  | `navigation` | 모달 상단에 표시할 네비게이션 클로저 |
-  | `content` | 모달에 표시할 콘텐츠 클로저 |
-- **Return Value**
-
-  전체 화면 모달이 적용된 뷰
-- **Discussion**
-
-  화면 전체를 덮는 바텀 시트 모달을 표시합니다.
 </details>
 
 

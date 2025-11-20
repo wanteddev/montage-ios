@@ -115,9 +115,9 @@ struct FilterButtonPreview: View {
                 
                 HStack {
                     Text("Active")
-                    Control.switch(checked: active) { active = $0 }
+                    Switch(checked: active) { active = $0 }
                     Text("Disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                 }
                 
                 HStack {

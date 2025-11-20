@@ -64,7 +64,7 @@ struct ListCardPreview: View {
                 }
                 .leadingContent {
                     if showLeadingContent {
-                        Control.checkbox(state: .unchecked)
+                        Checkbox(state: .unchecked)
                     }
                 }
                 .trailingContent {
@@ -79,12 +79,12 @@ struct ListCardPreview: View {
                 Group {
                     HStack {
                         Text("skeleton")
-                        Control.switch(checked: skeletonIsOn) { skeletonIsOn = $0 }
+                        Switch(checked: skeletonIsOn) { skeletonIsOn = $0 }
                     }
                     
                     HStack {
                         Text("invalid image URL")
-                        Control.switch(checked: invalidImageUrl) { invalidImageUrl = $0 }
+                        Switch(checked: invalidImageUrl) { invalidImageUrl = $0 }
                     }
                     
                     HStack {
@@ -95,29 +95,29 @@ struct ListCardPreview: View {
                     
                     HStack {
                         Text("multiline title")
-                        Control.switch(checked: multilineTitle) { multilineTitle = $0 }
-                        
+                        Switch(checked: multilineTitle) { multilineTitle = $0 }
+
                         Text("caption")
-                        Control.switch(checked: showCaption) { showCaption = $0 }
-                        
+                        Switch(checked: showCaption) { showCaption = $0 }
+
                         Text("extra caption")
-                        Control.switch(checked: showExtraCaption) { showExtraCaption = $0 }
+                        Switch(checked: showExtraCaption) { showExtraCaption = $0 }
                     }
                     
                     HStack {
                         Text("top content")
-                        Control.switch(checked: showTopContent) { showTopContent = $0 }
-                        
+                        Switch(checked: showTopContent) { showTopContent = $0 }
+
                         Text("bottom content")
-                        Control.switch(checked: showBottomContent) { showBottomContent = $0 }
+                        Switch(checked: showBottomContent) { showBottomContent = $0 }
                     }
                     
                     HStack {
                         Text("leading content")
-                        Control.switch(checked: showLeadingContent) { showLeadingContent = $0 }
-                        
+                        Switch(checked: showLeadingContent) { showLeadingContent = $0 }
+
                         Text("trailing content")
-                        Control.switch(checked: showTrailingContent) { showTrailingContent = $0 }
+                        Switch(checked: showTrailingContent) { showTrailingContent = $0 }
                     }
                 }
                 .font(.caption)
