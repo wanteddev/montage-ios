@@ -50,9 +50,6 @@ TextArea(text: $longText)
   | --- | --- |
   | `text` | 텍스트 영역의 값을 바인딩 |
   | `focus` | 텍스트 영역의 포커스 상태를 바인딩, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  구성된 텍스트 영역 인스턴스
 </details>
 
 ___

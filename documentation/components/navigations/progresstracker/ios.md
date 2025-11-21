@@ -51,6 +51,14 @@ ___
 
 <summary>``init(progress: Binding<Int>, variant: Variant)``</summary>
 
+
+진행 상태를 표시하는 컴포넌트를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `progress` | 진행 상태를 나타내는 바인딩 값 (1부터 시작하는 인덱스) |
+  | `variant` | 레이아웃 및 구성을 정의하는 옵션 |
 </details>
 
 ___
@@ -60,6 +68,8 @@ ___
 
 <summary>``var body: some View``</summary>
 
+
+뷰의 내용과 동작을 정의합니다.
 </details>
 
 ___
