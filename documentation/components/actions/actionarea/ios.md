@@ -62,6 +62,9 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 버튼 클릭 시 실행할 액션 |
+- **Return Value**
+
+  구성된 ButtonInfo 인스턴스
 </details>
 
 #### Type Methods
@@ -143,6 +146,9 @@ ActionArea 컴포넌트를 초기화합니다.
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼 영역의 변형 스타일과 버튼 구성 |
+- **Return Value**
+
+  구성된 ActionArea 인스턴스
 </details>
 
 ___
@@ -306,7 +312,7 @@ ___
   | Parameter | Description |
   | --- | --- |
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `true` 적용 |
+  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**
 

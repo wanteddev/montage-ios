@@ -76,15 +76,15 @@ struct SliderPreview: View {
                 }
                 HStack {
                     Text("heading")
-                    Control.switch(checked: heading) { heading = $0 }
+                    Switch(checked: heading) { heading = $0 }
                 }
                 HStack {
                     Text("label")
-                    Control.switch(checked: label) { label = $0 }
+                    Switch(checked: label) { label = $0 }
                 }
                 HStack {
                     Text("disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                 }
             }
             .padding(.horizontal)

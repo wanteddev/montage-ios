@@ -40,6 +40,9 @@ Chip(
   | `size` | 칩의 크기, 생략하면 기본값으로 `.medium` 적용 |
   | `text` | 칩에 표시할 텍스트 |
   | `handler` | 칩 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용 |
+- **Return Value**
+
+  구성된 칩 인스턴스
 </details>
 
 ___

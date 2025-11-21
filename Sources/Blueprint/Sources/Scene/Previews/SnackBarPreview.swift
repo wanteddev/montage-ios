@@ -47,7 +47,7 @@ struct SnackBarPreview: View {
                     }
                     HStack {
                         Text("extraContents")
-                        Control.switch(checked: showExtraContents) {
+                        Switch(checked: showExtraContents) {
                             showExtraContents = $0
                         }
                     }

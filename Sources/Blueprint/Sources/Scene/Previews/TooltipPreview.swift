@@ -163,10 +163,10 @@ struct TooltipPreview: View {
                 Text("Options for testing").bold()
                 HStack {
                     Text("MultiLine Text")
-                    Control.switch(checked: showMultilineText) { showMultilineText = $0 }
+                    Switch(checked: showMultilineText) { showMultilineText = $0 }
                     if modeIndex == 1 {
                         Text("Adjust zIndex")
-                        Control.switch(checked: adjustZIndex) { adjustZIndex = $0 }
+                        Switch(checked: adjustZIndex) { adjustZIndex = $0 }
                     }
                 }
             }

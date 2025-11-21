@@ -85,7 +85,7 @@ struct SegmentedControlPreview: View {
                 
                 HStack {
                     Text("icon")
-                    Control.switch(checked: showIcon) { showIcon = $0 }
+                    Switch(checked: showIcon) { showIcon = $0 }
                 }
             }
             .font(.caption)

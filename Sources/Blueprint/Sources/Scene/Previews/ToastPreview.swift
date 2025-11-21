@@ -49,7 +49,7 @@ struct ToastPreview: View {
                     if case .normal = variants[variantIndex] {
                         HStack {
                             Text("show icon")
-                            Control.switch(checked: icon) { icon = $0 }
+                            Switch(checked: icon) { icon = $0 }
                         }
                     }
                     HStack {
@@ -58,7 +58,7 @@ struct ToastPreview: View {
                     }
                     HStack {
                         Text("short duration")
-                        Control.switch(checked: toastShortDuration) { toastShortDuration = $0 }
+                        Switch(checked: toastShortDuration) { toastShortDuration = $0 }
                     }
                     Button(
                         variant: .outlined,

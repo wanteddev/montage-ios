@@ -13,7 +13,7 @@ import Montage
 struct ControlPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var stateIndex = 0
-    @State private var state: Control.State = .unchecked
+    @State private var state: Checkbox.State = .unchecked
     @State private var checked: Bool = false
     @State private var selected: Bool = false
     @State private var switched: Bool = false
@@ -24,10 +24,10 @@ struct ControlPreview: View {
     @State private var bold: Bool = false
     @State private var customTypography = false
     @State private var guideLine: Bool = false
-    
-    private let sizes: [Control.Size] = [.small, .medium]
-    private let states: [Control.State] = [.unchecked, .checked, .indeterminate]
-    
+
+    private let sizeLabels: [String] = ["small", "medium"]
+    private let states: [Checkbox.State] = [.unchecked, .checked, .indeterminate]
+
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
@@ -47,9 +47,9 @@ struct ControlPreview: View {
                 VStack {
                     HStack {
                         Spacer()
-                        Control.checkbox(
+                        Checkbox(
                             state: state,
-                            size: sizes[sizeIndex]
+                            size: sizeIndex == 0 ? .small : .medium
                         ) {
                             state = $0
                         }
@@ -65,9 +65,9 @@ struct ControlPreview: View {
                     }
                     HStack {
                         Spacer()
-                        Control.checkmark(
+                        Checkmark(
                             checked: checked,
-                            size: sizes[sizeIndex]
+                            size: sizeIndex == 0 ? .small : .medium
                         ) {
                             checked = $0
                         }
@@ -83,9 +83,9 @@ struct ControlPreview: View {
                     }
                     HStack {
                         Spacer()
-                        Control.radio(
+                        Radio(
                             checked: selected,
-                            size: sizes[sizeIndex]
+                            size: sizeIndex == 0 ? .small : .medium
                         ) {
                             selected = $0
                         }
@@ -99,9 +99,9 @@ struct ControlPreview: View {
                         .border(guideLine ? Color.blue : Color.clear)
                         Spacer()
                     }
-                    Control.switch(
+                    Switch(
                         checked: switched,
-                        size: sizes[sizeIndex]
+                        size: sizeIndex == 0 ? .small : .medium
                     ) {
                         switched = $0
                     }
@@ -123,17 +123,17 @@ struct ControlPreview: View {
                     Text("size")
                     SegmentedControl(
                         selectedIndex: $sizeIndex,
-                        labels: sizes.map(\.description)
+                        labels: sizeLabels
                     )
                     .size(.small)
                 }
                 HStack {
                     Text("disabled")
-                    Control.switch(checked: disabled) { disabled = $0 }
+                    Switch(checked: disabled) { disabled = $0 }
                     Text("bold")
-                    Control.switch(checked: bold) { bold = $0 }
+                    Switch(checked: bold) { bold = $0 }
                     Text("tight")
-                    Control.switch(checked: tight) { tight = $0 }
+                    Switch(checked: tight) { tight = $0 }
                 }
                 HStack {
                     Text("label")
@@ -141,7 +141,7 @@ struct ControlPreview: View {
                 }
                 HStack {
                     Text("custom label typography")
-                    Control.switch(checked: customTypography) { customTypography = $0 }
+                    Switch(checked: customTypography) { customTypography = $0 }
                 }
             }
             .padding(.horizontal)
@@ -151,9 +151,7 @@ struct ControlPreview: View {
     }
 }
 
-extension Control.Size: CaseDescribable {}
-extension Control.Variant: CaseDescribable {}
-extension Control.State: CaseDescribable {}
+extension Checkbox.State: CaseDescribable {}
 
 #Preview {
     ControlPreview()

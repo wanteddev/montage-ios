@@ -5,32 +5,40 @@
 //  Created by 김삼열 on 12/27/24.
 //
 
-import SwiftUI
 import Montage
+import Pretendard
+import SwiftUI
 
 struct PaginationPreview: View {
     enum PaginationType: String, CaseIterable, Identifiable {
-        case dot
-        case counter
-        
+        case paginationDots
+        case pageCounter
+
         var id: String { self.rawValue }
+        
+        var displayName: String {
+            rawValue.prefix(1).uppercased() + rawValue.dropFirst()
+        }
     }
-    
+
     init() {}
-    
+
     var body: some View {
         List(PaginationType.allCases) { type in
             NavigationLink(
                 destination: {
-                    switch type {
-                    case .dot:
-                        DotPaginationPreview()
-                    case .counter:
-                        CounterPaginationPreview()
+                    Group {
+                        switch type {
+                        case .paginationDots:
+                            PaginationDotsPreview()
+                        case .pageCounter:
+                            PageCounterPreview()
+                        }
                     }
+                    .navigationTitle(type.displayName)
                 },
                 label: {
-                    Text(type.rawValue.capitalized)
+                    Text(type.displayName)
                 }
             )
         }
@@ -38,7 +46,6 @@ struct PaginationPreview: View {
     }
 }
 
-import Pretendard
 #Preview(body: {
     _ = try? Pretendard.registerFonts()
     return PaginationPreview()

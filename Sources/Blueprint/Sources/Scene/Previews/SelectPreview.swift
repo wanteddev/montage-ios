@@ -46,11 +46,11 @@ struct SelectPreview: View {
             .iconButton(.init(icon: .send)),
             .custom({
                 Text("이력서")
-            })
+            }),
         ]
     }
-    
-    private let bottomSheetResizes: [BottomSheetModal.Resize] = [
+
+    private let bottomSheetResizes: [BottomSheet.Resize] = [
         .hug,
         .fixedRatio(0.6),
         .fixedHeight(200),
@@ -100,7 +100,7 @@ struct SelectPreview: View {
                 .requiredBadge(requiredBadge)
                 .leadingContent(leadingContents[leadingContentIndex])
                 .menuResize(bottomSheetResizes[menuResizeIndex])
-                .bottomSheetModal(isPresented: $showSheet, {
+                .bottomSheet(isPresented: $showSheet) {
                     VStack {
                         ForEach(items.indices, id: \.self) { index in
                             ListCell(title: items[index].text) {
@@ -114,21 +114,23 @@ struct SelectPreview: View {
                                     fallthrough
                                 case .multiple:
                                     items[index].isSelected.toggle()
+                                @unknown default:
+                                    break
                                 }
                             }
                             .selected(items[index].isSelected)
                             .trailingContent { active in
-                                Control.checkmark(checked: active)
+                                Checkmark(checked: active)
                             }
                         }
                     }
-                })
+                }
             }
             .padding(.horizontal)
-            
+
             VStack(alignment: .leading) {
                 Text("Options").bold()
-                
+
                 HStack {
                     Text("variant")
                     SegmentedControl(
@@ -149,7 +151,7 @@ struct SelectPreview: View {
                     }
                     HStack {
                         Text("menuActionArea")
-                        Control.switch(checked: menuActionArea) { menuActionArea = $0 }
+                        Switch(checked: menuActionArea) { menuActionArea = $0 }
                     }
                     if menuActionArea {
                         HStack {
@@ -166,26 +168,28 @@ struct SelectPreview: View {
                         )
                         .size(.small)
                         Text("overflow")
-                        Control.switch(checked: overflow) { overflow = $0 }
+                        Switch(checked: overflow) { overflow = $0 }
                     }
                     HStack {
                         Text("menuButtonTitle")
                         TextField(text: $menuButtonTitle)
                     }
+                @unknown default:
+                    EmptyView()
                 }
                 HStack {
                     Text("heading")
-                    Control.switch(checked: heading) { heading = $0 }
+                    Switch(checked: heading) { heading = $0 }
                     Text("requiredBadge")
-                    Control.switch(checked: requiredBadge) { requiredBadge = $0 }
+                    Switch(checked: requiredBadge) { requiredBadge = $0 }
                 }
                 HStack {
                     Text("negative")
-                    Control.switch(checked: negative) { negative = $0 }
+                    Switch(checked: negative) { negative = $0 }
                     Text("disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                     Text("description")
-                    Control.switch(checked: description) { description = $0 }
+                    Switch(checked: description) { description = $0 }
                 }
                 HStack {
                     Text("leadingContent")
@@ -197,7 +201,7 @@ struct SelectPreview: View {
                 }
                 HStack {
                     Text("custom menu")
-                    Control.switch(checked: customMenu) { customMenu = $0 }
+                    Switch(checked: customMenu) { customMenu = $0 }
                 }
                 HStack {
                     Text("menuResize")

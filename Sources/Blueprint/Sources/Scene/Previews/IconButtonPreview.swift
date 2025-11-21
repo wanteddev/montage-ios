@@ -137,17 +137,17 @@ struct IconButtonPreview: View {
                 if isBackground {
                     HStack {
                         Text("alternative")
-                        Control.switch(checked: alternative) { alternative = $0 }
+                        Switch(checked: alternative) { alternative = $0 }
                     }
                 }
                 HStack {
                     Text("disable")
-                    Control.switch(checked: disable) { disable = $0 }
+                    Switch(checked: disable) { disable = $0 }
                 }
                 if isNormal {
                     HStack {
                         Text("pushBadge")
-                        Control.switch(checked: showPushBadge) { showPushBadge = $0 }
+                        Switch(checked: showPushBadge) { showPushBadge = $0 }
                     }
                 }
                 if isOutlinedOrSolid {
@@ -157,7 +157,7 @@ struct IconButtonPreview: View {
                     }
                     HStack {
                         Text("backgroundColor")
-                        Control.switch(checked: backgroundColor != nil) {
+                        Switch(checked: backgroundColor != nil) {
                             backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil
                         }
                     }
@@ -165,14 +165,14 @@ struct IconButtonPreview: View {
                 if isOutlined {
                     HStack {
                         Text("borderColor")
-                        Control.switch(checked: borderColor != nil) {
+                        Switch(checked: borderColor != nil) {
                             borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil
                         }
                     }
                 }
                 HStack {
                     Text("iconColor")
-                    Control.switch(checked: iconColor != nil) {
+                    Switch(checked: iconColor != nil) {
                         iconColor = $0 ? .semantic(.accentForegroundCyan) : nil
                     }
                 }

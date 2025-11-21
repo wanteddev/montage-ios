@@ -65,19 +65,19 @@ struct AccordionPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("multilineTitle")
-                    Control.switch(checked: multilineTitle) { multilineTitle = $0 }
+                    Switch(checked: multilineTitle) { multilineTitle = $0 }
                 }
                 HStack {
                     Text("description")
-                    Control.switch(checked: description) { description = $0 }
+                    Switch(checked: description) { description = $0 }
                     Text("content")
-                    Control.switch(checked: content) { content = $0 }
+                    Switch(checked: content) { content = $0 }
                 }
                 HStack {
                     Text("leadingIcon")
-                    Control.switch(checked: leadingIcon) { leadingIcon = $0 }
+                    Switch(checked: leadingIcon) { leadingIcon = $0 }
                     Text("trailingContent")
-                    Control.switch(checked: trailingContent) { trailingContent = $0 }
+                    Switch(checked: trailingContent) { trailingContent = $0 }
                 }
                 HStack {
                     Text("verticalPadding")
@@ -89,11 +89,11 @@ struct AccordionPreview: View {
                 }
                 HStack {
                     Text("hideDivider")
-                    Control.switch(checked: hideDivider) { hideDivider = $0 }
+                    Switch(checked: hideDivider) { hideDivider = $0 }
                     Text("fillWidth")
-                    Control.switch(checked: fillWidth) { fillWidth = $0 }
+                    Switch(checked: fillWidth) { fillWidth = $0 }
                     Text("recursive")
-                    Control.switch(checked: recursive) { recursive = $0 }
+                    Switch(checked: recursive) { recursive = $0 }
                 }
                 Spacer(minLength: 0)
             }

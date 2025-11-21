@@ -57,11 +57,11 @@ struct LoadingPreview: View {
                 Text("Options").bold()
                 HStack {
                     Text("type")
-                    Control.radio(checked: loadingType.isCircular) { _ in
+                    Radio(checked: loadingType.isCircular) { _ in
                         loadingType = .circular(color: color == .clear ? nil : color)
                     }
                     .label("circular")
-                    Control.radio(checked: !loadingType.isCircular) { _ in
+                    Radio(checked: !loadingType.isCircular) { _ in
                         loadingType = .wanted
                     }
                     .label("wanted")
@@ -74,7 +74,7 @@ struct LoadingPreview: View {
                 }
                 HStack {
                     Text("dimmer")
-                    Control.switch(checked: dimmer) { newValue in
+                    Switch(checked: dimmer) { newValue in
                         dimmer = newValue
                     }
                 }

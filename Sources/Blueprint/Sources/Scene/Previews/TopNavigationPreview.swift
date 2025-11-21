@@ -184,7 +184,7 @@ struct TopNavigationPreview: View {
                     }
                     HStack {
                         Text("leadingContent")
-                        Control.switch(checked: leading) { leading = $0 }
+                        Switch(checked: leading) { leading = $0 }
                     }
                     HStack {
                         Text("trailingContents")
@@ -206,18 +206,18 @@ struct TopNavigationPreview: View {
                     }
                     HStack {
                         Text("actionArea")
-                        Control.switch(checked: actionArea) { actionArea = $0 }
+                        Switch(checked: actionArea) { actionArea = $0 }
                     }
                     if actionArea {
                         HStack {
                             Text("sub")
-                            Control.switch(checked: actionAreaSub) { actionAreaSub = $0 }
+                            Switch(checked: actionAreaSub) { actionAreaSub = $0 }
                             Text("alt")
-                            Control.switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
+                            Switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
                             Text("caption")
-                            Control.switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
+                            Switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
                             Text("extra")
-                            Control.switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
+                            Switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
                         }
                     }
                 }
