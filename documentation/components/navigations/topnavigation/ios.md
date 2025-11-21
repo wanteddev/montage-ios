@@ -62,9 +62,6 @@ TopNavigation(
   | Parameter | Description |
   | --- | --- |
   | `action` | 버튼 액션 |
-- **Return Value**
-
-  LeadingButton 인스턴스
 </details>
 
 #### Instance Properties
@@ -100,9 +97,6 @@ TopNavigation(
   | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `showPushBadge` | PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 아이콘 버튼 클릭시 동작할 액션 |
-- **Return Value**
-
-  TrailingIconButton 인스턴스
 </details>
 
 #### Instance Properties
@@ -137,9 +131,6 @@ TopNavigation(
   | `text` | 버튼에 표시할 텍스트 |
   | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 버튼 액션 |
-- **Return Value**
-
-  TrailingTextButton 인스턴스
 </details>
 
 #### Instance Properties

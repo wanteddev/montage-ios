@@ -350,7 +350,7 @@ View를 변환합니다.
 </details>
 <details>
 
-<summary>``func onGeometryChange<T>(for: T.Type, of: (GeometryProxy) -> T, for: RunLoop.SchedulerTimeType.Stride, action: (_ newValue: T) -> Void) -> some View``</summary>
+<summary>``func onGeometryChange<T>(for: T.Type, of: (GeometryProxy) -> T, for: ContinuousClock.Instant.Duration, action: (_ newValue: T) -> Void) -> some View``</summary>
 
 
 View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
