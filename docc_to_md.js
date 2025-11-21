@@ -344,15 +344,9 @@ function jsonToMarkdown(json, isUtil = false, mdPath = '', associatedExtensions 
     md += '## Topics\n\n';
     json.topicSections.forEach((sec, index) => {
       md += renderTopicSection(sec, json.references, 0, mdPath);
-      if (json.topicSections.length > 0 && index < json.topicSections.length - 1) {
-        md += '___\n';
-      }
     });
   }
   if (hasAssociatedExtensions) {
-    if (json.topicSections && json.topicSections.length > 0) {
-      md += '___\n';
-    }
     md += associatedExtensions;
   }
 
