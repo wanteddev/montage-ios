@@ -65,9 +65,9 @@ import Montage
 
 ## Contributing
 
-Montage는 오픈소스 프로젝트이며, 모든 기여를 환영합니다!
+Montage는 오픈소스 프로젝트이고 모든 기여를 환영하지만, 주로 원티드 디자인시스템 팀에서 정의한 디자인 스펙에 따라 수정, 배포되므로, 그 디자인 스펙에 어긋나는 기여는 거절될 수 있습니다.
 
-*Montage is an open source project and welcomes all contributions!*
+*Montage is an open-source project and welcomes all contributions; however, since modifications and releases are primarily made according to the design specifications defined by the Wanted Design System team, contributions that do not align with those specifications may be declined.*
 
 ### Contribution Process
 
@@ -75,9 +75,10 @@ Montage는 오픈소스 프로젝트이며, 모든 기여를 환영합니다!
 2. 프로젝트 클론: `git clone https://github.com/[your-username]/montage-ios.git`
 3. 작업 브랜치 생성: `git checkout -b [브랜치명]`
 4. 개발 작업 수행 및 커밋: `git commit -m '[작업 내용 설명]'`
-5. 포크한 저장소에 푸시: `git push origin [브랜치명]`
-6. GitHub에서 Pull Request 생성 및 코드 리뷰 요청
-7. 리뷰 승인 후 머지
+5. 문서/라이선스 스크립트 실행: `./generate_docc.sh`, `node docc_to_md.js`, `node generate_third_party_licenses.mjs`
+6. 포크한 저장소에 푸시: `git push origin [브랜치명]`
+7. GitHub에서 Pull Request 생성 및 코드 리뷰 요청
+8. 리뷰 승인 후 머지
 
 <!-- -->
 
@@ -85,9 +86,24 @@ Montage는 오픈소스 프로젝트이며, 모든 기여를 환영합니다!
 2. *Clone your fork: `git clone https://github.com/[your-username]/montage-ios.git`*
 3. *Create a branch: `git checkout -b [branch-name]`*
 4. *Make your changes and commit: `git commit -m '[description of changes]'`*
-5. *Push to your fork: `git push origin [branch-name]`*
-6. *Create a Pull Request on GitHub and request a code review*
-7. *After approval, your changes will be merged*
+5. *Run the doc/license scripts: `./generate_docc.sh`, `node docc_to_md.js`, `node generate_third_party_licenses.mjs`*
+6. *Push to your fork: `git push origin [branch-name]`*
+7. *Create a Pull Request on GitHub and request a code review*
+8. *After approval, your changes will be merged*
+
+> ⚠️ **PR을 올리기 전에 꼭 확인하세요**
+>
+> - `./generate_docc.sh && node docc_to_md.js`를 실행해 문서 산출물이 최신 상태인지 확인하고 변경 사항이 있다면 커밋해야 합니다.
+> - `node generate_third_party_licenses.mjs`도 실행해 `THIRD_PARTY_LICENSES.md`를 업데이트하세요.
+> - 위 스크립트가 만든 diff를 커밋하지 않으면 PR용 워크플로(`verify-docs`, `third-party-licenses`)가 실패해 머지할 수 없습니다.
+
+> ⚠️ *Before opening a PR, make sure to:*
+>
+> - *Run `./generate_docc.sh && node docc_to_md.js` so documentation artifacts stay in sync, and commit any generated files.*
+> - *Run `node generate_third_party_licenses.mjs` to refresh `THIRD_PARTY_LICENSES.md`.*
+> - *If these diffs are missing, the `verify-docs` and `third-party-licenses` workflows will fail and the PR cannot be merged.*
+
+
 
 ### Code Style
 

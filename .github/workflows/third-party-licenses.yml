@@ -1,0 +1,31 @@
+name: third-party-licenses
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - "release/*"
+    paths:
+      - "Package.swift"
+      - "Package.resolved"
+
+jobs:
+  regenerate:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Regenerate third-party licenses
+        run: node generate_third_party_licenses.mjs
+
+      - name: Ensure THIRD_PARTY_LICENSES.md is up-to-date
+        run: |
+          git diff --exit-code Projects/Views/Montage/THIRD_PARTY_LICENSES.md || (echo "::error::Run \`node Projects/Views/Montage/generate_third_party_licenses.mjs\` and commit the updated THIRD_PARTY_LICENSES.md" && exit 1)
+

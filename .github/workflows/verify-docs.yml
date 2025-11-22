@@ -1,0 +1,40 @@
+name: verify-docs
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - 'release/*'
+    paths:
+      - "**.swift"
+
+jobs:
+  verify:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run generate_docc.sh
+        run: ./generate_docc.sh
+
+      - name: Run docc_to_md.js
+        run: node docc_to_md.js
+
+      - name: Fail when documentation artifacts changed
+        run: |
+          if git diff --quiet; then
+            echo "Documentation artifacts are up to date."
+          else
+            echo "::error::Documentation scripts produced changes. Run ./generate_docc.sh && node docc_to_md.js locally and commit the results."
+            git status -sb
+            exit 1
+          fi
+
