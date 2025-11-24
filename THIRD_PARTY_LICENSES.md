@@ -5,8 +5,8 @@
 | --- | --- | --- | --- |
 | lottie-ios | 4.5.0 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
 | pretendard-ios | 1.0.0 | MIT License | 저작권 및 허가 문구 유지 |
-| sdwebimage | 5.21.0 | Unknown | 라이선스 전문 참조 |
-| sdwebimageswiftui | 3.1.3 | Unknown | 라이선스 전문 참조 |
+| sdwebimage | 5.21.0 | MIT License | 저작권 및 허가 문구 유지 |
+| sdwebimageswiftui | 3.1.3 | MIT License | 저작권 및 허가 문구 유지 |
 | swift-docc-plugin | 1.4.3 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
 | swift-docc-symbolkit | 1.0.0 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
 
@@ -256,12 +256,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## sdwebimage (Unknown)
+## sdwebimage (MIT License)
 
 - 저장소: https://github.com/SDWebImage/SDWebImage.git
 - 버전: 5.21.0
 - 소스: https://raw.githubusercontent.com/SDWebImage/SDWebImage/5.21.0/LICENSE
-- 의무: 라이선스 전문 참조
+- 의무: 저작권 및 허가 문구 유지
 
 ### 라이선스 전문
 
@@ -287,12 +287,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
-## sdwebimageswiftui (Unknown)
+## sdwebimageswiftui (MIT License)
 
 - 저장소: https://github.com/SDWebImage/SDWebImageSwiftUI.git
 - 버전: 3.1.3
 - 소스: https://raw.githubusercontent.com/SDWebImage/SDWebImageSwiftUI/3.1.3/LICENSE
-- 의무: 라이선스 전문 참조
+- 의무: 저작권 및 허가 문구 유지
 
 ### 라이선스 전문
 
