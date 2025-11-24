@@ -75,7 +75,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
         content
             .onChange(of: updatingValue.wrappedValue) {
                 if $0 != nil {
-                    isPresented = true
+                    present()
                 }
             }
             .onChange(of: isPresented) {
@@ -125,6 +125,7 @@ struct FloatModifier<V: Equatable>: ViewModifier {
             hostingView.frame = topView.frame
             hitTestingView.frame = topView.frame
             floatHC.show(animation: presentingAnimation)
+            isPresented = true
 
             if case .after(let seconds) = dismissPolicy {
                 let workItem = DispatchWorkItem { [weak floatHC] in
