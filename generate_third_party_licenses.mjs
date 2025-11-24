@@ -4,8 +4,7 @@
  * Third-party license extractor for Montage.
  *
  * Usage:
- *   cd Projects/Views/Montage
- *   node Scripts/generate_third_party_licenses.mjs
+ *   node generate_third_party_licenses.mjs
  *
  * The script reads Package.resolved, fetches (or overrides) license texts,
  * and rewrites THIRD_PARTY_LICENSES.md with a consistent table + sections.
@@ -64,22 +63,51 @@ function versionLabel(state) {
   return "unknown";
 }
 
-function detectLicenseName(text) {
-  if (!text) return "Unknown";
+function detectLicenseName(text, options = {}) {
+  const { sourceUrl } = options;
+
+  const inferFromSource = () => {
+    if (!sourceUrl) return null;
+    const lowerSource = sourceUrl.toLowerCase();
+    if (lowerSource.includes("/mit")) {
+      return "MIT License";
+    }
+    if (lowerSource.includes("apache-2.0")) {
+      return "Apache License 2.0";
+    }
+    return null;
+  };
+
+  if (!text) {
+    return inferFromSource() ?? "Unknown";
+  }
+
+  const normalized = text.replace(/\r\n?/g, "\n").trim();
+  const collapsed = normalized.replace(/\s+/g, " ").toLowerCase();
+
   const mappings = [
     { keyword: "Apache License", name: "Apache License 2.0" },
-    { keyword: "MIT License", name: "MIT License" },
     { keyword: "SIL OPEN FONT LICENSE", name: "SIL Open Font License 1.1" },
     { keyword: "BSD 3-Clause", name: "BSD 3-Clause License" },
     { keyword: "BSD 2-Clause", name: "BSD 2-Clause License" }
   ];
-  const upper = text.toUpperCase();
+
+  const upper = normalized.toUpperCase();
   for (const mapping of mappings) {
     if (upper.includes(mapping.keyword.toUpperCase())) {
       return mapping.name;
     }
   }
-  return "Unknown";
+
+  const hasMitHeader = /^\s*mit\s+license\b/i.test(normalized) || collapsed.includes("the mit license");
+  const hasPermissionSentence = collapsed.includes("permission is hereby granted, free of charge");
+  const hasSpdxToken = /\bspdx(-license)?-identifier\s*:\s*mit\b/i.test(normalized) || /\blicense\s*:\s*mit\b/i.test(normalized);
+
+  if (hasMitHeader || hasPermissionSentence || hasSpdxToken) {
+    return "MIT License";
+  }
+
+  return inferFromSource() ?? "Unknown";
 }
 
 const obligationHints = {
@@ -199,7 +227,9 @@ async function buildEntry(pin, overrides) {
 
   const licenseResult = await fetchLicenseFromGitHub(pin);
   const noticeResult = await fetchNoticeFromGitHub(pin);
-  const licenseName = detectLicenseName(licenseResult.text);
+  const licenseName = detectLicenseName(licenseResult.text, {
+    sourceUrl: licenseResult.source ?? pin.location
+  });
   return {
     ...base,
     licenseName,
