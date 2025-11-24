@@ -27,5 +27,5 @@ jobs:
 
       - name: Ensure THIRD_PARTY_LICENSES.md is up-to-date
         run: |
-          git diff --exit-code Projects/Views/Montage/THIRD_PARTY_LICENSES.md || (echo "::error::Run \`node Projects/Views/Montage/generate_third_party_licenses.mjs\` and commit the updated THIRD_PARTY_LICENSES.md" && exit 1)
+          git diff --exit-code THIRD_PARTY_LICENSES.md || (echo "::error::Run \`node generate_third_party_licenses.mjs\` and commit the updated THIRD_PARTY_LICENSES.md" && exit 1)
 

@@ -250,7 +250,7 @@ async function main() {
     .join("\n");
 
   const banner =
-    "<!-- AUTO-GENERATED FILE. Run `node Scripts/generate_third_party_licenses.mjs` to refresh. -->";
+    "<!-- AUTO-GENERATED FILE. Run `node generate_third_party_licenses.mjs` to refresh. -->";
   const timestamp = new Date().toISOString();
   const content = `${banner}
 # Third-Party Notices

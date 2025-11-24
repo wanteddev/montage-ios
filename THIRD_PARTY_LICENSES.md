@@ -1,4 +1,4 @@
-<!-- AUTO-GENERATED FILE. Run `node Scripts/generate_third_party_licenses.mjs` to refresh. -->
+<!-- AUTO-GENERATED FILE. Run `node generate_third_party_licenses.mjs` to refresh. -->
 # Third-Party Notices
 
 생성 시각: 2025-11-24T09:06:28.591Z
