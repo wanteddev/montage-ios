@@ -86,7 +86,6 @@ SnackBar 모델을 초기화합니다.
 
 </details>
 
-___
 ### Instance Properties
 
 <details>
@@ -97,7 +96,6 @@ ___
 뷰의 내용과 동작을 정의합니다.
 </details>
 
-___
 ### Enumerations
 
 <details>
@@ -167,8 +165,6 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 
 </details>
 
-___
-___
 ### Associated Extensions
 
 <details>

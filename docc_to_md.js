@@ -71,22 +71,29 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
             }
 
             // 리턴값 정보 추가
-            const returnsSection = symbolJson.primaryContentSections.find(
-              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && c.text === 'Return Value')
-            );
-            if (returnsSection && returnsSection.content) {
-              symbolDetails += '- **Return Value**\n';
-              let found = false;
-              returnsSection.content.forEach(item => {
-                if (item.type === 'heading' && item.text === 'Return Value') {
-                  found = true;
-                  return;
-                }
-                if (found && item.type === 'paragraph' && item.inlineContent) {
-                  const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
-                  symbolDetails += `\n  ${returnText}\n`;
-                }
-              });
+            const isInitializer =
+              symbolJson.metadata && symbolJson.metadata.roleHeading === 'Initializer';
+            if (!isInitializer) {
+              const returnsSection = symbolJson.primaryContentSections.find(
+                s =>
+                  s.kind === 'content' &&
+                  Array.isArray(s.content) &&
+                  s.content.some(c => c.type === 'heading' && c.text === 'Return Value')
+              );
+              if (returnsSection && returnsSection.content) {
+                symbolDetails += '- **Return Value**\n';
+                let found = false;
+                returnsSection.content.forEach(item => {
+                  if (item.type === 'heading' && item.text === 'Return Value') {
+                    found = true;
+                    return;
+                  }
+                  if (found && item.type === 'paragraph' && item.inlineContent) {
+                    const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
+                    symbolDetails += `\n  ${returnText}\n`;
+                  }
+                });
+              }
             }
 
             // Discussion 정보 추가
@@ -654,27 +661,31 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
             });
           }
 
-          const returnsSection = symbolJson.primaryContentSections.find(
-            (section) =>
-              section.kind === 'content' &&
-              Array.isArray(section.content) &&
-              section.content.some((item) => item.type === 'heading' && item.text === 'Return Value'),
-          );
-          if (returnsSection && returnsSection.content) {
-            symbolDetails += '- **Return Value**\n';
-            let foundHeading = false;
-            returnsSection.content.forEach((item) => {
-              if (item.type === 'heading' && item.text === 'Return Value') {
-                foundHeading = true;
-                return;
-              }
-              if (foundHeading) {
-                if (item.type === 'paragraph' && item.inlineContent) {
-                  const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
-                  symbolDetails += `\n  ${returnText}\n`;
+          const isInitializer =
+            symbolJson.metadata && symbolJson.metadata.roleHeading === 'Initializer';
+          if (!isInitializer) {
+            const returnsSection = symbolJson.primaryContentSections.find(
+              (section) =>
+                section.kind === 'content' &&
+                Array.isArray(section.content) &&
+                section.content.some((item) => item.type === 'heading' && item.text === 'Return Value'),
+            );
+            if (returnsSection && returnsSection.content) {
+              symbolDetails += '- **Return Value**\n';
+              let foundHeading = false;
+              returnsSection.content.forEach((item) => {
+                if (item.type === 'heading' && item.text === 'Return Value') {
+                  foundHeading = true;
+                  return;
                 }
-              }
-            });
+                if (foundHeading) {
+                  if (item.type === 'paragraph' && item.inlineContent) {
+                    const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
+                    symbolDetails += `\n  ${returnText}\n`;
+                  }
+                }
+              });
+            }
           }
 
           const discussionSection = symbolJson.primaryContentSections.find(

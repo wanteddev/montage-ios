@@ -251,11 +251,8 @@ async function main() {
 
   const banner =
     "<!-- AUTO-GENERATED FILE. Run `node generate_third_party_licenses.mjs` to refresh. -->";
-  const timestamp = new Date().toISOString();
   const content = `${banner}
 # Third-Party Notices
-
-생성 시각: ${timestamp}
 
 | 의존성 | 버전 | 라이선스 | 주요 의무 |
 | --- | --- | --- | --- |

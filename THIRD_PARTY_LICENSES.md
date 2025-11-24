@@ -1,8 +1,6 @@
 <!-- AUTO-GENERATED FILE. Run `node generate_third_party_licenses.mjs` to refresh. -->
 # Third-Party Notices
 
-생성 시각: 2025-11-24T09:06:28.591Z
-
 | 의존성 | 버전 | 라이선스 | 주요 의무 |
 | --- | --- | --- | --- |
 | lottie-ios | 4.5.0 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
