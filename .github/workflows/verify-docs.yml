@@ -33,8 +33,11 @@ jobs:
           if git diff --quiet; then
             echo "Documentation artifacts are up to date."
           else
-            echo "::error::Documentation scripts produced changes. Run ./generate_docc.sh && node docc_to_md.js locally and commit the results."
+            echo "ERROR: Documentation scripts produced changes."
+            echo " - Run \`./generate_docc.sh && node docc_to_md.js\` locally and commit the results."
+            echo " - ⚠️ This workflow is running on Xcode version `xcodes installed | grep Selected | cut -d ' ' -f1`."
             git status -sb
+            git --no-pager diff
             exit 1
           fi
 
