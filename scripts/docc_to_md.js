@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+const repoRoot = path.resolve(__dirname, '..');
+
 const jsonCache = new Map();
 
 function readJsonCached(filePath) {
@@ -887,7 +889,7 @@ function walkSwiftFiles(dir, relBase = '') {
   });
 }
 
-const montageSrcRoot = path.join(__dirname, 'Sources/Montage');
+const montageSrcRoot = path.join(repoRoot, 'Sources/Montage');
 // Swift Type Name -> Swift File Path
 const swiftFileMap = {};
 // Swift File Path -> Converted
@@ -903,7 +905,7 @@ console.log('📚 DocC → Markdown 변환 시작');
 console.log('='.repeat(50));
 
 // documentation 폴더 정리
-const documentationDir = path.join(__dirname, 'documentation');
+const documentationDir = path.join(repoRoot, 'documentation');
 if (fs.existsSync(documentationDir)) {
   console.log('🗑️  기존 documentation 폴더 삭제 중...');
   fs.rmSync(documentationDir, { recursive: true, force: true });
@@ -914,7 +916,10 @@ console.log('📂 Swift 타입-파일 매핑 시작...');
 walkSwiftFiles(montageSrcRoot);
 console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
 
-const dataRoot = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data');
+const dataRoot = path.join(
+  repoRoot,
+  '.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data'
+);
 const doccRoot = path.join(dataRoot, 'documentation');
 
 console.log('🔎 Extended Module 인덱싱 시작...');

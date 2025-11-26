@@ -5,7 +5,7 @@ docs:
 	echo "빌드머신의 Xcode가 업데이트되면 수정이 필요합니다."
 	command -v xcodes >/dev/null 2>&1 || brew install robotsandpencils/made/xcodes
 	xcodes select 16.4
-	./generate_docc.sh
+	./scripts/generate_docc.sh
 	xcodes select 26.0.1
-	node docc_to_md.js
-	node generate_third_party_licenses.mjs
+	node scripts/docc_to_md.js
+	node scripts/generate_third_party_licenses.mjs
