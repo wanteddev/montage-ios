@@ -11,7 +11,7 @@ on:
       - "Package.resolved"
 
 jobs:
-  regenerate:
+  licenses:
     runs-on: self-hosted
     steps:
       - name: Checkout
