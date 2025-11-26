@@ -4,7 +4,7 @@
  * Third-party license extractor for Montage.
  *
  * Usage:
- *   node generate_third_party_licenses.mjs
+ *   node scripts/generate_third_party_licenses.mjs
  *
  * The script reads Package.resolved, fetches (or overrides) license texts,
  * and rewrites THIRD_PARTY_LICENSES.md with a consistent table + sections.
@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, ".");
+const projectRoot = path.resolve(__dirname, "..");
 const packageResolvedPath = path.join(projectRoot, "Package.resolved");
 const outputPath = path.join(projectRoot, "THIRD_PARTY_LICENSES.md");
 const overridesPath = path.join(__dirname, "license-overrides.json");
@@ -35,11 +35,11 @@ function loadOverrides() {
   for (const [identity, config] of Object.entries(raw)) {
     const entry = { ...config };
     if (entry.textFile) {
-      const licensePath = path.resolve(__dirname, entry.textFile);
+      const licensePath = path.resolve(projectRoot, entry.textFile);
       entry.licenseText = fs.readFileSync(licensePath, "utf8").trim();
     }
     if (entry.noticeFile) {
-      const noticePath = path.resolve(__dirname, entry.noticeFile);
+      const noticePath = path.resolve(projectRoot, entry.noticeFile);
       entry.noticeText = fs.readFileSync(noticePath, "utf8").trim();
     }
     overrides[identity] = entry;
@@ -280,7 +280,7 @@ async function main() {
     .join("\n");
 
   const banner =
-    "<!-- AUTO-GENERATED FILE. Run `node generate_third_party_licenses.mjs` to refresh. -->";
+    "<!-- AUTO-GENERATED FILE. Run `node scripts/generate_third_party_licenses.mjs` to refresh. -->";
   const content = `${banner}
 # Third-Party Notices
 

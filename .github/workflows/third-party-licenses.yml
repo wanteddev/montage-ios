@@ -23,9 +23,9 @@ jobs:
           node-version: "20"
 
       - name: Regenerate third-party licenses
-        run: node generate_third_party_licenses.mjs
+        run: node scripts/generate_third_party_licenses.mjs
 
       - name: Ensure THIRD_PARTY_LICENSES.md is up-to-date
         run: |
-          git diff --exit-code THIRD_PARTY_LICENSES.md || (echo "ERROR: Run \`node generate_third_party_licenses.mjs\` and commit the updated THIRD_PARTY_LICENSES.md" && exit 1)
+          git diff --exit-code THIRD_PARTY_LICENSES.md || (echo "ERROR: Run \`node scripts/generate_third_party_licenses.mjs\` and commit the updated THIRD_PARTY_LICENSES.md" && exit 1)
 

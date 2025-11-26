@@ -31,10 +31,10 @@ jobs:
           fi
 
       - name: Run generate_docc.sh
-        run: ./generate_docc.sh
+        run: ./scripts/generate_docc.sh
 
       - name: Run docc_to_md.js
-        run: node docc_to_md.js
+        run: node scripts/docc_to_md.js
 
       - name: Fail when documentation artifacts changed
         run: |
@@ -42,7 +42,7 @@ jobs:
             echo "Documentation artifacts are up to date."
           else
             echo "ERROR: Documentation scripts produced changes."
-            echo " - Run \`./generate_docc.sh && node docc_to_md.js\` locally and commit the results."
+            echo " - Run \`./scripts/generate_docc.sh && node scripts/docc_to_md.js\` locally and commit the results."
             echo " - ⚠️ This workflow is running on Xcode version `xcodes installed | grep Selected | cut -d ' ' -f1`."
             git status -sb
             git --no-pager diff
