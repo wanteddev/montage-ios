@@ -656,14 +656,9 @@ public struct TextArea: View {
                 }
                 return true
             }
-
-            func textViewDidBeginEditing(_ textView: UITextView) {
-                textView.isScrollEnabled = textView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
-            }
             
             func textViewDidChange(_ textView: UITextView) {
                 let parentText = parent.text
-                textView.isScrollEnabled = textView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
                 parent.text = textView.text
                 // Binding된 값이 변하지 않으면, TextView에 Binding된 값 표시
                 if parentText == parent.text {
@@ -680,6 +675,13 @@ public struct TextArea: View {
             var newSize = uiView.sizeThatFits(
                 CGSize(width: proposal.width ?? uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)
             )
+            
+            // NOTE: textViewDidBeginEditing/textViewDidChange에서 isScrollEnabled를 설정했었는데
+            // 알 수 없는 이유로 언젠가부터 그 시점에 contentHeight가 maxHeight와 같아져 있어서
+            // isScrollEnabled가 false로 유지됨으로 인해 sizeThatFits에서 isScrollEnabled를 설정하도록 변경
+            uiView.contentSize = newSize
+            uiView.isScrollEnabled = uiView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
+            
             newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
             return CGSize(
                 width: proposal.width ?? uiView.bounds.width,
