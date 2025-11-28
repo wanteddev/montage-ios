@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+const repoRoot = path.resolve(__dirname, '..');
+
 const jsonCache = new Map();
 
 function readJsonCached(filePath) {
@@ -71,22 +73,29 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
             }
 
             // 리턴값 정보 추가
-            const returnsSection = symbolJson.primaryContentSections.find(
-              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && c.text === 'Return Value')
-            );
-            if (returnsSection && returnsSection.content) {
-              symbolDetails += '- **Return Value**\n';
-              let found = false;
-              returnsSection.content.forEach(item => {
-                if (item.type === 'heading' && item.text === 'Return Value') {
-                  found = true;
-                  return;
-                }
-                if (found && item.type === 'paragraph' && item.inlineContent) {
-                  const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
-                  symbolDetails += `\n  ${returnText}\n`;
-                }
-              });
+            const isInitializer =
+              symbolJson.metadata && symbolJson.metadata.roleHeading === 'Initializer';
+            if (!isInitializer) {
+              const returnsSection = symbolJson.primaryContentSections.find(
+                s =>
+                  s.kind === 'content' &&
+                  Array.isArray(s.content) &&
+                  s.content.some(c => c.type === 'heading' && c.text === 'Return Value')
+              );
+              if (returnsSection && returnsSection.content) {
+                symbolDetails += '- **Return Value**\n';
+                let found = false;
+                returnsSection.content.forEach(item => {
+                  if (item.type === 'heading' && item.text === 'Return Value') {
+                    found = true;
+                    return;
+                  }
+                  if (found && item.type === 'paragraph' && item.inlineContent) {
+                    const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
+                    symbolDetails += `\n  ${returnText}\n`;
+                  }
+                });
+              }
             }
 
             // Discussion 정보 추가
@@ -344,15 +353,9 @@ function jsonToMarkdown(json, isUtil = false, mdPath = '', associatedExtensions 
     md += '## Topics\n\n';
     json.topicSections.forEach((sec, index) => {
       md += renderTopicSection(sec, json.references, 0, mdPath);
-      if (json.topicSections.length > 0 && index < json.topicSections.length - 1) {
-        md += '___\n';
-      }
     });
   }
   if (hasAssociatedExtensions) {
-    if (json.topicSections && json.topicSections.length > 0) {
-      md += '___\n';
-    }
     md += associatedExtensions;
   }
 
@@ -660,27 +663,31 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
             });
           }
 
-          const returnsSection = symbolJson.primaryContentSections.find(
-            (section) =>
-              section.kind === 'content' &&
-              Array.isArray(section.content) &&
-              section.content.some((item) => item.type === 'heading' && item.text === 'Return Value'),
-          );
-          if (returnsSection && returnsSection.content) {
-            symbolDetails += '- **Return Value**\n';
-            let foundHeading = false;
-            returnsSection.content.forEach((item) => {
-              if (item.type === 'heading' && item.text === 'Return Value') {
-                foundHeading = true;
-                return;
-              }
-              if (foundHeading) {
-                if (item.type === 'paragraph' && item.inlineContent) {
-                  const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
-                  symbolDetails += `\n  ${returnText}\n`;
+          const isInitializer =
+            symbolJson.metadata && symbolJson.metadata.roleHeading === 'Initializer';
+          if (!isInitializer) {
+            const returnsSection = symbolJson.primaryContentSections.find(
+              (section) =>
+                section.kind === 'content' &&
+                Array.isArray(section.content) &&
+                section.content.some((item) => item.type === 'heading' && item.text === 'Return Value'),
+            );
+            if (returnsSection && returnsSection.content) {
+              symbolDetails += '- **Return Value**\n';
+              let foundHeading = false;
+              returnsSection.content.forEach((item) => {
+                if (item.type === 'heading' && item.text === 'Return Value') {
+                  foundHeading = true;
+                  return;
                 }
-              }
-            });
+                if (foundHeading) {
+                  if (item.type === 'paragraph' && item.inlineContent) {
+                    const returnText = renderInlineContent([item], symbolJson.references, { joinWith: '' });
+                    symbolDetails += `\n  ${returnText}\n`;
+                  }
+                }
+              });
+            }
           }
 
           const discussionSection = symbolJson.primaryContentSections.find(
@@ -882,7 +889,7 @@ function walkSwiftFiles(dir, relBase = '') {
   });
 }
 
-const montageSrcRoot = path.join(__dirname, 'Sources/Montage');
+const montageSrcRoot = path.join(repoRoot, 'Sources/Montage');
 // Swift Type Name -> Swift File Path
 const swiftFileMap = {};
 // Swift File Path -> Converted
@@ -898,7 +905,7 @@ console.log('📚 DocC → Markdown 변환 시작');
 console.log('='.repeat(50));
 
 // documentation 폴더 정리
-const documentationDir = path.join(__dirname, 'documentation');
+const documentationDir = path.join(repoRoot, 'documentation');
 if (fs.existsSync(documentationDir)) {
   console.log('🗑️  기존 documentation 폴더 삭제 중...');
   fs.rmSync(documentationDir, { recursive: true, force: true });
@@ -909,7 +916,10 @@ console.log('📂 Swift 타입-파일 매핑 시작...');
 walkSwiftFiles(montageSrcRoot);
 console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
 
-const dataRoot = path.join('.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data');
+const dataRoot = path.join(
+  repoRoot,
+  '.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data'
+);
 const doccRoot = path.join(dataRoot, 'documentation');
 
 console.log('🔎 Extended Module 인덱싱 시작...');

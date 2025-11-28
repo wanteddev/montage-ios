@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/wanteddev/pretendard-ios",
       "state" : {
-        "revision" : "d5053acbffff52628576c40138d7719953d9a0b9",
-        "version" : "0.5.0"
+        "revision" : "468a2bf832a3f245df031de14576d3625fb7b3e3",
+        "version" : "1.0.0"
       }
     },
     {

@@ -6,12 +6,12 @@ let package = Package(
     name: "Montage",
     platforms: [.iOS(.v16)],
     products: [
-        .library(name: "Montage", targets: ["Montage"]),
+        .library(name: "Montage", targets: ["Montage"])
     ],
     dependencies: [
         .package(
             url: "https://github.com/wanteddev/pretendard-ios",
-            "0.1.0" ..< "1.0.0"
+            "1.0.0"..<"2.0.0"
         ),
         .package(
             url: "https://github.com/airbnb/lottie-ios",
@@ -21,7 +21,7 @@ let package = Package(
             url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
             from: "3.0.0"
         ),
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -29,7 +29,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Pretendard", package: "pretendard-ios"),
                 .product(name: "Lottie", package: "lottie-ios"),
-                .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI")
+                .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
             ],
             resources: [
                 .process("Asset")
@@ -41,7 +41,7 @@ let package = Package(
         .testTarget(
             name: "MontageTests",
             dependencies: ["Montage"]
-        )
+        ),
     ],
     swiftLanguageVersions: [.v5]
 )
