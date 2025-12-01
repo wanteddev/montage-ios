@@ -24,13 +24,8 @@ var body: some View {
             }
         )
         .onAppear {
-            snackBarModel = SnackBar.Model(
-                duration: .short,
-                description: "작업이 완료되었습니다.",
-                action: "확인"
-            )
         }
-}
+/ }
 ```
 
 ## Topics
@@ -94,6 +89,14 @@ SnackBar 모델을 초기화합니다.
 
 
 뷰의 내용과 동작을 정의합니다.
+</details>
+
+### Instance Methods
+
+<details>
+
+<summary>``func closeButton(Bool) -> SnackBar``</summary>
+
 </details>
 
 ### Enumerations
@@ -173,7 +176,7 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 
 <details>
 
-<summary>``func snackBar(Binding<SnackBar.Model?>, location: SnackBar.Location, handler: () -> Void) -> some View``</summary>
+<summary>``func snackBar(Binding<SnackBar.Model?>, location: SnackBar.Location, closeButtonEnabled: Bool, handler: () -> Void) -> some View``</summary>
 
 
 현재 뷰에 SnackBar를 표시하는 modifier를 적용합니다.
@@ -183,6 +186,7 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
   | --- | --- |
   | `model` | SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다. |
   | `location` | SnackBar가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: .zero)` 적용 |
+  | `closeButtonEnabled` | 닫기 버튼 노출 여부 |
   | `handler` | SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저 |
 - **Return Value**
 
@@ -201,18 +205,7 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
               )
           }
       }
-      // 기본 위치 (하단)
-      .snackBar($snackBarModel) {
-          // 액션 버튼 클릭 시 실행될 코드
-      }
-  
-      // 상단에 표시
-      .snackBar($snackBarModel, location: .top(offset: 20)) {
-          // 액션 버튼 클릭 시 실행될 코드
-      }
-  
-      // Bottom Navigation과 함께 사용
-      .snackBar($snackBarModel, location: .bottom(offset: 80)) {
+      .snackBar($snackBarModel, closeButtonEnabled: true) {
           // 액션 버튼 클릭 시 실행될 코드
       }
   }

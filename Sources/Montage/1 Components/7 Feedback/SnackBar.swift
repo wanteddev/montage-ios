@@ -26,13 +26,13 @@ import SwiftUI
 ///             }
 ///         )
 ///         .onAppear {
-///             snackBarModel = SnackBar.Model(
-///                 duration: .short,
-///                 description: "작업이 완료되었습니다.",
-///                 action: "확인"
-///             )
+//              snackBarModel = SnackBar.Model(
+//                  duration: .short,
+//                  description: "작업이 완료되었습니다.",
+//                  action: "확인"
+//              )
 ///         }
-/// }
+//// }
 /// ```
 public struct SnackBar: View {
     /// SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
@@ -133,12 +133,13 @@ public struct SnackBar: View {
         }
     }
 
-    private var heading: String?
-    private var description: String?
-    private var extraContents: () -> AnyView
+    private let heading: String?
+    private let description: String?
+    private let extraContents: () -> AnyView
     private let action: String
-    private let handler: () -> Void
     private let location: Location
+    private let handler: () -> Void
+    private let dismiss: () -> Void
 
     init(
         heading: String? = nil,
@@ -146,7 +147,8 @@ public struct SnackBar: View {
         extraContents: (() -> any View)? = nil,
         action: String,
         location: Location = .bottom(offset: .zero),
-        handler: @escaping () -> Void
+        handler: @escaping () -> Void,
+        dismiss: @escaping () -> Void
     ) {
         self.heading = heading
         self.description = description
@@ -158,6 +160,7 @@ public struct SnackBar: View {
         self.action = action
         self.location = location
         self.handler = handler
+        self.dismiss = dismiss
     }
 
     /// 뷰의 내용과 동작을 정의합니다.
@@ -165,60 +168,11 @@ public struct SnackBar: View {
         VStack {
             if case .bottom = location { Spacer() }
 
-            Contents(
-                heading: heading,
-                description: description,
-                extraContents: extraContents,
-                action: action,
-                handler: handler
-            )
-            .padding(.horizontal, 20)
-            .padding(locationEdge, locationOffset)
-
-            if case .top = location { Spacer() }
-        }
-    }
-
-    private var locationEdge: Edge.Set {
-        switch location {
-        case .top: return .top
-        case .bottom: return .bottom
-        }
-    }
-
-    private var locationOffset: CGFloat {
-        switch location {
-        case .top(let offset), .bottom(let offset): return offset
-        }
-    }
-
-    fileprivate struct Contents: View {
-        private var heading: String?
-        private var description: String?
-        private var extraContents: () -> AnyView
-        private let action: String
-        private let handler: (() -> Void)?
-
-        public init(
-            heading: String? = nil,
-            description: String? = nil,
-            extraContents: @escaping () -> AnyView,
-            action: String,
-            handler: (() -> Void)? = nil
-        ) {
-            self.heading = heading
-            self.description = description
-            self.extraContents = extraContents
-            self.action = action
-            self.handler = handler
-        }
-
-        var body: some View {
             ZStack {
                 HStack(alignment: .center, spacing: .zero) {
                     extraContents()
-                        .padding(.trailing, 12)
-
+                        .padding(.trailing, 8)
+                    
                     ZStack(alignment: .center) {
                         VStack(alignment: .leading, spacing: .zero) {
                             if let heading {
@@ -234,8 +188,15 @@ public struct SnackBar: View {
                         .padding(.horizontal, 2)
                         .padding(.vertical, 5)
                     }
-                    Spacer()
+                    Spacer(minLength: 12)
                     Action(action, handler)
+                    Spacer().frame(width: 12)
+                    if closeButton {
+                        IconButton(variant: .normal(size: 20), icon: .close) {
+                            dismiss()
+                        }
+                        .iconColor(.semantic(.staticWhite).opacity(0.61))
+                    }
                 }
             }
             .padding(.horizontal, 16)
@@ -244,6 +205,33 @@ public struct SnackBar: View {
                 BackgroundView()
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 20)
+            .padding(locationEdge, locationOffset)
+
+            if case .top = location { Spacer() }
+        }
+    }
+    
+    // MARK: - Modifiers
+    
+    private var closeButton: Bool = false
+    
+    public func closeButton(_ isEnabled: Bool = true) -> SnackBar {
+        var zelf = self
+        zelf.closeButton = isEnabled
+        return zelf
+    }
+
+    private var locationEdge: Edge.Set {
+        switch location {
+        case .top: return .top
+        case .bottom: return .bottom
+        }
+    }
+
+    private var locationOffset: CGFloat {
+        switch location {
+        case .top(let offset), .bottom(let offset): return offset
         }
     }
 
@@ -296,6 +284,7 @@ public struct SnackBar: View {
 
         let handler: () -> Void
         let location: Location
+        let closeButtonEnabled: Bool
 
         /// SnackBarModifier를 초기화합니다.
         ///
@@ -303,12 +292,16 @@ public struct SnackBar: View {
         ///   - model: 표시할 스낵바 모델에 대한 바인딩. nil이면 스낵바가 표시되지 않습니다.
         ///   - location: 스낵바가 표시될 위치
         ///   - handler: 스낵바의 액션 버튼이 클릭될 때 실행할 핸들러
+        ///   - closeButtonEnabled: 닫기 버튼 노출 여부
         init(
-            model: Binding<SnackBar.Model?>, location: Location = .bottom(offset: .zero),
+            model: Binding<SnackBar.Model?>,
+            location: Location = .bottom(offset: .zero),
+            closeButtonEnabled: Bool = false,
             handler: @escaping () -> Void
         ) {
             self._model = model
             self.location = location
+            self.closeButtonEnabled = closeButtonEnabled
             self.handler = handler
         }
         
@@ -321,9 +314,7 @@ public struct SnackBar: View {
                     .overlay(
                         snackBar()
                     )
-                    .onChange(
-                        of: model
-                    ) { newValue in
+                    .onChange(of: model) { newValue in
                         guard newValue != nil else { return }
                         showSnackBar()
                     }
@@ -342,9 +333,13 @@ public struct SnackBar: View {
                     location: location,
                     handler: {
                         handler()
-                        self.model = nil
+                        dismissSnackBar()
+                    },
+                    dismiss: {
+                        dismissSnackBar()
                     }
                 )
+                .closeButton(closeButtonEnabled)
                 .padding(.bottom, isKeyboardVisible ? 20 : 0)
             }
         }
@@ -385,6 +380,7 @@ extension View {
     /// - Parameters:
     ///   - model: SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다.
     ///   - location: SnackBar가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: .zero)` 적용
+    ///   - closeButtonEnabled: 닫기 버튼 노출 여부
     ///   - handler: SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저
     /// - Returns: SnackBar가 적용된 뷰
     ///
@@ -400,27 +396,25 @@ extension View {
     ///             )
     ///         }
     ///     }
-    ///     // 기본 위치 (하단)
-    ///     .snackBar($snackBarModel) {
-    ///         // 액션 버튼 클릭 시 실행될 코드
-    ///     }
-    ///
-    ///     // 상단에 표시
-    ///     .snackBar($snackBarModel, location: .top(offset: 20)) {
-    ///         // 액션 버튼 클릭 시 실행될 코드
-    ///     }
-    ///
-    ///     // Bottom Navigation과 함께 사용
-    ///     .snackBar($snackBarModel, location: .bottom(offset: 80)) {
+    ///     .snackBar($snackBarModel, closeButtonEnabled: true) {
     ///         // 액션 버튼 클릭 시 실행될 코드
     ///     }
     /// }
     /// ```
     public func snackBar(
-        _ model: Binding<SnackBar.Model?>, location: SnackBar.Location = .bottom(offset: .zero),
+        _ model: Binding<SnackBar.Model?>,
+        location: SnackBar.Location = .bottom(offset: .zero),
+        closeButtonEnabled: Bool = false,
         handler: @escaping () -> Void
     ) -> some View {
         modifier(
-            SnackBar.SnackBarModifier(model: model, location: location, handler: handler))
+            SnackBar.SnackBarModifier(
+                model: model,
+                location: location,
+                closeButtonEnabled: closeButtonEnabled,
+                handler: handler
+            )
+        )
     }
 }
+
