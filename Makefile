@@ -1,3 +1,5 @@
+.PHONY: docs
+
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
 XCODE_VERSION=16.4

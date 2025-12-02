@@ -220,12 +220,19 @@ public struct SnackBar: View {
     
     private var closeButton: Bool = false
     
+    /// 닫기 버튼 노출 여부를 설정합니다.
+    ///
+    /// - Parameters:
+    ///   - isEnabled: 닫기 버튼 노출 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 SnackBar 인스턴스
     public func closeButton(_ isEnabled: Bool = true) -> SnackBar {
         var zelf = self
         zelf.closeButton = isEnabled
         return zelf
     }
 
+    // MARK: - Private
+    
     private var locationEdge: Edge.Set {
         switch location {
         case .top: return .top
@@ -393,4 +400,3 @@ extension View {
         )
     }
 }
-
