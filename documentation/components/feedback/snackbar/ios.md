@@ -24,8 +24,13 @@ var body: some View {
             }
         )
         .onAppear {
+             snackBarModel = SnackBar.Model(
+                 duration: .short,
+                 description: "작업이 완료되었습니다.",
+                 action: "확인"
+             )
         }
-/ }
+}
 ```
 
 ## Topics
@@ -97,6 +102,16 @@ SnackBar 모델을 초기화합니다.
 
 <summary>``func closeButton(Bool) -> SnackBar``</summary>
 
+
+닫기 버튼 노출 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isEnabled` | 닫기 버튼 노출 여부, 생략하면 기본값으로 `true` 적용 |
+- **Return Value**
+
+  수정된 SnackBar 인스턴스
 </details>
 
 ### Enumerations
