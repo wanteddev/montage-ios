@@ -32,6 +32,7 @@ docs:
 		rm build_docs.log; \
 		exit 1; \
 	fi; \
+	rm build_docs.log; \
 	xcodes select $$CURRENT_XCODE_VERSION; \
 	node scripts/docc_to_md.js; \
 	node scripts/generate_third_party_licenses.mjs; \

@@ -26,13 +26,13 @@ import SwiftUI
 ///             }
 ///         )
 ///         .onAppear {
-//              snackBarModel = SnackBar.Model(
-//                  duration: .short,
-//                  description: "작업이 완료되었습니다.",
-//                  action: "확인"
-//              )
+///              snackBarModel = SnackBar.Model(
+///                  duration: .short,
+///                  description: "작업이 완료되었습니다.",
+///                  action: "확인"
+///              )
 ///         }
-//// }
+/// }
 /// ```
 public struct SnackBar: View {
     /// SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
@@ -83,7 +83,7 @@ public struct SnackBar: View {
         let heading: String?
         let description: String?
         let extraContents: () -> AnyView
-        let action: String
+        let buttonTitle: String
 
         /// SnackBar 모델을 초기화합니다.
         ///
@@ -102,7 +102,7 @@ public struct SnackBar: View {
             self.heading = heading
             self.description = description
             self.extraContents = { AnyView(EmptyView()) }
-            self.action = action
+            self.buttonTitle = action
         }
 
         /// SnackBar 모델을 초기화합니다.
@@ -123,20 +123,20 @@ public struct SnackBar: View {
             self.heading = heading
             self.description = description
             self.extraContents = { AnyView(extraContents()) }
-            self.action = action
+            self.buttonTitle = action
         }
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.heading == rhs.heading
                 && lhs.description == rhs.description
-                && lhs.action == rhs.action
+                && lhs.buttonTitle == rhs.buttonTitle
         }
     }
 
     private let heading: String?
     private let description: String?
     private let extraContents: () -> AnyView
-    private let action: String
+    private let buttonTitle: String
     private let location: Location
     private let handler: () -> Void
     private let dismiss: () -> Void
@@ -145,7 +145,7 @@ public struct SnackBar: View {
         heading: String? = nil,
         description: String? = nil,
         extraContents: (() -> any View)? = nil,
-        action: String,
+        buttonTitle: String,
         location: Location = .bottom(offset: .zero),
         handler: @escaping () -> Void,
         dismiss: @escaping () -> Void
@@ -157,7 +157,7 @@ public struct SnackBar: View {
         } else {
             self.extraContents = { AnyView(EmptyView()) }
         }
-        self.action = action
+        self.buttonTitle = buttonTitle
         self.location = location
         self.handler = handler
         self.dismiss = dismiss
@@ -189,7 +189,7 @@ public struct SnackBar: View {
                         .padding(.vertical, 5)
                     }
                     Spacer(minLength: 12)
-                    Action(action, handler)
+                    TextButton(size: .medium, text: buttonTitle)
                     Spacer().frame(width: 12)
                     if closeButton {
                         IconButton(variant: .normal(size: 20), icon: .close) {
@@ -232,34 +232,6 @@ public struct SnackBar: View {
     private var locationOffset: CGFloat {
         switch location {
         case .top(let offset), .bottom(let offset): return offset
-        }
-    }
-
-    private struct Action: View {
-        @State private var isPressed = false
-        @State private var interaction: Interaction.State = .normal
-
-        private let action: String
-        private let handler: (() -> Void)?
-
-        init(_ action: String, _ handler: (() -> Void)?) {
-            self.action = action
-            self.handler = handler
-        }
-
-        var body: some View {
-            Text(action)
-                .paragraph(variant: .body2, weight: .bold, semantic: .staticWhite)
-                .background(
-                    Interaction(
-                        state: isPressed ? .pressed : .normal,
-                        variant: .light,
-                        color: .backgroundNormal
-                    )
-                    .padding(.horizontal, -7)
-                    .padding(.vertical, -4)
-                )
-                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         }
     }
 
@@ -329,7 +301,7 @@ public struct SnackBar: View {
                     heading: model.heading,
                     description: model.description,
                     extraContents: model.extraContents,
-                    action: model.action,
+                    buttonTitle: model.buttonTitle,
                     location: location,
                     handler: {
                         handler()
