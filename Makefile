@@ -25,6 +25,7 @@ docs:
 	echo "================================================="; \
 	echo "API 문서 및 3rd Party 라이선스 문서 생성 중..."; \
 	echo "================================================="; \
+	set -o pipefail; \
 	if ! ./scripts/generate_docc.sh 2>&1 | tee build_docs.log; then \
 		echo "[docs] generate_docc.sh 실행 실패 — Xcode 버전을 $$CURRENT_XCODE_VERSION로 재설정합니다."; \
 		xcodes select $$CURRENT_XCODE_VERSION; \
