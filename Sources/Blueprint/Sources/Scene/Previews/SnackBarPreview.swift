@@ -17,6 +17,7 @@ struct SnackBarPreview: View {
     @State private var showExtraContents: Bool = true
     @State private var locationOption: LocationOption = .bottom
     @State private var offset: Double = 0
+    @State private var closeButtonEnabled: Bool = false
 
     enum LocationOption: String, CaseIterable {
         case top = "Top"
@@ -64,6 +65,10 @@ struct SnackBarPreview: View {
                         Text("offset: \(Int(offset))")
                         Slider(value: $offset, in: 0...200, step: 10)
                     }
+                    HStack {
+                        Text("closeButton")
+                        Switch(checked: closeButtonEnabled) { closeButtonEnabled = $0 }
+                    }
                     Button(
                         variant: .outlined,
                         text: "스낵바 노출"
@@ -89,6 +94,7 @@ struct SnackBarPreview: View {
         .snackBar(
             $snackBarModel,
             location: locationOption == .top ? .top(offset: offset) : .bottom(offset: offset),
+            closeButtonEnabled: closeButtonEnabled,
             handler: {
                 print("modify model nil to dismiss")
             }
@@ -100,3 +106,4 @@ struct SnackBarPreview: View {
 #Preview {
     SnackBarPreview()
 }
+

@@ -5,7 +5,6 @@
 //  Created by Euigyom Kim on 2023/04/24.
 //
 
-import Pretendard
 import SwiftUI
 
 /// 필터링 기능을 제공하는 버튼 컴포넌트입니다.
@@ -383,4 +382,3 @@ private extension FilterButton {
         }
     }
 }
-

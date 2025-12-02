@@ -5,7 +5,6 @@
 //  Created by Euigyom Kim on 2023/04/18.
 //
 
-import Pretendard
 import SwiftUI
 
 /// 칩 컴포넌트입니다.
@@ -346,4 +345,3 @@ private extension Chip {
         }
     }
 }
-
