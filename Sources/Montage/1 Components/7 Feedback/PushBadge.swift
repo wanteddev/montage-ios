@@ -35,7 +35,7 @@ public struct PushBadge: View {
         /// 'N' 문자를 표시하는 뱃지
         case new
         /// 특정 숫자를 표시하는 뱃지
-        /// - Parameter number: 표시할 숫자
+        /// - Parameter number: 표시할 숫자, 99 초과 시 "99+"로 표시
         case number(_ number: Int)
     }
     
@@ -117,7 +117,7 @@ public struct PushBadge: View {
                             .foregroundColor(backgroundColor)
                     }
             case .number(let number):
-                Text("\(number)")
+                Text(number > 99 ? "99+" : "\(number)")
                     .font(font)
                     .frame(minWidth: textMinSize.width)
                     .frame(height: textMinSize.height)

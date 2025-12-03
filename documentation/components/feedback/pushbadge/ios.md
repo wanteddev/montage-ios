@@ -244,7 +244,7 @@ PushBadge를 초기화합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `number` | 표시할 숫자 |
+  | `number` | 표시할 숫자, 99 초과 시 “99+“로 표시 |
 </details>
 
 </details>
