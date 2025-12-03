@@ -82,7 +82,7 @@ struct SnackBarPreview: View {
                                         .foregroundColor(SwiftUI.Color.white)
                                 }
                             },
-                            action: "액션"
+                            action: "텍스트"
                         )
                     }
 

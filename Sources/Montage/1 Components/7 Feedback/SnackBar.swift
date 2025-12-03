@@ -189,17 +189,24 @@ public struct SnackBar: View {
                         .padding(.vertical, 5)
                     }
                     Spacer(minLength: 12)
+                    
                     TextButton(color: .assistive, size: .medium, text: buttonTitle) {
                         handler()
                         dismiss()
                     }
                     .contentColor(.semantic(.staticWhite))
+                    .fontVariant(.body2)
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 2)
+                    .padding(.vertical, 4)
+                    
                     if closeButton {
                         Spacer().frame(width: 12)
                         IconButton(variant: .normal(size: 20), icon: .close) {
                             dismiss()
                         }
                         .iconColor(.semantic(.staticWhite).opacity(0.61))
+                        .padding(.horizontal, 2)
                     }
                 }
             }
