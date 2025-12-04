@@ -1,12 +1,14 @@
-.PHONY: docs
+.PHONY: all docc md license check-changes clean
 
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
 XCODE_VERSION=16.4
 
-docs:
-# 문서 생성 스크립트입니다.
-# PR 생성 전에 실행해서 문서 산출물이 최신 상태인지 확인하고 변경 사항이 있다면 커밋해야 합니다.
+# 기본 타겟: docc, md, license를 순서대로 실행하고 변경사항 확인
+all: docc md license check-changes
+
+# DocC API 문서 생성
+docc:
 	@echo ""; \
 	echo "================================================="; \
 	echo "Xcode 버전 확인 중..."; \
@@ -25,21 +27,38 @@ docs:
 	fi; \
 	echo ""; \
 	echo "================================================="; \
-	echo "API 문서 및 3rd Party 라이선스 문서 생성 중..."; \
+	echo "API 문서 생성 중..."; \
 	echo "================================================="; \
 	set -o pipefail; \
 	if ! ./scripts/generate_docc.sh 2>&1 | tee build_docs.log; then \
-		echo "[docs] generate_docc.sh 실행 실패 — Xcode 버전을 $$CURRENT_XCODE_VERSION로 재설정합니다."; \
+		echo "[docc] generate_docc.sh 실행 실패 — Xcode 버전을 $$CURRENT_XCODE_VERSION로 재설정합니다."; \
 		xcodes select $$CURRENT_XCODE_VERSION; \
 		grep -A 20 'error:' build_docs.log; \
 		rm build_docs.log; \
 		exit 1; \
 	fi; \
 	rm build_docs.log; \
-	xcodes select $$CURRENT_XCODE_VERSION; \
-	node scripts/docc_to_md.js; \
-	node scripts/generate_third_party_licenses.mjs; \
-	echo ""; \
+	xcodes select $$CURRENT_XCODE_VERSION
+
+# DocC 문서를 Markdown으로 변환
+md:
+	@echo ""; \
+	echo "================================================="; \
+	echo "DocC 문서를 Markdown으로 변환 중..."; \
+	echo "================================================="; \
+	node scripts/docc_to_md.js
+
+# 3rd Party 라이선스 문서 생성
+license:
+	@echo ""; \
+	echo "================================================="; \
+	echo "3rd Party 라이선스 문서 생성 중..."; \
+	echo "================================================="; \
+	node scripts/generate_third_party_licenses.mjs
+
+# 문서 변경사항 확인
+check-changes:
+	@echo ""; \
 	echo "================================================="; \
 	echo "문서 변경사항 확인 중..."; \
 	echo "================================================="; \
@@ -54,3 +73,12 @@ docs:
 		echo "변경된 파일:"; \
 		git diff --name-only THIRD_PARTY_LICENSES.md documentation/ 2>/dev/null | sed 's/^/  - /'; \
 	fi
+
+# 생성된 문서 파일들 정리
+clean:
+	@echo ""; \
+	echo "================================================="; \
+	echo "생성된 문서 파일들 정리 중..."; \
+	echo "================================================="; \
+	rm -rf documentation/ THIRD_PARTY_LICENSES.md .build/ build_docs.log; \
+	echo "✅ 정리 완료"
