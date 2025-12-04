@@ -6,6 +6,7 @@
 //  Copyright © 2025 WantedLab Inc. All rights reserved.
 //
 
+
 import SwiftUI
 
 struct DebouncedGeometryChangeModifier<T: Equatable>: ViewModifier {
