@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   labeler:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 3
     runs-on: [self-hosted, utility]
     steps:
