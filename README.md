@@ -13,7 +13,7 @@ Wanted Lab Design System for iOS
 
 ### 개요
 
-Montage는 원티드랩에서 만든 iOS 앱 개발을 위한 디자인시스템 모듈입니다. 미리 만들어진 UI 컴포넌트와 SwiftUI/UIKit Extension을 제공하여, 일관성 있고 빠른 UI 개발을 지원합니다. 디자인 시스템에 대한 자세한 내용은 https://montage.wanted.co.kr 에서 확인할 수 있습니다.
+Montage는 원티드랩에서 만든 iOS 앱 개발을 위한 디자인시스템 모듈입니다. 미리 만들어진 UI 컴포넌트와 SwiftUI/UIKit Extension을 제공하여, 일관성 있고 빠른 UI 개발을 지원합니다. 디자인 시스템에 대한 자세한 내용은 [Montage](https://montage.wanted.co.kr) 에서 확인할 수 있습니다.
 
 Montage가 제공하는 여러 구성 요소와 사용 예시들을 한눈에 볼 수 있도록 샘플 앱 프로젝트를 제공하고 있습니다. [Sources/Blueprint](https://github.com/wanteddev/montage-ios/tree/main/Sources/Blueprint) 폴더를 참고해 주세요.
 
@@ -126,7 +126,7 @@ Montage는 오픈소스 프로젝트이고 모든 기여를 환영하지만, 주
 
 ### Overview
 
-Montage is a design system module for iOS app development created by Wanted Lab. It provides pre-built UI components and SwiftUI/UIKit Extensions to support consistent and fast UI development. For more details about the design system, please visit https://montage.wanted.co.kr.
+Montage is a design system module for iOS app development created by Wanted Lab. It provides pre-built UI components and SwiftUI/UIKit Extensions to support consistent and fast UI development. For more details about the design system, please visit [Montage](https://montage.wanted.co.kr).
 
 We provide a sample app project to showcase the various components and usage examples offered by Montage. Please refer to the [Sources/Blueprint](https://github.com/wanteddev/montage-ios/tree/main/Sources/Blueprint) folder.
 
