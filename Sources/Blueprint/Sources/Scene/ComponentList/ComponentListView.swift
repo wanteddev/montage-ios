@@ -48,7 +48,6 @@ struct ComponentListView: View {
                     .background {
                         Capsule()
                             .foregroundStyle(.ultraThinMaterial)
-                            .clipShape(Capsule())
                     }
                     .padding(8)
             }
