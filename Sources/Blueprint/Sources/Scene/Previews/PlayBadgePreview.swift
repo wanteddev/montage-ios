@@ -59,8 +59,6 @@ struct PlayBadgePreview: View {
 
 extension PlayBadge.Size: CaseDescribable {}
 
-import Pretendard
 #Preview {
-    _ = try? Pretendard.registerFonts()
     return PlayBadgePreview()
 }

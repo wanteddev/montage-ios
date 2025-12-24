@@ -36,13 +36,13 @@ struct TypographyPreview: View {
             ForEach(Typography.Variant.allCases, id: \.self) { variant in
                 HStack(spacing: 4) {
                     VStack{
-                        Text("\(variant)")
+                        Text(String(describing: variant))
                             .typography(weight: .bold)
-                        Text("fontSize:\(variant.fontSize, specifier: "%.0f")")
-                        Text("fontHeight:\(variant.fontHeight, specifier: "%.1f")")
-                        Text("lineSpacing:\(variant.lineSpacing, specifier: "%.1f")")
-                        Text("lineHeight:\(variant.lineHeight, specifier: "%.1f")")
-                        Text("letterSpacing:\(variant.tracking, specifier: "%.1f")")
+                        Text("fontSize: " + String(format: "%.0f", variant.fontSize))
+                        Text("fontHeight: " + String(format: "%.1f", variant.fontHeight))
+                        Text("lineSpacing: " + String(format: "%.1f", variant.lineSpacing))
+                        Text("lineHeight: " + String(format: "%.1f", variant.lineHeight))
+                        Text("letterSpacing: " + String(format: "%.1f", variant.tracking))
                     }
                     .monospacedDigit()
                     .font(.system(size: 10, weight: .medium))
@@ -72,8 +72,6 @@ struct TypographyPreview: View {
     }
 }
 
-import Pretendard
 #Preview {
-    _ = try? Pretendard.registerFonts()
     return TypographyPreview()
 }

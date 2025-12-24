@@ -85,8 +85,6 @@ struct SectionHeaderPreview: View {
 
 extension SectionHeader.Size: CaseDescribable {}
 
-import Pretendard
 #Preview {
-    _ = try? Pretendard.registerFonts()
     return SectionHeaderPreview()
 }

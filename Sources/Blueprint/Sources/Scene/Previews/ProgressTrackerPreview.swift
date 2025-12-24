@@ -47,8 +47,6 @@ struct ProgressTrackerPreview: View {
     }
 }
 
-import Pretendard
 #Preview(body: {
-    _ = try? Pretendard.registerFonts()
     return ProgressTrackerPreview()
 })
