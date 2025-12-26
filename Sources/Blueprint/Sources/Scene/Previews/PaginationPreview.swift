@@ -6,7 +6,6 @@
 //
 
 import Montage
-import Pretendard
 import SwiftUI
 
 struct PaginationPreview: View {
@@ -47,6 +46,5 @@ struct PaginationPreview: View {
 }
 
 #Preview(body: {
-    _ = try? Pretendard.registerFonts()
     return PaginationPreview()
 })

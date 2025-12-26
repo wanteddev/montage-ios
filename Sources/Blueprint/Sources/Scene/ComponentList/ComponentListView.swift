@@ -36,22 +36,22 @@ struct ComponentListView: View {
     
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            Group {
+            ZStack(alignment: .bottom) {
                 if #available(iOS 18.0, *) {
                     list.searchFocused($searchFocused)
                 } else {
                     list
                 }
+                (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
+                    .typography(variant: .caption2, weight: .regular)
+                    .padding(12)
+                    .background {
+                        Capsule()
+                            .foregroundStyle(.ultraThinMaterial)
+                    }
+                    .padding(8)
             }
             .navigationTitle("Blueprint")
-            .toolbar(content: {
-                ToolbarItem(placement: .bottomBar) {
-                    VStack {
-                        (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
-                            .typography(variant: .caption2, weight: .regular)
-                    }
-                }
-            })
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: Component.self) { componentType in
                 coordinator.destinationView(for: componentType)
