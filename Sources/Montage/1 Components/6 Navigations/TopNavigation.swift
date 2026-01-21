@@ -231,15 +231,6 @@ public struct TopNavigation: View {
                 .ignoresSafeArea(.container, edges: .top)
             }
         }
-        .onAppear {
-            Task { @MainActor in
-                // UIKit 네비게이션 바를 숨겨 SwiftUI TopNavigation과의 충돌을 방지합니다.
-                if let vc = UIApplication.topViewController() {
-                    vc.navigationController?.setNavigationBarHidden(true, animated: false)
-                    vc.setNavigationBar(type: .hideShadow)
-                }
-            }
-        }
     }
     
     // MARK: - Computed properties
