@@ -143,6 +143,10 @@ public struct BottomSheet: View {
                 }
             }
         }
+        .background(
+            SwiftUI.Color.semantic(.backgroundNormal)
+                .opacity(0.8)
+        )
         .presentationDetents(detents)
         .presentationDragIndicator(.hidden)
     }
