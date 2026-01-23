@@ -117,8 +117,8 @@ jobs:
       - name: Get base branch name
         id: base_branch
         run: |
-          # 기본 브랜치 확인 (develop 또는 main)
-          BASE_BRANCH=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name' || echo "develop")
+          # 기본 브랜치 확인 (main)
+          BASE_BRANCH=$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name' || echo "main")
           echo "branch=$BASE_BRANCH" >> $GITHUB_OUTPUT
 
       - name: Create or update PR
