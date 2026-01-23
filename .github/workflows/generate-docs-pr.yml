@@ -95,7 +95,6 @@ jobs:
           fi
 
       - name: Run make to generate documentation
-        working-directory: Projects/Views/Montage
         run: make
 
       - name: Commit changes
@@ -153,6 +152,7 @@ jobs:
         if: steps.commit.outputs.changes == 'true'
         run: |
           BRANCH_NAME="${{ env.BRANCH_NAME }}"
+          PR_TITLE="${{ inputs.pr_title || github.event.inputs.pr_title || 'docs: 문서 업데이트' }}"
           
           # webhook URL 결정
           if [ -n "${{ inputs.slack_webhook || github.event.inputs.slack_webhook }}" ]; then
@@ -165,7 +165,7 @@ jobs:
           fi
           PAYLOAD=$(cat <<EOF
           {
-            "text": ":appleinc2: 📚 문서 업데이트 PR이 생성되었습니다.",
+            "text": ":appleinc2: $PR_TITLE PR이 생성되었습니다.",
             "attachments": [
               {
                 "fields": [
