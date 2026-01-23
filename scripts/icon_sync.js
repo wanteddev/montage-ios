@@ -3,7 +3,7 @@ const path = require('path');
 
 const outputDir = './output';
 const iconAssetsDir = './Sources/Montage/Asset/Icon.xcassets';
-const swiftFilePath = './Sources/Montage/0 Foundations/Icon.swift';
+const swiftFilePath = './Sources/Montage/1 Components/9 Utilities/Icon.swift';
 
 const main = async () => {
   const outputs = fs.readdirSync(outputDir);
