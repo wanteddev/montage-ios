@@ -19,7 +19,7 @@ const main = async () => {
     const iconAssetPath = path.join('./Sources/Montage/Asset/Icon.xcassets', iconAsset);
 
     if (fs.existsSync(iconAssetPath)) {
-      fs.rmdirSync(iconAssetPath, { recursive: true, force: true });
+      fs.rmSync(iconAssetPath, { recursive: true, force: true });
     }
   });
   // clean up end
@@ -108,7 +108,7 @@ const main = async () => {
   // swift file update end
 
   // remove output directory
-  fs.rmdirSync(outputDir, { recursive: true, force: true });
+  fs.rmSync(outputDir, { recursive: true, force: true });
 
   console.log('DONE!');
 };
