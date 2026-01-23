@@ -3,7 +3,7 @@ const path = require('path');
 
 const outputDir = './output';
 const iconAssetsDir = './Sources/Montage/Asset/Icon.xcassets';
-const swiftFilePath = './Sources/Montage/0 Foundations/Icon.swift';
+const swiftFilePath = './Sources/Montage/1 Components/9 Utilities/Icon.swift';
 
 const main = async () => {
   const outputs = fs.readdirSync(outputDir);
@@ -19,7 +19,7 @@ const main = async () => {
     const iconAssetPath = path.join('./Sources/Montage/Asset/Icon.xcassets', iconAsset);
 
     if (fs.existsSync(iconAssetPath)) {
-      fs.rmdirSync(iconAssetPath, { recursive: true, force: true });
+      fs.rmSync(iconAssetPath, { recursive: true, force: true });
     }
   });
   // clean up end
@@ -108,7 +108,7 @@ const main = async () => {
   // swift file update end
 
   // remove output directory
-  fs.rmdirSync(outputDir, { recursive: true, force: true });
+  fs.rmSync(outputDir, { recursive: true, force: true });
 
   console.log('DONE!');
 };
