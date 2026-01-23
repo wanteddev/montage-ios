@@ -339,6 +339,7 @@ public enum Icon: String, CaseIterable {
     case sun
     case tag
     case tagFill
+    case telescope
     case template
     case templateFill
     case textFormat
