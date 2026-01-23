@@ -21,7 +21,7 @@ jobs:
     secrets: inherit
 
   parse:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: sync
     steps:
       - name: Checkout Repo
@@ -29,53 +29,22 @@ jobs:
 
       - name: Restore cache
         uses: actions/cache/restore@v4
-        id: cache
         with:
           path: output
           key: ${{ needs.sync.outputs.figma-output-cache-key }}
-
-      - name: Download artifact if cache miss
-        if: steps.cache.outputs.cache-hit != 'true'
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          name: figma-icons
-          path: output
-
-      - name: Ensure output directory exists
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          if [ ! -d "output" ]; then
-            echo "Warning: output directory does not exist. Creating empty directory."
-            mkdir -p output
-          fi
-
-      - name: Check if output directory has files
-        id: check_output
-        run: |
-          if [ -d "output" ] && [ "$(ls -A output 2>/dev/null)" ]; then
-            echo "has_files=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_files=false" >> $GITHUB_OUTPUT
-            echo "Warning: output directory is empty or does not exist."
-          fi
 
       - name: Node.js install
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Run icon sync
-        if: steps.check_output.outputs.has_files == 'true'
-        run: node scripts/icon_sync.js
-
-      - run: make 
+      - run: node scripts/icon_sync.js
 
       - run: git config user.name "github-actions[bot]"
       - run: git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create Branch And Commit
-        id: commit
+      - name: Generate branch name
+        id: branch_name
         run: |
           # 브랜치명 생성 (Jira 이슈 번호가 있으면 사용, 없으면 run_id 사용)
           if [ -n "${{ github.event.inputs.jira_issue }}" ]; then
@@ -83,77 +52,42 @@ jobs:
           else
             BRANCH_NAME="feature/code-connect/${{ github.run_id }}"
           fi
-          
-          git checkout -B $BRANCH_NAME
+          echo "name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create Branch And Commit
+        id: commit
+        run: |
+          git checkout -B "${{ steps.branch_name.outputs.name }}"
           git add .
           if git diff --staged --quiet; then
             echo "changes=false" >> $GITHUB_OUTPUT
           else
             git commit -m "feat: add icons synced from figma" --no-verify
-            git push origin $BRANCH_NAME
+            git push origin "${{ steps.branch_name.outputs.name }}"
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
-
-      - name: Create New PR
-        if: steps.commit.outputs.changes == 'true'
-        id: create_pr
+      - name: Generate PR body
+        id: pr_body
         run: |
-          # PR body 생성 (Jira 이슈 링크 포함)
-          PR_BODY="add icons synced from figma"
           if [ -n "${{ github.event.inputs.jira_issue }}" ]; then
-            PR_BODY="https://wantedlab.atlassian.net/browse/${{ github.event.inputs.jira_issue }}"
+            echo "body=https://wantedlab.atlassian.net/browse/${{ github.event.inputs.jira_issue }}" >> $GITHUB_OUTPUT
+          else
+            echo "body=add icons synced from figma" >> $GITHUB_OUTPUT
           fi
-          
-          # 현재 브랜치에 연결된 PR URL을 가져오기 시도 (브랜치 명시적 지정)
-          PR_URL=$(gh pr view -H "${{ steps.commit.outputs.branch_name }}" --json url --jq '.url' 2>/dev/null || echo "")
-          
-          if [ -z "$PR_URL" ]; then
-            # 기존 PR이 없으면 새로운 PR 생성
-            gh pr create -B "${{ steps.extract_branch.outputs.branch }}" -H "${{ steps.commit.outputs.branch_name }}" --title "feat: add icons synced from figma" --body "$PR_BODY"
-            # PR 생성 후 URL 다시 가져오기
-            PR_URL=$(gh pr view -H "${{ steps.commit.outputs.branch_name }}" --json url --jq '.url' 2>/dev/null || echo "")
-          fi
-          
-          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
+    outputs:
+      branch_name: ${{ steps.branch_name.outputs.name }}
+      pr_body: ${{ steps.pr_body.outputs.body }}
+      has_changes: ${{ steps.commit.outputs.changes }}
 
-      - name: Send Slack notification for icon sync changes
-        if: steps.commit.outputs.changes == 'true'
-        run: |
-          # JSON 페이로드 생성
-          PAYLOAD=$(cat <<EOF
-          {
-            "text": ":appleinc2: 🎨 Figma 아이콘 동기화 PR이 생성되었습니다.",
-            "attachments": [
-              {
-                "fields": [
-                  {
-                    "title": "브랜치",
-                    "value": "${{ steps.commit.outputs.branch_name }}",
-                    "short": true
-                  },
-                  {
-                    "title": "PR 링크",
-                    "value": "${{ steps.create_pr.outputs.pr_url }}",
-                    "short": true
-                  }
-                ],
-                "color": "good"
-              }
-            ]
-          }
-          EOF
-          )
-          
-          # Slack에 메시지 전송
-          curl -X POST -H 'Content-type: application/json' \
-            --data "$PAYLOAD" \
-            "${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}"
+  generate-docs:
+    needs: parse
+    if: needs.parse.outputs.has_changes == 'true'
+    uses: ./.github/workflows/generate-docs-pr.yml
+    with:
+      branch_name: ${{ needs.parse.outputs.branch_name }}
+      pr_title: "feat: add icons synced from figma"
+      pr_body: ${{ needs.parse.outputs.pr_body }}
+      commit_message: "docs: 문서 업데이트"
+    secrets:
+      SLACK_WEBHOOK_IOS_DEVS: ${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}
