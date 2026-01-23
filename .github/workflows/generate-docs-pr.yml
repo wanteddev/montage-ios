@@ -95,7 +95,6 @@ jobs:
           fi
 
       - name: Run make to generate documentation
-        working-directory: Projects/Views/Montage
         run: make
 
       - name: Commit changes
