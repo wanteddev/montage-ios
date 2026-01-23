@@ -321,6 +321,7 @@ public struct TopNavigation: View {
                                 .padding(.vertical, 10)
                             Spacer(minLength: actionItemsMaxWidth)
                         }
+                        .frame(height: 44)
                     }
                 case .display:
                     ZStack {
@@ -333,6 +334,7 @@ public struct TopNavigation: View {
                                 .padding(.vertical, 16)
                             Spacer(minLength: actionItemsMaxWidth)
                         }
+                        .frame(height: 64)
                     }
                 case .search:
                     HStack(spacing: 12) {
