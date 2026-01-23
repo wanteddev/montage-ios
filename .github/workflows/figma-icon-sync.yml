@@ -29,16 +29,45 @@ jobs:
 
       - name: Restore cache
         uses: actions/cache/restore@v4
+        id: cache
         with:
           path: output
           key: ${{ needs.sync.outputs.figma-output-cache-key }}
+
+      - name: Download artifact if cache miss
+        if: steps.cache.outputs.cache-hit != 'true'
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: figma-icons
+          path: output
+
+      - name: Ensure output directory exists
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          if [ ! -d "output" ]; then
+            echo "Warning: output directory does not exist. Creating empty directory."
+            mkdir -p output
+          fi
+
+      - name: Check if output directory has files
+        id: check_output
+        run: |
+          if [ -d "output" ] && [ "$(ls -A output 2>/dev/null)" ]; then
+            echo "has_files=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_files=false" >> $GITHUB_OUTPUT
+            echo "Warning: output directory is empty or does not exist."
+          fi
 
       - name: Node.js install
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - run: node scripts/icon_sync.js
+      - name: Run icon sync
+        if: steps.check_output.outputs.has_files == 'true'
+        run: node scripts/icon_sync.js
 
       - run: make 
 
