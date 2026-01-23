@@ -40,7 +40,7 @@ jobs:
 
       - run: node scripts/icon_sync.js
 
-      - run: make docs
+      - run: make 
 
       - run: git config user.name "github-actions[bot]"
       - run: git config user.email "github-actions[bot]@users.noreply.github.com"
