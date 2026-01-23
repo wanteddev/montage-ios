@@ -289,6 +289,7 @@ struct BottomSheetModifier: ViewModifier {
     private let ignoresEdgeInsets: Bool
     private let actionAreaModel: ActionArea.Model?
     private let navigation: (() -> ModalNavigation)?
+    private let onDismiss: (() -> Void)?
     private let bottomSheetContent: () -> AnyView
     
     init<V: View>(
@@ -299,6 +300,7 @@ struct BottomSheetModifier: ViewModifier {
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
         navigation: (() -> ModalNavigation)? = nil,
+        onDismiss: (() -> Void)? = nil,
         @ViewBuilder _ content: @escaping () -> V
     ) {
         _isPresented = isPresented
@@ -308,6 +310,7 @@ struct BottomSheetModifier: ViewModifier {
         self.ignoresEdgeInsets = ignoresEdgeInsets
         self.actionAreaModel = actionAreaModel
         self.navigation = navigation
+        self.onDismiss = onDismiss
         bottomSheetContent = { AnyView(content()) }
     }
     
@@ -315,7 +318,10 @@ struct BottomSheetModifier: ViewModifier {
         content
             .modifying {
                 if isFullScreenCover {
-                    $0.fullScreenCover(isPresented: $isPresented) {
+                    $0.fullScreenCover(
+                        isPresented: $isPresented,
+                        onDismiss: onDismiss
+                    ) {
                         BottomSheet {
                             bottomSheetContent()
                         }
@@ -326,7 +332,10 @@ struct BottomSheetModifier: ViewModifier {
                         .modalActionArea(actionAreaModel)
                     }
                 } else {
-                    $0.sheet(isPresented: $isPresented) {
+                    $0.sheet(
+                        isPresented: $isPresented,
+                        onDismiss: onDismiss
+                    ) {
                         BottomSheet {
                             bottomSheetContent()
                         }
@@ -356,6 +365,7 @@ extension View {
     ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
     ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - onDismiss: 모달이 닫힐때 호출될 클로저
     ///   - content: 모달에 표시할 콘텐츠 클로저
     /// - Returns: 바텀 시트 모달이 적용된 뷰
     public func bottomSheet<V: View>(
@@ -366,6 +376,7 @@ extension View {
         ignoresEdgeInsets: Bool = false,
         actionAreaModel: ActionArea.Model? = nil,
         navigation: (() -> ModalNavigation)? = nil,
+        onDismiss: (() -> Void)? = nil,
         @ViewBuilder _ content: @escaping () -> V
     ) -> some View {
         modifier(
@@ -377,6 +388,7 @@ extension View {
                 ignoresEdgeInsets: ignoresEdgeInsets,
                 actionAreaModel: actionAreaModel,
                 navigation: navigation,
+                onDismiss: onDismiss,
                 content
             )
         )
