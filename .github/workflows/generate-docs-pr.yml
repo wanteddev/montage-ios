@@ -1,10 +1,10 @@
 name: Generate Docs PR
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       branch_name:
-        description: '생성할 브랜치 이름'
+        description: '브랜치 이름'
         required: true
         type: string
       pr_title:
@@ -17,11 +17,26 @@ on:
         required: false
         type: string
         default: '문서를 업데이트했습니다.'
-      commit_message:
-        description: '커밋 메시지'
+      slack_webhook:
+        description: 'Slack webhook URL (선택사항)'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      branch_name:
+        description: '브랜치 이름'
+        required: true
+        type: string
+      pr_title:
+        description: 'PR 제목'
         required: false
         type: string
         default: 'docs: 문서 업데이트'
+      pr_body:
+        description: 'PR 본문'
+        required: false
+        type: string
+        default: '문서를 업데이트했습니다.'
       slack_webhook:
         description: 'Slack webhook URL (선택사항)'
         required: false
@@ -44,6 +59,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Checkout existing branch or create new
+        run: |
+          # workflow_dispatch와 workflow_call 모두 지원
+          BRANCH_NAME="${{ inputs.branch_name || github.event.inputs.branch_name }}"
+          
+          # 원격 브랜치 fetch
+          git fetch origin "$BRANCH_NAME":refs/remotes/origin/"$BRANCH_NAME" || true
+          
+          # 브랜치가 원격에 존재하면 체크아웃, 없으면 새로 생성
+          if git show-ref --verify --quiet refs/remotes/origin/"$BRANCH_NAME"; then
+            git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME"
+          else
+            git checkout -B "$BRANCH_NAME"
+          fi
+          
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -61,34 +98,22 @@ jobs:
         working-directory: Projects/Views/Montage
         run: make
 
-      - name: Git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Checkout existing branch or create new
-        run: |
-          # 원격 브랜치 fetch
-          git fetch origin "${{ inputs.branch_name }}":refs/remotes/origin/"${{ inputs.branch_name }}" || true
-          
-          # 브랜치가 원격에 존재하면 체크아웃, 없으면 새로 생성
-          if git show-ref --verify --quiet refs/remotes/origin/"${{ inputs.branch_name }}"; then
-            git checkout -b "${{ inputs.branch_name }}" origin/"${{ inputs.branch_name }}"
-          else
-            git checkout -B "${{ inputs.branch_name }}"
-          fi
-
       - name: Commit changes
         id: commit
         run: |
+          BRANCH_NAME="${{ env.BRANCH_NAME }}"
+          COMMIT_MSG="docs: 문서 업데이트"
+          
           git add .
           if git diff --staged --quiet; then
             echo "changes=false" >> $GITHUB_OUTPUT
           else
-            git commit -m "${{ inputs.commit_message }}" --no-verify
-            git push origin "${{ inputs.branch_name }}"
+            git commit -m "$COMMIT_MSG" --no-verify
+            git push origin "$BRANCH_NAME"
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
+          
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
       - name: Get base branch name
         id: base_branch
@@ -101,18 +126,22 @@ jobs:
         if: steps.commit.outputs.changes == 'true'
         id: create_pr
         run: |
+          BRANCH_NAME="${{ env.BRANCH_NAME }}"
+          PR_TITLE="${{ inputs.pr_title || github.event.inputs.pr_title || 'docs: 문서 업데이트' }}"
+          PR_BODY="${{ inputs.pr_body || github.event.inputs.pr_body || '문서를 업데이트했습니다.' }}"
+          
           # 현재 브랜치에 연결된 PR URL을 가져오기 시도
-          PR_URL=$(gh pr view -H "${{ inputs.branch_name }}" --json url --jq '.url' 2>/dev/null || echo "")
+          PR_URL=$(gh pr view -H "$BRANCH_NAME" --json url --jq '.url' 2>/dev/null || echo "")
           
           if [ -z "$PR_URL" ]; then
             # 기존 PR이 없으면 새로운 PR 생성
             gh pr create \
               -B "${{ steps.base_branch.outputs.branch }}" \
-              -H "${{ inputs.branch_name }}" \
-              --title "${{ inputs.pr_title }}" \
-              --body "${{ inputs.pr_body }}"
+              -H "$BRANCH_NAME" \
+              --title "$PR_TITLE" \
+              --body "$PR_BODY"
             # PR 생성 후 URL 다시 가져오기
-            PR_URL=$(gh pr view -H "${{ inputs.branch_name }}" --json url --jq '.url' 2>/dev/null || echo "")
+            PR_URL=$(gh pr view -H "$BRANCH_NAME" --json url --jq '.url' 2>/dev/null || echo "")
           fi
           
           echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
@@ -123,9 +152,11 @@ jobs:
       - name: Send Slack notification
         if: steps.commit.outputs.changes == 'true'
         run: |
+          BRANCH_NAME="${{ env.BRANCH_NAME }}"
+          
           # webhook URL 결정
-          if [ -n "${{ inputs.slack_webhook }}" ]; then
-            WEBHOOK_URL="${{ inputs.slack_webhook }}"
+          if [ -n "${{ inputs.slack_webhook || github.event.inputs.slack_webhook }}" ]; then
+            WEBHOOK_URL="${{ inputs.slack_webhook || github.event.inputs.slack_webhook }}"
           elif [ -n "${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}" ]; then
             WEBHOOK_URL="${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}"
           else
@@ -140,7 +171,7 @@ jobs:
                 "fields": [
                   {
                     "title": "브랜치",
-                    "value": "${{ inputs.branch_name }}",
+                    "value": "$BRANCH_NAME",
                     "short": true
                   },
                   {

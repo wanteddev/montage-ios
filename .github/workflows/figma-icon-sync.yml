@@ -88,6 +88,5 @@ jobs:
       branch_name: ${{ needs.parse.outputs.branch_name }}
       pr_title: "feat: add icons synced from figma"
       pr_body: ${{ needs.parse.outputs.pr_body }}
-      commit_message: "docs: 문서 업데이트"
     secrets:
       SLACK_WEBHOOK_IOS_DEVS: ${{ secrets.SLACK_WEBHOOK_IOS_DEVS }}
