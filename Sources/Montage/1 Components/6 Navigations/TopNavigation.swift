@@ -93,6 +93,8 @@ public struct TopNavigation: View {
     private var searchTerm: Binding<String>?
     private var searchFieldFocused: Binding<Bool>?
     private var onSearch: (() -> Void)?
+    private var onSearchTextChange: ((String) -> Void)?
+    private var onSearchFocusChange: ((Bool) -> Void)?
     
     /// 내비게이션 바의 스타일(Variant)을 설정합니다.
     ///
@@ -179,18 +181,24 @@ public struct TopNavigation: View {
     ///   - searchTerm: 검색어 바인딩 변수
     ///   - focused: 검색 필드의 포커스 상태 바인딩 변수, 생략하면 기본값으로 `nil` 적용
     ///   - onSubmit: 검색어 제출 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - onTextChange: 검색어 텍스트 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - onFocusChange: 검색 필드 포커스 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 수정된 인스턴스를 반환합니다.
     public func searchField(
         placeholder: String? = nil,
         searchTerm: Binding<String>,
         focused: Binding<Bool>? = nil,
-        onSubmit: (() -> Void)? = nil
+        onSubmit: (() -> Void)? = nil,
+        onTextChange: ((String) -> Void)? = nil,
+        onFocusChange: ((Bool) -> Void)? = nil
     ) -> Self {
         var zelf = self
         zelf.searchFieldPlaceholder = placeholder
         zelf.searchTerm = searchTerm
         zelf.searchFieldFocused = focused
         zelf.onSearch = onSubmit
+        zelf.onSearchTextChange = onTextChange
+        zelf.onSearchFocusChange = onFocusChange
         return zelf
     }
     
@@ -210,7 +218,9 @@ public struct TopNavigation: View {
                 searchPlaceholder: searchFieldPlaceholder,
                 searchTerm: searchTerm ?? $defaultSearchTerm,
                 focused: searchFieldFocused,
-                onSubmit: onSearch
+                onSubmit: onSearch,
+                onSearchTextChange: onSearchTextChange,
+                onSearchFocusChange: onSearchFocusChange
             )
             .background {
                 ZStack {
@@ -240,7 +250,7 @@ public struct TopNavigation: View {
     }
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
-    
+
     private var backgroundOpacity: CGFloat {
         if variant.isFloating {
             return 1
@@ -266,6 +276,8 @@ public struct TopNavigation: View {
         private let externalSearchTerm: Binding<String>?
         private let externalFocused: Binding<Bool>?
         private let onSubmit: (() -> Void)?
+        private let onSearchTextChange: ((String) -> Void)?
+        private let onSearchFocusChange: ((Bool) -> Void)?
         
         init(
             variant: Variant,
@@ -276,7 +288,9 @@ public struct TopNavigation: View {
             searchPlaceholder: String? = nil,
             searchTerm: Binding<String>? = nil,
             focused: Binding<Bool>? = nil,
-            onSubmit: (() -> Void)? = nil
+            onSubmit: (() -> Void)? = nil,
+            onSearchTextChange: ((String) -> Void)? = nil,
+            onSearchFocusChange: ((Bool) -> Void)? = nil
         ) {
             self.variant = variant
             self.titleText = titleText
@@ -287,6 +301,8 @@ public struct TopNavigation: View {
             self.externalSearchTerm = searchTerm
             self.externalFocused = focused
             self.onSubmit = onSubmit
+            self.onSearchTextChange = onSearchTextChange
+            self.onSearchFocusChange = onSearchFocusChange
         }
         
         private var actionItemsMaxWidth: CGFloat {
@@ -385,7 +401,7 @@ public struct TopNavigation: View {
                     )
             }
         }
-        
+
         @ViewBuilder
         private var searchField: some View {
             HStack(alignment: .center, spacing: 4) {
@@ -425,7 +441,11 @@ public struct TopNavigation: View {
                     .onChange(of: $focusState.wrappedValue) {
                         if focused.wrappedValue != $0 {
                             focused.wrappedValue = $0
+                            onSearchFocusChange?($0)
                         }
+                    }
+                    .onChange(of: searchTerm.wrappedValue) {
+                        onSearchTextChange?($0)
                     }
                     
                     if searchTerm.wrappedValue.isNotEmpty {
