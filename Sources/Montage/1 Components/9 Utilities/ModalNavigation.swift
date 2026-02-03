@@ -35,6 +35,9 @@ public struct ModalNavigation: View {
         /// 기본 스타일의 내비게이션 바
         case normal
         /// 제목이 별도 줄에 표시되는 확장된 스타일
+        case display
+        /// 제목이 별도 줄에 표시되는 확장된 스타일
+        @available(*, deprecated, renamed: "display", message: "will be removed on next major version update")
         case extended
         /// 배경이 투명한 플로팅 스타일
         /// - Parameters:
@@ -47,7 +50,7 @@ public struct ModalNavigation: View {
         fileprivate var isFloating: Bool {
             switch self {
             case .floating: true
-            case .normal, .extended, .emphasized: false
+            case .normal, .display, .extended, .emphasized: false
             }
         }
     }
@@ -225,7 +228,7 @@ public struct ModalNavigation: View {
         
         var body: some View {
             switch variant {
-            case .normal, .extended, .floating:
+            case .normal, .display, .extended, .floating:
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
                     titleText: titleText,
@@ -302,7 +305,7 @@ private extension ModalNavigation.Variant {
     var topNavigationVariant: TopNavigation.Variant {
         switch self {
         case .normal: .normal
-        case .extended: .display
+        case .display, .extended: .display
         case .floating: .floating
         case .emphasized: .normal
         }
@@ -311,7 +314,7 @@ private extension ModalNavigation.Variant {
     var typoVariant: Typography.Variant {
         switch self {
         case .normal: .headline2
-        case .extended: .title3
+        case .display, .extended: .title3
         case .floating: .headline2
         case .emphasized: .heading2
         }
@@ -320,7 +323,7 @@ private extension ModalNavigation.Variant {
     var typoWeight: Typography.Weight {
         switch self {
         case .normal: .bold
-        case .extended: .bold
+        case .display, .extended: .bold
         case .floating: .bold
         case .emphasized: .bold
         }
