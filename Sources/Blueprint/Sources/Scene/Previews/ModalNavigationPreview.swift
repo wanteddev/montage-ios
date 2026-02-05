@@ -142,7 +142,7 @@ struct ModalNavigationPreview: View {
     }
     
     private var variants: [ModalNavigation.Variant] {
-        [.normal, .extended, .emphasized, .floating(alternative: alternative, background: background)]
+        [.normal, .display, .emphasized, .floating(alternative: alternative, background: background)]
     }
     
     private var leadingButtons: [TopNavigation.Resource.LeadingButtonInfo] {

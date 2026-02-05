@@ -219,6 +219,13 @@ ModalNavigation()
 
 <details>
 
+<summary>``case display``</summary>
+
+
+제목이 별도 줄에 표시되는 확장된 스타일
+</details>
+<details>
+
 <summary>``case emphasized``</summary>
 
 
@@ -226,7 +233,7 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>``case extended``</summary>
+<summary>~~``case extended``~~</summary>
 
 
 제목이 별도 줄에 표시되는 확장된 스타일
