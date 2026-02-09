@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   sync:
-    uses: wanteddev/wds/.github/workflows/figma-icon-sync.yml@main
+    uses: wanteddev/montage-web/.github/workflows/figma-icon-sync.yml@main
     with:
       output_dir: output
     secrets: inherit
