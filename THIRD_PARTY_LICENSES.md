@@ -1,23 +1,25 @@
 <!-- AUTO-GENERATED FILE. Run `node scripts/generate_third_party_licenses.mjs` to refresh. -->
-# Third-Party Notices
+# Third-Party Licenses
 
-| 의존성 | 버전 | 라이선스 | 주요 의무 |
+This document contains the licenses for third-party software used in Montage iOS Design System.
+
+| Dependency | Version | License | Key Obligations |
 | --- | --- | --- | --- |
-| lottie-ios | 4.5.0 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
-| pretendard-ios | 1.0.0 | MIT License | 저작권 및 허가 문구 유지 |
-| sdwebimage | 5.21.0 | MIT License | 저작권 및 허가 문구 유지 |
-| sdwebimageswiftui | 3.1.3 | MIT License | 저작권 및 허가 문구 유지 |
-| swift-docc-plugin | 1.4.3 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
-| swift-docc-symbolkit | 1.0.0 | Apache License 2.0 | NOTICE/저작권 유지 + 특허 종료 조항 |
+| lottie-ios | 4.5.0 | Apache License 2.0 | Preserve NOTICE/copyright + patent termination clause |
+| pretendard-ios | 1.0.0 | MIT License | Preserve copyright and permission notice |
+| sdwebimage | 5.21.0 | MIT License | Preserve copyright and permission notice |
+| sdwebimageswiftui | 3.1.3 | MIT License | Preserve copyright and permission notice |
+| swift-docc-plugin | 1.4.3 | Apache License 2.0 | Preserve NOTICE/copyright + patent termination clause |
+| swift-docc-symbolkit | 1.0.0 | Apache License 2.0 | Preserve NOTICE/copyright + patent termination clause |
 
 ## lottie-ios (Apache License 2.0)
 
-- 저장소: https://github.com/airbnb/lottie-ios
-- 버전: 4.5.0
-- 소스: https://raw.githubusercontent.com/airbnb/lottie-ios/4.5.0/LICENSE
-- 의무: NOTICE/저작권 유지 + 특허 종료 조항
+- Repository: https://github.com/airbnb/lottie-ios
+- Version: 4.5.0
+- Source: https://raw.githubusercontent.com/airbnb/lottie-ios/4.5.0/LICENSE
+- Obligation: Preserve NOTICE/copyright + patent termination clause
 
-### 라이선스 전문
+### Full License Text
 
 ```
 Apache License
@@ -225,12 +227,12 @@ Apache License
 
 ## pretendard-ios (MIT License)
 
-- 저장소: https://github.com/wanteddev/pretendard-ios
-- 버전: 1.0.0
-- 소스: https://raw.githubusercontent.com/wanteddev/pretendard-ios/v1.0.0/LICENSE
-- 의무: 저작권 및 허가 문구 유지
+- Repository: https://github.com/wanteddev/pretendard-ios
+- Version: 1.0.0
+- Source: https://raw.githubusercontent.com/wanteddev/pretendard-ios/v1.0.0/LICENSE
+- Obligation: Preserve copyright and permission notice
 
-### 라이선스 전문
+### Full License Text
 
 ```
 MIT License
@@ -258,12 +260,12 @@ SOFTWARE.
 
 ## sdwebimage (MIT License)
 
-- 저장소: https://github.com/SDWebImage/SDWebImage.git
-- 버전: 5.21.0
-- 소스: https://raw.githubusercontent.com/SDWebImage/SDWebImage/5.21.0/LICENSE
-- 의무: 저작권 및 허가 문구 유지
+- Repository: https://github.com/SDWebImage/SDWebImage.git
+- Version: 5.21.0
+- Source: https://raw.githubusercontent.com/SDWebImage/SDWebImage/5.21.0/LICENSE
+- Obligation: Preserve copyright and permission notice
 
-### 라이선스 전문
+### Full License Text
 
 ```
 Copyright (c) 2009-2020 Olivier Poitrey rs@dailymotion.com
@@ -289,12 +291,12 @@ THE SOFTWARE.
 
 ## sdwebimageswiftui (MIT License)
 
-- 저장소: https://github.com/SDWebImage/SDWebImageSwiftUI.git
-- 버전: 3.1.3
-- 소스: https://raw.githubusercontent.com/SDWebImage/SDWebImageSwiftUI/3.1.3/LICENSE
-- 의무: 저작권 및 허가 문구 유지
+- Repository: https://github.com/SDWebImage/SDWebImageSwiftUI.git
+- Version: 3.1.3
+- Source: https://raw.githubusercontent.com/SDWebImage/SDWebImageSwiftUI/3.1.3/LICENSE
+- Obligation: Preserve copyright and permission notice
 
-### 라이선스 전문
+### Full License Text
 
 ```
 Copyright (c) 2019 lizhuoli1126@126.com <lizhuoli1126@126.com>
@@ -320,12 +322,12 @@ THE SOFTWARE.
 
 ## swift-docc-plugin (Apache License 2.0)
 
-- 저장소: https://github.com/apple/swift-docc-plugin
-- 버전: 1.4.3
-- 소스: https://raw.githubusercontent.com/apple/swift-docc-plugin/1.4.3/LICENSE.txt
-- 의무: NOTICE/저작권 유지 + 특허 종료 조항
+- Repository: https://github.com/apple/swift-docc-plugin
+- Version: 1.4.3
+- Source: https://raw.githubusercontent.com/apple/swift-docc-plugin/1.4.3/LICENSE.txt
+- Obligation: Preserve NOTICE/copyright + patent termination clause
 
-### 라이선스 전문
+### Full License Text
 
 ```
 Apache License
@@ -543,12 +545,12 @@ Apache License
 
 ## swift-docc-symbolkit (Apache License 2.0)
 
-- 저장소: https://github.com/swiftlang/swift-docc-symbolkit
-- 버전: 1.0.0
-- 소스: https://raw.githubusercontent.com/swiftlang/swift-docc-symbolkit/1.0.0/LICENSE.txt
-- 의무: NOTICE/저작권 유지 + 특허 종료 조항
+- Repository: https://github.com/swiftlang/swift-docc-symbolkit
+- Version: 1.0.0
+- Source: https://raw.githubusercontent.com/swiftlang/swift-docc-symbolkit/1.0.0/LICENSE.txt
+- Obligation: Preserve NOTICE/copyright + patent termination clause
 
-### 라이선스 전문
+### Full License Text
 
 ```
 Apache License
