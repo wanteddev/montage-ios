@@ -13,6 +13,8 @@ import SwiftUI
 /// - `solid`: 색상이 채워진 버튼
 /// - `outlined`: 테두리만 있는 버튼
 ///
+/// > Note: 버튼은 접근성 지원을 위해 자동으로 적절한 레이블을 제공합니다.
+///
 /// ```swift
 /// // 기본 솔리드 버튼
 /// Button(text: "확인", handler: { print("버튼 클릭") })
