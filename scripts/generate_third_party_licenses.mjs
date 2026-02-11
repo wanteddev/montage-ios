@@ -111,9 +111,9 @@ function detectLicenseName(text, options = {}) {
 }
 
 const obligationHints = {
-  "Apache License 2.0": "NOTICE/저작권 유지 + 특허 종료 조항",
-  "MIT License": "저작권 및 허가 문구 유지",
-  "SIL Open Font License 1.1": "Reserved Font Name 유지, OFL 전문 포함"
+  "Apache License 2.0": "Preserve NOTICE/copyright + patent termination clause",
+  "MIT License": "Preserve copyright and permission notice",
+  "SIL Open Font License 1.1": "Preserve Reserved Font Name, include OFL full text"
 };
 
 function toRawGitHub(url, ref, fileName) {
@@ -218,7 +218,7 @@ async function buildEntry(pin, overrides) {
     return {
       ...base,
       licenseName: override.license ?? "Custom",
-      obligation: override.obligation ?? obligationHints[override.license] ?? "라이선스 전문 참조",
+      obligation: override.obligation ?? obligationHints[override.license] ?? "See full license text",
       licenseText: override.licenseText ?? override.text ?? "",
       noticeText: override.noticeText ?? "",
       source: override.source ?? "manual override"
@@ -233,8 +233,8 @@ async function buildEntry(pin, overrides) {
   return {
     ...base,
     licenseName,
-    obligation: obligationHints[licenseName] ?? "라이선스 전문 참조",
-    licenseText: licenseResult.text || "라이선스를 가져오지 못했습니다. 수동 확인이 필요합니다.",
+    obligation: obligationHints[licenseName] ?? "See full license text",
+    licenseText: licenseResult.text || "Failed to fetch license. Manual verification required.",
     noticeText: noticeResult.text,
     source: licenseResult.source ?? pin.location
   };
@@ -266,15 +266,15 @@ async function main() {
   const sections = entries
     .map((entry) => {
       const metaLines = [
-        `- 저장소: ${entry.url}`,
-        `- 버전: ${entry.versionLabel}`,
-        `- 소스: ${entry.source}`,
-        `- 의무: ${entry.obligation}`
+        `- Repository: ${entry.url}`,
+        `- Version: ${entry.versionLabel}`,
+        `- Source: ${entry.source}`,
+        `- Obligation: ${entry.obligation}`
       ].join("\n");
       const noticeBlock = entry.noticeText
         ? `\n### NOTICE\n\n\`\`\`\n${entry.noticeText}\n\`\`\`\n`
         : "";
-      const licenseBlock = `\n### 라이선스 전문\n\n\`\`\`\n${entry.licenseText}\n\`\`\`\n`;
+      const licenseBlock = `\n### Full License Text\n\n\`\`\`\n${entry.licenseText}\n\`\`\`\n`;
       return `## ${entry.name} (${entry.licenseName})\n\n${metaLines}\n${noticeBlock}${licenseBlock}`;
     })
     .join("\n");
@@ -282,9 +282,11 @@ async function main() {
   const banner =
     "<!-- AUTO-GENERATED FILE. Run `node scripts/generate_third_party_licenses.mjs` to refresh. -->";
   const content = `${banner}
-# Third-Party Notices
+# Third-Party Licenses
 
-| 의존성 | 버전 | 라이선스 | 주요 의무 |
+This document contains the licenses for third-party software used in Montage iOS Design System.
+
+| Dependency | Version | License | Key Obligations |
 | --- | --- | --- | --- |
 ${tableRows}
 
@@ -299,4 +301,3 @@ main().catch((error) => {
   console.error(error);
   process.exit(1);
 });
-

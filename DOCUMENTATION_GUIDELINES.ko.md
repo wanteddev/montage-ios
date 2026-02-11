@@ -1,26 +1,26 @@
-# Montage Code Documentation Guidelines
+# Montage 코드 문서화 가이드라인
 
 [English](./DOCUMENTATION_GUIDELINES.md) | [한국어](./DOCUMENTATION_GUIDELINES.ko.md)
 
-This document outlines the requirements that must be followed when writing Montage code for the `scripts/docc_to_md.js` script to work correctly.
+이 문서는 `scripts/docc_to_md.js` 스크립트가 올바르게 동작하기 위해 Montage 코드 작성 시 준수해야 할 사항들을 정리합니다.
 
 
-## 1. Access Control
-### Required: Use the `public` Keyword
+## 1. 접근 제어자
+### ⚠️ 필수: `public` 키워드 사용
 
 
-- The script uses regex to find the `public` keyword to recognize types and members.
-- Without `public`, they will not be documented.
+- 스크립트는 정규식으로 `public` 키워드를 찾아 타입과 멤버를 인식합니다.
+- `public`이 없으면 문서화되지 않습니다.
 
 
 
 ```swift
-// Not documented
+// ❌ Not documented
 struct MyComponent {
     func myMethod() { }
 }
 
-// Documented
+// ✅ Documented
 public struct MyComponent {
     public func myMethod() { }
 }
@@ -47,19 +47,19 @@ public struct MyComponent {
     }
 ```
 
-## 2. File Name and Type Name Mapping
+## 2. 파일명과 타입명 매핑
 
-### Note: File Name Is Used as the Component Title
-
-
-- The file name (without `.swift`) is used as the component title.
-- If the type name inside the file differs from the file name, mapping can become complicated.
+### ⚠️ 주의: 파일명이 컴포넌트 제목으로 사용됨
 
 
+- 파일명(`.swift` 제거)이 컴포넌트 제목으로 사용됩니다.
+- 파일 내부의 타입명과 파일명이 다르면 매핑이 복잡해질 수 있습니다.
 
 
-- Match the file name with the primary type name.
-- Example: `Button.swift` -> `public struct Button`
+
+
+- 파일명과 주요 타입명을 일치시키세요.
+- 예: `Button.swift` → `public struct Button`
 
 
 
@@ -73,10 +73,10 @@ public struct MyComponent {
       }
 ```
 
-### Important: No Documentation Page Is Generated When Only View Extensions Exist
+### 🚨 중요: View Extension만 있는 경우 문서 페이지가 생성되지 않음
 
 
-If a file like `Popover.swift` contains only View extension functions without a `public enum Popover` or similar type:
+`Popover.swift`처럼 파일 내에 `public enum Popover` 같은 타입이 없고, View extension 함수만 있는 경우:
 
 
 ```swift
@@ -90,25 +90,25 @@ extension View {
 }
 ```
 
-In this case, **no documentation page will be generated.**
+이 경우 **문서 페이지 자체가 생성되지 않습니다.**
 
 
 
-1. DocC generates JSON documentation based on `public` types in the file.
-2. When only View extensions exist, DocC does not generate an independent JSON file for that file. (A SwiftUICore page is generated, but it contains many other extension functions, making it difficult for users to find.)
-3. Since the script generates Markdown based on DocC-generated JSON files, no JSON means no documentation page.
+1. DocC는 파일 내의 `public` 타입을 기반으로 JSON 문서를 생성합니다.
+2. View extension만 있는 경우, DocC가 해당 파일에 대한 독립적인 JSON 파일을 생성하지 않습니다. (SwiftUICore 페이지가 생성되기는 하지만 다른 extension 함수가 많아서 사용자가 찾기에 불편합니다.)
+3. 스크립트는 DocC가 생성한 JSON 파일을 기반으로 마크다운을 생성하므로, JSON이 없으면 문서 페이지도 생성되지 않습니다.
 
 
 
 
-If no View struct with the same name as the file is defined, add an empty enum or struct type:
+파일명과 동일한 이름의 View struct가 정의되지 않은 경우 빈 enum 혹은 struct 타입을 추가하세요:
 
 
 ```swift
 // Popover.swift
 import SwiftUI
 
-// Add type for documentation page generation
+// ✅ Add type for documentation page generation
 public enum Popover {
     // Empty enum is sufficient (namespace role)
 }
@@ -120,14 +120,14 @@ extension View {
 }
 ```
 
-Or:
+또는:
 
 
 ```swift
 // Popover.swift
 import SwiftUI
 
-// Or use struct
+// ✅ Or use struct
 public struct Popover {
     // Empty struct is sufficient
 }
@@ -140,38 +140,38 @@ extension View {
 ```
 
 
-- Extension functions of other associated types are automatically included in the "Associated Extensions" section of that type.
-- The type itself can be empty. It only serves as an "anchor" for generating the documentation page.
+- 연관된 다른 타입의 Extension 함수들은 해당 타입의 "Associated Extensions" 섹션에 자동으로 포함됩니다.
+- 타입 자체는 비어있어도 상관없습니다. 단지 문서 페이지를 생성하기 위한 "앵커" 역할만 합니다.
 
 
 
-### Important: Component Subtypes Must Be Defined Within a Namespace
+### 🚨 중요: 컴포넌트 하위 타입은 네임스페이스 안에 정의해야 함
 
 
-If subtypes related to a component (e.g., `Style`, `Size`, `Configuration`) are defined as separate top-level types, each will be generated as an independent documentation page.
+컴포넌트와 관련된 하위 타입(예: `Style`, `Size`, `Configuration` 등)을 별도의 최상위 타입으로 정의하면, 각각이 독립적인 문서 페이지로 생성됩니다.
 
 
 ```swift
 // Button.swift
 public struct Button { }
 
-// Defined as separate top-level type in separate file or same file
+// ❌ Defined as separate top-level type in separate file or same file
 public enum ButtonStyle { }
 public enum ButtonSize { }
 ```
 
-In this case, `ButtonStyle` and `ButtonSize` are each generated as separate documentation pages and are not consolidated into a single component document.
+이 경우 `ButtonStyle`과 `ButtonSize`가 각각 별도의 문서 페이지로 생성되어, 하나의 컴포넌트 문서로 통합되지 않습니다.
 
 
 
-Define subtypes within an enum namespace of the component name:
+컴포넌트 이름의 enum 네임스페이스 안에 하위 타입을 정의하세요:
 
 
 ```swift
 // Button.swift
 public struct Button { }
 
-// Defined within component namespace
+// ✅ Defined within component namespace
 public enum Button {
     public enum Style {
         case primary
@@ -187,9 +187,9 @@ public enum Button {
 ```
 
 
-1. The script does not generate separate documents for nested types with dots (`.`) in their type names (`Button.Style`, `Button.Size`).
-2. Instead, it includes them in the parent type's Topics section, consolidating them into a single component document.
-3. This logically groups related types, making them easier for users to find.
+1. 스크립트는 타입명에 점(`.`)이 있는 중첩 타입(`Button.Style`, `Button.Size`)을 별개의 문서로 생성하지 않습니다.
+2. 대신 부모 타입의 Topics 섹션에 포함시켜 하나의 컴포넌트 문서로 통합합니다.
+3. 이렇게 하면 관련 타입들이 논리적으로 그룹화되어 사용자가 찾기 쉽습니다.
 
 
 
@@ -206,7 +206,7 @@ public enum Button {
 ```
 
 ```swift
-// Correct example: Integrated into a single component document
+// ✅ Correct example: Integrated into a single component document
 public struct Button {
     // Button implementation
 }
@@ -217,53 +217,53 @@ public enum Button {
     public struct Configuration { }
 }
 
-// Incorrect example: Each generated as separate document
+// ❌ Incorrect example: Each generated as separate document
 public struct Button { }
 public enum ButtonStyle { }  // Separate document
 public enum ButtonSize { }    // Separate document
 ```
 
-## 3. Extension Writing Rules for Types Associated with Components
+## 3. 컴포넌트와 연관된 다른 타입의 Extension 작성 규칙
 
-### Required: Functions/Properties Inside Associated Extensions Must Be Declared as `public`
+### ⚠️ 필수: 연관 Extension 내부의 함수/프로퍼티는 `public`으로 선언해야 함
 
 
-- Functions or properties inside extensions will not be documented without the `public` keyword.
-- The script uses regex to find the `public` keyword before each member declaration to recognize extension members.
+- Extension 내부의 함수나 프로퍼티에 `public` 키워드가 없으면 문서화되지 않습니다.
+- 스크립트는 정규식으로 각 멤버 선언 앞의 `public` 키워드를 찾아 extension 멤버를 인식합니다.
 
 
 
 ```swift
 extension View {
-    // Not documented
+    // ❌ Not documented
     func button() -> some View { }
 
-    // Documented
+    // ✅ Documented
     public func button() -> some View { }
 }
 
-// Even if extension is public, members without public are not documented
+// ❌ Even if extension is public, members without public are not documented
 public extension View {
-    func button() -> some View { }  // No public -> Not documented
+    func button() -> some View { }  // No public → Not documented
 }
 
-// Both extension and members must be public
+// ✅ Both extension and members must be public
 public extension View {
-    public func button() -> some View { }  // Has public -> Documented
+    public func button() -> some View { }  // Has public → Documented
 }
 ```
 
-### Required: Only Specific Patterns Are Recognized for Associated Extensions
+### ⚠️ 필수: 연관 Extension은 특정 패턴만 인식됨
 
 
-- Only `public func` and `public var` inside extensions are recognized.
-- `public subscript`, `public init`, etc. are not included in the regex and may not be recognized.
-- Complex signatures or special patterns may fail to parse.
+- Extension 내부의 `public func`와 `public var`만 인식됩니다.
+- `public subscript`, `public init` 등은 정규식에 포함되지 않아 인식되지 않을 수 있습니다.
+- 복잡한 시그니처나 특수한 패턴은 파싱에 실패할 수 있습니다.
 
 
 
 ```swift
-// Recognized
+// ✅ Recognized
 extension SomeType {
     public func myMethod() { }
     public static func myStaticMethod() { }
@@ -273,7 +273,7 @@ extension SomeType {
     public static var myStaticProperty: String { }
 }
 
-// May not be recognized
+// ❌ May not be recognized
 extension SomeType {
     func privateMethod() { }  // No public
     public subscript(index: Int) -> Element { }  // subscript not in regex
@@ -301,11 +301,11 @@ extension SomeType {
     }
 ```
 
-### Note: Associated Extension Body Parsing Limitations
+### ⚠️ 주의: 연관 Extension 본문 파싱 제한
 
 
-- Extension bodies are extracted using brace matching.
-- Parsing may fail with deeply nested braces or complex structures.
+- 중괄호 매칭으로 extension 본문을 추출합니다.
+- 중첩된 중괄호가 많거나 복잡한 구조에서는 파싱이 실패할 수 있습니다.
 
 
 
@@ -332,21 +332,21 @@ function extractExtensionBodies(content) {
 }
 ```
 
-## 4. Associated Extension Signature Considerations
+## 4. 연관 Extension 시그니처 주의사항
 
-### Issue: Associated Extension Not Appearing in Component Documentation
-
-
-If you write `extension View { func button(...) }` in `Button.swift`, but the function does not appear in the "Associated Extensions" section of the generated `Button` component documentation:
+### ⚠️ 문제: 연관 Extension이 컴포넌트 문서에 나타나지 않는 경우
 
 
+`Button.swift` 파일에 `extension View { func button(...) }`를 작성했는데, 생성된 `Button` 컴포넌트 문서의 "Associated Extensions" 섹션에 이 함수가 나타나지 않습니다.
 
-When the script compares Swift file extension signatures with DocC-generated signatures, some information may be removed during normalization, causing matching to fail.
+
+
+스크립트가 Swift 파일의 extension 시그니처와 DocC가 생성한 시그니처를 비교할 때, 정규화 과정에서 일부 정보가 제거되어 매칭이 실패할 수 있습니다.
 
 
 
    ```swift
-   // May cause issues: Matching fails if type names differ
+   // ❌ May cause issues: Matching fails if type names differ
    extension View {
        public func button(title: String) -> some View { }
    }
@@ -354,21 +354,21 @@ When the script compares Swift file extension signatures with DocC-generated sig
    ```
 
 
-   - When generic constraints are present
-   - When there are many parameter attributes (`@escaping`, `@ViewBuilder`, etc.)
-   - When there are many parameters with default values
+   - 제네릭 제약이 있는 경우
+   - 파라미터 속성(`@escaping`, `@ViewBuilder` 등)이 많은 경우
+   - 기본값이 있는 파라미터가 많은 경우
 
 
 
 
-- Whitespace differences are automatically cleaned up, so they are not a problem.
-- Attributes like `@escaping`, `@ViewBuilder` are removed during normalization, so these alone do not cause matching failure.
-- Problems mainly arise from differences in type names, parameter names, and function names.
+- 공백 차이는 자동으로 정리되므로 문제가 되지 않습니다.
+- `@escaping`, `@ViewBuilder` 같은 속성은 정규화 과정에서 제거되므로, 이것만으로는 매칭이 실패하지 않습니다.
+- 문제는 주로 타입명, 파라미터명, 함수명의 차이에서 발생합니다.
 
 
 
 
-Signature Normalization Function:
+시그니처 정규화 함수 (Signature Normalization Function):
 ```javascript 515:563:Projects/Views/Montage/scripts/docc_to_md.js
 function canonicalizeSignature(signature) {
   let normalized = signature
@@ -421,7 +421,7 @@ function canonicalizeSignature(signature) {
 }
 ```
 
-Signature Comparison When Rendering Extension Members from DocC JSON:
+DocC JSON에서 extension 멤버 렌더링 시 시그니처 비교 (Signature Comparison When Rendering Extension Members from DocC JSON):
 ```javascript 628:633:Projects/Views/Montage/scripts/docc_to_md.js
 function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/utilities/ios-extensions') {
   if (!ref) return null;
@@ -431,13 +431,13 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
   const hash = generateHash(canonicalSignature);
 ```
 
-## 5. Directory Structure Dependency
+## 5. 디렉토리 구조 의존성
 
-### Required: "1 Components" Directory Structure
+### ⚠️ 필수: "1 Components" 디렉토리 구조
 
 
-- Associated extension collection only applies to files within the `1 Components` directory.
-- Extensions in files from other directories may not be documented.
+- 연관 Extension 수집은 `1 Components` 디렉토리 내의 파일에만 적용됩니다.
+- 다른 디렉토리의 파일은 extension이 문서화되지 않을 수 있습니다.
 
 
 
@@ -463,11 +463,11 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         }
 ```
 
-## 6. Type Recognition Limitations
+## 6. 타입 인식 제한
 
-### Note: Only Specific Types Are Recognized
+### ⚠️ 주의: 특정 타입만 인식됨
 
-**Recognized types:**
+**인식되는 타입:**
 
 - `public enum`
 - `public struct`
@@ -475,11 +475,11 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
 - `public protocol`
 - `public actor`
 
-**Not recognized:**
+**인식되지 않는 타입:**
 
 - `typealias`
-- `associatedtype` (inside protocols)
-- Nested types (no separate handling)
+- `associatedtype` (프로토콜 내부)
+- 중첩 타입 (별도 처리 없음)
 
 
 
@@ -487,13 +487,13 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         const typeRegex = /public\s+(enum|struct|class|protocol|actor)\s+(\w+)/g;
 ```
 
-## 7. UIKit-Related Filtering
+## 7. UIKit 관련 필터링
 
-### Note: UIKit-Related Documentation Is Excluded
+### ⚠️ 주의: UIKit 관련 문서는 제외됨
 
 
-- Files with names starting with `ui` or ending with `montage.json` are excluded.
-- UIKit-related types are not documented.
+- 파일명이 `ui`로 시작하거나 `montage.json`으로 끝나는 파일은 제외됩니다.
+- UIKit 관련 타입은 문서화되지 않습니다.
 
 
 
@@ -517,11 +517,11 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
       return;
 ```
 
-## 8. Specific Roles Excluded
+## 8. 특정 Role 제외
 
-### Note: Documents for Specific Roles Are Not Generated as Standalone Pages
+### ⚠️ 주의: 특정 Role의 문서는 단독 페이지로는 생성되지 않음
 
-However, enums and structs defined at the top level are generated as standalone pages.
+단, 최상위 레벨에 정의된 enum과 struct는 단독 페이지로 생성합니다.
 
 - `Initializer`
 - `Instance Method`
@@ -530,14 +530,14 @@ However, enums and structs defined at the top level are generated as standalone 
 - `Type Property`
 - `Operator`
 - `Class`
-- `Enumeration` (top-level depth excluded)
+- `Enumeration` (최상위 뎁스는 제외)
 - `Case`
 - `Extended Class`
 - `Extended Structure`
 - `Extended Enumeration`
 - `Extended Protocol`
 - `API Collection`
-- `Structure` (top-level depth excluded)
+- `Structure` (최상위 뎁스는 제외)
 
 
 ```javascript 373:390:Projects/Views/Montage/scripts/docc_to_md.js
@@ -561,13 +561,13 @@ However, enums and structs defined at the top level are generated as standalone 
     }
 ```
 
-## Summary: Troubleshooting
+## 요약: 문제 발생 시
 
-If documentation is not generated correctly:
+문서화가 제대로 되지 않는다면:
 
-1. Check for `public` keyword
-2. Verify file name and type name match
-3. Check if associated extensions are in the `1 Components` directory
-4. Verify functions/properties inside associated extensions are declared as `public`
-5. Check if the type is not UIKit-related
-6. Check the script execution log for error messages
+1. `public` 키워드 확인
+2. 파일명과 타입명 일치 확인
+3. 연관 Extension이 `1 Components` 디렉토리에 있는지 확인
+4. 연관 Extension 내부의 함수/프로퍼티는 `public`으로 선언되어 있는지 확인
+5. UIKit 관련 타입이 아닌지 확인
+6. 스크립트 실행 로그에서 에러 메시지 확인
