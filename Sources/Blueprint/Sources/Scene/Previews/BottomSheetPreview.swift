@@ -249,7 +249,7 @@ struct BottomSheetPreview: View {
 
     private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
-        .extended,
+        .display,
         .emphasized,
         .floating(alternative: false, background: false),
     ]

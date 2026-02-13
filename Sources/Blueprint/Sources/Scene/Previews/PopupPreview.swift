@@ -221,7 +221,7 @@ struct PopupPreview: View {
 
     private let navigationVariants: [ModalNavigation.Variant] = [
         .normal,
-        .extended,
+        .display,
         .emphasized,
         .floating(alternative: true, background: true),
     ]
