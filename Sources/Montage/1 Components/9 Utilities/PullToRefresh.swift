@@ -8,8 +8,8 @@
 import Lottie
 import SwiftUI
 
+@available(iOS 18, *)
 public enum PullToRefresh {
-    @available(iOS 18, *)
     struct Modifier: ViewModifier {
         @Binding private var scrollYOffset: CGFloat
         private let refresh: () async -> Void
@@ -70,51 +70,46 @@ public enum PullToRefresh {
 
                     content
                 }
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 1)
-                        .onChanged { _ in
-                            isScrolling = true
+                .onScrollPhaseChange { oldPhase, newPhase in
+                    if newPhase == .interacting {
+                        isScrolling = true
+                        if phase.beforeRefreshing {
+                            // 현재 스크롤이 트리거스크롤임
+                            isTriggerScrolling = true
+                        }
+                    }
 
-                            if phase.beforeRefreshing {
-                                // 현재 스크롤이 트리거스크롤임
-                                isTriggerScrolling = true
+                    if oldPhase == .interacting, newPhase != .interacting {
+                        // 리프레시가 시작된 후 스크롤이 끝났을 때
+                        if phase.isRefreshing {
+                            // 투명뷰를 추가한다.
+                            isClearRectNeeded = true
+                            // 스크롤 옵셋이 천천히 되돌아가도록 하기 위한 애니메이션
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                // 로고와 패딩 영역이 천천히 줄어들도록 하기 위함
+                                pullToRefreshViewHeight = hangingHeight
+                                clearRectHeight = hangingHeight
                             }
                         }
-                        .onEnded { value in
-                            // 리프레시가 시작된 후 스크롤이 끝났을 때
-                            if phase.isRefreshing {
-                                // 투명뷰를 추가한다.
-                                isClearRectNeeded = true
-                                // 스크롤 옵셋이 천천히 되돌아가도록 하기 위한 애니메이션
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    // 로고와 패딩 영역이 천천히 줄어들도록 하기 위함
-                                    pullToRefreshViewHeight = hangingHeight
-                                    clearRectHeight = hangingHeight
-                                }
-                            }
 
-                            // 리프레시가 끝나기 전에 스크롤을 드래그하여 위로 던지는 경우
-                            if phase
-                                .isRefreshing
-                                && (value.predictedEndTranslation.height < 0 || scrollYOffset < 0)
-                            {
-                                task?.cancel()
-                            }
-
-                            // 리프레시가 끝난 후 스크롤이 끝났을 때
-                            if phase.isWaitingToEnd {
-                                // 스크롤 옵셋 복귀 애니메이션 시작점 설정
-                                clearRectHeight = hangingHeight + value.translation.height / 2
-                                // 엔딩 애니메이션 수행
-                                phase = .ending
-                            }
-
-                            isTriggerScrolling = false
-                            isScrolling = false
+                        // 리프레시가 끝나기 전에 스크롤을 드래그하여 위로 던지는 경우
+                        if phase.isRefreshing && scrollYOffset < 0 {
+                            task?.cancel()
                         }
-                )
+
+                        // 리프레시가 끝난 후 스크롤이 끝났을 때
+                        if phase.isWaitingToEnd {
+                            // 엔딩 애니메이션 수행
+                            clearRectHeight = hangingHeight
+                            phase = .ending
+                        }
+
+                        isTriggerScrolling = false
+                        isScrolling = false
+                    }
+                }
             }
-            .onChange(of: scrollYOffset) { scrollPosition in
+            .onChange(of: scrollYOffset) { _, scrollPosition in
                 // 트리거스크롤이 끝날때까지
                 if isTriggerScrolling {
                     // 스크롤 옵셋 복귀 애니메이션 시작점을 업데이트
@@ -132,7 +127,7 @@ public enum PullToRefresh {
                     phase = .pulledDown(ratio: pullDownRatio)
                 }
             }
-            .onChange(of: phase) { phase in
+            .onChange(of: phase) { _, phase in
                 switch phase {
                 case .idle:
                     break
@@ -238,7 +233,7 @@ public enum PullToRefresh {
                 .frame(width: 48, height: 36)
                 .opacity(opacity)
                 .scaleEffect(scale)
-                .onChange(of: phase) { phase in
+                .onChange(of: phase) { _, phase in
                     switch phase {
                     case .idle:
                         opacity = 1
