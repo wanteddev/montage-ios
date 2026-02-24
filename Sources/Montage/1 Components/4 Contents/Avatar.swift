@@ -109,14 +109,19 @@ public struct Avatar: View {
         }
     }
     
+    enum ImageSource {
+        case url(String)
+        case image(Image)
+    }
+
     // MARK: - Initializer
-    
-    private let imageUrl: String
+
+    private let imageSource: ImageSource
     private let variant: Variant
     private let size: Size
     private let onTap: (() -> Void)?
-    
-    /// 아바타를 초기화합니다.
+
+    /// URL 문자열로 아바타를 초기화합니다.
     ///
     /// - Parameters:
     ///   - imageUrl: 표시할 이미지의 URL 문자열
@@ -124,7 +129,21 @@ public struct Avatar: View {
     ///   - size: 아바타 크기, 생략하면 기본값으로 `.small` 적용
     ///   - onTap: 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용
     public init(_ imageUrl: String, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
-        self.imageUrl = imageUrl
+        self.imageSource = .url(imageUrl)
+        self.variant = variant
+        self.size = size
+        self.onTap = onTap
+    }
+
+    /// SwiftUI Image로 아바타를 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - image: 표시할 SwiftUI Image
+    ///   - variant: 아바타 유형 (.person, .company, .academy)
+    ///   - size: 아바타 크기, 생략하면 기본값으로 `.small` 적용
+    ///   - onTap: 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용
+    public init(_ image: Image, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
+        self.imageSource = .image(image)
         self.variant = variant
         self.size = size
         self.onTap = onTap
@@ -136,18 +155,8 @@ public struct Avatar: View {
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        WebImage(url: URL(string: imageUrl)) { image in
-            image.resizable()
-                .aspectRatio(contentMode: .fit)
-                .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
-        } placeholder: {
-            Image(variant.placeholderImageName, bundle: .module)
-                .resizable()
-                .background( // WebImage에서 placeholder가 두 장 겹쳐지는 문제가 있어서 흰색 배경을 깔아줌
-                    SwiftUI.Color.semantic(.backgroundNormal)
-                )
-        }
-        .frame(width: size.containerSize.width, height: size.containerSize.height)
+        imageContent
+            .frame(width: size.containerSize.width, height: size.containerSize.height)
         .overlay {
             RoundedRectangle(cornerRadius: resolvedCornerRadius)
                 .strokeBorder(borderColor, lineWidth: borderWidth)
@@ -221,6 +230,27 @@ public struct Avatar: View {
 }
 
 private extension Avatar {
+    @ViewBuilder
+    var imageContent: some View {
+        switch imageSource {
+        case .url(let imageUrl):
+            WebImage(url: URL(string: imageUrl)) { image in
+                image.resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            } placeholder: {
+                Image(variant.placeholderImageName, bundle: .module)
+                    .resizable()
+                    .background(
+                        SwiftUI.Color.semantic(.backgroundNormal)
+                    )
+            }
+        case .image(let image):
+            image.resizable()
+                .aspectRatio(contentMode: .fit)
+        }
+    }
+
     var resolvedCornerRadius: CGFloat {
         customCornerRadius ?? variant.cornerRadius(size: size)
     }

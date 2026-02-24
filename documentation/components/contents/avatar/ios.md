@@ -30,10 +30,25 @@ Avatar("https://example.com/profile.jpg", variant: .person)
 
 <details>
 
+<summary>``init(Image, variant: Variant, size: Size, onTap: (() -> Void)?)``</summary>
+
+
+SwiftUI Image로 아바타를 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `image` | 표시할 SwiftUI Image |
+  | `variant` | 아바타 유형 (.person, .company, .academy) |
+  | `size` | 아바타 크기, 생략하면 기본값으로 `.small` 적용 |
+  | `onTap` | 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
 <summary>``init(String, variant: Variant, size: Size, onTap: (() -> Void)?)``</summary>
 
 
-아바타를 초기화합니다.
+URL 문자열로 아바타를 초기화합니다.
 
 - **Parameters**
   | Parameter | Description |
