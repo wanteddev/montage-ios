@@ -74,7 +74,22 @@ Avatar("https://example.com/profile.jpg", variant: .person)
 </details>
 <details>
 
-<summary>``func pushBadge(Bool) -> Avatar``</summary>
+<summary>``func cornerRadius(CGFloat) -> Avatar``</summary>
+
+
+아바타의 모서리 반경을 커스텀 값으로 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `cornerRadius` | 모서리 반경 값 |
+- **Return Value**
+
+  수정된 아바타 인스턴스
+</details>
+<details>
+
+<summary>``func pushBadge(Bool, size: PushBadge.Size?) -> Avatar``</summary>
 
 
 푸시 알림 표시 뱃지를 아바타에 추가합니다.
@@ -83,6 +98,7 @@ Avatar("https://example.com/profile.jpg", variant: .person)
   | Parameter | Description |
   | --- | --- |
   | `pushBadge` | 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용 |
+  | `size` | 뱃지 크기, 생략하면 아바타 크기에 따라 자동 결정 |
 - **Return Value**
 
   수정된 아바타 인스턴스
@@ -101,6 +117,21 @@ Avatar("https://example.com/profile.jpg", variant: .person)
 아바타의 크기를 정의하는 열거형입니다.
 #### Enumeration Cases
 
+<details>
+
+<summary>``case custom(CGFloat)``</summary>
+
+
+커스텀 크기
+- **Discussion**
+
+  커스텀 크기 사용 시 다음 규칙이 자동 적용됩니다:
+  - pushBadge size: 36pt 이하 `.xsmall`, 37~52pt `.small`, 53pt 이상 `.medium`
+  - cornerRadius (company/academy): 크기의 25% (짝수로 올림 보정)
+
+
+  [cornerRadius(_:)](/documentation/montage/avatar/cornerradius(_:).md)로 cornerRadius를 직접 지정하거나, [pushBadge(_:size:)](/documentation/montage/avatar/pushbadge(_:size:).md)의 `size` 파라미터로 뱃지 크기를 직접 지정할 수 있습니다.
+</details>
 <details>
 
 <summary>``case large``</summary>
