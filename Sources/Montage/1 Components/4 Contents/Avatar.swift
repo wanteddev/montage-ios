@@ -157,24 +157,24 @@ public struct Avatar: View {
     public var body: some View {
         imageContent
             .frame(width: size.containerSize.width, height: size.containerSize.height)
-        .overlay {
-            RoundedRectangle(cornerRadius: resolvedCornerRadius)
-                .strokeBorder(borderColor, lineWidth: borderWidth)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: resolvedCornerRadius))
-        .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
-        .background {
-            if !interactionDisabled {
-                Interaction(
-                    state: isPressed ? .pressed : .normal,
-                    variant: .normal,
-                    color: .labelNormal
-                )
-                .frame(width: size.interactionSize.width, height: size.interactionSize.height)
-                .clipShape(RoundedRectangle(cornerRadius: resolvedInteractionCornerRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: resolvedCornerRadius)
+                    .strokeBorder(borderColor, lineWidth: borderWidth)
             }
-        }
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
+            .clipShape(RoundedRectangle(cornerRadius: resolvedCornerRadius))
+            .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
+            .background {
+                if !interactionDisabled {
+                    Interaction(
+                        state: isPressed ? .pressed : .normal,
+                        variant: .normal,
+                        color: .labelNormal
+                    )
+                    .frame(width: size.interactionSize.width, height: size.interactionSize.height)
+                    .clipShape(RoundedRectangle(cornerRadius: resolvedInteractionCornerRadius))
+                }
+            }
+            .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
     }
     
     private var pushBadge = false
