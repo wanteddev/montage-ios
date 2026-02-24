@@ -57,6 +57,12 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
         if (fs.existsSync(symbolJsonPath)) {
           const symbolJson = readJsonCached(symbolJsonPath);
 
+          // deprecationSummary 처리
+          if (symbolJson.deprecationSummary) {
+            const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
+            symbolDetails += `>  **Deprecated**\n>\n>  ${depText}\n\n`;
+          }
+
           if (symbolJson.primaryContentSections) {
             // 파라미터 정보 추가
             const parameters = symbolJson.primaryContentSections.find(s => s.kind === 'parameters');
@@ -647,6 +653,12 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
 
         if (!desc && Array.isArray(symbolJson.abstract)) {
           desc = symbolJson.abstract.map((a) => a.text || '').join(' ');
+        }
+
+        // deprecationSummary 처리
+        if (symbolJson.deprecationSummary) {
+          const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
+          symbolDetails += `>  **Deprecated**\n>\n>  ${depText}\n\n`;
         }
 
         if (symbolJson.primaryContentSections) {

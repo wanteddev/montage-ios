@@ -66,6 +66,9 @@ ModalNavigation()
 
 
 제목이 별도 줄에 표시되는 확장된 스타일
+>  **Deprecated**
+>
+>  이름이 `display`로 변경되었습니다. 다음 메이저 업데이트 때 제거될 예정입니다.
 
 </details>
 <details>
@@ -91,6 +94,9 @@ ModalNavigation()
 
 
 플로팅 스타일
+>  **Deprecated**
+>
+>  파라메터 제거되었습니다. `.floating`으로 사용하십시오. 다음 메이저 업데이트 때 제거될 예정입니다.
 
 </details>
 
@@ -282,3 +288,6 @@ Conforms To
 `Swift.Sendable`
 
 `SwiftUICore.View`
+
+
+
