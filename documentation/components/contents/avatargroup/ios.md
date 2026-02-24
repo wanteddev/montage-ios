@@ -82,6 +82,21 @@ SwiftUI Image 배열로 그룹 아바타를 초기화합니다.
 
 <details>
 
+<summary>``func contentMode(ContentMode) -> AvatarGroup``</summary>
+
+
+이미지의 콘텐츠 모드를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `contentMode` | 콘텐츠 모드, `.fit` 또는 `.fill` |
+- **Return Value**
+
+  수정된 그룹 아바타 인스턴스
+</details>
+<details>
+
 <summary>``func trailingContent<V>(() -> V) -> AvatarGroup``</summary>
 
 

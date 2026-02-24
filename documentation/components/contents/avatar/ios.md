@@ -89,6 +89,21 @@ URL 문자열로 아바타를 초기화합니다.
 </details>
 <details>
 
+<summary>``func contentMode(ContentMode) -> Avatar``</summary>
+
+
+이미지의 콘텐츠 모드를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `contentMode` | 콘텐츠 모드, `.fit` 또는 `.fill` |
+- **Return Value**
+
+  수정된 아바타 인스턴스
+</details>
+<details>
+
 <summary>``func cornerRadius(CGFloat) -> Avatar``</summary>
 
 

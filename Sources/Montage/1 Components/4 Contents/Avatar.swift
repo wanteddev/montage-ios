@@ -180,6 +180,7 @@ public struct Avatar: View {
     private var pushBadge = false
     private var pushBadgeSizeOverride: PushBadge.Size?
     private var customCornerRadius: CGFloat?
+    private var contentMode: ContentMode = .fit
     private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
@@ -206,6 +207,16 @@ public struct Avatar: View {
     public func cornerRadius(_ cornerRadius: CGFloat) -> Self {
         var zelf = self
         zelf.customCornerRadius = cornerRadius
+        return zelf
+    }
+
+    /// 이미지의 콘텐츠 모드를 설정합니다.
+    ///
+    /// - Parameter contentMode: 콘텐츠 모드, `.fit` 또는 `.fill`
+    /// - Returns: 수정된 아바타 인스턴스
+    public func contentMode(_ contentMode: ContentMode) -> Self {
+        var zelf = self
+        zelf.contentMode = contentMode
         return zelf
     }
 
@@ -236,7 +247,7 @@ private extension Avatar {
         case .url(let imageUrl):
             WebImage(url: URL(string: imageUrl)) { image in
                 image.resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(contentMode: contentMode)
                     .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
             } placeholder: {
                 Image(variant.placeholderImageName, bundle: .module)
@@ -247,7 +258,7 @@ private extension Avatar {
             }
         case .image(let image):
             image.resizable()
-                .aspectRatio(contentMode: .fit)
+                .aspectRatio(contentMode: contentMode)
         }
     }
 

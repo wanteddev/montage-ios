@@ -104,6 +104,7 @@ public struct AvatarGroup: View {
                 ForEach(imageSources.indices, id: \.self) { index in
                     ZStack {
                         avatarView(for: imageSources[index], index: index)
+                            .contentMode(contentMode)
                             .interactionDisabled()
 
                         if index < imageSources.count - 1 {
@@ -140,7 +141,18 @@ public struct AvatarGroup: View {
 
     // MARK: - Modifiers
 
+    private var contentMode: ContentMode = .fit
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
+
+    /// 이미지의 콘텐츠 모드를 설정합니다.
+    ///
+    /// - Parameter contentMode: 콘텐츠 모드, `.fit` 또는 `.fill`
+    /// - Returns: 수정된 그룹 아바타 인스턴스
+    public func contentMode(_ contentMode: ContentMode) -> Self {
+        var zelf = self
+        zelf.contentMode = contentMode
+        return zelf
+    }
 
     /// 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
     ///
