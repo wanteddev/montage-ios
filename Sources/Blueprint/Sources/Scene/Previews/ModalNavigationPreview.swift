@@ -13,8 +13,6 @@ struct ModalNavigationPreview: View {
     @State private var contentOffset: CGFloat = 0
     @State private var scrollViewTopPadding: CGFloat = 0
     @State private var variantIndex = 0
-    @State private var alternative = false
-    @State private var background = false
     @State private var leadingButton = true
     @State private var leadingButtonTypeIndex = 0
     @State private var trailingButtonCount = 1
@@ -112,16 +110,6 @@ struct ModalNavigationPreview: View {
                         SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
                             .size(.small)
                     }
-                    if case .floating = variants[variantIndex] {
-                        HStack {
-                            Text("alternative")
-                            Switch(checked: alternative) { alternative = $0 }
-                        }
-                        HStack {
-                            Text("background")
-                            Switch(checked: background) { background = $0 }
-                        }
-                    }
                     HStack {
                         Text("leadingButton")
                         SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
@@ -142,7 +130,7 @@ struct ModalNavigationPreview: View {
     }
     
     private var variants: [ModalNavigation.Variant] {
-        [.normal, .display, .emphasized, .floating(alternative: alternative, background: background)]
+        [.normal, .display, .emphasized, .floating]
     }
     
     private var leadingButtons: [TopNavigation.Resource.LeadingButtonInfo] {
