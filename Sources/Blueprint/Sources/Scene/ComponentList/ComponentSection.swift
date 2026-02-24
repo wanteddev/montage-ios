@@ -25,7 +25,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
     var id: String { rawValue }
     case actionArea, chip, button, iconButton, textButton
     case control, filterButton, segmentedControl, select, slider, textArea, textField, dateTimePicker, framedStyle
-    case accordion, avatar, card, contentBadge, listCard, listCell, playBadge, sectionHeader, thumbnail
+    case accordion, avatar, avatarGroup, card, contentBadge, listCard, listCell, playBadge, sectionHeader, thumbnail
     case loading, pullToRefresh, skeleton
     case category, pagination, progressIndicator, progressTracker, tab, topNavigation
     case fallbackView, pushBadge, snackbar, toast
@@ -42,7 +42,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
             return .actions
         case .control, .filterButton, .segmentedControl, .select, .slider, .textArea, .textField, .dateTimePicker, .framedStyle:
             return .selectionAndInput
-        case .accordion, .avatar, .card, .contentBadge, .listCard, .listCell, .playBadge, .sectionHeader, .thumbnail:
+        case .accordion, .avatar, .avatarGroup, .card, .contentBadge, .listCard, .listCell, .playBadge, .sectionHeader, .thumbnail:
             return .contents
         case .loading, .pullToRefresh, .skeleton:
             return .loading
