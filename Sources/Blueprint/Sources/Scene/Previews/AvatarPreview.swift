@@ -95,15 +95,17 @@ struct AvatarPreview: View {
                             SwiftUI.Slider(value: $customSize, in: 16...120, step: 1)
                         }
                     }
-                    HStack {
-                        Text("cornerRadius")
-                        Switch(checked: useCustomCornerRadius) { useCustomCornerRadius = $0 }
-                    }
-                    if useCustomCornerRadius {
+                    if variants[variantIndex] != .person {
                         HStack {
-                            Text("\(Int(customCornerRadius))pt")
-                                .monospacedDigit()
-                            SwiftUI.Slider(value: $customCornerRadius, in: 0...60, step: 1)
+                            Text("cornerRadius")
+                            Switch(checked: useCustomCornerRadius) { useCustomCornerRadius = $0 }
+                        }
+                        if useCustomCornerRadius {
+                            HStack {
+                                Text("\(Int(customCornerRadius))pt")
+                                    .monospacedDigit()
+                                SwiftUI.Slider(value: $customCornerRadius, in: 0...60, step: 1)
+                            }
                         }
                     }
                     HStack {

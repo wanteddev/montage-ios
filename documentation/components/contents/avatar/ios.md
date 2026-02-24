@@ -116,6 +116,9 @@ URL 문자열로 아바타를 초기화합니다.
 - **Return Value**
 
   수정된 아바타 인스턴스
+- **Discussion**
+
+  `.person` variant는 항상 원형이므로 이 modifier가 적용되지 않습니다.
 </details>
 <details>
 

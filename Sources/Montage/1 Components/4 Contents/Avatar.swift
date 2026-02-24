@@ -202,6 +202,8 @@ public struct Avatar: View {
 
     /// 아바타의 모서리 반경을 커스텀 값으로 설정합니다.
     ///
+    /// `.person` variant는 항상 원형이므로 이 modifier가 적용되지 않습니다.
+    ///
     /// - Parameter cornerRadius: 모서리 반경 값
     /// - Returns: 수정된 아바타 인스턴스
     public func cornerRadius(_ cornerRadius: CGFloat) -> Self {
@@ -263,11 +265,14 @@ private extension Avatar {
     }
 
     var resolvedCornerRadius: CGFloat {
-        customCornerRadius ?? variant.cornerRadius(size: size)
+        if variant != .person, let customCornerRadius {
+            return customCornerRadius
+        }
+        return variant.cornerRadius(size: size)
     }
 
     var resolvedInteractionCornerRadius: CGFloat {
-        if let customCornerRadius {
+        if variant != .person, let customCornerRadius {
             return customCornerRadius + 8
         }
         return variant.interactionCornerRadius(size: size)
