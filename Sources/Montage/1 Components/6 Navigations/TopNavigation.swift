@@ -338,7 +338,6 @@ public struct TopNavigation: View {
                         HStack(spacing: 6) {
                             titleContent
                                 .frame(height: 32, alignment: variant.textAlignment)
-                                .padding(.horizontal, 4)
                                 .padding(.vertical, 16)
                             Spacer(minLength: actionItemsMaxWidth)
                         }
@@ -367,6 +366,7 @@ public struct TopNavigation: View {
         private var titleContent: some View {
             if let titleText {
                 TitleView(variant: variant, title: titleText)
+                    .padding(.horizontal, 4)
             } else {
                 titleView()
             }
