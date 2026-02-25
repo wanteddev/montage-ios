@@ -10,19 +10,19 @@ import SwiftUI
 
 struct AvatarPreview: View {
     @State private var showTransparentChecker: Bool = false
-    @State var variantIndex: Int = 0
-    @State var sizeIndex: Int = 0
-    @State var useCustomSize: Bool = false
-    @State var customSize: CGFloat = 40
-    @State var pushBadge = false
-    @State var pushBadgeSizeIndex: Int = 0
-    @State var useCustomCornerRadius: Bool = false
-    @State var customCornerRadius: CGFloat = 10
-    @State var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
-    @State var borderWidth: CGFloat = 1
-    @State var contentModeIndex: Int = 0
-    @State var useLocalImage: Bool = false
-    @State var invalidUrl: Bool = false
+    @State private var variantIndex: Int = 0
+    @State private var sizeIndex: Int = 0
+    @State private var useCustomSize: Bool = false
+    @State private var customSize: CGFloat = 40
+    @State private var pushBadge = false
+    @State private var pushBadgeSizeIndex: Int = 0
+    @State private var useCustomCornerRadius: Bool = false
+    @State private var customCornerRadius: CGFloat = 10
+    @State private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
+    @State private var borderWidth: CGFloat = 1
+    @State private var contentModeIndex: Int = 0
+    @State private var useLocalImage: Bool = false
+    @State private var invalidUrl: Bool = false
 
     let contentModes: [ContentMode] = [.fit, .fill]
     let pushBadgeSizes: [PushBadge.Size?] = [nil, .xsmall, .small, .medium]

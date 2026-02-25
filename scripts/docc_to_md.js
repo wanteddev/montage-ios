@@ -27,6 +27,13 @@ function makeLink(title, url, deprecated = false) {
   return link;
 }
 
+// deprecationSummary 블록 렌더링 함수
+function renderDeprecationBlock(symbolJson) {
+  if (!symbolJson.deprecationSummary) return '';
+  const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
+  return `>  **Deprecated**\n>\n>  ${depText}\n\n`;
+}
+
 // 토픽 섹션 변환
 function renderTopicSection(section, references, depth = 0, mdPath = '') {
   if (section.title === 'Classes' || section.title === 'Default Implementations') {
@@ -58,10 +65,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
           const symbolJson = readJsonCached(symbolJsonPath);
 
           // deprecationSummary 처리
-          if (symbolJson.deprecationSummary) {
-            const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
-            symbolDetails += `>  **Deprecated**\n>\n>  ${depText}\n\n`;
-          }
+          symbolDetails += renderDeprecationBlock(symbolJson);
 
           if (symbolJson.primaryContentSections) {
             // 파라미터 정보 추가
@@ -342,11 +346,7 @@ function jsonToMarkdown(json, isUtil = false, mdPath = '', associatedExtensions 
   }
 
   if (json.deprecationSummary) {
-    md += `> **Deprecation**\n>\n>`;
-    md += json.deprecationSummary
-      .map((s) => s.inlineContent.map((v) => v.text).join('\n> '))
-      .join('\n> ');
-    md += '\n\n';
+    md += renderDeprecationBlock(json);
   }
 
   // Overview/예시/기타
@@ -656,10 +656,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         }
 
         // deprecationSummary 처리
-        if (symbolJson.deprecationSummary) {
-          const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
-          symbolDetails += `>  **Deprecated**\n>\n>  ${depText}\n\n`;
-        }
+        symbolDetails += renderDeprecationBlock(symbolJson);
 
         if (symbolJson.primaryContentSections) {
           const parameters = symbolJson.primaryContentSections.find((section) => section.kind === 'parameters');

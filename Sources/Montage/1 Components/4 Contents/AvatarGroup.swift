@@ -100,40 +100,43 @@ public struct AvatarGroup: View {
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 10) {
-            ZStack {
-                ForEach(imageSources.indices, id: \.self) { index in
-                    ZStack {
-                        avatarView(for: imageSources[index], index: index)
-                            .contentMode(contentMode)
-                            .interactionDisabled()
+            if !imageSources.isEmpty {
+                let count = imageSources.count
+                ZStack {
+                    ForEach(imageSources.indices, id: \.self) { index in
+                        ZStack {
+                            avatarView(for: imageSources[index], index: index)
+                                .contentMode(contentMode)
+                                .interactionDisabled()
 
-                        if index < imageSources.count - 1 {
-                            RoundedRectangle(cornerRadius: variant.cornerRadius(size: avatartSize))
-                                .scaleEffect(1.1)
-                                .offset(x: avatartSize.containerSize.width - size.space)
-                                .blendMode(.destinationOut)
+                            if index < count - 1 {
+                                RoundedRectangle(cornerRadius: variant.cornerRadius(size: avatartSize))
+                                    .scaleEffect(1.1)
+                                    .offset(x: avatartSize.containerSize.width - size.space)
+                                    .blendMode(.destinationOut)
+                            }
                         }
+                        .compositingGroup()
+                        .frame(
+                            width: avatartSize.containerSize.width,
+                            height: avatartSize.containerSize.height
+                        )
+                        .offset(
+                            x: avatartSize.containerSize
+                                .width * CGFloat(index) - (size.space * CGFloat(index))
+                        )
                     }
-                    .compositingGroup()
-                    .frame(
-                        width: avatartSize.containerSize.width,
-                        height: avatartSize.containerSize.height
-                    )
-                    .offset(
-                        x: avatartSize.containerSize
-                            .width * CGFloat(index) - (size.space * CGFloat(index))
-                    )
                 }
+                .offset(
+                    x: -(avatartSize.containerSize.width - size.space) * CGFloat(count - 1)
+                        / 2
+                )
+                .frame(
+                    width: avatartSize.containerSize
+                        .width * CGFloat(count) - (size.space * CGFloat(count - 1)),
+                    height: avatartSize.containerSize.height
+                )
             }
-            .offset(
-                x: -(avatartSize.containerSize.width - size.space) * CGFloat(max(0, imageSources.count - 1))
-                    / 2
-            )
-            .frame(
-                width: avatartSize.containerSize
-                    .width * CGFloat(imageSources.count) - (size.space * CGFloat(max(0, imageSources.count - 1))),
-                height: avatartSize.containerSize.height
-            )
 
             trailingContent()
         }

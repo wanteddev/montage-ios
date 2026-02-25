@@ -250,7 +250,7 @@ private extension Avatar {
             WebImage(url: URL(string: imageUrl)) { image in
                 image.resizable()
                     .aspectRatio(contentMode: contentMode)
-                    .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
+                    .background(SwiftUI.Color.semantic(.staticWhite))
             } placeholder: {
                 Image(variant.placeholderImageName, bundle: .module)
                     .resizable()
