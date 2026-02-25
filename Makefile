@@ -42,8 +42,13 @@ docc:
 
 # DocC 문서 서버 애플리케이션 실행
 server:
-	@echo "http://localhost:8000/documentation/montage 에서 문서를 확인하세요."
-	python3 -m http.server --directory .build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive
+	@ARCHIVE_PATH=".build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive"; \
+	if [ ! -d "$$ARCHIVE_PATH" ]; then \
+		echo "❌ $$ARCHIVE_PATH 가 존재하지 않습니다. 먼저 'make docc'를 실행하세요."; \
+		exit 1; \
+	fi; \
+	echo "http://localhost:8000/documentation/montage 에서 문서를 확인하세요."; \
+	python3 -m http.server --directory "$$ARCHIVE_PATH"
 
 
 # DocC 문서를 Markdown으로 변환

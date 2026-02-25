@@ -17,15 +17,15 @@ struct AvatarGroupPreview: View {
         "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fschool%2FPNG_195.png&w=120&q=90",
     ]
 
-    @State var variantIndex: Int = 0
-    @State var sizeIndex: Int = 0
-    @State var contentModeIndex: Int = 0
-    @State var alertLabel = ""
-    @State var alertPresented: Bool = false
-    @State var itemCount: CGFloat = 5
-    @State var trailingContent = false
-    @State var useLocalImage: Bool = false
-    @State var invalidUrl: Bool = false
+    @State private var variantIndex: Int = 0
+    @State private var sizeIndex: Int = 0
+    @State private var contentModeIndex: Int = 0
+    @State private var alertLabel = ""
+    @State private var alertPresented: Bool = false
+    @State private var itemCount: CGFloat = 5
+    @State private var trailingContent = false
+    @State private var useLocalImage: Bool = false
+    @State private var invalidUrl: Bool = false
 
     let contentModes: [ContentMode] = [.fit, .fill]
 
@@ -127,7 +127,8 @@ struct AvatarGroupPreview: View {
     }
 
     private var imageUrls: [String] {
-        var urls = Array(allUrls.prefix(Int(itemCount)))
+        let count = min(allUrls.count, Int(itemCount))
+        var urls = Array(allUrls.prefix(count))
         if invalidUrl {
             urls[Int.random(in: 0..<urls.count)] = "https://invalid-url"
         }
