@@ -126,12 +126,12 @@ public struct AvatarGroup: View {
                 }
             }
             .offset(
-                x: -(avatartSize.containerSize.width - size.space) * CGFloat(imageSources.count - 1)
+                x: -(avatartSize.containerSize.width - size.space) * CGFloat(max(0, imageSources.count - 1))
                     / 2
             )
             .frame(
                 width: avatartSize.containerSize
-                    .width * CGFloat(imageSources.count) - (size.space * CGFloat(imageSources.count - 1)),
+                    .width * CGFloat(imageSources.count) - (size.space * CGFloat(max(0, imageSources.count - 1))),
                 height: avatartSize.containerSize.height
             )
 
