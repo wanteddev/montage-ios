@@ -223,7 +223,7 @@ struct PopupPreview: View {
         .normal,
         .display,
         .emphasized,
-        .floating(alternative: true, background: true),
+        .floating,
     ]
 
     private var itemCounts = [1, 5, 20]

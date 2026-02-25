@@ -251,7 +251,7 @@ struct BottomSheetPreview: View {
         .normal,
         .display,
         .emphasized,
-        .floating(alternative: false, background: false),
+        .floating,
     ]
 
     private var bottomSheetResizes: [BottomSheet.Resize] {
