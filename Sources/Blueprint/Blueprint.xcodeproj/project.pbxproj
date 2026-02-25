@@ -45,6 +45,7 @@
 		4DA44F1B2D12CC91009FE3DB /* PullToRefreshPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA44F1A2D12CC91009FE3DB /* PullToRefreshPreview.swift */; };
 		4DA44F1F2D19584D009FE3DB /* ProgressTrackerPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA44F1E2D195832009FE3DB /* ProgressTrackerPreview.swift */; };
 		4DB87ADC2CEC8F6B00DEC2A4 /* ProgressIndicatorPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB87ADB2CEC8F6800DEC2A4 /* ProgressIndicatorPreview.swift */; };
+		4DBDBC472F4DB52100E55529 /* AvatarGroupPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DBDBC462F4DB52100E55529 /* AvatarGroupPreview.swift */; };
 		4DC668AA2D673E8F00461189 /* BottomSheetPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC668A92D673E8F00461189 /* BottomSheetPreview.swift */; };
 		4DC668AE2D684BB100461189 /* ModalNavigationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC668AD2D684BA500461189 /* ModalNavigationPreview.swift */; };
 		4DCAEA792E4C81A8007C24BF /* FallbackViewPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */; };
@@ -108,6 +109,7 @@
 		4DA44F1A2D12CC91009FE3DB /* PullToRefreshPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefreshPreview.swift; sourceTree = "<group>"; };
 		4DA44F1E2D195832009FE3DB /* ProgressTrackerPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTrackerPreview.swift; sourceTree = "<group>"; };
 		4DB87ADB2CEC8F6800DEC2A4 /* ProgressIndicatorPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorPreview.swift; sourceTree = "<group>"; };
+		4DBDBC462F4DB52100E55529 /* AvatarGroupPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarGroupPreview.swift; sourceTree = "<group>"; };
 		4DC668A92D673E8F00461189 /* BottomSheetPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPreview.swift; sourceTree = "<group>"; };
 		4DC668AD2D684BA500461189 /* ModalNavigationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigationPreview.swift; sourceTree = "<group>"; };
 		4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallbackViewPreview.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			children = (
 				4D5D8C9B2D27E8CE00108C92 /* AccordionPreview.swift */,
 				4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */,
+				4DBDBC462F4DB52100E55529 /* AvatarGroupPreview.swift */,
 				4DD3E95C2CF45F5500F97C50 /* AvatarPreview.swift */,
 				4DC668A92D673E8F00461189 /* BottomSheetPreview.swift */,
 				4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */,
@@ -216,9 +219,7 @@
 				4D96F7C92E9FA8C300DFECE8 /* ColorPreview.swift */,
 				4D45DB182D917B91002B1686 /* ContentBadgePreview.swift */,
 				4D0952662D7ABCCB00BB6044 /* ControlPreview.swift */,
-				4D5597552D1E802C00CFBCA5 /* PageCounterPreview.swift */,
 				4D55974D2D1E402C00CFBCA5 /* DateTimePickerPreview.swift */,
-				4D5597512D1E7EC000CFBCA5 /* PaginationDotsPreview.swift */,
 				4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */,
 				4D10315F2EC457CD00C865E9 /* FilterButtonPreview.swift */,
 				4D4B71FC2DA649080069C4F7 /* FlowLayoutPreview.swift */,
@@ -230,6 +231,8 @@
 				4DCFAAF92CE6016900F7A4CD /* ListCellPreview.swift */,
 				4DCFAAFB2CE603A100F7A4CD /* LoadingPreview.swift */,
 				4DC668AD2D684BA500461189 /* ModalNavigationPreview.swift */,
+				4D5597552D1E802C00CFBCA5 /* PageCounterPreview.swift */,
+				4D5597512D1E7EC000CFBCA5 /* PaginationDotsPreview.swift */,
 				4D5597532D1E7F9400CFBCA5 /* PaginationPreview.swift */,
 				4DD95C842DAFB50C00F2EF87 /* PlayBadgePreview.swift */,
 				4D8100592EA875FF004CAD92 /* PopoverPreview.swift */,
@@ -396,6 +399,7 @@
 				4D9379FE2DB7A7EC005C14DD /* ListCardPreview.swift in Sources */,
 				4D8100522EA7594D004CAD92 /* BlueprintApp.swift in Sources */,
 				4DF7C54A2CE340F0002B241B /* ButtonPreview.swift in Sources */,
+				4DBDBC472F4DB52100E55529 /* AvatarGroupPreview.swift in Sources */,
 				4DD3E95D2CF45F6200F97C50 /* AvatarPreview.swift in Sources */,
 				4D5D8C9C2D27E8E100108C92 /* AccordionPreview.swift in Sources */,
 				4D4B71FD2DA649080069C4F7 /* FlowLayoutPreview.swift in Sources */,

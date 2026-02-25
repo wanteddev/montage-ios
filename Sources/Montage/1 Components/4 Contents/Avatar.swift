@@ -58,6 +58,7 @@ public struct Avatar: View {
                 case .medium: 10
                 case .large: 12
                 case .xlarge: 14
+                case .custom(let value): ceil(value * 0.25 / 2) * 2
                 }
             }
         }
@@ -82,7 +83,16 @@ public struct Avatar: View {
         case large
         /// 가장 큰 크기
         case xlarge
-        
+        /// 커스텀 크기
+        ///
+        /// 커스텀 크기 사용 시 다음 규칙이 자동 적용됩니다:
+        /// - pushBadge size: 36pt 이하 `.xsmall`, 37~52pt `.small`, 53pt 이상 `.medium`
+        /// - cornerRadius (company/academy): 크기의 25% (짝수로 올림 보정)
+        ///
+        /// ``Avatar/cornerRadius(_:)``로 cornerRadius를 직접 지정하거나,
+        /// ``Avatar/pushBadge(_:size:)``의 `size` 파라미터로 뱃지 크기를 직접 지정할 수 있습니다.
+        case custom(CGFloat)
+
         internal var containerSize: CGSize {
             switch self {
             case .xsmall: .init(width: 24, height: 24)
@@ -90,30 +100,28 @@ public struct Avatar: View {
             case .medium: .init(width: 40, height: 40)
             case .large: .init(width: 48, height: 48)
             case .xlarge: .init(width: 56, height: 56)
+            case .custom(let value): .init(width: value, height: value)
             }
         }
-        
+
         fileprivate var interactionSize: CGSize {
             .init(width: containerSize.width + 16, height: containerSize.height + 16)
         }
-        
-        fileprivate var badgeSize: CGSize {
-            switch self {
-            case .xsmall, .small: .init(width: 20, height: 20)
-            case .medium: .init(width: 22, height: 22)
-            case .large, .xlarge: .init(width: 24, height: 24)
-            }
-        }
     }
     
+    enum ImageSource {
+        case url(String)
+        case image(Image)
+    }
+
     // MARK: - Initializer
-    
-    private let imageUrl: String
+
+    private let imageSource: ImageSource
     private let variant: Variant
     private let size: Size
     private let onTap: (() -> Void)?
-    
-    /// 아바타를 초기화합니다.
+
+    /// URL 문자열로 아바타를 초기화합니다.
     ///
     /// - Parameters:
     ///   - imageUrl: 표시할 이미지의 URL 문자열
@@ -121,7 +129,21 @@ public struct Avatar: View {
     ///   - size: 아바타 크기, 생략하면 기본값으로 `.small` 적용
     ///   - onTap: 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용
     public init(_ imageUrl: String, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
-        self.imageUrl = imageUrl
+        self.imageSource = .url(imageUrl)
+        self.variant = variant
+        self.size = size
+        self.onTap = onTap
+    }
+
+    /// SwiftUI Image로 아바타를 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - image: 표시할 SwiftUI Image
+    ///   - variant: 아바타 유형 (.person, .company, .academy)
+    ///   - size: 아바타 크기, 생략하면 기본값으로 `.small` 적용
+    ///   - onTap: 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용
+    public init(_ image: Image, variant: Variant, size: Size = .small, onTap: (() -> Void)? = nil) {
+        self.imageSource = .image(image)
         self.variant = variant
         self.size = size
         self.onTap = onTap
@@ -133,39 +155,32 @@ public struct Avatar: View {
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        WebImage(url: URL(string: imageUrl)) { image in
-            image.resizable()
-                .aspectRatio(contentMode: .fit)
-                .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
-        } placeholder: {
-            Image(variant.placeholderImageName, bundle: .module)
-                .resizable()
-                .background( // WebImage에서 placeholder가 두 장 겹쳐지는 문제가 있어서 흰색 배경을 깔아줌
-                    SwiftUI.Color.semantic(.backgroundNormal)
-                )
-        }
-        .frame(width: size.containerSize.width, height: size.containerSize.height)
-        .overlay {
-            RoundedRectangle(cornerRadius: variant.cornerRadius(size: size))
-                .strokeBorder(borderColor, lineWidth: borderWidth)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: variant.cornerRadius(size: size)))
-        .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
-        .background {
-            if !interactionDisabled {
-                Interaction(
-                    state: isPressed ? .pressed : .normal,
-                    variant: .normal,
-                    color: .labelNormal
-                )
-                .frame(width: size.interactionSize.width, height: size.interactionSize.height)
-                .clipShape(RoundedRectangle(cornerRadius: variant.interactionCornerRadius(size: size)))
+        imageContent
+            .frame(width: size.containerSize.width, height: size.containerSize.height)
+            .overlay {
+                RoundedRectangle(cornerRadius: resolvedCornerRadius)
+                    .strokeBorder(borderColor, lineWidth: borderWidth)
             }
-        }
-        .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
+            .clipShape(RoundedRectangle(cornerRadius: resolvedCornerRadius))
+            .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
+            .background {
+                if !interactionDisabled {
+                    Interaction(
+                        state: isPressed ? .pressed : .normal,
+                        variant: .normal,
+                        color: .labelNormal
+                    )
+                    .frame(width: size.interactionSize.width, height: size.interactionSize.height)
+                    .clipShape(RoundedRectangle(cornerRadius: resolvedInteractionCornerRadius))
+                }
+            }
+            .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
     }
     
     private var pushBadge = false
+    private var pushBadgeSizeOverride: PushBadge.Size?
+    private var customCornerRadius: CGFloat?
+    private var contentMode: ContentMode = .fit
     private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
@@ -174,14 +189,39 @@ public struct Avatar: View {
     ///
     /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
     ///
-    /// - Parameter pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
+    /// - Parameters:
+    ///   - pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - size: 뱃지 크기, 생략하면 아바타 크기에 따라 자동 결정
     /// - Returns: 수정된 아바타 인스턴스
-    public func pushBadge(_ pushBadge: Bool = true) -> Self {
+    public func pushBadge(_ pushBadge: Bool = true, size: PushBadge.Size? = nil) -> Self {
         var zelf = self
         zelf.pushBadge = pushBadge
+        zelf.pushBadgeSizeOverride = size
         return zelf
     }
-    
+
+    /// 아바타의 모서리 반경을 커스텀 값으로 설정합니다.
+    ///
+    /// `.person` variant는 항상 원형이므로 이 modifier가 적용되지 않습니다.
+    ///
+    /// - Parameter cornerRadius: 모서리 반경 값
+    /// - Returns: 수정된 아바타 인스턴스
+    public func cornerRadius(_ cornerRadius: CGFloat) -> Self {
+        var zelf = self
+        zelf.customCornerRadius = cornerRadius
+        return zelf
+    }
+
+    /// 이미지의 콘텐츠 모드를 설정합니다.
+    ///
+    /// - Parameter contentMode: 콘텐츠 모드, `.fit` 또는 `.fill`
+    /// - Returns: 수정된 아바타 인스턴스
+    public func contentMode(_ contentMode: ContentMode) -> Self {
+        var zelf = self
+        zelf.contentMode = contentMode
+        return zelf
+    }
+
     /// 아바타에 테두리를 추가합니다.
     ///
     /// - Parameters:
@@ -203,11 +243,57 @@ public struct Avatar: View {
 }
 
 private extension Avatar {
+    @ViewBuilder
+    var imageContent: some View {
+        switch imageSource {
+        case .url(let imageUrl):
+            WebImage(url: URL(string: imageUrl)) { image in
+                image.resizable()
+                    .aspectRatio(contentMode: contentMode)
+                    .backgroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            } placeholder: {
+                Image(variant.placeholderImageName, bundle: .module)
+                    .resizable()
+                    .background(
+                        SwiftUI.Color.semantic(.backgroundNormal)
+                    )
+            }
+        case .image(let image):
+            image.resizable()
+                .aspectRatio(contentMode: contentMode)
+        }
+    }
+
+    var resolvedCornerRadius: CGFloat {
+        if variant != .person, let customCornerRadius {
+            return customCornerRadius
+        }
+        return variant.cornerRadius(size: size)
+    }
+
+    var resolvedInteractionCornerRadius: CGFloat {
+        if variant != .person, let customCornerRadius {
+            return customCornerRadius + 8
+        }
+        return variant.interactionCornerRadius(size: size)
+    }
+
     var pushBadgeSize: PushBadge.Size {
+        if let pushBadgeSizeOverride {
+            return pushBadgeSizeOverride
+        }
         switch size {
         case .xsmall, .small: return .xsmall
         case .medium, .large: return .small
         case .xlarge: return .medium
+        case .custom(let value):
+            if value <= 36 {
+                return .xsmall
+            } else if value <= 52 {
+                return .small
+            } else {
+                return .medium
+            }
         }
     }
 }

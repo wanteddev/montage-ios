@@ -52,12 +52,12 @@ public struct AvatarGroup: View {
 
     // MARK: - Initializer
 
-    private let imageUrls: [String]
+    private let imageSources: [Avatar.ImageSource]
     private let variant: Avatar.Variant
     private let size: Size
     private let onTap: ((_ index: Int) -> Void)?
 
-    /// 그룹 아바타를 초기화합니다.
+    /// URL 문자열 배열로 그룹 아바타를 초기화합니다.
     ///
     /// - Parameters:
     ///   - imageUrls: 표시할 이미지의 URL 문자열 배열 (최대 5개)
@@ -70,7 +70,26 @@ public struct AvatarGroup: View {
         size: Size,
         onTap: ((_ index: Int) -> Void)? = nil
     ) {
-        self.imageUrls = Array(imageUrls.prefix(5))
+        self.imageSources = Array(imageUrls.prefix(5)).map { .url($0) }
+        self.variant = variant
+        self.size = size
+        self.onTap = onTap
+    }
+
+    /// SwiftUI Image 배열로 그룹 아바타를 초기화합니다.
+    ///
+    /// - Parameters:
+    ///   - images: 표시할 SwiftUI Image 배열 (최대 5개)
+    ///   - variant: 아바타 유형
+    ///   - size: 그룹 아바타 크기
+    ///   - onTap: 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용
+    public init(
+        _ images: [Image],
+        variant: Avatar.Variant,
+        size: Size,
+        onTap: ((_ index: Int) -> Void)? = nil
+    ) {
+        self.imageSources = Array(images.prefix(5)).map { .image($0) }
         self.variant = variant
         self.size = size
         self.onTap = onTap
@@ -82,14 +101,13 @@ public struct AvatarGroup: View {
     public var body: some View {
         HStack(spacing: 10) {
             ZStack {
-                ForEach(imageUrls.indices, id: \.self) { index in
+                ForEach(imageSources.indices, id: \.self) { index in
                     ZStack {
-                        Avatar(imageUrls[index], variant: variant, size: avatartSize) {
-                            onTap?(index)
-                        }
-                        .interactionDisabled()
+                        avatarView(for: imageSources[index], index: index)
+                            .contentMode(contentMode)
+                            .interactionDisabled()
 
-                        if index < imageUrls.count - 1 {
+                        if index < imageSources.count - 1 {
                             RoundedRectangle(cornerRadius: variant.cornerRadius(size: avatartSize))
                                 .scaleEffect(1.1)
                                 .offset(x: avatartSize.containerSize.width - size.space)
@@ -108,12 +126,12 @@ public struct AvatarGroup: View {
                 }
             }
             .offset(
-                x: -(avatartSize.containerSize.width - size.space) * CGFloat(imageUrls.count - 1)
+                x: -(avatartSize.containerSize.width - size.space) * CGFloat(imageSources.count - 1)
                     / 2
             )
             .frame(
                 width: avatartSize.containerSize
-                    .width * CGFloat(imageUrls.count) - (size.space * CGFloat(imageUrls.count - 1)),
+                    .width * CGFloat(imageSources.count) - (size.space * CGFloat(imageSources.count - 1)),
                 height: avatartSize.containerSize.height
             )
 
@@ -123,7 +141,18 @@ public struct AvatarGroup: View {
 
     // MARK: - Modifiers
 
+    private var contentMode: ContentMode = .fit
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
+
+    /// 이미지의 콘텐츠 모드를 설정합니다.
+    ///
+    /// - Parameter contentMode: 콘텐츠 모드, `.fit` 또는 `.fill`
+    /// - Returns: 수정된 그룹 아바타 인스턴스
+    public func contentMode(_ contentMode: ContentMode) -> Self {
+        var zelf = self
+        zelf.contentMode = contentMode
+        return zelf
+    }
 
     /// 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
     ///
@@ -144,5 +173,14 @@ extension AvatarGroup {
     /// 그룹 아바타 크기에 맞는 개별 아바타 크기를 반환합니다.
     fileprivate var avatartSize: Avatar.Size {
         size == .xsmall ? .xsmall : .small
+    }
+
+    fileprivate func avatarView(for source: Avatar.ImageSource, index: Int) -> Avatar {
+        switch source {
+        case .url(let imageUrl):
+            Avatar(imageUrl, variant: variant, size: avatartSize) { onTap?(index) }
+        case .image(let image):
+            Avatar(image, variant: variant, size: avatartSize) { onTap?(index) }
+        }
     }
 }

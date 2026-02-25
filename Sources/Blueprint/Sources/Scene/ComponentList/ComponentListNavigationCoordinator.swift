@@ -36,6 +36,7 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .loading: LoadingPreview()
         case .progressIndicator: ProgressIndicatorPreview()
         case .avatar: AvatarPreview()
+        case .avatarGroup: AvatarGroupPreview()
         case .skeleton: SkeletonPreview()
         case .fallbackView: FallbackViewPreview()
         case .toast: ToastPreview()
