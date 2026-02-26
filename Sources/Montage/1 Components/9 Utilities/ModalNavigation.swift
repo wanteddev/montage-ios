@@ -86,52 +86,44 @@ public struct ModalNavigation: View {
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        ZStack(alignment: .bottom) {
-            VStack(spacing: 0) {
-                if needHandleArea {
-                    ZStack(alignment: .bottom) {
-                        SwiftUI.Color.clear
-                            .frame(height: 12)
-                        RoundedRectangle(cornerRadius: 1000)
-                            .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
-                            .frame(width: 40, height: 5)
-                    }
+        VStack(spacing: 0) {
+            if needHandleArea {
+                ZStack(alignment: .bottom) {
+                    SwiftUI.Color.clear
+                        .frame(height: 12)
+                    RoundedRectangle(cornerRadius: 1000)
+                        .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                        .frame(width: 40, height: 5)
                 }
-                
-                Contents(
-                    variant: variant,
-                    titleText: titleText,
-                    titleView: titleView,
-                    leadingContent: leadingContent,
-                    trailingContents: trailingContents
-                )
-                .padding(.vertical, 20)
-                .padding(.horizontal, 16)
             }
-            .background {
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .opacity(backgroundOpacity)
-                    backgroundColor
-                        .opacity(backgroundOpacity * 0.70)
+
+            Contents(
+                variant: variant,
+                titleText: titleText,
+                titleView: titleView,
+                leadingContent: leadingContent,
+                trailingContents: trailingContents
+            )
+            .padding(.top, variant.contentTopPadding)
+            .padding(.bottom, variant.contentBottomPadding)
+        }
+        .background {
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial)
+                    .opacity(backgroundOpacity)
+                backgroundColor
+                    .opacity(backgroundOpacity * 0.70)
+            }
+            .if(variant.isFloating) {
+                $0.mask {
+                    LinearGradient(
+                        colors: gradientMaskColors,
+                        startPoint: .init(x: 0, y: 1),
+                        endPoint: .init(x: 0, y: 0)
+                    )
                 }
-                .if(variant.isFloating) {
-                    $0.mask {
-                        LinearGradient(
-                            colors: gradientMaskColors,
-                            startPoint: .init(x: 0, y: 1),
-                            endPoint: .init(x: 0, y: 0)
-                        )
-                    }
-                }
-                .ignoresSafeArea(.container, edges: .top)
             }
-            
-            if scrolled && variant.isFloating == false {
-                Rectangle()
-                    .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral).opacity(backgroundOpacity))
-                    .frame(height: 0.5)
-            }
+            .ignoresSafeArea(.container, edges: .top)
         }
     }
     
@@ -273,6 +265,7 @@ public struct ModalNavigation: View {
                         }
                     }
                 }
+                .padding(.horizontal, 16)
             }
         }
         
@@ -308,13 +301,12 @@ extension ModalNavigation {
                     semantic: .labelStrong
                 )
                 .lineLimit(1)
+                .padding(.horizontal, 4)
         }
     }
 }
 
 private extension ModalNavigation {
-    var scrolled: Bool { scrollOffset < .zero }
-
     var backgroundOpacity: CGFloat {
         if variant.isFloating {
             return 1
@@ -330,6 +322,24 @@ private extension ModalNavigation {
 }
 
 private extension ModalNavigation.Variant {
+    var contentTopPadding: CGFloat {
+        switch kind {
+        case .normal: 10
+        case .display, .extended: 4
+        case .emphasized: 20
+        case .floating: 4
+        }
+    }
+
+    var contentBottomPadding: CGFloat {
+        switch kind {
+        case .normal: 10
+        case .display, .extended: 4
+        case .emphasized: 20
+        case .floating: 8
+        }
+    }
+
     var topNavigationVariant: TopNavigation.Variant {
         switch kind {
         case .normal: .normal
