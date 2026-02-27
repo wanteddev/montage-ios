@@ -15,6 +15,14 @@ function readJsonCached(filePath) {
   return parsed;
 }
 
+function renderAbstractText(abstract) {
+  if (!Array.isArray(abstract)) return '';
+  return abstract.map((a) => {
+    if (a.type === 'codeVoice' && a.code) return '`' + a.code + '`';
+    return a.text || '';
+  }).join('');
+}
+
 // 시그니쳐 해시 생성 함수
 function generateHash(signature) {
   return crypto.createHash('md5').update(signature).digest('hex').substring(0, 8);
@@ -25,6 +33,13 @@ function makeLink(title, url, deprecated = false) {
   let link = `[${title}](${url})`;
   if (deprecated) link = `~~${link}~~\n\n`;
   return link;
+}
+
+// deprecationSummary 블록 렌더링 함수
+function renderDeprecationBlock(symbolJson) {
+  if (!symbolJson.deprecationSummary) return '';
+  const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
+  return `>  **Deprecated**\n>\n>  ${depText}\n\n`;
 }
 
 // 토픽 섹션 변환
@@ -44,7 +59,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
     let deprecated = Boolean(ref.deprecated);
     let desc = '';
     if (ref.abstract && Array.isArray(ref.abstract)) {
-      desc = ref.abstract.map((a) => a.text || '').join(' ');
+      desc = renderAbstractText(ref.abstract);
     }
 
     let symbolDetails = '';
@@ -56,6 +71,9 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
       try {
         if (fs.existsSync(symbolJsonPath)) {
           const symbolJson = readJsonCached(symbolJsonPath);
+
+          // deprecationSummary 처리
+          symbolDetails += renderDeprecationBlock(symbolJson);
 
           if (symbolJson.primaryContentSections) {
             // 파라미터 정보 추가
@@ -305,7 +323,7 @@ function renderFrontmatter(json, isUtil = false) {
     fm += `title: ${title}\n`;
   }
   if (json.abstract && Array.isArray(json.abstract)) {
-    fm += `description: ${json.abstract.map((a) => a.text).join(' ')}\n`;
+    fm += `description: ${renderAbstractText(json.abstract)}\n`;
   }
   if (json.metadata && json.metadata.createdAt)
     fm += `createdAt: ${json.metadata.createdAt}\n`;
@@ -336,11 +354,7 @@ function jsonToMarkdown(json, isUtil = false, mdPath = '', associatedExtensions 
   }
 
   if (json.deprecationSummary) {
-    md += `> **Deprecation**\n>\n>`;
-    md += json.deprecationSummary
-      .map((s) => s.inlineContent.map((v) => v.text).join('\n> '))
-      .join('\n> ');
-    md += '\n\n';
+    md += renderDeprecationBlock(json);
   }
 
   // Overview/예시/기타
@@ -635,7 +649,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
   const canonicalSignature = canonicalizeSignature(signatureRaw);
   const hash = generateHash(canonicalSignature);
 
-  let desc = Array.isArray(ref.abstract) ? ref.abstract.map((a) => a.text || '').join(' ') : '';
+  let desc = renderAbstractText(ref.abstract);
   let symbolDetails = '';
 
   const symbolUrl = ref.url ? ref.url.replace(/^\//, '') : '';
@@ -646,8 +660,11 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         const symbolJson = readJsonCached(symbolJsonPath);
 
         if (!desc && Array.isArray(symbolJson.abstract)) {
-          desc = symbolJson.abstract.map((a) => a.text || '').join(' ');
+          desc = renderAbstractText(symbolJson.abstract);
         }
+
+        // deprecationSummary 처리
+        symbolDetails += renderDeprecationBlock(symbolJson);
 
         if (symbolJson.primaryContentSections) {
           const parameters = symbolJson.primaryContentSections.find((section) => section.kind === 'parameters');

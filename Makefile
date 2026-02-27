@@ -1,8 +1,8 @@
-.PHONY: all docc md license check-changes clean
+.PHONY: all docc server md license check-changes clean
 
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
-XCODE_VERSION=16.4
+XCODE_VERSION=26.2
 
 # 기본 타겟: docc, md, license를 순서대로 실행하고 변경사항 확인
 all: docc md license check-changes
@@ -39,6 +39,17 @@ docc:
 	fi; \
 	rm build_docs.log; \
 	xcodes select $$CURRENT_XCODE_VERSION
+
+# DocC 문서 서버 애플리케이션 실행
+server:
+	@ARCHIVE_PATH=".build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive"; \
+	if [ ! -d "$$ARCHIVE_PATH" ]; then \
+		echo "❌ $$ARCHIVE_PATH 가 존재하지 않습니다. 먼저 'make docc'를 실행하세요."; \
+		exit 1; \
+	fi; \
+	echo "http://localhost:8000/documentation/montage 에서 문서를 확인하세요."; \
+	python3 -m http.server --directory "$$ARCHIVE_PATH"
+
 
 # DocC 문서를 Markdown으로 변환
 md:

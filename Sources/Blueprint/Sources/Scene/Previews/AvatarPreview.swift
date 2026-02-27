@@ -10,20 +10,29 @@ import SwiftUI
 
 struct AvatarPreview: View {
     @State private var showTransparentChecker: Bool = false
-    @State var variantIndex: Int = 0
-    @State var sizeIndex: Int = 0
-    @State var customSize: CGFloat = 100
-    @State var pushBadge = false
-    @State var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
-    @State var borderWidth: CGFloat = 1
-    @State var invalidUrl: Bool = false
+    @State private var variantIndex: Int = 0
+    @State private var sizeIndex: Int = 0
+    @State private var useCustomSize: Bool = false
+    @State private var customSize: CGFloat = 40
+    @State private var pushBadge = false
+    @State private var pushBadgeSizeIndex: Int = 0
+    @State private var useCustomCornerRadius: Bool = false
+    @State private var customCornerRadius: CGFloat = 10
+    @State private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
+    @State private var borderWidth: CGFloat = 1
+    @State private var contentModeIndex: Int = 0
+    @State private var useLocalImage: Bool = false
+    @State private var invalidUrl: Bool = false
+
+    let contentModes: [ContentMode] = [.fit, .fill]
+    let pushBadgeSizes: [PushBadge.Size?] = [nil, .xsmall, .small, .medium]
+    let pushBadgeSizeLabels = ["auto", "xsmall", "small", "medium"]
 
     let variants: [Avatar.Variant] = [.person, .company, .academy]
     let sizes: [Avatar.Size] = [.xsmall, .small, .medium, .large, .xlarge]
 
     var body: some View {
         VStack {
-            Text("Avatar").font(.title)
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
@@ -38,14 +47,7 @@ struct AvatarPreview: View {
                     }
                     HStack {
                         Spacer()
-                        Avatar(
-                            invalidUrl
-                                ? "https://invalid-url"
-                                : "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg",
-                            variant: variants[variantIndex], size: sizes[sizeIndex]
-                        )
-                        .pushBadge(pushBadge)
-                        .border(color: borderColor, width: borderWidth)
+                        avatar
                         Spacer()
                     }
 
@@ -62,6 +64,16 @@ struct AvatarPreview: View {
                             Text("pushBadge")
                             Switch(checked: pushBadge) { pushBadge = $0 }
                         }
+                        if pushBadge {
+                            HStack {
+                                Text("pushBadge size")
+                                SegmentedControl(
+                                    selectedIndex: $pushBadgeSizeIndex,
+                                    labels: pushBadgeSizeLabels
+                                )
+                                .size(.small)
+                            }
+                        }
                     }
                     HStack {
                         Text("size")
@@ -70,9 +82,48 @@ struct AvatarPreview: View {
                         )
                         .size(.small)
                     }
+                    .opacity(useCustomSize ? 0.3 : 1)
+                    .disabled(useCustomSize)
                     HStack {
-                        Text("invalid image url")
-                        Switch(checked: invalidUrl) { invalidUrl = $0 }
+                        Text("custom size")
+                        Switch(checked: useCustomSize) { useCustomSize = $0 }
+                    }
+                    if useCustomSize {
+                        HStack {
+                            Text("\(Int(customSize))pt")
+                                .monospacedDigit()
+                            SwiftUI.Slider(value: $customSize, in: 16...120, step: 1)
+                        }
+                    }
+                    if variants[variantIndex] != .person {
+                        HStack {
+                            Text("cornerRadius")
+                            Switch(checked: useCustomCornerRadius) { useCustomCornerRadius = $0 }
+                        }
+                        if useCustomCornerRadius {
+                            HStack {
+                                Text("\(Int(customCornerRadius))pt")
+                                    .monospacedDigit()
+                                SwiftUI.Slider(value: $customCornerRadius, in: 0...60, step: 1)
+                            }
+                        }
+                    }
+                    HStack {
+                        Text("contentMode")
+                        SegmentedControl(
+                            selectedIndex: $contentModeIndex, labels: ["fit", "fill"]
+                        )
+                        .size(.small)
+                    }
+                    HStack {
+                        Text("local image")
+                        Switch(checked: useLocalImage) { useLocalImage = $0 }
+                    }
+                    if !useLocalImage {
+                        HStack {
+                            Text("invalid image url")
+                            Switch(checked: invalidUrl) { invalidUrl = $0 }
+                        }
                     }
                     HStack {
                         SwiftUI.ColorPicker("borderColor", selection: $borderColor)
@@ -84,8 +135,6 @@ struct AvatarPreview: View {
                 .padding(.horizontal)
             }
             .hidesIndicators()
-
-            AvatarGroupPreview()
         }
         .transparentChecking(
             isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red
@@ -94,97 +143,38 @@ struct AvatarPreview: View {
     }
 }
 
-struct AvatarGroupPreview: View {
-    private let allUrls = [
-        "https://static.wanted.co.kr/images/company/3778/brr1yf93dsndmgce__1080_790.png",
-        "https://cdn.pixabay.com/photo/2024/03/11/11/41/ai-generated-8626442_640.jpg",
-        "https://static.wanted.co.kr/images/school/PNG_162.png",
-        "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fwdes%2F0_5.c4c61c5a.png&w=100&q=100",
-        "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fschool%2FPNG_195.png&w=120&q=90",
-    ]
-
-    @State var variantIndex: Int = 0
-    @State var sizeIndex: Int = 0
-    @State var alertLabel = ""
-    @State var alertPresented: Bool = false
-    @State var itemCount: CGFloat = 5
-    @State var trailingContent = false
-    @State var invalidUrl: Bool = false
-
-    let variants: [Avatar.Variant] = [.person, .company, .academy]
-    let sizes: [AvatarGroup.Size] = [.xsmall, .small]
-
-    var body: some View {
-        Text("AvatarGroup").font(.title)
-        ScrollView {
-            VStack(alignment: .leading) {
-                Text("Preview").bold()
-                HStack {
-                    Spacer()
-                    AvatarGroup(imageUrls, variant: variants[variantIndex], size: sizes[sizeIndex])
-                    {
-                        alertLabel = "Item at index \($0) pressed"
-                        alertPresented.toggle()
-                    }
-                    .if(trailingContent) {
-                        $0.trailingContent {
-                            TextButton(color: .assistive, size: .small, text: "외 30명이 좋아합니다") {
-                                alertLabel = "TextButton pressed"
-                                alertPresented.toggle()
-                            }
-                        }
-                    }
-
-                    .alert(alertLabel, isPresented: $alertPresented) {
-                        SwiftUI.Button("OK") {
-                            alertLabel = ""
-                        }
-                    }
-                    Spacer()
-                }
-
-                Text("Options").bold()
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex, labels: variants.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
-                        .size(.small)
-                }
-                HStack {
-                    Text("random invalid image url")
-                    Switch(checked: invalidUrl) { invalidUrl = $0 }
-                }
-                HStack {
-                    Text("item count")
-                    SwiftUI.Slider(value: $itemCount, in: 1...CGFloat(allUrls.count))
-                    Text("trailing content")
-                    Switch(checked: trailingContent) { trailingContent = $0 }
-                }
-            }
-            .font(.caption)
-            .padding(.horizontal)
-        }
-        .hidesIndicators()
+extension AvatarPreview {
+    private var selectedSize: Avatar.Size {
+        useCustomSize ? .custom(customSize) : sizes[sizeIndex]
     }
 
-    var imageUrls: [String] {
-        var urls = Array(allUrls.prefix(Int(itemCount)))
-        if invalidUrl {
-            urls[Int.random(in: 0..<urls.count)] = "https://invalid-url"
+    @ViewBuilder
+    private var avatar: some View {
+        let base: Avatar = if useLocalImage {
+            Avatar(
+                Image("portrait", bundle: .main),
+                variant: variants[variantIndex],
+                size: selectedSize
+            )
+        } else {
+            Avatar(
+                invalidUrl
+                    ? "https://invalid-url"
+                    : "https://png.pngtree.com/background/20250608/original/pngtree-beautiful-korean-woman-posing-for-high-quality-photograph-picture-image_16640418.jpg",
+                variant: variants[variantIndex],
+                size: selectedSize
+            )
         }
-        return urls
+        base
+            .contentMode(contentModes[contentModeIndex])
+            .pushBadge(pushBadge, size: pushBadgeSizes[pushBadgeSizeIndex])
+            .border(color: borderColor, width: borderWidth)
+            .if(useCustomCornerRadius) { $0.cornerRadius(customCornerRadius) }
     }
 }
 
 extension Avatar.Variant: CaseDescribable {}
 extension Avatar.Size: CaseDescribable {}
-extension AvatarGroup.Size: CaseDescribable {}
 
 #Preview {
     AvatarPreview()

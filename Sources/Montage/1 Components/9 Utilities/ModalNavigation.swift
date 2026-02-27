@@ -30,24 +30,42 @@ import SwiftUI
 public struct ModalNavigation: View {
     // MARK: - Types
     
-    /// 내비게이션 바의 외관을 정의하는 열거형입니다.
-    public enum Variant: Equatable {
+    /// 내비게이션 바의 외관을 정의하는 구조체입니다.
+    public struct Variant: Equatable, CustomStringConvertible {
+        fileprivate enum Kind: Equatable {
+            case normal, display, extended, floating, emphasized
+        }
+
+        fileprivate let kind: Kind
+
         /// 기본 스타일의 내비게이션 바
-        case normal
+        public static let normal = Variant(kind: .normal)
         /// 제목이 별도 줄에 표시되는 확장된 스타일
-        case extended
-        /// 배경이 투명한 플로팅 스타일
-        /// - Parameters:
-        ///   - alternative: 대체 아이콘 사용 여부, 생략하면 기본값으로 `false` 적용
-        ///   - background: 배경 표시 여부, 생략하면 기본값으로 `true` 적용
-        case floating(alternative: Bool = false, background: Bool = true)
+        public static let display = Variant(kind: .display)
+        /// 플로팅 스타일 (그라디언트, Progressive Blur 적용)
+        public static let floating = Variant(kind: .floating)
         /// 강조된 큰 제목 스타일
-        case emphasized
-        
-        fileprivate var isFloating: Bool {
-            switch self {
-            case .floating: true
-            case .normal, .extended, .emphasized: false
+        public static let emphasized = Variant(kind: .emphasized)
+
+        /// 제목이 별도 줄에 표시되는 확장된 스타일
+        @available(*, deprecated, renamed: "display", message: "이름이 `display`로 변경되었습니다. 다음 메이저 업데이트 때 제거될 예정입니다.")
+        public static let extended = Variant(kind: .extended)
+
+        /// 플로팅 스타일
+        @available(*, deprecated, message: "파라메터 제거되었습니다. `.floating`으로 사용하십시오. 다음 메이저 업데이트 때 제거될 예정입니다.")
+        public static func floating(alternative: Bool = false, background: Bool = true) -> Variant {
+            Variant(kind: .floating)
+        }
+
+        fileprivate var isFloating: Bool { kind == .floating }
+
+        public var description: String {
+            switch kind {
+            case .normal: "normal"
+            case .display: "display"
+            case .extended: "extended"
+            case .floating: "floating"
+            case .emphasized: "emphasized"
             }
         }
     }
@@ -68,43 +86,44 @@ public struct ModalNavigation: View {
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        ZStack(alignment: .bottom) {
-            VStack(spacing: 0) {
-                if needHandleArea {
-                    ZStack(alignment: .bottom) {
-                        SwiftUI.Color.clear
-                            .frame(height: 12)
-                        RoundedRectangle(cornerRadius: 1000)
-                            .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
-                            .frame(width: 40, height: 5)
-                    }
+        VStack(spacing: 0) {
+            if needHandleArea {
+                ZStack(alignment: .bottom) {
+                    SwiftUI.Color.clear
+                        .frame(height: 12)
+                    RoundedRectangle(cornerRadius: 1000)
+                        .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                        .frame(width: 40, height: 5)
                 }
-                
-                Contents(
-                    variant: variant,
-                    titleText: titleText,
-                    titleView: titleView,
-                    leadingContent: leadingContent,
-                    trailingContents: trailingContents
-                )
-                .padding(.vertical, 20)
-                .padding(.horizontal, 16)
             }
-            .background {
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .opacity(backgroundOpacity)
-                    backgroundColor
-                        .opacity(backgroundOpacity * 0.70)
+
+            Contents(
+                variant: variant,
+                titleText: titleText,
+                titleView: titleView,
+                leadingContent: leadingContent,
+                trailingContents: trailingContents
+            )
+            .padding(.top, variant.contentTopPadding)
+            .padding(.bottom, variant.contentBottomPadding)
+        }
+        .background {
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial)
+                    .opacity(backgroundOpacity)
+                backgroundColor
+                    .opacity(backgroundOpacity * 0.70)
+            }
+            .if(variant.isFloating) {
+                $0.mask {
+                    LinearGradient(
+                        colors: gradientMaskColors,
+                        startPoint: .init(x: 0, y: 1),
+                        endPoint: .init(x: 0, y: 0)
+                    )
                 }
-                .ignoresSafeArea(.container, edges: .top)
             }
-            
-            if scrolled && variant.isFloating == false {
-                Rectangle()
-                    .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral).opacity(backgroundOpacity))
-                    .frame(height: 0.5)
-            }
+            .ignoresSafeArea(.container, edges: .top)
         }
     }
     
@@ -224,8 +243,8 @@ public struct ModalNavigation: View {
         var trailingContents: [() -> AnyView]
         
         var body: some View {
-            switch variant {
-            case .normal, .extended, .floating:
+            switch variant.kind {
+            case .normal, .display, .extended, .floating:
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
                     titleText: titleText,
@@ -246,6 +265,7 @@ public struct ModalNavigation: View {
                         }
                     }
                 }
+                .padding(.horizontal, 16)
             }
         }
         
@@ -281,46 +301,67 @@ extension ModalNavigation {
                     semantic: .labelStrong
                 )
                 .lineLimit(1)
+                .padding(.horizontal, 4)
         }
     }
 }
 
 private extension ModalNavigation {
-    var scrolled: Bool { scrollOffset < .zero }
-    
     var backgroundOpacity: CGFloat {
         if variant.isFloating {
-            return 0
+            return 1
         } else {
             let ratio = (scrollOffset / -32)
             return max(0, min(1, ratio))
         }
     }
+
+    var gradientMaskColors: [SwiftUI.Color] {
+        [0, 0.7, 1].map { SwiftUI.Color.black.opacity($0) }
+    }
 }
 
 private extension ModalNavigation.Variant {
+    var contentTopPadding: CGFloat {
+        switch kind {
+        case .normal: 10
+        case .display, .extended: 4
+        case .emphasized: 20
+        case .floating: 4
+        }
+    }
+
+    var contentBottomPadding: CGFloat {
+        switch kind {
+        case .normal: 10
+        case .display, .extended: 4
+        case .emphasized: 20
+        case .floating: 8
+        }
+    }
+
     var topNavigationVariant: TopNavigation.Variant {
-        switch self {
+        switch kind {
         case .normal: .normal
-        case .extended: .display
+        case .display, .extended: .display
         case .floating: .floating
         case .emphasized: .normal
         }
     }
-    
+
     var typoVariant: Typography.Variant {
-        switch self {
+        switch kind {
         case .normal: .headline2
-        case .extended: .title3
+        case .display, .extended: .title3
         case .floating: .headline2
         case .emphasized: .heading2
         }
     }
-    
+
     var typoWeight: Typography.Weight {
-        switch self {
+        switch kind {
         case .normal: .bold
-        case .extended: .bold
+        case .display, .extended: .bold
         case .floating: .bold
         case .emphasized: .bold
         }
