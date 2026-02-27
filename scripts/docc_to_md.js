@@ -15,6 +15,14 @@ function readJsonCached(filePath) {
   return parsed;
 }
 
+function renderAbstractText(abstract) {
+  if (!Array.isArray(abstract)) return '';
+  return abstract.map((a) => {
+    if (a.type === 'codeVoice' && a.code) return '`' + a.code + '`';
+    return a.text || '';
+  }).join('');
+}
+
 // 시그니쳐 해시 생성 함수
 function generateHash(signature) {
   return crypto.createHash('md5').update(signature).digest('hex').substring(0, 8);
@@ -51,7 +59,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
     let deprecated = Boolean(ref.deprecated);
     let desc = '';
     if (ref.abstract && Array.isArray(ref.abstract)) {
-      desc = ref.abstract.map((a) => a.text || '').join(' ');
+      desc = renderAbstractText(ref.abstract);
     }
 
     let symbolDetails = '';
@@ -315,7 +323,7 @@ function renderFrontmatter(json, isUtil = false) {
     fm += `title: ${title}\n`;
   }
   if (json.abstract && Array.isArray(json.abstract)) {
-    fm += `description: ${json.abstract.map((a) => a.text).join(' ')}\n`;
+    fm += `description: ${renderAbstractText(json.abstract)}\n`;
   }
   if (json.metadata && json.metadata.createdAt)
     fm += `createdAt: ${json.metadata.createdAt}\n`;
@@ -641,7 +649,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
   const canonicalSignature = canonicalizeSignature(signatureRaw);
   const hash = generateHash(canonicalSignature);
 
-  let desc = Array.isArray(ref.abstract) ? ref.abstract.map((a) => a.text || '').join(' ') : '';
+  let desc = renderAbstractText(ref.abstract);
   let symbolDetails = '';
 
   const symbolUrl = ref.url ? ref.url.replace(/^\//, '') : '';
@@ -652,7 +660,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         const symbolJson = readJsonCached(symbolJsonPath);
 
         if (!desc && Array.isArray(symbolJson.abstract)) {
-          desc = symbolJson.abstract.map((a) => a.text || '').join(' ');
+          desc = renderAbstractText(symbolJson.abstract);
         }
 
         // deprecationSummary 처리

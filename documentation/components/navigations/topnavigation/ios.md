@@ -196,7 +196,7 @@ TopNavigation을 초기화합니다.
 <summary>``func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> TopNavigation``</summary>
 
 
-검색 필드의 속성과 동작을 설정합니다. variant가   일 때만 적용됩니다.
+검색 필드의 속성과 동작을 설정합니다. variant가 `.search`일 때만 적용됩니다.
 
 - **Parameters**
   | Parameter | Description |
