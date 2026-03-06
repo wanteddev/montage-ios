@@ -416,7 +416,7 @@ public struct TextArea: View {
                 SwiftUI.Color.semantic(.fillAlternative)
             } else {
                 if colorScheme == .light {
-                    SwiftUI.Color.atomic(.common100).opacity(0.6)
+                    SwiftUI.Color.atomic(.common100).opacity(0.8)
                         .background(.ultraThinMaterial)
                 } else {
                     SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
