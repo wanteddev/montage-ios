@@ -388,6 +388,7 @@ public struct Select: View {
                     )
                     .padding(.horizontal, 4)
                     .frame(height: 24)
+                    .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
                 }
                 .padding(.all, 12)
                 .background {
