@@ -18,24 +18,21 @@ public struct SkeletonPreview: View {
     @State private var cornerRadius: CGFloat = 3
     @State private var color: SwiftUI.Color = .semantic(.fillNormal)
     @State private var opacity: CGFloat = 1
-    
-    private let kinds: [Skeleton.Kind?] = [
-        .text(),
-        .rectangle(),
-        .circle,
-        .none
-    ]
-    
+
+    private enum PreviewKind: CaseIterable, CaseDescribable {
+        case text, rectangle, circle, custom
+    }
+
     private let alignments: [Skeleton.Align] = [
         .leading,
         .center,
         .trailing
     ]
-    
+
     private let lengths: [Skeleton.Length] = [
         ._100, ._75, ._50, ._25
     ]
-    
+
     @State private var lineNumber: Int = 1
     public var body: some View {
         SwiftUI.ScrollView {
@@ -52,7 +49,7 @@ public struct SkeletonPreview: View {
                 }
                 .padding(.horizontal)
                 Group {
-                    switch kinds[kindIndex] {
+                    switch PreviewKind.allCases[kindIndex] {
                     case .text:
                         Text(text)
                             .skeleton(
@@ -87,7 +84,7 @@ public struct SkeletonPreview: View {
                                 color: color,
                                 opacity: opacity
                             )
-                    case .none:
+                    case .custom:
                         Triangle()
                             .fill(.blue)
                             .frame(width: 100, height: 100)
@@ -96,12 +93,10 @@ public struct SkeletonPreview: View {
                                     .fill(color)
                                     .frame(width: 100, height: 100)
                             }
-                    @unknown default:
-                        EmptyView()
                     }
                 }
                 .padding()
-                
+
                 options
                     .padding(.horizontal)
             }
@@ -112,7 +107,7 @@ public struct SkeletonPreview: View {
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
-    
+
     var options: some View {
         VStack(alignment: .leading) {
             Text("Options").bold()
@@ -122,10 +117,10 @@ public struct SkeletonPreview: View {
             }
             HStack {
                 Text("kind")
-                SegmentedControl(selectedIndex: $kindIndex, labels: kinds.map { $0?.description ?? "custom" })
+                SegmentedControl(selectedIndex: $kindIndex, labels: PreviewKind.allCases.map(\.description))
                     .size(.small)
             }
-            switch kinds[kindIndex] {
+            switch PreviewKind.allCases[kindIndex] {
             case .text:
                 HStack {
                     Text("text")
@@ -192,7 +187,6 @@ struct Triangle: Shape {
 
 extension Skeleton.Align: CaseDescribable {}
 extension Skeleton.Length: CaseDescribable {}
-extension Skeleton.Kind: CaseDescribable {}
 
 #Preview {
     SkeletonPreview()

@@ -12,10 +12,13 @@ import SwiftUI
 /// 데이터 로딩 중에 UI의 구조를 미리 보여주는 스켈레톤 뷰를 제공합니다.
 /// 텍스트, 사각형, 원형 등 다양한 형태의 스켈레톤 로딩 플레이스홀더를 지원합니다.
 ///
+/// 텍스트 스켈레톤은 `Typography.Variant`의 `lineHeight`를 기반으로
+/// 줄 수를 자동 계산하고, 첫 줄은 100%, 나머지는 가변 길이로 표시합니다.
+///
 /// ```swift
-/// // 텍스트 스켈레톤 사용
+/// // 자동 텍스트 스켈레톤 (variant 기반 자동 계산)
 /// Text("콘텐츠")
-///     .skeleton(isPresented: isLoading, kind: .text(lineNumber: 3))
+///     .skeleton(isPresented: isLoading, kind: .text(variant: .body1))
 ///
 /// // 이미지를 위한 원형 스켈레톤 사용
 /// Image(systemName: "person.circle")
@@ -88,13 +91,15 @@ public enum Skeleton {
         case _25 = 0.25
     }
     
-    /// 스켈레톤 요소의 종류를 지정하는 열거형입니다.
+    /// 스켈레톤 요소의 종류를 지정하는 구조체입니다.
     ///
     /// 다양한 콘텐츠 유형에 맞게 적절한 스켈레톤 형태를 선택할 수 있습니다.
+    /// 텍스트 스켈레톤은 `Typography.Variant`의 `lineHeight`를 기반으로
+    /// 줄 수와 길이를 자동 계산합니다.
     ///
     /// ```swift
-    /// // 3줄 텍스트 스켈레톤
-    /// Skeleton.Kind.text(lineNumber: 3)
+    /// // 자동 텍스트 스켈레톤 (variant 기반 자동 계산)
+    /// Skeleton.Kind.text(variant: .body1)
     ///
     /// // 둥근 모서리 사각형 스켈레톤
     /// Skeleton.Kind.rectangle(cornerRadius: 8)
@@ -102,24 +107,111 @@ public enum Skeleton {
     /// // 원형 스켈레톤 (프로필 이미지 등에 적합)
     /// Skeleton.Kind.circle
     /// ```
-    public enum Kind {
-        /// 텍스트 줄을 나타내는 스켈레톤
+    public struct Kind {
+        enum Category {
+            case text, rectangle, circle
+        }
+
+        let category: Category
+        let alignment: Align
+        let lengths: [Length]
+        let cornerRadius: CGFloat
+        let lineHeight: CGFloat
+        let lineSpacing: CGFloat
+        let lineNumber: Int
+
+        /// 텍스트 종류인지 여부
+        public var isText: Bool { category == .text }
+        /// 사각형 종류인지 여부
+        public var isRectangle: Bool { category == .rectangle }
+        /// 원형 종류인지 여부
+        public var isCircle: Bool { category == .circle }
+
+        // MARK: - New API
+
+        /// 텍스트 줄을 나타내는 스켈레톤을 생성합니다.
+        ///
+        /// `variant`의 `lineHeight`를 기반으로 뷰 높이에 맞는 줄 수를 자동 계산하고,
+        /// 첫 줄은 100%, 나머지는 가변 길이로 표시합니다.
+        ///
         /// - Parameters:
+        ///   - variant: 텍스트의 타이포그래피 변형. `lineHeight`를 기준으로 줄 수를 자동 계산합니다
         ///   - alignment: 텍스트 정렬 방식, 생략하면 기본값으로 `.leading` 적용
-        ///   - lengths: 각 줄의 상대적 길이, 생략하면 기본값으로 `[._100]` 적용
         ///   - cornerRadius: 모서리 둥글기, 생략하면 기본값으로 `3` 적용
-        ///   - lineNumber: 텍스트 줄 수, 생략하면 기본값으로 `1` 적용
-        case text(
+        /// - Returns: 텍스트 스켈레톤 Kind
+        public static func text(
+            variant: Typography.Variant,
             alignment: Align = .leading,
-            lengths: [Length] = [._100],
+            cornerRadius: CGFloat = 3
+        ) -> Kind {
+            Kind(
+                category: .text,
+                alignment: alignment,
+                lengths: [],
+                cornerRadius: cornerRadius,
+                lineHeight: variant.lineHeight,
+                lineSpacing: variant.lineSpacing,
+                lineNumber: 0
+            )
+        }
+
+        // MARK: - Deprecated API
+
+        /// 텍스트 줄을 나타내는 스켈레톤을 생성합니다.
+        ///
+        /// - Parameters:
+        ///   - alignment: 텍스트 정렬 방식
+        ///   - lengths: 각 줄의 상대적 길이
+        ///   - cornerRadius: 모서리 둥글기
+        ///   - lineHeight: 자동 줄 수 계산 시 기준 라인 높이 (pt)
+        ///   - lineNumber: 텍스트 줄 수. `0`이면 자동 계산
+        /// - Returns: 텍스트 스켈레톤 Kind
+        @available(*, deprecated, message: "text(variant:alignment:cornerRadius:)를 사용하세요")
+        public static func text(
+            alignment: Align = .leading,
+            lengths: [Length] = [],
             cornerRadius: CGFloat = 3,
-            lineNumber: Int = 1
-        )
-        /// 사각형 모양의 스켈레톤
+            lineNumber: Int = 0
+        ) -> Kind {
+            Kind(
+                category: .text,
+                alignment: alignment,
+                lengths: lengths,
+                cornerRadius: cornerRadius,
+                lineHeight: SkeletonView.textReferenceLineHeight,
+                lineSpacing: SkeletonView.textLineSpacing,
+                lineNumber: lineNumber
+            )
+        }
+
+        /// 사각형 모양의 스켈레톤을 생성합니다.
+        ///
         /// - Parameter cornerRadius: 모서리 둥글기, 생략하면 기본값으로 `3` 적용
-        case rectangle(cornerRadius: CGFloat = 3)
+        /// - Returns: 사각형 스켈레톤 Kind
+        public static func rectangle(cornerRadius: CGFloat = 3) -> Kind {
+            Kind(
+                category: .rectangle,
+                alignment: .leading,
+                lengths: [],
+                cornerRadius: cornerRadius,
+                lineHeight: 0,
+                lineSpacing: 0,
+                lineNumber: 0
+            )
+        }
+
         /// 원형 스켈레톤
-        case circle
+        public static var circle: Kind {
+            Kind(
+                category: .circle,
+                alignment: .leading,
+                lengths: [],
+                cornerRadius: 0,
+                lineHeight: 0,
+                lineSpacing: 0,
+                lineNumber: 0
+            )
+        }
     }
     
     // MARK: - Views
@@ -128,12 +220,25 @@ public enum Skeleton {
     /// 지정된 형태(텍스트, 사각형, 원형)에 따라 적절한 스켈레톤 UI를 렌더링합니다.
     /// 색상, 투명도 등을 커스터마이징할 수 있습니다.
     ///
+    /// 텍스트 스켈레톤의 자동 계산:
+    /// - `variant.lineHeight`를 기준으로 뷰 높이를 나누어 최적의 줄 수를 계산합니다.
+    /// - 첫 줄 100%, 중간 줄 65~90%, 마지막 줄 40~55% 비율로 자동 생성합니다.
+    ///
     /// ```swift
-    /// Skeleton.SkeletonView(.text(lineNumber: 3))
+    /// // variant 기반 자동 모드
+    /// Skeleton.SkeletonView(.text(variant: .body1))
     ///     .color(.gray)
     ///     .opacity(0.8)
     /// ```
     public struct SkeletonView: View {
+        // MARK: - Constants
+
+        /// 텍스트 스켈레톤 자동 계산 시 기준 라인 높이 (pt)
+        static let textReferenceLineHeight: CGFloat = 14
+
+        /// 텍스트 스켈레톤 라인 간 상하 여백 (pt)
+        static let textLineSpacing: CGFloat = 4
+
         // MARK: - Initializer
         private let kind: Kind
         
@@ -150,27 +255,40 @@ public enum Skeleton {
         /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             Group {
-                switch kind {
-                case .text(let alignment, let lengths, let cornerRadius, let lineNumber):
+                switch kind.category {
+                case .text:
                     GeometryReader { proxy in
-                        VStack(alignment: alignment.horizontalAlignment, spacing: 0) {
-                            ForEach(0 ..< lineNumber, id: \.self) { index in
-                                RoundedRectangle(cornerRadius: cornerRadius)
-                                    .frame(
-                                        width: proxy.size.width * (lengths[safe: index]?.rawValue ?? 1.0),
-                                        height: max(0, proxy.size.height / CGFloat(lineNumber) - 4)
+                        let spacing = kind.lineSpacing
+                        let effectiveLineCount = kind.lineNumber > 0
+                            ? kind.lineNumber
+                            : max(1, Int(proxy.size.height / (kind.lineHeight + spacing)))
+                        let barHeight = max(
+                            0,
+                            proxy.size.height / CGFloat(effectiveLineCount) - spacing
+                        )
+
+                        VStack(alignment: kind.alignment.horizontalAlignment, spacing: 0) {
+                            ForEach(0 ..< effectiveLineCount, id: \.self) { index in
+                                let ratio = kind.lengths[safe: index]?.rawValue
+                                    ?? Self.autoLengthRatio(
+                                        for: index, in: effectiveLineCount
                                     )
-                                    .padding(.vertical, 2)
+                                RoundedRectangle(cornerRadius: kind.cornerRadius)
+                                    .frame(
+                                        width: proxy.size.width * ratio,
+                                        height: barHeight
+                                    )
+                                    .padding(.vertical, spacing / 2)
                             }
                         }
                         .frame(
                             width: proxy.size.width,
                             height: proxy.size.height,
-                            alignment: alignment.alignment
+                            alignment: kind.alignment.alignment
                         )
                     }
-                case .rectangle(let cornerRadius):
-                    RoundedRectangle(cornerRadius: cornerRadius)
+                case .rectangle:
+                    RoundedRectangle(cornerRadius: kind.cornerRadius)
                 case .circle:
                     Circle()
                 }
@@ -179,8 +297,18 @@ public enum Skeleton {
             .opacity(opacity)
         }
         
+        // MARK: - Helpers
+
+        private static func autoLengthRatio(for index: Int, in lineCount: Int) -> CGFloat {
+            if index == 0 { return 1.0 }
+            if lineCount > 1, index == lineCount - 1 {
+                return [0.45, 0.55, 0.5, 0.4][index % 4]
+            }
+            return [0.85, 0.75, 0.9, 0.7, 0.8, 0.65][(index - 1) % 6]
+        }
+
         // MARK: - Modifiers
-        
+
         private var color: SwiftUI.Color = .semantic(.fillNormal)
         private var opacity: CGFloat = 1
         
@@ -232,11 +360,11 @@ public enum Skeleton {
         @State private var contentSize: CGSize = .zero
         
         func body(content: Content) -> some View {
-            ZStack {
+            ZStack(alignment: .topLeading) {
                 content
                     .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { contentSize = $0 })
                     .opacity(isPresented ? 0 : 1)
-                
+
                 if isPresented {
                     let w = size?.width ?? contentSize.width
                     let h = size?.height ?? contentSize.height

@@ -54,8 +54,8 @@ struct CardPreview: View {
                         title: multilineTitle ? "제목이 매우 매우 매우 매우 매우 매우 길어서 세 줄이 되면 어떻게 될까요?" : "제목"
                     )
                     .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
-                    .subCaption(showSubCaption ? "서브 캡션" : nil)
-                    .extraCaption(showExtraCaption ? "추가 캡션" : nil)
+                    .subCaption(showSubCaption ? "서브 캡션 서브 캡션" : nil)
+                    .extraCaption(showExtraCaption ? "추가 추가 캡션" : nil)
                     .topContent {
                         if showTopContent {
                             HStack {
