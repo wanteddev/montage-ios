@@ -156,6 +156,7 @@ public enum Icon: String, CaseIterable {
     case component
     case componentFill
     case copy
+    case crop
     case crown
     case crownFill
     case deepSearch
@@ -188,6 +189,7 @@ public enum Icon: String, CaseIterable {
     case fireFill
     case flag
     case flagFill
+    case flip
     case flipBackward
     case folder
     case folderFill
@@ -310,6 +312,7 @@ public enum Icon: String, CaseIterable {
     case replaceAll
     case reset
     case rightSide
+    case rotate
     case search
     case searchThick
     case send
