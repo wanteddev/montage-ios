@@ -11,10 +11,10 @@ import Montage
 public struct SkeletonPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var isPresented = true
-    @State private var text = "텍스트 스켈레톤 테스트"
+    @State private var text = "텍스트 스켈레톤 테스트 길이가 긴 텍스트입니다. 텍스트를 더 길게 입력해보세요. 어떤 변화가 일어나는지 확인해보세요."
     @State private var kindIndex = 0
     @State private var alignmentIndex = 0
-    @State private var lengthIndices: [Int] = [0]
+    @State private var variantIndex = 8 // body1
     @State private var cornerRadius: CGFloat = 3
     @State private var color: SwiftUI.Color = .semantic(.fillNormal)
     @State private var opacity: CGFloat = 1
@@ -29,11 +29,26 @@ public struct SkeletonPreview: View {
         .trailing
     ]
 
-    private let lengths: [Skeleton.Length] = [
-        ._100, ._75, ._50, ._25
+    private let variants: [Typography.Variant] = [
+        .display1, .display2, .display3,
+        .title1, .title2, .title3,
+        .heading1, .heading2,
+        .headline1, .headline2,
+        .body1, .body2,
+        .label1, .label2,
+        .caption1, .caption2
     ]
 
-    @State private var lineNumber: Int = 1
+    private let variantLabels: [String] = [
+        "display1", "display2", "display3",
+        "title1", "title2", "title3",
+        "heading1", "heading2",
+        "headline1", "headline2",
+        "body1", "body2",
+        "label1", "label2",
+        "caption1", "caption2"
+    ]
+
     public var body: some View {
         SwiftUI.ScrollView {
             VStack(spacing: 0) {
@@ -52,21 +67,18 @@ public struct SkeletonPreview: View {
                     switch PreviewKind.allCases[kindIndex] {
                     case .text:
                         Text(text)
+                            .paragraph(variant: variants[variantIndex])
                             .skeleton(
                                 isPresented: isPresented,
                                 kind: .text(
+                                    variant: variants[variantIndex],
                                     alignment: alignments[alignmentIndex],
-                                    lengths: lengthIndices.map { lengths[$0] },
-                                    cornerRadius: cornerRadius,
-                                    lineNumber: lineNumber
+                                    cornerRadius: cornerRadius
                                 ),
                                 color: color,
                                 opacity: opacity,
                                 size: text.isEmpty ? .init(width: 200, height: 24) : nil
                             )
-                            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
-                                self.lineNumber = Int($0 / 20)
-                            })
                     case .rectangle:
                         Image(.placeholder)
                             .cornerRadius(cornerRadius)
@@ -101,9 +113,6 @@ public struct SkeletonPreview: View {
                     .padding(.horizontal)
             }
         }
-        .onChange(of: lineNumber) { _ in
-            lengthIndices = [Int](repeating: 0, count: lineNumber)
-        }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
@@ -127,19 +136,20 @@ public struct SkeletonPreview: View {
                     TextField(text: $text)
                 }
                 HStack {
+                    Text("variant")
+                    Picker("variant", selection: $variantIndex) {
+                        ForEach(0..<variantLabels.count, id: \.self) { index in
+                            SwiftUI.Text(variantLabels[index]).tag(index)
+                        }
+                    }
+                }
+                HStack {
                     Text("align")
                     SegmentedControl(
                         selectedIndex: $alignmentIndex,
                         labels: alignments.map(\.description)
                     )
                     .size(.small)
-                }
-                ForEach(0..<lineNumber, id: \.self) { index in
-                    HStack {
-                        Text("length of line \(index + 1)")
-                        SegmentedControl(selectedIndex: $lengthIndices[safe: index] ?? .constant(0), labels: lengths.map { "\(Int($0.rawValue * 100))%" })
-                            .size(.small)
-                    }
                 }
                 HStack {
                     VStack(spacing: 0) {

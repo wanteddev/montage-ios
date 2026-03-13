@@ -163,7 +163,6 @@ public enum Skeleton {
         ///   - alignment: 텍스트 정렬 방식
         ///   - lengths: 각 줄의 상대적 길이
         ///   - cornerRadius: 모서리 둥글기
-        ///   - lineHeight: 자동 줄 수 계산 시 기준 라인 높이 (pt)
         ///   - lineNumber: 텍스트 줄 수. `0`이면 자동 계산
         /// - Returns: 텍스트 스켈레톤 Kind
         @available(*, deprecated, message: "text(variant:alignment:cornerRadius:)를 사용하세요")
@@ -262,10 +261,7 @@ public enum Skeleton {
                         let effectiveLineCount = kind.lineNumber > 0
                             ? kind.lineNumber
                             : max(1, Int(proxy.size.height / (kind.lineHeight + spacing)))
-                        let barHeight = max(
-                            0,
-                            proxy.size.height / CGFloat(effectiveLineCount) - spacing
-                        )
+                        let barHeight = max(0, kind.lineHeight - spacing)
 
                         VStack(alignment: kind.alignment.horizontalAlignment, spacing: 0) {
                             ForEach(0 ..< effectiveLineCount, id: \.self) { index in
