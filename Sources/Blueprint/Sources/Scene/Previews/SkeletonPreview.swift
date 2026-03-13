@@ -14,7 +14,7 @@ public struct SkeletonPreview: View {
     @State private var text = "텍스트 스켈레톤 테스트 길이가 긴 텍스트입니다. 텍스트를 더 길게 입력해보세요. 어떤 변화가 일어나는지 확인해보세요."
     @State private var kindIndex = 0
     @State private var alignmentIndex = 0
-    @State private var variantIndex = 8 // body1
+    @State private var variantIndex = 0
     @State private var cornerRadius: CGFloat = 3
     @State private var color: SwiftUI.Color = .semantic(.fillNormal)
     @State private var opacity: CGFloat = 1
@@ -115,6 +115,9 @@ public struct SkeletonPreview: View {
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .onAppear {
+            variantIndex = variants.firstIndex { $0 == .label1 } ?? 0
+        }
     }
 
     var options: some View {
