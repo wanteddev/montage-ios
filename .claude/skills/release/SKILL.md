@@ -55,7 +55,7 @@ $ARGUMENTS
    claude plugin add slack
    ```
 3. **사용 가능 시**:
-   - body를 Slack mrkdwn으로 변환하여 **메시지 미리보기를 사용자에게 표시**
+   - body를 Slack standard markdown으로 변환하여 **메시지 미리보기를 사용자에게 표시**
    - AskUserQuestion으로 확인: "아래 메시지를 #design_system_updates, #ios-developers 채널에 발송할까요?"
      - 옵션: "발송", "수정 후 발송", "발송하지 않음"
    - 확인 후 두 채널에 발송:
@@ -64,12 +64,13 @@ $ARGUMENTS
 
 **메시지 형식**:
 ```
-:appleinc:*Montage {version} Release 되었습니다.*
+:appleinc:**Montage {version} Release 되었습니다.**
 {release_url}
 
-*What's Changed*
-• {changes...}
-Full Changelog: {compare_url}
+**What's Changed**
+• {changes... (PR 링크는 [#번호](url) 형식으로 변환)}
+
+Full Changelog: [{old_version}...{new_version}]({compare_url})
 ```
 
 ---
@@ -106,6 +107,6 @@ AskUserQuestion으로 경고 메시지 표시:
 
 **메시지 형식**:
 ```
-:warning:*Montage {version} 릴리즈가 취소되었습니다.*
+:warning:**Montage {version} 릴리즈가 취소되었습니다.**
 해당 버전의 태그와 릴리즈가 삭제되었습니다.
 ```
