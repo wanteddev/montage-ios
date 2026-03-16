@@ -91,6 +91,7 @@ public struct BottomSheet: View {
     @State private var contentHeight: CGFloat = 0
     @State private var actionAreaHeight: CGFloat = 0
     @State private var scrollStatus: ScrollView.ScrollStatus = .init()
+    @State private var isContentMeasured = false
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -143,12 +144,16 @@ public struct BottomSheet: View {
                 }
             }
         }
+        .opacity(isContentMeasured ? 1 : 0)
         .background(
             SwiftUI.Color.semantic(.backgroundNormal)
                 .opacity(0.8)
         )
         .presentationDetents(detents)
         .presentationDragIndicator(.hidden)
+        .onChange(of: contentHeight) {  oldValue, newValue in
+            if newValue > 0 { isContentMeasured = true }
+        }
     }
     
     // MARK: - Modifiers
@@ -269,14 +274,17 @@ public struct BottomSheet: View {
     }
     
     private var detents: Set<PresentationDetent> {
+        guard isContentMeasured else {
+            return [.height(maxDetentHeight)]
+        }
         switch resize {
         case .flexible:
-            [
+            return [
                 .height(min(bottomSheetContentHeight, maxDetentHeight / 2 + safeAreaInsets.bottom)),
                 .height(min(bottomSheetContentHeight, maxDetentHeight))
             ]
         default:
-            [.height(bottomSheetMaxHeight)]
+            return [.height(bottomSheetMaxHeight)]
         }
     }
 }
