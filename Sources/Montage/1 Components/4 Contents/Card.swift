@@ -12,6 +12,9 @@ import SwiftUI
 /// 썸네일 이미지와 제목, 캡션 등의 텍스트 콘텐츠를 수직 방향으로 배치한 카드입니다.
 /// 스켈레톤 로딩 상태를 지원하고, 썸네일 위에 오버레이 콘텐츠를 표시할 수 있습니다.
 ///
+/// 스켈레톤 상태에서 텍스트 영역은 원본 뷰의 높이에 맞춰 줄 수와 길이가 자동 계산됩니다.
+/// `topContent`와 `bottomContent`는 사각형 스켈레톤으로 표시됩니다.
+///
 /// ```swift
 /// @State private var isLoading = false
 ///
@@ -175,8 +178,9 @@ public struct Card: View {
                             .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(2)
                             .skeleton(
-                                isPresented: skeleton, kind: .text(lengths: [._100]),
-                                size: CGSize(width: textAreaWidth, height: 22))
+                                isPresented: skeleton,
+                                kind: .text(variant: .body1)
+                            )
 
                         VStack(alignment: .leading, spacing: 2) {
                             if let caption {
@@ -187,8 +191,9 @@ public struct Card: View {
                                     )
                                     .lineLimit(1)
                                     .skeleton(
-                                        isPresented: skeleton, kind: .text(lengths: [._50]),
-                                        size: CGSize(width: textAreaWidth, height: 18))
+                                        isPresented: skeleton,
+                                        kind: .text(variant: .label2)
+                                    )
                             }
 
                             if let subCaption {
@@ -199,8 +204,9 @@ public struct Card: View {
                                     )
                                     .lineLimit(1)
                                     .skeleton(
-                                        isPresented: skeleton, kind: .text(lengths: [._25]),
-                                        size: CGSize(width: textAreaWidth, height: 18))
+                                        isPresented: skeleton,
+                                        kind: .text(variant: .label2)
+                                    )
                             }
 
                             if let extraCaption {
@@ -211,13 +217,16 @@ public struct Card: View {
                                     )
                                     .lineLimit(1)
                                     .skeleton(
-                                        isPresented: skeleton, kind: .text(lengths: [._25]),
-                                        size: CGSize(width: textAreaWidth, height: 18))
+                                        isPresented: skeleton,
+                                        kind: .text(variant: .label2)
+                                    )
                             }
                         }
                         .if(
-                            !caption.isNilOrEmpty || !subCaption.isNilOrEmpty
-                                || !extraCaption.isNilOrEmpty)
+                            !caption.isNilOrEmpty ||
+                            !subCaption.isNilOrEmpty ||
+                            !extraCaption.isNilOrEmpty
+                        )
                     }
 
                     bottomContent()

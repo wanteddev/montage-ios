@@ -12,6 +12,9 @@ import SwiftUI
 /// 썸네일 이미지와 텍스트 콘텐츠를 수평 방향으로 배치한 카드로, 리스트 항목으로 사용하기 적합합니다.
 /// 스켈레톤 로딩 상태를 지원하고 다양한 콘텐츠를 배치할 수 있습니다.
 ///
+/// 스켈레톤 상태에서 텍스트 영역은 원본 뷰의 높이에 맞춰 줄 수와 길이가 자동 계산됩니다.
+/// `topContent`와 `bottomContent`는 사각형 스켈레톤으로 표시됩니다.
+///
 /// ```swift
 /// @State private var isLoading = false
 ///
@@ -152,23 +155,28 @@ public struct ListCard: View {
                         Text(title)
                             .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
                             .lineLimit(1)
-                            .skeleton(isPresented: skeleton, kind: .text(lengths: [._75]), size: CGSize(width: textAreaWidth, height: 20))
-                        
+                            .skeleton(
+                                isPresented: skeleton,
+                                kind: .text(variant: .body1)
+                            )
+
                         if let caption {
                             Text(caption)
                                 .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .lineLimit(1)
-                                .skeleton(isPresented: skeleton, kind: .text(lengths: [._50]), size: CGSize(width: textAreaWidth, height: 14))
+                                .skeleton(
+                                    isPresented: skeleton,
+                                    kind: .text(variant: .label2)
+                                )
                         }
-                        
+
                         if let extraCaption {
                             Text(extraCaption)
                                 .paragraph(variant: .label2, weight: .medium, semantic: .labelAlternative)
                                 .lineLimit(1)
                                 .skeleton(
                                     isPresented: skeleton,
-                                    kind: .text(lengths: [._25]),
-                                    size: CGSize(width: textAreaWidth, height: 14)
+                                    kind: .text(variant: .label2)
                                 )
                         }
                     }

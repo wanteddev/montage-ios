@@ -11,32 +11,44 @@ import Montage
 public struct SkeletonPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var isPresented = true
-    @State private var text = "텍스트 스켈레톤 테스트"
+    @State private var text = "텍스트 스켈레톤 테스트 길이가 긴 텍스트입니다. 텍스트를 더 길게 입력해보세요. 어떤 변화가 일어나는지 확인해보세요."
     @State private var kindIndex = 0
     @State private var alignmentIndex = 0
-    @State private var lengthIndices: [Int] = [0]
+    @State private var variantIndex = 0
     @State private var cornerRadius: CGFloat = 3
     @State private var color: SwiftUI.Color = .semantic(.fillNormal)
     @State private var opacity: CGFloat = 1
-    
-    private let kinds: [Skeleton.Kind?] = [
-        .text(),
-        .rectangle(),
-        .circle,
-        .none
-    ]
-    
+
+    private enum PreviewKind: CaseIterable, CaseDescribable {
+        case text, rectangle, circle, custom
+    }
+
     private let alignments: [Skeleton.Align] = [
         .leading,
         .center,
         .trailing
     ]
-    
-    private let lengths: [Skeleton.Length] = [
-        ._100, ._75, ._50, ._25
+
+    private let variants: [Typography.Variant] = [
+        .display1, .display2, .display3,
+        .title1, .title2, .title3,
+        .heading1, .heading2,
+        .headline1, .headline2,
+        .body1, .body2,
+        .label1, .label2,
+        .caption1, .caption2
     ]
-    
-    @State private var lineNumber: Int = 1
+
+    private let variantLabels: [String] = [
+        "display1", "display2", "display3",
+        "title1", "title2", "title3",
+        "heading1", "heading2",
+        "headline1", "headline2",
+        "body1", "body2",
+        "label1", "label2",
+        "caption1", "caption2"
+    ]
+
     public var body: some View {
         SwiftUI.ScrollView {
             VStack(spacing: 0) {
@@ -52,24 +64,21 @@ public struct SkeletonPreview: View {
                 }
                 .padding(.horizontal)
                 Group {
-                    switch kinds[kindIndex] {
+                    switch PreviewKind.allCases[kindIndex] {
                     case .text:
                         Text(text)
+                            .paragraph(variant: variants[variantIndex])
                             .skeleton(
                                 isPresented: isPresented,
                                 kind: .text(
+                                    variant: variants[variantIndex],
                                     alignment: alignments[alignmentIndex],
-                                    lengths: lengthIndices.map { lengths[$0] },
-                                    cornerRadius: cornerRadius,
-                                    lineNumber: lineNumber
+                                    cornerRadius: cornerRadius
                                 ),
                                 color: color,
                                 opacity: opacity,
                                 size: text.isEmpty ? .init(width: 200, height: 24) : nil
                             )
-                            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
-                                self.lineNumber = Int($0 / 20)
-                            })
                     case .rectangle:
                         Image(.placeholder)
                             .cornerRadius(cornerRadius)
@@ -87,7 +96,7 @@ public struct SkeletonPreview: View {
                                 color: color,
                                 opacity: opacity
                             )
-                    case .none:
+                    case .custom:
                         Triangle()
                             .fill(.blue)
                             .frame(width: 100, height: 100)
@@ -96,23 +105,21 @@ public struct SkeletonPreview: View {
                                     .fill(color)
                                     .frame(width: 100, height: 100)
                             }
-                    @unknown default:
-                        EmptyView()
                     }
                 }
                 .padding()
-                
+
                 options
                     .padding(.horizontal)
             }
         }
-        .onChange(of: lineNumber) { _ in
-            lengthIndices = [Int](repeating: 0, count: lineNumber)
-        }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .onAppear {
+            variantIndex = variants.firstIndex { $0 == .label1 } ?? 0
+        }
     }
-    
+
     var options: some View {
         VStack(alignment: .leading) {
             Text("Options").bold()
@@ -122,14 +129,22 @@ public struct SkeletonPreview: View {
             }
             HStack {
                 Text("kind")
-                SegmentedControl(selectedIndex: $kindIndex, labels: kinds.map { $0?.description ?? "custom" })
+                SegmentedControl(selectedIndex: $kindIndex, labels: PreviewKind.allCases.map(\.description))
                     .size(.small)
             }
-            switch kinds[kindIndex] {
+            switch PreviewKind.allCases[kindIndex] {
             case .text:
                 HStack {
                     Text("text")
                     TextField(text: $text)
+                }
+                HStack {
+                    Text("variant")
+                    Picker("variant", selection: $variantIndex) {
+                        ForEach(0..<variantLabels.count, id: \.self) { index in
+                            SwiftUI.Text(variantLabels[index]).tag(index)
+                        }
+                    }
                 }
                 HStack {
                     Text("align")
@@ -138,13 +153,6 @@ public struct SkeletonPreview: View {
                         labels: alignments.map(\.description)
                     )
                     .size(.small)
-                }
-                ForEach(0..<lineNumber, id: \.self) { index in
-                    HStack {
-                        Text("length of line \(index + 1)")
-                        SegmentedControl(selectedIndex: $lengthIndices[safe: index] ?? .constant(0), labels: lengths.map { "\(Int($0.rawValue * 100))%" })
-                            .size(.small)
-                    }
                 }
                 HStack {
                     VStack(spacing: 0) {
@@ -192,7 +200,6 @@ struct Triangle: Shape {
 
 extension Skeleton.Align: CaseDescribable {}
 extension Skeleton.Length: CaseDescribable {}
-extension Skeleton.Kind: CaseDescribable {}
 
 #Preview {
     SkeletonPreview()
