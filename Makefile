@@ -2,7 +2,7 @@
 
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
-XCODE_VERSION=26.2
+XCODE_VERSION=26.3
 
 # 기본 타겟: docc, md, license를 순서대로 실행하고 변경사항 확인
 all: docc md license check-changes
