@@ -151,7 +151,7 @@ public struct BottomSheet: View {
         )
         .presentationDetents(detents)
         .presentationDragIndicator(.hidden)
-        .onChange(of: contentHeight) {  oldValue, newValue in
+        .onChange(of: contentHeight) { newValue in
             if newValue > 0 { isContentMeasured = true }
         }
     }
