@@ -177,6 +177,7 @@ public enum Skeleton {
             }
             .foregroundStyle(color)
             .opacity(opacity)
+            .accessibilityLabel(String(localized: "로딩 중", bundle: .module))
         }
         
         // MARK: - Modifiers

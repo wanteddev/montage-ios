@@ -131,6 +131,8 @@ public struct SegmentedControl: View {
                     .padding(buttonInsets)
                     .frame(width: max(0, buttonWidth))
                     .frame(maxHeight: .infinity)
+                    .accessibilityRemoveTraits(selectedIndex == index ? [] : .isSelected)
+                    .accessibilityAddTraits(selectedIndex == index ? .isSelected : [])
                     .background {
                         Group {
                             switch variant {
@@ -193,7 +195,6 @@ public struct SegmentedControl: View {
     // MARK: - Modifiers
     private var variant: Variant = .solid
     private var size: Size = .large
-    
     /// 세그먼트 컨트롤의 시각적 스타일을 설정합니다.
     ///
     /// - Parameter variant: 적용할 스타일

@@ -175,8 +175,10 @@ public struct Avatar: View {
                 }
             }
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
+            .accessibilityElement(children: .ignore)
+            .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
     }
-    
+
     private var pushBadge = false
     private var pushBadgeSizeOverride: PushBadge.Size?
     private var customCornerRadius: CGFloat?
@@ -184,7 +186,6 @@ public struct Avatar: View {
     private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
-    
     /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
     ///
     /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.

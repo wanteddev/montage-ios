@@ -285,6 +285,7 @@ struct TooltipView: View {
             .frame(maxWidth: 280)
             .fixedSize(horizontal: true, vertical: false)
             .offset(x: offsetHorizontal, y: offsetVertical)
+            .accessibilityLabel(message)
     }
         
     var arrowPadding: EdgeInsets {

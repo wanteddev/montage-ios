@@ -190,5 +190,6 @@ public struct ListCard: View {
             
             trailingContent()
         }
+        .accessibilityElement(children: .combine)
     }
 }

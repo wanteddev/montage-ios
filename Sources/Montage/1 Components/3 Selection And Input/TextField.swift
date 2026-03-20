@@ -162,7 +162,6 @@ public struct TextField: View {
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
-    
     /// 텍스트 필드의 상태를 설정합니다.
     ///
     /// - Parameter status: 텍스트 필드의 상태
@@ -330,6 +329,8 @@ private extension TextField {
                     .focused($textFieldFocusState)
                     .frame(minHeight: 24)
                     .padding(.horizontal, 4)
+                    .accessibilityLabel(heading ?? "")
+                    .accessibilityValue(accessibilityStatusDescription)
                     
                     if !text.isEmpty, textFieldFocusState {
                         IconButton(
@@ -464,6 +465,17 @@ private extension TextField {
         )
     }
     
+    var accessibilityStatusDescription: String {
+        switch status {
+        case .negative(let description):
+            description.isEmpty ? String(localized: "오류", bundle: .module) : description
+        case .positive(let description):
+            description.isEmpty ? "" : description
+        case .normal(let description):
+            description
+        }
+    }
+
     var captionTextColor: SwiftUI.Color {
         switch status {
         case .negative:

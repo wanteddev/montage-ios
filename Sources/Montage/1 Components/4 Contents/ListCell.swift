@@ -137,6 +137,8 @@ public struct ListCell: View {
         .allowsHitTesting(disable == false)
         .opacity(disable ? 0.43 : 1)
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
+        .accessibilityElement(children: .combine)
+        .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
     }
     
     // MARK: - Modifiers

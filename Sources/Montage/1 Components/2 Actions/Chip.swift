@@ -125,6 +125,10 @@ public struct Chip: View {
         )
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         .disabled(disable)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(text)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityValue(active ? String(localized: "선택됨", bundle: .module) : "")
     }
     
     // MARK: - Modifiers

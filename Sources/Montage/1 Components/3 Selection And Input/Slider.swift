@@ -232,13 +232,14 @@ public struct Slider: View {
             }
         }
         .allowsHitTesting(!disable)
+        .accessibilityElement(children: .ignore)
+        .accessibilityValue(headingLabel)
     }
     
     // MARK: - Modifiers
     private var heading = false
     private var label = false
     private var disable = false
-    
     /// 슬라이더 상단에 제목을 표시할지 여부를 설정합니다.
     ///
     /// - Parameter heading: 제목 표시 여부, 생략하면 기본값으로 `true` 적용

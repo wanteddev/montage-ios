@@ -205,7 +205,6 @@ public struct TextArea: View {
     private var trailingResourceSpacing: CGFloat = 4
     private var characterCounterLimit: Int?
     private var characterCounterOverflow: Bool = false
-    
     /// 텍스트 영역의 크기 조절 방식을 설정합니다.
     ///
     /// - Parameter resize: 크기 조절 방식
@@ -430,6 +429,8 @@ public struct TextArea: View {
         .onTapGesture {
             focus.wrappedValue = true
         }
+        .accessibilityLabel(heading ?? "")
+        .accessibilityValue(negative ? (description ?? String(localized: "오류", bundle: .module)) : "")
     }
     
     private var editorStrokeColor: SwiftUI.Color {

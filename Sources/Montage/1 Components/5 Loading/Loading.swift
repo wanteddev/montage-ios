@@ -92,6 +92,7 @@ public struct Loading: View {
                     $0
                 }
             }
+            .accessibilityLabel(String(localized: "로딩 중", bundle: .module))
     }
     
     struct LoadingViewModifier: ViewModifier {

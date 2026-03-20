@@ -124,6 +124,10 @@ public struct FilterButton: View {
         )
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         .disabled(disable)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(text)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityValue(active ? (activeLabel ?? String(localized: "선택됨", bundle: .module)) : "")
     }
     
     // MARK: - Modifiers
@@ -137,7 +141,6 @@ public struct FilterButton: View {
     private var customIconColor: SwiftUI.Color?
     private var fillHorizontal = false
     private var fillVertical = false
-    
     /// 버튼의 활성화 상태와 레이블을 설정합니다.
     ///
     /// - Parameters:
