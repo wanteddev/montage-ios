@@ -277,6 +277,7 @@ public struct Slider: View {
     // MARK: - private
 
     private func handleAccessibilityAdjust(_ direction: AccessibilityAdjustmentDirection) {
+        guard !disable else { return }
         let step = 0.05
         switch direction {
         case .increment:
