@@ -37,6 +37,14 @@ public struct Avatar: View {
         /// 학원 프로필 (둥근 모서리 사각형)
         case academy
         
+        var accessibilityDescription: String {
+            switch self {
+            case .person: String(localized: "프로필 이미지", bundle: .module)
+            case .company: String(localized: "회사 로고", bundle: .module)
+            case .academy: String(localized: "학원 로고", bundle: .module)
+            }
+        }
+
         fileprivate var placeholderImageName: String {
             switch self {
             case .person:
@@ -175,8 +183,11 @@ public struct Avatar: View {
                 }
             }
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(variant.accessibilityDescription)
+            .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
     }
-    
+
     private var pushBadge = false
     private var pushBadgeSizeOverride: PushBadge.Size?
     private var customCornerRadius: CGFloat?
@@ -184,7 +195,6 @@ public struct Avatar: View {
     private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
-    
     /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
     ///
     /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.

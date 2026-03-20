@@ -545,6 +545,7 @@ extension TopNavigation {
                         IconButton(icon: .chevronLeft) {
                             action()
                         }
+                        .accessibilityLabel(String(localized: "뒤로 가기", bundle: .module))
                         .frame(width: 24, height: 24)
                     case let .icon(i, action):
                         IconButton(icon: i) {

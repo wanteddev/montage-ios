@@ -232,13 +232,18 @@ public struct Slider: View {
             }
         }
         .allowsHitTesting(!disable)
+        .modifier(SliderAccessibilityModifier(
+            label: String(localized: "슬라이더", bundle: .module),
+            value: headingLabel,
+            disable: disable,
+            onAdjust: handleAccessibilityAdjust
+        ))
     }
     
     // MARK: - Modifiers
     private var heading = false
     private var label = false
     private var disable = false
-    
     /// 슬라이더 상단에 제목을 표시할지 여부를 설정합니다.
     ///
     /// - Parameter heading: 제목 표시 여부, 생략하면 기본값으로 `true` 적용
@@ -270,7 +275,30 @@ public struct Slider: View {
     }
     
     // MARK: - private
-    
+
+    private func handleAccessibilityAdjust(_ direction: AccessibilityAdjustmentDirection) {
+        guard !disable else { return }
+        let step = 0.05
+        switch direction {
+        case .increment:
+            if isRangeSlider, focusedThumb == 1 {
+                thumbRatio1 = min(thumbRatio2, thumbRatio1 + step)
+            } else {
+                thumbRatio2 = min(1.0, thumbRatio2 + step)
+            }
+        case .decrement:
+            if isRangeSlider, focusedThumb != 1 {
+                thumbRatio2 = max(thumbRatio1, thumbRatio2 - step)
+            } else if isRangeSlider {
+                thumbRatio1 = max(0.0, thumbRatio1 - step)
+            } else {
+                thumbRatio2 = max(0.0, thumbRatio2 - step)
+            }
+        @unknown default:
+            break
+        }
+    }
+
     private func updateValues() {
         lowValue = (valueRange.upperBound - valueRange.lowerBound) * lowThumbRatio + valueRange.lowerBound
         highValue = (valueRange.upperBound - valueRange.lowerBound) * highThumbRatio + valueRange.lowerBound
@@ -443,5 +471,20 @@ public struct Slider: View {
         private var distanceToLeadingEdge: CGFloat {
             value * maxValue + Slider.diameter / 2
         }
+    }
+}
+
+private struct SliderAccessibilityModifier: ViewModifier {
+    let label: String
+    let value: String
+    let disable: Bool
+    let onAdjust: (AccessibilityAdjustmentDirection) -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(label)
+            .accessibilityValue(value)
+            .accessibilityAdjustableAction(onAdjust)
     }
 }

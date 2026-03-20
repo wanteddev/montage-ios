@@ -64,7 +64,6 @@ public struct IconButton: View {
     private var iconColor: SwiftUI.Color?
     private var backgroundColor: SwiftUI.Color?
     private var borderColor: SwiftUI.Color?
-    
     /// 버튼의 비활성화 여부를 설정합니다.
     /// - Parameter value: 비활성화 여부, true이면 버튼이 비활성화됩니다.
     /// - Returns: 수정된 IconButton 인스턴스
@@ -223,6 +222,9 @@ public struct IconButton: View {
             )
             .allowsHitTesting(disable == false)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")
+            .accessibilityAddTraits(.isButton)
     }
 }
 

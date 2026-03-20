@@ -91,6 +91,7 @@ struct Control: View {
                         onSelect?($0 ? .checked : .unchecked)
                     })
             )
+            .labelsHidden()
             .disabled(disable)
             .tint(backgroundColor)
             .frame(width: switchSize.width, height: switchSize.height)
@@ -166,6 +167,10 @@ struct Control: View {
                         }
                 }
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(label)
+            .accessibilityValue(accessibilityStateDescription)
+            .accessibilityAddTraits(.isButton)
         }
     }
 
@@ -405,6 +410,14 @@ extension Control {
             weight: labelWeight ?? .regular,
             color: disable ? .semantic(.labelDisable) : labelColor ?? .semantic(.labelNormal)
         )
+    }
+
+    fileprivate var accessibilityStateDescription: String {
+        switch state {
+        case .checked: String(localized: "선택됨", bundle: .module)
+        case .unchecked: String(localized: "선택 안 됨", bundle: .module)
+        case .indeterminate: String(localized: "부분 선택됨", bundle: .module)
+        }
     }
 
     fileprivate var spacing: CGFloat {

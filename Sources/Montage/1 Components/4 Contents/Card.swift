@@ -243,6 +243,7 @@ public struct Card: View {
                 .frame(maxWidth: thumbnailWidth, alignment: .leading)
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
     private var horizontalPadding: CGFloat = 2

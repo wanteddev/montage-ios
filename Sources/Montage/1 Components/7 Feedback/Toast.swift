@@ -174,6 +174,8 @@ public struct Toast: View, KeyboardReadable {
                 BackgroundView()
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isStaticText)
         }
     }
 

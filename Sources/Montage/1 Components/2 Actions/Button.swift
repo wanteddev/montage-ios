@@ -166,7 +166,6 @@ public struct Button: View {
     private var loading = false
     private var fillHorizontal = false
     private var fillVertical = false
-    
     /// 버튼을 비활성화 상태로 설정합니다.
     ///
     /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
@@ -366,6 +365,10 @@ public struct Button: View {
         }
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         .allowsHitTesting(!disable && !loading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(text ?? leadingIcon?.rawValue ?? "")
+        .accessibilityAddTraits(.isButton)
+        .accessibilityValue(loading ? String(localized: "로딩 중", bundle: .module) : "")
     }
 }
 

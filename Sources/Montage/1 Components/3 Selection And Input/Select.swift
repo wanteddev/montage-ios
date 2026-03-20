@@ -149,7 +149,6 @@ public struct Select: View {
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leadingContent: LeadingContent?
     private var menuResize: BottomSheet.Resize = .hug
-
     /// negative 상태 여부를 조정합니다.
     /// - Parameter negative: 부정적 상태 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 Select 인스턴스
@@ -428,6 +427,10 @@ public struct Select: View {
             }
         }
         .allowsHitTesting(disable == false)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(heading.isEmpty ? placeholder : heading)
+        .accessibilityValue(selectedItems.map(\.text).joined(separator: ", "))
+        .accessibilityAddTraits(.isButton)
         .onTapGesture {
             menuPresented.wrappedValue.toggle()
         }

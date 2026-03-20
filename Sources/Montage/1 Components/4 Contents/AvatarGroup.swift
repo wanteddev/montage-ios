@@ -140,6 +140,10 @@ public struct AvatarGroup: View {
 
             trailingContent()
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "\(variant.accessibilityDescription) \(imageSources.count)"
+        )
     }
 
     // MARK: - Modifiers
@@ -169,6 +173,7 @@ public struct AvatarGroup: View {
         zelf.trailingContent = { AnyView(trailingContent()) }
         return zelf
     }
+
 }
 
 /// `AvatarGroup`의 내부 구현을 위한 확장입니다.

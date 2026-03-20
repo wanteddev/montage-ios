@@ -115,6 +115,9 @@ public struct Tab: View {
                                             }
                                         }
                                         .contentShape(Rectangle())
+                                        .accessibilityAddTraits(.isButton)
+                                        .accessibilityAddTraits(index == selectedIndex ? .isSelected : [])
+                                        .accessibilityRemoveTraits(index == selectedIndex ? [] : .isSelected)
                                         .onTapGesture {
                                             guard !itemDisabled(index) else { return }
                                             withAnimation(animation) {

@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Montage",
+    defaultLocalization: "ko",
     platforms: [.iOS(.v16)],
     products: [
         .library(name: "Montage", targets: ["Montage"])
