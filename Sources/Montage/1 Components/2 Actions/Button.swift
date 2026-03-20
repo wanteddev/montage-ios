@@ -366,7 +366,7 @@ public struct Button: View {
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
         .allowsHitTesting(!disable && !loading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(text ?? "")
+        .accessibilityLabel(text ?? leadingIcon?.rawValue ?? "")
         .accessibilityAddTraits(.isButton)
         .accessibilityValue(loading ? String(localized: "로딩 중", bundle: .module) : "")
     }

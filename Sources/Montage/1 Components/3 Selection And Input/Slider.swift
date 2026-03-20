@@ -234,6 +234,21 @@ public struct Slider: View {
         .allowsHitTesting(!disable)
         .accessibilityElement(children: .ignore)
         .accessibilityValue(headingLabel)
+        .accessibilityAdjustableAction { direction in
+            let step = 0.05
+            switch direction {
+            case .increment:
+                thumbRatio2 = min(1.0, thumbRatio2 + step)
+            case .decrement:
+                if isRangeSlider {
+                    thumbRatio1 = max(0.0, thumbRatio1 - step)
+                } else {
+                    thumbRatio2 = max(0.0, thumbRatio2 - step)
+                }
+            @unknown default:
+                break
+            }
+        }
     }
     
     // MARK: - Modifiers

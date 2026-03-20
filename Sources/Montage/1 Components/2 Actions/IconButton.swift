@@ -223,7 +223,7 @@ public struct IconButton: View {
             .allowsHitTesting(disable == false)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(icon.rawValue)
+            .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")
             .accessibilityAddTraits(.isButton)
     }
 }

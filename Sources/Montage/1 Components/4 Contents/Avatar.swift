@@ -37,6 +37,14 @@ public struct Avatar: View {
         /// 학원 프로필 (둥근 모서리 사각형)
         case academy
         
+        var accessibilityDescription: String {
+            switch self {
+            case .person: String(localized: "프로필 이미지", bundle: .module)
+            case .company: String(localized: "회사 로고", bundle: .module)
+            case .academy: String(localized: "학원 로고", bundle: .module)
+            }
+        }
+
         fileprivate var placeholderImageName: String {
             switch self {
             case .person:
@@ -176,6 +184,7 @@ public struct Avatar: View {
             }
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
             .accessibilityElement(children: .ignore)
+            .accessibilityLabel(variant.accessibilityDescription)
             .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
     }
 

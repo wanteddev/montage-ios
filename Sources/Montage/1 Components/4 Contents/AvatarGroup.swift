@@ -141,6 +141,9 @@ public struct AvatarGroup: View {
             trailingContent()
         }
         .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "\(variant.accessibilityDescription) \(imageSources.count)"
+        )
     }
 
     // MARK: - Modifiers
