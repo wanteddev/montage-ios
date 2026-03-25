@@ -47,7 +47,13 @@ $ARGUMENTS
 2. `gh release create {version} --repo wanteddev/montage-ios --target main --generate-notes [--latest] --title "{version}"`
 3. `gh release view {version} --repo wanteddev/montage-ios --json url,body`로 릴리즈 URL과 body 가져오기
 
-### 4단계 — Slack 알림
+### 4단계 — 마일스톤 클로즈
+
+1. `gh api repos/wanteddev/montage-ios/milestones --jq '.[] | select(.title=="{version_without_v}") | .number'`로 해당 버전의 마일스톤 번호 조회
+2. **마일스톤 있음**: `gh api -X PATCH repos/wanteddev/montage-ios/milestones/{number} -f state=closed`로 클로즈
+3. **마일스톤 없음**: "마일스톤 {version_without_v}이(가) 존재하지 않아 건너뜁니다." 안내 후 다음 단계로 진행
+
+### 5단계 — Slack 알림
 
 1. Slack MCP 사용 가능 여부 확인 (`mcp__plugin_slack_slack__slack_send_message` 도구 존재 여부)
 2. **사용 불가 시**: "Slack MCP가 설정되어 있지 않습니다. 아래 명령어로 설정해주세요:" 안내 후 메시지 텍스트 출력
