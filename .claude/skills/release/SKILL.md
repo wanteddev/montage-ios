@@ -74,10 +74,16 @@ $ARGUMENTS
 {release_url}
 
 **What's Changed**
-• {changes... (PR 링크는 [#번호](url) 형식으로 변환)}
+• {changes... }
 
-Full Changelog: [{old_version}...{new_version}]({compare_url})
+Full Changelog: <{compare_url}|{old_version}...{new_version}>
 ```
+
+**body 변환 규칙** (GitHub Release body → Slack mrkdwn):
+1. **지라 티켓번호 링크 추가**: `[PI-12345]` → `<https://wantedlab.atlassian.net/browse/PI-12345|[PI-12345]>` (지라 링크 추가, 대괄호 유지). `WRP-` 접두사도 동일 처리
+2. **PR 링크 유지**: `in https://github.com/.../pull/123` → `in <https://github.com/.../pull/123|#123>` (URL을 PR 번호 링크로 변환)
+3. **Full Changelog 링크**: 전체 URL 대신 `<{compare_url}|{old_version}...{new_version}>` 형식으로 변환
+4. **`*` 불릿 → `•`**: 마크다운 리스트를 Slack 불릿으로 변환
 
 ---
 
