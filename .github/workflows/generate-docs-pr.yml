@@ -105,14 +105,30 @@ jobs:
           
           git add .
           if git diff --staged --quiet; then
-            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "doc_changes=false" >> $GITHUB_OUTPUT
           else
             git commit -m "$COMMIT_MSG" --no-verify
             git push origin "$BRANCH_NAME"
-            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "doc_changes=true" >> $GITHUB_OUTPUT
           fi
-          
+
+          # 문서 변경이 없어도 브랜치에 커밋이 있고 PR이 없으면 PR 생성 필요
+          EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --state open --json url --jq '.[0].url // ""' 2>/dev/null || echo "")
+          if [ -n "$EXISTING_PR" ]; then
+            echo "needs_pr=false" >> $GITHUB_OUTPUT
+          else
+            AHEAD=$(git rev-list --count origin/main.."$BRANCH_NAME" 2>/dev/null || echo "0")
+            if [ "$AHEAD" -gt "0" ]; then
+              echo "needs_pr=true" >> $GITHUB_OUTPUT
+            else
+              echo "needs_pr=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
 
       - name: Get base branch name
         id: base_branch
@@ -122,7 +138,7 @@ jobs:
           echo "branch=$BASE_BRANCH" >> $GITHUB_OUTPUT
 
       - name: Create or update PR
-        if: steps.commit.outputs.changes == 'true'
+        if: steps.commit.outputs.doc_changes == 'true' || steps.commit.outputs.needs_pr == 'true'
         id: create_pr
         run: |
           BRANCH_NAME="${{ env.BRANCH_NAME }}"
@@ -130,7 +146,7 @@ jobs:
           PR_BODY="${{ inputs.pr_body || github.event.inputs.pr_body || '문서를 업데이트했습니다.' }}"
           
           # 현재 브랜치에 연결된 PR URL을 가져오기 시도
-          PR_URL=$(gh pr view -H "$BRANCH_NAME" --json url --jq '.url' 2>/dev/null || echo "")
+          PR_URL=$(gh pr list --head "$BRANCH_NAME" --state open --json url --jq '.[0].url // ""' 2>/dev/null || echo "")
           
           if [ -z "$PR_URL" ]; then
             # 기존 PR이 없으면 새로운 PR 생성
@@ -140,7 +156,7 @@ jobs:
               --title "$PR_TITLE" \
               --body "$PR_BODY"
             # PR 생성 후 URL 다시 가져오기
-            PR_URL=$(gh pr view -H "$BRANCH_NAME" --json url --jq '.url' 2>/dev/null || echo "")
+            PR_URL=$(gh pr list --head "$BRANCH_NAME" --state open --json url --jq '.[0].url // ""' 2>/dev/null || echo "")
           fi
           
           echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
@@ -149,7 +165,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
 
       - name: Send Slack notification
-        if: steps.commit.outputs.changes == 'true'
+        if: steps.commit.outputs.doc_changes == 'true' || steps.commit.outputs.needs_pr == 'true'
         run: |
           BRANCH_NAME="${{ env.BRANCH_NAME }}"
           PR_TITLE="${{ inputs.pr_title || github.event.inputs.pr_title || 'docs: 문서 업데이트' }}"
