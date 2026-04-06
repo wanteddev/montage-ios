@@ -503,7 +503,7 @@ public struct TopNavigation: View {
             HStack(alignment: .center, spacing: 16) {
                 ForEach(contents.indices, id: \.self) { index in
                     contents[index]()
-                        .contentShape(Rectangle().scale(2), eoFill: true) // 터치영역 확장
+                        .contentShape(Rectangle().inset(by: -10)) // 터치영역 확장 (고정 패딩)
                 }
             }
         }
@@ -560,7 +560,7 @@ extension TopNavigation {
                         .frame(height: 24)
                     }
                 }
-                .contentShape(Rectangle().scale(2), eoFill: true)
+                .contentShape(Rectangle().inset(by: -10)) // 터치영역 확장 (고정 패딩)
             } else {
                 SwiftUI.Color.clear
                     .frame(width: 24, height: 24)
