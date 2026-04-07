@@ -453,6 +453,7 @@ private extension TextField {
                             .strokeBorder(SwiftUI.Color.semantic(.lineAlternative))
                     }
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
+                    .accessibilityIdentifier("autocomplete_container")
                     .position(
                         x: textFieldFrame.midX,
                         y: textFieldFrame.maxY - safeAreaInsets.top
@@ -519,6 +520,7 @@ private extension TextField {
                                             ForEach(0 ..< itemCount, id: \.self) { item in
                                                 let indexPath = IndexPath(item: item, section: section)
                                                 autoCompletionDataSource.cellForItemAt(indexPath)
+                                                    .accessibilityIdentifier("autocomplete_item_\(section)_\(item)")
                                             }
                                         }
                                     }
