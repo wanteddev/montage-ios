@@ -196,15 +196,10 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>``func noMaterialBackground(Bool) -> ModalNavigation``</summary>
+<summary>``func noMaterialBackground() -> ModalNavigation``</summary>
 
 
-내비게이션 바의 배경에 머티리얼 효과를 적용하지 않을지 여부를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `noMaterialBackground` | 머티리얼 효과 제거 여부. 생략하면 기본값으로 `true` 적용 |
+내비게이션 바의 배경에 머티리얼 효과를 적용하지 않습니다.
 - **Return Value**
 
   수정된 내비게이션 바 뷰

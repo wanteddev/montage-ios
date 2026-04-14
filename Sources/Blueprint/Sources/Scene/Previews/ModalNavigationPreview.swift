@@ -55,7 +55,13 @@ struct ModalNavigationPreview: View {
                         ModalNavigation(scrollOffset: $contentOffset)
                             .variant(variants[variantIndex])
                             .title("제목")
-                            .noMaterialBackground(noMaterialBackground)
+                            .modifying {
+                                if noMaterialBackground {
+                                    $0.noMaterialBackground()
+                                } else {
+                                    $0
+                                }
+                            }
                             .modifying {
                                 if useFixedOpacity {
                                     $0.fixedBackgroundOpacity(fixedOpacity)

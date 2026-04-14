@@ -109,7 +109,7 @@ public struct ModalNavigation: View {
         }
         .background {
             ZStack {
-                if noMaterialBackground {
+                if isMaterialBackgroundDisabled {
                     SwiftUI.Color.semantic(.backgroundNormal)
                         .opacity(backgroundOpacity)
                 } else {
@@ -136,7 +136,7 @@ public struct ModalNavigation: View {
     
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNormal)
-    private var noMaterialBackground = false
+    private var isMaterialBackgroundDisabled = false
     private var fixedBackgroundOpacity: CGFloat?
     private var needHandleArea = false
     private var titleText: String?
@@ -174,13 +174,12 @@ public struct ModalNavigation: View {
         return zelf
     }
     
-    /// 내비게이션 바의 배경에 머티리얼 효과를 적용하지 않을지 여부를 설정합니다.
+    /// 내비게이션 바의 배경에 머티리얼 효과를 적용하지 않습니다.
     ///
-    /// - Parameter noMaterialBackground: 머티리얼 효과 제거 여부. 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 내비게이션 바 뷰
-    public func noMaterialBackground(_ noMaterialBackground: Bool = true) -> Self {
+    public func noMaterialBackground() -> Self {
         var zelf = self
-        zelf.noMaterialBackground = noMaterialBackground
+        zelf.isMaterialBackgroundDisabled = true
         return zelf
     }
     
