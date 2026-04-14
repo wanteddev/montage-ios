@@ -35,9 +35,9 @@ public struct ModalNavigation: View {
         fileprivate enum Kind: Equatable {
             case normal, display, extended, floating, emphasized
         }
-
+        
         fileprivate let kind: Kind
-
+        
         /// 기본 스타일의 내비게이션 바
         public static let normal = Variant(kind: .normal)
         /// 제목이 별도 줄에 표시되는 확장된 스타일
@@ -46,19 +46,19 @@ public struct ModalNavigation: View {
         public static let floating = Variant(kind: .floating)
         /// 강조된 큰 제목 스타일
         public static let emphasized = Variant(kind: .emphasized)
-
+        
         /// 제목이 별도 줄에 표시되는 확장된 스타일
         @available(*, deprecated, renamed: "display", message: "이름이 `display`로 변경되었습니다. 다음 메이저 업데이트 때 제거될 예정입니다.")
         public static let extended = Variant(kind: .extended)
-
+        
         /// 플로팅 스타일
         @available(*, deprecated, message: "파라메터 제거되었습니다. `.floating`으로 사용하십시오. 다음 메이저 업데이트 때 제거될 예정입니다.")
         public static func floating(alternative: Bool = false, background: Bool = true) -> Variant {
             Variant(kind: .floating)
         }
-
+        
         fileprivate var isFloating: Bool { kind == .floating }
-
+        
         public var description: String {
             switch kind {
             case .normal: "normal"
@@ -71,7 +71,7 @@ public struct ModalNavigation: View {
     }
     
     // MARK: - Initialisers
-
+    
     @Binding private var scrollOffset: CGFloat
     
     /// 내비게이션 바를 초기화합니다.
@@ -96,7 +96,7 @@ public struct ModalNavigation: View {
                         .frame(width: 40, height: 5)
                 }
             }
-
+            
             Contents(
                 variant: variant,
                 titleText: titleText,
@@ -109,10 +109,15 @@ public struct ModalNavigation: View {
         }
         .background {
             ZStack {
-                Rectangle().fill(.ultraThinMaterial)
-                    .opacity(backgroundOpacity)
-                backgroundColor
-                    .opacity(backgroundOpacity * 0.70)
+                if noMaterialBackground {
+                    SwiftUI.Color.semantic(.backgroundNormal)
+                        .opacity(backgroundOpacity)
+                } else {
+                    Rectangle().fill(.ultraThinMaterial)
+                        .opacity(backgroundOpacity)
+                    SwiftUI.Color.semantic(.backgroundNormal)
+                        .opacity(backgroundOpacity * 0.7)
+                }
             }
             .if(variant.isFloating) {
                 $0.mask {
@@ -131,6 +136,8 @@ public struct ModalNavigation: View {
     
     private var variant: Variant = .normal
     private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNormal)
+    private var noMaterialBackground = false
+    private var fixedBackgroundOpacity: CGFloat?
     private var needHandleArea = false
     private var titleText: String?
     private var titleView: () -> AnyView = { AnyView(EmptyView()) }
@@ -164,6 +171,26 @@ public struct ModalNavigation: View {
     public func backgroundColor(_ backgroundColor: SwiftUI.Color) -> Self {
         var zelf = self
         zelf.backgroundColor = backgroundColor
+        return zelf
+    }
+    
+    /// 내비게이션 바의 배경에 머티리얼 효과를 적용하지 않을지 여부를 설정합니다.
+    ///
+    /// - Parameter noMaterialBackground: 머티리얼 효과 제거 여부. 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func noMaterialBackground(_ noMaterialBackground: Bool = true) -> Self {
+        var zelf = self
+        zelf.noMaterialBackground = noMaterialBackground
+        return zelf
+    }
+    
+    /// 내비게이션 바의 배경 불투명도를 고정값으로 설정합니다. 스크롤에 따른 자동 조절을 비활성화하고 항상 일정한 불투명도를 유지합니다.
+    ///
+    /// - Parameter fixedBackgroundOpacity: 고정 배경 불투명도 (0에서 1 사이의 값)
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func fixedBackgroundOpacity(_ fixedBackgroundOpacity: CGFloat) -> Self {
+        var zelf = self
+        zelf.fixedBackgroundOpacity = fixedBackgroundOpacity
         return zelf
     }
     
@@ -312,10 +339,10 @@ private extension ModalNavigation {
             return 1
         } else {
             let ratio = (scrollOffset / -32)
-            return max(0, min(1, ratio))
+            return fixedBackgroundOpacity ?? max(0, min(1, ratio))
         }
     }
-
+    
     var gradientMaskColors: [SwiftUI.Color] {
         [0, 0.7, 1].map { SwiftUI.Color.black.opacity($0) }
     }
@@ -330,7 +357,7 @@ private extension ModalNavigation.Variant {
         case .floating: 4
         }
     }
-
+    
     var contentBottomPadding: CGFloat {
         switch kind {
         case .normal: 10
@@ -339,7 +366,7 @@ private extension ModalNavigation.Variant {
         case .floating: 8
         }
     }
-
+    
     var topNavigationVariant: TopNavigation.Variant {
         switch kind {
         case .normal: .normal
@@ -348,7 +375,7 @@ private extension ModalNavigation.Variant {
         case .emphasized: .normal
         }
     }
-
+    
     var typoVariant: Typography.Variant {
         switch kind {
         case .normal: .headline2
@@ -357,7 +384,7 @@ private extension ModalNavigation.Variant {
         case .emphasized: .heading2
         }
     }
-
+    
     var typoWeight: Typography.Weight {
         switch kind {
         case .normal: .bold

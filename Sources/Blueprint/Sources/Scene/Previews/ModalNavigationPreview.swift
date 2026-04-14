@@ -16,6 +16,9 @@ struct ModalNavigationPreview: View {
     @State private var leadingButton = true
     @State private var leadingButtonTypeIndex = 0
     @State private var trailingButtonCount = 1
+    @State private var noMaterialBackground = false
+    @State private var useFixedOpacity = false
+    @State private var fixedOpacity: CGFloat = 0.5
     @Environment(\.presentationMode) var presentationMode
     @State private var showPreview = true
     
@@ -52,6 +55,14 @@ struct ModalNavigationPreview: View {
                         ModalNavigation(scrollOffset: $contentOffset)
                             .variant(variants[variantIndex])
                             .title("제목")
+                            .noMaterialBackground(noMaterialBackground)
+                            .modifying {
+                                if useFixedOpacity {
+                                    $0.fixedBackgroundOpacity(fixedOpacity)
+                                } else {
+                                    $0
+                                }
+                            }
                             .leadingContent {
                                 Group {
                                     if leadingButton {
@@ -120,12 +131,26 @@ struct ModalNavigationPreview: View {
                         Text("trailingButton")
                         SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
                             .size(.small)
-                        
+
+                    }
+                    HStack {
+                        Text("noMaterialBackground")
+                        Spacer()
+                        Switch(checked: noMaterialBackground) { noMaterialBackground = $0 }
+                    }
+                    HStack {
+                        Text("fixedBackgroundOpacity")
+                        SwiftUI.Slider(value: $fixedOpacity, in: 0...1)
+                            .disabled(!useFixedOpacity)
+                        Text(String(format: "%.2f", fixedOpacity))
+                            .monospacedDigit()
+                        Switch(checked: useFixedOpacity) { useFixedOpacity = $0 }
                     }
                 }
                 .padding()
                 .background(.regularMaterial)
             }
+            .background(Color.semantic(.backgroundNormal))
         }
     }
     
