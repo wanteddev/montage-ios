@@ -110,12 +110,12 @@ public struct ModalNavigation: View {
         .background {
             ZStack {
                 if isMaterialBackgroundDisabled {
-                    SwiftUI.Color.semantic(.backgroundNormal)
+                    backgroundColor
                         .opacity(backgroundOpacity)
                 } else {
                     Rectangle().fill(.ultraThinMaterial)
                         .opacity(backgroundOpacity)
-                    SwiftUI.Color.semantic(.backgroundNormal)
+                    backgroundColor
                         .opacity(backgroundOpacity * 0.7)
                 }
             }
