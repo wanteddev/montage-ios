@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "ko",
   "strings" : {
+    "" : {
+
+    },
     "*" : {
 
     },
@@ -13,6 +16,26 @@
     "%@" : {
 
     },
+    "%@ %@" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ %lld" : {
+      "localizations" : {
+        "ko" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$lld"
+          }
+        }
+      }
+    },
     "%@x%@" : {
       "localizations" : {
         "ko" : {
@@ -22,6 +45,12 @@
           }
         }
       }
+    },
+    "%lld" : {
+
+    },
+    "99+" : {
+
     },
     "N" : {
 
