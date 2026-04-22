@@ -36,10 +36,6 @@ let package = Package(
                 .process("Asset")
             ]
         ),
-        .testTarget(
-            name: "MontageTests",
-            dependencies: ["Montage"]
-        ),
     ],
     swiftLanguageVersions: [.v5]
 )

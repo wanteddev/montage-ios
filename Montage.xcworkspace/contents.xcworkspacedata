@@ -984,20 +984,6 @@
          </Group>
       </Group>
    </Group>
-   <Group
-      location = "group:Tests"
-      name = "Tests">
-      <Group
-         location = "group:MontageTests"
-         name = "MontageTests">
-         <FileRef
-            location = "group:MontageTests.swift">
-         </FileRef>
-      </Group>
-   </Group>
-   <FileRef
-      location = "group:CODE_OF_CONDUCT.md">
-   </FileRef>
    <FileRef
       location = "group:DOCUMENTATION_GUIDELINES.md">
    </FileRef>
