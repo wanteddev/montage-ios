@@ -1,5 +1,5 @@
 {
-  "originHash" : "ce015d0ae6da392d3a2e82921ff7482591d1f786d188b2e9ffc091e98b11b880",
+  "originHash" : "1c9a3273da3f90d44c64c2c2c921f9b167ac803d81d27f49369b1cdc13470ed5",
   "pins" : [
     {
       "identity" : "lottie-ios",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "fe4c6fe3a0aa66cdeb51d549623c82ca9704b9a5",
         "version" : "4.5.0"
+      }
+    },
+    {
+      "identity" : "montage-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wanteddev/montage-ios",
+      "state" : {
+        "revision" : "c19f92b279b2be113b746cb709a6928ca83a51a8",
+        "version" : "3.5.0"
       }
     },
     {

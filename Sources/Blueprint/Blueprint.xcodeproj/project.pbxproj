@@ -69,6 +69,7 @@
 		4DF7C55D2CE340F0002B241B /* TooltipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */; };
 		4DF7C5602CE340F0002B241B /* SelectPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A62CE340F0002B241B /* SelectPreview.swift */; };
 		4DFA5A532E572464003BED22 /* ShadowPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFA5A522E572464003BED22 /* ShadowPreview.swift */; };
+		C878B8072F975E50000F7163 /* Montage in Frameworks */ = {isa = PBXBuildFile; productRef = C878B8062F975E50000F7163 /* Montage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C878B8072F975E50000F7163 /* Montage in Frameworks */,
 				4D5B46D82CE34625001DD48B /* Pretendard in Frameworks */,
 				4D45DAF12D910C2D002B1686 /* Montage in Frameworks */,
 			);
@@ -300,6 +302,7 @@
 			packageProductDependencies = (
 				4D5B46D72CE34625001DD48B /* Pretendard */,
 				4D45DAF02D910C2D002B1686 /* Montage */,
+				C878B8062F975E50000F7163 /* Montage */,
 			);
 			productName = Blueprint;
 			productReference = 4D9F46AC2CE32750000DBA7D /* Blueprint.app */;
@@ -331,7 +334,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4D5B46D62CE34625001DD48B /* XCRemoteSwiftPackageReference "pretendard-ios" */,
-				4D45DAEF2D910C2D002B1686 /* XCLocalSwiftPackageReference "../../" */,
+				C878B8052F975E50000F7163 /* XCRemoteSwiftPackageReference "montage-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4D9F46AD2CE32750000DBA7D /* Products */;
@@ -626,13 +629,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		4D45DAEF2D910C2D002B1686 /* XCLocalSwiftPackageReference "../../" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		4D5B46D62CE34625001DD48B /* XCRemoteSwiftPackageReference "pretendard-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -640,6 +636,14 @@
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		C878B8052F975E50000F7163 /* XCRemoteSwiftPackageReference "montage-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wanteddev/montage-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -653,6 +657,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D5B46D62CE34625001DD48B /* XCRemoteSwiftPackageReference "pretendard-ios" */;
 			productName = Pretendard;
+		};
+		C878B8062F975E50000F7163 /* Montage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C878B8052F975E50000F7163 /* XCRemoteSwiftPackageReference "montage-ios" */;
+			productName = Montage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
