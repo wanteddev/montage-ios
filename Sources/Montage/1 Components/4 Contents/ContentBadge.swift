@@ -180,7 +180,7 @@ private extension ContentBadge {
         case .small:
             .init(width: 14, height: 14)
         case .medium:
-            .init(width: 16, height: 16)
+            .init(width: 14, height: 14)
         }
     }
     
@@ -229,7 +229,7 @@ private extension ContentBadge {
         case .xsmall:
             2
         case .small:
-            3
+            4
         case .medium:
             4
         }
@@ -251,11 +251,11 @@ private extension ContentBadge {
     var cornerRadius: CGFloat {
         switch size {
         case .xsmall:
-            6.0
-        case .small:
-            6.0
-        case .medium:
             8.0
+        case .small:
+            8.0
+        case .medium:
+            10.0
         }
     }
 }
