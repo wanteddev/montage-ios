@@ -7,6 +7,8 @@ import { getComponentTool } from "./get-component.js";
 import { listTokensTool } from "./list-tokens.js";
 import { getColorUsageTool } from "./get-color-usage.js";
 import { listIconsTool } from "./list-icons.js";
+import { resolveFigmaComponentTool } from "./resolve-figma-component.js";
+import { resolveFigmaTokenTool } from "./resolve-figma-token.js";
 
 export interface ToolDefinition {
   name: string;
@@ -32,6 +34,7 @@ export function allTools(ctx: ServerContext): ToolDefinition[] {
     listTokensTool(ctx),
     getColorUsageTool(ctx),
     listIconsTool(ctx),
-    // Phase 4 will append: resolve_figma_component, resolve_figma_token
+    resolveFigmaComponentTool(ctx),
+    resolveFigmaTokenTool(ctx),
   ];
 }
