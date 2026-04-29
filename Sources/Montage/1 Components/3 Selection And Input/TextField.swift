@@ -257,7 +257,8 @@ public struct TextField: View {
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.colorScheme) private var colorScheme
-    @State private var textFieldFrame: CGRect = .zero
+    @State private var textFieldSize: CGSize = .zero
+    @State private var textFieldGlobalFrame: CGRect = .zero
     @FocusState private var textFieldFocusState: Bool
     @State private var autoCompletionContentHeight: CGFloat = .zero
     @State private var fixAutocorrection = false
@@ -383,16 +384,24 @@ private extension TextField {
                             Rectangle()
                                 .offset(x: 1, y: .zero)
                         )
-                        .frame(height: textFieldFrame.height)
+                        .frame(height: textFieldSize.height)
                 }
                 .fixedSize(horizontal: true, vertical: false)
             }
         }
         .frame(minHeight: 48)
         .onGeometryChange(
+            for: CGSize.self,
+            of: { $0.size },
+            action: { textFieldSize = $0 }
+        )
+        .onGeometryChange(
             for: CGRect.self,
-            of: { $0.frame(in: .global) },
-            action: { textFieldFrame = $0 }
+            of: { proxy in
+                guard autoCompletionDataSource != nil else { return .zero }
+                return proxy.frame(in: .global)
+            },
+            action: { textFieldGlobalFrame = $0 }
         )
         .background {
             if disable {
@@ -443,7 +452,7 @@ private extension TextField {
                         autoCompletionContent
                     }
                     .frame(
-                        width: textFieldFrame.width,
+                        width: textFieldGlobalFrame.width,
                         height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
                     .background(SwiftUI.Color.semantic(.backgroundNormal))
@@ -455,8 +464,8 @@ private extension TextField {
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .accessibilityIdentifier("autocomplete_container")
                     .position(
-                        x: textFieldFrame.midX,
-                        y: textFieldFrame.maxY - safeAreaInsets.top
+                        x: textFieldGlobalFrame.midX,
+                        y: textFieldGlobalFrame.maxY - safeAreaInsets.top
                     )
                     .offset(
                         y: 8 + min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0) / 2
