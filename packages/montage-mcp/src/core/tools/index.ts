@@ -1,5 +1,12 @@
 import type { ServerContext } from "../server.js";
 import { healthCheckTool } from "./health-check.js";
+import { gettingStartedTool } from "./getting-started.js";
+import { montageCodingGuidelinesTool } from "./montage-coding-guidelines.js";
+import { listComponentsTool } from "./list-components.js";
+import { getComponentTool } from "./get-component.js";
+import { listTokensTool } from "./list-tokens.js";
+import { getColorUsageTool } from "./get-color-usage.js";
+import { listIconsTool } from "./list-icons.js";
 
 export interface ToolDefinition {
   name: string;
@@ -18,6 +25,13 @@ export interface ToolDefinition {
 export function allTools(ctx: ServerContext): ToolDefinition[] {
   return [
     healthCheckTool(ctx),
-    // Phase 3+ will append the remaining tools here.
+    gettingStartedTool(ctx),
+    montageCodingGuidelinesTool(ctx),
+    listComponentsTool(ctx),
+    getComponentTool(ctx),
+    listTokensTool(ctx),
+    getColorUsageTool(ctx),
+    listIconsTool(ctx),
+    // Phase 4 will append: resolve_figma_component, resolve_figma_token
   ];
 }

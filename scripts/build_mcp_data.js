@@ -212,6 +212,33 @@ function buildIcons() {
   return { count: icons.length, icons };
 }
 
+function copyMarkdownSources() {
+  // Markdown sources need to be bundled with the npm package, so we mirror them
+  // into packages/montage-mcp/data/markdown/. The hand-curated `coding-guidelines.md`
+  // lives there directly and is not overwritten.
+  const mdOutDir = path.join(OUT_DIR, 'markdown');
+  if (!fs.existsSync(mdOutDir)) fs.mkdirSync(mdOutDir, { recursive: true });
+
+  const copies = [
+    {
+      from: path.join(REPO_ROOT, 'GETTINGSTARTED.md'),
+      to: path.join(mdOutDir, 'getting-started.md'),
+    },
+    {
+      from: path.join(REPO_ROOT, 'documentation/utilities/ios-utility-components/color.md'),
+      to: path.join(mdOutDir, 'color-usage.md'),
+    },
+  ];
+  for (const { from, to } of copies) {
+    if (!fs.existsSync(from)) {
+      console.warn(`[mcp-data] markdown source missing: ${from}`);
+      continue;
+    }
+    fs.copyFileSync(from, to);
+    console.log(`[mcp-data] copied ${path.relative(REPO_ROOT, from)} → ${path.relative(REPO_ROOT, to)}`);
+  }
+}
+
 function ensureFigmaMapping() {
   const target = path.join(OUT_DIR, 'figma-mapping.json');
   if (fs.existsSync(target)) return;
@@ -248,6 +275,7 @@ function main() {
   writeJson('components.json', { components });
   writeJson('tokens.json', { tokens });
   writeJson('icons.json', icons);
+  copyMarkdownSources();
   ensureFigmaMapping();
 
   console.log(
