@@ -1,0 +1,1534 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-04-29T04:56:43.553Z",
+  "components": [
+    {
+      "slug": "accordion",
+      "name": "Accordion",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct Accordion",
+      "summary": "접을 수 있는 컨텐츠를 제공하는 아코디언 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(title:description:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Accordion/init(title:description:)"
+        },
+        {
+          "signature": "init(title:description:content:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Accordion/init(title:description:content:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Accordion.VerticalPadding",
+          "kind": "enum",
+          "summary": "아코디언의 상하 여백을 나타내는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "actionarea",
+      "name": "ActionArea",
+      "category": "actions",
+      "kind": "struct",
+      "declaration": "struct ActionArea",
+      "summary": "화면 하단에 사용자 액션 버튼을 표시하는 영역 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ActionArea/init(variant:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "ActionArea.BackgroundTransparencyControl",
+          "kind": "enum",
+          "summary": "ActionArea의 배경 투명도를 제어하는 열거형입니다.",
+          "cases": [
+            "automatic",
+            "manual"
+          ]
+        },
+        {
+          "name": "ActionArea.ButtonInfo",
+          "kind": "struct",
+          "summary": "ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다."
+        },
+        {
+          "name": "ActionArea.Model",
+          "kind": "struct",
+          "summary": "ActionArea를 구성하기 위한 모델 구조체입니다."
+        },
+        {
+          "name": "ActionArea.Variant",
+          "kind": "enum",
+          "summary": "ActionArea의 버튼 레이아웃 변형을 정의합니다.",
+          "cases": [
+            "cancel",
+            "neutral",
+            "strong"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "avatar",
+      "name": "Avatar",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct Avatar",
+      "summary": "사용자, 회사, 학원의 프로필 이미지를 표시하는 아바타 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(_:variant:size:onTap:)-3qyan",
+          "docId": "doc://montage.Montage/documentation/Montage/Avatar/init(_:variant:size:onTap:)-3qyan"
+        },
+        {
+          "signature": "init(_:variant:size:onTap:)-6l2n",
+          "docId": "doc://montage.Montage/documentation/Montage/Avatar/init(_:variant:size:onTap:)-6l2n"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Avatar.Size",
+          "kind": "enum",
+          "summary": "아바타의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "custom",
+            "large",
+            "medium",
+            "small",
+            "xlarge",
+            "xsmall"
+          ]
+        },
+        {
+          "name": "Avatar.Variant",
+          "kind": "enum",
+          "summary": "아바타의 유형을 정의하는 열거형입니다.",
+          "cases": [
+            "academy",
+            "company",
+            "person"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "avatargroup",
+      "name": "AvatarGroup",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct AvatarGroup",
+      "summary": "여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(_:variant:size:onTap:)-bx0i",
+          "docId": "doc://montage.Montage/documentation/Montage/AvatarGroup/init(_:variant:size:onTap:)-bx0i"
+        },
+        {
+          "signature": "init(_:variant:size:onTap:)-p3k7",
+          "docId": "doc://montage.Montage/documentation/Montage/AvatarGroup/init(_:variant:size:onTap:)-p3k7"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "AvatarGroup.Size",
+          "kind": "enum",
+          "summary": "그룹 아바타의 크기와 간격을 정의하는 열거형입니다.",
+          "cases": [
+            "small",
+            "xsmall"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "bottomsheet",
+      "name": "BottomSheet",
+      "category": "presentation",
+      "kind": "struct",
+      "declaration": "struct BottomSheet",
+      "summary": "화면 하단에서 위로 올라오는 바텀 시트 모달 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(_:)",
+          "docId": "doc://montage.Montage/documentation/Montage/BottomSheet/init(_:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "BottomSheet.Resize",
+          "kind": "enum",
+          "summary": "바텀 시트의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "fill",
+            "fixedHeight",
+            "fixedRatio",
+            "flexible",
+            "hug"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "button",
+      "name": "Button",
+      "category": "actions",
+      "kind": "struct",
+      "declaration": "struct Button",
+      "summary": "사용자가 상호작용할 수 있는 버튼 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:color:size:icon:handler:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Button/init(variant:color:size:icon:handler:)"
+        },
+        {
+          "signature": "init(variant:color:size:text:leadingIcon:trailingIcon:handler:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Button/init(variant:color:size:text:leadingIcon:trailingIcon:handler:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Button.Color",
+          "kind": "enum",
+          "summary": "버튼의 색상 스타일을 정의합니다.",
+          "cases": [
+            "assistive",
+            "primary"
+          ]
+        },
+        {
+          "name": "Button.OutlinedUIButton",
+          "kind": "class",
+          "summary": "외곽선으로 둘러 싸인 곡선 모서리 버튼입니다."
+        },
+        {
+          "name": "Button.Size",
+          "kind": "enum",
+          "summary": "버튼의 크기를 정의합니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small"
+          ]
+        },
+        {
+          "name": "Button.SolidUIButton",
+          "kind": "class",
+          "summary": "배경으로 둘러 싸인 곡선 모서리 버튼입니다."
+        },
+        {
+          "name": "Button.Variant",
+          "kind": "enum",
+          "summary": "버튼의 변형을 정의합니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "card",
+      "name": "Card",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct Card",
+      "summary": "썸네일과 콘텐츠를 포함하는 기본 카드 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(thumbnail:skeleton:title:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Card/init(thumbnail:skeleton:title:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "category",
+      "name": "Category",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct Category",
+      "summary": "카테고리 선택 옵션을 가로로 나열하는 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(selectedIndex:items:itemModifier:actions:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Category/init(selectedIndex:items:itemModifier:actions:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Category.Size",
+          "kind": "enum",
+          "summary": "카테고리 사이즈를 결정하는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small",
+            "xlarge"
+          ]
+        },
+        {
+          "name": "Category.Variant",
+          "kind": "enum",
+          "summary": "카테고리 아이템의 종류를 결정하는 열거형입니다.",
+          "cases": [
+            "alternative",
+            "normal"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "checkbox",
+      "name": "Checkbox",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct Checkbox",
+      "summary": "체크박스 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(checked:size:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Checkbox/init(checked:size:onSelect:)"
+        },
+        {
+          "signature": "init(state:size:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Checkbox/init(state:size:onSelect:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Checkbox.Size",
+          "kind": "enum",
+          "summary": "체크박스 크기 타입입니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        },
+        {
+          "name": "Checkbox.State",
+          "kind": "enum",
+          "summary": "체크박스 상태 타입입니다.",
+          "cases": [
+            "checked",
+            "indeterminate",
+            "unchecked"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "checkmark",
+      "name": "Checkmark",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct Checkmark",
+      "summary": "체크마크 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(checked:size:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Checkmark/init(checked:size:onSelect:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Checkmark.Size",
+          "kind": "enum",
+          "summary": "체크마크 크기 타입입니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "chip",
+      "name": "Chip",
+      "category": "actions",
+      "kind": "struct",
+      "declaration": "struct Chip",
+      "summary": "칩 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:size:text:handler:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Chip/init(variant:size:text:handler:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Chip.Size",
+          "kind": "enum",
+          "summary": "칩의 크기를 정의합니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small",
+            "xsmall"
+          ]
+        },
+        {
+          "name": "Chip.Variant",
+          "kind": "enum",
+          "summary": "칩의 외관을 결정하는 열거형입니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "contentbadge",
+      "name": "ContentBadge",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct ContentBadge",
+      "summary": "텍스트와 아이콘을 포함할 수 있는 뱃지 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:text:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ContentBadge/init(variant:text:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "ContentBadge.ColorStyle",
+          "kind": "enum",
+          "summary": "뱃지의 색상을 결정하는 열거형입니다.",
+          "cases": [
+            "accent",
+            "neutral"
+          ]
+        },
+        {
+          "name": "ContentBadge.Size",
+          "kind": "enum",
+          "summary": "뱃지의 사이즈를 결정하는 열거형입니다.",
+          "cases": [
+            "medium",
+            "small",
+            "xsmall"
+          ]
+        },
+        {
+          "name": "ContentBadge.Variant",
+          "kind": "enum",
+          "summary": "뱃지의 외관을 결정하는 열거형 타입입니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "fallbackview",
+      "name": "FallbackView",
+      "category": "feedback",
+      "kind": "struct",
+      "declaration": "struct FallbackView",
+      "summary": "콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(image:title:description:button:)",
+          "docId": "doc://montage.Montage/documentation/Montage/FallbackView/init(image:title:description:button:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "filterbutton",
+      "name": "FilterButton",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct FilterButton",
+      "summary": "필터링 기능을 제공하는 버튼 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:size:text:state:handler:)",
+          "docId": "doc://montage.Montage/documentation/Montage/FilterButton/init(variant:size:text:state:handler:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "FilterButton.Size",
+          "kind": "enum",
+          "summary": "버튼의 크기를 정의합니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small",
+            "xsmall"
+          ]
+        },
+        {
+          "name": "FilterButton.State",
+          "kind": "enum",
+          "summary": "버튼의 확장 상태를 정의합니다.",
+          "cases": [
+            "expand",
+            "normal"
+          ]
+        },
+        {
+          "name": "FilterButton.Variant",
+          "kind": "enum",
+          "summary": "버튼의 외관을 결정하는 열거형입니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "flowlayout",
+      "name": "FlowLayout",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct FlowLayout",
+      "summary": "항목들을 자동으로 여러 줄에 배치하는 흐름 레이아웃 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(spacing:lineSpacing:)",
+          "docId": "doc://montage.Montage/documentation/Montage/FlowLayout/init(spacing:lineSpacing:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "framedstyle",
+      "name": "FramedStyle",
+      "category": "selection-input",
+      "kind": "enum",
+      "declaration": "enum FramedStyle",
+      "summary": "",
+      "initializers": [],
+      "nestedTypes": [
+        {
+          "name": "FramedStyle.Status",
+          "kind": "enum",
+          "summary": "프레임의 상태를 정의하는 열거형입니다.",
+          "cases": [
+            "negative",
+            "normal",
+            "selected"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "icon",
+      "name": "Icon",
+      "category": "utilities",
+      "kind": "enum",
+      "declaration": "enum Icon",
+      "summary": "Montage 디자인 시스템의 아이콘 세트",
+      "initializers": [
+        {
+          "signature": "init(rawValue:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Icon/init(rawValue:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "iconbutton",
+      "name": "IconButton",
+      "category": "actions",
+      "kind": "struct",
+      "declaration": "struct IconButton",
+      "summary": "다양한 스타일의 아이콘 버튼을 제공하는 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:icon:handler:)",
+          "docId": "doc://montage.Montage/documentation/Montage/IconButton/init(variant:icon:handler:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "IconButton.Size",
+          "kind": "enum",
+          "summary": "버튼 사이즈를 결정하는 열거형입니다.",
+          "cases": [
+            "custom",
+            "medium",
+            "small"
+          ]
+        },
+        {
+          "name": "IconButton.Variant",
+          "kind": "enum",
+          "summary": "버튼의 외관을 결정하는 열거형입니다.",
+          "cases": [
+            "background",
+            "normal",
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "interaction",
+      "name": "Interaction",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct Interaction",
+      "summary": "사용자 상호작용 상태를 시각적으로 표현하는 장식 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(state:variant:color:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Interaction/init(state:variant:color:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Interaction.State",
+          "kind": "enum",
+          "summary": "상호작용의 상태를 정의합니다.",
+          "cases": [
+            "focused",
+            "hovered",
+            "normal",
+            "pressed"
+          ]
+        },
+        {
+          "name": "Interaction.Variant",
+          "kind": "enum",
+          "summary": "상호작용 효과의 강도를 정의합니다.",
+          "cases": [
+            "light",
+            "normal",
+            "strong"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "listcard",
+      "name": "ListCard",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct ListCard",
+      "summary": "썸네일과 콘텐츠를 수평으로 배치한 리스트 형태의 카드 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(thumbnail:skeleton:title:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ListCard/init(thumbnail:skeleton:title:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "listcell",
+      "name": "ListCell",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct ListCell",
+      "summary": "텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(title:onTap:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ListCell/init(title:onTap:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "ListCell.VerticalPadding",
+          "kind": "enum",
+          "summary": "상하 여백을 나타내는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "none",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "loading",
+      "name": "Loading",
+      "category": "loading",
+      "kind": "struct",
+      "declaration": "struct Loading",
+      "summary": "로딩 상태를 표시하기 위한 애니메이션 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(kind:size:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Loading/init(kind:size:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Loading.Kind",
+          "kind": "enum",
+          "summary": "로딩 애니메이션의 종류를 정의하는 열거형입니다.",
+          "cases": [
+            "circular",
+            "wanted"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "modalnavigation",
+      "name": "ModalNavigation",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct ModalNavigation",
+      "summary": "모달 내에서 사용하는 내비게이션 바 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(scrollOffset:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ModalNavigation/init(scrollOffset:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "ModalNavigation.Variant",
+          "kind": "struct",
+          "summary": "내비게이션 바의 외관을 정의하는 구조체입니다."
+        }
+      ]
+    },
+    {
+      "slug": "pagecounter",
+      "name": "PageCounter",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct PageCounter",
+      "summary": "숫자 카운터 형태의 페이지 표시기 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(selectedPage:totalPages:)",
+          "docId": "doc://montage.Montage/documentation/Montage/PageCounter/init(selectedPage:totalPages:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "PageCounter.Size",
+          "kind": "enum",
+          "summary": "카운터 페이지네이션의 크기를 지정하는 열거형입니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "paginationdots",
+      "name": "PaginationDots",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct PaginationDots",
+      "summary": "점 형태의 페이지 표시기 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(selectedPage:totalPages:)",
+          "docId": "doc://montage.Montage/documentation/Montage/PaginationDots/init(selectedPage:totalPages:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "PaginationDots.Size",
+          "kind": "enum",
+          "summary": "점 페이지네이션의 크기를 지정하는 열거형입니다.",
+          "cases": [
+            "normal",
+            "small"
+          ]
+        },
+        {
+          "name": "PaginationDots.Variant",
+          "kind": "enum",
+          "summary": "점 페이지네이션의 색상 변형을 지정하는 열거형입니다.",
+          "cases": [
+            "normal",
+            "white"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "playbadge",
+      "name": "PlayBadge",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct PlayBadge",
+      "summary": "재생 버튼이 있는 배지 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init()",
+          "docId": "doc://montage.Montage/documentation/Montage/PlayBadge/init()"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "PlayBadge.Size",
+          "kind": "enum",
+          "summary": "재생 배지의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "popover",
+      "name": "Popover",
+      "category": "presentation",
+      "kind": "enum",
+      "declaration": "enum Popover",
+      "summary": "",
+      "initializers": [],
+      "nestedTypes": []
+    },
+    {
+      "slug": "popup",
+      "name": "Popup",
+      "category": "presentation",
+      "kind": "struct",
+      "declaration": "struct Popup",
+      "summary": "화면 중앙에 표시되는 팝업 모달 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(_:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Popup/init(_:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Popup.Resize",
+          "kind": "enum",
+          "summary": "팝업의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "fixed",
+            "hug"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "progressindicator",
+      "name": "ProgressIndicator",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct ProgressIndicator",
+      "summary": "진행 상태를 시각적으로 표시하는 인디케이터 뷰",
+      "initializers": [
+        {
+          "signature": "init(percentage:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ProgressIndicator/init(percentage:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "progresstracker",
+      "name": "ProgressTracker",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct ProgressTracker",
+      "summary": "단계별 진행 상태를 수평/수직으로 표시하는 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(progress:variant:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ProgressTracker/init(progress:variant:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "ProgressTracker.Variant",
+          "kind": "enum",
+          "summary": "레이아웃 및 구성을 정의하는 옵션입니다.",
+          "cases": [
+            "horizontal",
+            "vertical"
+          ]
+        },
+        {
+          "name": "ProgressTracker.VerticalStepContent",
+          "kind": "struct",
+          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다."
+        }
+      ]
+    },
+    {
+      "slug": "pulltorefresh",
+      "name": "PullToRefresh",
+      "category": "utilities",
+      "kind": "enum",
+      "declaration": "enum PullToRefresh",
+      "summary": "",
+      "initializers": [],
+      "nestedTypes": []
+    },
+    {
+      "slug": "pushbadge",
+      "name": "PushBadge",
+      "category": "feedback",
+      "kind": "struct",
+      "declaration": "struct PushBadge",
+      "summary": "푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(variant:)",
+          "docId": "doc://montage.Montage/documentation/Montage/PushBadge/init(variant:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "PushBadge.Position",
+          "kind": "enum",
+          "summary": "뱃지의 위치를 정의하는 열거형입니다.",
+          "cases": [
+            "bottom",
+            "center",
+            "top"
+          ]
+        },
+        {
+          "name": "PushBadge.Size",
+          "kind": "enum",
+          "summary": "뱃지의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "medium",
+            "small",
+            "xsmall"
+          ]
+        },
+        {
+          "name": "PushBadge.Variant",
+          "kind": "enum",
+          "summary": "뱃지의 표시 형태를 정의하는 열거형입니다.",
+          "cases": [
+            "dot",
+            "new",
+            "number"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "radio",
+      "name": "Radio",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct Radio",
+      "summary": "라디오 버튼 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(checked:size:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Radio/init(checked:size:onSelect:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Radio.Size",
+          "kind": "enum",
+          "summary": "라디오 버튼 크기 타입입니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "scrollview",
+      "name": "ScrollView",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct ScrollView",
+      "summary": "스크롤 상태 추적과 오프셋 감지가 가능한 커스텀 스크롤 뷰입니다.",
+      "initializers": [
+        {
+          "signature": "init(scrollStatus:onOffsetChanged:content:)",
+          "docId": "doc://montage.Montage/documentation/Montage/ScrollView/init(scrollStatus:onOffsetChanged:content:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "ScrollView.ScrollStatus",
+          "kind": "struct",
+          "summary": "스크롤 뷰의 상태를 추적하는 구조체입니다."
+        }
+      ]
+    },
+    {
+      "slug": "sectionheader",
+      "name": "SectionHeader",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct SectionHeader",
+      "summary": "섹션 제목과 부가 정보를 표시하는 헤더 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(title:)",
+          "docId": "doc://montage.Montage/documentation/Montage/SectionHeader/init(title:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "SectionHeader.Size",
+          "kind": "enum",
+          "summary": "섹션 헤더의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small",
+            "xsmall"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "segmentedcontrol",
+      "name": "SegmentedControl",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct SegmentedControl",
+      "summary": "여러 옵션 중 하나를 선택할 수 있는 세그먼트 컨트롤 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(selectedIndex:items:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/SegmentedControl/init(selectedIndex:items:onSelect:)"
+        },
+        {
+          "signature": "init(selectedIndex:labels:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/SegmentedControl/init(selectedIndex:labels:onSelect:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "SegmentedControl.Item",
+          "kind": "struct",
+          "summary": "세그먼트 컨트롤의 항목을 나타내는 구조체입니다."
+        },
+        {
+          "name": "SegmentedControl.Size",
+          "kind": "enum",
+          "summary": "세그먼트 컨트롤의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small"
+          ]
+        },
+        {
+          "name": "SegmentedControl.Variant",
+          "kind": "enum",
+          "summary": "세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "select",
+      "name": "Select",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct Select",
+      "summary": "컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
+      "initializers": [
+        {
+          "signature": "init(menuPresented:variant:items:onTapItem:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Select/init(menuPresented:variant:items:onTapItem:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Select.Item",
+          "kind": "struct",
+          "summary": "Select 컴포넌트에서 사용하는 항목 모델을 정의합니다."
+        },
+        {
+          "name": "Select.LeadingContent",
+          "kind": "enum",
+          "summary": "왼쪽에 표시될 컨텐트 타입입니다.",
+          "cases": [
+            "custom",
+            "icon",
+            "iconButton"
+          ]
+        },
+        {
+          "name": "Select.Render",
+          "kind": "enum",
+          "summary": "variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.",
+          "cases": [
+            "chip",
+            "text"
+          ]
+        },
+        {
+          "name": "Select.SingleSelectionType",
+          "kind": "enum",
+          "summary": "variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.",
+          "cases": [
+            "checkmark",
+            "radio"
+          ]
+        },
+        {
+          "name": "Select.Variant",
+          "kind": "enum",
+          "summary": "선택 모드를 나타내는 열거형입니다.",
+          "cases": [
+            "multiple",
+            "single"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "skeleton",
+      "name": "Skeleton",
+      "category": "loading",
+      "kind": "enum",
+      "declaration": "enum Skeleton",
+      "summary": "콘텐츠 로딩 중 표시되는 스켈레톤 UI 컴포넌트입니다.",
+      "initializers": [],
+      "nestedTypes": [
+        {
+          "name": "Skeleton.Align",
+          "kind": "enum",
+          "summary": "스켈레톤 요소의 정렬 방식을 지정하는 열거형입니다.",
+          "cases": [
+            "center",
+            "leading",
+            "trailing"
+          ]
+        },
+        {
+          "name": "Skeleton.Kind",
+          "kind": "struct",
+          "summary": "스켈레톤 요소의 종류를 지정하는 구조체입니다."
+        },
+        {
+          "name": "Skeleton.Length",
+          "kind": "enum",
+          "summary": "스켈레톤 요소의 길이 비율을 지정하는 열거형입니다."
+        },
+        {
+          "name": "Skeleton.SkeletonView",
+          "kind": "struct",
+          "summary": "스켈레톤 로딩 UI를 표시하는 뷰입니다."
+        }
+      ]
+    },
+    {
+      "slug": "slider",
+      "name": "Slider",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct Slider",
+      "summary": "범위 값을 선택할 수 있는 슬라이더 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(isRangeSlider:minValue:maxValue:labelFormatter:onChanged:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Slider/init(isRangeSlider:minValue:maxValue:labelFormatter:onChanged:)"
+        },
+        {
+          "signature": "init(isRangeSlider:valueRange:labelFormatter:onChanged:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Slider/init(isRangeSlider:valueRange:labelFormatter:onChanged:)"
+        }
+      ],
+      "nestedTypes": []
+    },
+    {
+      "slug": "snackbar",
+      "name": "SnackBar",
+      "category": "feedback",
+      "kind": "struct",
+      "declaration": "struct SnackBar",
+      "summary": "화면 상단 또는 하단에 임시로 표시되는 알림 메시지 컴포넌트입니다.",
+      "initializers": [],
+      "nestedTypes": [
+        {
+          "name": "SnackBar.Duration",
+          "kind": "enum",
+          "summary": "SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.",
+          "cases": [
+            "long",
+            "short"
+          ]
+        },
+        {
+          "name": "SnackBar.Location",
+          "kind": "enum",
+          "summary": "스낵바가 표시될 위치를 정의하는 열거형입니다.",
+          "cases": [
+            "bottom",
+            "top"
+          ]
+        },
+        {
+          "name": "SnackBar.Model",
+          "kind": "struct",
+          "summary": "SnackBar의 데이터 모델을 정의하는 구조체입니다."
+        }
+      ]
+    },
+    {
+      "slug": "switch",
+      "name": "Switch",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct Switch",
+      "summary": "스위치 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(checked:size:onSelect:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Switch/init(checked:size:onSelect:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Switch.Size",
+          "kind": "enum",
+          "summary": "스위치 크기 타입입니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tab",
+      "name": "Tab",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct Tab",
+      "summary": "선택 가능한 탭 메뉴를 표시하는 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(selectedIndex:items:itemDisabled:actions:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Tab/init(selectedIndex:items:itemDisabled:actions:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Tab.Resize",
+          "kind": "enum",
+          "summary": "탭 아이템 너비를 결정하는 열거형입니다.",
+          "cases": [
+            "fill",
+            "hug"
+          ]
+        },
+        {
+          "name": "Tab.Size",
+          "kind": "enum",
+          "summary": "탭 아이템의 크기를 결정하는 열거형입니다.",
+          "cases": [
+            "large",
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "textarea",
+      "name": "TextArea",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct TextArea",
+      "summary": "여러 줄의 텍스트 입력을 위한 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(text:focus:)",
+          "docId": "doc://montage.Montage/documentation/Montage/TextArea/init(text:focus:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "TextArea.Resize",
+          "kind": "enum",
+          "summary": "텍스트 영역의 크기 조절 방식을 정의합니다.",
+          "cases": [
+            "fixed",
+            "limit",
+            "normal"
+          ]
+        },
+        {
+          "name": "TextArea.Resource",
+          "kind": "enum",
+          "summary": "텍스트 영역 하단에 표시할 수 있는 UI 요소를 정의합니다.",
+          "cases": [
+            "badge",
+            "characterCount",
+            "chip",
+            "filterButton",
+            "icon",
+            "iconButton",
+            "textButton"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "textbutton",
+      "name": "TextButton",
+      "category": "actions",
+      "kind": "struct",
+      "declaration": "struct TextButton",
+      "summary": "Text 스타일의 버튼 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(color:size:text:leadingIcon:trailingIcon:handler:)",
+          "docId": "doc://montage.Montage/documentation/Montage/TextButton/init(color:size:text:leadingIcon:trailingIcon:handler:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "TextButton.Color",
+          "kind": "enum",
+          "summary": "Text 버튼의 색상 스타일을 정의합니다.",
+          "cases": [
+            "assistive",
+            "primary"
+          ]
+        },
+        {
+          "name": "TextButton.Size",
+          "kind": "enum",
+          "summary": "Text 스타일 버튼의 크기를 정의합니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "textfield",
+      "name": "TextField",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct TextField",
+      "summary": "단일 라인 텍스트 입력을 위한 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(text:autoCompletionDataSource:)",
+          "docId": "doc://montage.Montage/documentation/Montage/TextField/init(text:autoCompletionDataSource:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "TextField.AutoCompletionDataSource",
+          "kind": "struct",
+          "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다."
+        },
+        {
+          "name": "TextField.Status",
+          "kind": "enum",
+          "summary": "텍스트 필드의 상태를 정의합니다.",
+          "cases": [
+            "negative",
+            "normal",
+            "positive"
+          ]
+        },
+        {
+          "name": "TextField.TrailingButtonInfo",
+          "kind": "struct",
+          "summary": "텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다."
+        }
+      ]
+    },
+    {
+      "slug": "thumbnail",
+      "name": "Thumbnail",
+      "category": "contents",
+      "kind": "struct",
+      "declaration": "struct Thumbnail",
+      "summary": "다양한 비율로 이미지를 표시하는 썸네일 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(urlString:ratio:)",
+          "docId": "doc://montage.Montage/documentation/Montage/Thumbnail/init(urlString:ratio:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "Thumbnail.Ratio",
+          "kind": "enum",
+          "summary": "썸네일의 가로세로 비율을 정의하는 열거형입니다.",
+          "cases": [
+            "r10x16",
+            "r16x10",
+            "r16x9",
+            "r1_618x1",
+            "r1x1",
+            "r1x1_618",
+            "r1x2",
+            "r21x9",
+            "r2x1",
+            "r2x3",
+            "r3x2",
+            "r3x4",
+            "r4x3",
+            "r4x5",
+            "r5x4",
+            "r9x16",
+            "r9x21"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "toast",
+      "name": "Toast",
+      "category": "feedback",
+      "kind": "struct",
+      "declaration": "struct Toast",
+      "summary": "화면의 상단 또는 하단에 짧게 표시되는 알림 메시지 컴포넌트입니다.",
+      "initializers": [],
+      "nestedTypes": [
+        {
+          "name": "Toast.Duration",
+          "kind": "enum",
+          "summary": "토스트 메시지의 표시 시간을 정의하는 열거형입니다.",
+          "cases": [
+            "long",
+            "short"
+          ]
+        },
+        {
+          "name": "Toast.Location",
+          "kind": "enum",
+          "summary": "토스트 메시지가 표시될 위치를 정의하는 열거형입니다.",
+          "cases": [
+            "bottom",
+            "top"
+          ]
+        },
+        {
+          "name": "Toast.Model",
+          "kind": "struct",
+          "summary": "토스트 메시지의 데이터 모델을 정의하는 구조체입니다."
+        },
+        {
+          "name": "Toast.Variant",
+          "kind": "enum",
+          "summary": "토스트 메시지의 시각적 스타일을 정의하는 열거형입니다.",
+          "cases": [
+            "cautionary",
+            "negative",
+            "normal",
+            "positive"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tooltip",
+      "name": "Tooltip",
+      "category": "presentation",
+      "kind": "enum",
+      "declaration": "enum Tooltip",
+      "summary": "UI 요소 주변에 추가 정보나 설명을 제공하는 툴팁 컴포넌트입니다.",
+      "initializers": [],
+      "nestedTypes": [
+        {
+          "name": "Tooltip.ActionMode",
+          "kind": "enum",
+          "summary": "툴팁의 표시 모드를 정의하는 열거형입니다.",
+          "cases": [
+            "always",
+            "click"
+          ]
+        },
+        {
+          "name": "Tooltip.Position",
+          "kind": "enum",
+          "summary": "툴팁이 표시될 위치를 정의하는 열거형입니다.",
+          "cases": [
+            "bottom",
+            "leading",
+            "top",
+            "trailing"
+          ]
+        },
+        {
+          "name": "Tooltip.Size",
+          "kind": "enum",
+          "summary": "툴팁의 크기를 정의하는 열거형입니다.",
+          "cases": [
+            "medium",
+            "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "topnavigation",
+      "name": "TopNavigation",
+      "category": "navigations",
+      "kind": "struct",
+      "declaration": "struct TopNavigation",
+      "summary": "상단에 표시되는 내비게이션 바 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(scrollOffset:backgroundColor:)",
+          "docId": "doc://montage.Montage/documentation/Montage/TopNavigation/init(scrollOffset:backgroundColor:)"
+        }
+      ],
+      "nestedTypes": [
+        {
+          "name": "TopNavigation.LeadingButton",
+          "kind": "struct",
+          "summary": "내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다."
+        },
+        {
+          "name": "TopNavigation.Resource",
+          "kind": "enum",
+          "summary": "TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다."
+        },
+        {
+          "name": "TopNavigation.TrailingIconButton",
+          "kind": "struct",
+          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다."
+        },
+        {
+          "name": "TopNavigation.TrailingTextButton",
+          "kind": "struct",
+          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다."
+        },
+        {
+          "name": "TopNavigation.Variant",
+          "kind": "enum",
+          "summary": "TopNavigation의 외관을 결정하는 열거형입니다.",
+          "cases": [
+            "display",
+            "floating",
+            "normal",
+            "search"
+          ]
+        }
+      ]
+    }
+  ]
+}

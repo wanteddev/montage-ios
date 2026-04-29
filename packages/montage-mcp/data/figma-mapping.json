@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "description": "Manual Figma component/token → Montage Swift mapping. Convention-based matching is the fallback; entries here override.",
+  "components": {},
+  "tokens": {
+    "color": {},
+    "typography": {},
+    "spacing": {},
+    "shadow": {},
+    "opacity": {}
+  }
+}

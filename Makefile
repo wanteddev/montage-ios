@@ -1,11 +1,11 @@
-.PHONY: all docc server md license check-changes clean
+.PHONY: all docc server md license mcp-data check-changes clean
 
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
 XCODE_VERSION=26.3
 
-# 기본 타겟: docc, md, license를 순서대로 실행하고 변경사항 확인
-all: docc md license check-changes
+# 기본 타겟: docc, md, license, mcp-data를 순서대로 실행하고 변경사항 확인
+all: docc md license mcp-data check-changes
 
 # DocC API 문서 생성
 docc:
@@ -67,22 +67,30 @@ license:
 	echo "================================================="; \
 	node scripts/generate_third_party_licenses.mjs
 
-# 문서 변경사항 확인
+# Montage MCP 슬림 인덱스 갱신 (doccarchive + xcassets → packages/montage-mcp/data/)
+mcp-data:
+	@echo ""; \
+	echo "================================================="; \
+	echo "Montage MCP 데이터 인덱스 갱신 중..."; \
+	echo "================================================="; \
+	node scripts/build_mcp_data.js
+
+# 문서 변경사항 확인 (문서 + MCP 데이터)
 check-changes:
 	@echo ""; \
 	echo "================================================="; \
-	echo "문서 변경사항 확인 중..."; \
+	echo "문서/MCP 데이터 변경사항 확인 중..."; \
 	echo "================================================="; \
-	if git diff --quiet THIRD_PARTY_LICENSES.md documentation/ 2>/dev/null; then \
-		echo "✅ 문서가 모두 최신 상태입니다. 문서 변경사항이 없습니다."; \
+	if git diff --quiet THIRD_PARTY_LICENSES.md documentation/ packages/montage-mcp/data/ 2>/dev/null; then \
+		echo "✅ 문서/MCP 데이터가 모두 최신 상태입니다."; \
 	else \
-		echo "📝 문서에 변경사항이 있습니다. 다음 명령어로 커밋하세요:"; \
+		echo "📝 변경사항이 있습니다. 다음 명령어로 커밋하세요:"; \
 		echo ""; \
-		echo "  git add THIRD_PARTY_LICENSES.md documentation/"; \
+		echo "  git add THIRD_PARTY_LICENSES.md documentation/ packages/montage-mcp/data/"; \
 		echo "  git commit -m \"docs: 문서 업데이트\""; \
 		echo ""; \
 		echo "변경된 파일:"; \
-		git diff --name-only THIRD_PARTY_LICENSES.md documentation/ 2>/dev/null | sed 's/^/  - /'; \
+		git diff --name-only THIRD_PARTY_LICENSES.md documentation/ packages/montage-mcp/data/ 2>/dev/null | sed 's/^/  - /'; \
 	fi
 
 # 생성된 문서 파일들 정리
