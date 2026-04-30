@@ -25,7 +25,7 @@ app.get("/sse", async (_req: Request, res: Response) => {
   transports.set(transport.sessionId, transport);
   res.on("close", () => transports.delete(transport.sessionId));
 
-  const server = createServer({ config });
+  const server = createServer({ config, transport: "http" });
   await server.connect(transport);
 });
 

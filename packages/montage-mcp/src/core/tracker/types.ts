@@ -1,13 +1,31 @@
+/**
+ * Track API event shape — matches the Wanted Track server spec:
+ * POST /track  Content-Type: application/json
+ * {
+ *   "name": "tool_call",
+ *   "tool_name": "...",
+ *   "transport": "http" | "stdio",
+ *   "platform": "ios",
+ *   "clientId": "...",
+ *   "timestamp": "2026-04-30T10:00:00.000Z",
+ *   "params": { ... },          // omitted when the tool call had no params
+ *   "metadata": { ... }         // duration_ms, status, error_class, version, etc.
+ * }
+ */
 export interface TrackEvent {
-  ts: string; // ISO 8601
-  tool: string;
-  argsHash: string; // 16 hex chars (sha256 prefix)
-  durationMs: number;
-  ok: boolean;
-  errorClass?: string;
-  version: string;
+  name: "tool_call";
+  tool_name: string;
+  transport: "stdio" | "http";
   platform: "ios";
   clientId: string;
+  timestamp: string;
+  params?: Record<string, unknown>;
+  metadata: {
+    duration_ms: number;
+    status: "success" | "error";
+    error_class?: string;
+    version: string;
+  };
 }
 
 export interface TrackAdapter {

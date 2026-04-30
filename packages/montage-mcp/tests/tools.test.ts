@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { loadConfig } from "../src/core/config.js";
 import { allTools } from "../src/core/tools/index.js";
 
-const ctx = { config: loadConfig({}) };
+const ctx = { config: loadConfig({}), transport: "stdio" as const };
 const tools = allTools(ctx);
 const byName = new Map(tools.map((t) => [t.name, t]));
 

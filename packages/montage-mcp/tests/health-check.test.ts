@@ -4,7 +4,7 @@ import { loadConfig } from "../src/core/config.js";
 
 describe("health_check", () => {
   it("returns ok status with name, version, and timestamp", async () => {
-    const tool = healthCheckTool({ config: loadConfig({}) });
+    const tool = healthCheckTool({ config: loadConfig({}), transport: "stdio" });
     const result = await tool.handler({});
     expect(result.isError).toBeFalsy();
     expect(result.content).toHaveLength(1);

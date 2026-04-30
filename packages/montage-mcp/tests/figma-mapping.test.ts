@@ -125,7 +125,7 @@ describe("get_component (modifiers section)", () => {
     void healthCheckTool; // touch unused
     const { allTools } = await import("../src/core/tools/index.js");
     const { loadConfig } = await import("../src/core/config.js");
-    const tools = allTools({ config: loadConfig({}) });
+    const tools = allTools({ config: loadConfig({}), transport: "stdio" });
     const get = tools.find((t) => t.name === "get_component")!;
     const r = await get.handler({ componentName: "ListCard" });
     const text = r.content[0]!.text;

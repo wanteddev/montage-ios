@@ -4,7 +4,7 @@ import { createServer } from "./core/server.js";
 
 async function main(): Promise<void> {
   const config = loadConfig();
-  const server = createServer({ config });
+  const server = createServer({ config, transport: "stdio" });
   const transport = new StdioServerTransport();
   await server.connect(transport);
   if (config.debug) {

@@ -9,6 +9,7 @@ import { getTracker } from "./tracker/index.js";
 
 export interface ServerContext {
   config: RuntimeConfig;
+  transport: "stdio" | "http";
 }
 
 export function createServer(ctx: ServerContext): Server {
@@ -61,6 +62,7 @@ export function createServer(ctx: ServerContext): Server {
     } finally {
       tracker.track({
         tool: request.params.name,
+        transport: ctx.transport,
         args,
         durationMs: Date.now() - startedAt,
         ok,

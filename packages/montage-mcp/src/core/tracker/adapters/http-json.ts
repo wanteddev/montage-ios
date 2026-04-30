@@ -1,43 +1,54 @@
 import type { TrackAdapter, TrackEvent } from "../types.js";
 
 /**
- * Generic HTTP/JSON adapter that POSTs `{events: [...]}` with a Bearer token.
+ * Wanted Track HTTP adapter.
  *
- * NOTE: The exact wire format expected by the Wanted Track server is being finalized by the
- * Montage team. When the spec lands, either:
- *   - replace this body shape, OR
- *   - add a sibling adapter (e.g. `WantedTrackAdapter`) and switch in src/core/tracker/index.ts.
+ * Wire format (per Track API spec):
+ *   POST <trackUrl>
+ *   Content-Type: application/json
+ *   Body: a single TrackEvent JSON object (one POST per event).
  *
- * This adapter throws on any non-2xx so the WAL queue keeps the batch and retries later.
+ * Behavior:
+ *   - Iterates events in order; on the first non-2xx, throws so the WAL queue
+ *     keeps the *unsent remainder* for retry.
+ *   - `accepted` is the count of events that returned 2xx before any failure;
+ *     the caller (`flushNow`) truncates exactly that many leading entries.
+ *   - Bearer Authorization is added only when `token` is non-null/non-empty.
+ *     The current spec does not require auth, so token may be `null`.
  */
 export class HttpJsonAdapter implements TrackAdapter {
   constructor(
     private readonly url: string,
-    private readonly token: string,
+    private readonly token: string | null,
     private readonly fetchImpl: typeof fetch = fetch,
     private readonly timeoutMs: number = 5000,
   ) {}
 
   async send(events: TrackEvent[]): Promise<{ accepted: number }> {
     if (events.length === 0) return { accepted: 0 };
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
-    try {
-      const res = await this.fetchImpl(this.url, {
-        method: "POST",
-        headers: {
+    let accepted = 0;
+    for (const event of events) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
+      try {
+        const headers: Record<string, string> = {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${this.token}`,
-        },
-        body: JSON.stringify({ events }),
-        signal: ctrl.signal,
-      });
-      if (!res.ok) {
-        throw new Error(`Track server responded ${res.status}`);
+        };
+        if (this.token) headers.Authorization = `Bearer ${this.token}`;
+        const res = await this.fetchImpl(this.url, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(event),
+          signal: ctrl.signal,
+        });
+        if (!res.ok) {
+          throw new Error(`Track server responded ${res.status}`);
+        }
+        accepted++;
+      } finally {
+        clearTimeout(timer);
       }
-      return { accepted: events.length };
-    } finally {
-      clearTimeout(timer);
     }
+    return { accepted };
   }
 }

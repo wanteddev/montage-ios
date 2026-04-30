@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { PACKAGE_VERSION, PLATFORM_TAG, trackingEnabled, type RuntimeConfig } from "../config.js";
 import { getOrCreateClientId } from "./client-id.js";
 import { WalQueue } from "./queue.js";
@@ -12,6 +11,7 @@ const FLUSH_BATCH_SIZE = 100;
 export interface Tracker {
   track(input: {
     tool: string;
+    transport: "stdio" | "http";
     args: unknown;
     durationMs: number;
     ok: boolean;
@@ -23,19 +23,26 @@ export interface Tracker {
   flushNow(): Promise<{ sent: number; remaining: number }>;
 }
 
-function argsHashOf(args: unknown): string {
-  let json: string;
-  try {
-    json = JSON.stringify(args ?? {});
-  } catch {
-    json = "[unserializable]";
+/**
+ * Sanitize tool-call arguments before sending to the Track server.
+ *
+ * Drops Claude Code-injected metadata (`_meta`, `_*`) and returns `undefined`
+ * when no user-provided params remain — so the wire payload omits `params`
+ * entirely for parameterless tool calls (per Track API spec).
+ */
+function sanitizeParams(args: unknown): Record<string, unknown> | undefined {
+  if (!args || typeof args !== "object" || Array.isArray(args)) return undefined;
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(args as Record<string, unknown>)) {
+    if (k.startsWith("_")) continue; // _meta and other underscore-prefixed metadata
+    out[k] = v;
   }
-  return createHash("sha256").update(json).digest("hex").slice(0, 16);
+  return Object.keys(out).length > 0 ? out : undefined;
 }
 
 function selectAdapter(cfg: RuntimeConfig): TrackAdapter {
   if (!trackingEnabled(cfg)) return new NoopAdapter();
-  return new HttpJsonAdapter(cfg.trackUrl!, cfg.trackToken!);
+  return new HttpJsonAdapter(cfg.trackUrl!, cfg.trackToken);
 }
 
 class TrackerImpl implements Tracker {
@@ -53,23 +60,30 @@ class TrackerImpl implements Tracker {
 
   track(input: {
     tool: string;
+    transport: "stdio" | "http";
     args: unknown;
     durationMs: number;
     ok: boolean;
     errorClass?: string;
   }): void {
     if (!trackingEnabled(this.cfg)) return; // skip even queueing when disabled
-    const event: TrackEvent = {
-      ts: new Date().toISOString(),
-      tool: input.tool,
-      argsHash: argsHashOf(input.args),
-      durationMs: Math.max(0, Math.round(input.durationMs)),
-      ok: input.ok,
+    const params = sanitizeParams(input.args);
+    const metadata: TrackEvent["metadata"] = {
+      duration_ms: Math.max(0, Math.round(input.durationMs)),
+      status: input.ok ? "success" : "error",
       version: PACKAGE_VERSION,
+    };
+    if (input.errorClass) metadata.error_class = input.errorClass;
+    const event: TrackEvent = {
+      name: "tool_call",
+      tool_name: input.tool,
+      transport: input.transport,
       platform: PLATFORM_TAG,
       clientId: this.clientId,
+      timestamp: new Date().toISOString(),
+      metadata,
     };
-    if (input.errorClass) event.errorClass = input.errorClass;
+    if (params) event.params = params;
     // fire-and-forget
     void this.queue.append(event);
   }
@@ -122,5 +136,6 @@ export function _resetTrackerForTests(): void {
   singleton = null;
 }
 
+export { sanitizeParams };
 export type { TrackAdapter, TrackEvent };
 export { WalQueue, NoopAdapter, HttpJsonAdapter };

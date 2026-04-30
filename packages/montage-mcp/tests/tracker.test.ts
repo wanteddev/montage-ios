@@ -6,6 +6,7 @@ import {
   WalQueue,
   HttpJsonAdapter,
   NoopAdapter,
+  sanitizeParams,
   type TrackEvent,
   type TrackAdapter,
 } from "../src/core/tracker/index.js";
@@ -23,14 +24,17 @@ afterEach(() => {
 
 function ev(tool: string, ok = true): TrackEvent {
   return {
-    ts: new Date().toISOString(),
-    tool,
-    argsHash: "0".repeat(16),
-    durationMs: 1,
-    ok,
-    version: "0.1.0",
+    name: "tool_call",
+    tool_name: tool,
+    transport: "stdio",
     platform: "ios",
     clientId: "test-client",
+    timestamp: new Date().toISOString(),
+    metadata: {
+      duration_ms: 1,
+      status: ok ? "success" : "error",
+      version: "0.1.0",
+    },
   };
 }
 
@@ -40,7 +44,7 @@ describe("WalQueue", () => {
     await q.append(ev("a"));
     await q.append(ev("b"));
     const batch = await q.readBatch(10);
-    expect(batch.map((e) => e.tool)).toEqual(["a", "b"]);
+    expect(batch.map((e) => e.tool_name)).toEqual(["a", "b"]);
   });
 
   it("truncateFirst drops the leading N events", async () => {
@@ -50,7 +54,7 @@ describe("WalQueue", () => {
     await q.append(ev("c"));
     await q.truncateFirst(2);
     const batch = await q.readBatch(10);
-    expect(batch.map((e) => e.tool)).toEqual(["c"]);
+    expect(batch.map((e) => e.tool_name)).toEqual(["c"]);
   });
 
   it("returns empty when file is missing", async () => {
@@ -68,31 +72,70 @@ describe("NoopAdapter", () => {
   });
 });
 
-describe("HttpJsonAdapter", () => {
-  it("POSTs JSON body with Bearer token and returns accepted count on 2xx", async () => {
-    const captured: { url: string; init: RequestInit } = {
-      url: "",
-      init: {} as RequestInit,
-    };
+describe("HttpJsonAdapter (Track API spec)", () => {
+  it("POSTs one JSON event per call and returns accepted count on 2xx", async () => {
+    const captured: Array<{ url: string; init: RequestInit }> = [];
     const fakeFetch = (async (url: string, init?: RequestInit) => {
-      captured.url = String(url);
-      captured.init = init ?? ({} as RequestInit);
+      captured.push({ url: String(url), init: init ?? ({} as RequestInit) });
+      return new Response("{}", { status: 200 });
+    }) as unknown as typeof fetch;
+    const a = new HttpJsonAdapter("https://example/track", null, fakeFetch);
+    const r = await a.send([ev("a"), ev("b")]);
+    expect(r.accepted).toBe(2);
+    expect(captured).toHaveLength(2);
+    expect(captured[0]!.url).toBe("https://example/track");
+    const body = JSON.parse(String(captured[0]!.init?.body));
+    expect(body.name).toBe("tool_call");
+    expect(body.tool_name).toBe("a");
+    expect(body.platform).toBe("ios");
+    expect(body.transport).toBe("stdio");
+    expect(body.metadata.status).toBe("success");
+    // No Bearer header when token is null.
+    expect((captured[0]!.init?.headers as Record<string, string>)["Authorization"]).toBeUndefined();
+  });
+
+  it("attaches Bearer Authorization when token is provided", async () => {
+    let captured: Record<string, string> | undefined;
+    const fakeFetch = (async (_url: string, init?: RequestInit) => {
+      captured = (init?.headers as Record<string, string>) ?? {};
       return new Response("{}", { status: 200 });
     }) as unknown as typeof fetch;
     const a = new HttpJsonAdapter("https://example/track", "tok-123", fakeFetch);
-    const r = await a.send([ev("a"), ev("b")]);
-    expect(r.accepted).toBe(2);
-    expect(captured.url).toBe("https://example/track");
-    expect((captured.init?.headers as Record<string, string>)["Authorization"]).toBe("Bearer tok-123");
-    const body = JSON.parse(String(captured.init?.body));
-    expect(body.events).toHaveLength(2);
-    expect(body.events[0].tool).toBe("a");
+    await a.send([ev("a")]);
+    expect(captured?.["Authorization"]).toBe("Bearer tok-123");
   });
 
-  it("throws on non-2xx so the queue retains the batch", async () => {
-    const fakeFetch = (async () => new Response("nope", { status: 500 })) as unknown as typeof fetch;
-    const a = new HttpJsonAdapter("https://example/track", "tok", fakeFetch);
-    await expect(a.send([ev("a")])).rejects.toThrow(/500/);
+  it("stops on first non-2xx; accepted = events sent before failure", async () => {
+    let calls = 0;
+    const fakeFetch = (async () => {
+      calls++;
+      return calls === 2 ? new Response("nope", { status: 500 }) : new Response("{}", { status: 200 });
+    }) as unknown as typeof fetch;
+    const a = new HttpJsonAdapter("https://example/track", null, fakeFetch);
+    await expect(a.send([ev("a"), ev("b"), ev("c")])).rejects.toThrow(/500/);
+    // No assertion on accepted here because send() throws — caller treats as 0 sent.
+    expect(calls).toBe(2);
+  });
+});
+
+describe("sanitizeParams", () => {
+  it("returns undefined for empty/null input", () => {
+    expect(sanitizeParams(undefined)).toBeUndefined();
+    expect(sanitizeParams(null)).toBeUndefined();
+    expect(sanitizeParams({})).toBeUndefined();
+  });
+
+  it("strips _meta and any underscore-prefixed Claude Code metadata", () => {
+    const out = sanitizeParams({
+      componentName: "Button",
+      _meta: { progressToken: "abc" },
+      _internal: 1,
+    });
+    expect(out).toEqual({ componentName: "Button" });
+  });
+
+  it("returns undefined when only metadata fields exist", () => {
+    expect(sanitizeParams({ _meta: { x: 1 } })).toBeUndefined();
   });
 });
 
