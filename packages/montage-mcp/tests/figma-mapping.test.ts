@@ -61,13 +61,76 @@ describe("resolveFigmaToken (convention)", () => {
     expect(r.swiftExpression).toBe("Color.Atomic.Blue.500");
   });
 
-  it("rejects unknown kind via tool layer (not the resolver)", () => {
-    // resolver takes typed input; tool wrapper validates strings. Just sanity-check kinds we accept.
-    const kinds = ["color", "typography", "spacing", "shadow", "opacity"] as const;
+  it("returns convention paths for color/spacing/shadow/opacity (chained property)", () => {
+    const kinds = ["color", "spacing", "shadow", "opacity"] as const;
     for (const k of kinds) {
       const r = resolveFigmaToken({ figmaTokenName: "a/b", kind: k });
       expect(r.ok).toBe(true);
       expect(r.swiftExpression).toMatch(/^[A-Z]/);
     }
+  });
+
+  it("typography: parses 'Body 1/Reading - Regular' to variant body1Reading + weight regular", () => {
+    const r = resolveFigmaToken({
+      figmaTokenName: "Body 1/Reading - Regular",
+      kind: "typography",
+    });
+    expect(r.ok).toBe(true);
+    expect(r.variant).toBe("body1Reading");
+    expect(r.weight).toBe("regular");
+    expect(r.swiftExpression).toBe("(variant: .body1Reading, weight: .regular)");
+    expect(r.confidence).toBeGreaterThanOrEqual(0.9);
+  });
+
+  it("typography: parses 'Heading 1 - Bold' to variant heading1 + weight bold", () => {
+    const r = resolveFigmaToken({ figmaTokenName: "Heading 1 - Bold", kind: "typography" });
+    expect(r.ok).toBe(true);
+    expect(r.variant).toBe("heading1");
+    expect(r.weight).toBe("bold");
+  });
+
+  it("typography: returns fuzzy candidates when variant case is unknown", () => {
+    const r = resolveFigmaToken({ figmaTokenName: "Bogus 9", kind: "typography" });
+    expect(r.ok).toBe(false);
+    expect(r.candidates && r.candidates.length).toBeGreaterThan(0);
+  });
+});
+
+describe("resolveFigmaComponent (manifest + category candidates)", () => {
+  it("Card/List → ListCard via manifest (priority over Card convention)", () => {
+    const r = resolveFigmaComponent({ figmaName: "Card/List" });
+    expect(r.ok).toBe(true);
+    expect(r.source).toBe("manifest");
+    expect(r.confidence).toBe(1.0);
+    expect(r.montageType).toBe("ListCard");
+    expect(r.swiftSnippet).toMatch(/ListCard\(/);
+    expect(r.swiftSnippet).toMatch(/\.caption\(/);
+  });
+
+  it("weak convention match surfaces same-category candidates", () => {
+    const r = resolveFigmaComponent({ figmaName: "Card/Bogus" });
+    expect(r.ok).toBe(true); // resolver still produces something
+    if (r.unmatchedSegments) {
+      expect(r.categoryCandidates).toBeDefined();
+      const names = (r.categoryCandidates ?? []).map((c) => c.name);
+      // Expect ListCard in same `contents` category
+      expect(names).toContain("ListCard");
+    }
+  });
+});
+
+describe("get_component (modifiers section)", () => {
+  it("ListCard get_component output now exposes fluent modifiers", async () => {
+    const { healthCheckTool } = await import("../src/core/tools/health-check.js");
+    void healthCheckTool; // touch unused
+    const { allTools } = await import("../src/core/tools/index.js");
+    const { loadConfig } = await import("../src/core/config.js");
+    const tools = allTools({ config: loadConfig({}) });
+    const get = tools.find((t) => t.name === "get_component")!;
+    const r = await get.handler({ componentName: "ListCard" });
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/Instance Methods.*fluent modifiers/);
+    expect(text).toMatch(/caption/);
+    expect(text).toMatch(/extraCaption/);
   });
 });

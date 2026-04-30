@@ -26,6 +26,7 @@ export interface ComponentResolution {
   matchedVariants?: Record<string, string>;
   unmatchedSegments?: string[];
   candidates?: Array<{ name: string; score: number }>;
+  categoryCandidates?: Array<{ name: string; category: string }>;
   notes?: string;
 }
 
@@ -35,6 +36,10 @@ export interface TokenResolution {
   confidence: number;
   kind: TokenKind;
   swiftExpression?: string;
+  /** For typography tokens — the inferred Typography.Variant case. */
+  variant?: string;
+  /** For typography tokens — the inferred Typography.Weight case. */
+  weight?: string;
   candidates?: Array<{ name: string; score: number }>;
   notes?: string;
 }
@@ -289,6 +294,15 @@ export function resolveFigmaComponent(input: {
     notes: `matched via convention; init ${init.signature}`,
   };
   if (unmatched.length > 0) result.unmatchedSegments = unmatched;
+  // When the match is weak (unmatched segments OR low confidence), also surface
+  // siblings in the same category — the Figma name might actually point at
+  // a separate component (e.g. "Card/List" → ListCard, not a Card variant).
+  if (unmatched.length > 0 || confidence < 0.85) {
+    const siblings = idx.components
+      .filter((c) => c.category === target.category && c.slug !== target.slug)
+      .map((c) => ({ name: c.name, category: c.category }));
+    if (siblings.length > 0) result.categoryCandidates = siblings;
+  }
   return result;
 }
 
@@ -310,6 +324,85 @@ function tokenSegmentToSwift(seg: string, isLeaf: boolean): string {
   // Numeric leaf (e.g. "500", "100") → keep as-is.
   if (isNumericLike(seg)) return seg;
   return isLeaf ? camel(seg) : pascal(seg);
+}
+
+/**
+ * Typography-specific matcher.
+ *
+ * Figma typography names typically look like:
+ *   "Body 1/Reading - Regular"
+ *   "Heading 1 - Bold"
+ *   "Title 2/Reading - Medium"
+ *
+ * Strategy:
+ *   - Split by " - " — last segment is the weight if it matches a known weight name.
+ *   - The remainder splits by "/" and whitespace; concatenate as camelCase to match
+ *     Typography.Variant cases (body1Reading, heading1, title2, etc).
+ *   - Validate against tokens.json typography variant/weight enums for confidence.
+ */
+function resolveTypographyToken(figmaName: string): TokenResolution {
+  const KNOWN_WEIGHTS = ["regular", "medium", "bold", "semibold", "light", "thin", "heavy"];
+  const dashSplit = figmaName.split(/\s*-\s*/).map((s) => s.trim()).filter(Boolean);
+  let weight: string | undefined;
+  let remainder = figmaName;
+  if (dashSplit.length > 1) {
+    const last = dashSplit[dashSplit.length - 1]!.toLowerCase();
+    if (KNOWN_WEIGHTS.includes(last)) {
+      weight = last;
+      remainder = dashSplit.slice(0, -1).join(" - ");
+    }
+  }
+  const segments = remainder.split(/[\s/]+/).filter(Boolean);
+  if (segments.length === 0) {
+    return {
+      ok: false,
+      source: "none",
+      confidence: 0,
+      kind: "typography",
+      notes: "could not parse typography name",
+    };
+  }
+  // First segment lowercased, rest TitleCase, then concatenated.
+  const variant = segments
+    .map((s, i) => {
+      if (i === 0) return s.charAt(0).toLowerCase() + s.slice(1);
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    })
+    .join("");
+
+  // Validate against tokens.json typography enums.
+  const tokens = loadTokens();
+  const ty = tokens.tokens.typography;
+  let variantOk = false;
+  let weightOk = !weight; // if weight not parsed, no validation needed
+  let candidates: Array<{ name: string; score: number }> | undefined;
+  if (ty) {
+    const variantEnum = ty.nestedTypes.find((n) => n.name.endsWith(".Variant"));
+    const weightEnum = ty.nestedTypes.find((n) => n.name.endsWith(".Weight"));
+    if (variantEnum?.cases?.includes(variant)) variantOk = true;
+    else if (variantEnum?.cases) {
+      candidates = topCandidates(variant, variantEnum.cases);
+    }
+    if (weight && weightEnum?.cases?.includes(weight)) weightOk = true;
+  }
+  const confidence = variantOk && weightOk ? 0.95 : variantOk ? 0.8 : 0.5;
+  const exprParts = [`variant: .${variant}`];
+  if (weight) exprParts.push(`weight: .${weight}`);
+  const swiftExpression = `(${exprParts.join(", ")})`;
+
+  const result: TokenResolution = {
+    ok: variantOk,
+    source: "convention",
+    confidence,
+    kind: "typography",
+    swiftExpression,
+    variant,
+    notes:
+      "Typography is normally consumed via host helpers like `Text(\"...\").paragraph(variant: ..., weight: ..., color: ...)` defined in the host app. The exact modifier name is host-defined; this resolver only reports the Montage Typography enum cases.",
+  };
+  if (weight) result.weight = weight;
+  if (candidates) result.candidates = candidates;
+  return result;
 }
 
 export function resolveFigmaToken(input: {
@@ -340,6 +433,11 @@ export function resolveFigmaToken(input: {
       kind: input.kind,
       swiftExpression: manifestHit,
     };
+  }
+
+  // Typography has its own matcher (variant + weight, not a chained property).
+  if (input.kind === "typography") {
+    return resolveTypographyToken(input.figmaTokenName);
   }
 
   // Convention: build chained property path under Color.X.Y.z, etc.

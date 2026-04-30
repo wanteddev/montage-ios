@@ -17,6 +17,28 @@ function renderComponent(c: ComponentRecord): string {
     }
   }
 
+  if (c.modifiers && c.modifiers.length > 0) {
+    lines.push(
+      "",
+      "## Instance Methods (fluent modifiers)",
+      "",
+      "These are chainable methods that return `Self`. Use them after the initializer to configure the view.",
+      "",
+    );
+    for (const m of c.modifiers) {
+      const summary = m.summary ? ` — ${m.summary}` : "";
+      lines.push(`- \`${m.signature}\`${summary}`);
+    }
+  }
+
+  if (c.staticMembers && c.staticMembers.length > 0) {
+    lines.push("", "## Static Members", "");
+    for (const m of c.staticMembers) {
+      const summary = m.summary ? ` — ${m.summary}` : "";
+      lines.push(`- \`${m.signature}\`${summary}`);
+    }
+  }
+
   const enums = c.nestedTypes.filter((n) => n.kind === "enum");
   const others = c.nestedTypes.filter((n) => n.kind !== "enum");
 
@@ -35,6 +57,21 @@ function renderComponent(c: ComponentRecord): string {
     for (const t of others) {
       const summary = t.summary ? ` — ${t.summary}` : "";
       lines.push(`- **${t.name}** (\`${t.kind}\`)${summary}`);
+      if (t.staticMethods && t.staticMethods.length > 0) {
+        for (const sm of t.staticMethods) {
+          lines.push(`  - static \`${sm.signature}\``);
+        }
+      }
+      if (t.staticProperties && t.staticProperties.length > 0) {
+        for (const sp of t.staticProperties) {
+          lines.push(`  - static \`${sp.signature}\``);
+        }
+      }
+      if (t.modifiers && t.modifiers.length > 0) {
+        for (const mm of t.modifiers) {
+          lines.push(`  - modifier \`${mm.signature}\``);
+        }
+      }
     }
   }
 

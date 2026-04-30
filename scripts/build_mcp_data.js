@@ -95,6 +95,44 @@ function extractInitializers(json) {
   }));
 }
 
+/** Strip the disambiguating hash that DocC appends to overloaded methods (e.g. "title(_:)-3g6lv" → "title(_:)"). */
+function stripHash(slug) {
+  return slug.replace(/-[0-9a-z]{4,}$/i, '');
+}
+
+/**
+ * Read each member referenced by `sectionTitle` and return its signature/summary.
+ * Used for both "Instance Methods" (fluent modifiers) and "Type Methods" (static factories).
+ */
+function extractMembers(json, componentDir, sectionTitle) {
+  const sec = findSection(json, (t) => t === sectionTitle);
+  if (!sec || !fs.existsSync(componentDir)) return [];
+  const seen = new Set(); // dedupe overloads by stripped name
+  const out = [];
+  for (const id of sec.identifiers || []) {
+    const fileSlug = tail(id);
+    const memberPath = path.join(componentDir, `${fileSlug}.json`);
+    if (!fs.existsSync(memberPath)) continue;
+    let mj;
+    try { mj = readJson(memberPath); } catch { continue; }
+    const meta = mj.metadata || {};
+    const sig = fragmentSignature(meta.fragments);
+    if (!sig) continue;
+    const baseName = stripHash(fileSlug);
+    const summary = abstractText(mj);
+    const dedupeKey = `${baseName}::${sig}`;
+    if (seen.has(dedupeKey)) continue;
+    seen.add(dedupeKey);
+    out.push({
+      name: baseName,
+      signature: sig,
+      summary,
+      kind: meta.symbolKind || 'method',
+    });
+  }
+  return out;
+}
+
 function extractNestedTypes(componentDir, componentName) {
   if (!fs.existsSync(componentDir)) return [];
   const entries = fs.readdirSync(componentDir, { withFileTypes: true });
@@ -123,10 +161,20 @@ function extractNestedTypes(componentDir, componentName) {
       if (casesSec) {
         record.cases = (casesSec.identifiers || []).map((id) => {
           const t = tail(id);
-          // strip trailing parens or arguments
           return t.replace(/\(.*\)$/, '');
         });
       }
+    }
+    // Static factories like `TopNavigation.LeadingButton.back(action:)` live as
+    // "Type Methods" / "Type Properties" inside the nested-type subdir.
+    const nestedDir = path.join(componentDir, slug);
+    if (fs.existsSync(nestedDir)) {
+      const staticMethods = extractMembers(typeJson, nestedDir, 'Type Methods');
+      const staticProps = extractMembers(typeJson, nestedDir, 'Type Properties');
+      const modifiers = extractMembers(typeJson, nestedDir, 'Instance Methods');
+      if (staticMethods.length > 0) record.staticMethods = staticMethods;
+      if (staticProps.length > 0) record.staticProperties = staticProps;
+      if (modifiers.length > 0) record.modifiers = modifiers;
     }
     types.push(record);
   }
@@ -158,6 +206,7 @@ function buildComponents() {
     if (meta.symbolKind !== 'struct' && meta.symbolKind !== 'class' && meta.symbolKind !== 'enum') {
       continue;
     }
+    const compDir = path.join(DOCC, slug);
     components.push({
       slug,
       name: meta.title || slug,
@@ -166,7 +215,9 @@ function buildComponents() {
       declaration: fragmentSignature(meta.fragments),
       summary: abstractText(json),
       initializers: extractInitializers(json),
-      nestedTypes: extractNestedTypes(path.join(DOCC, slug), meta.title || slug),
+      modifiers: extractMembers(json, compDir, 'Instance Methods'),
+      staticMembers: extractMembers(json, compDir, 'Type Methods'),
+      nestedTypes: extractNestedTypes(compDir, meta.title || slug),
     });
   }
   components.sort((a, b) => a.name.localeCompare(b.name));

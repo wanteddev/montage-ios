@@ -11,11 +11,21 @@ export interface InitializerRecord {
   docId: string;
 }
 
+export interface MemberRecord {
+  name: string;
+  kind: string;
+  signature: string;
+  summary?: string;
+}
+
 export interface NestedTypeRecord {
   name: string;
   kind: string;
   summary?: string;
   cases?: string[];
+  modifiers?: MemberRecord[];
+  staticMethods?: MemberRecord[];
+  staticProperties?: MemberRecord[];
 }
 
 export interface ComponentRecord {
@@ -26,6 +36,8 @@ export interface ComponentRecord {
   declaration: string;
   summary: string;
   initializers: InitializerRecord[];
+  modifiers?: MemberRecord[];
+  staticMembers?: MemberRecord[];
   nestedTypes: NestedTypeRecord[];
 }
 
