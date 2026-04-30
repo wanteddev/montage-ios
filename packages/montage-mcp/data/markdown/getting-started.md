@@ -34,6 +34,23 @@ Then import Montage in your Swift files:
 import Montage
 ```
 
+## SwiftUI Preview Setup (important)
+
+Pretendard fonts are registered at app launch via the host's `Info.plist`. Xcode Previews bypass that path, so without manual registration Preview falls back to the system font and the design will not match production.
+
+Add this boilerplate to **every** `#Preview` in a file that uses Montage typography:
+
+```swift
+import Pretendard
+
+#Preview {
+    _ = try? Pretendard.registerFonts()
+    return MyView()
+}
+```
+
+This is Preview-only — the host app does not need it.
+
 ## Sample App
 
 We provide a Blueprint sample app to showcase the various components and usage examples offered by Montage. Please refer to the [Sources/Blueprint](https://github.com/wanteddev/montage-ios/tree/main/Sources/Blueprint) folder.

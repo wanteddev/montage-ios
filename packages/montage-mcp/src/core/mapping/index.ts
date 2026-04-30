@@ -398,7 +398,7 @@ function resolveTypographyToken(figmaName: string): TokenResolution {
     swiftExpression,
     variant,
     notes:
-      "Typography is normally consumed via host helpers like `Text(\"...\").paragraph(variant: ..., weight: ..., color: ...)` defined in the host app. The exact modifier name is host-defined; this resolver only reports the Montage Typography enum cases.",
+      "Typography is normally consumed via host helpers like `Text(\"...\").paragraph(variant: ..., weight: ..., color: ...)` defined in the host app. The exact modifier name is host-defined; this resolver only reports the Montage Typography enum cases. **Modifier order matters**: the host helper (e.g. `.paragraph(...)`) consumes a `Text` and returns `some View`, so it MUST be chained directly on the `Text` BEFORE any SwiftUI standard modifier (`.multilineTextAlignment`, `.frame`, `.padding`, etc). Putting `.multilineTextAlignment(.center)` before `.paragraph(...)` narrows the type and the typography helper either fails to apply or silently drops styling.",
   };
   if (weight) result.weight = weight;
   if (candidates) result.candidates = candidates;

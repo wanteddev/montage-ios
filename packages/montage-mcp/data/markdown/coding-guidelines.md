@@ -67,3 +67,61 @@ Button(
 
 - Montage에 없는 디자인은 **추가 컴포넌트 요청 코멘트와 함께 임시 SwiftUI 코드** 작성. 임시 코드도 토큰은 사용한다.
 - variant 조합이 doccarchive에 존재하지 않으면 LLM이 임의 enum 케이스를 만들지 말 것. `resolve_figma_component`가 반환한 후보 목록을 호출자에게 전달.
+
+## 8. Modifier 체이닝 순서 (중요)
+
+**호스트 helper(`.paragraph`, `.heading` 등 Typography helper)는 `Text`를 받아 `some View`로 변환하므로, 반드시 `Text` 직후에 체이닝하고 SwiftUI 표준 modifier는 그 뒤에 둔다.**
+
+```swift
+// ✅ 올바른 순서
+Text("합격 데이터를 기반으로\n선택한 포지션에 맞게 이력서를 다듬어 드려요.")
+    .paragraph(variant: .body1, weight: .regular, color: .semantic(.labelNeutral))
+    .multilineTextAlignment(.center)
+    .frame(maxWidth: .infinity)
+
+// ❌ 잘못된 순서 — typography가 적용되지 않거나 스타일이 누락된다
+Text("...")
+    .multilineTextAlignment(.center)  // 타입을 some View로 좁혀버림
+    .paragraph(variant: .body1, weight: .regular, color: ...)
+```
+
+## 9. 멀티컬러 아이콘 렌더링
+
+이름이 `Color`로 끝나는 아이콘(`agentColor`, `aiReviewColor` 등)은 멀티컬러 에셋이므로 SwiftUI 기본 template rendering을 끄지 않으면 단색으로 죽는다. `.renderingMode(.original)`을 반드시 체이닝한다.
+
+```swift
+Image.icon(.agentColor)
+    .renderingMode(.original)  // *Color 아이콘은 필수
+    .resizable()
+    .scaledToFit()
+    .frame(width: 48, height: 48)
+```
+
+단색 아이콘에는 불필요하다. 일반 아이콘은 `.foregroundColor(...)`로 색을 지정한다.
+
+## 10. SwiftUI Preview에서 Pretendard 폰트 등록
+
+Montage는 Pretendard에 의존하지만 Xcode Preview는 Info.plist를 거치지 않아 폰트가 자동 등록되지 않는다 → Preview에서만 시스템 폰트로 폴백되어 실제 디자인과 어긋난다. Preview에서는 다음 보일러플레이트를 첫 줄에 넣는다.
+
+```swift
+import Pretendard
+
+#Preview {
+    _ = try? Pretendard.registerFonts()
+    return MyView()
+}
+```
+
+호스트 앱은 launch 시점에 등록되므로 런타임에는 문제없다. **Preview 전용 처리**다.
+
+## 11. SwiftFormat 룰 정렬
+
+Montage 호스트 레포는 SwiftFormat을 사용한다. 코드 생성 시 다음 룰을 미리 적용한 형태로 출력한다(린터가 자동 정정하므로 강제는 아니지만, 노이즈 감소).
+
+- `redundantType`: 타입 추론 가능한 곳에 명시적 타입 annotation 생략
+  ```swift
+  // ❌ @State private var isLoading: Bool = false
+  // ✅ @State private var isLoading = false
+  ```
+- `redundantSelf`: 클로저 외부에서 `self.` 생략
+- `trailingClosures`: 마지막 클로저 인자는 trailing closure로

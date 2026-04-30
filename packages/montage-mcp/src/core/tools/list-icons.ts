@@ -28,6 +28,7 @@ export function listIconsTool(_ctx: ServerContext): ToolDefinition {
         ? idx.icons.filter((n) => n.toLowerCase().includes(q))
         : idx.icons;
       const truncated = filtered.length > limit ? filtered.slice(0, limit) : filtered;
+      const isMulticolor = (name: string) => /Color$/.test(name);
       const lines: string[] = [];
       lines.push(`# Montage Icons`);
       lines.push("");
@@ -35,8 +36,27 @@ export function listIconsTool(_ctx: ServerContext): ToolDefinition {
       if (q) lines.push(`- **Filter**: \`${q}\``);
       lines.push(`- **Returned**: ${truncated.length}${filtered.length > truncated.length ? ` (truncated from ${filtered.length}; pass \`limit\` to widen)` : ""}`);
       lines.push("");
+      lines.push(`## Rendering`);
+      lines.push("");
+      lines.push("- Single-color icons: standard SwiftUI tinting (`.foregroundColor(...)`) works as expected.");
+      lines.push("- **Multicolor icons** (name ending in `Color`, e.g. `agentColor`, `aiReviewColor`): SwiftUI defaults to template rendering, which collapses the icon to a single tint. **Always** chain `.renderingMode(.original)` immediately after `Image.icon(...)`:");
+      lines.push("");
+      lines.push("```swift");
+      lines.push("Image.icon(.agentColor)");
+      lines.push("    .renderingMode(.original)  // required for *Color icons");
+      lines.push("    .resizable()");
+      lines.push("    .scaledToFit()");
+      lines.push("    .frame(width: 48, height: 48)");
+      lines.push("```");
+      lines.push("");
+      lines.push(`## Icons`);
+      lines.push("");
       for (const name of truncated) {
-        lines.push(`- ${name}`);
+        if (isMulticolor(name)) {
+          lines.push(`- ${name} _(multicolor — requires \`.renderingMode(.original)\`)_`);
+        } else {
+          lines.push(`- ${name}`);
+        }
       }
       return {
         content: [{ type: "text", text: lines.join("\n").trimEnd() }],
