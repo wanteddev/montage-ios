@@ -15,6 +15,32 @@ import Montage
 - 가능하면 SwiftUI 표준 뷰 대신 Montage 컴포넌트를 사용한다 (예: `SwiftUI.Button` ❌ → `Montage.Button` ✅).
 - 동명 충돌이 우려되면 모듈 한정자(`Montage.Button`)를 명시한다.
 
+## 1-A. `Color` 네임스페이스 충돌 (CRITICAL)
+
+Montage는 `public enum Color`를 정의하고 동시에 `extension SwiftUI.Color`에 `static func semantic(_:) / atomic(_:)`을 추가한다. 즉,
+
+- `Color.semantic(.foo)` 같은 **표현식**은 SwiftUI.Color로 정상 추론된다.
+- 그러나 **타입 어노테이션 위치**(stored property, return type, function parameter, generic constraint 등)에 `Color`라고 쓰면 컴파일러가 `Montage.Color` (enum) 으로 해석하여 `Cannot convert value of type 'SwiftUI.Color' to ...` 에러가 난다.
+
+**규칙**: SwiftUI 색상 값을 변수/리턴 타입으로 보유할 때는 반드시 `SwiftUI.Color`로 한정해서 어노테이션한다.
+
+```swift
+// ✅ 올바름
+private var backgroundColor: SwiftUI.Color {
+    isSelected ? Color.semantic(.primaryNormal).opacity(0.02)
+               : Color.semantic(.backgroundElevatedAlternative)
+}
+
+private func tint(for state: State) -> SwiftUI.Color { ... }
+
+@State private var fillColor: SwiftUI.Color = .semantic(.fillNormal)
+
+// ❌ 잘못됨 — `Color`가 Montage.Color (enum)로 해석되어 빌드 실패
+private var backgroundColor: Color { Color.semantic(.primaryNormal) }
+```
+
+표현식 내부에서는 그냥 `Color.semantic(...)`을 써도 된다 — 충돌은 **타입 위치**에서만 발생한다. 모호한 표현식이 있으면 `SwiftUI.Color.semantic(...)`로 한정한다.
+
 ## 2. 디자인 토큰을 직접 사용한다
 
 하드코딩된 값을 절대 쓰지 않는다.
@@ -85,9 +111,9 @@ Text("...")
     .paragraph(variant: .body1, weight: .regular, color: ...)
 ```
 
-## 9. 멀티컬러 아이콘 렌더링
+## 9. 멀티컬러 아이콘 렌더링 (CRITICAL — 자주 누락됨)
 
-이름이 `Color`로 끝나는 아이콘(`agentColor`, `aiReviewColor` 등)은 멀티컬러 에셋이므로 SwiftUI 기본 template rendering을 끄지 않으면 단색으로 죽는다. `.renderingMode(.original)`을 반드시 체이닝한다.
+이름이 `Color`로 끝나는 아이콘(`agentColor`, `aiReviewColor`, `*Color` 패턴 전체)은 멀티컬러 에셋이다. SwiftUI는 기본적으로 template rendering을 적용하므로 단색(보통 accentColor)으로 뭉개진다. **반드시** `Image.icon(...)` 직후에 `.renderingMode(.original)`을 체이닝해야 한다 — 없으면 디자인이 죽는다.
 
 ```swift
 Image.icon(.agentColor)

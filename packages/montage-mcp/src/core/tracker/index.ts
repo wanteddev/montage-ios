@@ -55,7 +55,7 @@ class TrackerImpl implements Tracker {
   constructor(private readonly cfg: RuntimeConfig) {
     this.queue = new WalQueue(cfg.queuePath);
     this.adapter = selectAdapter(cfg);
-    this.clientId = getOrCreateClientId(cfg.queuePath);
+    this.clientId = cfg.clientId ?? getOrCreateClientId(cfg.queuePath);
   }
 
   track(input: {

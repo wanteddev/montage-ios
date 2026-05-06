@@ -426,13 +426,18 @@ export function resolveFigmaToken(input: {
   const mapping = loadFigmaMapping();
   const manifestHit = mapping.tokens[input.kind]?.[input.figmaTokenName];
   if (manifestHit) {
-    return {
+    const result: TokenResolution = {
       ok: true,
       source: "manifest",
       confidence: 1.0,
       kind: input.kind,
       swiftExpression: manifestHit,
     };
+    if (input.kind === "color") {
+      result.notes =
+        "**Color namespace conflict**: Montage defines `public enum Color` AND extends `SwiftUI.Color` with `static func semantic(_:) / atomic(_:)`. In TYPE-ANNOTATION position (stored property, return type, function parameter) bare `Color` resolves to `Montage.Color` (the enum) and produces a 'Cannot convert value' compile error. **Always annotate as `SwiftUI.Color`** when storing or returning a color value: `private var bg: SwiftUI.Color { Color.semantic(.primaryNormal) }`. Inside an expression `Color.semantic(...)` is fine — the conflict is only at type positions.";
+    }
+    return result;
   }
 
   // Typography has its own matcher (variant + weight, not a chained property).
@@ -459,14 +464,17 @@ export function resolveFigmaToken(input: {
     else candidates = topCandidates(leaf, allIdentifiers);
   }
 
+  const baseNote =
+    "convention path; verify against documentation if confidence < 0.9. Numeric segments preserved verbatim.";
+  const colorTypeAnnotationNote =
+    " **Color namespace conflict**: Montage defines `public enum Color` AND extends `SwiftUI.Color` with `static func semantic(_:) / atomic(_:)`. The expression `Color.semantic(.foo)` resolves to a `SwiftUI.Color` value, but in TYPE-ANNOTATION position (stored property, return type, function parameter) bare `Color` resolves to `Montage.Color` (the enum) and produces a 'Cannot convert value' compile error. **Always annotate as `SwiftUI.Color`** when storing or returning a color value: `private var bg: SwiftUI.Color { Color.semantic(.primaryNormal) }`. Inside an expression `Color.semantic(...)` is fine — the conflict is only at type positions.";
   const result: TokenResolution = {
     ok: true,
     source: "convention",
     confidence,
     kind: input.kind,
     swiftExpression,
-    notes:
-      "convention path; verify against documentation if confidence < 0.9. Numeric segments preserved verbatim.",
+    notes: input.kind === "color" ? baseNote + colorTypeAnnotationNote : baseNote,
   };
   if (candidates) result.candidates = candidates;
   return result;

@@ -36,19 +36,30 @@ export function listIconsTool(_ctx: ServerContext): ToolDefinition {
       if (q) lines.push(`- **Filter**: \`${q}\``);
       lines.push(`- **Returned**: ${truncated.length}${filtered.length > truncated.length ? ` (truncated from ${filtered.length}; pass \`limit\` to widen)` : ""}`);
       lines.push("");
-      lines.push(`## Rendering`);
+      const hasMulticolorInResult = truncated.some(isMulticolor);
+      lines.push(`## Rendering (CRITICAL — read before generating code)`);
       lines.push("");
-      lines.push("- Single-color icons: standard SwiftUI tinting (`.foregroundColor(...)`) works as expected.");
-      lines.push("- **Multicolor icons** (name ending in `Color`, e.g. `agentColor`, `aiReviewColor`): SwiftUI defaults to template rendering, which collapses the icon to a single tint. **Always** chain `.renderingMode(.original)` immediately after `Image.icon(...)`:");
+      lines.push("- Single-color icons: tint with `.foregroundColor(...)` as usual.");
+      lines.push("- **Multicolor icons** — any icon whose name ends in `Color` (e.g. `agentColor`, `aiReviewColor`, `*Color`) — are multi-channel raster/vector assets. SwiftUI's default `.template` rendering mode collapses them to a single tint, destroying the design. **You MUST chain `.renderingMode(.original)` directly after `Image.icon(...)` BEFORE `.resizable()` and any frame/tint modifiers.** This is non-negotiable; omitting it is a common LLM-generated bug.");
       lines.push("");
       lines.push("```swift");
+      lines.push("// ✅ Correct");
       lines.push("Image.icon(.agentColor)");
-      lines.push("    .renderingMode(.original)  // required for *Color icons");
+      lines.push("    .renderingMode(.original)  // REQUIRED for *Color icons — do not omit");
       lines.push("    .resizable()");
       lines.push("    .scaledToFit()");
       lines.push("    .frame(width: 48, height: 48)");
+      lines.push("");
+      lines.push("// ❌ Wrong — multicolor icon will render as a single tinted glyph");
+      lines.push("Image.icon(.agentColor)");
+      lines.push("    .resizable()");
+      lines.push("    .frame(width: 48, height: 48)");
       lines.push("```");
       lines.push("");
+      if (hasMulticolorInResult) {
+        lines.push("> The result list below contains at least one multicolor (`*Color`) icon. Apply the rule above when emitting code for those entries.");
+        lines.push("");
+      }
       lines.push(`## Icons`);
       lines.push("");
       for (const name of truncated) {
