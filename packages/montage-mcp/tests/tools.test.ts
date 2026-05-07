@@ -41,6 +41,17 @@ describe("montage_coding_guidelines", () => {
   });
 });
 
+describe("figma_to_swiftui_workflow", () => {
+  it("returns the Figma→SwiftUI procedure", async () => {
+    const r = await get("figma_to_swiftui_workflow").handler({});
+    expect(r.isError).toBeFalsy();
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/resolve_figma_component/);
+    expect(text).toMatch(/resolve_figma_token/);
+    expect(text).toMatch(/montage_coding_guidelines/);
+  });
+});
+
 describe("list_components", () => {
   it("groups by known categories and lists Button under Actions", async () => {
     const r = await get("list_components").handler({});

@@ -9,6 +9,7 @@ import { getColorUsageTool } from "./get-color-usage.js";
 import { listIconsTool } from "./list-icons.js";
 import { resolveFigmaComponentTool } from "./resolve-figma-component.js";
 import { resolveFigmaTokenTool } from "./resolve-figma-token.js";
+import { figmaToSwiftuiWorkflowTool } from "./figma-to-swiftui-workflow.js";
 
 export interface ToolDefinition {
   name: string;
@@ -36,5 +37,6 @@ export function allTools(ctx: ServerContext): ToolDefinition[] {
     listIconsTool(ctx),
     resolveFigmaComponentTool(ctx),
     resolveFigmaTokenTool(ctx),
+    figmaToSwiftuiWorkflowTool(ctx),
   ];
 }
