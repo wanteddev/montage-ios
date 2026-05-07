@@ -43,7 +43,6 @@ export interface ComponentRecord {
 
 export interface ComponentsIndex {
   schema: number;
-  generatedAt: string;
   components: ComponentRecord[];
 }
 
@@ -63,7 +62,6 @@ export interface TokenRecord {
 
 export interface TokensIndex {
   schema: number;
-  generatedAt: string;
   tokens: {
     color: TokenRecord | null;
     typography: TokenRecord | null;
@@ -75,7 +73,6 @@ export interface TokensIndex {
 
 export interface IconsIndex {
   schema: number;
-  generatedAt: string;
   count: number;
   icons: string[];
 }

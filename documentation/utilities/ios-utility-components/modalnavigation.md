@@ -251,7 +251,7 @@ ModalNavigation()
 - **Discussion**
   >  **Note**
   >
-  > Title(:) 메서드로 설정된 텍스트만 표시됩니다.
+  > Title(*:)와 함께 사용될 경우 title(*:) 메서드로 설정된 텍스트만 표시됩니다.
 
 </details>
 <details>

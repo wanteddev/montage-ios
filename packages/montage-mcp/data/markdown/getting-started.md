@@ -36,9 +36,9 @@ import Montage
 
 ## SwiftUI Preview Setup (important)
 
-Pretendard fonts are registered at app launch via the host's `Info.plist`. Xcode Previews bypass that path, so without manual registration Preview falls back to the system font and the design will not match production.
+Pretendard fonts are registered at app launch via the host's `Info.plist`. Xcode Previews bypass that path, so without manual registration Preview falls back to the system font — the typeface, weights, and line-height applied by Montage typography will not match production, making Preview useless for visual verification.
 
-Add this boilerplate to **every** `#Preview` in a file that uses Montage typography:
+To make Pretendard render correctly (with the right weights and line-spacing) inside `#Preview`, register the fonts manually at the top of every `#Preview` in a file that uses Montage typography:
 
 ```swift
 import Pretendard

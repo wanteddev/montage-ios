@@ -308,7 +308,6 @@ function writeJson(name, data) {
   const out = path.join(OUT_DIR, name);
   const payload = {
     schema: 1,
-    generatedAt: new Date().toISOString(),
     ...data,
   };
   fs.writeFileSync(out, JSON.stringify(payload, null, 2) + '\n');
