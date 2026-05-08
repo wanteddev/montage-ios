@@ -1,6 +1,6 @@
 {
   "name": "@wanteddev/montage-ios-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Model Context Protocol server for the Montage iOS Design System (Wanted Lab)",
   "type": "module",
   "license": "MIT",
