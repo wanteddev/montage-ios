@@ -23,11 +23,7 @@ Please refer to the [Getting Started Guide](./GETTINGSTARTED.md) for development
 
 Montage ships with an [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server so LLM-powered tools (Claude Code, etc.) can read component/token/icon metadata and the Figma → SwiftUI conversion workflow as authoritative tool responses.
 
-```bash
-claude mcp add montage-ios -- npx -y @wanteddev/montage-ios-mcp@latest
-```
-
-See [packages/montage-mcp](./packages/montage-mcp) for details.
+See [packages/montage-mcp/README.md](./packages/montage-mcp/README.md) for installation and usage.
 
 ## Contributing
 
