@@ -2,7 +2,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 
 export const PACKAGE_NAME = "@wanteddev/montage-ios-mcp";
-export const PACKAGE_VERSION = "0.1.0";
+export const PACKAGE_VERSION = "0.3.0";
 export const PLATFORM_TAG = "ios";
 
 export interface RuntimeConfig {
