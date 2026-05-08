@@ -25,8 +25,20 @@ app.get("/sse", async (_req: Request, res: Response) => {
   transports.set(transport.sessionId, transport);
   res.on("close", () => transports.delete(transport.sessionId));
 
-  const server = createServer({ config, transport: "http" });
-  await server.connect(transport);
+  try {
+    const server = createServer({ config, transport: "http" });
+    await server.connect(transport);
+  } catch (err) {
+    transports.delete(transport.sessionId);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "failed to initialize sse session" });
+    }
+    if (config.debug) {
+      process.stderr.write(
+        `[${PACKAGE_NAME}] sse init failed: ${String(err)}\n`,
+      );
+    }
+  }
 });
 
 app.post("/messages", async (req: Request, res: Response) => {

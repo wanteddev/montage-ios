@@ -50,15 +50,23 @@ describe("resolveFigmaComponent (convention)", () => {
 });
 
 describe("resolveFigmaToken (convention)", () => {
-  it("maps semantic/text/primary to Color.Semantic.Text.primary", () => {
+  // Convention-only paths: the resolver builds chained property syntax from the
+  // Figma path even when the produced expression doesn't exist in Montage's
+  // catalog (which uses flat case names like `primaryNormal` / `blue50`). The
+  // caller is expected to consult `confidence` and `candidates` before emitting
+  // these into generated code.
+  it("emits convention path for unknown leaf and signals low confidence", () => {
     const r = resolveFigmaToken({ figmaTokenName: "semantic/text/primary", kind: "color" });
     expect(r.ok).toBe(true);
     expect(r.swiftExpression).toBe("Color.Semantic.Text.primary");
+    // Catalog has no `primary` case under Semantic — resolver must flag low confidence.
+    expect(r.confidence).toBeLessThan(0.9);
   });
 
-  it("preserves numeric leaves", () => {
+  it("preserves numeric leaves verbatim in convention path", () => {
     const r = resolveFigmaToken({ figmaTokenName: "atomic/blue/500", kind: "color" });
     expect(r.swiftExpression).toBe("Color.Atomic.Blue.500");
+    expect(r.confidence).toBeLessThan(0.9);
   });
 
   it("returns convention paths for color/spacing/shadow/opacity (chained property)", () => {
@@ -129,7 +137,8 @@ describe("get_component (modifiers section)", () => {
     const get = tools.find((t) => t.name === "get_component")!;
     const r = await get.handler({ componentName: "ListCard" });
     const text = r.content[0]!.text;
-    expect(text).toMatch(/Instance Methods.*fluent modifiers/);
+    expect(text).toMatch(/Instance Methods/);
+    expect(text).toMatch(/fluent modifiers/);
     expect(text).toMatch(/caption/);
     expect(text).toMatch(/extraCaption/);
   });

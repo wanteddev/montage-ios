@@ -6,7 +6,7 @@ export function listIconsTool(_ctx: ServerContext): ToolDefinition {
   return {
     name: "list_icons",
     description:
-      "Lists Montage icon asset names from Icon.xcassets. Optional `query` filter performs a case-insensitive substring match. Returns matching icon names suitable for `Image.MontageIcon(name:)` usage.",
+      "Lists Montage icon asset names from Icon.xcassets. Optional `query` filter performs a case-insensitive substring match. Returns matching icon names usable with `Image.icon(.<name>)` (the public Montage API extension on `Image`).",
     inputSchema: {
       type: "object",
       properties: {
