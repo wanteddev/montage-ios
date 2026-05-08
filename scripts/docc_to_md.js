@@ -241,21 +241,53 @@ function renderInlineContent(content, references, options = {}) {
 }
 
 function renderAside(content, references) {
+  const ALLOWED_STYLES = ['note', 'warning', 'important', 'tip'];
   let md = '';
   for (const aside of content) {
-    if (aside.type === 'aside' && aside.style === 'note') {
-      const name = aside.name || 'Note';
-      const rendered = renderInlineContent(aside.content, references, {
-        blockQuote: true,
-        joinWith: '\n',
-      });
-      if (rendered.replace(/>\s*[,]*\s*$/g, '').trim()) {
-        md += `>  **${name}**\n>\n`;
-        md += rendered.replace(/>\s*[,]*\s*$/g, '').trim() + '\n\n';
+    if (aside.type !== 'aside' || !ALLOWED_STYLES.includes(aside.style)) continue;
+    const name =
+      aside.name || aside.style[0].toUpperCase() + aside.style.slice(1);
+    const lines = [];
+    for (const block of aside.content || []) {
+      if (block.type === 'paragraph') {
+        const text = renderRichInline(block.inlineContent, references).trim();
+        if (text) {
+          lines.push(text);
+          lines.push('');
+        }
+      } else if (block.type === 'codeListing' && Array.isArray(block.code)) {
+        lines.push('```' + (block.syntax || ''));
+        for (const ln of block.code) lines.push(ln);
+        lines.push('```');
+        lines.push('');
       }
     }
+    while (lines.length && lines[lines.length - 1] === '') lines.pop();
+    if (!lines.length) continue;
+    md += `>  **${name}**\n>\n`;
+    md +=
+      lines.map((l) => (l === '' ? '>' : '> ' + l)).join('\n') + '\n\n';
   }
   return md;
+}
+
+function renderRichInline(inlineContent, references) {
+  if (!inlineContent) return '';
+  return inlineContent
+    .map((ic) => {
+      if (ic.type === 'text') return ic.text || '';
+      if (ic.type === 'codeVoice') return '`' + (ic.code || '') + '`';
+      if (ic.type === 'strong')
+        return '**' + renderRichInline(ic.inlineContent, references) + '**';
+      if (ic.type === 'emphasis')
+        return '*' + renderRichInline(ic.inlineContent, references) + '*';
+      if (ic.type === 'reference' && ic.identifier) {
+        const ref = references ? references[ic.identifier] : null;
+        return ref ? `[${ref.title}](${ref.url}.md)` : '';
+      }
+      return '';
+    })
+    .join('');
 }
 
 function renderContentSections(sections, references) {

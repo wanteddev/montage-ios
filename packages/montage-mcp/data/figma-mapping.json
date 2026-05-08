@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "description": "Manual Figma component/token → Montage Swift mapping. Convention-based matching is the fallback; entries here override. Add an entry whenever a Figma path is NOT a clean Type/Variant/Size match — e.g. when a Figma variant has been promoted to a separate Montage component, or when the Figma name uses words that don't match any enum case.",
+  "components": {
+    "Card/List": {
+      "montageType": "ListCard",
+      "swiftSnippet": "ListCard(\n  thumbnail: { <#Thumbnail#> },\n  skeleton: <#Binding<Bool>#>,\n  title: <#String#>\n)\n  .caption(<#String?#>)\n  .extraCaption(<#String?#>)",
+      "notes": "Figma 'Card/List' is a separate Montage component (ListCard, horizontal layout) — NOT a variant of the vertical Card. Use ListCard fluent modifiers (.caption, .extraCaption, .leadingContent, .trailingContent, .topContent, .bottomContent) for the visible labels."
+    }
+  },
+  "tokens": {
+    "color": {},
+    "typography": {},
+    "spacing": {},
+    "shadow": {},
+    "opacity": {}
+  }
+}

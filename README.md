@@ -19,6 +19,16 @@ Visit [https://montage.wanted.co.kr](https://montage.wanted.co.kr) to view the d
 
 Please refer to the [Getting Started Guide](./GETTINGSTARTED.md) for development environment setup and local documentation hosting.
 
+## Montage MCP
+
+Montage ships with an [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server so LLM-powered tools (Claude Code, etc.) can read component/token/icon metadata and the Figma → SwiftUI conversion workflow as authoritative tool responses.
+
+```bash
+claude mcp add montage-ios -- npx -y @wanteddev/montage-ios-mcp@latest
+```
+
+See [packages/montage-mcp](./packages/montage-mcp) for details.
+
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md) before submitting a Pull Request.
