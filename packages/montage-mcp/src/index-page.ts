@@ -1,6 +1,5 @@
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./core/config.js";
 
-const NPM_PACKAGE = "@wanteddev/montage-ios-mcp";
 const REPO_URL = "https://github.com/wanteddev/montage-ios";
 const PUBLIC_ORIGIN = "https://montage-ios.lab.wntd.co";
 
@@ -17,7 +16,6 @@ export function renderIndexPage(_origin: string): string {
   const safeOrigin = escapeHtml(PUBLIC_ORIGIN);
   const sseUrl = `${safeOrigin}/sse`;
   const remoteAddCmd = `claude mcp add --transport sse montage-ios ${sseUrl}`;
-  const stdioAddCmd = `claude mcp add montage-ios -- npx -y ${NPM_PACKAGE}`;
   const cursorJson = `{
   "mcpServers": {
     "montage-ios": {
@@ -116,14 +114,7 @@ export function renderIndexPage(_origin: string): string {
     <button class="copy" data-target="cmd-remote">복사</button>
   </div>
 
-  <h2>2. Claude Code (로컬 stdio, npx)</h2>
-  <p>오프라인에서도 동작. npm 레지스트리에서 패키지를 받아 로컬 프로세스로 실행합니다.</p>
-  <div class="block">
-    <pre id="cmd-stdio">${escapeHtml(stdioAddCmd)}</pre>
-    <button class="copy" data-target="cmd-stdio">복사</button>
-  </div>
-
-  <h2>3. Cursor / 기타 MCP 클라이언트</h2>
+  <h2>2. Cursor / 기타 MCP 클라이언트</h2>
   <p>설정 파일에 SSE 엔드포인트를 추가합니다.</p>
   <div class="block">
     <pre id="cmd-cursor">${escapeHtml(cursorJson)}</pre>
