@@ -25,7 +25,7 @@ afterEach(() => {
 function ev(tool: string, ok = true): TrackEvent {
   return {
     name: "tool_call",
-    tool_name: tool,
+    toolName: tool,
     transport: "stdio",
     platform: "ios",
     clientId: "test-client",
@@ -44,7 +44,7 @@ describe("WalQueue", () => {
     await q.append(ev("a"));
     await q.append(ev("b"));
     const batch = await q.readBatch(10);
-    expect(batch.map((e) => e.tool_name)).toEqual(["a", "b"]);
+    expect(batch.map((e) => e.toolName)).toEqual(["a", "b"]);
   });
 
   it("truncateFirst drops the leading N events", async () => {
@@ -54,7 +54,7 @@ describe("WalQueue", () => {
     await q.append(ev("c"));
     await q.truncateFirst(2);
     const batch = await q.readBatch(10);
-    expect(batch.map((e) => e.tool_name)).toEqual(["c"]);
+    expect(batch.map((e) => e.toolName)).toEqual(["c"]);
   });
 
   it("returns empty when file is missing", async () => {
@@ -86,7 +86,7 @@ describe("HttpJsonAdapter (Track API spec)", () => {
     expect(captured[0]!.url).toBe("https://example/track");
     const body = JSON.parse(String(captured[0]!.init?.body));
     expect(body.name).toBe("tool_call");
-    expect(body.tool_name).toBe("a");
+    expect(body.toolName).toBe("a");
     expect(body.platform).toBe("ios");
     expect(body.transport).toBe("stdio");
     expect(body.metadata.status).toBe("success");

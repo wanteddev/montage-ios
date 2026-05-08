@@ -6,6 +6,8 @@ import {
 import { PACKAGE_NAME, PACKAGE_VERSION, type RuntimeConfig } from "./config.js";
 import { allTools, type ToolDefinition } from "./tools/index.js";
 import { getTracker } from "./tracker/index.js";
+import { logDebug } from "./logger.js";
+import { redactObject } from "./redact.js";
 
 export interface ServerContext {
   config: RuntimeConfig;
@@ -28,13 +30,16 @@ export function createServer(ctx: ServerContext): Server {
   const tools = allTools(ctx);
   const byName = new Map<string, ToolDefinition>(tools.map((t) => [t.name, t]));
 
-  server.setRequestHandler(ListToolsRequestSchema, async () => ({
-    tools: tools.map((t) => ({
-      name: t.name,
-      description: t.description,
-      inputSchema: t.inputSchema,
-    })),
-  }));
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    logDebug("tools/list", { count: tools.length, transport: ctx.transport });
+    return {
+      tools: tools.map((t) => ({
+        name: t.name,
+        description: t.description,
+        inputSchema: t.inputSchema,
+      })),
+    };
+  });
 
   const tracker = getTracker(ctx.config);
   tracker.start();
@@ -44,6 +49,11 @@ export function createServer(ctx: ServerContext): Server {
     const startedAt = Date.now();
     let ok = true;
     let errorClass: string | undefined;
+    logDebug("tools/call start", {
+      toolName: request.params.name,
+      transport: ctx.transport,
+      params: redactObject(args),
+    });
     try {
       const tool = byName.get(request.params.name);
       if (!tool) {
@@ -64,11 +74,19 @@ export function createServer(ctx: ServerContext): Server {
       }
       throw err;
     } finally {
+      const durationMs = Date.now() - startedAt;
+      logDebug("tools/call end", {
+        toolName: request.params.name,
+        transport: ctx.transport,
+        status: ok ? "success" : "error",
+        duration_ms: durationMs,
+        ...(errorClass ? { error_class: errorClass } : {}),
+      });
       tracker.track({
         tool: request.params.name,
         transport: ctx.transport,
         args,
-        durationMs: Date.now() - startedAt,
+        durationMs,
         ok,
         ...(errorClass ? { errorClass } : {}),
       });

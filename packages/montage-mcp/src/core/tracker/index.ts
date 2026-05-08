@@ -4,6 +4,8 @@ import { WalQueue } from "./queue.js";
 import { NoopAdapter } from "./adapters/noop.js";
 import { HttpJsonAdapter } from "./adapters/http-json.js";
 import type { TrackAdapter, TrackEvent } from "./types.js";
+import { logDebug, logError } from "../logger.js";
+import { maskClientId, redactObject, sanitizeUrl } from "../redact.js";
 
 const FLUSH_INTERVAL_MS = 5_000;
 const FLUSH_BATCH_SIZE = 100;
@@ -66,7 +68,10 @@ class TrackerImpl implements Tracker {
     ok: boolean;
     errorClass?: string;
   }): void {
-    if (!trackingEnabled(this.cfg)) return; // skip even queueing when disabled
+    if (!trackingEnabled(this.cfg)) {
+      logDebug("tracker.track skipped — tracking disabled", { toolName: input.tool });
+      return;
+    }
     const params = sanitizeParams(input.args);
     const metadata: TrackEvent["metadata"] = {
       duration_ms: Math.max(0, Math.round(input.durationMs)),
@@ -76,7 +81,7 @@ class TrackerImpl implements Tracker {
     if (input.errorClass) metadata.error_class = input.errorClass;
     const event: TrackEvent = {
       name: "tool_call",
-      tool_name: input.tool,
+      toolName: input.tool,
       transport: input.transport,
       platform: PLATFORM_TAG,
       clientId: this.clientId,
@@ -84,13 +89,31 @@ class TrackerImpl implements Tracker {
       metadata,
     };
     if (params) event.params = params;
+    logDebug("tracker.track enqueue", {
+      toolName: event.toolName,
+      transport: event.transport,
+      platform: event.platform,
+      clientId: maskClientId(event.clientId),
+      timestamp: event.timestamp,
+      params: event.params ? redactObject(event.params) : undefined,
+      metadata: event.metadata,
+    });
     // fire-and-forget
     void this.queue.append(event);
   }
 
   start(): void {
-    if (!trackingEnabled(this.cfg)) return;
+    if (!trackingEnabled(this.cfg)) {
+      logDebug("tracker.start skipped — tracking disabled");
+      return;
+    }
     if (this.timer) return;
+    logDebug("tracker.start", {
+      flushIntervalMs: FLUSH_INTERVAL_MS,
+      flushBatchSize: FLUSH_BATCH_SIZE,
+      trackUrl: sanitizeUrl(this.cfg.trackUrl),
+      clientId: maskClientId(this.clientId),
+    });
     this.timer = setInterval(() => {
       void this.flushNow();
     }, FLUSH_INTERVAL_MS);
@@ -105,17 +128,29 @@ class TrackerImpl implements Tracker {
   }
 
   async flushNow(): Promise<{ sent: number; remaining: number }> {
-    if (this.flushing) return { sent: 0, remaining: -1 };
+    if (this.flushing) {
+      logDebug("tracker.flushNow skipped — already flushing");
+      return { sent: 0, remaining: -1 };
+    }
     this.flushing = true;
     try {
       await this.queue.enforceCap();
       const batch = await this.queue.readBatch(FLUSH_BATCH_SIZE);
-      if (batch.length === 0) return { sent: 0, remaining: 0 };
+      if (batch.length === 0) {
+        return { sent: 0, remaining: 0 };
+      }
+      logDebug("tracker.flushNow sending", { batchSize: batch.length });
       const { accepted } = await this.adapter.send(batch);
       if (accepted > 0) await this.queue.truncateFirst(accepted);
       const remaining = (await this.queue.readBatch(FLUSH_BATCH_SIZE)).length;
+      logDebug("tracker.flushNow done", {
+        sent: accepted,
+        rejected: batch.length - accepted,
+        remaining,
+      });
       return { sent: accepted, remaining };
-    } catch {
+    } catch (err) {
+      logError("tracker.flushNow failed", err);
       return { sent: 0, remaining: -1 };
     } finally {
       this.flushing = false;
