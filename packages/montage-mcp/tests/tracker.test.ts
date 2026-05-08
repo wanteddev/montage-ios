@@ -105,15 +105,15 @@ describe("HttpJsonAdapter (Track API spec)", () => {
     expect(captured?.["Authorization"]).toBe("Bearer tok-123");
   });
 
-  it("stops on first non-2xx; accepted = events sent before failure", async () => {
+  it("stops on first non-2xx; returns partial accepted so caller can truncate", async () => {
     let calls = 0;
     const fakeFetch = (async () => {
       calls++;
       return calls === 2 ? new Response("nope", { status: 500 }) : new Response("{}", { status: 200 });
     }) as unknown as typeof fetch;
     const a = new HttpJsonAdapter("https://example/track", null, fakeFetch);
-    await expect(a.send([ev("a"), ev("b"), ev("c")])).rejects.toThrow(/500/);
-    // No assertion on accepted here because send() throws — caller treats as 0 sent.
+    const result = await a.send([ev("a"), ev("b"), ev("c")]);
+    expect(result.accepted).toBe(1);
     expect(calls).toBe(2);
   });
 });

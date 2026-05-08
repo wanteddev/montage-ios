@@ -91,6 +91,7 @@ check-changes:
 		echo ""; \
 		echo "변경된 파일:"; \
 		git diff --name-only THIRD_PARTY_LICENSES.md documentation/ packages/montage-mcp/data/ 2>/dev/null | sed 's/^/  - /'; \
+		exit 1; \
 	fi
 
 # 생성된 문서 파일들 정리

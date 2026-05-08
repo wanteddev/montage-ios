@@ -21,9 +21,17 @@ export function listIconsTool(_ctx: ServerContext): ToolDefinition {
       },
     },
     handler: async (args) => {
+      const input: Record<string, unknown> =
+        args && typeof args === "object" ? args : {};
       const idx = loadIcons();
-      const q = typeof args.query === "string" ? args.query.trim().toLowerCase() : "";
-      const limit = Math.max(1, Math.min(500, Number(args.limit ?? 200)));
+      const q =
+        typeof input.query === "string"
+          ? input.query.trim().toLowerCase()
+          : "";
+      const rawLimit = Number(input.limit ?? 200);
+      const limit = Number.isFinite(rawLimit)
+        ? Math.max(1, Math.min(500, rawLimit))
+        : 200;
       const filtered = q
         ? idx.icons.filter((n) => n.toLowerCase().includes(q))
         : idx.icons;

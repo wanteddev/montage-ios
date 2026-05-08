@@ -22,6 +22,13 @@ function defaultQueuePath(): string {
   return join(homedir(), ".montage-mcp", DEFAULT_QUEUE_FILENAME);
 }
 
+function parsePort(raw: string | undefined): number {
+  if (raw === undefined || raw.trim() === "") return 3000;
+  const n = Number(raw);
+  if (Number.isInteger(n) && n >= 1 && n <= 65535) return n;
+  return 3000;
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig {
   const trackUrlRaw = env.MONTAGE_MCP_TRACK_URL?.trim();
   const trackTokenRaw = env.MONTAGE_MCP_TRACK_TOKEN?.trim();
@@ -47,7 +54,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig 
     clientId,
     queuePath: env.MONTAGE_MCP_QUEUE_PATH?.trim() || defaultQueuePath(),
     debug: env.MONTAGE_MCP_DEBUG === "1",
-    port: Number(env.PORT ?? 3000) || 3000,
+    port: parsePort(env.PORT),
   };
 }
 

@@ -31,14 +31,27 @@ export function resolveFigmaComponentTool(_ctx: ServerContext): ToolDefinition {
           content: [{ type: "text", text: "figmaName is required" }],
         };
       }
-      const variants =
-        args.variants && typeof args.variants === "object"
-          ? Object.fromEntries(
-              Object.entries(args.variants as Record<string, unknown>).map(
-                ([k, v]) => [k, String(v)],
-              ),
-            )
-          : null;
+      const isPlainObject =
+        args.variants !== null &&
+        typeof args.variants === "object" &&
+        !Array.isArray(args.variants);
+      if (args.variants != null && !isPlainObject) {
+        return {
+          isError: true,
+          content: [
+            { type: "text", text: "variants must be a plain object of primitive values" },
+          ],
+        };
+      }
+      const variants = isPlainObject
+        ? Object.fromEntries(
+            Object.entries(args.variants as Record<string, unknown>)
+              .filter(([, v]) =>
+                ["string", "number", "boolean"].includes(typeof v),
+              )
+              .map(([k, v]) => [k, String(v)]),
+          )
+        : null;
       const result = variants
         ? resolveFigmaComponent({ figmaName, variants })
         : resolveFigmaComponent({ figmaName });

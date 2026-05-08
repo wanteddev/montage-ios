@@ -9,10 +9,12 @@ import type { TrackAdapter, TrackEvent } from "../types.js";
  *   Body: a single TrackEvent JSON object (one POST per event).
  *
  * Behavior:
- *   - Iterates events in order; on the first non-2xx, throws so the WAL queue
- *     keeps the *unsent remainder* for retry.
+ *   - Iterates events in order; on the first non-2xx, returns the partial
+ *     `accepted` count so the WAL queue keeps the *unsent remainder* for retry.
  *   - `accepted` is the count of events that returned 2xx before any failure;
  *     the caller (`flushNow`) truncates exactly that many leading entries.
+ *     Returning (rather than throwing) the partial count prevents duplicate
+ *     re-sends of already-acknowledged events on subsequent retries.
  *   - Bearer Authorization is added only when `token` is non-null/non-empty.
  *     The current spec does not require auth, so token may be `null`.
  */
@@ -42,7 +44,7 @@ export class HttpJsonAdapter implements TrackAdapter {
           signal: ctrl.signal,
         });
         if (!res.ok) {
-          throw new Error(`Track server responded ${res.status}`);
+          return { accepted };
         }
         accepted++;
       } finally {

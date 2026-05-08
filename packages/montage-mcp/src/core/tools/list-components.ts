@@ -35,7 +35,9 @@ export function listComponentsTool(_ctx: ServerContext): ToolDefinition {
     handler: async () => {
       const cats = listCategories();
       const lines: string[] = ["# Montage Components", ""];
-      for (const key of CATEGORY_ORDER) {
+      const knownKeys = new Set(CATEGORY_ORDER);
+      const extraKeys = Object.keys(cats).filter((k) => !knownKeys.has(k));
+      for (const key of [...CATEGORY_ORDER, ...extraKeys]) {
         const items = cats[key];
         if (!items || items.length === 0) continue;
         lines.push(`## ${CATEGORY_LABELS[key] ?? key}`, "");

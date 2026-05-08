@@ -59,5 +59,3 @@ Then add it as a remote MCP using your own URL.
 | `MONTAGE_MCP_TRACK_DISABLE` | (unset) | `1` to force-disable tracking |
 | `MONTAGE_MCP_QUEUE_PATH` | scope-default | Local WAL queue file path |
 | `MONTAGE_MCP_DEBUG` | (unset) | `1` for stderr debug logging |
-
-See [`.omc/plans/montage-mcp.md`](../../.omc/plans/montage-mcp.md) for the full design plan.

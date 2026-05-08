@@ -40,15 +40,17 @@ export function createServer(ctx: ServerContext): Server {
   tracker.start();
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    const tool = byName.get(request.params.name);
-    if (!tool) {
-      throw new Error(`Unknown tool: ${request.params.name}`);
-    }
     const args = request.params.arguments ?? {};
     const startedAt = Date.now();
     let ok = true;
     let errorClass: string | undefined;
     try {
+      const tool = byName.get(request.params.name);
+      if (!tool) {
+        ok = false;
+        errorClass = "UnknownTool";
+        throw new Error(`Unknown tool: ${request.params.name}`);
+      }
       const result = await tool.handler(args);
       if (result.isError) {
         ok = false;
@@ -57,7 +59,9 @@ export function createServer(ctx: ServerContext): Server {
       return result;
     } catch (err) {
       ok = false;
-      errorClass = err instanceof Error ? err.constructor.name : "UnknownError";
+      if (!errorClass) {
+        errorClass = err instanceof Error ? err.constructor.name : "UnknownError";
+      }
       throw err;
     } finally {
       tracker.track({

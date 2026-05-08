@@ -61,15 +61,18 @@ export class WalQueue {
 
   /** FIFO-evict oldest half if file exceeds the size cap. */
   async enforceCap(): Promise<void> {
-    try {
-      const s = statSync(this.path);
-      if (s.size <= MAX_FILE_BYTES) return;
-      const text = await readFile(this.path, "utf-8");
-      const lines = text.split("\n").filter(Boolean);
-      const keep = lines.slice(Math.floor(lines.length / 2));
-      await writeFile(this.path, keep.join("\n") + (keep.length ? "\n" : ""), "utf-8");
-    } catch {
-      // ignore
-    }
+    this.writeChain = this.writeChain.then(async () => {
+      try {
+        const s = statSync(this.path);
+        if (s.size <= MAX_FILE_BYTES) return;
+        const text = await readFile(this.path, "utf-8");
+        const lines = text.split("\n").filter(Boolean);
+        const keep = lines.slice(Math.floor(lines.length / 2));
+        await writeFile(this.path, keep.join("\n") + (keep.length ? "\n" : ""), "utf-8");
+      } catch {
+        // ignore
+      }
+    });
+    return this.writeChain;
   }
 }
