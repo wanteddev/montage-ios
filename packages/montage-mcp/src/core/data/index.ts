@@ -8,7 +8,6 @@ import { fileURLToPath } from "node:url";
 
 export interface InitializerRecord {
   signature: string;
-  docId: string;
 }
 
 export interface MemberRecord {

@@ -10,12 +10,10 @@
       "summary": "접을 수 있는 컨텐츠를 제공하는 아코디언 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:description:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Accordion/init(title:description:)"
+          "signature": "init(title:description:)"
         },
         {
-          "signature": "init(title:description:content:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Accordion/init(title:description:content:)"
+          "signature": "init(title:description:content:)"
         }
       ],
       "modifiers": [
@@ -85,8 +83,7 @@
       "summary": "화면 하단에 사용자 액션 버튼을 표시하는 영역 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ActionArea/init(variant:)"
+          "signature": "init(variant:)"
         }
       ],
       "modifiers": [
@@ -159,12 +156,10 @@
       "summary": "사용자, 회사, 학원의 프로필 이미지를 표시하는 아바타 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(_:variant:size:onTap:)-3qyan",
-          "docId": "doc://montage.Montage/documentation/Montage/Avatar/init(_:variant:size:onTap:)-3qyan"
+          "signature": "init(_:variant:size:onTap:)-3qyan"
         },
         {
-          "signature": "init(_:variant:size:onTap:)-6l2n",
-          "docId": "doc://montage.Montage/documentation/Montage/Avatar/init(_:variant:size:onTap:)-6l2n"
+          "signature": "init(_:variant:size:onTap:)-6l2n"
         }
       ],
       "modifiers": [
@@ -229,12 +224,10 @@
       "summary": "여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(_:variant:size:onTap:)-bx0i",
-          "docId": "doc://montage.Montage/documentation/Montage/AvatarGroup/init(_:variant:size:onTap:)-bx0i"
+          "signature": "init(_:variant:size:onTap:)-bx0i"
         },
         {
-          "signature": "init(_:variant:size:onTap:)-p3k7",
-          "docId": "doc://montage.Montage/documentation/Montage/AvatarGroup/init(_:variant:size:onTap:)-p3k7"
+          "signature": "init(_:variant:size:onTap:)-p3k7"
         }
       ],
       "modifiers": [
@@ -273,8 +266,7 @@
       "summary": "화면 하단에서 위로 올라오는 바텀 시트 모달 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(_:)",
-          "docId": "doc://montage.Montage/documentation/Montage/BottomSheet/init(_:)"
+          "signature": "init(_:)"
         }
       ],
       "modifiers": [
@@ -334,12 +326,10 @@
       "summary": "사용자가 상호작용할 수 있는 버튼 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:color:size:icon:handler:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Button/init(variant:color:size:icon:handler:)"
+          "signature": "init(variant:color:size:icon:handler:)"
         },
         {
-          "signature": "init(variant:color:size:text:leadingIcon:trailingIcon:handler:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Button/init(variant:color:size:text:leadingIcon:trailingIcon:handler:)"
+          "signature": "init(variant:color:size:text:leadingIcon:trailingIcon:handler:)"
         }
       ],
       "modifiers": [
@@ -471,8 +461,7 @@
       "summary": "썸네일과 콘텐츠를 포함하는 기본 카드 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(thumbnail:skeleton:title:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Card/init(thumbnail:skeleton:title:)"
+          "signature": "init(thumbnail:skeleton:title:)"
         }
       ],
       "modifiers": [
@@ -525,8 +514,7 @@
       "summary": "카테고리 선택 옵션을 가로로 나열하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(selectedIndex:items:itemModifier:actions:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Category/init(selectedIndex:items:itemModifier:actions:)"
+          "signature": "init(selectedIndex:items:itemModifier:actions:)"
         }
       ],
       "modifiers": [
@@ -594,12 +582,10 @@
       "summary": "체크박스 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(checked:size:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Checkbox/init(checked:size:onSelect:)"
+          "signature": "init(checked:size:onSelect:)"
         },
         {
-          "signature": "init(state:size:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Checkbox/init(state:size:onSelect:)"
+          "signature": "init(state:size:onSelect:)"
         }
       ],
       "modifiers": [
@@ -666,8 +652,7 @@
       "summary": "체크마크 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(checked:size:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Checkmark/init(checked:size:onSelect:)"
+          "signature": "init(checked:size:onSelect:)"
         }
       ],
       "modifiers": [
@@ -724,8 +709,7 @@
       "summary": "칩 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:size:text:handler:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Chip/init(variant:size:text:handler:)"
+          "signature": "init(variant:size:text:handler:)"
         }
       ],
       "modifiers": [
@@ -811,8 +795,7 @@
       "summary": "텍스트와 아이콘을 포함할 수 있는 뱃지 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:text:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ContentBadge/init(variant:text:)"
+          "signature": "init(variant:text:)"
         }
       ],
       "modifiers": [
@@ -882,8 +865,7 @@
       "summary": "콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(image:title:description:button:)",
-          "docId": "doc://montage.Montage/documentation/Montage/FallbackView/init(image:title:description:button:)"
+          "signature": "init(image:title:description:button:)"
         }
       ],
       "modifiers": [],
@@ -899,8 +881,7 @@
       "summary": "필터링 기능을 제공하는 버튼 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:size:text:state:handler:)",
-          "docId": "doc://montage.Montage/documentation/Montage/FilterButton/init(variant:size:text:state:handler:)"
+          "signature": "init(variant:size:text:state:handler:)"
         }
       ],
       "modifiers": [
@@ -983,8 +964,7 @@
       "summary": "항목들을 자동으로 여러 줄에 배치하는 흐름 레이아웃 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(spacing:lineSpacing:)",
-          "docId": "doc://montage.Montage/documentation/Montage/FlowLayout/init(spacing:lineSpacing:)"
+          "signature": "init(spacing:lineSpacing:)"
         }
       ],
       "modifiers": [],
@@ -1023,8 +1003,7 @@
       "summary": "Montage 디자인 시스템의 아이콘 세트",
       "initializers": [
         {
-          "signature": "init(rawValue:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Icon/init(rawValue:)"
+          "signature": "init(rawValue:)"
         }
       ],
       "modifiers": [],
@@ -1040,8 +1019,7 @@
       "summary": "다양한 스타일의 아이콘 버튼을 제공하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:icon:handler:)",
-          "docId": "doc://montage.Montage/documentation/Montage/IconButton/init(variant:icon:handler:)"
+          "signature": "init(variant:icon:handler:)"
         }
       ],
       "modifiers": [
@@ -1116,8 +1094,7 @@
       "summary": "사용자 상호작용 상태를 시각적으로 표현하는 장식 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(state:variant:color:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Interaction/init(state:variant:color:)"
+          "signature": "init(state:variant:color:)"
         }
       ],
       "modifiers": [],
@@ -1155,8 +1132,7 @@
       "summary": "썸네일과 콘텐츠를 수평으로 배치한 리스트 형태의 카드 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(thumbnail:skeleton:title:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ListCard/init(thumbnail:skeleton:title:)"
+          "signature": "init(thumbnail:skeleton:title:)"
         }
       ],
       "modifiers": [
@@ -1209,8 +1185,7 @@
       "summary": "텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:onTap:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ListCell/init(title:onTap:)"
+          "signature": "init(title:onTap:)"
         }
       ],
       "modifiers": [
@@ -1335,8 +1310,7 @@
       "summary": "로딩 상태를 표시하기 위한 애니메이션 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(kind:size:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Loading/init(kind:size:)"
+          "signature": "init(kind:size:)"
         }
       ],
       "modifiers": [],
@@ -1362,8 +1336,7 @@
       "summary": "모달 내에서 사용하는 내비게이션 바 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(scrollOffset:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ModalNavigation/init(scrollOffset:)"
+          "signature": "init(scrollOffset:)"
         }
       ],
       "modifiers": [
@@ -1492,8 +1465,7 @@
       "summary": "숫자 카운터 형태의 페이지 표시기 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(selectedPage:totalPages:)",
-          "docId": "doc://montage.Montage/documentation/Montage/PageCounter/init(selectedPage:totalPages:)"
+          "signature": "init(selectedPage:totalPages:)"
         }
       ],
       "modifiers": [
@@ -1532,8 +1504,7 @@
       "summary": "점 형태의 페이지 표시기 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(selectedPage:totalPages:)",
-          "docId": "doc://montage.Montage/documentation/Montage/PaginationDots/init(selectedPage:totalPages:)"
+          "signature": "init(selectedPage:totalPages:)"
         }
       ],
       "modifiers": [
@@ -1581,8 +1552,7 @@
       "summary": "재생 버튼이 있는 배지 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init()",
-          "docId": "doc://montage.Montage/documentation/Montage/PlayBadge/init()"
+          "signature": "init()"
         }
       ],
       "modifiers": [
@@ -1634,8 +1604,7 @@
       "summary": "화면 중앙에 표시되는 팝업 모달 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(_:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Popup/init(_:)"
+          "signature": "init(_:)"
         }
       ],
       "modifiers": [
@@ -1686,8 +1655,7 @@
       "summary": "진행 상태를 시각적으로 표시하는 인디케이터 뷰",
       "initializers": [
         {
-          "signature": "init(percentage:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ProgressIndicator/init(percentage:)"
+          "signature": "init(percentage:)"
         }
       ],
       "modifiers": [],
@@ -1703,8 +1671,7 @@
       "summary": "단계별 진행 상태를 수평/수직으로 표시하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(progress:variant:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ProgressTracker/init(progress:variant:)"
+          "signature": "init(progress:variant:)"
         }
       ],
       "modifiers": [],
@@ -1747,8 +1714,7 @@
       "summary": "푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:)",
-          "docId": "doc://montage.Montage/documentation/Montage/PushBadge/init(variant:)"
+          "signature": "init(variant:)"
         }
       ],
       "modifiers": [
@@ -1814,8 +1780,7 @@
       "summary": "라디오 버튼 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(checked:size:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Radio/init(checked:size:onSelect:)"
+          "signature": "init(checked:size:onSelect:)"
         }
       ],
       "modifiers": [
@@ -1872,8 +1837,7 @@
       "summary": "스크롤 상태 추적과 오프셋 감지가 가능한 커스텀 스크롤 뷰입니다.",
       "initializers": [
         {
-          "signature": "init(scrollStatus:onOffsetChanged:content:)",
-          "docId": "doc://montage.Montage/documentation/Montage/ScrollView/init(scrollStatus:onOffsetChanged:content:)"
+          "signature": "init(scrollStatus:onOffsetChanged:content:)"
         }
       ],
       "modifiers": [
@@ -1914,8 +1878,7 @@
       "summary": "섹션 제목과 부가 정보를 표시하는 헤더 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:)",
-          "docId": "doc://montage.Montage/documentation/Montage/SectionHeader/init(title:)"
+          "signature": "init(title:)"
         }
       ],
       "modifiers": [
@@ -1968,12 +1931,10 @@
       "summary": "여러 옵션 중 하나를 선택할 수 있는 세그먼트 컨트롤 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(selectedIndex:items:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/SegmentedControl/init(selectedIndex:items:onSelect:)"
+          "signature": "init(selectedIndex:items:onSelect:)"
         },
         {
-          "signature": "init(selectedIndex:labels:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/SegmentedControl/init(selectedIndex:labels:onSelect:)"
+          "signature": "init(selectedIndex:labels:onSelect:)"
         }
       ],
       "modifiers": [
@@ -2027,8 +1988,7 @@
       "summary": "컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
       "initializers": [
         {
-          "signature": "init(menuPresented:variant:items:onTapItem:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Select/init(menuPresented:variant:items:onTapItem:)"
+          "signature": "init(menuPresented:variant:items:onTapItem:)"
         }
       ],
       "modifiers": [
@@ -2222,12 +2182,10 @@
       "summary": "범위 값을 선택할 수 있는 슬라이더 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(isRangeSlider:minValue:maxValue:labelFormatter:onChanged:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Slider/init(isRangeSlider:minValue:maxValue:labelFormatter:onChanged:)"
+          "signature": "init(isRangeSlider:minValue:maxValue:labelFormatter:onChanged:)"
         },
         {
-          "signature": "init(isRangeSlider:valueRange:labelFormatter:onChanged:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Slider/init(isRangeSlider:valueRange:labelFormatter:onChanged:)"
+          "signature": "init(isRangeSlider:valueRange:labelFormatter:onChanged:)"
         }
       ],
       "modifiers": [
@@ -2305,8 +2263,7 @@
       "summary": "스위치 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(checked:size:onSelect:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Switch/init(checked:size:onSelect:)"
+          "signature": "init(checked:size:onSelect:)"
         }
       ],
       "modifiers": [
@@ -2339,8 +2296,7 @@
       "summary": "선택 가능한 탭 메뉴를 표시하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(selectedIndex:items:itemDisabled:actions:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Tab/init(selectedIndex:items:itemDisabled:actions:)"
+          "signature": "init(selectedIndex:items:itemDisabled:actions:)"
         }
       ],
       "modifiers": [
@@ -2401,8 +2357,7 @@
       "summary": "여러 줄의 텍스트 입력을 위한 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(text:focus:)",
-          "docId": "doc://montage.Montage/documentation/Montage/TextArea/init(text:focus:)"
+          "signature": "init(text:focus:)"
         }
       ],
       "modifiers": [
@@ -2492,8 +2447,7 @@
       "summary": "Text 스타일의 버튼 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(color:size:text:leadingIcon:trailingIcon:handler:)",
-          "docId": "doc://montage.Montage/documentation/Montage/TextButton/init(color:size:text:leadingIcon:trailingIcon:handler:)"
+          "signature": "init(color:size:text:leadingIcon:trailingIcon:handler:)"
         }
       ],
       "modifiers": [
@@ -2565,8 +2519,7 @@
       "summary": "단일 라인 텍스트 입력을 위한 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(text:autoCompletionDataSource:)",
-          "docId": "doc://montage.Montage/documentation/Montage/TextField/init(text:autoCompletionDataSource:)"
+          "signature": "init(text:autoCompletionDataSource:)"
         }
       ],
       "modifiers": [
@@ -2658,8 +2611,7 @@
       "summary": "다양한 비율로 이미지를 표시하는 썸네일 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(urlString:ratio:)",
-          "docId": "doc://montage.Montage/documentation/Montage/Thumbnail/init(urlString:ratio:)"
+          "signature": "init(urlString:ratio:)"
         }
       ],
       "modifiers": [
@@ -2808,8 +2760,7 @@
       "summary": "상단에 표시되는 내비게이션 바 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(scrollOffset:backgroundColor:)",
-          "docId": "doc://montage.Montage/documentation/Montage/TopNavigation/init(scrollOffset:backgroundColor:)"
+          "signature": "init(scrollOffset:backgroundColor:)"
         }
       ],
       "modifiers": [

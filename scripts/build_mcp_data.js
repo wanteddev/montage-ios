@@ -91,7 +91,6 @@ function extractInitializers(json) {
   if (!sec) return [];
   return (sec.identifiers || []).map((id) => ({
     signature: tail(id),
-    docId: id,
   }));
 }
 
