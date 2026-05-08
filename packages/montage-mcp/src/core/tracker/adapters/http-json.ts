@@ -1,5 +1,6 @@
 import type { TrackAdapter, TrackEvent } from "../types.js";
 import { logDebug, logError } from "../../logger.js";
+import { maskClientId, redactObject, sanitizeUrl } from "../../redact.js";
 
 /**
  * Wanted Track HTTP adapter.
@@ -34,10 +35,16 @@ export class HttpJsonAdapter implements TrackAdapter {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
       const body = JSON.stringify(event);
+      const safeUrl = sanitizeUrl(this.url);
+      const debugEvent = {
+        ...event,
+        clientId: maskClientId(event.clientId),
+        params: event.params ? redactObject(event.params) : undefined,
+      };
       logDebug("track POST request", {
-        url: this.url,
+        url: safeUrl,
         authorization: this.token ? "Bearer ***" : "(none)",
-        payload: event,
+        payload: debugEvent,
       });
       try {
         const headers: Record<string, string> = {
@@ -57,27 +64,31 @@ export class HttpJsonAdapter implements TrackAdapter {
           } catch {
             // ignore body read errors
           }
+          // Always-emit logError keeps minimal fields only — full (redacted) payload
+          // is at logDebug so it's gated by MONTAGE_MCP_DEBUG=1.
           logError("track POST non-2xx", undefined, {
-            url: this.url,
+            url: safeUrl,
             status: res.status,
             toolName: event.toolName,
-            payload: event,
+            transport: event.transport,
             response_body: bodyText,
           });
+          logDebug("track POST non-2xx payload", { payload: debugEvent });
           return { accepted };
         }
         logDebug("track POST ok", {
-          url: this.url,
+          url: safeUrl,
           status: res.status,
           toolName: event.toolName,
         });
         accepted++;
       } catch (err) {
         logError("track POST threw", err, {
-          url: this.url,
+          url: safeUrl,
           toolName: event.toolName,
-          payload: event,
+          transport: event.transport,
         });
+        logDebug("track POST threw payload", { payload: debugEvent });
         return { accepted };
       } finally {
         clearTimeout(timer);

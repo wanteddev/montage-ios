@@ -5,6 +5,7 @@ import { NoopAdapter } from "./adapters/noop.js";
 import { HttpJsonAdapter } from "./adapters/http-json.js";
 import type { TrackAdapter, TrackEvent } from "./types.js";
 import { logDebug, logError } from "../logger.js";
+import { maskClientId, redactObject, sanitizeUrl } from "../redact.js";
 
 const FLUSH_INTERVAL_MS = 5_000;
 const FLUSH_BATCH_SIZE = 100;
@@ -92,9 +93,9 @@ class TrackerImpl implements Tracker {
       toolName: event.toolName,
       transport: event.transport,
       platform: event.platform,
-      clientId: event.clientId,
+      clientId: maskClientId(event.clientId),
       timestamp: event.timestamp,
-      params: event.params,
+      params: event.params ? redactObject(event.params) : undefined,
       metadata: event.metadata,
     });
     // fire-and-forget
@@ -110,8 +111,8 @@ class TrackerImpl implements Tracker {
     logDebug("tracker.start", {
       flushIntervalMs: FLUSH_INTERVAL_MS,
       flushBatchSize: FLUSH_BATCH_SIZE,
-      trackUrl: this.cfg.trackUrl,
-      clientId: this.clientId,
+      trackUrl: sanitizeUrl(this.cfg.trackUrl),
+      clientId: maskClientId(this.clientId),
     });
     this.timer = setInterval(() => {
       void this.flushNow();

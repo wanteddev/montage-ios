@@ -7,6 +7,7 @@ import { PACKAGE_NAME, PACKAGE_VERSION, type RuntimeConfig } from "./config.js";
 import { allTools, type ToolDefinition } from "./tools/index.js";
 import { getTracker } from "./tracker/index.js";
 import { logDebug } from "./logger.js";
+import { redactObject } from "./redact.js";
 
 export interface ServerContext {
   config: RuntimeConfig;
@@ -51,7 +52,7 @@ export function createServer(ctx: ServerContext): Server {
     logDebug("tools/call start", {
       toolName: request.params.name,
       transport: ctx.transport,
-      params: args,
+      params: redactObject(args),
     });
     try {
       const tool = byName.get(request.params.name);

@@ -3,11 +3,12 @@ import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { loadConfig, PACKAGE_NAME, PACKAGE_VERSION } from "./core/config.js";
 import { createServer } from "./core/server.js";
 import { configureLogger, logDebug, logError } from "./core/logger.js";
+import { sanitizeUrl } from "./core/redact.js";
 
 const config = loadConfig();
 configureLogger({ debug: config.debug });
 logDebug("config resolved", {
-  trackUrl: config.trackUrl,
+  trackUrl: sanitizeUrl(config.trackUrl),
   trackTokenSet: config.trackToken !== null,
   trackDisabled: config.trackDisabled,
   clientIdSet: config.clientId !== null,
