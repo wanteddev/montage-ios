@@ -134,6 +134,7 @@ export function renderIndexPage(_origin: string): string {
   <table>
     <thead><tr><th>도구</th><th>설명</th></tr></thead>
     <tbody>
+      <tr><td><code>figma_to_swiftui_workflow</code></td><td>Figma → Montage SwiftUI 변환 워크플로우 (다른 도구들을 오케스트레이션)</td></tr>
       <tr><td><code>health_check</code></td><td>서버 상태 + 버전</td></tr>
       <tr><td><code>getting_started</code></td><td>Montage 시작 가이드</td></tr>
       <tr><td><code>montage_coding_guidelines</code></td><td>SwiftUI 작성 규칙</td></tr>
