@@ -33,6 +33,12 @@ export class HttpJsonAdapter implements TrackAdapter {
     for (const event of events) {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
+      const body = JSON.stringify(event);
+      logDebug("track POST request", {
+        url: this.url,
+        authorization: this.token ? "Bearer ***" : "(none)",
+        payload: event,
+      });
       try {
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
@@ -41,32 +47,37 @@ export class HttpJsonAdapter implements TrackAdapter {
         const res = await this.fetchImpl(this.url, {
           method: "POST",
           headers,
-          body: JSON.stringify(event),
+          body,
           signal: ctrl.signal,
         });
         if (!res.ok) {
           let bodyText = "";
           try {
-            bodyText = (await res.text()).slice(0, 500);
+            bodyText = (await res.text()).slice(0, 1000);
           } catch {
             // ignore body read errors
           }
           logError("track POST non-2xx", undefined, {
             url: this.url,
             status: res.status,
-            tool: event.toolName,
-            body: bodyText,
+            toolName: event.toolName,
+            payload: event,
+            response_body: bodyText,
           });
           return { accepted };
         }
         logDebug("track POST ok", {
           url: this.url,
           status: res.status,
-          tool: event.toolName,
+          toolName: event.toolName,
         });
         accepted++;
       } catch (err) {
-        logError("track POST threw", err, { url: this.url, tool: event.toolName });
+        logError("track POST threw", err, {
+          url: this.url,
+          toolName: event.toolName,
+          payload: event,
+        });
         return { accepted };
       } finally {
         clearTimeout(timer);

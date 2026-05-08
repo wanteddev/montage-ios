@@ -49,8 +49,9 @@ export function createServer(ctx: ServerContext): Server {
     let ok = true;
     let errorClass: string | undefined;
     logDebug("tools/call start", {
-      tool: request.params.name,
+      toolName: request.params.name,
       transport: ctx.transport,
+      params: args,
     });
     try {
       const tool = byName.get(request.params.name);
@@ -74,10 +75,11 @@ export function createServer(ctx: ServerContext): Server {
     } finally {
       const durationMs = Date.now() - startedAt;
       logDebug("tools/call end", {
-        tool: request.params.name,
-        ok,
-        durationMs,
-        ...(errorClass ? { errorClass } : {}),
+        toolName: request.params.name,
+        transport: ctx.transport,
+        status: ok ? "success" : "error",
+        duration_ms: durationMs,
+        ...(errorClass ? { error_class: errorClass } : {}),
       });
       tracker.track({
         tool: request.params.name,

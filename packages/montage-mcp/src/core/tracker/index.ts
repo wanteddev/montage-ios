@@ -68,7 +68,7 @@ class TrackerImpl implements Tracker {
     errorClass?: string;
   }): void {
     if (!trackingEnabled(this.cfg)) {
-      logDebug("tracker.track skipped — tracking disabled", { tool: input.tool });
+      logDebug("tracker.track skipped — tracking disabled", { toolName: input.tool });
       return;
     }
     const params = sanitizeParams(input.args);
@@ -89,9 +89,13 @@ class TrackerImpl implements Tracker {
     };
     if (params) event.params = params;
     logDebug("tracker.track enqueue", {
-      tool: input.tool,
-      ok: input.ok,
-      durationMs: metadata.duration_ms,
+      toolName: event.toolName,
+      transport: event.transport,
+      platform: event.platform,
+      clientId: event.clientId,
+      timestamp: event.timestamp,
+      params: event.params,
+      metadata: event.metadata,
     });
     // fire-and-forget
     void this.queue.append(event);

@@ -28,9 +28,13 @@ function format(meta: Record<string, unknown> | undefined): string {
   }
 }
 
+function now(): string {
+  return new Date().toISOString();
+}
+
 export function logDebug(msg: string, meta?: Record<string, unknown>): void {
   if (!debugEnabled) return;
-  process.stderr.write(`[${PACKAGE_NAME}] ${msg}${format(meta)}\n`);
+  process.stderr.write(`${now()} [${PACKAGE_NAME}] ${msg}${format(meta)}\n`);
 }
 
 export function logError(msg: string, err?: unknown, meta?: Record<string, unknown>): void {
@@ -40,5 +44,5 @@ export function logError(msg: string, err?: unknown, meta?: Record<string, unkno
   } else if (err !== undefined) {
     detail = ` — ${String(err)}`;
   }
-  process.stderr.write(`[${PACKAGE_NAME}] ERROR ${msg}${detail}${format(meta)}\n`);
+  process.stderr.write(`${now()} [${PACKAGE_NAME}] ERROR ${msg}${detail}${format(meta)}\n`);
 }
