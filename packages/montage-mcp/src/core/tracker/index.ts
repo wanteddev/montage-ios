@@ -76,7 +76,7 @@ class TrackerImpl implements Tracker {
     if (input.errorClass) metadata.error_class = input.errorClass;
     const event: TrackEvent = {
       name: "tool_call",
-      tool_name: input.tool,
+      toolName: input.tool,
       transport: input.transport,
       platform: PLATFORM_TAG,
       clientId: this.clientId,

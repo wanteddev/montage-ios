@@ -3,7 +3,7 @@
  * POST /track  Content-Type: application/json
  * {
  *   "name": "tool_call",
- *   "tool_name": "...",
+ *   "toolName": "...",
  *   "transport": "http" | "stdio",
  *   "platform": "ios",
  *   "clientId": "...",
@@ -14,7 +14,7 @@
  */
 export interface TrackEvent {
   name: "tool_call";
-  tool_name: string;
+  toolName: string;
   transport: "stdio" | "http";
   platform: "ios";
   clientId: string;
