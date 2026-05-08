@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, statSync } from "node:fs";
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { TrackEvent } from "./types.js";
+import { logError } from "../logger.js";
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB cap before FIFO eviction
 
@@ -16,8 +17,9 @@ export class WalQueue {
   async append(event: TrackEvent): Promise<void> {
     const line = JSON.stringify(event) + "\n";
     this.writeChain = this.writeChain.then(() =>
-      appendFile(this.path, line, "utf-8").catch(() => {
-        // Disk error — drop silently; tracking must never break tool calls.
+      appendFile(this.path, line, "utf-8").catch((err) => {
+        // Disk error — drop event but surface for debugging; tracking must never break tool calls.
+        logError("queue.append failed", err, { path: this.path });
       }),
     );
     return this.writeChain;

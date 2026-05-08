@@ -1,18 +1,25 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadConfig } from "./core/config.js";
 import { createServer } from "./core/server.js";
+import { configureLogger, logDebug, logError } from "./core/logger.js";
 
 async function main(): Promise<void> {
   const config = loadConfig();
+  configureLogger({ debug: config.debug });
+  logDebug("config resolved", {
+    trackUrl: config.trackUrl,
+    trackTokenSet: config.trackToken !== null,
+    trackDisabled: config.trackDisabled,
+    clientIdSet: config.clientId !== null,
+    queuePath: config.queuePath,
+  });
   const server = createServer({ config, transport: "stdio" });
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  if (config.debug) {
-    process.stderr.write("[montage-ios-mcp] stdio transport ready\n");
-  }
+  logDebug("stdio transport ready");
 }
 
 main().catch((err) => {
-  process.stderr.write(`[montage-ios-mcp] fatal: ${String(err)}\n`);
+  logError("fatal", err);
   process.exit(1);
 });

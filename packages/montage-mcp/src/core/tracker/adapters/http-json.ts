@@ -1,4 +1,5 @@
 import type { TrackAdapter, TrackEvent } from "../types.js";
+import { logDebug, logError } from "../../logger.js";
 
 /**
  * Wanted Track HTTP adapter.
@@ -44,9 +45,29 @@ export class HttpJsonAdapter implements TrackAdapter {
           signal: ctrl.signal,
         });
         if (!res.ok) {
+          let bodyText = "";
+          try {
+            bodyText = (await res.text()).slice(0, 500);
+          } catch {
+            // ignore body read errors
+          }
+          logError("track POST non-2xx", undefined, {
+            url: this.url,
+            status: res.status,
+            tool: event.toolName,
+            body: bodyText,
+          });
           return { accepted };
         }
+        logDebug("track POST ok", {
+          url: this.url,
+          status: res.status,
+          tool: event.toolName,
+        });
         accepted++;
+      } catch (err) {
+        logError("track POST threw", err, { url: this.url, tool: event.toolName });
+        return { accepted };
       } finally {
         clearTimeout(timer);
       }
