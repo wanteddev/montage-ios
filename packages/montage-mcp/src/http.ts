@@ -30,11 +30,28 @@ app.get("/healthz", (_req: Request, res: Response) => {
   });
 });
 
+// SSE heartbeat — sends an SSE comment line periodically so L7 idle timeouts
+// (e.g. ingress 30s) don't sever quiet streams. The colon-prefixed line is a
+// no-op for SSE clients per spec, but counts as bytes for proxies.
+const SSE_HEARTBEAT_MS = 25_000;
+
 app.get("/sse", async (_req: Request, res: Response) => {
   const transport = new SSEServerTransport("/messages", res);
   transports.set(transport.sessionId, transport);
-  logDebug("sse session opened", { sessionId: transport.sessionId });
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(": ping\n\n");
+    } catch {
+      // socket already gone — close handler will clean up
+    }
+  }, SSE_HEARTBEAT_MS);
+  if (typeof heartbeat.unref === "function") heartbeat.unref();
+  logDebug("sse session opened", {
+    sessionId: transport.sessionId,
+    heartbeatMs: SSE_HEARTBEAT_MS,
+  });
   res.on("close", () => {
+    clearInterval(heartbeat);
     transports.delete(transport.sessionId);
     logDebug("sse session closed", { sessionId: transport.sessionId });
   });
@@ -43,6 +60,7 @@ app.get("/sse", async (_req: Request, res: Response) => {
     const server = createServer({ config, transport: "http" });
     await server.connect(transport);
   } catch (err) {
+    clearInterval(heartbeat);
     transports.delete(transport.sessionId);
     if (!res.headersSent) {
       res.status(500).json({ error: "failed to initialize sse session" });
