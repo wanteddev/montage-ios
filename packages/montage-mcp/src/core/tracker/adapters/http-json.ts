@@ -31,22 +31,25 @@ export class HttpJsonAdapter implements TrackAdapter {
   async send(events: TrackEvent[]): Promise<{ accepted: number }> {
     if (events.length === 0) return { accepted: 0 };
     let accepted = 0;
+    const safeUrl = sanitizeUrl(this.url);
     for (const event of events) {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), this.timeoutMs);
-      const body = JSON.stringify(event);
-      const safeUrl = sanitizeUrl(this.url);
-      const debugEvent = {
-        ...event,
-        clientId: maskClientId(event.clientId),
-        params: event.params ? redactObject(event.params) : undefined,
-      };
-      logDebug("track POST request", {
-        url: safeUrl,
-        authorization: this.token ? "Bearer ***" : "(none)",
-        payload: debugEvent,
-      });
       try {
+        // Serialize inside try so BigInt/circular-reference exceptions return
+        // the partial `accepted` count instead of propagating — without this,
+        // already-acknowledged events would be re-sent on retry.
+        const body = JSON.stringify(event);
+        const debugEvent = {
+          ...event,
+          clientId: maskClientId(event.clientId),
+          params: event.params ? redactObject(event.params) : undefined,
+        };
+        logDebug("track POST request", {
+          url: safeUrl,
+          authorization: this.token ? "Bearer ***" : "(none)",
+          payload: debugEvent,
+        });
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
         };
@@ -73,7 +76,13 @@ export class HttpJsonAdapter implements TrackAdapter {
             transport: event.transport,
             response_body: bodyText,
           });
-          logDebug("track POST non-2xx payload", { payload: debugEvent });
+          logDebug("track POST non-2xx payload", {
+            payload: {
+              ...event,
+              clientId: maskClientId(event.clientId),
+              params: event.params ? redactObject(event.params) : undefined,
+            },
+          });
           return { accepted };
         }
         logDebug("track POST ok", {
@@ -88,7 +97,13 @@ export class HttpJsonAdapter implements TrackAdapter {
           toolName: event.toolName,
           transport: event.transport,
         });
-        logDebug("track POST threw payload", { payload: debugEvent });
+        logDebug("track POST threw payload", {
+          payload: {
+            ...event,
+            clientId: maskClientId(event.clientId),
+            params: event.params ? redactObject(event.params) : undefined,
+          },
+        });
         return { accepted };
       } finally {
         clearTimeout(timer);
