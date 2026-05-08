@@ -4,6 +4,7 @@ import { loadConfig, PACKAGE_NAME, PACKAGE_VERSION } from "./core/config.js";
 import { createServer } from "./core/server.js";
 import { configureLogger, logDebug, logError } from "./core/logger.js";
 import { sanitizeUrl } from "./core/redact.js";
+import { renderIndexPage } from "./index-page.js";
 
 const config = loadConfig();
 configureLogger({ debug: config.debug });
@@ -21,6 +22,17 @@ const app = express();
 // We register express.json() AFTER the SSE message endpoint so the SDK reads the stream itself.
 
 const transports = new Map<string, SSEServerTransport>();
+
+app.get("/", (req: Request, res: Response) => {
+  const forwardedProto = req.headers["x-forwarded-proto"];
+  const proto =
+    typeof forwardedProto === "string" && forwardedProto.length > 0
+      ? (forwardedProto.split(",")[0] ?? "").trim() || req.protocol
+      : req.protocol;
+  const host = req.get("host") ?? `localhost:${config.port}`;
+  const origin = `${proto}://${host}`;
+  res.type("html").send(renderIndexPage(origin));
+});
 
 app.get("/healthz", (_req: Request, res: Response) => {
   res.json({
