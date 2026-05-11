@@ -209,7 +209,9 @@ public struct Thumbnail: View {
         .onChange(of: urlString) { _ in loadIfNeeded() }
         .onDisappear {
             // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
+            // loadedURL을 함께 비워, 같은 셀이 동일 URL로 재진입했을 때 loadIfNeeded()가 재요청을 수행하게 한다.
             imageManager.cancel()
+            loadedURL = nil
         }
     }
 
