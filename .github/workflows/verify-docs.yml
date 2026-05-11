@@ -10,6 +10,8 @@ on:
       - "**.swift"
       - "Sources/Montage/Asset/Icon.xcassets/**"
       - "scripts/build_mcp_data.js"
+      - "Package.swift"
+      - "Package.resolved"
 
 jobs:
   verify:

@@ -90,6 +90,8 @@ public struct Chip: View {
             
             Text(text)
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
+                .lineLimit(1)
+                .truncationMode(.tail)
                 .padding(.horizontal, textPadding)
             
             if let trailingImage = trailingImage {

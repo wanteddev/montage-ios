@@ -81,13 +81,19 @@ extension FlowLayout: Layout {
         subviews: Subviews,
         cache: inout Cache
     ) -> CGSize {
+        // 컨테이너 너비를 자식에게 전달해 너비 클램프(예: lineLimit + truncation) 동작을 보장한다.
+        let maxWidth = proposal.width ?? .infinity
+        cache.sizes = subviews.map {
+            $0.sizeThatFits(.init(width: maxWidth, height: nil))
+        }
+
         var totalHeight = 0.0
         var totalWidth = 0.0
-        
+
         var lineWidth = 0.0
         var lineHeight = 0.0
         var isFirstInLine = true
-        
+
         for index in subviews.indices {
             // 줄바꿈 여부 확인
             if !isFirstInLine && lineWidth + cache.spacing[index-1] + cache.sizes[index].width >= (proposal.width ?? 0) - 0.001 {
