@@ -13,6 +13,9 @@ import SwiftUI
 /// `Thumbnail`은 원격 URL에서 이미지를 로드하여 지정된 비율과 크기로 표시합니다.
 /// 이미지 로딩 상태에 따른 플레이스홀더를 지원하고, 둥근 모서리와 테두리 스타일을 적용할 수 있습니다.
 ///
+/// 뷰가 화면에서 사라지면 진행 중이던 다운로드를 즉시 취소합니다. List/LazyVStack 등에서
+/// 빠른 스크롤 시 화면 밖으로 나간 셀이 네트워크 슬롯을 점유하는 문제를 막기 위한 동작입니다.
+///
 /// ```swift
 /// // 기본 정사각형 썸네일
 /// Thumbnail(urlString: imageURL, ratio: .r1x1)
@@ -29,9 +32,9 @@ import SwiftUI
 ///    .border(true)
 /// ```
 public struct Thumbnail: View {
-    
+
     // MARK: - Ratio Enum
-    
+
     /// 썸네일의 가로세로 비율을 정의하는 열거형입니다.
     ///
     /// 다양한 미디어 콘텐츠 유형에 맞는 여러 표준 비율을 제공합니다.
@@ -81,11 +84,11 @@ public struct Thumbnail: View {
         case r1x2
         /// 9:21 비율 (세로 울트라와이드)
         case r9x21
-        
+
         var rawValue: CGFloat {
             size.height / size.width
         }
-        
+
         /// 비율에 해당하는 크기를 반환합니다.
         ///
         /// - Note: 이 값은 상대적 비율을 나타내며 실제 픽셀 크기가 아닙니다.
@@ -100,10 +103,10 @@ public struct Thumbnail: View {
             case .r3x2: .init(width: 3, height: 2)
             case .r4x3: .init(width: 4, height: 3)
             case .r5x4: .init(width: 5, height: 4)
-            
+
             // 정사각형
             case .r1x1: .init(width: 1, height: 1)
-            
+
             // 세로가 긴 비율
             case .r4x5: .init(width: 4, height: 5)
             case .r3x4: .init(width: 3, height: 4)
@@ -116,12 +119,12 @@ public struct Thumbnail: View {
             }
         }
     }
-    
+
     // MARK: - Initializer
-    
+
     private let urlString: String
     private let ratio: Ratio
-    
+
     /// 썸네일을 초기화합니다.
     ///
     /// - Parameters:
@@ -132,13 +135,13 @@ public struct Thumbnail: View {
         self.urlString = urlString
         self.ratio = ratio
     }
-    
+
     // MARK: - Modifiers
-    
+
     private var radius = false
     private var border = false
     private var width: CGFloat?
-    
+
     /// 썸네일에 둥근 모서리를 적용합니다.
     ///
     /// - Parameters:
@@ -149,7 +152,7 @@ public struct Thumbnail: View {
         zelf.radius = radius
         return zelf
     }
-    
+
     /// 썸네일에 테두리를 적용합니다.
     ///
     /// - Parameters:
@@ -160,7 +163,7 @@ public struct Thumbnail: View {
         zelf.border = border
         return zelf
     }
-    
+
     /// 썸네일의 너비를 설정합니다.
     ///
     /// - Parameters:
@@ -171,51 +174,71 @@ public struct Thumbnail: View {
         zelf.width = width
         return zelf
     }
-    
+
     // MARK: - Body
-    
+
     @State private var proposedWidth: CGFloat = .zero
-    
+    // SDWebImageSwiftUI 3.x의 WebImage는 onDisappear에서 error가 nil인 in-flight 요청을
+    // 취소하지 않는 한계가 있어 ImageManager를 직접 소유해 명시적으로 load/cancel을 제어한다.
+    @StateObject private var imageManager = ImageManager()
+    @State private var loadedURL: URL?
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             SwiftUI.Color.clear
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { proposedWidth = $0 })
-                
-            WebImage(url: URL(string: urlString)) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                case .failure(let error):
-                    Image("placeholder", bundle: .module)
-                        .resizable()
-                        .scaledToFill()
-                        .onAppear {
-                            print(error)
-                        }
-                case .empty:
-                    SwiftUI.Color.semantic(.fillAlternative)
+
+            content
+                .if (thumbnailWidth > 0) {
+                    $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
                 }
-            }
-            .if (thumbnailWidth > 0) {
-                $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
-            }
-            .clipped()
-            .cornerRadius(radius ? 12 : 0)
-            .overlay {
-                if border {
-                    RoundedRectangle(cornerRadius: radius ? 12 : 0)
-                        .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: 1)
+                .clipped()
+                .cornerRadius(radius ? 12 : 0)
+                .overlay {
+                    if border {
+                        RoundedRectangle(cornerRadius: radius ? 12 : 0)
+                            .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: 1)
+                    }
                 }
-            }
         }
         .if (thumbnailWidth > 0) {
             $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
         }
+        .onAppear { loadIfNeeded() }
+        .onChange(of: urlString) { _ in loadIfNeeded() }
+        .onDisappear {
+            // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
+            imageManager.cancel()
+        }
     }
-    
+
+    @ViewBuilder
+    private var content: some View {
+        if let image = imageManager.image {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+        } else if let error = imageManager.error {
+            Image("placeholder", bundle: .module)
+                .resizable()
+                .scaledToFill()
+                .onAppear { print(error) }
+        } else {
+            SwiftUI.Color.semantic(.fillAlternative)
+        }
+    }
+
+    private func loadIfNeeded() {
+        let url = URL(string: urlString)
+        guard loadedURL != url else { return }
+        loadedURL = url
+        imageManager.cancel()
+        if let url {
+            imageManager.load(url: url)
+        }
+    }
+
     private var thumbnailWidth: CGFloat {
         width ?? proposedWidth
     }
