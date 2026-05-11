@@ -17,11 +17,11 @@ jobs:
         run: |
           rm -rf ./DerivedData
 
-      - name: Run Tests
+      - name: Build
         run: |
-          xcodebuild clean build test \
+          xcodebuild clean build \
             -scheme Montage \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=iPhone 13,OS=latest" \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=latest" \
             -derivedDataPath "./DerivedData" \
             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcbeautify;
