@@ -114,9 +114,8 @@ public struct Accordion: View {
     private var verticalPadding: VerticalPadding = .large
     private var fillWidth = false
     private var hideDivider = false
-    private var leadingIcon: Icon? = nil
-    private var leadingIconColor: SwiftUI.Color? = nil
-    private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
+    private var leadingContent: (() -> AnyView)? = nil
+    private var trailingContent: (Bool) -> AnyView = { _ in AnyView(EmptyView()) }
     
     /// 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
     ///
@@ -190,14 +189,39 @@ public struct Accordion: View {
     
     /// 아코디언 제목 앞에 아이콘을 추가합니다.
     ///
+    /// `leadingContent { ... }`와 동일한 슬롯을 공유하므로, 두 모디파이어를 함께 호출하면 마지막에 호출된 쪽이 적용됩니다.
+    ///
     /// - Parameters:
     ///   - leadingIcon: 표시할 아이콘, 생략하면 기본값으로 `nil` 적용
     ///   - color: 아이콘 색상, 생략하면 기본값으로 `nil` 적용 (기본 색상 사용)
     /// - Returns: 수정된 아코디언 인스턴스
     public func leadingIcon(_ leadingIcon: Icon? = nil, color: SwiftUI.Color? = nil) -> Self {
         var zelf = self
-        zelf.leadingIcon = leadingIcon
-        zelf.leadingIconColor = color
+        if let leadingIcon {
+            zelf.leadingContent = {
+                AnyView(
+                    Image.icon(leadingIcon)
+                        .resizable()
+                        .if(color != nil) { $0.foregroundStyle(color!) }
+                        .padding(2)
+                        .frame(width: 24, height: 24)
+                )
+            }
+        } else {
+            zelf.leadingContent = nil
+        }
+        return zelf
+    }
+
+    /// 아코디언 제목 앞에 커스텀 컨텐츠를 추가합니다.
+    ///
+    /// `leadingIcon`과 동일한 슬롯을 공유하므로, 두 모디파이어를 함께 호출하면 마지막에 호출된 쪽이 적용됩니다.
+    ///
+    /// - Parameter leadingContent: 표시할 커스텀 컨텐츠 뷰
+    /// - Returns: 수정된 아코디언 인스턴스
+    public func leadingContent<V: View>(@ViewBuilder _ leadingContent: @escaping () -> V) -> Self {
+        var zelf = self
+        zelf.leadingContent = { AnyView(leadingContent()) }
         return zelf
     }
     
@@ -207,9 +231,22 @@ public struct Accordion: View {
     ///
     /// - Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
     /// - Returns: 수정된 아코디언 인스턴스
+    @available(*, deprecated, message: "확장 상태를 인자로 받는 오버로드를 사용하세요: trailingContent { isExpanded in ... }")
     public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
-        zelf.trailingContent = { AnyView(trailingContent()) }
+        zelf.trailingContent = { _ in AnyView(trailingContent()) }
+        return zelf
+    }
+    
+    /// 아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
+    ///
+    /// 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
+    ///
+    /// - Parameter trailingContent: 표시할 컨텐츠를 생성하는 클로져 (아코디언이 펼쳐진 상태를 파라미터로 받음)
+    /// - Returns: 수정된 아코디언 인스턴스
+    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping (Bool) -> V) -> Self {
+        var zelf = self
+        zelf.trailingContent = { AnyView(trailingContent($0)) }
         return zelf
     }
     
@@ -225,16 +262,10 @@ public struct Accordion: View {
         ZStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 HStack(alignment: .top, spacing: 8) {
-                    if let leadingIcon {
-                        Image.icon(leadingIcon)
-                            .resizable()
-                            .if(leadingIconColor != nil) {
-                                $0.foregroundStyle(leadingIconColor!)
-                            }
-                            .padding(2)
-                            .frame(width: 24, height: 24)
+                    if let leadingContent {
+                        leadingContent()
                     }
-                    
+
                     Text(title)
                         .paragraph(
                             variant: titleTypography.variant,
@@ -243,7 +274,7 @@ public struct Accordion: View {
                         )
                     Spacer(minLength: 0)
                     
-                    trailingContent()
+                    trailingContent(isExpanded)
                         .ifEmptyView { trailingContentEmpty = $0 }
                     
                     if trailingContentEmpty {
