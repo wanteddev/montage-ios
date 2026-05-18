@@ -46,15 +46,20 @@ jobs:
         run: |
           echo "$REG_TOKEN" | docker login "$REGISTRY" -u "$REG_USER" --password-stdin
 
-      - name: Build & push (linux/amd64)
+      # buildx --push 는 OCI manifest list 로 푸시되어 사내 레지스트리 webhook 이 발화하지 않는 케이스가 있다.
+      # --load 로 로컬 daemon 에 적재 후 일반 docker push (classic v2 manifest) 로 푸시하면 webhook 이 정상 발화한다.
+      - name: Build (linux/amd64) and load into local daemon
         run: |
           docker buildx build \
             --builder montage-builder \
             --platform linux/amd64 \
             --tag "$IMAGE" \
-            --push \
+            --load \
             --provenance=false \
             .
+
+      - name: Push (classic v2 manifest, triggers Backyard rollout webhook)
+        run: docker push "$IMAGE"
 
       - name: Logout
         if: always()
