@@ -22,7 +22,9 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    # workflow_dispatch 도 main 으로만 제한 — 실배포 태그(:latest)가 다른 브랜치에서 덮어쓰여지지 않도록.
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macOS, ARM64]
     timeout-minutes: 30
     defaults:
       run:

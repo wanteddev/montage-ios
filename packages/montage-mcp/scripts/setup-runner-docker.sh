@@ -36,9 +36,13 @@ done
 
 # 3) docker-buildx plugin 등록 (brew 설치 시 자동 링크 안 되는 케이스 대응)
 mkdir -p "$HOME/.docker/cli-plugins"
+BUILDX_BIN="$(brew --prefix)/opt/docker-buildx/bin/docker-buildx"
+if [[ ! -f "$BUILDX_BIN" ]]; then
+  echo "docker-buildx 바이너리를 찾을 수 없습니다: $BUILDX_BIN" >&2
+  exit 1
+fi
 if [[ ! -L "$HOME/.docker/cli-plugins/docker-buildx" ]]; then
-  ln -sfn "$(brew --prefix)/opt/docker-buildx/bin/docker-buildx" \
-          "$HOME/.docker/cli-plugins/docker-buildx"
+  ln -sfn "$BUILDX_BIN" "$HOME/.docker/cli-plugins/docker-buildx"
   log "linked docker-buildx plugin"
 fi
 
@@ -58,14 +62,7 @@ if ! docker info >/dev/null 2>&1; then
 fi
 log "docker daemon reachable: $(docker version --format '{{.Server.Version}}')"
 
-# 6) linux/amd64 cross-build 용 QEMU binfmt 등록
-#    Apple Silicon 호스트에서 amd64 이미지를 빌드하려면 필수.
-if ! docker buildx ls | grep -q 'linux/amd64'; then
-  log "registering QEMU binfmt for linux/amd64"
-  docker run --privileged --rm tonistiigi/binfmt --install amd64
-fi
-
-# 7) 전용 buildx builder
+# 6) 전용 buildx builder
 if docker buildx inspect montage-builder >/dev/null 2>&1; then
   log "buildx builder 'montage-builder' already exists"
 else
@@ -73,5 +70,16 @@ else
   docker buildx create --name montage-builder --use --bootstrap
 fi
 docker buildx use montage-builder
+
+# 7) linux/amd64 cross-build 용 QEMU binfmt 등록
+#    Apple Silicon 호스트에서 amd64 이미지를 빌드하려면 필수.
+#    montage-builder 의 Platforms 라인을 검사해 정확히 linux/amd64 토큰이 있는지 확인.
+if ! docker buildx inspect montage-builder --bootstrap \
+      | awk -F': ' '/^Platforms:/ {print $2}' \
+      | tr ',' '\n' | tr -d ' *' \
+      | grep -qx 'linux/amd64'; then
+  log "registering QEMU binfmt for linux/amd64"
+  docker run --privileged --rm tonistiigi/binfmt --install amd64
+fi
 
 log "setup complete ✅"
