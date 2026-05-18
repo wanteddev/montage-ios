@@ -353,7 +353,12 @@ public struct Button: View {
             
             if loading {
                 Loading(kind: .circular(), size: loadingSize)
-                    .foregroundColor(loadingColor)
+                    .overlay {
+                        if let loadingColor {
+                            loadingColor.blendMode(.sourceAtop)
+                        }
+                    }
+                    .compositingGroup()
             }
         }
         .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
