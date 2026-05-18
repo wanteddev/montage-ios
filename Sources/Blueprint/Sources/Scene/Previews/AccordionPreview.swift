@@ -18,10 +18,10 @@ struct AccordionPreview: View {
     @State private var hideDivider = false
     @State private var fillWidth = false
     @State private var recursive = false
-    @State private var leadingIcon = false
-    
+    @State private var leadingContent = false
+
     let verticalPaddings: [Accordion.VerticalPadding] = [.small, .medium, .large]
-    
+
     var body: some View {
         SwiftUI.ScrollView {
             VStack(alignment: .leading) {
@@ -55,10 +55,28 @@ struct AccordionPreview: View {
                     .verticalPadding(verticalPaddings[verticalPaddingIndex])
                     .hideDivider(hideDivider)
                     .fillWidth(fillWidth)
-                    .leadingIcon(leadingIcon ? .alignJustify : nil)
-                    .trailingContent {
+                    .leadingContent({
+                        if leadingContent {
+                            Thumbnail(urlString: "https://images.icon-icons.com/4128/PNG/512/hero_main_heading_title_icon_260510.png", ratio: .r1x1)
+                                .frame(width: 24, height: 24)
+                        }
+                    })
+                    .trailingContent { isExpanded in
                         if trailingContent {
-                            ContentBadge(variant: .solid, text: "뱃지")
+                            HStack(spacing: 4) {
+                                TextButton(
+                                    color: .assistive,
+                                    size: .small,
+                                    text: isExpanded ? "접기" : "펼치기"
+                                )
+                                Image.icon(isExpanded ? .chevronUp : .chevronDown)
+                                    .resizable()
+                                    .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                                    .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                                    .frame(width: 16, height: 16)
+                            }
+                            .frame(height: 24)
+                            .allowsHitTesting(false)
                         }
                     }
                 }
@@ -74,8 +92,8 @@ struct AccordionPreview: View {
                     Switch(checked: content) { content = $0 }
                 }
                 HStack {
-                    Text("leadingIcon")
-                    Switch(checked: leadingIcon) { leadingIcon = $0 }
+                    Text("leadingContent")
+                    Switch(checked: leadingContent) { leadingContent = $0 }
                     Text("trailingContent")
                     Switch(checked: trailingContent) { trailingContent = $0 }
                 }
