@@ -9,6 +9,8 @@ xcuserdata/
 Derived
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 package-lock.json
+# montage-mcp 컨테이너 빌드에서 `npm ci` 재현성을 위해 lockfile은 추적한다
+!packages/montage-mcp/package-lock.json
 node_modules
 docc/
 Sources/Blueprint/Blueprint.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
