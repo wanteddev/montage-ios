@@ -628,16 +628,16 @@ private extension TextField {
         
         var textColor: Color.Semantic {
             switch variant {
-            case .primary:
+            case .primary, .negative:
                 .primaryNormal
             case .assistive:
                 .labelNormal
             }
         }
-        
+
         var typoWeight: Typography.Weight {
             switch variant {
-            case .primary: .bold
+            case .primary, .negative: .bold
             case .assistive: .medium
             }
         }
