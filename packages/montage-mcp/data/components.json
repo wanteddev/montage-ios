@@ -36,6 +36,12 @@
           "kind": "method"
         },
         {
+          "name": "leadingContent(_:)",
+          "signature": "func leadingContent<V>(() -> V) -> Accordion",
+          "summary": "아코디언 제목 앞에 커스텀 컨텐츠를 추가합니다.",
+          "kind": "method"
+        },
+        {
           "name": "leadingIcon(_:color:)",
           "signature": "func leadingIcon(Icon?, color: SwiftUI.Color?) -> Accordion",
           "summary": "아코디언 제목 앞에 아이콘을 추가합니다.",
@@ -50,6 +56,12 @@
         {
           "name": "trailingContent(_:)",
           "signature": "func trailingContent<V>(() -> V) -> Accordion",
+          "summary": "아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "trailingContent(_:)",
+          "signature": "func trailingContent<V>((Bool) -> V) -> Accordion",
           "summary": "아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.",
           "kind": "method"
         },
