@@ -219,7 +219,7 @@ Accordion(title: "커스텀 스타일")
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `trailingContent` | 표시할 컨텐츠를 생성하는 클로져 (아코디언이 펼쳐진 상태를 파라미터로 받음) |
+  | `trailingContent` | 표시할 컨텐츠를 생성하는 클로저 (아코디언이 펼쳐진 상태를 파라미터로 받음) |
 - **Return Value**
 
   수정된 아코디언 인스턴스

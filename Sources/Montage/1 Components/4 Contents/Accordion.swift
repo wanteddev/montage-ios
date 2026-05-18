@@ -242,7 +242,7 @@ public struct Accordion: View {
     ///
     /// 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
     ///
-    /// - Parameter trailingContent: 표시할 컨텐츠를 생성하는 클로져 (아코디언이 펼쳐진 상태를 파라미터로 받음)
+    /// - Parameter trailingContent: 표시할 컨텐츠를 생성하는 클로저 (아코디언이 펼쳐진 상태를 파라미터로 받음)
     /// - Returns: 수정된 아코디언 인스턴스
     public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping (Bool) -> V) -> Self {
         var zelf = self
