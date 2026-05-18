@@ -28,8 +28,8 @@ struct ButtonPreview: View {
     @State private var loading = false
     
     private let variants: [Montage.Button.Variant] = [.solid, .outlined]
-    private let colors: [Montage.Button.Color] = [.primary, .assistive]
-    private let sizes: [Montage.Button.Size] = [.small, .medium, .large]
+    private let colors: [Montage.Button.Color] = [.primary, .assistive, .negative]
+    private let sizes: [Montage.Button.Size] = [.xsmall, .small, .medium, .large]
     
     var body: some View {
         SwiftUI.ScrollView {
@@ -47,10 +47,14 @@ struct ButtonPreview: View {
                 
                 let color = colors[colorIndex]
                 let size = sizes[sizeIndex]
-                
+                let isUnsupported = variants[variantIndex] == .outlined && color == .negative
+
                 HStack {
                     Spacer(minLength: 0)
-                    if iconOnly {
+                    if isUnsupported {
+                        Text("Outlined + Negative는 지원되지 않는 조합입니다.")
+                            .foregroundColor(.semantic(.statusNegative))
+                    } else if iconOnly {
                         Button(
                             variant: variants[variantIndex],
                             color: color,
@@ -85,7 +89,7 @@ struct ButtonPreview: View {
                         .fontWeight(fontWeight ? .regular : nil)
                         .loading(loading)
                     }
-                    
+
                     Spacer(minLength: 0)
                 }
                 

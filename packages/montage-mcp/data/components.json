@@ -402,6 +402,7 @@
           "summary": "버튼의 색상 스타일을 정의합니다.",
           "cases": [
             "assistive",
+            "negative",
             "primary"
           ]
         },
@@ -431,7 +432,8 @@
           "cases": [
             "large",
             "medium",
-            "small"
+            "small",
+            "xsmall"
           ]
         },
         {

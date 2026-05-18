@@ -49,10 +49,17 @@ public struct Button: View {
         case primary
         /// 보조 스타일 - 덜 중요한 액션에 사용
         case assistive
+        /// 부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
+        ///
+        /// > Important: `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않으며,
+        /// > 해당 조합으로 버튼을 생성하면 `preconditionFailure`가 발생합니다.
+        case negative
     }
-    
+
     /// 버튼의 크기를 정의합니다.
     public enum Size: String {
+        /// 가장 작은 크기
+        case xsmall
         /// 작은 크기
         case small
         /// 중간 크기
@@ -96,6 +103,10 @@ public struct Button: View {
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
+        precondition(
+            !(variant == .outlined && color == .negative),
+            "Button: variant `.outlined` does not support color `.negative`."
+        )
         self.init(
             InternalVariant(rawValue: variant.rawValue) ?? .solid,
             color: color,
@@ -128,6 +139,10 @@ public struct Button: View {
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
+        precondition(
+            !(variant == .outlined && color == .negative),
+            "Button: variant `.outlined` does not support color `.negative`."
+        )
         self.init(
             InternalVariant(rawValue: variant.rawValue) ?? .solid,
             color: color,
@@ -318,7 +333,7 @@ public struct Button: View {
         ZStack {
             SwiftUI.Color.clear
             
-            HStack(alignment: .center, spacing: 4) {
+            HStack(alignment: .center, spacing: gap) {
                 if let leadingIcon {
                     icon(leadingIcon)
                 }
@@ -385,6 +400,7 @@ private extension Button {
                     switch color {
                     case .primary: .semantic(.primaryNormal)
                     case .assistive: .semantic(.fillNormal)
+                    case .negative: .semantic(.statusNegative).opacity(0.12)
                     }
                 }
             }
@@ -425,6 +441,7 @@ private extension Button {
                 switch color {
                 case .primary: .semantic(.staticWhite)
                 case .assistive: .semantic(.labelNeutral)
+                case .negative: .semantic(.accentForegroundRed)
                 }
             }
         case .outlined, .text:
@@ -436,6 +453,7 @@ private extension Button {
                 switch color {
                 case .primary: .semantic(.primaryNormal)
                 case .assistive: .semantic(variant == .outlined ? .labelNormal : .labelAlternative)
+                case .negative: .semantic(.accentForegroundRed)
                 }
             }
         }
@@ -450,11 +468,13 @@ private extension Button {
                 switch color {
                 case .primary: .semantic(.staticWhite)
                 case .assistive: .semantic(.labelAssistive)
+                case .negative: .semantic(.accentForegroundRed)
                 }
             default:
                 switch color {
                 case .primary: .semantic(.primaryNormal)
                 case .assistive: .semantic(.labelAssistive)
+                case .negative: .semantic(.accentForegroundRed)
                 }
             }
         }
@@ -472,23 +492,27 @@ private extension Button {
     
     var iconSize: CGSize {
         switch size {
+        case .xsmall:
+            .init(width: 14, height: 14)
         case .small:
             .init(width: 16, height: 16)
         case .medium:
-                .init(width: variant == .text ? 20 : 18, height: variant == .text ? 20 : 18)
+            .init(width: variant == .text ? 20 : 18, height: variant == .text ? 20 : 18)
         case .large:
             .init(width: 20, height: 20)
         }
     }
-    
+
     var typoVariant: Typography.Variant {
         switch size {
+        case .xsmall:
+            variant == .text ? .label2 : .caption1
         case .small:
-            variant == .text ? .label1 : .label2
+            variant == .text ? .label1 : .caption1
         case .medium:
-            variant == .text ? .body1 : .body2
+            variant == .text ? .body1 : .label1
         case .large:
-            .body1
+            variant == .text ? .body1 : .body2
         }
     }
     
@@ -496,6 +520,7 @@ private extension Button {
         switch color {
         case .primary: .bold
         case .assistive: variant == .text ? .bold : .medium
+        case .negative: .bold
         }
     }
     
@@ -504,39 +529,52 @@ private extension Button {
             6.0
         } else {
             switch size {
-            case .large: 12.0
-            case .medium: 10.0
-            case .small: 8.0
+            case .xsmall: 10.0
+            case .small: 10.0
+            case .medium: 12.0
+            case .large: 14.0
             }
         }
     }
-    
+
     var contentHeight: CGFloat {
         switch size {
-        case .small: variant == .text ? 20 : 18
-        case .medium: variant == .text ? 24 : 22
-        case .large: 24
+        case .xsmall: 16
+        case .small: variant == .text ? 20 : 16
+        case .medium: variant == .text ? 24 : 20
+        case .large: variant == .text ? 24 : 22
         }
     }
-    
+
     var edgeInsets: EdgeInsets {
         if variant == .text {
             .init()
         } else {
             switch size {
-            case .small:
+            case .xsmall:
                 text == nil && leadingIcon != nil
                 ? .init(top: 7, leading: 7, bottom: 7, trailing: 7)
-                : .init(top: 7, leading: 14, bottom: 7, trailing: 14)
+                : .init(top: 6, leading: 10, bottom: 6, trailing: 10)
+            case .small:
+                text == nil && leadingIcon != nil
+                ? .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+                : .init(top: 8, leading: 12, bottom: 8, trailing: 12)
             case .medium:
                 text == nil && leadingIcon != nil
                 ? .init(top: 10, leading: 10, bottom: 10, trailing: 10)
-                : .init(top: 9, leading: 20, bottom: 9, trailing: 20)
+                : .init(top: 10, leading: 16, bottom: 10, trailing: 16)
             case .large:
                 text == nil && leadingIcon != nil
-                ? .init(top: 12, leading: 12, bottom: 12, trailing: 12)
-                : .init(top: 12, leading: 28, bottom: 12, trailing: 28)
+                ? .init(top: 14, leading: 14, bottom: 14, trailing: 14)
+                : .init(top: 13, leading: 20, bottom: 13, trailing: 20)
             }
+        }
+    }
+
+    var gap: CGFloat {
+        switch size {
+        case .xsmall, .small, .medium: 4
+        case .large: 6
         }
     }
     
@@ -544,13 +582,15 @@ private extension Button {
         switch color {
         case .primary: variant == .solid ? .strong : .normal
         case .assistive: variant == .solid ? .normal : .light
+        case .negative: .strong
         }
     }
-    
+
     var interactionColor: Montage.Color.Semantic {
         switch color {
         case .primary: variant == .solid ? .labelNormal : .primaryNormal
         case .assistive: .labelNormal
+        case .negative: .labelNormal
         }
     }
 
@@ -558,7 +598,12 @@ private extension Button {
     var interactionHorizontalOffset: CGFloat { variant == .text ? 7 : 0 }
     
     var loadingSize: CGSize {
-        let textHeight = (fontVariant ?? typoVariant).fontHeight
-        return .init(width: textHeight, height: textHeight)
+        let dim: CGFloat
+        switch size {
+        case .xsmall, .small: dim = 12
+        case .medium: dim = 14
+        case .large: dim = 16
+        }
+        return .init(width: dim, height: dim)
     }
 }
