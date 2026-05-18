@@ -639,16 +639,16 @@ private extension TextField {
                 return .labelDisable
             }
             switch variant {
-            case .primary:
-                return .primaryNormal
+            case .primary, .negative:
+                .primaryNormal
             case .assistive:
                 return .labelNormal
             }
         }
-        
+
         var typoWeight: Typography.Weight {
             switch variant {
-            case .primary: .bold
+            case .primary, .negative: .bold
             case .assistive: .medium
             }
         }
