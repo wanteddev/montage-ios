@@ -337,6 +337,18 @@ Button(text: "저장")
 </details>
 <details>
 
+<summary>``case negative``</summary>
+
+
+부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
+- **Discussion**
+  >  **Important**
+  >
+  > `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않으며, 해당 조합으로 버튼을 생성하면 `preconditionFailure`가 발생합니다.
+
+</details>
+<details>
+
 <summary>``case primary``</summary>
 
 
@@ -380,6 +392,13 @@ Button(text: "저장")
 
 
 작은 크기
+</details>
+<details>
+
+<summary>``case xsmall``</summary>
+
+
+가장 작은 크기
 </details>
 
 #### Initializers
