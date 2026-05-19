@@ -71,6 +71,7 @@ public enum Icon: String, CaseIterable {
     case bubblePlus
     case bubblePlusFill
     case bulb
+    case bulbFill
     case businessBag
     case businessBagFill
     case calendar
@@ -131,6 +132,7 @@ public enum Icon: String, CaseIterable {
     case circlePlus
     case circlePlusFill
     case circlePoint
+    case circlePointFill
     case circleQuestion
     case circleQuestionFill
     case circleUpRight
@@ -302,6 +304,8 @@ public enum Icon: String, CaseIterable {
     case play
     case plus
     case plusThick
+    case pouch
+    case pouchFill
     case presentation
     case printer
     case question
