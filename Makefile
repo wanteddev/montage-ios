@@ -5,7 +5,10 @@
 XCODE_VERSION=26.3
 
 # 기본 타겟(로컬용): 문서 생성 후 변경사항 가드 실행
-all: generate check-changes
+# check-changes를 prerequisite가 아닌 recipe에서 호출해야 make -j 병렬 실행 시
+# generate가 완료된 뒤 순차적으로 검사된다.
+all: generate
+	@$(MAKE) check-changes
 
 # 문서/MCP 데이터 생성만 수행 (CI에서 생성 후 자동 커밋할 때 사용)
 generate: docc md license mcp-data
