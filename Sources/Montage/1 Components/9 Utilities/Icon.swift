@@ -302,6 +302,7 @@ public enum Icon: String, CaseIterable {
     case play
     case plus
     case plusThick
+    case pouch
     case presentation
     case printer
     case question
