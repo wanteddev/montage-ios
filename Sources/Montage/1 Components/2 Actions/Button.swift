@@ -51,8 +51,8 @@ public struct Button: View {
         case assistive
         /// 부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
         ///
-        /// > Important: `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않으며,
-        /// > 해당 조합으로 버튼을 생성하면 `preconditionFailure`가 발생합니다.
+        /// > Important: `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다.
+        /// > 해당 조합으로 버튼을 생성하면 자동으로 `.solid`로 대체됩니다.
         case negative
     }
 
@@ -103,12 +103,15 @@ public struct Button: View {
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
-        precondition(
-            !(variant == .outlined && color == .negative),
-            "Button: variant `.outlined` does not support color `.negative`."
-        )
+        let resolvedVariant: InternalVariant
+        if variant == .outlined && color == .negative {
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to `.solid`.")
+            resolvedVariant = .solid
+        } else {
+            resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
+        }
         self.init(
-            InternalVariant(rawValue: variant.rawValue) ?? .solid,
+            resolvedVariant,
             color: color,
             size: size,
             text: text,
@@ -139,12 +142,15 @@ public struct Button: View {
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
-        precondition(
-            !(variant == .outlined && color == .negative),
-            "Button: variant `.outlined` does not support color `.negative`."
-        )
+        let resolvedVariant: InternalVariant
+        if variant == .outlined && color == .negative {
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to `.solid`.")
+            resolvedVariant = .solid
+        } else {
+            resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
+        }
         self.init(
-            InternalVariant(rawValue: variant.rawValue) ?? .solid,
+            resolvedVariant,
             color: color,
             size: size,
             leadingIcon: icon,
