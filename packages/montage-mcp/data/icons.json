@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 343,
+  "count": 344,
   "icons": [
     "agent",
     "agentColor",
@@ -271,6 +271,7 @@
     "play",
     "plus",
     "plusThick",
+    "pouch",
     "presentation",
     "printer",
     "question",
