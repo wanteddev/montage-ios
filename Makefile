@@ -1,11 +1,14 @@
-.PHONY: all docc server md license mcp-data check-changes clean
+.PHONY: all generate docc server md license mcp-data check-changes clean
 
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
 XCODE_VERSION=26.3
 
-# 기본 타겟: docc, md, license, mcp-data를 순서대로 실행하고 변경사항 확인
-all: docc md license mcp-data check-changes
+# 기본 타겟(로컬용): 문서 생성 후 변경사항 가드 실행
+all: generate check-changes
+
+# 문서/MCP 데이터 생성만 수행 (CI에서 생성 후 자동 커밋할 때 사용)
+generate: docc md license mcp-data
 
 # DocC API 문서 생성
 docc:
