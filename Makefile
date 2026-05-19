@@ -10,6 +10,11 @@ all: generate check-changes
 # 문서/MCP 데이터 생성만 수행 (CI에서 생성 후 자동 커밋할 때 사용)
 generate: docc md license mcp-data
 
+# md와 mcp-data는 docc가 생성한 .doccarchive를 입력으로 사용하므로
+# 병렬 빌드(make -j)에서도 docc 완료 후 실행되도록 명시한다.
+md: docc
+mcp-data: docc
+
 # DocC API 문서 생성
 docc:
 	@echo ""; \
