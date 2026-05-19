@@ -47,14 +47,10 @@ struct ButtonPreview: View {
                 
                 let color = colors[colorIndex]
                 let size = sizes[sizeIndex]
-                let isUnsupported = variants[variantIndex] == .outlined && color == .negative
 
                 HStack {
                     Spacer(minLength: 0)
-                    if isUnsupported {
-                        Text("Outlined + Negative는 지원되지 않는 조합입니다.")
-                            .foregroundColor(.semantic(.statusNegative))
-                    } else if iconOnly {
+                    if iconOnly {
                         Button(
                             variant: variants[variantIndex],
                             color: color,
@@ -141,8 +137,10 @@ struct ButtonPreview: View {
                     Switch(checked: contentColor) { contentColor = $0 }
                     Text("background")
                     Switch(checked: backgroundColor) { backgroundColor = $0 }
-                    Text("border")
-                    Switch(checked: borderColor) { borderColor = $0 }
+                    if variants[variantIndex] == .outlined {
+                        Text("border")
+                        Switch(checked: borderColor) { borderColor = $0 }
+                    }
                 }
                 Divider()
                 Text("font")
@@ -159,6 +157,9 @@ struct ButtonPreview: View {
         .onChange(of: iconOnly) { _ in
             leadingIcon = false
             trailingIcon = false
+        }
+        .onChange(of: variantIndex) { _ in
+            borderColor = false
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
