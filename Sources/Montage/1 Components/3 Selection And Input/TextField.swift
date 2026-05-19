@@ -59,22 +59,26 @@ public struct TextField: View {
     public struct TrailingButtonInfo {
         fileprivate let variant: Button.Color
         fileprivate let title: String
+        fileprivate let disable: Bool
         fileprivate let handler: (() -> Void)?
-        
+
         /// 트레일링 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - variant: 버튼의 변형 스타일
         ///   - title: 버튼에 표시할 텍스트
+        ///   - disable: 트레일링 버튼만 비활성화할지 여부, 생략하면 기본값으로 `false` 적용
         ///   - handler: 버튼 클릭 시 실행할 핸들러
         /// - Returns: 구성된 트레일링 버튼 인스턴스
         public init(
             variant: Button.Color,
             title: String,
+            disable: Bool = false,
             handler: (() -> Void)? = nil
         ) {
             self.variant = variant
             self.title = title
+            self.disable = disable
             self.handler = handler
         }
     }
@@ -376,6 +380,7 @@ private extension TextField {
                     TrailingButton(
                         variant: trailingButton.variant,
                         title: trailingButton.title,
+                        disable: disable || trailingButton.disable,
                         handler: trailingButton.handler
                     )
                     UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
@@ -601,16 +606,18 @@ private extension TextField {
     struct TrailingButton: View {
         private let variant: Button.Color
         private let title: String
+        private let disable: Bool
         private let handler: (() -> Void)?
-        
-        init(variant: Button.Color, title: String, handler: (() -> Void)?) {
+
+        init(variant: Button.Color, title: String, disable: Bool, handler: (() -> Void)?) {
             self.variant = variant
             self.title = title
+            self.disable = disable
             self.handler = handler
         }
-        
+
         @State private var isPressed = false
-        
+
         var body: some View {
             Text(title)
                 .paragraph(variant: .body1, weight: typoWeight, semantic: textColor)
@@ -623,15 +630,19 @@ private extension TextField {
                         color: .labelNormal
                     )
                 )
-                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: disable ? nil : handler))
+                .allowsHitTesting(disable == false)
         }
-        
+
         var textColor: Color.Semantic {
+            if disable {
+                return .labelDisable
+            }
             switch variant {
             case .primary:
-                .primaryNormal
+                return .primaryNormal
             case .assistive:
-                .labelNormal
+                return .labelNormal
             }
         }
         
