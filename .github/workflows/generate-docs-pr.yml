@@ -95,7 +95,7 @@ jobs:
           fi
 
       - name: Run make to generate documentation
-        run: make
+        run: make generate
 
       - name: Commit changes
         id: commit

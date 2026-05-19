@@ -1,11 +1,22 @@
-.PHONY: all docc server md license mcp-data check-changes clean
+.PHONY: all generate docc server md license mcp-data check-changes clean
 
 # 문서 생성시 사용해야 하는 Xcode 버전
 # 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
 XCODE_VERSION=26.3
 
-# 기본 타겟: docc, md, license, mcp-data를 순서대로 실행하고 변경사항 확인
-all: docc md license mcp-data check-changes
+# 기본 타겟(로컬용): 문서 생성 후 변경사항 가드 실행
+# check-changes를 prerequisite가 아닌 recipe에서 호출해야 make -j 병렬 실행 시
+# generate가 완료된 뒤 순차적으로 검사된다.
+all: generate
+	@$(MAKE) check-changes
+
+# 문서/MCP 데이터 생성만 수행 (CI에서 생성 후 자동 커밋할 때 사용)
+generate: docc md license mcp-data
+
+# md와 mcp-data는 docc가 생성한 .doccarchive를 입력으로 사용하므로
+# 병렬 빌드(make -j)에서도 docc 완료 후 실행되도록 명시한다.
+md: docc
+mcp-data: docc
 
 # DocC API 문서 생성
 docc:
