@@ -1,0 +1,75 @@
+name: deploy-montage-mcp
+
+# packages/montage-mcp 변경 시 사내 Backyard (proj-ss1e6i) 로 자동 배포한다.
+# - 빌드머신: self-hosted macOS (Apple Silicon)
+# - 배포 방식: lab.wntd.co/proj-ss1e6i/frontend:latest 태그로 push → operator 가 자동 롤링
+# - 필요 Secrets:
+#     BACKYARD_REGISTRY_USER   (예: samyeol.kim@wantedlab.com)
+#     BACKYARD_REGISTRY_TOKEN  (lab.wntd.co 발급 토큰)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/montage-mcp/**"
+      - ".github/workflows/deploy-montage-mcp.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-montage-mcp
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # workflow_dispatch 도 main 으로만 제한 — 실배포 태그(:latest)가 다른 브랜치에서 덮어쓰여지지 않도록.
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macOS, ARM64]
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: packages/montage-mcp
+
+    env:
+      REGISTRY: lab.wntd.co
+      IMAGE: lab.wntd.co/proj-ss1e6i/frontend:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure Docker environment (Colima + buildx)
+        run: bash scripts/setup-runner-docker.sh
+
+      - name: Docker login
+        env:
+          REG_USER: ${{ secrets.BACKYARD_REGISTRY_USER }}
+          REG_TOKEN: ${{ secrets.BACKYARD_REGISTRY_TOKEN }}
+        run: |
+          echo "$REG_TOKEN" | docker login "$REGISTRY" -u "$REG_USER" --password-stdin
+
+      # buildx --push 는 OCI manifest list 로 푸시되어 사내 레지스트리 webhook 이 발화하지 않는 케이스가 있다.
+      # --load 로 로컬 daemon 에 적재 후 일반 docker push (classic v2 manifest) 로 푸시하면 webhook 이 정상 발화한다.
+      - name: Build (linux/amd64) and load into local daemon
+        run: |
+          docker buildx build \
+            --builder montage-builder \
+            --platform linux/amd64 \
+            --tag "$IMAGE" \
+            --load \
+            --provenance=false \
+            .
+
+      - name: Push (classic v2 manifest, triggers Backyard rollout webhook)
+        run: docker push "$IMAGE"
+
+      - name: Logout
+        if: always()
+        run: docker logout "$REGISTRY" || true
+
+      - name: Summary
+        run: |
+          echo "### Deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Image: \`$IMAGE\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Project: proj-ss1e6i (http://prj-frontend-ss1e6i.lab.wntd.co)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Backyard operator 가 :latest SHA 변경을 감지해 롤링 업데이트합니다." >> "$GITHUB_STEP_SUMMARY"
