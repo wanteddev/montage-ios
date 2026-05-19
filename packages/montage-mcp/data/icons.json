@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 343,
+  "count": 347,
   "icons": [
     "agent",
     "agentColor",
@@ -40,6 +40,7 @@
     "bubblePlus",
     "bubblePlusFill",
     "bulb",
+    "bulbFill",
     "businessBag",
     "businessBagFill",
     "calendar",
@@ -100,6 +101,7 @@
     "circlePlus",
     "circlePlusFill",
     "circlePoint",
+    "circlePointFill",
     "circleQuestion",
     "circleQuestionFill",
     "circleUpRight",
@@ -271,6 +273,8 @@
     "play",
     "plus",
     "plusThick",
+    "pouch",
+    "pouchFill",
     "presentation",
     "printer",
     "question",
