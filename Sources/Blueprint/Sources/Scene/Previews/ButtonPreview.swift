@@ -161,7 +161,7 @@ struct ButtonPreview: View {
                     Switch(checked: contentColor) { contentColor = $0 }
                     Text("background")
                     Switch(checked: backgroundColor) { backgroundColor = $0 }
-                    if variants[variantIndex] == .outlined {
+                    if variants[variantIndex] == .outlined && colors[colorIndex] != .negative {
                         Text("border")
                         Switch(checked: borderColor) { borderColor = $0 }
                     }
@@ -184,6 +184,11 @@ struct ButtonPreview: View {
         }
         .onChange(of: variantIndex) { _ in
             borderColor = false
+        }
+        .onChange(of: colorIndex) { _ in
+            if variants[variantIndex] == .outlined && colors[colorIndex] == .negative {
+                borderColor = false
+            }
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .background(SwiftUI.Color.semantic(.backgroundNormal))
