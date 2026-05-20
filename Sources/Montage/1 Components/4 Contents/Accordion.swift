@@ -231,7 +231,7 @@ public struct Accordion: View {
     ///
     /// - Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
     /// - Returns: 수정된 아코디언 인스턴스
-    @available(*, deprecated, message: "확장 상태를 인자로 받는 오버로드를 사용하세요: trailingContent { isExpanded in ... }")
+    @available(*, deprecated, message: "확장 상태를 인자로 받는 오버로드를 사용하세요: `trailingContent { isExpanded in ... }`")
     public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
         var zelf = self
         zelf.trailingContent = { _ in AnyView(trailingContent()) }
