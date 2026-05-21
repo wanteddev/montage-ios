@@ -339,7 +339,7 @@ private extension TextField {
                     
                     if !text.isEmpty, textFieldFocusState {
                         IconButton(
-                            variant: .normal(size: 22),
+                            variant: .normal(size: .custom(size: 22)),
                             icon: .circleCloseFill
                         ) {
                             text = ""
