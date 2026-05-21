@@ -31,4 +31,5 @@ jobs:
           gh workflow run docs-deploy.yml \
             --repo wanteddev/montage-web \
             --ref "${{ needs.sync.outputs.branch }}" \
-            -f server_type=www
+            -f server_type=www \
+            -f algolia=true
