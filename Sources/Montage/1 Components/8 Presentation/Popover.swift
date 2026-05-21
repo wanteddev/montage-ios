@@ -106,7 +106,7 @@ public enum Popover {
                         }
                     }
                     if closeButton {
-                        IconButton(variant: .normal(size: 16), icon: .close) {
+                        IconButton(variant: .normal(size: .small), icon: .close) {
                             isPresented = false
                         }
                         .padding(.all, 3)
