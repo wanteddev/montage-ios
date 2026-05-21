@@ -13,7 +13,7 @@ struct IconButtonPreview: View {
     @State private var variantIndex = 0
     @State private var customSize: CGFloat = 24
     @State private var sizeIndex = 0
-    @State private var normalSizeIndex = 2 // 기본값 24
+    @State private var normalSizeIndex = 3 // 기본값 24 (.xlarge)
     @State private var alternative = false
     @State private var disable = false
     @State private var showPushBadge = false
