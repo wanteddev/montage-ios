@@ -202,7 +202,7 @@ public struct SnackBar: View {
                     
                     if closeButton {
                         Spacer().frame(width: 12)
-                        IconButton(variant: .normal(size: 20), icon: .close) {
+                        IconButton(variant: .normal(size: .large), icon: .close) {
                             dismiss()
                         }
                         .iconColor(.semantic(.staticWhite).opacity(0.61))

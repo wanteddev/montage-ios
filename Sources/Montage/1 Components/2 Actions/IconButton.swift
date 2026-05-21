@@ -31,12 +31,12 @@ public struct IconButton: View {
     /// 아이콘 버튼을 생성합니다.
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: 24)` 적용
+    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: .xlarge)` 적용
     ///   - icon: 표시할 아이콘
     ///   - handler: 버튼 탭 시 실행할 핸들러
     /// - Returns: 구성된 아이콘 버튼 뷰
     public init(
-        variant: IconButton.Variant = .normal(size: 24),
+        variant: IconButton.Variant = .normal(size: .xlarge),
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
@@ -199,7 +199,7 @@ public struct IconButton: View {
                     variant: variant.interactionVariant,
                     color: variant.interactionColor
                 )
-                .clipShape(Circle())
+                .clipShape(variant.interactionShape)
                 .padding(.vertical, -interactionOffset)
                 .padding(.horizontal, -interactionOffset)
             }
@@ -234,23 +234,23 @@ extension IconButton {
     /// 아이콘 버튼의 다양한 스타일과 크기를 정의합니다.
     public enum Variant {
         /// 기본형 아이콘 버튼 - 배경 없이 아이콘만 표시
-        /// - Parameter size: 아이콘 크기 (픽셀)
-        case normal(size: Int)
-        
+        /// - Parameter size: 아이콘 크기 (`NormalSize`)
+        case normal(size: NormalSize)
+
         /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
         /// - Parameters:
         ///   - size: 아이콘 크기 (픽셀)
         ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
         case background(size: Int, isAlternative: Bool = false)
-        
+
         /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
         /// - Parameter size: 아이콘 크기 (Size 열거형)
         case outlined(size: Size)
-        
+
         /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
         /// - Parameter size: 아이콘 크기 (Size 열거형)
         case solid(size: Size)
-        
+
         fileprivate var isBackground: Bool {
             switch self {
             case .background: true
@@ -258,7 +258,32 @@ extension IconButton {
             }
         }
     }
-    
+
+    /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
+    public enum NormalSize {
+        /// 작은 크기 (16px)
+        case small
+        /// 중간 크기 (18px)
+        case medium
+        /// 큰 크기 (20px)
+        case large
+        /// 가장 큰 크기 (24px)
+        case xlarge
+        /// 사용자 지정 크기
+        /// - Parameter size: 아이콘 크기 (픽셀)
+        case custom(size: Int)
+
+        fileprivate var pixelSize: Int {
+            switch self {
+            case .small: 16
+            case .medium: 18
+            case .large: 20
+            case .xlarge: 24
+            case .custom(let size): size
+            }
+        }
+    }
+
     /// 버튼 사이즈를 결정하는 열거형입니다.
     public enum Size {
         /// 작은 크기
@@ -315,22 +340,22 @@ extension IconButton.Variant {
     var inactiveColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
-                .semantic(.labelDisable).withAlphaComponent(0.16)
+                .semantic(.labelDisable)
         case .background:
                 .atomic(.coolNeutral50).withAlphaComponent(0.22)
         }
     }
-    
+
     var borderWidth: CGFloat {
         switch self {
         case .outlined: 1
         default: .zero
         }
     }
-    
+
     var borderColor: UIColor {
         switch self {
-        case .outlined: .semantic(.lineNeutral)
+        case .outlined: .semantic(.lineNeutral).withAlphaComponent(0.16)
         default: .clear
         }
     }
@@ -354,32 +379,59 @@ extension IconButton.Variant {
         case .background(_, _): 6
         case let .outlined(size), let .solid(size):
             switch size {
-            case .small: 7
-            case .medium: 10
-            case .custom(_): 6
+            case .small: 8
+            case .medium: 11
+            case .custom(_): 7
             }
         }
     }
-    
+
     var interactionOffset: CGFloat {
         switch self {
-        case .normal: 8
-        case .background(_, _), .outlined(_), .solid(_): backgroundOffset
+        case .normal(let size):
+            switch size {
+            case .small: 4    // icon 16 → interaction 24
+            case .medium: 5   // icon 18 → interaction 28
+            case .large: 6    // icon 20 → interaction 32
+            case .xlarge: 8   // icon 24 → interaction 40
+            case .custom: 6
+            }
+        case .outlined(_): backgroundOffset + 1
+        case .background(_, _), .solid(_): backgroundOffset
         }
     }
-    
+
+    var interactionShape: AnyShape {
+        switch self {
+        case .normal(let size):
+            let radius: CGFloat
+            switch size {
+            case .small: radius = 8
+            case .medium: radius = 8
+            case .large: radius = 10
+            case .xlarge: radius = 12
+            case .custom: radius = 10
+            }
+            return AnyShape(RoundedRectangle(cornerRadius: radius))
+        case .background, .outlined, .solid:
+            return AnyShape(Circle())
+        }
+    }
+
     var iconSize: CGSize {
         switch self {
-        case .normal(let size): .init(width: size, height: size)
-        case .background(let size, _): .init(width: size, height: size)
+        case .normal(let size):
+            let dim = CGFloat(size.pixelSize)
+            return .init(width: dim, height: dim)
+        case .background(let size, _): return .init(width: size, height: size)
         case .outlined(let variant), .solid(let variant):
             switch variant {
             case .small:
-                    .init(width: 18, height: 18)
+                return .init(width: 16, height: 16)
             case .medium:
-                    .init(width: 20, height: 20)
+                return .init(width: 18, height: 18)
             case .custom(let size):
-                    .init(width: size, height: size)
+                return .init(width: size, height: size)
             }
         }
     }
