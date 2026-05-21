@@ -1083,6 +1083,18 @@
       "staticMembers": [],
       "nestedTypes": [
         {
+          "name": "IconButton.NormalSize",
+          "kind": "enum",
+          "summary": "Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.",
+          "cases": [
+            "custom",
+            "large",
+            "medium",
+            "small",
+            "xlarge"
+          ]
+        },
+        {
           "name": "IconButton.Size",
           "kind": "enum",
           "summary": "버튼 사이즈를 결정하는 열거형입니다.",
