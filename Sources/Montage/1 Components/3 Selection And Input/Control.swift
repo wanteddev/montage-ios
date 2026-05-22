@@ -158,7 +158,7 @@ struct Control: View {
                             color: labelTypography.color
                         )
                         .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: fillWidth ? .infinity : nil, alignment: .leading)
                         .padding(.vertical, size == .medium ? 1 : 0)
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -177,6 +177,7 @@ struct Control: View {
     // MARK: - Modifiers
 
     private var label: String = ""
+    private var fillWidth = false
     private var labelVariant: Typography.Variant?
     private var labelWeight: Typography.Weight?
     private var labelColor: SwiftUI.Color?
@@ -186,13 +187,16 @@ struct Control: View {
 
     /// 레이블 텍스트를 설정합니다.
     ///
-    /// - Parameter text: 레이블에 표시할 텍스트
+    /// - Parameters:
+    ///  - text: 레이블에 표시할 텍스트
+    ///  - fillWidth: 수평으로 주어진 공간을 다 채우도록 설정합니다. 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 입력 컴포넌트
     ///
     /// - Note: `.switch` 변형에서는 레이블이 표시되지 않습니다.
-    func label(_ text: String) -> Self {
+    func label(_ text: String, fillWidth: Bool = true) -> Self {
         var zelf = self
         zelf.label = text
+        zelf.fillWidth = fillWidth
         return zelf
     }
 

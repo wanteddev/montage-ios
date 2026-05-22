@@ -20,6 +20,7 @@ struct ControlPreview: View {
     @State private var sizeIndex = 0
     @State private var disabled: Bool = false
     @State private var tight: Bool = false
+    @State private var fillWidth: Bool = true
     @State private var label: String = ""
     @State private var bold: Bool = false
     @State private var customTypography = false
@@ -56,7 +57,7 @@ struct ControlPreview: View {
                         .disable(disabled)
                         .bold(bold)
                         .tight(tight)
-                        .label(label)
+                        .label(label, fillWidth: fillWidth)
                         .if(customTypography) {
                             $0.labelTypography(.heading2, weight: .medium, color: .semantic(.accentBackgroundPink))
                         }
@@ -74,7 +75,7 @@ struct ControlPreview: View {
                         .disable(disabled)
                         .bold(bold)
                         .tight(tight)
-                        .label(label)
+                        .label(label, fillWidth: fillWidth)
                         .if(customTypography) {
                             $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
                         }
@@ -92,7 +93,7 @@ struct ControlPreview: View {
                         .disable(disabled)
                         .bold(bold)
                         .tight(tight)
-                        .label(label)
+                        .label(label, fillWidth: fillWidth)
                         .if(customTypography) {
                             $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
                         }
@@ -132,8 +133,12 @@ struct ControlPreview: View {
                     Switch(checked: disabled) { disabled = $0 }
                     Text("bold")
                     Switch(checked: bold) { bold = $0 }
+                }
+                HStack {
                     Text("tight")
                     Switch(checked: tight) { tight = $0 }
+                    Text("fillWidth")
+                    Switch(checked: fillWidth) { fillWidth = $0 }
                 }
                 HStack {
                     Text("label")

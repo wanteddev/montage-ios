@@ -614,8 +614,8 @@
           "kind": "method"
         },
         {
-          "name": "label(_:)",
-          "signature": "func label(String) -> Checkbox",
+          "name": "label(_:fillWidth:)",
+          "signature": "func label(String, fillWidth: Bool) -> Checkbox",
           "summary": "레이블 텍스트를 설정합니다.",
           "kind": "method"
         },
@@ -681,8 +681,8 @@
           "kind": "method"
         },
         {
-          "name": "label(_:)",
-          "signature": "func label(String) -> Checkmark",
+          "name": "label(_:fillWidth:)",
+          "signature": "func label(String, fillWidth: Bool) -> Checkmark",
           "summary": "레이블 텍스트를 설정합니다.",
           "kind": "method"
         },
@@ -1809,8 +1809,8 @@
           "kind": "method"
         },
         {
-          "name": "label(_:)",
-          "signature": "func label(String) -> Radio",
+          "name": "label(_:fillWidth:)",
+          "signature": "func label(String, fillWidth: Bool) -> Radio",
           "summary": "레이블 텍스트를 설정합니다.",
           "kind": "method"
         },

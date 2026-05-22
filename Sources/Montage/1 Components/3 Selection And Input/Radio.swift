@@ -51,10 +51,12 @@ public struct Radio: View {
 
     /// 레이블 텍스트를 설정합니다.
     ///
-    /// - Parameter text: 레이블에 표시할 텍스트
+    /// - Parameters:
+    ///  - text: 레이블에 표시할 텍스트
+    ///  - fillWidth: 수평으로 주어진 공간을 다 채우도록 설정합니다. 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 라디오 버튼 컴포넌트
-    public func label(_ text: String) -> Self {
-        .init(base: base.label(text))
+    public func label(_ text: String, fillWidth: Bool = true) -> Self {
+        .init(base: base.label(text, fillWidth: fillWidth))
     }
 
     /// 레이블의 타이포그래피 속성을 설정합니다.
