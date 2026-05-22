@@ -1,6 +1,6 @@
 ---
 title: Spacing
-description: UI 요소 간의 간격을 정의하는 시스템
+description: UI 요소 간의 간격(gap, padding)을 정의하는 시스템
 ---
 
 ```swift
@@ -9,22 +9,22 @@ enum Spacing
 
 ## Overview
 
-Spacing은 Montage 디자인 시스템에서 UI 요소 간의 일관된 간격을 제공하기 위한 규격화된 값들을 정의합니다. 모든 간격은 4포인트 기반의 스케일로 구성되어 있어 디자인의 일관성과 조화를 유지합니다.
+Spacing은 Montage 디자인 시스템에서 UI 요소 간의 일관된 간격을 제공하기 위한 규격화된 값들을 정의합니다.
 
 ```swift
 // UIKit에서 사용
-let padding = CGFloat.spacing(.pt16)
+let padding = CGFloat.spacing(.s16)
 view.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
 
 // SwiftUI에서 사용
 Text("Hello, World!")
-    .padding(.horizontal, .spacing(.pt24))
-    .padding(.vertical, .spacing(.pt16))
+    .padding(.horizontal, .spacing(.s24))
+    .padding(.vertical, .spacing(.s16))
 ```
 
 >  **Note**
 >
-> 간격 이름의 숫자는 포인트 단위의 실제 간격 값을 나타냅니다. 예를 들어 pt16은 16포인트의 간격을 의미합니다.
+> 간격 이름의 숫자는 포인트 단위의 실제 간격 값을 나타냅니다. 예를 들어 s16은 16포인트의 간격을 의미합니다.
 
 ## Topics
 
@@ -32,122 +32,136 @@ Text("Hello, World!")
 
 <details>
 
-<summary>``case pt01``</summary>
+<summary>``case s0``</summary>
 
 
-1포인트 간격
+0px
 </details>
 <details>
 
-<summary>``case pt02``</summary>
+<summary>``case s1``</summary>
 
 
-2포인트 간격
+1px
 </details>
 <details>
 
-<summary>``case pt04``</summary>
+<summary>``case s10``</summary>
 
 
-4포인트 간격
+10px
 </details>
 <details>
 
-<summary>``case pt08``</summary>
+<summary>``case s12``</summary>
 
 
-8포인트 간격
+12px
 </details>
 <details>
 
-<summary>``case pt12``</summary>
+<summary>``case s14``</summary>
 
 
-12포인트 간격
+14px
 </details>
 <details>
 
-<summary>``case pt16``</summary>
+<summary>``case s16``</summary>
 
 
-16포인트 간격 (기본 간격)
+16px (기본 간격)
 </details>
 <details>
 
-<summary>``case pt20``</summary>
+<summary>``case s2``</summary>
 
 
-20포인트 간격
+2px
 </details>
 <details>
 
-<summary>``case pt24``</summary>
+<summary>``case s20``</summary>
 
 
-24포인트 간격
+20px
 </details>
 <details>
 
-<summary>``case pt28``</summary>
+<summary>``case s24``</summary>
 
 
-28포인트 간격
+24px
 </details>
 <details>
 
-<summary>``case pt32``</summary>
+<summary>``case s32``</summary>
 
 
-32포인트 간격
+32px
 </details>
 <details>
 
-<summary>``case pt36``</summary>
+<summary>``case s4``</summary>
 
 
-36포인트 간격
+4px
 </details>
 <details>
 
-<summary>``case pt40``</summary>
+<summary>``case s40``</summary>
 
 
-40포인트 간격
+40px
 </details>
 <details>
 
-<summary>``case pt48``</summary>
+<summary>``case s48``</summary>
 
 
-48포인트 간격
+48px
 </details>
 <details>
 
-<summary>``case pt56``</summary>
+<summary>``case s56``</summary>
 
 
-56포인트 간격
+56px
 </details>
 <details>
 
-<summary>``case pt64``</summary>
+<summary>``case s6``</summary>
 
 
-64포인트 간격
+6px
 </details>
 <details>
 
-<summary>``case pt72``</summary>
+<summary>``case s64``</summary>
 
 
-72포인트 간격
+64px
 </details>
 <details>
 
-<summary>``case pt80``</summary>
+<summary>``case s72``</summary>
 
 
-80포인트 간격
+72px
+</details>
+<details>
+
+<summary>``case s8``</summary>
+
+
+8px
+</details>
+<details>
+
+<summary>``case s80``</summary>
+
+
+80px
 </details>
 
 ### Associated Extensions
@@ -166,7 +180,7 @@ Spacing 열거형 값에 해당하는 CGFloat 값을 반환합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `spacingComponent` | 사용할 간격 열거형 값 |
+  | `spacing` | 사용할 간격 열거형 값 |
 - **Return Value**
 
   지정된 간격에 해당하는 CGFloat 값
@@ -175,7 +189,7 @@ Spacing 열거형 값에 해당하는 CGFloat 값을 반환합니다.
   디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
 
   ```swift
-  let padding = CGFloat.spacing(.pt16) // 16.0
+  let padding = CGFloat.spacing(.s16) // 16.0
   ```
 
 </details>
@@ -198,7 +212,7 @@ Spacing 열거형 값에 해당하는 Float 값을 반환합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `spacingComponent` | 사용할 간격 열거형 값 |
+  | `spacing` | 사용할 간격 열거형 값 |
 - **Return Value**
 
   지정된 간격에 해당하는 Float 값
@@ -207,7 +221,7 @@ Spacing 열거형 값에 해당하는 Float 값을 반환합니다.
   디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
 
   ```swift
-  let padding = Float.spacing(.pt16) // 16.0
+  let padding = Float.spacing(.s16) // 16.0
   ```
 
 </details>
