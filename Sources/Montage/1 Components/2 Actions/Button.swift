@@ -302,7 +302,7 @@ public struct Button: View {
     ///   - fillHorizontal: 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
     ///   - fillVertical: 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
     /// - Returns: 수정된 버튼 인스턴스
-    @available(*, deprecated, message: "`fillWidth(_:Bool)`을 사용하세요.")
+    @available(*, deprecated, message: "`fillWidth(_:Bool)`을 사용하세요. 참고: `vertical` 파라미터는 더 이상 지원되지 않습니다.")
     public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
         var zelf = self
         zelf.fillWidth = fillHorizontal

@@ -196,7 +196,7 @@ Button(text: "저장")
 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
 >  **Deprecated**
 >
->  `fillWidth(_:Bool)`을 사용하세요.
+>  `fillWidth(_:Bool)`을 사용하세요. 참고: `vertical` 파라미터는 더 이상 지원되지 않습니다.
 
 
 - **Parameters**
