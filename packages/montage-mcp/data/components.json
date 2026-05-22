@@ -376,6 +376,12 @@
           "kind": "method"
         },
         {
+          "name": "fillWidth(_:)",
+          "signature": "func fillWidth(Bool) -> Button",
+          "summary": "버튼이 수평으로 공간을 채우도록 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "fontVariant(_:)",
           "signature": "func fontVariant(Typography.Variant?) -> Button",
           "summary": "버튼 텍스트의 폰트 변형을 설정합니다.",
