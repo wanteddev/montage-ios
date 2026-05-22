@@ -19,6 +19,7 @@ struct ButtonPreview: View {
     @State private var iconOnly = false
     @State private var leadingIcon = false
     @State private var trailingIcon = false
+    @State private var fillWidth = false
     @State private var disable = false
     @State private var contentColor = false
     @State private var backgroundColor = false
@@ -67,23 +68,44 @@ struct ButtonPreview: View {
                         .fontWeight(fontWeight ? .regular : nil)
                         .loading(loading)
                     } else {
-                        Button(
-                            variant: variants[variantIndex],
-                            color: color,
-                            size: size,
-                            text: "텍스트",
-                            leadingIcon: leadingIcon ? .apps : nil,
-                            trailingIcon: trailingIcon ? .apps : nil
-                        ) {
-                            print("tapped")
+                        VStack {
+                            Button(
+                                variant: variants[variantIndex],
+                                color: color,
+                                size: size,
+                                text: "텍스트",
+                                leadingIcon: leadingIcon ? .apps : nil,
+                                trailingIcon: trailingIcon ? .apps : nil
+                            ) {
+                                print("tapped")
+                            }
+                            .disable(disable)
+                            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                            .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                            .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                            .fontVariant(fontVariant ? .heading1 : nil)
+                            .fontWeight(fontWeight ? .regular : nil)
+                            .loading(loading)
+                            .fillWidth(fillWidth)
+                            Button(
+                                variant: variants[variantIndex],
+                                color: color,
+                                size: size,
+                                text: "매우 긴~~~~~~~~~~~~~~~~~~~~~~~~~~~~~텍스트입니다",
+                                leadingIcon: leadingIcon ? .apps : nil,
+                                trailingIcon: trailingIcon ? .apps : nil
+                            ) {
+                                print("tapped")
+                            }
+                            .disable(disable)
+                            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                            .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                            .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                            .fontVariant(fontVariant ? .heading1 : nil)
+                            .fontWeight(fontWeight ? .regular : nil)
+                            .loading(loading)
+                            .fillWidth(fillWidth)
                         }
-                        .disable(disable)
-                        .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                        .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                        .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                        .fontVariant(fontVariant ? .heading1 : nil)
-                        .fontWeight(fontWeight ? .regular : nil)
-                        .loading(loading)
                     }
                     
                     Spacer(minLength: 0)
@@ -122,13 +144,15 @@ struct ButtonPreview: View {
                     Text("loading")
                     Switch(checked: loading) { loading = $0 }
                 }
-                if !iconOnly {
-                    HStack {
+                HStack {
+                    if !iconOnly {
                         Text("leadingIcon")
                         Switch(checked: leadingIcon) { leadingIcon = $0 }
                         Text("trailingIcon")
                         Switch(checked: trailingIcon) { trailingIcon = $0 }
                     }
+                    Text("fillWidth")
+                    Switch(checked: fillWidth) { fillWidth = $0 }
                 }
                 Divider()
                 Text("color")

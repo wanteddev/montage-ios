@@ -164,8 +164,8 @@ public struct Button: View {
     private var fontVariant: Typography.Variant? = nil
     private var fontWeight: Typography.Weight? = nil
     private var loading = false
-    private var fillHorizontal = false
-    private var fillVertical = false
+    private var fillWidth = false
+    
     /// 버튼을 비활성화 상태로 설정합니다.
     ///
     /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
@@ -302,10 +302,27 @@ public struct Button: View {
     ///   - fillHorizontal: 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
     ///   - fillVertical: 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
     /// - Returns: 수정된 버튼 인스턴스
+    @available(*, deprecated, message: "`fillWidth(_:Bool)`을 사용하세요.")
     public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
         var zelf = self
-        zelf.fillHorizontal = fillHorizontal
-        zelf.fillVertical = fillVertical
+        zelf.fillWidth = fillHorizontal
+        return zelf
+    }
+    
+    /// 버튼이 수평으로 공간을 채우도록 설정합니다.
+    ///
+    /// ```swift
+    /// // 부모 뷰의 가로 너비를 모두 채우는 버튼
+    /// Button(text: "전체 확인")
+    ///     .fillWidth(true)
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - fillWidth: 채우기 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 버튼 인스턴스
+    public func fillWidth(_ fillWidth: Bool = true) -> Self {
+        var zelf = self
+        zelf.fillWidth = fillWidth
         return zelf
     }
     
@@ -317,6 +334,7 @@ public struct Button: View {
     public var body: some View {
         ZStack {
             SwiftUI.Color.clear
+                .frame(width: fillWidth ? nil : 0, height: 0)
             
             HStack(alignment: .center, spacing: 4) {
                 if let leadingIcon {
@@ -341,7 +359,6 @@ public struct Button: View {
                     .foregroundColor(loadingColor)
             }
         }
-        .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
         .contentShape(Rectangle())
         .frame(height: contentHeight)
         .padding(edgeInsets)
