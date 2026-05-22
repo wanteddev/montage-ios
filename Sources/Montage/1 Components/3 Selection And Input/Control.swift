@@ -76,7 +76,13 @@ struct Control: View {
     // MARK: - Body
 
     @SwiftUI.State private var isPressed = false
-    private let switchSize: CGSize = .init(width: 51, height: 31)
+    private var originalToggleSize: CGSize {
+        if #available(iOS 26.0, *) {
+            .init(width: 65, height: 30)
+        } else {
+            .init(width: 51, height: 31)
+        }
+    }
 
     var body: some View {
         switch variant {
@@ -94,19 +100,17 @@ struct Control: View {
             .labelsHidden()
             .disabled(disable)
             .tint(backgroundColor)
-            .frame(width: switchSize.width, height: switchSize.height)
-            .offset(CGSize(width: -5, height: 0))
             .transformEffect(
                 CGAffineTransform(
-                    scaleX: boxSize.width / switchSize.width,
-                    y: boxSize.height / switchSize.height
+                    scaleX: boxSize.width / originalToggleSize.width,
+                    y: boxSize.height / originalToggleSize.height
                 )
             )
             .frame(width: boxSize.width, height: boxSize.height)
             .offset(
                 CGSize(
-                    width: (switchSize.width - boxSize.width) / 2,
-                    height: (switchSize.height - boxSize.height) / 2
+                    width: (originalToggleSize.width - boxSize.width) / 2 - 1,
+                    height: (originalToggleSize.height - boxSize.height) / 2
                 ))
         default:
             HStack(alignment: .top, spacing: spacing) {
@@ -373,9 +377,17 @@ extension Control {
         case .switch:
             switch size {
             case .medium:
-                .init(width: 52, height: 32)
+                if #available(iOS 26, *) {
+                    .init(width: 69, height: 32)
+                } else {
+                    .init(width: 52, height: 32)
+                }
             case .small:
-                .init(width: 39, height: 24)
+                if #available(iOS 26, *) {
+                    .init(width: 52, height: 24)
+                } else {
+                    .init(width: 39, height: 24)
+                }
             }
         }
     }
