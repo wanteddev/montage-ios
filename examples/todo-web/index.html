@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>할 일 관리</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --border: #e6e8ef;
+    --text: #1f2330;
+    --text-sub: #6b7180;
+    --muted: #a1a6b3;
+    --primary: #4f6ef7;
+    --primary-soft: #eef1ff;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
+      "Apple SD Gothic Neo", "Noto Sans KR", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 80px;
+  }
+  .app {
+    width: 100%;
+    max-width: 640px;
+    background: var(--surface);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  header {
+    padding: 24px 24px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  header .summary {
+    font-size: 13px;
+    color: var(--text-sub);
+  }
+  .add-bar {
+    padding: 0 24px 16px;
+    display: flex;
+    gap: 8px;
+  }
+  .add-bar input[type="text"] {
+    flex: 1;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: #fff;
+    color: var(--text);
+  }
+  .add-bar input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+  }
+  .add-bar select {
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+  }
+  .btn {
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .btn:hover { background: #3f5be0; }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { background: #c8ccd6; cursor: not-allowed; }
+  .btn.ghost {
+    background: transparent;
+    color: var(--text-sub);
+    font-weight: 500;
+  }
+  .btn.ghost:hover { background: #f0f1f5; color: var(--text); }
+  .btn.icon {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .btn.icon:hover { background: #f3f4f8; color: var(--text); }
+  .btn.icon.danger:hover { background: #fee2e2; color: var(--danger); }
+
+  .toolbar {
+    padding: 0 24px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .segment {
+    display: inline-flex;
+    background: #f1f3f9;
+    padding: 4px;
+    border-radius: 10px;
+    gap: 2px;
+  }
+  .segment button {
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-sub);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .segment button.active {
+    background: #fff;
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  }
+  .chips {
+    padding: 0 24px 12px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 12px;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: #ccd1de; color: var(--text); }
+  .chip.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+  }
+
+  ul.list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 12px;
+  }
+  li.item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 24px;
+    border-top: 1px solid var(--border);
+    background: #fff;
+    transition: background 0.1s;
+  }
+  li.item:hover { background: #fafbfd; }
+  li.item.done .title { color: var(--muted); text-decoration: line-through; }
+
+  .check {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 1.5px solid #c8ccd6;
+    flex: none;
+    margin-top: 2px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    background: #fff;
+  }
+  .check:hover { border-color: var(--primary); }
+  .check.checked {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  .check.checked::after {
+    content: "";
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  .item-body { flex: 1; min-width: 0; }
+  .title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  .meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #f1f3f9;
+    color: var(--text-sub);
+  }
+  .badge.cat-personal { background: #e0ecff; color: #1d4ed8; }
+  .badge.cat-work    { background: #ede4ff; color: #6d28d9; }
+  .badge.cat-shopping { background: #ffeede; color: #c2410c; }
+  .badge.cat-health  { background: #ffe1e1; color: #b91c1c; }
+
+  .badge.prio-low    { background: #eef0f5; color: #6b7180; }
+  .badge.prio-medium { background: #fff3d6; color: #b45309; }
+  .badge.prio-high   { background: #ffe0e0; color: #b91c1c; }
+
+  .actions {
+    display: flex;
+    gap: 2px;
+    margin-top: -4px;
+  }
+
+  .empty {
+    padding: 56px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty .icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: #1f2330;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+    z-index: 100;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Modal */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 16px;
+  }
+  .backdrop.show { display: flex; }
+  .modal {
+    background: #fff;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .modal h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-sub);
+    margin-bottom: 6px;
+  }
+  .field input[type="text"],
+  .field input[type="date"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    outline: none;
+    font-family: inherit;
+    color: var(--text);
+  }
+  .field input[type="text"]:focus,
+  .field input[type="date"]:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+  }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .row { display: flex; gap: 10px; }
+  .row .field { flex: 1; }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .modal-actions .btn { flex: 1; }
+  .btn.secondary {
+    background: #f1f3f9;
+    color: var(--text);
+  }
+  .btn.secondary:hover { background: #e6e8ef; }
+
+  @media (max-width: 480px) {
+    body { padding: 12px 8px 60px; }
+    .app { border-radius: 14px; }
+    header, .add-bar, .toolbar, .chips { padding-left: 16px; padding-right: 16px; }
+    li.item { padding-left: 16px; padding-right: 16px; }
+    .add-bar select { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>할 일 <span style="font-size:11px;color:#a1a6b3;font-weight:500;margin-left:6px;">v3 · <span id="js-status" style="color:#ef4444;">JS 미실행</span></span></h1>
+        <div class="summary" id="summary">0 / 0 완료</div>
+      </div>
+      <button class="btn" id="open-add">+ 새 할 일</button>
+    </header>
+    <noscript>
+      <div style="margin:0 24px 12px;padding:12px;background:#fee2e2;color:#b91c1c;border-radius:10px;font-size:13px;">
+        이 브라우저에서 JavaScript가 비활성화되어 있어요. 설정에서 활성화하거나 다른 브라우저에서 열어주세요.
+      </div>
+    </noscript>
+
+    <div class="add-bar">
+      <input type="text" id="quick-input" placeholder="빠르게 추가하기 (Enter)" />
+      <select id="quick-category">
+        <option value="personal">개인</option>
+        <option value="work">업무</option>
+        <option value="shopping">쇼핑</option>
+        <option value="health">건강</option>
+      </select>
+      <button class="btn" id="quick-add-btn">추가</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="segment" id="filter-segment">
+        <button data-filter="all" class="active">전체</button>
+        <button data-filter="active">진행 중</button>
+        <button data-filter="completed">완료</button>
+      </div>
+      <button class="btn ghost" id="clear-completed">완료 비우기</button>
+    </div>
+
+    <div class="chips" id="category-chips">
+      <button class="chip active" data-category="">전체</button>
+      <button class="chip" data-category="personal">개인</button>
+      <button class="chip" data-category="work">업무</button>
+      <button class="chip" data-category="shopping">쇼핑</button>
+      <button class="chip" data-category="health">건강</button>
+    </div>
+
+    <ul class="list" id="todo-list"></ul>
+    <div class="empty" id="empty-state" style="display:none;">
+      <div class="icon">✓</div>
+      <div id="empty-message">첫 번째 할 일을 추가해 보세요</div>
+    </div>
+  </div>
+
+  <div class="backdrop" id="modal-backdrop">
+    <div class="modal" id="modal">
+      <h2 id="modal-title">할 일 추가</h2>
+      <div class="field">
+        <label>제목</label>
+        <input type="text" id="m-title" placeholder="무엇을 해야 하나요?" />
+      </div>
+      <div class="field">
+        <label>메모</label>
+        <textarea id="m-note" placeholder="선택 사항"></textarea>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>카테고리</label>
+          <select id="m-category">
+            <option value="personal">개인</option>
+            <option value="work">업무</option>
+            <option value="shopping">쇼핑</option>
+            <option value="health">건강</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>우선순위</label>
+          <select id="m-priority">
+            <option value="low">낮음</option>
+            <option value="medium" selected>보통</option>
+            <option value="high">높음</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>마감일 (선택)</label>
+        <input type="date" id="m-due" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn secondary" id="m-cancel">취소</button>
+        <button class="btn" id="m-save">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'todoapp.items.v1';
+
+  const CATEGORY = {
+    personal: { label: '개인' },
+    work: { label: '업무' },
+    shopping: { label: '쇼핑' },
+    health: { label: '건강' },
+  };
+
+  const PRIORITY = {
+    low: { label: '낮음' },
+    medium: { label: '보통' },
+    high: { label: '높음' },
+  };
+
+  const PRIORITY_RANK = { high: 3, medium: 2, low: 1 };
+
+  /** @type {{id:string,title:string,note:string,category:string,priority:string,dueDate:string|null,isCompleted:boolean,createdAt:number}[]} */
+  let items = [];
+  let filter = 'all';
+  let categoryFilter = '';
+  let editingId = null;
+
+  // ----- persistence -----
+  function load() {
+    let parsed = null;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) parsed = JSON.parse(raw);
+    } catch {}
+    if (Array.isArray(parsed)) {
+      items = parsed.filter(x => x && typeof x === 'object' && typeof x.title === 'string');
+      return;
+    }
+    items = [
+      { id: uid(), title: '할 일 관리 웹앱 살펴보기', note: '카테고리/우선순위/마감일을 설정해 보세요.', category: 'personal', priority: 'high', dueDate: null, isCompleted: false, createdAt: Date.now() - 3000 },
+      { id: uid(), title: '주간 식료품 주문', note: '', category: 'shopping', priority: 'medium', dueDate: null, isCompleted: false, createdAt: Date.now() - 2000 },
+      { id: uid(), title: '스트레칭 10분', note: '', category: 'health', priority: 'low', dueDate: null, isCompleted: true, createdAt: Date.now() - 1000 },
+    ];
+    save();
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
+  }
+  function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+
+  // ----- rendering -----
+  const $ = (id) => document.getElementById(id);
+  const listEl = $('todo-list');
+  const emptyEl = $('empty-state');
+  const emptyMsg = $('empty-message');
+  const summaryEl = $('summary');
+  const clearBtn = $('clear-completed');
+
+  function render() {
+    summaryEl.textContent = `${items.filter(i => i.isCompleted).length} / ${items.length} 완료`;
+    clearBtn.style.visibility = items.some(i => i.isCompleted) ? 'visible' : 'hidden';
+
+    const filtered = items
+      .filter(i => filter === 'all' ? true : filter === 'active' ? !i.isCompleted : i.isCompleted)
+      .filter(i => categoryFilter === '' ? true : i.category === categoryFilter)
+      .sort((a, b) => {
+        if (a.isCompleted !== b.isCompleted) return a.isCompleted ? 1 : -1;
+        if (a.priority !== b.priority) return PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority];
+        return b.createdAt - a.createdAt;
+      });
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = '';
+      emptyEl.style.display = 'block';
+      emptyMsg.textContent = filter === 'active'
+        ? '진행 중인 할 일이 없어요'
+        : filter === 'completed' ? '완료된 할 일이 없어요' : '첫 번째 할 일을 추가해 보세요';
+      return;
+    }
+    emptyEl.style.display = 'none';
+
+    listEl.innerHTML = filtered.map(item => {
+      const due = item.dueDate ? formatDate(item.dueDate) : '';
+      return `
+        <li class="item ${item.isCompleted ? 'done' : ''}" data-id="${item.id}">
+          <span class="check ${item.isCompleted ? 'checked' : ''}" data-action="toggle"></span>
+          <div class="item-body" data-action="edit">
+            <div class="title">${escapeHtml(item.title)}</div>
+            ${item.note ? `<div class="title" style="font-size:12px;color:var(--text-sub);font-weight:400;margin-bottom:6px;">${escapeHtml(item.note)}</div>` : ''}
+            <div class="meta">
+              <span class="badge cat-${item.category}">${CATEGORY[item.category].label}</span>
+              <span class="badge prio-${item.priority}">⚑ ${PRIORITY[item.priority].label}</span>
+              ${due ? `<span class="badge">📅 ${due}</span>` : ''}
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn icon" data-action="edit" title="편집">✎</button>
+            <button class="btn icon danger" data-action="delete" title="삭제">🗑</button>
+          </div>
+        </li>`;
+    }).join('');
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+  function formatDate(d) {
+    const dt = new Date(d);
+    if (Number.isNaN(dt.getTime())) return '';
+    return `${dt.getMonth() + 1}월 ${dt.getDate()}일`;
+  }
+
+  // ----- toast -----
+  const toastEl = $('toast');
+  let toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+  }
+
+  // ----- actions -----
+  function addItem({ title, note = '', category = 'personal', priority = 'medium', dueDate = null }) {
+    const t = title.trim();
+    if (!t) return;
+    items.unshift({
+      id: uid(), title: t, note: note.trim(), category, priority, dueDate,
+      isCompleted: false, createdAt: Date.now(),
+    });
+    save(); render();
+  }
+  function updateItem(id, patch) {
+    const it = items.find(x => x.id === id);
+    if (!it) return;
+    Object.assign(it, patch);
+    save(); render();
+  }
+  function removeItem(id) {
+    items = items.filter(x => x.id !== id);
+    save(); render();
+  }
+
+  // ----- events -----
+  $('quick-add-btn').addEventListener('click', () => {
+    const input = $('quick-input');
+    const cat = $('quick-category').value;
+    if (!input.value.trim()) return;
+    addItem({ title: input.value, category: categoryFilter || cat });
+    input.value = '';
+    toast('할 일을 추가했어요');
+  });
+  $('quick-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) {
+      e.preventDefault();
+      $('quick-add-btn').click();
+    }
+  });
+
+  $('filter-segment').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    filter = btn.dataset.filter;
+    $('filter-segment').querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+    render();
+  });
+
+  $('category-chips').addEventListener('click', (e) => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    categoryFilter = btn.dataset.category;
+    $('category-chips').querySelectorAll('.chip').forEach(b => b.classList.toggle('active', b === btn));
+    render();
+  });
+
+  $('clear-completed').addEventListener('click', () => {
+    const before = items.length;
+    items = items.filter(i => !i.isCompleted);
+    save(); render();
+    toast(`${before - items.length}개 항목을 삭제했어요`);
+  });
+
+  listEl.addEventListener('click', (e) => {
+    const li = e.target.closest('li.item');
+    if (!li) return;
+    const id = li.dataset.id;
+    const action = e.target.closest('[data-action]')?.dataset.action;
+    if (action === 'toggle') {
+      const it = items.find(x => x.id === id);
+      if (it) updateItem(id, { isCompleted: !it.isCompleted });
+    } else if (action === 'delete') {
+      removeItem(id);
+      toast('삭제되었어요');
+    } else if (action === 'edit') {
+      openModal(id);
+    }
+  });
+
+  // ----- modal -----
+  function openModal(id = null) {
+    editingId = id;
+    const item = id ? items.find(x => x.id === id) : null;
+    $('modal-title').textContent = item ? '할 일 편집' : '할 일 추가';
+    $('m-title').value = item?.title ?? '';
+    $('m-note').value = item?.note ?? '';
+    $('m-category').value = item?.category ?? (categoryFilter || 'personal');
+    $('m-priority').value = item?.priority ?? 'medium';
+    $('m-due').value = item?.dueDate ?? '';
+    $('modal-backdrop').classList.add('show');
+    setTimeout(() => $('m-title').focus(), 50);
+  }
+  function closeModal() {
+    $('modal-backdrop').classList.remove('show');
+    editingId = null;
+  }
+
+  $('open-add').addEventListener('click', () => openModal());
+  $('m-cancel').addEventListener('click', closeModal);
+  $('modal-backdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'modal-backdrop') closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $('modal-backdrop').classList.contains('show')) closeModal();
+  });
+  $('m-save').addEventListener('click', () => {
+    const title = $('m-title').value.trim();
+    if (!title) {
+      $('m-title').focus();
+      return;
+    }
+    const payload = {
+      title,
+      note: $('m-note').value,
+      category: $('m-category').value,
+      priority: $('m-priority').value,
+      dueDate: $('m-due').value || null,
+    };
+    if (editingId) {
+      updateItem(editingId, payload);
+      toast('수정되었어요');
+    } else {
+      addItem(payload);
+      toast('할 일을 추가했어요');
+    }
+    closeModal();
+  });
+
+  // ----- init -----
+  try {
+    load();
+    render();
+    const s = document.getElementById('js-status');
+    if (s) { s.textContent = 'JS 정상'; s.style.color = '#10b981'; }
+  } catch (err) {
+    const s = document.getElementById('js-status');
+    if (s) { s.textContent = '오류: ' + err.message; }
+  }
+})();
+</script>
+</body>
+</html>
