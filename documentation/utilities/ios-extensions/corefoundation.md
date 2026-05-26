@@ -63,6 +63,13 @@ title: CoreFoundation
 </details>
 <details>
 
+<summary>``static let dimension36: CGFloat``</summary>
+
+
+36pt
+</details>
+<details>
+
 <summary>``static let dimension40: CGFloat``</summary>
 
 
@@ -284,6 +291,13 @@ title: CoreFoundation
 
 
 32pt
+</details>
+<details>
+
+<summary>``static let primitive36: CGFloat``</summary>
+
+
+36pt
 </details>
 <details>
 
