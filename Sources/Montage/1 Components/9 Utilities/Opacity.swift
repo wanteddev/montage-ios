@@ -8,152 +8,59 @@
 import Foundation
 import UIKit
 
-/// 색상의 투명도를 정의한 열거형입니다.
+/// 색상의 불투명도(alpha)를 정의하는 시스템
 ///
-/// Montage 디자인 시스템에서 사용하는 정규화된 투명도 값을 제공합니다.
-/// 각 케이스는 백분율 형식으로 이름이 지정되어 있습니다 (예: p005는 5% 투명도).
+/// Montage 디자인 시스템에서 사용하는 정규화된 불투명도 값을 제공합니다.
+/// 각 토큰 이름의 숫자는 백분율(%)을 의미합니다. 예: `opacity52`는 0.52(52%) 불투명도입니다.
 ///
 /// ```swift
-/// // CGFloat 값으로 변환
-/// let alpha: CGFloat = .opacity(.p052)
+/// // CGFloat 값으로 사용
+/// let alpha: CGFloat = .opacity52
 ///
-/// // 뷰 투명도 설정
-/// myView.alpha = .opacity(.p088)
+/// // SwiftUI 뷰 불투명도
+/// myView.opacity(.opacity88)
 ///
-/// // 색상 투명도 설정
-/// let transparentColor = UIColor.black.withAlphaComponent(.opacity(.p043))
+/// // 색상 알파 채널
+/// UIColor.black.withAlphaComponent(.opacity43)
 /// ```
 ///
-/// - Note: 표준화된 투명도 값을 사용하면 디자인의 일관성을 유지하는 데 도움이 됩니다.
-public enum Opacity {
-    /// 0% 투명도 (완전 불투명)
-    case p000
-    /// 5% 투명도
-    case p005
-    /// 8% 투명도
-    case p008
-    /// 12% 투명도
-    case p012
-    /// 16% 투명도
-    case p016
-    /// 22% 투명도
-    case p022
-    /// 28% 투명도
-    case p028
-    /// 32% 투명도
-    case p032
-    /// 35% 투명도
-    case p035
-    /// 43% 투명도
-    case p043
-    /// 52% 투명도
-    case p052
-    /// 61% 투명도
-    case p061
-    /// 74% 투명도
-    case p074
-    /// 88% 투명도
-    case p088
-    /// 97% 투명도
-    case p097
-    /// 100% 투명도 (완전 투명)
-    case p100
-}
+/// - Note: `opacity0`은 완전 투명(0.0), `opacity100`은 완전 불투명(1.0)입니다.
+///
+/// 실제 값은 `CGFloat.opacity{N}` 정적 프로퍼티로 노출됩니다.
+/// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
+public enum Opacity {}
 
-extension CGFloat {
-    /// Opacity 열거형 값에 해당하는 CGFloat 불투명도 값을 반환합니다.
-    ///
-    /// 디자인 시스템에서 정의된 일관된 불투명도 값을 사용할 수 있도록 합니다.
-    ///
-    /// ```swift
-    /// let alpha = CGFloat.opacity(.p052) // 0.52
-    /// ```
-    ///
-    /// - Parameter opacityComponent: 사용할 불투명도 열거형 값
-    /// - Returns: 지정된 불투명도에 해당하는 CGFloat 값 (0.0 ~ 1.0 범위)
-    public static func opacity(_ opacityComponent: Opacity) -> CGFloat {
-        switch opacityComponent {
-        case .p000:
-            0
-        case .p005:
-            0.05
-        case .p008:
-            0.08
-        case .p012:
-            0.12
-        case .p016:
-            0.16
-        case .p022:
-            0.22
-        case .p028:
-            0.28
-        case .p032:
-            0.32
-        case .p035:
-            0.35
-        case .p043:
-            0.43
-        case .p052:
-            0.52
-        case .p061:
-            0.61
-        case .p074:
-            0.74
-        case .p088:
-            0.88
-        case .p097:
-            0.97
-        case .p100:
-            1
-        }
-    }
-}
-
-extension Float {
-    /// Opacity 열거형 값에 해당하는 Float 불투명도 값을 반환합니다.
-    ///
-    /// 디자인 시스템에서 정의된 일관된 불투명도 값을 사용할 수 있도록 합니다.
-    ///
-    /// ```swift
-    /// let alpha = Float.opacity(.p050) // 0.5
-    /// ```
-    ///
-    /// - Parameter opacityComponent: 사용할 불투명도 열거형 값
-    /// - Returns: 지정된 불투명도에 해당하는 Float 값 (0.0 ~ 1.0 범위)
-    public static func opacity(_ opacityComponent: Opacity) -> Float {
-        switch opacityComponent {
-        case .p000:
-            0
-        case .p005:
-            0.05
-        case .p008:
-            0.08
-        case .p012:
-            0.12
-        case .p016:
-            0.16
-        case .p022:
-            0.22
-        case .p028:
-            0.28
-        case .p032:
-            0.32
-        case .p035:
-            0.35
-        case .p043:
-            0.43
-        case .p052:
-            0.52
-        case .p061:
-            0.61
-        case .p074:
-            0.74
-        case .p088:
-            0.88
-        case .p097:
-            0.97
-        case .p100:
-            1
-        }
-    }
+public extension CGFloat {
+    /// 0% (완전 투명)
+    static let opacity0: CGFloat = 0
+    /// 5%
+    static let opacity5: CGFloat = 0.05
+    /// 8%
+    static let opacity8: CGFloat = 0.08
+    /// 12%
+    static let opacity12: CGFloat = 0.12
+    /// 16%
+    static let opacity16: CGFloat = 0.16
+    /// 22%
+    static let opacity22: CGFloat = 0.22
+    /// 28%
+    static let opacity28: CGFloat = 0.28
+    /// 32%
+    static let opacity32: CGFloat = 0.32
+    /// 35%
+    static let opacity35: CGFloat = 0.35
+    /// 43%
+    static let opacity43: CGFloat = 0.43
+    /// 52%
+    static let opacity52: CGFloat = 0.52
+    /// 61%
+    static let opacity61: CGFloat = 0.61
+    /// 74%
+    static let opacity74: CGFloat = 0.74
+    /// 88%
+    static let opacity88: CGFloat = 0.88
+    /// 97%
+    static let opacity97: CGFloat = 0.97
+    /// 100% (완전 불투명)
+    static let opacity100: CGFloat = 1
 }
