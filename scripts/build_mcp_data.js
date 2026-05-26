@@ -298,7 +298,10 @@ function ensureFigmaMapping() {
     description:
       'Manual Figma component/token → Montage Swift mapping. Convention-based matching is the fallback; entries here override.',
     components: {},
-    tokens: { color: {}, typography: {}, spacing: {}, shadow: {}, opacity: {} },
+    tokens: {
+      color: {}, typography: {}, spacing: {}, shadow: {}, opacity: {},
+      radius: {}, dimension: {}, primitive: {},
+    },
   };
   fs.writeFileSync(target, JSON.stringify(seed, null, 2) + '\n');
   console.log('[mcp-data] seeded figma-mapping.json');
