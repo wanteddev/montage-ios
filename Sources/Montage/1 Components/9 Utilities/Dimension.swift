@@ -25,28 +25,28 @@ import UIKit
 public enum Dimension {}
 
 public extension CGFloat {
-    /// 14pt
+    /// 14pt의 크기
     static let dimension14: CGFloat = .primitive14
-    /// 16pt
+    /// 16pt의 크기
     static let dimension16: CGFloat = .primitive16
-    /// 18pt
+    /// 18pt의 크기
     static let dimension18: CGFloat = .primitive18
-    /// 20pt
+    /// 20pt의 크기
     static let dimension20: CGFloat = .primitive20
-    /// 24pt
+    /// 24pt의 크기
     static let dimension24: CGFloat = .primitive24
-    /// 28pt
+    /// 28pt의 크기
     static let dimension28: CGFloat = .primitive28
-    /// 32pt
+    /// 32pt의 크기
     static let dimension32: CGFloat = .primitive32
-    /// 36pt
+    /// 36pt의 크기
     static let dimension36: CGFloat = .primitive36
-    /// 40pt
+    /// 40pt의 크기
     static let dimension40: CGFloat = .primitive40
-    /// 48pt
+    /// 48pt의 크기
     static let dimension48: CGFloat = .primitive48
-    /// 56pt
+    /// 56pt의 크기
     static let dimension56: CGFloat = .primitive56
-    /// 64pt
+    /// 64pt의 크기
     static let dimension64: CGFloat = .primitive64
 }

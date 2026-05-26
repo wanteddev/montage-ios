@@ -33,42 +33,42 @@ import UIKit
 public enum Spacing {}
 
 public extension CGFloat {
-    /// 0pt
+    /// 0pt의 간격
     static let spacing0: CGFloat = .primitive0
-    /// 1pt
+    /// 1pt의 간격
     static let spacing1: CGFloat = .primitive1
-    /// 2pt
+    /// 2pt의 간격
     static let spacing2: CGFloat = .primitive2
-    /// 4pt
+    /// 4pt의 간격
     static let spacing4: CGFloat = .primitive4
-    /// 6pt
+    /// 6pt의 간격
     static let spacing6: CGFloat = .primitive6
-    /// 8pt
+    /// 8pt의 간격
     static let spacing8: CGFloat = .primitive8
-    /// 10pt
+    /// 10pt의 간격
     static let spacing10: CGFloat = .primitive10
-    /// 12pt
+    /// 12pt의 간격
     static let spacing12: CGFloat = .primitive12
-    /// 14pt
+    /// 14pt의 간격
     static let spacing14: CGFloat = .primitive14
-    /// 16pt (기본 간격)
+    /// 16pt의 간격 (기본)
     static let spacing16: CGFloat = .primitive16
-    /// 20pt
+    /// 20pt의 간격
     static let spacing20: CGFloat = .primitive20
-    /// 24pt
+    /// 24pt의 간격
     static let spacing24: CGFloat = .primitive24
-    /// 32pt
+    /// 32pt의 간격
     static let spacing32: CGFloat = .primitive32
-    /// 40pt
+    /// 40pt의 간격
     static let spacing40: CGFloat = .primitive40
-    /// 48pt
+    /// 48pt의 간격
     static let spacing48: CGFloat = .primitive48
-    /// 56pt
+    /// 56pt의 간격
     static let spacing56: CGFloat = .primitive56
-    /// 64pt
+    /// 64pt의 간격
     static let spacing64: CGFloat = .primitive64
-    /// 72pt
+    /// 72pt의 간격
     static let spacing72: CGFloat = .primitive72
-    /// 80pt
+    /// 80pt의 간격
     static let spacing80: CGFloat = .primitive80
 }
