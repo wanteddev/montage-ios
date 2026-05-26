@@ -624,7 +624,7 @@ public enum Color {
         public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             let style = traitCollection.userInterfaceStyle
             let atomicColor: Color.Atomic
-            var opacity: Opacity = .p100
+            var opacity: CGFloat = .opacity100
             
             switch self {
             case .staticWhite:
@@ -643,16 +643,16 @@ public enum Color {
                 atomicColor = style == .dark ? .common100 : .common0
             case .labelNeutral:
                 atomicColor = style == .dark ? .coolNeutral90 : .coolNeutral22
-                opacity = .p088
+                opacity = .opacity88
             case .labelAlternative:
                 atomicColor = style == .dark ? .coolNeutral80 : .coolNeutral25
-                opacity = .p061
+                opacity = .opacity61
             case .labelAssistive:
                 atomicColor = style == .dark ? .coolNeutral80 : .coolNeutral25
-                opacity = .p028
+                opacity = .opacity28
             case .labelDisable:
                 atomicColor = style == .dark ? .coolNeutral70 : .coolNeutral25
-                opacity = .p016
+                opacity = .opacity16
             case .backgroundNormal:
                 atomicColor = style == .dark ? .coolNeutral15 : .common100
             case .backgroundNormalAlternative:
@@ -663,23 +663,23 @@ public enum Color {
                 atomicColor = style == .dark ? .coolNeutral7 : .coolNeutral99
             case .backgroundTransparent:
                 atomicColor = style == .dark ? .coolNeutral17 : .common100
-                opacity = style == .dark ? .p061 : .p008
+                opacity = style == .dark ? .opacity61 : .opacity8
             case .backgroundTransparentAlternative:
                 atomicColor = style == .dark ? .coolNeutral17 : .common100
-                opacity = style == .dark ? .p061 : .p028
+                opacity = style == .dark ? .opacity61 : .opacity28
             case .interactionInactive:
                 atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
             case .interactionDisable:
                 atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
             case .lineNormal:
                 atomicColor = .coolNeutral50
-                opacity = style == .dark ? .p032 : .p022
+                opacity = style == .dark ? .opacity32 : .opacity22
             case .lineNeutral:
                 atomicColor = .coolNeutral50
-                opacity = style == .dark ? .p028 : .p016
+                opacity = style == .dark ? .opacity28 : .opacity16
             case .lineAlternative:
                 atomicColor = .coolNeutral50
-                opacity = style == .dark ? .p022 : .p008
+                opacity = style == .dark ? .opacity22 : .opacity8
             case .lineSolidNormal:
                 atomicColor = style == .dark ? .coolNeutral25 : .coolNeutral96
             case .lineSolidNeutral:
@@ -736,19 +736,19 @@ public enum Color {
                 atomicColor = style == .dark ? .neutral10 : .neutral99
             case .fillNormal:
                 atomicColor = .coolNeutral50
-                opacity = style == .dark ? .p022 : .p008
+                opacity = style == .dark ? .opacity22 : .opacity8
             case .fillStrong:
                 atomicColor = .coolNeutral50
-                opacity = style == .dark ? .p028 : .p016
+                opacity = style == .dark ? .opacity28 : .opacity16
             case .fillAlternative:
                 atomicColor = .coolNeutral50
-                opacity = style == .dark ? .p012 : .p005
+                opacity = style == .dark ? .opacity12 : .opacity5
             case .materialDimmer:
                 atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral10
-                opacity = style == .dark ? .p074 : .p052
+                opacity = style == .dark ? .opacity74 : .opacity52
             }
             
-            return .load(name: atomicColor.rawValue).withAlphaComponent(.opacity(opacity))
+            return .load(name: atomicColor.rawValue).withAlphaComponent(opacity)
         }
     }
 }
