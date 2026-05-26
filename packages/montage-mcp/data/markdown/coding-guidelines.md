@@ -86,7 +86,7 @@ Button(
 ## 6. 접근성
 
 - 모든 인터랙티브 컴포넌트는 의미 있는 라벨/힌트를 제공한다.
-- Dynamic Type을 깨지 않게, 폰트 크기를 직접 픽셀로 고정하지 않는다 (Typography 토큰 사용).
+- Dynamic Type을 깨지 않게, 폰트 크기를 직접 포인트로 고정하지 않는다 (Typography 토큰 사용).
 - VoiceOver 그룹핑이 필요하면 `.accessibilityElement(children: .combine)`.
 
 ## 7. 미지원 케이스 처리
