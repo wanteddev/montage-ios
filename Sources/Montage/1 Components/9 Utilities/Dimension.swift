@@ -14,72 +14,37 @@ import UIKit
 /// ```swift
 /// // SwiftUI
 /// Image(systemName: "star")
-///     .frame(width: .dimension(.d24), height: .dimension(.d24))
+///     .frame(width: .dimension24, height: .dimension24)
 ///
 /// // UIKit
-/// imageView.widthAnchor.constraint(equalToConstant: .dimension(.d24)).isActive = true
+/// imageView.widthAnchor.constraint(equalToConstant: .dimension24).isActive = true
 /// ```
-public enum Dimension {
-    /// 14px
-    case d14
-    /// 16px
-    case d16
-    /// 18px
-    case d18
-    /// 20px
-    case d20
-    /// 24px
-    case d24
-    /// 32px
-    case d32
-    /// 40px
-    case d40
-    /// 48px
-    case d48
-    /// 56px
-    case d56
-    /// 64px
-    case d64
-}
+///
+/// - Note: 실제 값은 `CGFloat.dimension{N}` 정적 프로퍼티로 노출됩니다.
+/// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
+public enum Dimension {}
 
-extension CGFloat {
-    /// Dimension 열거형 값에 해당하는 CGFloat 값을 반환합니다.
-    ///
-    /// - Parameter dimension: 사용할 Dimension 열거형 값
-    /// - Returns: 지정된 치수에 해당하는 CGFloat 값
-    public static func dimension(_ dimension: Dimension) -> CGFloat {
-        switch dimension {
-        case .d14: 14
-        case .d16: 16
-        case .d18: 18
-        case .d20: 20
-        case .d24: 24
-        case .d32: 32
-        case .d40: 40
-        case .d48: 48
-        case .d56: 56
-        case .d64: 64
-        }
-    }
-}
-
-extension Float {
-    /// Dimension 열거형 값에 해당하는 Float 값을 반환합니다.
-    ///
-    /// - Parameter dimension: 사용할 Dimension 열거형 값
-    /// - Returns: 지정된 치수에 해당하는 Float 값
-    public static func dimension(_ dimension: Dimension) -> Float {
-        switch dimension {
-        case .d14: 14
-        case .d16: 16
-        case .d18: 18
-        case .d20: 20
-        case .d24: 24
-        case .d32: 32
-        case .d40: 40
-        case .d48: 48
-        case .d56: 56
-        case .d64: 64
-        }
-    }
+public extension CGFloat {
+    /// 14pt
+    static let dimension14: CGFloat = .primitive14
+    /// 16pt
+    static let dimension16: CGFloat = .primitive16
+    /// 18pt
+    static let dimension18: CGFloat = .primitive18
+    /// 20pt
+    static let dimension20: CGFloat = .primitive20
+    /// 24pt
+    static let dimension24: CGFloat = .primitive24
+    /// 28pt
+    static let dimension28: CGFloat = .primitive28
+    /// 32pt
+    static let dimension32: CGFloat = .primitive32
+    /// 40pt
+    static let dimension40: CGFloat = .primitive40
+    /// 48pt
+    static let dimension48: CGFloat = .primitive48
+    /// 56pt
+    static let dimension56: CGFloat = .primitive56
+    /// 64pt
+    static let dimension64: CGFloat = .primitive64
 }
