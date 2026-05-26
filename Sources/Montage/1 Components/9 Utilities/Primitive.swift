@@ -25,50 +25,50 @@ import UIKit
 public enum Primitive {}
 
 public extension CGFloat {
-    /// 0pt
+    /// 0pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive0: CGFloat = 0
-    /// 1pt
+    /// 1pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive1: CGFloat = 1
-    /// 2pt
+    /// 2pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive2: CGFloat = 2
-    /// 4pt
+    /// 4pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive4: CGFloat = 4
-    /// 6pt
+    /// 6pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive6: CGFloat = 6
-    /// 8pt
+    /// 8pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive8: CGFloat = 8
-    /// 10pt
+    /// 10pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive10: CGFloat = 10
-    /// 12pt
+    /// 12pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive12: CGFloat = 12
-    /// 14pt
+    /// 14pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive14: CGFloat = 14
-    /// 16pt
+    /// 16pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive16: CGFloat = 16
-    /// 18pt
+    /// 18pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive18: CGFloat = 18
-    /// 20pt
+    /// 20pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive20: CGFloat = 20
-    /// 24pt
+    /// 24pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive24: CGFloat = 24
-    /// 28pt
+    /// 28pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive28: CGFloat = 28
-    /// 32pt
+    /// 32pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive32: CGFloat = 32
-    /// 36pt
+    /// 36pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive36: CGFloat = 36
-    /// 40pt
+    /// 40pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive40: CGFloat = 40
-    /// 48pt
+    /// 48pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive48: CGFloat = 48
-    /// 56pt
+    /// 56pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive56: CGFloat = 56
-    /// 64pt
+    /// 64pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive64: CGFloat = 64
-    /// 72pt
+    /// 72pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive72: CGFloat = 72
-    /// 80pt
+    /// 80pt의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용
     static let primitive80: CGFloat = 80
-    /// 무한대. Figma `9999` 토큰에 대응.
+    /// 무한대의 원시 값 — Spacing/Radius/Dimension에 없는 값이 필요할 때만 직접 사용. Figma `9999` 토큰에 대응
     static let primitiveInfinity: CGFloat = .infinity
 }
