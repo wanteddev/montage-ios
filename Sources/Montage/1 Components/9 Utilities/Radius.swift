@@ -12,68 +12,33 @@ import UIKit
 ///
 /// ```swift
 /// // SwiftUI
-/// RoundedRectangle(cornerRadius: .radius(.r12))
+/// RoundedRectangle(cornerRadius: .radius12)
 ///
 /// // UIKit
-/// view.layer.cornerRadius = .radius(.r12)
+/// view.layer.cornerRadius = .radius12
 /// ```
-public enum Radius {
-    /// 0px (직각)
-    case r0
-    /// 4px
-    case r4
-    /// 8px
-    case r8
-    /// 10px
-    case r10
-    /// 12px
-    case r12
-    /// 14px
-    case r14
-    /// 16px
-    case r16
-    /// 20px
-    case r20
-    /// 24px
-    case r24
-}
+///
+/// - Note: 실제 값은 `CGFloat.radius{N}` 정적 프로퍼티로 노출됩니다.
+/// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
+public enum Radius {}
 
-extension CGFloat {
-    /// Radius 열거형 값에 해당하는 CGFloat 값을 반환합니다.
-    ///
-    /// - Parameter radius: 사용할 Radius 열거형 값
-    /// - Returns: 지정된 모서리 반경에 해당하는 CGFloat 값
-    public static func radius(_ radius: Radius) -> CGFloat {
-        switch radius {
-        case .r0: 0
-        case .r4: 4
-        case .r8: 8
-        case .r10: 10
-        case .r12: 12
-        case .r14: 14
-        case .r16: 16
-        case .r20: 20
-        case .r24: 24
-        }
-    }
-}
-
-extension Float {
-    /// Radius 열거형 값에 해당하는 Float 값을 반환합니다.
-    ///
-    /// - Parameter radius: 사용할 Radius 열거형 값
-    /// - Returns: 지정된 모서리 반경에 해당하는 Float 값
-    public static func radius(_ radius: Radius) -> Float {
-        switch radius {
-        case .r0: 0
-        case .r4: 4
-        case .r8: 8
-        case .r10: 10
-        case .r12: 12
-        case .r14: 14
-        case .r16: 16
-        case .r20: 20
-        case .r24: 24
-        }
-    }
+public extension CGFloat {
+    /// 0pt (직각)
+    static let radius0: CGFloat = .primitive0
+    /// 4pt
+    static let radius4: CGFloat = .primitive4
+    /// 8pt
+    static let radius8: CGFloat = .primitive8
+    /// 10pt
+    static let radius10: CGFloat = .primitive10
+    /// 12pt
+    static let radius12: CGFloat = .primitive12
+    /// 14pt
+    static let radius14: CGFloat = .primitive14
+    /// 16pt
+    static let radius16: CGFloat = .primitive16
+    /// 20pt
+    static let radius20: CGFloat = .primitive20
+    /// 24pt
+    static let radius24: CGFloat = .primitive24
 }

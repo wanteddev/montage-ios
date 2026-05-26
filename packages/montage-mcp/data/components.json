@@ -871,18 +871,6 @@
       ]
     },
     {
-      "slug": "dimension",
-      "name": "Dimension",
-      "category": "uncategorized",
-      "kind": "enum",
-      "declaration": "enum Dimension",
-      "summary": "컴포넌트의 너비/높이를 정의하는 시스템",
-      "initializers": [],
-      "modifiers": [],
-      "staticMembers": [],
-      "nestedTypes": []
-    },
-    {
       "slug": "fallbackview",
       "name": "FallbackView",
       "category": "feedback",
@@ -1673,18 +1661,6 @@
       ]
     },
     {
-      "slug": "primitive",
-      "name": "Primitive",
-      "category": "uncategorized",
-      "kind": "enum",
-      "declaration": "enum Primitive",
-      "summary": "모든 치수 토큰의 원시 척도(Primitive scale)",
-      "initializers": [],
-      "modifiers": [],
-      "staticMembers": [],
-      "nestedTypes": []
-    },
-    {
       "slug": "progressindicator",
       "name": "ProgressIndicator",
       "category": "navigations",
@@ -1865,18 +1841,6 @@
           ]
         }
       ]
-    },
-    {
-      "slug": "radius",
-      "name": "Radius",
-      "category": "uncategorized",
-      "kind": "enum",
-      "declaration": "enum Radius",
-      "summary": "모서리 반경(corner radius)을 정의하는 시스템",
-      "initializers": [],
-      "modifiers": [],
-      "staticMembers": [],
-      "nestedTypes": []
     },
     {
       "slug": "scrollview",
