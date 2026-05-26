@@ -39,6 +39,8 @@ public extension CGFloat {
     static let dimension28: CGFloat = .primitive28
     /// 32pt
     static let dimension32: CGFloat = .primitive32
+    /// 36pt
+    static let dimension36: CGFloat = .primitive36
     /// 40pt
     static let dimension40: CGFloat = .primitive40
     /// 48pt
