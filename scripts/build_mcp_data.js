@@ -43,12 +43,13 @@ const CATEGORY_MAP = {
     'segmentedcontrol', 'select', 'slider', 'switch', 'textarea', 'textfield',
   ],
   utilities: [
-    'color', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
-    'opacity', 'pulltorefresh', 'scrollview', 'shadow', 'spacing', 'typography',
+    'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
+    'opacity', 'primitive', 'pulltorefresh', 'radius', 'scrollview', 'shadow',
+    'spacing', 'typography',
   ],
 };
 
-const TOKEN_NAMES = ['color', 'typography', 'spacing', 'shadow', 'opacity'];
+const TOKEN_NAMES = ['color', 'typography', 'spacing', 'shadow', 'opacity', 'radius', 'dimension', 'primitive'];
 
 const SKIP_NAMES = new Set([
   'corefoundation', 'foundation', 'swift', 'swiftui',
