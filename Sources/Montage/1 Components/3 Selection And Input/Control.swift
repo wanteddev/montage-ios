@@ -241,8 +241,8 @@ struct Control: View {
     /// 컨트롤을 더 조밀한 레이아웃으로 표시합니다.
     ///
     /// 이 수정자를 적용하면 컨트롤의 가로 너비가 줄어듭니다.
-    /// - medium: 24px → 20px
-    /// - small: 20px → 16px
+    /// - medium: 24pt → 20pt
+    /// - small: 20pt → 16pt
     ///
     /// - Parameter tight: 조밀한 레이아웃 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 컨트롤 인스턴스
