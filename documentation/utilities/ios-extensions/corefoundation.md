@@ -91,6 +91,118 @@ title: CoreFoundation
 </details>
 <details>
 
+<summary>``static let opacity0: CGFloat``</summary>
+
+
+0% (완전 투명)
+</details>
+<details>
+
+<summary>``static let opacity100: CGFloat``</summary>
+
+
+100% (완전 불투명)
+</details>
+<details>
+
+<summary>``static let opacity12: CGFloat``</summary>
+
+
+12%
+</details>
+<details>
+
+<summary>``static let opacity16: CGFloat``</summary>
+
+
+16%
+</details>
+<details>
+
+<summary>``static let opacity22: CGFloat``</summary>
+
+
+22%
+</details>
+<details>
+
+<summary>``static let opacity28: CGFloat``</summary>
+
+
+28%
+</details>
+<details>
+
+<summary>``static let opacity32: CGFloat``</summary>
+
+
+32%
+</details>
+<details>
+
+<summary>``static let opacity35: CGFloat``</summary>
+
+
+35%
+</details>
+<details>
+
+<summary>``static let opacity43: CGFloat``</summary>
+
+
+43%
+</details>
+<details>
+
+<summary>``static let opacity5: CGFloat``</summary>
+
+
+5%
+</details>
+<details>
+
+<summary>``static let opacity52: CGFloat``</summary>
+
+
+52%
+</details>
+<details>
+
+<summary>``static let opacity61: CGFloat``</summary>
+
+
+61%
+</details>
+<details>
+
+<summary>``static let opacity74: CGFloat``</summary>
+
+
+74%
+</details>
+<details>
+
+<summary>``static let opacity8: CGFloat``</summary>
+
+
+8%
+</details>
+<details>
+
+<summary>``static let opacity88: CGFloat``</summary>
+
+
+88%
+</details>
+<details>
+
+<summary>``static let opacity97: CGFloat``</summary>
+
+
+97%
+</details>
+<details>
+
 <summary>``static let primitive0: CGFloat``</summary>
 
 
@@ -438,32 +550,6 @@ title: CoreFoundation
 
 
 80pt
-</details>
-
-#### Type Methods
-
-<details>
-
-<summary>``static func opacity(Opacity) -> CGFloat``</summary>
-
-
-Opacity 열거형 값에 해당하는 CGFloat 불투명도 값을 반환합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `opacityComponent` | 사용할 불투명도 열거형 값 |
-- **Return Value**
-
-  지정된 불투명도에 해당하는 CGFloat 값 (0.0 ~ 1.0 범위)
-- **Discussion**
-
-  디자인 시스템에서 정의된 일관된 불투명도 값을 사용할 수 있도록 합니다.
-
-  ```swift
-  let alpha = CGFloat.opacity(.p052) // 0.52
-  ```
-
 </details>
 
 </details>
