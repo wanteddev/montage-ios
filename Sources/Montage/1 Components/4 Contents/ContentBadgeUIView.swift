@@ -278,7 +278,7 @@ extension ContentBadgeUIView {
         case .neutral:
             return variant == .solid ? .semantic(.fillNormal) : .semantic(.lineNormal)
         case let .accent(contentColor, enclosureColor):
-            let opacity: CGFloat = variant == .solid ? .opacity(.p008) : .opacity(.p043)
+            let opacity: CGFloat = variant == .solid ? .opacity8 : .opacity43
             return (enclosureColor ?? contentColor).uiColor.withAlphaComponent(opacity)
         }
     }
