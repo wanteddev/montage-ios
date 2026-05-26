@@ -74,7 +74,7 @@ struct TextFieldPreview: View {
             case .iconButton:
                 return {
                     IconButton(
-                        variant: .normal(size: 8),
+                        variant: .normal(size: .custom(size: 8)),
                         icon: .send
                     )
                     .iconColor(.semantic(.labelAlternative))

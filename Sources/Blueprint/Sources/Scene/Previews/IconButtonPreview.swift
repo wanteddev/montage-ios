@@ -13,6 +13,7 @@ struct IconButtonPreview: View {
     @State private var variantIndex = 0
     @State private var customSize: CGFloat = 24
     @State private var sizeIndex = 0
+    @State private var normalSizeIndex = 3 // 기본값 24 (.xlarge)
     @State private var alternative = false
     @State private var disable = false
     @State private var showPushBadge = false
@@ -20,21 +21,36 @@ struct IconButtonPreview: View {
     @State private var iconColor: SwiftUI.Color?
     @State private var backgroundColor: SwiftUI.Color?
     @State private var borderColor: SwiftUI.Color?
-    
+
     private var variants: [IconButton.Variant] {
         [
-            .normal(size: Int(customSize)),
+            .normal(size: resolvedNormalSize),
             .background(size: Int(customSize), isAlternative: alternative),
             .outlined(size: sizes[sizeIndex]),
             .solid(size: sizes[sizeIndex])
         ]
     }
-    
+
     private let sizes: [IconButton.Size] = [
         .small,
         .medium,
         .custom(size: 8)
     ]
+
+    private let normalSizes: [IconButton.NormalSize] = [.small, .medium, .large, .xlarge]
+    private let normalSizeLabels: [String] = ["small", "medium", "large", "xlarge", "custom"]
+
+    private var isNormalCustomSize: Bool {
+        normalSizeIndex == normalSizes.count
+    }
+
+    private var resolvedNormalSize: IconButton.NormalSize {
+        if isNormalCustomSize {
+            .custom(size: Int(customSize))
+        } else {
+            normalSizes[normalSizeIndex]
+        }
+    }
     
     private var currentVariant: IconButton.Variant {
         variants[variantIndex]
@@ -122,11 +138,31 @@ struct IconButtonPreview: View {
                     )
                     .size(.small)
                 }
-                HStack {
-                    Text("size")
-                    if variantIndex == 0 || variantIndex == 1 {
+                if variantIndex == 0 {
+                    HStack {
+                        Text("size")
+                        SegmentedControl(
+                            selectedIndex: $normalSizeIndex,
+                            labels: normalSizeLabels
+                        )
+                        .size(.small)
+                    }
+                    if isNormalCustomSize {
+                        HStack {
+                            Text("custom")
+                            SwiftUI.Slider(value: $customSize, in: 10...128, step: 1)
+                            Text("\(Int(customSize))")
+                        }
+                    }
+                } else if variantIndex == 1 {
+                    HStack {
+                        Text("size")
                         SwiftUI.Slider(value: $customSize, in: 10...128, step: 1)
-                    } else {
+                        Text("\(Int(customSize))")
+                    }
+                } else {
+                    HStack {
+                        Text("size")
                         SegmentedControl(
                             selectedIndex: $sizeIndex,
                             labels: sizes.map(\.description)

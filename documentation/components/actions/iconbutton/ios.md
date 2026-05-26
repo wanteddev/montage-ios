@@ -37,7 +37,7 @@ IconButton(
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `variant` | 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: 24)` 적용 |
+  | `variant` | 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: .xlarge)` 적용 |
   | `icon` | 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
 </details>
@@ -169,6 +169,56 @@ IconButton(
 
 <details>
 
+<summary>``enum NormalSize``</summary>
+
+
+Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case custom(size: Int)``</summary>
+
+
+사용자 지정 크기
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 아이콘 크기 (포인트) |
+</details>
+<details>
+
+<summary>``case large``</summary>
+
+
+큰 크기 (20pt)
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+
+중간 크기 (18pt)
+</details>
+<details>
+
+<summary>``case small``</summary>
+
+
+작은 크기 (16pt)
+</details>
+<details>
+
+<summary>``case xlarge``</summary>
+
+
+가장 큰 크기 (24pt)
+</details>
+
+</details>
+<details>
+
 <summary>``enum Size``</summary>
 
 
@@ -185,7 +235,7 @@ IconButton(
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `size` | 아이콘 크기 (픽셀) |
+  | `size` | 아이콘 크기 (포인트) |
 </details>
 <details>
 
@@ -221,12 +271,12 @@ IconButton(
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `size` | 아이콘 크기 (픽셀) |
+  | `size` | 아이콘 크기 (포인트) |
   | `isAlternative` | 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용 |
 </details>
 <details>
 
-<summary>``case normal(size: Int)``</summary>
+<summary>``case normal(size: NormalSize)``</summary>
 
 
 기본형 아이콘 버튼 - 배경 없이 아이콘만 표시
@@ -234,7 +284,7 @@ IconButton(
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `size` | 아이콘 크기 (픽셀) |
+  | `size` | 아이콘 크기 (`NormalSize`) |
 </details>
 <details>
 
