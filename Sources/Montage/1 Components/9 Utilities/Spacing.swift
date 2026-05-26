@@ -14,127 +14,61 @@ import UIKit
 /// 간격을 제공하기 위한 규격화된 값들을 정의합니다.
 ///
 /// ```swift
-/// // UIKit에서 사용
-/// let padding = CGFloat.spacing(.s16)
-/// view.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+/// // UIKit
+/// view.layoutMargins = UIEdgeInsets(
+///     top: .spacing16, left: .spacing16, bottom: .spacing16, right: .spacing16
+/// )
 ///
-/// // SwiftUI에서 사용
+/// // SwiftUI
 /// Text("Hello, World!")
-///     .padding(.horizontal, .spacing(.s24))
-///     .padding(.vertical, .spacing(.s16))
+///     .padding(.horizontal, .spacing24)
+///     .padding(.vertical, .spacing16)
 /// ```
 ///
 /// - Note: 간격 이름의 숫자는 포인트 단위의 실제 간격 값을 나타냅니다.
-/// 예를 들어 s16은 16포인트의 간격을 의미합니다.
-public enum Spacing {
-    /// 0px
-    case s0
-    /// 1px
-    case s1
-    /// 2px
-    case s2
-    /// 4px
-    case s4
-    /// 6px
-    case s6
-    /// 8px
-    case s8
-    /// 10px
-    case s10
-    /// 12px
-    case s12
-    /// 14px
-    case s14
-    /// 16px (기본 간격)
-    case s16
-    /// 20px
-    case s20
-    /// 24px
-    case s24
-    /// 32px
-    case s32
-    /// 40px
-    case s40
-    /// 48px
-    case s48
-    /// 56px
-    case s56
-    /// 64px
-    case s64
-    /// 72px
-    case s72
-    /// 80px
-    case s80
-}
+/// 예를 들어 spacing16은 16포인트의 간격을 의미합니다.
+///
+/// 실제 값은 `CGFloat.spacing{N}` 정적 프로퍼티로 노출됩니다.
+/// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
+public enum Spacing {}
 
-extension CGFloat {
-    /// Spacing 열거형 값에 해당하는 CGFloat 값을 반환합니다.
-    ///
-    /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
-    ///
-    /// ```swift
-    /// let padding = CGFloat.spacing(.s16) // 16.0
-    /// ```
-    ///
-    /// - Parameter spacing: 사용할 간격 열거형 값
-    /// - Returns: 지정된 간격에 해당하는 CGFloat 값
-    public static func spacing(_ spacing: Spacing) -> CGFloat {
-        switch spacing {
-        case .s0: 0
-        case .s1: 1
-        case .s2: 2
-        case .s4: 4
-        case .s6: 6
-        case .s8: 8
-        case .s10: 10
-        case .s12: 12
-        case .s14: 14
-        case .s16: 16
-        case .s20: 20
-        case .s24: 24
-        case .s32: 32
-        case .s40: 40
-        case .s48: 48
-        case .s56: 56
-        case .s64: 64
-        case .s72: 72
-        case .s80: 80
-        }
-    }
-}
-
-extension Float {
-    /// Spacing 열거형 값에 해당하는 Float 값을 반환합니다.
-    ///
-    /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
-    ///
-    /// ```swift
-    /// let padding = Float.spacing(.s16) // 16.0
-    /// ```
-    ///
-    /// - Parameter spacing: 사용할 간격 열거형 값
-    /// - Returns: 지정된 간격에 해당하는 Float 값
-    public static func spacing(_ spacing: Spacing) -> Float {
-        switch spacing {
-        case .s0: 0
-        case .s1: 1
-        case .s2: 2
-        case .s4: 4
-        case .s6: 6
-        case .s8: 8
-        case .s10: 10
-        case .s12: 12
-        case .s14: 14
-        case .s16: 16
-        case .s20: 20
-        case .s24: 24
-        case .s32: 32
-        case .s40: 40
-        case .s48: 48
-        case .s56: 56
-        case .s64: 64
-        case .s72: 72
-        case .s80: 80
-        }
-    }
+public extension CGFloat {
+    /// 0pt
+    static let spacing0: CGFloat = .primitive0
+    /// 1pt
+    static let spacing1: CGFloat = .primitive1
+    /// 2pt
+    static let spacing2: CGFloat = .primitive2
+    /// 4pt
+    static let spacing4: CGFloat = .primitive4
+    /// 6pt
+    static let spacing6: CGFloat = .primitive6
+    /// 8pt
+    static let spacing8: CGFloat = .primitive8
+    /// 10pt
+    static let spacing10: CGFloat = .primitive10
+    /// 12pt
+    static let spacing12: CGFloat = .primitive12
+    /// 14pt
+    static let spacing14: CGFloat = .primitive14
+    /// 16pt (기본 간격)
+    static let spacing16: CGFloat = .primitive16
+    /// 20pt
+    static let spacing20: CGFloat = .primitive20
+    /// 24pt
+    static let spacing24: CGFloat = .primitive24
+    /// 32pt
+    static let spacing32: CGFloat = .primitive32
+    /// 40pt
+    static let spacing40: CGFloat = .primitive40
+    /// 48pt
+    static let spacing48: CGFloat = .primitive48
+    /// 56pt
+    static let spacing56: CGFloat = .primitive56
+    /// 64pt
+    static let spacing64: CGFloat = .primitive64
+    /// 72pt
+    static let spacing72: CGFloat = .primitive72
+    /// 80pt
+    static let spacing80: CGFloat = .primitive80
 }
