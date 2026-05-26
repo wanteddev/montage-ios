@@ -91,7 +91,7 @@ public struct Thumbnail: View {
 
         /// 비율에 해당하는 크기를 반환합니다.
         ///
-        /// - Note: 이 값은 상대적 비율을 나타내며 실제 픽셀 크기가 아닙니다.
+        /// - Note: 이 값은 상대적 비율을 나타내며 실제 포인트 크기가 아닙니다.
         var size: CGSize {
             switch self {
             // 가로가 긴 비율

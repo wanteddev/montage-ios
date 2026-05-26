@@ -172,8 +172,8 @@ public struct IconButton: View {
         }
     }
     
-    private var interactionOffset: CGFloat {
-        variant.interactionOffset + padding
+    private var interactionExpansion: CGFloat {
+        variant.interactionExpansion + padding
     }
     
     /// 뷰의 내용과 동작을 정의합니다.
@@ -200,8 +200,8 @@ public struct IconButton: View {
                     color: variant.interactionColor
                 )
                 .clipShape(variant.interactionShape)
-                .padding(.vertical, -interactionOffset)
-                .padding(.horizontal, -interactionOffset)
+                .padding(.vertical, -interactionExpansion)
+                .padding(.horizontal, -interactionExpansion)
             }
             .padding(.all, variant.backgroundOffset + padding)
             .background(
@@ -239,7 +239,7 @@ extension IconButton {
 
         /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
         /// - Parameters:
-        ///   - size: 아이콘 크기 (픽셀)
+        ///   - size: 아이콘 크기 (포인트)
         ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
         case background(size: Int, isAlternative: Bool = false)
 
@@ -261,19 +261,19 @@ extension IconButton {
 
     /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
     public enum NormalSize {
-        /// 작은 크기 (16px)
+        /// 작은 크기 (16pt)
         case small
-        /// 중간 크기 (18px)
+        /// 중간 크기 (18pt)
         case medium
-        /// 큰 크기 (20px)
+        /// 큰 크기 (20pt)
         case large
-        /// 가장 큰 크기 (24px)
+        /// 가장 큰 크기 (24pt)
         case xlarge
         /// 사용자 지정 크기
-        /// - Parameter size: 아이콘 크기 (픽셀)
+        /// - Parameter size: 아이콘 크기 (포인트)
         case custom(size: Int)
 
-        fileprivate var pixelSize: Int {
+        fileprivate var points: Int {
             switch self {
             case .small: 16
             case .medium: 18
@@ -291,7 +291,7 @@ extension IconButton {
         /// 중간 크기
         case medium
         /// 사용자 지정 크기
-        /// - Parameter size: 아이콘 크기 (픽셀)
+        /// - Parameter size: 아이콘 크기 (포인트)
         case custom(size: Int)
     }
 }
@@ -386,7 +386,7 @@ extension IconButton.Variant {
         }
     }
 
-    var interactionOffset: CGFloat {
+    var interactionExpansion: CGFloat {
         switch self {
         case .normal(let size):
             switch size {
@@ -421,7 +421,7 @@ extension IconButton.Variant {
     var iconSize: CGSize {
         switch self {
         case .normal(let size):
-            let dim = CGFloat(size.pixelSize)
+            let dim = CGFloat(size.points)
             return .init(width: dim, height: dim)
         case .background(let size, _): return .init(width: size, height: size)
         case .outlined(let variant), .solid(let variant):
