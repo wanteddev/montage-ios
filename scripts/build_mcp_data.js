@@ -43,12 +43,13 @@ const CATEGORY_MAP = {
     'segmentedcontrol', 'select', 'slider', 'switch', 'textarea', 'textfield',
   ],
   utilities: [
-    'color', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
-    'opacity', 'pulltorefresh', 'scrollview', 'shadow', 'spacing', 'typography',
+    'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
+    'opacity', 'primitive', 'pulltorefresh', 'radius', 'scrollview', 'shadow',
+    'spacing', 'typography',
   ],
 };
 
-const TOKEN_NAMES = ['color', 'typography', 'spacing', 'shadow', 'opacity'];
+const TOKEN_NAMES = ['color', 'typography', 'spacing', 'shadow', 'opacity', 'radius', 'dimension', 'primitive'];
 
 const SKIP_NAMES = new Set([
   'corefoundation', 'foundation', 'swift', 'swiftui',
@@ -297,7 +298,10 @@ function ensureFigmaMapping() {
     description:
       'Manual Figma component/token → Montage Swift mapping. Convention-based matching is the fallback; entries here override.',
     components: {},
-    tokens: { color: {}, typography: {}, spacing: {}, shadow: {}, opacity: {} },
+    tokens: {
+      color: {}, typography: {}, spacing: {}, shadow: {}, opacity: {},
+      radius: {}, dimension: {}, primitive: {},
+    },
   };
   fs.writeFileSync(target, JSON.stringify(seed, null, 2) + '\n');
   console.log('[mcp-data] seeded figma-mapping.json');

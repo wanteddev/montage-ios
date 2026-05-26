@@ -8,161 +8,67 @@
 import Foundation
 import UIKit
 
-/// UI 요소 간의 간격을 정의하는 시스템
+/// UI 요소 간의 간격(gap, padding)을 정의하는 시스템
 ///
-/// Spacing은 Montage 디자인 시스템에서 UI 요소 간의 일관된 
-/// 간격을 제공하기 위한 규격화된 값들을 정의합니다. 
-/// 모든 간격은 4포인트 기반의 스케일로 구성되어 있어 디자인의 
-/// 일관성과 조화를 유지합니다.
+/// Spacing은 Montage 디자인 시스템에서 UI 요소 간의 일관된
+/// 간격을 제공하기 위한 규격화된 값들을 정의합니다.
 ///
 /// ```swift
-/// // UIKit에서 사용
-/// let padding = CGFloat.spacing(.pt16)
-/// view.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+/// // UIKit
+/// view.layoutMargins = UIEdgeInsets(
+///     top: .spacing16, left: .spacing16, bottom: .spacing16, right: .spacing16
+/// )
 ///
-/// // SwiftUI에서 사용
+/// // SwiftUI
 /// Text("Hello, World!")
-///     .padding(.horizontal, .spacing(.pt24))
-///     .padding(.vertical, .spacing(.pt16))
+///     .padding(.horizontal, .spacing24)
+///     .padding(.vertical, .spacing16)
 /// ```
 ///
 /// - Note: 간격 이름의 숫자는 포인트 단위의 실제 간격 값을 나타냅니다.
-/// 예를 들어 pt16은 16포인트의 간격을 의미합니다.
-public enum Spacing {
-    /// 1포인트 간격
-    case pt01
-    /// 2포인트 간격
-    case pt02
-    /// 4포인트 간격
-    case pt04
-    /// 8포인트 간격
-    case pt08
-    /// 12포인트 간격
-    case pt12
-    /// 16포인트 간격 (기본 간격)
-    case pt16
-    /// 20포인트 간격
-    case pt20
-    /// 24포인트 간격
-    case pt24
-    /// 28포인트 간격
-    case pt28
-    /// 32포인트 간격
-    case pt32
-    /// 36포인트 간격
-    case pt36
-    /// 40포인트 간격
-    case pt40
-    /// 48포인트 간격
-    case pt48
-    /// 56포인트 간격
-    case pt56
-    /// 64포인트 간격
-    case pt64
-    /// 72포인트 간격
-    case pt72
-    /// 80포인트 간격
-    case pt80
-}
+/// 예를 들어 spacing16은 16포인트의 간격을 의미합니다.
+///
+/// 실제 값은 `CGFloat.spacing{N}` 정적 프로퍼티로 노출됩니다.
+/// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
+public enum Spacing {}
 
-extension CGFloat {
-    /// Spacing 열거형 값에 해당하는 CGFloat 값을 반환합니다.
-    ///
-    /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
-    ///
-    /// ```swift
-    /// let padding = CGFloat.spacing(.pt16) // 16.0
-    /// ```
-    ///
-    /// - Parameter spacingComponent: 사용할 간격 열거형 값
-    /// - Returns: 지정된 간격에 해당하는 CGFloat 값
-    public static func spacing(_ spacingComponent: Spacing) -> CGFloat {
-        switch spacingComponent {
-        case .pt01:
-            1
-        case .pt02:
-            2
-        case .pt04:
-            4
-        case .pt08:
-            8
-        case .pt12:
-            12
-        case .pt16:
-            16
-        case .pt20:
-            20
-        case .pt24:
-            24
-        case .pt28:
-            28
-        case .pt32:
-            32
-        case .pt36:
-            36
-        case .pt40:
-            40
-        case .pt48:
-            48
-        case .pt56:
-            56
-        case .pt64:
-            64
-        case .pt72:
-            72
-        case .pt80:
-            80
-        }
-    }
-}
-
-extension Float {
-    /// Spacing 열거형 값에 해당하는 Float 값을 반환합니다.
-    ///
-    /// 디자인 시스템에서 정의된 일관된 간격 값을 사용할 수 있도록 합니다.
-    ///
-    /// ```swift
-    /// let padding = Float.spacing(.pt16) // 16.0
-    /// ```
-    ///
-    /// - Parameter spacingComponent: 사용할 간격 열거형 값
-    /// - Returns: 지정된 간격에 해당하는 Float 값
-    public static func spacing(_ spacingComponent: Spacing) -> Float {
-        switch spacingComponent {
-        case .pt01:
-            1
-        case .pt02:
-            2
-        case .pt04:
-            4
-        case .pt08:
-            8
-        case .pt12:
-            12
-        case .pt16:
-            16
-        case .pt20:
-            20
-        case .pt24:
-            24
-        case .pt28:
-            28
-        case .pt32:
-            32
-        case .pt36:
-            36
-        case .pt40:
-            40
-        case .pt48:
-            48
-        case .pt56:
-            56
-        case .pt64:
-            64
-        case .pt72:
-            72
-        case .pt80:
-            80
-        }
-    }
+public extension CGFloat {
+    /// 0pt의 간격
+    static let spacing0: CGFloat = .primitive0
+    /// 1pt의 간격
+    static let spacing1: CGFloat = .primitive1
+    /// 2pt의 간격
+    static let spacing2: CGFloat = .primitive2
+    /// 4pt의 간격
+    static let spacing4: CGFloat = .primitive4
+    /// 6pt의 간격
+    static let spacing6: CGFloat = .primitive6
+    /// 8pt의 간격
+    static let spacing8: CGFloat = .primitive8
+    /// 10pt의 간격
+    static let spacing10: CGFloat = .primitive10
+    /// 12pt의 간격
+    static let spacing12: CGFloat = .primitive12
+    /// 14pt의 간격
+    static let spacing14: CGFloat = .primitive14
+    /// 16pt의 간격 (기본)
+    static let spacing16: CGFloat = .primitive16
+    /// 20pt의 간격
+    static let spacing20: CGFloat = .primitive20
+    /// 24pt의 간격
+    static let spacing24: CGFloat = .primitive24
+    /// 32pt의 간격
+    static let spacing32: CGFloat = .primitive32
+    /// 40pt의 간격
+    static let spacing40: CGFloat = .primitive40
+    /// 48pt의 간격
+    static let spacing48: CGFloat = .primitive48
+    /// 56pt의 간격
+    static let spacing56: CGFloat = .primitive56
+    /// 64pt의 간격
+    static let spacing64: CGFloat = .primitive64
+    /// 72pt의 간격
+    static let spacing72: CGFloat = .primitive72
+    /// 80pt의 간격
+    static let spacing80: CGFloat = .primitive80
 }
