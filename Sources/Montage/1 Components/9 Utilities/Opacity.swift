@@ -31,36 +31,36 @@ import UIKit
 public enum Opacity {}
 
 public extension CGFloat {
-    /// 0% (완전 투명)
+    /// 0%의 불투명도 (완전 투명)
     static let opacity0: CGFloat = 0
-    /// 5%
+    /// 5%의 불투명도
     static let opacity5: CGFloat = 0.05
-    /// 8%
+    /// 8%의 불투명도
     static let opacity8: CGFloat = 0.08
-    /// 12%
+    /// 12%의 불투명도
     static let opacity12: CGFloat = 0.12
-    /// 16%
+    /// 16%의 불투명도
     static let opacity16: CGFloat = 0.16
-    /// 22%
+    /// 22%의 불투명도
     static let opacity22: CGFloat = 0.22
-    /// 28%
+    /// 28%의 불투명도
     static let opacity28: CGFloat = 0.28
-    /// 32%
+    /// 32%의 불투명도
     static let opacity32: CGFloat = 0.32
-    /// 35%
+    /// 35%의 불투명도
     static let opacity35: CGFloat = 0.35
-    /// 43%
+    /// 43%의 불투명도
     static let opacity43: CGFloat = 0.43
-    /// 52%
+    /// 52%의 불투명도
     static let opacity52: CGFloat = 0.52
-    /// 61%
+    /// 61%의 불투명도
     static let opacity61: CGFloat = 0.61
-    /// 74%
+    /// 74%의 불투명도
     static let opacity74: CGFloat = 0.74
-    /// 88%
+    /// 88%의 불투명도
     static let opacity88: CGFloat = 0.88
-    /// 97%
+    /// 97%의 불투명도
     static let opacity97: CGFloat = 0.97
-    /// 100% (완전 불투명)
+    /// 100%의 불투명도 (완전 불투명)
     static let opacity100: CGFloat = 1
 }

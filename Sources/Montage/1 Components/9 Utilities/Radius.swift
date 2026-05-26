@@ -23,22 +23,22 @@ import UIKit
 public enum Radius {}
 
 public extension CGFloat {
-    /// 0pt (직각)
+    /// 0pt의 모서리 반경 (직각 모서리)
     static let radius0: CGFloat = .primitive0
-    /// 4pt
+    /// 4pt의 모서리 반경
     static let radius4: CGFloat = .primitive4
-    /// 8pt
+    /// 8pt의 모서리 반경
     static let radius8: CGFloat = .primitive8
-    /// 10pt
+    /// 10pt의 모서리 반경
     static let radius10: CGFloat = .primitive10
-    /// 12pt
+    /// 12pt의 모서리 반경
     static let radius12: CGFloat = .primitive12
-    /// 14pt
+    /// 14pt의 모서리 반경
     static let radius14: CGFloat = .primitive14
-    /// 16pt
+    /// 16pt의 모서리 반경
     static let radius16: CGFloat = .primitive16
-    /// 20pt
+    /// 20pt의 모서리 반경
     static let radius20: CGFloat = .primitive20
-    /// 24pt
+    /// 24pt의 모서리 반경
     static let radius24: CGFloat = .primitive24
 }
