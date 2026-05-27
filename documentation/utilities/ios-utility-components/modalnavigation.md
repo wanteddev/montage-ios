@@ -62,17 +62,6 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>~~``static let extended: ModalNavigation.Variant``~~</summary>
-
-
-제목이 별도 줄에 표시되는 확장된 스타일
->  **Deprecated**
->
->  이름이 `display`로 변경되었습니다. 다음 메이저 업데이트 때 제거될 예정입니다.
-
-</details>
-<details>
-
 <summary>``static let floating: ModalNavigation.Variant``</summary>
 
 
@@ -84,20 +73,6 @@ ModalNavigation()
 
 
 기본 스타일의 내비게이션 바
-</details>
-
-#### Type Methods
-
-<details>
-
-<summary>~~``static func floating(alternative: Bool, background: Bool) -> Variant``~~</summary>
-
-
-플로팅 스타일
->  **Deprecated**
->
->  파라메터 제거되었습니다. `.floating`으로 사용하십시오. 다음 메이저 업데이트 때 제거될 예정입니다.
-
 </details>
 
 </details>
