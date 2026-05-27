@@ -199,7 +199,6 @@ struct Triangle: Shape {
 }
 
 extension Skeleton.Align: CaseDescribable {}
-extension Skeleton.Length: CaseDescribable {}
 
 #Preview {
     SkeletonPreview()
