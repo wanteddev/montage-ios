@@ -94,28 +94,6 @@ contentView
 </details>
 <details>
 
-<summary>~~``static func text(alignment: Align, lengths: [Length], cornerRadius: CGFloat, lineNumber: Int) -> Kind``~~</summary>
-
-
-텍스트 줄을 나타내는 스켈레톤을 생성합니다.
->  **Deprecated**
->
->  text(variant:alignment:cornerRadius:)를 사용하세요
-
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `alignment` | 텍스트 정렬 방식 |
-  | `lengths` | 각 줄의 상대적 길이 |
-  | `cornerRadius` | 모서리 둥글기 |
-  | `lineNumber` | 텍스트 줄 수. `0`이면 자동 계산 |
-- **Return Value**
-
-  텍스트 스켈레톤 Kind
-</details>
-<details>
-
 <summary>``static func text(variant: Typography.Variant, alignment: Align, cornerRadius: CGFloat) -> Kind``</summary>
 
 
@@ -232,21 +210,6 @@ contentView
 
 
 우측 정렬
-</details>
-
-</details>
-<details>
-
-<summary>``enum Length``</summary>
-
-
-스켈레톤 요소의 길이 비율을 지정하는 열거형입니다.
-#### Initializers
-
-<details>
-
-<summary>``init?(rawValue: CGFloat)``</summary>
-
 </details>
 
 </details>
