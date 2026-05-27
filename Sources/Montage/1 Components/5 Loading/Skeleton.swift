@@ -73,24 +73,6 @@ public enum Skeleton {
         }
     }
     
-    /// 스켈레톤 요소의 길이 비율을 지정하는 열거형입니다.
-    ///
-    /// 텍스트 스켈레톤에서 각 라인의 길이를 상대적으로 지정하는 데 사용됩니다.
-    ///
-    /// ```swift
-    /// Skeleton.Kind.text(lengths: [._100, ._75, ._50], lineNumber: 3)
-    /// ```
-    public enum Length: CGFloat {
-        /// 100% 길이 (전체 너비)
-        case _100 = 1
-        /// 75% 길이
-        case _75 = 0.75
-        /// 50% 길이
-        case _50 = 0.5
-        /// 25% 길이
-        case _25 = 0.25
-    }
-    
     /// 스켈레톤 요소의 종류를 지정하는 구조체입니다.
     ///
     /// 다양한 콘텐츠 유형에 맞게 적절한 스켈레톤 형태를 선택할 수 있습니다.
@@ -114,7 +96,6 @@ public enum Skeleton {
 
         let category: Category
         let alignment: Align
-        let lengths: [Length]
         let cornerRadius: CGFloat
         let lineHeight: CGFloat
         let lineSpacing: CGFloat
@@ -147,7 +128,6 @@ public enum Skeleton {
             Kind(
                 category: .text,
                 alignment: alignment,
-                lengths: [],
                 cornerRadius: cornerRadius,
                 lineHeight: variant.lineHeight,
                 lineSpacing: variant.lineSpacing,
@@ -163,7 +143,6 @@ public enum Skeleton {
             Kind(
                 category: .rectangle,
                 alignment: .leading,
-                lengths: [],
                 cornerRadius: cornerRadius,
                 lineHeight: 0,
                 lineSpacing: 0,
@@ -176,7 +155,6 @@ public enum Skeleton {
             Kind(
                 category: .circle,
                 alignment: .leading,
-                lengths: [],
                 cornerRadius: 0,
                 lineHeight: 0,
                 lineSpacing: 0,
@@ -237,10 +215,7 @@ public enum Skeleton {
 
                         VStack(alignment: kind.alignment.horizontalAlignment, spacing: 0) {
                             ForEach(0 ..< effectiveLineCount, id: \.self) { index in
-                                let ratio = kind.lengths[safe: index]?.rawValue
-                                    ?? Self.autoLengthRatio(
-                                        for: index, in: effectiveLineCount
-                                    )
+                                let ratio = Self.autoLengthRatio(for: index, in: effectiveLineCount)
                                 RoundedRectangle(cornerRadius: kind.cornerRadius)
                                     .frame(
                                         width: proxy.size.width * ratio,
