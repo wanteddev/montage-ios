@@ -103,16 +103,17 @@ public struct Button: View {
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
-        let resolvedVariant: InternalVariant
+        let resolvedColor: Color
         if variant == .outlined && color == .negative {
-            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to `.solid`.")
-            resolvedVariant = .solid
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
+            resolvedColor = .primary
         } else {
-            resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
+            resolvedColor = color
         }
+        let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
             resolvedVariant,
-            color: color,
+            color: resolvedColor,
             size: size,
             text: text,
             leadingIcon: leadingIcon,
@@ -142,16 +143,17 @@ public struct Button: View {
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
-        let resolvedVariant: InternalVariant
+        let resolvedColor: Color
         if variant == .outlined && color == .negative {
-            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to `.solid`.")
-            resolvedVariant = .solid
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
+            resolvedColor = .primary
         } else {
-            resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
+            resolvedColor = color
         }
+        let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
             resolvedVariant,
-            color: color,
+            color: resolvedColor,
             size: size,
             leadingIcon: icon,
             handler: handler
@@ -369,7 +371,7 @@ public struct Button: View {
         }
         .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
         .contentShape(Rectangle())
-        .frame(height: contentHeight)
+        .frame(minHeight: contentHeight)
         .padding(edgeInsets)
         .background {
             RoundedRectangle(cornerRadius: cornerRadius)
@@ -428,7 +430,7 @@ private extension Button {
     var borderColor: SwiftUI.Color {
         if variant == .outlined {
             if disable {
-                .semantic(.lineNormal)
+                .semantic(.lineNeutral)
             } else {
                 if let customBorderColor {
                     customBorderColor
@@ -445,7 +447,7 @@ private extension Button {
         switch variant {
         case .solid:
             if disable {
-                .semantic(.labelAssistive)
+                .semantic(.labelDisable)
             } else if let contentColor {
                 contentColor
             } else {
@@ -530,7 +532,7 @@ private extension Button {
     var typoWeight: Typography.Weight {
         switch color {
         case .primary: .bold
-        case .assistive: variant == .text ? .bold : .medium
+        case .assistive: .bold
         case .negative: .bold
         }
     }
@@ -540,7 +542,7 @@ private extension Button {
             6.0
         } else {
             switch size {
-            case .xsmall: 10.0
+            case .xsmall: 8.0
             case .small: 10.0
             case .medium: 12.0
             case .large: 14.0
