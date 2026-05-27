@@ -229,19 +229,6 @@ public struct Accordion: View {
     ///
     /// 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
     ///
-    /// - Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
-    /// - Returns: 수정된 아코디언 인스턴스
-    @available(*, deprecated, message: "확장 상태를 인자로 받는 오버로드를 사용하세요: `trailingContent { isExpanded in ... }`")
-    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
-        var zelf = self
-        zelf.trailingContent = { _ in AnyView(trailingContent()) }
-        return zelf
-    }
-    
-    /// 아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
-    ///
-    /// 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
-    ///
     /// - Parameter trailingContent: 표시할 컨텐츠를 생성하는 클로저 (아코디언이 펼쳐진 상태를 파라미터로 받음)
     /// - Returns: 수정된 아코디언 인스턴스
     public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping (Bool) -> V) -> Self {

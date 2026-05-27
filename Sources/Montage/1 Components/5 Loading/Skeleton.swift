@@ -155,34 +155,6 @@ public enum Skeleton {
             )
         }
 
-        // MARK: - Deprecated API
-
-        /// 텍스트 줄을 나타내는 스켈레톤을 생성합니다.
-        ///
-        /// - Parameters:
-        ///   - alignment: 텍스트 정렬 방식
-        ///   - lengths: 각 줄의 상대적 길이
-        ///   - cornerRadius: 모서리 둥글기
-        ///   - lineNumber: 텍스트 줄 수. `0`이면 자동 계산
-        /// - Returns: 텍스트 스켈레톤 Kind
-        @available(*, deprecated, message: "text(variant:alignment:cornerRadius:)를 사용하세요")
-        public static func text(
-            alignment: Align = .leading,
-            lengths: [Length] = [],
-            cornerRadius: CGFloat = 3,
-            lineNumber: Int = 0
-        ) -> Kind {
-            Kind(
-                category: .text,
-                alignment: alignment,
-                lengths: lengths,
-                cornerRadius: cornerRadius,
-                lineHeight: SkeletonView.textReferenceLineHeight,
-                lineSpacing: SkeletonView.textLineSpacing,
-                lineNumber: lineNumber
-            )
-        }
-
         /// 사각형 모양의 스켈레톤을 생성합니다.
         ///
         /// - Parameter cornerRadius: 모서리 둥글기, 생략하면 기본값으로 `3` 적용
