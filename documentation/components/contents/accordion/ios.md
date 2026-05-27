@@ -189,28 +189,6 @@ Accordion(title: "커스텀 스타일")
 </details>
 <details>
 
-<summary>~~``func trailingContent<V>(() -> V) -> Accordion``~~</summary>
-
-
-아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
->  **Deprecated**
->
->  확장 상태를 인자로 받는 오버로드를 사용하세요: trailingContent { isExpanded in ... }
-
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `trailingContent` | 표시할 커스텀 컨텐츠 뷰 |
-- **Return Value**
-
-  수정된 아코디언 인스턴스
-- **Discussion**
-
-  이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
-</details>
-<details>
-
 <summary>``func trailingContent<V>((Bool) -> V) -> Accordion``</summary>
 
 

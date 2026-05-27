@@ -55,12 +55,6 @@
         },
         {
           "name": "trailingContent(_:)",
-          "signature": "func trailingContent<V>(() -> V) -> Accordion",
-          "summary": "아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "trailingContent(_:)",
           "signature": "func trailingContent<V>((Bool) -> V) -> Accordion",
           "summary": "아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.",
           "kind": "method"
@@ -407,25 +401,6 @@
           ]
         },
         {
-          "name": "Button.OutlinedUIButton",
-          "kind": "class",
-          "summary": "외곽선으로 둘러 싸인 곡선 모서리 버튼입니다.",
-          "modifiers": [
-            {
-              "name": "layoutSubviews()",
-              "signature": "func layoutSubviews()",
-              "summary": "",
-              "kind": "method"
-            },
-            {
-              "name": "traitCollectionDidChange(_:)",
-              "signature": "func traitCollectionDidChange(UITraitCollection?)",
-              "summary": "",
-              "kind": "method"
-            }
-          ]
-        },
-        {
           "name": "Button.Size",
           "kind": "enum",
           "summary": "버튼의 크기를 정의합니다.",
@@ -434,25 +409,6 @@
             "medium",
             "small",
             "xsmall"
-          ]
-        },
-        {
-          "name": "Button.SolidUIButton",
-          "kind": "class",
-          "summary": "배경으로 둘러 싸인 곡선 모서리 버튼입니다.",
-          "modifiers": [
-            {
-              "name": "layoutSubviews()",
-              "signature": "func layoutSubviews()",
-              "summary": "",
-              "kind": "method"
-            },
-            {
-              "name": "traitCollectionDidChange(_:)",
-              "signature": "func traitCollectionDidChange(UITraitCollection?)",
-              "summary": "",
-              "kind": "method"
-            }
           ]
         },
         {
@@ -1439,14 +1395,6 @@
           "name": "ModalNavigation.Variant",
           "kind": "struct",
           "summary": "내비게이션 바의 외관을 정의하는 구조체입니다.",
-          "staticMethods": [
-            {
-              "name": "floating(alternative:background:)",
-              "signature": "static func floating(alternative: Bool, background: Bool) -> Variant",
-              "summary": "플로팅 스타일",
-              "kind": "method"
-            }
-          ],
           "staticProperties": [
             {
               "name": "display",
@@ -1458,12 +1406,6 @@
               "name": "emphasized",
               "signature": "static let emphasized: ModalNavigation.Variant",
               "summary": "강조된 큰 제목 스타일",
-              "kind": "property"
-            },
-            {
-              "name": "extended",
-              "signature": "static let extended: ModalNavigation.Variant",
-              "summary": "제목이 별도 줄에 표시되는 확장된 스타일",
               "kind": "property"
             },
             {
@@ -2152,12 +2094,6 @@
               "kind": "method"
             },
             {
-              "name": "text(alignment:lengths:cornerRadius:lineNumber:)",
-              "signature": "static func text(alignment: Align, lengths: [Length], cornerRadius: CGFloat, lineNumber: Int) -> Kind",
-              "summary": "텍스트 줄을 나타내는 스켈레톤을 생성합니다.",
-              "kind": "method"
-            },
-            {
               "name": "text(variant:alignment:cornerRadius:)",
               "signature": "static func text(variant: Typography.Variant, alignment: Align, cornerRadius: CGFloat) -> Kind",
               "summary": "텍스트 줄을 나타내는 스켈레톤을 생성합니다.",
@@ -2172,11 +2108,6 @@
               "kind": "property"
             }
           ]
-        },
-        {
-          "name": "Skeleton.Length",
-          "kind": "enum",
-          "summary": "스켈레톤 요소의 길이 비율을 지정하는 열거형입니다."
         },
         {
           "name": "Skeleton.SkeletonView",
