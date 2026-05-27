@@ -33,7 +33,7 @@ public struct ModalNavigation: View {
     /// 내비게이션 바의 외관을 정의하는 구조체입니다.
     public struct Variant: Equatable, CustomStringConvertible {
         fileprivate enum Kind: Equatable {
-            case normal, display, extended, floating, emphasized
+            case normal, display, floating, emphasized
         }
         
         fileprivate let kind: Kind
@@ -47,23 +47,12 @@ public struct ModalNavigation: View {
         /// 강조된 큰 제목 스타일
         public static let emphasized = Variant(kind: .emphasized)
         
-        /// 제목이 별도 줄에 표시되는 확장된 스타일
-        @available(*, deprecated, renamed: "display", message: "이름이 `display`로 변경되었습니다. 다음 메이저 업데이트 때 제거될 예정입니다.")
-        public static let extended = Variant(kind: .extended)
-        
-        /// 플로팅 스타일
-        @available(*, deprecated, message: "파라메터 제거되었습니다. `.floating`으로 사용하십시오. 다음 메이저 업데이트 때 제거될 예정입니다.")
-        public static func floating(alternative: Bool = false, background: Bool = true) -> Variant {
-            Variant(kind: .floating)
-        }
-        
         fileprivate var isFloating: Bool { kind == .floating }
         
         public var description: String {
             switch kind {
             case .normal: "normal"
             case .display: "display"
-            case .extended: "extended"
             case .floating: "floating"
             case .emphasized: "emphasized"
             }
@@ -270,7 +259,7 @@ public struct ModalNavigation: View {
         
         var body: some View {
             switch variant.kind {
-            case .normal, .display, .extended, .floating:
+            case .normal, .display, .floating:
                 TopNavigation.Contents(
                     variant: variant.topNavigationVariant,
                     titleText: titleText,
@@ -351,43 +340,43 @@ private extension ModalNavigation.Variant {
     var contentTopPadding: CGFloat {
         switch kind {
         case .normal: 10
-        case .display, .extended: 4
+        case .display: 4
         case .emphasized: 20
         case .floating: 4
         }
     }
-    
+
     var contentBottomPadding: CGFloat {
         switch kind {
         case .normal: 10
-        case .display, .extended: 4
+        case .display: 4
         case .emphasized: 20
         case .floating: 8
         }
     }
-    
+
     var topNavigationVariant: TopNavigation.Variant {
         switch kind {
         case .normal: .normal
-        case .display, .extended: .display
+        case .display: .display
         case .floating: .floating
         case .emphasized: .normal
         }
     }
-    
+
     var typoVariant: Typography.Variant {
         switch kind {
         case .normal: .headline2
-        case .display, .extended: .title3
+        case .display: .title3
         case .floating: .headline2
         case .emphasized: .heading2
         }
     }
-    
+
     var typoWeight: Typography.Weight {
         switch kind {
         case .normal: .bold
-        case .display, .extended: .bold
+        case .display: .bold
         case .floating: .bold
         case .emphasized: .bold
         }
