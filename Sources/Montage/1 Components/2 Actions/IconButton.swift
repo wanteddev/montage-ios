@@ -195,7 +195,7 @@ public struct IconButton: View {
                     color: variant.interactionColor
                 )
                 .frame(width: interactionSize, height: interactionSize)
-                .clipShape(variant.interactionShape)
+                .clipShape(RoundedRectangle(cornerRadius: variant.interactionRadius))
             }
             .padding(.all, variant.backgrounOutset + padding)
             .background(
@@ -369,6 +369,16 @@ extension IconButton.Variant {
             }
         }
     }
+    
+    private static let normalDimensionTokens: [CGFloat] = [
+        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20, .dimension24, .dimension28,
+        .dimension32, .dimension36, .dimension40, .dimension48, .dimension56, .dimension64
+    ]
+    
+    private func nextEvenAbove(_ value: CGFloat) -> CGFloat {
+        // value보다 큰 첫번째 짝수
+        2 * floor(value / 2) + 2
+    }
 
     /// Interaction(터치) 영역의 한 변 크기.
     ///
@@ -382,7 +392,7 @@ extension IconButton.Variant {
         case .normal:
             let raw = iconSize.width * 1.5
             let tokens = Self.normalDimensionTokens
-            let container = raw <= previousEvenBelow(tokens.first!)
+            let container = raw <= tokens.first! - 2
                 ? nextEvenAbove(raw)
                 : tokens.first(where: { $0 > raw }) ?? nextEvenAbove(raw)
             return max(24, container)
@@ -393,35 +403,30 @@ extension IconButton.Variant {
         }
     }
 
-    private static let normalDimensionTokens: [CGFloat] = [
-        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20, .dimension24, .dimension28,
-        .dimension32, .dimension36, .dimension40, .dimension48, .dimension56, .dimension64
+    private static let radiusTokens: [CGFloat] = [
+        .radius0, .radius4, .radius8, .radius10, .radius12, .radius14, .radius16, .radius20, .radius24
     ]
     
     private func previousEvenBelow(_ value: CGFloat) -> CGFloat {
         // value보다 작은 첫번째 짝수
         2 * ceil(value / 2) - 2
     }
-
-    private func nextEvenAbove(_ value: CGFloat) -> CGFloat {
-        // value보다 큰 첫번째 짝수
-        2 * floor(value / 2) + 2
-    }
-
-    var interactionShape: AnyShape {
+    
+    /// Interaction(터치) 영역의 모서리 반경.
+    ///
+    /// - normal: `interactionSize × 0.3` 보다 작은 첫번째 radius 토큰을 사용한다.
+    ///   raw 가 radius 최대 토큰 + 2(= 26) 이상이면 raw 보다 작은 첫번째 짝수로 폴백한다.
+    /// - 그 외: 원형(`Circle`)이므로 `interactionSize / 2`
+    var interactionRadius: CGFloat {
         switch self {
-        case .normal(let size):
-            let radius: CGFloat
-            switch size {
-            case .small: radius = 8
-            case .medium: radius = 8
-            case .large: radius = 10
-            case .xlarge: radius = 12
-            case .custom: radius = 10
-            }
-            return AnyShape(RoundedRectangle(cornerRadius: radius))
+        case .normal:
+            let raw = interactionSize * 0.3
+            let tokens = Self.radiusTokens
+            return raw > tokens.last! + 2
+                ? previousEvenBelow(raw)
+                : tokens.last(where: { $0 < raw }) ?? 0
         case .background, .outlined, .solid:
-            return AnyShape(Circle())
+            return interactionSize / 2
         }
     }
 
