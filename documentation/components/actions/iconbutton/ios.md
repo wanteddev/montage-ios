@@ -71,7 +71,7 @@ IconButton(
 - **Discussion**
   >  **Note**
   >
-  > Outlined, soild variant에서만 사용 가능합니다.
+  > Outlined, solid variant에서만 사용 가능합니다.
 
 </details>
 <details>
@@ -129,7 +129,7 @@ IconButton(
 <summary>``func padding(CGFloat) -> IconButton``</summary>
 
 
-버튼의 패딩을 설정합니다.
+버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).
 
 - **Parameters**
   | Parameter | Description |
@@ -141,7 +141,7 @@ IconButton(
 - **Discussion**
   >  **Note**
   >
-  > Outlined, soild variant에서만 사용 가능합니다.
+  > Outlined, solid variant에서만 사용 가능합니다.
 
 </details>
 <details>
@@ -271,7 +271,7 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `size` | 아이콘 크기 (포인트) |
+  | `size` | 버튼 전체 크기 (포인트, 음영 영역 포함). 생략하면 기본크기 `20`으로 적용 |
   | `isAlternative` | 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용 |
 </details>
 <details>
