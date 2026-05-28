@@ -167,10 +167,10 @@ public struct IconButton: View {
         }
     }
     
-    private var interactionExpansion: CGFloat {
-        variant.interactionExpansion + padding
+    private var interactionSize: CGFloat {
+        variant.interactionSize + 2 * padding
     }
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         Image.icon(icon)
@@ -194,9 +194,8 @@ public struct IconButton: View {
                     variant: variant.interactionVariant,
                     color: variant.interactionColor
                 )
+                .frame(width: interactionSize, height: interactionSize)
                 .clipShape(variant.interactionShape)
-                .padding(.vertical, -interactionExpansion)
-                .padding(.horizontal, -interactionExpansion)
             }
             .padding(.all, variant.backgroundOffset + padding)
             .background(
@@ -381,19 +380,42 @@ extension IconButton.Variant {
         }
     }
 
-    var interactionExpansion: CGFloat {
+    /// Interaction(터치) 영역의 한 변 크기.
+    ///
+    /// - normal: `iconSize.width * 1.5` 보다 큰 첫번째 dimension 토큰을 사용한다.
+    ///   raw 가 토큰 최소값 미만이거나 최대값 초과면 raw 보다 큰 첫번째 짝수로 폴백하며,
+    ///   WCAG((Web Content Accessibility Guidelines)) 24x24 최소 영역을 보장한다.
+    /// - outlined: `iconSize.width + (backgroundOffset + 1) * 2`
+    /// - background, solid: `iconSize.width + backgroundOffset * 2`
+    var interactionSize: CGFloat {
         switch self {
-        case .normal(let size):
-            switch size {
-            case .small: 4    // icon 16 → interaction 24
-            case .medium: 5   // icon 18 → interaction 28
-            case .large: 6    // icon 20 → interaction 32
-            case .xlarge: 8   // icon 24 → interaction 40
-            case .custom: 6
-            }
-        case .outlined: backgroundOffset + 1
-        case .background, .solid: backgroundOffset
+        case .normal:
+            let raw = iconSize.width * 1.5
+            let tokens = Self.normalDimensionTokens
+            let container = raw <= previousEvenBelow(tokens.first!)
+                ? nextEvenAbove(raw)
+                : tokens.first(where: { $0 > raw }) ?? nextEvenAbove(raw)
+            return max(24, container)
+        case .outlined:
+            return iconSize.width + 2 * (backgroundOffset + 1)
+        case .background, .solid:
+            return iconSize.width + 2 * backgroundOffset
         }
+    }
+
+    private static let normalDimensionTokens: [CGFloat] = [
+        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20, .dimension24, .dimension28,
+        .dimension32, .dimension36, .dimension40, .dimension48, .dimension56, .dimension64
+    ]
+    
+    private func previousEvenBelow(_ value: CGFloat) -> CGFloat {
+        // value보다 작은 첫번째 짝수
+        2 * ceil(value / 2) - 2
+    }
+
+    private func nextEvenAbove(_ value: CGFloat) -> CGFloat {
+        // value보다 큰 첫번째 짝수
+        2 * floor(value / 2) + 2
     }
 
     var interactionShape: AnyShape {
