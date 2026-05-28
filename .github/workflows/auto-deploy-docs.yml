@@ -1,6 +1,7 @@
 name: Auto Docs Sync/Deploy on Release
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
