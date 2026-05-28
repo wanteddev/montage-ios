@@ -197,7 +197,7 @@ public struct IconButton: View {
                 .frame(width: interactionSize, height: interactionSize)
                 .clipShape(RoundedRectangle(cornerRadius: variant.interactionRadius))
             }
-            .padding(.all, variant.backgrounOutset + padding)
+            .padding(.all, variant.backgroundOutset + padding)
             .background(
                 ZStack {
                     Circle().fill(_backgroundColor)
@@ -209,8 +209,8 @@ public struct IconButton: View {
                 }
             )
             .frame(
-                width: variant.iconSize.width + variant.backgrounOutset * 2 + padding,
-                height: variant.iconSize.height + variant.backgrounOutset * 2 + padding
+                width: variant.iconSize.width + variant.backgroundOutset * 2 + padding,
+                height: variant.iconSize.height + variant.backgroundOutset * 2 + padding
             )
             .allowsHitTesting(disable == false)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
@@ -231,7 +231,7 @@ extension IconButton {
 
         /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
         /// - Parameters:
-        ///   - size: 아이콘 크기 (포인트). 생략하면 기본크기 `20`으로 적용
+        ///   - size: 버튼 전체 크기 (포인트, 음영 영역 포함). 생략하면 기본크기 `20`으로 적용
         ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
         case background(size: Int = 20, isAlternative: Bool = false)
 
@@ -357,7 +357,7 @@ extension IconButton.Variant {
         }
     }
     
-    var backgrounOutset: CGFloat {
+    var backgroundOutset: CGFloat {
         switch self {
         case .normal: .zero
         case .background: 6
@@ -383,10 +383,11 @@ extension IconButton.Variant {
     /// Interaction(터치) 영역의 한 변 크기.
     ///
     /// - normal: `iconSize.width * 1.5` 보다 큰 첫번째 dimension 토큰을 사용한다.
-    ///   raw 가 토큰 최소값 미만이거나 최대값 초과면 raw 보다 큰 첫번째 짝수로 폴백하며,
-    ///   WCAG((Web Content Accessibility Guidelines)) 24x24 최소 영역을 보장한다.
-    /// - outlined: `iconSize.width + (backgroundOffset + 1) * 2`
-    /// - background, solid: `iconSize.width + backgroundOffset * 2`
+    ///   raw 가 토큰 최소값 - 2(= 10) 이하이거나 토큰 최대값(= 64) 이상이면
+    ///   raw 보다 큰 첫번째 짝수로 폴백하며, WCAG(Web Content Accessibility Guidelines)
+    ///   24x24 최소 영역을 보장한다.
+    /// - outlined: `iconSize.width + (backgroundOutset + 1) * 2`
+    /// - background, solid: `iconSize.width + backgroundOutset * 2`
     var interactionSize: CGFloat {
         switch self {
         case .normal:
@@ -397,9 +398,9 @@ extension IconButton.Variant {
                 : tokens.first(where: { $0 > raw }) ?? nextEvenAbove(raw)
             return max(24, container)
         case .outlined:
-            return iconSize.width + 2 * (backgrounOutset + 1)
+            return iconSize.width + 2 * (backgroundOutset + 1)
         case .background, .solid:
-            return iconSize.width + 2 * backgrounOutset
+            return iconSize.width + 2 * backgroundOutset
         }
     }
 
@@ -437,8 +438,8 @@ extension IconButton.Variant {
             return .init(width: dim, height: dim)
         case .background(let size, _):
             return .init(
-                width: CGFloat(size) - backgrounOutset * 2,
-                height: CGFloat(size) - backgrounOutset * 2
+                width: CGFloat(size) - backgroundOutset * 2,
+                height: CGFloat(size) - backgroundOutset * 2
             )
         case .outlined(let variant), .solid(let variant):
             switch variant {
