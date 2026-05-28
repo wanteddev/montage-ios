@@ -25,6 +25,8 @@ import UIKit
 public enum Dimension {}
 
 public extension CGFloat {
+    /// 12pt의 크기
+    static let dimension12: CGFloat = .primitive12
     /// 14pt의 크기
     static let dimension14: CGFloat = .primitive14
     /// 16pt의 크기
