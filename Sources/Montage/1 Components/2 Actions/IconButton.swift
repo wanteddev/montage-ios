@@ -197,22 +197,20 @@ public struct IconButton: View {
                 .frame(width: interactionSize, height: interactionSize)
                 .clipShape(variant.interactionShape)
             }
-            .padding(.all, variant.backgroundOffset + padding)
+            .padding(.all, variant.backgrounOutset + padding)
             .background(
                 ZStack {
-                    Circle()
-                        .fill(_backgroundColor)
+                    Circle().fill(_backgroundColor)
                     if case let .background(_, alternative) = variant, alternative == false {
-                        Circle()
-                            .fill(.regularMaterial)
+                        Circle().fill(.regularMaterial)
+                    } else if case .outlined = variant {
+                        Circle().stroke(_strokeColor, lineWidth: 1)
                     }
-                    Circle()
-                        .stroke(_strokeColor, lineWidth: variant.borderWidth)
                 }
             )
             .frame(
-                width: variant.iconSize.width + variant.backgroundOffset + padding,
-                height: variant.iconSize.height + variant.backgroundOffset + padding
+                width: variant.iconSize.width + variant.backgrounOutset * 2 + padding,
+                height: variant.iconSize.height + variant.backgrounOutset * 2 + padding
             )
             .allowsHitTesting(disable == false)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
@@ -294,7 +292,7 @@ extension IconButton.Variant {
     var activeBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
-                .clear
+            .clear
         case .background(_, let isAlternative):
             if isAlternative {
                 .atomic(.coolNeutral30).withAlphaComponent(0.61)
@@ -303,18 +301,18 @@ extension IconButton.Variant {
                 .clear
             }
         case .solid:
-                .semantic(.primaryNormal)
+            .semantic(.primaryNormal)
         }
     }
     
     var inactiveBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
-                .clear
+            .clear
         case .background:
-                .semantic(.fillAlternative).withAlphaComponent(0.05)
+            .semantic(.fillAlternative).withAlphaComponent(0.05)
         case .solid:
-                .semantic(.fillNormal).withAlphaComponent(0.08)
+            .semantic(.fillNormal).withAlphaComponent(0.08)
         }
     }
     
@@ -334,16 +332,9 @@ extension IconButton.Variant {
     var inactiveColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
-                .semantic(.labelDisable)
+            .semantic(.labelDisable)
         case .background:
-                .atomic(.coolNeutral50).withAlphaComponent(0.22)
-        }
-    }
-
-    var borderWidth: CGFloat {
-        switch self {
-        case .outlined: 1
-        default: .zero
+            .atomic(.coolNeutral50).withAlphaComponent(0.22)
         }
     }
 
@@ -361,16 +352,15 @@ extension IconButton.Variant {
     var interactionVariant: Interaction.Variant {
         switch self {
         case .normal, .outlined: .light
-        case .background(_, let isAlternative):
-            isAlternative ? .normal : .light
+        case .background(_, let isAlternative): isAlternative ? .normal : .light
         case .solid: .strong
         }
     }
     
-    var backgroundOffset: CGFloat {
+    var backgrounOutset: CGFloat {
         switch self {
         case .normal: .zero
-        case .background(_, _): 6
+        case .background: 6
         case let .outlined(size), let .solid(size):
             switch size {
             case .small: 8
@@ -397,9 +387,9 @@ extension IconButton.Variant {
                 : tokens.first(where: { $0 > raw }) ?? nextEvenAbove(raw)
             return max(24, container)
         case .outlined:
-            return iconSize.width + 2 * (backgroundOffset + 1)
+            return iconSize.width + 2 * (backgrounOutset + 1)
         case .background, .solid:
-            return iconSize.width + 2 * backgroundOffset
+            return iconSize.width + 2 * backgrounOutset
         }
     }
 
@@ -440,7 +430,11 @@ extension IconButton.Variant {
         case .normal(let size):
             let dim = CGFloat(size.points)
             return .init(width: dim, height: dim)
-        case .background(let size, _): return .init(width: size, height: size)
+        case .background(let size, _):
+            return .init(
+                width: CGFloat(size) - backgrounOutset * 2,
+                height: CGFloat(size) - backgrounOutset * 2
+            )
         case .outlined(let variant), .solid(let variant):
             switch variant {
             case .small:
