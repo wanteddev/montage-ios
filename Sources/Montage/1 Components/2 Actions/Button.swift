@@ -52,7 +52,7 @@ public struct Button: View {
         /// 부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
         ///
         /// > Important: `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다.
-        /// > 해당 조합으로 버튼을 생성하면 자동으로 `.solid`로 대체됩니다.
+        /// > 해당 조합으로 버튼을 생성하면 color가 `.primary`로 폴백됩니다.
         case negative
     }
 
@@ -103,16 +103,11 @@ public struct Button: View {
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
-        let resolvedVariant: InternalVariant
-        if variant == .outlined && color == .negative {
-            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to `.solid`.")
-            resolvedVariant = .solid
-        } else {
-            resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
-        }
+        let resolvedColor = Self.resolveColor(variant: variant, color: color)
+        let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
             resolvedVariant,
-            color: color,
+            color: resolvedColor,
             size: size,
             text: text,
             leadingIcon: leadingIcon,
@@ -142,16 +137,11 @@ public struct Button: View {
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
-        let resolvedVariant: InternalVariant
-        if variant == .outlined && color == .negative {
-            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to `.solid`.")
-            resolvedVariant = .solid
-        } else {
-            resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
-        }
+        let resolvedColor = Self.resolveColor(variant: variant, color: color)
+        let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
             resolvedVariant,
-            color: color,
+            color: resolvedColor,
             size: size,
             leadingIcon: icon,
             handler: handler
@@ -369,7 +359,7 @@ public struct Button: View {
         }
         .fixedSize(horizontal: !fillHorizontal, vertical: !fillVertical)
         .contentShape(Rectangle())
-        .frame(height: contentHeight)
+        .frame(minHeight: contentHeight)
         .padding(edgeInsets)
         .background {
             RoundedRectangle(cornerRadius: cornerRadius)
@@ -399,6 +389,16 @@ public struct Button: View {
 }
 
 private extension Button {
+    static func resolveColor(variant: Variant, color: Color) -> Color {
+        if variant == .outlined && color == .negative {
+            #if DEBUG
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
+            #endif
+            return .primary
+        }
+        return color
+    }
+    
     var backgroundColor: SwiftUI.Color {
         switch variant {
         case .solid:
@@ -428,7 +428,7 @@ private extension Button {
     var borderColor: SwiftUI.Color {
         if variant == .outlined {
             if disable {
-                .semantic(.lineNormal)
+                .semantic(.lineNeutral)
             } else {
                 if let customBorderColor {
                     customBorderColor
@@ -445,7 +445,7 @@ private extension Button {
         switch variant {
         case .solid:
             if disable {
-                .semantic(.labelAssistive)
+                .semantic(.labelDisable)
             } else if let contentColor {
                 contentColor
             } else {
@@ -528,11 +528,7 @@ private extension Button {
     }
     
     var typoWeight: Typography.Weight {
-        switch color {
-        case .primary: .bold
-        case .assistive: variant == .text ? .bold : .medium
-        case .negative: .bold
-        }
+        .bold
     }
     
     var cornerRadius: CGFloat {
@@ -540,7 +536,7 @@ private extension Button {
             6.0
         } else {
             switch size {
-            case .xsmall: 10.0
+            case .xsmall: 8.0
             case .small: 10.0
             case .medium: 12.0
             case .large: 14.0

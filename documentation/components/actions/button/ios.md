@@ -317,7 +317,7 @@ Button(text: "저장")
 - **Discussion**
   >  **Important**
   >
-  > `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다. 해당 조합으로 버튼을 생성하면 자동으로 `.solid`로 대체됩니다.
+  > `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다. 해당 조합으로 버튼을 생성하면 color가 `.primary`로 폴백됩니다.
 
 </details>
 <details>
