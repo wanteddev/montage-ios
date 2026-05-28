@@ -408,7 +408,9 @@ public struct Button: View {
 private extension Button {
     static func resolveColor(variant: Variant, color: Color) -> Color {
         if variant == .outlined && color == .negative {
+            #if DEBUG
             print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
+            #endif
             return .primary
         }
         return color
