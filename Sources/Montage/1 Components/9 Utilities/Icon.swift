@@ -75,6 +75,7 @@ public enum Icon: String, CaseIterable {
     case businessBag
     case businessBagFill
     case calendar
+    case calendarFill
     case calendarPerson
     case camera
     case cameraFill
