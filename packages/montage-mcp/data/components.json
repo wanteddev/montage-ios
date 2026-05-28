@@ -1020,7 +1020,7 @@
         {
           "name": "padding(_:)",
           "signature": "func padding(CGFloat) -> IconButton",
-          "summary": "버튼의 패딩을 설정합니다.",
+          "summary": "버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).",
           "kind": "method"
         },
         {
