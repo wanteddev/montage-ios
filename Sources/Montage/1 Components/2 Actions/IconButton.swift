@@ -44,12 +44,7 @@ public struct IconButton: View {
         self.icon = icon
         self.disable = false
         self.showPushBadge = false
-        self.padding = {
-            switch variant {
-            case .normal, .background: .zero
-            case .outlined, .solid: .zero
-            }
-        }()
+        self.padding = .zero
         self.iconColor = nil
         self.backgroundColor = nil
         self.borderColor = nil
@@ -80,14 +75,14 @@ public struct IconButton: View {
     public func showPushBadge(_ value: Bool = true) -> Self {
         var copy = self
         copy.showPushBadge = {
-            guard case .normal(_) = self.variant else { return false }
+            guard case .normal = self.variant else { return false }
             return value
         }()
         return copy
     }
     
-    /// 버튼의 패딩을 설정합니다.
-    /// > outlined, soild variant에서만 사용 가능합니다.
+    /// 버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).
+    /// > outlined, solid variant에서만 사용 가능합니다.
     /// - Parameter value: 패딩 값
     /// - Returns: 수정된 IconButton 인스턴스
     public func padding(_ value: CGFloat) -> Self {
@@ -111,7 +106,7 @@ public struct IconButton: View {
     }
     
     /// 배경 색상을 설정합니다.
-    /// > outlined, soild variant에서만 사용 가능합니다.
+    /// > outlined, solid variant에서만 사용 가능합니다.
     /// - Parameter color: 설정할 색상
     /// - Returns: 수정된 IconButton 인스턴스
     public func backgroundColor(_ color: SwiftUI.Color) -> Self {
@@ -132,7 +127,7 @@ public struct IconButton: View {
     public func borderColor(_ color: SwiftUI.Color) -> Self {
         var copy = self
         copy.borderColor = {
-            guard case .outlined(_) = self.variant else { return nil }
+            guard case .outlined = self.variant else { return nil }
             return color
         }()
         return copy
@@ -153,7 +148,7 @@ public struct IconButton: View {
     }
     
     private var _strokeColor: SwiftUI.Color {
-        if case .outlined(_) = variant, let borderColor {
+        if case .outlined = variant, let borderColor {
             borderColor
         } else {
             SwiftUI.Color(uiColor: variant.borderColor)
@@ -239,9 +234,9 @@ extension IconButton {
 
         /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
         /// - Parameters:
-        ///   - size: 아이콘 크기 (포인트)
+        ///   - size: 아이콘 크기 (포인트). 생략하면 기본크기 `20`으로 적용
         ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
-        case background(size: Int, isAlternative: Bool = false)
+        case background(size: Int = 20, isAlternative: Bool = false)
 
         /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
         /// - Parameter size: 아이콘 크기 (Size 열거형)
@@ -381,7 +376,7 @@ extension IconButton.Variant {
             switch size {
             case .small: 8
             case .medium: 11
-            case .custom(_): 7
+            case .custom: 7
             }
         }
     }
@@ -396,8 +391,8 @@ extension IconButton.Variant {
             case .xlarge: 8   // icon 24 → interaction 40
             case .custom: 6
             }
-        case .outlined(_): backgroundOffset + 1
-        case .background(_, _), .solid(_): backgroundOffset
+        case .outlined: backgroundOffset + 1
+        case .background, .solid: backgroundOffset
         }
     }
 
