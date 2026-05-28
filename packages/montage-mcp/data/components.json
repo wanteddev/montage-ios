@@ -1020,7 +1020,7 @@
         {
           "name": "padding(_:)",
           "signature": "func padding(CGFloat) -> IconButton",
-          "summary": "버튼의 패딩을 설정합니다.",
+          "summary": "버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).",
           "kind": "method"
         },
         {
@@ -1035,7 +1035,7 @@
         {
           "name": "IconButton.NormalSize",
           "kind": "enum",
-          "summary": "Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.",
+          "summary": "variant의 아이콘 사이즈를 결정하는 열거형입니다.",
           "cases": [
             "custom",
             "large",
@@ -1047,7 +1047,7 @@
         {
           "name": "IconButton.Size",
           "kind": "enum",
-          "summary": "버튼 사이즈를 결정하는 열거형입니다.",
+          "summary": "· variant의 컨테이너 사이즈를 결정하는 열거형입니다.",
           "cases": [
             "custom",
             "medium",

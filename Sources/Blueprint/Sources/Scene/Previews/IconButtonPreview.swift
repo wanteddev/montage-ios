@@ -11,7 +11,7 @@ import Montage
 struct IconButtonPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
-    @State private var customSize: CGFloat = 24
+    @State private var customSize: CGFloat = 20
     @State private var sizeIndex = 0
     @State private var normalSizeIndex = 3 // 기본값 24 (.xlarge)
     @State private var alternative = false
@@ -21,6 +21,7 @@ struct IconButtonPreview: View {
     @State private var iconColor: SwiftUI.Color?
     @State private var backgroundColor: SwiftUI.Color?
     @State private var borderColor: SwiftUI.Color?
+    @State private var showDebugFrame = false
 
     private var variants: [IconButton.Variant] {
         [
@@ -125,7 +126,13 @@ struct IconButtonPreview: View {
                             $0
                         }
                     }
-                    
+                    .overlay {
+                        if showDebugFrame {
+                            Rectangle()
+                                .stroke(SwiftUI.Color.red.opacity(0.6), lineWidth: 1)
+                        }
+                    }
+
                     Spacer(minLength: 0)
                 }
                 
@@ -211,6 +218,10 @@ struct IconButtonPreview: View {
                     Switch(checked: iconColor != nil) {
                         iconColor = $0 ? .semantic(.accentForegroundCyan) : nil
                     }
+                }
+                HStack {
+                    Text("debug frame")
+                    Switch(checked: showDebugFrame) { showDebugFrame = $0 }
                 }
             }
             .font(.caption)
