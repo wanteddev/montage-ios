@@ -14,6 +14,13 @@ title: CoreFoundation
 
 <details>
 
+<summary>``static let dimension12: CGFloat``</summary>
+
+
+12pt의 크기
+</details>
+<details>
+
 <summary>``static let dimension14: CGFloat``</summary>
 
 
