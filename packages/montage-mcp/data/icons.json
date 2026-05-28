@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 347,
+  "count": 348,
   "icons": [
     "agent",
     "agentColor",
@@ -44,6 +44,7 @@
     "businessBag",
     "businessBagFill",
     "calendar",
+    "calendarFill",
     "calendarPerson",
     "camera",
     "cameraFill",
