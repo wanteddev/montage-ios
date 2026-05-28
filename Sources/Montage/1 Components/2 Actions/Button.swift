@@ -52,7 +52,7 @@ public struct Button: View {
         /// 부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
         ///
         /// > Important: `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다.
-        /// > 해당 조합으로 버튼을 생성하면 자동으로 `.solid`로 대체됩니다.
+        /// > 해당 조합으로 버튼을 생성하면 color가 `.primary`로 폴백됩니다.
         case negative
     }
 
@@ -103,13 +103,7 @@ public struct Button: View {
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
-        let resolvedColor: Color
-        if variant == .outlined && color == .negative {
-            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
-            resolvedColor = .primary
-        } else {
-            resolvedColor = color
-        }
+        let resolvedColor = Self.resolveColor(variant: variant, color: color)
         let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
             resolvedVariant,
@@ -143,13 +137,7 @@ public struct Button: View {
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
-        let resolvedColor: Color
-        if variant == .outlined && color == .negative {
-            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
-            resolvedColor = .primary
-        } else {
-            resolvedColor = color
-        }
+        let resolvedColor = Self.resolveColor(variant: variant, color: color)
         let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
             resolvedVariant,
@@ -418,6 +406,14 @@ public struct Button: View {
 }
 
 private extension Button {
+    static func resolveColor(variant: Variant, color: Color) -> Color {
+        if variant == .outlined && color == .negative {
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
+            return .primary
+        }
+        return color
+    }
+    
     var backgroundColor: SwiftUI.Color {
         switch variant {
         case .solid:
@@ -547,11 +543,7 @@ private extension Button {
     }
     
     var typoWeight: Typography.Weight {
-        switch color {
-        case .primary: .bold
-        case .assistive: .bold
-        case .negative: .bold
-        }
+        .bold
     }
     
     var cornerRadius: CGFloat {
