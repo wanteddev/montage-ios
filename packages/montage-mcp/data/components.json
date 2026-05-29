@@ -1018,9 +1018,21 @@
           "kind": "method"
         },
         {
+          "name": "disableInteraction(_:)",
+          "signature": "func disableInteraction(Bool) -> IconButton",
+          "summary": "hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).",
+          "kind": "method"
+        },
+        {
           "name": "iconColor(_:)",
           "signature": "func iconColor(SwiftUI.Color) -> IconButton",
           "summary": "아이콘 색상을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "interactionColor(_:)",
+          "signature": "func interactionColor(Color.Semantic) -> IconButton",
+          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: ).",
           "kind": "method"
         },
         {
