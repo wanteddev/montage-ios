@@ -12,8 +12,8 @@ struct IconButtonPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
     @State private var customSize: CGFloat = 20
-    @State private var sizeIndex = 0
-    @State private var normalSizeIndex = 3 // 기본값 24 (.xlarge)
+    @State private var sizeIndex = 1 // 기본값 .medium
+    @State private var normalSizeIndex = 3 // 기본값 .xlarge
     @State private var alternative = false
     @State private var disable = false
     @State private var showPushBadge = false
@@ -26,29 +26,44 @@ struct IconButtonPreview: View {
         [
             .normal(size: resolvedNormalSize),
             .background(size: Int(customSize), isAlternative: alternative),
-            .outlined(size: sizes[sizeIndex]),
-            .solid(size: sizes[sizeIndex])
+            .outlined(size: resolvedSize),
+            .solid(size: resolvedSize)
         ]
     }
 
     private let sizes: [IconButton.Size] = [
         .small,
-        .medium,
-        .custom(size: 8)
+        .medium
     ]
+    private let sizeLabels: [String] = ["small", "medium", "custom"]
 
     private let normalSizes: [IconButton.NormalSize] = [.small, .medium, .large, .xlarge]
     private let normalSizeLabels: [String] = ["small", "medium", "large", "xlarge", "custom"]
-
-    private var isNormalCustomSize: Bool {
-        normalSizeIndex == normalSizes.count
+    
+    private var isCustomSize: Bool {
+        switch variantIndex {
+        case 0:
+            normalSizeIndex == normalSizes.count
+        case 1:
+            true
+        default:
+            sizeIndex == sizes.count
+        }
     }
 
     private var resolvedNormalSize: IconButton.NormalSize {
-        if isNormalCustomSize {
+        if normalSizeIndex >= normalSizes.count {
             .custom(size: Int(customSize))
         } else {
             normalSizes[normalSizeIndex]
+        }
+    }
+
+    private var resolvedSize: IconButton.Size {
+        if sizeIndex >= sizes.count {
+            .custom(size: Int(customSize))
+        } else {
+            sizes[sizeIndex]
         }
     }
     
@@ -62,9 +77,12 @@ struct IconButtonPreview: View {
     }
     
     private var isOutlinedOrSolid: Bool {
-        if case .outlined = currentVariant { return true }
-        if case .solid = currentVariant { return true }
-        return false
+        switch currentVariant {
+        case .normal, .background:
+            false
+        case .outlined, .solid:
+            true
+        }
     }
     
     private var isOutlined: Bool {
@@ -147,17 +165,17 @@ struct IconButtonPreview: View {
                         )
                         .size(.small)
                     }
-                    if isNormalCustomSize {
+                    if isCustomSize {
                         HStack {
                             Text("custom")
-                            SwiftUI.Slider(value: $customSize, in: 10...128, step: 1)
+                            SwiftUI.Slider(value: $customSize, in: 10...100, step: 1)
                             Text("\(Int(customSize))")
                         }
                     }
                 } else if variantIndex == 1 {
                     HStack {
                         Text("size")
-                        SwiftUI.Slider(value: $customSize, in: 10...128, step: 1)
+                        SwiftUI.Slider(value: $customSize, in: 10...100, step: 1)
                         Text("\(Int(customSize))")
                     }
                 } else {
@@ -165,9 +183,16 @@ struct IconButtonPreview: View {
                         Text("size")
                         SegmentedControl(
                             selectedIndex: $sizeIndex,
-                            labels: sizes.map(\.description)
+                            labels: sizeLabels
                         )
                         .size(.small)
+                    }
+                    if isCustomSize {
+                        HStack {
+                            Text("custom")
+                            SwiftUI.Slider(value: $customSize, in: 10...100, step: 1)
+                            Text("\(Int(customSize))")
+                        }
                     }
                 }
                 if isBackground {
@@ -222,6 +247,7 @@ struct IconButtonPreview: View {
 }
 
 extension IconButton.Variant: CaseDescribable {}
+extension IconButton.NormalSize: CaseDescribable {}
 extension IconButton.Size: CaseDescribable {}
 
 #Preview {
