@@ -11,16 +11,18 @@ import Montage
 struct IconButtonPreview: View {
     @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
-    @State private var customSize: CGFloat = 20
+    @State private var customSize: CGFloat = 36
     @State private var sizeIndex = 1 // 기본값 .medium
     @State private var normalSizeIndex = 3 // 기본값 .xlarge
     @State private var alternative = false
     @State private var disable = false
+    @State private var disableInteraction = false
     @State private var showPushBadge = false
     @State private var padding: CGFloat = 0
     @State private var iconColor: SwiftUI.Color?
     @State private var backgroundColor: SwiftUI.Color?
     @State private var borderColor: SwiftUI.Color?
+    @State private var interactionColor: Montage.Color.Semantic?
 
     private var variants: [IconButton.Variant] {
         [
@@ -120,8 +122,16 @@ struct IconButtonPreview: View {
                         }
                     )
                     .disable(disable)
+                    .disableInteraction(disableInteraction)
                     .showPushBadge(isNormal ? showPushBadge : false)
                     .padding(isOutlinedOrSolid ? padding : 0)
+                    .modifying {
+                        if let interactionColor {
+                            $0.interactionColor(interactionColor)
+                        } else {
+                            $0
+                        }
+                    }
                     .modifying {
                         if iconColor != nil {
                             $0.iconColor(iconColor!)
@@ -205,6 +215,10 @@ struct IconButtonPreview: View {
                     Text("disable")
                     Switch(checked: disable) { disable = $0 }
                 }
+                HStack {
+                    Text("disableInteraction")
+                    Switch(checked: disableInteraction) { disableInteraction = $0 }
+                }
                 if isNormal {
                     HStack {
                         Text("pushBadge")
@@ -235,6 +249,12 @@ struct IconButtonPreview: View {
                     Text("iconColor")
                     Switch(checked: iconColor != nil) {
                         iconColor = $0 ? .semantic(.accentForegroundCyan) : nil
+                    }
+                }
+                HStack {
+                    Text("interactionColor")
+                    Switch(checked: interactionColor != nil) {
+                        interactionColor = $0 ? .accentForegroundRed : nil
                     }
                 }
             }
