@@ -30,7 +30,24 @@ import UIKit
 ///
 /// 실제 값은 `CGFloat.spacing{N}` 정적 프로퍼티로 노출됩니다.
 /// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
-public enum Spacing {}
+public enum Spacing {
+    /// 정의된 모든 spacing 토큰 값(오름차순).
+    ///
+    /// 컴포넌트가 토큰에 스냅하거나 최대/최소 토큰을 동적으로 도출할 때 사용한다.
+    /// 토큰이 추가/삭제되면 이 배열만 갱신하면 사용처가 자동으로 반영된다.
+    public static let allValues: [CGFloat] = [
+        .spacing0, .spacing1, .spacing2, .spacing4, .spacing6, .spacing8,
+        .spacing10, .spacing12, .spacing14, .spacing16, .spacing20, .spacing24,
+        .spacing32, .spacing40, .spacing48, .spacing56, .spacing64, .spacing72,
+        .spacing80
+    ]
+
+    /// 정의된 spacing 토큰 중 최소값.
+    public static var min: CGFloat { allValues.first ?? 0 }
+
+    /// 정의된 spacing 토큰 중 최대값.
+    public static var max: CGFloat { allValues.last ?? 0 }
+}
 
 public extension CGFloat {
     /// 0pt의 간격
