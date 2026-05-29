@@ -28,7 +28,23 @@ import UIKit
 ///
 /// 실제 값은 `CGFloat.opacity{N}` 정적 프로퍼티로 노출됩니다.
 /// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
-public enum Opacity {}
+public enum Opacity {
+    /// 정의된 모든 opacity 토큰 값(오름차순).
+    ///
+    /// 컴포넌트가 토큰에 스냅하거나 최대/최소 토큰을 동적으로 도출할 때 사용한다.
+    /// 토큰이 추가/삭제되면 이 배열만 갱신하면 사용처가 자동으로 반영된다.
+    public static let allValues: [CGFloat] = [
+        .opacity0, .opacity5, .opacity8, .opacity12, .opacity16, .opacity22,
+        .opacity28, .opacity32, .opacity35, .opacity43, .opacity52, .opacity61,
+        .opacity74, .opacity88, .opacity97, .opacity100
+    ]
+
+    /// 정의된 opacity 토큰 중 최소값(완전 투명).
+    public static var min: CGFloat { allValues.first ?? 0 }
+
+    /// 정의된 opacity 토큰 중 최대값(완전 불투명).
+    public static var max: CGFloat { allValues.last ?? 1 }
+}
 
 public extension CGFloat {
     /// 0%의 불투명도 (완전 투명)
