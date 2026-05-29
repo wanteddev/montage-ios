@@ -15,6 +15,8 @@ import SwiftUI
 /// - 외곽선형(outlined): 테두리로 둘러싸인 아이콘
 /// - 솔리드형(solid): 배경색이 채워진 아이콘
 ///
+/// 모든 variant의 컨테이너(터치 영역 포함)는 24~64pt 사이에서 커스텀 사이즈로 지정할 수 있습니다.
+///
 /// ```swift
 /// IconButton(
 ///     icon: .arrowLeft,
@@ -23,11 +25,11 @@ import SwiftUI
 /// ```
 public struct IconButton: View {
     @State private var isPressed = false
-    
+
     private let variant: IconButton.Variant
     private let icon: Icon
     private let handler: (() -> Void)?
-    
+
     /// 아이콘 버튼을 생성합니다.
     ///
     /// - Parameters:
@@ -44,21 +46,22 @@ public struct IconButton: View {
         self.icon = icon
         self.disable = false
         self.showPushBadge = false
-        self.padding = .zero
+        self.extraPadding = .zero
         self.iconColor = nil
         self.backgroundColor = nil
         self.borderColor = nil
         self.handler = handler
     }
-    
+
     // MARK: - Modifiers
-    
+
     private var disable: Bool
     private var showPushBadge: Bool
-    private var padding: CGFloat
+    private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
     private var backgroundColor: SwiftUI.Color?
     private var borderColor: SwiftUI.Color?
+
     /// 버튼의 비활성화 여부를 설정합니다.
     /// - Parameter value: 비활성화 여부, true이면 버튼이 비활성화됩니다.
     /// - Returns: 수정된 IconButton 인스턴스
@@ -67,7 +70,7 @@ public struct IconButton: View {
         copy.disable = value
         return copy
     }
-    
+
     /// 푸시 뱃지 표시 여부를 설정합니다.
     /// > normal variant에서만 사용 가능합니다.
     /// - Parameter value: 푸시 뱃지 표시 여부
@@ -80,14 +83,14 @@ public struct IconButton: View {
         }()
         return copy
     }
-    
+
     /// 버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).
     /// > outlined, solid variant에서만 사용 가능합니다.
     /// - Parameter value: 패딩 값
     /// - Returns: 수정된 IconButton 인스턴스
     public func padding(_ value: CGFloat) -> Self {
         var copy = self
-        copy.padding = {
+        copy.extraPadding = {
             switch self.variant {
             case .normal, .background: .zero
             case .outlined, .solid: value
@@ -95,7 +98,7 @@ public struct IconButton: View {
         }()
         return copy
     }
-    
+
     /// 아이콘 색상을 설정합니다.
     /// - Parameter color: 설정할 색상
     /// - Returns: 수정된 IconButton 인스턴스
@@ -104,7 +107,7 @@ public struct IconButton: View {
         copy.iconColor = color
         return copy
     }
-    
+
     /// 배경 색상을 설정합니다.
     /// > outlined, solid variant에서만 사용 가능합니다.
     /// - Parameter color: 설정할 색상
@@ -119,7 +122,7 @@ public struct IconButton: View {
         }()
         return copy
     }
-    
+
     /// 테두리 색상을 설정합니다.
     /// > outlined 에서만 사용 가능합니다.
     /// - Parameter color: 설정할 색상
@@ -132,9 +135,9 @@ public struct IconButton: View {
         }()
         return copy
     }
-    
+
     // MARK: Private Computed Property
-    
+
     private var _iconColor: SwiftUI.Color {
         if disable {
             SwiftUI.Color(uiColor: variant.inactiveColor)
@@ -146,7 +149,7 @@ public struct IconButton: View {
             }
         }
     }
-    
+
     private var _strokeColor: SwiftUI.Color {
         if case .outlined = variant, let borderColor {
             borderColor
@@ -154,7 +157,7 @@ public struct IconButton: View {
             SwiftUI.Color(uiColor: variant.borderColor)
         }
     }
-    
+
     private var _backgroundColor: SwiftUI.Color {
         if disable {
             SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
@@ -166,57 +169,63 @@ public struct IconButton: View {
             }
         }
     }
-    
-    private var interactionSize: CGFloat {
-        variant.interactionSize + 2 * padding
-    }
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
+        let m = variant.metrics
+        let containerSize = m.container + 2 * extraPadding
+        let totalPadding = m.padding + extraPadding
+
         Image.icon(icon)
             .resizable()
-            .if(variant.isBackground) {
-                $0.padding(2)
-            } else: {
-                $0
-            }
-            .frame(
-                width: variant.iconSize.width,
-                height: variant.iconSize.height
-            )
+            .frame(width: m.icon, height: m.icon)
             .foregroundStyle(_iconColor)
             .if(showPushBadge) {
                 $0.pushBadge()
+            } else: {
+                $0
             }
+            .padding(totalPadding)
             .background {
                 Interaction(
                     state: isPressed ? .pressed : .normal,
                     variant: variant.interactionVariant,
                     color: variant.interactionColor
                 )
-                .frame(width: interactionSize, height: interactionSize)
-                .clipShape(RoundedRectangle(cornerRadius: variant.interactionRadius))
+                .clipShape(RoundedRectangle(cornerRadius: m.radius))
             }
-            .padding(.all, variant.backgroundOutset + padding)
-            .background(
-                ZStack {
-                    Circle().fill(_backgroundColor)
-                    if case let .background(_, alternative) = variant, alternative == false {
-                        Circle().fill(.regularMaterial)
-                    } else if case .outlined = variant {
-                        Circle().stroke(_strokeColor, lineWidth: 1)
-                    }
-                }
-            )
-            .frame(
-                width: variant.iconSize.width + variant.backgroundOutset * 2 + padding,
-                height: variant.iconSize.height + variant.backgroundOutset * 2 + padding
-            )
+            .background {
+                backgroundLayer(metrics: m)
+            }
+            .frame(width: containerSize, height: containerSize)
             .allowsHitTesting(disable == false)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")
             .accessibilityAddTraits(.isButton)
+    }
+
+    @ViewBuilder
+    private func backgroundLayer(metrics m: IconButton.Variant.Metrics) -> some View {
+        let shape = RoundedRectangle(cornerRadius: m.radius)
+        switch variant {
+        case .normal:
+            EmptyView()
+        case .background(_, let alternative):
+            ZStack {
+                shape.fill(_backgroundColor)
+                if alternative == false {
+                    shape.fill(.regularMaterial)
+                }
+            }
+        case .outlined:
+            ZStack {
+                shape.fill(_backgroundColor)
+                shape.stroke(_strokeColor, lineWidth: 1)
+            }
+        case .solid:
+            shape.fill(_backgroundColor)
+        }
     }
 }
 
@@ -229,66 +238,144 @@ extension IconButton {
         /// - Parameter size: 아이콘 크기 (`NormalSize`)
         case normal(size: NormalSize)
 
-        /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
+        /// 배경형 아이콘 버튼 - 반투명 배경을 가진 원형 아이콘
         /// - Parameters:
-        ///   - size: 버튼 전체 크기 (포인트, 음영 영역 포함). 생략하면 기본크기 `20`으로 적용
+        ///   - size: 컨테이너 한 변의 크기(포인트). 생략하면 기본값 `32`(컨테이너 32 / 아이콘 20).
+        ///     `[24, 64]` 범위로 클램프되며, `32`가 아닌 값은 커스텀 사이즈 규칙으로 계산된다.
         ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
-        case background(size: Int = 20, isAlternative: Bool = false)
+        case background(size: Int = 32, isAlternative: Bool = false)
 
         /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
-        /// - Parameter size: 아이콘 크기 (Size 열거형)
+        /// - Parameter size: 아이콘 크기 (`Size`)
         case outlined(size: Size)
 
         /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
-        /// - Parameter size: 아이콘 크기 (Size 열거형)
+        /// - Parameter size: 아이콘 크기 (`Size`)
         case solid(size: Size)
-
-        fileprivate var isBackground: Bool {
-            switch self {
-            case .background: true
-            default: false
-            }
-        }
     }
 
     /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
     public enum NormalSize {
-        /// 작은 크기 (16pt)
+        /// 작은 크기 (컨테이너 24pt / 아이콘 16pt / radius 8)
         case small
-        /// 중간 크기 (18pt)
+        /// 중간 크기 (컨테이너 28pt / 아이콘 18pt / radius 8)
         case medium
-        /// 큰 크기 (20pt)
+        /// 큰 크기 (컨테이너 32pt / 아이콘 20pt / radius 10)
         case large
-        /// 가장 큰 크기 (24pt)
+        /// 가장 큰 크기 (컨테이너 36pt / 아이콘 24pt / radius 10)
         case xlarge
-        /// 사용자 지정 크기
-        /// - Parameter size: 아이콘 크기 (포인트)
+        /// 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
+        /// - Parameter size: 컨테이너 한 변의 크기(포인트)
         case custom(size: Int)
-
-        fileprivate var points: Int {
-            switch self {
-            case .small: 16
-            case .medium: 18
-            case .large: 20
-            case .xlarge: 24
-            case .custom(let size): size
-            }
-        }
     }
 
     /// 버튼 사이즈를 결정하는 열거형입니다.
     public enum Size {
-        /// 작은 크기
+        /// 작은 크기 (컨테이너 32pt / 아이콘 16pt / 원형)
         case small
-        /// 중간 크기
+        /// 중간 크기 (컨테이너 40pt / 아이콘 18pt / 원형)
         case medium
-        /// 사용자 지정 크기
-        /// - Parameter size: 아이콘 크기 (포인트)
+        /// 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
+        /// - Parameter size: 컨테이너 한 변의 크기(포인트)
         case custom(size: Int)
     }
 }
 
 extension IconButton.Variant {
+    /// 아이콘 버튼의 레이아웃 메트릭(컨테이너/패딩/라운드 반경/아이콘 크기).
+    struct Metrics {
+        var container: CGFloat
+        var padding: CGFloat
+        var radius: CGFloat
+        var icon: CGFloat
+    }
+
+    var metrics: Metrics {
+        switch self {
+        case .normal(let size):
+            switch size {
+            case .small:  return Self.makeMetrics(container: .dimension24, icon: .dimension16, radius: .radius8)
+            case .medium: return Self.makeMetrics(container: .dimension28, icon: .dimension18, radius: .radius8)
+            case .large:  return Self.makeMetrics(container: .dimension32, icon: .dimension20, radius: .radius10)
+            case .xlarge: return Self.makeMetrics(container: .dimension36, icon: .dimension24, radius: .radius10)
+            case .custom(let n):
+                let container = Self.clampedContainer(n)
+                let icon = Self.nearestToken(container * (2.0 / 3.0), in: Self.dimensionTokens, tieBreak: .down)
+                let radius = Self.nearestToken(container * 0.3, in: Self.radiusTokens, tieBreak: .down)
+                return Self.makeMetrics(container: container, icon: icon, radius: radius)
+            }
+        case .background(let size, _):
+            if CGFloat(size) == .dimension32 {
+                return Self.makeMetrics(container: .dimension32, icon: .dimension20, radius: .primitiveInfinity)
+            }
+            let container = Self.clampedContainer(size)
+            let icon = Self.nearestToken(container * (2.0 / 3.0), in: Self.dimensionTokens, tieBreak: .down)
+            return Self.makeMetrics(container: container, icon: icon, radius: .primitiveInfinity)
+        case .outlined(let size), .solid(let size):
+            switch size {
+            case .small:  return Self.makeMetrics(container: .dimension32, icon: .dimension16, radius: .primitiveInfinity)
+            case .medium: return Self.makeMetrics(container: .dimension40, icon: .dimension18, radius: .primitiveInfinity)
+            case .custom(let n):
+                let container = Self.clampedContainer(n)
+                let icon = Self.nearestToken(container * 0.47, in: Self.dimensionTokens, tieBreak: .down)
+                return Self.makeMetrics(container: container, icon: icon, radius: .primitiveInfinity)
+            }
+        }
+    }
+
+    private static let dimensionTokens: [CGFloat] = [
+        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20,
+        .dimension24, .dimension28, .dimension32, .dimension36, .dimension40,
+        .dimension48, .dimension56, .dimension64
+    ]
+
+    private static let radiusTokens: [CGFloat] = [
+        .radius0, .radius4, .radius8, .radius10, .radius12, .radius14,
+        .radius16, .radius20, .radius24
+    ]
+
+    /// 컨테이너 한 변의 크기는 `[24, 64]`로 클램프된다.
+    private static func clampedContainer(_ n: Int) -> CGFloat {
+        min(64, max(24, CGFloat(n)))
+    }
+
+    /// 컨테이너/아이콘 크기로부터 패딩을 도출해 Metrics 를 구성한다. 아이콘은 컨테이너 중앙에 배치된다.
+    private static func makeMetrics(container: CGFloat, icon: CGFloat, radius: CGFloat) -> Metrics {
+        Metrics(
+            container: container,
+            padding: (container - icon) / 2,
+            radius: radius,
+            icon: icon
+        )
+    }
+
+    private enum TieBreak {
+        case up
+        case down
+    }
+
+    private static func nearestToken(
+        _ value: CGFloat,
+        in tokens: [CGFloat],
+        tieBreak: TieBreak
+    ) -> CGFloat {
+        guard var best = tokens.first else { return 0 }
+        var bestDist = abs(value - best)
+        for token in tokens.dropFirst() {
+            let d = abs(value - token)
+            if d < bestDist {
+                best = token
+                bestDist = d
+            } else if d == bestDist {
+                switch tieBreak {
+                case .up:   if token > best { best = token }
+                case .down: if token < best { best = token }
+                }
+            }
+        }
+        return best
+    }
+
     var activeBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
@@ -304,7 +391,7 @@ extension IconButton.Variant {
             .semantic(.primaryNormal)
         }
     }
-    
+
     var inactiveBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
@@ -315,7 +402,7 @@ extension IconButton.Variant {
             .semantic(.fillNormal).withAlphaComponent(0.08)
         }
     }
-    
+
     var activeColor: UIColor {
         switch self {
         case .normal, .outlined: .semantic(.labelNormal)
@@ -328,7 +415,7 @@ extension IconButton.Variant {
         case .solid: .semantic(.staticWhite)
         }
     }
-    
+
     var inactiveColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
@@ -344,112 +431,16 @@ extension IconButton.Variant {
         default: .clear
         }
     }
-    
+
     var interactionColor: Color.Semantic {
         .labelNormal
     }
-    
+
     var interactionVariant: Interaction.Variant {
         switch self {
         case .normal, .outlined: .light
         case .background(_, let isAlternative): isAlternative ? .normal : .light
         case .solid: .strong
-        }
-    }
-    
-    var backgroundOutset: CGFloat {
-        switch self {
-        case .normal: .zero
-        case .background: 6
-        case let .outlined(size), let .solid(size):
-            switch size {
-            case .small: 8
-            case .medium: 11
-            case .custom: 7
-            }
-        }
-    }
-    
-    private static let normalDimensionTokens: [CGFloat] = [
-        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20, .dimension24, .dimension28,
-        .dimension32, .dimension36, .dimension40, .dimension48, .dimension56, .dimension64
-    ]
-    
-    private func nextEvenAbove(_ value: CGFloat) -> CGFloat {
-        // value보다 큰 첫번째 짝수
-        2 * floor(value / 2) + 2
-    }
-
-    /// Interaction(터치) 영역의 한 변 크기.
-    ///
-    /// - normal: `iconSize.width * 1.5` 보다 큰 첫번째 dimension 토큰을 사용한다.
-    ///   raw 가 토큰 최소값 - 2(= 10) 이하이거나 토큰 최대값(= 64) 이상이면
-    ///   raw 보다 큰 첫번째 짝수로 폴백하며, WCAG(Web Content Accessibility Guidelines)
-    ///   24x24 최소 영역을 보장한다.
-    /// - outlined: `iconSize.width + (backgroundOutset + 1) * 2`
-    /// - background, solid: `iconSize.width + backgroundOutset * 2`
-    var interactionSize: CGFloat {
-        switch self {
-        case .normal:
-            let raw = iconSize.width * 1.5
-            let tokens = Self.normalDimensionTokens
-            let container = raw <= tokens.first! - 2
-                ? nextEvenAbove(raw)
-                : tokens.first(where: { $0 > raw }) ?? nextEvenAbove(raw)
-            return max(24, container)
-        case .outlined:
-            return iconSize.width + 2 * (backgroundOutset + 1)
-        case .background, .solid:
-            return iconSize.width + 2 * backgroundOutset
-        }
-    }
-
-    private static let radiusTokens: [CGFloat] = [
-        .radius0, .radius4, .radius8, .radius10, .radius12, .radius14, .radius16, .radius20, .radius24
-    ]
-    
-    private func previousEvenBelow(_ value: CGFloat) -> CGFloat {
-        // value보다 작은 첫번째 짝수
-        2 * ceil(value / 2) - 2
-    }
-    
-    /// Interaction(터치) 영역의 모서리 반경.
-    ///
-    /// - normal: `interactionSize × 0.3` 보다 작은 첫번째 radius 토큰을 사용한다.
-    ///   raw 가 radius 최대 토큰 + 2(= 26) 이상이면 raw 보다 작은 첫번째 짝수로 폴백한다.
-    /// - 그 외: 원형(`Circle`)이므로 `interactionSize / 2`
-    var interactionRadius: CGFloat {
-        switch self {
-        case .normal:
-            let raw = interactionSize * 0.3
-            let tokens = Self.radiusTokens
-            return raw > tokens.last! + 2
-                ? previousEvenBelow(raw)
-                : tokens.last(where: { $0 < raw }) ?? 0
-        case .background, .outlined, .solid:
-            return interactionSize / 2
-        }
-    }
-
-    var iconSize: CGSize {
-        switch self {
-        case .normal(let size):
-            let dim = CGFloat(size.points)
-            return .init(width: dim, height: dim)
-        case .background(let size, _):
-            return .init(
-                width: CGFloat(size) - backgroundOutset * 2,
-                height: CGFloat(size) - backgroundOutset * 2
-            )
-        case .outlined(let variant), .solid(let variant):
-            switch variant {
-            case .small:
-                return .init(width: 16, height: 16)
-            case .medium:
-                return .init(width: 18, height: 18)
-            case .custom(let size):
-                return .init(width: size, height: size)
-            }
         }
     }
 }
