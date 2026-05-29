@@ -113,6 +113,21 @@ IconButton(
 </details>
 <details>
 
+<summary>``func disableInteraction(Bool) -> IconButton``</summary>
+
+
+hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 인터랙션 효과 차단 여부 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+</details>
+<details>
+
 <summary>``func iconColor(SwiftUI.Color) -> IconButton``</summary>
 
 
@@ -122,6 +137,21 @@ IconButton(
   | Parameter | Description |
   | --- | --- |
   | `color` | 설정할 색상 |
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+</details>
+<details>
+
+<summary>``func interactionColor(Color.Semantic) -> IconButton``</summary>
+
+
+hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.labelNormal`).
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 인터랙션 색상(semantic 토큰) |
 - **Return Value**
 
   수정된 IconButton 인스턴스
