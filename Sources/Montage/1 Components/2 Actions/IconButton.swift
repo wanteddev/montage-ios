@@ -45,22 +45,26 @@ public struct IconButton: View {
         self.variant = variant
         self.icon = icon
         self.disable = false
+        self.disableInteraction = false
         self.showPushBadge = false
         self.extraPadding = .zero
         self.iconColor = nil
         self.backgroundColor = nil
         self.borderColor = nil
+        self.customInteractionColor = nil
         self.handler = handler
     }
 
     // MARK: - Modifiers
 
     private var disable: Bool
+    private var disableInteraction: Bool
     private var showPushBadge: Bool
     private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
     private var backgroundColor: SwiftUI.Color?
     private var borderColor: SwiftUI.Color?
+    private var customInteractionColor: Color.Semantic?
 
     /// 버튼의 비활성화 여부를 설정합니다.
     /// - Parameter value: 비활성화 여부, true이면 버튼이 비활성화됩니다.
@@ -68,6 +72,24 @@ public struct IconButton: View {
     public func disable(_ value: Bool = true) -> Self {
         var copy = self
         copy.disable = value
+        return copy
+    }
+
+    /// hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
+    /// - Parameter value: 인터랙션 효과 차단 여부
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func disableInteraction(_ value: Bool = true) -> Self {
+        var copy = self
+        copy.disableInteraction = value
+        return copy
+    }
+
+    /// hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.labelNormal`).
+    /// - Parameter color: 인터랙션 색상(semantic 토큰)
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func interactionColor(_ color: Color.Semantic) -> Self {
+        var copy = self
+        copy.customInteractionColor = color
         return copy
     }
 
@@ -140,7 +162,7 @@ public struct IconButton: View {
 
     private var _iconColor: SwiftUI.Color {
         if disable {
-            SwiftUI.Color(uiColor: variant.inactiveColor)
+            SwiftUI.Color(uiColor: variant.disabledIconColor)
         } else {
             if let iconColor {
                 iconColor
@@ -160,7 +182,7 @@ public struct IconButton: View {
 
     private var _backgroundColor: SwiftUI.Color {
         if disable {
-            SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
+            SwiftUI.Color(uiColor: variant.disabledBackgroundColor)
         } else {
             if let backgroundColor {
                 backgroundColor
@@ -188,9 +210,9 @@ public struct IconButton: View {
             .padding(totalPadding)
             .background {
                 Interaction(
-                    state: isPressed ? .pressed : .normal,
+                    state: (isPressed && !disable && !disableInteraction) ? .pressed : .normal,
                     variant: variant.interactionVariant,
-                    color: variant.interactionColor
+                    color: customInteractionColor ?? variant.interactionColor
                 )
                 .clipShape(RoundedRectangle(cornerRadius: m.radius))
             }
@@ -225,6 +247,8 @@ public struct IconButton: View {
             }
         case .solid:
             shape.fill(_backgroundColor)
+                .background(.ultraThinMaterial)
+                .clipShape(shape)
         }
     }
 }
@@ -300,8 +324,8 @@ extension IconButton.Variant {
             case .xlarge: return Self.makeMetrics(container: .dimension36, icon: .dimension24, radius: .radius10)
             case .custom(let n):
                 let container = Self.clampedContainer(n)
-                let icon = Self.nearestToken(container * (2.0 / 3.0), in: Self.dimensionTokens, tieBreak: .down)
-                let radius = Self.nearestToken(container * 0.3, in: Self.radiusTokens, tieBreak: .down)
+                let icon = Self.nearestToken(container * (2.0 / 3.0), in: Dimension.allValues, tieBreak: .down)
+                let radius = Self.nearestToken(container * 0.3, in: Radius.allValues, tieBreak: .down)
                 return Self.makeMetrics(container: container, icon: icon, radius: radius)
             }
         case .background(let size, _):
@@ -309,7 +333,7 @@ extension IconButton.Variant {
                 return Self.makeMetrics(container: .dimension32, icon: .dimension20, radius: .primitiveInfinity)
             }
             let container = Self.clampedContainer(size)
-            let icon = Self.nearestToken(container * (2.0 / 3.0), in: Self.dimensionTokens, tieBreak: .down)
+            let icon = Self.nearestToken(container * (2.0 / 3.0), in: Dimension.allValues, tieBreak: .down)
             return Self.makeMetrics(container: container, icon: icon, radius: .primitiveInfinity)
         case .outlined(let size), .solid(let size):
             switch size {
@@ -317,26 +341,16 @@ extension IconButton.Variant {
             case .medium: return Self.makeMetrics(container: .dimension40, icon: .dimension18, radius: .primitiveInfinity)
             case .custom(let n):
                 let container = Self.clampedContainer(n)
-                let icon = Self.nearestToken(container * 0.47, in: Self.dimensionTokens, tieBreak: .down)
+                let icon = Self.nearestToken(container * 0.47, in: Dimension.allValues, tieBreak: .down)
                 return Self.makeMetrics(container: container, icon: icon, radius: .primitiveInfinity)
             }
         }
     }
 
-    private static let dimensionTokens: [CGFloat] = [
-        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20,
-        .dimension24, .dimension28, .dimension32, .dimension36, .dimension40,
-        .dimension48, .dimension56, .dimension64
-    ]
-
-    private static let radiusTokens: [CGFloat] = [
-        .radius0, .radius4, .radius8, .radius10, .radius12, .radius14,
-        .radius16, .radius20, .radius24
-    ]
-
-    /// 컨테이너 한 변의 크기는 `[24, 64]`로 클램프된다.
+    /// 컨테이너 한 변의 크기는 `[24, dimension 최대 토큰]`으로 클램프된다.
+    /// 상한은 디자인 시스템 토큰에서 동적으로 도출되어, 토큰이 변경되면 자동으로 따라간다.
     private static func clampedContainer(_ n: Int) -> CGFloat {
-        min(64, max(24, CGFloat(n)))
+        min(Dimension.max, max(24, CGFloat(n)))
     }
 
     /// 컨테이너/아이콘 크기로부터 패딩을 도출해 Metrics 를 구성한다. 아이콘은 컨테이너 중앙에 배치된다.
@@ -392,14 +406,14 @@ extension IconButton.Variant {
         }
     }
 
-    var inactiveBackgroundColor: UIColor {
+    var disabledBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
             .clear
         case .background:
             .semantic(.fillAlternative).withAlphaComponent(0.05)
         case .solid:
-            .semantic(.fillNormal).withAlphaComponent(0.08)
+            .semantic(.fillNormal)
         }
     }
 
@@ -416,7 +430,7 @@ extension IconButton.Variant {
         }
     }
 
-    var inactiveColor: UIColor {
+    var disabledIconColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
             .semantic(.labelDisable)
