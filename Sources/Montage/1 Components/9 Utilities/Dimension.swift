@@ -22,9 +22,27 @@ import UIKit
 ///
 /// - Note: 실제 값은 `CGFloat.dimension{N}` 정적 프로퍼티로 노출됩니다.
 /// 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
-public enum Dimension {}
+public enum Dimension {
+    /// 정의된 모든 dimension 토큰 값(오름차순).
+    ///
+    /// 컴포넌트가 토큰에 스냅하거나 최대/최소 토큰을 동적으로 도출할 때 사용한다.
+    /// 토큰이 추가/삭제되면 이 배열만 갱신하면 사용처가 자동으로 반영된다.
+    public static let allValues: [CGFloat] = [
+        .dimension12, .dimension14, .dimension16, .dimension18, .dimension20,
+        .dimension24, .dimension28, .dimension32, .dimension36, .dimension40,
+        .dimension48, .dimension56, .dimension64
+    ]
+
+    /// 정의된 dimension 토큰 중 최소값.
+    public static var min: CGFloat { allValues.first ?? 0 }
+
+    /// 정의된 dimension 토큰 중 최대값.
+    public static var max: CGFloat { allValues.last ?? 0 }
+}
 
 public extension CGFloat {
+    /// 12pt의 크기
+    static let dimension12: CGFloat = .primitive12
     /// 14pt의 크기
     static let dimension14: CGFloat = .primitive14
     /// 16pt의 크기
