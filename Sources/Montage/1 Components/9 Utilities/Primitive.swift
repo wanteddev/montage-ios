@@ -37,8 +37,11 @@ public enum Primitive {
     /// 정의된 primitive 토큰 중 최소값.
     public static var min: CGFloat { allValues.first ?? 0 }
 
-    /// 정의된 primitive 토큰 중 최대값(`primitiveInfinity` 포함).
-    public static var max: CGFloat { allValues.last ?? 0 }
+    /// 정의된 primitive 토큰 중 최대 유한값(`primitiveInfinity` 제외).
+    ///
+    /// 범위 검증이나 슬라이더 제약 계산처럼 유한값이 필요한 곳에서 사용한다.
+    /// `allValues`에 포함된 `primitiveInfinity`는 제외된다.
+    public static var finiteMax: CGFloat { allValues.last(where: { $0.isFinite }) ?? 0 }
 }
 
 public extension CGFloat {
