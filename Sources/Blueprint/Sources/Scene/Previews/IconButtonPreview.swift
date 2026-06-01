@@ -178,14 +178,14 @@ struct IconButtonPreview: View {
                     if isCustomSize {
                         HStack {
                             Text("custom")
-                            SwiftUI.Slider(value: $customSize, in: 10...100, step: 1)
+                            SwiftUI.Slider(value: $customSize, in: 24...64, step: 1)
                             Text("\(Int(customSize))")
                         }
                     }
                 } else if variantIndex == 1 {
                     HStack {
                         Text("size")
-                        SwiftUI.Slider(value: $customSize, in: 10...100, step: 1)
+                        SwiftUI.Slider(value: $customSize, in: 24...64, step: 1)
                         Text("\(Int(customSize))")
                     }
                 } else {
@@ -200,7 +200,7 @@ struct IconButtonPreview: View {
                     if isCustomSize {
                         HStack {
                             Text("custom")
-                            SwiftUI.Slider(value: $customSize, in: 10...100, step: 1)
+                            SwiftUI.Slider(value: $customSize, in: 24...64, step: 1)
                             Text("\(Int(customSize))")
                         }
                     }
