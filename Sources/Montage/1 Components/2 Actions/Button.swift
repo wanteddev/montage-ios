@@ -508,7 +508,7 @@ private extension Button {
         case .small:
             .init(width: 16, height: 16)
         case .medium:
-            .init(width: variant == .text ? 20 : 18, height: variant == .text ? 20 : 18)
+            .init(width: 18, height: 18)
         case .large:
             .init(width: 20, height: 20)
         }
@@ -521,7 +521,7 @@ private extension Button {
         case .small:
             variant == .text ? .label1 : .caption1
         case .medium:
-            variant == .text ? .body1 : .label1
+            variant == .text ? .body2 : .label1
         case .large:
             variant == .text ? .body1 : .body2
         }
@@ -533,7 +533,10 @@ private extension Button {
     
     var cornerRadius: CGFloat {
         if variant == .text {
-            6.0
+            switch size {
+            case .xsmall, .small: 8.0
+            case .medium, .large: 10.0
+            }
         } else {
             switch size {
             case .xsmall: 8.0
@@ -548,8 +551,8 @@ private extension Button {
         switch size {
         case .xsmall: 16
         case .small: variant == .text ? 20 : 16
-        case .medium: variant == .text ? 24 : 20
-        case .large: variant == .text ? 24 : 22
+        case .medium: variant == .text ? 22 : 20
+        case .large: 22
         }
     }
 
@@ -602,15 +605,21 @@ private extension Button {
     }
 
     var interactionVerticalOffset: CGFloat { variant == .text ? 4 : 0 }
-    var interactionHorizontalOffset: CGFloat { variant == .text ? 7 : 0 }
+    var interactionHorizontalOffset: CGFloat {
+        guard variant == .text else { return 0 }
+        return switch size {
+        case .xsmall, .small: 6
+        case .medium, .large: 8
+        }
+    }
     
     var loadingSize: CGSize {
-        let dim: CGFloat
+        let dimension: CGFloat
         switch size {
-        case .xsmall, .small: dim = 12
-        case .medium: dim = 14
-        case .large: dim = 16
+        case .xsmall, .small: dimension = 12
+        case .medium: dimension = 14
+        case .large: dimension = 16
         }
-        return .init(width: dim, height: dim)
+        return .init(width: dimension, height: dimension)
     }
 }
