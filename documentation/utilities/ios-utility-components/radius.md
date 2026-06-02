@@ -39,20 +39,10 @@ view.layer.cornerRadius = .radius12
 </details>
 <details>
 
-<summary>``static var full: CGFloat``</summary>
-
-
-모서리를 완전히 둥글게(pill/capsule) 만드는 radius 값.
-- **Discussion**
-
-  실제 값은 무한대(`primitiveInfinity`)이며, 적용 시 컴포넌트의 짧은 변 길이의 절반으로 클램프되어 항상 완전한 둥근 형태가 된다. 고정된 유한 토큰이 아니므로 `allValues`/`max`에는 포함되지 않는다.
-</details>
-<details>
-
 <summary>``static var max: CGFloat``</summary>
 
 
-정의된 radius 토큰 중 최대값. `full`(pill)은 포함되지 않는다.
+정의된 radius 토큰 중 최대값. `radiusFull`은 포함되지 않는다.
 </details>
 <details>
 
