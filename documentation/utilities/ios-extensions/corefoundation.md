@@ -441,6 +441,25 @@ title: CoreFoundation
 </details>
 <details>
 
+<summary>``static let radiusFull: CGFloat``</summary>
+
+
+모서리를 완전히 둥글게(pill/capsule) 만드는 모서리 반경.
+- **Discussion**
+
+  무한대 값으로, 적용 대상의 짧은 변 길이의 절반으로 클램프되어 항상 완전한 둥근 형태를 보장한다. Figma `full` 토큰에 대응한다.
+
+  ```swift
+  // SwiftUI
+  RoundedRectangle(cornerRadius: .radiusFull)
+  
+  // UIKit
+  view.layer.cornerRadius = .radiusFull
+  ```
+
+</details>
+<details>
+
 <summary>``static let spacing0: CGFloat``</summary>
 
 
