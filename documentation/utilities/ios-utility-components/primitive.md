@@ -39,13 +39,10 @@ let custom = CGFloat.primitive18
 </details>
 <details>
 
-<summary>``static var finiteMax: CGFloat``</summary>
+<summary>``static var max: CGFloat``</summary>
 
 
-정의된 primitive 토큰 중 최대 유한값(`primitiveInfinity` 제외).
-- **Discussion**
-
-  범위 검증이나 슬라이더 제약 계산처럼 유한값이 필요한 곳에서 사용한다. `allValues`에 포함된 `primitiveInfinity`는 제외된다.
+정의된 primitive 토큰 중 최대값. `primitiveInfinity`은 포함되지 않는다.
 </details>
 <details>
 
