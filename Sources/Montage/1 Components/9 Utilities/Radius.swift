@@ -35,6 +35,13 @@ public enum Radius {
 
     /// 정의된 radius 토큰 중 최대값. `full`(pill)은 포함되지 않는다.
     public static var max: CGFloat { allValues.last ?? 0 }
+
+    /// 모서리를 완전히 둥글게(pill/capsule) 만드는 radius 값.
+    ///
+    /// 실제 값은 무한대(`primitiveInfinity`)이며, 적용 시 컴포넌트의 짧은 변
+    /// 길이의 절반으로 클램프되어 항상 완전한 둥근 형태가 된다. 고정된 유한
+    /// 토큰이 아니므로 `allValues`/`max`에는 포함되지 않는다.
+    public static var full: CGFloat { .radiusFull }
 }
 
 public extension CGFloat {
@@ -56,4 +63,17 @@ public extension CGFloat {
     static let radius20: CGFloat = .primitive20
     /// 24pt의 모서리 반경
     static let radius24: CGFloat = .primitive24
+    /// 모서리를 완전히 둥글게(pill/capsule) 만드는 모서리 반경.
+    ///
+    /// 무한대 값으로, 적용 대상의 짧은 변 길이의 절반으로 클램프되어 항상
+    /// 완전한 둥근 형태를 보장한다. Figma `full` 토큰에 대응한다.
+    ///
+    /// ```swift
+    /// // SwiftUI
+    /// RoundedRectangle(cornerRadius: .radiusFull)
+    ///
+    /// // UIKit
+    /// view.layer.cornerRadius = .radiusFull
+    /// ```
+    static let radiusFull: CGFloat = .primitiveInfinity
 }
