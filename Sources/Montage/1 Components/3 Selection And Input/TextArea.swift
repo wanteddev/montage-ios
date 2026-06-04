@@ -649,6 +649,11 @@ public struct TextArea: View {
             }
             
             func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+                // iOS 26.4 UIKit Undo 도중 전달되는 범위가 현재 텍스트 길이를 초과해
+                // NSString 조작 시 NSInvalidArgumentException(out of bounds)이 발생하는 것을 방지한다.
+                let currentLength = (textView.text as NSString).length
+                guard range.location != NSNotFound,
+                      range.location + range.length <= currentLength else { return true }
                 if let limit = parent.limit, !parent.overflow {
                     let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
                     if newText.count > limit {
