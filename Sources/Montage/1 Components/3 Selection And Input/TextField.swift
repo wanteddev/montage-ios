@@ -640,7 +640,7 @@ private extension TextField {
             }
             switch variant {
             case .primary, .negative:
-                .primaryNormal
+                return .primaryNormal
             case .assistive:
                 return .labelNormal
             }
