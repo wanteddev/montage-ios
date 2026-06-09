@@ -2404,6 +2404,18 @@
           "kind": "method"
         },
         {
+          "name": "inputCharacterLimit(_:)",
+          "signature": "func inputCharacterLimit(Int?) -> TextArea",
+          "summary": "입력 시점에 적용할 최대 글자 수를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "inputTransform(_:)",
+          "signature": "func inputTransform(((String) -> String)?) -> TextArea",
+          "summary": "입력되는 텍스트를 입력 시점에 변환할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "negative(_:)",
           "signature": "func negative(Bool) -> TextArea",
           "summary": "텍스트 영역의 오류 상태를 설정합니다.",
