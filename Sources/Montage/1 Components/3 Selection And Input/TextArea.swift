@@ -205,6 +205,8 @@ public struct TextArea: View {
     private var trailingResourceSpacing: CGFloat = 4
     private var characterCounterLimit: Int?
     private var characterCounterOverflow: Bool = false
+    private var inputCharacterLimit: Int?
+    private var inputTransform: ((String) -> String)?
     /// 텍스트 영역의 크기 조절 방식을 설정합니다.
     ///
     /// - Parameter resize: 크기 조절 방식
@@ -212,6 +214,34 @@ public struct TextArea: View {
     public func resize(_ resize: Resize) -> Self {
         var zelf = self
         zelf.resize = resize
+        return zelf
+    }
+
+    /// 입력 시점에 적용할 최대 글자 수를 설정합니다.
+    ///
+    /// 하단 문자 수 카운터와 달리 카운터 UI를 표시하지 않고 입력 길이만 제한합니다.
+    /// 사후 변형이 아닌 입력 단계에서 제한하므로 UITextView의 텍스트와 UndoManager가
+    /// 일관되게 유지되며, 초과 입력/붙여넣기는 허용분만 잘라서 삽입됩니다.
+    ///
+    /// - Parameter limit: 최대 글자 수, nil이면 제한 없음
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func inputCharacterLimit(_ limit: Int?) -> Self {
+        var zelf = self
+        zelf.inputCharacterLimit = limit
+        return zelf
+    }
+
+    /// 입력되는 텍스트를 입력 시점에 변환할 클로저를 설정합니다.
+    ///
+    /// 사용자가 입력하거나 붙여넣는 텍스트(replacement) 조각에 적용됩니다. emoji 제거 등
+    /// 도메인별 정규화에 사용합니다. 사후 변형이 아닌 입력 단계에서 적용되므로 UITextView의
+    /// 텍스트와 UndoManager가 일관되게 유지됩니다.
+    ///
+    /// - Parameter transform: 입력 조각을 변환하는 클로저, nil이면 변환하지 않음
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func inputTransform(_ transform: ((String) -> String)?) -> Self {
+        var zelf = self
+        zelf.inputTransform = transform
         return zelf
     }
     
@@ -351,6 +381,8 @@ public struct TextArea: View {
                 UITextViewWrapper(text: $text)
                     .characterCountLimit(characterCounterLimit)
                     .characterCountOverflow(characterCounterOverflow)
+                    .inputLimit(inputCharacterLimit)
+                    .inputTransform(inputTransform)
                     .frameHeight(
                         minHeight: resize.minHeight,
                         maxHeight: resize.maxHeight
@@ -621,7 +653,13 @@ public struct TextArea: View {
         
         func updateUIView(_ uiView: UITextView, context: Context) {
             if uiView.text != text {
+                // 외부(코드)에서 텍스트가 교체되는 경우. 직접 대입은 UITextView의 UndoManager와
+                // 동기화되지 않아 stale operation이 남고, 이후 Undo 시 저장된 range가 현재 길이를
+                // 벗어나 out-of-bounds 크래시(LIVE-1014)를 유발하므로 undo 기록을 비운다.
+                // 사용자 입력으로 인한 길이 제한은 shouldChangeTextIn에서 처리되어 이 경로를
+                // 타지 않으므로 일반 타이핑의 undo/redo에는 영향을 주지 않는다.
                 uiView.text = text
+                uiView.undoManager?.removeAllActions()
             }
             if context.coordinator.parent.text != text {
                 DispatchQueue.main.async {
@@ -630,6 +668,8 @@ public struct TextArea: View {
             }
             context.coordinator.parent.limit = limit
             context.coordinator.parent.overflow = overflow
+            context.coordinator.parent.inputLimit = inputLimit
+            context.coordinator.parent.inputTransform = inputTransform
             context.coordinator.minHeight = minHeight
             context.coordinator.maxHeight = maxHeight
         }
@@ -649,15 +689,44 @@ public struct TextArea: View {
             }
             
             func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-                if let limit = parent.limit, !parent.overflow {
-                    let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-                    if newText.count > limit {
-                        return false
+                let currentText = textView.text ?? ""
+                // Undo 등으로 전달된 range가 현재 텍스트 범위를 벗어나면 차단한다.
+                // (out-of-bounds 크래시 방어 — Range 변환 실패가 곧 범위 초과를 의미)
+                guard let swiftRange = Range(range, in: currentText) else { return false }
+
+                // 입력 변환(emoji 제거 등)·길이 제한을 입력 시점에 적용해 UITextView가 항상
+                // 정규화된 텍스트만 보유하도록 한다. 사후 변형을 하지 않으므로 textStorage와
+                // UndoManager가 일관되게 유지되어 LIVE-1014(Undo 시 out-of-bounds) 크래시를 방지한다.
+                var sanitized = parent.inputTransform?(text) ?? text
+                let maxLength = parent.inputLimit ?? (parent.overflow ? nil : parent.limit)
+                if let maxLength {
+                    let lengthWithoutRange = currentText.count
+                        - currentText.distance(from: swiftRange.lowerBound, to: swiftRange.upperBound)
+                    let remaining = max(0, maxLength - lengthWithoutRange)
+                    if sanitized.count > remaining {
+                        sanitized = String(sanitized.prefix(remaining))
                     }
                 }
-                return true
+
+                // 변형이 없으면 시스템 기본 입력을 허용한다(UITextView가 직접 처리 → undo 일관).
+                if sanitized == text {
+                    return true
+                }
+
+                // 삽입할 내용이 없고 지울 범위도 없으면(예: 길이 초과로 입력이 전부 잘린 경우)
+                // 실질 변화가 없으므로 입력만 차단한다. 빈 replace를 호출하면 텍스트는 그대로면서
+                // undo 기록만 쌓여 이후 Undo/Redo가 무반응이 된다.
+                if sanitized.isEmpty, range.length == 0 {
+                    return false
+                }
+
+                // 변형이 있으면 해당 범위에 직접 삽입(undo에 일관 기록)하고 시스템 입력은 차단한다.
+                if let textRange = textView.textRange(for: range) {
+                    textView.replace(textRange, withText: sanitized)
+                }
+                return false
             }
-            
+
             func textViewDidChange(_ textView: UITextView) {
                 let parentText = parent.text
                 parent.text = textView.text
@@ -665,6 +734,13 @@ public struct TextArea: View {
                 if parentText == parent.text {
                     textView.text = parentText
                 }
+                // sizeThatFits 반환 높이가 maxHeight에서 포화되면 SwiftUI가 sizeThatFits를
+                // 재호출하지 않아 스크롤 토글 기회가 사라진다. 매 입력마다 호출되는 이 시점에서
+                // 무제한 높이로 측정한 콘텐츠 높이로 스크롤 여부를 직접 갱신한다.
+                let fit = textView.sizeThatFits(
+                    CGSize(width: textView.bounds.width, height: .greatestFiniteMagnitude)
+                ).height
+                textView.isScrollEnabled = fit > (maxHeight ?? .greatestFiniteMagnitude)
             }
         }
         
@@ -676,13 +752,11 @@ public struct TextArea: View {
             var newSize = uiView.sizeThatFits(
                 CGSize(width: proposal.width ?? uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)
             )
-            
-            // NOTE: textViewDidBeginEditing/textViewDidChange에서 isScrollEnabled를 설정했었는데
-            // 알 수 없는 이유로 언젠가부터 그 시점에 contentHeight가 maxHeight와 같아져 있어서
-            // isScrollEnabled가 false로 유지됨으로 인해 sizeThatFits에서 isScrollEnabled를 설정하도록 변경
-            uiView.contentSize = newSize
-            uiView.isScrollEnabled = uiView.contentSize.height > (maxHeight ?? .greatestFiniteMagnitude)
-            
+
+            // isScrollEnabled는 여기서 설정하지 않는다. SwiftUI는 레이아웃 협상 과정에서
+            // sizeThatFits를 비정상 width(예: 9, .infinity)로도 호출하는데, 그때의 측정값으로
+            // 스크롤을 토글하면 textViewDidChange에서 올바르게 켠 값을 false로 덮어쓴다.
+            // 스크롤 토글은 실제 bounds.width가 보장되는 textViewDidChange에서만 수행한다.
             newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
             return CGSize(
                 width: proposal.width ?? uiView.bounds.width,
@@ -694,10 +768,24 @@ public struct TextArea: View {
         private var overflow: Bool = false
         private var minHeight: CGFloat?
         private var maxHeight: CGFloat?
-        
+        private var inputLimit: Int?
+        private var inputTransform: ((String) -> String)?
+
         func characterCountLimit(_ limit: Int?) -> Self {
             var zelf = self
             zelf.limit = limit
+            return zelf
+        }
+
+        func inputLimit(_ limit: Int?) -> Self {
+            var zelf = self
+            zelf.inputLimit = limit
+            return zelf
+        }
+
+        func inputTransform(_ transform: ((String) -> String)?) -> Self {
+            var zelf = self
+            zelf.inputTransform = transform
             return zelf
         }
         
@@ -719,5 +807,14 @@ public struct TextArea: View {
         override var intrinsicContentSize: CGSize {
             sizeThatFits(CGSize(width: frame.width, height: CGFloat.greatestFiniteMagnitude))
         }
+    }
+}
+
+private extension UITextView {
+    /// NSRange를 UITextRange로 변환한다. 범위가 유효하지 않으면 nil을 반환한다.
+    func textRange(for nsRange: NSRange) -> UITextRange? {
+        guard let start = position(from: beginningOfDocument, offset: nsRange.location),
+              let end = position(from: start, offset: nsRange.length) else { return nil }
+        return textRange(from: start, to: end)
     }
 }
