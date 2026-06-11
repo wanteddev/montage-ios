@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 348,
+  "count": 350,
   "icons": [
     "agent",
     "agentColor",
@@ -185,6 +185,7 @@
     "homeFill",
     "hourglass",
     "image",
+    "imageFill",
     "inbox",
     "instance",
     "keyboard",
@@ -274,6 +275,7 @@
     "play",
     "plus",
     "plusThick",
+    "positionReview",
     "pouch",
     "pouchFill",
     "presentation",

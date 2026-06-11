@@ -216,6 +216,7 @@ public enum Icon: String, CaseIterable {
     case homeFill
     case hourglass
     case image
+    case imageFill
     case inbox
     case instance
     case keyboard
@@ -305,6 +306,7 @@ public enum Icon: String, CaseIterable {
     case play
     case plus
     case plusThick
+    case positionReview
     case pouch
     case pouchFill
     case presentation
