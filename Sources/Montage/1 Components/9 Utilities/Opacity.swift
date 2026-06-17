@@ -34,9 +34,9 @@ public enum Opacity {
     /// 컴포넌트가 토큰에 스냅하거나 최대/최소 토큰을 동적으로 도출할 때 사용한다.
     /// 토큰이 추가/삭제되면 이 배열만 갱신하면 사용처가 자동으로 반영된다.
     public static let allValues: [CGFloat] = [
-        .opacity0, .opacity5, .opacity8, .opacity12, .opacity16, .opacity22,
-        .opacity28, .opacity32, .opacity35, .opacity43, .opacity52, .opacity61,
-        .opacity74, .opacity88, .opacity97, .opacity100
+        .opacity0, .opacity5, .opacity8, .opacity12, .opacity16, .opacity20,
+        .opacity22, .opacity28, .opacity32, .opacity35, .opacity43, .opacity52,
+        .opacity61, .opacity74, .opacity88, .opacity97, .opacity100
     ]
 
     /// 정의된 opacity 토큰 중 최소값(완전 투명).
@@ -57,6 +57,8 @@ public extension CGFloat {
     static let opacity12: CGFloat = 0.12
     /// 16%의 불투명도
     static let opacity16: CGFloat = 0.16
+    /// 20%의 불투명도
+    static let opacity20: CGFloat = 0.20
     /// 22%의 불투명도
     static let opacity22: CGFloat = 0.22
     /// 28%의 불투명도
