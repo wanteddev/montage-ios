@@ -31,15 +31,28 @@ import SwiftUI
 /// TextField(text: $inputText)
 ///    .trailingButton(
 ///        .init(
-///            variant: .primary,
 ///            title: "인증",
 ///            handler: { verifyCode() }
 ///        )
 ///    )
+///
+/// // 사이즈를 지정한 텍스트 필드
+/// TextField(text: $inputText)
+///    .size(.medium)
 /// ```
 public struct TextField: View {
     // MARK: - Types
-    
+
+    /// 텍스트 필드의 사이즈를 정의합니다.
+    ///
+    /// 사이즈에 따라 패딩, 모서리 반경, 최소 높이, 입력 타이포그래피, 아이콘 크기가 함께 결정됩니다.
+    public enum Size {
+        /// 큰 사이즈 (최소 높이 48)
+        case large
+        /// 중간 사이즈 (최소 높이 40)
+        case medium
+    }
+
     /// 텍스트 필드의 상태를 정의합니다.
     public enum Status {
         /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
@@ -52,12 +65,11 @@ public struct TextField: View {
         /// - Parameter description: 오류 설명 텍스트, 생략하면 기본값으로 `""` 적용
         case negative(description: String = "")
     }
-    
+
     /// 텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.
     ///
-    /// 이 구조체를 사용하여 오른쪽에 표시될 버튼의 스타일, 텍스트, 동작을 정의할 수 있습니다.
+    /// 이 구조체를 사용하여 필드 내부 오른쪽에 표시될 버튼(Outlined 형태)의 텍스트와 동작을 정의할 수 있습니다.
     public struct TrailingButtonInfo {
-        fileprivate let variant: Button.Color
         fileprivate let title: String
         fileprivate let disable: Bool
         fileprivate let handler: (() -> Void)?
@@ -65,18 +77,15 @@ public struct TextField: View {
         /// 트레일링 버튼을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - variant: 버튼의 변형 스타일
         ///   - title: 버튼에 표시할 텍스트
         ///   - disable: 트레일링 버튼만 비활성화할지 여부, 생략하면 기본값으로 `false` 적용
         ///   - handler: 버튼 클릭 시 실행할 핸들러
         /// - Returns: 구성된 트레일링 버튼 인스턴스
         public init(
-            variant: Button.Color,
             title: String,
             disable: Bool = false,
             handler: (() -> Void)? = nil
         ) {
-            self.variant = variant
             self.title = title
             self.disable = disable
             self.handler = handler
@@ -155,7 +164,8 @@ public struct TextField: View {
     }
     
     // MARK: - Modifiers
-    
+
+    private var size: Size = .large
     private var status: Status = .normal()
     private var disable = false
     private var heading: String? = nil
@@ -166,6 +176,17 @@ public struct TextField: View {
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
+
+    /// 텍스트 필드의 사이즈를 설정합니다.
+    ///
+    /// - Parameter size: 텍스트 필드의 사이즈
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func size(_ size: Size) -> Self {
+        var zelf = self
+        zelf.size = size
+        return zelf
+    }
+
     /// 텍스트 필드의 상태를 설정합니다.
     ///
     /// - Parameter status: 텍스트 필드의 상태
@@ -261,7 +282,6 @@ public struct TextField: View {
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.colorScheme) private var colorScheme
-    @State private var textFieldSize: CGSize = .zero
     @State private var textFieldGlobalFrame: CGRect = .zero
     @FocusState private var textFieldFocusState: Bool
     @State private var autoCompletionContentHeight: CGFloat = .zero
@@ -303,103 +323,21 @@ public struct TextField: View {
 
 private extension TextField {
     var inputField: some View {
-        HStack(spacing: -1) {
-            ZStack {
-                HStack(spacing: 9) {
-                    if let icon {
-                        Image.icon(icon)
-                            .resizable()
-                            .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
-                    }
-                    SwiftUI.TextField(
-                        "",
-                        text: $text,
-                        prompt: {
-                            if let placeholder {
-                                Text(placeholder)
-                                    .typography(
-                                        variant: .body1,
-                                        weight: .regular,
-                                        color: placeholderTextColor
-                                    )
-                            } else {
-                                nil
-                            }
-                        }()
-                    )
-                    .autocorrectionDisabled(fixAutocorrection)
-                    .font(.font(variant: .body1, weight: .regular))
-                    .foregroundStyle(fieldTextColor)
-                    .focused($textFieldFocusState)
-                    .frame(minHeight: 24)
-                    .padding(.horizontal, 4)
-                    .accessibilityLabel(heading ?? "")
-                    .accessibilityValue(accessibilityStatusDescription)
-                    
-                    if !text.isEmpty, textFieldFocusState {
-                        IconButton(
-                            variant: .normal(size: .custom(size: 22)),
-                            icon: .circleCloseFill
-                        ) {
-                            text = ""
-                            fixAutocorrection = true
-                            Task { fixAutocorrection = false }
-                        }
-                        .iconColor(.semantic(.labelAssistive))
-                    } else {
-                        if let trailingIcon, let trailingIconColor {
-                            Image
-                                .icon(trailingIcon)
-                                .resizable()
-                                .frame(width: 22, height: 22)
-                                .foregroundStyle(trailingIconColor)
-                        }
-                    }
-                    
-                    trailingContent()
-                }
-                .padding(.all, 12)
-                .overlay {
-                    if trailingButton == nil {
-                        RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                    } else {
-                        UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12))
-                            .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                    }
-                }
-            }
-            .contentShape(RoundedRectangle(cornerRadius: 12))
-            .onTapGesture {
-                textFieldFocusState = true
-            }
-            
+        HStack(spacing: .spacing4) {
+            contentRow
+                .frame(minHeight: size.contentMinHeight)
+
             if let trailingButton {
-                ZStack {
-                    TrailingButton(
-                        variant: trailingButton.variant,
-                        title: trailingButton.title,
-                        disable: disable || trailingButton.disable,
-                        handler: trailingButton.handler
-                    )
-                    UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
-                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutral), lineWidth: 1)
-                        .clipShape(
-                            Rectangle()
-                                .offset(x: 1, y: .zero)
-                        )
-                        .frame(height: textFieldSize.height)
-                }
-                .fixedSize(horizontal: true, vertical: false)
+                TrailingButton(
+                    size: size,
+                    title: trailingButton.title,
+                    disable: disable || trailingButton.disable,
+                    handler: trailingButton.handler
+                )
             }
         }
-        .frame(minHeight: 48)
-        .onGeometryChange(
-            for: CGSize.self,
-            of: { $0.size },
-            action: { textFieldSize = $0 }
-        )
+        .padding(.all, size.containerPadding)
+        .frame(minHeight: size.minHeight)
         .onGeometryChange(
             for: CGRect.self,
             of: { proxy in
@@ -408,22 +346,17 @@ private extension TextField {
             },
             action: { textFieldGlobalFrame = $0 }
         )
-        .background {
-            if disable {
-                SwiftUI.Color.semantic(.fillAlternative)
-            } else {
-                if colorScheme == .light {
-                    SwiftUI.Color.atomic(.common100)
-                        .opacity(0.8)
-                        .background(.ultraThinMaterial)
-                } else {
-                    SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                        .background(.ultraThinMaterial)
-                }
-            }
+        .background { fieldBackground }
+        .overlay {
+            RoundedRectangle(cornerRadius: size.cornerRadius)
+                .strokeBorder(fieldStrokeColor, lineWidth: 1)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background { focusRing }
         .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
+        .contentShape(RoundedRectangle(cornerRadius: size.cornerRadius))
+        .onTapGesture {
+            textFieldFocusState = true
+        }
         .allowsHitTesting(disable == false)
         .overlay {
             autoCompletionContent.opacity(0)
@@ -479,7 +412,97 @@ private extension TextField {
             )
         )
     }
-    
+
+    @ViewBuilder
+    var contentRow: some View {
+        HStack(spacing: .spacing2) {
+            if let icon {
+                Image.icon(icon)
+                    .resizable()
+                    .frame(width: size.iconSize, height: size.iconSize)
+                    .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                    .padding(size.iconPadding)
+            }
+
+            SwiftUI.TextField(
+                "",
+                text: $text,
+                prompt: promptText
+            )
+            .autocorrectionDisabled(fixAutocorrection)
+            .font(.font(variant: size.inputVariant, weight: .regular))
+            .foregroundStyle(fieldTextColor)
+            .focused($textFieldFocusState)
+            .padding(.horizontal, .spacing4)
+            .accessibilityLabel(heading ?? "")
+            .accessibilityValue(accessibilityStatusDescription)
+
+            trailingArea
+        }
+    }
+
+    var promptText: Text? {
+        guard let placeholder else { return nil }
+        return Text(placeholder)
+            .typography(
+                variant: size.inputVariant,
+                weight: .regular,
+                color: placeholderTextColor
+            )
+    }
+
+    @ViewBuilder
+    var trailingArea: some View {
+        HStack(spacing: .spacing8) {
+            if !text.isEmpty, textFieldFocusState {
+                IconButton(
+                    variant: .normal(size: .custom(size: Int(size.iconSize))),
+                    icon: .circleCloseFill
+                ) {
+                    text = ""
+                    fixAutocorrection = true
+                    Task { fixAutocorrection = false }
+                }
+                .iconColor(.semantic(.labelAssistive))
+            } else if !text.isEmpty, let trailingIcon, let trailingIconColor {
+                Image
+                    .icon(trailingIcon)
+                    .resizable()
+                    .frame(width: size.iconSize, height: size.iconSize)
+                    .foregroundStyle(trailingIconColor)
+            }
+
+            trailingContent()
+        }
+    }
+
+    @ViewBuilder
+    var fieldBackground: some View {
+        Group {
+            if disable {
+                SwiftUI.Color.semantic(.fillAlternative)
+            } else if colorScheme == .light {
+                SwiftUI.Color.atomic(.common100)
+                    .opacity(0.8)
+                    .background(.ultraThinMaterial)
+            } else {
+                SwiftUI.Color.atomic(.coolNeutral17)
+                    .opacity(0.61)
+                    .background(.ultraThinMaterial)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: size.cornerRadius))
+    }
+
+    @ViewBuilder
+    var focusRing: some View {
+        if textFieldFocusState, disable == false {
+            RoundedRectangle(cornerRadius: size.cornerRadius + .spacing4)
+                .strokeBorder(focusRingColor, lineWidth: 4)
+                .padding(-.spacing4)
+        }
+    }
+
     var accessibilityStatusDescription: String {
         switch status {
         case .negative(let description):
@@ -556,44 +579,49 @@ private extension TextField {
         if textFieldFocusState {
             switch status {
             case .normal, .positive:
-                .semantic(.primaryNormal).opacity(0.43)
+                .semantic(.linePrimaryStrong)
             case .negative:
-                .semantic(.statusNegative).opacity(0.43)
+                .semantic(.lineNegativeStrong)
             }
         } else {
             switch status {
             case .normal, .positive:
                 .semantic(.lineNeutral)
             case .negative:
-                .semantic(.statusNegative).opacity(0.43)
+                .semantic(.lineNegativeNormal)
             }
         }
     }
-    
+
+    var focusRingColor: SwiftUI.Color {
+        switch status {
+        case .negative:
+            .semantic(.interactionNegative)
+        case .normal, .positive:
+            .semantic(.interactionFocus)
+        }
+    }
+
     var trailingIcon: Icon? {
         switch status {
         case .positive:
             .circleCheckFill
-        case .negative:
-            .circleExclamationFill
         default:
             nil
         }
     }
-    
+
     var trailingIconColor: SwiftUI.Color? {
         switch status {
         case .positive:
-            .semantic(.primaryNormal)
-        case .negative:
-            .semantic(.statusNegative)
+            .semantic(.statusPositive)
         default:
             nil
         }
     }
-    
+
     var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
+        disable ? .semantic(.labelDisable) : .semantic(.labelAlternative)
     }
     
     var fieldTextColor: SwiftUI.Color {
@@ -601,16 +629,99 @@ private extension TextField {
     }
 }
 
+// MARK: - Size Tokens
+private extension TextField.Size {
+    /// Container 내부 패딩
+    var containerPadding: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing6
+        }
+    }
+
+    /// 모서리 반경
+    var cornerRadius: CGFloat {
+        switch self {
+        case .large: .radius14
+        case .medium: .radius12
+        }
+    }
+
+    /// Container 최소 높이
+    var minHeight: CGFloat {
+        switch self {
+        case .large: .dimension48
+        case .medium: .dimension40
+        }
+    }
+
+    /// Content 영역 최소 높이
+    var contentMinHeight: CGFloat {
+        switch self {
+        case .large: .dimension24
+        case .medium: .dimension20
+        }
+    }
+
+    /// 아이콘 크기
+    var iconSize: CGFloat {
+        switch self {
+        case .large: .dimension20
+        case .medium: .dimension18
+        }
+    }
+
+    /// 아이콘 묶음 내부 패딩
+    var iconPadding: CGFloat {
+        switch self {
+        case .large: .spacing2
+        case .medium: .spacing1
+        }
+    }
+
+    /// 입력 타이포그래피 변형
+    var inputVariant: Typography.Variant {
+        switch self {
+        case .large: .body2
+        case .medium: .label1
+        }
+    }
+
+    /// 트레일링 버튼 좌우 패딩
+    var trailingButtonPaddingHorizontal: CGFloat {
+        switch self {
+        case .large: .spacing12
+        case .medium: .spacing10
+        }
+    }
+
+    /// 트레일링 버튼 상하 패딩
+    var trailingButtonPaddingVertical: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing6
+        }
+    }
+
+    /// 트레일링 버튼 모서리 반경
+    var trailingButtonRadius: CGFloat {
+        switch self {
+        case .large: .radius10
+        case .medium: .radius8
+        }
+    }
+}
+
 // MARK: - Inner Views
 private extension TextField {
     struct TrailingButton: View {
-        private let variant: Button.Color
+        private let size: Size
         private let title: String
         private let disable: Bool
         private let handler: (() -> Void)?
 
-        init(variant: Button.Color, title: String, disable: Bool, handler: (() -> Void)?) {
-            self.variant = variant
+        init(size: Size, title: String, disable: Bool, handler: (() -> Void)?) {
+            self.size = size
             self.title = title
             self.disable = disable
             self.handler = handler
@@ -620,9 +731,9 @@ private extension TextField {
 
         var body: some View {
             Text(title)
-                .paragraph(variant: .body1, weight: typoWeight, semantic: textColor)
-                .padding(.horizontal, 19)
-                .padding(.vertical, 12)
+                .paragraph(variant: .caption1, weight: .bold, semantic: textColor)
+                .padding(.horizontal, size.trailingButtonPaddingHorizontal)
+                .padding(.vertical, size.trailingButtonPaddingVertical)
                 .background(
                     Interaction(
                         state: isPressed ? .pressed : .normal,
@@ -630,27 +741,17 @@ private extension TextField {
                         color: .labelNormal
                     )
                 )
+                .clipShape(RoundedRectangle(cornerRadius: size.trailingButtonRadius))
+                .overlay {
+                    RoundedRectangle(cornerRadius: size.trailingButtonRadius)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutral), lineWidth: 1)
+                }
                 .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: disable ? nil : handler))
                 .allowsHitTesting(disable == false)
         }
 
         var textColor: Color.Semantic {
-            if disable {
-                return .labelDisable
-            }
-            switch variant {
-            case .primary, .negative:
-                return .primaryNormal
-            case .assistive:
-                return .labelNormal
-            }
-        }
-
-        var typoWeight: Typography.Weight {
-            switch variant {
-            case .primary, .negative: .bold
-            case .assistive: .medium
-            }
+            disable ? .labelDisable : .labelNormal
         }
     }
 }
