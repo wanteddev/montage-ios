@@ -543,6 +543,10 @@ public enum Color {
         case interactionInactive
         /// 비활성화된 상호작용 색상
         case interactionDisable
+        /// 포커스 상태에서 그림자를 표현하는 상호작용 색상 (e.g. TextField focused)
+        case interactionFocus
+        /// negative 상태에서 포커스되었을 때 그림자를 표현하는 상호작용 색상 (e.g. TextField negative focused)
+        case interactionNegative
 
         /// 기본 선 색상
         case lineNormal
@@ -556,6 +560,14 @@ public enum Color {
         case lineSolidNeutral
         /// 대체 실선 색상
         case lineSolidAlternative
+        /// primary 상태의 기본 보더 색상 (e.g. chip)
+        case linePrimaryNormal
+        /// primary 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField focused)
+        case linePrimaryStrong
+        /// negative 상태의 기본 보더 색상 (e.g. TextField negative)
+        case lineNegativeNormal
+        /// negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
+        case lineNegativeStrong
 
         /// 긍정적인 상태 색상
         case statusPositive
@@ -614,6 +626,10 @@ public enum Color {
         case fillStrong
         /// 대체 채우기 색상
         case fillAlternative
+        /// primary 요소 내부 색상 (e.g. Chip)
+        case fillPrimary
+        /// negative 요소 내부 색상 (e.g. Button negative)
+        case fillNegative
         /// 어두운 재질 색상
         case materialDimmer
         
@@ -671,6 +687,12 @@ public enum Color {
                 atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
             case .interactionDisable:
                 atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .interactionFocus:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity12
+            case .interactionNegative:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity12
             case .lineNormal:
                 atomicColor = .coolNeutral50
                 opacity = style == .dark ? .opacity32 : .opacity22
@@ -686,6 +708,18 @@ public enum Color {
                 atomicColor = style == .dark ? .coolNeutral23 : .coolNeutral97
             case .lineSolidAlternative:
                 atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .linePrimaryNormal:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity28
+            case .linePrimaryStrong:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity43
+            case .lineNegativeNormal:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity43
+            case .lineNegativeStrong:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity52
             case .statusPositive:
                 atomicColor = style == .dark ? .green60 : .green50
             case .statusCautionary:
@@ -743,6 +777,12 @@ public enum Color {
             case .fillAlternative:
                 atomicColor = .coolNeutral50
                 opacity = style == .dark ? .opacity12 : .opacity5
+            case .fillPrimary:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity5
+            case .fillNegative:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = style == .dark ? .opacity20 : .opacity12
             case .materialDimmer:
                 atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral10
                 opacity = style == .dark ? .opacity74 : .opacity52
