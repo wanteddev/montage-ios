@@ -1635,10 +1635,24 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 </details>
 <details>
 
+<summary>``case fillNegative``</summary>
+
+
+negative 요소 내부 색상 (e.g. Button negative)
+</details>
+<details>
+
 <summary>``case fillNormal``</summary>
 
 
 기본 채우기 색상
+</details>
+<details>
+
+<summary>``case fillPrimary``</summary>
+
+
+primary 요소 내부 색상 (e.g. Chip)
 </details>
 <details>
 
@@ -1656,10 +1670,24 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 </details>
 <details>
 
+<summary>``case interactionFocus``</summary>
+
+
+포커스 상태에서 그림자를 표현하는 상호작용 색상 (e.g. TextField focused)
+</details>
+<details>
+
 <summary>``case interactionInactive``</summary>
 
 
 비활성화된 상호작용 색상
+</details>
+<details>
+
+<summary>``case interactionNegative``</summary>
+
+
+negative 상태에서 포커스되었을 때 그림자를 표현하는 상호작용 색상 (e.g. TextField negative focused)
 </details>
 <details>
 
@@ -1733,6 +1761,20 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 </details>
 <details>
 
+<summary>``case lineNegativeNormal``</summary>
+
+
+negative 상태의 기본 보더 색상 (e.g. TextField negative)
+</details>
+<details>
+
+<summary>``case lineNegativeStrong``</summary>
+
+
+negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
+</details>
+<details>
+
 <summary>``case lineNeutral``</summary>
 
 
@@ -1750,14 +1792,14 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 <summary>``case linePrimaryNormal``</summary>
 
 
-기본 주요 선 색상
+primary 상태의 기본 보더 색상 (e.g. chip)
 </details>
 <details>
 
 <summary>``case linePrimaryStrong``</summary>
 
 
-강조된 주요 선 색상
+primary 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField focused)
 </details>
 <details>
 
