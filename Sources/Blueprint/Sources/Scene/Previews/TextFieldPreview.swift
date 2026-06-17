@@ -10,9 +10,14 @@ import SwiftUI
 
 import Montage
 
+/// SegmentedControl로 선택 가능한 Preview 옵션 enum을 위한 공통 프로토콜.
+private protocol PreviewSegment: CaseIterable, Equatable {
+    var selectableTitle: String { get }
+}
+
 struct TextFieldPreview: View {
-    
-    enum Variant: String, CaseIterable {
+
+    enum Variant: String, CaseIterable, PreviewSegment {
         case normal
         case positive
         case negative
@@ -30,7 +35,7 @@ struct TextFieldPreview: View {
         }
     }
     
-    enum Content: String, CaseIterable {
+    enum Content: String, CaseIterable, PreviewSegment {
         case none
         case icon
         case text
@@ -83,8 +88,25 @@ struct TextFieldPreview: View {
         }
     }
     
+    enum FieldSize: String, CaseIterable, PreviewSegment {
+        case large
+        case medium
+
+        var selectableTitle: String {
+            self.rawValue.capitalized
+        }
+
+        var s: Montage.TextField.Size {
+            switch self {
+            case .large: .large
+            case .medium: .medium
+            }
+        }
+    }
+
     @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
+    @State private var fieldSize: FieldSize = .large
     @State private var variant: Variant = .normal
     @State private var disable: Bool = false
     @State private var heading: Bool = false
@@ -101,7 +123,33 @@ struct TextFieldPreview: View {
         "aaa1", "bbb1", "ccc1", "ddd1", "eee1", "fff1", "ggg1", "hhh1", "iii1", "jjj1", "kkk1",
         "aaa2", "bbb2", "ccc2", "ddd2", "eee2", "fff2", "ggg2", "iii", "jjj"
     ]
-    
+
+    /// 제목과 SegmentedControl을 묶은 옵션 행을 구성한다.
+    @ViewBuilder
+    private func optionRow<Option: PreviewSegment>(_ title: String, _ selection: Binding<Option>) -> some View {
+        let all = Array(Option.allCases)
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+            SegmentedControl(
+                selectedIndex: Binding(
+                    get: { all.firstIndex(of: selection.wrappedValue) ?? 0 },
+                    set: { selection.wrappedValue = all[$0] }
+                ),
+                labels: all.map(\.selectableTitle)
+            )
+            .size(.small)
+        }
+    }
+
+    /// 제목과 Switch를 묶은 토글 행을 구성한다.
+    private func toggleRow(_ title: String, _ isOn: Binding<Bool>) -> some View {
+        HStack {
+            Text(title)
+            Switch(checked: isOn.wrappedValue) { isOn.wrappedValue = $0 }
+            Spacer()
+        }
+    }
+
     var body: some View {
         SwiftUI.ScrollView {
             VStack {
@@ -119,6 +167,7 @@ struct TextFieldPreview: View {
                     text: $text,
                     autoCompletionDataSource: $autoCompletionDataSource
                 )
+                .size(fieldSize.s)
                 .status(variant.v)
                 .disable(disable)
                 .heading(heading ? "제목" : nil)
@@ -127,7 +176,6 @@ struct TextFieldPreview: View {
                 .icon(icon ? .verifiedCheckFill : nil)
                 .trailingButton(
                     trailingButton ? TextField.TrailingButtonInfo(
-                        variant: .primary,
                         title: "텍스트",
                         handler: { print("trailing button tapped") }
                     ) : nil
@@ -197,69 +245,36 @@ struct TextFieldPreview: View {
                     )
                 }
                 
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 16) {
                     Text("Options").bold()
-                    
-                    HStack {
-                        Text("Status")
-                        Menu(variant.selectableTitle) {
-                            ForEach(Variant.allCases, id: \.self) { v in
-                                Button {
-                                    variant = v
-                                } label: {
-                                    Text(v.selectableTitle)
-                                }
-                            }
-                        }
-                        Spacer()
-                        HStack {
-                            Text("Disable")
-                            Switch(checked: disable) { disable = $0 }
-                        }
+
+                    // 필드 외형
+                    optionRow("Size", $fieldSize)
+                    optionRow("Status", $variant)
+
+                    Divider()
+
+                    // 필드 콘텐츠/상태 토글
+                    toggleRow("Placeholder", $placeholder)
+                    toggleRow("Icon", $icon)
+                    toggleRow("Disable", $disable)
+                    toggleRow("Heading", $heading)
+                    if heading {
+                        // RequiredBadge는 Heading이 있을 때만 표시된다.
+                        toggleRow("RequiredBadge", $requiredBadge)
+                            .padding(.leading, 16)
                     }
-                    HStack {
-                        HStack {
-                            Text("Heading")
-                            Switch(checked: heading) { heading = $0 }
-                        }
-                        Spacer()
-                        HStack {
-                            Text("RequiredBadge")
-                            Switch(checked: requiredBadge) { requiredBadge = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Icon")
-                            Switch(checked: icon) { icon = $0 }
-                        }
-                        Spacer()
-                        HStack {
-                            Text("Placeholder")
-                            Switch(checked: placeholder) { placeholder = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("TrailingButton")
-                            Switch(checked: trailingButton) { trailingButton = $0 }
-                        }
-                        Spacer()
-                        Text("TrailingContent")
-                        Menu(trailingContent.selectableTitle) {
-                            ForEach(Content.allCases, id: \.self) { c in
-                                Button {
-                                    trailingContent = c
-                                } label: {
-                                    Text(c.selectableTitle)
-                                }
-                            }
-                        }
-                    }
-                    HStack {
-                        Text("AutoComplete")
-                        Switch(checked: usingSuggestions) { usingSuggestions = $0 }
-                    }
+
+                    Divider()
+
+                    // 트레일링 영역
+                    toggleRow("TrailingButton", $trailingButton)
+                    optionRow("Trailing Content", $trailingContent)
+
+                    Divider()
+
+                    // 자동완성
+                    toggleRow("AutoComplete", $usingSuggestions)
                     if usingSuggestions {
                         Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")
                             .font(.caption)
