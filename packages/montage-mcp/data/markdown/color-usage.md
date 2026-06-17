@@ -62,1344 +62,1344 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 <summary>``case blue0``</summary>
 
 
-가장 어두운 파란색
+가장 어두운 파란색 (`#000000`)
 </details>
 <details>
 
 <summary>``case blue10``</summary>
 
 
-매우 어두운 파란색
+매우 어두운 파란색 (`#001536`)
 </details>
 <details>
 
 <summary>``case blue100``</summary>
 
 
-가장 밝은 파란색
+가장 밝은 파란색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case blue20``</summary>
 
 
-거의 검은색 파란색
+거의 검은색 파란색 (`#002966`)
 </details>
 <details>
 
 <summary>``case blue30``</summary>
 
 
-거의 검은색에 가까운 파란색
+거의 검은색에 가까운 파란색 (`#003E9C`)
 </details>
 <details>
 
 <summary>``case blue40``</summary>
 
 
-매우 어두운 파란색
+매우 어두운 파란색 (`#0054D1`)
 </details>
 <details>
 
 <summary>``case blue45``</summary>
 
 
-어두운 파란색
+어두운 파란색 (`#005EEB`)
 </details>
 <details>
 
 <summary>``case blue50``</summary>
 
 
-중간 어두운 파란색
+중간 어두운 파란색 (`#0066FF`)
 </details>
 <details>
 
 <summary>``case blue55``</summary>
 
 
-어두운 파란색
+어두운 파란색 (`#1A75FF`)
 </details>
 <details>
 
 <summary>``case blue60``</summary>
 
 
-중간 어두운 파란색
+중간 어두운 파란색 (`#3385FF`)
 </details>
 <details>
 
 <summary>``case blue65``</summary>
 
 
-약간 어두운 파란색
+약간 어두운 파란색 (`#4F95FF`)
 </details>
 <details>
 
 <summary>``case blue70``</summary>
 
 
-중간 파란색
+중간 파란색 (`#69A5FF`)
 </details>
 <details>
 
 <summary>``case blue80``</summary>
 
 
-중간 밝기의 파란색
+중간 밝기의 파란색 (`#9EC5FF`)
 </details>
 <details>
 
 <summary>``case blue90``</summary>
 
 
-약간 밝은 파란색
+약간 밝은 파란색 (`#C9DEFE`)
 </details>
 <details>
 
 <summary>``case blue95``</summary>
 
 
-밝은 파란색
+밝은 파란색 (`#EAF2FE`)
 </details>
 <details>
 
 <summary>``case blue99``</summary>
 
 
-매우 밝은 파란색
+매우 밝은 파란색 (`#F7FBFF`)
 </details>
 <details>
 
 <summary>``case common0``</summary>
 
 
-검은색 계열의 기본 색상
+검은색 계열의 기본 색상 (`#000000`)
 </details>
 <details>
 
 <summary>``case common100``</summary>
 
 
-흰색 계열의 기본 색상
+흰색 계열의 기본 색상 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case coolNeutral0``</summary>
 
 
-가장 어두운 차가운 중립 색상
+가장 어두운 차가운 중립 색상 (`#000000`)
 </details>
 <details>
 
 <summary>``case coolNeutral10``</summary>
 
 
-매우 어두운 차가운 중립 색상
+매우 어두운 차가운 중립 색상 (`#171719`)
 </details>
 <details>
 
 <summary>``case coolNeutral100``</summary>
 
 
-가장 밝은 차가운 중립 색상
+가장 밝은 차가운 중립 색상 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case coolNeutral15``</summary>
 
 
-거의 검은색 차가운 중립 색상
+거의 검은색 차가운 중립 색상 (`#1B1C1E`)
 </details>
 <details>
 
 <summary>``case coolNeutral17``</summary>
 
 
-거의 검은색에 가까운 차가운 중립 색상
+거의 검은색에 가까운 차가운 중립 색상 (`#212225`)
 </details>
 <details>
 
 <summary>``case coolNeutral20``</summary>
 
 
-매우 어두운 차가운 중립 색상
+매우 어두운 차가운 중립 색상 (`#292A2D`)
 </details>
 <details>
 
 <summary>``case coolNeutral22``</summary>
 
 
-어두운 차가운 중립 색상
+어두운 차가운 중립 색상 (`#2E2F33`)
 </details>
 <details>
 
 <summary>``case coolNeutral23``</summary>
 
 
-매우 어두운 차가운 중립 색상
+매우 어두운 차가운 중립 색상 (`#333438`)
 </details>
 <details>
 
 <summary>``case coolNeutral25``</summary>
 
 
-특별한 어두운 차가운 중립 색상
+특별한 어두운 차가운 중립 색상 (`#37383C`)
 </details>
 <details>
 
 <summary>``case coolNeutral30``</summary>
 
 
-매우 어두운 차가운 중립 색상
+매우 어두운 차가운 중립 색상 (`#46474C`)
 </details>
 <details>
 
 <summary>``case coolNeutral40``</summary>
 
 
-어두운 차가운 중립 색상
+어두운 차가운 중립 색상 (`#5A5C63`)
 </details>
 <details>
 
 <summary>``case coolNeutral5``</summary>
 
 
-매우 어두운 차가운 중립 색상
+매우 어두운 차가운 중립 색상 (`#0F0F10`)
 </details>
 <details>
 
 <summary>``case coolNeutral50``</summary>
 
 
-중간 어두운 차가운 중립 색상
+중간 어두운 차가운 중립 색상 (`#70737C`)
 </details>
 <details>
 
 <summary>``case coolNeutral60``</summary>
 
 
-약간 어두운 차가운 중립 색상
+약간 어두운 차가운 중립 색상 (`#878A93`)
 </details>
 <details>
 
 <summary>``case coolNeutral7``</summary>
 
 
-거의 검은색에 가까운 차가운 중립 색상
+거의 검은색에 가까운 차가운 중립 색상 (`#141415`)
 </details>
 <details>
 
 <summary>``case coolNeutral70``</summary>
 
 
-중간 차가운 중립 색상
+중간 차가운 중립 색상 (`#989BA2`)
 </details>
 <details>
 
 <summary>``case coolNeutral80``</summary>
 
 
-중간 밝기의 차가운 중립 색상
+중간 밝기의 차가운 중립 색상 (`#AEB0B6`)
 </details>
 <details>
 
 <summary>``case coolNeutral90``</summary>
 
 
-약간 밝은 차가운 중립 색상
+약간 밝은 차가운 중립 색상 (`#C2C4C8`)
 </details>
 <details>
 
 <summary>``case coolNeutral95``</summary>
 
 
-밝은 차가운 중립 색상
+밝은 차가운 중립 색상 (`#DBDCDF`)
 </details>
 <details>
 
 <summary>``case coolNeutral96``</summary>
 
 
-중간 밝기의 차가운 중립 색상
+중간 밝기의 차가운 중립 색상 (`#E1E2E4`)
 </details>
 <details>
 
 <summary>``case coolNeutral97``</summary>
 
 
-약간 밝은 차가운 중립 색상
+약간 밝은 차가운 중립 색상 (`#EAEBEC`)
 </details>
 <details>
 
 <summary>``case coolNeutral98``</summary>
 
 
-밝은 차가운 중립 색상
+밝은 차가운 중립 색상 (`#F4F4F5`)
 </details>
 <details>
 
 <summary>``case coolNeutral99``</summary>
 
 
-매우 밝은 차가운 중립 색상
+매우 밝은 차가운 중립 색상 (`#F7F7F8`)
 </details>
 <details>
 
 <summary>``case cyan0``</summary>
 
 
-가장 어두운 시안색
+가장 어두운 시안색 (`#000000`)
 </details>
 <details>
 
 <summary>``case cyan10``</summary>
 
 
-거의 검은색 시안색
+거의 검은색 시안색 (`#00252B`)
 </details>
 <details>
 
 <summary>``case cyan100``</summary>
 
 
-가장 밝은 시안색
+가장 밝은 시안색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case cyan20``</summary>
 
 
-거의 검은색에 가까운 시안색
+거의 검은색에 가까운 시안색 (`#004854`)
 </details>
 <details>
 
 <summary>``case cyan30``</summary>
 
 
-매우 어두운 시안색
+매우 어두운 시안색 (`#006F82`)
 </details>
 <details>
 
 <summary>``case cyan40``</summary>
 
 
-어두운 시안색
+어두운 시안색 (`#0098B2`)
 </details>
 <details>
 
 <summary>``case cyan50``</summary>
 
 
-중간 어두운 시안색
+중간 어두운 시안색 (`#00BDDE`)
 </details>
 <details>
 
 <summary>``case cyan60``</summary>
 
 
-약간 어두운 시안색
+약간 어두운 시안색 (`#28D0ED`)
 </details>
 <details>
 
 <summary>``case cyan70``</summary>
 
 
-중간 시안색
+중간 시안색 (`#57DFF7`)
 </details>
 <details>
 
 <summary>``case cyan80``</summary>
 
 
-중간 밝기의 시안색
+중간 밝기의 시안색 (`#8AEDFF`)
 </details>
 <details>
 
 <summary>``case cyan90``</summary>
 
 
-약간 밝은 시안색
+약간 밝은 시안색 (`#B5F4FF`)
 </details>
 <details>
 
 <summary>``case cyan95``</summary>
 
 
-밝은 시안색
+밝은 시안색 (`#DEFAFF`)
 </details>
 <details>
 
 <summary>``case cyan99``</summary>
 
 
-매우 밝은 시안색
+매우 밝은 시안색 (`#F7FEFF`)
 </details>
 <details>
 
 <summary>``case green0``</summary>
 
 
-가장 어두운 초록색
+가장 어두운 초록색 (`#000000`)
 </details>
 <details>
 
 <summary>``case green10``</summary>
 
 
-거의 검은색 초록색
+거의 검은색 초록색 (`#00240C`)
 </details>
 <details>
 
 <summary>``case green100``</summary>
 
 
-가장 밝은 초록색
+가장 밝은 초록색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case green20``</summary>
 
 
-거의 검은색에 가까운 초록색
+거의 검은색에 가까운 초록색 (`#004517`)
 </details>
 <details>
 
 <summary>``case green30``</summary>
 
 
-매우 어두운 초록색
+매우 어두운 초록색 (`#006E25`)
 </details>
 <details>
 
 <summary>``case green40``</summary>
 
 
-어두운 초록색
+어두운 초록색 (`#009632`)
 </details>
 <details>
 
 <summary>``case green50``</summary>
 
 
-중간 어두운 초록색
+중간 어두운 초록색 (`#00BF40`)
 </details>
 <details>
 
 <summary>``case green60``</summary>
 
 
-약간 어두운 초록색
+약간 어두운 초록색 (`#1ED45A`)
 </details>
 <details>
 
 <summary>``case green70``</summary>
 
 
-중간 초록색
+중간 초록색 (`#49E57D`)
 </details>
 <details>
 
 <summary>``case green80``</summary>
 
 
-중간 밝기의 초록색
+중간 밝기의 초록색 (`#7DF5A5`)
 </details>
 <details>
 
 <summary>``case green90``</summary>
 
 
-약간 밝은 초록색
+약간 밝은 초록색 (`#ACFCC7`)
 </details>
 <details>
 
 <summary>``case green95``</summary>
 
 
-밝은 초록색
+밝은 초록색 (`#D9FFE6`)
 </details>
 <details>
 
 <summary>``case green99``</summary>
 
 
-매우 밝은 초록색
+매우 밝은 초록색 (`#F2FFF6`)
 </details>
 <details>
 
 <summary>``case lightBlue0``</summary>
 
 
-가장 어두운 하늘색
+가장 어두운 하늘색 (`#000000`)
 </details>
 <details>
 
 <summary>``case lightBlue10``</summary>
 
 
-거의 검은색 하늘색
+거의 검은색 하늘색 (`#002130`)
 </details>
 <details>
 
 <summary>``case lightBlue100``</summary>
 
 
-가장 밝은 하늘색
+가장 밝은 하늘색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case lightBlue20``</summary>
 
 
-거의 검은색에 가까운 하늘색
+거의 검은색에 가까운 하늘색 (`#004261`)
 </details>
 <details>
 
 <summary>``case lightBlue30``</summary>
 
 
-매우 어두운 하늘색
+매우 어두운 하늘색 (`#006796`)
 </details>
 <details>
 
 <summary>``case lightBlue40``</summary>
 
 
-어두운 하늘색
+어두운 하늘색 (`#008DCF`)
 </details>
 <details>
 
 <summary>``case lightBlue50``</summary>
 
 
-중간 어두운 하늘색
+중간 어두운 하늘색 (`#00AEFF`)
 </details>
 <details>
 
 <summary>``case lightBlue60``</summary>
 
 
-약간 어두운 하늘색
+약간 어두운 하늘색 (`#3DC2FF`)
 </details>
 <details>
 
 <summary>``case lightBlue70``</summary>
 
 
-중간 하늘색
+중간 하늘색 (`#70D2FF`)
 </details>
 <details>
 
 <summary>``case lightBlue80``</summary>
 
 
-중간 밝기의 하늘색
+중간 밝기의 하늘색 (`#A1E1FF`)
 </details>
 <details>
 
 <summary>``case lightBlue90``</summary>
 
 
-약간 밝은 하늘색
+약간 밝은 하늘색 (`#C4ECFE`)
 </details>
 <details>
 
 <summary>``case lightBlue95``</summary>
 
 
-밝은 하늘색
+밝은 하늘색 (`#E5F6FE`)
 </details>
 <details>
 
 <summary>``case lightBlue99``</summary>
 
 
-매우 밝은 하늘색
+매우 밝은 하늘색 (`#F7FDFF`)
 </details>
 <details>
 
 <summary>``case lime0``</summary>
 
 
-가장 어두운 라임색
+가장 어두운 라임색 (`#000000`)
 </details>
 <details>
 
 <summary>``case lime10``</summary>
 
 
-거의 검은색 라임색
+거의 검은색 라임색 (`#112900`)
 </details>
 <details>
 
 <summary>``case lime100``</summary>
 
 
-가장 밝은 라임색
+가장 밝은 라임색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case lime20``</summary>
 
 
-거의 검은색에 가까운 라임색
+거의 검은색에 가까운 라임색 (`#225200`)
 </details>
 <details>
 
 <summary>``case lime30``</summary>
 
 
-매우 어두운 라임색
+매우 어두운 라임색 (`#347D00`)
 </details>
 <details>
 
 <summary>``case lime37``</summary>
 
 
-특별한 어두운 라임색
+특별한 어두운 라임색 (`#429E00`)
 </details>
 <details>
 
 <summary>``case lime40``</summary>
 
 
-어두운 라임색
+어두운 라임색 (`#48AD00`)
 </details>
 <details>
 
 <summary>``case lime50``</summary>
 
 
-중간 어두운 라임색
+중간 어두운 라임색 (`#58CF04`)
 </details>
 <details>
 
 <summary>``case lime60``</summary>
 
 
-약간 어두운 라임색
+약간 어두운 라임색 (`#6BE016`)
 </details>
 <details>
 
 <summary>``case lime70``</summary>
 
 
-중간 라임색
+중간 라임색 (`#88F03E`)
 </details>
 <details>
 
 <summary>``case lime80``</summary>
 
 
-중간 밝기의 라임색
+중간 밝기의 라임색 (`#AEF779`)
 </details>
 <details>
 
 <summary>``case lime90``</summary>
 
 
-약간 밝은 라임색
+약간 밝은 라임색 (`#CCFCA9`)
 </details>
 <details>
 
 <summary>``case lime95``</summary>
 
 
-밝은 라임색
+밝은 라임색 (`#E6FFD4`)
 </details>
 <details>
 
 <summary>``case lime99``</summary>
 
 
-매우 밝은 라임색
+매우 밝은 라임색 (`#F8FFF2`)
 </details>
 <details>
 
 <summary>``case neutral0``</summary>
 
 
-가장 어두운 중립 색상
+가장 어두운 중립 색상 (`#000000`)
 </details>
 <details>
 
 <summary>``case neutral10``</summary>
 
 
-거의 검은색 중립 색상
+거의 검은색 중립 색상 (`#171717`)
 </details>
 <details>
 
 <summary>``case neutral100``</summary>
 
 
-가장 밝은 중립 색상
+가장 밝은 중립 색상 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case neutral15``</summary>
 
 
-거의 검은색에 가까운 중립 색상
+거의 검은색에 가까운 중립 색상 (`#1C1C1C`)
 </details>
 <details>
 
 <summary>``case neutral20``</summary>
 
 
-매우 어두운 중립 색상
+매우 어두운 중립 색상 (`#2A2A2A`)
 </details>
 <details>
 
 <summary>``case neutral22``</summary>
 
 
-특별한 어두운 중립 색상
+특별한 어두운 중립 색상 (`#303030`)
 </details>
 <details>
 
 <summary>``case neutral30``</summary>
 
 
-매우 어두운 중립 색상
+매우 어두운 중립 색상 (`#474747`)
 </details>
 <details>
 
 <summary>``case neutral40``</summary>
 
 
-어두운 중립 색상
+어두운 중립 색상 (`#5C5C5C`)
 </details>
 <details>
 
 <summary>``case neutral5``</summary>
 
 
-매우 어두운 중립 색상
+매우 어두운 중립 색상 (`#0F0F0F`)
 </details>
 <details>
 
 <summary>``case neutral50``</summary>
 
 
-중간 어두운 중립 색상
+중간 어두운 중립 색상 (`#737373`)
 </details>
 <details>
 
 <summary>``case neutral60``</summary>
 
 
-약간 어두운 중립 색상
+약간 어두운 중립 색상 (`#8A8A8A`)
 </details>
 <details>
 
 <summary>``case neutral70``</summary>
 
 
-중간 중립 색상
+중간 중립 색상 (`#9B9B9B`)
 </details>
 <details>
 
 <summary>``case neutral80``</summary>
 
 
-중간 밝기의 중립 색상
+중간 밝기의 중립 색상 (`#B0B0B0`)
 </details>
 <details>
 
 <summary>``case neutral90``</summary>
 
 
-약간 밝은 중립 색상
+약간 밝은 중립 색상 (`#C4C4C4`)
 </details>
 <details>
 
 <summary>``case neutral95``</summary>
 
 
-밝은 중립 색상
+밝은 중립 색상 (`#DCDCDC`)
 </details>
 <details>
 
 <summary>``case neutral99``</summary>
 
 
-매우 밝은 중립 색상
+매우 밝은 중립 색상 (`#F7F7F7`)
 </details>
 <details>
 
 <summary>``case orange0``</summary>
 
 
-가장 어두운 주황색
+가장 어두운 주황색 (`#000000`)
 </details>
 <details>
 
 <summary>``case orange10``</summary>
 
 
-거의 검은색 주황색
+거의 검은색 주황색 (`#361E00`)
 </details>
 <details>
 
 <summary>``case orange100``</summary>
 
 
-가장 밝은 주황색
+가장 밝은 주황색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case orange20``</summary>
 
 
-거의 검은색에 가까운 주황색
+거의 검은색에 가까운 주황색 (`#663A00`)
 </details>
 <details>
 
 <summary>``case orange30``</summary>
 
 
-매우 어두운 주황색
+매우 어두운 주황색 (`#9C5800`)
 </details>
 <details>
 
 <summary>``case orange39``</summary>
 
 
-특별한 어두운 주황색
+특별한 어두운 주황색 (`#D17600`)
 </details>
 <details>
 
 <summary>``case orange40``</summary>
 
 
-어두운 주황색
+어두운 주황색 (`#D47800`)
 </details>
 <details>
 
 <summary>``case orange50``</summary>
 
 
-중간 어두운 주황색
+중간 어두운 주황색 (`#FF9200`)
 </details>
 <details>
 
 <summary>``case orange60``</summary>
 
 
-약간 어두운 주황색
+약간 어두운 주황색 (`#FFA938`)
 </details>
 <details>
 
 <summary>``case orange70``</summary>
 
 
-중간 주황색
+중간 주황색 (`#FFC06E`)
 </details>
 <details>
 
 <summary>``case orange80``</summary>
 
 
-중간 밝기의 주황색
+중간 밝기의 주황색 (`#FFD49C`)
 </details>
 <details>
 
 <summary>``case orange90``</summary>
 
 
-약간 밝은 주황색
+약간 밝은 주황색 (`#FEE6C6`)
 </details>
 <details>
 
 <summary>``case orange95``</summary>
 
 
-밝은 주황색
+밝은 주황색 (`#FEF4E6`)
 </details>
 <details>
 
 <summary>``case orange99``</summary>
 
 
-매우 밝은 주황색
+매우 밝은 주황색 (`#FFFCF7`)
 </details>
 <details>
 
 <summary>``case pink0``</summary>
 
 
-가장 어두운 분홍색
+가장 어두운 분홍색 (`#000000`)
 </details>
 <details>
 
 <summary>``case pink10``</summary>
 
 
-거의 검은색 분홍색
+거의 검은색 분홍색 (`#3D0133`)
 </details>
 <details>
 
 <summary>``case pink100``</summary>
 
 
-가장 밝은 분홍색
+가장 밝은 분홍색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case pink20``</summary>
 
 
-거의 검은색에 가까운 분홍색
+거의 검은색에 가까운 분홍색 (`#730560`)
 </details>
 <details>
 
 <summary>``case pink30``</summary>
 
 
-매우 어두운 분홍색
+매우 어두운 분홍색 (`#A81690`)
 </details>
 <details>
 
 <summary>``case pink40``</summary>
 
 
-어두운 분홍색
+어두운 분홍색 (`#D331B8`)
 </details>
 <details>
 
 <summary>``case pink46``</summary>
 
 
-특별한 어두운 분홍색
+특별한 어두운 분홍색 (`#E846CD`)
 </details>
 <details>
 
 <summary>``case pink50``</summary>
 
 
-중간 어두운 분홍색
+중간 어두운 분홍색 (`#F553DA`)
 </details>
 <details>
 
 <summary>``case pink60``</summary>
 
 
-약간 어두운 분홍색
+약간 어두운 분홍색 (`#FA73E3`)
 </details>
 <details>
 
 <summary>``case pink70``</summary>
 
 
-중간 분홍색
+중간 분홍색 (`#FF94ED`)
 </details>
 <details>
 
 <summary>``case pink80``</summary>
 
 
-중간 밝기의 분홍색
+중간 밝기의 분홍색 (`#FFB8F3`)
 </details>
 <details>
 
 <summary>``case pink90``</summary>
 
 
-약간 밝은 분홍색
+약간 밝은 분홍색 (`#FED3F7`)
 </details>
 <details>
 
 <summary>``case pink95``</summary>
 
 
-밝은 분홍색
+밝은 분홍색 (`#FEECFB`)
 </details>
 <details>
 
 <summary>``case pink99``</summary>
 
 
-매우 밝은 분홍색
+매우 밝은 분홍색 (`#FFFAFE`)
 </details>
 <details>
 
 <summary>``case purple0``</summary>
 
 
-가장 어두운 자주색
+가장 어두운 자주색 (`#000000`)
 </details>
 <details>
 
 <summary>``case purple10``</summary>
 
 
-거의 검은색 자주색
+거의 검은색 자주색 (`#290247`)
 </details>
 <details>
 
 <summary>``case purple100``</summary>
 
 
-가장 밝은 자주색
+가장 밝은 자주색 (`#FEFFFF`)
 </details>
 <details>
 
 <summary>``case purple20``</summary>
 
 
-거의 검은색에 가까운 자주색
+거의 검은색에 가까운 자주색 (`#580A7D`)
 </details>
 <details>
 
 <summary>``case purple30``</summary>
 
 
-매우 어두운 자주색
+매우 어두운 자주색 (`#861CB8`)
 </details>
 <details>
 
 <summary>``case purple40``</summary>
 
 
-어두운 자주색
+어두운 자주색 (`#AD36E3`)
 </details>
 <details>
 
 <summary>``case purple50``</summary>
 
 
-중간 어두운 자주색
+중간 어두운 자주색 (`#CB59FF`)
 </details>
 <details>
 
 <summary>``case purple60``</summary>
 
 
-약간 어두운 자주색
+약간 어두운 자주색 (`#D478FF`)
 </details>
 <details>
 
 <summary>``case purple70``</summary>
 
 
-중간 자주색
+중간 자주색 (`#DE96FF`)
 </details>
 <details>
 
 <summary>``case purple80``</summary>
 
 
-중간 밝기의 자주색
+중간 밝기의 자주색 (`#E9BAFF`)
 </details>
 <details>
 
 <summary>``case purple90``</summary>
 
 
-약간 밝은 자주색
+약간 밝은 자주색 (`#F2D6FF`)
 </details>
 <details>
 
 <summary>``case purple95``</summary>
 
 
-밝은 자주색
+밝은 자주색 (`#F9EDFF`)
 </details>
 <details>
 
 <summary>``case purple99``</summary>
 
 
-매우 밝은 자주색
+매우 밝은 자주색 (`#FEFBFF`)
 </details>
 <details>
 
 <summary>``case red0``</summary>
 
 
-가장 어두운 빨간색
+가장 어두운 빨간색 (`#000000`)
 </details>
 <details>
 
 <summary>``case red10``</summary>
 
 
-거의 검은색 빨간색
+거의 검은색 빨간색 (`#3B0101`)
 </details>
 <details>
 
 <summary>``case red100``</summary>
 
 
-가장 밝은 빨간색
+가장 밝은 빨간색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case red20``</summary>
 
 
-거의 검은색에 가까운 빨간색
+거의 검은색에 가까운 빨간색 (`#730303`)
 </details>
 <details>
 
 <summary>``case red30``</summary>
 
 
-매우 어두운 빨간색
+매우 어두운 빨간색 (`#B00C0C`)
 </details>
 <details>
 
 <summary>``case red40``</summary>
 
 
-어두운 빨간색
+어두운 빨간색 (`#E52222`)
 </details>
 <details>
 
 <summary>``case red50``</summary>
 
 
-중간 어두운 빨간색
+중간 어두운 빨간색 (`#FF4242`)
 </details>
 <details>
 
 <summary>``case red60``</summary>
 
 
-약간 어두운 빨간색
+약간 어두운 빨간색 (`#FF6363`)
 </details>
 <details>
 
 <summary>``case red70``</summary>
 
 
-중간 빨간색
+중간 빨간색 (`#FF8C8C`)
 </details>
 <details>
 
 <summary>``case red80``</summary>
 
 
-중간 밝기의 빨간색
+중간 밝기의 빨간색 (`#FFB5B5`)
 </details>
 <details>
 
 <summary>``case red90``</summary>
 
 
-약간 밝은 빨간색
+약간 밝은 빨간색 (`#FED5D5`)
 </details>
 <details>
 
 <summary>``case red95``</summary>
 
 
-밝은 빨간색
+밝은 빨간색 (`#FEECEC`)
 </details>
 <details>
 
 <summary>``case red99``</summary>
 
 
-매우 밝은 빨간색
+매우 밝은 빨간색 (`#FFFAFA`)
 </details>
 <details>
 
 <summary>``case redOrange0``</summary>
 
 
-가장 어두운 붉은 주황색
+가장 어두운 붉은 주황색 (`#000000`)
 </details>
 <details>
 
 <summary>``case redOrange10``</summary>
 
 
-거의 검은색 붉은 주황색
+거의 검은색 붉은 주황색 (`#290F00`)
 </details>
 <details>
 
 <summary>``case redOrange100``</summary>
 
 
-가장 밝은 붉은 주황색
+가장 밝은 붉은 주황색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case redOrange20``</summary>
 
 
-거의 검은색에 가까운 붉은 주황색
+거의 검은색에 가까운 붉은 주황색 (`#592100`)
 </details>
 <details>
 
 <summary>``case redOrange30``</summary>
 
 
-매우 어두운 붉은 주황색
+매우 어두운 붉은 주황색 (`#913500`)
 </details>
 <details>
 
 <summary>``case redOrange40``</summary>
 
 
-어두운 붉은 주황색
+어두운 붉은 주황색 (`#C94A00`)
 </details>
 <details>
 
 <summary>``case redOrange48``</summary>
 
 
-특별한 어두운 붉은 주황색
+특별한 어두운 붉은 주황색 (`#F55A00`)
 </details>
 <details>
 
 <summary>``case redOrange50``</summary>
 
 
-중간 어두운 붉은 주황색
+중간 어두운 붉은 주황색 (`#FF5E00`)
 </details>
 <details>
 
 <summary>``case redOrange60``</summary>
 
 
-약간 어두운 붉은 주황색
+약간 어두운 붉은 주황색 (`#FF7B2E`)
 </details>
 <details>
 
 <summary>``case redOrange70``</summary>
 
 
-중간 붉은 주황색
+중간 붉은 주황색 (`#FF9B61`)
 </details>
 <details>
 
 <summary>``case redOrange80``</summary>
 
 
-중간 밝기의 붉은 주황색
+중간 밝기의 붉은 주황색 (`#FFBD96`)
 </details>
 <details>
 
 <summary>``case redOrange90``</summary>
 
 
-약간 밝은 붉은 주황색
+약간 밝은 붉은 주황색 (`#FED9C4`)
 </details>
 <details>
 
 <summary>``case redOrange95``</summary>
 
 
-밝은 붉은 주황색
+밝은 붉은 주황색 (`#FEEEE5`)
 </details>
 <details>
 
 <summary>``case redOrange99``</summary>
 
 
-매우 밝은 붉은 주황색
+매우 밝은 붉은 주황색 (`#FFFAF7`)
 </details>
 <details>
 
 <summary>``case violet0``</summary>
 
 
-가장 어두운 보라색
+가장 어두운 보라색 (`#000000`)
 </details>
 <details>
 
 <summary>``case violet10``</summary>
 
 
-거의 검은색 보라색
+거의 검은색 보라색 (`#11024D`)
 </details>
 <details>
 
 <summary>``case violet100``</summary>
 
 
-가장 밝은 보라색
+가장 밝은 보라색 (`#FFFFFF`)
 </details>
 <details>
 
 <summary>``case violet20``</summary>
 
 
-거의 검은색에 가까운 보라색
+거의 검은색에 가까운 보라색 (`#23098F`)
 </details>
 <details>
 
 <summary>``case violet30``</summary>
 
 
-매우 어두운 보라색
+매우 어두운 보라색 (`#3A16C9`)
 </details>
 <details>
 
 <summary>``case violet40``</summary>
 
 
-어두운 보라색
+어두운 보라색 (`#4F29E5`)
 </details>
 <details>
 
 <summary>``case violet45``</summary>
 
 
-특별한 어두운 보라색
+특별한 어두운 보라색 (`#5B37ED`)
 </details>
 <details>
 
 <summary>``case violet50``</summary>
 
 
-중간 어두운 보라색
+중간 어두운 보라색 (`#6541F2`)
 </details>
 <details>
 
 <summary>``case violet60``</summary>
 
 
-약간 어두운 보라색
+약간 어두운 보라색 (`#7D5EF7`)
 </details>
 <details>
 
 <summary>``case violet70``</summary>
 
 
-중간 보라색
+중간 보라색 (`#9E86FC`)
 </details>
 <details>
 
 <summary>``case violet80``</summary>
 
 
-중간 밝기의 보라색
+중간 밝기의 보라색 (`#C0B0FF`)
 </details>
 <details>
 
 <summary>``case violet90``</summary>
 
 
-약간 밝은 보라색
+약간 밝은 보라색 (`#DBD3FE`)
 </details>
 <details>
 
 <summary>``case violet95``</summary>
 
 
-밝은 보라색
+밝은 보라색 (`#F0ECFE`)
 </details>
 <details>
 
 <summary>``case violet99``</summary>
 
 
-매우 밝은 보라색
+매우 밝은 보라색 (`#FBFAFF`)
 </details>
 
 #### Initializers
