@@ -142,7 +142,7 @@ struct ActionAreaPreview: View {
                             color: .primary,
                             text: "커스텀 메인"
                         )
-                        .fill(horizontal: true)
+                        .fillWidth()
                     },
                     sub: .custom {
                         Button(
@@ -150,7 +150,7 @@ struct ActionAreaPreview: View {
                             text: "커스텀 서브"
                         )
                         .contentColor(.semantic(.accentBackgroundLime))
-                        .fill(horizontal: true, vertical: false)
+                        .fillWidth()
                     }
                 )
             }
