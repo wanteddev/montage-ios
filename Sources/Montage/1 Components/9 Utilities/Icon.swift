@@ -391,16 +391,6 @@ public enum Icon: String, CaseIterable {
     case zepFastFill
 }
 
-// MARK: - UIKit Extensions
-extension UIImage {
-    /// Montage 디자인 시스템의 아이콘을 생성합니다.
-    ///
-    /// - Parameter type: 생성할 아이콘 타입
-    /// - Returns: 생성된 UIImage 인스턴스
-    public static func icon(_ type: Icon) -> UIImage {
-        load(name: type.rawValue)
-    }
-}
 
 // MARK: - SwiftUI Extensions
 extension Image {
@@ -408,7 +398,21 @@ extension Image {
     ///
     /// - Parameter type: 생성할 아이콘 타입
     /// - Returns: 생성된 Image 인스턴스
-    public static func icon(_ type: Icon) -> Image {
-        load(name: type.rawValue)
+    public static func icon(_ type: Icon, renderingMode: TemplateRenderingMode = .template) -> Image {
+        load(name: type.rawValue).renderingMode(renderingMode)
+    }
+    
+    public static func opaqueIcon(_ type: Icon, renderingMode: TemplateRenderingMode = .template) -> some View {
+        ZStack {
+            if let fillIcon = Icon(rawValue: type.rawValue.replacingOccurrences(of: "Opaque", with: "")) {
+                Image.icon(type)
+                    .renderingMode(.original)
+                Image.icon(fillIcon)
+                    .renderingMode(renderingMode)
+            } else {
+                Image.icon(type)
+                    .renderingMode(renderingMode)
+            }
+        }
     }
 }

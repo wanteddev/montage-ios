@@ -879,7 +879,7 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 
 <details>
 
-<summary>``static func icon(Icon) -> Image``</summary>
+<summary>``static func icon(Icon, renderingMode: TemplateRenderingMode) -> Image``</summary>
 
 
 Montage 디자인 시스템의 아이콘을 생성합니다.
@@ -891,6 +891,11 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 - **Return Value**
 
   생성된 Image 인스턴스
+</details>
+<details>
+
+<summary>``static func opaqueIcon(Icon, renderingMode: TemplateRenderingMode) -> some View``</summary>
+
 </details>
 
 </details>

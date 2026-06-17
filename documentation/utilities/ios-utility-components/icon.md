@@ -1828,35 +1828,11 @@ Button(action: {}) {
 
 <details>
 
-<summary>``extension UIImage``</summary>
-
-<details>
-
-<summary>``static func icon(Icon) -> UIImage``</summary>
-
-
-Montage 디자인 시스템의 아이콘을 생성합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `type` | 생성할 아이콘 타입 |
-- **Return Value**
-
-  생성된 UIImage 인스턴스
-</details>
-
-
-</details>
-
-
-<details>
-
 <summary>``extension Image``</summary>
 
 <details>
 
-<summary>``static func icon(Icon) -> Image``</summary>
+<summary>``static func icon(Icon, renderingMode: TemplateRenderingMode) -> Image``</summary>
 
 
 Montage 디자인 시스템의 아이콘을 생성합니다.
@@ -1868,6 +1844,12 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 - **Return Value**
 
   생성된 Image 인스턴스
+</details>
+
+<details>
+
+<summary>``static func opaqueIcon(Icon, renderingMode: TemplateRenderingMode) -> some View``</summary>
+
 </details>
 
 
