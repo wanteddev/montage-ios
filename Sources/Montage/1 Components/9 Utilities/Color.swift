@@ -782,7 +782,7 @@ public enum Color {
                 opacity = .opacity5
             case .fillNegative:
                 atomicColor = style == .dark ? .red60 : .red50
-                opacity = style == .dark ? .opacity20 : .opacity12
+                opacity = style == .dark ? .opacity22 : .opacity12
             case .materialDimmer:
                 atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral10
                 opacity = style == .dark ? .opacity74 : .opacity52
