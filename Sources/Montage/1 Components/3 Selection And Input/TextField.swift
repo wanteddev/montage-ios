@@ -457,7 +457,7 @@ private extension TextField {
         HStack(spacing: .spacing8) {
             if !text.isEmpty, textFieldFocusState {
                 IconButton(
-                    variant: .normal(size: .custom(size: Int(size.iconSize))),
+                    variant: .normal(size: size.clearButtonSize),
                     icon: .circleCloseFill
                 ) {
                     text = ""
@@ -667,6 +667,14 @@ private extension TextField.Size {
         }
     }
 
+    // clear button 크기
+    var clearButtonSize: IconButton.NormalSize {
+        switch self {
+        case .large: .large
+        case .medium: .medium
+        }
+    }
+    
     /// 아이콘 크기
     var iconSize: CGFloat {
         switch self {
