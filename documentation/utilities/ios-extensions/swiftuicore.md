@@ -879,7 +879,7 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 
 <details>
 
-<summary>``static func icon(Icon, renderingMode: TemplateRenderingMode, color: UIColor?) -> Image``</summary>
+<summary>``static func icon(Icon, renderingMode: TemplateRenderingMode, color: SwiftUI.Color?) -> Image``</summary>
 
 
 Montage 디자인 시스템의 아이콘을 생성합니다.

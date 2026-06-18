@@ -1828,11 +1828,42 @@ Button(action: {}) {
 
 <details>
 
+<summary>``extension UIImage``</summary>
+
+<details>
+
+<summary>``static func icon(Icon, renderingMode: RenderingMode, color: UIColor?) -> UIImage``</summary>
+
+
+Montage 디자인 시스템의 아이콘을 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `type` | 생성할 아이콘 타입 |
+  | `renderingMode` | `color`가 없을 때의 렌더링 모드 (기본 `.template`) |
+  | `color` | 틴트 색. 지정하면 `renderingMode`와 무관하게 색이 적용됩니다. |
+- **Return Value**
+
+  생성된 UIImage 인스턴스
+- **Discussion**
+  - `color`가 없으면: `renderingMode`에 따라 `.template`(`foregroundColor`로 틴트) 또는 `.original`(원본 색)로 동작합니다.
+  - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다.
+
+
+</details>
+
+
+</details>
+
+
+<details>
+
 <summary>``extension Image``</summary>
 
 <details>
 
-<summary>``static func icon(Icon, renderingMode: TemplateRenderingMode, color: UIColor?) -> Image``</summary>
+<summary>``static func icon(Icon, renderingMode: TemplateRenderingMode, color: SwiftUI.Color?) -> Image``</summary>
 
 
 Montage 디자인 시스템의 아이콘을 생성합니다.
