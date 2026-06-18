@@ -18,10 +18,25 @@ struct SnackBarPreview: View {
     @State private var locationOption: LocationOption = .bottom
     @State private var offset: Double = 0
     @State private var closeButtonEnabled: Bool = false
+    @State private var durationOption: DurationOption = .short
 
     enum LocationOption: String, CaseIterable {
         case top = "Top"
         case bottom = "Bottom"
+    }
+
+    enum DurationOption: String, CaseIterable {
+        case short = "Short"
+        case long = "Long"
+        case infinity = "Infinity"
+
+        var duration: SnackBar.Duration {
+            switch self {
+            case .short: return .short
+            case .long: return .long
+            case .infinity: return .infinity
+            }
+        }
     }
 
     var body: some View {
@@ -66,6 +81,15 @@ struct SnackBarPreview: View {
                         Slider(value: $offset, in: 0...200, step: 10)
                     }
                     HStack {
+                        Text("duration")
+                        Picker("Duration", selection: $durationOption) {
+                            ForEach(DurationOption.allCases, id: \.self) { option in
+                                Text(option.rawValue).tag(option)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    HStack {
                         Text("closeButton")
                         Switch(checked: closeButtonEnabled) { closeButtonEnabled = $0 }
                     }
@@ -74,6 +98,7 @@ struct SnackBarPreview: View {
                         text: "스낵바 노출"
                     ) {
                         snackBarModel = .init(
+                            duration: durationOption.duration,
                             heading: heading.isEmpty ? nil : heading,
                             description: description.isEmpty ? nil : description,
                             extraContents: {
