@@ -146,11 +146,21 @@ SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.
 짧은 표시 시간 (4초)
 </details>
 
+#### Initializers
+
+<details>
+
+<summary>``init?(rawValue: Double)``</summary>
+
+
+표시 시간(초)으로부터 `Duration`을 생성합니다. 정의되지 않은 값이면 `nil`을 반환합니다.
+</details>
+
 #### Instance Properties
 
 <details>
 
-<summary>``var interval: Double``</summary>
+<summary>``var rawValue: Double``</summary>
 
 
 스낵바가 표시되는 시간(초). `.infinity`인 경우 `Double.infinity`를 반환합니다.
