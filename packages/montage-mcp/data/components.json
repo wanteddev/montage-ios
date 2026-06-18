@@ -2252,6 +2252,7 @@
           "kind": "enum",
           "summary": "SnackBar가 자동으로 사라지는 시간을 정의하는 열거형입니다.",
           "cases": [
+            "infinity",
             "long",
             "short"
           ]
