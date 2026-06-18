@@ -391,6 +391,66 @@ public enum Icon: String, CaseIterable {
     case zepFastFill
 }
 
+// MARK: - UIKit Extensions
+extension UIImage {
+    /// Montage 디자인 시스템의 아이콘을 생성합니다.
+    ///
+    /// - `color`가 없으면: `renderingMode`에 따라 `.template`(`foregroundColor`로 틴트) 또는 `.original`(원본 색)로 동작합니다.
+    /// - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다.
+    ///   - 일반 아이콘은 전체가 `color`로 칠해집니다.
+    ///   - `Opaque` 아이콘(흰색·검은색·투명 혼합)은 검은 영역만 `color`로 치환하고 흰색·투명 영역은 유지합니다.
+    ///
+    /// - Parameters:
+    ///   - type: 생성할 아이콘 타입
+    ///   - renderingMode: `color`가 없을 때의 렌더링 모드 (기본 `.template`)
+    ///   - color: 틴트 색. 지정하면 `renderingMode`와 무관하게 색이 적용됩니다.
+    /// - Returns: 생성된 UIImage 인스턴스
+    public static func icon(
+        _ type: Icon,
+        renderingMode: RenderingMode = .alwaysTemplate,
+        color: UIColor? = nil
+    ) -> UIImage {
+        guard let color else {
+            return load(name: type.rawValue).withRenderingMode(renderingMode)
+        }
+        return tintedImage(name: type.rawValue, color: color)
+    }
+    
+    /// 틴트 합성 결과를 캐시한다. `body` 재평가마다 래스터화가 반복되는 것을 막기 위한 것으로,
+    /// 같은 (이름·색·인터페이스 스타일) 입력에 대해 결과가 결정적이므로 안전하게 재사용된다.
+    private static let tintedImageCache = NSCache<NSString, UIImage>()
+    
+    /// 아이콘을 `color`로 틴트한 한 장의 UIImage로 합성합니다.
+    ///
+    /// 원본(`base`) 위에 `color`로 틴트한 실루엣을 덮습니다. 틴트 대상은 이름의 `Opaque`를 `Fill`로 치환한 에셋이며,
+    /// `Opaque` 아이콘은 검은 영역만 가리키는 별도 `Fill` 실루엣이 덮여 흰색 영역이 보존되고,
+    /// 그 외 아이콘은 이름이 그대로라 자기 자신이 덮여 전체가 `color`로 칠해집니다.
+    fileprivate static func tintedImage(name: String, color: UIColor) -> UIImage {
+        let style = UITraitCollection.current.userInterfaceStyle.rawValue
+        let cacheKey = "\(name)|\(color)|\(style)" as NSString
+        if let cached = tintedImageCache.object(forKey: cacheKey) {
+            return cached
+        }
+        
+        let base = UIImage.load(name: name)
+        let tintIconName = name.replacingOccurrences(of: "Opaque", with: "Fill")
+        let tint = UIImage.load(name: tintIconName).withTintColor(color, renderingMode: .alwaysOriginal)
+        
+        let format = UIGraphicsImageRendererFormat.preferred()
+        format.opaque = false
+        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
+        let composite = renderer.image { _ in
+            let rect = CGRect(origin: .zero, size: base.size)
+            // base는 흰색·검은색이 섞인 원본일 수 있으므로 template 마스크가 아닌 원본 색으로 그린다.
+            base.withRenderingMode(.alwaysOriginal).draw(in: rect)
+            tint.draw(in: rect)
+        }
+            .withRenderingMode(.alwaysOriginal)
+        
+        tintedImageCache.setObject(composite, forKey: cacheKey)
+        return composite
+    }
+}
 
 // MARK: - SwiftUI Extensions
 extension Image {
@@ -409,46 +469,11 @@ extension Image {
     public static func icon(
         _ type: Icon,
         renderingMode: TemplateRenderingMode = .template,
-        color: UIColor? = nil
+        color: SwiftUI.Color? = nil
     ) -> Image {
         guard let color else {
             return load(name: type.rawValue).renderingMode(renderingMode)
         }
-        return tintedImage(name: type.rawValue, color: color)
-    }
-
-    /// 틴트 합성 결과를 캐시한다. `body` 재평가마다 래스터화가 반복되는 것을 막기 위한 것으로,
-    /// 같은 (이름·색·인터페이스 스타일) 입력에 대해 결과가 결정적이므로 안전하게 재사용된다.
-    private static let tintedImageCache = NSCache<NSString, UIImage>()
-
-    /// 아이콘을 `color`로 틴트한 한 장의 Image로 합성합니다.
-    ///
-    /// 원본(`base`) 위에 `color`로 틴트한 실루엣을 덮습니다. 틴트 대상은 이름의 `Opaque`를 `Fill`로 치환한 에셋이며,
-    /// `Opaque` 아이콘은 검은 영역만 가리키는 별도 `Fill` 실루엣이 덮여 흰색 영역이 보존되고,
-    /// 그 외 아이콘은 이름이 그대로라 자기 자신이 덮여 전체가 `color`로 칠해집니다.
-    private static func tintedImage(name: String, color: UIColor) -> Image {
-        let style = UITraitCollection.current.userInterfaceStyle.rawValue
-        let cacheKey = "\(name)|\(color)|\(style)" as NSString
-        if let cached = tintedImageCache.object(forKey: cacheKey) {
-            return Image(uiImage: cached)
-        }
-
-        let base = UIImage.load(name: name)
-        let tintIconName = name.replacingOccurrences(of: "Opaque", with: "Fill")
-        let tint = UIImage.load(name: tintIconName).withTintColor(color, renderingMode: .alwaysOriginal)
-
-        let format = UIGraphicsImageRendererFormat.preferred()
-        format.opaque = false
-        let renderer = UIGraphicsImageRenderer(size: base.size, format: format)
-        let composite = renderer.image { _ in
-            let rect = CGRect(origin: .zero, size: base.size)
-            // base는 흰색·검은색이 섞인 원본일 수 있으므로 template 마스크가 아닌 원본 색으로 그린다.
-            base.withRenderingMode(.alwaysOriginal).draw(in: rect)
-            tint.draw(in: rect)
-        }
-        .withRenderingMode(.alwaysOriginal)
-
-        tintedImageCache.setObject(composite, forKey: cacheKey)
-        return Image(uiImage: composite)
+        return Image(uiImage: UIImage.tintedImage(name: type.rawValue, color: color.uiColor))
     }
 }
