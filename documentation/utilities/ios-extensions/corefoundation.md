@@ -133,13 +133,6 @@ title: CoreFoundation
 </details>
 <details>
 
-<summary>``static let opacity20: CGFloat``</summary>
-
-
-20%의 불투명도
-</details>
-<details>
-
 <summary>``static let opacity22: CGFloat``</summary>
 
 
