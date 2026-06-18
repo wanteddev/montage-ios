@@ -439,6 +439,7 @@ private extension TextField {
 
             trailingArea
         }
+        .padding(.horizontal, .spacing4)
     }
 
     var promptText: Text? {
@@ -464,12 +465,12 @@ private extension TextField {
                     Task { fixAutocorrection = false }
                 }
                 .iconColor(.semantic(.labelAssistive))
-            } else if !text.isEmpty, let trailingIcon, let trailingIconColor {
+            } else if !text.isEmpty, let statusMark, let statusMarkColor {
                 Image
-                    .icon(trailingIcon)
+                    .icon(statusMark)
                     .resizable()
                     .frame(width: size.iconSize, height: size.iconSize)
-                    .foregroundStyle(trailingIconColor)
+                    .foregroundStyle(statusMarkColor)
             }
 
             trailingContent()
@@ -605,7 +606,7 @@ private extension TextField {
         }
     }
 
-    var trailingIcon: Icon? {
+    var statusMark: Icon? {
         switch status {
         case .positive:
             .circleCheckFill
@@ -614,7 +615,7 @@ private extension TextField {
         }
     }
 
-    var trailingIconColor: SwiftUI.Color? {
+    var statusMarkColor: SwiftUI.Color? {
         switch status {
         case .positive:
             .semantic(.statusPositive)
