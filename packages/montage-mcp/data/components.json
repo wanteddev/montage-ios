@@ -2548,6 +2548,12 @@
           "kind": "method"
         },
         {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> TextField",
+          "summary": "텍스트 필드의 사이즈를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "status(_:)",
           "signature": "func status(Status) -> TextField",
           "summary": "텍스트 필드의 상태를 설정합니다.",
@@ -2572,6 +2578,15 @@
           "name": "TextField.AutoCompletionDataSource",
           "kind": "struct",
           "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다."
+        },
+        {
+          "name": "TextField.Size",
+          "kind": "enum",
+          "summary": "텍스트 필드의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
         },
         {
           "name": "TextField.Status",
