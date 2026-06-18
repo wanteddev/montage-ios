@@ -576,7 +576,10 @@ private extension TextField {
     }
     
     var fieldStrokeColor: SwiftUI.Color {
-        if textFieldFocusState {
+        // disable 상태에서는 status와 무관하게 normal과 동일한 border 색상을 사용한다. (negative 포함)
+        if disable {
+            .semantic(.lineNeutral)
+        } else if textFieldFocusState {
             switch status {
             case .normal, .positive:
                 .semantic(.linePrimaryStrong)
