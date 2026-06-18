@@ -32,37 +32,31 @@ struct ComponentListView: View {
             }
     }
     
-    @FocusState private var searchFocused
-    
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            ZStack(alignment: .bottom) {
-                if #available(iOS 18.0, *) {
-                    list.searchFocused($searchFocused)
-                } else {
-                    list
-                }
-                (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
-                    .typography(variant: .caption2, weight: .regular)
-                    .padding(12)
-                    .background {
-                        Capsule()
-                            .foregroundStyle(.ultraThinMaterial)
+            VStack(spacing: 4) {
+                TopNavigation()
+                    .variant(.display)
+                    .titleView {
+                        VStack(alignment: .leading) {
+                            Text(Bundle.main.appName)
+                                .font(.largeTitle)
+                                .bold()
+                            Text("version " + Bundle.main.versionString)
+                                .font(.caption2)
+                            (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
+                                .font(.caption2)
+                                .italic()
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(8)
+                list
             }
-            .navigationTitle("Blueprint")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarHidden(true)
             .navigationDestination(for: Component.self) { componentType in
                 coordinator.destinationView(for: componentType)
                     .navigationTitle(componentType.displayName)
                     .navigationBarTitleDisplayMode(.inline)
-            }
-            .onAppear {
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                    searchFocused = true
-                }
             }
         }
     }
@@ -154,6 +148,26 @@ extension ComponentState: Comparable {
         case .completed:
             return .font(variant: .body1, weight: .bold)
         }
+    }
+}
+
+extension Bundle {
+    var appName: String {
+        infoDictionary?["CFBundleDisplayName"] as? String
+        ?? infoDictionary?["CFBundleName"] as? String
+        ?? "—"
+    }
+    
+    var appVersion: String {
+        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
+    
+    var buildNumber: String {
+        infoDictionary?["CFBundleVersion"] as? String ?? "—"
+    }
+    
+    var versionString: String {
+        "\(appVersion)(\(buildNumber))"
     }
 }
 
