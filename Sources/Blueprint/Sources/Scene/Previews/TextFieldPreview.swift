@@ -26,11 +26,11 @@ struct TextFieldPreview: View {
             self.rawValue.capitalized
         }
         
-        var v: Montage.TextField.Status {
+        func v(description: Bool) -> Montage.TextField.Status {
             switch self {
-            case .normal: .normal()
-            case .positive: .positive(description: "성공 메세지를 나타내요.")
-            case .negative: .negative(description: "에러 메세지를 나타내요.")
+            case .normal: .normal(description: description ? "설명 메세지를 나타내요." : "")
+            case .positive: .positive(description: description ? "성공 메세지를 나타내요." : "")
+            case .negative: .negative(description: description ? "에러 메세지를 나타내요." : "")
             }
         }
     }
@@ -168,7 +168,7 @@ struct TextFieldPreview: View {
                     autoCompletionDataSource: $autoCompletionDataSource
                 )
                 .size(fieldSize.s)
-                .status(variant.v)
+                .status(variant.v(description: description))
                 .disable(disable)
                 .heading(heading ? "제목" : nil)
                 .requiredBadge(requiredBadge)
@@ -264,6 +264,7 @@ struct TextFieldPreview: View {
                         toggleRow("RequiredBadge", $requiredBadge)
                             .padding(.leading, 16)
                     }
+                    toggleRow("Description", $description)
 
                     Divider()
 
