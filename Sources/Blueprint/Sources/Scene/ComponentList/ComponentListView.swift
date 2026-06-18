@@ -50,13 +50,18 @@ struct ComponentListView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                TopNavigation()
+                    .variant(.search)
+                    .searchField(
+                        placeholder: "컴포넌트 검색",
+                        searchTerm: $searchText
+                    )
                 list
             }
             .navigationBarHidden(true)
             .navigationDestination(for: Component.self) { componentType in
                 coordinator.destinationView(for: componentType)
                     .navigationTitle(componentType.displayName)
-                    .navigationBarTitleDisplayMode(.inline)
             }
         }
     }
@@ -85,7 +90,6 @@ struct ComponentListView: View {
         .listStyle(.plain)
         .background(Color.semantic(.backgroundNormal))
         .scrollContentBackground(.hidden)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
     }
 }
 
