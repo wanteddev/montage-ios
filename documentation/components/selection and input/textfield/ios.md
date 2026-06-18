@@ -30,11 +30,14 @@ TextField(text: $inputText)
 TextField(text: $inputText)
    .trailingButton(
        .init(
-           variant: .primary,
            title: "인증",
            handler: { verifyCode() }
        )
    )
+
+// 사이즈를 지정한 텍스트 필드
+TextField(text: $inputText)
+   .size(.medium)
 ```
 
 ## Topics
@@ -97,7 +100,7 @@ TextField(text: $inputText)
 
 <details>
 
-<summary>``init(variant: Button.Color, title: String, disable: Bool, handler: (() -> Void)?)``</summary>
+<summary>``init(title: String, disable: Bool, handler: (() -> Void)?)``</summary>
 
 
 트레일링 버튼을 초기화합니다.
@@ -105,7 +108,6 @@ TextField(text: $inputText)
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `variant` | 버튼의 변형 스타일 |
   | `title` | 버튼에 표시할 텍스트 |
   | `disable` | 트레일링 버튼만 비활성화할지 여부, 생략하면 기본값으로 `false` 적용 |
   | `handler` | 버튼 클릭 시 실행할 핸들러 |
@@ -238,6 +240,21 @@ TextField(text: $inputText)
 </details>
 <details>
 
+<summary>``func size(Size) -> TextField``</summary>
+
+
+텍스트 필드의 사이즈를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 텍스트 필드의 사이즈 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+</details>
+<details>
+
 <summary>``func status(Status) -> TextField``</summary>
 
 
@@ -284,6 +301,30 @@ TextField(text: $inputText)
 
 ### Enumerations
 
+<details>
+
+<summary>``enum Size``</summary>
+
+
+텍스트 필드의 사이즈를 정의합니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case large``</summary>
+
+
+큰 사이즈 (최소 높이 48)
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+
+중간 사이즈 (최소 높이 40)
+</details>
+
+</details>
 <details>
 
 <summary>``enum Status``</summary>
