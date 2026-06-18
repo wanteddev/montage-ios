@@ -38,18 +38,11 @@ struct IconPreview: View {
                 ForEach(iconList, id: \.rawValue) { icon in
                     ListCell(title: icon.rawValue)
                         .leadingContent {
-                            if icon.rawValue.hasSuffix("Filler") {
-                                Image.opaqueIcon(icon)
-                                    .if(applyColor) { $0.foregroundColor(.semantic(.primaryNormal))
-                                    }
-                            } else {
-                                if applyColor {
-                                    Image.icon(icon, renderingMode: .template)
-                                        .foregroundColor(.semantic(.primaryNormal))
-                                } else {
-                                    Image.icon(icon, renderingMode: .original)
-                                }
-                            }
+                            Image.icon(
+                                icon,
+                                renderingMode: .original,
+                                color: applyColor ? .semantic(.primaryNormal) : nil
+                            )
                         }
                         .divider()
                         .padding(.horizontal, 16)
