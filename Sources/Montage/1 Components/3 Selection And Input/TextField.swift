@@ -629,7 +629,7 @@ private extension TextField {
     }
     
     var fieldTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
+        .semantic(.labelNormal)
     }
 }
 
