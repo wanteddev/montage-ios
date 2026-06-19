@@ -482,12 +482,22 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case circleCheckOpaque``</summary>
+
+</details>
+<details>
+
 <summary>``case circleClose``</summary>
 
 </details>
 <details>
 
 <summary>``case circleCloseFill``</summary>
+
+</details>
+<details>
+
+<summary>``case circleCloseOpaque``</summary>
 
 </details>
 <details>
@@ -507,6 +517,11 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case circleExclamationOpaque``</summary>
+
+</details>
+<details>
+
 <summary>``case circleFill``</summary>
 
 </details>
@@ -522,12 +537,22 @@ Button(action: {}) {
 </details>
 <details>
 
+<summary>``case circleInfoOpaque``</summary>
+
+</details>
+<details>
+
 <summary>``case circlePlus``</summary>
 
 </details>
 <details>
 
 <summary>``case circlePlusFill``</summary>
+
+</details>
+<details>
+
+<summary>``case circlePlusOpaque``</summary>
 
 </details>
 <details>
@@ -548,6 +573,11 @@ Button(action: {}) {
 <details>
 
 <summary>``case circleQuestionFill``</summary>
+
+</details>
+<details>
+
+<summary>``case circleQuestionOpaque``</summary>
 
 </details>
 <details>
