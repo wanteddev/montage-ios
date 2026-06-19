@@ -1848,8 +1848,7 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
   생성된 UIImage 인스턴스
 - **Discussion**
   - `color`가 없으면: `renderingMode`에 따라 `.alwaysTemplate`(`foregroundColor`로 틴트) 또는 `.alwaysOriginal`(원본 색)로 동작합니다.
-  - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다.
-
+  - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다. 일반 아이콘은 전체가 `color`로 칠해지고, `Opaque` 아이콘(흰색·검은색·투명 혼합)은 검은 영역만 `color`로 치환하고 흰색·투명 영역은 유지합니다.
 
 </details>
 
@@ -1879,8 +1878,7 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
   생성된 Image 인스턴스
 - **Discussion**
   - `color`가 없으면: `renderingMode`에 따라 `.template`(`foregroundColor`로 틴트) 또는 `.original`(원본 색)로 동작합니다.
-  - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다.
-
+  - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다. 일반 아이콘은 전체가 `color`로 칠해지고, `Opaque` 아이콘(흰색·검은색·투명 혼합)은 검은 영역만 `color`로 치환하고 흰색·투명 영역은 유지합니다.
 
 </details>
 
