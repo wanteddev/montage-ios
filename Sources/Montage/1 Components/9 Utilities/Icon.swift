@@ -122,20 +122,26 @@ public enum Icon: String, CaseIterable {
     case circleBlock
     case circleCheck
     case circleCheckFill
+    case circleCheckOpaque
     case circleClose
     case circleCloseFill
+    case circleCloseOpaque
     case circleDot
     case circleExclamation
     case circleExclamationFill
+    case circleExclamationOpaque
     case circleFill
     case circleInfo
     case circleInfoFill
+    case circleInfoOpaque
     case circlePlus
     case circlePlusFill
+    case circlePlusOpaque
     case circlePoint
     case circlePointFill
     case circleQuestion
     case circleQuestionFill
+    case circleQuestionOpaque
     case circleUpRight
     case circleUpRightFill
     case clock
