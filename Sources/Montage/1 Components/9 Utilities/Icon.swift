@@ -395,14 +395,14 @@ public enum Icon: String, CaseIterable {
 extension UIImage {
     /// Montage 디자인 시스템의 아이콘을 생성합니다.
     ///
-    /// - `color`가 없으면: `renderingMode`에 따라 `.template`(`foregroundColor`로 틴트) 또는 `.original`(원본 색)로 동작합니다.
+    /// - `color`가 없으면: `renderingMode`에 따라 `.alwaysTemplate`(`foregroundColor`로 틴트) 또는 `.alwaysOriginal`(원본 색)로 동작합니다.
     /// - `color`가 있으면: 해당 색으로 틴트한 한 장의 Image를 만듭니다.
     ///   - 일반 아이콘은 전체가 `color`로 칠해집니다.
     ///   - `Opaque` 아이콘(흰색·검은색·투명 혼합)은 검은 영역만 `color`로 치환하고 흰색·투명 영역은 유지합니다.
     ///
     /// - Parameters:
     ///   - type: 생성할 아이콘 타입
-    ///   - renderingMode: `color`가 없을 때의 렌더링 모드 (기본 `.template`)
+    ///   - renderingMode: `color`가 없을 때의 렌더링 모드 (기본 `.alwaysTemplate`)
     ///   - color: 틴트 색. 지정하면 `renderingMode`와 무관하게 색이 적용됩니다.
     /// - Returns: 생성된 UIImage 인스턴스
     public static func icon(
@@ -426,15 +426,17 @@ extension UIImage {
     /// `Opaque` 아이콘은 검은 영역만 가리키는 별도 `Fill` 실루엣이 덮여 흰색 영역이 보존되고,
     /// 그 외 아이콘은 이름이 그대로라 자기 자신이 덮여 전체가 `color`로 칠해집니다.
     fileprivate static func tintedImage(name: String, color: UIColor) -> UIImage {
-        let style = UITraitCollection.current.userInterfaceStyle.rawValue
-        let cacheKey = "\(name)|\(color)|\(style)" as NSString
+        // 캐시 키와 에셋 로딩이 동일한 trait를 보도록 현재 trait를 한 번만 캡처한다.
+        // (로딩에 nil을 넘기면 키는 current 기준인데 실제 선택 에셋은 시스템 기본 trait를 따라 불일치할 수 있다.)
+        let traits = UITraitCollection.current
+        let cacheKey = "\(name)|\(color)|\(traits.userInterfaceStyle.rawValue)" as NSString
         if let cached = tintedImageCache.object(forKey: cacheKey) {
             return cached
         }
-        
-        let base = UIImage.load(name: name)
+
+        let base = UIImage.load(name: name, compatibleWith: traits)
         let tintIconName = name.replacingOccurrences(of: "Opaque", with: "Fill")
-        let tint = UIImage.load(name: tintIconName).withTintColor(color, renderingMode: .alwaysOriginal)
+        let tint = UIImage.load(name: tintIconName, compatibleWith: traits).withTintColor(color, renderingMode: .alwaysOriginal)
         
         let format = UIGraphicsImageRendererFormat.preferred()
         format.opaque = false

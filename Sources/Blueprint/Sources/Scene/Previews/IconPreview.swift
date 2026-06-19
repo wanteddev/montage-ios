@@ -20,8 +20,8 @@ struct IconPreview: View {
                 Spacer()
                 HStack {
                     Text("Apply color")
-                    Switch(checked: applyColor) { _ in
-                        applyColor.toggle()
+                    Switch(checked: applyColor) { checked in
+                        applyColor = checked
                     }
                 }
                 .font(.caption)
