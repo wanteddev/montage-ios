@@ -61,10 +61,9 @@ const main = async () => {
       fs.writeFileSync(
         path.join(iconAssetsDir, `${iconName}.imageset`, `${iconName}.svg`),
         svgContent
-          .replaceAll('width="24"', '')
-          .replaceAll('height="24"', '')
-          .replaceAll('width="12"', '')
-          .replaceAll('height="12"', '')
+          // 루트 <svg> 태그의 width/height만 제거(viewBox로 스케일). 안쪽 요소
+          // (예: Opaque 아이콘의 흰색 <rect width="12" height="12">)의 크기는 보존한다.
+          .replace(/<svg\b[^>]*>/, (svgTag) => svgTag.replace(/\s(?:width|height)="\d+"/g, ''))
           .replaceAll('fill="none"', '')
           .replaceAll('fill="#171719"', '')
       );
