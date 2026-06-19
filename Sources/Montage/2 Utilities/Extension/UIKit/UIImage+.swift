@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIImage {
-    internal static func load(name: String) -> UIImage {
-        UIImage(named: name, in: Bundle.module, with: nil) ?? UIImage()
+    internal static func load(name: String, compatibleWith traitCollection: UITraitCollection? = nil) -> UIImage {
+        UIImage(named: name, in: Bundle.module, compatibleWith: traitCollection) ?? UIImage()
     }
 }

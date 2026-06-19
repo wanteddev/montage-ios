@@ -9,6 +9,7 @@ import SwiftUI
 import Montage
 
 struct IconPreview: View {
+    @State private var applyColor: Bool = false
     @State private var showTransparentChecker: Bool = false
     @State private var searchText: String = ""
     
@@ -17,6 +18,13 @@ struct IconPreview: View {
             HStack {
                 Text("Preview").bold()
                 Spacer()
+                HStack {
+                    Text("Apply color")
+                    Switch(checked: applyColor) { checked in
+                        applyColor = checked
+                    }
+                }
+                .font(.caption)
                 Button(action: {
                     showTransparentChecker.toggle()
                 }) {
@@ -30,8 +38,11 @@ struct IconPreview: View {
                 ForEach(iconList, id: \.rawValue) { icon in
                     ListCell(title: icon.rawValue)
                         .leadingContent {
-                            Image.icon(icon)
-                                .renderingMode(.original)
+                            Image.icon(
+                                icon,
+                                renderingMode: .original,
+                                color: applyColor ? .semantic(.primaryNormal) : nil
+                            )
                         }
                         .divider()
                         .padding(.horizontal, 16)
@@ -43,7 +54,7 @@ struct IconPreview: View {
             .listStyle(.plain)
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
+        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 10, checkerColor: .red)
     }
     
     var iconList: [Icon] {
