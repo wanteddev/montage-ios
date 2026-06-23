@@ -203,10 +203,27 @@ Text("Hello, World!")
 </details>
 <details>
 
+<summary>``var textStyle: Font.TextStyle``</summary>
+
+
+Dynamic Type 스케일의 기준이 되는 SwiftUI 텍스트 스타일.
+- **Discussion**
+
+  각 variant의 고정 크기는 그대로 두되, 사용자가 시스템 글자 크기를 키우면 여기에 매핑된 텍스트 스타일의 스케일 곡선을 따라 커진다. 큰 글자(display/title)는 완만하게, 작은 글자(caption)는 더 적극적으로 커지도록 역할·크기가 가장 가까운 스타일에 연결한다.
+</details>
+<details>
+
 <summary>``var tracking: CGFloat``</summary>
 
 
 각 변형에 대한 자간 (letter spacing)
+</details>
+<details>
+
+<summary>``var uiTextStyle: UIFont.TextStyle``</summary>
+
+
+Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. 과 동일한 논리이며 UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
 </details>
 
 </details>
@@ -273,6 +290,11 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 - **Return Value**
 
   생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 nil 반환
+- **Discussion**
+  >  **Note**
+  >
+  > 반환 폰트는 `.body` 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
+
 </details>
 
 <details>
@@ -290,6 +312,11 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 - **Return Value**
 
   생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 시스템 폰트로 대체
+- **Discussion**
+  >  **Note**
+  >
+  > 반환 폰트는 variant별 텍스트 스타일([uiTextStyle](/documentation/montage/typography/variant/uitextstyle.md)) 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
+
 </details>
 
 
