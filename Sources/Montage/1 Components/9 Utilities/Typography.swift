@@ -262,6 +262,45 @@ public enum Typography {
     }
 }
 
+extension Typography.Variant {
+    /// Dynamic Type 스케일의 기준이 되는 SwiftUI 텍스트 스타일.
+    ///
+    /// 각 variant의 고정 크기는 그대로 두되, 사용자가 시스템 글자 크기를 키우면 여기에 매핑된
+    /// 텍스트 스타일의 스케일 곡선을 따라 커진다. 큰 글자(display/title)는 완만하게, 작은
+    /// 글자(caption)는 더 적극적으로 커지도록 역할·크기가 가장 가까운 스타일에 연결한다.
+    var textStyle: Font.TextStyle {
+        switch self {
+        case .display1, .display2, .display3: .largeTitle
+        case .title1, .title2: .title
+        case .title3, .heading1: .title2
+        case .heading2: .title3
+        case .headline1, .headline2: .headline
+        case .body1, .body1Reading: .body
+        case .body2, .body2Reading: .subheadline
+        case .label1, .label1Reading, .label2: .footnote
+        case .caption1: .caption
+        case .caption2: .caption2
+        }
+    }
+
+    /// Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. ``textStyle``과 동일한 논리이며
+    /// UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
+    var uiTextStyle: UIFont.TextStyle {
+        switch self {
+        case .display1, .display2, .display3: .largeTitle
+        case .title1, .title2: .title1
+        case .title3, .heading1: .title2
+        case .heading2: .title3
+        case .headline1, .headline2: .headline
+        case .body1, .body1Reading: .body
+        case .body2, .body2Reading: .subheadline
+        case .label1, .label1Reading, .label2: .footnote
+        case .caption1: .caption1
+        case .caption2: .caption2
+        }
+    }
+}
+
 extension Typography.Weight {
     /// Pretendard 폰트 두께 매핑
     public var pretendardWeight: Pretendard.Weight {
@@ -289,8 +328,11 @@ extension UIFont {
     ///   - size: 폰트 크기
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 nil 반환
+    /// - Note: 반환 폰트는 `.body` 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에
+    ///   반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
     public static func font(size: CGFloat, weight: Typography.Weight) -> UIFont? {
         UIFont(name: weight.pretendardWeight.fontName, size: size)
+            .map { UIFontMetrics(forTextStyle: .body).scaledFont(for: $0) }
     }
 
     /// Montage 디자인 시스템의 폰트를 생성합니다.
@@ -299,6 +341,9 @@ extension UIFont {
     ///   - variant: 텍스트 변형
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 시스템 폰트로 대체
+    /// - Note: 반환 폰트는 variant별 텍스트 스타일(``Typography/Variant/uiTextStyle``) 기준
+    ///   Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서
+    ///   `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
     public static func font(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular
@@ -306,8 +351,9 @@ extension UIFont {
         let sementicWeight = Typography.getSementicWeight(variant: variant, weight: weight)
         let fallbackWeight = Typography.getFallbackWeight(variant: variant, weight: weight)
         let sementicSize = variant.fontSize
-        return UIFont(name: sementicWeight.fontName, size: sementicSize) ??
+        let base = UIFont(name: sementicWeight.fontName, size: sementicSize) ??
             .systemFont(ofSize: sementicSize, weight: fallbackWeight)
+        return UIFontMetrics(forTextStyle: variant.uiTextStyle).scaledFont(for: base)
     }
 }
 
@@ -320,7 +366,9 @@ extension Font {
     ///   - weight: 폰트 두께
     /// - Returns: 생성된 Font 인스턴스
     public static func font(size: CGFloat, weight: Typography.Weight) -> Font {
-        .custom(weight.pretendardWeight.fontName, size: size)
+        // `.custom(_:size:)`는 이미 `.body` 기준으로 스케일되지만, UIKit `UIFont.font(size:)`의
+        // `UIFontMetrics(forTextStyle: .body)`와 명시적으로 대칭이 되도록 relativeTo를 적는다.
+        .custom(weight.pretendardWeight.fontName, size: size, relativeTo: .body)
     }
 
     /// Montage 디자인 시스템의 폰트를 생성합니다.
@@ -335,7 +383,9 @@ extension Font {
     ) -> Font? {
         let sementicWeight = Typography.getSementicWeight(variant: variant, weight: weight)
         let sementicSize = variant.fontSize
-        return .custom(sementicWeight.fontName, size: sementicSize)
+        // variant별 텍스트 스타일 기준으로 Dynamic Type 스케일. relativeTo가 없는 .custom(_:size:)는
+        // 모든 variant가 .body 곡선으로만 커지므로, variant별 곡선을 따르도록 relativeTo를 지정한다.
+        return .custom(sementicWeight.fontName, size: sementicSize, relativeTo: variant.textStyle)
     }
 }
 
