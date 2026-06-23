@@ -7,12 +7,17 @@
 //
 
 import SwiftUI
+
 import Montage
 
 struct ComponentListView: View {
     @StateObject private var coordinator = ComponentListNavigationCoordinator()
     @State var searchText: String = ""
-    
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// 세로 방향 size class. iPhone에서 portrait=`.regular`, landscape=`.compact`로 회전 시 토글되며,
+    /// 측정 지오메트리가 아니라 UIKit trait이라 회전 직후에도 stale되지 않고 갱신된다.
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     var categoryItemSections: [ComponentSection] {
         ComponentCategory.allCases
             .map { category in
@@ -62,6 +67,12 @@ struct ComponentListView: View {
             .navigationDestination(for: Component.self) { componentType in
                 coordinator.destinationView(for: componentType)
                     .navigationTitle(componentType.displayName)
+                    // Dynamic Type 변경이나 기기 회전(landscape↔portrait)을 런타임에 수행하면,
+                    // SwiftUI가 커스텀 폰트 화면의 컨테이너 레이아웃(줄바꿈·너비 배분)을 다시 계산하지
+                    // 않고 이전 캐시를 재사용해, 옛 너비 구조에 폰트만 커지거나 옛 너비가 유지되어
+                    // 콘텐츠가 화면 밖으로 넘치는 경우가 있다. 레이아웃과 무관한 trait(Dynamic Type
+                    // 크기·세로 size class)이 바뀌면 식별자를 갱신해 강제로 재레이아웃한다.
+                    .id("\(dynamicTypeSize)-\(verticalSizeClass == .compact ? "c" : "r")")
             }
         }
     }
