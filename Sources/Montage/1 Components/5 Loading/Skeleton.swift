@@ -100,6 +100,8 @@ public enum Skeleton {
         let lineHeight: CGFloat
         let lineSpacing: CGFloat
         let lineNumber: Int
+        /// 텍스트 스켈레톤일 때 Dynamic Type 스케일 기준 텍스트 스타일. 비-텍스트는 nil.
+        let textStyle: Font.TextStyle?
 
         /// 텍스트 종류인지 여부
         public var isText: Bool { category == .text }
@@ -131,7 +133,8 @@ public enum Skeleton {
                 cornerRadius: cornerRadius,
                 lineHeight: variant.lineHeight,
                 lineSpacing: variant.lineSpacing,
-                lineNumber: 0
+                lineNumber: 0,
+                textStyle: variant.textStyle
             )
         }
 
@@ -146,7 +149,8 @@ public enum Skeleton {
                 cornerRadius: cornerRadius,
                 lineHeight: 0,
                 lineSpacing: 0,
-                lineNumber: 0
+                lineNumber: 0,
+                textStyle: nil
             )
         }
 
@@ -158,7 +162,8 @@ public enum Skeleton {
                 cornerRadius: 0,
                 lineHeight: 0,
                 lineSpacing: 0,
-                lineNumber: 0
+                lineNumber: 0,
+                textStyle: nil
             )
         }
     }
@@ -190,13 +195,20 @@ public enum Skeleton {
 
         // MARK: - Initializer
         private let kind: Kind
-        
+        /// 텍스트 스켈레톤의 줄 높이를 Dynamic Type에 맞춰 스케일한 값. 폰트와 동일한 곡선
+        /// (`variant.textStyle`)을 따르므로 큰 글자에서도 실제 텍스트 높이와 일치한다.
+        @ScaledMetric private var scaledLineHeight: CGFloat
+        @ScaledMetric private var scaledLineSpacing: CGFloat
+
         /// 스켈레톤 뷰를 초기화합니다.
         ///
         /// - Parameters:
         ///   - kind: 표시할 스켈레톤의 종류
         public init(_ kind: Kind) {
             self.kind = kind
+            let style = kind.textStyle ?? .body
+            _scaledLineHeight = ScaledMetric(wrappedValue: kind.lineHeight, relativeTo: style)
+            _scaledLineSpacing = ScaledMetric(wrappedValue: kind.lineSpacing, relativeTo: style)
         }
         
         // MARK: - Body
@@ -207,11 +219,11 @@ public enum Skeleton {
                 switch kind.category {
                 case .text:
                     GeometryReader { proxy in
-                        let spacing = kind.lineSpacing
+                        let spacing = scaledLineSpacing
                         let effectiveLineCount = kind.lineNumber > 0
                             ? kind.lineNumber
-                            : max(1, Int(round(proxy.size.height / kind.lineHeight)))
-                        let barHeight = max(0, kind.lineHeight - spacing)
+                            : max(1, Int(round(proxy.size.height / scaledLineHeight)))
+                        let barHeight = max(0, scaledLineHeight - spacing)
 
                         VStack(alignment: kind.alignment.horizontalAlignment, spacing: 0) {
                             ForEach(0 ..< effectiveLineCount, id: \.self) { index in
