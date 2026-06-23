@@ -49,22 +49,6 @@ public struct TextArea: View {
         ///   - max: 최대 높이
         case fixed(min: CGFloat, max: CGFloat)
         
-        var minHeight: CGFloat? {
-            switch self {
-            case .normal: 36.0
-            case .limit: 36.0
-            case .fixed(let min, _): min
-            }
-        }
-        
-        var maxHeight: CGFloat? {
-            switch self {
-            case .normal: .infinity
-            case .limit: 102.0
-            case .fixed(_, let max): max
-            }
-        }
-        
         var alignment: Alignment {
             switch self {
             case .normal, .limit: .center
@@ -344,8 +328,39 @@ public struct TextArea: View {
     // MARK: - Body
     
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var typedCharacters = 0
     @FocusState private var internalFocusState
+
+    /// 스케일된 본문 폰트(`.body1Reading`)의 한 줄 높이. `UIFont.font`이 Dynamic Type 스케일 폰트를
+    /// 반환하므로 글자 크기 설정에 따라 값이 달라진다.
+    private var lineHeightUnit: CGFloat {
+        UIFont.font(variant: .body1Reading).lineHeight
+    }
+
+    /// UITextView 기본 `textContainerInset`(상·하 각 8pt)의 합.
+    private var verticalContainerInset: CGFloat { 16 }
+
+    /// resize 방식에 따른 최소 높이. `.normal`/`.limit`은 **한 줄 높이 기준**이며 폰트 크기에 따라
+    /// 동적으로 스케일된다. `.fixed`는 호출자가 지정한 픽셀값을 그대로 쓴다.
+    private var resolvedMinHeight: CGFloat? {
+        _ = dynamicTypeSize // Dynamic Type 변경 시 높이 재계산을 위한 의존성 등록
+        switch resize {
+        case .normal, .limit: return ceil(lineHeightUnit + verticalContainerInset)
+        case .fixed(let min, _): return min
+        }
+    }
+
+    /// resize 방식에 따른 최대 높이. `.limit`은 기존 기준값(102pt)을 `.body` 곡선으로 스케일해
+    /// 큰 글자에서도 최소 높이를 밑돌지 않도록 한다.
+    private var resolvedMaxHeight: CGFloat? {
+        _ = dynamicTypeSize
+        switch resize {
+        case .normal: return .infinity
+        case .limit: return UIFontMetrics(forTextStyle: .body).scaledValue(for: 102)
+        case .fixed(_, let max): return max
+        }
+    }
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -384,12 +399,12 @@ public struct TextArea: View {
                     .inputLimit(inputCharacterLimit)
                     .inputTransform(inputTransform)
                     .frameHeight(
-                        minHeight: resize.minHeight,
-                        maxHeight: resize.maxHeight
+                        minHeight: resolvedMinHeight,
+                        maxHeight: resolvedMaxHeight
                     )
                     .frame(
-                        minHeight: resize.minHeight,
-                        maxHeight: resize.maxHeight,
+                        minHeight: resolvedMinHeight,
+                        maxHeight: resolvedMaxHeight,
                         alignment: resize.alignment
                     )
                     .foregroundStyle(editorTextColor)
@@ -644,7 +659,11 @@ public struct TextArea: View {
         
         func makeUIView(context: Context) -> UITextView {
             let textView = UITextView()
-            textView.font = UIFont.systemFont(ofSize: 16)
+            // 디자인 폰트(Pretendard)를 Dynamic Type 스케일과 함께 적용한다. UIFont.font은 이미
+            // UIFontMetrics 스케일 폰트를 반환하므로, adjustsFontForContentSizeCategory를 켜면 실행 중
+            // 글자 크기 변경에도 자동으로 갱신된다.
+            textView.font = UIFont.font(variant: .body1Reading)
+            textView.adjustsFontForContentSizeCategory = true
             textView.isScrollEnabled = false
             textView.backgroundColor = .clear
             textView.delegate = context.coordinator
