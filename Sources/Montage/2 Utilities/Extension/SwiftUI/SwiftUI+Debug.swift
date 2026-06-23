@@ -155,48 +155,45 @@ private struct DimensionView: View {
     private let hairline = 1 / UIScreen.main.scale
     
     var body: some View {
-        switch axis {
-        case .horizontal:
-            ZStack {
+        Group {
+            switch axis {
+            case .horizontal:
                 HStack(spacing: 0) {
                     Rectangle()
                         .frame(width: hairline)
                     Rectangle()
                         .frame(height: hairline)
-                        .frame(width: CGFloat(max(0, value - 2)))
+                    Text("\(String(format: "%.1f", value))")
+                        .font(.system(size: 10))
+                        .minimumScaleFactor(0.3)
+                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
+                        .layoutPriority(1)
+                    Rectangle()
+                        .frame(height: hairline)
                     Rectangle()
                         .frame(width: hairline)
                 }
                 .frame(width: CGFloat(value))
-                Text("\(String(format: "%.1f", value))")
-                    .font(.system(size: 10))
-                    .background {
-                        Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
-                    }
-            }
-            .foregroundStyle(.red)
-        case .vertical:
-            ZStack {
+            case .vertical:
                 VStack(spacing: 0) {
                     Rectangle()
                         .frame(height: hairline)
                     Rectangle()
                         .frame(width: hairline)
-                        .frame(height: CGFloat(max(0, value - 2)))
+                    Text("\(String(format: "%.1f", value))")
+                        .font(.system(size: 10))
+                        .minimumScaleFactor(0.3)
+                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
+                        .layoutPriority(1)
+                    Rectangle()
+                        .frame(width: hairline)
                     Rectangle()
                         .frame(height: hairline)
                 }
                 .frame(height: CGFloat(value))
-                Rectangle()
-                    .frame(width: 1, height: CGFloat(value))
-                Text("\(String(format: "%.1f", value))")
-                    .font(.system(size: 10))
-                    .background {
-                        Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7)
-                    }
             }
-            .foregroundStyle(.red)
         }
+        .foregroundStyle(.red)
     }
 }
 
@@ -210,11 +207,12 @@ private struct DimensionBoxView: View {
 
     var body: some View {
         Rectangle()
-            .stroke()
+            .stroke(lineWidth: 1 / UIScreen.main.scale)
             .frame(width: CGFloat(width), height: CGFloat(height))
             .overlay {
                 Text("\(String(format: "%.1f", width))x\(String(format: "%.1f", height))")
-                    .font(.system(size: 6))
+                    .font(.system(size: 10))
+                    .minimumScaleFactor(0.3)
                     .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
             }
             .foregroundStyle(.red)
