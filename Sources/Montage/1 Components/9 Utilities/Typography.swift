@@ -268,7 +268,7 @@ extension Typography.Variant {
     /// 각 variant의 고정 크기는 그대로 두되, 사용자가 시스템 글자 크기를 키우면 여기에 매핑된
     /// 텍스트 스타일의 스케일 곡선을 따라 커진다. 큰 글자(display/title)는 완만하게, 작은
     /// 글자(caption)는 더 적극적으로 커지도록 역할·크기가 가장 가까운 스타일에 연결한다.
-    var textStyle: Font.TextStyle {
+    public var textStyle: Font.TextStyle {
         switch self {
         case .display1, .display2, .display3: .largeTitle
         case .title1, .title2: .title
@@ -285,7 +285,7 @@ extension Typography.Variant {
 
     /// Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. ``textStyle``과 동일한 논리이며
     /// UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
-    var uiTextStyle: UIFont.TextStyle {
+    public var uiTextStyle: UIFont.TextStyle {
         switch self {
         case .display1, .display2, .display3: .largeTitle
         case .title1, .title2: .title1
@@ -506,7 +506,25 @@ extension View {
     /// - Parameter variant: 텍스트 변형
     /// - Returns: 줄 높이가 적용된 View
     public func adjustLineHeight(variant: Typography.Variant) -> some View {
-        lineSpacing(variant.lineSpacing).padding(.vertical, variant.lineSpacing / 2)
+        modifier(AdjustLineHeightModifier(variant: variant))
+    }
+}
+
+/// 줄 간격·세로 padding을 Dynamic Type에 맞춰 스케일하는 모디파이어.
+///
+/// 폰트가 ``Typography/Variant/textStyle`` 곡선으로 스케일되므로, 줄 간격도 동일한 곡선의
+/// `@ScaledMetric`으로 스케일해 큰 글자에서도 정의된 lineHeight 비율을 유지한다.
+private struct AdjustLineHeightModifier: ViewModifier {
+    @ScaledMetric private var lineSpacing: CGFloat
+
+    init(variant: Typography.Variant) {
+        _lineSpacing = ScaledMetric(wrappedValue: variant.lineSpacing, relativeTo: variant.textStyle)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .lineSpacing(lineSpacing)
+            .padding(.vertical, lineSpacing / 2)
     }
 }
 
