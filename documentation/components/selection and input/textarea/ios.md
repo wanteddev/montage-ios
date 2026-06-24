@@ -9,7 +9,7 @@ description: 여러 줄의 텍스트 입력을 위한 컴포넌트입니다.
 
 ## Overview
 
-이 컴포넌트는 사용자가 여러 줄의 텍스트를 입력할 수 있는 영역을 제공합니다. 제목, 배지, 리사이즈 옵션, 캐릭터 카운터 등 다양한 기능을 지원합니다.
+이 컴포넌트는 사용자가 여러 줄의 텍스트를 입력할 수 있는 영역을 제공합니다. 사이즈, 리사이즈 옵션, 하단 리소스 등 다양한 기능을 지원합니다.
 
 ```swift
 @State private var longText = ""
@@ -17,21 +17,18 @@ description: 여러 줄의 텍스트 입력을 위한 컴포넌트입니다.
 
 // 기본 텍스트 영역
 TextArea(text: $longText, focus: $isFocused)
-    .heading("의견")
     .placeholder("의견을 입력해주세요")
 
-// 문자 수 제한과 고정 크기를 가진 텍스트 영역
+// 중간 사이즈와 고정 크기를 가진 텍스트 영역
 TextArea(text: $longText)
-    .resize(.fixed(min: 100, max: 200))
-    .bottomResources(
-        trailing: [.characterCount(limit: 100)]
-    )
+    .size(.medium)
+    .resize(.fixed(min: 108, max: 200))
 
-// 필수 항목 표시와 설명이 있는 텍스트 영역
+// 입력 글자 수를 추적하는 텍스트 영역
+@State private var characterCount = 0
 TextArea(text: $longText)
-    .heading("상세 설명")
-    .requiredBadge(true)
-    .description("최대한 자세히 작성해주세요")
+    .maxLength(100)
+    .onTextChange { characterCount = $0.count }
 ```
 
 ## Topics
@@ -81,21 +78,11 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
-</details>
-<details>
+- **Discussion**
+  >  **Note**
+  >
+  > `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 leading에 전달되면 무시됩니다.
 
-<summary>``func description(String?) -> TextArea``</summary>
-
-
-텍스트 영역 하단에 표시할 설명 텍스트를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `description` | 표시할 설명 텍스트, nil이면 표시 안함 |
-- **Return Value**
-
-  수정된 텍스트 영역 인스턴스
 </details>
 <details>
 
@@ -111,39 +98,6 @@ TextArea(text: $longText)
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
-</details>
-<details>
-
-<summary>``func heading(String?) -> TextArea``</summary>
-
-
-텍스트 영역 위에 표시할 제목을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `heading` | 표시할 제목, nil이면 제목 표시 안함 |
-- **Return Value**
-
-  수정된 텍스트 영역 인스턴스
-</details>
-<details>
-
-<summary>``func inputCharacterLimit(Int?) -> TextArea``</summary>
-
-
-입력 시점에 적용할 최대 글자 수를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `limit` | 최대 글자 수, nil이면 제한 없음 |
-- **Return Value**
-
-  수정된 텍스트 영역 인스턴스
-- **Discussion**
-
-  하단 문자 수 카운터와 달리 카운터 UI를 표시하지 않고 입력 길이만 제한합니다. 사후 변형이 아닌 입력 단계에서 제한하므로 UITextView의 텍스트와 UndoManager가 일관되게 유지되며, 초과 입력/붙여넣기는 허용분만 잘라서 삽입됩니다.
 </details>
 <details>
 
@@ -165,6 +119,24 @@ TextArea(text: $longText)
 </details>
 <details>
 
+<summary>``func maxLength(Int?) -> TextArea``</summary>
+
+
+최대 글자 수를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `limit` | 최대 글자 수, nil이면 제한 없음 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  카운터 UI를 표시하지 않고 입력 길이만 제한합니다. 사후 변형이 아닌 입력 단계에서 제한하므로 UITextView의 텍스트와 UndoManager가 일관되게 유지되며, 초과 입력/붙여넣기는 허용분만 잘라서 삽입됩니다.
+</details>
+<details>
+
 <summary>``func negative(Bool) -> TextArea``</summary>
 
 
@@ -183,6 +155,24 @@ TextArea(text: $longText)
 </details>
 <details>
 
+<summary>``func onTextChange((String) -> Void) -> TextArea``</summary>
+
+
+텍스트가 변경될 때마다 호출할 클로저를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `handler` | 변경된 텍스트를 전달받는 클로저 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  변경된 전체 텍스트를 전달하므로 글자 수 계산(`text.count`), 유효성 검사 등 다양한 후처리에 사용할 수 있습니다.
+</details>
+<details>
+
 <summary>``func placeholder(String?) -> TextArea``</summary>
 
 
@@ -198,26 +188,6 @@ TextArea(text: $longText)
 </details>
 <details>
 
-<summary>``func requiredBadge(Bool) -> TextArea``</summary>
-
-
-제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `requiredBadge` | 필수 입력 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 텍스트 영역 인스턴스
-- **Discussion**
-  >  **Note**
-  >
-  > 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
-
-</details>
-<details>
-
 <summary>``func resize(Resize) -> TextArea``</summary>
 
 
@@ -227,6 +197,21 @@ TextArea(text: $longText)
   | Parameter | Description |
   | --- | --- |
   | `resize` | 크기 조절 방식 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+</details>
+<details>
+
+<summary>``func size(Size) -> TextArea``</summary>
+
+
+텍스트 영역의 사이즈를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 텍스트 영역의 사이즈 |
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -260,14 +245,14 @@ TextArea(text: $longText)
 <summary>``case limit``</summary>
 
 
-최대 8줄까지 표시되며, 초과 부분은 스크롤할 수 있습니다.
+최대 6줄까지 표시되며, 초과 부분은 스크롤할 수 있습니다. 최소 높이는 2줄 기준입니다.
 </details>
 <details>
 
 <summary>``case normal``</summary>
 
 
-줄 수 제한이 없으며, 입력된 텍스트에 따라 영역이 자동으로 확장됩니다.
+줄 수 제한이 없으며, 입력된 텍스트에 따라 영역이 자동으로 확장됩니다. 최소 높이는 2줄 기준입니다.
 </details>
 
 </details>
@@ -276,62 +261,35 @@ TextArea(text: $longText)
 <summary>``enum Resource``</summary>
 
 
-텍스트 영역 하단에 표시할 수 있는 UI 요소를 정의합니다.
+텍스트 영역 하단(Bottom Content)에 표시할 수 있는 UI 요소를 정의합니다.
 #### Enumeration Cases
 
 <details>
 
-<summary>``case badge(ContentBadge.Variant, title: String)``</summary>
+<summary>``case button(color: Button.Color, title: String, handler: (() -> Void)?)``</summary>
 
 
-뱃지
+텍스트 버튼(Outlined)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 버튼 색상, 생략하면 기본값으로 `.assistive` 적용 |
+  | `title` | 버튼 텍스트 |
+  | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case contentBadge(ContentBadge.Variant, title: String)``</summary>
+
+
+콘텐츠 뱃지
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
   | `variant` | 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `title` | 뱃지 텍스트 |
-</details>
-<details>
-
-<summary>``case characterCount(limit: Int?, overflow: Bool)``</summary>
-
-
-문자 수 카운터
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `limit` | 최대 문자 수 제한, 생략하면 기본값으로 `nil` 적용 (제한 없음) |
-  | `overflow` | 최대 문자 수 초과 허용 여부, 생략하면 기본값으로 `false` 적용 |
-</details>
-<details>
-
-<summary>``case chip(Chip.Variant, title: String, handler: (() -> Void)?)``</summary>
-
-
-칩
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 칩 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
-  | `title` | 칩 텍스트 |
-  | `handler` | 칩 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
-</details>
-<details>
-
-<summary>``case filterButton(FilterButton.Variant, title: String, handler: (() -> Void)?)``</summary>
-
-
-필터 버튼
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 버튼 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
-  | `title` | 버튼 텍스트 |
-  | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
 </details>
 <details>
 
@@ -348,61 +306,103 @@ TextArea(text: $longText)
 </details>
 <details>
 
-<summary>``case iconButton(placement: Placement, variant: IconButton.Variant?, icon: Icon, tintColor: SwiftUI.Color, handler: (() -> Void)?)``</summary>
+<summary>``case iconButton(icon: Icon, tintColor: SwiftUI.Color, handler: (() -> Void)?)``</summary>
 
 
-아이콘 버튼
+아이콘 버튼(배경 없음)
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `placement` | 버튼 위치, 생략하면 기본값으로 `.leading` 적용 |
-  | `variant` | 버튼 변형 스타일, 생략하면 기본값으로 `.solid(size: .small)` 적용 |
   | `icon` | 버튼 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAlternative)` 적용 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
 </details>
 <details>
 
-<summary>``case textButton(placement: Placement, variant: TextButton.Color?, title: String, handler: (() -> Void)?)``</summary>
+<summary>``case primaryIconButton(icon: Icon, handler: (() -> Void)?)``</summary>
 
 
-텍스트 버튼
+Primary 아이콘 버튼(Solid)
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `placement` | 버튼 위치, 생략하면 기본값으로 `.leading` 적용 |
-  | `variant` | 버튼 변형 스타일, 생략하면 기본값으로 `.assistive` 적용 |
-  | `title` | 버튼 텍스트 |
+  | `icon` | 버튼 아이콘 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
 </details>
-
-#### Enumerations
-
 <details>
 
-<summary>``enum Placement``</summary>
+<summary>``case segmentedControl(selectedIndex: Binding<Int>, icons: [Icon], onSelect: ((Int) -> Void)?)``</summary>
 
 
-요소의 배치 위치를 정의합니다.
-##### Enumeration Cases
+세그먼트 컨트롤(아이콘 전용). Bottom Content 전용 크기로 렌더링되며 정방형 아이콘만 받습니다.
 
-<details>
-
-<summary>``case leading``</summary>
-
-
-왼쪽에 배치
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `selectedIndex` | 선택된 세그먼트 인덱스 바인딩 |
+  | `icons` | 세그먼트 아이콘 배열 |
+  | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
 </details>
 <details>
 
-<summary>``case trailing``</summary>
+<summary>``case slotView(() -> AnyView)``</summary>
 
 
-오른쪽에 배치
+임의 뷰. `.slot { ... }` 팩토리로 생성합니다.
 </details>
 
+#### Instance Properties
+
+<details>
+
+<summary>``var isLeadingAllowed: Bool``</summary>
+
+
+leading(왼쪽)에 배치할 수 있는 리소스인지 여부. `button`·`primaryIconButton`은 trailing 전용입니다.
+</details>
+
+#### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Resource``</summary>
+
+
+임의 뷰를 Bottom Content에 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  구성된 리소스
+</details>
+
+</details>
+<details>
+
+<summary>``enum Size``</summary>
+
+
+텍스트 영역의 사이즈를 정의합니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case large``</summary>
+
+
+큰 사이즈 (입력 `body2`, 최소 콘텐츠 높이 48)
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+
+중간 사이즈 (입력 `label1`, 최소 콘텐츠 높이 44)
 </details>
 
 </details>

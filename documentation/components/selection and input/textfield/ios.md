@@ -16,15 +16,12 @@ description: 단일 라인 텍스트 입력을 위한 컴포넌트입니다.
 
 // 기본 텍스트 필드
 TextField(text: $inputText)
-   .heading("이메일")
    .placeholder("이메일을 입력하세요")
 
-// 아이콘이 있는 필수 입력 필드
+// 아이콘과 오류 상태를 가진 필드
 TextField(text: $inputText)
-   .heading("아이디")
-   .requiredBadge(true)
    .icon(.person)
-   .status(.negative(description: "올바른 아이디를 입력해주세요"))
+   .status(.negative)
 
 // 오른쪽 버튼이 있는 텍스트 필드
 TextField(text: $inputText)
@@ -175,21 +172,6 @@ TextField(text: $inputText)
 </details>
 <details>
 
-<summary>``func heading(String?) -> TextField``</summary>
-
-
-텍스트 필드 위에 표시할 제목을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `heading` | 표시할 제목, nil이면 제목 표시 안함 |
-- **Return Value**
-
-  수정된 텍스트 필드 인스턴스
-</details>
-<details>
-
 <summary>``func icon(Icon?) -> TextField``</summary>
 
 
@@ -217,26 +199,6 @@ TextField(text: $inputText)
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
-</details>
-<details>
-
-<summary>``func requiredBadge(Bool) -> TextField``</summary>
-
-
-제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `requiredBadge` | 필수 입력 뱃지 표시 여부 |
-- **Return Value**
-
-  수정된 텍스트 필드 인스턴스
-- **Discussion**
-  >  **Note**
-  >
-  > 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
-
 </details>
 <details>
 
@@ -335,39 +297,24 @@ TextField(text: $inputText)
 
 <details>
 
-<summary>``case negative(description: String)``</summary>
+<summary>``case negative``</summary>
 
 
-오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `description` | 오류 설명 텍스트, 생략하면 기본값으로 `""` 적용 |
+오류 상태
 </details>
 <details>
 
-<summary>``case normal(description: String)``</summary>
+<summary>``case normal``</summary>
 
 
-기본 상태, 선택적으로 설명 텍스트 포함 가능
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `description` | 설명 텍스트, 생략하면 기본값으로 `""` 적용 |
+기본 상태
 </details>
 <details>
 
-<summary>``case positive(description: String)``</summary>
+<summary>``case positive``</summary>
 
 
-유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `description` | 설명 텍스트, 생략하면 기본값으로 `""` 적용 |
+유효한 입력 상태
 </details>
 
 </details>

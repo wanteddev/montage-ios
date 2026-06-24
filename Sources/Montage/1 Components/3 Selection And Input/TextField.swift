@@ -17,15 +17,12 @@ import SwiftUI
 ///
 /// // 기본 텍스트 필드
 /// TextField(text: $inputText)
-///    .heading("이메일")
 ///    .placeholder("이메일을 입력하세요")
 ///
-/// // 아이콘이 있는 필수 입력 필드
+/// // 아이콘과 오류 상태를 가진 필드
 /// TextField(text: $inputText)
-///    .heading("아이디")
-///    .requiredBadge(true)
 ///    .icon(.person)
-///    .status(.negative(description: "올바른 아이디를 입력해주세요"))
+///    .status(.negative)
 ///
 /// // 오른쪽 버튼이 있는 텍스트 필드
 /// TextField(text: $inputText)
@@ -55,15 +52,12 @@ public struct TextField: View {
 
     /// 텍스트 필드의 상태를 정의합니다.
     public enum Status {
-        /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
-        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
-        case normal(description: String = "")
-        /// 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
-        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
-        case positive(description: String = "")
-        /// 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
-        /// - Parameter description: 오류 설명 텍스트, 생략하면 기본값으로 `""` 적용
-        case negative(description: String = "")
+        /// 기본 상태
+        case normal
+        /// 유효한 입력 상태
+        case positive
+        /// 오류 상태
+        case negative
     }
 
     /// 텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.
@@ -166,10 +160,8 @@ public struct TextField: View {
     // MARK: - Modifiers
 
     private var size: Size = .large
-    private var status: Status = .normal()
+    private var status: Status = .normal
     private var disable = false
-    private var heading: String? = nil
-    private var requiredBadge = false
     private var placeholder: String? = nil
     private var icon: Icon? = nil
     private var trailingButton: TrailingButtonInfo? = nil
@@ -204,27 +196,6 @@ public struct TextField: View {
     public func disable(_ disable: Bool) -> Self {
         var zelf = self
         zelf.disable = disable
-        return zelf
-    }
-    
-    /// 텍스트 필드 위에 표시할 제목을 설정합니다.
-    ///
-    /// - Parameter heading: 표시할 제목, nil이면 제목 표시 안함
-    /// - Returns: 수정된 텍스트 필드 인스턴스
-    public func heading(_ heading: String?) -> Self {
-        var zelf = self
-        zelf.heading = heading
-        return zelf
-    }
-    
-    /// 제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
-    ///
-    /// - Parameter requiredBadge: 필수 입력 뱃지 표시 여부
-    /// - Returns: 수정된 텍스트 필드 인스턴스
-    /// - Note: 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
-    public func requiredBadge(_ requiredBadge: Bool) -> Self {
-        var zelf = self
-        zelf.requiredBadge = requiredBadge
         return zelf
     }
     
@@ -289,33 +260,7 @@ public struct TextField: View {
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if let heading {
-                HStack(spacing: 4) {
-                    Text(heading)
-                        .paragraph(variant: .label1, weight: .bold, semantic: .labelNeutral)
-                    if requiredBadge {
-                        Text("*")
-                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
-                    }
-                }
-            }
-            
-            inputField
-            
-            Group {
-                switch status {
-                case .positive(let caption), .negative(let caption), .normal(let caption):
-                    if caption.isEmpty == false {
-                        Text(caption)
-                            .paragraph(
-                                variant: .caption1,
-                                color: captionTextColor
-                            )
-                    }
-                }
-            }
-        }
+        inputField
     }
 }
         
@@ -434,7 +379,6 @@ private extension TextField {
             .foregroundStyle(fieldTextColor)
             .focused($textFieldFocusState)
             .padding(.horizontal, .spacing4)
-            .accessibilityLabel(heading ?? "")
             .accessibilityValue(accessibilityStatusDescription)
 
             trailingArea
@@ -506,24 +450,13 @@ private extension TextField {
 
     var accessibilityStatusDescription: String {
         switch status {
-        case .negative(let description):
-            description.isEmpty ? String(localized: "오류", bundle: .module) : description
-        case .positive(let description):
-            description.isEmpty ? "" : description
-        case .normal(let description):
-            description
+        case .negative:
+            String(localized: "오류", bundle: .module)
+        case .positive, .normal:
+            ""
         }
     }
 
-    var captionTextColor: SwiftUI.Color {
-        switch status {
-        case .negative:
-            .semantic(.statusNegative)
-        default:
-            .semantic(.labelAlternative)
-        }
-    }
-    
     var autoCompletionContent: some View {
         Group {
             if let autoCompletionDataSource {
