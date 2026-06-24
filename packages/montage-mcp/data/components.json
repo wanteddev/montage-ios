@@ -2344,27 +2344,9 @@
           "kind": "method"
         },
         {
-          "name": "description(_:)",
-          "signature": "func description(String?) -> TextArea",
-          "summary": "텍스트 영역 하단에 표시할 설명 텍스트를 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "disable(_:)",
           "signature": "func disable(Bool) -> TextArea",
           "summary": "텍스트 영역의 활성화 상태를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "heading(_:)",
-          "signature": "func heading(String?) -> TextArea",
-          "summary": "텍스트 영역 위에 표시할 제목을 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "inputCharacterLimit(_:)",
-          "signature": "func inputCharacterLimit(Int?) -> TextArea",
-          "summary": "입력 시점에 적용할 최대 글자 수를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2374,9 +2356,21 @@
           "kind": "method"
         },
         {
+          "name": "maxLength(_:)",
+          "signature": "func maxLength(Int?) -> TextArea",
+          "summary": "최대 글자 수를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "negative(_:)",
           "signature": "func negative(Bool) -> TextArea",
           "summary": "텍스트 영역의 오류 상태를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onTextChange(_:)",
+          "signature": "func onTextChange((String) -> Void) -> TextArea",
+          "summary": "텍스트가 변경될 때마다 호출할 클로저를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2386,15 +2380,15 @@
           "kind": "method"
         },
         {
-          "name": "requiredBadge(_:)",
-          "signature": "func requiredBadge(Bool) -> TextArea",
-          "summary": "제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "resize(_:)",
           "signature": "func resize(Resize) -> TextArea",
           "summary": "텍스트 영역의 크기 조절 방식을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> TextArea",
+          "summary": "텍스트 영역의 사이즈를 설정합니다.",
           "kind": "method"
         }
       ],
@@ -2413,15 +2407,32 @@
         {
           "name": "TextArea.Resource",
           "kind": "enum",
-          "summary": "텍스트 영역 하단에 표시할 수 있는 UI 요소를 정의합니다.",
+          "summary": "텍스트 영역 하단(Bottom Content)에 표시할 수 있는 UI 요소를 정의합니다.",
           "cases": [
-            "badge",
-            "characterCount",
-            "chip",
-            "filterButton",
+            "button",
+            "contentBadge",
             "icon",
             "iconButton",
-            "textButton"
+            "primaryIconButton",
+            "segmentedControl",
+            "slotView"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Resource",
+              "summary": "임의 뷰를 Bottom Content에 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "TextArea.Size",
+          "kind": "enum",
+          "summary": "텍스트 영역의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
           ]
         }
       ]
@@ -2524,12 +2535,6 @@
           "kind": "method"
         },
         {
-          "name": "heading(_:)",
-          "signature": "func heading(String?) -> TextField",
-          "summary": "텍스트 필드 위에 표시할 제목을 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "icon(_:)",
           "signature": "func icon(Icon?) -> TextField",
           "summary": "텍스트 필드 왼쪽에 표시할 아이콘을 설정합니다.",
@@ -2539,12 +2544,6 @@
           "name": "placeholder(_:)",
           "signature": "func placeholder(String?) -> TextField",
           "summary": "텍스트 필드에 입력된 텍스트가 없을 때 표시할 플레이스홀더를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "requiredBadge(_:)",
-          "signature": "func requiredBadge(Bool) -> TextField",
-          "summary": "제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.",
           "kind": "method"
         },
         {
