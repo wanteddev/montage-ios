@@ -12,7 +12,6 @@ import SwiftUI
 import Montage
 
 struct TextButtonPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var colorIndex = 0
     @State private var sizeIndex = 0
     @State private var leadingIcon = false
@@ -24,90 +23,50 @@ struct TextButtonPreview: View {
     @State private var fontVariant = false
     @State private var fontWeight = false
     @State private var loading = false
-    
+
     private let colors: [TextButton.Color] = [.primary, .assistive]
     private let sizes: [TextButton.Size] = [.small, .medium]
-    
+
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
+        PreviewLayout {
+            let color = colors[colorIndex]
+            let size = sizes[sizeIndex]
+            HStack {
+                Spacer()
+                TextButton(
+                    color: color,
+                    size: size,
+                    text: "텍스트",
+                    leadingIcon: leadingIcon ? .apps : nil,
+                    trailingIcon: trailingIcon ? .apps : nil
+                ) {
+                    print("tapped")
                 }
-                
-                    let color = colors[colorIndex]
-                    let size = sizes[sizeIndex]
-                
-                HStack {
-                    Spacer()
-                    TextButton(
-                        color: color,
-                        size: size,
-                        text: "텍스트",
-                        leadingIcon: leadingIcon ? .apps : nil,
-                        trailingIcon: trailingIcon ? .apps : nil
-                    ) {
-                        print("tapped")
-                    }
-                    .disable(disable)
-                    .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                    .fontVariant(fontVariant ? .heading1 : nil)
-                    .fontWeight(fontWeight ? .regular : nil)
-                    .loading(loading)
-                    .padding(.vertical, 4)
-                    Spacer()
-                }
-                
-                Text("Options").bold()
-                HStack {
-                    Text("color")
-                    SegmentedControl(
-                        selectedIndex: $colorIndex,
-                        labels: colors.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("size")
-                    SegmentedControl(
-                        selectedIndex: $sizeIndex,
-                        labels: sizes.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("disable")
-                    Switch(checked: disable) { disable = $0 }
-                    Text("loading")
-                    Switch(checked: loading) { loading = $0 }
-                }
-                HStack {
-                    Text("leadingIcon")
-                    Switch(checked: leadingIcon) { leadingIcon = $0 }
-                    Text("trailingIcon")
-                    Switch(checked: trailingIcon) { trailingIcon = $0 }
-                }
-                HStack {
-                    Text("content color")
-                    Switch(checked: contentColor) { contentColor = $0 }
-                    Text("font variant")
-                    Switch(checked: fontVariant) { fontVariant = $0 }
-                    Text("font weight")
-                    Switch(checked: fontWeight) { fontWeight = $0 }
-                }
+                .disable(disable)
+                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                .fontVariant(fontVariant ? .heading1 : nil)
+                .fontWeight(fontWeight ? .regular : nil)
+                .loading(loading)
+                .padding(.vertical, 4)
+                Spacer()
             }
-            .font(.caption)
-            .padding()
+        } options: {
+            SegmentedIndexRow("color", index: $colorIndex, labels: colors.map(\.description))
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            HStack {
+                ToggleOption("disable", isOn: $disable)
+                ToggleOption("loading", isOn: $loading)
+            }
+            HStack {
+                ToggleOption("leadingIcon", isOn: $leadingIcon)
+                ToggleOption("trailingIcon", isOn: $trailingIcon)
+            }
+            HStack {
+                ToggleOption("content color", isOn: $contentColor)
+                ToggleOption("font variant", isOn: $fontVariant)
+                ToggleOption("font weight", isOn: $fontWeight)
+            }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
