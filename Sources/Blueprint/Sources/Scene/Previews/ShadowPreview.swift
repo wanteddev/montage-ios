@@ -9,22 +9,10 @@ import SwiftUI
 import Montage
 
 struct ShadowPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var levelIndex = 0
-    
+
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Preview").bold()
-                Spacer()
-                Button(action: {
-                    showTransparentChecker.toggle()
-                }) {
-                    Image(systemName: "checkerboard.rectangle")
-                        .foregroundColor(.semantic(.primaryNormal))
-                }
-            }
-            
+        PreviewLayout {
             VStack {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundStyle(SwiftUI.Color.white)
@@ -32,16 +20,9 @@ struct ShadowPreview: View {
                     .shadow(Shadow.Level.allCases[levelIndex])
             }
             .frame(maxWidth: .infinity)
-            
-            Text("Options").bold()
-            
-            SegmentedControl(selectedIndex: $levelIndex, labels: Shadow.Level.allCases.map(\.description))
-                .size(.small)
-            
-            Spacer()
+        } options: {
+            SegmentedIndexRow("level", index: $levelIndex, labels: Shadow.Level.allCases.map(\.description))
         }
-        .padding(.horizontal)
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 

@@ -10,11 +10,6 @@ import SwiftUI
 
 import Montage
 
-/// SegmentedControl로 선택 가능한 Preview 옵션 enum을 위한 공통 프로토콜.
-private protocol PreviewSegment: CaseIterable, Equatable {
-    var selectableTitle: String { get }
-}
-
 struct TextFieldPreview: View {
 
     enum Variant: String, CaseIterable, PreviewSegment {
@@ -104,7 +99,6 @@ struct TextFieldPreview: View {
         }
     }
 
-    @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
     @State private var fieldSize: FieldSize = .large
     @State private var variant: Variant = .normal
@@ -121,106 +115,10 @@ struct TextFieldPreview: View {
         "aaa2", "bbb2", "ccc2", "ddd2", "eee2", "fff2", "ggg2", "iii", "jjj"
     ]
 
-    /// 제목과 SegmentedControl을 인라인으로 묶은 옵션 행을 구성한다.
-    @ViewBuilder
-    private func optionRow<Option: PreviewSegment>(_ title: String, _ selection: Binding<Option>) -> some View {
-        let all = Array(Option.allCases)
-        HStack {
-            Text(title)
-            SegmentedControl(
-                selectedIndex: Binding(
-                    get: { all.firstIndex(of: selection.wrappedValue) ?? 0 },
-                    set: { selection.wrappedValue = all[$0] }
-                ),
-                labels: all.map(\.selectableTitle)
-            )
-            .size(.small)
-        }
-    }
-
-    /// 제목과 Switch를 묶은 토글 쌍을 구성한다. (HStack에 여러 개를 인라인 배치)
-    @ViewBuilder
-    private func toggleRow(_ title: String, _ isOn: Binding<Bool>) -> some View {
-        Text(title)
-        Switch(checked: isOn.wrappedValue) { isOn.wrappedValue = $0 }
-            .accessibilityLabel(title)
-    }
-
-    /// 현재 `text`와 `usingSuggestions` 상태를 기준으로 자동완성 데이터를 갱신한다.
-    /// 텍스트 변경과 autoComplete 토글 양쪽에서 동일한 규칙으로 호출된다.
-    private func refreshAutoCompletion() {
-        guard usingSuggestions else {
-            autoCompletionDataSource = nil
-            return
-        }
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
-            autoCompletionDataSource = nil
-            return
-        }
-        let suggestions = candidates
-            .filter { $0.lowercased().contains(trimmed.lowercased()) }
-        autoCompletionDataSource = .init(
-            numberOfSections: 2,
-            sectionTitleAt: { section in
-                "\(section+1)번째 섹션"
-            },
-            numberOfItemsInSection: { _ in
-                suggestions.count
-            },
-            cellForItemAt: { indexPath in
-                ListCell(title: suggestions[indexPath.row]) {
-                    self.text = suggestions[indexPath.row]
-                    Task {
-                        autoCompletionDataSource = nil
-                    }
-                }
-                .highlight(trimmed)
-                .leadingContent {
-                    Group {
-                        if indexPath.section == 0 {
-                            Image.icon(.search)
-                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
-                        } else {
-                            Avatar("", variant: .company, size: .medium)
-                        }
-                    }
-                }
-                .if(indexPath.section == 1) {
-                    $0.caption("캡션")
-                }
-            },
-            headerView: {
-                ListCell(title: "'\(trimmed)' 사용하기") {
-                    autoCompletionDataSource = nil
-                }
-                .highlight(trimmed)
-            },
-            footerView: {
-                ListCell(title: "'\(trimmed)' 사용하기") {
-                    autoCompletionDataSource = nil
-                }
-                .highlight(trimmed)
-            },
-            maxHeight: 200
-        )
-    }
-
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                Group {
-                    TextField(
+        PreviewLayout {
+            Group {
+                TextField(
                         text: $text,
                         autoCompletionDataSource: $autoCompletionDataSource
                     )
@@ -250,32 +148,27 @@ struct TextFieldPreview: View {
                     .onChange(of: usingSuggestions) { _ in
                         refreshAutoCompletion()
                     }
-                }
-                Text("Options").bold()
-                optionRow("size", $fieldSize)
-                optionRow("status", $variant)
-                HStack {
-                    toggleRow("placeholder", $placeholder)
-                    toggleRow("icon", $icon)
-                }
-                HStack {
-                    toggleRow("disable", $disable)
-                    toggleRow("trailingButton", $trailingButton)
-                }
-                optionRow("trailingContent", $trailingContent)
-                HStack {
-                    toggleRow("autoComplete", $usingSuggestions)
-                }
-                if usingSuggestions {
-                    Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")
-                        .foregroundStyle(SwiftUI.Color.secondary)
-                }
-                Spacer(minLength: 0)
             }
-            .font(.caption)
-            .padding()
+        } options: {
+            SegmentedOptionRow("size", selection: $fieldSize)
+            SegmentedOptionRow("status", selection: $variant)
+            HStack {
+                ToggleOption("placeholder", isOn: $placeholder)
+                ToggleOption("icon", isOn: $icon)
+            }
+            HStack {
+                ToggleOption("disable", isOn: $disable)
+                ToggleOption("trailingButton", isOn: $trailingButton)
+            }
+            SegmentedOptionRow("trailingContent", selection: $trailingContent)
+            HStack {
+                ToggleOption("autoComplete", isOn: $usingSuggestions)
+            }
+            if usingSuggestions {
+                Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")
+                    .foregroundStyle(SwiftUI.Color.secondary)
+            }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
     }
 }
 

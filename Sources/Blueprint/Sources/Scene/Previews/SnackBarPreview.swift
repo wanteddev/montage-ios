@@ -10,7 +10,6 @@ import Montage
 import SwiftUI
 
 struct SnackBarPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var heading: String = "제목"
     @State private var description: String = "설명"
     @State private var snackBarModel: SnackBar.Model?
@@ -20,15 +19,19 @@ struct SnackBarPreview: View {
     @State private var closeButtonEnabled: Bool = false
     @State private var durationOption: DurationOption = .short
 
-    enum LocationOption: String, CaseIterable {
+    enum LocationOption: String, CaseIterable, PreviewSegment {
         case top = "Top"
         case bottom = "Bottom"
+
+        var selectableTitle: String { rawValue }
     }
 
-    enum DurationOption: String, CaseIterable {
+    enum DurationOption: String, CaseIterable, PreviewSegment {
         case short = "Short"
         case long = "Long"
         case infinity = "Infinity"
+
+        var selectableTitle: String { rawValue }
 
         var duration: SnackBar.Duration {
             switch self {
@@ -40,80 +43,32 @@ struct SnackBarPreview: View {
     }
 
     var body: some View {
-        ZStack {
-            VStack(spacing: 25) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Options").bold()
-                        Spacer()
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
+        PreviewLayout(mode: .overlay) {
+            EmptyView()
+        } options: {
+            TextFieldOptionRow("heading", text: $heading)
+            TextFieldOptionRow("description", text: $description)
+            ToggleOptionRow("extraContents", isOn: $showExtraContents)
+            SegmentedOptionRow("location", selection: $locationOption)
+            SliderOptionRow("offset", value: $offset, in: 0...200, step: 10)
+            SegmentedOptionRow("duration", selection: $durationOption)
+            ToggleOptionRow("closeButton", isOn: $closeButtonEnabled)
+            Button(
+                variant: .outlined,
+                text: "스낵바 노출"
+            ) {
+                snackBarModel = .init(
+                    duration: durationOption.duration,
+                    heading: heading.isEmpty ? nil : heading,
+                    description: description.isEmpty ? nil : description,
+                    extraContents: {
+                        if showExtraContents {
+                            Image.icon(.company)
+                                .foregroundColor(SwiftUI.Color.white)
                         }
-                    }
-                    HStack {
-                        Text("heading")
-                        TextField(text: $heading)
-                    }
-                    HStack {
-                        Text("description")
-                        TextField(text: $description)
-                    }
-                    HStack {
-                        Text("extraContents")
-                        Switch(checked: showExtraContents) {
-                            showExtraContents = $0
-                        }
-                    }
-                    HStack {
-                        Text("location")
-                        Picker("Location", selection: $locationOption) {
-                            ForEach(LocationOption.allCases, id: \.self) { option in
-                                Text(option.rawValue).tag(option)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    VStack(alignment: .leading) {
-                        Text("offset: \(Int(offset))")
-                        Slider(value: $offset, in: 0...200, step: 10)
-                    }
-                    HStack {
-                        Text("duration")
-                        Picker("Duration", selection: $durationOption) {
-                            ForEach(DurationOption.allCases, id: \.self) { option in
-                                Text(option.rawValue).tag(option)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                    }
-                    HStack {
-                        Text("closeButton")
-                        Switch(checked: closeButtonEnabled) { closeButtonEnabled = $0 }
-                    }
-                    Button(
-                        variant: .outlined,
-                        text: "스낵바 노출"
-                    ) {
-                        snackBarModel = .init(
-                            duration: durationOption.duration,
-                            heading: heading.isEmpty ? nil : heading,
-                            description: description.isEmpty ? nil : description,
-                            extraContents: {
-                                if showExtraContents {
-                                    Image.icon(.company)
-                                        .foregroundColor(SwiftUI.Color.white)
-                                }
-                            },
-                            action: "텍스트"
-                        )
-                    }
-
-                    Spacer()
-                }
-                .padding(.horizontal)
+                    },
+                    action: "텍스트"
+                )
             }
         }
         .snackBar(
@@ -124,7 +79,6 @@ struct SnackBarPreview: View {
                 print("modify model nil to dismiss")
             }
         )
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 
