@@ -66,6 +66,11 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
         ///
         /// TopNavigation·ModalNavigation처럼 화면 상단에 바가 고정되는 컴포넌트에 적합하다.
         case pinnedTop
+        /// 미리보기를 전체 화면에 채우고 옵션을 드래그로 위치를 옮길 수 있는 floating 카드로 띄운다.
+        ///
+        /// 체커는 컨테이너가 미리보기에 자동 적용하므로 호출부에서 ``previewCheckered()``가 필요 없다.
+        /// (배경이 불투명한 컴포넌트는 그만큼 가려지고, 투명한 영역에서만 체커가 비친다)
+        case floating
     }
 
     private let mode: Mode
@@ -106,6 +111,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
         case .stacked: stackedBody
         case .overlay: overlayBody
         case .pinnedTop: pinnedTopBody
+        case .floating: floatingBody
         }
     }
 
@@ -164,6 +170,24 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
         }
     }
 
+    private var floatingBody: some View {
+        // 미리보기는 전체 화면을 채우고 컨테이너가 체커를 자동 적용한다(호출부 previewCheckered 불필요).
+        // 옵션은 드래그로 위치를 옮길 수 있는 floating 카드로 미리보기 위에 띄운다.
+        checkered(
+            preview
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        )
+        .overlay(alignment: .bottom) {
+            DraggableCard {
+                VStack(alignment: .leading) {
+                    header("Options")
+                    options
+                }
+                .font(.caption)
+            }
+        }
+    }
+
     /// 대상 영역에 체커보드 배경을 적용한다.
     ///
     /// 체커 패턴은 콘텐츠 뒤에 깔리므로, 평상시 배경은 체커 모디파이어 "바깥"에 두어
@@ -210,7 +234,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
 /// ``PreviewLayout``이 하위 뷰에 전달하는 투명도 체커 상태.
 struct PreviewCheckerConfig {
     var isPresented: Bool = false
-    var checkerSize: CGFloat = 51
+    var checkerSize: CGFloat = 50
 }
 
 private struct PreviewCheckerKey: EnvironmentKey {
@@ -259,6 +283,37 @@ extension PreviewLayout where Accessory == EmptyView {
             preview: preview,
             options: options,
             accessory: { EmptyView() }
+        )
+    }
+}
+
+// MARK: - Floating Options 카드
+
+/// 드래그로 세로 위치를 옮길 수 있는 floating material 카드. ``PreviewLayout/Mode/floating``에서
+/// 옵션 패널을 미리보기 위에 띄우는 데 사용한다. 상단 핸들을 잡고 위/아래로 끌어 미리보기를 가리지
+/// 않도록 옮길 수 있다.
+private struct DraggableCard<Content: View>: View {
+    @ViewBuilder var content: Content
+
+    @State private var offsetY: CGFloat = 0
+    @GestureState private var dragY: CGFloat = 0
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Capsule()
+                .fill(SwiftUI.Color.semantic(.lineNeutral))
+                .frame(width: 36, height: 5)
+            content
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .padding()
+        .offset(y: offsetY + dragY)
+        .gesture(
+            DragGesture()
+                .updating($dragY) { value, state, _ in state = value.translation.height }
+                .onEnded { value in offsetY += value.translation.height }
         )
     }
 }

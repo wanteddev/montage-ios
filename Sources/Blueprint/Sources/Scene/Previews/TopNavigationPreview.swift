@@ -113,7 +113,7 @@ struct TopNavigationPreview: View {
             showPreview = true
         }
         .fullScreenCover(isPresented: $showPreview) {
-            PreviewLayout(mode: .pinnedTop) {
+            PreviewLayout(mode: .floating) {
                 VStack(alignment: .leading) {
                     ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
                         ZStack {
@@ -124,7 +124,6 @@ struct TopNavigationPreview: View {
                     }
                 }
                 .padding(.horizontal)
-                .previewCheckered()
                 .topNavigation(
                     variant: currentVariant,
                     title: title,
