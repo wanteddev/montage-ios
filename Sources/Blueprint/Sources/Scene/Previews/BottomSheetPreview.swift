@@ -11,7 +11,6 @@ import SwiftUI
 struct BottomSheetPreview: View {
     @State private var show = true
 
-    @State private var showTransparentChecker: Bool = false
     @State private var isFullModal = false
     @State private var resizeIndex = 0
     @State private var itemCountsIndex: Int = 0
@@ -31,14 +30,13 @@ struct BottomSheetPreview: View {
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
-        SwiftUI.Button("PUSH") {
-            show.toggle()
+        PreviewLayout(mode: .overlay) {
+            EmptyView()
+        } options: {
+            Button(variant: .outlined, text: "PUSH") {
+                show.toggle()
+            }
         }
-        .transparentChecking(
-            isPresented: showTransparentChecker,
-            checkerSize: 202,
-            checkerColor: .blue
-        )
         .bottomSheet(
             isPresented: $show,
             isFullScreenCover: isFullModal,
@@ -48,7 +46,6 @@ struct BottomSheetPreview: View {
             navigation: navigation ? { navigationContent } : nil,
             { modalContent }
         )
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
         .onChange(of: isFullModal) { _ in
             show = false
             Task { @MainActor in
@@ -100,12 +97,6 @@ struct BottomSheetPreview: View {
                         presentationMode.wrappedValue.dismiss()
                     }) {
                         Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                    }
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
                     }
                 }
                 HStack {

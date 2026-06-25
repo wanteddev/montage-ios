@@ -9,7 +9,6 @@ import SwiftUI
 import Montage
 
 struct ModalNavigationPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var contentOffset: CGFloat = 0
     @State private var scrollViewTopPadding: CGFloat = 0
     @State private var variantIndex = 0
@@ -21,13 +20,13 @@ struct ModalNavigationPreview: View {
     @State private var fixedOpacity: CGFloat = 0.5
     @Environment(\.presentationMode) var presentationMode
     @State private var showPreview = true
-    
+
     var body: some View {
         SwiftUI.Button("TopNavigation Preview") {
             showPreview = true
         }
         .fullScreenCover(isPresented: $showPreview) {
-            VStack(spacing: 0) {
+            PreviewLayout(mode: .pinnedTop) {
                 ZStack(alignment: .top) {
                     ScrollView(
                         onOffsetChanged: { offset in
@@ -36,7 +35,7 @@ struct ModalNavigationPreview: View {
                         content: {
                             SwiftUI.Color.clear
                                 .frame(height: scrollViewTopPadding)
-                            
+
                             LazyVStack(spacing: 0) {
                                 ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
                                     ZStack {
@@ -49,8 +48,8 @@ struct ModalNavigationPreview: View {
                             .padding(.horizontal)
                         }
                     )
-                    .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-                    
+                    .previewCheckered()
+
                     VStack {
                         ModalNavigation(scrollOffset: $contentOffset)
                             .variant(variants[variantIndex])
@@ -104,66 +103,47 @@ struct ModalNavigationPreview: View {
                     }
                     .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
                 }
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Options").bold()
-                        Spacer()
-                        Button(action: {
-                            showPreview = false
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                        }
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
-                    }
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
-                            .size(.small)
-                    }
-                    HStack {
-                        Text("leadingButton")
-                        SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
-                            .size(.small)
-                        Switch(checked: leadingButton) { leadingButton = $0 }
-                    }
-                    HStack {
-                        Text("trailingButton")
-                        SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
-                            .size(.small)
-
-                    }
-                    HStack {
-                        Text("noMaterialBackground")
-                        Spacer()
-                        Switch(checked: noMaterialBackground) { noMaterialBackground = $0 }
-                    }
-                    HStack {
-                        Text("fixedBackgroundOpacity")
-                        SwiftUI.Slider(value: $fixedOpacity, in: 0...1)
-                            .disabled(!useFixedOpacity)
-                        Text(String(format: "%.2f", fixedOpacity))
-                            .monospacedDigit()
-                        Switch(checked: useFixedOpacity) { useFixedOpacity = $0 }
-                    }
+            } options: {
+                SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+                HStack {
+                    Text("leadingButton")
+                    SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
+                        .size(.small)
+                    Switch(checked: leadingButton) { leadingButton = $0 }
                 }
-                .padding()
-                .background(.regularMaterial)
+                HStack {
+                    Text("trailingButton")
+                    SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
+                        .size(.small)
+                }
+                HStack {
+                    Text("noMaterialBackground")
+                    Spacer()
+                    Switch(checked: noMaterialBackground) { noMaterialBackground = $0 }
+                }
+                HStack {
+                    Text("fixedBackgroundOpacity")
+                    SwiftUI.Slider(value: $fixedOpacity, in: 0...1)
+                        .disabled(!useFixedOpacity)
+                    Text(String(format: "%.2f", fixedOpacity))
+                        .monospacedDigit()
+                    Switch(checked: useFixedOpacity) { useFixedOpacity = $0 }
+                }
+            } accessory: {
+                Button(action: {
+                    showPreview = false
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
+                }
             }
-            .background(Color.semantic(.backgroundNormal))
         }
     }
-    
+
     private var variants: [ModalNavigation.Variant] {
         [.normal, .display, .emphasized, .floating]
     }
-    
+
     private var leadingButtons: [TopNavigation.Resource.LeadingButtonInfo] {
         [
             .back(action: {
@@ -175,7 +155,7 @@ struct ModalNavigationPreview: View {
             })
         ]
     }
-    
+
     private let actions: [TopNavigation.Resource.TrailingButtonInfo] = {
         [
             .icon(.close, action: {}),

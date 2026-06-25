@@ -9,26 +9,13 @@ import SwiftUI
 import Montage
 
 struct PullToRefreshPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var data: [Int] = Array(0...100)
     @State private var seconds: String = "3"
     @State private var scrollYOffset: CGFloat = 0
     @FocusState private var inputFieldFocused: Bool
-    
+
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Text("Preview").bold()
-                Spacer()
-                Button(action: {
-                    showTransparentChecker.toggle()
-                }) {
-                    Image(systemName: "checkerboard.rectangle")
-                        .foregroundColor(.semantic(.primaryNormal))
-                }
-            }
-            .padding()
-            
+        PreviewLayout {
             ScrollView(onOffsetChanged: { offset in
                 scrollYOffset = offset.y
             }) {
@@ -54,24 +41,17 @@ struct PullToRefreshPreview: View {
                     print(error)
                 }
             }
-            
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-                HStack {
-                    Text("리프레시 시간")
-                    TextField(text: $seconds)
-                        .focused($inputFieldFocused)
-                    Text("초")
-                }
+        } options: {
+            HStack {
+                Text("리프레시 시간")
+                TextField(text: $seconds)
+                    .focused($inputFieldFocused)
+                Text("초")
             }
-            .font(.caption)
-            .padding()
         }
         .onTapGesture {
             inputFieldFocused = false
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

@@ -11,7 +11,6 @@ import SwiftUI
 import Montage
 
 struct ControlPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var stateIndex = 0
     @State private var state: Checkbox.State = .unchecked
     @State private var checked: Bool = false
@@ -30,129 +29,98 @@ struct ControlPreview: View {
     private let states: [Checkbox.State] = [.unchecked, .checked, .indeterminate]
 
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
+        PreviewLayout {
+            VStack {
                 HStack {
-                    Text("Preview").bold()
                     Spacer()
-                    Button(action: { guideLine.toggle() }) {
-                        Image(systemName: "rectangle.dashed")
-                    }
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                VStack {
-                    HStack {
-                        Spacer()
-                        Checkbox(
-                            state: state,
-                            size: sizeIndex == 0 ? .small : .medium
-                        ) {
-                            state = $0
-                        }
-                        .disable(disabled)
-                        .bold(bold)
-                        .tight(tight)
-                        .label(label, fillWidth: fillWidth)
-                        .if(customTypography) {
-                            $0.labelTypography(.heading2, weight: .medium, color: .semantic(.accentBackgroundPink))
-                        }
-                        .border(guideLine ? Color.blue : Color.clear)
-                        Spacer()
-                    }
-                    HStack {
-                        Spacer()
-                        Checkmark(
-                            checked: checked,
-                            size: sizeIndex == 0 ? .small : .medium
-                        ) {
-                            checked = $0
-                        }
-                        .disable(disabled)
-                        .bold(bold)
-                        .tight(tight)
-                        .label(label, fillWidth: fillWidth)
-                        .if(customTypography) {
-                            $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
-                        }
-                        .border(guideLine ? Color.blue : Color.clear)
-                        Spacer()
-                    }
-                    HStack {
-                        Spacer()
-                        Radio(
-                            checked: selected,
-                            size: sizeIndex == 0 ? .small : .medium
-                        ) {
-                            selected = $0
-                        }
-                        .disable(disabled)
-                        .bold(bold)
-                        .tight(tight)
-                        .label(label, fillWidth: fillWidth)
-                        .if(customTypography) {
-                            $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
-                        }
-                        .border(guideLine ? Color.blue : Color.clear)
-                        Spacer()
-                    }
-                    Switch(
-                        checked: switched,
+                    Checkbox(
+                        state: state,
                         size: sizeIndex == 0 ? .small : .medium
                     ) {
-                        switched = $0
+                        state = $0
                     }
                     .disable(disabled)
-                    .border(guideLine ? Color.blue : Color.clear)
-                }
-                Text("Options").bold()
-                HStack {
-                    Text("state")
-                    SegmentedControl(selectedIndex: $stateIndex, labels: states.map(\.description)) {
-                        state = states[$0]
-                        checked = $0 != 0
-                        selected = $0 != 0
-                        switched = $0 != 0
+                    .bold(bold)
+                    .tight(tight)
+                    .label(label, fillWidth: fillWidth)
+                    .if(customTypography) {
+                        $0.labelTypography(.heading2, weight: .medium, color: .semantic(.accentBackgroundPink))
                     }
-                    .size(.small)
+                    .border(guideLine ? Color.blue : Color.clear)
+                    Spacer()
                 }
                 HStack {
-                    Text("size")
-                    SegmentedControl(
-                        selectedIndex: $sizeIndex,
-                        labels: sizeLabels
-                    )
-                    .size(.small)
+                    Spacer()
+                    Checkmark(
+                        checked: checked,
+                        size: sizeIndex == 0 ? .small : .medium
+                    ) {
+                        checked = $0
+                    }
+                    .disable(disabled)
+                    .bold(bold)
+                    .tight(tight)
+                    .label(label, fillWidth: fillWidth)
+                    .if(customTypography) {
+                        $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
+                    }
+                    .border(guideLine ? Color.blue : Color.clear)
+                    Spacer()
                 }
                 HStack {
-                    Text("disabled")
-                    Switch(checked: disabled) { disabled = $0 }
-                    Text("bold")
-                    Switch(checked: bold) { bold = $0 }
+                    Spacer()
+                    Radio(
+                        checked: selected,
+                        size: sizeIndex == 0 ? .small : .medium
+                    ) {
+                        selected = $0
+                    }
+                    .disable(disabled)
+                    .bold(bold)
+                    .tight(tight)
+                    .label(label, fillWidth: fillWidth)
+                    .if(customTypography) {
+                        $0.labelTypography(.heading2, weight: .bold, color: .semantic(.accentBackgroundPink))
+                    }
+                    .border(guideLine ? Color.blue : Color.clear)
+                    Spacer()
                 }
-                HStack {
-                    Text("tight")
-                    Switch(checked: tight) { tight = $0 }
-                    Text("fillWidth")
-                    Switch(checked: fillWidth) { fillWidth = $0 }
+                Switch(
+                    checked: switched,
+                    size: sizeIndex == 0 ? .small : .medium
+                ) {
+                    switched = $0
                 }
-                HStack {
-                    Text("label")
-                    TextField(text: $label)
-                }
-                HStack {
-                    Text("custom label typography")
-                    Switch(checked: customTypography) { customTypography = $0 }
-                }
+                .disable(disabled)
+                .border(guideLine ? Color.blue : Color.clear)
             }
-            .padding(.horizontal)
+        } options: {
+            HStack {
+                Text("state")
+                SegmentedControl(selectedIndex: $stateIndex, labels: states.map(\.description)) {
+                    state = states[$0]
+                    checked = $0 != 0
+                    selected = $0 != 0
+                    switched = $0 != 0
+                }
+                .size(.small)
+            }
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizeLabels)
+            HStack {
+                ToggleOption("disabled", isOn: $disabled)
+                ToggleOption("bold", isOn: $bold)
+            }
+            HStack {
+                ToggleOption("tight", isOn: $tight)
+                ToggleOption("fillWidth", isOn: $fillWidth)
+            }
+            TextFieldOptionRow("label", text: $label)
+            ToggleOptionRow("custom label typography", isOn: $customTypography)
+        } accessory: {
+            SwiftUI.Button(action: { guideLine.toggle() }) {
+                Image(systemName: "rectangle.dashed")
+            }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
