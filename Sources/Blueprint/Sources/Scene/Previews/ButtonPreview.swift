@@ -36,14 +36,31 @@ struct ButtonPreview: View {
             let color = colors[colorIndex]
             let size = sizes[sizeIndex]
 
-            HStack {
-                Spacer(minLength: 0)
-                if iconOnly {
+            if iconOnly {
+                Button(
+                    variant: variants[variantIndex],
+                    color: color,
+                    size: size,
+                    icon: .apps
+                ) {
+                    print("tapped")
+                }
+                .disable(disable)
+                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                .fontVariant(fontVariant ? .heading1 : nil)
+                .fontWeight(fontWeight ? .regular : nil)
+                .loading(loading)
+            } else {
+                VStack {
                     Button(
                         variant: variants[variantIndex],
                         color: color,
                         size: size,
-                        icon: .apps
+                        text: "텍스트",
+                        leadingIcon: leadingIcon ? .apps : nil,
+                        trailingIcon: trailingIcon ? .apps : nil
                     ) {
                         print("tapped")
                     }
@@ -54,48 +71,26 @@ struct ButtonPreview: View {
                     .fontVariant(fontVariant ? .heading1 : nil)
                     .fontWeight(fontWeight ? .regular : nil)
                     .loading(loading)
-                } else {
-                    VStack {
-                        Button(
-                            variant: variants[variantIndex],
-                            color: color,
-                            size: size,
-                            text: "텍스트",
-                            leadingIcon: leadingIcon ? .apps : nil,
-                            trailingIcon: trailingIcon ? .apps : nil
-                        ) {
-                            print("tapped")
-                        }
-                        .disable(disable)
-                        .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                        .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                        .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                        .fontVariant(fontVariant ? .heading1 : nil)
-                        .fontWeight(fontWeight ? .regular : nil)
-                        .loading(loading)
-                        .fillWidth(fillWidth)
-                        Button(
-                            variant: variants[variantIndex],
-                            color: color,
-                            size: size,
-                            text: "매우 긴~~~~~~~~~~~~~~~~~~~~~~~~~~~~~텍스트입니다",
-                            leadingIcon: leadingIcon ? .apps : nil,
-                            trailingIcon: trailingIcon ? .apps : nil
-                        ) {
-                            print("tapped")
-                        }
-                        .disable(disable)
-                        .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                        .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                        .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                        .fontVariant(fontVariant ? .heading1 : nil)
-                        .fontWeight(fontWeight ? .regular : nil)
-                        .loading(loading)
-                        .fillWidth(fillWidth)
+                    .fillWidth(fillWidth)
+                    Button(
+                        variant: variants[variantIndex],
+                        color: color,
+                        size: size,
+                        text: "매우 긴~~~~~~~~~~~~~~~~~~~~~~~~~~~~~텍스트입니다",
+                        leadingIcon: leadingIcon ? .apps : nil,
+                        trailingIcon: trailingIcon ? .apps : nil
+                    ) {
+                        print("tapped")
                     }
+                    .disable(disable)
+                    .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                    .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                    .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                    .fontVariant(fontVariant ? .heading1 : nil)
+                    .fontWeight(fontWeight ? .regular : nil)
+                    .loading(loading)
+                    .fillWidth(fillWidth)
                 }
-
-                Spacer(minLength: 0)
             }
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))

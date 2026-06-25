@@ -16,58 +16,54 @@ struct ChipPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                Chip(
-                    variant: variant,
-                    size: size,
-                    text: text
-                )
-                .active(active)
-                .disabled(disable)
-                .modifying {
-                    if backgroundColor == .clear {
-                        $0
-                    } else {
-                        $0.backgroundColor(backgroundColor)
-                    }
+            Chip(
+                variant: variant,
+                size: size,
+                text: text
+            )
+            .active(active)
+            .disabled(disable)
+            .modifying {
+                if backgroundColor == .clear {
+                    $0
+                } else {
+                    $0.backgroundColor(backgroundColor)
                 }
-                .modifying {
-                    if fontColor == .clear {
-                        $0
-                    } else {
-                        $0.fontColor(fontColor)
-                    }
+            }
+            .modifying {
+                if fontColor == .clear {
+                    $0
+                } else {
+                    $0.fontColor(fontColor)
                 }
-                .modifying {
-                    if activeColor == .clear {
-                        $0
-                    } else {
-                        $0.activeColor(activeColor)
-                    }
+            }
+            .modifying {
+                if activeColor == .clear {
+                    $0
+                } else {
+                    $0.activeColor(activeColor)
                 }
-                .modifying {
-                    if imageColor == .clear {
-                        $0
-                    } else {
-                        $0.imageColor(imageColor)
-                    }
+            }
+            .modifying {
+                if imageColor == .clear {
+                    $0
+                } else {
+                    $0.imageColor(imageColor)
                 }
-                .modifying {
-                    if leadingImage {
-                        $0.leadingImage(Image.icon(.bell))
-                    } else {
-                        $0
-                    }
+            }
+            .modifying {
+                if leadingImage {
+                    $0.leadingImage(Image.icon(.bell))
+                } else {
+                    $0
                 }
-                .modifying {
-                    if trailingImage {
-                        $0.trailingImage(Image.icon(.bell))
-                    } else {
-                        $0
-                    }
+            }
+            .modifying {
+                if trailingImage {
+                    $0.trailingImage(Image.icon(.bell))
+                } else {
+                    $0
                 }
-                Spacer()
             }
         } options: {
             HStack {
