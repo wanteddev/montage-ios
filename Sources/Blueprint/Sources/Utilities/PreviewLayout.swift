@@ -128,14 +128,19 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
     private var overlayBody: some View {
         // 옵션은 상단에 고정하고 나머지를 미리보기 영역으로 비운다. 미리보기가 EmptyView면(예: Toast·
         // SnackBar) 빈 공간이 남고, 미리보기가 greedy하면(예: ActionArea의 ScrollView) 하단까지 채운다.
+        // 패딩은 옵션 블록에만 적용하고 미리보기는 edge-to-edge로 둔다. (전체화면 컴포넌트의 배경·
+        // 그래디언트·하단 바가 화면 너비를 꽉 채울 수 있도록)
         checkered(
-            VStack(alignment: .leading) {
-                header("Options")
-                options
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading) {
+                    header("Options")
+                    options
+                }
+                .font(.caption)
+                .padding()
+
                 preview
             }
-            .font(.caption)
-            .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         )
     }
