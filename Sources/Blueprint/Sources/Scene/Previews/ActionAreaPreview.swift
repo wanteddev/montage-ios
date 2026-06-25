@@ -132,7 +132,7 @@ struct ActionAreaPreview: View {
     @State private var scrollStatus: Montage.ScrollView.ScrollStatus = .init()
 
     var body: some View {
-        PreviewLayout {
+        PreviewLayout(mode: .overlay) {
             ScrollView(scrollStatus: $scrollStatus) {
                 LazyVStack {
                     ForEach(0..<30, id: \.self) {
