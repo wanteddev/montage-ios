@@ -115,6 +115,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 VStack(alignment: .leading) {
                     header("Preview")
                     preview
+                        .frame(maxWidth: .infinity)
                     Text("Options").bold().font(.subheadline)
                     options
                     Spacer(minLength: 0)

@@ -24,15 +24,9 @@ struct ThumbnailPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack(spacing: 0) {
-                Spacer(minLength: 0)
-
-                Thumbnail(urlString: imageURL, ratio: selectedRatio)
-                    .radius(radius)
-                    .border(border)
-
-                Spacer(minLength: 0)
-            }
+            Thumbnail(urlString: imageURL, ratio: selectedRatio)
+                .radius(radius)
+                .border(border)
         } options: {
             HStack {
                 Text("Ratio")
