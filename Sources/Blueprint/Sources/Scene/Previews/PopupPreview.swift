@@ -26,86 +26,83 @@ struct PopupPreview: View {
     @State private var refreshTask: Task<(), Never>?
 
     var body: some View {
-        SwiftUI.ScrollView {
+        PreviewLayout(mode: .overlay) {
+            EmptyView()
+        } options: {
             SwiftUI.Button("PUSH") {
                 show = true
             }
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-                HStack {
+            HStack {
+                SegmentedControl(
+                    selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
+                )
+                .size(.small)
+                Text("items")
+            }
+
+            HStack {
+                Text("resize")
+                Picker("resize", selection: $resize) {
+                    Text("hug").tag(Popup.Resize.hug)
+                    Text("fixed(300)").tag(Popup.Resize.fixed(300))
+                }
+                .pickerStyle(.segmented)
+            }
+            HStack {
+                Text("navigation")
+                Switch(checked: navigation) { navigation = $0 }
+                if navigation {
                     SegmentedControl(
-                        selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
+                        selectedIndex: $navVariantIndex,
+                        labels: navigationVariants.map(\.description)
                     )
                     .size(.small)
-                    Text("items")
                 }
+            }
 
-                HStack {
-                    Text("resize")
-                    Picker("resize", selection: $resize) {
-                        Text("hug").tag(Popup.Resize.hug)
-                        Text("fixed(300)").tag(Popup.Resize.fixed(300))
+            HStack {
+                VStack(alignment: .trailing) {
+                    HStack {
+                        Text("actionArea")
+                        Switch(checked: actionArea) { actionArea = $0 }
+                        Spacer()
                     }
-                    .pickerStyle(.segmented)
-                }
-                HStack {
-                    Text("navigation")
-                    Switch(checked: navigation) { navigation = $0 }
-                    if navigation {
+                    if actionArea {
                         SegmentedControl(
-                            selectedIndex: $navVariantIndex,
-                            labels: navigationVariants.map(\.description)
+                            selectedIndex: $buttonsIndex,
+                            labels: ActionAreaButtons.allCases.map(\.rawValue)
                         )
                         .size(.small)
-                    }
-                }
-
-                HStack {
-                    VStack(alignment: .trailing) {
                         HStack {
-                            Text("actionArea")
-                            Switch(checked: actionArea) { actionArea = $0 }
-                            Spacer()
-                        }
-                        if actionArea {
-                            SegmentedControl(
-                                selectedIndex: $buttonsIndex,
-                                labels: ActionAreaButtons.allCases.map(\.rawValue)
-                            )
-                            .size(.small)
-                            HStack {
-                                Text("caption")
-                                Switch(checked: caption) { caption = $0 }
-                                Text("extra")
-                                Switch(checked: extra) { extra = $0 }
-                                if extra {
-                                    Text("divider")
-                                    Switch(checked: extraDivider) { extraDivider = $0 }
-                                }
+                            Text("caption")
+                            Switch(checked: caption) { caption = $0 }
+                            Text("extra")
+                            Switch(checked: extra) { extra = $0 }
+                            if extra {
+                                Text("divider")
+                                Switch(checked: extraDivider) { extraDivider = $0 }
                             }
                         }
                     }
                 }
             }
-            .padding(.horizontal)
-            .onChange(
-                of:
-                    "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)"
-            ) { _ in
-                refreshTask?.cancel()
-                refreshTask = Task {
-                    do {
-                        try await Task.sleep(for: .seconds(1))
-                        try Task.checkCancellation()
-                        show = true
-                    } catch {
-                    }
+        }
+        .onChange(
+            of:
+                "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)"
+        ) { _ in
+            refreshTask?.cancel()
+            refreshTask = Task {
+                do {
+                    try await Task.sleep(for: .seconds(1))
+                    try Task.checkCancellation()
+                    show = true
+                } catch {
                 }
             }
-            .onAppear {
-                show = true
-            }
-            .font(.caption)
+        }
+        .onAppear {
+            show = true
         }
         .popup(
             isPresented: $show,

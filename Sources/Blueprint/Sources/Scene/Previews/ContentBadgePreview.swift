@@ -14,7 +14,6 @@ import SwiftUI
 import Montage
 
 struct ContentBadgePreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var isSolid: Bool = true
     @State private var sizeIndex: Int = 0
     @State private var colorStyleIndex: Int = 0
@@ -32,89 +31,51 @@ struct ContentBadgePreview: View {
     ]
     
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
+        PreviewLayout {
+            ContentBadge(
+                variant: isSolid ? .solid : .outlined,
+                text: "Badge"
+            )
+            .size(sizes[sizeIndex])
+            .colorStyle(
+                colorStyleIndex == 0 ? .neutral(foregroundColor) : .accent(foregroundColor, background: backgroundColor)
+            )
+            .modifying { original in
+                var mutated = original
+                if leadingIcon {
+                    mutated = mutated.leadingIcon(.agentColor, usesTemplate: leadingIconUsesTemplate)
                 }
-                ContentBadge(
-                    variant: isSolid ? .solid : .outlined,
-                    text: "Badge"
-                )
-                .size(sizes[sizeIndex])
-                .colorStyle(
-                    colorStyleIndex == 0 ? .neutral(foregroundColor) : .accent(foregroundColor, background: backgroundColor)
-                )
-                .modifying { original in
-                    var mutated = original
-                    if leadingIcon {
-                        mutated = mutated.leadingIcon(.agentColor, usesTemplate: leadingIconUsesTemplate)
-                    }
-                    if trailingIcon {
-                        mutated = mutated.trailingIcon(.agentColor, usesTemplate: trailingIconUsesTemplate)
-                    }
-                    return mutated
+                if trailingIcon {
+                    mutated = mutated.trailingIcon(.agentColor, usesTemplate: trailingIconUsesTemplate)
                 }
-                
+                return mutated
             }
-            .padding()
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-                HStack {
-                    Text("solid")
-                    Switch(checked: isSolid) { isSolid = $0 }
-                }
-                HStack {
-                    Text("size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
-                        .size(.small)
-                }
-                HStack {
-                    Text("colorStyle")
-                    SegmentedControl(selectedIndex: $colorStyleIndex, labels: colorStyles.map(\.description))
-                        .size(.small)
-                }
-                SwiftUI.ColorPicker("contentColor", selection: $foregroundColor)
-                if colorStyleIndex == 1 {
-                    SwiftUI.ColorPicker("backgroundColor", selection: $backgroundColor)
-                }
-                HStack {
-                    Text("leadingIcon")
-                    Switch(checked: leadingIcon) { leadingIcon = $0 }
-                    if leadingIcon {
-                        Text("usesTemplate")
-                        Switch(checked: leadingIconUsesTemplate) {
-                            leadingIconUsesTemplate = $0
-                        }
-                    }
-                }
-                HStack {
-                    Text("trailingIcon")
-                    Switch(checked: trailingIcon) { trailingIcon = $0 }
-                    if trailingIcon {
-                        Text("usesTemplate")
-                        Switch(checked: trailingIconUsesTemplate) {
-                            trailingIconUsesTemplate = $0
-                        }
-                    }
+        } options: {
+            ToggleOptionRow("solid", isOn: $isSolid)
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            SegmentedIndexRow("colorStyle", index: $colorStyleIndex, labels: colorStyles.map(\.description))
+            SwiftUI.ColorPicker("contentColor", selection: $foregroundColor)
+            if colorStyleIndex == 1 {
+                SwiftUI.ColorPicker("backgroundColor", selection: $backgroundColor)
+            }
+            HStack {
+                ToggleOption("leadingIcon", isOn: $leadingIcon)
+                if leadingIcon {
+                    ToggleOption("usesTemplate", isOn: $leadingIconUsesTemplate)
                 }
             }
-            .padding(.horizontal)
-            .onChange(of: colorStyleIndex) { newValue in
-                if newValue == 0 {
-                    foregroundColor = .semantic(.labelAlternative)
+            HStack {
+                ToggleOption("trailingIcon", isOn: $trailingIcon)
+                if trailingIcon {
+                    ToggleOption("usesTemplate", isOn: $trailingIconUsesTemplate)
                 }
             }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        .onChange(of: colorStyleIndex) { newValue in
+            if newValue == 0 {
+                foregroundColor = .semantic(.labelAlternative)
+            }
+        }
     }
     
     private var colorStyles: [ContentBadge.ColorStyle] {
