@@ -14,31 +14,27 @@ struct FilterButtonPreview: View {
     
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                FilterButton(
-                    variant: variant,
-                    size: size,
-                    text: text,
-                    state: $state
-                )
-                .active(active, label: activeLabel)
-                .disabled(disable)
-                .modifying {
-                    if fontColor == .clear {
-                        $0
-                    } else {
-                        $0.fontColor(fontColor)
-                    }
+            FilterButton(
+                variant: variant,
+                size: size,
+                text: text,
+                state: $state
+            )
+            .active(active, label: activeLabel)
+            .disabled(disable)
+            .modifying {
+                if fontColor == .clear {
+                    $0
+                } else {
+                    $0.fontColor(fontColor)
                 }
-                .modifying {
-                    if iconColor == .clear {
-                        $0
-                    } else {
-                        $0.iconColor(iconColor)
-                    }
+            }
+            .modifying {
+                if iconColor == .clear {
+                    $0
+                } else {
+                    $0.iconColor(iconColor)
                 }
-                Spacer()
             }
         } options: {
             HStack {

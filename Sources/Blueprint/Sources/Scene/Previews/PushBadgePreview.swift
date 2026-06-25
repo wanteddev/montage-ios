@@ -37,22 +37,18 @@ struct PushBadgePreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                Rectangle()
-                    .frame(width: 50, height: 50)
-                    .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet))
-                    .opacity(0.3)
-                    .pushBadge(
-                        variant: variants[variantIndex],
-                        size: sizes[sizeIndex],
-                        fontColor: fontColor,
-                        backgroundColor: backgroundColor,
-                        position: positionYs[positionYIndex],
-                        inset: inset ? .init(width: 20, height: 20) : .zero
-                    )
-                Spacer()
-            }
+            Rectangle()
+                .frame(width: 50, height: 50)
+                .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet))
+                .opacity(0.3)
+                .pushBadge(
+                    variant: variants[variantIndex],
+                    size: sizes[sizeIndex],
+                    fontColor: fontColor,
+                    backgroundColor: backgroundColor,
+                    position: positionYs[positionYIndex],
+                    inset: inset ? .init(width: 20, height: 20) : .zero
+                )
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if case .number = variants[variantIndex] {

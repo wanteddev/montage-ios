@@ -37,17 +37,13 @@ struct SegmentedControlPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                SegmentedControl(
-                    selectedIndex: $selectedIndex,
-                    items: items,
-                    onSelect: { print($0) }
-                )
-                .variant(variants[variantIndex])
-                .size(sizes[sizeIndex])
-                Spacer()
-            }
+            SegmentedControl(
+                selectedIndex: $selectedIndex,
+                items: items,
+                onSelect: { print($0) }
+            )
+            .variant(variants[variantIndex])
+            .size(sizes[sizeIndex])
             .padding(.vertical)
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))

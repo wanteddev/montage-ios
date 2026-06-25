@@ -31,25 +31,21 @@ struct TextButtonPreview: View {
         PreviewLayout {
             let color = colors[colorIndex]
             let size = sizes[sizeIndex]
-            HStack {
-                Spacer()
-                TextButton(
-                    color: color,
-                    size: size,
-                    text: "텍스트",
-                    leadingIcon: leadingIcon ? .apps : nil,
-                    trailingIcon: trailingIcon ? .apps : nil
-                ) {
-                    print("tapped")
-                }
-                .disable(disable)
-                .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                .fontVariant(fontVariant ? .heading1 : nil)
-                .fontWeight(fontWeight ? .regular : nil)
-                .loading(loading)
-                .padding(.vertical, 4)
-                Spacer()
+            TextButton(
+                color: color,
+                size: size,
+                text: "텍스트",
+                leadingIcon: leadingIcon ? .apps : nil,
+                trailingIcon: trailingIcon ? .apps : nil
+            ) {
+                print("tapped")
             }
+            .disable(disable)
+            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+            .fontVariant(fontVariant ? .heading1 : nil)
+            .fontWeight(fontWeight ? .regular : nil)
+            .loading(loading)
+            .padding(.vertical, 4)
         } options: {
             SegmentedIndexRow("color", index: $colorIndex, labels: colors.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

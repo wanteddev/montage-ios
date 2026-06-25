@@ -21,13 +21,9 @@ struct PageCounterPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                PageCounter(selectedPage: $selectedPage, totalPages: totalPages)
-                    .size(sizes[sizeIndex])
-                    .alternative(isAlternative)
-                Spacer()
-            }
+            PageCounter(selectedPage: $selectedPage, totalPages: totalPages)
+                .size(sizes[sizeIndex])
+                .alternative(isAlternative)
         } options: {
             HStack {
                 Spacer()

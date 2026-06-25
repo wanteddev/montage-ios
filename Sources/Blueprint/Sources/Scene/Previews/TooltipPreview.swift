@@ -44,24 +44,20 @@ struct TooltipPreview: View {
     
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                VStack {
+            VStack {
+                zIndexTestingButton
+                HStack {
                     zIndexTestingButton
-                    HStack {
-                        zIndexTestingButton
-                        iconButton
-                            .if(adjustZIndex) {
-                                $0.zIndex(1)
-                            }
-                        zIndexTestingButton
-                    }
-                    .if(adjustZIndex) {
-                        $0.zIndex(1)
-                    }
+                    iconButton
+                        .if(adjustZIndex) {
+                            $0.zIndex(1)
+                        }
                     zIndexTestingButton
                 }
-                Spacer()
+                .if(adjustZIndex) {
+                    $0.zIndex(1)
+                }
+                zIndexTestingButton
             }
             .if(adjustZIndex) {
                 $0.zIndex(1)

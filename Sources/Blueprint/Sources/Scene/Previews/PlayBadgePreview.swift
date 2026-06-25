@@ -20,13 +20,9 @@ struct PlayBadgePreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                PlayBadge()
-                    .size(sizes[sizeIndex])
-                    .alternative(isAlternative)
-                Spacer()
-            }
+            PlayBadge()
+                .size(sizes[sizeIndex])
+                .alternative(isAlternative)
         } options: {
             ToggleOptionRow("alternative", isOn: $isAlternative)
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

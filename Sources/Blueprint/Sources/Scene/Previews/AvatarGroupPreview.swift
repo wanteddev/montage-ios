@@ -34,28 +34,24 @@ struct AvatarGroupPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                avatarGroup
-                    .contentMode(contentModes[contentModeIndex])
-                    .if(trailingContent) {
-                        $0.trailingContent {
-                            TextButton(
-                                color: .assistive, size: .small,
-                                text: "외 30명이 좋아합니다"
-                            ) {
-                                alertLabel = "TextButton pressed"
-                                alertPresented.toggle()
-                            }
+            avatarGroup
+                .contentMode(contentModes[contentModeIndex])
+                .if(trailingContent) {
+                    $0.trailingContent {
+                        TextButton(
+                            color: .assistive, size: .small,
+                            text: "외 30명이 좋아합니다"
+                        ) {
+                            alertLabel = "TextButton pressed"
+                            alertPresented.toggle()
                         }
                     }
-                    .alert(alertLabel, isPresented: $alertPresented) {
-                        SwiftUI.Button("OK") {
-                            alertLabel = ""
-                        }
+                }
+                .alert(alertLabel, isPresented: $alertPresented) {
+                    SwiftUI.Button("OK") {
+                        alertLabel = ""
                     }
-                Spacer()
-            }
+                }
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

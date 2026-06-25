@@ -27,51 +27,47 @@ struct CardPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack(spacing: 0) {
-                Spacer(minLength: 0)
-                Card(
-                    thumbnail: {
-                        Thumbnail(
-                            urlString: invalidImageUrl ? "https://invalid-url" : imageUrl,
-                            ratio: .r4x3
-                        )
-                        .width(thumbnailWidth)
-                    },
-                    skeleton: $skeletonIsOn,
-                    title: multilineTitle ? "제목이 매우 매우 매우 매우 매우 매우 길어서 세 줄이 되면 어떻게 될까요?" : "제목"
-                )
-                .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
-                .subCaption(showSubCaption ? "서브 캡션 서브 캡션" : nil)
-                .extraCaption(showExtraCaption ? "추가 추가 캡션" : nil)
-                .topContent {
-                    if showTopContent {
-                        HStack {
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
-                        }
-                    }
-                }
-                .bottomContent {
-                    if showBottomContent {
-                        HStack {
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
-                            ContentBadge(text: "텍스트")
-                        }
-                    }
-                }
-                .if(showOverlayCaption || showOverlayButton) {
-                    $0.overlay(
-                        caption: showOverlayCaption ? "합격보상금 100만원" : nil,
-                        buttonIcon: showOverlayButton
-                            ? (bookmarkIsOn ? .bookmarkFill : .bookmark) : nil,
-                        buttonColor: bookmarkIsOn
-                            ? .semantic(.primaryNormal) : .semantic(.staticWhite),
-                        onTapButton: showOverlayButton ? { bookmarkIsOn.toggle() } : nil
+            Card(
+                thumbnail: {
+                    Thumbnail(
+                        urlString: invalidImageUrl ? "https://invalid-url" : imageUrl,
+                        ratio: .r4x3
                     )
+                    .width(thumbnailWidth)
+                },
+                skeleton: $skeletonIsOn,
+                title: multilineTitle ? "제목이 매우 매우 매우 매우 매우 매우 길어서 세 줄이 되면 어떻게 될까요?" : "제목"
+            )
+            .caption(showCaption ? "캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션캡션" : nil)
+            .subCaption(showSubCaption ? "서브 캡션 서브 캡션" : nil)
+            .extraCaption(showExtraCaption ? "추가 추가 캡션" : nil)
+            .topContent {
+                if showTopContent {
+                    HStack {
+                        ContentBadge(text: "텍스트")
+                        ContentBadge(text: "텍스트")
+                        ContentBadge(text: "텍스트")
+                    }
                 }
-                Spacer(minLength: 0)
+            }
+            .bottomContent {
+                if showBottomContent {
+                    HStack {
+                        ContentBadge(text: "텍스트")
+                        ContentBadge(text: "텍스트")
+                        ContentBadge(text: "텍스트")
+                    }
+                }
+            }
+            .if(showOverlayCaption || showOverlayButton) {
+                $0.overlay(
+                    caption: showOverlayCaption ? "합격보상금 100만원" : nil,
+                    buttonIcon: showOverlayButton
+                        ? (bookmarkIsOn ? .bookmarkFill : .bookmark) : nil,
+                    buttonColor: bookmarkIsOn
+                        ? .semantic(.primaryNormal) : .semantic(.staticWhite),
+                    onTapButton: showOverlayButton ? { bookmarkIsOn.toggle() } : nil
+                )
             }
         } options: {
             ToggleOptionRow("skeleton", isOn: $skeletonIsOn)
