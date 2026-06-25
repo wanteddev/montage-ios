@@ -27,7 +27,8 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
     case control, filterButton, segmentedControl, select, slider, textArea, textField, dateTimePicker, framedStyle
     case accordion, avatar, avatarGroup, card, contentBadge, listCard, listCell, playBadge, sectionHeader, thumbnail
     case loading, pullToRefresh, skeleton
-    case category, pagination, progressIndicator, progressTracker, tab, topNavigation
+    case category, progressIndicator, tab, topNavigation
+    case horizontalProgressTracker, verticalProgressTracker, paginationDots, pageCounter
     case fallbackView, pushBadge, snackbar, toast
     case bottomSheet, popup, popover, tooltip
     case color, flowLayout, icon, modalNavigation, shadow, typography
@@ -46,7 +47,8 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
             return .contents
         case .loading, .pullToRefresh, .skeleton:
             return .loading
-        case .category, .pagination, .progressIndicator, .progressTracker, .tab, .topNavigation:
+        case .category, .progressIndicator, .tab, .topNavigation,
+             .horizontalProgressTracker, .verticalProgressTracker, .paginationDots, .pageCounter:
             return .navigations
         case .fallbackView, .pushBadge, .snackbar, .toast:
             return .feedback

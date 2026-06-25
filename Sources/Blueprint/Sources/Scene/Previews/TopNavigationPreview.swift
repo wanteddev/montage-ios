@@ -31,8 +31,7 @@ struct TopNavigationPreview: View {
     }
     
     @Environment(\.presentationMode) var presentationMode
-    
-    @State private var showTransparentChecker: Bool = false
+
     @State private var title = "제목"
     @State var variantIndex: Int = 0
     @State var leading = false
@@ -114,22 +113,18 @@ struct TopNavigationPreview: View {
             showPreview = true
         }
         .fullScreenCover(isPresented: $showPreview) {
-            VStack(spacing: 0) {
+            PreviewLayout(mode: .pinnedTop) {
                 VStack(alignment: .leading) {
                     ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
                         ZStack {
-                            SwiftUI.Color.semantic(.allCases[index]).opacity(0.3)
+                            SwiftUI.Color.semantic(.allCases[index])
                             Text("Item \(index)")
                                 .padding()
                         }
                     }
                 }
                 .padding(.horizontal)
-                .transparentChecking(
-                    isPresented: showTransparentChecker,
-                    checkerSize: 202,
-                    checkerColor: .red
-                )
+                .previewCheckered()
                 .topNavigation(
                     variant: currentVariant,
                     title: title,
@@ -155,74 +150,43 @@ struct TopNavigationPreview: View {
                         }
                     }
                 }
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Options").bold()
-                        Spacer()
-                        Button(action: {
-                            showPreview = false
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                        }
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
+            } options: {
+                SegmentedIndexRow(
+                    "variant",
+                    index: $variantIndex,
+                    labels: TopNavigation.Variant.allCases.map(\.description)
+                )
+                TextFieldOptionRow("title", text: $title)
+                ToggleOptionRow("leadingContent", isOn: $leading)
+                HStack {
+                    Text("trailingContents")
+                    Button(variant: .outlined, size: .small, text: "TextButton") {
+                        trailing.append(.text)
                     }
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(selectedIndex: $variantIndex, labels: TopNavigation.Variant.allCases.map(\.description))
-                            .size(.small)
+                    Button(variant: .outlined, size: .small, text: "IconButton") {
+                        trailing.append(.icon)
                     }
-                    HStack {
-                        Text("title")
-                        TextField(text: $title)
-                    }
-                    HStack {
-                        Text("leadingContent")
-                        Switch(checked: leading) { leading = $0 }
-                    }
-                    HStack {
-                        Text("trailingContents")
-                        Button(variant: .outlined, size: .small, text: "TextButton") {
-                            trailing.append(.text)
-                        }
-                        Button(variant: .outlined, size: .small, text: "IconButton") {
-                            trailing.append(.icon)
-                        }
-                        IconButton(variant: .outlined(size: .small), icon: .reset) {
-                            trailing = []
-                        }
-                    }
-                    HStack {
-                        ColorPicker(
-                            "backgroundColor",
-                            selection: $backgroundColor
-                        )
-                    }
-                    HStack {
-                        Text("actionArea")
-                        Switch(checked: actionArea) { actionArea = $0 }
-                    }
-                    if actionArea {
-                        HStack {
-                            Text("sub")
-                            Switch(checked: actionAreaSub) { actionAreaSub = $0 }
-                            Text("alt")
-                            Switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
-                            Text("caption")
-                            Switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
-                            Text("extra")
-                            Switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
-                        }
+                    IconButton(variant: .outlined(size: .small), icon: .reset) {
+                        trailing = []
                     }
                 }
-                .padding()
-                .background(.regularMaterial)
+                ColorPicker("backgroundColor", selection: $backgroundColor)
+                ToggleOptionRow("actionArea", isOn: $actionArea)
+                if actionArea {
+                    HStack {
+                        ToggleOption("sub", isOn: $actionAreaSub)
+                        ToggleOption("alt", isOn: $actionAreaAlt)
+                        ToggleOption("caption", isOn: $actionAreaCaption)
+                        ToggleOption("extra", isOn: $actionAreaExtra)
+                    }
+                }
+            } accessory: {
+                Button(action: {
+                    showPreview = false
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
+                }
             }
             .toast($toast)
         }
