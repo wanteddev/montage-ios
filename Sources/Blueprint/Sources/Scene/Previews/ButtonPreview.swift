@@ -12,7 +12,6 @@ import SwiftUI
 import Montage
 
 struct ButtonPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
     @State private var colorIndex = 0
     @State private var sizeIndex = 0
@@ -27,36 +26,43 @@ struct ButtonPreview: View {
     @State private var fontVariant = false
     @State private var fontWeight = false
     @State private var loading = false
-    
+
     private let variants: [Montage.Button.Variant] = [.solid, .outlined]
     private let colors: [Montage.Button.Color] = [.primary, .assistive, .negative]
     private let sizes: [Montage.Button.Size] = [.xsmall, .small, .medium, .large]
-    
-    var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                
-                let color = colors[colorIndex]
-                let size = sizes[sizeIndex]
 
-                HStack {
-                    Spacer(minLength: 0)
-                    if iconOnly {
+    var body: some View {
+        PreviewLayout {
+            let color = colors[colorIndex]
+            let size = sizes[sizeIndex]
+
+            HStack {
+                Spacer(minLength: 0)
+                if iconOnly {
+                    Button(
+                        variant: variants[variantIndex],
+                        color: color,
+                        size: size,
+                        icon: .apps
+                    ) {
+                        print("tapped")
+                    }
+                    .disable(disable)
+                    .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                    .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                    .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                    .fontVariant(fontVariant ? .heading1 : nil)
+                    .fontWeight(fontWeight ? .regular : nil)
+                    .loading(loading)
+                } else {
+                    VStack {
                         Button(
                             variant: variants[variantIndex],
                             color: color,
                             size: size,
-                            icon: .apps
+                            text: "텍스트",
+                            leadingIcon: leadingIcon ? .apps : nil,
+                            trailingIcon: trailingIcon ? .apps : nil
                         ) {
                             print("tapped")
                         }
@@ -67,116 +73,61 @@ struct ButtonPreview: View {
                         .fontVariant(fontVariant ? .heading1 : nil)
                         .fontWeight(fontWeight ? .regular : nil)
                         .loading(loading)
-                    } else {
-                        VStack {
-                            Button(
-                                variant: variants[variantIndex],
-                                color: color,
-                                size: size,
-                                text: "텍스트",
-                                leadingIcon: leadingIcon ? .apps : nil,
-                                trailingIcon: trailingIcon ? .apps : nil
-                            ) {
-                                print("tapped")
-                            }
-                            .disable(disable)
-                            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                            .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                            .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                            .fontVariant(fontVariant ? .heading1 : nil)
-                            .fontWeight(fontWeight ? .regular : nil)
-                            .loading(loading)
-                            .fillWidth(fillWidth)
-                            Button(
-                                variant: variants[variantIndex],
-                                color: color,
-                                size: size,
-                                text: "매우 긴~~~~~~~~~~~~~~~~~~~~~~~~~~~~~텍스트입니다",
-                                leadingIcon: leadingIcon ? .apps : nil,
-                                trailingIcon: trailingIcon ? .apps : nil
-                            ) {
-                                print("tapped")
-                            }
-                            .disable(disable)
-                            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
-                            .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
-                            .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
-                            .fontVariant(fontVariant ? .heading1 : nil)
-                            .fontWeight(fontWeight ? .regular : nil)
-                            .loading(loading)
-                            .fillWidth(fillWidth)
+                        .fillWidth(fillWidth)
+                        Button(
+                            variant: variants[variantIndex],
+                            color: color,
+                            size: size,
+                            text: "매우 긴~~~~~~~~~~~~~~~~~~~~~~~~~~~~~텍스트입니다",
+                            leadingIcon: leadingIcon ? .apps : nil,
+                            trailingIcon: trailingIcon ? .apps : nil
+                        ) {
+                            print("tapped")
                         }
+                        .disable(disable)
+                        .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+                        .backgroundColor(backgroundColor ? .semantic(.accentBackgroundCyan) : nil)
+                        .borderColor(borderColor ? .semantic(.accentBackgroundPurple) : nil)
+                        .fontVariant(fontVariant ? .heading1 : nil)
+                        .fontWeight(fontWeight ? .regular : nil)
+                        .loading(loading)
+                        .fillWidth(fillWidth)
                     }
+                }
 
-                    Spacer(minLength: 0)
+                Spacer(minLength: 0)
+            }
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            SegmentedIndexRow("color", index: $colorIndex, labels: colors.map(\.description))
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            HStack {
+                ToggleOption("iconOnly", isOn: $iconOnly)
+                ToggleOption("disable", isOn: $disable)
+                ToggleOption("loading", isOn: $loading)
+            }
+            HStack {
+                if !iconOnly {
+                    ToggleOption("leadingIcon", isOn: $leadingIcon)
+                    ToggleOption("trailingIcon", isOn: $trailingIcon)
                 }
-                
-                Text("Options").bold()
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("color")
-                    SegmentedControl(
-                        selectedIndex: $colorIndex,
-                        labels: colors.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("size")
-                    SegmentedControl(
-                        selectedIndex: $sizeIndex,
-                        labels: sizes.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("iconOnly")
-                    Switch(checked: iconOnly) { iconOnly = $0 }
-                    Text("disable")
-                    Switch(checked: disable) { disable = $0 }
-                    Text("loading")
-                    Switch(checked: loading) { loading = $0 }
-                }
-                HStack {
-                    if !iconOnly {
-                        Text("leadingIcon")
-                        Switch(checked: leadingIcon) { leadingIcon = $0 }
-                        Text("trailingIcon")
-                        Switch(checked: trailingIcon) { trailingIcon = $0 }
-                    }
-                    Text("fillWidth")
-                    Switch(checked: fillWidth) { fillWidth = $0 }
-                }
-                Divider()
-                Text("color")
-                HStack {
-                    Text("content")
-                    Switch(checked: contentColor) { contentColor = $0 }
-                    Text("background")
-                    Switch(checked: backgroundColor) { backgroundColor = $0 }
-                    if variants[variantIndex] == .outlined && colors[colorIndex] != .negative {
-                        Text("border")
-                        Switch(checked: borderColor) { borderColor = $0 }
-                    }
-                }
-                Divider()
-                Text("font")
-                HStack {
-                    Text("variant")
-                    Switch(checked: fontVariant) { fontVariant = $0 }
-                    Text("weight")
-                    Switch(checked: fontWeight) { fontWeight = $0 }
+                ToggleOption("fillWidth", isOn: $fillWidth)
+            }
+            Divider()
+            Text("color")
+            HStack {
+                ToggleOption("content", isOn: $contentColor)
+                ToggleOption("background", isOn: $backgroundColor)
+                if variants[variantIndex] == .outlined && colors[colorIndex] != .negative {
+                    ToggleOption("border", isOn: $borderColor)
                 }
             }
-            .font(.caption)
-            .padding()
+            Divider()
+            Text("font")
+            HStack {
+                ToggleOption("variant", isOn: $fontVariant)
+                ToggleOption("weight", isOn: $fontWeight)
+            }
         }
         .onChange(of: iconOnly) { _ in
             leadingIcon = false
@@ -190,8 +141,6 @@ struct ButtonPreview: View {
                 borderColor = false
             }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

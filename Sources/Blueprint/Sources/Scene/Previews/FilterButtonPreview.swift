@@ -2,7 +2,6 @@ import SwiftUI
 import Montage
 
 struct FilterButtonPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var variant: FilterButton.Variant = .solid
     @State private var size: FilterButton.Size = .medium
     @State private var text = "텍스트"
@@ -14,131 +13,102 @@ struct FilterButtonPreview: View {
     @State private var fontColor: SwiftUI.Color = .clear
     
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
+        PreviewLayout {
+            HStack {
+                Spacer()
+                FilterButton(
+                    variant: variant,
+                    size: size,
+                    text: text,
+                    state: $state
+                )
+                .active(active, label: activeLabel)
+                .disabled(disable)
+                .modifying {
+                    if fontColor == .clear {
+                        $0
+                    } else {
+                        $0.fontColor(fontColor)
                     }
                 }
-                
-                HStack {
-                    Spacer()
-                    FilterButton(
-                        variant: variant,
-                        size: size,
-                        text: text,
-                        state: $state
-                    )
-                    .active(active, label: activeLabel)
-                    .disabled(disable)
-                    .modifying {
-                        if fontColor == .clear {
-                            $0
-                        } else {
-                            $0.fontColor(fontColor)
-                        }
+                .modifying {
+                    if iconColor == .clear {
+                        $0
+                    } else {
+                        $0.iconColor(iconColor)
                     }
-                    .modifying {
-                        if iconColor == .clear {
-                            $0
-                        } else {
-                            $0.iconColor(iconColor)
-                        }
-                    }
-                    Spacer()
                 }
-                
-                Text("Options").bold()
-                
-                HStack {
-                    Text("Variant")
-                    SegmentedControl(
-                        selectedIndex: Binding(
-                            get: { variant == .solid ? 0 : 1 },
-                            set: { variant = $0 == 0 ? .solid : .outlined }
-                        ),
-                        labels: ["Solid", "Outlined"]
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Size")
-                    SegmentedControl(
-                        selectedIndex: Binding(
-                            get: { 
-                                switch size {
-                                case .xsmall: return 0
-                                case .small: return 1
-                                case .medium: return 2
-                                case .large: return 3
-                                }
-                            },
-                            set: { 
-                                switch $0 {
-                                case 0: size = .xsmall
-                                case 1: size = .small
-                                case 2: size = .medium
-                                case 3: size = .large
-                                default: break
-                                }
-                            }
-                        ),
-                        labels: ["XSmall", "Small", "Medium", "Large"]
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Text")
-                    TextField(text: $text)
-                        .placeholder("텍스트를 입력하세요")
-                }
-                
-                HStack {
-                    Text("State")
-                    SegmentedControl(
-                        selectedIndex: Binding(
-                            get: { state == .normal ? 0 : 1 },
-                            set: { state = $0 == 0 ? .normal : .expand }
-                        ),
-                        labels: ["Normal", "Expand"]
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Active")
-                    Switch(checked: active) { active = $0 }
-                    Text("Disable")
-                    Switch(checked: disable) { disable = $0 }
-                }
-                
-                HStack {
-                    Text("Active Label")
-                    TextField(text: Binding(
-                        get: { activeLabel ?? "" },
-                        set: { activeLabel = $0.isEmpty ? nil : $0 }
-                    ))
-                    .placeholder("활성화 상태일 때 표시할 텍스트")
-                }
-                
-                SwiftUI.ColorPicker("Icon Color", selection: $iconColor)
-                SwiftUI.ColorPicker("Font Color", selection: $fontColor)
-                
-                Spacer(minLength: 0)
+                Spacer()
             }
-            .font(.caption)
-            .padding()
+        } options: {
+            HStack {
+                Text("Variant")
+                SegmentedControl(
+                    selectedIndex: Binding(
+                        get: { variant == .solid ? 0 : 1 },
+                        set: { variant = $0 == 0 ? .solid : .outlined }
+                    ),
+                    labels: ["Solid", "Outlined"]
+                )
+                .size(.small)
+            }
+            HStack {
+                Text("Size")
+                SegmentedControl(
+                    selectedIndex: Binding(
+                        get: {
+                            switch size {
+                            case .xsmall: return 0
+                            case .small: return 1
+                            case .medium: return 2
+                            case .large: return 3
+                            }
+                        },
+                        set: {
+                            switch $0 {
+                            case 0: size = .xsmall
+                            case 1: size = .small
+                            case 2: size = .medium
+                            case 3: size = .large
+                            default: break
+                            }
+                        }
+                    ),
+                    labels: ["XSmall", "Small", "Medium", "Large"]
+                )
+                .size(.small)
+            }
+            HStack {
+                Text("Text")
+                TextField(text: $text)
+                    .placeholder("텍스트를 입력하세요")
+            }
+            HStack {
+                Text("State")
+                SegmentedControl(
+                    selectedIndex: Binding(
+                        get: { state == .normal ? 0 : 1 },
+                        set: { state = $0 == 0 ? .normal : .expand }
+                    ),
+                    labels: ["Normal", "Expand"]
+                )
+                .size(.small)
+            }
+            HStack {
+                ToggleOption("Active", isOn: $active)
+                ToggleOption("Disable", isOn: $disable)
+            }
+            HStack {
+                Text("Active Label")
+                TextField(text: Binding(
+                    get: { activeLabel ?? "" },
+                    set: { activeLabel = $0.isEmpty ? nil : $0 }
+                ))
+                .placeholder("활성화 상태일 때 표시할 텍스트")
+            }
+            SwiftUI.ColorPicker("Icon Color", selection: $iconColor)
+            SwiftUI.ColorPicker("Font Color", selection: $fontColor)
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

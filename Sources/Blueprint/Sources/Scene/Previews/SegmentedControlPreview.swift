@@ -9,15 +9,14 @@ import SwiftUI
 import Montage
 
 struct SegmentedControlPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var selectedIndex: Int = 0
     @State private var variantIndex: Int = 0
     @State private var sizeIndex: Int = 0
     @State private var showIcon: Bool = true
-    
+
     private let variants: [SegmentedControl.Variant] = [.solid, .outlined]
     private let sizes: [SegmentedControl.Size] = [.large, .medium, .small]
-    
+
     var items: [SegmentedControl.Item] {
         if showIcon {
             return [
@@ -35,64 +34,26 @@ struct SegmentedControlPreview: View {
             ]
         }
     }
-    
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                
-                HStack {
-                    Spacer()
-                    SegmentedControl(
-                        selectedIndex: $selectedIndex,
-                        items: items,
-                        onSelect: { print($0) }
-                    )
-                    .variant(variants[variantIndex])
-                    .size(sizes[sizeIndex])
-                    Spacer()
-                }
-                .padding(.vertical)
-                
-                Text("Options").bold()
-                
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("size")
-                    SegmentedControl(
-                        selectedIndex: $sizeIndex,
-                        labels: sizes.map(\.description)
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("icon")
-                    Switch(checked: showIcon) { showIcon = $0 }
-                }
+        PreviewLayout {
+            HStack {
+                Spacer()
+                SegmentedControl(
+                    selectedIndex: $selectedIndex,
+                    items: items,
+                    onSelect: { print($0) }
+                )
+                .variant(variants[variantIndex])
+                .size(sizes[sizeIndex])
+                Spacer()
             }
-            .font(.caption)
-            .padding()
+            .padding(.vertical)
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            ToggleOptionRow("icon", isOn: $showIcon)
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

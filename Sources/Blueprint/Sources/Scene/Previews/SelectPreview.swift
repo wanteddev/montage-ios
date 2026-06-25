@@ -11,7 +11,6 @@ import SwiftUI
 import Montage
 
 struct SelectPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var showSheet: Bool = false
     @State private var negative: Bool = false
     @State private var variantIndex: Int = 0
@@ -31,14 +30,14 @@ struct SelectPreview: View {
 
     private let selectionTypes: [Select.SingleSelectionType] = [.checkmark, .radio]
     private let renders: [Select.Render] = [.text, .chip]
-    
+
     private var variants: [Select.Variant] {
         [
             .single(selectionType: selectionTypes[selectionTypeIndex], menuPrimaryButtonTitle: menuActionArea ? menuButtonTitle : nil),
             .multiple(render: renders[renderIndex], overflow: overflow, menuPrimaryButtonTitle: menuButtonTitle)
         ]
     }
-    
+
     private var leadingContents: [Select.LeadingContent?] {
         [
             .none,
@@ -57,166 +56,99 @@ struct SelectPreview: View {
         .flexible,
         .fill
     ]
-    
+
     private enum ItemCountClass: String, CaseIterable {
         case few, medium, many
-        
+
         var description: String {
             self.rawValue
         }
     }
-    
+
     @State private var items: [Select.Item] = [
         .init(text: "값1"),
         .init(text: "값2(icon)", icon: .apps),
         .init(text: "값3(negative)", isNegative: true)
     ]
-    
+
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                Select(
-                    menuPresented: customMenu ? $showSheet : nil,
-                    variant: variants[variantIndex],
-                    items: $items
-                ) {
-                    print($0.text)
-                }
-                .negative(negative)
-                .placeholder("선택해 주세요.")
-                .disable(disable)
-                .description(description ? "설명을 적습니다." : "")
-                .heading(heading ? "제목" : "")
-                .requiredBadge(requiredBadge)
-                .leadingContent(leadingContents[leadingContentIndex])
-                .menuResize(bottomSheetResizes[menuResizeIndex])
-                .bottomSheet(isPresented: $showSheet) {
-                    VStack {
-                        ForEach(items.indices, id: \.self) { index in
-                            ListCell(title: items[index].text) {
-                                switch variants[variantIndex] {
-                                case .single:
-                                    items = items.map {
-                                        var mutated = $0
-                                        mutated.isSelected = false
-                                        return mutated
-                                    }
-                                    fallthrough
-                                case .multiple:
-                                    items[index].isSelected.toggle()
-                                @unknown default:
-                                    break
+        PreviewLayout {
+            Select(
+                menuPresented: customMenu ? $showSheet : nil,
+                variant: variants[variantIndex],
+                items: $items
+            ) {
+                print($0.text)
+            }
+            .negative(negative)
+            .placeholder("선택해 주세요.")
+            .disable(disable)
+            .description(description ? "설명을 적습니다." : "")
+            .heading(heading ? "제목" : "")
+            .requiredBadge(requiredBadge)
+            .leadingContent(leadingContents[leadingContentIndex])
+            .menuResize(bottomSheetResizes[menuResizeIndex])
+            .bottomSheet(isPresented: $showSheet) {
+                VStack {
+                    ForEach(items.indices, id: \.self) { index in
+                        ListCell(title: items[index].text) {
+                            switch variants[variantIndex] {
+                            case .single:
+                                items = items.map {
+                                    var mutated = $0
+                                    mutated.isSelected = false
+                                    return mutated
                                 }
+                                fallthrough
+                            case .multiple:
+                                items[index].isSelected.toggle()
+                            @unknown default:
+                                break
                             }
-                            .selected(items[index].isSelected)
-                            .trailingContent { active in
-                                Checkmark(checked: active)
-                            }
+                        }
+                        .selected(items[index].isSelected)
+                        .trailingContent { active in
+                            Checkmark(checked: active)
                         }
                     }
                 }
             }
-            .padding(.horizontal)
-
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            switch variants[variantIndex] {
+            case .single:
+                SegmentedIndexRow("selectionType", index: $selectionTypeIndex, labels: selectionTypes.map(\.description))
+                ToggleOptionRow("menuActionArea", isOn: $menuActionArea)
+                if menuActionArea {
+                    TextFieldOptionRow("menuButtonTitle", text: $menuButtonTitle)
+                }
+            case .multiple:
                 HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
-                    )
-                    .size(.small)
+                    SegmentedIndexRow("render", index: $renderIndex, labels: renders.map(\.description))
+                    ToggleOption("overflow", isOn: $overflow)
                 }
-                switch variants[variantIndex] {
-                case .single:
-                    HStack {
-                        Text("selectionType")
-                        SegmentedControl(
-                            selectedIndex: $selectionTypeIndex,
-                            labels: selectionTypes.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("menuActionArea")
-                        Switch(checked: menuActionArea) { menuActionArea = $0 }
-                    }
-                    if menuActionArea {
-                        HStack {
-                            Text("menuButtonTitle")
-                            TextField(text: $menuButtonTitle)
-                        }
-                    }
-                case .multiple:
-                    HStack {
-                        Text("render")
-                        SegmentedControl(
-                            selectedIndex: $renderIndex,
-                            labels: renders.map(\.description)
-                        )
-                        .size(.small)
-                        Text("overflow")
-                        Switch(checked: overflow) { overflow = $0 }
-                    }
-                    HStack {
-                        Text("menuButtonTitle")
-                        TextField(text: $menuButtonTitle)
-                    }
-                @unknown default:
-                    EmptyView()
-                }
-                HStack {
-                    Text("heading")
-                    Switch(checked: heading) { heading = $0 }
-                    Text("requiredBadge")
-                    Switch(checked: requiredBadge) { requiredBadge = $0 }
-                }
-                HStack {
-                    Text("negative")
-                    Switch(checked: negative) { negative = $0 }
-                    Text("disable")
-                    Switch(checked: disable) { disable = $0 }
-                    Text("description")
-                    Switch(checked: description) { description = $0 }
-                }
-                HStack {
-                    Text("leadingContent")
-                    SegmentedControl(
-                        selectedIndex: $leadingContentIndex,
-                        labels: leadingContents.map { $0?.description ?? "none" }
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("custom menu")
-                    Switch(checked: customMenu) { customMenu = $0 }
-                }
-                HStack {
-                    Text("menuResize")
-                    SegmentedControl(selectedIndex: $menuResizeIndex, labels: bottomSheetResizes.map(\.description))
-                        .size(.small)
-                }
-                HStack {
-                    SegmentedControl(selectedIndex: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))
-                        .size(.small)
-                    Text("items")
-                }
+                TextFieldOptionRow("menuButtonTitle", text: $menuButtonTitle)
+            @unknown default:
+                EmptyView()
             }
-            .padding(.horizontal)
+            HStack {
+                ToggleOption("heading", isOn: $heading)
+                ToggleOption("requiredBadge", isOn: $requiredBadge)
+            }
+            HStack {
+                ToggleOption("negative", isOn: $negative)
+                ToggleOption("disable", isOn: $disable)
+                ToggleOption("description", isOn: $description)
+            }
+            SegmentedIndexRow("leadingContent", index: $leadingContentIndex, labels: leadingContents.map { $0?.description ?? "none" })
+            ToggleOptionRow("custom menu", isOn: $customMenu)
+            SegmentedIndexRow("menuResize", index: $menuResizeIndex, labels: bottomSheetResizes.map(\.description))
+            HStack {
+                SegmentedControl(selectedIndex: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))
+                    .size(.small)
+                Text("items")
+            }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
         .navigationTitle("Select/Multiple")
         .onChange(of: itemCountClassIndex) { _ in
             switch ItemCountClass.allCases[itemCountClassIndex] {
