@@ -178,10 +178,6 @@ public struct Thumbnail: View {
     // MARK: - Body
 
     @State private var proposedWidth: CGFloat = .zero
-    // SDWebImageSwiftUI 3.x의 WebImage는 onDisappear에서 error가 nil인 in-flight 요청을
-    // 취소하지 않는 한계가 있어 ImageManager를 직접 소유해 명시적으로 load/cancel을 제어한다.
-    @StateObject private var imageManager = ImageManager()
-    @State private var loadedURL: URL?
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -189,7 +185,10 @@ public struct Thumbnail: View {
             SwiftUI.Color.clear
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { proposedWidth = $0 })
 
-            content
+            // 이미지 로더는 URL로 식별(identity)한다. urlString이 바뀌면 로더(및 내부 ImageManager)가
+            // 새로 생성돼, 이전 URL의 이미지/에러 상태가 남지 않고 항상 처음부터 다시 로드한다.
+            ThumbnailImageLoader(urlString: urlString)
+                .id(urlString)
                 .if (thumbnailWidth > 0) {
                     $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
                 }
@@ -205,14 +204,34 @@ public struct Thumbnail: View {
         .if (thumbnailWidth > 0) {
             $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
         }
-        .onAppear { loadIfNeeded() }
-        .onChange(of: urlString) { _ in loadIfNeeded() }
-        .onDisappear {
-            // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
-            // loadedURL을 함께 비워, 같은 셀이 동일 URL로 재진입했을 때 loadIfNeeded()가 재요청을 수행하게 한다.
-            imageManager.cancel()
-            loadedURL = nil
-        }
+    }
+
+    private var thumbnailWidth: CGFloat {
+        width ?? proposedWidth
+    }
+}
+
+/// URL 단위로 이미지를 로드해 표시하는 내부 뷰.
+///
+/// `ImageManager`를 직접 소유해 화면에서 사라질 때 in-flight 다운로드를 명시적으로 취소한다.
+/// (SDWebImageSwiftUI 3.x의 `WebImage`는 error가 nil인 in-flight 요청을 onDisappear에서 취소하지 않는다.)
+/// URL이 바뀌면 ``Thumbnail``이 `.id(urlString)`로 이 뷰를 새로 만들어, 직전 URL의 이미지/에러
+/// 상태가 남지 않은 깨끗한 상태에서 다시 로드한다.
+private struct ThumbnailImageLoader: View {
+    let urlString: String
+
+    @StateObject private var imageManager = ImageManager()
+
+    var body: some View {
+        content
+            .onAppear {
+                guard let url = URL(string: urlString) else { return }
+                imageManager.load(url: url)
+            }
+            .onDisappear {
+                // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
+                imageManager.cancel()
+            }
     }
 
     @ViewBuilder
@@ -229,19 +248,5 @@ public struct Thumbnail: View {
         } else {
             SwiftUI.Color.semantic(.fillAlternative)
         }
-    }
-
-    private func loadIfNeeded() {
-        let url = URL(string: urlString)
-        guard loadedURL != url else { return }
-        loadedURL = url
-        imageManager.cancel()
-        if let url {
-            imageManager.load(url: url)
-        }
-    }
-
-    private var thumbnailWidth: CGFloat {
-        width ?? proposedWidth
     }
 }
