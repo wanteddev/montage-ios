@@ -32,11 +32,7 @@ struct AvatarPreview: View {
 
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer()
-                avatar
-                Spacer()
-            }
+            avatar
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if variants[variantIndex] == .person {

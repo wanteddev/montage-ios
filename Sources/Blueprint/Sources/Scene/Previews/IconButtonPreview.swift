@@ -98,50 +98,44 @@ struct IconButtonPreview: View {
     
     var body: some View {
         PreviewLayout {
-            HStack {
-                Spacer(minLength: 0)
-
-                IconButton(
-                    variant: currentVariant,
-                    icon: .apps,
-                    handler: {
-                        print("tapped")
-                    }
-                )
-                .disable(disable)
-                .disableInteraction(disableInteraction)
-                .showPushBadge(isNormal ? showPushBadge : false)
-                .padding(isOutlinedOrSolid ? padding : 0)
-                .modifying {
-                    if let interactionColor {
-                        $0.interactionColor(interactionColor)
-                    } else {
-                        $0
-                    }
+            IconButton(
+                variant: currentVariant,
+                icon: .apps,
+                handler: {
+                    print("tapped")
                 }
-                .modifying {
-                    if iconColor != nil {
-                        $0.iconColor(iconColor!)
-                    } else {
-                        $0
-                    }
+            )
+            .disable(disable)
+            .disableInteraction(disableInteraction)
+            .showPushBadge(isNormal ? showPushBadge : false)
+            .padding(isOutlinedOrSolid ? padding : 0)
+            .modifying {
+                if let interactionColor {
+                    $0.interactionColor(interactionColor)
+                } else {
+                    $0
                 }
-                .modifying {
-                    if isOutlinedOrSolid && backgroundColor != nil {
-                        $0.backgroundColor(backgroundColor!)
-                    } else {
-                        $0
-                    }
+            }
+            .modifying {
+                if iconColor != nil {
+                    $0.iconColor(iconColor!)
+                } else {
+                    $0
                 }
-                .modifying {
-                    if isOutlined && borderColor != nil {
-                        $0.borderColor(borderColor!)
-                    } else {
-                        $0
-                    }
+            }
+            .modifying {
+                if isOutlinedOrSolid && backgroundColor != nil {
+                    $0.backgroundColor(backgroundColor!)
+                } else {
+                    $0
                 }
-
-                Spacer(minLength: 0)
+            }
+            .modifying {
+                if isOutlined && borderColor != nil {
+                    $0.borderColor(borderColor!)
+                } else {
+                    $0
+                }
             }
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
