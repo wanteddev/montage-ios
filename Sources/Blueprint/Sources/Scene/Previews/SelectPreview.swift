@@ -149,7 +149,6 @@ struct SelectPreview: View {
                 Text("items")
             }
         }
-        .navigationTitle("Select/Multiple")
         .onChange(of: itemCountClassIndex) { _ in
             switch ItemCountClass.allCases[itemCountClassIndex] {
             case .few:
