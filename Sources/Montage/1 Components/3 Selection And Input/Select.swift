@@ -390,31 +390,31 @@ public struct Select: View {
                     .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
                 }
                 .padding(.all, 12)
+                // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거하고,
+                // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(별도 오프스크린 패스 없음).
+                // 외형(둥근 모서리·머티리얼·옅은 그림자·테두리)은 동일하게 유지된다.
                 .background {
+                    let surface = RoundedRectangle(cornerRadius: 12)
                     if disable {
-                        SwiftUI.Color.semantic(.fillAlternative)
+                        surface
+                            .fill(SwiftUI.Color.semantic(.fillAlternative))
+                            .shadow(color: .semantic(.staticBlack).opacity(0.03), radius: 2, x: 0, y: 1)
                     } else {
-                        if colorScheme == .light {
-                            SwiftUI.Color.atomic(.common100).opacity(0.8)
-                                .background(.ultraThinMaterial)
-                        } else {
-                            SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                                .background(.ultraThinMaterial)
-                        }
+                        surface
+                            .fill(
+                                colorScheme == .light
+                                    ? SwiftUI.Color.atomic(.common100).opacity(0.8)
+                                    : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                            )
+                            .shadow(color: .semantic(.staticBlack).opacity(0.03), radius: 2, x: 0, y: 1)
+                            .background(.ultraThinMaterial, in: surface)
                     }
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .inset(by: 0.5)
                         .strokeBorder(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
                 }
-                .shadow(
-                    color: .semantic(.staticBlack).opacity(0.03),
-                    radius: 2,
-                    x: 0,
-                    y: 1
-                )
             }
 
             if !description.isEmpty {
