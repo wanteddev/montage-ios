@@ -313,7 +313,11 @@ public struct Slider: View {
     }
     
     private var headingLabel: String {
-        "\(labelFormatter(lowValue)) ~ \(labelFormatter(highValue))"
+        if isRangeSlider {
+            "\(labelFormatter(lowValue)) ~ \(labelFormatter(highValue))"
+        } else {
+            "\(labelFormatter(highValue))"
+        }
     }
     
     private var lowThumbRatio: CGFloat {
