@@ -37,7 +37,7 @@ struct TopNavigationPreview: View {
     @State var leading = false
     @State var trailing: [TrailingButton] = []
     @State var toast: Toast.Model?
-    @State var backgroundColor: SwiftUI.Color = .semantic(.backgroundNormal)
+    @State var backgroundColor: SwiftUI.Color = .clear
     @State var actionArea = false
     @State var actionAreaSub = false
     @State var actionAreaAlt = false
@@ -106,50 +106,13 @@ struct TopNavigationPreview: View {
     
     @State private var term = ""
     @State private var focused = false
-    @State private var showPreview = true
-    
+
     var body: some View {
-        SwiftUI.Button("TopNavigation Preview") {
-            showPreview = true
-        }
-        .fullScreenCover(isPresented: $showPreview) {
-            PreviewLayout(mode: .floating) {
-                VStack(alignment: .leading) {
-                    ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
-                        ZStack {
-                            SwiftUI.Color.semantic(.allCases[index])
-                            Text("Item \(index)")
-                                .padding()
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                .topNavigation(
-                    variant: currentVariant,
-                    title: title,
-                    backgroundColor: backgroundColor,
-                    leadingContent: leading ? {
-                        IconButton(icon: .chevronLeft) {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                        .frame(width: 24, height: 24)
-                    } : nil,
-                    trailingContents: trailingContents,
-                    withBottom: actionAreaModel,
-                    searchPlaceholder: "검색하세요",
-                    searchTerm: $term,
-                    searchFocused: $focused
-                ) {
-                    print("\(term) 검색됨")
-                }
-                .onChange(of: focused) { newValue in
-                    if isSearchVariant {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            trailing = newValue ? [.text] : []
-                        }
-                    }
-                }
-            } options: {
+        // .navigation 모드: PreviewLayout이 NavigationView·push 버튼·체커 적용까지 담당한다.
+        // preview 클로저는 push되는 미리보기 화면이다.
+        PreviewLayout(mode: .navigation) {
+            preview
+        } options: {
                 SegmentedIndexRow(
                     "variant",
                     index: $variantIndex,
@@ -169,7 +132,7 @@ struct TopNavigationPreview: View {
                         trailing = []
                     }
                 }
-                ColorPicker("backgroundColor", selection: $backgroundColor)
+                ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
                 ToggleOptionRow("actionArea", isOn: $actionArea)
                 if actionArea {
                     HStack {
@@ -179,15 +142,45 @@ struct TopNavigationPreview: View {
                         ToggleOption("extra", isOn: $actionAreaExtra)
                     }
                 }
-            } accessory: {
-                Button(action: {
-                    showPreview = false
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                }
             }
             .toast($toast)
+    }
+
+    var preview: some View {
+        VStack(alignment: .leading) {
+            ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
+                ZStack {
+                    SwiftUI.Color.semantic(.allCases[index])
+                    Text("Item \(index)")
+                        .padding()
+                }
+            }
+        }
+        .padding()
+        .topNavigation(
+            variant: currentVariant,
+            title: title,
+            backgroundColor: backgroundColor,
+            leadingContent: leading ? {
+                IconButton(icon: .chevronLeft) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .frame(width: 24, height: 24)
+            } : nil,
+            trailingContents: trailingContents,
+            withBottom: actionAreaModel,
+            searchPlaceholder: "검색하세요",
+            searchTerm: $term,
+            searchFocused: $focused
+        ) {
+            print("\(term) 검색됨")
+        }
+        .onChange(of: focused) { newValue in
+            if isSearchVariant {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    trailing = newValue ? [.text] : []
+                }
+            }
         }
     }
 }

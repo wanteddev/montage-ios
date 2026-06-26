@@ -13,6 +13,7 @@ struct VerticalProgressTrackerPreview: View {
     @State private var isLabelExist = true
     @State private var isAccessoryExist = true
     @State private var isContentExist = true
+    @State private var testText = "테스트 텍스트입니다."
 
     var body: some View {
         PreviewLayout {
@@ -20,7 +21,7 @@ struct VerticalProgressTrackerPreview: View {
                 progress: $progress,
                 variant: .vertical(stepContents: [
                     ProgressTracker.VerticalStepContent(
-                        label: isLabelExist ? "처음이에요\n진짜" : "",
+                        label: isLabelExist ? "1단계" : "",
                         labelAccessoryView: {
                             ContentBadge(variant: .solid, text: "뱃지")
                                 .size(.small)
@@ -28,12 +29,12 @@ struct VerticalProgressTrackerPreview: View {
                                 .if(isAccessoryExist)
                         },
                         contentView: {
-                            TextArea(text: .constant("테스트 텍스트입니다."))
+                            TextArea(text: $testText)
                                 .if(isContentExist)
                         }
                     ),
                     ProgressTracker.VerticalStepContent(
-                        label: isLabelExist ? "중간" : "",
+                        label: isLabelExist ? "2단계" : "",
                         labelAccessoryView: { AnyView(EmptyView()) },
                         contentView: {
                             Avatar(
@@ -44,11 +45,11 @@ struct VerticalProgressTrackerPreview: View {
                         }
                     ),
                     ProgressTracker.VerticalStepContent(
-                        label: isLabelExist ? "또\n중간" : "",
+                        label: isLabelExist ? "3단계" : "",
                         labelAccessoryView: {
                             HStack {
                                 Spacer(minLength: 0)
-                                Text("뭐라 뭐라 디스크립션")
+                                Text("설명")
                                     .typography(variant: .caption1)
                             }
                             .if(isAccessoryExist)
@@ -60,9 +61,9 @@ struct VerticalProgressTrackerPreview: View {
                         }
                     ),
                     ProgressTracker.VerticalStepContent(
-                        label: isLabelExist ? "끝입니다\n정말\n정말\n끝" : "",
+                        label: isLabelExist ? "마지막\n단계" : "",
                         contentView: {
-                            Text("Hel\nlo\nWor\nld!")
+                            Text("Hello\nWorld!")
                                 .typography(variant: .title1)
                                 .paragraph(variant: .title1)
                                 .fixedSize()
@@ -72,19 +73,7 @@ struct VerticalProgressTrackerPreview: View {
                 ])
             )
         } options: {
-            HStack {
-                Spacer()
-                Button(variant: .outlined, size: .small, text: "Previous") {
-                    progress = max(1, progress - 1)
-                }
-                .disable(progress <= 1)
-
-                Button(variant: .outlined, size: .small, text: "Next") {
-                    progress = min(progress + 1, 5)
-                }
-                .disable(progress >= 5)
-                Spacer()
-            }
+            PrevNextOptionRow(value: $progress, in: 1...5)
 
             HStack {
                 ToggleOption("Label", isOn: Binding(

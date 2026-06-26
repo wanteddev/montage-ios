@@ -27,8 +27,13 @@ struct ToastPreview: View {
     }
 
     var body: some View {
-        PreviewLayout(mode: .overlay) {
-            EmptyView()
+        PreviewLayout {
+            Button(
+                variant: .outlined,
+                text: "Show Preview"
+            ) {
+                toastModel = Toast.Model(variants[variantIndex], message: message)
+            }
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map { $0.description })
             if case .normal = variants[variantIndex] {
@@ -36,12 +41,6 @@ struct ToastPreview: View {
             }
             TextFieldOptionRow("message", text: $message)
             ToggleOptionRow("short duration", isOn: $toastShortDuration)
-            Button(
-                variant: .outlined,
-                text: "토스트 띄우기"
-            ) {
-                toastModel = Toast.Model(variants[variantIndex], message: message)
-            }
         }
         .toast($toastModel, duration: toastShortDuration ? .short : .long)
     }

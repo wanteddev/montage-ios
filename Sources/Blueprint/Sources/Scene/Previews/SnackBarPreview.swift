@@ -43,19 +43,10 @@ struct SnackBarPreview: View {
     }
 
     var body: some View {
-        PreviewLayout(mode: .overlay) {
-            EmptyView()
-        } options: {
-            TextFieldOptionRow("heading", text: $heading)
-            TextFieldOptionRow("description", text: $description)
-            ToggleOptionRow("extraContents", isOn: $showExtraContents)
-            SegmentedOptionRow("location", selection: $locationOption)
-            SliderOptionRow("offset", value: $offset, in: 0...200, step: 10)
-            SegmentedOptionRow("duration", selection: $durationOption)
-            ToggleOptionRow("closeButton", isOn: $closeButtonEnabled)
+        PreviewLayout {
             Button(
                 variant: .outlined,
-                text: "스낵바 노출"
+                text: "Show Preview"
             ) {
                 snackBarModel = .init(
                     duration: durationOption.duration,
@@ -70,6 +61,14 @@ struct SnackBarPreview: View {
                     action: "텍스트"
                 )
             }
+        } options: {
+            TextFieldOptionRow("heading", text: $heading)
+            TextFieldOptionRow("description", text: $description)
+            ToggleOptionRow("extraContents", isOn: $showExtraContents)
+            SegmentedOptionRow("location", selection: $locationOption)
+            SliderOptionRow("offset", value: $offset, in: 0...200, step: 10)
+            SegmentedOptionRow("duration", selection: $durationOption)
+            ToggleOptionRow("closeButton", isOn: $closeButtonEnabled)
         }
         .snackBar(
             $snackBarModel,

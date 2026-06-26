@@ -38,18 +38,20 @@ struct SliderPreview: View {
             HStack {
                 Text("range")
                 Picker("from", selection: $lowerBound) {
-                    ForEach(0...100, id: \.self) {
-                        Text("\($0)")
+                    ForEach(0..<upperBound, id: \.self) {
+                        Text("\($0)").font(.caption)
                     }
                 }
-                .pickerStyle(.inline)
+                .pickerStyle(.wheel)
                 Picker("to", selection: $upperBound) {
-                    ForEach(0...100, id: \.self) {
-                        Text("\($0)")
+                    ForEach((lowerBound+1)...100, id: \.self) {
+                        Text("\($0)").font(.caption)
                     }
                 }
-                .pickerStyle(.inline)
+                .pickerStyle(.wheel)
             }
+            .frame(height: 120)
+            
             TextFieldOptionRow("unit", text: $unit)
             SegmentedIndexRow("variant", index: $variantIndex, labels: ["single", "double"])
             ToggleOptionRow("heading", isOn: $heading)

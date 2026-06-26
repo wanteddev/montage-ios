@@ -98,12 +98,9 @@ public struct SkeletonPreview: View {
             switch PreviewKind.allCases[kindIndex] {
             case .text:
                 TextFieldOptionRow("text", text: $text)
-                HStack {
-                    Text("variant")
-                    Picker("variant", selection: $variantIndex) {
-                        ForEach(0..<variantLabels.count, id: \.self) { index in
-                            SwiftUI.Text(variantLabels[index]).tag(index)
-                        }
+                MenuOptionRow("variant", menuLabel: variantLabels[variantIndex]) {
+                    ForEach(0..<variantLabels.count, id: \.self) { index in
+                        Button(variantLabels[index]) { variantIndex = index }
                     }
                 }
                 SegmentedIndexRow("align", index: $alignmentIndex, labels: alignments.map(\.description))
@@ -113,10 +110,8 @@ public struct SkeletonPreview: View {
             default:
                 EmptyView()
             }
-            HStack {
-                SwiftUI.ColorPicker("color", selection: $color)
-            }
-            SliderOptionRow("opacity", value: $opacity, in: 0...1, format: { String(format: "%.1f", Double($0)) })
+            ColorPickerOptionRow("color", selection: $color)
+            SliderOptionRow("opacity", value: $opacity, in: 0...1, step: 0.1, format: { String(format: "%.1f", Double($0)) })
         }
         .onAppear {
             variantIndex = variants.firstIndex { $0 == .label1 } ?? 0

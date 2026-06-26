@@ -15,12 +15,7 @@ struct ProgressIndicatorPreview: View {
         PreviewLayout {
             ProgressIndicator(percentage: $percentage)
         } options: {
-            HStack {
-                Text("Percentage")
-                Text(String(format: "%.1f%%", percentage * 100))
-                    .frame(width: 60, alignment: .trailing)
-                Slider(value: $percentage, in: 0...1)
-            }
+            SliderOptionRow("Percentage", value: $percentage, in: 0...1, step: 0.01, format: { String(format: "%.1f%%", Double($0) * 100) })
         }
     }
 }

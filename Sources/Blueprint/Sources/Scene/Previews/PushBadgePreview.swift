@@ -52,16 +52,13 @@ struct PushBadgePreview: View {
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if case .number = variants[variantIndex] {
-                Text("number")
-                SwiftUI.Slider(value: $number, in: 1...1000) { isEditing in
-                    if !isEditing {
-                        number = Double(Int(number))
-                    }
-                }
+                SliderOptionRow("number", value: $number, in: 1...110, onEditingEnded: {
+                    number = Double(Int(number))
+                })
             }
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
-            SwiftUI.ColorPicker("fontColor", selection: $fontColor)
-            SwiftUI.ColorPicker("backgroundColor", selection: $backgroundColor)
+            ColorPickerOptionRow("fontColor", selection: $fontColor)
+            ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
             Divider()
             Text("position")
             SegmentedIndexRow("horizontal", index: $positionXIndex, labels: horizontalPositions.map(\.description))

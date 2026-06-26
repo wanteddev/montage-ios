@@ -25,34 +25,12 @@ struct PageCounterPreview: View {
                 .size(sizes[sizeIndex])
                 .alternative(isAlternative)
         } options: {
-            HStack {
-                Spacer()
-                Button(variant: .outlined, size: .small, text: "Previous") {
-                    if selectedPage > 1 {
-                        selectedPage -= 1
-                    }
-                }
-                .disable(selectedPage <= 1)
+            PrevNextOptionRow(value: $selectedPage, in: 1...totalPages)
 
-                Button(variant: .outlined, size: .small, text: "Next") {
-                    if selectedPage < totalPages {
-                        selectedPage += 1
-                    }
-                }
-                .disable(selectedPage >= totalPages)
-                Spacer()
-            }
-
-            HStack {
-                Text("totalPages")
-                SwiftUI.Slider(
-                    value: Binding(
-                        get: { Double(totalPages) },
-                        set: { totalPages = Int($0) }
-                    ), in: 1...10, step: 1)
-                Text("\(totalPages)")
-                    .frame(width: 30)
-            }
+            SliderOptionRow("totalPages", value: Binding(
+                get: { Double(totalPages) },
+                set: { totalPages = Int($0) }
+            ), in: 1...10, step: 1)
 
             ToggleOptionRow("alternative", isOn: $isAlternative)
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

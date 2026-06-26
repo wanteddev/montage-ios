@@ -9,102 +9,53 @@ import SwiftUI
 import Montage
 
 struct LoadingPreview: View {
-    @State private var showTransparentChecker: Bool = false
-    @State var alertPresented: Bool = false
     @State var isLoading: Bool = false
-    @State var loadingType: Loading.Kind = .circular()
+    @State var typeOption: TypeOption = .circular
+    // .clear이면 기본 색(circular spinner 기본 색)을 쓴다.
     @State var color: SwiftUI.Color = .clear
-    @State var dimmer: Bool = true
-    
+    // .clear이면 dimmer를 적용하지 않는다.
+    @State var dimmerColor: SwiftUI.Color = .semantic(.materialDimmer)
+    @State var timeout: TimeInterval = 3
+
+    enum TypeOption: String, CaseIterable, PreviewSegment {
+        case circular, wanted
+    }
+
+    private var loadingType: Loading.Kind {
+        switch typeOption {
+        case .circular: return .circular(color: color == .clear ? nil : color)
+        case .wanted: return .wanted
+        }
+    }
+
     var body: some View {
-        ZStack(alignment: .bottom) {
+        PreviewLayout(mode: .floating) {
             VStack {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-                
-                Rectangle()
-                    .frame(width: 100, height: 100)
-                    .foregroundStyle(.clear)
-                
-                Button {
-                    alertPresented.toggle()
-                } label: {
-                    Text("로딩 중에는 안눌려야 함")
-                }
-                .padding(8)
-                .background {
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke()
-                        .foregroundStyle(.gray)
-                }
-                
-                Spacer()
-            }
-            .loading($isLoading, type: loadingType, dimmedColor: dimmer ? .semantic(.materialDimmer) : .clear)
-            
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-                HStack {
-                    Text("type")
-                    Radio(checked: loadingType.isCircular) { _ in
-                        loadingType = .circular(color: color == .clear ? nil : color)
-                    }
-                    .label("circular")
-                    Radio(checked: !loadingType.isCircular) { _ in
-                        loadingType = .wanted
-                    }
-                    .label("wanted")
-                }
-                if loadingType.isCircular {
-                    ColorPicker("color", selection: $color)
-                        .onChange(of: color) { newValue in
-                            loadingType = .circular(color: newValue)
-                        }
-                }
-                HStack {
-                    Text("dimmer")
-                    Switch(checked: dimmer) { newValue in
-                        dimmer = newValue
-                    }
-                }
-                Button {
+                Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+                Button(text: "Load") {
                     isLoading.toggle()
-                } label: {
-                    Text(isLoading ? "로딩 종료" : "로딩 시작")
                 }
-                .padding(8)
-                .background {
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke()
-                        .foregroundStyle(.gray)
-                }
+                .fillWidth()
+                Spacer()
             }
             .padding(.horizontal)
+            .loading($isLoading, type: loadingType, dimmedColor: dimmerColor)
+        } options: {
+            SegmentedOptionRow("type", selection: $typeOption)
+            if typeOption == .circular {
+                ColorPickerOptionRow("color", selection: $color)
+            }
+            ColorPickerOptionRow("dimmer", selection: $dimmerColor)
+            SliderOptionRow("timer", value: $timeout, in: 0...10, step: 1) {
+                "\(Int($0))초"
+            }
         }
-        .alert(isLoading ? "😅지금은 얼럿이 뜨면 안되는데..??" : "👌지금은 얼럿 뜨는게 정상!ㅋㅋ", isPresented: $alertPresented) {
-            
-        }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-    }
-}
-
-extension Loading.Kind {
-    var isCircular: Bool {
-        if case .circular = self {
-            return true
-        } else {
-            return false
+        .onChange(of: isLoading) { newValue in
+            if newValue {
+                DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
+                    isLoading.toggle()
+                }
+            }
         }
     }
 }

@@ -54,9 +54,9 @@ struct ContentBadgePreview: View {
             ToggleOptionRow("solid", isOn: $isSolid)
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
             SegmentedIndexRow("colorStyle", index: $colorStyleIndex, labels: colorStyles.map(\.description))
-            SwiftUI.ColorPicker("contentColor", selection: $foregroundColor)
+            ColorPickerOptionRow("contentColor", selection: $foregroundColor)
             if colorStyleIndex == 1 {
-                SwiftUI.ColorPicker("backgroundColor", selection: $backgroundColor)
+                ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
             }
             HStack {
                 ToggleOption("leadingIcon", isOn: $leadingIcon)

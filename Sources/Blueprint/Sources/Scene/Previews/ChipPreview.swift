@@ -66,43 +66,29 @@ struct ChipPreview: View {
                 }
             }
         } options: {
-            HStack {
-                Text("Variant")
-                SegmentedControl(
-                    selectedIndex: Binding(
-                        get: { variant == .solid ? 0 : 1 },
-                        set: { variant = $0 == 0 ? .solid : .outlined }
-                    ),
-                    labels: ["Solid", "Outlined"]
-                )
-                .size(.small)
-            }
-            HStack {
-                Text("Size")
-                SegmentedControl(
-                    selectedIndex: Binding(
-                        get: {
-                            switch size {
-                            case .xsmall: return 0
-                            case .small: return 1
-                            case .medium: return 2
-                            case .large: return 3
-                            }
-                        },
-                        set: {
-                            switch $0 {
-                            case 0: size = .xsmall
-                            case 1: size = .small
-                            case 2: size = .medium
-                            case 3: size = .large
-                            default: break
-                            }
-                        }
-                    ),
-                    labels: ["XSmall", "Small", "Medium", "Large"]
-                )
-                .size(.small)
-            }
+            SegmentedIndexRow("Variant", index: Binding(
+                get: { variant == .solid ? 0 : 1 },
+                set: { variant = $0 == 0 ? .solid : .outlined }
+            ), labels: ["Solid", "Outlined"])
+            SegmentedIndexRow("Size", index: Binding(
+                get: {
+                    switch size {
+                    case .xsmall: return 0
+                    case .small: return 1
+                    case .medium: return 2
+                    case .large: return 3
+                    }
+                },
+                set: {
+                    switch $0 {
+                    case 0: size = .xsmall
+                    case 1: size = .small
+                    case 2: size = .medium
+                    case 3: size = .large
+                    default: break
+                    }
+                }
+            ), labels: ["XSmall", "Small", "Medium", "Large"])
             TextFieldOptionRow("Text", text: $text)
             HStack {
                 ToggleOption("Disable", isOn: $disable)
@@ -112,10 +98,10 @@ struct ChipPreview: View {
                 ToggleOption("Leading Image", isOn: $leadingImage)
                 ToggleOption("Trailing Image", isOn: $trailingImage)
             }
-            SwiftUI.ColorPicker("Background Color", selection: $backgroundColor)
-            SwiftUI.ColorPicker("Font Color", selection: $fontColor)
-            SwiftUI.ColorPicker("Active Color", selection: $activeColor)
-            SwiftUI.ColorPicker("Image Color", selection: $imageColor)
+            ColorPickerOptionRow("Background Color", selection: $backgroundColor)
+            ColorPickerOptionRow("Font Color", selection: $fontColor)
+            ColorPickerOptionRow("Active Color", selection: $activeColor)
+            ColorPickerOptionRow("Image Color", selection: $imageColor)
         }
     }
 }

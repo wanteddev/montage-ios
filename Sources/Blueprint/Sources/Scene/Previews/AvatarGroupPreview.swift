@@ -60,11 +60,8 @@ struct AvatarGroupPreview: View {
             if !useLocalImage {
                 ToggleOptionRow("random invalid image url", isOn: $invalidUrl)
             }
-            HStack {
-                Text("item count \(Int(itemCount))")
-                SwiftUI.Slider(value: $itemCount, in: 1...10)
-                ToggleOption("trailing content", isOn: $trailingContent)
-            }
+            SliderOptionRow("item count", value: $itemCount, in: 1...10)
+            ToggleOptionRow("trailing content", isOn: $trailingContent)
         }
     }
 

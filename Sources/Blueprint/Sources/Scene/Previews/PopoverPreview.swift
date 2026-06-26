@@ -28,7 +28,7 @@ struct PopoverPreview: View {
     var body: some View {
         PreviewLayout {
             VStack(spacing: 24) {
-                Button(color: .primary, size: .medium, text: "Show") {
+                Button(variant: .outlined, text: "Show Preview") {
                     isPresented = true
                 }
                 .modifying {
