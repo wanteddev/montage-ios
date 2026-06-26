@@ -639,12 +639,14 @@ public struct TextArea: View {
 
         private var indicator: some View {
             ZStack {
+                // 그림자를 ZStack(합성 뷰)이 아니라 첫 pure shape(`.fill`)에 적용해 analytic으로
+                // 캐스팅한다(오프스크린 패스 제거). 동일 실루엣이라 외형은 동일하게 유지된다.
                 RoundedRectangle(cornerRadius: segmentRadius)
-                    .foregroundStyle(SwiftUI.Color.semantic(.backgroundElevated))
+                    .fill(SwiftUI.Color.semantic(.backgroundElevated))
+                    .shadow(color: .semantic(.staticBlack).opacity(0.08), radius: segmentRadius)
                 RoundedRectangle(cornerRadius: segmentRadius)
                     .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.28))
             }
-            .shadow(color: .semantic(.staticBlack).opacity(0.08), radius: segmentRadius)
             .frame(width: segmentSide, height: segmentSide)
             .offset(x: segmentSide * CGFloat(selectedIndex))
         }
