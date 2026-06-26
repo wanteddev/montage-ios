@@ -132,14 +132,13 @@ struct ActionAreaPreview: View {
     @State private var scrollStatus: Montage.ScrollView.ScrollStatus = .init()
 
     var body: some View {
-        PreviewLayout(mode: .overlay) {
+        PreviewLayout(mode: .upsideDown) {
             ScrollView(scrollStatus: $scrollStatus) {
                 LazyVStack {
                     ForEach(0..<30, id: \.self) {
                         TextField(text: .constant("Item \($0)"))
                     }
                 }
-                .padding()
             }
             .actionArea(
                 variant: currentVariant,
@@ -154,15 +153,12 @@ struct ActionAreaPreview: View {
                 extraDivider: extraDivider
             )
         } options: {
-            HStack {
-                Text("Variant: ")
-                Menu(VariantKind.allCases[variantIndex].selectableTitle) {
-                    ForEach(VariantKind.allCases.indices, id: \.self) { v in
-                        Button {
-                            variantIndex = v
-                        } label: {
-                            Text(VariantKind.allCases[v].selectableTitle)
-                        }
+            MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
+                ForEach(VariantKind.allCases.indices, id: \.self) { v in
+                    Button {
+                        variantIndex = v
+                    } label: {
+                        Text(VariantKind.allCases[v].selectableTitle)
                     }
                 }
             }
@@ -175,14 +171,7 @@ struct ActionAreaPreview: View {
                     ToggleOption("extraDivider", isOn: $extraDivider)
                 }
             }
-            HStack {
-                Text("background Transparency")
-                SegmentedControl(
-                    selectedIndex: $gradientIndex,
-                    labels: ["Scroll-synced", "Manually-controlled"]
-                )
-                .size(.small)
-            }
+            SegmentedIndexRow("background Transparency", index: $gradientIndex, labels: ["Scroll-synced", "Manually-controlled"])
             if gradientIndex == 1 {
                 ToggleOptionRow("transparency", isOn: $transparency)
             }

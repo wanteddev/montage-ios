@@ -31,10 +31,7 @@ struct DateTimePickerPreview: View {
             }
         } options: {
             SegmentedIndexRow("style", index: $datePickerStyleIndex, labels: styleLabels)
-            HStack {
-                Text("bottomSheet")
-                Switch(checked: isBottomSheetPresented) { isBottomSheetPresented = $0 }
-            }
+            ToggleOptionRow("bottomSheet", isOn: $isBottomSheetPresented)
             .bottomSheet(isPresented: $isBottomSheetPresented) {
                 HStack {
                     Spacer(minLength: 0)

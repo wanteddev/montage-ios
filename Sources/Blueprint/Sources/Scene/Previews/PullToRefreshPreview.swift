@@ -15,7 +15,7 @@ struct PullToRefreshPreview: View {
     @FocusState private var inputFieldFocused: Bool
 
     var body: some View {
-        PreviewLayout {
+        PreviewLayout(mode: .floating) {
             ScrollView(onOffsetChanged: { offset in
                 scrollYOffset = offset.y
             }) {
@@ -30,6 +30,7 @@ struct PullToRefreshPreview: View {
                         .background(.blue)
                     }
                 }
+                .padding(.horizontal)
             }
             .onRefresh {
                 do {
