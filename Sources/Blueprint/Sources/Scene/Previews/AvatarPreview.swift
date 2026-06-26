@@ -59,11 +59,8 @@ struct AvatarPreview: View {
             if !useLocalImage {
                 ToggleOptionRow("invalid image url", isOn: $invalidUrl)
             }
-            HStack {
-                SwiftUI.ColorPicker("borderColor", selection: $borderColor)
-                Text("borderWidth")
-                SwiftUI.Slider(value: $borderWidth, in: 0...5)
-            }
+            ColorPickerOptionRow("borderColor", selection: $borderColor)
+            SliderOptionRow("borderWidth", value: $borderWidth, in: 0...5)
         }
     }
 }

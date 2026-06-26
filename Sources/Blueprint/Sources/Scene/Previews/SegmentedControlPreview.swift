@@ -44,7 +44,6 @@ struct SegmentedControlPreview: View {
             )
             .variant(variants[variantIndex])
             .size(sizes[sizeIndex])
-            .padding(.vertical)
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

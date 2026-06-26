@@ -144,8 +144,7 @@ struct SelectPreview: View {
             ToggleOptionRow("custom menu", isOn: $customMenu)
             SegmentedIndexRow("menuResize", index: $menuResizeIndex, labels: bottomSheetResizes.map(\.description))
             HStack {
-                SegmentedControl(selectedIndex: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))
-                    .size(.small)
+                SegmentedIndexRow(index: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))
                 Text("items")
             }
         }
