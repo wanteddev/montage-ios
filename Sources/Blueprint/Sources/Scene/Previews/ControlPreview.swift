@@ -95,15 +95,11 @@ struct ControlPreview: View {
                 .border(guideLine ? Color.blue : Color.clear)
             }
         } options: {
-            HStack {
-                Text("state")
-                SegmentedControl(selectedIndex: $stateIndex, labels: states.map(\.description)) {
-                    state = states[$0]
-                    checked = $0 != 0
-                    selected = $0 != 0
-                    switched = $0 != 0
-                }
-                .size(.small)
+            SegmentedIndexRow("state", index: $stateIndex, labels: states.map(\.description)) {
+                state = states[$0]
+                checked = $0 != 0
+                selected = $0 != 0
+                switched = $0 != 0
             }
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizeLabels)
             HStack {

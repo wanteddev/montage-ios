@@ -31,39 +31,17 @@ struct PaginationDotsPreview: View {
                 Text("\(selectedPage) / \(totalPages)")
             }
         } options: {
-            HStack {
-                Spacer()
-                Button(variant: .outlined, size: .small, text: "Previous") {
-                    if selectedPage > 1 {
-                        selectedPage -= 1
+            PrevNextOptionRow(value: $selectedPage, in: 1...totalPages)
+
+            SliderOptionRow("totalPages", value: Binding(
+                get: { Double(totalPages) },
+                set: {
+                    totalPages = Int($0)
+                    if selectedPage > totalPages {
+                        selectedPage = totalPages
                     }
                 }
-                .disable(selectedPage <= 1)
-
-                Button(variant: .outlined, size: .small, text: "Next") {
-                    if selectedPage < totalPages {
-                        selectedPage += 1
-                    }
-                }
-                .disable(selectedPage >= totalPages)
-                Spacer()
-            }
-
-            HStack {
-                Text("totalPages")
-                SwiftUI.Slider(
-                    value: Binding(
-                        get: { Double(totalPages) },
-                        set: {
-                            totalPages = Int($0)
-                            if selectedPage > totalPages {
-                                selectedPage = totalPages
-                            }
-                        }
-                    ), in: 1...10, step: 1)
-                Text("\(totalPages)")
-                    .frame(width: 30)
-            }
+            ), in: 1...10)
 
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

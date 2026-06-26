@@ -127,37 +127,34 @@ struct TextAreaPreview: View {
                 ToggleOption("disable", isOn: $disable)
                 ToggleOption("negative", isOn: $negative)
             }
-            HStack {
-                Text("leading")
-                Menu("add") {
-                    ForEach(resources.indices, id: \.self) { index in
-                        if resources[index]?.isLeadingAllowed ?? false {
-                            Button {
-                                if let resource = resources[index] {
-                                    leadingResources.append(resource)
-                                    leadingResources = leadingResources.suffix(3)
-                                }
-                            } label: {
-                                Text(resources[index]?.description ?? "none")
-                            }
-                        }
-                    }
-                }
-                Button("reset") { leadingResources.removeAll() }
-                Spacer()
-                Text("trailing")
-                Menu("add") {
-                    ForEach(resources.indices, id: \.self) { index in
+            MenuOptionRow("leading", menuLabel: "add") {
+                ForEach(resources.indices, id: \.self) { index in
+                    if resources[index]?.isLeadingAllowed ?? false {
                         Button {
                             if let resource = resources[index] {
-                                trailingResources.append(resource)
-                                trailingResources = trailingResources.suffix(3)
+                                leadingResources.append(resource)
+                                leadingResources = leadingResources.suffix(3)
                             }
                         } label: {
                             Text(resources[index]?.description ?? "none")
                         }
                     }
                 }
+            } accessory: {
+                Button("reset") { leadingResources.removeAll() }
+            }
+            MenuOptionRow("trailing", menuLabel: "add") {
+                ForEach(resources.indices, id: \.self) { index in
+                    Button {
+                        if let resource = resources[index] {
+                            trailingResources.append(resource)
+                            trailingResources = trailingResources.suffix(3)
+                        }
+                    } label: {
+                        Text(resources[index]?.description ?? "none")
+                    }
+                }
+            } accessory: {
                 Button("reset") { trailingResources.removeAll() }
             }
             HStack {

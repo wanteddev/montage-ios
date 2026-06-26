@@ -37,73 +37,44 @@ struct FilterButtonPreview: View {
                 }
             }
         } options: {
-            HStack {
-                Text("Variant")
-                SegmentedControl(
-                    selectedIndex: Binding(
-                        get: { variant == .solid ? 0 : 1 },
-                        set: { variant = $0 == 0 ? .solid : .outlined }
-                    ),
-                    labels: ["Solid", "Outlined"]
-                )
-                .size(.small)
-            }
-            HStack {
-                Text("Size")
-                SegmentedControl(
-                    selectedIndex: Binding(
-                        get: {
-                            switch size {
-                            case .xsmall: return 0
-                            case .small: return 1
-                            case .medium: return 2
-                            case .large: return 3
-                            }
-                        },
-                        set: {
-                            switch $0 {
-                            case 0: size = .xsmall
-                            case 1: size = .small
-                            case 2: size = .medium
-                            case 3: size = .large
-                            default: break
-                            }
-                        }
-                    ),
-                    labels: ["XSmall", "Small", "Medium", "Large"]
-                )
-                .size(.small)
-            }
-            HStack {
-                Text("Text")
-                TextField(text: $text)
-                    .placeholder("텍스트를 입력하세요")
-            }
-            HStack {
-                Text("State")
-                SegmentedControl(
-                    selectedIndex: Binding(
-                        get: { state == .normal ? 0 : 1 },
-                        set: { state = $0 == 0 ? .normal : .expand }
-                    ),
-                    labels: ["Normal", "Expand"]
-                )
-                .size(.small)
-            }
+            SegmentedIndexRow("Variant", index: Binding(
+                get: { variant == .solid ? 0 : 1 },
+                set: { variant = $0 == 0 ? .solid : .outlined }
+            ), labels: ["Solid", "Outlined"])
+            SegmentedIndexRow("Size", index: Binding(
+                get: {
+                    switch size {
+                    case .xsmall: return 0
+                    case .small: return 1
+                    case .medium: return 2
+                    case .large: return 3
+                    }
+                },
+                set: {
+                    switch $0 {
+                    case 0: size = .xsmall
+                    case 1: size = .small
+                    case 2: size = .medium
+                    case 3: size = .large
+                    default: break
+                    }
+                }
+            ), labels: ["XSmall", "Small", "Medium", "Large"])
+            TextFieldOptionRow("Text", text: $text)
+            SegmentedIndexRow("State", index: Binding(
+                get: { state == .normal ? 0 : 1 },
+                set: { state = $0 == 0 ? .normal : .expand }
+            ), labels: ["Normal", "Expand"])
             HStack {
                 ToggleOption("Active", isOn: $active)
                 ToggleOption("Disable", isOn: $disable)
             }
-            HStack {
-                Text("Active Label")
-                TextField(text: Binding(
-                    get: { activeLabel ?? "" },
-                    set: { activeLabel = $0.isEmpty ? nil : $0 }
-                ))
-                .placeholder("활성화 상태일 때 표시할 텍스트")
-            }
-            SwiftUI.ColorPicker("Icon Color", selection: $iconColor)
-            SwiftUI.ColorPicker("Font Color", selection: $fontColor)
+            TextFieldOptionRow("Active Label", text: Binding(
+                get: { activeLabel ?? "" },
+                set: { activeLabel = $0.isEmpty ? nil : $0 }
+            ), placeholder: "활성화 상태일 때 표시할 텍스트")
+            ColorPickerOptionRow("Icon Color", selection: $iconColor)
+            ColorPickerOptionRow("Font Color", selection: $fontColor)
         }
     }
 }
