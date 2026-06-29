@@ -379,7 +379,10 @@ private extension TextField {
             .foregroundStyle(fieldTextColor)
             .focused($textFieldFocusState)
             .padding(.horizontal, .spacing4)
-            .accessibilityValue(accessibilityStatusDescription)
+            // 실제 입력 텍스트가 보조 기술에 그대로 노출되도록 value는 덮어쓰지 않는다.
+            // 필드의 용도는 placeholder로 라벨링하고, 상태 메시지(오류 등)는 hint로 전달한다.
+            .accessibilityLabel(placeholder.map(Text.init) ?? Text(""))
+            .accessibilityHint(accessibilityStatusDescription)
 
             trailingArea
         }
