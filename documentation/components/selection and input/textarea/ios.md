@@ -333,7 +333,7 @@ Primary 아이콘 버튼(Solid)
 </details>
 <details>
 
-<summary>``case segmentedControl(selectedIndex: Binding<Int>, icons: [Icon], onSelect: ((Int) -> Void)?)``</summary>
+<summary>``case segmentedControl(selectedIndex: Binding<Int>, icons: [Icon], accessibilityLabels: [String], onSelect: ((Int) -> Void)?)``</summary>
 
 
 세그먼트 컨트롤(아이콘 전용). Bottom Content 전용 크기로 렌더링되며 정방형 아이콘만 받습니다.
@@ -343,7 +343,11 @@ Primary 아이콘 버튼(Solid)
   | --- | --- |
   | `selectedIndex` | 선택된 세그먼트 인덱스 바인딩 |
   | `icons` | 세그먼트 아이콘 배열 |
+  | `accessibilityLabels` | 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용 |
   | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+- **Discussion**
+
+  아이콘만 노출되므로 VoiceOver 사용자를 위해 세그먼트별 `accessibilityLabels`를 함께 전달하는 것을 권장합니다. 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
 </details>
 <details>
 

@@ -143,6 +143,67 @@ struct TextFieldPreview: View {
     private func toggleRow(_ title: String, _ isOn: Binding<Bool>) -> some View {
         Text(title)
         Switch(checked: isOn.wrappedValue) { isOn.wrappedValue = $0 }
+            .accessibilityLabel(title)
+    }
+
+    /// 현재 `text`와 `usingSuggestions` 상태를 기준으로 자동완성 데이터를 갱신한다.
+    /// 텍스트 변경과 autoComplete 토글 양쪽에서 동일한 규칙으로 호출된다.
+    private func refreshAutoCompletion() {
+        guard usingSuggestions else {
+            autoCompletionDataSource = nil
+            return
+        }
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            autoCompletionDataSource = nil
+            return
+        }
+        let suggestions = candidates
+            .filter { $0.lowercased().contains(trimmed.lowercased()) }
+        autoCompletionDataSource = .init(
+            numberOfSections: 2,
+            sectionTitleAt: { section in
+                "\(section+1)번째 섹션"
+            },
+            numberOfItemsInSection: { _ in
+                suggestions.count
+            },
+            cellForItemAt: { indexPath in
+                ListCell(title: suggestions[indexPath.row]) {
+                    self.text = suggestions[indexPath.row]
+                    Task {
+                        autoCompletionDataSource = nil
+                    }
+                }
+                .highlight(trimmed)
+                .leadingContent {
+                    Group {
+                        if indexPath.section == 0 {
+                            Image.icon(.search)
+                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                        } else {
+                            Avatar("", variant: .company, size: .medium)
+                        }
+                    }
+                }
+                .if(indexPath.section == 1) {
+                    $0.caption("캡션")
+                }
+            },
+            headerView: {
+                ListCell(title: "'\(trimmed)' 사용하기") {
+                    autoCompletionDataSource = nil
+                }
+                .highlight(trimmed)
+            },
+            footerView: {
+                ListCell(title: "'\(trimmed)' 사용하기") {
+                    autoCompletionDataSource = nil
+                }
+                .highlight(trimmed)
+            },
+            maxHeight: 200
+        )
     }
 
     var body: some View {
@@ -181,62 +242,13 @@ struct TextFieldPreview: View {
                             EmptyView()
                         }
                     }
-                    .onChange(of: text) { text in
-                        guard usingSuggestions else {
-                            autoCompletionDataSource = nil
-                            return
-                        }
-                        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !trimmed.isEmpty else {
-                            autoCompletionDataSource = nil
-                            return
-                        }
-                        let suggestions = candidates
-                            .filter { $0.lowercased().contains(trimmed.lowercased()) }
-                        autoCompletionDataSource = .init(
-                            numberOfSections: 2,
-                            sectionTitleAt: { section in
-                                "\(section+1)번째 섹션"
-                            },
-                            numberOfItemsInSection: { _ in
-                                suggestions.count
-                            },
-                            cellForItemAt: { indexPath in
-                                ListCell(title: suggestions[indexPath.row]) {
-                                    self.text = suggestions[indexPath.row]
-                                    Task {
-                                        autoCompletionDataSource = nil
-                                    }
-                                }
-                                .highlight(trimmed)
-                                .leadingContent {
-                                    Group {
-                                        if indexPath.section == 0 {
-                                            Image.icon(.search)
-                                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
-                                        } else {
-                                            Avatar("", variant: .company, size: .medium)
-                                        }
-                                    }
-                                }
-                                .if(indexPath.section == 1) {
-                                    $0.caption("캡션")
-                                }
-                            },
-                            headerView: {
-                                ListCell(title: "'\(trimmed)' 사용하기") {
-                                    autoCompletionDataSource = nil
-                                }
-                                .highlight(trimmed)
-                            },
-                            footerView: {
-                                ListCell(title: "'\(trimmed)' 사용하기") {
-                                    autoCompletionDataSource = nil
-                                }
-                                .highlight(trimmed)
-                            },
-                            maxHeight: 200
-                        )
+                    .onChange(of: text) { _ in
+                        refreshAutoCompletion()
+                    }
+                    // 텍스트 변경뿐 아니라 autoComplete 토글 시점에도 현재 텍스트 기준으로 즉시 동기화한다.
+                    // (켜질 때 제안이 바로 뜨고, 꺼질 때 기존 제안이 남지 않도록)
+                    .onChange(of: usingSuggestions) { _ in
+                        refreshAutoCompletion()
                     }
                 }
                 Text("Options").bold()
