@@ -1032,7 +1032,7 @@
         {
           "name": "interactionColor(_:)",
           "signature": "func interactionColor(Color.Semantic) -> IconButton",
-          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: ).",
+          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: .labelNormal).",
           "kind": "method"
         },
         {
@@ -1252,19 +1252,19 @@
         {
           "name": "titleColor(_:)",
           "signature": "func titleColor(Color.Semantic) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "summary": "타이틀 텍스트의 color 속성을 조정합니다.",
           "kind": "method"
         },
         {
           "name": "titleVariant(_:)",
           "signature": "func titleVariant(Typography.Variant) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "summary": "타이틀 텍스트의 variant 속성을 조정합니다.",
           "kind": "method"
         },
         {
           "name": "titleWeight(_:)",
           "signature": "func titleWeight(Typography.Weight) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "summary": "타이틀 텍스트의 weight 속성을 조정합니다.",
           "kind": "method"
         },
         {
@@ -2003,7 +2003,7 @@
       "category": "selection-input",
       "kind": "struct",
       "declaration": "struct Select",
-      "summary": "컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
+      "summary": "Select 컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
       "initializers": [
         {
           "signature": "init(menuPresented:variant:items:onTapItem:)"
@@ -2303,7 +2303,7 @@
             {
               "name": "rawValue",
               "signature": "var rawValue: Double",
-              "summary": "스낵바가 표시되는 시간(초). 인 경우 를 반환합니다.",
+              "summary": "스낵바가 표시되는 시간(초). .infinity인 경우 Double.infinity를 반환합니다.",
               "kind": "property"
             }
           ]
@@ -2523,7 +2523,7 @@
             {
               "name": "isLeadingAllowed",
               "signature": "var isLeadingAllowed: Bool",
-              "summary": "leading(왼쪽)에 배치할 수 있는 리소스인지 여부. ·은 trailing 전용입니다.",
+              "summary": "leading(왼쪽)에 배치할 수 있는 리소스인지 여부. button·primaryIconButton은 trailing 전용입니다.",
               "kind": "property"
             }
           ]
@@ -2885,7 +2885,7 @@
         {
           "name": "searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)",
           "signature": "func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> TopNavigation",
-          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 일 때만 적용됩니다.",
+          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 .search일 때만 적용됩니다.",
           "kind": "method"
         },
         {
