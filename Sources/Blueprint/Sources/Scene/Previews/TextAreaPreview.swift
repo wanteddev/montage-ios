@@ -67,7 +67,8 @@ struct TextAreaPreview: View {
             ),
             .segmentedControl(
                 selectedIndex: $segmentIndex,
-                icons: [.send, .chevronDown]
+                icons: [.send, .chevronDown],
+                accessibilityLabels: ["전송", "더 보기"]
             ),
             .slot {
                 Image(systemName: "star.fill")
