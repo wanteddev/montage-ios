@@ -155,15 +155,19 @@ async function tryFetch(url) {
   if (globalThis.fetch) {
     try {
       const response = await fetch(url);
-      if (response.ok) {
-        return await response.text();
+      // HTTP 상태로 판정한다. 404/5xx 등 비-2xx 응답은 본문(레이트리밋 안내·에러 페이지 등)을
+      // 라이선스 텍스트로 오인하지 않도록 즉시 null을 반환한다.
+      if (!response.ok) {
+        return null;
       }
+      return await response.text();
     } catch {
-      // swallow error and fall back to curl
+      // fetch가 네트워크 레벨에서 실패한 경우에만 curl로 폴백한다.
     }
   }
-  const result = spawnSync("curl", ["-Lks", url], { encoding: "utf8" });
-  if (result.status === 0) {
+  // curl도 -f로 HTTP 오류(>=400)를 비0 종료로 처리해, 에러 페이지 본문이 콘텐츠로 새지 않게 한다.
+  const result = spawnSync("curl", ["-fkLsS", url], { encoding: "utf8" });
+  if (result.status === 0 && result.stdout) {
     return result.stdout;
   }
   return null;
