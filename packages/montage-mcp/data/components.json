@@ -1438,14 +1438,6 @@
               "summary": "기본 스타일의 내비게이션 바",
               "kind": "property"
             }
-          ],
-          "instanceProperties": [
-            {
-              "name": "description",
-              "signature": "var description: String",
-              "summary": "Inherited from .",
-              "kind": "property"
-            }
           ]
         }
       ]
@@ -1683,15 +1675,7 @@
         {
           "name": "ProgressTracker.VerticalStepContent",
           "kind": "struct",
-          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다.",
-          "instanceProperties": [
-            {
-              "name": "body",
-              "signature": "var body: some View",
-              "summary": "Inherited from .",
-              "kind": "property"
-            }
-          ]
+          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다."
         }
       ]
     },
