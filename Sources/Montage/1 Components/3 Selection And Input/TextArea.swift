@@ -122,13 +122,18 @@ public struct TextArea: View {
         )
 
         /// 세그먼트 컨트롤(아이콘 전용). Bottom Content 전용 크기로 렌더링되며 정방형 아이콘만 받습니다.
+        ///
+        /// 아이콘만 노출되므로 VoiceOver 사용자를 위해 세그먼트별 `accessibilityLabels`를 함께 전달하는 것을 권장합니다.
+        /// 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
         /// - Parameters:
         ///   - selectedIndex: 선택된 세그먼트 인덱스 바인딩
         ///   - icons: 세그먼트 아이콘 배열
+        ///   - accessibilityLabels: 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용
         ///   - onSelect: 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용
         case segmentedControl(
             selectedIndex: Binding<Int>,
             icons: [Icon],
+            accessibilityLabels: [String] = [],
             onSelect: ((Int) -> Void)? = nil
         )
 
@@ -216,7 +221,8 @@ public struct TextArea: View {
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func maxLength(_ limit: Int?) -> Self {
         var zelf = self
-        zelf.maxLength = limit
+        // 음수가 들어오면 String.prefix(_:)가 런타임 트랩을 일으키므로 진입점에서 0 이상으로 정규화한다.
+        zelf.maxLength = limit.map { max(0, $0) }
         return zelf
     }
 
@@ -573,10 +579,11 @@ public struct TextArea: View {
                 ContentBadge(variant: variant, text: title)
                     .size(size.contentBadgeSize)
                     .colorStyle(.neutral())
-            case let .segmentedControl(selectedIndex, icons, onSelect):
+            case let .segmentedControl(selectedIndex, icons, accessibilityLabels, onSelect):
                 BottomSegmentedControl(
                     selectedIndex: selectedIndex,
                     icons: icons,
+                    accessibilityLabels: accessibilityLabels,
                     size: size,
                     onSelect: onSelect
                 )
@@ -593,17 +600,20 @@ public struct TextArea: View {
     private struct BottomSegmentedControl: View {
         @Binding private var selectedIndex: Int
         private let icons: [Icon]
+        private let accessibilityLabels: [String]
         private let size: Size
         private let onSelect: ((Int) -> Void)?
 
         init(
             selectedIndex: Binding<Int>,
             icons: [Icon],
+            accessibilityLabels: [String],
             size: Size,
             onSelect: ((Int) -> Void)?
         ) {
             _selectedIndex = selectedIndex
             self.icons = icons
+            self.accessibilityLabels = accessibilityLabels
             self.size = size
             self.onSelect = onSelect
         }
@@ -655,6 +665,19 @@ public struct TextArea: View {
                     }
                     onSelect?(index)
                 }
+                // 아이콘만 노출되므로 VoiceOver에서 의미·조작 가능 여부를 알 수 있도록 라벨과 버튼/선택 trait를 부여한다.
+                .accessibilityElement()
+                .accessibilityLabel(accessibilityLabel(index))
+                .accessibilityAddTraits(.isButton)
+                .accessibilityAddTraits(index == selectedIndex ? .isSelected : [])
+        }
+
+        /// 세그먼트의 VoiceOver 라벨. 명시적 라벨이 없으면 아이콘 이름으로 대체한다.
+        private func accessibilityLabel(_ index: Int) -> String {
+            if index < accessibilityLabels.count, !accessibilityLabels[index].isEmpty {
+                return accessibilityLabels[index]
+            }
+            return icons[index].rawValue
         }
     }
 
