@@ -52,9 +52,7 @@ struct PushBadgePreview: View {
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if case .number = variants[variantIndex] {
-                SliderOptionRow("number", value: $number, in: 1...110, onEditingEnded: {
-                    number = Double(Int(number))
-                })
+                SliderOptionRow("number", value: $number, in: 1...110, step: 1)
             }
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
             ColorPickerOptionRow("fontColor", selection: $fontColor)

@@ -172,9 +172,11 @@ function extractNestedTypes(componentDir, componentName) {
       const staticMethods = extractMembers(typeJson, nestedDir, 'Type Methods');
       const staticProps = extractMembers(typeJson, nestedDir, 'Type Properties');
       const modifiers = extractMembers(typeJson, nestedDir, 'Instance Methods');
+      const instanceProps = extractMembers(typeJson, nestedDir, 'Instance Properties');
       if (staticMethods.length > 0) record.staticMethods = staticMethods;
       if (staticProps.length > 0) record.staticProperties = staticProps;
       if (modifiers.length > 0) record.modifiers = modifiers;
+      if (instanceProps.length > 0) record.instanceProperties = instanceProps;
     }
     types.push(record);
   }

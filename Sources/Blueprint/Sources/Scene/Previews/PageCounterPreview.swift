@@ -29,7 +29,12 @@ struct PageCounterPreview: View {
 
             SliderOptionRow("totalPages", value: Binding(
                 get: { Double(totalPages) },
-                set: { totalPages = Int($0) }
+                set: {
+                    totalPages = Int($0)
+                    if selectedPage > totalPages {
+                        selectedPage = totalPages
+                    }
+                }
             ), in: 1...10, step: 1)
 
             ToggleOptionRow("alternative", isOn: $isAlternative)
