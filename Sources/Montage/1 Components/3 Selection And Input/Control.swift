@@ -76,42 +76,51 @@ struct Control: View {
     // MARK: - Body
 
     @SwiftUI.State private var isPressed = false
-    private var originalToggleSize: CGSize {
-        if #available(iOS 26.0, *) {
-            .init(width: 65, height: 30)
-        } else {
-            .init(width: 51, height: 31)
-        }
+
+    private var switchThumb: some View {
+        Capsule()
+            .fill(SwiftUI.Color.semantic(.staticWhite))
+            .shadow(color: SwiftUI.Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
     }
 
     var body: some View {
         switch variant {
         case .switch:
-            Toggle(
-                "",
-                isOn: Binding(
-                    get: {
-                        !state.isUnchecked
-                    },
-                    set: {
-                        onSelect?($0 ? .checked : .unchecked)
-                    })
-            )
-            .labelsHidden()
-            .disabled(disable)
-            .tint(backgroundColor)
-            .transformEffect(
-                CGAffineTransform(
-                    scaleX: boxSize.width / originalToggleSize.width,
-                    y: boxSize.height / originalToggleSize.height
-                )
-            )
+            // 네이티브 `Toggle`과 `UISwitch`는 `tintColor`를 커스텀 색으로 바꾸는 순간 iOS 26
+            // Liquid Glass 최적화 경로를 벗어나 on/off 애니메이션 프레임 드랍이 일어나서 커스텀으로 구현했다.
+            // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
+            let thumbInset: CGFloat = 1.5
+            let thumbHeight = boxSize.height - thumbInset * 2
+            let thumbWidth = thumbHeight * 1.45
+            let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
+            ZStack {
+                Capsule()
+                    .fill(SwiftUI.Color(uiColor: .quaternaryLabel).opacity(disable ? 0.43 : 1))
+                Capsule()
+                    .fill(backgroundColor)
+            }
             .frame(width: boxSize.width, height: boxSize.height)
-            .offset(
-                CGSize(
-                    width: (originalToggleSize.width - boxSize.width) / 2 - 1,
-                    height: (originalToggleSize.height - boxSize.height) / 2
-                ))
+            .overlay {
+                switchThumb
+                    .frame(width: thumbWidth, height: thumbHeight)
+                    .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
+            }
+            .animation(.spring(response: 0.3, dampingFraction: 0.75), value: state.isUnchecked)
+            .contentShape(Capsule())
+            .onTapGesture {
+                guard disable == false else { return }
+                onSelect?(state.isUnchecked ? .checked : .unchecked)
+            }
+            .accessibilityRepresentation {
+                Toggle(
+                    "",
+                    isOn: Binding(
+                        get: { !state.isUnchecked },
+                        set: { onSelect?($0 ? .checked : .unchecked) })
+                )
+                .labelsHidden()
+                .disabled(disable)
+            }
         default:
             HStack(alignment: .top, spacing: spacing) {
                 Group {
