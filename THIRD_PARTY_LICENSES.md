@@ -19,12 +19,6 @@ This document contains the licenses for third-party software used in Montage iOS
 - Source: https://raw.githubusercontent.com/airbnb/lottie-ios/4.5.0/LICENSE
 - Obligation: Preserve NOTICE/copyright + patent termination clause
 
-### NOTICE
-
-```
-400: Invalid request
-```
-
 ### Full License Text
 
 ```
