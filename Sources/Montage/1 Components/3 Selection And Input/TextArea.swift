@@ -394,9 +394,6 @@ public struct TextArea: View {
                     .padding(.horizontal, -4.5)
                     .padding(.top, -4)
                     .padding(.bottom, -6)
-                    .onAppear {
-                        onTextChange?(text)
-                    }
 
                 if $text.wrappedValue.isEmpty, let placeholder {
                     Text(placeholder)
@@ -435,7 +432,8 @@ public struct TextArea: View {
         .onTapGesture {
             focus.wrappedValue = true
         }
-        .accessibilityValue(negative ? String(localized: "오류", bundle: .module) : "")
+        // 실제 입력 텍스트가 보조 기술에 그대로 노출되도록 value는 덮어쓰지 않고, 오류 상태는 hint로 전달한다.
+        .accessibilityHint(negative ? String(localized: "오류", bundle: .module) : "")
     }
 
     @ViewBuilder

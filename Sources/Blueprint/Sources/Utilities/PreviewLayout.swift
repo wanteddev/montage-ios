@@ -408,6 +408,21 @@ private struct DraggableCard<Content: View>: View {
             Capsule()
                 .fill(SwiftUI.Color.semantic(.lineNeutral))
                 .frame(width: 36, height: 5)
+                // 드래그는 핸들에만 건다. 카드 전체에 걸면 안쪽 Slider·TextArea 같은 드래그 기반 컨트롤이
+                // 카드 이동 제스처와 경쟁해 옵션 조작이 불안정해진다.
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
+                // coordinateSpace는 .global. 기본 .local은 드래그로 움직이는 이 카드 자신 기준이라
+                // 움직임이 좌표계에 되먹임되어 진동한다.
+                .gesture(
+                    DragGesture(coordinateSpace: .global)
+                        .updating($dragY) { value, state, transaction in
+                            state = value.translation.height
+                            transaction.animation = nil
+                        }
+                        .onEnded { value in offsetY += value.translation.height }
+                )
             content
         }
         .padding()
@@ -417,15 +432,5 @@ private struct DraggableCard<Content: View>: View {
         .shadow(color: .black.opacity(0.15), radius: 8, y: 2)
         .padding()
         .offset(y: offsetY + dragY)
-        // coordinateSpace는 .global. 기본 .local은 드래그로 움직이는 이 카드 자신 기준이라
-        // 움직임이 좌표계에 되먹임되어 진동한다.
-        .gesture(
-            DragGesture(coordinateSpace: .global)
-                .updating($dragY) { value, state, transaction in
-                    state = value.translation.height
-                    transaction.animation = nil
-                }
-                .onEnded { value in offsetY += value.translation.height }
-        )
     }
 }

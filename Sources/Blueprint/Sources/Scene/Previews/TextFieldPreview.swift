@@ -115,6 +115,66 @@ struct TextFieldPreview: View {
         "aaa2", "bbb2", "ccc2", "ddd2", "eee2", "fff2", "ggg2", "iii", "jjj"
     ]
 
+    /// 현재 `text`와 `usingSuggestions` 상태를 기준으로 자동완성 데이터를 갱신한다.
+    /// 텍스트 변경과 autoComplete 토글 양쪽에서 동일한 규칙으로 호출된다.
+    private func refreshAutoCompletion() {
+        guard usingSuggestions else {
+            autoCompletionDataSource = nil
+            return
+        }
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            autoCompletionDataSource = nil
+            return
+        }
+        let suggestions = candidates
+            .filter { $0.lowercased().contains(trimmed.lowercased()) }
+        autoCompletionDataSource = .init(
+            numberOfSections: 2,
+            sectionTitleAt: { section in
+                "\(section+1)번째 섹션"
+            },
+            numberOfItemsInSection: { _ in
+                suggestions.count
+            },
+            cellForItemAt: { indexPath in
+                ListCell(title: suggestions[indexPath.row]) {
+                    self.text = suggestions[indexPath.row]
+                    Task {
+                        autoCompletionDataSource = nil
+                    }
+                }
+                .highlight(trimmed)
+                .leadingContent {
+                    Group {
+                        if indexPath.section == 0 {
+                            Image.icon(.search)
+                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                        } else {
+                            Avatar("", variant: .company, size: .medium)
+                        }
+                    }
+                }
+                .if(indexPath.section == 1) {
+                    $0.caption("캡션")
+                }
+            },
+            headerView: {
+                ListCell(title: "'\(trimmed)' 사용하기") {
+                    autoCompletionDataSource = nil
+                }
+                .highlight(trimmed)
+            },
+            footerView: {
+                ListCell(title: "'\(trimmed)' 사용하기") {
+                    autoCompletionDataSource = nil
+                }
+                .highlight(trimmed)
+            },
+            maxHeight: 200
+        )
+    }
+
     var body: some View {
         PreviewLayout {
             Group {

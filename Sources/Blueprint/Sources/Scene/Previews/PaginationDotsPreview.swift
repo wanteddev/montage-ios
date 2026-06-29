@@ -41,7 +41,7 @@ struct PaginationDotsPreview: View {
                         selectedPage = totalPages
                     }
                 }
-            ), in: 1...10)
+            ), in: 1...10, step: 1)
 
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

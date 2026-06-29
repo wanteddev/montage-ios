@@ -133,7 +133,7 @@ struct TextAreaPreview: View {
                         Button {
                             if let resource = resources[index] {
                                 leadingResources.append(resource)
-                                leadingResources = leadingResources.suffix(3)
+                                leadingResources = Array(leadingResources.prefix(3))
                             }
                         } label: {
                             Text(resources[index]?.description ?? "none")
@@ -148,7 +148,7 @@ struct TextAreaPreview: View {
                     Button {
                         if let resource = resources[index] {
                             trailingResources.append(resource)
-                            trailingResources = trailingResources.suffix(3)
+                            trailingResources = Array(trailingResources.prefix(3))
                         }
                     } label: {
                         Text(resources[index]?.description ?? "none")
