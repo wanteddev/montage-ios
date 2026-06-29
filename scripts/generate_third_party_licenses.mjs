@@ -166,7 +166,7 @@ async function tryFetch(url) {
     }
   }
   // curl도 -f로 HTTP 오류(>=400)를 비0 종료로 처리해, 에러 페이지 본문이 콘텐츠로 새지 않게 한다.
-  const result = spawnSync("curl", ["-fkLsS", url], { encoding: "utf8" });
+  const result = spawnSync("curl", ["-fLsS", url], { encoding: "utf8" });
   if (result.status === 0 && result.stdout) {
     return result.stdout;
   }
