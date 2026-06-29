@@ -67,9 +67,29 @@ function readJson(p) {
   return JSON.parse(fs.readFileSync(p, 'utf-8'));
 }
 
+/**
+ * DocC 인라인 콘텐츠 세그먼트를 텍스트로 변환한다.
+ * `text` 외에 `codeVoice`(\`...\`)의 코드, 심볼/링크 `reference`의 제목, 강조(`emphasis`/`strong`)의
+ * 중첩 내용까지 포함해야 "스낵바가 표시되는 시간(초). `.infinity`인 경우 ..."처럼 placeholder가
+ * 빠진 깨진 문장이 생기지 않는다.
+ */
+function inlineText(seg, refs) {
+  if (typeof seg.text === 'string') return seg.text;
+  if (typeof seg.code === 'string') return seg.code;
+  if (seg.type === 'reference' && seg.identifier) {
+    const ref = refs && refs[seg.identifier];
+    return (ref && ref.title) || tail(seg.identifier);
+  }
+  if (Array.isArray(seg.inlineContent)) {
+    return seg.inlineContent.map((s) => inlineText(s, refs)).join('');
+  }
+  return '';
+}
+
 function abstractText(json) {
   if (!Array.isArray(json.abstract)) return '';
-  return json.abstract.map((seg) => seg.text ?? '').join('').trim();
+  const refs = json.references || {};
+  return json.abstract.map((seg) => inlineText(seg, refs)).join('').trim();
 }
 
 /**

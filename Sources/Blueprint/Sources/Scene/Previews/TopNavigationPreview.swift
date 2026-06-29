@@ -33,16 +33,16 @@ struct TopNavigationPreview: View {
     @Environment(\.presentationMode) var presentationMode
 
     @State private var title = "제목"
-    @State var variantIndex: Int = 0
-    @State var leading = false
-    @State var trailing: [TrailingButton] = []
-    @State var toast: Toast.Model?
-    @State var backgroundColor: SwiftUI.Color = .clear
-    @State var actionArea = false
-    @State var actionAreaSub = false
-    @State var actionAreaAlt = false
-    @State var actionAreaCaption = false
-    @State var actionAreaExtra = false
+    @State private var variantIndex: Int = 0
+    @State private var leading = false
+    @State private var trailing: [TrailingButton] = []
+    @State private var toast: Toast.Model?
+    @State private var backgroundColor: SwiftUI.Color = .clear
+    @State private var actionArea = false
+    @State private var actionAreaSub = false
+    @State private var actionAreaAlt = false
+    @State private var actionAreaCaption = false
+    @State private var actionAreaExtra = false
     
     private var currentVariant: TopNavigation.Variant {
         let cases = TopNavigation.Variant.allCases
