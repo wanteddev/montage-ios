@@ -300,9 +300,14 @@ struct MenuOptionRow<Content: View, Accessory: View>: View {
     var body: some View {
         HStack {
             Text(title)
-            Menu(menuLabel) { content }
+            // 메뉴 라벨이 가용 최대폭을 차지하도록 둔다. 선택값(menuLabel)이 폭이 다른
+            // 문자열로 바뀌어도 버튼 프레임이 그대로라 행이 reflow되지 않는다.
+            Menu {
+                content
+            } label: {
+                Text(menuLabel).frame(maxWidth: .infinity, alignment: .leading)
+            }
             accessory
-            Spacer(minLength: 0)
         }
     }
 }
