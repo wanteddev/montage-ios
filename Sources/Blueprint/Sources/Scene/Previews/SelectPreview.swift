@@ -142,6 +142,10 @@ struct SelectPreview: View {
             }
             SegmentedIndexRow("leadingContent", index: $leadingContentIndex, labels: leadingContents.map { $0?.description ?? "none" })
             ToggleOptionRow("custom menu", isOn: $customMenu)
+                // 커스텀 메뉴를 끄면 항상 살아 있는 bottomSheet가 남지 않도록 함께 닫는다.
+                .onChange(of: customMenu) { enabled in
+                    if !enabled { showSheet = false }
+                }
             SegmentedIndexRow("menuResize", index: $menuResizeIndex, labels: bottomSheetResizes.map(\.description))
             HStack {
                 SegmentedIndexRow(index: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))

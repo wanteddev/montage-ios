@@ -60,7 +60,7 @@ struct AvatarGroupPreview: View {
             if !useLocalImage {
                 ToggleOptionRow("random invalid image url", isOn: $invalidUrl)
             }
-            SliderOptionRow("item count", value: $itemCount, in: 1...10)
+            SliderOptionRow("item count", value: $itemCount, in: 1...10, step: 1)
             ToggleOptionRow("trailing content", isOn: $trailingContent)
         }
     }
