@@ -141,7 +141,7 @@ struct TextFieldPreview: View {
                 ListCell(title: suggestions[indexPath.row]) {
                     self.text = suggestions[indexPath.row]
                     Task {
-                        autoCompletionDataSource = nil
+                        self.autoCompletionDataSource = nil
                     }
                 }
                 .highlight(trimmed)

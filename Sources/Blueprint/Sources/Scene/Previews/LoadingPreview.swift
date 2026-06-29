@@ -9,13 +9,13 @@ import SwiftUI
 import Montage
 
 struct LoadingPreview: View {
-    @State var isLoading: Bool = false
-    @State var typeOption: TypeOption = .circular
+    @State private var isLoading: Bool = false
+    @State private var typeOption: TypeOption = .circular
     // .clear이면 기본 색(circular spinner 기본 색)을 쓴다.
-    @State var color: SwiftUI.Color = .clear
+    @State private var color: SwiftUI.Color = .clear
     // .clear이면 dimmer를 적용하지 않는다.
-    @State var dimmerColor: SwiftUI.Color = .semantic(.materialDimmer)
-    @State var timeout: TimeInterval = 3
+    @State private var dimmerColor: SwiftUI.Color = .semantic(.materialDimmer)
+    @State private var timeout: TimeInterval = 3
 
     enum TypeOption: String, CaseIterable, PreviewSegment {
         case circular, wanted
