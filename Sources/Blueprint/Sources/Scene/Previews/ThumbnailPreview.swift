@@ -34,7 +34,7 @@ struct ThumbnailPreview: View {
                 .border(border)
         } options: {
             MenuOptionRow("Ratio", menuLabel: selectedRatio.description) {
-                ForEach(ratios, id: \.hashValue) { ratio in
+                ForEach(ratios, id: \.self) { ratio in
                     Button(ratio.description) { selectedRatio = ratio }
                 }
             }
