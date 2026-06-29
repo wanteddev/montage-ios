@@ -72,6 +72,15 @@ function abstractText(json) {
   return json.abstract.map((seg) => seg.text ?? '').join('').trim();
 }
 
+/**
+ * 프로토콜 등에서 상속된 멤버인지 판별한다. DocC는 상속 멤버의 abstract를
+ * `[{text:"Inherited from "}, {codeVoice:"Type.member"}, {text:"."}]` 형태로 자동 생성한다.
+ */
+function isInheritedMember(json) {
+  const first = Array.isArray(json.abstract) ? json.abstract[0] : null;
+  return !!first && typeof first.text === 'string' && first.text.startsWith('Inherited from');
+}
+
 function fragmentSignature(fragments) {
   if (!Array.isArray(fragments)) return '';
   return fragments.map((f) => f.text ?? '').join('').trim();
@@ -115,6 +124,9 @@ function extractMembers(json, componentDir, sectionTitle) {
     if (!fs.existsSync(memberPath)) continue;
     let mj;
     try { mj = readJson(memberPath); } catch { continue; }
+    // 프로토콜 등에서 상속된 멤버는 현재 타입이 직접 제공하는 API가 아니므로 제외한다.
+    // DocC는 이런 멤버의 abstract를 "Inherited from `Type`." 형태로 자동 생성한다.
+    if (isInheritedMember(mj)) continue;
     const meta = mj.metadata || {};
     const sig = fragmentSignature(meta.fragments);
     if (!sig) continue;
