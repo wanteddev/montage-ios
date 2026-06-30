@@ -160,7 +160,7 @@ struct TextAreaPreview: View {
             HStack {
                 Text("maxLength")
                     .layoutPriority(1)
-                SwiftUI.Slider(value: $maxLength, in: 0...1000, step: 10)
+                SwiftUI.Slider(value: $maxLength, in: 0...200, step: 10)
                 Text(maxLength > 0 ? "\(characterCount)/\(Int(maxLength))" : "off")
             }
         }

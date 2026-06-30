@@ -168,6 +168,8 @@ public struct TextField: View {
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
+    private var maxLength: Int?
+    private var onTextChange: ((String) -> Void)?
 
     /// 텍스트 필드의 사이즈를 설정합니다.
     ///
@@ -248,7 +250,34 @@ public struct TextField: View {
         zelf.customBackgroundColor = color
         return zelf
     }
-    
+
+    /// 입력 가능한 최대 글자 수를 설정합니다.
+    ///
+    /// 입력/붙여넣기로 텍스트가 제한을 초과하면 앞에서부터 `limit` 글자만 남기고 잘립니다.
+    /// 글자 수는 문자(grapheme cluster) 단위로 계산됩니다. `nil`이면 길이를 제한하지 않습니다.
+    ///
+    /// - Parameter limit: 최대 글자 수. `nil`이면 제한 없음
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func maxLength(_ limit: Int?) -> Self {
+        var zelf = self
+        // 음수가 들어오면 String.prefix(_:)가 런타임 트랩을 일으키므로 진입점에서 0 이상으로 정규화한다.
+        zelf.maxLength = limit.map { max(0, $0) }
+        return zelf
+    }
+
+    /// 텍스트가 변경될 때마다 호출할 클로저를 설정합니다.
+    ///
+    /// 변경된 전체 텍스트를 전달하므로 글자 수 계산(`text.count`), 유효성 검사 등 다양한 후처리에
+    /// 사용할 수 있습니다. ``maxLength(_:)``으로 잘린 경우 잘린 뒤의 최종 텍스트가 전달됩니다.
+    ///
+    /// - Parameter handler: 변경된 텍스트를 전달받는 클로저
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func onTextChange(_ handler: @escaping (String) -> Void) -> Self {
+        var zelf = self
+        zelf.onTextChange = handler
+        return zelf
+    }
+
     // MARK: - Body
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
@@ -382,10 +411,29 @@ private extension TextField {
             // 필드의 용도는 placeholder로 라벨링하고, 상태 메시지(오류 등)는 hint로 전달한다.
             .accessibilityLabel(placeholder.map(Text.init) ?? Text(""))
             .accessibilityHint(accessibilityStatusDescription)
+            .onChange(of: text) { newValue in
+                // 제한 초과 시 앞에서부터 maxLength 글자만 남긴다(문자 단위). text를 다시 쓰면
+                // onChange가 잘린 값으로 재호출되므로, onTextChange는 그때 최종 값으로 한 번만 불린다.
+                if let maxLength, newValue.count > maxLength {
+                    text = String(newValue.prefix(maxLength))
+                    return
+                }
+                onTextChange?(newValue)
+            }
+            // text가 바뀌지 않아도 maxLength가 더 작아지면 기존 텍스트를 즉시 잘라낸다.
+            // 최초 등장 시에도 이미 제한을 넘는 초기 텍스트를 정리한다.
+            .onChange(of: maxLength) { _ in clampTextToMaxLength() }
+            .onAppear { clampTextToMaxLength() }
 
             trailingArea
         }
         .padding(.horizontal, .spacing4)
+    }
+
+    /// 현재 `text`가 `maxLength`를 초과하면 앞에서부터 제한 글자 수만 남긴다.
+    func clampTextToMaxLength() {
+        guard let maxLength, text.count > maxLength else { return }
+        text = String(text.prefix(maxLength))
     }
 
     var promptText: Text? {

@@ -109,6 +109,8 @@ struct TextFieldPreview: View {
     @State private var trailingContent: Content = .none
     @State private var usingSuggestions: Bool = false
     @State private var autoCompletionDataSource: Montage.TextField.AutoCompletionDataSource? = nil
+    @State private var maxLength: CGFloat = 0
+    @State private var characterCount: Int = 0
     
     let candidates: [String] = [
         "aaa1", "bbb1", "ccc1", "ddd1", "eee1", "fff1", "ggg1", "hhh1", "iii1", "jjj1", "kkk1",
@@ -200,6 +202,8 @@ struct TextFieldPreview: View {
                             EmptyView()
                         }
                     }
+                    .maxLength(maxLength > 0 ? Int(maxLength) : nil)
+                    .onTextChange { characterCount = $0.count }
                     .onChange(of: text) { _ in
                         refreshAutoCompletion()
                     }
@@ -221,6 +225,12 @@ struct TextFieldPreview: View {
                 ToggleOption("trailingButton", isOn: $trailingButton)
             }
             SegmentedOptionRow("trailingContent", selection: $trailingContent)
+            HStack {
+                Text("maxLength")
+                    .layoutPriority(1)
+                SwiftUI.Slider(value: $maxLength, in: 0...100, step: 10)
+                Text(maxLength > 0 ? "\(characterCount)/\(Int(maxLength))" : "off")
+            }
             HStack {
                 ToggleOption("autoComplete", isOn: $usingSuggestions)
             }
