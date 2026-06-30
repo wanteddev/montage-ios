@@ -187,6 +187,42 @@ TextField(text: $inputText)
 </details>
 <details>
 
+<summary>``func maxLength(Int?) -> TextField``</summary>
+
+
+입력 가능한 최대 글자 수를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `limit` | 최대 글자 수. `nil`이면 제한 없음 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  입력/붙여넣기로 텍스트가 제한을 초과하면 앞에서부터 `limit` 글자만 남기고 잘립니다. 글자 수는 문자(grapheme cluster) 단위로 계산됩니다. `nil`이면 길이를 제한하지 않습니다.
+</details>
+<details>
+
+<summary>``func onTextChange((String) -> Void) -> TextField``</summary>
+
+
+텍스트가 변경될 때마다 호출할 클로저를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `handler` | 변경된 텍스트를 전달받는 클로저 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  변경된 전체 텍스트를 전달하므로 글자 수 계산(`text.count`), 유효성 검사 등 다양한 후처리에 사용할 수 있습니다. [maxLength(_:)](/documentation/montage/textfield/maxlength(_:).md)으로 잘린 경우 잘린 뒤의 최종 텍스트가 전달됩니다.
+</details>
+<details>
+
 <summary>``func placeholder(String?) -> TextField``</summary>
 
 
