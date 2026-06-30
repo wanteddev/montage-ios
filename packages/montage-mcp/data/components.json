@@ -948,6 +948,121 @@
       "nestedTypes": []
     },
     {
+      "slug": "formcontrol",
+      "name": "FormControl",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct FormControl",
+      "summary": "입력 컨트롤(TextField 등)에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(input:)"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "characterCount(_:)",
+          "signature": "func characterCount(String?) -> FormControl",
+          "summary": "글자 수 카운트 텍스트를 직접 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "characterCount(current:limit:)",
+          "signature": "func characterCount(current: Int, limit: Int) -> FormControl",
+          "summary": "현재 글자 수와 최대 글자 수로 글자 수 카운트를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "label(_:required:)",
+          "signature": "func label(String?, required: Bool) -> FormControl",
+          "summary": "라벨 텍스트와 필수 표시 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelPlacement(_:)",
+          "signature": "func labelPlacement(LabelPlacement) -> FormControl",
+          "summary": "라벨 위치를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "message(_:)",
+          "signature": "func message(String?) -> FormControl",
+          "summary": "도움말/에러 메시지를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> FormControl",
+          "summary": "크기를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "status(_:)",
+          "signature": "func status(Status) -> FormControl",
+          "summary": "상태를 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "FormControl.Context",
+          "kind": "struct",
+          "summary": "입력 슬롯 클로저에 전달되는 FormControl의 현재 상태 컨텍스트입니다.",
+          "instanceProperties": [
+            {
+              "name": "size",
+              "signature": "let size: Size",
+              "summary": "현재 FormControl 크기.",
+              "kind": "property"
+            },
+            {
+              "name": "status",
+              "signature": "let status: Status",
+              "summary": "현재 FormControl 상태.",
+              "kind": "property"
+            }
+          ]
+        },
+        {
+          "name": "FormControl.LabelPlacement",
+          "kind": "enum",
+          "summary": "라벨의 위치입니다.",
+          "cases": [
+            "start",
+            "top"
+          ]
+        },
+        {
+          "name": "FormControl.Size",
+          "kind": "enum",
+          "summary": "FormControl의 크기입니다. 라벨 타이포그래피를 결정합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
+        },
+        {
+          "name": "FormControl.Status",
+          "kind": "enum",
+          "summary": "FormControl의 상태입니다. 메시지의 색을 결정합니다.",
+          "cases": [
+            "negative",
+            "normal",
+            "positive"
+          ],
+          "instanceProperties": [
+            {
+              "name": "textFieldStatus",
+              "signature": "var textFieldStatus: TextField.Status",
+              "summary": "같은 의미의 TextField.Status 값으로 변환합니다.",
+              "kind": "property"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "slug": "framedstyle",
       "name": "FramedStyle",
       "category": "selection-input",
@@ -2640,6 +2755,18 @@
           "name": "icon(_:)",
           "signature": "func icon(Icon?) -> TextField",
           "summary": "텍스트 필드 왼쪽에 표시할 아이콘을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "maxLength(_:)",
+          "signature": "func maxLength(Int?) -> TextField",
+          "summary": "입력 가능한 최대 글자 수를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onTextChange(_:)",
+          "signature": "func onTextChange((String) -> Void) -> TextField",
+          "summary": "텍스트가 변경될 때마다 호출할 클로저를 설정합니다.",
           "kind": "method"
         },
         {
