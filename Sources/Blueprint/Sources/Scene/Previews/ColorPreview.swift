@@ -10,7 +10,7 @@ import Montage
 
 /// SwiftUI로 구현된 모든 색상(Atomic + Semantic)을 보여주는 ColorPreview
 struct ColorPreview: View {
-    @State private var selectedColorType: ColorType = .atomic
+    @State private var selectedColorTypeIndex: Int = 0
     @State private var showTransparentChecker = false
     
     enum ColorType: String, CaseIterable {
@@ -24,12 +24,7 @@ struct ColorPreview: View {
             // 상단 컨트롤
             HStack {
                 // 색상 타입 선택
-                Picker("Color Type", selection: $selectedColorType) {
-                    ForEach(ColorType.allCases, id: \.self) { type in
-                        Text(type.rawValue).tag(type)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
+                SegmentedIndexRow(index: $selectedColorTypeIndex, labels: ColorType.allCases.map(\.rawValue))
                 
                 Spacer()
                 
@@ -38,8 +33,8 @@ struct ColorPreview: View {
                     showTransparentChecker.toggle()
                 }) {
                     Image(systemName: "checkerboard.rectangle")
-                        .foregroundColor(.semantic(.primaryNormal))
                 }
+                .disabled(ColorType.allCases[selectedColorTypeIndex] == .atomic)
             }
             .padding()
             .background(Color.semantic(.backgroundNormal))
@@ -47,7 +42,7 @@ struct ColorPreview: View {
             // 색상 목록
             ScrollView {
                 LazyVStack(spacing: 24) {
-                    switch selectedColorType {
+                    switch ColorType.allCases[selectedColorTypeIndex] {
                     case .atomic:
                         AtomicColorSections(showTransparentChecker: showTransparentChecker)
                     case .semantic:
@@ -171,9 +166,9 @@ struct ColorChipView: View {
             // 색상 칩
             RoundedRectangle(cornerRadius: 8)
                 .fill(colorItem.color)
-                .frame(height: 60)
                 .modifier(TransparentCheckerPatternModifier(isPresented: colorItem.showTransparentChecker))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
+                .frame(height: 60)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.semantic(.lineNormal), lineWidth: 1)

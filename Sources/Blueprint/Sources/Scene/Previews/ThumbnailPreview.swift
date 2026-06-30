@@ -9,12 +9,11 @@ import SwiftUI
 import Montage
 
 struct ThumbnailPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var selectedRatio: Thumbnail.Ratio = .r1x1
     @State private var radius: Bool = true
     @State private var border: Bool = true
     @State private var invalidURL: Bool = false
-    
+
     var imageURL: String {
         if invalidURL {
             "https://invalid-url"
@@ -23,92 +22,38 @@ struct ThumbnailPreview: View {
         }
     }
     
-    var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                
-                HStack(spacing: 0) {
-                    Spacer(minLength: 0)
-                    
-                    Thumbnail(urlString: imageURL, ratio: selectedRatio)
-                        .radius(radius)
-                        .border(border)
-                    
-                    Spacer(minLength: 0)
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("Options").bold()
-                    
-                    HStack {
-                        Text("Ratio")
-                        Picker("Ratio", selection: $selectedRatio) {
-                            // 가로가 긴 비율
-                            Group {
-                                Text("21:9").tag(Thumbnail.Ratio.r21x9)
-                                Text("2:1").tag(Thumbnail.Ratio.r2x1)
-                                Text("16:9").tag(Thumbnail.Ratio.r16x9)
-                                Text("1.618:1").tag(Thumbnail.Ratio.r1_618x1)
-                                Text("16:10").tag(Thumbnail.Ratio.r16x10)
-                                Text("3:2").tag(Thumbnail.Ratio.r3x2)
-                                Text("4:3").tag(Thumbnail.Ratio.r4x3)
-                                Text("5:4").tag(Thumbnail.Ratio.r5x4)
-                            }
+    let ratios: [Thumbnail.Ratio] = [
+        .r21x9, .r2x1, .r16x9, .r1_618x1, .r16x10, .r3x2, .r4x3, .r5x4, .r1x1,
+        .r4x5, .r3x4, .r2x3, .r10x16, .r1x1_618, .r9x16, .r1x2, .r9x21
+    ]
 
-                            // 정사각형
-                            Text("1:1").tag(Thumbnail.Ratio.r1x1)
-                            
-                            
-                            // 세로가 긴 비율
-                            Group {
-                                Text("4:5").tag(Thumbnail.Ratio.r4x5)
-                                Text("3:4").tag(Thumbnail.Ratio.r3x4)
-                                Text("2:3").tag(Thumbnail.Ratio.r2x3)
-                                Text("10:16").tag(Thumbnail.Ratio.r10x16)
-                                Text("1:1.618").tag(Thumbnail.Ratio.r1x1_618)
-                                Text("9:16").tag(Thumbnail.Ratio.r9x16)
-                                Text("1:2").tag(Thumbnail.Ratio.r1x2)
-                                Text("9:21").tag(Thumbnail.Ratio.r9x21)
-                            }
-                        }
-                        .pickerStyle(.wheel)
-                        .frame(height: 130)
-                    }
-                    
-                    HStack {
-                        Text("Radius")
-                        Switch(checked: radius) { radius = $0 }
-                    }
-                    
-                    HStack {
-                        Text("Border")
-                        Switch(checked: border) { border = $0 }
-                    }
-                    
-                    HStack {
-                        Text("Invalid URL (테스트용)")
-                        Switch(checked: invalidURL) { invalidURL = $0 }
-                    }
+    var body: some View {
+        PreviewLayout {
+            Thumbnail(urlString: imageURL, ratio: selectedRatio)
+                .radius(radius)
+                .border(border)
+        } options: {
+            MenuOptionRow("Ratio", menuLabel: selectedRatio.description) {
+                ForEach(ratios, id: \.self) { ratio in
+                    Button(ratio.description) { selectedRatio = ratio }
                 }
             }
-            .padding(.horizontal)
+            ToggleOptionRow("Radius", isOn: $radius)
+            ToggleOptionRow("Border", isOn: $border)
+            ToggleOptionRow("Invalid URL (테스트용)", isOn: $invalidURL)
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+    }
+}
+
+extension Thumbnail.Ratio {
+    var description: String {
+        String("\(self)")
+            .replacingOccurrences(of: "r", with: "")
+            .replacingOccurrences(of: "_", with: ".")
+            .replacingOccurrences(of: "x", with: ":")
     }
 }
 
 #Preview {
     ThumbnailPreview()
 }
-

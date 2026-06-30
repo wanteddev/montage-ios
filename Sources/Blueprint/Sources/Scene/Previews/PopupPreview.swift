@@ -23,89 +23,49 @@ struct PopupPreview: View {
     @State private var extra = false
     @State private var extraDivider = true
 
-    @State private var refreshTask: Task<(), Never>?
-
     var body: some View {
-        SwiftUI.ScrollView {
-            SwiftUI.Button("PUSH") {
-                show = true
+        PreviewLayout {
+            Button(variant: .outlined, text: "Show Preview") {
+                show.toggle()
             }
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-                HStack {
-                    SegmentedControl(
-                        selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
-                    )
-                    .size(.small)
-                    Text("items")
-                }
+        } options: {
+            HStack {
+                SegmentedIndexRow(index: $itemCountsIndex, labels: itemCounts.map { "\($0)" })
+                Text("items")
+            }
 
-                HStack {
-                    Text("resize")
-                    Picker("resize", selection: $resize) {
-                        Text("hug").tag(Popup.Resize.hug)
-                        Text("fixed(300)").tag(Popup.Resize.fixed(300))
-                    }
-                    .pickerStyle(.segmented)
+            SegmentedIndexRow("resize", index: Binding(
+                get: { if case .hug = resize { 0 } else { 1 } },
+                set: { resize = $0 == 0 ? .hug : .fixed(300) }
+            ), labels: ["hug", "fixed(300)"])
+            HStack {
+                ToggleOption("navigation", isOn: $navigation)
+                if navigation {
+                    SegmentedIndexRow(index: $navVariantIndex, labels: navigationVariants.map(\.description))
                 }
-                HStack {
-                    Text("navigation")
-                    Switch(checked: navigation) { navigation = $0 }
-                    if navigation {
-                        SegmentedControl(
-                            selectedIndex: $navVariantIndex,
-                            labels: navigationVariants.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                }
+            }
 
-                HStack {
-                    VStack(alignment: .trailing) {
+            HStack {
+                VStack(alignment: .trailing) {
+                    HStack {
+                        ToggleOption("actionArea", isOn: $actionArea)
+                        Spacer()
+                    }
+                    if actionArea {
+                        SegmentedIndexRow(index: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
                         HStack {
-                            Text("actionArea")
-                            Switch(checked: actionArea) { actionArea = $0 }
-                            Spacer()
-                        }
-                        if actionArea {
-                            SegmentedControl(
-                                selectedIndex: $buttonsIndex,
-                                labels: ActionAreaButtons.allCases.map(\.rawValue)
-                            )
-                            .size(.small)
-                            HStack {
-                                Text("caption")
-                                Switch(checked: caption) { caption = $0 }
-                                Text("extra")
-                                Switch(checked: extra) { extra = $0 }
-                                if extra {
-                                    Text("divider")
-                                    Switch(checked: extraDivider) { extraDivider = $0 }
-                                }
+                            ToggleOption("caption", isOn: $caption)
+                            ToggleOption("extra", isOn: $extra)
+                            if extra {
+                                ToggleOption("divider", isOn: $extraDivider)
                             }
                         }
                     }
                 }
             }
-            .padding(.horizontal)
-            .onChange(
-                of:
-                    "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)"
-            ) { _ in
-                refreshTask?.cancel()
-                refreshTask = Task {
-                    do {
-                        try await Task.sleep(for: .seconds(1))
-                        try Task.checkCancellation()
-                        show = true
-                    } catch {
-                    }
-                }
-            }
-            .onAppear {
-                show = true
-            }
-            .font(.caption)
+        }
+        .onAppear {
+            show = true
         }
         .popup(
             isPresented: $show,

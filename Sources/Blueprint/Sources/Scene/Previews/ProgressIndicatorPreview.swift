@@ -9,35 +9,14 @@ import SwiftUI
 import Montage
 
 struct ProgressIndicatorPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var percentage: CGFloat = 0
-    
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                ProgressIndicator(percentage: $percentage)
-                Text("Options").bold()
-                HStack {
-                    Text("Percentage")
-                    Text(String(format: "%.1f%%", percentage * 100))
-                        .frame(width: 60, alignment: .trailing)
-                    Slider(value: $percentage, in: 0...1)
-                }
-            }
-            .padding()
+        PreviewLayout {
+            ProgressIndicator(percentage: $percentage)
+        } options: {
+            SliderOptionRow("Percentage", value: $percentage, in: 0...1, step: 0.01, format: { String(format: "%.1f%%", Double($0) * 100) })
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

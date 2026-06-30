@@ -4,6 +4,7 @@
 # Allow lowercase `packages/` (npm monorepo) — `/Packages` above matches case-insensitively on macOS
 !/packages
 !/packages/**
+packages/.DS_Store
 /*.xcodeproj
 xcuserdata/
 Derived

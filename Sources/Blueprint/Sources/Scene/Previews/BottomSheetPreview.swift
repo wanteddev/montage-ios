@@ -11,7 +11,6 @@ import SwiftUI
 struct BottomSheetPreview: View {
     @State private var show = true
 
-    @State private var showTransparentChecker: Bool = false
     @State private var isFullModal = false
     @State private var resizeIndex = 0
     @State private var itemCountsIndex: Int = 0
@@ -31,14 +30,52 @@ struct BottomSheetPreview: View {
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
-        SwiftUI.Button("PUSH") {
-            show.toggle()
+        PreviewLayout {
+            Button(variant: .outlined, text: "Show Preview") {
+                show.toggle()
+            }
+        } options: {
+            VStack(alignment: .leading) {
+                ToggleOptionRow("fullModal", isOn: $isFullModal)
+                SegmentedIndexRow("resize", index: $resizeIndex, labels: bottomSheetResizes.map(\.description))
+                SegmentedIndexRow("item count", index : $itemCountsIndex, labels: itemCounts.map(\.description))
+                switch bottomSheetResizes[resizeIndex] {
+                case .fixedRatio:
+                    SliderOptionRow("ratio", value: $fixedRatio, in: 0...1, step: 0.01, format: { String(format: "%.2f", Double($0)) })
+                case .fixedHeight:
+                    SliderOptionRow("height", value: $fixedHeight, in: 0...1000)
+                default:
+                    EmptyView()
+                }
+                ToggleOptionRow("handle", isOn: $handle)
+                HStack {
+                    ToggleOption("navigation", isOn: $navigation)
+                    if navigation {
+                        SegmentedIndexRow(index: $navVariantIndex, labels: navigationVariants.map(\.description))
+                    }
+                }
+                
+                HStack {
+                    VStack(alignment: .trailing) {
+                        HStack {
+                            ToggleOption("actionArea", isOn: $actionArea)
+                            if actionArea {
+                                SegmentedIndexRow(index: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
+                            }
+                        }
+                        if actionArea {
+                            HStack {
+                                ToggleOption("caption", isOn: $caption)
+                                ToggleOption("extra", isOn: $extra)
+                                if extra {
+                                    ToggleOption("divider", isOn: $extraDivider)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        .transparentChecking(
-            isPresented: showTransparentChecker,
-            checkerSize: 202,
-            checkerColor: .blue
-        )
         .bottomSheet(
             isPresented: $show,
             isFullScreenCover: isFullModal,
@@ -48,7 +85,6 @@ struct BottomSheetPreview: View {
             navigation: navigation ? { navigationContent } : nil,
             { modalContent }
         )
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
         .onChange(of: isFullModal) { _ in
             show = false
             Task { @MainActor in
@@ -90,112 +126,24 @@ struct BottomSheetPreview: View {
     }
 
     private var modalContent: some View {
-        VStack {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Options").bold()
-                    Spacer()
-                    Button(action: {
-                        show = false
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                    }
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                HStack {
-                    Text("fullModal")
-                    Switch(checked: isFullModal) { isFullModal = $0 }
-                }
-                HStack {
-                    Text("resize")
-                    SegmentedControl(
-                        selectedIndex: $resizeIndex, labels: bottomSheetResizes.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    SegmentedControl(
-                        selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
-                    )
-                    .size(.small)
-                    Text("items")
-                }
-                HStack {
-                    switch bottomSheetResizes[resizeIndex] {
-                    case .fixedRatio:
-                        Text("ratio")
-                        Slider(value: $fixedRatio, in: 0...1)
-                    case .fixedHeight:
-                        Text("height")
-                        Slider(value: $fixedHeight, in: 0...1000)
-                    default:
-                        Spacer(minLength: 0)
-                    }
-                }
-                HStack {
-                    Text("handle")
-                    Switch(checked: handle) { handle = $0 }
-                    Spacer()
-                }
-                HStack {
-                    Text("navigation")
-                    Switch(checked: navigation) { navigation = $0 }
-                    if navigation {
-                        SegmentedControl(
-                            selectedIndex: $navVariantIndex,
-                            labels: navigationVariants.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                }
-
-                HStack {
-                    VStack(alignment: .trailing) {
-                        HStack {
-                            Text("actionArea")
-                            Switch(checked: actionArea) { actionArea = $0 }
-                            if actionArea {
-                                SegmentedControl(
-                                    selectedIndex: $buttonsIndex,
-                                    labels: ActionAreaButtons.allCases.map(\.rawValue)
-                                )
-                                .size(.small)
-                            }
-                        }
-                        if actionArea {
-                            HStack {
-                                Text("caption")
-                                Switch(checked: caption) { caption = $0 }
-                                Text("extra")
-                                Switch(checked: extra) { extra = $0 }
-                                if extra {
-                                    Text("divider")
-                                    Switch(checked: extraDivider) { extraDivider = $0 }
-                                }
-                            }
-                        }
-                    }
-                }
+        VStack(spacing: 0) {
+            ZStack(alignment: .trailing) {
+                Text("Color List").font(.largeTitle)
+                    .frame(maxWidth: .infinity)
             }
-            .font(.caption)
-
-            VStack(spacing: 0) {
-                ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
-                    ZStack {
-                        let color = Color.Semantic.allCases[index % Color.Semantic.allCases.count]
-                        Rectangle()
-                            .foregroundStyle(SwiftUI.Color.semantic(color))
-                        Text(color.rawValue)
-                            .shadow(color: .white, radius: 1)
-                    }
-                    .frame(height: 48)
+            ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
+                ZStack {
+                    let color = Color.Semantic.allCases[index % Color.Semantic.allCases.count]
+                    Rectangle()
+                        .foregroundStyle(SwiftUI.Color.semantic(color))
+                    Text(color.rawValue)
+                        .padding(2)
+                        .background {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.semantic(.staticWhite).opacity(0.5))
+                        }
                 }
+                .frame(height: 48)
             }
             .border(.black)
         }

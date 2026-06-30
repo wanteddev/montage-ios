@@ -9,7 +9,6 @@ import SwiftUI
 import Montage
 
 struct IconButtonPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
     @State private var customSize: CGFloat = 36
     @State private var sizeIndex = 1 // 기본값 .medium
@@ -98,171 +97,91 @@ struct IconButtonPreview: View {
     }
     
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
+        PreviewLayout {
+            IconButton(
+                variant: currentVariant,
+                icon: .apps,
+                handler: {
+                    print("tapped")
                 }
-                
-                HStack {
-                    Spacer(minLength: 0)
-                    
-                    IconButton(
-                        variant: currentVariant,
-                        icon: .apps,
-                        handler: {
-                            print("tapped")
-                        }
-                    )
-                    .disable(disable)
-                    .disableInteraction(disableInteraction)
-                    .showPushBadge(isNormal ? showPushBadge : false)
-                    .padding(isOutlinedOrSolid ? padding : 0)
-                    .modifying {
-                        if let interactionColor {
-                            $0.interactionColor(interactionColor)
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if iconColor != nil {
-                            $0.iconColor(iconColor!)
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if isOutlinedOrSolid && backgroundColor != nil {
-                            $0.backgroundColor(backgroundColor!)
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if isOutlined && borderColor != nil {
-                            $0.borderColor(borderColor!)
-                        } else {
-                            $0
-                        }
-                    }
-                    
-                    Spacer(minLength: 0)
-                }
-                
-                Text("Options").bold()
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
-                    )
-                    .size(.small)
-                }
-                if variantIndex == 0 {
-                    HStack {
-                        Text("size")
-                        SegmentedControl(
-                            selectedIndex: $normalSizeIndex,
-                            labels: normalSizeLabels
-                        )
-                        .size(.small)
-                    }
-                    if isCustomSize {
-                        HStack {
-                            Text("custom")
-                            SwiftUI.Slider(value: $customSize, in: 24...64, step: 1)
-                            Text("\(Int(customSize))")
-                        }
-                    }
-                } else if variantIndex == 1 {
-                    HStack {
-                        Text("size")
-                        SwiftUI.Slider(value: $customSize, in: 24...64, step: 1)
-                        Text("\(Int(customSize))")
-                    }
+            )
+            .disable(disable)
+            .disableInteraction(disableInteraction)
+            .showPushBadge(isNormal ? showPushBadge : false)
+            .padding(isOutlinedOrSolid ? padding : 0)
+            .modifying {
+                if let interactionColor {
+                    $0.interactionColor(interactionColor)
                 } else {
-                    HStack {
-                        Text("size")
-                        SegmentedControl(
-                            selectedIndex: $sizeIndex,
-                            labels: sizeLabels
-                        )
-                        .size(.small)
-                    }
-                    if isCustomSize {
-                        HStack {
-                            Text("custom")
-                            SwiftUI.Slider(value: $customSize, in: 24...64, step: 1)
-                            Text("\(Int(customSize))")
-                        }
-                    }
-                }
-                if isBackground {
-                    HStack {
-                        Text("alternative")
-                        Switch(checked: alternative) { alternative = $0 }
-                    }
-                }
-                HStack {
-                    Text("disable")
-                    Switch(checked: disable) { disable = $0 }
-                }
-                HStack {
-                    Text("disableInteraction")
-                    Switch(checked: disableInteraction) { disableInteraction = $0 }
-                }
-                if isNormal {
-                    HStack {
-                        Text("pushBadge")
-                        Switch(checked: showPushBadge) { showPushBadge = $0 }
-                    }
-                }
-                if isOutlinedOrSolid {
-                    HStack {
-                        Text("padding")
-                        Slider(value: $padding, in: 0...24, step: 1)
-                    }
-                    HStack {
-                        Text("backgroundColor")
-                        Switch(checked: backgroundColor != nil) {
-                            backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil
-                        }
-                    }
-                }
-                if isOutlined {
-                    HStack {
-                        Text("borderColor")
-                        Switch(checked: borderColor != nil) {
-                            borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil
-                        }
-                    }
-                }
-                HStack {
-                    Text("iconColor")
-                    Switch(checked: iconColor != nil) {
-                        iconColor = $0 ? .semantic(.accentForegroundCyan) : nil
-                    }
-                }
-                HStack {
-                    Text("interactionColor")
-                    Switch(checked: interactionColor != nil) {
-                        interactionColor = $0 ? .accentForegroundRed : nil
-                    }
+                    $0
                 }
             }
-            .font(.caption)
-            .padding()
+            .modifying {
+                if iconColor != nil {
+                    $0.iconColor(iconColor!)
+                } else {
+                    $0
+                }
+            }
+            .modifying {
+                if isOutlinedOrSolid && backgroundColor != nil {
+                    $0.backgroundColor(backgroundColor!)
+                } else {
+                    $0
+                }
+            }
+            .modifying {
+                if isOutlined && borderColor != nil {
+                    $0.borderColor(borderColor!)
+                } else {
+                    $0
+                }
+            }
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            if variantIndex == 0 {
+                SegmentedIndexRow("size", index: $normalSizeIndex, labels: normalSizeLabels)
+                if isCustomSize {
+                    SliderOptionRow("custom", value: $customSize, in: 24...64)
+                }
+            } else if variantIndex == 1 {
+                SliderOptionRow("size", value: $customSize, in: 24...64)
+            } else {
+                SegmentedIndexRow("size", index: $sizeIndex, labels: sizeLabels)
+                if isCustomSize {
+                    SliderOptionRow("custom", value: $customSize, in: 24...64)
+                }
+            }
+            if isBackground {
+                ToggleOptionRow("alternative", isOn: $alternative)
+            }
+            ToggleOptionRow("disable", isOn: $disable)
+            ToggleOptionRow("disableInteraction", isOn: $disableInteraction)
+            if isNormal {
+                ToggleOptionRow("pushBadge", isOn: $showPushBadge)
+            }
+            if isOutlinedOrSolid {
+                SliderOptionRow("padding", value: $padding, in: 0...24)
+                ToggleOptionRow("backgroundColor", isOn: Binding(
+                    get: { backgroundColor != nil },
+                    set: { backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil }
+                ))
+            }
+            if isOutlined {
+                ToggleOptionRow("borderColor", isOn: Binding(
+                    get: { borderColor != nil },
+                    set: { borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil }
+                ))
+            }
+            ToggleOptionRow("iconColor", isOn: Binding(
+                get: { iconColor != nil },
+                set: { iconColor = $0 ? .semantic(.accentForegroundCyan) : nil }
+            ))
+            ToggleOptionRow("interactionColor", isOn: Binding(
+                get: { interactionColor != nil },
+                set: { interactionColor = $0 ? .accentForegroundRed : nil }
+            ))
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

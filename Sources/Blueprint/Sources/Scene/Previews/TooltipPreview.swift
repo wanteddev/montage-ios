@@ -30,7 +30,6 @@ struct TooltipPreview: View {
     let verticalAlignments: [VerticalAlignment] = [.top, .center, .bottom]
     let horizontalAlignments: [HorizontalAlignment] = [.leading, .center, .trailing]
     
-    @State private var showTransparentChecker: Bool = false
     @State private var show: Bool = false
     @State private var alertPresented: Bool = false
     
@@ -44,46 +43,39 @@ struct TooltipPreview: View {
     @State private var adjustZIndex: Bool = true
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
+        PreviewLayout {
+            VStack {
+                zIndexTestingButton
                 HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                .padding(.horizontal)
-                HStack {
-                    Spacer()
-                    VStack {
-                        zIndexTestingButton
-                        HStack {
-                            zIndexTestingButton
-                            iconButton
-                                .if(adjustZIndex) {
-                                    $0.zIndex(1)
-                                }
-                            zIndexTestingButton
-                        }
+                    zIndexTestingButton
+                    iconButton
                         .if(adjustZIndex) {
                             $0.zIndex(1)
                         }
-                        zIndexTestingButton
-                    }
-                    Spacer()
+                    zIndexTestingButton
                 }
                 .if(adjustZIndex) {
                     $0.zIndex(1)
                 }
-                optionSheet
-                    .padding(.horizontal)
+                zIndexTestingButton
+            }
+            .if(adjustZIndex) {
+                $0.zIndex(1)
+            }
+        } options: {
+            SegmentedIndexRow("Mode", index: $modeIndex, labels: ["click", "always"])
+            SegmentedIndexRow("Position", index: $positionIndex, labels: positions.map(\.description))
+            SegmentedIndexRow("Arrow Position", index: $arrowPositionIndex, labels: positions[positionIndex].arrowPositions)
+            SegmentedIndexRow("Size", index: $sizeIndex, labels: sizes.map(\.description))
+            Divider()
+            Text("Options for testing").bold()
+            HStack {
+                ToggleOption("MultiLine Text", isOn: $showMultilineText)
+                if modeIndex == 1 {
+                    ToggleOption("Adjust zIndex", isOn: $adjustZIndex)
+                }
             }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 200, checkerColor: .red)
     }
     
     var iconButton: some View {
@@ -119,59 +111,6 @@ struct TooltipPreview: View {
         }
     }
     
-    var optionSheet: some View {
-        VStack(alignment: .leading) {
-            options
-        }
-    }
-    
-    var options: some View {
-        VStack(alignment: .leading) {
-            Text("Options").bold()
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Mode")
-                    SegmentedControl(selectedIndex: $modeIndex, labels: ["click", "always"])
-                        .size(.small)
-                }
-                HStack {
-                    Text("Position")
-                    SegmentedControl(
-                        selectedIndex: $positionIndex,
-                        labels: positions.map(\.description)
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Arrow Position")
-                    SegmentedControl(
-                        selectedIndex: $arrowPositionIndex,
-                        labels: positions[positionIndex].arrowPositions
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Size")
-                    SegmentedControl(selectedIndex: $sizeIndex, labels: sizes.map(\.description))
-                        .size(.small)
-                }
-                
-                Divider()
-                Text("Options for testing").bold()
-                HStack {
-                    Text("MultiLine Text")
-                    Switch(checked: showMultilineText) { showMultilineText = $0 }
-                    if modeIndex == 1 {
-                        Text("Adjust zIndex")
-                        Switch(checked: adjustZIndex) { adjustZIndex = $0 }
-                    }
-                }
-            }
-        }
-    }
 }
 
 enum HAlign: String, CaseIterable {
