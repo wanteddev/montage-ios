@@ -65,6 +65,7 @@
 		4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */; };
 		4DF7C54A2CE340F0002B241B /* ButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */; };
 		4DF7C5522CE340F0002B241B /* TextFieldPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */; };
+		FC22BBBB2CE340F0002B241B /* FormControlPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */; };
 		4DF7C55D2CE340F0002B241B /* TooltipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */; };
 		4DF7C5602CE340F0002B241B /* SelectPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A62CE340F0002B241B /* SelectPreview.swift */; };
 		4DFA5A532E572464003BED22 /* ShadowPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFA5A522E572464003BED22 /* ShadowPreview.swift */; };
@@ -127,6 +128,7 @@
 		4DF7C4A82CE340F0002B241B /* SnackBarPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackBarPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AA2CE340F0002B241B /* TextAreaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAreaPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPreview.swift; sourceTree = "<group>"; };
+		FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormControlPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TooltipPreview.swift; sourceTree = "<group>"; };
 		4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationPreview.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				4DF7C4AA2CE340F0002B241B /* TextAreaPreview.swift */,
 				4D88E6662E9CC90A00EA0E67 /* TextButtonPreview.swift */,
 				4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */,
+				FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */,
 				4D0D251D2DB763F600608CE5 /* ThumbnailPreview.swift */,
 				4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */,
 				4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */,
@@ -404,6 +407,7 @@
 				4D9083502DAF9D7000DF22A4 /* CaseDescribable.swift in Sources */,
 				4D5597562D1E802E00CFBCA5 /* PageCounterPreview.swift in Sources */,
 				4DF7C5522CE340F0002B241B /* TextFieldPreview.swift in Sources */,
+				FC22BBBB2CE340F0002B241B /* FormControlPreview.swift in Sources */,
 				4D96F7CA2E9FA8C300DFECE8 /* ColorPreview.swift in Sources */,
 				4D5D8C9E2D2E5D9E00108C92 /* CategoryPreview.swift in Sources */,
 				4D8100542EA76329004CAD92 /* ComponentSection.swift in Sources */,
