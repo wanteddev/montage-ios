@@ -89,13 +89,13 @@ struct Control: View {
             // 네이티브 `Toggle`과 `UISwitch`는 `tintColor`를 커스텀 색으로 바꾸는 순간 iOS 26
             // Liquid Glass 최적화 경로를 벗어나 on/off 애니메이션 프레임 드랍이 일어나서 커스텀으로 구현했다.
             // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
-            let thumbInset: CGFloat = 1.5
+            let thumbInset: CGFloat = 2
             let thumbHeight = boxSize.height - thumbInset * 2
-            let thumbWidth = thumbHeight * 1.45
+            let thumbWidth = thumbHeight * 1.4
             let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
             ZStack {
                 Capsule()
-                    .fill(SwiftUI.Color(uiColor: .quaternaryLabel).opacity(disable ? 0.43 : 1))
+                    .fill(SwiftUI.Color.semantic(.lineNormal).opacity(disable ? 0.43 : 1))
                 Capsule()
                     .fill(backgroundColor)
             }
