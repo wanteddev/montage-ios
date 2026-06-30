@@ -297,7 +297,6 @@ private extension TextField {
                 .strokeBorder(fieldStrokeColor, lineWidth: 1)
         }
         .background { focusRing }
-        .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         .contentShape(RoundedRectangle(cornerRadius: size.cornerRadius))
         .onTapGesture {
             textFieldFocusState = true
@@ -426,20 +425,24 @@ private extension TextField {
 
     @ViewBuilder
     var fieldBackground: some View {
-        Group {
-            if disable {
-                SwiftUI.Color.semantic(.fillAlternative)
-            } else if colorScheme == .light {
-                SwiftUI.Color.atomic(.common100)
-                    .opacity(0.8)
-                    .background(.ultraThinMaterial)
-            } else {
-                SwiftUI.Color.atomic(.coolNeutral17)
-                    .opacity(0.61)
-                    .background(.ultraThinMaterial)
-            }
+        // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거하고,
+        // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(별도 오프스크린 패스 없음).
+        // 외형(둥근 모서리·머티리얼·옅은 그림자)은 동일하게 유지된다.
+        let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
+        if disable {
+            surface
+                .fill(SwiftUI.Color.semantic(.fillAlternative))
+                .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
+        } else {
+            surface
+                .fill(
+                    colorScheme == .light
+                        ? SwiftUI.Color.atomic(.common100).opacity(0.8)
+                        : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                )
+                .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
+                .background(.ultraThinMaterial, in: surface)
         }
-        .clipShape(RoundedRectangle(cornerRadius: size.cornerRadius))
     }
 
     @ViewBuilder

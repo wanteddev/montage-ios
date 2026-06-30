@@ -137,16 +137,18 @@ public struct SegmentedControl: View {
                         Group {
                             switch variant {
                             case .solid:
+                                // 그림자를 ZStack(합성 뷰)이 아니라 첫 pure shape(`.fill`)에 적용해
+                                // analytic으로 캐스팅한다(오프스크린 패스 제거). 동일 실루엣이라 외형 동일.
                                 ZStack {
                                     RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                        .foregroundStyle(SwiftUI.Color.semantic(.backgroundElevated))
+                                        .fill(SwiftUI.Color.semantic(.backgroundElevated))
+                                        .shadow(
+                                            color: .semantic(.staticBlack).opacity(0.08),
+                                            radius: buttonCornerRadius
+                                        )
                                     RoundedRectangle(cornerRadius: buttonCornerRadius)
                                         .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.28))
                                 }
-                                .shadow(
-                                    color: .semantic(.staticBlack).opacity(0.08),
-                                    radius: buttonCornerRadius
-                                )
                                 .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
                                 .if(index == 0)
                             case .outlined:

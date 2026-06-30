@@ -49,7 +49,12 @@ public enum FramedStyle {
                         .opacity(disabled ? 0.43 : 1)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: borderRadius))
-                .shadow(shadowLevel)
+                // 그림자를 배경 Shape의 fill에 analytic(`ShapeStyle.shadow`)으로 적용해 오프스크린
+                // 패스를 피한다. 프레임 실루엣(둥근 사각형) 기준으로 그림자가 그려진다.
+                .background(
+                    RoundedRectangle(cornerRadius: borderRadius)
+                        .fill(SwiftUI.Color.semantic(.backgroundNormal).shadow(shadowLevel))
+                )
                 .disabled(disabled)
         }
 
