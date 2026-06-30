@@ -77,10 +77,26 @@ struct Control: View {
 
     @SwiftUI.State private var isPressed = false
 
-    private var switchThumb: some View {
-        Capsule()
-            .fill(SwiftUI.Color.semantic(.staticWhite))
-            .shadow(color: SwiftUI.Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
+    @ViewBuilder private var switchThumb: some View {
+        let thumbInset: CGFloat = 2
+        let thumbHeight = boxSize.height - thumbInset * 2
+        if #available(iOS 26, *) {
+            let thumbWidth = thumbHeight * 1.4
+            let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
+            Capsule()
+                .fill(SwiftUI.Color.semantic(.staticWhite))
+                .shadow(color: SwiftUI.Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
+                .frame(width: thumbWidth, height: thumbHeight)
+                .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
+        } else {
+            let thumbWidth = thumbHeight
+            let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
+            Circle()
+                .fill(SwiftUI.Color.semantic(.staticWhite))
+                .shadow(color: SwiftUI.Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
+                .frame(width: thumbWidth, height: thumbHeight)
+                .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
+        }
     }
 
     var body: some View {
@@ -89,10 +105,6 @@ struct Control: View {
             // 네이티브 `Toggle`과 `UISwitch`는 `tintColor`를 커스텀 색으로 바꾸는 순간 iOS 26
             // Liquid Glass 최적화 경로를 벗어나 on/off 애니메이션 프레임 드랍이 일어나서 커스텀으로 구현했다.
             // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
-            let thumbInset: CGFloat = 2
-            let thumbHeight = boxSize.height - thumbInset * 2
-            let thumbWidth = thumbHeight * 1.4
-            let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
             ZStack {
                 Capsule()
                     .fill(SwiftUI.Color.semantic(.lineNormal).opacity(disable ? 0.43 : 1))
@@ -102,8 +114,6 @@ struct Control: View {
             .frame(width: boxSize.width, height: boxSize.height)
             .overlay {
                 switchThumb
-                    .frame(width: thumbWidth, height: thumbHeight)
-                    .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
             }
             .animation(.spring(response: 0.3, dampingFraction: 0.75), value: state.isUnchecked)
             .contentShape(Capsule())
