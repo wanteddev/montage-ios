@@ -118,6 +118,9 @@ struct TextAreaPreview: View {
                         .maxLength(maxLength > 0 ? Int(maxLength) : nil)
                         .onTextChange { characterCount = $0.count }
                         .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
+                        // resize 변경 시 뷰 아이덴티티를 리셋해 높이를 재계산한다.
+                        // text를 건드리면 placeholder 조건(text.isEmpty)이 깨지므로 .id로 처리한다.
+                        .id(resize)
                 }
                 Text("Options").bold()
                 HStack {
@@ -200,13 +203,6 @@ struct TextAreaPreview: View {
         }
         .onChange(of: focusState) {
             focus = $0
-        }
-        .onChange(of: resize) { _ in
-            // resize 값이 바뀔 때 프리뷰에서 높이가 제대로 갱신되지 않아서 꼼수로 처리
-            text = " "
-            Task {
-                text = ""
-            }
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
