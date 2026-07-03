@@ -961,15 +961,9 @@
       ],
       "modifiers": [
         {
-          "name": "characterCount(_:)",
-          "signature": "func characterCount(String?) -> FormControl",
-          "summary": "글자 수 카운트 텍스트를 직접 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "characterCount(current:limit:)",
-          "signature": "func characterCount(current: Int, limit: Int) -> FormControl",
-          "summary": "현재 글자 수와 최대 글자 수로 글자 수 카운트를 설정합니다.",
+          "name": "accessory(_:)",
+          "signature": "func accessory<Accessory>(() -> Accessory) -> FormControl",
+          "summary": "Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.",
           "kind": "method"
         },
         {
@@ -1029,7 +1023,7 @@
           "kind": "enum",
           "summary": "라벨의 위치입니다.",
           "cases": [
-            "start",
+            "leading",
             "top"
           ]
         },
