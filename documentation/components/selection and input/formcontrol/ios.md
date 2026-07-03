@@ -9,7 +9,7 @@ description: 입력 컨트롤( 등)에 제목(Label)과 도움말(Message)을 �
 
 ## Overview
 
-FormControl은 단독으로 값을 입력받지 않습니다. 내부 슬롯(`input`)에 실제 입력 컴포넌트를 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·글자 수 카운트를 일관된 레이아웃과 색·타이포그래피로 감싸 줍니다.
+FormControl은 단독으로 값을 입력받지 않습니다. 내부 슬롯(`input`)에 실제 입력 컴포넌트를 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·액세서리(글자 수 카운트 등)를 일관된 레이아웃으로 감싸 줍니다.
 
 슬롯 클로저는 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)(크기·상태)를 전달받습니다. 입력 컴포넌트가 이를 반영하면 FormControl의 `.size(_:)`·`.status(_:)` 한 번 설정만으로 내부 입력까지 일관되게 그려집니다.
 
@@ -31,13 +31,16 @@ FormControl { context in
 .status(.negative)
 .label("이메일", required: true)
 .message("올바른 이메일 형식이 아닙니다.")
-.characterCount(current: email.count, limit: 100)
+.accessory {
+    Text("\(email.count)/100")
+        .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+}
 
 // 라벨을 입력 왼쪽에 배치
 FormControl { _ in
     TextField(text: $name)
 }
-.labelPlacement(.start)
+.labelPlacement(.leading)
 .label("이름")
 ```
 
@@ -102,34 +105,21 @@ FormControl { _ in
 
 <details>
 
-<summary>``func characterCount(String?) -> FormControl``</summary>
+<summary>``func accessory<Accessory>(() -> Accessory) -> FormControl``</summary>
 
 
-글자 수 카운트 텍스트를 직접 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `text` | 표시할 글자 수 텍스트(예: `"12/100"`). `nil`이면 표시하지 않습니다. |
-- **Return Value**
-
-  수정된 FormControl 컴포넌트
-</details>
-<details>
-
-<summary>``func characterCount(current: Int, limit: Int) -> FormControl``</summary>
-
-
-현재 글자 수와 최대 글자 수로 글자 수 카운트를 설정합니다.
+Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `current` | 현재 입력된 글자 수 |
-  | `limit` | 최대 글자 수 |
+  | `accessory` | 표시할 액세서리 뷰 빌더 |
 - **Return Value**
 
   수정된 FormControl 컴포넌트
+- **Discussion**
+
+  글자 수 카운트, 타이머 등 입력 아래에 붙는 보조 요소를 자유롭게 구성할 수 있습니다. 스타일(타이포그래피·색)은 호출부에서 지정합니다.
 </details>
 <details>
 
@@ -225,10 +215,10 @@ FormControl { _ in
 
 <details>
 
-<summary>``case start``</summary>
+<summary>``case leading``</summary>
 
 
-라벨을 입력 왼쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
+라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
 </details>
 <details>
 
