@@ -115,7 +115,7 @@ struct Control: View {
             .overlay {
                 switchThumb
             }
-            .animation(.spring(response: 0.3, dampingFraction: 0.75), value: state.isUnchecked)
+            .animation(.easeOut(duration: 0.2), value: state.isUnchecked)
             .contentShape(Capsule())
             .onTapGesture {
                 guard disable == false else { return }
