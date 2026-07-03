@@ -17,7 +17,7 @@ struct FormControlPreview: View {
     @State private var label: String = "이메일"
     @State private var required: Bool = true
     @State private var message: String = "회사 이메일을 입력해 주세요."
-    @State private var showCharacterCount: Bool = false
+    @State private var showAccessory: Bool = false
     @State private var guideLine: Bool = false
     @State private var inputIndex = 0
     @State private var selectItems: [Select.Item] = [
@@ -28,7 +28,7 @@ struct FormControlPreview: View {
 
     private let sizeLabels = ["large", "medium"]
     private let statusLabels = ["normal", "positive", "negative"]
-    private let placementLabels = ["top", "start"]
+    private let placementLabels = ["top", "leading"]
     private let inputLabels = ["TextField", "TextArea", "Select"]
 
     private let limit = 100
@@ -46,7 +46,7 @@ struct FormControlPreview: View {
     }
 
     private var placement: FormControl.LabelPlacement {
-        placementIndex == 0 ? .top : .start
+        placementIndex == 0 ? .top : .leading
     }
 
     var body: some View {
@@ -58,7 +58,7 @@ struct FormControlPreview: View {
                     TextArea(text: $text)
                         .size(context.size == .medium ? .medium : .large)
                         .negative(context.status == .negative)
-                        .maxLength(showCharacterCount ? limit : nil)
+                        .maxLength(showAccessory ? limit : nil)
                         .placeholder("내용을 입력하세요")
                 case 2:
                     Select(variant: .single(), items: $selectItems)
@@ -68,7 +68,7 @@ struct FormControlPreview: View {
                     Montage.TextField(text: $text)
                         .size(context.size == .medium ? .medium : .large)
                         .status(context.status.textFieldStatus)
-                        .maxLength(showCharacterCount ? limit : nil)
+                        .maxLength(showAccessory ? limit : nil)
                         .placeholder("이메일을 입력하세요")
                 }
             }
@@ -77,8 +77,11 @@ struct FormControlPreview: View {
             .labelPlacement(placement)
             .label(label, required: required)
             .message(message)
-            .if(showCharacterCount) {
-                $0.characterCount(current: text.count, limit: limit)
+            .if(showAccessory) {
+                $0.accessory {
+                    Text("\(text.count)/\(limit)")
+                        .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+                }
             }
             .border(guideLine ? Color.blue : Color.clear)
         } options: {
@@ -89,7 +92,7 @@ struct FormControlPreview: View {
             SegmentedIndexRow("placement", index: $placementIndex, labels: placementLabels)
             ToggleOptionRow("required", isOn: $required)
             TextFieldOptionRow("message", text: $message)
-            ToggleOptionRow("characterCount", isOn: $showCharacterCount)
+            ToggleOptionRow("accessory", isOn: $showAccessory)
         } accessory: {
             SwiftUI.Button(action: { guideLine.toggle() }) {
                 Image(systemName: "rectangle.dashed")
