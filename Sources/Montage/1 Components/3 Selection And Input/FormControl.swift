@@ -11,8 +11,8 @@ import SwiftUI
 /// 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.
 ///
 /// FormControl은 단독으로 값을 입력받지 않습니다. 내부 슬롯(`input`)에 실제 입력 컴포넌트를
-/// 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·글자 수 카운트를 일관된
-/// 레이아웃과 색·타이포그래피로 감싸 줍니다.
+/// 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·액세서리(글자 수 카운트 등)를
+/// 일관된 레이아웃으로 감싸 줍니다.
 ///
 /// 슬롯 클로저는 현재 ``Context``(크기·상태)를 전달받습니다. 입력 컴포넌트가 이를 반영하면
 /// FormControl의 `.size(_:)`·`.status(_:)` 한 번 설정만으로 내부 입력까지 일관되게 그려집니다.
@@ -35,13 +35,16 @@ import SwiftUI
 /// .status(.negative)
 /// .label("이메일", required: true)
 /// .message("올바른 이메일 형식이 아닙니다.")
-/// .characterCount(current: email.count, limit: 100)
+/// .accessory {
+///     Text("\(email.count)/100")
+///         .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+/// }
 ///
 /// // 라벨을 입력 왼쪽에 배치
 /// FormControl { _ in
 ///     TextField(text: $name)
 /// }
-/// .labelPlacement(.start)
+/// .labelPlacement(.leading)
 /// .label("이름")
 /// ```
 public struct FormControl: View {
@@ -67,8 +70,8 @@ public struct FormControl: View {
     public enum LabelPlacement {
         /// 라벨을 입력 위에 세로로 배치합니다. (기본)
         case top
-        /// 라벨을 입력 왼쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
-        case start
+        /// 라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
+        case leading
     }
 
     private let input: (Context) -> AnyView
@@ -90,7 +93,7 @@ public struct FormControl: View {
     private var labelText: String?
     private var isRequired: Bool = false
     private var messageText: String?
-    private var characterCountText: String?
+    private var accessoryView: AnyView?
 
     /// 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
     ///
@@ -150,22 +153,16 @@ public struct FormControl: View {
         modifying { $0.messageText = text }
     }
 
-    /// 글자 수 카운트 텍스트를 직접 설정합니다.
+    /// Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
     ///
-    /// - Parameter text: 표시할 글자 수 텍스트(예: `"12/100"`). `nil`이면 표시하지 않습니다.
-    /// - Returns: 수정된 FormControl 컴포넌트
-    public func characterCount(_ text: String?) -> Self {
-        modifying { $0.characterCountText = text }
-    }
-
-    /// 현재 글자 수와 최대 글자 수로 글자 수 카운트를 설정합니다.
+    /// 글자 수 카운트, 타이머 등 입력 아래에 붙는 보조 요소를 자유롭게 구성할 수 있습니다.
+    /// 스타일(타이포그래피·색)은 호출부에서 지정합니다.
     ///
-    /// - Parameters:
-    ///   - current: 현재 입력된 글자 수
-    ///   - limit: 최대 글자 수
+    /// - Parameter accessory: 표시할 액세서리 뷰 빌더
     /// - Returns: 수정된 FormControl 컴포넌트
-    public func characterCount(current: Int, limit: Int) -> Self {
-        characterCount("\(current)/\(limit)")
+    public func accessory<Accessory: View>(@ViewBuilder _ accessory: () -> Accessory) -> Self {
+        let view = AnyView(accessory())
+        return modifying { $0.accessoryView = view }
     }
 
     /// 뷰의 내용과 동작을 정의합니다.
@@ -173,8 +170,8 @@ public struct FormControl: View {
         switch labelPlacement {
         case .top:
             topLayout
-        case .start:
-            startLayout
+        case .leading:
+            leadingLayout
         }
     }
 }
@@ -195,12 +192,12 @@ private extension FormControl {
         }
     }
 
-    /// 라벨을 입력 왼쪽에 두고, 라벨을 입력 슬롯의 세로 중앙에 맞추는 가로 레이아웃.
+    /// 라벨을 입력의 leading 쪽에 두고, 라벨을 입력 슬롯의 세로 중앙에 맞추는 가로 레이아웃.
     @ViewBuilder
-    var startLayout: some View {
+    var leadingLayout: some View {
         if hasLabel {
             // 라벨의 세로 중앙을 입력 슬롯의 세로 중앙에 정렬한다(Footer는 입력 아래로 흐름).
-            // Figma 기준: Start 배치에서 라벨은 입력 필드 높이의 중앙에 위치한다.
+            // Figma 기준: Leading 배치에서 라벨은 입력 필드 높이의 중앙에 위치한다.
             HStack(alignment: .inputCenter, spacing: .spacing16) {
                 labelRow
                     .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
@@ -237,21 +234,25 @@ private extension FormControl {
         .accessibilityHidden(true)
     }
 
-    /// 메시지(좌) + 글자 수 카운트(우) Footer 행.
+    /// 메시지(좌) + 액세서리(우) Footer 행.
+    ///
+    /// 폭이 부족하면 액세서리가 자기 크기를 유지하고(레이아웃 우선), 메시지가 줄바꿈된다.
+    /// 두 요소 사이 최소 간격은 `spacing8`이다.
     var footer: some View {
         HStack(alignment: .top, spacing: .spacing8) {
             if let messageText, !messageText.isEmpty {
                 Text(messageText)
                     .typography(variant: .caption1, weight: .regular, semantic: messageColor)
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     // 메시지는 입력 슬롯의 accessibilityHint로 연결되므로 중복 낭독을 막는다.
                     .accessibilityHidden(true)
             } else {
                 Spacer(minLength: 0)
             }
-            if let characterCountText, !characterCountText.isEmpty {
-                Text(characterCountText)
-                    .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+            if let accessoryView {
+                accessoryView
+                    .layoutPriority(1)
             }
         }
         .padding(.horizontal, .spacing2)
@@ -276,7 +277,7 @@ private extension FormControl {
     }
 
     var hasFooter: Bool {
-        messageText?.isEmpty == false || characterCountText?.isEmpty == false
+        messageText?.isEmpty == false || accessoryView != nil
     }
 
     /// 크기에 따른 라벨 타이포그래피 변형.
@@ -316,7 +317,7 @@ private extension FormControl {
 // MARK: - Alignment
 
 private extension VerticalAlignment {
-    /// Start 배치에서 라벨을 입력 슬롯의 세로 중앙에 맞추기 위한 정렬.
+    /// Leading 배치에서 라벨을 입력 슬롯의 세로 중앙에 맞추기 위한 정렬.
     ///
     /// 라벨과 입력 슬롯이 각각 이 가이드를 자신의 세로 중앙으로 보고하면, Footer가 입력 아래로
     /// 흐르더라도 라벨은 입력 슬롯(Footer 제외)의 중앙에 정렬된다.
