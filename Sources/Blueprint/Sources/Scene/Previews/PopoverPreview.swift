@@ -9,7 +9,6 @@ import Montage
 import SwiftUI
 
 struct PopoverPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var isPresented: Bool = false
     @State private var variantIndex: Int = 0
     @State private var text: String = "메시지에 마침표를 찍어요."
@@ -27,63 +26,58 @@ struct PopoverPreview: View {
     ]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
+        PreviewLayout {
+            VStack(spacing: 24) {
+                Button(variant: .outlined, text: "Show Preview") {
+                    isPresented = true
                 }
-                .padding(.horizontal)
-
-                VStack(spacing: 24) {
-                    Button(color: .primary, size: .medium, text: "Show") {
-                        isPresented = true
-                    }
-                    .modifying {
-                        if variantIndex == 0 {
-                            $0.popoverNormal(
-                                isPresented: $isPresented,
-                                heading: heading,
-                                text: text,
-                                closeButton: closeButton,
-                                action: action
-                                    ? (
-                                        title: "행동",
-                                        action: {
-                                            print("Action tapped")
-                                            isPresented = false
-                                        }
-                                    ) : nil,
-                                subAction: subAction
-                                    ? (
-                                        title: "보조행동",
-                                        action: {
-                                            print("SubAction tapped")
-                                            isPresented = false
-                                        }
-                                    ) : nil
-                            )
-                        } else {
-                            $0.popoverCustom(isPresented: $isPresented) {
-                                popoverContent
-                            }
+                .modifying {
+                    if variantIndex == 0 {
+                        $0.popoverNormal(
+                            isPresented: $isPresented,
+                            heading: heading,
+                            text: text,
+                            closeButton: closeButton,
+                            action: action
+                                ? (
+                                    title: "행동",
+                                    action: {
+                                        print("Action tapped")
+                                        isPresented = false
+                                    }
+                                ) : nil,
+                            subAction: subAction
+                                ? (
+                                    title: "보조행동",
+                                    action: {
+                                        print("SubAction tapped")
+                                        isPresented = false
+                                    }
+                                ) : nil
+                        )
+                    } else {
+                        $0.popoverCustom(isPresented: $isPresented) {
+                            popoverContent
                         }
                     }
                 }
-                .frame(maxWidth: .infinity)
-
-                optionSheet
-                    .padding(.horizontal)
+            }
+            .frame(maxWidth: .infinity)
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants)
+            if variantIndex == 0 {
+                TextFieldOptionRow("heading", text: $heading)
+                HStack {
+                    Text("text")
+                    TextArea(text: $text)
+                }
+                HStack {
+                    ToggleOption("closeButton", isOn: $closeButton)
+                    ToggleOption("action", isOn: $action)
+                    ToggleOption("subAction", isOn: $subAction)
+                }
             }
         }
-        .transparentChecking(
-            isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
     }
 
     @ViewBuilder
@@ -124,44 +118,6 @@ struct PopoverPreview: View {
         .frame(width: 300)
         .background(.ultraThinMaterial)
         .background(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
-    }
-
-    private var optionSheet: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Options").bold()
-
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants
-                    )
-                    .size(.small)
-                }
-                if variantIndex == 0 {
-                    HStack {
-                        Text("heading")
-                        TextField(text: $heading)
-                    }
-
-                    HStack {
-                        Text("text")
-                        TextArea(text: $text)
-                    }
-
-                    HStack {
-                        Text("closeButton")
-                        Switch(checked: closeButton) { closeButton = $0 }
-                        Text("action")
-                        Switch(checked: action) { action = $0 }
-                        Text("subAction")
-                        Switch(checked: subAction) { subAction = $0 }
-                    }
-                }
-            }
-            .font(.caption)
-        }
     }
 }
 

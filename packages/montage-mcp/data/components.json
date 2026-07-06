@@ -1032,7 +1032,7 @@
         {
           "name": "interactionColor(_:)",
           "signature": "func interactionColor(Color.Semantic) -> IconButton",
-          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: ).",
+          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: .labelNormal).",
           "kind": "method"
         },
         {
@@ -1252,19 +1252,19 @@
         {
           "name": "titleColor(_:)",
           "signature": "func titleColor(Color.Semantic) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "summary": "타이틀 텍스트의 color 속성을 조정합니다.",
           "kind": "method"
         },
         {
           "name": "titleVariant(_:)",
           "signature": "func titleVariant(Typography.Variant) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "summary": "타이틀 텍스트의 variant 속성을 조정합니다.",
           "kind": "method"
         },
         {
           "name": "titleWeight(_:)",
           "signature": "func titleWeight(Typography.Weight) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "summary": "타이틀 텍스트의 weight 속성을 조정합니다.",
           "kind": "method"
         },
         {
@@ -1851,7 +1851,39 @@
         {
           "name": "ScrollView.ScrollStatus",
           "kind": "struct",
-          "summary": "스크롤 뷰의 상태를 추적하는 구조체입니다."
+          "summary": "스크롤 뷰의 상태를 추적하는 구조체입니다.",
+          "instanceProperties": [
+            {
+              "name": "axis",
+              "signature": "var axis: Axis",
+              "summary": "스크롤 방향",
+              "kind": "property"
+            },
+            {
+              "name": "contentOffset",
+              "signature": "var contentOffset: CGPoint",
+              "summary": "콘텐츠 오프셋",
+              "kind": "property"
+            },
+            {
+              "name": "contentSize",
+              "signature": "var contentSize: CGSize",
+              "summary": "콘텐츠 크기",
+              "kind": "property"
+            },
+            {
+              "name": "scrollViewSize",
+              "signature": "var scrollViewSize: CGSize",
+              "summary": "스크롤 뷰 크기",
+              "kind": "property"
+            },
+            {
+              "name": "scrolledToMax",
+              "signature": "var scrolledToMax: Bool",
+              "summary": "스크롤이 최대 위치에 도달했는지 여부입니다.",
+              "kind": "property"
+            }
+          ]
         }
       ]
     },
@@ -1971,7 +2003,7 @@
       "category": "selection-input",
       "kind": "struct",
       "declaration": "struct Select",
-      "summary": "컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
+      "summary": "Select 컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
       "initializers": [
         {
           "signature": "init(menuPresented:variant:items:onTapItem:)"
@@ -2038,7 +2070,33 @@
         {
           "name": "Select.Item",
           "kind": "struct",
-          "summary": "Select 컴포넌트에서 사용하는 항목 모델을 정의합니다."
+          "summary": "Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.",
+          "instanceProperties": [
+            {
+              "name": "icon",
+              "signature": "let icon: Icon?",
+              "summary": "아이템의 아이콘",
+              "kind": "property"
+            },
+            {
+              "name": "isNegative",
+              "signature": "let isNegative: Bool",
+              "summary": "부정적 상태 여부 (오류나 경고를 나타낼 때 사용)",
+              "kind": "property"
+            },
+            {
+              "name": "isSelected",
+              "signature": "var isSelected: Bool",
+              "summary": "항목의 선택 여부",
+              "kind": "property"
+            },
+            {
+              "name": "text",
+              "signature": "let text: String",
+              "summary": "아이템 텍스트 내용",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "Select.LeadingContent",
@@ -2125,6 +2183,26 @@
               "summary": "원형 스켈레톤",
               "kind": "property"
             }
+          ],
+          "instanceProperties": [
+            {
+              "name": "isCircle",
+              "signature": "var isCircle: Bool",
+              "summary": "원형 종류인지 여부",
+              "kind": "property"
+            },
+            {
+              "name": "isRectangle",
+              "signature": "var isRectangle: Bool",
+              "summary": "사각형 종류인지 여부",
+              "kind": "property"
+            },
+            {
+              "name": "isText",
+              "signature": "var isText: Bool",
+              "summary": "텍스트 종류인지 여부",
+              "kind": "property"
+            }
           ]
         },
         {
@@ -2143,6 +2221,14 @@
               "signature": "func opacity(CGFloat) -> Skeleton.SkeletonView",
               "summary": "스켈레톤 뷰의 투명도를 설정합니다.",
               "kind": "method"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
             }
           ]
         }
@@ -2212,6 +2298,14 @@
             "infinity",
             "long",
             "short"
+          ],
+          "instanceProperties": [
+            {
+              "name": "rawValue",
+              "signature": "var rawValue: Double",
+              "summary": "스낵바가 표시되는 시간(초). .infinity인 경우 Double.infinity를 반환합니다.",
+              "kind": "property"
+            }
           ]
         },
         {
@@ -2424,6 +2518,14 @@
               "summary": "임의 뷰를 Bottom Content에 배치합니다.",
               "kind": "method"
             }
+          ],
+          "instanceProperties": [
+            {
+              "name": "isLeadingAllowed",
+              "signature": "var isLeadingAllowed: Bool",
+              "summary": "leading(왼쪽)에 배치할 수 있는 리소스인지 여부. button·primaryIconButton은 trailing 전용입니다.",
+              "kind": "property"
+            }
           ]
         },
         {
@@ -2576,7 +2678,15 @@
         {
           "name": "TextField.AutoCompletionDataSource",
           "kind": "struct",
-          "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다."
+          "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다.",
+          "instanceProperties": [
+            {
+              "name": "totalNumberOfItems",
+              "signature": "var totalNumberOfItems: Int",
+              "summary": "전체 항목 수를 반환합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TextField.Size",
@@ -2775,7 +2885,7 @@
         {
           "name": "searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)",
           "signature": "func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> TopNavigation",
-          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 일 때만 적용됩니다.",
+          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 .search일 때만 적용됩니다.",
           "kind": "method"
         },
         {
@@ -2814,7 +2924,15 @@
         {
           "name": "TopNavigation.LeadingButton",
           "kind": "struct",
-          "summary": "내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다."
+          "summary": "내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다.",
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TopNavigation.Resource",
@@ -2824,12 +2942,28 @@
         {
           "name": "TopNavigation.TrailingIconButton",
           "kind": "struct",
-          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다."
+          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.",
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TopNavigation.TrailingTextButton",
           "kind": "struct",
-          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다."
+          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.",
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TopNavigation.Variant",

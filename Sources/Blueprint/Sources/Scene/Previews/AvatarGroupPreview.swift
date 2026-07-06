@@ -33,78 +33,36 @@ struct AvatarGroupPreview: View {
     let sizes: [AvatarGroup.Size] = [.xsmall, .small]
 
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text("Preview").bold()
-                    HStack {
-                        Spacer()
-                        avatarGroup
-                            .contentMode(contentModes[contentModeIndex])
-                            .if(trailingContent) {
-                                $0.trailingContent {
-                                    TextButton(
-                                        color: .assistive, size: .small,
-                                        text: "외 30명이 좋아합니다"
-                                    ) {
-                                        alertLabel = "TextButton pressed"
-                                        alertPresented.toggle()
-                                    }
-                                }
-                            }
-                            .alert(alertLabel, isPresented: $alertPresented) {
-                                SwiftUI.Button("OK") {
-                                    alertLabel = ""
-                                }
-                            }
-                        Spacer()
-                    }
-
-                    Text("Options").bold()
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(
-                            selectedIndex: $variantIndex, labels: variants.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("size")
-                        SegmentedControl(
-                            selectedIndex: $sizeIndex, labels: sizes.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("contentMode")
-                        SegmentedControl(
-                            selectedIndex: $contentModeIndex, labels: ["fit", "fill"]
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("local image")
-                        Switch(checked: useLocalImage) { useLocalImage = $0 }
-                    }
-                    if !useLocalImage {
-                        HStack {
-                            Text("random invalid image url")
-                            Switch(checked: invalidUrl) { invalidUrl = $0 }
+        PreviewLayout {
+            avatarGroup
+                .contentMode(contentModes[contentModeIndex])
+                .if(trailingContent) {
+                    $0.trailingContent {
+                        TextButton(
+                            color: .assistive, size: .small,
+                            text: "외 30명이 좋아합니다"
+                        ) {
+                            alertLabel = "TextButton pressed"
+                            alertPresented.toggle()
                         }
                     }
-                    HStack {
-                        Text("item count \(Int(itemCount))")
-                        SwiftUI.Slider(value: $itemCount, in: 1...10)
-                        Text("trailing content")
-                        Switch(checked: trailingContent) { trailingContent = $0 }
+                }
+                .alert(alertLabel, isPresented: $alertPresented) {
+                    SwiftUI.Button("OK") {
+                        alertLabel = ""
                     }
                 }
-                .font(.caption)
-                .padding(.horizontal)
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            SegmentedIndexRow("contentMode", index: $contentModeIndex, labels: ["fit", "fill"])
+            ToggleOptionRow("local image", isOn: $useLocalImage)
+            if !useLocalImage {
+                ToggleOptionRow("random invalid image url", isOn: $invalidUrl)
             }
-            .hidesIndicators()
+            SliderOptionRow("item count", value: $itemCount, in: 1...10, step: 1)
+            ToggleOptionRow("trailing content", isOn: $trailingContent)
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 
     private var avatarGroup: AvatarGroup {

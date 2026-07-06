@@ -9,92 +9,56 @@ import Montage
 import SwiftUI
 
 struct HorizontalProgressTrackerPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var progress: Int = 1
     @State private var stepCount: CGFloat = 4
-    @State private var labels: [String] = ["처음이에요\n진짜", "중간이구요", "또\n중간", "끝입니다\n정말\n진짜로"]
+    @State private var labels: [String] = ["1단계", "2단계", "3단계", "마지막\n단계"]
 
     init() {}
 
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-
-                ProgressTracker(
-                    progress: $progress,
-                    variant: .horizontal(labels: Array(labels.prefix(Int(stepCount)))))
-
-                Text("Options").bold()
-
-                HStack {
-                    Spacer()
-                    Button(variant: .outlined, size: .small, text: "Previous") {
-                        progress = max(1, progress - 1)
-                    }
-                    .disable(progress <= 1)
-
-                    Button(variant: .outlined, size: .small, text: "Next") {
-                        progress = min(progress + 1, Int(stepCount))
-                    }
-                    .disable(progress >= Int(stepCount))
-                    Spacer()
-                }
-
-                HStack {
-                    Text("stepCount")
-                    SwiftUI.Slider(value: $stepCount, in: 2...10, step: 1)
-                        .onChange(of: stepCount) {
-                            if progress > Int($0) {
-                                progress = Int($0)
-                            }
-                        }
-                    Text("\(Int(stepCount))")
-                        .frame(width: 30)
-                }
-                ForEach(0..<Int(stepCount), id: \.self) { index in
-                    HStack {
-                        Text("step\(index + 1) label")
-                        TextArea(text: Binding<String>(
-                            get: {
-                                labels[safe: index] ?? ""
-                            },
-                            set: {
-                                if index < labels.count {
-                                    labels[index] = $0
-                                } else {
-                                    labels.append($0)
-                                }
-                            }
-                        ))
-                    }
-                }
-                .onChange(of: stepCount) {
-                    if labels.count < Int($0) {
-                        for _ in labels.count..<Int($0) {
-                            labels.append("")
-                        }
-                    }
-                }
-
-                Spacer(minLength: 0)
-            }
-            .font(.caption)
-            .padding()
+    /// step 수와 항상 동일한 길이의 라벨 배열. 부족하면 빈 문자열로 채워 모델 불일치를 막는다.
+    private var displayLabels: [String] {
+        let count = Int(stepCount)
+        var result = Array(labels.prefix(count))
+        if result.count < count {
+            result.append(contentsOf: Array(repeating: "", count: count - result.count))
         }
-        .transparentChecking(
-            isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red
-        )
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+        return result
+    }
+
+    var body: some View {
+        PreviewLayout {
+            ProgressTracker(
+                progress: $progress,
+                variant: .horizontal(labels: displayLabels))
+        } options: {
+            PrevNextOptionRow(value: $progress, in: 1...Int(stepCount))
+
+            SliderOptionRow("stepCount", value: $stepCount, in: 2...10, step: 1)
+                // stepCount가 바뀌면 labels·progress를 같은 지점에서 함께 정규화해 모델이 잠시도 어긋나지 않게 한다.
+                .onChange(of: stepCount) {
+                    let count = Int($0)
+                    if labels.count < count {
+                        labels.append(contentsOf: Array(repeating: "", count: count - labels.count))
+                    }
+                    if progress > count {
+                        progress = count
+                    }
+                }
+            ForEach(0..<Int(stepCount), id: \.self) { index in
+                TextAreaOptionRow("step\(index + 1) label", text: Binding<String>(
+                    get: {
+                        labels[safe: index] ?? ""
+                    },
+                    set: {
+                        if index < labels.count {
+                            labels[index] = $0
+                        } else {
+                            labels.append($0)
+                        }
+                    }
+                ))
+            }
+        }
     }
 }
 

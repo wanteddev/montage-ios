@@ -9,7 +9,6 @@ import Montage
 import SwiftUI
 
 struct AvatarPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var variantIndex: Int = 0
     @State private var sizeIndex: Int = 0
     @State private var useCustomSize: Bool = false
@@ -32,114 +31,37 @@ struct AvatarPreview: View {
     let sizes: [Avatar.Size] = [.xsmall, .small, .medium, .large, .xlarge]
 
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Preview").bold()
-                        Spacer()
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
-                    }
-                    HStack {
-                        Spacer()
-                        avatar
-                        Spacer()
-                    }
-
-                    Text("Options").bold()
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(
-                            selectedIndex: $variantIndex, labels: variants.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    if variants[variantIndex] == .person {
-                        HStack {
-                            Text("pushBadge")
-                            Switch(checked: pushBadge) { pushBadge = $0 }
-                        }
-                        if pushBadge {
-                            HStack {
-                                Text("pushBadge size")
-                                SegmentedControl(
-                                    selectedIndex: $pushBadgeSizeIndex,
-                                    labels: pushBadgeSizeLabels
-                                )
-                                .size(.small)
-                            }
-                        }
-                    }
-                    HStack {
-                        Text("size")
-                        SegmentedControl(
-                            selectedIndex: $sizeIndex, labels: sizes.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    .opacity(useCustomSize ? 0.3 : 1)
-                    .disabled(useCustomSize)
-                    HStack {
-                        Text("custom size")
-                        Switch(checked: useCustomSize) { useCustomSize = $0 }
-                    }
-                    if useCustomSize {
-                        HStack {
-                            Text("\(Int(customSize))pt")
-                                .monospacedDigit()
-                            SwiftUI.Slider(value: $customSize, in: 16...120, step: 1)
-                        }
-                    }
-                    if variants[variantIndex] != .person {
-                        HStack {
-                            Text("cornerRadius")
-                            Switch(checked: useCustomCornerRadius) { useCustomCornerRadius = $0 }
-                        }
-                        if useCustomCornerRadius {
-                            HStack {
-                                Text("\(Int(customCornerRadius))pt")
-                                    .monospacedDigit()
-                                SwiftUI.Slider(value: $customCornerRadius, in: 0...60, step: 1)
-                            }
-                        }
-                    }
-                    HStack {
-                        Text("contentMode")
-                        SegmentedControl(
-                            selectedIndex: $contentModeIndex, labels: ["fit", "fill"]
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("local image")
-                        Switch(checked: useLocalImage) { useLocalImage = $0 }
-                    }
-                    if !useLocalImage {
-                        HStack {
-                            Text("invalid image url")
-                            Switch(checked: invalidUrl) { invalidUrl = $0 }
-                        }
-                    }
-                    HStack {
-                        SwiftUI.ColorPicker("borderColor", selection: $borderColor)
-                        Text("borderWidth")
-                        SwiftUI.Slider(value: $borderWidth, in: 0...5)
-                    }
+        PreviewLayout {
+            avatar
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            if variants[variantIndex] == .person {
+                ToggleOptionRow("pushBadge", isOn: $pushBadge)
+                if pushBadge {
+                    SegmentedIndexRow("pushBadge size", index: $pushBadgeSizeIndex, labels: pushBadgeSizeLabels)
                 }
-                .font(.caption)
-                .padding(.horizontal)
             }
-            .hidesIndicators()
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+                .opacity(useCustomSize ? 0.3 : 1)
+                .disabled(useCustomSize)
+            ToggleOptionRow("custom size", isOn: $useCustomSize)
+            if useCustomSize {
+                SliderOptionRow("customSize", value: $customSize, in: 16...120, step: 1)
+            }
+            if variants[variantIndex] != .person {
+                ToggleOptionRow("cornerRadius", isOn: $useCustomCornerRadius)
+                if useCustomCornerRadius {
+                    SliderOptionRow("cornerRadius", value: $customCornerRadius, in: 0...60, step: 1)
+                }
+            }
+            SegmentedIndexRow("contentMode", index: $contentModeIndex, labels: ["fit", "fill"])
+            ToggleOptionRow("local image", isOn: $useLocalImage)
+            if !useLocalImage {
+                ToggleOptionRow("invalid image url", isOn: $invalidUrl)
+            }
+            ColorPickerOptionRow("borderColor", selection: $borderColor)
+            SliderOptionRow("borderWidth", value: $borderWidth, in: 0...5)
         }
-        .transparentChecking(
-            isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red
-        )
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

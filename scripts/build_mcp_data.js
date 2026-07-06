@@ -67,9 +67,38 @@ function readJson(p) {
   return JSON.parse(fs.readFileSync(p, 'utf-8'));
 }
 
+/**
+ * DocC 인라인 콘텐츠 세그먼트를 텍스트로 변환한다.
+ * `text` 외에 `codeVoice`(\`...\`)의 코드, 심볼/링크 `reference`의 제목, 강조(`emphasis`/`strong`)의
+ * 중첩 내용까지 포함해야 "스낵바가 표시되는 시간(초). `.infinity`인 경우 ..."처럼 placeholder가
+ * 빠진 깨진 문장이 생기지 않는다.
+ */
+function inlineText(seg, refs) {
+  if (typeof seg.text === 'string') return seg.text;
+  if (typeof seg.code === 'string') return seg.code;
+  if (seg.type === 'reference' && seg.identifier) {
+    const ref = refs && refs[seg.identifier];
+    return (ref && ref.title) || tail(seg.identifier);
+  }
+  if (Array.isArray(seg.inlineContent)) {
+    return seg.inlineContent.map((s) => inlineText(s, refs)).join('');
+  }
+  return '';
+}
+
 function abstractText(json) {
   if (!Array.isArray(json.abstract)) return '';
-  return json.abstract.map((seg) => seg.text ?? '').join('').trim();
+  const refs = json.references || {};
+  return json.abstract.map((seg) => inlineText(seg, refs)).join('').trim();
+}
+
+/**
+ * 프로토콜 등에서 상속된 멤버인지 판별한다. DocC는 상속 멤버의 abstract를
+ * `[{text:"Inherited from "}, {codeVoice:"Type.member"}, {text:"."}]` 형태로 자동 생성한다.
+ */
+function isInheritedMember(json) {
+  const first = Array.isArray(json.abstract) ? json.abstract[0] : null;
+  return !!first && typeof first.text === 'string' && first.text.startsWith('Inherited from');
 }
 
 function fragmentSignature(fragments) {
@@ -115,6 +144,9 @@ function extractMembers(json, componentDir, sectionTitle) {
     if (!fs.existsSync(memberPath)) continue;
     let mj;
     try { mj = readJson(memberPath); } catch { continue; }
+    // 프로토콜 등에서 상속된 멤버는 현재 타입이 직접 제공하는 API가 아니므로 제외한다.
+    // DocC는 이런 멤버의 abstract를 "Inherited from `Type`." 형태로 자동 생성한다.
+    if (isInheritedMember(mj)) continue;
     const meta = mj.metadata || {};
     const sig = fragmentSignature(meta.fragments);
     if (!sig) continue;
@@ -172,9 +204,11 @@ function extractNestedTypes(componentDir, componentName) {
       const staticMethods = extractMembers(typeJson, nestedDir, 'Type Methods');
       const staticProps = extractMembers(typeJson, nestedDir, 'Type Properties');
       const modifiers = extractMembers(typeJson, nestedDir, 'Instance Methods');
+      const instanceProps = extractMembers(typeJson, nestedDir, 'Instance Properties');
       if (staticMethods.length > 0) record.staticMethods = staticMethods;
       if (staticProps.length > 0) record.staticProperties = staticProps;
       if (modifiers.length > 0) record.modifiers = modifiers;
+      if (instanceProps.length > 0) record.instanceProperties = instanceProps;
     }
     types.push(record);
   }
