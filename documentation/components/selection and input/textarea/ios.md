@@ -63,7 +63,7 @@ TextArea(text: $longText)
 
 <details>
 
-<summary>``func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat, trailingResourceSpacing: CGFloat) -> TextArea``</summary>
+<summary>``func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea``</summary>
 
 
 텍스트 영역 하단에 표시할 UI 요소를 설정합니다.
@@ -73,8 +73,8 @@ TextArea(text: $longText)
   | --- | --- |
   | `leadingResources` | 왼쪽에 표시할 UI 요소 배열 (최대 3개) |
   | `trailingResources` | 오른쪽에 표시할 UI 요소 배열 (최대 3개) |
-  | `leadingResourceSpacing` | 왼쪽 요소 간의 간격 |
-  | `trailingResourceSpacing` | 오른쪽 요소 간의 간격 |
+  | `leadingResourceSpacing` | 왼쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용 |
+  | `trailingResourceSpacing` | 오른쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용 |
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
