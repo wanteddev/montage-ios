@@ -2542,7 +2542,7 @@
       "modifiers": [
         {
           "name": "bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)",
-          "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat, trailingResourceSpacing: CGFloat) -> TextArea",
+          "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
           "summary": "텍스트 영역 하단에 표시할 UI 요소를 설정합니다.",
           "kind": "method"
         },
