@@ -11,28 +11,43 @@ import SwiftUI
 import Montage
 
 struct TextAreaPreview: View {
+    enum Size: String, CaseIterable {
+        case large
+        case medium
+
+        var description: String {
+            self.rawValue.capitalized
+        }
+
+        var s: TextArea.Size {
+            switch self {
+            case .large: .large
+            case .medium: .medium
+            }
+        }
+    }
+
     enum Resize: String, CaseIterable {
         case normal
         case limit
         case fixed
-        
+
         var description: String {
             self.rawValue.capitalized
         }
-        
+
         var r: TextArea.Resize {
             switch self {
             case .normal: .normal
             case .limit: .limit
-            case .fixed: .fixed(min: 100, max: 200)
+            case .fixed: .fixed(min: 116, max: 200)
             }
         }
     }
-    
+
     var resources: [TextArea.Resource?] {
         [
-            .characterCount(limit: Int(limit), overflow: overflow),
-            .textButton(
+            .button(
                 title: "Text",
                 handler: {}
             ),
@@ -40,39 +55,46 @@ struct TextAreaPreview: View {
                 icon: .send,
                 handler: {}
             ),
+            .primaryIconButton(
+                icon: .send,
+                handler: {}
+            ),
             .icon(
                 .chevronDown
             ),
-            .chip(
-                title: "Action",
-                handler: {}
+            .contentBadge(
+                title: "Badge"
             ),
-            .filterButton(
-                title: "Filter",
-                handler: {}
-            )
+            .segmentedControl(
+                selectedIndex: $segmentIndex,
+                icons: [.send, .chevronDown],
+                accessibilityLabels: ["전송", "더 보기"]
+            ),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.primaryNormal))
+            }
         ]
     }
-    
+
     @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
+    @State private var size: Size = .large
     @State private var resize: Resize = .normal
     @State private var negative: Bool = false
     @State private var focus: Bool = false
     @FocusState private var focusState: Bool
     @State private var disable: Bool = false
-    @State private var heading: Bool = false
-    @State private var requiredBadge: Bool = false
-    @State private var description: Bool = false
     @State private var placeholder: Bool = true
     @State private var leadingResources = [TextArea.Resource]()
     @State private var trailingResources = [TextArea.Resource]()
-    @State private var limit: CGFloat = 10
-    @State private var overflow: Bool = false
-    
+    @State private var maxLength: CGFloat = 0
+    @State private var characterCount: Int = 0
+    @State private var segmentIndex: Int = 0
+
     var body: some View {
         SwiftUI.ScrollView {
-            VStack(spacing: 12) {
+            VStack(alignment: .leading) {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
@@ -83,163 +105,106 @@ struct TextAreaPreview: View {
                             .foregroundColor(.semantic(.primaryNormal))
                     }
                 }
-                TextArea(text: $text, focus: $focusState)
-                    .resize(resize.r)
-                    .negative(negative)
-                    .disable(disable)
-                    .heading(heading ? "제목" : nil)
-                    .requiredBadge(requiredBadge)
-                    .bottomResources(
-                        leading: leadingResources,
-                        trailing: trailingResources
-                    )
-                    .description(description ? "메세지에 마침표를 찍어요." : nil)
-                    .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Options").bold()
-                    HStack {
-                        HStack {
-                            Text("Resize :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Menu(resize.description) {
-                                ForEach(Resize.allCases, id: \.self) { r in
-                                    Button {
-                                        resize = r
-                                    } label: {
-                                        Text(r.description)
-                                    }
-                                }
-                            }
-                        }
-                        HStack {
-                            Text("Placeholder :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: placeholder) { placeholder = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Focus :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: focus) {
-                                focusState = $0
-                            }
-                        }
-                        HStack {
-                            Text("Disable :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: disable) { disable = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Heading :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: heading) { heading = $0 }
-                        }
-                        HStack {
-                            Text("RequiredBadge :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: requiredBadge) { requiredBadge = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Description :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: description) { description = $0 }
-                        }
-                        Text("Negative :")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Switch(checked: negative) { negative = $0 }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Leading :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Menu("add") {
-                                ForEach(resources.indices, id: \.self) { index in
-                                    Button {
-                                        if let resource = resources[index] {
-                                            leadingResources.append(resource)
-                                        }
-                                    } label: {
-                                        Text(resources[index]?.description ?? "none")
-                                    }
-                                }
-                            }
-                            Button("reset") {
-                                leadingResources.removeAll()
-                            }
-                        }
-                        HStack {
-                            Text("Trailing :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Menu("add") {
-                                ForEach(resources.indices, id: \.self) { index in
-                                    Button {
-                                        if let resource = resources[index] {
-                                            trailingResources.append(resource)
-                                        }
-                                    } label: {
-                                        Text(resources[index]?.description ?? "none")
-                                    }
-                                }
-                            }
-                            Button("reset") {
-                                trailingResources.removeAll()
-                            }
-                        }
-                    }
-                    .font(.font(variant: .label1))
-                    if leadingResources.contains(where: { $0.isCharacterCount }) ||
-                        trailingResources.contains(where: { $0.isCharacterCount })
-                    {
-                        HStack {
-                            Text("characterCount")
-                                .layoutPriority(1)
-                            Text("limit")
-                            SwiftUI.Slider(value: $limit, in: 10...1000, step: 10)
-                            Text("overflow")
-                            Switch(checked: overflow) { overflow = $0 }
-                        }
-                    }
+                Group {
+                    TextArea(text: $text, focus: $focusState)
+                        .size(size.s)
+                        .resize(resize.r)
+                        .negative(negative)
+                        .disable(disable)
+                        .bottomResources(
+                            leading: leadingResources,
+                            trailing: trailingResources
+                        )
+                        .maxLength(maxLength > 0 ? Int(maxLength) : nil)
+                        .onTextChange { characterCount = $0.count }
+                        .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
+                        // resize 변경 시 뷰 아이덴티티를 리셋해 높이를 재계산한다.
+                        // text를 건드리면 placeholder 조건(text.isEmpty)이 깨지므로 .id로 처리한다.
+                        .id(resize)
                 }
+                Text("Options").bold()
+                HStack {
+                    Text("size")
+                    SegmentedControl(
+                        selectedIndex: Binding(
+                            get: { Size.allCases.firstIndex(of: size) ?? 0 },
+                            set: { size = Size.allCases[$0] }
+                        ),
+                        labels: Size.allCases.map(\.description)
+                    )
+                    .size(.small)
+                }
+                HStack {
+                    Text("resize")
+                    SegmentedControl(
+                        selectedIndex: Binding(
+                            get: { Resize.allCases.firstIndex(of: resize) ?? 0 },
+                            set: { resize = Resize.allCases[$0] }
+                        ),
+                        labels: Resize.allCases.map(\.description)
+                    )
+                    .size(.small)
+                }
+                HStack {
+                    Text("placeholder")
+                    Switch(checked: placeholder) { placeholder = $0 }
+                    Text("focus")
+                    Switch(checked: focus) { focusState = $0 }
+                }
+                HStack {
+                    Text("disable")
+                    Switch(checked: disable) { disable = $0 }
+                    Text("negative")
+                    Switch(checked: negative) { negative = $0 }
+                }
+                HStack {
+                    Text("leading")
+                    Menu("add") {
+                        ForEach(resources.indices, id: \.self) { index in
+                            if resources[index]?.isLeadingAllowed ?? false {
+                                Button {
+                                    if let resource = resources[index] {
+                                        leadingResources.append(resource)
+                                        leadingResources = leadingResources.suffix(3)
+                                    }
+                                } label: {
+                                    Text(resources[index]?.description ?? "none")
+                                }
+                            }
+                        }
+                    }
+                    Button("reset") { leadingResources.removeAll() }
+                    Spacer()
+                    Text("trailing")
+                    Menu("add") {
+                        ForEach(resources.indices, id: \.self) { index in
+                            Button {
+                                if let resource = resources[index] {
+                                    trailingResources.append(resource)
+                                    trailingResources = trailingResources.suffix(3)
+                                }
+                            } label: {
+                                Text(resources[index]?.description ?? "none")
+                            }
+                        }
+                    }
+                    Button("reset") { trailingResources.removeAll() }
+                }
+                HStack {
+                    Text("maxLength")
+                        .layoutPriority(1)
+                    SwiftUI.Slider(value: $maxLength, in: 0...1000, step: 10)
+                    Text(maxLength > 0 ? "\(characterCount)/\(Int(maxLength))" : "off")
+                }
+                Spacer(minLength: 0)
             }
+            .font(.caption)
             .padding()
         }
         .onChange(of: focusState) {
             focus = $0
         }
-        .onChange(of: resize) { _ in
-            // resize 값이 바뀔 때 프리뷰에서 높이가 제대로 갱신되지 않아서 꼼수로 처리
-            text = " "
-            Task {
-                text = ""
-            }
-        }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-    }
-}
-
-extension TextArea.Resource {
-    var isCharacterCount: Bool {
-        if case .characterCount = self {
-            return true
-        } else {
-            return false
-        }
     }
 }
 

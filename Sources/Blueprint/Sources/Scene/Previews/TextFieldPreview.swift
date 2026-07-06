@@ -26,11 +26,11 @@ struct TextFieldPreview: View {
             self.rawValue.capitalized
         }
         
-        func v(description: Bool) -> Montage.TextField.Status {
+        var v: Montage.TextField.Status {
             switch self {
-            case .normal: .normal(description: description ? "설명 메세지를 나타내요." : "")
-            case .positive: .positive(description: description ? "성공 메세지를 나타내요." : "")
-            case .negative: .negative(description: description ? "에러 메세지를 나타내요." : "")
+            case .normal: .normal
+            case .positive: .positive
+            case .negative: .negative
             }
         }
     }
@@ -109,10 +109,7 @@ struct TextFieldPreview: View {
     @State private var fieldSize: FieldSize = .large
     @State private var variant: Variant = .normal
     @State private var disable: Bool = false
-    @State private var heading: Bool = false
-    @State private var requiredBadge: Bool = false
     @State private var icon: Bool = false
-    @State private var description: Bool = false
     @State private var placeholder: Bool = true
     @State private var trailingButton: Bool = false
     @State private var trailingContent: Content = .none
@@ -124,11 +121,11 @@ struct TextFieldPreview: View {
         "aaa2", "bbb2", "ccc2", "ddd2", "eee2", "fff2", "ggg2", "iii", "jjj"
     ]
 
-    /// 제목과 SegmentedControl을 묶은 옵션 행을 구성한다.
+    /// 제목과 SegmentedControl을 인라인으로 묶은 옵션 행을 구성한다.
     @ViewBuilder
     private func optionRow<Option: PreviewSegment>(_ title: String, _ selection: Binding<Option>) -> some View {
         let all = Array(Option.allCases)
-        VStack(alignment: .leading, spacing: 6) {
+        HStack {
             Text(title)
             SegmentedControl(
                 selectedIndex: Binding(
@@ -141,18 +138,77 @@ struct TextFieldPreview: View {
         }
     }
 
-    /// 제목과 Switch를 묶은 토글 행을 구성한다.
+    /// 제목과 Switch를 묶은 토글 쌍을 구성한다. (HStack에 여러 개를 인라인 배치)
+    @ViewBuilder
     private func toggleRow(_ title: String, _ isOn: Binding<Bool>) -> some View {
-        HStack {
-            Text(title)
-            Switch(checked: isOn.wrappedValue) { isOn.wrappedValue = $0 }
-            Spacer()
+        Text(title)
+        Switch(checked: isOn.wrappedValue) { isOn.wrappedValue = $0 }
+            .accessibilityLabel(title)
+    }
+
+    /// 현재 `text`와 `usingSuggestions` 상태를 기준으로 자동완성 데이터를 갱신한다.
+    /// 텍스트 변경과 autoComplete 토글 양쪽에서 동일한 규칙으로 호출된다.
+    private func refreshAutoCompletion() {
+        guard usingSuggestions else {
+            autoCompletionDataSource = nil
+            return
         }
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            autoCompletionDataSource = nil
+            return
+        }
+        let suggestions = candidates
+            .filter { $0.lowercased().contains(trimmed.lowercased()) }
+        autoCompletionDataSource = .init(
+            numberOfSections: 2,
+            sectionTitleAt: { section in
+                "\(section+1)번째 섹션"
+            },
+            numberOfItemsInSection: { _ in
+                suggestions.count
+            },
+            cellForItemAt: { indexPath in
+                ListCell(title: suggestions[indexPath.row]) {
+                    self.text = suggestions[indexPath.row]
+                    Task {
+                        autoCompletionDataSource = nil
+                    }
+                }
+                .highlight(trimmed)
+                .leadingContent {
+                    Group {
+                        if indexPath.section == 0 {
+                            Image.icon(.search)
+                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                        } else {
+                            Avatar("", variant: .company, size: .medium)
+                        }
+                    }
+                }
+                .if(indexPath.section == 1) {
+                    $0.caption("캡션")
+                }
+            },
+            headerView: {
+                ListCell(title: "'\(trimmed)' 사용하기") {
+                    autoCompletionDataSource = nil
+                }
+                .highlight(trimmed)
+            },
+            footerView: {
+                ListCell(title: "'\(trimmed)' 사용하기") {
+                    autoCompletionDataSource = nil
+                }
+                .highlight(trimmed)
+            },
+            maxHeight: 200
+        )
     }
 
     var body: some View {
         SwiftUI.ScrollView {
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
                     Text("Preview").bold()
                     Spacer()
@@ -163,126 +219,60 @@ struct TextFieldPreview: View {
                             .foregroundColor(.semantic(.primaryNormal))
                     }
                 }
-                TextField(
-                    text: $text,
-                    autoCompletionDataSource: $autoCompletionDataSource
-                )
-                .size(fieldSize.s)
-                .status(variant.v(description: description))
-                .disable(disable)
-                .heading(heading ? "제목" : nil)
-                .requiredBadge(requiredBadge)
-                .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
-                .icon(icon ? .verifiedCheckFill : nil)
-                .trailingButton(
-                    trailingButton ? TextField.TrailingButtonInfo(
-                        title: "텍스트",
-                        handler: { print("trailing button tapped") }
-                    ) : nil
-                )
-                .trailingContent {
-                    if let content = trailingContent.c {
-                        AnyView(content())
-                    } else {
-                        EmptyView()
-                    }
-                }
-                .onChange(of: text) { text in
-                    guard usingSuggestions else {
-                        autoCompletionDataSource = nil
-                        return
-                    }
-                    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-                    guard !trimmed.isEmpty else {
-                        autoCompletionDataSource = nil
-                        return
-                    }
-                    let suggestions = candidates
-                        .filter { $0.lowercased().contains(trimmed.lowercased()) }
-                    autoCompletionDataSource = .init(
-                        numberOfSections: 2,
-                        sectionTitleAt: { section in
-                            "\(section+1)번째 섹션"
-                        },
-                        numberOfItemsInSection: { _ in
-                            suggestions.count
-                        },
-                        cellForItemAt: { indexPath in
-                            ListCell(title: suggestions[indexPath.row]) {
-                                self.text = suggestions[indexPath.row]
-                                Task {
-                                    autoCompletionDataSource = nil
-                                }
-                            }
-                            .highlight(trimmed)
-                            .leadingContent {
-                                Group {
-                                    if indexPath.section == 0 {
-                                        Image.icon(.search)
-                                            .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
-                                    } else {
-                                        Avatar("", variant: .company, size: .medium)
-                                    }
-                                }
-                            }
-                            .if(indexPath.section == 1) {
-                                $0.caption("캡션")
-                            }
-                        },
-                        headerView: {
-                            ListCell(title: "'\(trimmed)' 사용하기") {
-                                autoCompletionDataSource = nil
-                            }
-                            .highlight(trimmed)
-                        },
-                        footerView: {
-                            ListCell(title: "'\(trimmed)' 사용하기") {
-                                autoCompletionDataSource = nil
-                            }
-                            .highlight(trimmed)
-                        },
-                        maxHeight: 200
+                Group {
+                    TextField(
+                        text: $text,
+                        autoCompletionDataSource: $autoCompletionDataSource
                     )
-                }
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Options").bold()
-
-                    // 필드 외형
-                    optionRow("Size", $fieldSize)
-                    optionRow("Status", $variant)
-
-                    Divider()
-
-                    // 필드 콘텐츠/상태 토글
-                    toggleRow("Placeholder", $placeholder)
-                    toggleRow("Icon", $icon)
-                    toggleRow("Disable", $disable)
-                    toggleRow("Heading", $heading)
-                    if heading {
-                        // RequiredBadge는 Heading이 있을 때만 표시된다.
-                        toggleRow("RequiredBadge", $requiredBadge)
-                            .padding(.leading, 16)
+                    .size(fieldSize.s)
+                    .status(variant.v)
+                    .disable(disable)
+                    .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
+                    .icon(icon ? .verifiedCheckFill : nil)
+                    .trailingButton(
+                        trailingButton ? TextField.TrailingButtonInfo(
+                            title: "텍스트",
+                            handler: { print("trailing button tapped") }
+                        ) : nil
+                    )
+                    .trailingContent {
+                        if let content = trailingContent.c {
+                            AnyView(content())
+                        } else {
+                            EmptyView()
+                        }
                     }
-                    toggleRow("Description", $description)
-
-                    Divider()
-
-                    // 트레일링 영역
-                    toggleRow("TrailingButton", $trailingButton)
-                    optionRow("Trailing Content", $trailingContent)
-
-                    Divider()
-
-                    // 자동완성
-                    toggleRow("AutoComplete", $usingSuggestions)
-                    if usingSuggestions {
-                        Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")
-                            .font(.caption)
-                            .foregroundStyle(SwiftUI.Color.secondary)
+                    .onChange(of: text) { _ in
+                        refreshAutoCompletion()
+                    }
+                    // 텍스트 변경뿐 아니라 autoComplete 토글 시점에도 현재 텍스트 기준으로 즉시 동기화한다.
+                    // (켜질 때 제안이 바로 뜨고, 꺼질 때 기존 제안이 남지 않도록)
+                    .onChange(of: usingSuggestions) { _ in
+                        refreshAutoCompletion()
                     }
                 }
+                Text("Options").bold()
+                optionRow("size", $fieldSize)
+                optionRow("status", $variant)
+                HStack {
+                    toggleRow("placeholder", $placeholder)
+                    toggleRow("icon", $icon)
+                }
+                HStack {
+                    toggleRow("disable", $disable)
+                    toggleRow("trailingButton", $trailingButton)
+                }
+                optionRow("trailingContent", $trailingContent)
+                HStack {
+                    toggleRow("autoComplete", $usingSuggestions)
+                }
+                if usingSuggestions {
+                    Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")
+                        .foregroundStyle(SwiftUI.Color.secondary)
+                }
+                Spacer(minLength: 0)
             }
+            .font(.caption)
             .padding()
         }
         .transparentChecking(isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
