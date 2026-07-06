@@ -185,8 +185,9 @@ public struct TextArea: View {
     private var placeholder: String? = nil
     private var leadingResources: [Resource] = []
     private var trailingResources: [Resource] = []
-    private var leadingResourceSpacing: CGFloat = 4
-    private var trailingResourceSpacing: CGFloat = 4
+    // nil이면 사이즈별 기본 간격(``Size/resourceSpacing``)을 사용한다.
+    private var leadingResourceSpacing: CGFloat?
+    private var trailingResourceSpacing: CGFloat?
     private var maxLength: Int?
     private var inputTransform: ((String) -> String)?
     private var onTextChange: ((String) -> Void)?
@@ -280,15 +281,15 @@ public struct TextArea: View {
     /// - Parameters:
     ///   - leadingResources: 왼쪽에 표시할 UI 요소 배열 (최대 3개)
     ///   - trailingResources: 오른쪽에 표시할 UI 요소 배열 (최대 3개)
-    ///   - leadingResourceSpacing: 왼쪽 요소 간의 간격
-    ///   - trailingResourceSpacing: 오른쪽 요소 간의 간격
+    ///   - leadingResourceSpacing: 왼쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용
+    ///   - trailingResourceSpacing: 오른쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     /// - Note: `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 leading에 전달되면 무시됩니다.
     public func bottomResources(
         leading leadingResources: [Resource] = [],
         trailing trailingResources: [Resource] = [],
-        leadingResourceSpacing: CGFloat = 4,
-        trailingResourceSpacing: CGFloat = 4
+        leadingResourceSpacing: CGFloat? = nil,
+        trailingResourceSpacing: CGFloat? = nil
     ) -> Self {
         var zelf = self
         // leading 전용 제약: trailing 전용 프리셋은 걸러낸다.
@@ -488,7 +489,7 @@ public struct TextArea: View {
     }
 
     private var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
+        disable ? .semantic(.labelDisable) : .semantic(.labelAlternative)
     }
 
     private var editorTextColor: SwiftUI.Color {
@@ -501,17 +502,17 @@ public struct TextArea: View {
         private let size: Size
         private let disable: Bool
         private let leadingResources: [Resource]
-        private let leadingResourceSpacing: CGFloat
+        private let leadingResourceSpacing: CGFloat?
         private let trailingResources: [Resource]
-        private let trailingResourceSpacing: CGFloat
+        private let trailingResourceSpacing: CGFloat?
 
         init(
             _ size: Size,
             _ disable: Bool,
             _ leadingResources: [Resource],
-            _ leadingResourceSpacing: CGFloat,
+            _ leadingResourceSpacing: CGFloat?,
             _ trailingResources: [Resource],
-            _ trailingResourceSpacing: CGFloat
+            _ trailingResourceSpacing: CGFloat?
         ) {
             self.size = size
             self.disable = disable
@@ -525,7 +526,7 @@ public struct TextArea: View {
         var body: some View {
             HStack(alignment: .bottom) {
                 if leadingResources.isEmpty == false {
-                    HStack(spacing: leadingResourceSpacing) {
+                    HStack(spacing: leadingResourceSpacing ?? size.resourceSpacing) {
                         ForEach(leadingResources.indices, id: \.self) { index in
                             component(leadingResources[index])
                         }
@@ -533,7 +534,7 @@ public struct TextArea: View {
                 }
                 Spacer(minLength: 0)
                 if trailingResources.isEmpty == false {
-                    HStack(spacing: trailingResourceSpacing) {
+                    HStack(spacing: trailingResourceSpacing ?? size.resourceSpacing) {
                         ForEach(trailingResources.indices, id: \.self) { index in
                             component(trailingResources[index])
                         }
@@ -554,12 +555,15 @@ public struct TextArea: View {
                     handler: handler
                 )
             case let .iconButton(icon, tintColor, handler):
+                // 아이콘 계열 요소는 사이즈별 정렬 래퍼(``Size/resourceWrapperSize``)로 감싸 Bottom Content
+                // 정렬 기준을 통일한다. 요소가 래퍼보다 크면(예: 아이콘 버튼 large 32) 래퍼를 넘어 중앙 정렬로 렌더된다.
                 IconButton(
                     variant: .normal(size: size.normalIconButtonSize),
                     icon: icon,
                     handler: handler
                 )
                 .iconColor(tintColor)
+                .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
             case let .primaryIconButton(icon, handler):
                 Button(
                     variant: .solid,
@@ -568,11 +572,13 @@ public struct TextArea: View {
                     icon: icon,
                     handler: handler
                 )
+                .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
             case let .icon(icon, tintColor):
                 Image.icon(icon)
                     .resizable()
                     .foregroundColor(tintColor)
                     .frame(width: size.resourceIconSize, height: size.resourceIconSize)
+                    .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
             case let .contentBadge(variant, title):
                 ContentBadge(variant: variant, text: title)
                     .size(size.contentBadgeSize)
@@ -897,6 +903,24 @@ private extension TextArea.Size {
         switch self {
         case .large: 20
         case .medium: 18
+        }
+    }
+
+    /// Bottom Content leading/trailing 요소 간 기본 간격. (large 8 / medium 6)
+    var resourceSpacing: CGFloat {
+        switch self {
+        case .large: 8
+        case .medium: 6
+        }
+    }
+
+    /// Bottom Content 아이콘·아이콘 버튼을 감싸는 정렬 래퍼 크기. (large 24×20 / medium 22×22)
+    /// 디자인 가이드상 아이콘/아이콘 버튼은 이 크기의 컨테이너로 감싸 정렬 기준을 통일하며,
+    /// 요소가 래퍼보다 크면(예: 아이콘 버튼 large 32) 래퍼를 넘어 렌더된다.
+    var resourceWrapperSize: CGSize {
+        switch self {
+        case .large: CGSize(width: 24, height: 20)
+        case .medium: CGSize(width: 22, height: 22)
         }
     }
 
