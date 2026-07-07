@@ -1,6 +1,6 @@
 ---
 title: Form control
-description: 입력 컨트롤( 등)에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.
+description: 입력 컨트롤에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.
 ---
 
 ```swift
@@ -290,7 +290,7 @@ FormControl의 상태입니다. 메시지의 색을 결정합니다.
 <summary>``var textFieldStatus: TextField.Status``</summary>
 
 
-같은 의미의  값으로 변환합니다.
+같은 의미의 TextField 상태 값으로 변환합니다.
 - **Discussion**
 
   슬롯에 [TextField](/documentation/montage/textfield.md)를 둘 때 [status](/documentation/montage/formcontrol/context/status.md)를 그대로 전달하기 위한 편의 변환입니다.
