@@ -16,13 +16,15 @@ struct FormControlGroupPreview: View {
     @State private var bio = ""
 
     @State private var grouped = true
+    @State private var autoLabelWidth = true
+    @State private var labelWidth: CGFloat = 64
     @State private var guideLine = false
 
     var body: some View {
         PreviewLayout {
             Group {
                 if grouped {
-                    FormControlGroup {
+                    FormControlGroup(labelWidth: autoLabelWidth ? nil : labelWidth) {
                         fields
                     }
                 } else {
@@ -34,6 +36,9 @@ struct FormControlGroupPreview: View {
             .border(guideLine ? SwiftUI.Color.blue : SwiftUI.Color.clear)
         } options: {
             ToggleOptionRow("grouped", isOn: $grouped)
+            ToggleOptionRow("자동 labelWidth", isOn: $autoLabelWidth)
+            SliderOptionRow("labelWidth", value: $labelWidth, in: 40...160, step: 4, format: { "\(Int($0))" })
+                .if(!autoLabelWidth)
         } accessory: {
             SwiftUI.Button(action: { guideLine.toggle() }) {
                 Image(systemName: "rectangle.dashed")
@@ -49,10 +54,10 @@ struct FormControlGroupPreview: View {
         textField("전화번호", text: $phone, placeholder: "전화")
         FormControl { context in
             TextArea(text: $bio)
+                .resize(.fixed(min: 200, max: 300))
                 .negative(context.status == .negative)
                 .placeholder("자기소개를 입력하세요")
         }
-        .labelPlacement(.leading)
         .label("자기소개")
     }
 
