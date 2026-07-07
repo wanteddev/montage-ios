@@ -1065,10 +1065,10 @@
     {
       "slug": "formcontrolgroup",
       "name": "FormControlGroup",
-      "category": "uncategorized",
+      "category": "selection-input",
       "kind": "struct",
       "declaration": "struct FormControlGroup",
-      "summary": "여러 FormControl을 세로로 쌓을 때, 라벨 열의 폭을 가장 긴 라벨 기준으로 통일해 입력(input)의 시작 위치를 정렬하는 컨테이너입니다. (FormControl.LabelPlacement.leading 대상)",
+      "summary": "여러 FormControl을 세로로 쌓을 때 라벨 열 폭을 통일해 입력의 시작 위치를 정렬하는 컨테이너입니다.",
       "initializers": [
         {
           "signature": "init(labelWidth:spacing:content:)"
