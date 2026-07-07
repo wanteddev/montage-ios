@@ -198,8 +198,10 @@ private extension FormControl {
         if hasLabel {
             // 라벨의 세로 중앙을 입력 슬롯의 세로 중앙에 정렬한다(Footer는 입력 아래로 흐름).
             // Figma 기준: Leading 배치에서 라벨은 입력 필드 높이의 중앙에 위치한다.
+            // 라벨이 여러 줄로 길어져도 입력 필드 높이(48)를 넘지 않도록 maxHeight로 제한한다.
             HStack(alignment: .inputCenter, spacing: .spacing16) {
                 labelRow
+                    .frame(maxHeight: .dimension48)
                     .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
                 inputWrapper
             }
