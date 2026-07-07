@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-/// 입력 컨트롤(``TextField`` 등)에 제목(Label)과 도움말(Message)을 붙여 주고,
-/// 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.
+/// 입력 컨트롤에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을
+/// 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.
 ///
 /// FormControl은 단독으로 값을 입력받지 않습니다. 내부 슬롯(`input`)에 실제 입력 컴포넌트를
 /// 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·액세서리(글자 수 카운트 등)를
@@ -333,7 +333,7 @@ private extension VerticalAlignment {
 // MARK: - Status 편의 변환
 
 extension FormControl.Status {
-    /// 같은 의미의 ``TextField/Status`` 값으로 변환합니다.
+    /// 같은 의미의 TextField 상태 값으로 변환합니다.
     ///
     /// 슬롯에 ``TextField``를 둘 때 ``FormControl/Context/status``를 그대로 전달하기 위한 편의 변환입니다.
     public var textFieldStatus: TextField.Status {
