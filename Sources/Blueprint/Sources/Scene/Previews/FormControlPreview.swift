@@ -29,21 +29,26 @@ struct FormControlPreview: View {
     ]
 
     private let sizeLabels = ["large", "medium"]
-    private let statusLabels = ["normal", "positive", "negative"]
     private let placementLabels = ["top", "leading"]
     private let inputLabels = ["TextField", "TextArea", "Select"]
 
     private let limit = 100
+
+    // positive는 TextField에서만 지원하므로, 입력 타입에 따라 status 옵션을 다르게 노출한다.
+    private var statusLabels: [String] {
+        inputIndex == 0 ? ["normal", "positive", "negative"] : ["normal", "negative"]
+    }
 
     private var size: FormControl.Size {
         sizeIndex == 0 ? .large : .medium
     }
 
     private var status: FormControl.Status {
-        switch statusIndex {
-        case 1: .positive
-        case 2: .negative
-        default: .normal
+        // 인덱스가 아니라 선택된 라벨 이름으로 매핑한다(입력 타입에 따라 옵션 구성이 달라지므로).
+        switch statusIndex < statusLabels.count ? statusLabels[statusIndex] : "normal" {
+        case "positive": return .positive
+        case "negative": return .negative
+        default: return .normal
         }
     }
 
@@ -73,6 +78,10 @@ struct FormControlPreview: View {
             SwiftUI.Button(action: { guideLine.toggle() }) {
                 Image(systemName: "rectangle.dashed")
             }
+        }
+        // 입력 타입이 바뀌면 status 선택을 normal로 초기화한다(positive는 TextField 전용이라 인덱스 어긋남 방지).
+        .onChange(of: inputIndex) { _ in
+            statusIndex = 0
         }
     }
 
