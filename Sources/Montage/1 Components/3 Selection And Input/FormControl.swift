@@ -94,6 +94,10 @@ public struct FormControl: View {
     private var isRequired: Bool = false
     private var messageText: String?
     private var accessoryView: AnyView?
+    private var explicitLabelWidth: CGFloat?
+
+    /// ``FormControlGroup``이 주입하는 공유 라벨 컬럼 폭. leading 배치에서 라벨 폭을 이 값으로 맞춘다.
+    @Environment(\.formLabelColumnWidth) private var columnLabelWidth
 
     /// 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
     ///
@@ -165,6 +169,21 @@ public struct FormControl: View {
         return modifying { $0.accessoryView = view }
     }
 
+    /// leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니다.
+    ///
+    /// 주 용도는 두 가지입니다.
+    /// 1. **단독** leading FormControl에서 라벨 폭을 스펙값으로 맞출 때.
+    /// 2. ``FormControlGroup`` 안에서 **특정 행 하나만** 다른 폭으로 둘 때(per-control 값이 컨테이너 폭보다 우선).
+    ///
+    /// 컬럼 전체를 고정 폭으로 맞추려면 각 컨트롤에 반복하지 말고 ``FormControlGroup``의 `labelWidth`를 쓰세요.
+    /// ``LabelPlacement/top`` 배치에는 영향이 없습니다.
+    ///
+    /// - Parameter width: 라벨 열 폭(pt).
+    /// - Returns: 수정된 FormControl 컴포넌트
+    public func labelWidth(_ width: CGFloat) -> Self {
+        modifying { $0.explicitLabelWidth = width }
+    }
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         switch labelPlacement {
@@ -196,12 +215,12 @@ private extension FormControl {
     @ViewBuilder
     var leadingLayout: some View {
         if hasLabel {
-            // 라벨의 세로 중앙을 입력 슬롯의 세로 중앙에 정렬한다(Footer는 입력 아래로 흐름).
-            // Figma 기준: Leading 배치에서 라벨은 입력 필드 높이의 중앙에 위치한다.
-            // 라벨이 여러 줄로 길어져도 입력 필드 높이(48)를 넘지 않도록 maxHeight로 제한한다.
+            // Figma 기준: Leading 배치에서 라벨은 입력 첫 줄(높이 48 영역)에 맞춘다.
+            // - 입력 높이 ≤ 48: 라벨을 입력 세로 중앙에 정렬
+            // - 입력 높이 > 48(예: 여러 줄 TextArea): 라벨을 입력 상단 48pt(첫 줄)에 고정
+            // 라벨이 여러 줄로 길어져도 입력 첫 줄 높이(48)를 넘지 않도록 maxHeight로 제한한다.
             HStack(alignment: .inputCenter, spacing: .spacing16) {
-                labelRow
-                    .frame(maxHeight: .dimension48)
+                leadingLabel
                     .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
                 inputWrapper
             }
@@ -210,11 +229,38 @@ private extension FormControl {
         }
     }
 
-    /// 입력 슬롯과 Footer를 묶는 세로 래퍼. 입력 슬롯의 세로 중앙을 ``VerticalAlignment/inputCenter``로 노출한다.
+    /// leading 배치용 라벨. 높이는 48로 제한하고, 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
+    ///
+    /// 폭 우선순위: ``labelWidth(_:)`` 명시값 → ``FormControlGroup`` 주입값 → 없으면 본연 폭.
+    /// 실제 적용 폭과 무관하게 라벨 **본연 폭**을 ``FormLabelWidthKey``로 보고해,
+    /// ``FormControlGroup``이 최댓값(가장 긴 라벨)을 계산할 수 있게 한다.
+    var leadingLabel: some View {
+        labelRow
+            .frame(maxHeight: .dimension48)
+            .frame(width: resolvedLabelWidth, alignment: .leading)
+            .background(alignment: .topLeading) {
+                labelRow
+                    .fixedSize(horizontal: true, vertical: false)
+                    .hidden()
+                    .background(GeometryReader { proxy in
+                        SwiftUI.Color.clear.preference(key: FormLabelWidthKey.self, value: proxy.size.width)
+                    })
+            }
+    }
+
+    /// leading 배치에서 라벨에 적용할 폭. 명시값 > 컬럼 주입값 > `nil`(본연 폭) 순.
+    var resolvedLabelWidth: CGFloat? {
+        explicitLabelWidth ?? columnLabelWidth
+    }
+
+    /// 입력 슬롯과 Footer를 묶는 세로 래퍼. 입력 슬롯의 정렬 기준(``VerticalAlignment/inputCenter``)을 노출한다.
+    ///
+    /// 정렬 기준은 입력 높이의 중앙이 아니라 `min(높이, 48)/2`다. 입력이 48 이하면 중앙이지만,
+    /// 48을 넘으면 24(=48/2)로 고정되어 라벨이 입력 상단 48pt(첫 줄)에 정렬된다.
     var inputWrapper: some View {
         VStack(alignment: .leading, spacing: .spacing8) {
             accessibleInput
-                .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
+                .alignmentGuide(.inputCenter) { min($0.height, .dimension48) / 2 }
             if hasFooter {
                 footer
             }
@@ -223,17 +269,40 @@ private extension FormControl {
 
     /// 라벨 + 필수(`*`) 행.
     var labelRow: some View {
-        HStack(spacing: .spacing4) {
-            Text(labelText ?? "")
-                .typography(variant: labelVariant, weight: .bold, semantic: .labelNeutral)
-            if isRequired {
-                Text(verbatim: "*")
-                    .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+        styledLabel
+            .padding(.horizontal, .spacing2)
+            // 라벨은 입력 슬롯의 accessibilityLabel로 연결되므로, 별도 요소로 중복 낭독되지 않게 숨긴다.
+            .accessibilityHidden(true)
+    }
+
+    /// 라벨과 필수(`*`)를 렌더링한다.
+    ///
+    /// - 2줄 이내로 다 들어오면 라벨+`*`를 **하나의 Text**로 이어 그려, `*`가 마지막 글자 뒤에
+    ///   자연스럽게 붙는다(각 세그먼트는 자신의 타이포그래피 유지).
+    /// - 라벨이 더 길어 말줄임이 필요하면 **라벨만 truncate**하고 `*`는 별도 요소로 항상 표시한다.
+    ///   (단일 Text로 합치면 `*`가 끝에서 함께 잘려 사라지므로 ``ViewThatFits``로 분기한다.)
+    @ViewBuilder
+    var styledLabel: some View {
+        let labelPart = Text(labelText ?? "")
+            .typography(variant: labelVariant, weight: .bold, semantic: .labelNeutral)
+        let asterisk = Text(verbatim: " *")
+            .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+
+        if isRequired {
+            ViewThatFits(in: .vertical) {
+                // 1) 다 들어오는 경우: 인라인 단일 Text (`*`가 마지막 글자 뒤)
+                labelPart + asterisk
+                // 2) 넘치는 경우: 라벨만 말줄임하고 `*`는 마지막 줄 끝에 유지
+                HStack(alignment: .lastTextBaseline, spacing: 0) {
+                    labelPart
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                    asterisk
+                }
             }
+        } else {
+            labelPart
         }
-        .padding(.horizontal, .spacing2)
-        // 라벨은 입력 슬롯의 accessibilityLabel로 연결되므로, 별도 요소로 중복 낭독되지 않게 숨긴다.
-        .accessibilityHidden(true)
     }
 
     /// 메시지(좌) + 액세서리(우) Footer 행.
@@ -319,10 +388,11 @@ private extension FormControl {
 // MARK: - Alignment
 
 private extension VerticalAlignment {
-    /// Leading 배치에서 라벨을 입력 슬롯의 세로 중앙에 맞추기 위한 정렬.
+    /// Leading 배치에서 라벨을 입력 슬롯의 첫 줄(높이 48 영역)에 맞추기 위한 정렬.
     ///
-    /// 라벨과 입력 슬롯이 각각 이 가이드를 자신의 세로 중앙으로 보고하면, Footer가 입력 아래로
-    /// 흐르더라도 라벨은 입력 슬롯(Footer 제외)의 중앙에 정렬된다.
+    /// 라벨은 자신의 세로 중앙을, 입력 슬롯은 `min(높이, 48)/2` 지점을 이 가이드로 보고한다.
+    /// 그 결과 입력이 48 이하면 라벨이 입력 중앙에, 48을 넘으면 입력 상단 48pt(첫 줄)에 정렬된다.
+    /// (Footer는 입력 아래로 흐르며 정렬 기준에서 제외된다.)
     enum InputCenter: AlignmentID {
         static func defaultValue(in dimensions: ViewDimensions) -> CGFloat {
             dimensions[VerticalAlignment.center]
@@ -330,6 +400,31 @@ private extension VerticalAlignment {
     }
 
     static let inputCenter = VerticalAlignment(InputCenter.self)
+}
+
+// MARK: - Label column coordination
+
+/// leading 배치 라벨들의 **본연 폭 최댓값**을 모으는 PreferenceKey.
+///
+/// ``FormControlGroup``이 이 값을 읽어 ``EnvironmentValues/formLabelColumnWidth``로 재주입하고,
+/// 각 ``FormControl``의 leading 라벨이 그 폭에 맞춰져 입력 시작 위치가 정렬된다.
+struct FormLabelWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+extension EnvironmentValues {
+    /// ``FormControlGroup``이 주입하는 공유 라벨 컬럼 폭. 컨테이너 밖(단독 사용)에서는 `nil`이다.
+    var formLabelColumnWidth: CGFloat? {
+        get { self[FormLabelColumnWidthKey.self] }
+        set { self[FormLabelColumnWidthKey.self] = newValue }
+    }
+}
+
+private struct FormLabelColumnWidthKey: EnvironmentKey {
+    static let defaultValue: CGFloat? = nil
 }
 
 // MARK: - Status 편의 변환
