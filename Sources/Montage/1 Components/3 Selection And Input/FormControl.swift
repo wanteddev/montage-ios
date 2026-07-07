@@ -171,9 +171,8 @@ public struct FormControl: View {
 
     /// leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니다.
     ///
-    /// 주 용도는 두 가지입니다.
-    /// 1. **단독** leading FormControl에서 라벨 폭을 스펙값으로 맞출 때.
-    /// 2. ``FormControlGroup`` 안에서 **특정 행 하나만** 다른 폭으로 둘 때(per-control 값이 컨테이너 폭보다 우선).
+    /// 주 용도는 두 가지입니다. (1) 단독 leading FormControl에서 라벨 폭을 스펙값으로 맞출 때, 그리고
+    /// (2) ``FormControlGroup`` 안에서 특정 행 하나만 다른 폭으로 둘 때(per-control 값이 컨테이너 폭보다 우선).
     ///
     /// 컬럼 전체를 고정 폭으로 맞추려면 각 컨트롤에 반복하지 말고 ``FormControlGroup``의 `labelWidth`를 쓰세요.
     /// ``LabelPlacement/top`` 배치에는 영향이 없습니다.
