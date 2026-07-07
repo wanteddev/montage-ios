@@ -979,6 +979,12 @@
           "kind": "method"
         },
         {
+          "name": "labelWidth(_:)",
+          "signature": "func labelWidth(CGFloat) -> FormControl",
+          "summary": "leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "message(_:)",
           "signature": "func message(String?) -> FormControl",
           "summary": "도움말/에러 메시지를 설정합니다.",
@@ -1055,6 +1061,22 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "formcontrolgroup",
+      "name": "FormControlGroup",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct FormControlGroup",
+      "summary": "여러 FormControl을 세로로 쌓을 때, 라벨 열의 폭을 가장 긴 라벨 기준으로 통일해 입력(input)의 시작 위치를 정렬하는 컨테이너입니다. (FormControl.LabelPlacement.leading 대상)",
+      "initializers": [
+        {
+          "signature": "init(labelWidth:spacing:content:)"
+        }
+      ],
+      "modifiers": [],
+      "staticMembers": [],
+      "nestedTypes": []
     },
     {
       "slug": "framedstyle",
