@@ -953,7 +953,7 @@
       "category": "selection-input",
       "kind": "struct",
       "declaration": "struct FormControl",
-      "summary": "입력 컨트롤(TextField 등)에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.",
+      "summary": "입력 컨트롤에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.",
       "initializers": [
         {
           "signature": "init(input:)"
@@ -1055,7 +1055,7 @@
             {
               "name": "textFieldStatus",
               "signature": "var textFieldStatus: TextField.Status",
-              "summary": "같은 의미의 TextField.Status 값으로 변환합니다.",
+              "summary": "같은 의미의 TextField 상태 값으로 변환합니다.",
               "kind": "property"
             }
           ]
@@ -2564,7 +2564,7 @@
       "modifiers": [
         {
           "name": "bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)",
-          "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat, trailingResourceSpacing: CGFloat) -> TextArea",
+          "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
           "summary": "텍스트 영역 하단에 표시할 UI 요소를 설정합니다.",
           "kind": "method"
         },
