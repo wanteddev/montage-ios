@@ -39,8 +39,9 @@ const CATEGORY_MAP = {
   ],
   presentation: ['bottomsheet', 'popover', 'popup', 'tooltip'],
   'selection-input': [
-    'checkbox', 'checkmark', 'filterbutton', 'framedstyle', 'radio',
-    'segmentedcontrol', 'select', 'slider', 'switch', 'textarea', 'textfield',
+    'checkbox', 'checkmark', 'filterbutton', 'formcontrol', 'formcontrolgroup',
+    'framedstyle', 'radio', 'segmentedcontrol', 'select', 'slider', 'switch',
+    'textarea', 'textfield',
   ],
   utilities: [
     'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
