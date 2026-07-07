@@ -154,6 +154,26 @@ Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
 </details>
 <details>
 
+<summary>``func labelWidth(CGFloat) -> FormControl``</summary>
+
+
+leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `width` | 라벨 열 폭(pt). |
+- **Return Value**
+
+  수정된 FormControl 컴포넌트
+- **Discussion**
+
+  주 용도는 두 가지입니다.
+
+  컬럼 전체를 고정 폭으로 맞추려면 각 컨트롤에 반복하지 말고 [FormControlGroup](/documentation/montage/formcontrolgroup.md)의 `labelWidth`를 쓰세요. [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치에는 영향이 없습니다.
+</details>
+<details>
+
 <summary>``func message(String?) -> FormControl``</summary>
 
 

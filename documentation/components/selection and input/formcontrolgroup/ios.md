@@ -1,0 +1,79 @@
+---
+title: Form control group
+description: 여러 을 세로로 쌓을 때, 라벨 열의 폭을 해 입력(input)의 시작 위치를 정렬하는 컨테이너입니다. ( 대상)
+---
+
+```swift
+@MainActor struct FormControlGroup<Content> where Content : View
+```
+
+## Overview
+
+개별 FormControl에 폭을 지정할 필요 없이 이 컨테이너로 감싸기만 하면, 내부 leading 라벨들의 본연 폭 중 최댓값으로 라벨 열이 맞춰집니다. Dynamic Type·다국어로 라벨 길이가 바뀌어도 자동으로 재정렬되므로 호출부에 고정 폭(매직 넘버)을 두지 않아도 됩니다.
+
+```swift
+FormControlGroup {
+    FormControl { context in
+        TextField(text: $name).status(context.status.textFieldStatus)
+    }
+    .labelPlacement(.leading)
+    .label("이름")
+
+    FormControl { context in
+        TextField(text: $email).status(context.status.textFieldStatus)
+    }
+    .labelPlacement(.leading)
+    .label("이메일 주소")
+}
+// → 두 입력의 leading이 정렬되고, 라벨 열은 "이메일 주소" 폭으로 통일된다.
+```
+
+자동 측정 대신 라벨 열 폭을 하고 싶으면 `labelWidth`를 지정합니다. 이 경우 측정을 건너뛰고 모든 행이 그 폭을 씁니다. (여러 화면에서 동일한 폭을 맞추거나, 측정으로 인한 1프레임 흔들림을 피하고 싶을 때)
+
+```swift
+FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64로 고정
+```
+
+>  **Note**
+>
+> [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치 FormControl에는 영향을 주지 않습니다. 특정 행 하나만 다른 폭으로 두려면 그 FormControl에 [labelWidth(_:)](/documentation/montage/formcontrol/labelwidth(_:).md)를 사용하세요 (per-control 값이 컨테이너 폭보다 우선합니다).
+
+## Topics
+
+### Initializers
+
+<details>
+
+<summary>``init(labelWidth: CGFloat?, spacing: CGFloat, content: () -> Content)``</summary>
+
+
+컨테이너를 생성합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `labelWidth` | 라벨 열 폭을 고정할 값. 생략(`nil`)하면 내부 라벨 최댓값으로 한다. |
+  | `spacing` | FormControl 사이의 세로 간격. 생략하면 기본값으로 `.spacing16` 적용 |
+  | `content` | 세로로 쌓을 [FormControl](/documentation/montage/formcontrol.md) 목록 |
+</details>
+
+### Instance Properties
+
+<details>
+
+<summary>``var body: some View``</summary>
+
+
+뷰의 내용과 동작을 정의합니다.
+</details>
+
+## Relationships
+
+Conforms To
+
+`Swift.Sendable`
+
+`SwiftUICore.View`
+
+
+
