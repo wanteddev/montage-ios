@@ -46,6 +46,7 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .textArea: TextAreaPreview()
         case .textField: TextFieldPreview()
         case .formControl: FormControlPreview()
+        case .formControlGroup: FormControlGroupPreview()
         case .select: SelectPreview()
         case .segmentedControl: SegmentedControlPreview()
         case .listCell: ListCellPreview()

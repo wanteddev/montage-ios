@@ -65,11 +65,12 @@
 		4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */; };
 		4DF7C54A2CE340F0002B241B /* ButtonPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */; };
 		4DF7C5522CE340F0002B241B /* TextFieldPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */; };
-		FC22BBBB2CE340F0002B241B /* FormControlPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */; };
 		4DF7C55D2CE340F0002B241B /* TooltipPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */; };
 		4DF7C5602CE340F0002B241B /* SelectPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A62CE340F0002B241B /* SelectPreview.swift */; };
 		4DFA5A532E572464003BED22 /* ShadowPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFA5A522E572464003BED22 /* ShadowPreview.swift */; };
 		DC24EF41B0DA94F41B7E6045 /* PreviewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146BA6920E2A24E4BF32CEC4 /* PreviewLayout.swift */; };
+		FC22BBBB2CE340F0002B241B /* FormControlPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */; };
+		FCFCFC012CE340F0002B241B /* FormControlGroupPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCFCFC022CE340F0002B241B /* FormControlGroupPreview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -128,7 +129,6 @@
 		4DF7C4A82CE340F0002B241B /* SnackBarPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackBarPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AA2CE340F0002B241B /* TextAreaPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAreaPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPreview.swift; sourceTree = "<group>"; };
-		FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormControlPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TooltipPreview.swift; sourceTree = "<group>"; };
 		4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationPreview.swift; sourceTree = "<group>"; };
@@ -136,6 +136,8 @@
 		4DF7C56A2CE342EA002B241B /* Blueprint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Blueprint-Info.plist"; sourceTree = "<group>"; };
 		4DFA5A522E572464003BED22 /* ShadowPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowPreview.swift; sourceTree = "<group>"; };
 		F415610E3023F8F843E803E3 /* PreviewOption.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PreviewOption.swift; sourceTree = "<group>"; };
+		FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormControlPreview.swift; sourceTree = "<group>"; };
+		FCFCFC022CE340F0002B241B /* FormControlGroupPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormControlGroupPreview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +229,8 @@
 				4DCAEA782E4C81A8007C24BF /* FallbackViewPreview.swift */,
 				4D10315F2EC457CD00C865E9 /* FilterButtonPreview.swift */,
 				4D4B71FC2DA649080069C4F7 /* FlowLayoutPreview.swift */,
+				FCFCFC022CE340F0002B241B /* FormControlGroupPreview.swift */,
+				FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */,
 				4D8A16F02E586B370094B8B7 /* FramedStylePreview.swift */,
 				4D5597492D19A33500CFBCA5 /* HorizontalProgressTrackerPreview.swift */,
 				4D853DF62D96491E004549CF /* IconButtonPreview.swift */,
@@ -254,7 +258,6 @@
 				4DF7C4AA2CE340F0002B241B /* TextAreaPreview.swift */,
 				4D88E6662E9CC90A00EA0E67 /* TextButtonPreview.swift */,
 				4DF7C4AB2CE340F0002B241B /* TextFieldPreview.swift */,
-				FC11AAAA2CE340F0002B241B /* FormControlPreview.swift */,
 				4D0D251D2DB763F600608CE5 /* ThumbnailPreview.swift */,
 				4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */,
 				4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */,
@@ -334,7 +337,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4D5B46D62CE34625001DD48B /* XCRemoteSwiftPackageReference "pretendard-ios" */,
-				4D45DAEF2D910C2D002B1686 /* XCLocalSwiftPackageReference ".." */,
+				4D45DAEF2D910C2D002B1686 /* XCLocalSwiftPackageReference "../../" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4D9F46AD2CE32750000DBA7D /* Products */;
@@ -408,6 +411,7 @@
 				4D5597562D1E802E00CFBCA5 /* PageCounterPreview.swift in Sources */,
 				4DF7C5522CE340F0002B241B /* TextFieldPreview.swift in Sources */,
 				FC22BBBB2CE340F0002B241B /* FormControlPreview.swift in Sources */,
+				FCFCFC012CE340F0002B241B /* FormControlGroupPreview.swift in Sources */,
 				4D96F7CA2E9FA8C300DFECE8 /* ColorPreview.swift in Sources */,
 				4D5D8C9E2D2E5D9E00108C92 /* CategoryPreview.swift in Sources */,
 				4D8100542EA76329004CAD92 /* ComponentSection.swift in Sources */,
@@ -631,7 +635,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		4D45DAEF2D910C2D002B1686 /* XCLocalSwiftPackageReference ".." */ = {
+		4D45DAEF2D910C2D002B1686 /* XCLocalSwiftPackageReference "../../" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../;
 		};
