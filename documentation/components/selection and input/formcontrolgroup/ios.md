@@ -1,6 +1,6 @@
 ---
 title: Form control group
-description: 여러 을 세로로 쌓을 때, 라벨 열의 폭을 해 입력(input)의 시작 위치를 정렬하는 컨테이너입니다. ( 대상)
+description: 여러 FormControl을 세로로 쌓을 때 라벨 열 폭을 통일해 입력의 시작 위치를 정렬하는 컨테이너입니다.
 ---
 
 ```swift
@@ -8,6 +8,8 @@ description: 여러 을 세로로 쌓을 때, 라벨 열의 폭을 해 입력(in
 ```
 
 ## Overview
+
+Leading 배치([FormControl.LabelPlacement.leading](/documentation/montage/formcontrol/labelplacement/leading.md))의 라벨들을 대상으로, 내부 라벨의 본연 폭 중 가장 긴 값으로 라벨 열이 맞춰집니다.
 
 개별 FormControl에 폭을 지정할 필요 없이 이 컨테이너로 감싸기만 하면, 내부 leading 라벨들의 본연 폭 중 최댓값으로 라벨 열이 맞춰집니다. Dynamic Type·다국어로 라벨 길이가 바뀌어도 자동으로 재정렬되므로 호출부에 고정 폭(매직 넘버)을 두지 않아도 됩니다.
 
