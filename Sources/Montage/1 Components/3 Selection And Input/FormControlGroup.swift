@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-/// 여러 ``FormControl``을 세로로 쌓을 때, 라벨 열의 폭을 **가장 긴 라벨 기준으로 통일**해
-/// 입력(input)의 시작 위치를 정렬하는 컨테이너입니다. (``FormControl/LabelPlacement/leading`` 대상)
+/// 여러 FormControl을 세로로 쌓을 때 라벨 열 폭을 통일해 입력의 시작 위치를 정렬하는 컨테이너입니다.
+///
+/// leading 배치(``FormControl/LabelPlacement/leading``)의 라벨들을 대상으로, 내부 라벨의 본연 폭 중
+/// 가장 긴 값으로 라벨 열이 맞춰집니다.
 ///
 /// 개별 FormControl에 폭을 지정할 필요 없이 이 컨테이너로 감싸기만 하면, 내부 leading 라벨들의
 /// 본연 폭 중 최댓값으로 라벨 열이 맞춰집니다. Dynamic Type·다국어로 라벨 길이가 바뀌어도
