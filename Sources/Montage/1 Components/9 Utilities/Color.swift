@@ -538,7 +538,13 @@ public enum Color {
         case backgroundTransparent
         /// 투명 대체 배경 색상
         case backgroundTransparentAlternative
-        
+        /// 긍정 상태 배경 색상
+        case backgroundStatusPositive
+        /// 주의 상태 배경 색상
+        case backgroundStatusCautionary
+        /// 부정 상태 배경 색상
+        case backgroundStatusNegative
+
         /// 비활성화된 상호작용 색상
         case interactionInactive
         /// 비활성화된 상호작용 색상
@@ -556,6 +562,18 @@ public enum Color {
         case lineSolidNeutral
         /// 대체 실선 색상
         case lineSolidAlternative
+        /// 기본 주요 선 색상
+        case linePrimaryNormal
+        /// 강조된 주요 선 색상
+        case linePrimaryStrong
+        /// 기본 부정 상태 선 색상
+        case lineStatusNegativeNormal
+        /// 강조된 부정 상태 선 색상
+        case lineStatusNegativeStrong
+        /// 기본 주의 상태 선 색상
+        case lineStatusCautionaryNormal
+        /// 기본 긍정 상태 선 색상
+        case lineStatusPositiveNormal
 
         /// 긍정적인 상태 색상
         case statusPositive
@@ -667,6 +685,15 @@ public enum Color {
             case .backgroundTransparentAlternative:
                 atomicColor = style == .dark ? .coolNeutral17 : .common100
                 opacity = style == .dark ? .p061 : .p028
+            case .backgroundStatusPositive:
+                atomicColor = style == .dark ? .green60 : .green50
+                opacity = .p008
+            case .backgroundStatusCautionary:
+                atomicColor = style == .dark ? .orange60 : .orange50
+                opacity = .p008
+            case .backgroundStatusNegative:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .p008
             case .interactionInactive:
                 atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
             case .interactionDisable:
@@ -686,6 +713,24 @@ public enum Color {
                 atomicColor = style == .dark ? .coolNeutral23 : .coolNeutral97
             case .lineSolidAlternative:
                 atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .linePrimaryNormal:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .p028
+            case .linePrimaryStrong:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .p043
+            case .lineStatusNegativeNormal:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .p043
+            case .lineStatusNegativeStrong:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .p052
+            case .lineStatusCautionaryNormal:
+                atomicColor = style == .dark ? .orange60 : .orange50
+                opacity = .p043
+            case .lineStatusPositiveNormal:
+                atomicColor = style == .dark ? .green60 : .green50
+                opacity = .p043
             case .statusPositive:
                 atomicColor = style == .dark ? .green60 : .green50
             case .statusCautionary:
