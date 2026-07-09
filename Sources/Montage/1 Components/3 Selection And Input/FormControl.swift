@@ -214,10 +214,10 @@ private extension FormControl {
     @ViewBuilder
     var leadingLayout: some View {
         if hasLabel {
-            // Figma 기준: Leading 배치에서 라벨은 입력 첫 줄(높이 48 영역)에 맞춘다.
-            // - 입력 높이 ≤ 48: 라벨을 입력 세로 중앙에 정렬
-            // - 입력 높이 > 48(예: 여러 줄 TextArea): 라벨을 입력 상단 48pt(첫 줄)에 고정
-            // 라벨이 여러 줄로 길어져도 입력 첫 줄 높이(48)를 넘지 않도록 maxHeight로 제한한다.
+            // Figma 기준: Leading 배치에서 라벨은 입력 첫 줄 높이 영역(medium 40 / large 48)에 맞춘다.
+            // - 입력 높이 ≤ 첫 줄 높이: 라벨을 입력 세로 중앙에 정렬
+            // - 입력 높이 > 첫 줄 높이(예: 여러 줄 TextArea): 라벨을 입력 상단 첫 줄에 고정
+            // 라벨이 여러 줄로 길어져도 입력 첫 줄 높이를 넘지 않도록 maxHeight로 제한한다.
             HStack(alignment: .inputCenter, spacing: .spacing16) {
                 leadingLabel
                     .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
@@ -228,14 +228,14 @@ private extension FormControl {
         }
     }
 
-    /// leading 배치용 라벨. 높이는 48로 제한하고, 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
+    /// leading 배치용 라벨. 높이는 입력 첫 줄 높이(``inputFirstLineHeight``)로 제한하고, 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
     ///
     /// 폭 우선순위: ``labelWidth(_:)`` 명시값 → ``FormControlGroup`` 주입값 → 없으면 본연 폭.
     /// 실제 적용 폭과 무관하게 라벨 **본연 폭**을 ``FormLabelWidthKey``로 보고해,
     /// ``FormControlGroup``이 최댓값(가장 긴 라벨)을 계산할 수 있게 한다.
     var leadingLabel: some View {
         labelRow
-            .frame(maxHeight: .dimension48)
+            .frame(maxHeight: inputFirstLineHeight)
             .frame(width: resolvedLabelWidth, alignment: .leading)
             .background(alignment: .topLeading) {
                 labelRow
@@ -254,12 +254,12 @@ private extension FormControl {
 
     /// 입력 슬롯과 Footer를 묶는 세로 래퍼. 입력 슬롯의 정렬 기준(``VerticalAlignment/inputCenter``)을 노출한다.
     ///
-    /// 정렬 기준은 입력 높이의 중앙이 아니라 `min(높이, 48)/2`다. 입력이 48 이하면 중앙이지만,
-    /// 48을 넘으면 24(=48/2)로 고정되어 라벨이 입력 상단 48pt(첫 줄)에 정렬된다.
+    /// 정렬 기준은 입력 높이의 중앙이 아니라 `min(높이, 입력 첫 줄 높이)/2`다. 입력이 첫 줄 높이 이하면 중앙이지만,
+    /// 넘으면 `첫 줄 높이/2`로 고정되어 라벨이 입력 상단 첫 줄(medium 40 / large 48)에 정렬된다.
     var inputWrapper: some View {
         VStack(alignment: .leading, spacing: .spacing8) {
             accessibleInput
-                .alignmentGuide(.inputCenter) { min($0.height, .dimension48) / 2 }
+                .alignmentGuide(.inputCenter) { min($0.height, inputFirstLineHeight) / 2 }
             if hasFooter {
                 footer
             }
@@ -358,6 +358,16 @@ private extension FormControl {
         }
     }
 
+    /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨 높이 제한·세로 정렬 기준이 된다.
+    ///
+    /// 슬롯 입력 컴포넌트(TextField/TextArea)의 높이와 맞춘다: `.large` 48, `.medium` 40.
+    var inputFirstLineHeight: CGFloat {
+        switch size {
+        case .large: .dimension48
+        case .medium: .dimension40
+        }
+    }
+
     /// 상태에 따른 메시지 색. `.negative`에서만 강조 색을 사용한다.
     var messageColor: Color.Semantic {
         switch status {
@@ -387,10 +397,10 @@ private extension FormControl {
 // MARK: - Alignment
 
 private extension VerticalAlignment {
-    /// Leading 배치에서 라벨을 입력 슬롯의 첫 줄(높이 48 영역)에 맞추기 위한 정렬.
+    /// Leading 배치에서 라벨을 입력 슬롯의 첫 줄(medium 40 / large 48 영역)에 맞추기 위한 정렬.
     ///
-    /// 라벨은 자신의 세로 중앙을, 입력 슬롯은 `min(높이, 48)/2` 지점을 이 가이드로 보고한다.
-    /// 그 결과 입력이 48 이하면 라벨이 입력 중앙에, 48을 넘으면 입력 상단 48pt(첫 줄)에 정렬된다.
+    /// 라벨은 자신의 세로 중앙을, 입력 슬롯은 `min(높이, 첫 줄 높이)/2` 지점을 이 가이드로 보고한다.
+    /// 그 결과 입력이 첫 줄 높이 이하면 라벨이 입력 중앙에, 넘으면 입력 상단 첫 줄에 정렬된다.
     /// (Footer는 입력 아래로 흐르며 정렬 기준에서 제외된다.)
     enum InputCenter: AlignmentID {
         static func defaultValue(in dimensions: ViewDimensions) -> CGFloat {
