@@ -214,10 +214,9 @@ private extension FormControl {
     @ViewBuilder
     var leadingLayout: some View {
         if hasLabel {
-            // Figma 기준: Leading 배치에서 라벨은 입력 첫 줄 높이 영역(medium 40 / large 48)에 맞춘다.
-            // - 입력 높이 ≤ 첫 줄 높이: 라벨을 입력 세로 중앙에 정렬
-            // - 입력 높이 > 첫 줄 높이(예: 여러 줄 TextArea): 라벨을 입력 상단 첫 줄에 고정
-            // 라벨이 여러 줄로 길어져도 입력 첫 줄 높이를 넘지 않도록 maxHeight로 제한한다.
+            // Figma 기준: Leading 배치에서 라벨(한 줄)은 입력 첫 줄 높이 영역(medium 40 / large 48)에 맞춘다.
+            // - 입력 높이 ≤ 첫 줄 높이(예: TextField): 라벨을 입력 세로 중앙에 정렬
+            // - 입력 높이 > 첫 줄 높이(예: 여러 줄 TextArea): 라벨을 입력 상단 첫 줄 중앙에 정렬
             HStack(alignment: .inputCenter, spacing: .spacing16) {
                 leadingLabel
                     .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
@@ -228,14 +227,16 @@ private extension FormControl {
         }
     }
 
-    /// leading 배치용 라벨. 높이는 입력 첫 줄 높이(``inputFirstLineHeight``)로 제한하고, 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
+    /// leading 배치용 라벨. 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
+    ///
+    /// 높이는 고정하지 않는다. 라벨은 ``styledLabel``에서 한 줄로 제한되며, Dynamic Type로
+    /// 커진 글자가 잘리지 않도록 높이가 자연스럽게 늘어난다. (고정 높이 clip은 접근성 위반)
     ///
     /// 폭 우선순위: ``labelWidth(_:)`` 명시값 → ``FormControlGroup`` 주입값 → 없으면 본연 폭.
     /// 실제 적용 폭과 무관하게 라벨 **본연 폭**을 ``FormLabelWidthKey``로 보고해,
     /// ``FormControlGroup``이 최댓값(가장 긴 라벨)을 계산할 수 있게 한다.
     var leadingLabel: some View {
         labelRow
-            .frame(maxHeight: inputFirstLineHeight)
             .frame(width: resolvedLabelWidth, alignment: .leading)
             .background(alignment: .topLeading) {
                 labelRow
@@ -276,28 +277,25 @@ private extension FormControl {
 
     /// 라벨과 필수(`*`)를 렌더링한다.
     ///
-    /// - 2줄 이내로 다 들어오면 라벨+`*`를 **하나의 Text**로 이어 그려, `*`가 마지막 글자 뒤에
-    ///   자연스럽게 붙는다(각 세그먼트는 자신의 타이포그래피 유지).
-    /// - 라벨이 더 길어 말줄임이 필요하면 **라벨만 truncate**하고 `*`는 별도 요소로 항상 표시한다.
-    ///   (단일 Text로 합치면 `*`가 끝에서 함께 잘려 사라지므로 ``ViewThatFits``로 분기한다.)
+    /// 라벨은 **한 줄**로 제한하고(`lineLimit(1)`), 넘치면 말줄임(`tail`)한다.
+    /// 줄 수 기반 제한이라 Dynamic Type로 글자가 커져도 한 줄이 함께 커지며 잘리지 않는다.
+    /// (고정 높이로 자르면 큰 글자에서 텍스트가 클립되므로 사용하지 않는다.)
+    ///
+    /// 필수(`*`)는 라벨 말줄임과 무관하게 끝에 항상 보이도록 **별도 요소**로 두고,
+    /// 자신의 고유 크기를 유지(`fixedSize`)해 함께 잘리지 않게 한다.
     @ViewBuilder
     var styledLabel: some View {
         let labelPart = Text(labelText ?? "")
             .typography(variant: labelVariant, weight: .bold, semantic: .labelNeutral)
-        let asterisk = Text(verbatim: " *")
-            .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+            .lineLimit(1)
+            .truncationMode(.tail)
 
         if isRequired {
-            ViewThatFits(in: .vertical) {
-                // 1) 다 들어오는 경우: 인라인 단일 Text (`*`가 마지막 글자 뒤)
-                labelPart + asterisk
-                // 2) 넘치는 경우: 라벨만 말줄임하고 `*`는 마지막 줄 끝에 유지
-                HStack(alignment: .lastTextBaseline, spacing: 0) {
-                    labelPart
-                        .lineLimit(2)
-                        .truncationMode(.tail)
-                    asterisk
-                }
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                labelPart
+                Text(verbatim: " *")
+                    .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+                    .fixedSize()
             }
         } else {
             labelPart
@@ -358,9 +356,9 @@ private extension FormControl {
         }
     }
 
-    /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨 높이 제한·세로 정렬 기준이 된다.
+    /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨을 입력 첫 줄에 맞추는 세로 정렬 기준이 된다.
     ///
-    /// 슬롯 입력 컴포넌트(TextField/TextArea)의 높이와 맞춘다: `.large` 48, `.medium` 40.
+    /// 슬롯 입력 컴포넌트(TextField/TextArea)의 고정 높이와 맞춘다: `.large` 48, `.medium` 40.
     var inputFirstLineHeight: CGFloat {
         switch size {
         case .large: .dimension48
