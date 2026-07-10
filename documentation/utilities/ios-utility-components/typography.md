@@ -223,7 +223,7 @@ Dynamic Type 스케일의 기준이 되는 SwiftUI 텍스트 스타일.
 <summary>``var uiTextStyle: UIFont.TextStyle``</summary>
 
 
-Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. 과 동일한 논리이며 UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
+Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. [textStyle](/documentation/montage/typography/variant/textstyle.md)과 동일한 논리이며 UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
 </details>
 
 </details>

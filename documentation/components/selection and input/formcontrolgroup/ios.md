@@ -30,7 +30,7 @@ FormControlGroup {
 // → 두 입력의 leading이 정렬되고, 라벨 열은 "이메일 주소" 폭으로 통일된다.
 ```
 
-자동 측정 대신 라벨 열 폭을 하고 싶으면 `labelWidth`를 지정합니다. 이 경우 측정을 건너뛰고 모든 행이 그 폭을 씁니다. (여러 화면에서 동일한 폭을 맞추거나, 측정으로 인한 1프레임 흔들림을 피하고 싶을 때)
+자동 측정 대신 라벨 열 폭을 **고정**하고 싶으면 `labelWidth`를 지정합니다. 이 경우 측정을 건너뛰고 모든 행이 그 폭을 씁니다. (여러 화면에서 동일한 폭을 맞추거나, 측정으로 인한 1프레임 흔들림을 피하고 싶을 때)
 
 ```swift
 FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64로 고정
@@ -54,7 +54,7 @@ FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `labelWidth` | 라벨 열 폭을 고정할 값. 생략(`nil`)하면 내부 라벨 최댓값으로 한다. |
+  | `labelWidth` | 라벨 열 폭을 고정할 값. 생략(`nil`)하면 내부 라벨 최댓값으로 **자동 측정**한다. |
   | `spacing` | FormControl 사이의 세로 간격. 생략하면 기본값으로 `.spacing16` 적용 |
   | `content` | 세로로 쌓을 [FormControl](/documentation/montage/formcontrol.md) 목록 |
 </details>
