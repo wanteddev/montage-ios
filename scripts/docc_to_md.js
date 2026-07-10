@@ -15,6 +15,16 @@ function readJsonCached(filePath) {
   return parsed;
 }
 
+// 취소선 렌더링 + 백스톱 경고
+// Montage docstring은 취소선을 의도적으로 쓰지 않는다. 대부분 '~'를 숫자 범위
+// 구분자(예: 65~90%)로 썼다가 DocC가 취소선으로 오인한 경우다. 감지되면 경고해
+// 소스에서 '\~'로 이스케이프하도록 유도한다. (DOCUMENTATION_GUIDELINES 참조)
+function renderStrikethrough(inlineContent, references) {
+  const inner = renderRichInline(inlineContent, references);
+  console.warn(`⚠️ strikethrough(취소선) 감지: "${inner}" — docstring에서 범위 구분자 '~'를 '\\~'로 이스케이프했는지 확인하세요 (DOCUMENTATION_GUIDELINES 참조).`);
+  return '~~' + inner + '~~';
+}
+
 function renderAbstractText(abstract, references) {
   if (!Array.isArray(abstract)) return '';
   return abstract.map((a) => {
@@ -24,7 +34,7 @@ function renderAbstractText(abstract, references) {
     if (a.type === 'emphasis')
       return '*' + renderRichInline(a.inlineContent, references) + '*';
     if (a.type === 'strikethrough')
-      return '~~' + renderRichInline(a.inlineContent, references) + '~~';
+      return renderStrikethrough(a.inlineContent, references);
     if (a.type === 'reference' && a.identifier) {
       const ref = references ? references[a.identifier] : null;
       if (ref) return `[${ref.title}](${ref.url}.md)`;
@@ -235,7 +245,7 @@ function renderInlineContent(content, references, options = {}) {
           if (ic.type === 'emphasis')
             return '*' + renderRichInline(ic.inlineContent, references) + '*';
           if (ic.type === 'strikethrough')
-            return '~~' + renderRichInline(ic.inlineContent, references) + '~~';
+            return renderStrikethrough(ic.inlineContent, references);
           if (ic.type === 'reference' && ic.identifier) {
             const ref = references ? references[ic.identifier] : null;
             if (ref) {
@@ -300,7 +310,7 @@ function renderRichInline(inlineContent, references) {
       if (ic.type === 'emphasis')
         return '*' + renderRichInline(ic.inlineContent, references) + '*';
       if (ic.type === 'strikethrough')
-        return '~~' + renderRichInline(ic.inlineContent, references) + '~~';
+        return renderStrikethrough(ic.inlineContent, references);
       if (ic.type === 'reference' && ic.identifier) {
         const ref = references ? references[ic.identifier] : null;
         return ref ? `[${ref.title}](${ref.url}.md)` : '';
