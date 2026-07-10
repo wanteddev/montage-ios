@@ -291,6 +291,9 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 
 
 버튼의 외관을 결정하는 열거형입니다.
+- **Overview**
+
+  아이콘 버튼의 다양한 스타일과 크기를 정의합니다.
 #### Enumeration Cases
 
 <details>

@@ -94,6 +94,15 @@ PlayBadge()
 
 
 재생 배지의 크기를 정의하는 열거형입니다.
+- **Overview**
+
+  미디어 콘텐츠의 크기나 중요도에 따라 적절한 배지 크기를 선택할 수 있습니다.
+
+  ```swift
+  PlayBadge()
+      .size(.large) // 큰 크기의 배지 사용
+  ```
+
 #### Enumeration Cases
 
 <details>

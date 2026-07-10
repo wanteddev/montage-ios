@@ -47,6 +47,9 @@ ScrollView(scrollStatus: $scrollStatus,
 
 
 스크롤 뷰의 상태를 추적하는 구조체입니다.
+- **Overview**
+
+  스크롤 방향, 스크롤 뷰 크기, 콘텐츠 크기, 오프셋 등의 정보를 포함합니다.
 #### Initializers
 
 <details>

@@ -47,6 +47,9 @@ TextField(text: $inputText)
 
 
 텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다.
+- **Overview**
+
+  이 구조체를 사용하여 자동완성 목록의 섹션, 항목, 레이아웃 등을 정의할 수 있습니다.
 #### Operators
 
 <details>
@@ -93,6 +96,9 @@ TextField(text: $inputText)
 
 
 텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.
+- **Overview**
+
+  이 구조체를 사용하여 필드 내부 오른쪽에 표시될 버튼(Outlined 형태)의 텍스트와 동작을 정의할 수 있습니다.
 #### Initializers
 
 <details>
@@ -305,6 +311,9 @@ TextField(text: $inputText)
 
 
 텍스트 필드의 사이즈를 정의합니다.
+- **Overview**
+
+  사이즈에 따라 패딩, 모서리 반경, 최소 높이, 입력 타이포그래피, 아이콘 크기가 함께 결정됩니다.
 #### Enumeration Cases
 
 <details>

@@ -60,6 +60,18 @@ Loading 컴포넌트를 초기화합니다.
 
 
 로딩 애니메이션의 종류를 정의하는 열거형입니다.
+- **Overview**
+
+  애플리케이션의 디자인 요구사항이나 컨텍스트에 따라 적절한 로딩 스타일을 선택할 수 있습니다.
+
+  ```swift
+  // Wanted 스타일 로딩 사용
+  Loading(kind: .wanted)
+  
+  // 원형 로딩 사용
+  Loading(kind: .circular())
+  ```
+
 #### Enumeration Cases
 
 <details>
