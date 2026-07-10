@@ -15,10 +15,20 @@ function readJsonCached(filePath) {
   return parsed;
 }
 
-function renderAbstractText(abstract) {
+function renderAbstractText(abstract, references) {
   if (!Array.isArray(abstract)) return '';
   return abstract.map((a) => {
     if (a.type === 'codeVoice' && a.code) return '`' + a.code + '`';
+    if (a.type === 'strong')
+      return '**' + renderRichInline(a.inlineContent, references) + '**';
+    if (a.type === 'emphasis')
+      return '*' + renderRichInline(a.inlineContent, references) + '*';
+    if (a.type === 'strikethrough')
+      return '~~' + renderRichInline(a.inlineContent, references) + '~~';
+    if (a.type === 'reference' && a.identifier) {
+      const ref = references ? references[a.identifier] : null;
+      if (ref) return `[${ref.title}](${ref.url}.md)`;
+    }
     return a.text || '';
   }).join('');
 }
@@ -59,7 +69,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
     let deprecated = Boolean(ref.deprecated);
     let desc = '';
     if (ref.abstract && Array.isArray(ref.abstract)) {
-      desc = renderAbstractText(ref.abstract);
+      desc = renderAbstractText(ref.abstract, references);
     }
 
     let symbolDetails = '';
@@ -218,6 +228,12 @@ function renderInlineContent(content, references, options = {}) {
           if (ic.type === 'codeVoice' && ic.code) {
             return '`' + ic.code + '`';
           }
+          if (ic.type === 'strong')
+            return '**' + renderRichInline(ic.inlineContent, references) + '**';
+          if (ic.type === 'emphasis')
+            return '*' + renderRichInline(ic.inlineContent, references) + '*';
+          if (ic.type === 'strikethrough')
+            return '~~' + renderRichInline(ic.inlineContent, references) + '~~';
           if (ic.type === 'reference' && ic.identifier) {
             const ref = references ? references[ic.identifier] : null;
             if (ref) {
@@ -281,6 +297,8 @@ function renderRichInline(inlineContent, references) {
         return '**' + renderRichInline(ic.inlineContent, references) + '**';
       if (ic.type === 'emphasis')
         return '*' + renderRichInline(ic.inlineContent, references) + '*';
+      if (ic.type === 'strikethrough')
+        return '~~' + renderRichInline(ic.inlineContent, references) + '~~';
       if (ic.type === 'reference' && ic.identifier) {
         const ref = references ? references[ic.identifier] : null;
         return ref ? `[${ref.title}](${ref.url}.md)` : '';
@@ -355,7 +373,7 @@ function renderFrontmatter(json, isUtil = false) {
     fm += `title: ${title}\n`;
   }
   if (json.abstract && Array.isArray(json.abstract)) {
-    fm += `description: ${renderAbstractText(json.abstract)}\n`;
+    fm += `description: ${renderAbstractText(json.abstract, json.references)}\n`;
   }
   if (json.metadata && json.metadata.createdAt)
     fm += `createdAt: ${json.metadata.createdAt}\n`;
@@ -681,7 +699,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
   const canonicalSignature = canonicalizeSignature(signatureRaw);
   const hash = generateHash(canonicalSignature);
 
-  let desc = renderAbstractText(ref.abstract);
+  let desc = renderAbstractText(ref.abstract, ref.references);
   let symbolDetails = '';
 
   const symbolUrl = ref.url ? ref.url.replace(/^\//, '') : '';
@@ -692,7 +710,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         const symbolJson = readJsonCached(symbolJsonPath);
 
         if (!desc && Array.isArray(symbolJson.abstract)) {
-          desc = renderAbstractText(symbolJson.abstract);
+          desc = renderAbstractText(symbolJson.abstract, symbolJson.references);
         }
 
         // deprecationSummary 처리
