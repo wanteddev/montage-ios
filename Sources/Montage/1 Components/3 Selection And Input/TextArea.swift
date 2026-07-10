@@ -395,8 +395,11 @@ public struct TextArea: View {
                     .padding(.horizontal, -4.5)
                     .padding(.top, -4)
                     .padding(.bottom, -6)
-
-                if $text.wrappedValue.isEmpty, let placeholder {
+            }
+            // placeholder를 ZStack 자식으로 두면 여러 줄 placeholder가 TextArea 높이를 밀어 올리므로,
+            // 레이아웃에 참여하지 않는 overlay로 그려 입력 영역 크기 안에서 줄바꿈·말줄임만 한다.
+            .overlay(alignment: .topLeading) {
+                if text.isEmpty, let placeholder {
                     Text(placeholder)
                         .paragraph(
                             variant: size.inputVariant,

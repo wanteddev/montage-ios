@@ -397,15 +397,14 @@ private extension TextField {
                     .padding(size.iconPadding)
             }
 
-            SwiftUI.TextField(
-                "",
-                text: $text,
-                prompt: promptText
-            )
+            SwiftUI.TextField("", text: $text)
             .autocorrectionDisabled(fixAutocorrection)
             .font(.font(variant: size.inputVariant, weight: .regular))
             .foregroundStyle(fieldTextColor)
             .focused($textFieldFocusState)
+            // placeholder를 prompt로 전달하면 폭이 부족할 때 시스템이 폰트를 자동 축소(shrink-to-fit)하므로,
+            // 레이아웃에 참여하지 않는 overlay로 직접 그려 폰트 크기를 유지한 채 말줄임 처리한다.
+            .overlay(alignment: .leading) { placeholderOverlay }
             .padding(.horizontal, .spacing4)
             // 실제 입력 텍스트가 보조 기술에 그대로 노출되도록 value는 덮어쓰지 않는다.
             // 필드의 용도는 placeholder로 라벨링하고, 상태 메시지(오류 등)는 hint로 전달한다.
@@ -436,14 +435,20 @@ private extension TextField {
         text = String(text.prefix(maxLength))
     }
 
-    var promptText: Text? {
-        guard let placeholder else { return nil }
-        return Text(placeholder)
-            .typography(
-                variant: size.inputVariant,
-                weight: .regular,
-                color: placeholderTextColor
-            )
+    @ViewBuilder
+    var placeholderOverlay: some View {
+        if text.isEmpty, let placeholder {
+            Text(placeholder)
+                .typography(
+                    variant: size.inputVariant,
+                    weight: .regular,
+                    color: placeholderTextColor
+                )
+                .lineLimit(1)
+                .allowsHitTesting(false)
+                // 필드의 accessibilityLabel이 이미 placeholder를 노출하므로 중복 낭독을 막는다.
+                .accessibilityHidden(true)
+        }
     }
 
     @ViewBuilder
