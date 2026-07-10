@@ -99,6 +99,13 @@ public struct FormControl: View {
     /// ``FormControlGroup``이 주입하는 공유 라벨 컬럼 폭. leading 배치에서 라벨 폭을 이 값으로 맞춘다.
     @Environment(\.formLabelColumnWidth) private var columnLabelWidth
 
+    /// ``inputFirstLineHeight``의 Dynamic Type 스케일 기준값(크기별). 입력 슬롯의 첫 줄 높이는 글자
+    /// 크기에 따라 커지므로(입력 폰트가 `UIFontMetrics` 곡선으로 스케일), 라벨 정렬 기준도 같은 곡선으로
+    /// 커지도록 입력 폰트 variant의 텍스트 스타일(large `.body2`→`.subheadline`, medium `.label1`→`.footnote`)에
+    /// 맞춰 스케일한다. 기본 글자 크기에서는 48/40 그대로다.
+    @ScaledMetric(relativeTo: .subheadline) private var scaledLargeFirstLineHeight: CGFloat = .dimension48
+    @ScaledMetric(relativeTo: .footnote) private var scaledMediumFirstLineHeight: CGFloat = .dimension40
+
     /// 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
     ///
     /// 클로저는 현재 ``Context``(크기·상태)를 전달받으므로, 입력 컴포넌트가 FormControl의
@@ -256,7 +263,8 @@ private extension FormControl {
     /// 입력 슬롯과 Footer를 묶는 세로 래퍼. 입력 슬롯의 정렬 기준(``VerticalAlignment/inputCenter``)을 노출한다.
     ///
     /// 정렬 기준은 입력 높이의 중앙이 아니라 `min(높이, 입력 첫 줄 높이)/2`다. 입력이 첫 줄 높이 이하면 중앙이지만,
-    /// 넘으면 `첫 줄 높이/2`로 고정되어 라벨이 입력 상단 첫 줄(medium 40 / large 48)에 정렬된다.
+    /// 넘으면 `첫 줄 높이/2`로 고정되어 라벨이 입력 상단 첫 줄에 정렬된다. 첫 줄 높이(``inputFirstLineHeight``,
+    /// 기본 medium 40 / large 48)는 Dynamic Type로 함께 커진다.
     var inputWrapper: some View {
         VStack(alignment: .leading, spacing: .spacing8) {
             accessibleInput
@@ -358,11 +366,13 @@ private extension FormControl {
 
     /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨을 입력 첫 줄에 맞추는 세로 정렬 기준이 된다.
     ///
-    /// 슬롯 입력 컴포넌트(TextField/TextArea)의 고정 높이와 맞춘다: `.large` 48, `.medium` 40.
+    /// 기준값은 슬롯 입력 컴포넌트(TextField/TextArea)의 첫 줄 높이와 맞춘 `.large` 48 / `.medium` 40이며,
+    /// 입력 폰트가 Dynamic Type로 커지면 첫 줄도 함께 커지므로 ``scaledLargeFirstLineHeight`` /
+    /// ``scaledMediumFirstLineHeight``로 같은 곡선을 따라 스케일한다. (고정값이면 큰 글자에서 라벨 정렬이 어긋남)
     var inputFirstLineHeight: CGFloat {
         switch size {
-        case .large: .dimension48
-        case .medium: .dimension40
+        case .large: scaledLargeFirstLineHeight
+        case .medium: scaledMediumFirstLineHeight
         }
     }
 
