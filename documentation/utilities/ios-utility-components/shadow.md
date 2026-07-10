@@ -74,7 +74,7 @@ enum Shadow
 <summary>``func shadow(Shadow.Level) -> some ShapeStyle``</summary>
 
 
-디자인 시스템 그림자(앰비언트 + 키)를 로 적용한 `ShapeStyle`을 반환합니다.
+디자인 시스템 그림자(앰비언트 + 키)를 **analytic drop 그림자**로 적용한 `ShapeStyle`을 반환합니다.
 
 - **Parameters**
   | Parameter | Description |
@@ -85,7 +85,7 @@ enum Shadow
   그림자가 적용된 `ShapeStyle`
 - **Discussion**
 
-  `Shape`의 `fill`에 사용하면 그림자가 Shape 지오메트리로부터 직접 그려져  그림자를 그릴 표면의 모양을 알 수 있는 경우(카드·버튼·둥근 컨테이너 등)에는 임의 콘텐츠에 적용하는 `View.shadow(_:)` 대신 이쪽을 사용해 GPU 합성 비용을 줄이세요.
+  `Shape`의 `fill`에 사용하면 그림자가 Shape 지오메트리로부터 직접 그려져 **오프스크린 렌더링 패스가 발생하지 않습니다.** 그림자를 그릴 표면의 모양을 알 수 있는 경우(카드·버튼·둥근 컨테이너 등)에는 임의 콘텐츠에 적용하는 `View.shadow(_:)` 대신 이쪽을 사용해 GPU 합성 비용을 줄이세요.
 
   ```swift
   RoundedRectangle(cornerRadius: 12)
