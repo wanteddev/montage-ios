@@ -54,6 +54,9 @@ FormControl { _ in
 
 
 입력 슬롯 클로저에 전달되는 FormControl의 현재 상태 컨텍스트입니다.
+- **Overview**
+
+  슬롯 입력 컴포넌트가 FormControl의 [FormControl.Size](/documentation/montage/formcontrol/size.md)·[FormControl.Status](/documentation/montage/formcontrol/status.md)를 그대로 반영하도록 현재 값을 묶어 전달합니다. 향후 항목이 추가돼도 클로저 시그니처는 바뀌지 않습니다.
 #### Instance Properties
 
 <details>

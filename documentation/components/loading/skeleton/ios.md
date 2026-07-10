@@ -41,6 +41,21 @@ contentView
 
 
 스켈레톤 요소의 종류를 지정하는 구조체입니다.
+- **Overview**
+
+  다양한 콘텐츠 유형에 맞게 적절한 스켈레톤 형태를 선택할 수 있습니다. 텍스트 스켈레톤은 `Typography.Variant`의 `lineHeight`를 기반으로 줄 수와 길이를 자동 계산합니다.
+
+  ```swift
+  // 자동 텍스트 스켈레톤 (variant 기반 자동 계산)
+  Skeleton.Kind.text(variant: .body1)
+  
+  // 둥근 모서리 사각형 스켈레톤
+  Skeleton.Kind.rectangle(cornerRadius: 8)
+  
+  // 원형 스켈레톤 (프로필 이미지 등에 적합)
+  Skeleton.Kind.circle
+  ```
+
 #### Instance Properties
 
 <details>
@@ -120,6 +135,22 @@ contentView
 
 
 스켈레톤 로딩 UI를 표시하는 뷰입니다.
+- **Overview**
+
+  지정된 형태(텍스트, 사각형, 원형)에 따라 적절한 스켈레톤 UI를 렌더링합니다. 색상, 투명도 등을 커스터마이징할 수 있습니다.
+
+  텍스트 스켈레톤의 자동 계산:
+  - `variant.lineHeight`를 기준으로 뷰 높이를 나누어 최적의 줄 수를 계산합니다.
+  - 첫 줄 100%, 중간 줄 65~~90%, 마지막 줄 40~~55% 비율로 자동 생성합니다.
+
+
+  ```swift
+  // variant 기반 자동 모드
+  Skeleton.SkeletonView(.text(variant: .body1))
+      .color(.gray)
+      .opacity(0.8)
+  ```
+
 #### Initializers
 
 <details>
@@ -188,6 +219,14 @@ contentView
 
 
 스켈레톤 요소의 정렬 방식을 지정하는 열거형입니다.
+- **Overview**
+
+  텍스트 스켈레톤에서 각 라인의 정렬 방식을 지정할 때 사용됩니다.
+
+  ```swift
+  Skeleton.Kind.text(alignment: .center, lineNumber: 2)
+  ```
+
 #### Enumeration Cases
 
 <details>

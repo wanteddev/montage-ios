@@ -126,15 +126,17 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
               }
             }
 
-            // Discussion 정보 추가
+            // Discussion/Overview 정보 추가 (타입은 Overview, 멤버는 Discussion 헤딩을 사용)
+            const DETAIL_HEADINGS = ['Discussion', 'Overview'];
             const discussionSection = symbolJson.primaryContentSections.find(
-              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && c.text === 'Discussion')
+              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && DETAIL_HEADINGS.includes(c.text))
             );
             if (discussionSection && discussionSection.content) {
-              symbolDetails += '- **Discussion**\n';
+              const headingItem = discussionSection.content.find(c => c.type === 'heading' && DETAIL_HEADINGS.includes(c.text));
+              symbolDetails += `- **${headingItem ? headingItem.text : 'Discussion'}**\n`;
               let found = false;
               discussionSection.content.forEach(item => {
-                if (item.type === 'heading' && item.text === 'Discussion') {
+                if (item.type === 'heading' && DETAIL_HEADINGS.includes(item.text)) {
                   found = true;
                   return;
                 }

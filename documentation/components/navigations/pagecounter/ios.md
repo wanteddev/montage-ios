@@ -91,6 +91,16 @@ PageCounter(selectedPage: $currentPage, totalPages: 10)
 
 
 카운터 페이지네이션의 크기를 지정하는 열거형입니다.
+- **Overview**
+
+  UI 디자인 요구사항에 따라 카운터의 크기를 선택할 수 있습니다.
+
+  ```swift
+  // 작은 크기의 카운터 페이지네이션
+  PageCounter(selectedPage: $currentPage, totalPages: 5)
+      .size(.small)
+  ```
+
 #### Enumeration Cases
 
 <details>

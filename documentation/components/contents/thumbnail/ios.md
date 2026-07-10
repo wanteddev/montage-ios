@@ -113,6 +113,20 @@ Thumbnail(urlString: imageURL, ratio: .r1x1)
 
 
 썸네일의 가로세로 비율을 정의하는 열거형입니다.
+- **Overview**
+
+  다양한 미디어 콘텐츠 유형에 맞는 여러 표준 비율을 제공합니다. 가로가 긴 비율(21:9, 16:9 등), 정사각형(1:1), 세로가 긴 비율(9:16, 1:2 등)을 지원합니다.
+
+  ```swift
+  // 와이드스크린 비디오용 썸네일
+  Thumbnail(urlString: videoURL, ratio: .r16x9)
+     .width(320)
+  
+  // 모바일 세로 화면용 썸네일
+  Thumbnail(urlString: storyURL, ratio: .r9x16)
+     .width(400)
+  ```
+
 #### Enumeration Cases
 
 <details>

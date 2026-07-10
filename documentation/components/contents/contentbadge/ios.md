@@ -121,6 +121,13 @@ ContentBadge를 초기화합니다.
 
 
 뱃지의 색상을 결정하는 열거형입니다.
+- **Overview**
+
+  ```swift
+  ContentBadge(text: "이벤트")
+      .colorStyle(.accent(SwiftUI.Color.red))
+  ```
+
 #### Enumeration Cases
 
 <details>
