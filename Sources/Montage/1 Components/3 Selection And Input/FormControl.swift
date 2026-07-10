@@ -70,7 +70,8 @@ public struct FormControl: View {
     public enum LabelPlacement {
         /// 라벨을 입력 위에 세로로 배치합니다. (기본)
         case top
-        /// 라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
+        /// 라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 **첫 줄 중앙**에 맞춥니다.
+        /// (단일 행 입력은 입력 세로 중앙과 같고, 다중 행 입력은 입력 전체가 아니라 첫 줄을 기준으로 정렬됩니다.)
         case leading
     }
 
@@ -99,12 +100,14 @@ public struct FormControl: View {
     /// ``FormControlGroup``이 주입하는 공유 라벨 컬럼 폭. leading 배치에서 라벨 폭을 이 값으로 맞춘다.
     @Environment(\.formLabelColumnWidth) private var columnLabelWidth
 
-    /// ``inputFirstLineHeight``의 Dynamic Type 스케일 기준값(크기별). 입력 슬롯의 첫 줄 높이는 글자
-    /// 크기에 따라 커지므로(입력 폰트가 `UIFontMetrics` 곡선으로 스케일), 라벨 정렬 기준도 같은 곡선으로
-    /// 커지도록 입력 폰트 variant의 텍스트 스타일(large `.body2`→`.subheadline`, medium `.label1`→`.footnote`)에
-    /// 맞춰 스케일한다. 기본 글자 크기에서는 48/40 그대로다.
-    @ScaledMetric(relativeTo: .subheadline) private var scaledLargeFirstLineHeight: CGFloat = .dimension48
-    @ScaledMetric(relativeTo: .footnote) private var scaledMediumFirstLineHeight: CGFloat = .dimension40
+    /// 입력 슬롯 첫 줄 높이(``inputFirstLineHeight``)의 **줄 높이 부분**만 담는 Dynamic Type 스케일 기준값(크기별).
+    ///
+    /// 입력 슬롯 첫 줄 높이는 `동적 lineHeight + 고정 inset` 구조다(``TextArea``의 `lineHeightUnit + verticalContainerInset`
+    /// 참고). 따라서 lineHeight 부분(48/40에서 inset 16pt를 뺀 32/24)만 입력 폰트 variant의 텍스트 스타일
+    /// (large `.body2`→`.subheadline`, medium `.label1`→`.footnote`) 곡선으로 스케일하고, inset은 ``inputFirstLineHeight``에서
+    /// 고정으로 더한다. (48/40 전체를 스케일하면 큰 글자에서 inset까지 비례 확대돼 첫 줄보다 과대해져 라벨이 밀린다.)
+    @ScaledMetric(relativeTo: .subheadline) private var scaledLargeLineHeight: CGFloat = .dimension32
+    @ScaledMetric(relativeTo: .footnote) private var scaledMediumLineHeight: CGFloat = .dimension24
 
     /// 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
     ///
@@ -217,7 +220,8 @@ private extension FormControl {
         }
     }
 
-    /// 라벨을 입력의 leading 쪽에 두고, 라벨을 입력 슬롯의 세로 중앙에 맞추는 가로 레이아웃.
+    /// 라벨을 입력의 leading 쪽에 두고, 라벨을 입력 슬롯의 **첫 줄 중앙**에 맞추는 가로 레이아웃.
+    /// (단일 행 입력은 입력 세로 중앙과 같고, 다중 행 입력은 첫 줄 기준으로 정렬된다.)
     @ViewBuilder
     var leadingLayout: some View {
         if hasLabel {
@@ -364,15 +368,15 @@ private extension FormControl {
         }
     }
 
-    /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨을 입력 첫 줄에 맞추는 세로 정렬 기준이 된다.
+    /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨을 입력 첫 줄 중앙에 맞추는 세로 정렬 기준이 된다.
     ///
-    /// 기준값은 슬롯 입력 컴포넌트(TextField/TextArea)의 첫 줄 높이와 맞춘 `.large` 48 / `.medium` 40이며,
-    /// 입력 폰트가 Dynamic Type로 커지면 첫 줄도 함께 커지므로 ``scaledLargeFirstLineHeight`` /
-    /// ``scaledMediumFirstLineHeight``로 같은 곡선을 따라 스케일한다. (고정값이면 큰 글자에서 라벨 정렬이 어긋남)
+    /// **동적 lineHeight + 고정 inset(16pt)** 로 계산한다(``TextArea``의 `lineHeightUnit + verticalContainerInset`과 동일 계약).
+    /// lineHeight 부분(``scaledLargeLineHeight`` / ``scaledMediumLineHeight``)만 Dynamic Type로 스케일하고 inset은 고정으로
+    /// 더하므로, 큰 글자에서도 실제 입력 첫 줄과 어긋나지 않는다. 기본 글자 크기에서는 large 48 / medium 40.
     var inputFirstLineHeight: CGFloat {
         switch size {
-        case .large: scaledLargeFirstLineHeight
-        case .medium: scaledMediumFirstLineHeight
+        case .large: scaledLargeLineHeight + .dimension16
+        case .medium: scaledMediumLineHeight + .dimension16
         }
     }
 
