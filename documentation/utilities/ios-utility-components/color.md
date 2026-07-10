@@ -1761,20 +1761,6 @@ negative 상태에서 포커스되었을 때 그림자를 표현하는 상호작
 </details>
 <details>
 
-<summary>``case lineNegativeNormal``</summary>
-
-
-negative 상태의 기본 보더 색상 (e.g. TextField negative)
-</details>
-<details>
-
-<summary>``case lineNegativeStrong``</summary>
-
-
-negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
-</details>
-<details>
-
 <summary>``case lineNeutral``</summary>
 
 
@@ -1827,28 +1813,28 @@ primary 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g
 <summary>``case lineStatusCautionaryNormal``</summary>
 
 
-기본 주의 상태 선 색상
+cautionary 상태의 기본 보더 색상
 </details>
 <details>
 
 <summary>``case lineStatusNegativeNormal``</summary>
 
 
-기본 부정 상태 선 색상
+negative 상태의 기본 보더 색상 (e.g. TextField negative)
 </details>
 <details>
 
 <summary>``case lineStatusNegativeStrong``</summary>
 
 
-강조된 부정 상태 선 색상
+negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
 </details>
 <details>
 
 <summary>``case lineStatusPositiveNormal``</summary>
 
 
-기본 긍정 상태 선 색상
+positive 상태의 기본 보더 색상
 </details>
 <details>
 

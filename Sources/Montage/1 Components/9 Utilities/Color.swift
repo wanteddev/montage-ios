@@ -571,9 +571,13 @@ public enum Color {
         /// primary 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField focused)
         case linePrimaryStrong
         /// negative 상태의 기본 보더 색상 (e.g. TextField negative)
-        case lineNegativeNormal
+        case lineStatusNegativeNormal
         /// negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
-        case lineNegativeStrong
+        case lineStatusNegativeStrong
+        /// cautionary 상태의 기본 보더 색상
+        case lineStatusCautionaryNormal
+        /// positive 상태의 기본 보더 색상
+        case lineStatusPositiveNormal
 
         /// 긍정적인 상태 색상
         case statusPositive
@@ -689,6 +693,15 @@ public enum Color {
             case .backgroundTransparentAlternative:
                 atomicColor = style == .dark ? .coolNeutral17 : .common100
                 opacity = style == .dark ? .opacity61 : .opacity28
+            case .backgroundStatusPositive:
+                atomicColor = style == .dark ? .green60 : .green50
+                opacity = .opacity8
+            case .backgroundStatusCautionary:
+                atomicColor = style == .dark ? .orange60 : .orange50
+                opacity = .opacity8
+            case .backgroundStatusNegative:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity8
             case .interactionInactive:
                 atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
             case .interactionDisable:
@@ -720,12 +733,18 @@ public enum Color {
             case .linePrimaryStrong:
                 atomicColor = style == .dark ? .blue60 : .blue50
                 opacity = .opacity43
-            case .lineNegativeNormal:
+            case .lineStatusNegativeNormal:
                 atomicColor = style == .dark ? .red60 : .red50
                 opacity = .opacity43
-            case .lineNegativeStrong:
+            case .lineStatusNegativeStrong:
                 atomicColor = style == .dark ? .red60 : .red50
                 opacity = .opacity52
+            case .lineStatusCautionaryNormal:
+                atomicColor = style == .dark ? .orange60 : .orange50
+                opacity = .opacity43
+            case .lineStatusPositiveNormal:
+                atomicColor = style == .dark ? .green60 : .green50
+                opacity = .opacity43
             case .statusPositive:
                 atomicColor = style == .dark ? .green60 : .green50
             case .statusCautionary:

@@ -476,7 +476,7 @@ public struct TextArea: View {
         if disable {
             SwiftUI.Color.semantic(.lineAlternative)
         } else if negative {
-            SwiftUI.Color.semantic(.lineNegativeStrong)
+            SwiftUI.Color.semantic(.lineStatusNegativeStrong)
         } else if focus.wrappedValue {
             SwiftUI.Color.semantic(.linePrimaryStrong)
         } else {
