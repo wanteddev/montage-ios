@@ -572,14 +572,14 @@ private extension TextField {
             case .normal, .positive:
                 .semantic(.linePrimaryStrong)
             case .negative:
-                .semantic(.lineNegativeStrong)
+                .semantic(.lineStatusNegativeStrong)
             }
         } else {
             switch status {
             case .normal, .positive:
                 .semantic(.lineNeutral)
             case .negative:
-                .semantic(.lineNegativeNormal)
+                .semantic(.lineStatusNegativeNormal)
             }
         }
     }
