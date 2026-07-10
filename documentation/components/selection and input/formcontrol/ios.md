@@ -54,6 +54,9 @@ FormControl { _ in
 
 
 입력 슬롯 클로저에 전달되는 FormControl의 현재 상태 컨텍스트입니다.
+- **Overview**
+
+  슬롯 입력 컴포넌트가 FormControl의 [FormControl.Size](/documentation/montage/formcontrol/size.md)·[FormControl.Status](/documentation/montage/formcontrol/status.md)를 그대로 반영하도록 현재 값을 묶어 전달합니다. 향후 항목이 추가돼도 클로저 시그니처는 바뀌지 않습니다.
 #### Instance Properties
 
 <details>
@@ -238,7 +241,7 @@ leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니
 <summary>``case leading``</summary>
 
 
-라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
+라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 **첫 줄 중앙**에 맞춥니다. (단일 행 입력은 입력 세로 중앙과 같고, 다중 행 입력은 입력 전체가 아니라 첫 줄을 기준으로 정렬됩니다.)
 </details>
 <details>
 

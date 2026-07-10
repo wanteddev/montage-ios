@@ -43,6 +43,31 @@ var body: some View {
 
 
 SnackBar의 데이터 모델을 정의하는 구조체입니다.
+- **Overview**
+
+  스낵바에 표시할 콘텐츠와 동작 방식을 설정할 수 있습니다.
+
+  ```swift
+  // 기본 스낵바 모델
+  SnackBar.Model(
+      description: "저장되었습니다.",
+      action: "확인"
+  )
+  
+  // 모든 요소를 활용한 스낵바 모델
+  SnackBar.Model(
+      duration: .long,
+      heading: "알림",
+      description: "새로운 메시지가 도착했습니다.",
+      extraContents: {
+          Image.icon(.bell)
+              .resizable()
+              .frame(width: 24, height: 24)
+      },
+      action: "보기"
+  )
+  ```
+
 #### Operators
 
 <details>

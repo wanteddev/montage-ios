@@ -35,6 +35,19 @@ Text("Hello, World!")
 
 
 텍스트 변형을 정의하는 열거형
+- **Overview**
+
+  Variant는 텍스트의 용도와 계층 구조에 따라 서로 다른 사이즈, 자간, 행간 값을 갖는 텍스트 스타일을 정의합니다.
+
+  **계층 구조**:
+  - Display: 가장 크고 강조된 텍스트 (배너, 랜딩 페이지 등)
+  - Title: 주요 제목 텍스트
+  - Heading: 중간 크기의 제목 텍스트
+  - Headline: 소제목 텍스트
+  - Body: 기본 본문 텍스트
+  - Label: 작은 텍스트 (버튼, 폼 레이블 등)
+  - Caption: 가장 작은 보조 텍스트
+
 #### Enumeration Cases
 
 <details>
@@ -223,7 +236,7 @@ Dynamic Type 스케일의 기준이 되는 SwiftUI 텍스트 스타일.
 <summary>``var uiTextStyle: UIFont.TextStyle``</summary>
 
 
-Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. 과 동일한 논리이며 UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
+Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. [textStyle](/documentation/montage/typography/variant/textstyle.md)과 동일한 논리이며 UIKit 케이스 이름(`.title1`, `.caption1`)만 다르다.
 </details>
 
 </details>
@@ -233,6 +246,9 @@ Dynamic Type 스케일의 기준이 되는 UIKit 텍스트 스타일. 과 동일
 
 
 폰트 두께를 정의하는 열거형
+- **Overview**
+
+  Weight는 텍스트의 시각적 강조를 위한 세 가지 기본 두께를 제공합니다. 텍스트의 중요도나 계층 구조에 따라 적절한 두께를 선택하여 사용합니다.
 #### Enumeration Cases
 
 <details>

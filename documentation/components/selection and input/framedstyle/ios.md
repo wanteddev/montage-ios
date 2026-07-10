@@ -16,6 +16,9 @@ enum FramedStyle
 
 
 프레임의 상태를 정의하는 열거형입니다.
+- **Overview**
+
+  각 상태마다 다른 테두리 색상과 스타일이 적용됩니다.
 #### Enumeration Cases
 
 <details>

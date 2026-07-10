@@ -55,6 +55,23 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 
 
 디자인 시스템에서 정의된 Atomic 컬러 팔레트
+- **Overview**
+
+  Atomic 색상은 디자인 시스템의 기본 색상 값을 정의합니다. 이 색상들은 직접 사용하기보다는 Semantic 색상의 기반이 되는 기본 색상 팔레트로 활용됩니다.
+
+  ```swift
+  // UIKit에서 사용
+  view.backgroundColor = UIColor.atomic(.blue50)
+  
+  // SwiftUI에서 사용
+  Text("텍스트")
+      .foregroundColor(.atomic(.red60))
+  ```
+
+  >  **Note**
+  >
+  > 숫자가 높을수록 밝은 색상을 나타내며, 100에 가까울수록 흰색에 가깝고 0에 가까울수록 검은색에 가깝습니다.
+
 #### Enumeration Cases
 
 <details>
@@ -1435,6 +1452,20 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 
 
 디자인 시스템에서 정의된 Semantic 컬러 값
+- **Overview**
+
+  Semantic 색상은 Atomic 색상을 참조하여 의미적 맥락에 따라 적절한 색상을 제공합니다. 다크 모드와 라이트 모드에서 자동으로 적절한 색상으로 변환됩니다.
+
+  ```swift
+  // UIKit에서 사용
+  label.textColor = UIColor.semantic(.labelNormal)
+  
+  // SwiftUI에서 사용
+  Button("버튼") { }
+      .foregroundColor(.semantic(.primaryNormal))
+      .background(Color.semantic(.backgroundNormal))
+  ```
+
 #### Enumeration Cases
 
 <details>

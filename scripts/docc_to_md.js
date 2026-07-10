@@ -15,10 +15,30 @@ function readJsonCached(filePath) {
   return parsed;
 }
 
-function renderAbstractText(abstract) {
+// 취소선 렌더링 + 백스톱 경고
+// Montage docstring은 취소선을 의도적으로 쓰지 않는다. 대부분 '~'를 숫자 범위
+// 구분자(예: 65~90%)로 썼다가 DocC가 취소선으로 오인한 경우다. 감지되면 경고해
+// 소스에서 '\~'로 이스케이프하도록 유도한다. (DOCUMENTATION_GUIDELINES 참조)
+function renderStrikethrough(inlineContent, references) {
+  const inner = renderRichInline(inlineContent, references);
+  console.warn(`⚠️ strikethrough(취소선) 감지: "${inner}" — docstring에서 범위 구분자 '~'를 '\\~'로 이스케이프했는지 확인하세요 (DOCUMENTATION_GUIDELINES 참조).`);
+  return '~~' + inner + '~~';
+}
+
+function renderAbstractText(abstract, references) {
   if (!Array.isArray(abstract)) return '';
   return abstract.map((a) => {
     if (a.type === 'codeVoice' && a.code) return '`' + a.code + '`';
+    if (a.type === 'strong')
+      return '**' + renderRichInline(a.inlineContent, references) + '**';
+    if (a.type === 'emphasis')
+      return '*' + renderRichInline(a.inlineContent, references) + '*';
+    if (a.type === 'strikethrough')
+      return renderStrikethrough(a.inlineContent, references);
+    if (a.type === 'reference' && a.identifier) {
+      const ref = references ? references[a.identifier] : null;
+      if (ref) return `[${ref.title}](${ref.url}.md)`;
+    }
     return a.text || '';
   }).join('');
 }
@@ -59,7 +79,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
     let deprecated = Boolean(ref.deprecated);
     let desc = '';
     if (ref.abstract && Array.isArray(ref.abstract)) {
-      desc = renderAbstractText(ref.abstract);
+      desc = renderAbstractText(ref.abstract, references);
     }
 
     let symbolDetails = '';
@@ -116,15 +136,17 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
               }
             }
 
-            // Discussion 정보 추가
+            // Discussion/Overview 정보 추가 (타입은 Overview, 멤버는 Discussion 헤딩을 사용)
+            const DETAIL_HEADINGS = ['Discussion', 'Overview'];
             const discussionSection = symbolJson.primaryContentSections.find(
-              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && c.text === 'Discussion')
+              s => s.kind === 'content' && Array.isArray(s.content) && s.content.some(c => c.type === 'heading' && DETAIL_HEADINGS.includes(c.text))
             );
             if (discussionSection && discussionSection.content) {
-              symbolDetails += '- **Discussion**\n';
+              const headingItem = discussionSection.content.find(c => c.type === 'heading' && DETAIL_HEADINGS.includes(c.text));
+              symbolDetails += `- **${headingItem ? headingItem.text : 'Discussion'}**\n`;
               let found = false;
               discussionSection.content.forEach(item => {
-                if (item.type === 'heading' && item.text === 'Discussion') {
+                if (item.type === 'heading' && DETAIL_HEADINGS.includes(item.text)) {
                   found = true;
                   return;
                 }
@@ -218,6 +240,12 @@ function renderInlineContent(content, references, options = {}) {
           if (ic.type === 'codeVoice' && ic.code) {
             return '`' + ic.code + '`';
           }
+          if (ic.type === 'strong')
+            return '**' + renderRichInline(ic.inlineContent, references) + '**';
+          if (ic.type === 'emphasis')
+            return '*' + renderRichInline(ic.inlineContent, references) + '*';
+          if (ic.type === 'strikethrough')
+            return renderStrikethrough(ic.inlineContent, references);
           if (ic.type === 'reference' && ic.identifier) {
             const ref = references ? references[ic.identifier] : null;
             if (ref) {
@@ -281,6 +309,8 @@ function renderRichInline(inlineContent, references) {
         return '**' + renderRichInline(ic.inlineContent, references) + '**';
       if (ic.type === 'emphasis')
         return '*' + renderRichInline(ic.inlineContent, references) + '*';
+      if (ic.type === 'strikethrough')
+        return renderStrikethrough(ic.inlineContent, references);
       if (ic.type === 'reference' && ic.identifier) {
         const ref = references ? references[ic.identifier] : null;
         return ref ? `[${ref.title}](${ref.url}.md)` : '';
@@ -355,7 +385,7 @@ function renderFrontmatter(json, isUtil = false) {
     fm += `title: ${title}\n`;
   }
   if (json.abstract && Array.isArray(json.abstract)) {
-    fm += `description: ${renderAbstractText(json.abstract)}\n`;
+    fm += `description: ${renderAbstractText(json.abstract, json.references)}\n`;
   }
   if (json.metadata && json.metadata.createdAt)
     fm += `createdAt: ${json.metadata.createdAt}\n`;
@@ -681,7 +711,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
   const canonicalSignature = canonicalizeSignature(signatureRaw);
   const hash = generateHash(canonicalSignature);
 
-  let desc = renderAbstractText(ref.abstract);
+  let desc = renderAbstractText(ref.abstract, ref.references);
   let symbolDetails = '';
 
   const symbolUrl = ref.url ? ref.url.replace(/^\//, '') : '';
@@ -692,7 +722,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         const symbolJson = readJsonCached(symbolJsonPath);
 
         if (!desc && Array.isArray(symbolJson.abstract)) {
-          desc = renderAbstractText(symbolJson.abstract);
+          desc = renderAbstractText(symbolJson.abstract, symbolJson.references);
         }
 
         // deprecationSummary 처리

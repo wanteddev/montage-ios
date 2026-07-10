@@ -262,6 +262,13 @@ TextArea(text: $longText)
 
 
 텍스트 영역 하단(Bottom Content)에 표시할 수 있는 UI 요소를 정의합니다.
+- **Overview**
+
+  프리셋(`button`·`iconButton`·`icon`·`contentBadge`·`segmentedControl`· `primaryIconButton`)과 임의 뷰([slot(_:)](/documentation/montage/textarea/resource/slot(_:).md))를 지원합니다. 각 요소의 크기는 TextArea의 [TextArea.Size](/documentation/montage/textarea/size.md)에 따라 자동으로 조정됩니다.
+  >  **Note**
+  >
+  > 디자인 가이드 기준 `button`·`primaryIconButton`은 trailing 전용으로 권장됩니다.
+
 #### Enumeration Cases
 
 <details>
@@ -392,6 +399,9 @@ leading(왼쪽)에 배치할 수 있는 리소스인지 여부. `button`·`prima
 
 
 텍스트 영역의 사이즈를 정의합니다.
+- **Overview**
+
+  사이즈에 따라 모서리 반경, 최소 콘텐츠 높이, 입력 타이포그래피, 하단 리소스 크기가 함께 결정됩니다.
 #### Enumeration Cases
 
 <details>

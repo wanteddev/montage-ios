@@ -343,6 +343,9 @@ ListCell(title: "커스텀 셀", onTap: {
 
 
 상하 여백을 나타내는 열거형입니다.
+- **Overview**
+
+  셀 컴포넌트의 상하 여백을 조정할 때 사용되며, 각 케이스는 다양한 크기의 여백을 제공합니다.
 #### Enumeration Cases
 
 <details>

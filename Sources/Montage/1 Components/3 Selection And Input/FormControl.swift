@@ -70,7 +70,8 @@ public struct FormControl: View {
     public enum LabelPlacement {
         /// 라벨을 입력 위에 세로로 배치합니다. (기본)
         case top
-        /// 라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 세로 중앙에 맞춥니다.
+        /// 라벨을 입력의 leading 쪽에 가로로 배치하고, 입력 슬롯의 **첫 줄 중앙**에 맞춥니다.
+        /// (단일 행 입력은 입력 세로 중앙과 같고, 다중 행 입력은 입력 전체가 아니라 첫 줄을 기준으로 정렬됩니다.)
         case leading
     }
 
@@ -98,6 +99,15 @@ public struct FormControl: View {
 
     /// ``FormControlGroup``이 주입하는 공유 라벨 컬럼 폭. leading 배치에서 라벨 폭을 이 값으로 맞춘다.
     @Environment(\.formLabelColumnWidth) private var columnLabelWidth
+
+    /// 입력 슬롯 첫 줄 높이(``inputFirstLineHeight``)의 **줄 높이 부분**만 담는 Dynamic Type 스케일 기준값(크기별).
+    ///
+    /// 입력 슬롯 첫 줄 높이는 `동적 lineHeight + 고정 inset` 구조다(``TextArea``의 `lineHeightUnit + verticalContainerInset`
+    /// 참고). 따라서 lineHeight 부분(48/40에서 inset 16pt를 뺀 32/24)만 입력 폰트 variant의 텍스트 스타일
+    /// (large `.body2`→`.subheadline`, medium `.label1`→`.footnote`) 곡선으로 스케일하고, inset은 ``inputFirstLineHeight``에서
+    /// 고정으로 더한다. (48/40 전체를 스케일하면 큰 글자에서 inset까지 비례 확대돼 첫 줄보다 과대해져 라벨이 밀린다.)
+    @ScaledMetric(relativeTo: .subheadline) private var scaledLargeLineHeight: CGFloat = .dimension32
+    @ScaledMetric(relativeTo: .footnote) private var scaledMediumLineHeight: CGFloat = .dimension24
 
     /// 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
     ///
@@ -210,14 +220,14 @@ private extension FormControl {
         }
     }
 
-    /// 라벨을 입력의 leading 쪽에 두고, 라벨을 입력 슬롯의 세로 중앙에 맞추는 가로 레이아웃.
+    /// 라벨을 입력의 leading 쪽에 두고, 라벨을 입력 슬롯의 **첫 줄 중앙**에 맞추는 가로 레이아웃.
+    /// (단일 행 입력은 입력 세로 중앙과 같고, 다중 행 입력은 첫 줄 기준으로 정렬된다.)
     @ViewBuilder
     var leadingLayout: some View {
         if hasLabel {
-            // Figma 기준: Leading 배치에서 라벨은 입력 첫 줄(높이 48 영역)에 맞춘다.
-            // - 입력 높이 ≤ 48: 라벨을 입력 세로 중앙에 정렬
-            // - 입력 높이 > 48(예: 여러 줄 TextArea): 라벨을 입력 상단 48pt(첫 줄)에 고정
-            // 라벨이 여러 줄로 길어져도 입력 첫 줄 높이(48)를 넘지 않도록 maxHeight로 제한한다.
+            // Figma 기준: Leading 배치에서 라벨(한 줄)은 입력 첫 줄 높이 영역(medium 40 / large 48)에 맞춘다.
+            // - 입력 높이 ≤ 첫 줄 높이(예: TextField): 라벨을 입력 세로 중앙에 정렬
+            // - 입력 높이 > 첫 줄 높이(예: 여러 줄 TextArea): 라벨을 입력 상단 첫 줄 중앙에 정렬
             HStack(alignment: .inputCenter, spacing: .spacing16) {
                 leadingLabel
                     .alignmentGuide(.inputCenter) { $0[VerticalAlignment.center] }
@@ -228,14 +238,16 @@ private extension FormControl {
         }
     }
 
-    /// leading 배치용 라벨. 높이는 48로 제한하고, 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
+    /// leading 배치용 라벨. 공유 라벨 컬럼 폭(있으면)에 맞춰 폭을 고정한다.
+    ///
+    /// 높이는 고정하지 않는다. 라벨은 ``styledLabel``에서 한 줄로 제한되며, Dynamic Type로
+    /// 커진 글자가 잘리지 않도록 높이가 자연스럽게 늘어난다. (고정 높이 clip은 접근성 위반)
     ///
     /// 폭 우선순위: ``labelWidth(_:)`` 명시값 → ``FormControlGroup`` 주입값 → 없으면 본연 폭.
     /// 실제 적용 폭과 무관하게 라벨 **본연 폭**을 ``FormLabelWidthKey``로 보고해,
     /// ``FormControlGroup``이 최댓값(가장 긴 라벨)을 계산할 수 있게 한다.
     var leadingLabel: some View {
         labelRow
-            .frame(maxHeight: .dimension48)
             .frame(width: resolvedLabelWidth, alignment: .leading)
             .background(alignment: .topLeading) {
                 labelRow
@@ -254,12 +266,13 @@ private extension FormControl {
 
     /// 입력 슬롯과 Footer를 묶는 세로 래퍼. 입력 슬롯의 정렬 기준(``VerticalAlignment/inputCenter``)을 노출한다.
     ///
-    /// 정렬 기준은 입력 높이의 중앙이 아니라 `min(높이, 48)/2`다. 입력이 48 이하면 중앙이지만,
-    /// 48을 넘으면 24(=48/2)로 고정되어 라벨이 입력 상단 48pt(첫 줄)에 정렬된다.
+    /// 정렬 기준은 입력 높이의 중앙이 아니라 `min(높이, 입력 첫 줄 높이)/2`다. 입력이 첫 줄 높이 이하면 중앙이지만,
+    /// 넘으면 `첫 줄 높이/2`로 고정되어 라벨이 입력 상단 첫 줄에 정렬된다. 첫 줄 높이(``inputFirstLineHeight``,
+    /// 기본 medium 40 / large 48)는 Dynamic Type로 함께 커진다.
     var inputWrapper: some View {
         VStack(alignment: .leading, spacing: .spacing8) {
             accessibleInput
-                .alignmentGuide(.inputCenter) { min($0.height, .dimension48) / 2 }
+                .alignmentGuide(.inputCenter) { min($0.height, inputFirstLineHeight) / 2 }
             if hasFooter {
                 footer
             }
@@ -276,28 +289,25 @@ private extension FormControl {
 
     /// 라벨과 필수(`*`)를 렌더링한다.
     ///
-    /// - 2줄 이내로 다 들어오면 라벨+`*`를 **하나의 Text**로 이어 그려, `*`가 마지막 글자 뒤에
-    ///   자연스럽게 붙는다(각 세그먼트는 자신의 타이포그래피 유지).
-    /// - 라벨이 더 길어 말줄임이 필요하면 **라벨만 truncate**하고 `*`는 별도 요소로 항상 표시한다.
-    ///   (단일 Text로 합치면 `*`가 끝에서 함께 잘려 사라지므로 ``ViewThatFits``로 분기한다.)
+    /// 라벨은 **한 줄**로 제한하고(`lineLimit(1)`), 넘치면 말줄임(`tail`)한다.
+    /// 줄 수 기반 제한이라 Dynamic Type로 글자가 커져도 한 줄이 함께 커지며 잘리지 않는다.
+    /// (고정 높이로 자르면 큰 글자에서 텍스트가 클립되므로 사용하지 않는다.)
+    ///
+    /// 필수(`*`)는 라벨 말줄임과 무관하게 끝에 항상 보이도록 **별도 요소**로 두고,
+    /// 자신의 고유 크기를 유지(`fixedSize`)해 함께 잘리지 않게 한다.
     @ViewBuilder
     var styledLabel: some View {
         let labelPart = Text(labelText ?? "")
             .typography(variant: labelVariant, weight: .bold, semantic: .labelNeutral)
-        let asterisk = Text(verbatim: " *")
-            .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+            .lineLimit(1)
+            .truncationMode(.tail)
 
         if isRequired {
-            ViewThatFits(in: .vertical) {
-                // 1) 다 들어오는 경우: 인라인 단일 Text (`*`가 마지막 글자 뒤)
-                labelPart + asterisk
-                // 2) 넘치는 경우: 라벨만 말줄임하고 `*`는 마지막 줄 끝에 유지
-                HStack(alignment: .lastTextBaseline, spacing: 0) {
-                    labelPart
-                        .lineLimit(2)
-                        .truncationMode(.tail)
-                    asterisk
-                }
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                labelPart
+                Text(verbatim: " *")
+                    .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+                    .fixedSize()
             }
         } else {
             labelPart
@@ -358,6 +368,18 @@ private extension FormControl {
         }
     }
 
+    /// 크기에 따른 입력 슬롯 첫 줄 높이. leading 배치에서 라벨을 입력 첫 줄 중앙에 맞추는 세로 정렬 기준이 된다.
+    ///
+    /// **동적 lineHeight + 고정 inset(16pt)** 로 계산한다(``TextArea``의 `lineHeightUnit + verticalContainerInset`과 동일 계약).
+    /// lineHeight 부분(``scaledLargeLineHeight`` / ``scaledMediumLineHeight``)만 Dynamic Type로 스케일하고 inset은 고정으로
+    /// 더하므로, 큰 글자에서도 실제 입력 첫 줄과 어긋나지 않는다. 기본 글자 크기에서는 large 48 / medium 40.
+    var inputFirstLineHeight: CGFloat {
+        switch size {
+        case .large: scaledLargeLineHeight + .dimension16
+        case .medium: scaledMediumLineHeight + .dimension16
+        }
+    }
+
     /// 상태에 따른 메시지 색. `.negative`에서만 강조 색을 사용한다.
     var messageColor: Color.Semantic {
         switch status {
@@ -387,10 +409,10 @@ private extension FormControl {
 // MARK: - Alignment
 
 private extension VerticalAlignment {
-    /// Leading 배치에서 라벨을 입력 슬롯의 첫 줄(높이 48 영역)에 맞추기 위한 정렬.
+    /// Leading 배치에서 라벨을 입력 슬롯의 첫 줄(medium 40 / large 48 영역)에 맞추기 위한 정렬.
     ///
-    /// 라벨은 자신의 세로 중앙을, 입력 슬롯은 `min(높이, 48)/2` 지점을 이 가이드로 보고한다.
-    /// 그 결과 입력이 48 이하면 라벨이 입력 중앙에, 48을 넘으면 입력 상단 48pt(첫 줄)에 정렬된다.
+    /// 라벨은 자신의 세로 중앙을, 입력 슬롯은 `min(높이, 첫 줄 높이)/2` 지점을 이 가이드로 보고한다.
+    /// 그 결과 입력이 첫 줄 높이 이하면 라벨이 입력 중앙에, 넘으면 입력 상단 첫 줄에 정렬된다.
     /// (Footer는 입력 아래로 흐르며 정렬 기준에서 제외된다.)
     enum InputCenter: AlignmentID {
         static func defaultValue(in dimensions: ViewDimensions) -> CGFloat {

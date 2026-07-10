@@ -64,6 +64,10 @@ Sources/
 
 메인 컴포넌트와 관련된 extension, protocol 등은 같은 파일에 정의한다. Public View struct는 Inner Type으로 정의하지 않는다.
 
+### docstring 마크다운 서식 (틸드 이스케이프 필수)
+
+DocC는 docstring을 Markdown으로 파싱하며 **단일 `~`도 취소선으로 해석**한다. `~`를 숫자 범위 구분자로 쓰면(예: `65~90%`) 한 문단의 두 `~`가 짝지어져 텍스트가 취소선 처리되어 문서가 깨진다. **범위 표기의 `~`는 반드시 `\~`로 이스케이프**한다(예: `65\~90%, 40\~55%`). 볼드·이탤릭·심볼 링크는 그대로 보존되므로 의도적으로 사용해도 된다. 상세는 [DOCUMENTATION_GUIDELINES.ko.md](./DOCUMENTATION_GUIDELINES.ko.md) §9 참고. (`make` 실행 시 취소선이 감지되면 변환기가 경고를 출력한다.)
+
 ## Documentation Workflow
 
 Swift 소스 파일(`Sources/Montage/`)을 수정한 후에는 반드시 `make`를 실행하여 `documentation/` 폴더와 `THIRD_PARTY_LICENSES.md`를 갱신해야 한다. CI의 `verify-docs` 워크플로우가 이를 검증한다.

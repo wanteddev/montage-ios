@@ -229,6 +229,9 @@ Accordion(title: "커스텀 스타일")
 
 
 아코디언의 상하 여백을 나타내는 열거형입니다.
+- **Overview**
+
+  아코디언 헤더의 상하 패딩 값을 설정합니다.
 #### Enumeration Cases
 
 <details>
