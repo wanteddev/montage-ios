@@ -128,6 +128,15 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
 
 탭 아이템 너비를 결정하는 열거형입니다.
+- **Overview**
+
+  탭 아이템의 너비가 콘텐츠에 맞게 조정될지, 전체 너비를 균등하게 분할할지 결정합니다.
+
+  ```swift
+  Tab(selectedIndex: $selectedTab, items: tabItems)
+      .resize(.fill) // 균등하게 분할
+  ```
+
 #### Enumeration Cases
 
 <details>
@@ -152,6 +161,15 @@ Tab(selectedIndex: $selectedTab, items: tabItems) { index in
 
 
 탭 아이템의 크기를 결정하는 열거형입니다.
+- **Overview**
+
+  탭 컴포넌트의 높이와 폰트 크기를 결정합니다.
+
+  ```swift
+  Tab(selectedIndex: $selectedTab, items: tabItems)
+      .size(.large) // 큰 크기의 탭
+  ```
+
 #### Enumeration Cases
 
 <details>

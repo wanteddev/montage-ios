@@ -107,6 +107,18 @@ PushBadge를 초기화합니다.
 
 
 뱃지의 위치를 정의하는 열거형입니다.
+- **Overview**
+
+  수직 위치(top, center, bottom)와 수평 위치(leading, center, trailing)를 함께 지정할 수 있습니다.
+
+  ```swift
+  // 우측 상단에 위치
+  someView.pushBadge(position: .top(.trailing))
+  
+  // 좌측 하단에 위치
+  someView.pushBadge(position: .bottom(.leading))
+  ```
+
 #### Enumeration Cases
 
 <details>

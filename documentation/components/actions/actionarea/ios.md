@@ -48,6 +48,9 @@ ActionArea(variant: .cancel(
 
 
 ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
+- **Overview**
+
+  버튼의 텍스트, 액션, 커스텀 뷰 등을 지정할 수 있습니다.
 #### Initializers
 
 <details>
@@ -94,6 +97,9 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 
 
 ActionArea를 구성하기 위한 모델 구조체입니다.
+- **Overview**
+
+  이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다. 버튼 레이아웃, 배경 투명도, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
 #### Initializers
 
 <details>
