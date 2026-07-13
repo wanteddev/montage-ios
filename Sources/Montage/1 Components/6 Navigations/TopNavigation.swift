@@ -407,7 +407,7 @@ public struct TopNavigation: View {
             HStack(alignment: .center, spacing: 4) {
                 Image.icon(.search)
                     .resizable()
-                    .foregroundStyle(SwiftUI.Color.semantic( .labelAssistive))
+                    .foregroundStyle(SwiftUI.Color.semantic( .foregroundNeutralQuaternary))
                     .frame(width: 20, height: 20)
                     .padding(.horizontal, 2)
                 
@@ -418,7 +418,7 @@ public struct TopNavigation: View {
                         prompt: {
                             if let searchPlaceholder {
                                 Text(searchPlaceholder)
-                                    .typography(variant: .body1, weight: .regular, semantic: .labelAssistive)
+                                    .typography(variant: .body1, weight: .regular, semantic: .foregroundNeutralQuaternary)
                             } else {
                                 nil
                             }
@@ -429,7 +429,7 @@ public struct TopNavigation: View {
                     .submitLabel(.search)
                     .onSubmit(onSubmit ?? {})
                     .font(.font(variant: .body1, weight: .regular))
-                    .foregroundStyle(SwiftUI.Color.semantic( .labelNormal))
+                    .foregroundStyle(SwiftUI.Color.semantic( .foregroundNeutralPrimary))
                     .frame(height: 24)
                     .frame(maxWidth: .infinity)
                     .focused($focusState)
@@ -454,7 +454,7 @@ public struct TopNavigation: View {
                         } label: {
                             Image.icon(.circleCloseFill)
                                 .resizable()
-                                .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
+                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralQuaternary))
                                 .frame(width: 20, height: 20)
                         }
                     }
@@ -463,7 +463,7 @@ public struct TopNavigation: View {
             .padding(8)
             .background {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(SwiftUI.Color.semantic(.fillNormal))
+                    .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
             }
             .padding(.vertical, 8)
         }
@@ -486,7 +486,7 @@ public struct TopNavigation: View {
                 .paragraph(
                     variant: variant.typoVariant,
                     weight: variant.typoWeight,
-                    semantic: .labelStrong
+                    semantic: .foregroundNeutralStrong
                 )
                 .lineLimit(1)
         }
@@ -606,7 +606,7 @@ extension TopNavigation {
                 action()
             }
             .disable(disable)
-            .contentColor(.semantic(.labelNormal))
+            .contentColor(.semantic(.foregroundNeutralPrimary))
             .fontVariant(.headline2)
             .fontWeight(.regular)
             .frame(height: 24)

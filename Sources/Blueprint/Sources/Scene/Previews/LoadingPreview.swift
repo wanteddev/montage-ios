@@ -14,7 +14,7 @@ struct LoadingPreview: View {
     // .clear이면 기본 색(circular spinner 기본 색)을 쓴다.
     @State private var color: SwiftUI.Color = .clear
     // .clear이면 dimmer를 적용하지 않는다.
-    @State private var dimmerColor: SwiftUI.Color = .semantic(.materialDimmer)
+    @State private var dimmerColor: SwiftUI.Color = .semantic(.effectDimmerPrimary)
     @State private var timeout: TimeInterval = 3
 
     enum TypeOption: String, CaseIterable, PreviewSegment {

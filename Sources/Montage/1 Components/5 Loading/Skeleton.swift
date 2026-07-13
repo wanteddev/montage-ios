@@ -28,7 +28,7 @@ import SwiftUI
 /// contentView
 ///     .skeleton(isPresented: isLoading) {
 ///         Skeleton.SkeletonView(.rectangle(cornerRadius: 8))
-///             .color(.semantic(.fillNormal))
+///             .color(.semantic(.surfaceNeutralSecondary))
 ///             .opacity(0.7)
 ///     }
 /// ```
@@ -265,7 +265,7 @@ public enum Skeleton {
 
         // MARK: - Modifiers
 
-        private var color: SwiftUI.Color = .semantic(.fillNormal)
+        private var color: SwiftUI.Color = .semantic(.surfaceNeutralSecondary)
         private var opacity: CGFloat = 1
         
         /// 스켈레톤 뷰의 색상을 설정합니다.
@@ -308,7 +308,7 @@ public enum Skeleton {
         ) {
             self.isPresented = isPresented
             self.kind = kind
-            self.color = color ?? .semantic(.fillNormal)
+            self.color = color ?? .semantic(.surfaceNeutralSecondary)
             self.opacity = opacity ?? 1
             self.size = (size?.isNegativeOrNonfinite ?? false) ? nil : size
         }
@@ -390,7 +390,7 @@ extension View {
     /// - Parameters:
     ///   - isPresented: 스켈레톤 표시 여부를 제어하는 불리언 값
     ///   - kind: 스켈레톤 종류 (텍스트, 사각형, 원형 등)
-    ///   - color: 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.fillNormal) 사용)
+    ///   - color: 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.surfaceNeutralSecondary) 사용)
     ///   - opacity: 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용
     ///   - size: 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용
     /// - Returns: 스켈레톤 기능이 적용된 뷰

@@ -202,7 +202,7 @@ public struct PaginationDots: View {
         private var dotColor: SwiftUI.Color {
             switch variant {
             case .normal:
-                .semantic(.labelNormal).opacity(selected ? 1 : 0.16)
+                .semantic(.foregroundNeutralPrimary).opacity(selected ? 1 : 0.16)
             case .white:
                 .semantic(.staticWhite).opacity(selected ? 1 : 0.52)
             }
@@ -213,7 +213,7 @@ public struct PaginationDots: View {
             case .normal:
                 .clear
             case .white:
-                .semantic(.lineNeutral).opacity(selected ? 1 : 0.52)
+                .semantic(.lineNeutralSecondary).opacity(selected ? 1 : 0.52)
             }
         }
     }

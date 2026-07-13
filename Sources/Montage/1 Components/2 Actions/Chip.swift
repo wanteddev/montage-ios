@@ -18,7 +18,7 @@ import SwiftUI
 ///     size: .medium,
 ///     text: "액션"
 /// )
-/// .backgroundColor(.semantic(.primaryNormal))
+/// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
 /// .leadingImage(Image(systemName: "heart"))
 /// ```
@@ -121,7 +121,7 @@ public struct Chip: View {
             Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: .light,
-                color: .labelNormal
+                color: .foregroundNeutralPrimary
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
@@ -232,21 +232,21 @@ private extension Chip {
         if disable {
             switch variant {
             case .solid:
-                return .semantic(.interactionDisable)
+                return .semantic(.surfaceDisablePrimary)
             case .outlined:
                 return .clear
             }
         } else if active {
             switch variant {
             case .solid:
-                return customActiveColor ?? .semantic(.inverseBackground)
+                return customActiveColor ?? .semantic(.surfaceNeutralInverse)
             case .outlined:
-                return .semantic(.primaryNormal).opacity(0.05)
+                return .semantic(.surfaceBrandPrimary).opacity(0.05)
             }
         } else {
             switch variant {
             case .solid:
-                return customBackgroundColor ?? .semantic(.fillAlternative)
+                return customBackgroundColor ?? .semantic(.surfaceNeutralTertiary)
             case .outlined:
                 return .clear
             }
@@ -255,41 +255,41 @@ private extension Chip {
     
     var fontColor: SwiftUI.Color {
         if disable {
-            return .semantic(.labelDisable)
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.labelNormal)
+            return customFontColor ?? .semantic(.foregroundNeutralPrimary)
         }
     }
     
     var imageColor: SwiftUI.Color {
         if disable {
-            return .semantic(.labelDisable)
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
         } else {
-            return customImageColor ?? .semantic(.labelAlternative)
+            return customImageColor ?? .semantic(.foregroundNeutralTertiary)
         }
     }
     
     var activeContentColor: SwiftUI.Color {
         switch variant {
         case .solid:
-            return .semantic(.inverseLabel)
+            return .semantic(.foregroundNeutralInverse)
         case .outlined:
-            return customActiveColor ?? .semantic(.primaryNormal)
+            return customActiveColor ?? .semantic(.surfaceBrandPrimary)
         }
     }
         
     var borderColor: SwiftUI.Color {
         guard variant == .outlined else { return .clear }
         if disable {
-            return .semantic(.lineNeutral)
+            return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.primaryNormal)).opacity(0.43)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.43)
         } else {
-            return .semantic(.lineNeutral)
+            return .semantic(.lineNeutralSecondary)
         }
     }
     

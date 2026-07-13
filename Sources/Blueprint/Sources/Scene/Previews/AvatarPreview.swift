@@ -17,7 +17,7 @@ struct AvatarPreview: View {
     @State private var pushBadgeSizeIndex: Int = 0
     @State private var useCustomCornerRadius: Bool = false
     @State private var customCornerRadius: CGFloat = 10
-    @State private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
+    @State private var borderColor: SwiftUI.Color = .semantic(.lineNeutralTertiary)
     @State private var borderWidth: CGFloat = 1
     @State private var contentModeIndex: Int = 0
     @State private var useLocalImage: Bool = false

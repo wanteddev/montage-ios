@@ -95,7 +95,7 @@ Accordion(title: "커스텀 스타일")
   | --- | --- |
   | `variant` | 텍스트 변형, 생략하면 기본값으로 `.label1` 적용 |
   | `weight` | 텍스트 굵기, 생략하면 기본값으로 `.regular` 적용 |
-  | `color` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.labelNeutral)` 적용 |
+  | `color` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용 |
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -182,7 +182,7 @@ Accordion(title: "커스텀 스타일")
   | --- | --- |
   | `variant` | 텍스트 변형, 생략하면 기본값으로 `.body2` 적용 |
   | `weight` | 텍스트 굵기, 생략하면 기본값으로 `.bold` 적용 |
-  | `color` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.labelNormal)` 적용 |
+  | `color` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
 - **Return Value**
 
   수정된 아코디언 인스턴스

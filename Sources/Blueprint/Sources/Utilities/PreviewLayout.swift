@@ -215,7 +215,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 }
                 .padding(.horizontal)
             }
-            .background(SwiftUI.Color.semantic(.backgroundNormal))
+            .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
         }
         .navigationViewStyle(.stack)
     }
@@ -231,7 +231,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 checkerSize: checkerSize,
                 checkerColor: .red
             )
-            .background(SwiftUI.Color.semantic(.backgroundNormal))
+            .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
     }
 
     /// 섹션 헤더: 제목 + (옵션) 추가 버튼 + 체커 토글, 그리고 체커 ON 시 크기 조절 슬라이더.
@@ -345,7 +345,7 @@ private struct NavigationFloatingControls<Accessory: View>: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "line.3.horizontal")
-                .foregroundColor(.semantic(.labelAssistive))
+                .foregroundColor(.semantic(.foregroundNeutralQuaternary))
                 .frame(width: 28, height: 36)
                 .contentShape(Rectangle())
                 // highPriority로 밑의 ScrollView 스크롤과 경쟁하지 않게 해 드래그가 끊기지 않도록 한다.
@@ -367,7 +367,7 @@ private struct NavigationFloatingControls<Accessory: View>: View {
                 dismiss()
             } label: {
                 Image(systemName: "chevron.backward")
-                    .foregroundColor(.semantic(.primaryNormal))
+                    .foregroundColor(.semantic(.surfaceBrandPrimary))
             }
 
             accessory
@@ -406,7 +406,7 @@ private struct DraggableCard<Content: View>: View {
     var body: some View {
         VStack(spacing: 8) {
             Capsule()
-                .fill(SwiftUI.Color.semantic(.lineNeutral))
+                .fill(SwiftUI.Color.semantic(.lineNeutralSecondary))
                 .frame(width: 36, height: 5)
                 // 드래그는 핸들에만 건다. 카드 전체에 걸면 안쪽 Slider·TextArea 같은 드래그 기반 컨트롤이
                 // 카드 이동 제스처와 경쟁해 옵션 조작이 불안정해진다.

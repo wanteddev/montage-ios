@@ -37,9 +37,9 @@ public struct ProgressIndicator: View {
     public var body: some View {
         ZStack(alignment: .leading) {
             Rectangle()
-                .foregroundStyle(SwiftUI.Color.semantic(.fillNormal))
+                .foregroundStyle(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
             Rectangle()
-                .foregroundStyle(SwiftUI.Color.semantic(.primaryNormal))
+                .foregroundStyle(SwiftUI.Color.semantic(.surfaceBrandPrimary))
                 .frame(width: size.width * percentage, height: 2)
         }
         .frame(height: 2)

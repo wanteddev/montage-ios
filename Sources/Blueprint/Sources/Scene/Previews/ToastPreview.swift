@@ -19,7 +19,7 @@ struct ToastPreview: View {
 
     var variants: [Toast.Variant] {
         [
-            .normal(icon ? .android : nil, tint: icon ? .accentBackgroundCyan : nil),
+            .normal(icon ? .android : nil, tint: icon ? .surfaceAccentCyanOpaque : nil),
             .positive,
             .cautionary,
             .negative

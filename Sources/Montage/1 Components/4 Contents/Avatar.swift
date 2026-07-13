@@ -176,7 +176,7 @@ public struct Avatar: View {
                     Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .normal,
-                        color: .labelNormal
+                        color: .foregroundNeutralPrimary
                     )
                     .frame(width: size.interactionSize.width, height: size.interactionSize.height)
                     .clipShape(RoundedRectangle(cornerRadius: resolvedInteractionCornerRadius))
@@ -192,7 +192,7 @@ public struct Avatar: View {
     private var pushBadgeSizeOverride: PushBadge.Size?
     private var customCornerRadius: CGFloat?
     private var contentMode: ContentMode = .fit
-    private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
+    private var borderColor: SwiftUI.Color = .semantic(.lineNeutralTertiary)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
     /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
@@ -235,10 +235,10 @@ public struct Avatar: View {
     /// 아바타에 테두리를 추가합니다.
     ///
     /// - Parameters:
-    ///   - color: 테두리 색상, 생략하면 기본값으로 `.semantic(.lineAlternative)` 적용
+    ///   - color: 테두리 색상, 생략하면 기본값으로 `.semantic(.lineNeutralTertiary)` 적용
     ///   - width: 테두리 두께, 생략하면 기본값으로 `1` 적용
     /// - Returns: 수정된 아바타 인스턴스
-    public func border(color: SwiftUI.Color = .semantic(.lineAlternative), width: CGFloat = 1) -> Self {
+    public func border(color: SwiftUI.Color = .semantic(.lineNeutralTertiary), width: CGFloat = 1) -> Self {
         var zelf = self
         zelf.borderColor = color
         zelf.borderWidth = width
@@ -265,7 +265,7 @@ private extension Avatar {
                 Image(variant.placeholderImageName, bundle: .module)
                     .resizable()
                     .background(
-                        SwiftUI.Color.semantic(.backgroundNormal)
+                        SwiftUI.Color.semantic(.backgroundNeutralPrimary)
                     )
             }
         case .image(let image):

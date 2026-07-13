@@ -41,7 +41,7 @@ struct TextButtonPreview: View {
                 print("tapped")
             }
             .disable(disable)
-            .contentColor(contentColor ? .semantic(.accentForegroundCyan) : nil)
+            .contentColor(contentColor ? .semantic(.foregroundAccentCyan) : nil)
             .fontVariant(fontVariant ? .heading1 : nil)
             .fontWeight(fontWeight ? .regular : nil)
             .loading(loading)

@@ -366,11 +366,11 @@ private extension TextField {
                         width: textFieldGlobalFrame.width,
                         height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
-                    .background(SwiftUI.Color.semantic(.backgroundNormal))
+                    .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay {
                         RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(SwiftUI.Color.semantic(.lineAlternative))
+                            .strokeBorder(SwiftUI.Color.semantic(.lineNeutralTertiary))
                     }
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .accessibilityIdentifier("autocomplete_container")
@@ -393,7 +393,7 @@ private extension TextField {
                 Image.icon(icon)
                     .resizable()
                     .frame(width: size.iconSize, height: size.iconSize)
-                    .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                    .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
                     .padding(size.iconPadding)
             }
 
@@ -463,7 +463,7 @@ private extension TextField {
                     fixAutocorrection = true
                     Task { fixAutocorrection = false }
                 }
-                .iconColor(.semantic(.labelAssistive))
+                .iconColor(.semantic(.foregroundNeutralQuaternary))
             } else if !text.isEmpty, let statusMark, let statusMarkColor {
                 Image
                     .icon(statusMark)
@@ -484,7 +484,7 @@ private extension TextField {
         let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
         if disable {
             surface
-                .fill(SwiftUI.Color.semantic(.fillAlternative))
+                .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
                 .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
         } else {
             surface
@@ -536,13 +536,13 @@ private extension TextField {
                                                     .paragraph(
                                                         variant: .caption1,
                                                         weight: .bold,
-                                                        semantic: .labelAlternative
+                                                        semantic: .foregroundNeutralTertiary
                                                     )
                                                 Spacer()
                                             }
                                             .padding(.horizontal, 1)
                                             .padding(.vertical, 4)
-                                            .background(SwiftUI.Color.semantic(.backgroundElevated))
+                                            .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
                                         }
                                     }
                                     Section(header: header) {
@@ -571,20 +571,20 @@ private extension TextField {
     var fieldStrokeColor: SwiftUI.Color {
         // disable 상태에서는 status와 무관하게 normal과 동일한 border 색상을 사용한다. (negative 포함)
         if disable {
-            .semantic(.lineNeutral)
+            .semantic(.lineNeutralSecondary)
         } else if textFieldFocusState {
             switch status {
             case .normal, .positive:
-                .semantic(.linePrimaryStrong)
+                .semantic(.lineBrandStrong)
             case .negative:
-                .semantic(.lineStatusNegativeStrong)
+                .semantic(.lineNegativeStrong)
             }
         } else {
             switch status {
             case .normal, .positive:
-                .semantic(.lineNeutral)
+                .semantic(.lineNeutralSecondary)
             case .negative:
-                .semantic(.lineStatusNegativeNormal)
+                .semantic(.lineNegativePrimary)
             }
         }
     }
@@ -592,9 +592,9 @@ private extension TextField {
     var focusRingColor: SwiftUI.Color {
         switch status {
         case .negative:
-            .semantic(.interactionNegative)
+            .semantic(.lineNegativeFocus)
         case .normal, .positive:
-            .semantic(.interactionFocus)
+            .semantic(.lineBrandFocus)
         }
     }
 
@@ -610,18 +610,18 @@ private extension TextField {
     var statusMarkColor: SwiftUI.Color? {
         switch status {
         case .positive:
-            .semantic(.statusPositive)
+            .semantic(.foregroundPositivePrimary)
         default:
             nil
         }
     }
 
     var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelDisable) : .semantic(.labelAlternative)
+        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
     
     var fieldTextColor: SwiftUI.Color {
-        .semantic(.labelNormal)
+        .semantic(.foregroundNeutralPrimary)
     }
 }
 
@@ -742,20 +742,20 @@ private extension TextField {
                     Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
-                        color: .labelNormal
+                        color: .foregroundNeutralPrimary
                     )
                 )
                 .clipShape(RoundedRectangle(cornerRadius: size.trailingButtonRadius))
                 .overlay {
                     RoundedRectangle(cornerRadius: size.trailingButtonRadius)
-                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutral), lineWidth: 1)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutralSecondary), lineWidth: 1)
                 }
                 .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: disable ? nil : handler))
                 .allowsHitTesting(disable == false)
         }
 
         var textColor: Color.Semantic {
-            disable ? .labelDisable : .labelNormal
+            disable ? .foregroundDisablePrimary : .foregroundNeutralPrimary
         }
     }
 }

@@ -120,7 +120,7 @@ public struct Popup: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(SwiftUI.Color.semantic(.backgroundNormal))
+                    .foregroundColor(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
@@ -136,7 +136,7 @@ public struct Popup: View {
             Group {
                 if #available(iOS 16.4, *) {
                     originalView.presentationBackground(
-                        SwiftUI.Color.semantic(.materialDimmer)
+                        SwiftUI.Color.semantic(.effectDimmerPrimary)
                     )
                 } else {
                     originalView.dimmerBackground()
@@ -299,7 +299,7 @@ private struct DimmerBackgroundView: UIViewRepresentable {
     func makeUIView(context _: Context) -> some UIView {
         let view = UIView()
         DispatchQueue.main.async {
-            view.superview?.superview?.backgroundColor = .semantic(.materialDimmer)
+            view.superview?.superview?.backgroundColor = .semantic(.effectDimmerPrimary)
         }
         return view
     }

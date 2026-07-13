@@ -53,7 +53,7 @@ public enum FramedStyle {
                 // 패스를 피한다. 프레임 실루엣(둥근 사각형) 기준으로 그림자가 그려진다.
                 .background(
                     RoundedRectangle(cornerRadius: borderRadius)
-                        .fill(SwiftUI.Color.semantic(.backgroundNormal).shadow(shadowLevel))
+                        .fill(SwiftUI.Color.semantic(.backgroundNeutralPrimary).shadow(shadowLevel))
                 )
                 .disabled(disabled)
         }
@@ -65,11 +65,11 @@ public enum FramedStyle {
         private var borderColor: SwiftUI.Color {
             switch status {
             case .normal:
-                .semantic(.lineNeutral)
+                .semantic(.lineNeutralSecondary)
             case .selected:
-                .semantic(.primaryNormal).opacity(0.43)
+                .semantic(.surfaceBrandPrimary).opacity(0.43)
             case .negative:
-                .semantic(.statusNegative).opacity(0.28)
+                .semantic(.foregroundNegativePrimary).opacity(0.28)
             }
         }
     }

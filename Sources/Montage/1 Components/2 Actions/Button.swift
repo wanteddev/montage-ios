@@ -420,15 +420,15 @@ private extension Button {
         switch variant {
         case .solid:
             if disable {
-                .semantic(.interactionDisable)
+                .semantic(.surfaceDisablePrimary)
             } else {
                 if let customBackgroundColor {
                     customBackgroundColor
                 } else {
                     switch color {
-                    case .primary: .semantic(.primaryNormal)
-                    case .assistive: .semantic(.fillNormal)
-                    case .negative: .semantic(.statusNegative).opacity(0.12)
+                    case .primary: .semantic(.surfaceBrandPrimary)
+                    case .assistive: .semantic(.surfaceNeutralSecondary)
+                    case .negative: .semantic(.foregroundNegativePrimary).opacity(0.12)
                     }
                 }
             }
@@ -445,12 +445,12 @@ private extension Button {
     var borderColor: SwiftUI.Color {
         if variant == .outlined {
             if disable {
-                .semantic(.lineNeutral)
+                .semantic(.lineNeutralSecondary)
             } else {
                 if let customBorderColor {
                     customBorderColor
                 } else {
-                    .semantic(.lineNeutral)
+                    .semantic(.lineNeutralSecondary)
                 }
             }
         } else {
@@ -462,26 +462,26 @@ private extension Button {
         switch variant {
         case .solid:
             if disable {
-                .semantic(.labelDisable)
+                .semantic(.foregroundDisablePrimary)
             } else if let contentColor {
                 contentColor
             } else {
                 switch color {
                 case .primary: .semantic(.staticWhite)
-                case .assistive: .semantic(.labelNeutral)
-                case .negative: .semantic(.accentForegroundRed)
+                case .assistive: .semantic(.foregroundNeutralSecondary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             }
         case .outlined, .text:
             if disable {
-                .semantic(.labelDisable)
+                .semantic(.foregroundDisablePrimary)
             } else if let contentColor {
                 contentColor
             } else {
                 switch color {
-                case .primary: .semantic(.primaryNormal)
-                case .assistive: .semantic(variant == .outlined ? .labelNormal : .labelAlternative)
-                case .negative: .semantic(.accentForegroundRed)
+                case .primary: .semantic(.surfaceBrandPrimary)
+                case .assistive: .semantic(variant == .outlined ? .foregroundNeutralPrimary : .foregroundNeutralTertiary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             }
         }
@@ -495,14 +495,14 @@ private extension Button {
             case .solid:
                 switch color {
                 case .primary: .semantic(.staticWhite)
-                case .assistive: .semantic(.labelAssistive)
-                case .negative: .semantic(.accentForegroundRed)
+                case .assistive: .semantic(.foregroundNeutralQuaternary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             default:
                 switch color {
-                case .primary: .semantic(.primaryNormal)
-                case .assistive: .semantic(.labelAssistive)
-                case .negative: .semantic(.accentForegroundRed)
+                case .primary: .semantic(.surfaceBrandPrimary)
+                case .assistive: .semantic(.foregroundNeutralQuaternary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             }
         }
@@ -615,9 +615,9 @@ private extension Button {
 
     var interactionColor: Montage.Color.Semantic {
         switch color {
-        case .primary: variant == .solid ? .labelNormal : .primaryNormal
-        case .assistive: .labelNormal
-        case .negative: .labelNormal
+        case .primary: variant == .solid ? .foregroundNeutralPrimary : .surfaceBrandPrimary
+        case .assistive: .foregroundNeutralPrimary
+        case .negative: .foregroundNeutralPrimary
         }
     }
 

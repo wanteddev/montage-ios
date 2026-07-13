@@ -51,25 +51,25 @@ struct TextFieldPreview: View {
                     Image.icon(.logoApple)
                         .resizable()
                         .frame(width: 22, height: 22)
-                        .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                        .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
                 }
             case .text:
                 return {
                     Text("텍스트")
-                        .paragraph(variant: .body1, weight: .medium, semantic: .labelAssistive)
+                        .paragraph(variant: .body1, weight: .medium, semantic: .foregroundNeutralQuaternary)
                 }
             case .timer:
                 return {
                     let second = 431
                     return Text(String(format: "%02d:%02d", (second / 60), (second % 60)))
-                        .paragraph(variant: .label1, weight: .bold, semantic: .primaryNormal)
+                        .paragraph(variant: .label1, weight: .bold, semantic: .surfaceBrandPrimary)
                         .monospacedDigit()
                 }
             case .badge:
                 return {
                     ContentBadge(variant: .solid, text: "뱃지")
                         .size(.xsmall)
-                        .colorStyle(.accent(.semantic(.statusPositive)))
+                        .colorStyle(.accent(.semantic(.foregroundPositivePrimary)))
                 }
             case .iconButton:
                 return {
@@ -77,7 +77,7 @@ struct TextFieldPreview: View {
                         variant: .normal(size: .custom(size: 8)),
                         icon: .send
                     )
-                    .iconColor(.semantic(.labelAlternative))
+                    .iconColor(.semantic(.foregroundNeutralTertiary))
                 }
             }
         }
@@ -151,7 +151,7 @@ struct TextFieldPreview: View {
                     Group {
                         if indexPath.section == 0 {
                             Image.icon(.search)
-                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
                         } else {
                             Avatar("", variant: .company, size: .medium)
                         }

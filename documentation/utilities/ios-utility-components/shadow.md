@@ -92,7 +92,7 @@ enum Shadow
 
   ```swift
   RoundedRectangle(cornerRadius: 12)
-      .fill(SwiftUI.Color.semantic(.backgroundElevated).shadow(.medium))
+      .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary).shadow(.medium))
   ```
 
 </details>
@@ -130,7 +130,7 @@ enum Shadow
   ```swift
   // 권장: Shape fill에 analytic 그림자 (오프스크린 없음)
   RoundedRectangle(cornerRadius: 12)
-      .fill(SwiftUI.Color.semantic(.backgroundElevated).shadow(.medium))
+      .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary).shadow(.medium))
   
   // 모양을 알 수 없는 임의 콘텐츠에만 사용 (오프스크린 비용 주의)
   someContent

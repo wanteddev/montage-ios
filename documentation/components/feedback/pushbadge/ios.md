@@ -280,7 +280,7 @@ PushBadge를 초기화합니다.
   | `variant` | 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용 |
   | `size` | 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용 |
   | `fontColor` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용 |
-  | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.primaryNormal)` 적용 |
+  | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
   | `inset` | 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용 |
 - **Return Value**

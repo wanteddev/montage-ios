@@ -81,7 +81,7 @@ public struct ModalNavigation: View {
                     SwiftUI.Color.clear
                         .frame(height: 12)
                     RoundedRectangle(cornerRadius: 1000)
-                        .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                        .foregroundStyle(SwiftUI.Color.semantic(.surfaceNeutralStrong))
                         .frame(width: 40, height: 5)
                 }
             }
@@ -124,7 +124,7 @@ public struct ModalNavigation: View {
     // MARK: - Modifiers
     
     private var variant: Variant = .normal
-    private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNormal)
+    private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNeutralPrimary)
     private var isMaterialBackgroundDisabled = false
     private var fixedBackgroundOpacity: CGFloat?
     private var needHandleArea = false
@@ -313,7 +313,7 @@ extension ModalNavigation {
                 .paragraph(
                     variant: variant.typoVariant,
                     weight: variant.typoWeight,
-                    semantic: .labelStrong
+                    semantic: .foregroundNeutralStrong
                 )
                 .lineLimit(1)
                 .padding(.horizontal, 4)

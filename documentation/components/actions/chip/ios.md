@@ -17,7 +17,7 @@ Chip(
     size: .medium,
     text: "액션"
 )
-.backgroundColor(.semantic(.primaryNormal))
+.backgroundColor(.semantic(.surfaceBrandPrimary))
 .fontColor(.semantic(.staticWhite))
 .leadingImage(Image(systemName: "heart"))
 ```
