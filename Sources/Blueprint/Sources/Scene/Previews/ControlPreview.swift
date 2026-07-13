@@ -44,7 +44,7 @@ struct ControlPreview: View {
                     .tight(tight)
                     .label(label, fillWidth: fillWidth)
                     .if(customTypography) {
-                        $0.labelTypography(.heading2, weight: .medium, color: .semantic(.surfaceAccentPinkOpaque))
+                        $0.labelTypography(.heading2, weight: .medium, color: .semantic(.foregroundAccentPink))
                     }
                     .border(guideLine ? Color.blue : Color.clear)
                     Spacer()
@@ -62,7 +62,7 @@ struct ControlPreview: View {
                     .tight(tight)
                     .label(label, fillWidth: fillWidth)
                     .if(customTypography) {
-                        $0.labelTypography(.heading2, weight: .bold, color: .semantic(.surfaceAccentPinkOpaque))
+                        $0.labelTypography(.heading2, weight: .bold, color: .semantic(.foregroundAccentPink))
                     }
                     .border(guideLine ? Color.blue : Color.clear)
                     Spacer()
@@ -80,7 +80,7 @@ struct ControlPreview: View {
                     .tight(tight)
                     .label(label, fillWidth: fillWidth)
                     .if(customTypography) {
-                        $0.labelTypography(.heading2, weight: .bold, color: .semantic(.surfaceAccentPinkOpaque))
+                        $0.labelTypography(.heading2, weight: .bold, color: .semantic(.foregroundAccentPink))
                     }
                     .border(guideLine ? Color.blue : Color.clear)
                     Spacer()
