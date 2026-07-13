@@ -1163,7 +1163,7 @@
         {
           "name": "interactionColor(_:)",
           "signature": "func interactionColor(Color.Semantic) -> IconButton",
-          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: .labelNormal).",
+          "summary": "hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: .foregroundNeutralPrimary).",
           "kind": "method"
         },
         {

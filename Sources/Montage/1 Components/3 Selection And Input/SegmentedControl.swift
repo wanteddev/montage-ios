@@ -141,7 +141,7 @@ public struct SegmentedControl: View {
                                 // analytic으로 캐스팅한다(오프스크린 패스 제거). 동일 실루엣이라 외형 동일.
                                 ZStack {
                                     RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                        .fill(SwiftUI.Color.semantic(.backgroundElevated))
+                                        .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
                                         .shadow(
                                             color: .semantic(.staticBlack).opacity(0.08),
                                             radius: buttonCornerRadius
@@ -222,7 +222,7 @@ public struct SegmentedControl: View {
 extension SegmentedControl {
     private var backgroundColor: SwiftUI.Color {
         switch variant {
-        case .solid: .semantic(.fillNormal)
+        case .solid: .semantic(.surfaceNeutralSecondary)
         case .outlined: .clear
         }
     }
@@ -313,22 +313,22 @@ extension SegmentedControl {
     
     private func buttonForegroundColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
-        case .solid: .semantic(isSelected ? .labelNormal : .labelAlternative)
-        case .outlined: .semantic(isSelected ? .primaryNormal : .labelAlternative)
+        case .solid: .semantic(isSelected ? .foregroundNeutralPrimary : .foregroundNeutralTertiary)
+        case .outlined: .semantic(isSelected ? .surfaceBrandPrimary : .foregroundNeutralTertiary)
         }
     }
     
     private func buttonBackgroundColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
         case .solid: .clear
-        case .outlined: isSelected ? .semantic(.primaryNormal).opacity(0.05) : .clear
+        case .outlined: isSelected ? .semantic(.surfaceBrandPrimary).opacity(0.05) : .clear
         }
     }
     
     private func buttonBorderColor(isSelected: Bool) -> SwiftUI.Color {
         switch variant {
         case .solid: .clear
-        case .outlined: isSelected ? .semantic(.primaryNormal).opacity(0.43) : .semantic(.lineNormal)
+        case .outlined: isSelected ? .semantic(.surfaceBrandPrimary).opacity(0.43) : .semantic(.lineNeutralPrimary)
         }
     }
 }

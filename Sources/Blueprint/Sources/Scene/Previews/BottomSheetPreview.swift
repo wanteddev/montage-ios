@@ -155,7 +155,7 @@ struct BottomSheetPreview: View {
             caption: caption ? "caption" : nil,
             extra: {
                 if extra {
-                    Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                    Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
                         .frame(height: 50)
                 }
             },

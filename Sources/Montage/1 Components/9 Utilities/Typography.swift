@@ -22,7 +22,7 @@ import UIKit
 ///
 /// // SwiftUI에서 사용
 /// Text("Hello, World!")
-///     .typography(variant: .heading1, weight: .bold, semantic: .labelNormal)
+///     .typography(variant: .heading1, weight: .bold, semantic: .foregroundNeutralPrimary)
 /// ```
 ///
 /// - Note: 텍스트 스타일을 적용할 때는 일관성을 위해 직접 폰트를 지정하기보다
@@ -403,7 +403,7 @@ extension UILabel {
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        color: UIColor = .semantic(.labelNormal)
+        color: UIColor = .semantic(.foregroundNeutralPrimary)
     ) -> UILabel {
         let label = UIKit.UILabel()
         label.attributedText = .attributedString(
@@ -427,7 +427,7 @@ extension UILabel {
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        semantic: Color.Semantic = .labelNormal
+        semantic: Color.Semantic = .foregroundNeutralPrimary
     ) -> UILabel {
         label(string, variant: variant, weight: weight, color: .semantic(semantic))
     }
@@ -462,7 +462,7 @@ extension Text {
     public func typography(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        semantic: Color.Semantic = .labelNormal
+        semantic: Color.Semantic = .foregroundNeutralPrimary
     ) -> Text {
         typography(variant: variant, weight: weight, color: .semantic(semantic))
     }
@@ -493,7 +493,7 @@ extension Text {
     public func paragraph(
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        semantic: Color.Semantic = .labelNormal
+        semantic: Color.Semantic = .foregroundNeutralPrimary
     ) -> some View {
         typography(variant: variant, weight: weight, color: .semantic(semantic))
             .adjustLineHeight(variant: variant)
@@ -536,14 +536,14 @@ extension NSAttributedString {
     ///   - string: 변환할 문자열
     ///   - variant: 타이포그래피 변형, 생략하면 기본값으로 `.body1` 적용
     ///   - weight: 폰트 두께, 생략하면 기본값으로 `.regular` 적용
-    ///   - color: 색상, 생략하면 기본값으로 `.semantic(.labelNormal)` 적용
+    ///   - color: 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
     ///   - lineBreakMode: 줄바꿈 모드, 생략하면 기본값으로 `.byWordWrapping` 적용
     /// - Returns: Montage 스타일이 적용된 NSAttributedString
     public static func attributedString(
         _ string: String,
         variant: Typography.Variant = .body1,
         weight: Typography.Weight = .regular,
-        color: SwiftUI.Color = .semantic(.labelNormal),
+        color: SwiftUI.Color = .semantic(.foregroundNeutralPrimary),
         lineBreakMode: NSLineBreakMode = .byWordWrapping
     ) -> NSAttributedString {
         _montage(

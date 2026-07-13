@@ -87,7 +87,7 @@ struct TopNavigationPreview: View {
                 extra: {
                     if actionAreaExtra {
                         Rectangle()
-                            .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                            .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
                             .frame(height: 100)
                     }
                 },

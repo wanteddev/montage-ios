@@ -72,7 +72,7 @@ struct TextAreaPreview: View {
             ),
             .slot {
                 Image(systemName: "star.fill")
-                    .foregroundColor(.semantic(.primaryNormal))
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
             }
         ]
     }

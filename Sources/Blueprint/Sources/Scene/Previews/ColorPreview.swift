@@ -37,11 +37,15 @@ struct ColorPreview: View {
                 .disabled(ColorType.allCases[selectedColorTypeIndex] == .atomic)
             }
             .padding()
-            .background(Color.semantic(.backgroundNormal))
+            .background(Color.semantic(.backgroundNeutralPrimary))
             
             // 색상 목록
             ScrollView {
-                LazyVStack(spacing: 24) {
+                // NOTE: ScrollView 안에서 LazyVStack(지연) + LazyVGrid(.adaptive, 지연)를
+                // 이중 중첩하면 스크롤 시 adaptive 열 수 재계산이 상위 레이아웃으로 되먹임되어
+                // AttributeGraph 사이클/행(hang)이 발생한다. 그룹 헤더는 소수이므로 바깥은
+                // 비지연 VStack으로 두고, 칩 단위 지연은 안쪽 LazyVGrid가 담당한다.
+                VStack(spacing: 24) {
                     switch ColorType.allCases[selectedColorTypeIndex] {
                     case .atomic:
                         AtomicColorSections(showTransparentChecker: showTransparentChecker)
@@ -102,17 +106,11 @@ struct SemanticColorSections: View {
     let showTransparentChecker: Bool
     
     private let semanticColorGroups: [(String, [Montage.Color.Semantic])] = [
-        ("Primary", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "primary") }),
-        ("Label", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "label") }),
+        ("Foreground", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "foreground") }),
         ("Background", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "background") }),
-        ("Interaction", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "interaction") }),
+        ("Surface", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "surface") }),
         ("Line", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "line") }),
-        ("Status", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "status") }),
-        ("Accent Foreground", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "accentForeground") }),
-        ("Accent Background", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "accentBackground") }),
-        ("Inverse", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "inverse") }),
-        ("Fill", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "fill") }),
-        ("Material", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "material") }),
+        ("Effect", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "effect") }),
         ("Static", Color.Semantic.allCases.filter { $0.rawValue.starts(with: "static") })
     ]
     
@@ -143,7 +141,7 @@ struct ColorSectionView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.semantic(.labelStrong))
+                .foregroundColor(.semantic(.foregroundNeutralStrong))
                 .padding(.horizontal, 4)
             
             LazyVGrid(columns: [
@@ -171,13 +169,13 @@ struct ColorChipView: View {
                 .frame(height: 60)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.semantic(.lineNormal), lineWidth: 1)
+                        .stroke(Color.semantic(.lineNeutralPrimary), lineWidth: 1)
                 )
             
             // 색상 이름
             Text(colorItem.name)
                 .font(.system(size: 10))
-                .foregroundColor(.semantic(.labelNormal))
+                .foregroundColor(.semantic(.foregroundNeutralPrimary))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }

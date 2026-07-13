@@ -197,7 +197,7 @@ public struct Thumbnail: View {
                 .overlay {
                     if border {
                         RoundedRectangle(cornerRadius: radius ? 12 : 0)
-                            .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: 1)
+                            .strokeBorder(SwiftUI.Color.semantic(.lineNeutralPrimary), lineWidth: 1)
                     }
                 }
         }
@@ -246,7 +246,7 @@ private struct ThumbnailImageLoader: View {
                 .scaledToFill()
                 .onAppear { print(error) }
         } else {
-            SwiftUI.Color.semantic(.fillAlternative)
+            SwiftUI.Color.semantic(.surfaceNeutralTertiary)
         }
     }
 }

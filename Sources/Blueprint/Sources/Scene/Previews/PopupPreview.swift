@@ -77,7 +77,7 @@ struct PopupPreview: View {
                     extra: {
                         if extra {
                             Rectangle().fill(
-                                SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08)
+                                SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08)
                             )
                             .frame(height: 50)
                         }
@@ -94,7 +94,7 @@ struct PopupPreview: View {
                         }
                     }
                 }
-                .background(SwiftUI.Color.semantic(.backgroundNormal))
+                .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
             },
             navigation: navigation
                 ? {

@@ -89,7 +89,7 @@ struct ComponentListView: View {
                                 ComponentItemRow(componentType: componentType)
                             }
                             .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.semantic(.backgroundNormal))
+                            .listRowBackground(Color.semantic(.backgroundNeutralPrimary))
                         }
                     } header: {
                         Text(categorySet.category.displayName)
@@ -99,7 +99,7 @@ struct ComponentListView: View {
             }
         }
         .listStyle(.plain)
-        .background(Color.semantic(.backgroundNormal))
+        .background(Color.semantic(.backgroundNeutralPrimary))
         .scrollContentBackground(.hidden)
     }
 }
@@ -116,7 +116,7 @@ extension ComponentListView {
                 .foregroundStyle(componentType.state.color)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)
-                .background(Color.semantic(.backgroundNormal))
+                .background(Color.semantic(.backgroundNeutralPrimary))
         }
     }
 }
@@ -146,11 +146,11 @@ extension ComponentState: Comparable {
     var color: SwiftUI.Color {
         switch self {
         case .pending:
-            return SwiftUI.Color.semantic(.labelDisable)
+            return SwiftUI.Color.semantic(.foregroundDisablePrimary)
         case .previewNotReady:
-            return SwiftUI.Color.semantic(.statusCautionary)
+            return SwiftUI.Color.semantic(.foregroundCautionaryPrimary)
         case .completed:
-            return SwiftUI.Color.semantic(.statusPositive)
+            return SwiftUI.Color.semantic(.foregroundPositivePrimary)
         }
     }
     

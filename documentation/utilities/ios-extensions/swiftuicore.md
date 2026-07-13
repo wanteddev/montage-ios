@@ -32,7 +32,7 @@ title: SwiftUICore
 
   ```swift
   RoundedRectangle(cornerRadius: 12)
-      .fill(SwiftUI.Color.semantic(.backgroundElevated).shadow(.medium))
+      .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary).shadow(.medium))
   ```
 
 </details>
@@ -537,7 +537,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `variant` | 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용 |
   | `size` | 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용 |
   | `fontColor` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용 |
-  | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.primaryNormal)` 적용 |
+  | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
   | `inset` | 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용 |
 - **Return Value**
@@ -598,7 +598,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   ```swift
   // 권장: Shape fill에 analytic 그림자 (오프스크린 없음)
   RoundedRectangle(cornerRadius: 12)
-      .fill(SwiftUI.Color.semantic(.backgroundElevated).shadow(.medium))
+      .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary).shadow(.medium))
   
   // 모양을 알 수 없는 임의 콘텐츠에만 사용 (오프스크린 비용 주의)
   someContent
@@ -618,7 +618,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | --- | --- |
   | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
   | `kind` | 스켈레톤 종류 (텍스트, 사각형, 원형 등) |
-  | `color` | 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.fillNormal) 사용) |
+  | `color` | 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.surfaceNeutralSecondary) 사용) |
   | `opacity` | 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용 |
   | `size` | 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**

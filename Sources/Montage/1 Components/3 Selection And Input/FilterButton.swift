@@ -19,7 +19,7 @@ import SwiftUI
 ///     text: "카테고리",
 ///     state: $state
 /// )
-/// .backgroundColor(.semantic(.primaryNormal))
+/// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
 /// .active(true, label: "최신순")
 /// ```
@@ -118,7 +118,7 @@ public struct FilterButton: View {
             Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: .light,
-                color: .labelNormal
+                color: .foregroundNeutralPrimary
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
@@ -209,7 +209,7 @@ extension FilterButton.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.fillAlternative)
+            .semantic(.surfaceNeutralTertiary)
         case .outlined:
             .clear
         }
@@ -227,7 +227,7 @@ extension FilterButton.Variant {
     var disableBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.interactionDisable)
+            .semantic(.surfaceDisablePrimary)
         case .outlined:
             .clear
         }
@@ -236,27 +236,27 @@ extension FilterButton.Variant {
     var activeBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.inverseBackground)
+            .semantic(.surfaceNeutralInverse)
         case .outlined:
-            .semantic(.primaryNormal).withAlphaComponent(0.05)
+            .semantic(.surfaceBrandPrimary).withAlphaComponent(0.05)
         }
     }
     
     var activeTextUIColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.inverseLabel)
+            .semantic(.foregroundNeutralInverse)
         case .outlined:
-            .semantic(.primaryNormal)
+            .semantic(.surfaceBrandPrimary)
         }
     }
     
     var activeArrowColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.inverseLabel)
+            .semantic(.foregroundNeutralInverse)
         case .outlined:
-            .semantic(.labelNormal)
+            .semantic(.foregroundNeutralPrimary)
         }
     }
 }
@@ -266,21 +266,21 @@ private extension FilterButton {
         if disable {
             switch variant {
             case .solid:
-                return .semantic(.interactionDisable)
+                return .semantic(.surfaceDisablePrimary)
             case .outlined:
                 return .clear
             }
         } else if active {
             switch variant {
             case .solid:
-                return customActiveColor ?? .semantic(.inverseBackground)
+                return customActiveColor ?? .semantic(.surfaceNeutralInverse)
             case .outlined:
-                return .semantic(.primaryNormal).opacity(0.05)
+                return .semantic(.surfaceBrandPrimary).opacity(0.05)
             }
         } else {
             switch variant {
             case .solid:
-                return customBackgroundColor ?? .semantic(.fillAlternative)
+                return customBackgroundColor ?? .semantic(.surfaceNeutralTertiary)
             case .outlined:
                 return .clear
             }
@@ -289,41 +289,41 @@ private extension FilterButton {
     
     var fontColor: SwiftUI.Color {
         if disable {
-            return .semantic(.labelDisable)
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.labelAlternative)
+            return customFontColor ?? .semantic(.foregroundNeutralTertiary)
         }
     }
     
     var iconColor: SwiftUI.Color {
         if disable {
-            return .semantic(.labelDisable)
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
         } else {
-            return customIconColor ?? .semantic(.labelAlternative)
+            return customIconColor ?? .semantic(.foregroundNeutralTertiary)
         }
     }
     
     var activeContentColor: SwiftUI.Color {
         switch variant {
         case .solid:
-            return .semantic(.inverseLabel)
+            return .semantic(.foregroundNeutralInverse)
         case .outlined:
-            return customActiveColor ?? .semantic(.primaryNormal)
+            return customActiveColor ?? .semantic(.surfaceBrandPrimary)
         }
     }
     
     var borderColor: SwiftUI.Color {
         guard variant == .outlined else { return .clear }
         if disable {
-            return .semantic(.lineNeutral)
+            return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.primaryNormal)).opacity(0.43)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.43)
         } else {
-            return .semantic(.lineNeutral)
+            return .semantic(.lineNeutralSecondary)
         }
     }
     

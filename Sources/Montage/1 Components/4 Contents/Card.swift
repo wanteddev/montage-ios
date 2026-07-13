@@ -175,7 +175,7 @@ public struct Card: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(title)
-                            .paragraph(variant: .body1, weight: .bold, semantic: .labelNormal)
+                            .paragraph(variant: .body1, weight: .bold, semantic: .foregroundNeutralPrimary)
                             .lineLimit(2)
                             .skeleton(
                                 isPresented: skeleton,
@@ -187,7 +187,7 @@ public struct Card: View {
                                 Text(caption)
                                     .paragraph(
                                         variant: .label2, weight: .medium,
-                                        semantic: .labelAlternative
+                                        semantic: .foregroundNeutralTertiary
                                     )
                                     .lineLimit(1)
                                     .skeleton(
@@ -200,7 +200,7 @@ public struct Card: View {
                                 Text(subCaption)
                                     .paragraph(
                                         variant: .label2, weight: .medium,
-                                        semantic: .labelAlternative
+                                        semantic: .foregroundNeutralTertiary
                                     )
                                     .lineLimit(1)
                                     .skeleton(
@@ -213,7 +213,7 @@ public struct Card: View {
                                 Text(extraCaption)
                                     .paragraph(
                                         variant: .label2, weight: .medium,
-                                        semantic: .labelAlternative
+                                        semantic: .foregroundNeutralTertiary
                                     )
                                     .lineLimit(1)
                                     .skeleton(

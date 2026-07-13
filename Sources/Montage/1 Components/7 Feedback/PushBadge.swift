@@ -134,7 +134,7 @@ public struct PushBadge: View {
     // MARK: - Modifiers
     private var size: Size = .xsmall
     private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
-    private var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
+    private var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
     
     /// 뱃지의 크기를 설정합니다.
     ///
@@ -213,7 +213,7 @@ extension PushBadge {
             variant: Variant = .dot,
             size: Size = .xsmall,
             fontColor: SwiftUI.Color = .semantic(.staticWhite),
-            backgroundColor: SwiftUI.Color = .semantic(.primaryNormal),
+            backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary),
             position: Position = .top(.trailing),
             inset: CGSize = .zero
         ) {
@@ -293,7 +293,7 @@ extension View {
     ///   - variant: 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용
     ///   - size: 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용
     ///   - fontColor: 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용
-    ///   - backgroundColor: 배경 색상, 생략하면 기본값으로 `.semantic(.primaryNormal)` 적용
+    ///   - backgroundColor: 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용
     ///   - position: 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용
     ///   - inset: 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용
     /// - Returns: 뱃지가 적용된 뷰
@@ -309,7 +309,7 @@ extension View {
         variant: PushBadge.Variant = .dot,
         size: PushBadge.Size = .xsmall,
         fontColor: SwiftUI.Color = .semantic(.staticWhite),
-        backgroundColor: SwiftUI.Color = .semantic(.primaryNormal),
+        backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary),
         position: PushBadge.Position = .top(.trailing),
         inset: CGSize = .zero
     ) -> some View {

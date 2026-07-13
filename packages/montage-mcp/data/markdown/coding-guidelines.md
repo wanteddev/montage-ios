@@ -27,16 +27,16 @@ Montage는 `public enum Color`를 정의하고 동시에 `extension SwiftUI.Colo
 ```swift
 // ✅ 올바름
 private var backgroundColor: SwiftUI.Color {
-    isSelected ? Color.semantic(.primaryNormal).opacity(0.02)
-               : Color.semantic(.backgroundElevatedAlternative)
+    isSelected ? Color.semantic(.surfaceBrandPrimary).opacity(0.02)
+               : Color.semantic(.surfaceElevatedSecondary)
 }
 
 private func tint(for state: State) -> SwiftUI.Color { ... }
 
-@State private var fillColor: SwiftUI.Color = .semantic(.fillNormal)
+@State private var fillColor: SwiftUI.Color = .semantic(.surfaceNeutralSecondary)
 
 // ❌ 잘못됨 — `Color`가 Montage.Color (enum)로 해석되어 빌드 실패
-private var backgroundColor: Color { Color.semantic(.primaryNormal) }
+private var backgroundColor: Color { Color.semantic(.surfaceBrandPrimary) }
 ```
 
 표현식 내부에서는 그냥 `Color.semantic(...)`을 써도 된다 — 충돌은 **타입 위치**에서만 발생한다. 모호한 표현식이 있으면 `SwiftUI.Color.semantic(...)`로 한정한다.

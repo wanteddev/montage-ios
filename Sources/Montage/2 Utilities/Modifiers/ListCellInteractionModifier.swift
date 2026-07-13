@@ -26,7 +26,7 @@ struct ListCellInteractionModifier: ViewModifier {
                 Interaction(
                     state: pressed ? .pressed : .normal,
                     variant: .light,
-                    color: .labelNormal
+                    color: .foregroundNeutralPrimary
                 )
                 .frame(
                     width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2),

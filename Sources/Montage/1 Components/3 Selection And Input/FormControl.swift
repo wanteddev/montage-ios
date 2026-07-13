@@ -37,7 +37,7 @@ import SwiftUI
 /// .message("올바른 이메일 형식이 아닙니다.")
 /// .accessory {
 ///     Text("\(email.count)/100")
-///         .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+///         .typography(variant: .caption1, weight: .regular, semantic: .foregroundNeutralTertiary)
 /// }
 ///
 /// // 라벨을 입력 왼쪽에 배치
@@ -58,11 +58,11 @@ public struct FormControl: View {
 
     /// FormControl의 상태입니다. 메시지의 색을 결정합니다.
     public enum Status {
-        /// 기본 상태. 메시지는 도움말 색(`labelAlternative`)으로 표시됩니다.
+        /// 기본 상태. 메시지는 도움말 색(`foregroundNeutralTertiary`)으로 표시됩니다.
         case normal
-        /// 성공 상태. 메시지는 기본 도움말과 동일한 색(`labelAlternative`)으로 표시됩니다.
+        /// 성공 상태. 메시지는 기본 도움말과 동일한 색(`foregroundNeutralTertiary`)으로 표시됩니다.
         case positive
-        /// 에러 상태. 메시지는 강조 색(`statusNegative`)으로 표시됩니다.
+        /// 에러 상태. 메시지는 강조 색(`foregroundNegativePrimary`)으로 표시됩니다.
         case negative
     }
 
@@ -298,7 +298,7 @@ private extension FormControl {
     @ViewBuilder
     var styledLabel: some View {
         let labelPart = Text(labelText ?? "")
-            .typography(variant: labelVariant, weight: .bold, semantic: .labelNeutral)
+            .typography(variant: labelVariant, weight: .bold, semantic: .foregroundNeutralSecondary)
             .lineLimit(1)
             .truncationMode(.tail)
 
@@ -306,7 +306,7 @@ private extension FormControl {
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 labelPart
                 Text(verbatim: " *")
-                    .typography(variant: labelVariant, weight: .medium, semantic: .statusNegative)
+                    .typography(variant: labelVariant, weight: .medium, semantic: .foregroundNegativePrimary)
                     .fixedSize()
             }
         } else {
@@ -383,8 +383,8 @@ private extension FormControl {
     /// 상태에 따른 메시지 색. `.negative`에서만 강조 색을 사용한다.
     var messageColor: Color.Semantic {
         switch status {
-        case .normal, .positive: .labelAlternative
-        case .negative: .statusNegative
+        case .normal, .positive: .foregroundNeutralTertiary
+        case .negative: .foregroundNegativePrimary
         }
     }
 

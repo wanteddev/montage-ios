@@ -248,14 +248,14 @@ public struct Select: View {
                         .typography(
                             variant: .label1,
                             weight: .bold,
-                            semantic: .labelNormal
+                            semantic: .foregroundNeutralPrimary
                         )
                     if requiredBadge {
                         Text("*")
                             .typography(
                                 variant: .label1,
                                 weight: .medium,
-                                semantic: .statusNegative
+                                semantic: .foregroundNegativePrimary
                             )
                     }
                 }
@@ -281,7 +281,7 @@ public struct Select: View {
                         case .icon(let icon):
                             Image.icon(icon)
                                 .resizable()
-                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
                                 .padding(1)
                                 .frame(width: 24, height: 24)
                         case .iconButton(let iconButton):
@@ -372,7 +372,7 @@ public struct Select: View {
                             .resizable()
                             .padding(1)
                             .frame(width: 24, height: 24)
-                            .foregroundStyle(SwiftUI.Color.semantic(.statusNegative))
+                            .foregroundStyle(SwiftUI.Color.semantic(.foregroundNegativePrimary))
                     }
 
                     IconButton(
@@ -383,7 +383,7 @@ public struct Select: View {
                     }
                     .iconColor(
                         disable
-                            ? SwiftUI.Color.semantic(.labelDisable) : .semantic(.labelAlternative)
+                            ? SwiftUI.Color.semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
                     )
                     .padding(.horizontal, 4)
                     .frame(height: 24)
@@ -397,7 +397,7 @@ public struct Select: View {
                     let surface = RoundedRectangle(cornerRadius: 12)
                     if disable {
                         surface
-                            .fill(SwiftUI.Color.semantic(.fillAlternative))
+                            .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
                             .shadow(color: .semantic(.staticBlack).opacity(0.03), radius: 2, x: 0, y: 1)
                     } else {
                         surface
@@ -422,7 +422,7 @@ public struct Select: View {
                     .typography(
                         variant: .caption1,
                         weight: .regular,
-                        semantic: negative ? .statusNegative : .labelAlternative
+                        semantic: negative ? .foregroundNegativePrimary : .foregroundNeutralTertiary
                     )
             }
         }
@@ -515,7 +515,7 @@ public struct Select: View {
                                             Image.icon(.check)
                                                 .resizable()
                                                 .foregroundStyle(
-                                                    SwiftUI.Color.semantic(.primaryNormal)
+                                                    SwiftUI.Color.semantic(.surfaceBrandPrimary)
                                                 )
                                                 .frame(width: 24, height: 24)
                                         }
@@ -550,23 +550,23 @@ public struct Select: View {
 
     private var strokeColor: SwiftUI.Color {
         if disable {
-            .semantic(.lineNeutral)
+            .semantic(.lineNeutralSecondary)
         } else {
             if negative {
-                .semantic(.statusNegative).opacity(0.28)
+                .semantic(.foregroundNegativePrimary).opacity(0.28)
             } else {
                 menuPresented.wrappedValue
-                    ? .semantic(.primaryNormal).opacity(0.43) : .semantic(.lineNeutral)
+                    ? .semantic(.surfaceBrandPrimary).opacity(0.43) : .semantic(.lineNeutralSecondary)
             }
         }
     }
 
     private var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
+        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralQuaternary)
     }
 
     private var textColor: SwiftUI.Color {
-        disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
+        disable ? .semantic(.foregroundNeutralTertiary) : .semantic(.foregroundNeutralPrimary)
     }
 
     // MARK: - Inner View
@@ -593,7 +593,7 @@ public struct Select: View {
                         mutated = mutated.leadingImage(Image.icon(icon))
                     }
                     if item.isNegative {
-                        mutated = mutated.backgroundColor(.semantic(.statusNegative).opacity(0.05))
+                        mutated = mutated.backgroundColor(.semantic(.foregroundNegativePrimary).opacity(0.05))
                     }
                     return mutated
                 }
@@ -605,20 +605,20 @@ public struct Select: View {
         }
 
         private func iconColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .semantic(.labelDisable) }
+            guard disable == false else { return .semantic(.foregroundDisablePrimary) }
             if item.isNegative {
-                return .semantic(.statusNegative)
+                return .semantic(.foregroundNegativePrimary)
             } else {
-                return .semantic(.labelAlternative)
+                return .semantic(.foregroundNeutralTertiary)
             }
         }
 
         private func fontColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .semantic(.labelDisable) }
+            guard disable == false else { return .semantic(.foregroundDisablePrimary) }
             if item.isNegative {
-                return .semantic(.statusNegative)
+                return .semantic(.foregroundNegativePrimary)
             } else {
-                return .semantic(.labelAlternative)
+                return .semantic(.foregroundNeutralTertiary)
             }
         }
     }

@@ -15,7 +15,7 @@ public struct SkeletonPreview: View {
     @State private var alignmentIndex = 0
     @State private var variantIndex = 0
     @State private var cornerRadius: CGFloat = 3
-    @State private var color: SwiftUI.Color = .semantic(.fillNormal)
+    @State private var color: SwiftUI.Color = .semantic(.surfaceNeutralSecondary)
     @State private var opacity: CGFloat = 1
 
     private enum PreviewKind: CaseIterable, CaseDescribable {

@@ -146,7 +146,7 @@ hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동
 <summary>``func interactionColor(Color.Semantic) -> IconButton``</summary>
 
 
-hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.labelNormal`).
+hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
 
 - **Parameters**
   | Parameter | Description |

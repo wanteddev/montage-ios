@@ -33,7 +33,7 @@ FormControl { context in
 .message("올바른 이메일 형식이 아닙니다.")
 .accessory {
     Text("\(email.count)/100")
-        .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+        .typography(variant: .caption1, weight: .regular, semantic: .foregroundNeutralTertiary)
 }
 
 // 라벨을 입력 왼쪽에 배치
@@ -289,21 +289,21 @@ FormControl의 상태입니다. 메시지의 색을 결정합니다.
 <summary>``case negative``</summary>
 
 
-에러 상태. 메시지는 강조 색(`statusNegative`)으로 표시됩니다.
+에러 상태. 메시지는 강조 색(`foregroundNegativePrimary`)으로 표시됩니다.
 </details>
 <details>
 
 <summary>``case normal``</summary>
 
 
-기본 상태. 메시지는 도움말 색(`labelAlternative`)으로 표시됩니다.
+기본 상태. 메시지는 도움말 색(`foregroundNeutralTertiary`)으로 표시됩니다.
 </details>
 <details>
 
 <summary>``case positive``</summary>
 
 
-성공 상태. 메시지는 기본 도움말과 동일한 색(`labelAlternative`)으로 표시됩니다.
+성공 상태. 메시지는 기본 도움말과 동일한 색(`foregroundNeutralTertiary`)으로 표시됩니다.
 </details>
 
 #### Instance Properties

@@ -309,7 +309,7 @@ TextArea(text: $longText)
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
-  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAssistive)` 적용 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용 |
 </details>
 <details>
 
@@ -322,7 +322,7 @@ TextArea(text: $longText)
   | Parameter | Description |
   | --- | --- |
   | `icon` | 버튼 아이콘 |
-  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAlternative)` 적용 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
 </details>
 <details>

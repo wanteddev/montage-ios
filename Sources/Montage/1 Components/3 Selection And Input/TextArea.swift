@@ -86,11 +86,11 @@ public struct TextArea: View {
         /// 아이콘 버튼(배경 없음)
         /// - Parameters:
         ///   - icon: 버튼 아이콘
-        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAlternative)` 적용
+        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용
         ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
         case iconButton(
             icon: Icon,
-            tintColor: SwiftUI.Color = .semantic(.labelAlternative),
+            tintColor: SwiftUI.Color = .semantic(.foregroundNeutralTertiary),
             handler: (() -> Void)? = nil
         )
 
@@ -106,10 +106,10 @@ public struct TextArea: View {
         /// 단순 아이콘
         /// - Parameters:
         ///   - icon: 표시할 아이콘
-        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.labelAssistive)` 적용
+        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용
         case icon(
             _ icon: Icon,
-            tintColor: SwiftUI.Color = .semantic(.labelAssistive)
+            tintColor: SwiftUI.Color = .semantic(.foregroundNeutralQuaternary)
         )
 
         /// 콘텐츠 뱃지
@@ -444,7 +444,7 @@ public struct TextArea: View {
     private var editorBackground: some View {
         Group {
             if disable {
-                SwiftUI.Color.semantic(.fillAlternative)
+                SwiftUI.Color.semantic(.surfaceNeutralTertiary)
             } else {
                 if colorScheme == .light {
                     SwiftUI.Color.atomic(.common100).opacity(0.8)
@@ -471,19 +471,19 @@ public struct TextArea: View {
 
     private var focusRingColor: SwiftUI.Color {
         negative
-            ? SwiftUI.Color.semantic(.interactionNegative)
-            : SwiftUI.Color.semantic(.interactionFocus)
+            ? SwiftUI.Color.semantic(.lineNegativeFocus)
+            : SwiftUI.Color.semantic(.lineBrandFocus)
     }
 
     private var editorStrokeColor: SwiftUI.Color {
         if disable {
-            SwiftUI.Color.semantic(.lineAlternative)
+            SwiftUI.Color.semantic(.lineNeutralTertiary)
         } else if negative {
-            SwiftUI.Color.semantic(.lineStatusNegativeStrong)
+            SwiftUI.Color.semantic(.lineNegativeStrong)
         } else if focus.wrappedValue {
-            SwiftUI.Color.semantic(.linePrimaryStrong)
+            SwiftUI.Color.semantic(.lineBrandStrong)
         } else {
-            SwiftUI.Color.semantic(.lineNeutral)
+            SwiftUI.Color.semantic(.lineNeutralSecondary)
         }
     }
 
@@ -492,11 +492,11 @@ public struct TextArea: View {
     }
 
     private var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelDisable) : .semantic(.labelAlternative)
+        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
 
     private var editorTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
+        disable ? .semantic(.foregroundNeutralTertiary) : .semantic(.foregroundNeutralPrimary)
     }
 
     // MARK: - Inner View
@@ -642,7 +642,7 @@ public struct TextArea: View {
             .padding(inset)
             .background {
                 RoundedRectangle(cornerRadius: containerRadius)
-                    .foregroundStyle(SwiftUI.Color.semantic(.fillNormal))
+                    .foregroundStyle(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
             }
         }
 
@@ -651,7 +651,7 @@ public struct TextArea: View {
                 // 그림자를 ZStack(합성 뷰)이 아니라 첫 pure shape(`.fill`)에 적용해 analytic으로
                 // 캐스팅한다(오프스크린 패스 제거). 동일 실루엣이라 외형은 동일하게 유지된다.
                 RoundedRectangle(cornerRadius: segmentRadius)
-                    .fill(SwiftUI.Color.semantic(.backgroundElevated))
+                    .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
                     .shadow(color: .semantic(.staticBlack).opacity(0.08), radius: segmentRadius)
                 RoundedRectangle(cornerRadius: segmentRadius)
                     .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.28))
@@ -665,7 +665,7 @@ public struct TextArea: View {
             Image.icon(icons[index])
                 .resizable()
                 .frame(width: size.resourceIconSize, height: size.resourceIconSize)
-                .foregroundColor(.semantic(index == selectedIndex ? .labelNormal : .labelAlternative))
+                .foregroundColor(.semantic(index == selectedIndex ? .foregroundNeutralPrimary : .foregroundNeutralTertiary))
                 .frame(width: segmentSide, height: segmentSide)
                 .contentShape(RoundedRectangle(cornerRadius: segmentRadius))
                 .onTapGesture {
