@@ -26,7 +26,7 @@ Image(systemName: "person.circle")
 contentView
     .skeleton(isPresented: isLoading) {
         Skeleton.SkeletonView(.rectangle(cornerRadius: 8))
-            .color(.semantic(.fillNormal))
+            .color(.semantic(.surfaceNeutralSecondary))
             .opacity(0.7)
     }
 ```
@@ -288,7 +288,7 @@ contentView
   | --- | --- |
   | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
   | `kind` | 스켈레톤 종류 (텍스트, 사각형, 원형 등) |
-  | `color` | 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.fillNormal) 사용) |
+  | `color` | 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.surfaceNeutralSecondary) 사용) |
   | `opacity` | 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용 |
   | `size` | 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**

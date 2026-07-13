@@ -164,22 +164,22 @@ struct IconButtonPreview: View {
                 SliderOptionRow("padding", value: $padding, in: 0...24)
                 ToggleOptionRow("backgroundColor", isOn: Binding(
                     get: { backgroundColor != nil },
-                    set: { backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil }
+                    set: { backgroundColor = $0 ? .semantic(.surfaceAccentCyanOpaque) : nil }
                 ))
             }
             if isOutlined {
                 ToggleOptionRow("borderColor", isOn: Binding(
                     get: { borderColor != nil },
-                    set: { borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil }
+                    set: { borderColor = $0 ? .semantic(.surfaceAccentPurpleOpaque) : nil }
                 ))
             }
             ToggleOptionRow("iconColor", isOn: Binding(
                 get: { iconColor != nil },
-                set: { iconColor = $0 ? .semantic(.accentForegroundCyan) : nil }
+                set: { iconColor = $0 ? .semantic(.foregroundAccentCyan) : nil }
             ))
             ToggleOptionRow("interactionColor", isOn: Binding(
                 get: { interactionColor != nil },
-                set: { interactionColor = $0 ? .accentForegroundRed : nil }
+                set: { interactionColor = $0 ? .foregroundNegativeStrong : nil }
             ))
         }
     }

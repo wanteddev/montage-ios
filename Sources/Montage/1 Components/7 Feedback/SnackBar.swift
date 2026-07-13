@@ -279,9 +279,9 @@ public struct SnackBar: View {
 
         var body: some View {
             ZStack {
-                SwiftUI.Color.semantic(.inverseBackground).opacity(
+                SwiftUI.Color.semantic(.surfaceNeutralInverse).opacity(
                     colorScheme == .light ? 0.5 : 0.46)
-                SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
+                SwiftUI.Color.semantic(.surfaceBrandPrimary).opacity(0.05)
             }
             .background(
                 .ultraThinMaterial

@@ -97,9 +97,9 @@ struct PopoverPreview: View {
             VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("인재의 추가 정보를 확인하세요.")
-                        .paragraph(variant: .headline2, weight: .bold, semantic: .labelNormal)
+                        .paragraph(variant: .headline2, weight: .bold, semantic: .foregroundNeutralPrimary)
                     Text("적극적으로 구직 중인, 다른 회사가 주목하는, 우리 회사에 관심있는 인재를 알 수 있어요.")
-                        .paragraph(variant: .body2Reading, weight: .medium, semantic: .labelNeutral)
+                        .paragraph(variant: .body2Reading, weight: .medium, semantic: .foregroundNeutralSecondary)
                         .lineLimit(nil)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -117,7 +117,7 @@ struct PopoverPreview: View {
         }
         .frame(width: 300)
         .background(.ultraThinMaterial)
-        .background(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
+        .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary).opacity(0.88))
     }
 }
 

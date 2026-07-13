@@ -105,12 +105,12 @@ public struct Accordion: View {
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (.body2, .bold, .semantic(.labelNormal))
+    ) = (.body2, .bold, .semantic(.foregroundNeutralPrimary))
     private var descriptionTypography: (
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (.label1, .regular, .semantic(.labelNeutral))
+    ) = (.label1, .regular, .semantic(.foregroundNeutralSecondary))
     private var verticalPadding: VerticalPadding = .large
     private var fillWidth = false
     private var hideDivider = false
@@ -122,12 +122,12 @@ public struct Accordion: View {
     /// - Parameters:
     ///   - variant: 텍스트 변형, 생략하면 기본값으로 `.body2` 적용
     ///   - weight: 텍스트 굵기, 생략하면 기본값으로 `.bold` 적용
-    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.labelNormal)` 적용
+    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
     /// - Returns: 수정된 아코디언 인스턴스
     public func title(
         _ variant: Typography.Variant = .body2,
         weight: Typography.Weight = .bold,
-        color: SwiftUI.Color = .semantic(.labelNormal)
+        color: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
     ) -> Self {
         var zelf = self
         zelf.titleTypography.variant = variant
@@ -141,12 +141,12 @@ public struct Accordion: View {
     /// - Parameters:
     ///   - variant: 텍스트 변형, 생략하면 기본값으로 `.label1` 적용
     ///   - weight: 텍스트 굵기, 생략하면 기본값으로 `.regular` 적용
-    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.labelNeutral)` 적용
+    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용
     /// - Returns: 수정된 아코디언 인스턴스
     public func description(
         _ variant: Typography.Variant = .label1,
         weight: Typography.Weight = .regular,
-        color: SwiftUI.Color = .semantic(.labelNeutral)
+        color: SwiftUI.Color = .semantic(.foregroundNeutralSecondary)
     ) -> Self {
         var zelf = self
         zelf.descriptionTypography.variant = variant
@@ -312,7 +312,7 @@ public struct Accordion: View {
             
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))
+                .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralTertiary))
                 .background()
                 .if(!hideDivider)
         }

@@ -69,7 +69,7 @@ public enum Popover {
                                     Text(heading)
                                         .paragraph(
                                             variant: .body2, weight: .bold,
-                                            color: .semantic(.labelNormal)
+                                            color: .semantic(.foregroundNeutralPrimary)
                                         )
                                         .lineLimit(2)
                                         .multilineTextAlignment(.leading)
@@ -90,7 +90,7 @@ public enum Popover {
                                     Text(text)
                                         .paragraph(
                                             variant: .label2, weight: .medium,
-                                            color: .semantic(.labelNeutral)
+                                            color: .semantic(.foregroundNeutralSecondary)
                                         )
                                         .lineLimit(nil)
                                         .multilineTextAlignment(.leading)
@@ -139,7 +139,7 @@ public enum Popover {
             .frame(minWidth: 140, maxWidth: 360)
             .fixedSize(horizontal: true, vertical: true)
             .background(.ultraThinMaterial)
-            .background(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
+            .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary).opacity(0.88))
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }

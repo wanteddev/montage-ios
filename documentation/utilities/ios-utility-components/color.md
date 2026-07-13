@@ -18,9 +18,9 @@ let uiColor = UIColor.atomic(.blue50)
 let swiftUIColor = SwiftUI.Color.atomic(.blue50)
 
 // Semantic 색상 사용
-let semanticColor = Color.Semantic.primaryNormal
-let uiColor = UIColor.semantic(.primaryNormal)
-let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
+let semanticColor = Color.Semantic.surfaceBrandPrimary
+let uiColor = UIColor.semantic(.surfaceBrandPrimary)
+let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 ```
 
 >  **Note**
@@ -38,11 +38,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 > ```swift
 > // ✅ 올바름
 > private var backgroundColor: SwiftUI.Color {
->     Color.semantic(.backgroundElevatedAlternative)
+>     Color.semantic(.surfaceElevatedSecondary)
 > }
 >
 > // ❌ 빌드 실패
-> private var backgroundColor: Color { Color.semantic(.backgroundElevatedAlternative) }
+> private var backgroundColor: Color { Color.semantic(.surfaceElevatedSecondary) }
 > ```
 
 ## Topics
@@ -1458,442 +1458,330 @@ let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
 
   ```swift
   // UIKit에서 사용
-  label.textColor = UIColor.semantic(.labelNormal)
+  label.textColor = UIColor.semantic(.foregroundNeutralPrimary)
   
   // SwiftUI에서 사용
   Button("버튼") { }
-      .foregroundColor(.semantic(.primaryNormal))
-      .background(Color.semantic(.backgroundNormal))
+      .foregroundColor(.semantic(.surfaceBrandPrimary))
+      .background(Color.semantic(.backgroundNeutralPrimary))
   ```
 
 #### Enumeration Cases
 
 <details>
 
-<summary>``case accentBackgroundCyan``</summary>
+<summary>``case backgroundNeutralPrimary``</summary>
 
 
-시안색 강조 배경 색상
+기본 배경 색상 (구 backgroundNormal)
 </details>
 <details>
 
-<summary>``case accentBackgroundLightBlue``</summary>
+<summary>``case backgroundNeutralSecondary``</summary>
 
 
-하늘색 강조 배경 색상
+대체 배경 색상 (구 backgroundNormalAlternative)
 </details>
 <details>
 
-<summary>``case accentBackgroundLime``</summary>
+<summary>``case effectDimmerPrimary``</summary>
 
 
-라임색 강조 배경 색상
+딤 효과 색상 (구 materialDimmer)
 </details>
 <details>
 
-<summary>``case accentBackgroundPink``</summary>
+<summary>``case effectTransparentPrimary``</summary>
 
 
-분홍색 강조 배경 색상
+투명 효과 색상 (구 backgroundTransparent)
 </details>
 <details>
 
-<summary>``case accentBackgroundPurple``</summary>
+<summary>``case effectTransparentSecondary``</summary>
 
 
-자주색 강조 배경 색상
+대체 투명 효과 색상 (구 backgroundTransparentAlternative)
 </details>
 <details>
 
-<summary>``case accentBackgroundRedOrange``</summary>
-
-
-붉은 주황색 강조 배경 색상
-</details>
-<details>
-
-<summary>``case accentBackgroundViolet``</summary>
-
-
-보라색 강조 배경 색상
-</details>
-<details>
-
-<summary>``case accentForegroundBlue``</summary>
-
-
-파란색 강조 전경 색상
-</details>
-<details>
-
-<summary>``case accentForegroundCyan``</summary>
+<summary>``case foregroundAccentCyan``</summary>
 
 
 시안색 강조 전경 색상
 </details>
 <details>
 
-<summary>``case accentForegroundGreen``</summary>
-
-
-초록색 강조 전경 색상
-</details>
-<details>
-
-<summary>``case accentForegroundLightBlue``</summary>
+<summary>``case foregroundAccentLightBlue``</summary>
 
 
 하늘색 강조 전경 색상
 </details>
 <details>
 
-<summary>``case accentForegroundLime``</summary>
+<summary>``case foregroundAccentLime``</summary>
 
 
 라임색 강조 전경 색상
 </details>
 <details>
 
-<summary>``case accentForegroundOrange``</summary>
-
-
-주황색 강조 전경 색상
-</details>
-<details>
-
-<summary>``case accentForegroundPink``</summary>
+<summary>``case foregroundAccentPink``</summary>
 
 
 분홍색 강조 전경 색상
 </details>
 <details>
 
-<summary>``case accentForegroundPurple``</summary>
+<summary>``case foregroundAccentPurple``</summary>
 
 
 자주색 강조 전경 색상
 </details>
 <details>
 
-<summary>``case accentForegroundRed``</summary>
-
-
-빨간색 강조 전경 색상
-</details>
-<details>
-
-<summary>``case accentForegroundRedOrange``</summary>
-
-
-붉은 주황색 강조 전경 색상
-</details>
-<details>
-
-<summary>``case accentForegroundViolet``</summary>
+<summary>``case foregroundAccentViolet``</summary>
 
 
 보라색 강조 전경 색상
 </details>
 <details>
 
-<summary>``case backgroundElevated``</summary>
+<summary>``case foregroundBrandInverse``</summary>
 
 
-상승된 배경 색상
+역전 브랜드 전경 색상 (구 inversePrimary)
 </details>
 <details>
 
-<summary>``case backgroundElevatedAlternative``</summary>
+<summary>``case foregroundBrandPrimary``</summary>
 
 
-상승된 대체 배경 색상
+브랜드 전경 색상
 </details>
 <details>
 
-<summary>``case backgroundNormal``</summary>
+<summary>``case foregroundCautionaryPrimary``</summary>
 
 
-기본 배경 색상
+주의 전경 색상 (구 statusCautionary)
 </details>
 <details>
 
-<summary>``case backgroundNormalAlternative``</summary>
+<summary>``case foregroundDisablePrimary``</summary>
 
 
-대체 배경 색상
+비활성 전경 색상 (구 labelDisable)
 </details>
 <details>
 
-<summary>``case backgroundStatusCautionary``</summary>
+<summary>``case foregroundInactivePrimary``</summary>
 
 
-주의 상태 배경 색상
+비활성(inactive) 전경 색상 (구 interactionInactive)
 </details>
 <details>
 
-<summary>``case backgroundStatusNegative``</summary>
+<summary>``case foregroundNegativePrimary``</summary>
 
 
-부정 상태 배경 색상
+부정 전경 색상 (구 statusNegative)
 </details>
 <details>
 
-<summary>``case backgroundStatusPositive``</summary>
+<summary>``case foregroundNegativeStrong``</summary>
 
 
-긍정 상태 배경 색상
+강조된 부정 전경 색상 (구 accentForegroundRed)
 </details>
 <details>
 
-<summary>``case backgroundTransparent``</summary>
+<summary>``case foregroundNeutralInverse``</summary>
 
 
-투명 배경 색상
+역전 전경 색상 (구 inverseLabel)
 </details>
 <details>
 
-<summary>``case backgroundTransparentAlternative``</summary>
+<summary>``case foregroundNeutralPrimary``</summary>
 
 
-투명 대체 배경 색상
+기본 전경 색상 (구 labelNormal)
 </details>
 <details>
 
-<summary>``case fillAlternative``</summary>
+<summary>``case foregroundNeutralQuaternary``</summary>
 
 
-대체 채우기 색상
+4차 전경 색상 (구 labelAssistive)
 </details>
 <details>
 
-<summary>``case fillNegative``</summary>
+<summary>``case foregroundNeutralSecondary``</summary>
 
 
-negative 요소 내부 색상 (e.g. Button negative)
+보조 전경 색상 (구 labelNeutral)
 </details>
 <details>
 
-<summary>``case fillNormal``</summary>
+<summary>``case foregroundNeutralStrong``</summary>
 
 
-기본 채우기 색상
+강조 전경 색상 (구 labelStrong)
 </details>
 <details>
 
-<summary>``case fillPrimary``</summary>
+<summary>``case foregroundNeutralTertiary``</summary>
 
 
-primary 요소 내부 색상 (e.g. Chip)
+3차 전경 색상 (구 labelAlternative)
 </details>
 <details>
 
-<summary>``case fillStrong``</summary>
+<summary>``case foregroundPositivePrimary``</summary>
 
 
-강조된 채우기 색상
+긍정 전경 색상 (구 statusPositive)
 </details>
 <details>
 
-<summary>``case interactionDisable``</summary>
+<summary>``case lineAccentCyan``</summary>
 
 
-비활성화된 상호작용 색상
+시안색 강조 선 색상
 </details>
 <details>
 
-<summary>``case interactionFocus``</summary>
+<summary>``case lineAccentLightBlue``</summary>
 
 
-포커스 상태에서 그림자를 표현하는 상호작용 색상 (e.g. TextField focused)
+하늘색 강조 선 색상
 </details>
 <details>
 
-<summary>``case interactionInactive``</summary>
+<summary>``case lineAccentLime``</summary>
 
 
-비활성화된 상호작용 색상
+라임색 강조 선 색상
 </details>
 <details>
 
-<summary>``case interactionNegative``</summary>
+<summary>``case lineAccentPink``</summary>
 
 
-negative 상태에서 포커스되었을 때 그림자를 표현하는 상호작용 색상 (e.g. TextField negative focused)
+분홍색 강조 선 색상
 </details>
 <details>
 
-<summary>``case inverseBackground``</summary>
+<summary>``case lineAccentPurple``</summary>
 
 
-역전된 배경 색상
+자주색 강조 선 색상
 </details>
 <details>
 
-<summary>``case inverseLabel``</summary>
+<summary>``case lineAccentViolet``</summary>
 
 
-역전된 라벨 색상
+보라색 강조 선 색상
 </details>
 <details>
 
-<summary>``case inversePrimary``</summary>
+<summary>``case lineBrandFocus``</summary>
 
 
-역전된 주요 색상
+브랜드 포커스 선 색상 (구 interactionFocus, e.g. TextField focused)
 </details>
 <details>
 
-<summary>``case labelAlternative``</summary>
+<summary>``case lineBrandPrimary``</summary>
 
 
-대체 라벨 색상
+브랜드 선 색상 (구 linePrimaryNormal, e.g. chip)
 </details>
 <details>
 
-<summary>``case labelAssistive``</summary>
+<summary>``case lineBrandStrong``</summary>
 
 
-보조 라벨 색상
+강조된 브랜드 선 색상 (구 linePrimaryStrong)
 </details>
 <details>
 
-<summary>``case labelDisable``</summary>
+<summary>``case lineCautionaryPrimary``</summary>
 
 
-비활성화된 라벨 색상
+주의 선 색상 (구 lineStatusCautionaryNormal)
 </details>
 <details>
 
-<summary>``case labelNeutral``</summary>
+<summary>``case lineNegativeFocus``</summary>
 
 
-중립적인 라벨 색상
+부정 포커스 선 색상 (구 interactionNegative, e.g. TextField negative focused)
 </details>
 <details>
 
-<summary>``case labelNormal``</summary>
+<summary>``case lineNegativePrimary``</summary>
 
 
-기본 라벨 색상
+부정 선 색상 (구 lineStatusNegativeNormal, e.g. TextField negative)
 </details>
 <details>
 
-<summary>``case labelStrong``</summary>
+<summary>``case lineNegativeStrong``</summary>
 
 
-강조된 라벨 색상
+강조된 부정 선 색상 (구 lineStatusNegativeStrong)
 </details>
 <details>
 
-<summary>``case lineAlternative``</summary>
+<summary>``case lineNeutralPrimary``</summary>
 
 
-대체 선 색상
+기본 선 색상 (구 lineNormal)
 </details>
 <details>
 
-<summary>``case lineNeutral``</summary>
+<summary>``case lineNeutralPrimaryOpaque``</summary>
 
 
-중립적인 선 색상
+기본 실선 색상 (구 lineSolidNormal)
 </details>
 <details>
 
-<summary>``case lineNormal``</summary>
+<summary>``case lineNeutralSecondary``</summary>
 
 
-기본 선 색상
+보조 선 색상 (구 lineNeutral)
 </details>
 <details>
 
-<summary>``case linePrimaryNormal``</summary>
+<summary>``case lineNeutralSecondaryOpaque``</summary>
 
 
-primary 상태의 기본 보더 색상 (e.g. chip)
+보조 실선 색상 (구 lineSolidNeutral)
 </details>
 <details>
 
-<summary>``case linePrimaryStrong``</summary>
+<summary>``case lineNeutralTertiary``</summary>
 
 
-primary 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField focused)
+3차 선 색상 (구 lineAlternative)
 </details>
 <details>
 
-<summary>``case lineSolidAlternative``</summary>
+<summary>``case lineNeutralTertiaryOpaque``</summary>
 
 
-대체 실선 색상
+3차 실선 색상 (구 lineSolidAlternative)
 </details>
 <details>
 
-<summary>``case lineSolidNeutral``</summary>
+<summary>``case linePositivePrimary``</summary>
 
 
-중립적인 실선 색상
-</details>
-<details>
-
-<summary>``case lineSolidNormal``</summary>
-
-
-기본 실선 색상
-</details>
-<details>
-
-<summary>``case lineStatusCautionaryNormal``</summary>
-
-
-cautionary 상태의 기본 보더 색상
-</details>
-<details>
-
-<summary>``case lineStatusNegativeNormal``</summary>
-
-
-negative 상태의 기본 보더 색상 (e.g. TextField negative)
-</details>
-<details>
-
-<summary>``case lineStatusNegativeStrong``</summary>
-
-
-negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
-</details>
-<details>
-
-<summary>``case lineStatusPositiveNormal``</summary>
-
-
-positive 상태의 기본 보더 색상
-</details>
-<details>
-
-<summary>``case materialDimmer``</summary>
-
-
-어두운 재질 색상
-</details>
-<details>
-
-<summary>``case primaryHeavy``</summary>
-
-
-매우 강조된 주요 색상
-</details>
-<details>
-
-<summary>``case primaryNormal``</summary>
-
-
-기본 주요 색상
-</details>
-<details>
-
-<summary>``case primaryStrong``</summary>
-
-
-강조된 주요 색상
+긍정 선 색상 (구 lineStatusPositiveNormal)
 </details>
 <details>
 
@@ -1911,24 +1799,199 @@ positive 상태의 기본 보더 색상
 </details>
 <details>
 
-<summary>``case statusCautionary``</summary>
+<summary>``case surfaceAccentCyan``</summary>
 
 
-주의 상태 색상
+시안색 강조 표면 색상
 </details>
 <details>
 
-<summary>``case statusNegative``</summary>
+<summary>``case surfaceAccentCyanOpaque``</summary>
 
 
-부정적인 상태 색상
+시안색 강조 표면 색상 (불투명, 구 accentBackgroundCyan)
 </details>
 <details>
 
-<summary>``case statusPositive``</summary>
+<summary>``case surfaceAccentLightBlue``</summary>
 
 
-긍정적인 상태 색상
+하늘색 강조 표면 색상
+</details>
+<details>
+
+<summary>``case surfaceAccentLightBlueOpaque``</summary>
+
+
+하늘색 강조 표면 색상 (불투명, 구 accentBackgroundLightBlue)
+</details>
+<details>
+
+<summary>``case surfaceAccentLime``</summary>
+
+
+라임색 강조 표면 색상
+</details>
+<details>
+
+<summary>``case surfaceAccentLimeOpaque``</summary>
+
+
+라임색 강조 표면 색상 (불투명, 구 accentBackgroundLime)
+</details>
+<details>
+
+<summary>``case surfaceAccentPink``</summary>
+
+
+분홍색 강조 표면 색상
+</details>
+<details>
+
+<summary>``case surfaceAccentPinkOpaque``</summary>
+
+
+분홍색 강조 표면 색상 (불투명, 구 accentBackgroundPink)
+</details>
+<details>
+
+<summary>``case surfaceAccentPurple``</summary>
+
+
+자주색 강조 표면 색상
+</details>
+<details>
+
+<summary>``case surfaceAccentPurpleOpaque``</summary>
+
+
+자주색 강조 표면 색상 (불투명, 구 accentBackgroundPurple)
+</details>
+<details>
+
+<summary>``case surfaceAccentViolet``</summary>
+
+
+보라색 강조 표면 색상
+</details>
+<details>
+
+<summary>``case surfaceAccentVioletOpaque``</summary>
+
+
+보라색 강조 표면 색상 (불투명, 구 accentBackgroundViolet)
+</details>
+<details>
+
+<summary>``case surfaceBrandHeavy``</summary>
+
+
+매우 강조된 브랜드 표면 색상 (구 primaryHeavy)
+</details>
+<details>
+
+<summary>``case surfaceBrandPrimary``</summary>
+
+
+브랜드 표면 색상 (구 primaryNormal)
+</details>
+<details>
+
+<summary>``case surfaceBrandStrong``</summary>
+
+
+강조된 브랜드 표면 색상 (구 primaryStrong)
+</details>
+<details>
+
+<summary>``case surfaceBrandSubtle``</summary>
+
+
+옅은 브랜드 표면 색상 (구 fillPrimary)
+</details>
+<details>
+
+<summary>``case surfaceCautionaryPrimary``</summary>
+
+
+주의 표면 색상 (구 backgroundStatusCautionary)
+</details>
+<details>
+
+<summary>``case surfaceDisablePrimary``</summary>
+
+
+비활성 표면 색상 (구 interactionDisable)
+</details>
+<details>
+
+<summary>``case surfaceElevatedPrimary``</summary>
+
+
+상승된 표면 색상 (구 backgroundElevated)
+</details>
+<details>
+
+<summary>``case surfaceElevatedSecondary``</summary>
+
+
+상승된 대체 표면 색상 (구 backgroundElevatedAlternative)
+</details>
+<details>
+
+<summary>``case surfaceNegativePrimary``</summary>
+
+
+부정 표면 색상 (구 backgroundStatusNegative)
+</details>
+<details>
+
+<summary>``case surfaceNegativeStrong``</summary>
+
+
+강조된 부정 표면 색상 (구 fillNegative)
+</details>
+<details>
+
+<summary>``case surfaceNeutralInverse``</summary>
+
+
+역전 표면 색상 (구 inverseBackground)
+</details>
+<details>
+
+<summary>``case surfaceNeutralPrimary``</summary>
+
+
+기본 표면 색상
+</details>
+<details>
+
+<summary>``case surfaceNeutralSecondary``</summary>
+
+
+보조 표면 색상 (구 fillNormal)
+</details>
+<details>
+
+<summary>``case surfaceNeutralStrong``</summary>
+
+
+강조 표면 색상 (구 fillStrong)
+</details>
+<details>
+
+<summary>``case surfaceNeutralTertiary``</summary>
+
+
+3차 표면 색상 (구 fillAlternative)
+</details>
+<details>
+
+<summary>``case surfacePositivePrimary``</summary>
+
+
+긍정 표면 색상 (구 backgroundStatusPositive)
 </details>
 
 #### Initializers

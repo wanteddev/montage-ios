@@ -69,13 +69,13 @@ public struct ActionArea: View, KeyboardReadable {
 
                 if !isExtraEmpty && extraDivider {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral))
+                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralSecondary))
                         .frame(height: 1)
                 }
             }
 
             if isExtraEmpty {
-                SwiftUI.Color.semantic(.backgroundElevated)
+                SwiftUI.Color.semantic(.surfaceElevatedPrimary)
                     .frame(height: 0)
                     .overlay {
                         LinearGradient(
@@ -289,7 +289,7 @@ extension ActionArea {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
                 Text(caption)
-                    .paragraph(variant: .label2, semantic: .labelAlternative)
+                    .paragraph(variant: .label2, semantic: .foregroundNeutralTertiary)
             }
         }
     }
@@ -297,12 +297,12 @@ extension ActionArea {
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
-                .semantic(.backgroundElevated).opacity($0)
+                .semantic(.surfaceElevatedPrimary).opacity($0)
             }
     }
 
     private var backgroundColor: SwiftUI.Color {
-        .semantic(.backgroundElevated).opacity(backgroundOpacity)
+        .semantic(.surfaceElevatedPrimary).opacity(backgroundOpacity)
     }
     
     private func applyTransparentBackground(_ transparentBackground: Bool, animated: Bool) {

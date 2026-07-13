@@ -126,9 +126,9 @@ public struct ProgressTracker: View {
         private var labelColor: SwiftUI.Color {
             switch status {
             case .complete, .inactive:
-                .semantic(.labelAlternative)
+                .semantic(.foregroundNeutralTertiary)
             case .active:
-                .semantic(.labelNormal)
+                .semantic(.foregroundNeutralPrimary)
             }
         }
     }
@@ -169,9 +169,9 @@ extension ProgressTracker {
         private var backgroundColor: SwiftUI.Color {
             switch state {
             case .complete, .active:
-                .semantic(.primaryNormal)
+                .semantic(.surfaceBrandPrimary)
             case .inactive:
-                .semantic(.lineSolidNormal)
+                .semantic(.lineNeutralPrimaryOpaque)
             }
         }
     }
@@ -241,9 +241,9 @@ extension ProgressTracker {
         private func labelColor(at index: Int) -> SwiftUI.Color {
             switch state(at: index) {
             case .complete, .inactive:
-                .semantic(.labelAlternative)
+                .semantic(.foregroundNeutralTertiary)
             case .active:
-                .semantic(.labelNormal)
+                .semantic(.foregroundNeutralPrimary)
             }
         }
 
@@ -272,7 +272,7 @@ extension ProgressTracker {
                         .foregroundStyle(
                             SwiftUI.Color.semantic(
                                 state(at: index - 1) == .complete
-                                    ? .primaryNormal : .lineSolidNormal
+                                    ? .surfaceBrandPrimary : .lineNeutralPrimaryOpaque
                             )
                         )
                 } else {
@@ -288,7 +288,7 @@ extension ProgressTracker {
                     Rectangle()
                         .foregroundStyle(
                             SwiftUI.Color.semantic(
-                                state(at: index) == .complete ? .primaryNormal : .lineSolidNormal
+                                state(at: index) == .complete ? .surfaceBrandPrimary : .lineNeutralPrimaryOpaque
                             )
                         )
                 } else {
@@ -372,7 +372,7 @@ extension ProgressTracker {
                 .frame(width: 1)
                 .foregroundStyle(
                     SwiftUI.Color
-                        .semantic(state(at: index) == .complete ? .primaryNormal : .lineSolidNormal)
+                        .semantic(state(at: index) == .complete ? .surfaceBrandPrimary : .lineNeutralPrimaryOpaque)
                 )
         }
     }

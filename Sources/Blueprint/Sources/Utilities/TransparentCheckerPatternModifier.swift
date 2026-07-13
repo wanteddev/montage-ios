@@ -115,7 +115,7 @@ class CheckerPatternCache {
             let cgContext = context.cgContext
             
             // 흰색 배경
-            cgContext.setFillColor(UIColor.semantic(.backgroundNormal).cgColor)
+            cgContext.setFillColor(UIColor.semantic(.backgroundNeutralPrimary).cgColor)
             cgContext.fill(CGRect(origin: .zero, size: size))
             
             // 회색 체커 패턴

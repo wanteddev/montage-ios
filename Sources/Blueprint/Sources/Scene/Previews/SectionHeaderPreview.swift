@@ -37,7 +37,7 @@ struct SectionHeaderPreview: View {
                 }
                 .size(sizes[sizeIndex])
                 .if(titleColor) {
-                    $0.titleColor(.semantic(.accentBackgroundPink))
+                    $0.titleColor(.semantic(.surfaceAccentPinkOpaque))
                 }
                 .padding(.vertical)
         } options: {

@@ -21,8 +21,8 @@ struct ContentBadgePreview: View {
     @State private var leadingIconUsesTemplate: Bool = true
     @State private var trailingIcon: Bool = false
     @State private var trailingIconUsesTemplate: Bool = true
-    @State private var foregroundColor: SwiftUI.Color = .semantic(.labelAlternative)
-    @State private var backgroundColor: SwiftUI.Color = .semantic(.accentBackgroundViolet)
+    @State private var foregroundColor: SwiftUI.Color = .semantic(.foregroundNeutralTertiary)
+    @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceAccentVioletOpaque)
     
     private let sizes: [ContentBadge.Size] = [
         .xsmall,
@@ -73,7 +73,7 @@ struct ContentBadgePreview: View {
         }
         .onChange(of: colorStyleIndex) { newValue in
             if newValue == 0 {
-                foregroundColor = .semantic(.labelAlternative)
+                foregroundColor = .semantic(.foregroundNeutralTertiary)
             }
         }
     }

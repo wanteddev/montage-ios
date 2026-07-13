@@ -217,7 +217,7 @@ ListCell(title: "커스텀 셀", onTap: {
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  선택된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다. `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
+  선택된 셀은 타이틀 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 medium으로 설정됩니다. `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
 </details>
 <details>
 

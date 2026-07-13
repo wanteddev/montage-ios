@@ -103,7 +103,7 @@ struct TooltipPreview: View {
         Button(color: .assistive, text: "zIndex\n테스트 버튼") {
             alertPresented = true
         }
-        .contentColor(.semantic(.primaryNormal))
+        .contentColor(.semantic(.surfaceBrandPrimary))
         .alert("버튼이 툴팁에 의해 가려지고 툴팁을 통과해서 눌리지 않아야 합니다.", isPresented: $alertPresented) {
             Button("확인") {
                 alertPresented = false
