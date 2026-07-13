@@ -198,7 +198,7 @@ private extension ContentBadge {
     var contentColor: SwiftUI.Color {
         switch colorStyle {
         case .neutral(let contentColor):
-            return contentColor ?? .semantic(.labelAlternative)
+            return contentColor ?? .semantic(.foregroundNeutralTertiary)
         case let .accent(contentColor, _):
             return contentColor
         }
@@ -207,7 +207,7 @@ private extension ContentBadge {
     var backgroundColor: SwiftUI.Color {
         switch colorStyle {
         case .neutral:
-            return variant == .solid ? .semantic(.fillNormal) : .clear
+            return variant == .solid ? .semantic(.surfaceNeutralSecondary) : .clear
         case let .accent(contentColor, backgroundColor):
             return (backgroundColor ?? contentColor).opacity(0.08)
         }
@@ -238,7 +238,7 @@ private extension ContentBadge {
     var borderColor: SwiftUI.Color {
         switch colorStyle {
         case .neutral:
-            return variant == .solid ? .clear : .semantic(.lineNormal)
+            return variant == .solid ? .clear : .semantic(.lineNeutralPrimary)
         case let .accent(contentColor, backgroundColor):
             return (backgroundColor ?? contentColor).opacity(0.43)
         }

@@ -101,7 +101,7 @@ public struct Slider: View {
                     .typography(
                         variant: .headline2,
                         weight: .bold,
-                        semantic: disable ? .interactionDisable : .labelNormal
+                        semantic: disable ? .surfaceDisablePrimary : .foregroundNeutralPrimary
                     )
             }
             
@@ -353,12 +353,12 @@ public struct Slider: View {
         }
         
         var lineColor: SwiftUI.Color {
-            guard !disable else { return .semantic(.interactionDisable) }
+            guard !disable else { return .semantic(.surfaceDisablePrimary) }
             return switch kind {
             case .inner:
-                .semantic(.primaryNormal)
+                .semantic(.surfaceBrandPrimary)
             case .outer:
-                .semantic(.fillStrong)
+                .semantic(.surfaceNeutralStrong)
             }
         }
     }
@@ -383,14 +383,14 @@ public struct Slider: View {
                 Circle()
                     .frame(width: Slider.diameter, height: Slider.diameter)
                     .foregroundStyle(
-                        SwiftUI.Color.semantic(disable ? .interactionDisable : .primaryNormal)
+                        SwiftUI.Color.semantic(disable ? .surfaceDisablePrimary : .surfaceBrandPrimary)
                     )
                     .contentShape(Rectangle())
                     .background {
                         Interaction(
                             state: isDragging ? .pressed : .normal,
                             variant: .strong,
-                            color: .primaryNormal
+                            color: .surfaceBrandPrimary
                         )
                         .frame(width: Slider.diameter + 12, height: Slider.diameter + 12)
                         .clipShape(Circle())
@@ -440,7 +440,7 @@ public struct Slider: View {
                 .typography(
                     variant: .label1,
                     weight: .medium,
-                    semantic: disable ? .interactionDisable : .labelNormal
+                    semantic: disable ? .surfaceDisablePrimary : .foregroundNeutralPrimary
                 )
             Group {
                 if isSpacer {

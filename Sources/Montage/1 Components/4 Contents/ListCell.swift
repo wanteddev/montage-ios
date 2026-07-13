@@ -99,7 +99,7 @@ public struct ListCell: View {
                             Text(caption)
                                 .paragraph(
                                     variant: .label2,
-                                    semantic: .labelAlternative
+                                    semantic: .foregroundNeutralTertiary
                                 )
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
@@ -111,7 +111,7 @@ public struct ListCell: View {
                         Image.icon(.chevronRightTightSmall)
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
+                            .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralQuaternary))
                             .frame(width: 8, height: 16)
                             .padding(.vertical, 4)
                     }
@@ -123,7 +123,7 @@ public struct ListCell: View {
             
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))
+                .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralTertiary))
                 .background()
                 .if(divider)
         }
@@ -143,7 +143,7 @@ public struct ListCell: View {
     
     // MARK: - Modifiers
     
-    private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight, color: Color.Semantic) = (.body1, .regular, .labelNormal)
+    private var titleTypography: (variant: Typography.Variant, weight: Typography.Weight, color: Color.Semantic) = (.body1, .regular, .foregroundNeutralPrimary)
     private var verticalPadding: VerticalPadding = .medium
     private var fillWidth = false
     private var textEllipsis = false
@@ -269,7 +269,7 @@ public struct ListCell: View {
 
     /// 셀을 선택된 상태로 설정합니다.
     ///
-    /// 선택된 셀은 타이틀 텍스트의 색상이 `primaryNormal`로 변경되고, 텍스트 두께가 medium으로 설정됩니다.
+    /// 선택된 셀은 타이틀 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 medium으로 설정됩니다.
     /// `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
     ///
     /// - Parameters:
@@ -362,9 +362,9 @@ public struct ListCell: View {
 extension ListCell {
     private var normalTitleColor: Color.Semantic {
         if disable {
-            .labelAlternative
+            .foregroundNeutralTertiary
         } else {
-            selected ? .primaryNormal : titleTypography.color
+            selected ? .surfaceBrandPrimary : titleTypography.color
         }
     }
     

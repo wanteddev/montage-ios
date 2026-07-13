@@ -60,7 +60,7 @@ struct AccordionPreview: View {
                             Image.icon(isExpanded ? .chevronUp : .chevronDown)
                                 .resizable()
                                 .rotationEffect(.degrees(isExpanded ? 180 : 0))
-                                .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
+                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
                                 .frame(width: 16, height: 16)
                         }
                         .frame(height: 24)
@@ -89,7 +89,7 @@ struct AccordionPreview: View {
 
     var dummyContent: some View {
         Rectangle()
-            .fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.2))
+            .fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.2))
             .frame(height: 100)
     }
 }

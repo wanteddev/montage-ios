@@ -18,7 +18,7 @@ FilterButton(
     text: "카테고리",
     state: $state
 )
-.backgroundColor(.semantic(.primaryNormal))
+.backgroundColor(.semantic(.surfaceBrandPrimary))
 .fontColor(.semantic(.staticWhite))
 .active(true, label: "최신순")
 ```

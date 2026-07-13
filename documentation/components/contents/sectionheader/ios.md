@@ -94,7 +94,7 @@ SectionHeader(title: "카테고리") {
   수정된 SectionHeader 인스턴스
 - **Discussion**
 
-  크기에 따라 폰트 크기와 높이가 자동으로 조정됩니다. `xsmall` 크기를 선택하면 타이틀 색상이 `.labelAlternative`로 변경됩니다.
+  크기에 따라 폰트 크기와 높이가 자동으로 조정됩니다. `xsmall` 크기를 선택하면 타이틀 색상이 `.foregroundNeutralTertiary`로 변경됩니다.
 </details>
 <details>
 

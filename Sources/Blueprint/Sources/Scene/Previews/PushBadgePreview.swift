@@ -32,14 +32,14 @@ struct PushBadgePreview: View {
     @State var positionXIndex = 2
     @State var positionYIndex = 0
     @State var fontColor: SwiftUI.Color = .semantic(.staticWhite)
-    @State var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
+    @State var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
     @State var inset = false
 
     var body: some View {
         PreviewLayout {
             Rectangle()
                 .frame(width: 50, height: 50)
-                .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet))
+                .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque))
                 .opacity(0.3)
                 .pushBadge(
                     variant: variants[variantIndex],

@@ -56,7 +56,7 @@ struct ListCardPreview: View {
             .trailingContent {
                 if showTrailingContent {
                     Image.icon(.chevronRight)
-                        .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
+                        .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralQuaternary))
                 }
             }
             .onChange(of: "\(thumbnailWidth)\(showLeadingContent)\(showTrailingContent)") { _ in

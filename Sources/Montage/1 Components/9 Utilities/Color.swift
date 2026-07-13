@@ -21,9 +21,9 @@ import UIKit
 /// let swiftUIColor = SwiftUI.Color.atomic(.blue50)
 /// 
 /// // Semantic 색상 사용
-/// let semanticColor = Color.Semantic.primaryNormal
-/// let uiColor = UIColor.semantic(.primaryNormal)
-/// let swiftUIColor = SwiftUI.Color.semantic(.primaryNormal)
+/// let semanticColor = Color.Semantic.surfaceBrandPrimary
+/// let uiColor = UIColor.semantic(.surfaceBrandPrimary)
+/// let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 /// ```
 ///
 /// - Note: UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다
@@ -39,11 +39,11 @@ import UIKit
 /// > ```swift
 /// > // ✅ 올바름
 /// > private var backgroundColor: SwiftUI.Color {
-/// >     Color.semantic(.backgroundElevatedAlternative)
+/// >     Color.semantic(.surfaceElevatedSecondary)
 /// > }
 /// >
 /// > // ❌ 빌드 실패
-/// > private var backgroundColor: Color { Color.semantic(.backgroundElevatedAlternative) }
+/// > private var backgroundColor: Color { Color.semantic(.surfaceElevatedSecondary) }
 /// > ```
 public enum Color {
     /// 디자인 시스템에서 정의된 Atomic 컬러 팔레트
@@ -493,155 +493,175 @@ public enum Color {
     ///
     /// ```swift
     /// // UIKit에서 사용
-    /// label.textColor = UIColor.semantic(.labelNormal)
-    /// 
+    /// label.textColor = UIColor.semantic(.foregroundNeutralPrimary)
+    ///
     /// // SwiftUI에서 사용
     /// Button("버튼") { }
-    ///     .foregroundColor(.semantic(.primaryNormal))
-    ///     .background(Color.semantic(.backgroundNormal))
+    ///     .foregroundColor(.semantic(.surfaceBrandPrimary))
+    ///     .background(Color.semantic(.backgroundNeutralPrimary))
     /// ```
     public enum Semantic: String, CaseIterable, ColorResolvable {
+        // MARK: Static
         /// 정적 흰색 색상
         case staticWhite
         /// 정적 검은색 색상
         case staticBlack
 
-        /// 기본 주요 색상
-        case primaryNormal
-        /// 강조된 주요 색상
-        case primaryStrong
-        /// 매우 강조된 주요 색상
-        case primaryHeavy
-
-        /// 기본 라벨 색상
-        case labelNormal
-        /// 강조된 라벨 색상
-        case labelStrong
-        /// 중립적인 라벨 색상
-        case labelNeutral
-        /// 대체 라벨 색상
-        case labelAlternative
-        /// 보조 라벨 색상
-        case labelAssistive
-        /// 비활성화된 라벨 색상
-        case labelDisable
-
-        /// 기본 배경 색상
-        case backgroundNormal
-        /// 대체 배경 색상
-        case backgroundNormalAlternative
-        /// 상승된 배경 색상
-        case backgroundElevated
-        /// 상승된 대체 배경 색상
-        case backgroundElevatedAlternative
-        /// 투명 배경 색상
-        case backgroundTransparent
-        /// 투명 대체 배경 색상
-        case backgroundTransparentAlternative
-        /// 긍정 상태 배경 색상
-        case backgroundStatusPositive
-        /// 주의 상태 배경 색상
-        case backgroundStatusCautionary
-        /// 부정 상태 배경 색상
-        case backgroundStatusNegative
-
-        /// 비활성화된 상호작용 색상
-        case interactionInactive
-        /// 비활성화된 상호작용 색상
-        case interactionDisable
-        /// 포커스 상태에서 그림자를 표현하는 상호작용 색상 (e.g. TextField focused)
-        case interactionFocus
-        /// negative 상태에서 포커스되었을 때 그림자를 표현하는 상호작용 색상 (e.g. TextField negative focused)
-        case interactionNegative
-
-        /// 기본 선 색상
-        case lineNormal
-        /// 중립적인 선 색상
-        case lineNeutral
-        /// 대체 선 색상
-        case lineAlternative
-        /// 기본 실선 색상
-        case lineSolidNormal
-        /// 중립적인 실선 색상
-        case lineSolidNeutral
-        /// 대체 실선 색상
-        case lineSolidAlternative
-        /// primary 상태의 기본 보더 색상 (e.g. chip)
-        case linePrimaryNormal
-        /// primary 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField focused)
-        case linePrimaryStrong
-        /// negative 상태의 기본 보더 색상 (e.g. TextField negative)
-        case lineStatusNegativeNormal
-        /// negative 상태에서 포커스 등 강조가 필요할 때의 보더 색상 (e.g. TextField negative focused)
-        case lineStatusNegativeStrong
-        /// cautionary 상태의 기본 보더 색상
-        case lineStatusCautionaryNormal
-        /// positive 상태의 기본 보더 색상
-        case lineStatusPositiveNormal
-
-        /// 긍정적인 상태 색상
-        case statusPositive
-        /// 주의 상태 색상
-        case statusCautionary
-        /// 부정적인 상태 색상
-        case statusNegative
-
-        /// 빨간색 강조 전경 색상
-        case accentForegroundRed
-        /// 붉은 주황색 강조 전경 색상
-        case accentForegroundRedOrange
-        /// 주황색 강조 전경 색상
-        case accentForegroundOrange
+        // MARK: Foreground (전경색)
+        /// 기본 전경 색상 (구 labelNormal)
+        case foregroundNeutralPrimary
+        /// 강조 전경 색상 (구 labelStrong)
+        case foregroundNeutralStrong
+        /// 보조 전경 색상 (구 labelNeutral)
+        case foregroundNeutralSecondary
+        /// 3차 전경 색상 (구 labelAlternative)
+        case foregroundNeutralTertiary
+        /// 4차 전경 색상 (구 labelAssistive)
+        case foregroundNeutralQuaternary
+        /// 역전 전경 색상 (구 inverseLabel)
+        case foregroundNeutralInverse
+        /// 비활성 전경 색상 (구 labelDisable)
+        case foregroundDisablePrimary
+        /// 비활성(inactive) 전경 색상 (구 interactionInactive)
+        case foregroundInactivePrimary
+        /// 브랜드 전경 색상
+        case foregroundBrandPrimary
+        /// 역전 브랜드 전경 색상 (구 inversePrimary)
+        case foregroundBrandInverse
+        /// 긍정 전경 색상 (구 statusPositive)
+        case foregroundPositivePrimary
+        /// 주의 전경 색상 (구 statusCautionary)
+        case foregroundCautionaryPrimary
+        /// 부정 전경 색상 (구 statusNegative)
+        case foregroundNegativePrimary
+        /// 강조된 부정 전경 색상 (구 accentForegroundRed)
+        case foregroundNegativeStrong
         /// 라임색 강조 전경 색상
-        case accentForegroundLime
-        /// 초록색 강조 전경 색상
-        case accentForegroundGreen
+        case foregroundAccentLime
         /// 시안색 강조 전경 색상
-        case accentForegroundCyan
+        case foregroundAccentCyan
         /// 하늘색 강조 전경 색상
-        case accentForegroundLightBlue
-        /// 파란색 강조 전경 색상
-        case accentForegroundBlue
+        case foregroundAccentLightBlue
         /// 보라색 강조 전경 색상
-        case accentForegroundViolet
+        case foregroundAccentViolet
         /// 자주색 강조 전경 색상
-        case accentForegroundPurple
+        case foregroundAccentPurple
         /// 분홍색 강조 전경 색상
-        case accentForegroundPink
-        /// 붉은 주황색 강조 배경 색상
-        case accentBackgroundRedOrange
-        /// 라임색 강조 배경 색상
-        case accentBackgroundLime
-        /// 시안색 강조 배경 색상
-        case accentBackgroundCyan
-        /// 하늘색 강조 배경 색상
-        case accentBackgroundLightBlue
-        /// 보라색 강조 배경 색상
-        case accentBackgroundViolet
-        /// 자주색 강조 배경 색상
-        case accentBackgroundPurple
-        /// 분홍색 강조 배경 색상
-        case accentBackgroundPink
+        case foregroundAccentPink
 
-        /// 역전된 주요 색상
-        case inversePrimary
-        /// 역전된 배경 색상
-        case inverseBackground
-        /// 역전된 라벨 색상
-        case inverseLabel
+        // MARK: Background (페이지 배경색)
+        /// 기본 배경 색상 (구 backgroundNormal)
+        case backgroundNeutralPrimary
+        /// 대체 배경 색상 (구 backgroundNormalAlternative)
+        case backgroundNeutralSecondary
 
-        /// 기본 채우기 색상
-        case fillNormal
-        /// 강조된 채우기 색상
-        case fillStrong
-        /// 대체 채우기 색상
-        case fillAlternative
-        /// primary 요소 내부 색상 (e.g. Chip)
-        case fillPrimary
-        /// negative 요소 내부 색상 (e.g. Button negative)
-        case fillNegative
-        /// 어두운 재질 색상
-        case materialDimmer
+        // MARK: Surface (페이지 위 요소의 Fill 색상)
+        /// 기본 표면 색상
+        case surfaceNeutralPrimary
+        /// 보조 표면 색상 (구 fillNormal)
+        case surfaceNeutralSecondary
+        /// 3차 표면 색상 (구 fillAlternative)
+        case surfaceNeutralTertiary
+        /// 강조 표면 색상 (구 fillStrong)
+        case surfaceNeutralStrong
+        /// 역전 표면 색상 (구 inverseBackground)
+        case surfaceNeutralInverse
+        /// 상승된 표면 색상 (구 backgroundElevated)
+        case surfaceElevatedPrimary
+        /// 상승된 대체 표면 색상 (구 backgroundElevatedAlternative)
+        case surfaceElevatedSecondary
+        /// 브랜드 표면 색상 (구 primaryNormal)
+        case surfaceBrandPrimary
+        /// 강조된 브랜드 표면 색상 (구 primaryStrong)
+        case surfaceBrandStrong
+        /// 매우 강조된 브랜드 표면 색상 (구 primaryHeavy)
+        case surfaceBrandHeavy
+        /// 옅은 브랜드 표면 색상 (구 fillPrimary)
+        case surfaceBrandSubtle
+        /// 긍정 표면 색상 (구 backgroundStatusPositive)
+        case surfacePositivePrimary
+        /// 주의 표면 색상 (구 backgroundStatusCautionary)
+        case surfaceCautionaryPrimary
+        /// 부정 표면 색상 (구 backgroundStatusNegative)
+        case surfaceNegativePrimary
+        /// 강조된 부정 표면 색상 (구 fillNegative)
+        case surfaceNegativeStrong
+        /// 비활성 표면 색상 (구 interactionDisable)
+        case surfaceDisablePrimary
+        /// 라임색 강조 표면 색상 (불투명, 구 accentBackgroundLime)
+        case surfaceAccentLimeOpaque
+        /// 시안색 강조 표면 색상 (불투명, 구 accentBackgroundCyan)
+        case surfaceAccentCyanOpaque
+        /// 하늘색 강조 표면 색상 (불투명, 구 accentBackgroundLightBlue)
+        case surfaceAccentLightBlueOpaque
+        /// 보라색 강조 표면 색상 (불투명, 구 accentBackgroundViolet)
+        case surfaceAccentVioletOpaque
+        /// 자주색 강조 표면 색상 (불투명, 구 accentBackgroundPurple)
+        case surfaceAccentPurpleOpaque
+        /// 분홍색 강조 표면 색상 (불투명, 구 accentBackgroundPink)
+        case surfaceAccentPinkOpaque
+        /// 라임색 강조 표면 색상
+        case surfaceAccentLime
+        /// 시안색 강조 표면 색상
+        case surfaceAccentCyan
+        /// 하늘색 강조 표면 색상
+        case surfaceAccentLightBlue
+        /// 보라색 강조 표면 색상
+        case surfaceAccentViolet
+        /// 자주색 강조 표면 색상
+        case surfaceAccentPurple
+        /// 분홍색 강조 표면 색상
+        case surfaceAccentPink
+
+        // MARK: Line (선 색상)
+        /// 기본 선 색상 (구 lineNormal)
+        case lineNeutralPrimary
+        /// 보조 선 색상 (구 lineNeutral)
+        case lineNeutralSecondary
+        /// 3차 선 색상 (구 lineAlternative)
+        case lineNeutralTertiary
+        /// 기본 실선 색상 (구 lineSolidNormal)
+        case lineNeutralPrimaryOpaque
+        /// 보조 실선 색상 (구 lineSolidNeutral)
+        case lineNeutralSecondaryOpaque
+        /// 3차 실선 색상 (구 lineSolidAlternative)
+        case lineNeutralTertiaryOpaque
+        /// 브랜드 선 색상 (구 linePrimaryNormal, e.g. chip)
+        case lineBrandPrimary
+        /// 강조된 브랜드 선 색상 (구 linePrimaryStrong)
+        case lineBrandStrong
+        /// 브랜드 포커스 선 색상 (구 interactionFocus, e.g. TextField focused)
+        case lineBrandFocus
+        /// 부정 선 색상 (구 lineStatusNegativeNormal, e.g. TextField negative)
+        case lineNegativePrimary
+        /// 강조된 부정 선 색상 (구 lineStatusNegativeStrong)
+        case lineNegativeStrong
+        /// 부정 포커스 선 색상 (구 interactionNegative, e.g. TextField negative focused)
+        case lineNegativeFocus
+        /// 주의 선 색상 (구 lineStatusCautionaryNormal)
+        case lineCautionaryPrimary
+        /// 긍정 선 색상 (구 lineStatusPositiveNormal)
+        case linePositivePrimary
+        /// 라임색 강조 선 색상
+        case lineAccentLime
+        /// 시안색 강조 선 색상
+        case lineAccentCyan
+        /// 하늘색 강조 선 색상
+        case lineAccentLightBlue
+        /// 보라색 강조 선 색상
+        case lineAccentViolet
+        /// 자주색 강조 선 색상
+        case lineAccentPurple
+        /// 분홍색 강조 선 색상
+        case lineAccentPink
+
+        // MARK: Effect
+        /// 투명 효과 색상 (구 backgroundTransparent)
+        case effectTransparentPrimary
+        /// 대체 투명 효과 색상 (구 backgroundTransparentAlternative)
+        case effectTransparentSecondary
+        /// 딤 효과 색상 (구 materialDimmer)
+        case effectDimmerPrimary
         
         /// 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
         ///
@@ -653,163 +673,204 @@ public enum Color {
             var opacity: CGFloat = .opacity100
             
             switch self {
+            // MARK: Static
             case .staticWhite:
                 atomicColor = .common100
             case .staticBlack:
                 atomicColor = .common0
-            case .primaryNormal:
-                atomicColor = style == .dark ? .blue60 : .blue50
-            case .primaryStrong:
-                atomicColor = style == .dark ? .blue55 : .blue45
-            case .primaryHeavy:
-                atomicColor = style == .dark ? .blue50 : .blue40
-            case .labelNormal:
+
+            // MARK: Foreground
+            case .foregroundNeutralPrimary:
                 atomicColor = style == .dark ? .coolNeutral99 : .coolNeutral10
-            case .labelStrong:
+            case .foregroundNeutralStrong:
                 atomicColor = style == .dark ? .common100 : .common0
-            case .labelNeutral:
+            case .foregroundNeutralSecondary:
                 atomicColor = style == .dark ? .coolNeutral90 : .coolNeutral22
                 opacity = .opacity88
-            case .labelAlternative:
+            case .foregroundNeutralTertiary:
                 atomicColor = style == .dark ? .coolNeutral80 : .coolNeutral25
                 opacity = .opacity61
-            case .labelAssistive:
+            case .foregroundNeutralQuaternary:
                 atomicColor = style == .dark ? .coolNeutral80 : .coolNeutral25
                 opacity = .opacity28
-            case .labelDisable:
+            case .foregroundNeutralInverse:
+                atomicColor = style == .dark ? .coolNeutral10 : .coolNeutral99
+            case .foregroundDisablePrimary:
                 atomicColor = style == .dark ? .coolNeutral70 : .coolNeutral25
                 opacity = .opacity16
-            case .backgroundNormal:
-                atomicColor = style == .dark ? .coolNeutral15 : .common100
-            case .backgroundNormalAlternative:
-                atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral99
-            case .backgroundElevated:
-                atomicColor = style == .dark ? .coolNeutral17 : .common100
-            case .backgroundElevatedAlternative:
-                atomicColor = style == .dark ? .coolNeutral7 : .coolNeutral99
-            case .backgroundTransparent:
-                atomicColor = style == .dark ? .coolNeutral17 : .common100
-                opacity = style == .dark ? .opacity61 : .opacity8
-            case .backgroundTransparentAlternative:
-                atomicColor = style == .dark ? .coolNeutral17 : .common100
-                opacity = style == .dark ? .opacity61 : .opacity28
-            case .backgroundStatusPositive:
-                atomicColor = style == .dark ? .green60 : .green50
-                opacity = .opacity8
-            case .backgroundStatusCautionary:
-                atomicColor = style == .dark ? .orange60 : .orange50
-                opacity = .opacity8
-            case .backgroundStatusNegative:
-                atomicColor = style == .dark ? .red60 : .red50
-                opacity = .opacity8
-            case .interactionInactive:
+            case .foregroundInactivePrimary:
                 atomicColor = style == .dark ? .coolNeutral40 : .coolNeutral70
-            case .interactionDisable:
-                atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
-            case .interactionFocus:
+            case .foregroundBrandPrimary:
                 atomicColor = style == .dark ? .blue60 : .blue50
-                opacity = .opacity12
-            case .interactionNegative:
-                atomicColor = style == .dark ? .red60 : .red50
-                opacity = .opacity12
-            case .lineNormal:
-                atomicColor = .coolNeutral50
-                opacity = style == .dark ? .opacity32 : .opacity22
-            case .lineNeutral:
-                atomicColor = .coolNeutral50
-                opacity = style == .dark ? .opacity28 : .opacity16
-            case .lineAlternative:
-                atomicColor = .coolNeutral50
-                opacity = style == .dark ? .opacity22 : .opacity8
-            case .lineSolidNormal:
-                atomicColor = style == .dark ? .coolNeutral25 : .coolNeutral96
-            case .lineSolidNeutral:
-                atomicColor = style == .dark ? .coolNeutral23 : .coolNeutral97
-            case .lineSolidAlternative:
-                atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
-            case .linePrimaryNormal:
-                atomicColor = style == .dark ? .blue60 : .blue50
-                opacity = .opacity28
-            case .linePrimaryStrong:
-                atomicColor = style == .dark ? .blue60 : .blue50
-                opacity = .opacity43
-            case .lineStatusNegativeNormal:
-                atomicColor = style == .dark ? .red60 : .red50
-                opacity = .opacity43
-            case .lineStatusNegativeStrong:
-                atomicColor = style == .dark ? .red60 : .red50
-                opacity = .opacity52
-            case .lineStatusCautionaryNormal:
-                atomicColor = style == .dark ? .orange60 : .orange50
-                opacity = .opacity43
-            case .lineStatusPositiveNormal:
-                atomicColor = style == .dark ? .green60 : .green50
-                opacity = .opacity43
-            case .statusPositive:
-                atomicColor = style == .dark ? .green60 : .green50
-            case .statusCautionary:
-                atomicColor = style == .dark ? .orange60 : .orange50
-            case .statusNegative:
-                atomicColor = style == .dark ? .red60 : .red50
-            case .accentForegroundRed:
-                atomicColor = .red40
-            case .accentForegroundRedOrange:
-                atomicColor = .redOrange48
-            case .accentForegroundOrange:
-                atomicColor = .orange39
-            case .accentForegroundLime:
-                atomicColor = .lime37
-            case .accentForegroundGreen:
-                atomicColor = .green40
-            case .accentForegroundCyan:
-                atomicColor = .cyan40
-            case .accentForegroundLightBlue:
-                atomicColor = .lightBlue40
-            case .accentForegroundBlue:
-                atomicColor = .blue45
-            case .accentForegroundViolet:
-                atomicColor = .violet45
-            case .accentForegroundPurple:
-                atomicColor = .purple40
-            case .accentForegroundPink:
-                atomicColor = .pink46
-            case .accentBackgroundRedOrange:
-                atomicColor = style == .dark ? .redOrange60 : .redOrange50
-            case .accentBackgroundLime:
-                atomicColor = style == .dark ? .lime60 : .lime50
-            case .accentBackgroundCyan:
-                atomicColor = style == .dark ? .cyan60 : .cyan50
-            case .accentBackgroundLightBlue:
-                atomicColor = style == .dark ? .lightBlue60 : .lightBlue50
-            case .accentBackgroundViolet:
-                atomicColor = style == .dark ? .violet60 : .violet50
-            case .accentBackgroundPurple:
-                atomicColor = style == .dark ? .purple60 : .purple50
-            case .accentBackgroundPink:
-                atomicColor = style == .dark ? .pink60 : .pink50
-            case .inversePrimary:
+            case .foregroundBrandInverse:
                 atomicColor = style == .dark ? .blue50 : .blue60
-            case .inverseBackground:
-                atomicColor = style == .dark ? .common100 : .coolNeutral15
-            case .inverseLabel:
-                atomicColor = style == .dark ? .neutral10 : .neutral99
-            case .fillNormal:
+            case .foregroundPositivePrimary:
+                atomicColor = style == .dark ? .green60 : .green50
+            case .foregroundCautionaryPrimary:
+                atomicColor = style == .dark ? .orange60 : .orange50
+            case .foregroundNegativePrimary:
+                atomicColor = style == .dark ? .red60 : .red50
+            case .foregroundNegativeStrong:
+                atomicColor = style == .dark ? .red60 : .red40
+            case .foregroundAccentLime:
+                atomicColor = style == .dark ? .lime50 : .lime37
+            case .foregroundAccentCyan:
+                atomicColor = style == .dark ? .cyan50 : .cyan40
+            case .foregroundAccentLightBlue:
+                atomicColor = style == .dark ? .lightBlue50 : .lightBlue40
+            case .foregroundAccentViolet:
+                atomicColor = style == .dark ? .violet70 : .violet45
+            case .foregroundAccentPurple:
+                atomicColor = style == .dark ? .purple60 : .purple40
+            case .foregroundAccentPink:
+                atomicColor = style == .dark ? .pink60 : .pink46
+
+            // MARK: Background
+            case .backgroundNeutralPrimary:
+                atomicColor = style == .dark ? .coolNeutral15 : .coolNeutral100
+            case .backgroundNeutralSecondary:
+                atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral99
+
+            // MARK: Surface
+            case .surfaceNeutralPrimary:
+                atomicColor = style == .dark ? .coolNeutral15 : .common100
+            case .surfaceNeutralSecondary:
                 atomicColor = .coolNeutral50
                 opacity = style == .dark ? .opacity22 : .opacity8
-            case .fillStrong:
-                atomicColor = .coolNeutral50
-                opacity = style == .dark ? .opacity28 : .opacity16
-            case .fillAlternative:
+            case .surfaceNeutralTertiary:
                 atomicColor = .coolNeutral50
                 opacity = style == .dark ? .opacity12 : .opacity5
-            case .fillPrimary:
+            case .surfaceNeutralStrong:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .opacity28 : .opacity16
+            case .surfaceNeutralInverse:
+                atomicColor = style == .dark ? .common100 : .coolNeutral15
+            case .surfaceElevatedPrimary:
+                atomicColor = style == .dark ? .coolNeutral17 : .common100
+            case .surfaceElevatedSecondary:
+                atomicColor = style == .dark ? .coolNeutral7 : .coolNeutral99
+            case .surfaceBrandPrimary:
+                atomicColor = style == .dark ? .blue60 : .blue50
+            case .surfaceBrandStrong:
+                atomicColor = style == .dark ? .blue55 : .blue45
+            case .surfaceBrandHeavy:
+                atomicColor = style == .dark ? .blue50 : .blue40
+            case .surfaceBrandSubtle:
                 atomicColor = style == .dark ? .blue60 : .blue50
                 opacity = .opacity5
-            case .fillNegative:
+            case .surfacePositivePrimary:
+                atomicColor = style == .dark ? .green60 : .green50
+                opacity = .opacity8
+            case .surfaceCautionaryPrimary:
+                atomicColor = style == .dark ? .orange60 : .orange50
+                opacity = .opacity8
+            case .surfaceNegativePrimary:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity8
+            case .surfaceNegativeStrong:
                 atomicColor = style == .dark ? .red60 : .red50
                 opacity = style == .dark ? .opacity22 : .opacity12
-            case .materialDimmer:
-                atomicColor = style == .dark ? .coolNeutral5 : .coolNeutral10
+            case .surfaceDisablePrimary:
+                atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .surfaceAccentLimeOpaque:
+                atomicColor = style == .dark ? .lime60 : .lime50
+            case .surfaceAccentCyanOpaque:
+                atomicColor = style == .dark ? .cyan60 : .cyan50
+            case .surfaceAccentLightBlueOpaque:
+                atomicColor = style == .dark ? .lightBlue60 : .lightBlue50
+            case .surfaceAccentVioletOpaque:
+                atomicColor = style == .dark ? .violet60 : .violet50
+            case .surfaceAccentPurpleOpaque:
+                atomicColor = style == .dark ? .purple60 : .purple50
+            case .surfaceAccentPinkOpaque:
+                atomicColor = style == .dark ? .pink60 : .pink50
+            case .surfaceAccentLime:
+                atomicColor = style == .dark ? .lime60 : .lime50
+                opacity = .opacity8
+            case .surfaceAccentCyan:
+                atomicColor = style == .dark ? .cyan60 : .cyan50
+                opacity = .opacity8
+            case .surfaceAccentLightBlue:
+                atomicColor = style == .dark ? .lightBlue60 : .lightBlue50
+                opacity = .opacity8
+            case .surfaceAccentViolet:
+                atomicColor = style == .dark ? .violet60 : .violet50
+                opacity = .opacity8
+            case .surfaceAccentPurple:
+                atomicColor = style == .dark ? .purple60 : .purple50
+                opacity = .opacity8
+            case .surfaceAccentPink:
+                atomicColor = style == .dark ? .pink60 : .pink50
+                opacity = .opacity8
+
+            // MARK: Line
+            case .lineNeutralPrimary:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .opacity32 : .opacity22
+            case .lineNeutralSecondary:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .opacity28 : .opacity16
+            case .lineNeutralTertiary:
+                atomicColor = .coolNeutral50
+                opacity = style == .dark ? .opacity22 : .opacity8
+            case .lineNeutralPrimaryOpaque:
+                atomicColor = style == .dark ? .coolNeutral25 : .coolNeutral96
+            case .lineNeutralSecondaryOpaque:
+                atomicColor = style == .dark ? .coolNeutral23 : .coolNeutral97
+            case .lineNeutralTertiaryOpaque:
+                atomicColor = style == .dark ? .coolNeutral22 : .coolNeutral98
+            case .lineBrandPrimary:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity28
+            case .lineBrandStrong:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity43
+            case .lineBrandFocus:
+                atomicColor = style == .dark ? .blue60 : .blue50
+                opacity = .opacity12
+            case .lineNegativePrimary:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity43
+            case .lineNegativeStrong:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity52
+            case .lineNegativeFocus:
+                atomicColor = style == .dark ? .red60 : .red50
+                opacity = .opacity12
+            case .lineCautionaryPrimary:
+                atomicColor = style == .dark ? .orange60 : .orange50
+                opacity = .opacity43
+            case .linePositivePrimary:
+                atomicColor = style == .dark ? .green60 : .green50
+                opacity = .opacity43
+            case .lineAccentLime:
+                atomicColor = style == .dark ? .lime50 : .lime37
+                opacity = .opacity43
+            case .lineAccentCyan:
+                atomicColor = style == .dark ? .cyan50 : .cyan40
+                opacity = .opacity43
+            case .lineAccentLightBlue:
+                atomicColor = style == .dark ? .lightBlue50 : .lightBlue40
+                opacity = .opacity43
+            case .lineAccentViolet:
+                atomicColor = style == .dark ? .violet70 : .violet45
+                opacity = .opacity43
+            case .lineAccentPurple:
+                atomicColor = style == .dark ? .purple60 : .purple40
+                opacity = .opacity43
+            case .lineAccentPink:
+                atomicColor = style == .dark ? .pink60 : .pink46
+                opacity = .opacity43
+
+            // MARK: Effect
+            case .effectTransparentPrimary:
+                atomicColor = style == .dark ? .coolNeutral17 : .common100
+                opacity = style == .dark ? .opacity61 : .opacity8
+            case .effectTransparentSecondary:
+                atomicColor = style == .dark ? .coolNeutral17 : .common100
+                opacity = style == .dark ? .opacity61 : .opacity28
+            case .effectDimmerPrimary:
+                atomicColor = .coolNeutral10
                 opacity = style == .dark ? .opacity74 : .opacity52
             }
             

@@ -65,7 +65,7 @@ struct CardPreview: View {
                     buttonIcon: showOverlayButton
                         ? (bookmarkIsOn ? .bookmarkFill : .bookmark) : nil,
                     buttonColor: bookmarkIsOn
-                        ? .semantic(.primaryNormal) : .semantic(.staticWhite),
+                        ? .semantic(.surfaceBrandPrimary) : .semantic(.staticWhite),
                     onTapButton: showOverlayButton ? { bookmarkIsOn.toggle() } : nil
                 )
             }

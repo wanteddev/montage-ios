@@ -18,7 +18,7 @@ label.font = UIFont.font(variant: .body1, weight: .regular)
 
 // SwiftUI에서 사용
 Text("Hello, World!")
-    .typography(variant: .heading1, weight: .bold, semantic: .labelNormal)
+    .typography(variant: .heading1, weight: .bold, semantic: .foregroundNeutralPrimary)
 ```
 
 >  **Note**
@@ -548,7 +548,7 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
   | `string` | 변환할 문자열 |
   | `variant` | 타이포그래피 변형, 생략하면 기본값으로 `.body1` 적용 |
   | `weight` | 폰트 두께, 생략하면 기본값으로 `.regular` 적용 |
-  | `color` | 색상, 생략하면 기본값으로 `.semantic(.labelNormal)` 적용 |
+  | `color` | 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
   | `lineBreakMode` | 줄바꿈 모드, 생략하면 기본값으로 `.byWordWrapping` 적용 |
 - **Return Value**
 

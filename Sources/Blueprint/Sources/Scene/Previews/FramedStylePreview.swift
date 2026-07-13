@@ -18,7 +18,7 @@ struct FramedStylePreview: View {
         PreviewLayout {
             ZStack {
                 Rectangle()
-                    .foregroundColor(.semantic(.backgroundNormalAlternative))
+                    .foregroundColor(.semantic(.backgroundNeutralSecondary))
                     .frame(height: 80)
                 Text("Preview")
             }

@@ -71,7 +71,7 @@ struct ActionAreaPreview: View {
     private var alternativeAction: (() -> Void) {
         {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            alternativeToastModel = .init(.normal(.company, tint: .accentBackgroundViolet), message: "대체 액션")
+            alternativeToastModel = .init(.normal(.company, tint: .surfaceAccentVioletOpaque), message: "대체 액션")
         }
     }
 
@@ -122,7 +122,7 @@ struct ActionAreaPreview: View {
                         color: .primary,
                         text: "커스텀 서브"
                     )
-                    .contentColor(.semantic(.accentBackgroundLime))
+                    .contentColor(.semantic(.surfaceAccentLimeOpaque))
                     .fillWidth()
                 }
             )
@@ -146,7 +146,7 @@ struct ActionAreaPreview: View {
                 caption: caption ? "caption" : nil,
                 extra: {
                     if extra {
-                        Rectangle().fill(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
+                        Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
                             .frame(height: 50)
                     }
                 },

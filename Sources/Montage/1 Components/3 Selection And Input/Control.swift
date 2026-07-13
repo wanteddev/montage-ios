@@ -107,7 +107,7 @@ struct Control: View {
             // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
             ZStack {
                 Capsule()
-                    .fill(SwiftUI.Color.semantic(.lineNormal).opacity(disable ? 0.43 : 1))
+                    .fill(SwiftUI.Color.semantic(.lineNeutralPrimary).opacity(disable ? 0.43 : 1))
                 Capsule()
                     .fill(backgroundColor)
             }
@@ -156,7 +156,7 @@ struct Control: View {
                     Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .normal,
-                        color: .labelNormal
+                        color: .foregroundNeutralPrimary
                     )
                     .clipShape(Circle())
                     .frame(width: interactionSize.width, height: interactionSize.height)
@@ -304,7 +304,7 @@ extension Control {
     fileprivate var iconColor: SwiftUI.Color {
         switch variant {
         case .checkmark:
-            .semantic(state.isUnchecked ? .labelAssistive : .primaryNormal)
+            .semantic(state.isUnchecked ? .foregroundNeutralQuaternary : .surfaceBrandPrimary)
                 .opacity(disable ? 0.43 : 1)
         case .checkbox, .radio:
             .semantic(.staticWhite)
@@ -338,14 +338,14 @@ extension Control {
         switch variant {
         case .switch:
             if state.isUnchecked {
-                disable ? .clear : .semantic(.fillStrong)
+                disable ? .clear : .semantic(.surfaceNeutralStrong)
             } else {
-                .semantic(.primaryNormal).opacity(disable ? 0.43 : 1)
+                .semantic(.surfaceBrandPrimary).opacity(disable ? 0.43 : 1)
             }
         case .checkmark:
             .clear
         case .checkbox, .radio:
-            state.isUnchecked ? .clear : .semantic(.primaryNormal).opacity(disable ? 0.43 : 1)
+            state.isUnchecked ? .clear : .semantic(.surfaceBrandPrimary).opacity(disable ? 0.43 : 1)
         }
     }
 
@@ -353,7 +353,7 @@ extension Control {
         switch variant {
         case .checkmark, .switch: .clear
         case .checkbox, .radio:
-            .semantic(state.isUnchecked ? .lineNormal : .primaryNormal).opacity(disable ? 0.43 : 1)
+            .semantic(state.isUnchecked ? .lineNeutralPrimary : .surfaceBrandPrimary).opacity(disable ? 0.43 : 1)
         }
     }
 
@@ -443,7 +443,7 @@ extension Control {
         (
             variant: labelVariant ?? (size == .small ? .label1 : .body2),
             weight: labelWeight ?? .regular,
-            color: disable ? .semantic(.labelDisable) : labelColor ?? .semantic(.labelNormal)
+            color: disable ? .semantic(.foregroundDisablePrimary) : labelColor ?? .semantic(.foregroundNeutralPrimary)
         )
     }
 

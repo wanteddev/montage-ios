@@ -120,7 +120,7 @@ struct FormControlPreview: View {
         if showAccessory {
             control = control.accessory {
                 Text("\(text.count)/\(limit)")
-                    .typography(variant: .caption1, weight: .regular, semantic: .labelAlternative)
+                    .typography(variant: .caption1, weight: .regular, semantic: .foregroundNeutralTertiary)
             }
         }
         return control.border(guideLine ? Color.blue : Color.clear)

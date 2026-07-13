@@ -84,7 +84,7 @@ public struct IconButton: View {
         return copy
     }
 
-    /// hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.labelNormal`).
+    /// hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
     /// - Parameter color: 인터랙션 색상(semantic 토큰)
     /// - Returns: 수정된 IconButton 인스턴스
     public func interactionColor(_ color: Color.Semantic) -> Self {
@@ -402,7 +402,7 @@ extension IconButton.Variant {
                 .clear
             }
         case .solid:
-            .semantic(.primaryNormal)
+            .semantic(.surfaceBrandPrimary)
         }
     }
 
@@ -411,15 +411,15 @@ extension IconButton.Variant {
         case .normal, .outlined:
             .clear
         case .background:
-            .semantic(.fillAlternative).withAlphaComponent(0.05)
+            .semantic(.surfaceNeutralTertiary).withAlphaComponent(0.05)
         case .solid:
-            .semantic(.fillNormal)
+            .semantic(.surfaceNeutralSecondary)
         }
     }
 
     var activeColor: UIColor {
         switch self {
-        case .normal, .outlined: .semantic(.labelNormal)
+        case .normal, .outlined: .semantic(.foregroundNeutralPrimary)
         case .background(_, let isAlternative):
             if isAlternative {
                 .semantic(.staticWhite).withAlphaComponent(0.88)
@@ -433,7 +433,7 @@ extension IconButton.Variant {
     var disabledIconColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
-            .semantic(.labelDisable)
+            .semantic(.foregroundDisablePrimary)
         case .background:
             .atomic(.coolNeutral50).withAlphaComponent(0.22)
         }
@@ -441,13 +441,13 @@ extension IconButton.Variant {
 
     var borderColor: UIColor {
         switch self {
-        case .outlined: .semantic(.lineNeutral).withAlphaComponent(0.16)
+        case .outlined: .semantic(.lineNeutralSecondary).withAlphaComponent(0.16)
         default: .clear
         }
     }
 
     var interactionColor: Color.Semantic {
-        .labelNormal
+        .foregroundNeutralPrimary
     }
 
     var interactionVariant: Interaction.Variant {

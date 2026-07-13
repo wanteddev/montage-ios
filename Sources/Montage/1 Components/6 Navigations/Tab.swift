@@ -182,7 +182,7 @@ public struct Tab: View {
             }
             
             Rectangle()
-                .fill(SwiftUI.Color.semantic(.lineAlternative))
+                .fill(SwiftUI.Color.semantic(.lineNeutralTertiary))
                 .frame(height: 1)
         }
     }
@@ -254,16 +254,16 @@ private extension Tab {
     }
     
     func activeItemBarColor(_ index: Int) -> SwiftUI.Color {
-        .semantic(itemDisabled(index) ? .fillAlternative : .labelStrong)
+        .semantic(itemDisabled(index) ? .surfaceNeutralTertiary : .foregroundNeutralStrong)
     }
     
     func itemTextColor(_ index: Int) -> SwiftUI.Color {
         if itemDisabled(index) {
-            .semantic(.labelDisable)
+            .semantic(.foregroundDisablePrimary)
         } else if index == selectedIndex {
-            .semantic(.labelStrong)
+            .semantic(.foregroundNeutralStrong)
         } else {
-            .semantic(.labelAssistive)
+            .semantic(.foregroundNeutralQuaternary)
         }
     }
     

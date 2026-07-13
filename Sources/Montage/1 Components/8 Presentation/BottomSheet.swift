@@ -102,7 +102,7 @@ public struct BottomSheet: View {
                         SwiftUI.Color.clear
                             .frame(height: 12)
                         RoundedRectangle(cornerRadius: 1000)
-                            .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                            .foregroundStyle(SwiftUI.Color.semantic(.surfaceNeutralStrong))
                             .frame(width: 40, height: 5)
                     }
                 }
@@ -146,7 +146,7 @@ public struct BottomSheet: View {
         }
         .opacity(isContentMeasured ? 1 : 0)
         .background(
-            SwiftUI.Color.semantic(.backgroundNormal)
+            SwiftUI.Color.semantic(.backgroundNeutralPrimary)
                 .opacity(0.8)
         )
         .presentationDetents(detents)

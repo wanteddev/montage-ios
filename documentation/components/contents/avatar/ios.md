@@ -81,7 +81,7 @@ URL 문자열로 아바타를 초기화합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `color` | 테두리 색상, 생략하면 기본값으로 `.semantic(.lineAlternative)` 적용 |
+  | `color` | 테두리 색상, 생략하면 기본값으로 `.semantic(.lineNeutralTertiary)` 적용 |
   | `width` | 테두리 두께, 생략하면 기본값으로 `1` 적용 |
 - **Return Value**
 
