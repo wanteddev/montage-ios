@@ -10,20 +10,20 @@ import Montage
 
 struct SegmentedControlPreview: View {
     @State private var selectedIndex: Int = 0
-    @State private var variantIndex: Int = 0
     @State private var sizeIndex: Int = 0
     @State private var showIcon: Bool = true
+    @State private var iconOnly: Bool = false
 
-    private let variants: [SegmentedControl.Variant] = [.solid, .outlined]
     private let sizes: [SegmentedControl.Size] = [.large, .medium, .small]
 
     var items: [SegmentedControl.Item] {
-        if showIcon {
+        // iconOnly일 때는 반드시 아이콘이 필요하므로 아이콘 항목을 사용한다.
+        if showIcon || iconOnly {
             return [
                 .init(image: .icon(.android), title: "Android"),
                 .init(image: .icon(.logoApple), title: "iOS"),
                 .init(image: .icon(.globe), title: "Web"),
-                .init(title: "ETC")
+                .init(image: .icon(.apps), title: "ETC")
             ]
         } else {
             return [
@@ -42,17 +42,18 @@ struct SegmentedControlPreview: View {
                 items: items,
                 onSelect: { print($0) }
             )
-            .variant(variants[variantIndex])
             .size(sizes[sizeIndex])
+            .iconOnly(iconOnly)
         } options: {
-            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
-            ToggleOptionRow("icon", isOn: $showIcon)
+            HStack {
+                ToggleOption("icon", isOn: $showIcon)
+                ToggleOption("iconOnly", isOn: $iconOnly)
+            }
         }
     }
 }
 
-extension SegmentedControl.Variant: CaseDescribable {}
 extension SegmentedControl.Size: CaseDescribable {}
 
 #Preview {
