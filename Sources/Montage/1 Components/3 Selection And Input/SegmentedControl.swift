@@ -30,8 +30,17 @@ import SwiftUI
 ///         .init(title: "설정")
 ///     ]
 /// )
-/// .variant(.outlined)
 /// .size(.medium)
+///
+/// // 아이콘만 표시하는 세그먼트 컨트롤 (세그먼트 너비/높이 고정)
+/// SegmentedControl(
+///     selectedIndex: $selectedIndex,
+///     items: [
+///         .init(image: .icon(.home), title: "홈"),
+///         .init(image: .icon(.person), title: "프로필")
+///     ]
+/// )
+/// .iconOnly()
 /// ```
 public struct SegmentedControl: View {
     // MARK: - Types
@@ -41,7 +50,7 @@ public struct SegmentedControl: View {
     public struct Item {
         let image: Image?
         let title: String
-        
+
         /// 세그먼트 항목을 초기화합니다.
         ///
         /// - Parameters:
@@ -52,30 +61,24 @@ public struct SegmentedControl: View {
             self.title = title
         }
     }
-    
-    /// 세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
-    public enum Variant {
-        /// 배경이 채워진 스타일
-        case solid
-        /// 테두리만 있는 스타일
-        case outlined
-    }
-    
+
     /// 세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
+    ///
+    /// 크기에 따라 높이, 모서리 반경, 패딩, 타이포그래피, 아이콘 크기가 함께 결정됩니다.
     public enum Size {
-        /// 큰 크기
+        /// 큰 크기 (높이 48)
         case large
-        /// 중간 크기
+        /// 중간 크기 (높이 40)
         case medium
-        /// 작은 크기
+        /// 작은 크기 (높이 32)
         case small
     }
-    
+
     // MARK: - Initializer
     @Binding private var selectedIndex: Int
     private let items: [Item]
     private let onSelect: ((Int) -> Void)?
-    
+
     /// 항목 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
     ///
     /// - Parameters:
@@ -87,7 +90,7 @@ public struct SegmentedControl: View {
         self.items = items
         self.onSelect = onSelect
     }
-    
+
     /// 텍스트 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
     ///
     /// - Parameters:
@@ -99,10 +102,10 @@ public struct SegmentedControl: View {
         items = labels.map { Item(title: $0) }
         self.onSelect = onSelect
     }
-    
+
     // MARK: - Body
     @State private var frameSize: CGSize = .zero
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 0) {
@@ -113,20 +116,21 @@ public struct SegmentedControl: View {
                         selectedIndex = index
                     }
                 } label: {
-                    HStack(spacing: 4) {
+                    HStack(spacing: contentSpacing) {
                         items[index].image?
                             .resizable()
                             .renderingMode(.template)
                             .foregroundStyle(buttonForegroundColor(isSelected: selectedIndex == index))
                             .frame(width: buttonIconSize.width, height: buttonIconSize.height)
-                            .padding(.vertical, 2)
-                        
-                        Text(items[index].title)
-                            .paragraph(
-                                variant: buttonTitleFont,
-                                weight: .medium,
-                                color: buttonForegroundColor(isSelected: selectedIndex == index)
-                            )
+
+                        if !iconOnly {
+                            Text(items[index].title)
+                                .paragraph(
+                                    variant: buttonTitleFont,
+                                    weight: .medium,
+                                    color: buttonForegroundColor(isSelected: selectedIndex == index)
+                                )
+                        }
                     }
                     .padding(buttonInsets)
                     .frame(width: max(0, buttonWidth))
@@ -134,79 +138,43 @@ public struct SegmentedControl: View {
                     .accessibilityRemoveTraits(selectedIndex == index ? [] : .isSelected)
                     .accessibilityAddTraits(selectedIndex == index ? .isSelected : [])
                     .background {
-                        Group {
-                            switch variant {
-                            case .solid:
-                                // 그림자를 ZStack(합성 뷰)이 아니라 첫 pure shape(`.fill`)에 적용해
-                                // analytic으로 캐스팅한다(오프스크린 패스 제거). 동일 실루엣이라 외형 동일.
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                        .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
-                                        .shadow(
-                                            color: .semantic(.staticBlack).opacity(0.08),
-                                            radius: buttonCornerRadius
-                                        )
-                                    RoundedRectangle(cornerRadius: buttonCornerRadius)
-                                        .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.28))
-                                }
-                                .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
-                                .if(index == 0)
-                            case .outlined:
-                                ZStack {
-                                    UnevenRoundedRectangle(
-                                        topLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomTrailingRadius: index == items
-                                            .count - 1 ? buttonCornerRadius : 0,
-                                        topTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0
-                                    )
-                                    .foregroundStyle(buttonBackgroundColor(
-                                        isSelected: selectedIndex ==
-                                            index
-                                    ))
-                                    UnevenRoundedRectangle(
-                                        topLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomLeadingRadius: index == 0 ? buttonCornerRadius : 0,
-                                        bottomTrailingRadius: index == items
-                                            .count - 1 ? buttonCornerRadius : 0,
-                                        topTrailingRadius: index == items.count - 1 ? buttonCornerRadius : 0
-                                    )
-                                    .stroke(buttonBorderColor(isSelected: selectedIndex == index))
-                                }
-                            }
-                        }
+                        // 선택 인디케이터(knob)는 단일 뷰가 offset으로 슬라이드한다(index 0에서만 그린다).
+                        // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(오프스크린 패스 없음).
+                        RoundedRectangle(cornerRadius: buttonCornerRadius)
+                            .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
+                            .shadow(
+                                color: SwiftUI.Color(red: 0.09, green: 0.09, blue: 0.09, opacity: 0.1),
+                                radius: 2,
+                                x: 0,
+                                y: 1
+                            )
+                            .offset(x: buttonWidth * CGFloat(selectedIndex), y: 0)
+                            .if(index == 0)
                     }
                 }
             }
         }
         .padding(insets)
-        .if(variant == .solid) {
-            $0.background {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .foregroundStyle(backgroundColor)
-            }
+        .background {
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .foregroundStyle(backgroundColor)
         }
         .frame(height: frameHeight)
-        .frame(maxWidth: .infinity)
+        // iconOnly일 때 세그먼트 너비가 고정되므로 컨텐츠에 맞춰 hug하고,
+        // 그 외에는 가용 폭을 균등 분할하도록 maxWidth를 채운다.
+        .if(!iconOnly) {
+            $0.frame(maxWidth: .infinity)
+        }
         .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { frameSize = $0 })
         .onChange(of: selectedIndex) { index in
             onSelect?(index)
         }
     }
-    
+
     // MARK: - Modifiers
-    private var variant: Variant = .solid
     private var size: Size = .large
-    /// 세그먼트 컨트롤의 시각적 스타일을 설정합니다.
-    ///
-    /// - Parameter variant: 적용할 스타일
-    /// - Returns: 수정된 세그먼트 컨트롤 인스턴스
-    public func variant(_ variant: Variant) -> Self {
-        var zelf = self
-        zelf.variant = variant
-        return zelf
-    }
-    
+    private var iconOnly: Bool = false
+
     /// 세그먼트 컨트롤의 크기를 설정합니다.
     ///
     /// - Parameter size: 적용할 크기
@@ -216,17 +184,27 @@ public struct SegmentedControl: View {
         zelf.size = size
         return zelf
     }
+
+    /// 각 세그먼트를 아이콘만 표시하도록 설정합니다.
+    ///
+    /// `true`이면 텍스트를 숨기고 아이콘만 표시하며, 각 세그먼트의 너비와 높이가 크기별로 고정됩니다.
+    /// 이 경우 각 ``Item``에 이미지를 지정해야 합니다.
+    ///
+    /// - Parameter iconOnly: 아이콘만 표시할지 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 세그먼트 컨트롤 인스턴스
+    public func iconOnly(_ iconOnly: Bool = true) -> Self {
+        var zelf = self
+        zelf.iconOnly = iconOnly
+        return zelf
+    }
 }
 
 // MARK: - Private
 extension SegmentedControl {
     private var backgroundColor: SwiftUI.Color {
-        switch variant {
-        case .solid: .semantic(.surfaceNeutralSecondary)
-        case .outlined: .clear
-        }
+        .semantic(.surfaceNeutralSecondary)
     }
-    
+
     private var frameHeight: CGFloat {
         switch size {
         case .large:
@@ -237,58 +215,58 @@ extension SegmentedControl {
             32
         }
     }
-    
+
+    /// Container 내부 패딩 (모든 사이즈 공통 4)
     private var insets: EdgeInsets {
-        switch variant {
-        case .solid:
-            switch size {
-            case .large:
-                .init(top: 3, leading: 3, bottom: 3, trailing: 3)
-            case .medium, .small:
-                .init(top: 2, leading: 2, bottom: 2, trailing: 2)
-            }
-        case .outlined:
-            .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-        }
+        .init(top: 4, leading: 4, bottom: 4, trailing: 4)
     }
-    
+
+    /// Container 모서리 반경
     private var cornerRadius: CGFloat {
         switch size {
         case .large:
-            12
+            14
         case .medium:
-            10
+            12
         case .small:
-            8
+            10
         }
     }
-    
+
     private var buttonWidth: CGFloat {
-        (frameSize.width - (insets.leading + insets.trailing)) / CGFloat(items.count)
+        if iconOnly {
+            return iconOnlySegmentWidth
+        }
+        return (frameSize.width - (insets.leading + insets.trailing)) / CGFloat(max(1, items.count))
     }
-    
+
     private var buttonTitleFont: Typography.Variant {
         switch size {
         case .large:
-            .headline2
-        case .medium:
             .body2
+        case .medium:
+            .label1
         case .small:
-            .label2
+            .caption1
         }
     }
-    
+
+    /// 세그먼트 내부(콘텐츠) 패딩 (텍스트 모드). iconOnly는 고정 너비로 간격을 확보하므로 0.
     private var buttonInsets: EdgeInsets {
+        guard iconOnly == false else {
+            return .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+        }
         switch size {
         case .large:
-            .init(top: 9, leading: 8, bottom: 9, trailing: 8)
+            return .init(top: 9, leading: 9, bottom: 9, trailing: 9)
         case .medium:
-            .init(top: 7, leading: 8, bottom: 7, trailing: 8)
+            return .init(top: 7, leading: 8, bottom: 7, trailing: 8)
         case .small:
-            .init(top: 5, leading: 6, bottom: 5, trailing: 6)
+            return .init(top: 5, leading: 6, bottom: 5, trailing: 6)
         }
     }
-    
+
+    /// 선택 인디케이터(knob) 모서리 반경
     private var buttonCornerRadius: CGFloat {
         switch size {
         case .large:
@@ -296,10 +274,10 @@ extension SegmentedControl {
         case .medium:
             8
         case .small:
-            6
+            8
         }
     }
-    
+
     private var buttonIconSize: CGSize {
         switch size {
         case .large:
@@ -310,26 +288,31 @@ extension SegmentedControl {
             .init(width: 14, height: 14)
         }
     }
-    
+
+    /// iconOnly일 때 세그먼트 고정 너비 (아이콘 크기 + 좌우 패딩)
+    private var iconOnlySegmentWidth: CGFloat {
+        switch size {
+        case .large:
+            42
+        case .medium:
+            34
+        case .small:
+            26
+        }
+    }
+
+    /// 아이콘-텍스트 간격
+    private var contentSpacing: CGFloat {
+        switch size {
+        case .large, .medium:
+            6
+        case .small:
+            4
+        }
+    }
+
     private func buttonForegroundColor(isSelected: Bool) -> SwiftUI.Color {
-        switch variant {
-        case .solid: .semantic(isSelected ? .foregroundNeutralPrimary : .foregroundNeutralTertiary)
-        case .outlined: .semantic(isSelected ? .surfaceBrandPrimary : .foregroundNeutralTertiary)
-        }
-    }
-    
-    private func buttonBackgroundColor(isSelected: Bool) -> SwiftUI.Color {
-        switch variant {
-        case .solid: .clear
-        case .outlined: isSelected ? .semantic(.surfaceBrandPrimary).opacity(0.05) : .clear
-        }
-    }
-    
-    private func buttonBorderColor(isSelected: Bool) -> SwiftUI.Color {
-        switch variant {
-        case .solid: .clear
-        case .outlined: isSelected ? .semantic(.surfaceBrandPrimary).opacity(0.43) : .semantic(.lineNeutralPrimary)
-        }
+        .semantic(isSelected ? .foregroundNeutralPrimary : .foregroundNeutralTertiary)
     }
 }
 
@@ -349,7 +332,7 @@ struct SegmentControl_Previews: PreviewProvider {
                 ],
                 onSelect: { _ in }
             )
-            
+
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
@@ -361,7 +344,7 @@ struct SegmentControl_Previews: PreviewProvider {
                 onSelect: { _ in }
             )
             .size(.medium)
-            
+
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
@@ -373,43 +356,40 @@ struct SegmentControl_Previews: PreviewProvider {
                 onSelect: { _ in }
             )
             .size(.small)
-            
+
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
                     .init(image: .icon(.android), title: "Android"),
                     .init(image: .icon(.logoApple), title: "iOS"),
-                    .init(title: "Web"),
-                    .init(title: "ETC")
+                    .init(image: .icon(.apps), title: "ETC")
                 ],
                 onSelect: { _ in }
             )
-            .variant(.outlined)
-            
+            .iconOnly()
+
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
                     .init(image: .icon(.android), title: "Android"),
                     .init(image: .icon(.logoApple), title: "iOS"),
-                    .init(title: "Web"),
-                    .init(title: "ETC")
+                    .init(image: .icon(.apps), title: "ETC")
                 ],
                 onSelect: { _ in }
             )
-            .variant(.outlined)
+            .iconOnly()
             .size(.medium)
-            
+
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
                     .init(image: .icon(.android), title: "Android"),
                     .init(image: .icon(.logoApple), title: "iOS"),
-                    .init(title: "Web"),
-                    .init(title: "ETC")
+                    .init(image: .icon(.apps), title: "ETC")
                 ],
                 onSelect: { _ in }
             )
-            .variant(.outlined)
+            .iconOnly()
             .size(.small)
         }
         .padding()
