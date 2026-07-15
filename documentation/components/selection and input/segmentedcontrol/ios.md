@@ -29,8 +29,17 @@ SegmentedControl(
         .init(title: "설정")
     ]
 )
-.variant(.outlined)
 .size(.medium)
+
+// 아이콘만 표시하는 세그먼트 컨트롤 (세그먼트 너비/높이 고정)
+SegmentedControl(
+    selectedIndex: $selectedIndex,
+    items: [
+        .init(image: .icon(.home), title: "홈"),
+        .init(image: .icon(.person), title: "프로필")
+    ]
+)
+.iconOnly()
 ```
 
 ## Topics
@@ -109,6 +118,24 @@ SegmentedControl(
 
 <details>
 
+<summary>``func iconOnly(Bool) -> SegmentedControl``</summary>
+
+
+각 세그먼트를 아이콘만 표시하도록 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `iconOnly` | 아이콘만 표시할지 여부, 생략하면 기본값으로 `true` 적용 |
+- **Return Value**
+
+  수정된 세그먼트 컨트롤 인스턴스
+- **Discussion**
+
+  `true`이면 텍스트를 숨기고 아이콘만 표시하며, 각 세그먼트의 너비와 높이가 크기별로 고정됩니다. 이 경우 각 [SegmentedControl.Item](/documentation/montage/segmentedcontrol/item.md)에 이미지를 지정해야 합니다.
+</details>
+<details>
+
 <summary>``func size(Size) -> SegmentedControl``</summary>
 
 
@@ -122,21 +149,6 @@ SegmentedControl(
 
   수정된 세그먼트 컨트롤 인스턴스
 </details>
-<details>
-
-<summary>``func variant(Variant) -> SegmentedControl``</summary>
-
-
-세그먼트 컨트롤의 시각적 스타일을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 적용할 스타일 |
-- **Return Value**
-
-  수정된 세그먼트 컨트롤 인스턴스
-</details>
 
 ### Enumerations
 
@@ -146,6 +158,9 @@ SegmentedControl(
 
 
 세그먼트 컨트롤의 크기를 정의하는 열거형입니다.
+- **Overview**
+
+  크기에 따라 높이, 모서리 반경, 패딩, 타이포그래피, 아이콘 크기가 함께 결정됩니다.
 #### Enumeration Cases
 
 <details>
@@ -153,45 +168,21 @@ SegmentedControl(
 <summary>``case large``</summary>
 
 
-큰 크기
+큰 크기 (높이 48)
 </details>
 <details>
 
 <summary>``case medium``</summary>
 
 
-중간 크기
+중간 크기 (높이 40)
 </details>
 <details>
 
 <summary>``case small``</summary>
 
 
-작은 크기
-</details>
-
-</details>
-<details>
-
-<summary>``enum Variant``</summary>
-
-
-세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.
-#### Enumeration Cases
-
-<details>
-
-<summary>``case outlined``</summary>
-
-
-테두리만 있는 스타일
-</details>
-<details>
-
-<summary>``case solid``</summary>
-
-
-배경이 채워진 스타일
+작은 크기 (높이 32)
 </details>
 
 </details>
