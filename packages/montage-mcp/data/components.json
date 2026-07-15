@@ -720,6 +720,12 @@
           "kind": "method"
         },
         {
+          "name": "iconOnly(_:)",
+          "signature": "func iconOnly(Bool) -> Chip",
+          "summary": "아이콘만 표시하는 정사각 형태 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "imageColor(_:)",
           "signature": "func imageColor(SwiftUI.Color) -> Chip",
           "summary": "이미지의 색상을 설정합니다.",
