@@ -249,6 +249,21 @@ shadow 배경색을 조정합니다.
 
   수정된 Select 인스턴스
 </details>
+<details>
+
+<summary>``func size(Size) -> Select``</summary>
+
+
+Select 컴포넌트의 사이즈를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 적용할 사이즈, 생략하면 기본값으로 `.large` 적용 |
+- **Return Value**
+
+  수정된 Select 인스턴스
+</details>
 
 ### Enumerations
 
@@ -343,6 +358,33 @@ variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방�
 
 
 라디오 버튼으로 선택 표시
+</details>
+
+</details>
+<details>
+
+<summary>``enum Size``</summary>
+
+
+Select 컴포넌트의 사이즈를 정의합니다.
+- **Overview**
+
+  사이즈에 따라 컨테이너 패딩, 모서리 반경, 최소 높이, 입력 타이포그래피, 선행 아이콘 크기가 함께 결정됩니다. `TextField`의 사이즈 정책과 동일합니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case large``</summary>
+
+
+큰 사이즈 (최소 높이 48)
+</details>
+<details>
+
+<summary>``case medium``</summary>
+
+
+중간 사이즈 (최소 높이 40)
 </details>
 
 </details>

@@ -2185,6 +2185,12 @@
           "signature": "func shadowBackgroundColor(SwiftUI.Color) -> Select",
           "summary": "shadow 배경색을 조정합니다.",
           "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> Select",
+          "summary": "Select 컴포넌트의 사이즈를 설정합니다.",
+          "kind": "method"
         }
       ],
       "staticMembers": [],
@@ -2246,6 +2252,15 @@
           "cases": [
             "checkmark",
             "radio"
+          ]
+        },
+        {
+          "name": "Select.Size",
+          "kind": "enum",
+          "summary": "Select 컴포넌트의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
           ]
         },
         {
