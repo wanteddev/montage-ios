@@ -12,6 +12,7 @@ struct ChipPreview: View {
     @State private var activeColor: SwiftUI.Color = .clear
     @State private var leadingImage = false
     @State private var trailingImage = false
+    @State private var iconOnly = false
     @State private var imageColor: SwiftUI.Color = .clear
 
     var body: some View {
@@ -65,6 +66,13 @@ struct ChipPreview: View {
                     $0
                 }
             }
+            .modifying {
+                if iconOnly {
+                    $0.iconOnly()
+                } else {
+                    $0
+                }
+            }
         } options: {
             SegmentedIndexRow("Variant", index: Binding(
                 get: { variant == .solid ? 0 : 1 },
@@ -98,6 +106,7 @@ struct ChipPreview: View {
                 ToggleOption("Leading Image", isOn: $leadingImage)
                 ToggleOption("Trailing Image", isOn: $trailingImage)
             }
+            ToggleOption("Icon Only", isOn: $iconOnly)
             ColorPickerOptionRow("Background Color", selection: $backgroundColor)
             ColorPickerOptionRow("Font Color", selection: $fontColor)
             ColorPickerOptionRow("Active Color", selection: $activeColor)
