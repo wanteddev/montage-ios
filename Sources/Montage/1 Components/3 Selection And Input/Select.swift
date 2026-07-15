@@ -112,6 +112,17 @@ public struct Select: View {
         case custom(_ content: () -> any View)
     }
 
+    /// Select 컴포넌트의 사이즈를 정의합니다.
+    ///
+    /// 사이즈에 따라 컨테이너 패딩, 모서리 반경, 최소 높이, 입력 타이포그래피,
+    /// 선행 아이콘 크기가 함께 결정됩니다. `TextField`의 사이즈 정책과 동일합니다.
+    public enum Size {
+        /// 큰 사이즈 (최소 높이 48)
+        case large
+        /// 중간 사이즈 (최소 높이 40)
+        case medium
+    }
+
     // MARK: - Initializer
 
     private var customMenuPresented: Binding<Bool>?
@@ -149,6 +160,17 @@ public struct Select: View {
     private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leadingContent: LeadingContent?
     private var menuResize: BottomSheet.Resize = .hug
+    private var size: Size = .large
+
+    /// Select 컴포넌트의 사이즈를 설정합니다.
+    /// - Parameter size: 적용할 사이즈, 생략하면 기본값으로 `.large` 적용
+    /// - Returns: 수정된 Select 인스턴스
+    public func size(_ size: Size = .large) -> Self {
+        var zelf = self
+        zelf.size = size
+        return zelf
+    }
+
     /// negative 상태 여부를 조정합니다.
     /// - Parameter negative: 부정적 상태 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 Select 인스턴스
@@ -262,7 +284,7 @@ public struct Select: View {
             }
 
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: size.cornerRadius)
                     .fill(shadowBackgroundColor)
                     .shadow(
                         color: .semantic(.staticBlack).opacity(0.03),
@@ -282,25 +304,27 @@ public struct Select: View {
                             Image.icon(icon)
                                 .resizable()
                                 .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
-                                .padding(1)
-                                .frame(width: 24, height: 24)
+                                .padding(size.leadingIconPadding)
+                                .frame(width: size.contentMinHeight, height: size.contentMinHeight)
                         case .iconButton(let iconButton):
                             iconButton
-                                .frame(width: 24, height: 24)
+                                .frame(width: size.contentMinHeight, height: size.contentMinHeight)
                         case .custom(let content):
                             AnyView(content())
-                                .frame(minHeight: 24)
+                                .frame(minHeight: size.contentMinHeight)
                         default:
                             EmptyView()
                         }
                     }
+                    // render=chip일 때 선행 콘텐츠는 우측 4px 패딩으로 칩 영역과 간격을 둔다.
+                    .padding(.trailing, leadingContent != nil && isRenderChip ? .spacing4 : 0)
 
                     ZStack {
                         HStack {
                             if selectedItems.isEmpty {
                                 Text(placeholder)
                                     .paragraph(
-                                        variant: .body1,
+                                        variant: size.inputVariant,
                                         weight: .regular,
                                         color: placeholderTextColor
                                     )
@@ -311,7 +335,7 @@ public struct Select: View {
                                     if let text = selectedItems.first?.text {
                                         Text(text)
                                             .paragraph(
-                                                variant: .body1,
+                                                variant: size.inputVariant,
                                                 weight: .regular,
                                                 color: textColor
                                             )
@@ -325,7 +349,7 @@ public struct Select: View {
                                                     separator: ", ")
                                             )
                                             .paragraph(
-                                                variant: .body1,
+                                                variant: size.inputVariant,
                                                 weight: .regular,
                                                 color: textColor
                                             )
@@ -362,7 +386,7 @@ public struct Select: View {
                             }
                             Spacer()
                         }
-                        .frame(minHeight: 24)
+                        .frame(minHeight: size.contentMinHeight)
                         .padding(.horizontal, 4)
                         .contentShape(Rectangle())
                     }
@@ -371,7 +395,7 @@ public struct Select: View {
                         Image.icon(.circleExclamationFill)
                             .resizable()
                             .padding(1)
-                            .frame(width: 24, height: 24)
+                            .frame(width: size.contentMinHeight, height: size.contentMinHeight)
                             .foregroundStyle(SwiftUI.Color.semantic(.foregroundNegativePrimary))
                     }
 
@@ -386,15 +410,16 @@ public struct Select: View {
                             ? SwiftUI.Color.semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
                     )
                     .padding(.horizontal, 4)
-                    .frame(height: 24)
+                    .frame(height: size.contentMinHeight)
                     .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
                 }
-                .padding(.all, 12)
+                .padding(.all, size.containerPadding)
+                .frame(minHeight: size.minHeight)
                 // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거하고,
                 // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(별도 오프스크린 패스 없음).
                 // 외형(둥근 모서리·머티리얼·옅은 그림자·테두리)은 동일하게 유지된다.
                 .background {
-                    let surface = RoundedRectangle(cornerRadius: 12)
+                    let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
                     if disable {
                         surface
                             .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
@@ -411,10 +436,12 @@ public struct Select: View {
                     }
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 12)
-                        .inset(by: 0.5)
-                        .strokeBorder(strokeColor, lineWidth: menuPresented.wrappedValue ? 2 : 1)
+                    RoundedRectangle(cornerRadius: size.cornerRadius)
+                        .strokeBorder(strokeColor, lineWidth: 1)
                 }
+                // 메뉴가 열렸을 때 TextField와 동일하게 내부 border(primary 43%)에 더해
+                // 외부 Focus Ring(primary 12%)을 그린다.
+                .background { focusRing }
             }
 
             if !description.isEmpty {
@@ -551,14 +578,33 @@ public struct Select: View {
     private var strokeColor: SwiftUI.Color {
         if disable {
             .semantic(.lineNeutralSecondary)
+        } else if negative {
+            menuPresented.wrappedValue
+                ? .semantic(.lineNegativeStrong) : .semantic(.lineNegativePrimary)
         } else {
-            if negative {
-                .semantic(.foregroundNegativePrimary).opacity(0.28)
-            } else {
-                menuPresented.wrappedValue
-                    ? .semantic(.surfaceBrandPrimary).opacity(0.43) : .semantic(.lineNeutralSecondary)
-            }
+            menuPresented.wrappedValue
+                ? .semantic(.lineBrandStrong) : .semantic(.lineNeutralSecondary)
         }
+    }
+
+    private var focusRingColor: SwiftUI.Color {
+        negative ? .semantic(.lineNegativeFocus) : .semantic(.lineBrandFocus)
+    }
+
+    @ViewBuilder
+    private var focusRing: some View {
+        if menuPresented.wrappedValue, disable == false {
+            RoundedRectangle(cornerRadius: size.cornerRadius + .spacing4)
+                .strokeBorder(focusRingColor, lineWidth: 4)
+                .padding(-.spacing4)
+        }
+    }
+
+    private var isRenderChip: Bool {
+        if case .multiple(let render, _, _) = variant {
+            return render == .chip
+        }
+        return false
     }
 
     private var placeholderTextColor: SwiftUI.Color {
@@ -620,6 +666,57 @@ public struct Select: View {
             } else {
                 return .semantic(.foregroundNeutralTertiary)
             }
+        }
+    }
+}
+
+// MARK: - Size Tokens
+private extension Select.Size {
+    /// Container 내부 패딩
+    var containerPadding: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing6
+        }
+    }
+
+    /// 모서리 반경
+    var cornerRadius: CGFloat {
+        switch self {
+        case .large: .radius14
+        case .medium: .radius12
+        }
+    }
+
+    /// Container 최소 높이
+    var minHeight: CGFloat {
+        switch self {
+        case .large: .dimension48
+        case .medium: .dimension40
+        }
+    }
+
+    /// Content 영역 최소 높이 (선행/후행 아이콘 묶음 크기와 공유)
+    var contentMinHeight: CGFloat {
+        switch self {
+        case .large: .dimension24
+        case .medium: .dimension20
+        }
+    }
+
+    /// 입력 타이포그래피 변형
+    var inputVariant: Typography.Variant {
+        switch self {
+        case .large: .body2
+        case .medium: .label1
+        }
+    }
+
+    /// 선행 아이콘 묶음 내부 패딩 (아이콘 실제 크기 = contentMinHeight - 2 * leadingIconPadding)
+    var leadingIconPadding: CGFloat {
+        switch self {
+        case .large: .spacing2
+        case .medium: .spacing1
         }
     }
 }
