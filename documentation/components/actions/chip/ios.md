@@ -131,6 +131,24 @@ Chip(
 </details>
 <details>
 
+<summary>``func iconOnly(Bool) -> Chip``</summary>
+
+
+아이콘만 표시하는 정사각 형태 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `iconOnly` | 아이콘 전용 여부, 생략하면 기본값으로 `true` 적용 |
+- **Return Value**
+
+  수정된 칩 인스턴스
+- **Discussion**
+
+  `true`이면 텍스트 없이 `leadingImage`(없으면 `trailingImage`)만 너비와 높이가 같은 정사각 형태로 중앙 정렬해 표시합니다. 표시할 이미지는 `leadingImage(_:)` 또는 `trailingImage(_:)`로 지정합니다.
+</details>
+<details>
+
 <summary>``func imageColor(SwiftUI.Color) -> Chip``</summary>
 
 
