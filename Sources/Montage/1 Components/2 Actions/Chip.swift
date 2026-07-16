@@ -308,7 +308,7 @@ private extension Chip {
         } else if active {
             return activeContentColor
         } else {
-            return customImageColor ?? .semantic(.foregroundNeutralTertiary)
+            return customImageColor ?? .semantic(.foregroundNeutralPrimary)
         }
     }
     
