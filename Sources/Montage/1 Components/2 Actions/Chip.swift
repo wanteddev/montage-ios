@@ -78,33 +78,8 @@ public struct Chip: View {
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        HStack(spacing: contentSpacing) {
-            if let leadingImage = leadingImage {
-                leadingImage
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
-                    .foregroundStyle(imageColor)
-            }
-            
-            Text(text)
-                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
-                .lineLimit(1)
-                .truncationMode(.tail)
-                .padding(.horizontal, textPadding)
-            
-            if let trailingImage = trailingImage {
-                trailingImage
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
-                    .foregroundStyle(imageColor)
-            }
-        }
-        .padding(contentPadding)
-        .frame(
+        content
+            .frame(
             maxWidth: fillHorizontal ? .infinity : nil,
             maxHeight: fillVertical ? .infinity : nil
         )
@@ -132,11 +107,66 @@ public struct Chip: View {
         .accessibilityAddTraits(.isButton)
         .accessibilityValue(active ? String(localized: "선택됨", bundle: .module) : "")
     }
-    
+
+    /// 칩의 내용 영역입니다. `iconOnly` 여부에 따라 아이콘 전용 정사각 뷰 또는 기본 뷰를 반환합니다.
+    @ViewBuilder
+    private var content: some View {
+        if iconOnly {
+            iconOnlyContent
+        } else {
+            defaultContent
+        }
+    }
+
+    /// `iconOnly`일 때 표시하는 아이콘 전용 정사각 뷰입니다.
+    @ViewBuilder
+    private var iconOnlyContent: some View {
+        if let image = leadingImage ?? trailingImage {
+            image
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: imageSize, height: imageSize)
+                .foregroundStyle(imageColor)
+                .frame(width: iconOnlySize, height: iconOnlySize)
+        }
+    }
+
+    /// 기본(텍스트 + 선택적 아이콘) 내용 뷰입니다.
+    private var defaultContent: some View {
+        HStack(spacing: contentSpacing) {
+            if let leadingImage {
+                leadingImage
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: imageSize, height: imageSize)
+                    .foregroundStyle(imageColor)
+            }
+
+            Text(text)
+                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .padding(.horizontal, textPadding)
+
+            if let trailingImage {
+                trailingImage
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: imageSize, height: imageSize)
+                    .foregroundStyle(imageColor)
+            }
+        }
+        .padding(contentPadding)
+    }
+
     // MARK: - Modifiers
-    
+
     private var disable = false
     private var active = false
+    private var iconOnly = false
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
@@ -163,6 +193,20 @@ public struct Chip: View {
     public func active(_ active: Bool = true) -> Self {
         var view = self
         view.active = active
+        return view
+    }
+
+    /// 아이콘만 표시하는 정사각 형태 여부를 설정합니다.
+    ///
+    /// `true`이면 텍스트 없이 `leadingImage`(없으면 `trailingImage`)만 너비와 높이가 같은
+    /// 정사각 형태로 중앙 정렬해 표시합니다. 표시할 이미지는 `leadingImage(_:)` 또는
+    /// `trailingImage(_:)`로 지정합니다.
+    ///
+    /// - Parameter iconOnly: 아이콘 전용 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 칩 인스턴스
+    public func iconOnly(_ iconOnly: Bool = true) -> Self {
+        var view = self
+        view.iconOnly = iconOnly
         return view
     }
     
@@ -237,12 +281,7 @@ private extension Chip {
                 return .clear
             }
         } else if active {
-            switch variant {
-            case .solid:
-                return customActiveColor ?? .semantic(.surfaceNeutralInverse)
-            case .outlined:
-                return .semantic(.surfaceBrandPrimary).opacity(0.05)
-            }
+            return .semantic(.surfaceBrandSubtle)
         } else {
             switch variant {
             case .solid:
@@ -274,12 +313,7 @@ private extension Chip {
     }
     
     var activeContentColor: SwiftUI.Color {
-        switch variant {
-        case .solid:
-            return .semantic(.foregroundNeutralInverse)
-        case .outlined:
-            return customActiveColor ?? .semantic(.surfaceBrandPrimary)
-        }
+        customActiveColor ?? .semantic(.surfaceBrandPrimary)
     }
         
     var borderColor: SwiftUI.Color {
@@ -287,7 +321,7 @@ private extension Chip {
         if disable {
             return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.43)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.28)
         } else {
             return .semantic(.lineNeutralSecondary)
         }
@@ -305,49 +339,54 @@ private extension Chip {
         case .xsmall: return 12
         }
     }
+
+    /// `iconOnly`일 때 사용하는 정사각 한 변의 길이입니다(칩 높이와 동일).
+    var iconOnlySize: CGFloat {
+        switch size {
+        case .large: return 40
+        case .medium: return 36
+        case .small: return 32
+        case .xsmall: return 24
+        }
+    }
     
     var typoVariant: Typography.Variant {
         switch size {
-        case .large: return .body2
-        case .medium: return .label1
-        case .small: return .label1
-        case .xsmall: return .caption1
+        case .large: return .label1
+        case .medium: return .label2
+        case .small: return .caption1
+        case .xsmall: return .caption2
         }
     }
     
     var contentPadding: EdgeInsets {
         switch size {
-        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12)
-        case .medium: return EdgeInsets(top: 7, leading: 11, bottom: 7, trailing: 11)
-        case .small: return EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8)
-        case .xsmall: return EdgeInsets(top: 4, leading: 7, bottom: 4, trailing: 7)
+        case .large: return EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
+        case .medium: return EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 10)
+        case .small: return EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        case .xsmall: return EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 6)
         }
     }
     
     var contentSpacing: CGFloat {
         switch size {
-        case .large: return 3
-        case .medium: return 3
+        case .large: return 2
+        case .medium: return 2
         case .small: return 2
-        case .xsmall: return 2
+        case .xsmall: return 0
         }
     }
     
     var textPadding: CGFloat {
-        switch size {
-        case .large: return 2.0
-        case .medium: return 2.0
-        case .small: return 2.0
-        case .xsmall: return 1.0
-        }
+        2.0
     }
     
     var cornerRadius: CGFloat {
         switch size {
-        case .large: return 10.0
-        case .medium: return 8.0
-        case .small: return 8.0
-        case .xsmall: return 6.0
+        case .large: return 12.0
+        case .medium: return 10.0
+        case .small: return 10.0
+        case .xsmall: return 8.0
         }
     }
 }
