@@ -137,6 +137,10 @@ public struct SegmentedControl: View {
                     .frame(maxHeight: .infinity)
                     .accessibilityRemoveTraits(selectedIndex == index ? [] : .isSelected)
                     .accessibilityAddTraits(selectedIndex == index ? .isSelected : [])
+                    // iconOnly는 텍스트를 숨겨 VoiceOver가 읽을 라벨이 없으므로 Item 제목을 라벨로 노출한다.
+                    .if(iconOnly) {
+                        $0.accessibilityLabel(items[index].title)
+                    }
                     .background {
                         // 선택 인디케이터(knob)는 단일 뷰가 offset으로 슬라이드한다(index 0에서만 그린다).
                         // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(오프스크린 패스 없음).
