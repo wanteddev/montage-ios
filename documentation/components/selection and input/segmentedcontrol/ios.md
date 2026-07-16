@@ -68,7 +68,7 @@ SegmentedControl(
   | Parameter | Description |
   | --- | --- |
   | `image` | 표시할 이미지, 생략하면 기본값으로 `nil` 적용 |
-  | `title` | 표시할 텍스트 |
+  | `title` | 표시할 텍스트. `iconOnly` 모드에서는 텍스트가 숨겨지는 대신 이 값이 세그먼트의 VoiceOver 접근성 라벨로 사용됩니다. |
 </details>
 
 </details>
@@ -132,7 +132,7 @@ SegmentedControl(
   수정된 세그먼트 컨트롤 인스턴스
 - **Discussion**
 
-  `true`이면 텍스트를 숨기고 아이콘만 표시하며, 각 세그먼트의 너비와 높이가 크기별로 고정됩니다. 이 경우 각 [SegmentedControl.Item](/documentation/montage/segmentedcontrol/item.md)에 이미지를 지정해야 합니다.
+  `true`이면 텍스트를 숨기고 아이콘만 표시하며, 각 세그먼트의 너비와 높이가 크기별로 고정됩니다. 이 경우 각 [SegmentedControl.Item](/documentation/montage/segmentedcontrol/item.md)에 이미지를 지정해야 하며, [SegmentedControl.Item](/documentation/montage/segmentedcontrol/item.md)의 `title`은 세그먼트의 VoiceOver 접근성 라벨로 사용됩니다.
 </details>
 <details>
 
