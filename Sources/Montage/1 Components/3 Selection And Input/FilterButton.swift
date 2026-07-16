@@ -91,9 +91,10 @@ public struct FilterButton: View {
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        HStack(spacing: contentSpacing) {
+        HStack(spacing: 0) {
             Text(active ? (activeLabel ?? text) : text)
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
+                .padding(.horizontal, textPadding)
 
             Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)
                 .resizable()
@@ -111,7 +112,6 @@ public struct FilterButton: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .stroke(borderColor, lineWidth: borderWidth)
         )
-        .opacity(disable ? 0.5 : 1.0)
         .contentShape(Rectangle())
         .background(
             Interaction(
@@ -296,8 +296,15 @@ private extension FilterButton {
             return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
+        } else if let customIconColor {
+            return customIconColor
         } else {
-            return customIconColor ?? .semantic(.foregroundNeutralTertiary)
+            switch variant {
+            case .solid:
+                return .semantic(.foregroundNeutralPrimary)
+            case .outlined:
+                return .semantic(.foregroundNeutralTertiary)
+            }
         }
     }
     
@@ -332,29 +339,22 @@ private extension FilterButton {
     var typoVariant: Typography.Variant {
         switch size {
         case .large: return .body2
-        case .medium: return .body2
-        case .small: return .label1
-        case .xsmall: return .caption1
-        }
-    }
-    
-    var contentPadding: EdgeInsets {
-        switch size {
-        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 10)
-        case .medium: return EdgeInsets(top: 7, leading: 10, bottom: 7, trailing: 8)
-        case .small: return EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 6)
-        case .xsmall: return EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 4)
+        case .medium: return .label2
+        case .small: return .caption1
+        case .xsmall: return .caption2
         }
     }
 
-    var contentSpacing: CGFloat {
+    var contentPadding: EdgeInsets {
         switch size {
-        case .large: return 2
-        case .medium: return 0
-        case .small: return 0
-        case .xsmall: return 0
+        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 10)
+        case .medium: return EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 8)
+        case .small: return EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 6)
+        case .xsmall: return EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 4)
         }
     }
+
+    var textPadding: CGFloat { 2 }
 
     var cornerRadius: CGFloat {
         switch size {
