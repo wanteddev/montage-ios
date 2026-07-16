@@ -343,7 +343,7 @@ Primary 아이콘 버튼(Solid)
 <summary>``case segmentedControl(selectedIndex: Binding<Int>, icons: [Icon], accessibilityLabels: [String], onSelect: ((Int) -> Void)?)``</summary>
 
 
-세그먼트 컨트롤(아이콘 전용). Bottom Content 전용 크기로 렌더링되며 정방형 아이콘만 받습니다.
+세그먼트 컨트롤(아이콘 전용). 표준 [SegmentedControl](/documentation/montage/segmentedcontrol.md)을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
 
 - **Parameters**
   | Parameter | Description |
@@ -354,7 +354,7 @@ Primary 아이콘 버튼(Solid)
   | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
 - **Discussion**
 
-  아이콘만 노출되므로 VoiceOver 사용자를 위해 세그먼트별 `accessibilityLabels`를 함께 전달하는 것을 권장합니다. 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
+  `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다. 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
 </details>
 <details>
 
