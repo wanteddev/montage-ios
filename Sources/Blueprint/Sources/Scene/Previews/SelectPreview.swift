@@ -27,9 +27,11 @@ struct SelectPreview: View {
     @State private var customMenu: Bool = false
     @State private var menuResizeIndex = 0
     @State private var itemCountClassIndex: Int = 0
+    @State private var sizeIndex: Int = 0
 
     private let selectionTypes: [Select.SingleSelectionType] = [.checkmark, .radio]
     private let renders: [Select.Render] = [.text, .chip]
+    private let sizes: [Select.Size] = [.large, .medium]
 
     private var variants: [Select.Variant] {
         [
@@ -80,6 +82,7 @@ struct SelectPreview: View {
             ) {
                 print($0.text)
             }
+            .size(sizes[sizeIndex])
             .negative(negative)
             .placeholder("선택해 주세요.")
             .disable(disable)
@@ -114,6 +117,7 @@ struct SelectPreview: View {
                 }
             }
         } options: {
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             switch variants[variantIndex] {
             case .single:
@@ -198,6 +202,7 @@ struct SelectPreview: View {
 }
 
 extension Select.Variant: CaseDescribable {}
+extension Select.Size: CaseDescribable {}
 extension Select.SingleSelectionType: CaseDescribable {}
 extension Select.Render: CaseDescribable {}
 extension Select.LeadingContent: CaseDescribable {}
