@@ -121,9 +121,9 @@ public struct TextArea: View {
             title: String
         )
 
-        /// 세그먼트 컨트롤(아이콘 전용). Bottom Content 전용 크기로 렌더링되며 정방형 아이콘만 받습니다.
+        /// 세그먼트 컨트롤(아이콘 전용). 표준 ``SegmentedControl``을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
         ///
-        /// 아이콘만 노출되므로 VoiceOver 사용자를 위해 세그먼트별 `accessibilityLabels`를 함께 전달하는 것을 권장합니다.
+        /// `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다.
         /// 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
         /// - Parameters:
         ///   - selectedIndex: 선택된 세그먼트 인덱스 바인딩
@@ -587,106 +587,23 @@ public struct TextArea: View {
                     .size(size.contentBadgeSize)
                     .colorStyle(.neutral())
             case let .segmentedControl(selectedIndex, icons, accessibilityLabels, onSelect):
-                BottomSegmentedControl(
+                SegmentedControl(
                     selectedIndex: selectedIndex,
-                    icons: icons,
-                    accessibilityLabels: accessibilityLabels,
-                    size: size,
+                    items: icons.indices.map { index in
+                        SegmentedControl.Item(
+                            image: .icon(icons[index]),
+                            title: index < accessibilityLabels.count && accessibilityLabels[index].isEmpty == false
+                                ? accessibilityLabels[index]
+                                : icons[index].rawValue
+                        )
+                    },
                     onSelect: onSelect
                 )
+                .iconOnly()
+                .size(.small)
             case let .slotView(content):
                 content()
             }
-        }
-    }
-
-    /// Bottom Content 전용 아이콘 세그먼트 컨트롤.
-    ///
-    /// 표준 ``SegmentedControl``과 달리 정방형 아이콘만 받으며, TextArea의 ``Size``에 맞춰
-    /// 더 작은 크기로 렌더링된다. 선택 스타일(elevated 배경 + shadow)은 표준 컨트롤과 동일하다.
-    private struct BottomSegmentedControl: View {
-        @Binding private var selectedIndex: Int
-        private let icons: [Icon]
-        private let accessibilityLabels: [String]
-        private let size: Size
-        private let onSelect: ((Int) -> Void)?
-
-        init(
-            selectedIndex: Binding<Int>,
-            icons: [Icon],
-            accessibilityLabels: [String],
-            size: Size,
-            onSelect: ((Int) -> Void)?
-        ) {
-            _selectedIndex = selectedIndex
-            self.icons = icons
-            self.accessibilityLabels = accessibilityLabels
-            self.size = size
-            self.onSelect = onSelect
-        }
-
-        private let containerRadius: CGFloat = 8
-        private let segmentRadius: CGFloat = 6
-        private let inset: CGFloat = 2
-
-        private var segmentSide: CGFloat { size.segmentControlHeight - inset * 2 }
-
-        var body: some View {
-            HStack(spacing: 0) {
-                ForEach(icons.indices, id: \.self) { index in
-                    segment(index)
-                }
-            }
-            // 선택 인디케이터는 표준 SegmentedControl과 동일하게 단일 뷰가 offset으로 슬라이드한다.
-            .background(alignment: .leading) { indicator }
-            .padding(inset)
-            .background {
-                RoundedRectangle(cornerRadius: containerRadius)
-                    .foregroundStyle(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
-            }
-        }
-
-        private var indicator: some View {
-            ZStack {
-                // 그림자를 ZStack(합성 뷰)이 아니라 첫 pure shape(`.fill`)에 적용해 analytic으로
-                // 캐스팅한다(오프스크린 패스 제거). 동일 실루엣이라 외형은 동일하게 유지된다.
-                RoundedRectangle(cornerRadius: segmentRadius)
-                    .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
-                    .shadow(color: .semantic(.staticBlack).opacity(0.08), radius: segmentRadius)
-                RoundedRectangle(cornerRadius: segmentRadius)
-                    .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.28))
-            }
-            .frame(width: segmentSide, height: segmentSide)
-            .offset(x: segmentSide * CGFloat(selectedIndex))
-        }
-
-        @ViewBuilder
-        private func segment(_ index: Int) -> some View {
-            Image.icon(icons[index])
-                .resizable()
-                .frame(width: size.resourceIconSize, height: size.resourceIconSize)
-                .foregroundColor(.semantic(index == selectedIndex ? .foregroundNeutralPrimary : .foregroundNeutralTertiary))
-                .frame(width: segmentSide, height: segmentSide)
-                .contentShape(RoundedRectangle(cornerRadius: segmentRadius))
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        selectedIndex = index
-                    }
-                    onSelect?(index)
-                }
-                // 아이콘만 노출되므로 VoiceOver에서 의미·조작 가능 여부를 알 수 있도록 라벨과 버튼/선택 trait를 부여한다.
-                .accessibilityElement()
-                .accessibilityLabel(accessibilityLabel(index))
-                .accessibilityAddTraits(.isButton)
-                .accessibilityAddTraits(index == selectedIndex ? .isSelected : [])
-        }
-
-        /// 세그먼트의 VoiceOver 라벨. 명시적 라벨이 없으면 아이콘 이름으로 대체한다.
-        private func accessibilityLabel(_ index: Int) -> String {
-            if index < accessibilityLabels.count, !accessibilityLabels[index].isEmpty {
-                return accessibilityLabels[index]
-            }
-            return icons[index].rawValue
         }
     }
 
@@ -940,14 +857,6 @@ private extension TextArea.Size {
         switch self {
         case .large: .large
         case .medium: .medium
-        }
-    }
-
-    /// Bottom 전용 아이콘 세그먼트 컨트롤의 컨테이너 높이. Large=32, Medium=28.
-    var segmentControlHeight: CGFloat {
-        switch self {
-        case .large: 32
-        case .medium: 28
         }
     }
 
