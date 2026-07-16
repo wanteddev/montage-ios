@@ -94,8 +94,7 @@ public struct FilterButton: View {
         HStack(spacing: contentSpacing) {
             Text(active ? (activeLabel ?? text) : text)
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
-                .padding(.horizontal, textPadding)
-            
+
             Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)
                 .resizable()
                 .foregroundStyle(iconColor)
@@ -271,12 +270,7 @@ private extension FilterButton {
                 return .clear
             }
         } else if active {
-            switch variant {
-            case .solid:
-                return customActiveColor ?? .semantic(.surfaceNeutralInverse)
-            case .outlined:
-                return .semantic(.surfaceBrandPrimary).opacity(0.05)
-            }
+            return .semantic(.surfaceBrandSubtle)
         } else {
             switch variant {
             case .solid:
@@ -293,7 +287,7 @@ private extension FilterButton {
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.foregroundNeutralTertiary)
+            return customFontColor ?? .semantic(.foregroundNeutralPrimary)
         }
     }
     
@@ -308,12 +302,7 @@ private extension FilterButton {
     }
     
     var activeContentColor: SwiftUI.Color {
-        switch variant {
-        case .solid:
-            return .semantic(.foregroundNeutralInverse)
-        case .outlined:
-            return customActiveColor ?? .semantic(.surfaceBrandPrimary)
-        }
+        customActiveColor ?? .semantic(.surfaceBrandPrimary)
     }
     
     var borderColor: SwiftUI.Color {
@@ -321,7 +310,7 @@ private extension FilterButton {
         if disable {
             return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.43)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.28)
         } else {
             return .semantic(.lineNeutralSecondary)
         }
@@ -351,37 +340,28 @@ private extension FilterButton {
     
     var contentPadding: EdgeInsets {
         switch size {
-        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12)
-        case .medium: return EdgeInsets(top: 7, leading: 11, bottom: 7, trailing: 11)
-        case .small: return EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8)
-        case .xsmall: return EdgeInsets(top: 4, leading: 7, bottom: 4, trailing: 7)
+        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 10)
+        case .medium: return EdgeInsets(top: 7, leading: 10, bottom: 7, trailing: 8)
+        case .small: return EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 6)
+        case .xsmall: return EdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 4)
         }
     }
-    
+
     var contentSpacing: CGFloat {
         switch size {
         case .large: return 2
-        case .medium: return 2
-        case .small: return 1
-        case .xsmall: return 1
+        case .medium: return 0
+        case .small: return 0
+        case .xsmall: return 0
         }
     }
-    
-    var textPadding: CGFloat {
-        switch size {
-        case .large: return 2.0
-        case .medium: return 2.0
-        case .small: return 2.0
-        case .xsmall: return 1.0
-        }
-    }
-    
+
     var cornerRadius: CGFloat {
         switch size {
-        case .large: return 10.0
+        case .large: return 12.0
         case .medium: return 10.0
-        case .small: return 8.0
-        case .xsmall: return 6.0
+        case .small: return 10.0
+        case .xsmall: return 8.0
         }
     }
 }
