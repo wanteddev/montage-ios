@@ -284,7 +284,7 @@ public struct Select: View {
             }
 
             ZStack {
-                RoundedRectangle(cornerRadius: size.cornerRadius)
+                surfaceShape
                     .fill(shadowBackgroundColor)
                     .shadow(
                         color: .semantic(.staticBlack).opacity(0.03),
@@ -419,7 +419,7 @@ public struct Select: View {
                 // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(별도 오프스크린 패스 없음).
                 // 외형(둥근 모서리·머티리얼·옅은 그림자·테두리)은 동일하게 유지된다.
                 .background {
-                    let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
+                    let surface = surfaceShape
                     if disable {
                         surface
                             .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
@@ -436,7 +436,7 @@ public struct Select: View {
                     }
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: size.cornerRadius)
+                    surfaceShape
                         .strokeBorder(strokeColor, lineWidth: 1)
                 }
                 // 메뉴가 열렸을 때 TextField와 동일하게 내부 border(primary 43%)에 더해
@@ -573,6 +573,11 @@ public struct Select: View {
             mutated.isSelected = false
             return mutated
         }
+    }
+
+    /// 표면(surface) 둥근 사각형 Shape입니다. 배경 채우기·그림자·테두리에서 공통으로 사용합니다.
+    private var surfaceShape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: size.cornerRadius)
     }
 
     private var strokeColor: SwiftUI.Color {
