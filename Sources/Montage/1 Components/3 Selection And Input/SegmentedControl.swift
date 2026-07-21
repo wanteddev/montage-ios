@@ -282,14 +282,25 @@ extension SegmentedControl {
         }
     }
 
+    /// 세그먼트 아이콘 크기. iconOnly 모드는 텍스트 모드보다 2pt 크다.
     private var buttonIconSize: CGSize {
+        if iconOnly {
+            switch size {
+            case .large:
+                return .init(width: 20, height: 20)
+            case .medium:
+                return .init(width: 18, height: 18)
+            case .small:
+                return .init(width: 16, height: 16)
+            }
+        }
         switch size {
         case .large:
-            .init(width: 20, height: 20)
+            return .init(width: 18, height: 18)
         case .medium:
-            .init(width: 18, height: 18)
+            return .init(width: 16, height: 16)
         case .small:
-            .init(width: 14, height: 14)
+            return .init(width: 14, height: 14)
         }
     }
 
