@@ -154,10 +154,6 @@ public struct Select: View {
     private var render: Render = .text
     private var placeholder = ""
     private var disable = false
-    private var heading = ""
-    private var requiredBadge = false
-    private var description = ""
-    private var shadowBackgroundColor: SwiftUI.Color = .init(uiColor: UIColor.systemBackground)
     private var leadingContent: LeadingContent?
     private var menuResize: BottomSheet.Resize = .hug
     private var size: Size = .large
@@ -198,42 +194,6 @@ public struct Select: View {
         return zelf
     }
 
-    /// 제목을 추가합니다.
-    /// - Parameter heading: 표시할 제목 텍스트
-    /// - Returns: 수정된 Select 인스턴스
-    public func heading(_ heading: String) -> Self {
-        var zelf = self
-        zelf.heading = heading
-        return zelf
-    }
-
-    /// 필수 표시 노출 여부를 조정합니다.
-    /// - Parameter requiredBadge: 필수 표시 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 Select 인스턴스
-    public func requiredBadge(_ requiredBadge: Bool = true) -> Self {
-        var zelf = self
-        zelf.requiredBadge = requiredBadge
-        return zelf
-    }
-
-    /// 설명을 추가합니다.
-    /// - Parameter description: 표시할 설명 텍스트
-    /// - Returns: 수정된 Select 인스턴스
-    public func description(_ description: String) -> Self {
-        var zelf = self
-        zelf.description = description
-        return zelf
-    }
-
-    /// shadow 배경색을 조정합니다.
-    /// - Parameter shadowBackgroundColor: 설정할 배경색
-    /// - Returns: 수정된 Select 인스턴스
-    public func shadowBackgroundColor(_ shadowBackgroundColor: SwiftUI.Color) -> Self {
-        var zelf = self
-        zelf.shadowBackgroundColor = shadowBackgroundColor
-        return zelf
-    }
-
     /// 왼쪽 컨텐츠를 추가합니다.
     /// - Parameter content: 표시할 선행 콘텐츠
     /// - Returns: 수정된 Select 인스턴스
@@ -255,207 +215,157 @@ public struct Select: View {
     // MARK: - Body
 
     @Environment(\.colorScheme) private var colorScheme
-    @State private var contentSize: CGSize = .zero
-    @State private var flowLayoutSize: CGSize = .zero
     @State private var defaultMenuPresented = false
     @State private var bottomSheetContentHeight: CGFloat = .zero
     @State private var pureBottomSheetHeight: CGFloat = .zero
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if !heading.isEmpty {
-                HStack(spacing: 4) {
-                    Text(heading)
-                        .typography(
-                            variant: .label1,
-                            weight: .bold,
-                            semantic: .foregroundNeutralPrimary
-                        )
-                    if requiredBadge {
-                        Text("*")
-                            .typography(
-                                variant: .label1,
-                                weight: .medium,
-                                semantic: .foregroundNegativePrimary
-                            )
-                    }
+        // spacing 0: 요소 사이 간격은 각 요소의 명시적 패딩으로만 준다.
+        // (HStack spacing을 두면 leading→content 간격에 불필요하게 더해진다)
+        HStack(alignment: .top, spacing: 0) {
+            Group {
+                switch leadingContent {
+                case .icon(let icon):
+                    Image.icon(icon)
+                        .resizable()
+                        .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
+                        .padding(size.leadingIconPadding)
+                        .frame(width: size.contentMinHeight, height: size.contentMinHeight)
+                case .iconButton(let iconButton):
+                    // leading 아이콘 버튼은 인터랙션 영역이 슬롯보다 크므로(large 32, medium 28),
+                    // 슬롯(large 24×24, medium 20×24)에 담고 넘치는 인터랙션 영역은 밖으로 흘린다.
+                    iconButton
+                        .frame(width: size.contentMinHeight, height: .dimension24)
+                case .custom(let content):
+                    AnyView(content())
+                        .frame(minHeight: size.contentMinHeight)
+                default:
+                    EmptyView()
                 }
             }
+            // 선행 콘텐츠와 content 영역 사이 간격. render=chip일 때 large 4/medium 3, 그 외 leading은 textHorizontalPadding.
+            .padding(.trailing, leadingContent == nil ? 0 : (isRenderChip ? size.chipLeadingTrailingPadding : size.textHorizontalPadding))
 
-            ZStack {
-                surfaceShape
-                    .fill(shadowBackgroundColor)
-                    .shadow(
-                        color: .semantic(.staticBlack).opacity(0.03),
-                        radius: 2,
-                        x: 0,
-                        y: 1
-                    )
-                    .frame(
-                        width: contentSize.width,
-                        height: contentSize.height
-                    )
-
-                HStack(alignment: .top, spacing: 8) {
-                    Group {
-                        switch leadingContent {
-                        case .icon(let icon):
-                            Image.icon(icon)
-                                .resizable()
-                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
-                                .padding(size.leadingIconPadding)
-                                .frame(width: size.contentMinHeight, height: size.contentMinHeight)
-                        case .iconButton(let iconButton):
-                            iconButton
-                                .frame(width: size.contentMinHeight, height: size.contentMinHeight)
-                        case .custom(let content):
-                            AnyView(content())
-                                .frame(minHeight: size.contentMinHeight)
-                        default:
-                            EmptyView()
+            HStack {
+                if selectedItems.isEmpty {
+                    Text(placeholder)
+                        .paragraph(
+                            variant: size.inputVariant,
+                            weight: .regular,
+                            color: placeholderTextColor
+                        )
+                        .lineLimit(1)
+                } else {
+                    switch variant {
+                    case .single:
+                        if let text = selectedItems.first?.text {
+                            Text(text)
+                                .paragraph(
+                                    variant: size.inputVariant,
+                                    weight: .regular,
+                                    color: textColor
+                                )
+                                .lineLimit(1)
                         }
-                    }
-                    // render=chip일 때 선행 콘텐츠는 우측 4px 패딩으로 칩 영역과 간격을 둔다.
-                    .padding(.trailing, leadingContent != nil && isRenderChip ? .spacing4 : 0)
-
-                    ZStack {
-                        HStack {
-                            if selectedItems.isEmpty {
-                                Text(placeholder)
-                                    .paragraph(
-                                        variant: size.inputVariant,
-                                        weight: .regular,
-                                        color: placeholderTextColor
-                                    )
-                                    .lineLimit(1)
+                    case .multiple(let render, let overflow, _):
+                        Group {
+                            if render == .text {
+                                Text(
+                                    selectedItems.map { $0.text }.joined(
+                                        separator: ", ")
+                                )
+                                .paragraph(
+                                    variant: size.inputVariant,
+                                    weight: .regular,
+                                    color: textColor
+                                )
+                                .if(!overflow) {
+                                    $0.lineLimit(1)
+                                }
                             } else {
-                                switch variant {
-                                case .single:
-                                    if let text = selectedItems.first?.text {
-                                        Text(text)
-                                            .paragraph(
-                                                variant: size.inputVariant,
-                                                weight: .regular,
-                                                color: textColor
-                                            )
-                                            .lineLimit(1)
-                                    }
-                                case .multiple(let render, let overflow, _):
-                                    Group {
-                                        if render == .text {
-                                            Text(
-                                                selectedItems.map { $0.text }.joined(
-                                                    separator: ", ")
-                                            )
-                                            .paragraph(
-                                                variant: size.inputVariant,
-                                                weight: .regular,
-                                                color: textColor
-                                            )
-                                            .if(!overflow) {
-                                                $0.lineLimit(1)
-                                            }
-                                        } else {
-                                            let chips = Chips(
-                                                items: selectedItems,
-                                                disable: disable,
-                                                onTapItem: { item in
-                                                    let index = items.enumerated()
-                                                        .first { $0.element == item }?
-                                                        .offset
-                                                    if let index {
-                                                        items[index].isSelected = false
-                                                    }
-                                                }
-                                            )
-                                            if overflow {
-                                                FlowLayout(spacing: 4, lineSpacing: 4) {
-                                                    chips
-                                                }
-                                            } else {
-                                                HStack(spacing: 4) {
-                                                    chips
-                                                }
-                                                .modifier(
-                                                    GradientScrollEdgeModifier(gradientWidth: 40))
-                                            }
+                                let chips = Chips(
+                                    items: selectedItems,
+                                    disable: disable,
+                                    onTapItem: { item in
+                                        let index = items.enumerated()
+                                            .first { $0.element == item }?
+                                            .offset
+                                        if let index {
+                                            items[index].isSelected = false
                                         }
                                     }
+                                )
+                                if overflow {
+                                    FlowLayout(spacing: 4, lineSpacing: 4) {
+                                        chips
+                                    }
+                                } else {
+                                    HStack(spacing: 4) {
+                                        chips
+                                    }
+                                    .modifier(
+                                        GradientScrollEdgeModifier(gradientWidth: 40))
                                 }
                             }
-                            Spacer()
                         }
-                        .frame(minHeight: size.contentMinHeight)
-                        .padding(.horizontal, 4)
-                        .contentShape(Rectangle())
-                    }
-
-                    if !selectedItems.isEmpty, negative {
-                        Image.icon(.circleExclamationFill)
-                            .resizable()
-                            .padding(1)
-                            .frame(width: size.contentMinHeight, height: size.contentMinHeight)
-                            .foregroundStyle(SwiftUI.Color.semantic(.foregroundNegativePrimary))
-                    }
-
-                    IconButton(
-                        variant: .normal(size: .small),
-                        icon: .chevronDownThickSmall
-                    ) {
-                        menuPresented.wrappedValue.toggle()
-                    }
-                    .iconColor(
-                        disable
-                            ? SwiftUI.Color.semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
-                    )
-                    .padding(.horizontal, 4)
-                    .frame(height: size.contentMinHeight)
-                    .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
-                }
-                .padding(.all, size.containerPadding)
-                .frame(minHeight: size.minHeight)
-                // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거하고,
-                // 그림자는 pure shape(`.fill`)에 적용해 analytic으로 캐스팅한다(별도 오프스크린 패스 없음).
-                // 외형(둥근 모서리·머티리얼·옅은 그림자·테두리)은 동일하게 유지된다.
-                .background {
-                    let surface = surfaceShape
-                    if disable {
-                        surface
-                            .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
-                            .shadow(color: .semantic(.staticBlack).opacity(0.03), radius: 2, x: 0, y: 1)
-                    } else {
-                        surface
-                            .fill(
-                                colorScheme == .light
-                                    ? SwiftUI.Color.atomic(.common100).opacity(0.8)
-                                    : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                            )
-                            .shadow(color: .semantic(.staticBlack).opacity(0.03), radius: 2, x: 0, y: 1)
-                            .background(.ultraThinMaterial, in: surface)
                     }
                 }
-                .overlay {
-                    surfaceShape
-                        .strokeBorder(strokeColor, lineWidth: 1)
-                }
-                // 메뉴가 열렸을 때 TextField와 동일하게 내부 border(primary 43%)에 더해
-                // 외부 Focus Ring(primary 12%)을 그린다.
-                .background { focusRing }
+                Spacer()
             }
+            .frame(minHeight: size.contentMinHeight)
+            // content 왼쪽 패딩은 leading이 없을 때만 준다(있으면 leading의 trailing 패딩이 간격을 담당).
+            // 오른쪽 패딩은 chevron과의 간격으로 항상 유지. 이로써 leading 없을 때 텍스트-외곽선 large 16/medium 14.
+            .padding(.leading, leadingContent == nil ? size.textHorizontalPadding : 0)
+            .padding(.trailing, size.textHorizontalPadding)
+            .contentShape(Rectangle())
 
-            if !description.isEmpty {
-                Text(description)
-                    .typography(
-                        variant: .caption1,
-                        weight: .regular,
-                        semantic: negative ? .foregroundNegativePrimary : .foregroundNeutralTertiary
+            IconButton(
+                variant: .normal(size: .small),
+                icon: .chevronDownThickSmall
+            ) {
+                menuPresented.wrappedValue.toggle()
+            }
+            .iconColor(
+                disable
+                    ? SwiftUI.Color.semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
+            )
+            .padding(.horizontal, 4)
+            .frame(height: size.contentMinHeight)
+            .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
+        }
+        .padding(.horizontal, size.containerPadding)
+        // overflow일 때 상하단 간격(large 12, medium 8)을 컨테이너 세로 패딩으로 준다.
+        // text 영역이 아니라 HStack 전체에 줘야 leading·첫 줄·chevron이 같은 상단선에 정렬된다.
+        .padding(.vertical, size.containerPadding + (isOverflow ? size.overflowVerticalPadding : 0))
+        .frame(minHeight: size.minHeight)
+        // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거한다.
+        // 외형(둥근 모서리·머티리얼·테두리)은 동일하게 유지한다. (drop shadow 제거)
+        .background {
+            let surface = surfaceShape
+            if disable {
+                surface
+                    .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
+            } else {
+                surface
+                    .fill(
+                        colorScheme == .light
+                            ? SwiftUI.Color.atomic(.common100).opacity(0.8)
+                            : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
                     )
+                    .background(.ultraThinMaterial, in: surface)
             }
         }
+        .overlay {
+            surfaceShape
+                .strokeBorder(strokeColor, lineWidth: 1)
+        }
+        // 메뉴가 열렸을 때 TextField와 동일하게 내부 border(primary 43%)에 더해
+        // 외부 Focus Ring(primary 12%)을 그린다.
+        .background { focusRing }
         .allowsHitTesting(disable == false)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(heading.isEmpty ? placeholder : heading)
+        .accessibilityLabel(placeholder)
         .accessibilityValue(selectedItems.map(\.text).joined(separator: ", "))
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
@@ -612,6 +522,13 @@ public struct Select: View {
         return false
     }
 
+    private var isOverflow: Bool {
+        if case .multiple(_, let overflow, _) = variant {
+            return overflow
+        }
+        return false
+    }
+
     private var placeholderTextColor: SwiftUI.Color {
         disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralQuaternary)
     }
@@ -626,6 +543,9 @@ public struct Select: View {
         var items: [Select.Item]
         var disable: Bool
         var onTapItem: ((Select.Item) -> Void)?
+
+        /// xsmall 칩의 모서리 반경(Chip.Size.xsmall과 동일)입니다. 테두리 overlay에서 사용합니다.
+        private let chipCornerRadius: CGFloat = 8
 
         var body: some View {
             ForEach(items.indices, id: \.self) { index in
@@ -643,10 +563,19 @@ public struct Select: View {
                     if let icon = item.icon {
                         mutated = mutated.leadingImage(Image.icon(icon))
                     }
-                    if item.isNegative {
-                        mutated = mutated.backgroundColor(.semantic(.foregroundNegativePrimary).opacity(0.05))
+                    // negative 칩은 배경 채움 없이 상태 색 테두리만 사용한다(line/negative/primary).
+                    if item.isNegative, disable == false {
+                        mutated = mutated.backgroundColor(.clear)
                     }
                     return mutated
+                }
+                // Chip 컴포넌트에 정의되지 않은 negative/disable 테두리를 여기서 그린다.
+                .overlay {
+                    if let borderColor = borderColor(item) {
+                        RoundedRectangle(cornerRadius: chipCornerRadius)
+                            .inset(by: 0.5)
+                            .stroke(borderColor, lineWidth: 1)
+                    }
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -655,21 +584,37 @@ public struct Select: View {
             }
         }
 
+        /// close 버튼(trailing 아이콘) 색상입니다. disable은 foreground/disable/primary, negative는 foreground/negative/primary.
         private func iconColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .semantic(.foregroundDisablePrimary) }
-            if item.isNegative {
+            if disable {
+                return .semantic(.foregroundDisablePrimary)
+            } else if item.isNegative {
                 return .semantic(.foregroundNegativePrimary)
             } else {
                 return .semantic(.foregroundNeutralTertiary)
             }
         }
 
+        /// 텍스트 색상입니다. disable은 foreground/neutral/primary, negative는 foreground/negative/primary.
         private func fontColor(_ item: Select.Item) -> SwiftUI.Color {
-            guard disable == false else { return .semantic(.foregroundDisablePrimary) }
-            if item.isNegative {
+            if disable {
+                return .semantic(.foregroundNeutralPrimary)
+            } else if item.isNegative {
                 return .semantic(.foregroundNegativePrimary)
             } else {
                 return .semantic(.foregroundNeutralTertiary)
+            }
+        }
+
+        /// 테두리 색상입니다. disable은 line/neutral/secondary, negative는 line/negative/primary.
+        /// normal(비활성·비부정) 칩은 Chip 컴포넌트 업데이트 전까지 테두리를 그리지 않는다.
+        private func borderColor(_ item: Select.Item) -> SwiftUI.Color? {
+            if disable {
+                return .semantic(.lineNeutralSecondary)
+            } else if item.isNegative {
+                return .semantic(.lineNegativePrimary)
+            } else {
+                return nil
             }
         }
     }
@@ -722,6 +667,31 @@ private extension Select.Size {
         switch self {
         case .large: .spacing2
         case .medium: .spacing1
+        }
+    }
+
+    /// 텍스트 영역 좌우 패딩. containerPadding과 합해 텍스트-외곽선 간격을 large 16, medium 14로 만든다.
+    var textHorizontalPadding: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing8
+        }
+    }
+
+    /// overflow일 때 콘텐츠 상하단에 더하는 세로 패딩. containerPadding과 합해 large 12, medium 8을 만든다.
+    var overflowVerticalPadding: CGFloat {
+        switch self {
+        case .large: .spacing4
+        case .medium: .spacing2
+        }
+    }
+
+    /// render=chip일 때 선행 콘텐츠 우측에 더하는 패딩(large 4, medium 3).
+    /// spacing 스케일에 3이 없어 medium은 리터럴을 사용한다.
+    var chipLeadingTrailingPadding: CGFloat {
+        switch self {
+        case .large: .spacing4
+        case .medium: 3
         }
     }
 }

@@ -2139,21 +2139,9 @@
       ],
       "modifiers": [
         {
-          "name": "description(_:)",
-          "signature": "func description(String) -> Select",
-          "summary": "설명을 추가합니다.",
-          "kind": "method"
-        },
-        {
           "name": "disable(_:)",
           "signature": "func disable(Bool) -> Select",
           "summary": "활성화 여부를 조정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "heading(_:)",
-          "signature": "func heading(String) -> Select",
-          "summary": "제목을 추가합니다.",
           "kind": "method"
         },
         {
@@ -2178,18 +2166,6 @@
           "name": "placeholder(_:)",
           "signature": "func placeholder(String) -> Select",
           "summary": "선택된 항목들이 없는 경우 placeholder를 표시합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "requiredBadge(_:)",
-          "signature": "func requiredBadge(Bool) -> Select",
-          "summary": "필수 표시 노출 여부를 조정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "shadowBackgroundColor(_:)",
-          "signature": "func shadowBackgroundColor(SwiftUI.Color) -> Select",
-          "summary": "shadow 배경색을 조정합니다.",
           "kind": "method"
         },
         {
