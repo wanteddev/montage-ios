@@ -86,6 +86,35 @@ describe("get_component", () => {
   });
 });
 
+describe("get_component - Select", () => {
+  it("no longer exposes the heading/requiredBadge/description/shadowBackgroundColor modifiers", async () => {
+    const r = await get("get_component").handler({ componentName: "Select" });
+    expect(r.isError).toBeFalsy();
+    const text = r.content[0]!.text;
+    expect(text).not.toMatch(/func heading\(/);
+    expect(text).not.toMatch(/func requiredBadge\(/);
+    expect(text).not.toMatch(/func description\(/);
+    expect(text).not.toMatch(/func shadowBackgroundColor\(/);
+  });
+
+  it("still exposes the remaining fluent modifiers", async () => {
+    const r = await get("get_component").handler({ componentName: "Select" });
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/func disable\(Bool\) -> Select/);
+    expect(text).toMatch(/func negative\(Bool\) -> Select/);
+    expect(text).toMatch(/func placeholder\(String\) -> Select/);
+    expect(text).toMatch(/func leadingContent\(LeadingContent\?\) -> Select/);
+    expect(text).toMatch(/func menuResize\(BottomSheet\.Resize\) -> Select/);
+    expect(text).toMatch(/func size\(Size\) -> Select/);
+  });
+
+  it("is case-insensitive for Select as well", async () => {
+    const r = await get("get_component").handler({ componentName: "select" });
+    expect(r.isError).toBeFalsy();
+    expect(r.content[0]!.text).toMatch(/^# Select/);
+  });
+});
+
 describe("list_tokens", () => {
   it("includes all five token kinds", async () => {
     const r = await get("list_tokens").handler({});
