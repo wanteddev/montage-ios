@@ -20,10 +20,10 @@ struct SegmentedControlPreview: View {
         // iconOnly일 때는 반드시 아이콘이 필요하므로 아이콘 항목을 사용한다.
         if showIcon || iconOnly {
             return [
-                .init(image: .icon(.android), title: "Android"),
-                .init(image: .icon(.logoApple), title: "iOS"),
-                .init(image: .icon(.globe), title: "Web"),
-                .init(image: .icon(.apps), title: "ETC")
+                .init(leadingIcon: .icon(.android), title: "Android"),
+                .init(leadingIcon: .icon(.logoApple), title: "iOS"),
+                .init(leadingIcon: .icon(.globe), title: "Web"),
+                .init(leadingIcon: .icon(.apps), title: "ETC")
             ]
         } else {
             return [
