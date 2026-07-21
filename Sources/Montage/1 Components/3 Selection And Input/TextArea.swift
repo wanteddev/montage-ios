@@ -591,7 +591,7 @@ public struct TextArea: View {
                     selectedIndex: selectedIndex,
                     items: icons.indices.map { index in
                         SegmentedControl.Item(
-                            image: .icon(icons[index]),
+                            leadingIcon: .icon(icons[index]),
                             title: index < accessibilityLabels.count && accessibilityLabels[index].isEmpty == false
                                 ? accessibilityLabels[index]
                                 : icons[index].rawValue
