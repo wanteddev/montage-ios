@@ -116,21 +116,6 @@ Select 컴포넌트 초기화
 
 <details>
 
-<summary>``func description(String) -> Select``</summary>
-
-
-설명을 추가합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `description` | 표시할 설명 텍스트 |
-- **Return Value**
-
-  수정된 Select 인스턴스
-</details>
-<details>
-
 <summary>``func disable(Bool) -> Select``</summary>
 
 
@@ -140,21 +125,6 @@ Select 컴포넌트 초기화
   | Parameter | Description |
   | --- | --- |
   | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 Select 인스턴스
-</details>
-<details>
-
-<summary>``func heading(String) -> Select``</summary>
-
-
-제목을 추가합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `heading` | 표시할 제목 텍스트 |
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -215,36 +185,6 @@ negative 상태 여부를 조정합니다.
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 표시할 플레이스홀더 텍스트 |
-- **Return Value**
-
-  수정된 Select 인스턴스
-</details>
-<details>
-
-<summary>``func requiredBadge(Bool) -> Select``</summary>
-
-
-필수 표시 노출 여부를 조정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `requiredBadge` | 필수 표시 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 Select 인스턴스
-</details>
-<details>
-
-<summary>``func shadowBackgroundColor(SwiftUI.Color) -> Select``</summary>
-
-
-shadow 배경색을 조정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `shadowBackgroundColor` | 설정할 배경색 |
 - **Return Value**
 
   수정된 Select 인스턴스
