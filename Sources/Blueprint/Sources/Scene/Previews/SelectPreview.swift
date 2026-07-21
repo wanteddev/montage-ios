@@ -20,9 +20,6 @@ struct SelectPreview: View {
     @State private var renderIndex: Int = 0
     @State private var overflow: Bool = false
     @State private var disable: Bool = false
-    @State private var description: Bool = false
-    @State private var heading: Bool = false
-    @State private var requiredBadge: Bool = false
     @State private var leadingContentIndex: Int = 0
     @State private var customMenu: Bool = false
     @State private var menuResizeIndex = 0
@@ -44,7 +41,8 @@ struct SelectPreview: View {
         [
             .none,
             .icon(.send),
-            .iconButton(.init(icon: .send)),
+            // leading 아이콘 버튼은 Select 사이즈에 맞춰 large/medium을 사용한다.
+            .iconButton(.init(variant: .normal(size: sizes[sizeIndex] == .large ? .large : .medium), icon: .send)),
             .custom({
                 Text("이력서")
             }),
@@ -86,9 +84,6 @@ struct SelectPreview: View {
             .negative(negative)
             .placeholder("선택해 주세요.")
             .disable(disable)
-            .description(description ? "설명을 적습니다." : "")
-            .heading(heading ? "제목" : "")
-            .requiredBadge(requiredBadge)
             .leadingContent(leadingContents[leadingContentIndex])
             .menuResize(bottomSheetResizes[menuResizeIndex])
             .bottomSheet(isPresented: $showSheet) {
@@ -136,13 +131,8 @@ struct SelectPreview: View {
                 EmptyView()
             }
             HStack {
-                ToggleOption("heading", isOn: $heading)
-                ToggleOption("requiredBadge", isOn: $requiredBadge)
-            }
-            HStack {
                 ToggleOption("negative", isOn: $negative)
                 ToggleOption("disable", isOn: $disable)
-                ToggleOption("description", isOn: $description)
             }
             SegmentedIndexRow("leadingContent", index: $leadingContentIndex, labels: leadingContents.map { $0?.description ?? "none" })
             ToggleOptionRow("custom menu", isOn: $customMenu)
