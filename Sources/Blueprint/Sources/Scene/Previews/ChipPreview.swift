@@ -10,6 +10,7 @@ struct ChipPreview: View {
     @State private var backgroundColor: SwiftUI.Color = .clear
     @State private var fontColor: SwiftUI.Color = .clear
     @State private var activeColor: SwiftUI.Color = .clear
+    @State private var borderColor: SwiftUI.Color = .clear
     @State private var leadingImage = false
     @State private var trailingImage = false
     @State private var iconOnly = false
@@ -50,6 +51,13 @@ struct ChipPreview: View {
                     $0
                 } else {
                     $0.imageColor(imageColor)
+                }
+            }
+            .modifying {
+                if borderColor == .clear {
+                    $0
+                } else {
+                    $0.borderColor(borderColor)
                 }
             }
             .modifying {
@@ -111,6 +119,7 @@ struct ChipPreview: View {
             ColorPickerOptionRow("Font Color", selection: $fontColor)
             ColorPickerOptionRow("Active Color", selection: $activeColor)
             ColorPickerOptionRow("Image Color", selection: $imageColor)
+            ColorPickerOptionRow("Border Color", selection: $borderColor)
         }
     }
 }

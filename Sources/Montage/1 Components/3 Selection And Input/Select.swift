@@ -546,18 +546,11 @@ public struct Select: View {
         var disable: Bool
         var onTapItem: ((Select.Item) -> Void)?
 
-        /// xsmall 칩의 모서리 반경(Chip.Size.xsmall과 동일)입니다. 테두리 overlay에서 사용합니다.
-        private let chipCornerRadius: CGFloat = 8
-
         var body: some View {
             ForEach(items.indices, id: \.self) { index in
                 let item = items[index]
-                // 칩은 outlined(투명 배경 + 테두리)로 그린다.
-                // normal·disable은 outlined 기본 테두리(line/normal/neutral)를 사용하고,
-                // negative만 테두리 색이 상태 색이라 테두리 없는 solid + 투명 배경에 overlay로 상태 테두리를 얹는다.
-                let isNegative = item.isNegative && disable == false
                 Montage.Chip(
-                    variant: isNegative ? .solid : .outlined,
+                    variant: .outlined,
                     size: .xsmall,
                     text: item.text
                 )
@@ -569,19 +562,10 @@ public struct Select: View {
                     if let icon = item.icon {
                         mutated = mutated.leadingImage(Image.icon(icon))
                     }
-                    // solid의 회색 fill을 제거해 투명 배경으로 둔다.
-                    if isNegative {
-                        mutated = mutated.backgroundColor(.clear)
+                    if item.isNegative, disable == false {
+                        mutated = mutated.borderColor(.semantic(.lineNegativePrimary))
                     }
                     return mutated
-                }
-                // negative만 상태 색 테두리(line/negative/primary)를 얹는다. normal·disable은 outlined가 테두리를 담당.
-                .overlay {
-                    if isNegative {
-                        RoundedRectangle(cornerRadius: chipCornerRadius)
-                            .inset(by: 0.5)
-                            .stroke(SwiftUI.Color.semantic(.lineNegativePrimary), lineWidth: 1)
-                    }
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
