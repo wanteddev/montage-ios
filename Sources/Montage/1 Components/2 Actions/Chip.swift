@@ -171,6 +171,7 @@ public struct Chip: View {
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
     private var customImageColor: SwiftUI.Color?
+    private var customBorderColor: SwiftUI.Color?
     private var leadingImage: Image?
     private var trailingImage: Image?
     private var fillHorizontal = false
@@ -249,7 +250,19 @@ public struct Chip: View {
         view.customImageColor = color
         return view
     }
-    
+
+    /// 칩의 테두리 색상을 설정합니다.
+    ///
+    /// > `outlined` variant에서만 적용됩니다. (`solid`는 테두리를 그리지 않습니다.)
+    ///
+    /// - Parameter color: 적용할 테두리 색상
+    /// - Returns: 수정된 칩 인스턴스
+    public func borderColor(_ color: SwiftUI.Color) -> Self {
+        var view = self
+        view.customBorderColor = color
+        return view
+    }
+
     /// 칩의 좌측에 이미지를 추가합니다.
     ///
     /// - Parameter image: 표시할 이미지
@@ -323,7 +336,7 @@ private extension Chip {
         } else if active {
             return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.28)
         } else {
-            return .semantic(.lineNeutralSecondary)
+            return customBorderColor ?? .semantic(.lineNeutralSecondary)
         }
     }
     

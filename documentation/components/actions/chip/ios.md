@@ -101,6 +101,26 @@ Chip(
 </details>
 <details>
 
+<summary>``func borderColor(SwiftUI.Color) -> Chip``</summary>
+
+
+칩의 테두리 색상을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `color` | 적용할 테두리 색상 |
+- **Return Value**
+
+  수정된 칩 인스턴스
+- **Discussion**
+  >  **Note**
+  >
+  > `outlined` variant에서만 적용됩니다. (`solid`는 테두리를 그리지 않습니다.)
+
+</details>
+<details>
+
 <summary>``func disabled(Bool) -> Chip``</summary>
 
 
