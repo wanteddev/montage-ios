@@ -25,8 +25,8 @@ import SwiftUI
 /// SegmentedControl(
 ///     selectedIndex: $selectedIndex,
 ///     items: [
-///         .init(image: .icon(.home), title: "홈"),
-///         .init(image: .icon(.person), title: "프로필"),
+///         .init(leadingIcon: .icon(.home), title: "홈"),
+///         .init(leadingIcon: .icon(.person), title: "프로필"),
 ///         .init(title: "설정")
 ///     ]
 /// )
@@ -36,8 +36,8 @@ import SwiftUI
 /// SegmentedControl(
 ///     selectedIndex: $selectedIndex,
 ///     items: [
-///         .init(image: .icon(.home), title: "홈"),
-///         .init(image: .icon(.person), title: "프로필")
+///         .init(leadingIcon: .icon(.home), title: "홈"),
+///         .init(leadingIcon: .icon(.person), title: "프로필")
 ///     ]
 /// )
 /// .iconOnly()
@@ -48,16 +48,16 @@ public struct SegmentedControl: View {
     ///
     /// 각 항목은 이미지(선택 사항)와 텍스트로 구성됩니다.
     public struct Item {
-        let image: Image?
+        let leadingIcon: Image?
         let title: String
 
         /// 세그먼트 항목을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - image: 표시할 이미지, 생략하면 기본값으로 `nil` 적용
+        ///   - leadingIcon: 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용
         ///   - title: 표시할 텍스트. `iconOnly` 모드에서는 텍스트가 숨겨지는 대신 이 값이 세그먼트의 VoiceOver 접근성 라벨로 사용됩니다.
-        public init(image: Image? = nil, title: String) {
-            self.image = image
+        public init(leadingIcon: Image? = nil, title: String) {
+            self.leadingIcon = leadingIcon
             self.title = title
         }
     }
@@ -117,7 +117,7 @@ public struct SegmentedControl: View {
                     }
                 } label: {
                     HStack(spacing: contentSpacing) {
-                        items[index].image?
+                        items[index].leadingIcon?
                             .resizable()
                             .renderingMode(.template)
                             .foregroundStyle(buttonForegroundColor(isSelected: selectedIndex == index))
@@ -282,14 +282,25 @@ extension SegmentedControl {
         }
     }
 
+    /// 세그먼트 아이콘 크기. iconOnly 모드는 텍스트 모드보다 2pt 크다.
     private var buttonIconSize: CGSize {
+        if iconOnly {
+            switch size {
+            case .large:
+                return .init(width: 20, height: 20)
+            case .medium:
+                return .init(width: 18, height: 18)
+            case .small:
+                return .init(width: 16, height: 16)
+            }
+        }
         switch size {
         case .large:
-            .init(width: 20, height: 20)
+            return .init(width: 18, height: 18)
         case .medium:
-            .init(width: 18, height: 18)
+            return .init(width: 16, height: 16)
         case .small:
-            .init(width: 14, height: 14)
+            return .init(width: 14, height: 14)
         }
     }
 
@@ -329,8 +340,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .icon(.android), title: "Android"),
-                    .init(image: .icon(.logoApple), title: "iOS"),
+                    .init(leadingIcon: .icon(.android), title: "Android"),
+                    .init(leadingIcon: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -340,8 +351,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .icon(.android), title: "Android"),
-                    .init(image: .icon(.logoApple), title: "iOS"),
+                    .init(leadingIcon: .icon(.android), title: "Android"),
+                    .init(leadingIcon: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -352,8 +363,8 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .icon(.android), title: "Android"),
-                    .init(image: .icon(.logoApple), title: "iOS"),
+                    .init(leadingIcon: .icon(.android), title: "Android"),
+                    .init(leadingIcon: .icon(.logoApple), title: "iOS"),
                     .init(title: "Web"),
                     .init(title: "ETC")
                 ],
@@ -364,9 +375,9 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .icon(.android), title: "Android"),
-                    .init(image: .icon(.logoApple), title: "iOS"),
-                    .init(image: .icon(.apps), title: "ETC")
+                    .init(leadingIcon: .icon(.android), title: "Android"),
+                    .init(leadingIcon: .icon(.logoApple), title: "iOS"),
+                    .init(leadingIcon: .icon(.apps), title: "ETC")
                 ],
                 onSelect: { _ in }
             )
@@ -375,9 +386,9 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .icon(.android), title: "Android"),
-                    .init(image: .icon(.logoApple), title: "iOS"),
-                    .init(image: .icon(.apps), title: "ETC")
+                    .init(leadingIcon: .icon(.android), title: "Android"),
+                    .init(leadingIcon: .icon(.logoApple), title: "iOS"),
+                    .init(leadingIcon: .icon(.apps), title: "ETC")
                 ],
                 onSelect: { _ in }
             )
@@ -387,9 +398,9 @@ struct SegmentControl_Previews: PreviewProvider {
             SegmentedControl(
                 selectedIndex: $selectedIndex,
                 items: [
-                    .init(image: .icon(.android), title: "Android"),
-                    .init(image: .icon(.logoApple), title: "iOS"),
-                    .init(image: .icon(.apps), title: "ETC")
+                    .init(leadingIcon: .icon(.android), title: "Android"),
+                    .init(leadingIcon: .icon(.logoApple), title: "iOS"),
+                    .init(leadingIcon: .icon(.apps), title: "ETC")
                 ],
                 onSelect: { _ in }
             )
