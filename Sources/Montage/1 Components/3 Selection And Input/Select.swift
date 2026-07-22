@@ -574,25 +574,23 @@ public struct Select: View {
             }
         }
 
-        /// close 버튼(trailing 아이콘) 색상입니다. disable은 foreground/disable/primary, negative는 foreground/negative/primary.
+        /// 아이콘(leading/close) 색상입니다. disable은 foreground/disable/primary, negative는 foreground/negative/primary, 그 외 foreground/neutral/primary.
         private func iconColor(_ item: Select.Item) -> SwiftUI.Color {
             if disable {
                 return .semantic(.foregroundDisablePrimary)
             } else if item.isNegative {
                 return .semantic(.foregroundNegativePrimary)
             } else {
-                return .semantic(.foregroundNeutralTertiary)
+                return .semantic(.foregroundNeutralPrimary)
             }
         }
 
-        /// 텍스트 색상입니다. disable은 foreground/neutral/primary, negative는 foreground/negative/primary.
+        /// 텍스트 색상입니다. disable/그 외는 foreground/neutral/primary, negative는 foreground/negative/primary.
         private func fontColor(_ item: Select.Item) -> SwiftUI.Color {
-            if disable {
-                return .semantic(.foregroundNeutralPrimary)
-            } else if item.isNegative {
+            if item.isNegative, disable == false {
                 return .semantic(.foregroundNegativePrimary)
             } else {
-                return .semantic(.foregroundNeutralTertiary)
+                return .semantic(.foregroundNeutralPrimary)
             }
         }
     }
