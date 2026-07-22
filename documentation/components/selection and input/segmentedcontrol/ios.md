@@ -24,8 +24,8 @@ SegmentedControl(
 SegmentedControl(
     selectedIndex: $selectedIndex,
     items: [
-        .init(image: .icon(.home), title: "홈"),
-        .init(image: .icon(.person), title: "프로필"),
+        .init(leadingIcon: .icon(.home), title: "홈"),
+        .init(leadingIcon: .icon(.person), title: "프로필"),
         .init(title: "설정")
     ]
 )
@@ -35,8 +35,8 @@ SegmentedControl(
 SegmentedControl(
     selectedIndex: $selectedIndex,
     items: [
-        .init(image: .icon(.home), title: "홈"),
-        .init(image: .icon(.person), title: "프로필")
+        .init(leadingIcon: .icon(.home), title: "홈"),
+        .init(leadingIcon: .icon(.person), title: "프로필")
     ]
 )
 .iconOnly()
@@ -59,7 +59,7 @@ SegmentedControl(
 
 <details>
 
-<summary>``init(image: Image?, title: String)``</summary>
+<summary>``init(leadingIcon: Image?, title: String)``</summary>
 
 
 세그먼트 항목을 초기화합니다.
@@ -67,7 +67,7 @@ SegmentedControl(
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `image` | 표시할 이미지, 생략하면 기본값으로 `nil` 적용 |
+  | `leadingIcon` | 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `title` | 표시할 텍스트. `iconOnly` 모드에서는 텍스트가 숨겨지는 대신 이 값이 세그먼트의 VoiceOver 접근성 라벨로 사용됩니다. |
 </details>
 
