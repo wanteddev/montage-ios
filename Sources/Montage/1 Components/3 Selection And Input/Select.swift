@@ -550,8 +550,12 @@ public struct Select: View {
         var body: some View {
             ForEach(items.indices, id: \.self) { index in
                 let item = items[index]
+                // 칩은 outlined(투명 배경 + 테두리)로 그린다.
+                // normal·disable은 outlined 기본 테두리(line/normal/neutral)를 사용하고,
+                // negative만 테두리 색이 상태 색이라 테두리 없는 solid + 투명 배경에 overlay로 상태 테두리를 얹는다.
+                let isNegative = item.isNegative && disable == false
                 Montage.Chip(
-                    variant: .solid,
+                    variant: isNegative ? .solid : .outlined,
                     size: .xsmall,
                     text: item.text
                 )
@@ -563,18 +567,18 @@ public struct Select: View {
                     if let icon = item.icon {
                         mutated = mutated.leadingImage(Image.icon(icon))
                     }
-                    // negative 칩은 배경 채움 없이 상태 색 테두리만 사용한다(line/negative/primary).
-                    if item.isNegative, disable == false {
+                    // solid의 회색 fill을 제거해 투명 배경으로 둔다.
+                    if isNegative {
                         mutated = mutated.backgroundColor(.clear)
                     }
                     return mutated
                 }
-                // Chip 컴포넌트에 정의되지 않은 negative/disable 테두리를 여기서 그린다.
+                // negative만 상태 색 테두리(line/negative/primary)를 얹는다. normal·disable은 outlined가 테두리를 담당.
                 .overlay {
-                    if let borderColor = borderColor(item) {
+                    if isNegative {
                         RoundedRectangle(cornerRadius: chipCornerRadius)
                             .inset(by: 0.5)
-                            .stroke(borderColor, lineWidth: 1)
+                            .stroke(SwiftUI.Color.semantic(.lineNegativePrimary), lineWidth: 1)
                     }
                 }
                 .contentShape(Rectangle())
@@ -603,18 +607,6 @@ public struct Select: View {
                 return .semantic(.foregroundNegativePrimary)
             } else {
                 return .semantic(.foregroundNeutralTertiary)
-            }
-        }
-
-        /// 테두리 색상입니다. disable은 line/neutral/secondary, negative는 line/negative/primary.
-        /// normal(비활성·비부정) 칩은 Chip 컴포넌트 업데이트 전까지 테두리를 그리지 않는다.
-        private func borderColor(_ item: Select.Item) -> SwiftUI.Color? {
-            if disable {
-                return .semantic(.lineNeutralSecondary)
-            } else if item.isNegative {
-                return .semantic(.lineNegativePrimary)
-            } else {
-                return nil
             }
         }
     }
