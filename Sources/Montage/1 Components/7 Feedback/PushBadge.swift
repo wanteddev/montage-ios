@@ -10,33 +10,40 @@ import SwiftUI
 
 /// 푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입니다.
 ///
-/// 작은 점, 'N' 표시, 또는 숫자를 표시할 수 있으며 다양한 크기와 위치를 지원합니다.
+/// 작은 점 또는 임의의 문자열(숫자·"N" 등)을 표시할 수 있으며 다양한 크기와 위치를 지원합니다.
 /// 주로 아이콘이나 버튼 주변에 새로운 알림이나 메시지가 있음을 나타내기 위해 사용됩니다.
 ///
 /// ```swift
 /// // 기본 점 형태 뱃지
 /// PushBadge(variant: .dot)
 ///
-/// // 'N' 표시 뱃지
-/// PushBadge(variant: .new)
+/// // 문자열 표시 뱃지
+/// PushBadge(variant: .text("N"))
 ///     .size(.small)
 ///
-/// // 숫자 표시 뱃지
-/// PushBadge(variant: .number(5))
+/// // 최대치 표기 뱃지 (99 초과 시 "99+")
+/// PushBadge(variant: .maxCount(150))
 ///     .backgroundColor(.red)
+///
+/// // 배경과 분리하는 링 배경 적용 (아바타 등 겹침 배경에서 사용)
+/// PushBadge(variant: .dot)
+///     .ringBg()
 /// ```
 public struct PushBadge: View {
     // MARK: - Types
-    
+
     /// 뱃지의 표시 형태를 정의하는 열거형입니다.
     public enum Variant: Equatable {
         /// 작은 점 형태의 뱃지
         case dot
-        /// 'N' 문자를 표시하는 뱃지
-        case new
-        /// 특정 숫자를 표시하는 뱃지
-        /// - Parameter number: 표시할 숫자, 99 초과 시 "99+"로 표시
-        case number(_ number: Int)
+        /// 임의의 문자열을 표시하는 뱃지
+        /// - Parameter text: 표시할 문자열
+        case text(_ text: String)
+        /// 최대치를 적용해 숫자를 표시하는 뱃지
+        /// - Parameters:
+        ///   - count: 표시할 숫자
+        ///   - max: 표기 상한, 생략하면 기본값으로 `99` 적용. `count`가 `max`를 초과하면 `"{max}+"`로 표시
+        case maxCount(_ count: Int, max: Int = 99)
     }
     
     /// 뱃지의 크기를 정의하는 열거형입니다.
@@ -90,7 +97,7 @@ public struct PushBadge: View {
     
     /// PushBadge를 초기화합니다.
     ///
-    /// - Parameter variant: 뱃지의 표시 형태 (dot, new, number)
+    /// - Parameter variant: 뱃지의 표시 형태 (dot, text, maxCount)
     public init(variant: Variant) {
         self.variant = variant
     }
@@ -105,36 +112,48 @@ public struct PushBadge: View {
                 Circle()
                     .frame(width: dotSize.width, height: dotSize.height)
                     .foregroundColor(backgroundColor)
-            case .new:
-                Text("N")
-                    .font(font)
-                    .frame(minWidth: textMinSize.width)
-                    .frame(height: textMinSize.height)
-                    .foregroundStyle(fontColor)
-                    .padding(fontPadding)
+                    .padding(ringBg ? (dotRingSize - dotSize.width) / 2 : 0)
                     .background {
-                        Circle()
-                            .foregroundColor(backgroundColor)
+                        if ringBg {
+                            Circle().foregroundColor(ringBgColor)
+                        }
                     }
-            case .number(let number):
-                Text(number > 99 ? "99+" : "\(number)")
-                    .font(font)
-                    .frame(minWidth: textMinSize.width)
-                    .frame(height: textMinSize.height)
-                    .foregroundStyle(fontColor)
-                    .padding(fontPadding)
-                    .background {
-                        RoundedRectangle(cornerRadius: 1000)
-                            .foregroundColor(backgroundColor)
-                    }
+            case .text(let text):
+                textBadge(text)
+            case .maxCount(let count, let max):
+                textBadge(count > max ? "\(max)+" : "\(count)")
             }
         }
+    }
+
+    /// 문자열 뱃지(text·maxCount 공용) 본문을 구성합니다.
+    @ViewBuilder
+    private func textBadge(_ text: String) -> some View {
+        Text(text)
+            .font(font)
+            .frame(minWidth: textMinSize.width)
+            .frame(height: textMinSize.height)
+            .foregroundStyle(fontColor)
+            .padding(fontPadding)
+            .background {
+                RoundedRectangle(cornerRadius: .radiusFull)
+                    .foregroundColor(backgroundColor)
+            }
+            .padding(ringBg ? textRingGap : 0)
+            .background {
+                if ringBg {
+                    RoundedRectangle(cornerRadius: .radiusFull)
+                        .foregroundColor(ringBgColor)
+                }
+            }
     }
     
     // MARK: - Modifiers
     private var size: Size = .xsmall
     private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
     private var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
+    private var ringBg = false
+    private var ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
     
     /// 뱃지의 크기를 설정합니다.
     ///
@@ -163,6 +182,22 @@ public struct PushBadge: View {
     public func backgroundColor(_ color: SwiftUI.Color) -> Self {
         var zelf = self
         zelf.backgroundColor = color
+        return zelf
+    }
+
+    /// 배경과 뱃지를 분리하는 링 배경을 설정합니다.
+    ///
+    /// 아바타 등 겹치는 배경 위에 뱃지를 얹을 때, 뱃지 주위에 배경색 링을 그려 시각적으로 분리합니다.
+    /// 기본값은 off이며, 링과 뱃지 사이 간격은 크기·형태별로 상이합니다.
+    ///
+    /// - Parameters:
+    ///   - ringBg: 링 배경 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - color: 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용
+    /// - Returns: 링 배경이 설정된 PushBadge
+    public func ringBg(_ ringBg: Bool = true, color: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)) -> Self {
+        var zelf = self
+        zelf.ringBg = ringBg
+        zelf.ringBgColor = color
         return zelf
     }
 }
@@ -198,6 +233,24 @@ private extension PushBadge {
         case .medium: .init(width: 10, height: 20)
         }
     }
+
+    /// dot 뱃지의 링 배경(원) 지름. dot을 뒤에서 감싸 배경과 분리한다.
+    var dotRingSize: CGFloat {
+        switch size {
+        case .xsmall: 5
+        case .small: 6
+        case .medium: 10
+        }
+    }
+
+    /// text·maxCount 뱃지의 링 배경 여백(뱃지 상하좌우로 이 값만큼 링이 확장된다).
+    var textRingGap: CGFloat {
+        switch size {
+        case .xsmall: 1
+        case .small: 1.5
+        case .medium: 2
+        }
+    }
 }
 
 extension PushBadge {
@@ -206,14 +259,18 @@ extension PushBadge {
         private let size: Size
         private let fontColor: SwiftUI.Color
         private let backgroundColor: SwiftUI.Color
+        private let ringBg: Bool
+        private let ringBgColor: SwiftUI.Color
         private let position: Position
         private let inset: CGSize
-        
+
         init(
             variant: Variant = .dot,
             size: Size = .xsmall,
             fontColor: SwiftUI.Color = .semantic(.staticWhite),
             backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary),
+            ringBg: Bool = false,
+            ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary),
             position: Position = .top(.trailing),
             inset: CGSize = .zero
         ) {
@@ -221,10 +278,12 @@ extension PushBadge {
             self.size = size
             self.fontColor = fontColor
             self.backgroundColor = backgroundColor
+            self.ringBg = ringBg
+            self.ringBgColor = ringBgColor
             self.position = position
             self.inset = inset
         }
-        
+
         @State private var contentSize: CGSize = .zero
 
         func body(content: Content) -> some View {
@@ -237,6 +296,7 @@ extension PushBadge {
                     .size(size)
                     .fontColor(fontColor)
                     .backgroundColor(backgroundColor)
+                    .ringBg(ringBg, color: ringBgColor)
                     .offset(anchorPosition)
                     .offset(offset)
             }
@@ -267,15 +327,15 @@ extension PushBadge {
                     .center(let horizontalAlignment),
                     .bottom(let horizontalAlignment):
                 switch horizontalAlignment {
-                case .leading: inset.width / 2
+                case .leading: inset.width
                 case .center: CGFloat.zero
-                case .trailing: -inset.width / 2
+                case .trailing: -inset.width
                 }
             }
             let height = switch position {
-            case .top: inset.height / 2
+            case .top: inset.height
             case .center: CGFloat.zero
-            case .bottom: -inset.height / 2
+            case .bottom: -inset.height
             }
             return .init(width: width, height: height)
         }
@@ -294,13 +354,15 @@ extension View {
     ///   - size: 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용
     ///   - fontColor: 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용
     ///   - backgroundColor: 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용
+    ///   - ringBg: 배경과 분리하는 링 배경 표시 여부, 생략하면 기본값으로 `false` 적용
+    ///   - ringBgColor: 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용
     ///   - position: 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용
-    ///   - inset: 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용
+    ///   - inset: 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용
     /// - Returns: 뱃지가 적용된 뷰
     ///
     /// ```swift
     /// Button("메시지") { }
-    ///     .pushBadge(variant: .number(3), position: .top(.leading))
+    ///     .pushBadge(variant: .maxCount(3), position: .top(.leading))
     ///
     /// Image.icon(.bell)
     ///     .pushBadge()  // 기본값: 우측 상단에 빨간 점
@@ -310,6 +372,8 @@ extension View {
         size: PushBadge.Size = .xsmall,
         fontColor: SwiftUI.Color = .semantic(.staticWhite),
         backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary),
+        ringBg: Bool = false,
+        ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary),
         position: PushBadge.Position = .top(.trailing),
         inset: CGSize = .zero
     ) -> some View {
@@ -319,6 +383,8 @@ extension View {
                 size: size,
                 fontColor: fontColor,
                 backgroundColor: backgroundColor,
+                ringBg: ringBg,
+                ringBgColor: ringBgColor,
                 position: position,
                 inset: inset
             )
