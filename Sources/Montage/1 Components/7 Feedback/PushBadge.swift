@@ -235,10 +235,13 @@ private extension PushBadge {
     }
 
     /// dot 뱃지의 링 배경(원) 지름. dot을 뒤에서 감싸 배경과 분리한다.
+    ///
+    /// dot 지름(4/6/8)보다 크게 두어 상하좌우로 링이 드러나게 한다.
+    /// (small은 dot과 동일한 6이면 링이 가려지므로 medium과 같은 1pt 간격 규칙에 맞춰 8로 둔다.)
     var dotRingSize: CGFloat {
         switch size {
         case .xsmall: 5
-        case .small: 6
+        case .small: 8
         case .medium: 10
         }
     }
