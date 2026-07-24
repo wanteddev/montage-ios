@@ -9,19 +9,23 @@ description: 푸시 알림이나 알림 표시를 위한 뱃지 컴포넌트입�
 
 ## Overview
 
-작은 점, ‘N’ 표시, 또는 숫자를 표시할 수 있으며 다양한 크기와 위치를 지원합니다. 주로 아이콘이나 버튼 주변에 새로운 알림이나 메시지가 있음을 나타내기 위해 사용됩니다.
+작은 점 또는 임의의 문자열(숫자·“N” 등)을 표시할 수 있으며 다양한 크기와 위치를 지원합니다. 주로 아이콘이나 버튼 주변에 새로운 알림이나 메시지가 있음을 나타내기 위해 사용됩니다.
 
 ```swift
 // 기본 점 형태 뱃지
 PushBadge(variant: .dot)
 
-// 'N' 표시 뱃지
-PushBadge(variant: .new)
+// 문자열 표시 뱃지
+PushBadge(variant: .text("N"))
     .size(.small)
 
-// 숫자 표시 뱃지
-PushBadge(variant: .number(5))
+// 최대치 표기 뱃지 (99 초과 시 "99+")
+PushBadge(variant: .maxCount(150))
     .backgroundColor(.red)
+
+// 배경과 분리하는 링 배경 적용 (아바타 등 겹침 배경에서 사용)
+PushBadge(variant: .dot)
+    .ringBg()
 ```
 
 ## Topics
@@ -38,7 +42,7 @@ PushBadge를 초기화합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `variant` | 뱃지의 표시 형태 (dot, new, number) |
+  | `variant` | 뱃지의 표시 형태 (dot, text, maxCount) |
 </details>
 
 ### Instance Properties
@@ -82,6 +86,25 @@ PushBadge를 초기화합니다.
 - **Return Value**
 
   텍스트 색상이 변경된 PushBadge
+</details>
+<details>
+
+<summary>``func ringBg(Bool, color: SwiftUI.Color) -> PushBadge``</summary>
+
+
+배경과 뱃지를 분리하는 링 배경을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `ringBg` | 링 배경 표시 여부, 생략하면 기본값으로 `true` 적용 |
+  | `color` | 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
+- **Return Value**
+
+  링 배경이 설정된 PushBadge
+- **Discussion**
+
+  아바타 등 겹치는 배경 위에 뱃지를 얹을 때, 뱃지 주위에 배경색 링을 그려 시각적으로 분리합니다. 기본값은 off이며, 링과 뱃지 사이 간격은 크기·형태별로 상이합니다.
 </details>
 <details>
 
@@ -241,22 +264,28 @@ PushBadge를 초기화합니다.
 </details>
 <details>
 
-<summary>``case new``</summary>
+<summary>``case maxCount(Int, max: Int)``</summary>
 
 
-‘N’ 문자를 표시하는 뱃지
-</details>
-<details>
-
-<summary>``case number(Int)``</summary>
-
-
-특정 숫자를 표시하는 뱃지
+최대치를 적용해 숫자를 표시하는 뱃지
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `number` | 표시할 숫자, 99 초과 시 “99+“로 표시 |
+  | `count` | 표시할 숫자 |
+  | `max` | 표기 상한, 생략하면 기본값으로 `99` 적용. `count`가 `max`를 초과하면 `"{max}+"`로 표시 |
+</details>
+<details>
+
+<summary>``case text(String)``</summary>
+
+
+임의의 문자열을 표시하는 뱃지
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 표시할 문자열 |
 </details>
 
 </details>
@@ -269,7 +298,7 @@ PushBadge를 초기화합니다.
 
 <details>
 
-<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
+<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, ringBg: Bool, ringBgColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
 
 
 현재 뷰에 푸시 알림 뱃지를 표시합니다.
@@ -281,8 +310,10 @@ PushBadge를 초기화합니다.
   | `size` | 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용 |
   | `fontColor` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용 |
   | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
+  | `ringBg` | 배경과 분리하는 링 배경 표시 여부, 생략하면 기본값으로 `false` 적용 |
+  | `ringBgColor` | 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
-  | `inset` | 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용 |
+  | `inset` | 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용 |
 - **Return Value**
 
   뱃지가 적용된 뷰
@@ -292,7 +323,7 @@ PushBadge를 초기화합니다.
 
   ```swift
   Button("메시지") { }
-      .pushBadge(variant: .number(3), position: .top(.leading))
+      .pushBadge(variant: .maxCount(3), position: .top(.leading))
   
   Image.icon(.bell)
       .pushBadge()  // 기본값: 우측 상단에 빨간 점

@@ -1860,6 +1860,12 @@
           "kind": "method"
         },
         {
+          "name": "ringBg(_:color:)",
+          "signature": "func ringBg(Bool, color: SwiftUI.Color) -> PushBadge",
+          "summary": "배경과 뱃지를 분리하는 링 배경을 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "size(_:)",
           "signature": "func size(Size) -> PushBadge",
           "summary": "뱃지의 크기를 설정합니다.",
@@ -1894,8 +1900,8 @@
           "summary": "뱃지의 표시 형태를 정의하는 열거형입니다.",
           "cases": [
             "dot",
-            "new",
-            "number"
+            "maxCount",
+            "text"
           ]
         }
       ]
