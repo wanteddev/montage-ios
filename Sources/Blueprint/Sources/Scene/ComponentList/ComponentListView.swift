@@ -39,19 +39,21 @@ struct ComponentListView: View {
     
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            VStack(spacing: 4) {
+            VStack {
                 TopNavigation()
                     .variant(.display)
                     .titleView {
-                        VStack(alignment: .leading) {
+                        HStack {
                             Text(Bundle.main.appName)
                                 .font(.largeTitle)
                                 .bold()
-                            Text("version " + Bundle.main.versionString)
-                                .font(.caption2)
-                            (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
-                                .font(.caption2)
-                                .italic()
+                            VStack(alignment: .leading) {
+                                (Text("powered by ") + Text("Montage™").bold())
+                                    .font(.caption2)
+                                    .italic()
+                                Text("version " + Bundle.main.versionString)
+                                    .font(.caption2)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -99,6 +101,7 @@ struct ComponentListView: View {
             }
         }
         .listStyle(.plain)
+        .listRowSpacing(0)
         .background(Color.semantic(.backgroundNeutralPrimary))
         .scrollContentBackground(.hidden)
     }
