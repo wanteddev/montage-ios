@@ -17,7 +17,6 @@ struct AvatarGroupPreview: View {
         "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fschool%2FPNG_195.png&w=120&q=90",
     ]
 
-    @State private var variantIndex: Int = 0
     @State private var sizeIndex: Int = 0
     @State private var contentModeIndex: Int = 0
     @State private var alertLabel = ""
@@ -29,7 +28,6 @@ struct AvatarGroupPreview: View {
 
     let contentModes: [ContentMode] = [.fit, .fill]
 
-    let variants: [Avatar.Variant] = [.person, .company, .academy]
     let sizes: [AvatarGroup.Size] = [.xsmall, .small]
 
     var body: some View {
@@ -38,13 +36,11 @@ struct AvatarGroupPreview: View {
                 .contentMode(contentModes[contentModeIndex])
                 .if(trailingContent) {
                     $0.trailingContent {
-                        TextButton(
-                            color: .assistive, size: .small,
-                            text: "외 30명이 좋아합니다"
-                        ) {
-                            alertLabel = "TextButton pressed"
-                            alertPresented.toggle()
-                        }
+                        Text("외 30명")
+                            .typography(
+                                variant: .label1, weight: .medium,
+                                semantic: .foregroundNeutralSecondary
+                            )
                     }
                 }
                 .alert(alertLabel, isPresented: $alertPresented) {
@@ -53,7 +49,6 @@ struct AvatarGroupPreview: View {
                     }
                 }
         } options: {
-            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
             SegmentedIndexRow("contentMode", index: $contentModeIndex, labels: ["fit", "fill"])
             ToggleOptionRow("local image", isOn: $useLocalImage)
@@ -74,13 +69,9 @@ struct AvatarGroupPreview: View {
             let images = Array(
                 repeating: Image("portrait", bundle: .main), count: Int(itemCount)
             )
-            return AvatarGroup(
-                images, variant: variants[variantIndex], size: sizes[sizeIndex], onTap: onTap
-            )
+            return AvatarGroup(images, size: sizes[sizeIndex], onTap: onTap)
         } else {
-            return AvatarGroup(
-                imageUrls, variant: variants[variantIndex], size: sizes[sizeIndex], onTap: onTap
-            )
+            return AvatarGroup(imageUrls, size: sizes[sizeIndex], onTap: onTap)
         }
     }
 
