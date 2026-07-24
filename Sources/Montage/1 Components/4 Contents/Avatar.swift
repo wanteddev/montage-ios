@@ -61,12 +61,12 @@ public struct Avatar: View {
             case .person: 1000
             default:
                 switch size {
-                case .xsmall: 6
-                case .small: 8
-                case .medium: 10
-                case .large: 12
-                case .xlarge: 14
-                case .custom(let value): ceil(value * 0.25 / 2) * 2
+                case .xsmall: 8
+                case .small: 10
+                case .medium: 12
+                case .large: 14
+                case .xlarge: 16
+                case .custom(let value): ceil(value * 0.25 / 2) * 2 + 2
                 }
             }
         }
@@ -95,7 +95,7 @@ public struct Avatar: View {
         ///
         /// 커스텀 크기 사용 시 다음 규칙이 자동 적용됩니다:
         /// - pushBadge size: 36pt 이하 `.xsmall`, 37~52pt `.small`, 53pt 이상 `.medium`
-        /// - cornerRadius (company/academy): 크기의 25% (짝수로 올림 보정)
+        /// - cornerRadius (company/academy): 크기의 25%에 +2 (짝수로 올림 보정)
         ///
         /// ``Avatar/cornerRadius(_:)``로 cornerRadius를 직접 지정하거나,
         /// ``Avatar/pushBadge(_:size:)``의 `size` 파라미터로 뱃지 크기를 직접 지정할 수 있습니다.
@@ -170,7 +170,14 @@ public struct Avatar: View {
                     .strokeBorder(borderColor, lineWidth: borderWidth)
             }
             .clipShape(RoundedRectangle(cornerRadius: resolvedCornerRadius))
-            .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
+            .if(pushBadge) {
+                $0.pushBadge(
+                    variant: .dot,
+                    size: pushBadgeSize,
+                    ringBg: true,
+                    inset: pushBadgeInset
+                )
+            }
             .background {
                 if !interactionDisabled {
                     Interaction(
@@ -197,7 +204,8 @@ public struct Avatar: View {
     private var interactionDisabled = false
     /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
     ///
-    /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
+    /// 모든 유형(.person, .company, .academy)의 아바타에 적용할 수 있습니다.
+    /// 뱃지는 배경과 분리되도록 링 배경(ringBg)이 기본 적용되며, 유형·크기에 따라 부착 위치가 안쪽으로 보정됩니다.
     ///
     /// - Parameters:
     ///   - pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
@@ -305,5 +313,35 @@ private extension Avatar {
                 return .medium
             }
         }
+    }
+
+    /// 뱃지를 아바타 바운딩 박스 코너에서 안쪽으로 들이는 여백(상단·우측 padding).
+    ///
+    /// - person(원형): 원형 45° 접점 기준(≈ 0.29 × 반지름). 24/32/40/48/56 → 4/5/6/7/8.
+    /// - company·academy(둥근 사각): 24/32/40/48/56 → 2/3/4/4/5.
+    /// 커스텀 크기는 각 유형의 비율로 산정한다.
+    var pushBadgeInset: CGSize {
+        let inset: CGFloat
+        switch variant {
+        case .person:
+            switch size {
+            case .xsmall: inset = 4
+            case .small: inset = 5
+            case .medium: inset = 6
+            case .large: inset = 7
+            case .xlarge: inset = 8
+            case .custom(let value): inset = (value * 0.15).rounded()
+            }
+        case .company, .academy:
+            switch size {
+            case .xsmall: inset = 2
+            case .small: inset = 3
+            case .medium: inset = 4
+            case .large: inset = 4
+            case .xlarge: inset = 5
+            case .custom(let value): inset = (value * 0.09).rounded()
+            }
+        }
+        return .init(width: inset, height: inset)
     }
 }
