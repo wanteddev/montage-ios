@@ -35,11 +35,9 @@ struct AvatarPreview: View {
             avatar
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
-            if variants[variantIndex] == .person {
-                ToggleOptionRow("pushBadge", isOn: $pushBadge)
-                if pushBadge {
-                    SegmentedIndexRow("pushBadge size", index: $pushBadgeSizeIndex, labels: pushBadgeSizeLabels)
-                }
+            ToggleOptionRow("pushBadge", isOn: $pushBadge)
+            if pushBadge {
+                SegmentedIndexRow("pushBadge size", index: $pushBadgeSizeIndex, labels: pushBadgeSizeLabels)
             }
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
                 .opacity(useCustomSize ? 0.3 : 1)
