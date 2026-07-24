@@ -526,7 +526,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
+<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, ringBg: Bool, ringBgColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
 
 
 현재 뷰에 푸시 알림 뱃지를 표시합니다.
@@ -538,8 +538,10 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `size` | 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용 |
   | `fontColor` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용 |
   | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
+  | `ringBg` | 배경과 분리하는 링 배경 표시 여부, 생략하면 기본값으로 `false` 적용 |
+  | `ringBgColor` | 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
-  | `inset` | 위치 조정을 위한 여백, 생략하면 기본값으로 `.zero` 적용 |
+  | `inset` | 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용 |
 - **Return Value**
 
   뱃지가 적용된 뷰
@@ -549,7 +551,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 
   ```swift
   Button("메시지") { }
-      .pushBadge(variant: .number(3), position: .top(.leading))
+      .pushBadge(variant: .maxCount(3), position: .top(.leading))
   
   Image.icon(.bell)
       .pushBadge()  // 기본값: 우측 상단에 빨간 점
