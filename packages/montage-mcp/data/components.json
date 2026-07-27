@@ -227,13 +227,13 @@
       "category": "contents",
       "kind": "struct",
       "declaration": "struct AvatarGroup",
-      "summary": "여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.",
+      "summary": "여러 사용자 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(_:variant:size:onTap:)-bx0i"
+          "signature": "init(_:size:onTap:)-8wtxu"
         },
         {
-          "signature": "init(_:variant:size:onTap:)-p3k7"
+          "signature": "init(_:size:onTap:)-9g241"
         }
       ],
       "modifiers": [
