@@ -35,7 +35,8 @@ struct PushBadgePreview: View {
     @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
     @State private var ringBg = false
     @State private var ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
-    @State private var inset = false
+    @State private var insetX: CGFloat = 0
+    @State private var insetY: CGFloat = 0
 
     var body: some View {
         PreviewLayout {
@@ -51,7 +52,7 @@ struct PushBadgePreview: View {
                     ringBg: ringBg,
                     ringBgColor: ringBgColor,
                     position: positionYs[positionYIndex],
-                    inset: inset ? .init(width: 8, height: 8) : .zero
+                    inset: .init(width: insetX, height: insetY)
                 )
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
@@ -71,7 +72,9 @@ struct PushBadgePreview: View {
             SegmentedIndexRow("horizontal", index: $positionXIndex, labels: horizontalPositions.map(\.description))
             SegmentedIndexRow("vertical", index: $positionYIndex, labels: positionYs.map(\.description))
             Divider()
-            ToggleOptionRow("inset(8,8)", isOn: $inset)
+            Text("inset")
+            SliderOptionRow("inset x", value: $insetX, in: 0...20, step: 1)
+            SliderOptionRow("inset y", value: $insetY, in: 0...20, step: 1)
         }
     }
 }
