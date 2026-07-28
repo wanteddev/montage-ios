@@ -23,9 +23,9 @@ PushBadge(variant: .text("N"))
 PushBadge(variant: .maxCount(150))
     .backgroundColor(.red)
 
-// 배경과 분리하는 링 배경 적용 (아바타 등 겹침 배경에서 사용)
+// 배경과 분리하는 아웃라인 보더 적용 (아바타 등 겹침 배경에서 사용)
 PushBadge(variant: .dot)
-    .ringBg()
+    .outlineBorder()
 ```
 
 ## Topics
@@ -89,22 +89,22 @@ PushBadge를 초기화합니다.
 </details>
 <details>
 
-<summary>``func ringBg(Bool, color: SwiftUI.Color) -> PushBadge``</summary>
+<summary>``func outlineBorder(Bool, color: SwiftUI.Color) -> PushBadge``</summary>
 
 
-배경과 뱃지를 분리하는 링 배경을 설정합니다.
+배경과 뱃지를 분리하는 아웃라인 보더를 설정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `ringBg` | 링 배경 표시 여부, 생략하면 기본값으로 `true` 적용 |
-  | `color` | 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
+  | `outlineBorder` | 아웃라인 보더 표시 여부, 생략하면 기본값으로 `true` 적용 |
+  | `color` | 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
 - **Return Value**
 
-  링 배경이 설정된 PushBadge
+  아웃라인 보더가 설정된 PushBadge
 - **Discussion**
 
-  아바타 등 겹치는 배경 위에 뱃지를 얹을 때, 뱃지 주위에 배경색 링을 그려 시각적으로 분리합니다. 기본값은 off이며, 링과 뱃지 사이 간격은 크기·형태별로 상이합니다.
+  아바타 등 겹치는 배경 위에 뱃지를 얹을 때, 뱃지 주위에 배경색 테두리를 그려 시각적으로 분리합니다. 기본값은 off이며, 테두리와 뱃지 사이 간격은 크기·형태별로 상이합니다.
 </details>
 <details>
 
@@ -298,7 +298,7 @@ PushBadge를 초기화합니다.
 
 <details>
 
-<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, ringBg: Bool, ringBgColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
+<summary>``func pushBadge(variant: PushBadge.Variant, size: PushBadge.Size, fontColor: SwiftUI.Color, backgroundColor: SwiftUI.Color, outlineBorder: Bool, outlineBorderColor: SwiftUI.Color, position: PushBadge.Position, inset: CGSize) -> some View``</summary>
 
 
 현재 뷰에 푸시 알림 뱃지를 표시합니다.
@@ -310,8 +310,8 @@ PushBadge를 초기화합니다.
   | `size` | 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용 |
   | `fontColor` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용 |
   | `backgroundColor` | 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
-  | `ringBg` | 배경과 분리하는 링 배경 표시 여부, 생략하면 기본값으로 `false` 적용 |
-  | `ringBgColor` | 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
+  | `outlineBorder` | 배경과 분리하는 아웃라인 보더 표시 여부, 생략하면 기본값으로 `false` 적용 |
+  | `outlineBorderColor` | 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
   | `inset` | 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용 |
 - **Return Value**
