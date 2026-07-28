@@ -25,9 +25,9 @@ import SwiftUI
 /// PushBadge(variant: .maxCount(150))
 ///     .backgroundColor(.red)
 ///
-/// // 배경과 분리하는 링 배경 적용 (아바타 등 겹침 배경에서 사용)
+/// // 배경과 분리하는 아웃라인 보더 적용 (아바타 등 겹침 배경에서 사용)
 /// PushBadge(variant: .dot)
-///     .ringBg()
+///     .outlineBorder()
 /// ```
 public struct PushBadge: View {
     // MARK: - Types
@@ -112,10 +112,10 @@ public struct PushBadge: View {
                 Circle()
                     .frame(width: dotSize.width, height: dotSize.height)
                     .foregroundColor(backgroundColor)
-                    .padding(ringBg ? (dotRingSize - dotSize.width) / 2 : 0)
+                    .padding(outlineBorder ? (dotOutlineSize - dotSize.width) / 2 : 0)
                     .background {
-                        if ringBg {
-                            Circle().foregroundColor(ringBgColor)
+                        if outlineBorder {
+                            Circle().foregroundColor(outlineBorderColor)
                         }
                     }
             case .text(let text):
@@ -139,11 +139,11 @@ public struct PushBadge: View {
                 RoundedRectangle(cornerRadius: .radiusFull)
                     .foregroundColor(backgroundColor)
             }
-            .padding(ringBg ? textRingGap : 0)
+            .padding(outlineBorder ? textOutlineGap : 0)
             .background {
-                if ringBg {
+                if outlineBorder {
                     RoundedRectangle(cornerRadius: .radiusFull)
-                        .foregroundColor(ringBgColor)
+                        .foregroundColor(outlineBorderColor)
                 }
             }
     }
@@ -152,8 +152,8 @@ public struct PushBadge: View {
     private var size: Size = .xsmall
     private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
     private var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
-    private var ringBg = false
-    private var ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
+    private var outlineBorder = false
+    private var outlineBorderColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
     
     /// 뱃지의 크기를 설정합니다.
     ///
@@ -185,19 +185,19 @@ public struct PushBadge: View {
         return zelf
     }
 
-    /// 배경과 뱃지를 분리하는 링 배경을 설정합니다.
+    /// 배경과 뱃지를 분리하는 아웃라인 보더를 설정합니다.
     ///
-    /// 아바타 등 겹치는 배경 위에 뱃지를 얹을 때, 뱃지 주위에 배경색 링을 그려 시각적으로 분리합니다.
-    /// 기본값은 off이며, 링과 뱃지 사이 간격은 크기·형태별로 상이합니다.
+    /// 아바타 등 겹치는 배경 위에 뱃지를 얹을 때, 뱃지 주위에 배경색 테두리를 그려 시각적으로 분리합니다.
+    /// 기본값은 off이며, 테두리와 뱃지 사이 간격은 크기·형태별로 상이합니다.
     ///
     /// - Parameters:
-    ///   - ringBg: 링 배경 표시 여부, 생략하면 기본값으로 `true` 적용
-    ///   - color: 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용
-    /// - Returns: 링 배경이 설정된 PushBadge
-    public func ringBg(_ ringBg: Bool = true, color: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)) -> Self {
+    ///   - outlineBorder: 아웃라인 보더 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - color: 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용
+    /// - Returns: 아웃라인 보더가 설정된 PushBadge
+    public func outlineBorder(_ outlineBorder: Bool = true, color: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)) -> Self {
         var zelf = self
-        zelf.ringBg = ringBg
-        zelf.ringBgColor = color
+        zelf.outlineBorder = outlineBorder
+        zelf.outlineBorderColor = color
         return zelf
     }
 }
@@ -234,11 +234,11 @@ private extension PushBadge {
         }
     }
 
-    /// dot 뱃지의 링 배경(원) 지름. dot을 뒤에서 감싸 배경과 분리한다.
+    /// dot 뱃지의 아웃라인 보더(원) 지름. dot을 뒤에서 감싸 배경과 분리한다.
     ///
-    /// dot 지름(4/6/8)보다 크게 두어 상하좌우로 링이 드러나게 한다.
-    /// (small은 dot과 동일한 6이면 링이 가려지므로 medium과 같은 1pt 간격 규칙에 맞춰 8로 둔다.)
-    var dotRingSize: CGFloat {
+    /// dot 지름(4/6/8)보다 크게 두어 상하좌우로 테두리가 드러나게 한다.
+    /// (small은 dot과 동일한 6이면 테두리가 가려지므로 medium과 같은 1pt 간격 규칙에 맞춰 8로 둔다.)
+    var dotOutlineSize: CGFloat {
         switch size {
         case .xsmall: 5
         case .small: 8
@@ -246,8 +246,8 @@ private extension PushBadge {
         }
     }
 
-    /// text·maxCount 뱃지의 링 배경 여백(뱃지 상하좌우로 이 값만큼 링이 확장된다).
-    var textRingGap: CGFloat {
+    /// text·maxCount 뱃지의 아웃라인 보더 여백(뱃지 상하좌우로 이 값만큼 테두리가 확장된다).
+    var textOutlineGap: CGFloat {
         switch size {
         case .xsmall: 1
         case .small: 1.5
@@ -262,8 +262,8 @@ extension PushBadge {
         private let size: Size
         private let fontColor: SwiftUI.Color
         private let backgroundColor: SwiftUI.Color
-        private let ringBg: Bool
-        private let ringBgColor: SwiftUI.Color
+        private let outlineBorder: Bool
+        private let outlineBorderColor: SwiftUI.Color
         private let position: Position
         private let inset: CGSize
 
@@ -272,8 +272,8 @@ extension PushBadge {
             size: Size = .xsmall,
             fontColor: SwiftUI.Color = .semantic(.staticWhite),
             backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary),
-            ringBg: Bool = false,
-            ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary),
+            outlineBorder: Bool = false,
+            outlineBorderColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary),
             position: Position = .top(.trailing),
             inset: CGSize = .zero
         ) {
@@ -281,8 +281,8 @@ extension PushBadge {
             self.size = size
             self.fontColor = fontColor
             self.backgroundColor = backgroundColor
-            self.ringBg = ringBg
-            self.ringBgColor = ringBgColor
+            self.outlineBorder = outlineBorder
+            self.outlineBorderColor = outlineBorderColor
             self.position = position
             self.inset = inset
         }
@@ -299,7 +299,7 @@ extension PushBadge {
                     .size(size)
                     .fontColor(fontColor)
                     .backgroundColor(backgroundColor)
-                    .ringBg(ringBg, color: ringBgColor)
+                    .outlineBorder(outlineBorder, color: outlineBorderColor)
                     .offset(anchorPosition)
                     .offset(offset)
             }
@@ -357,8 +357,8 @@ extension View {
     ///   - size: 뱃지 크기, 생략하면 기본값으로 `.xsmall` 적용
     ///   - fontColor: 텍스트 색상, 생략하면 기본값으로 `.semantic(.staticWhite)` 적용
     ///   - backgroundColor: 배경 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용
-    ///   - ringBg: 배경과 분리하는 링 배경 표시 여부, 생략하면 기본값으로 `false` 적용
-    ///   - ringBgColor: 링 배경 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용
+    ///   - outlineBorder: 배경과 분리하는 아웃라인 보더 표시 여부, 생략하면 기본값으로 `false` 적용
+    ///   - outlineBorderColor: 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용
     ///   - position: 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용
     ///   - inset: 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용
     /// - Returns: 뱃지가 적용된 뷰
@@ -375,8 +375,8 @@ extension View {
         size: PushBadge.Size = .xsmall,
         fontColor: SwiftUI.Color = .semantic(.staticWhite),
         backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary),
-        ringBg: Bool = false,
-        ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary),
+        outlineBorder: Bool = false,
+        outlineBorderColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary),
         position: PushBadge.Position = .top(.trailing),
         inset: CGSize = .zero
     ) -> some View {
@@ -386,8 +386,8 @@ extension View {
                 size: size,
                 fontColor: fontColor,
                 backgroundColor: backgroundColor,
-                ringBg: ringBg,
-                ringBgColor: ringBgColor,
+                outlineBorder: outlineBorder,
+                outlineBorderColor: outlineBorderColor,
                 position: position,
                 inset: inset
             )
