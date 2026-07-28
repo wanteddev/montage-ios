@@ -96,7 +96,7 @@ public struct Chip: View {
             Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: interactionVariant,
-                color: .foregroundNeutralPrimary
+                color: interactionColor
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
@@ -349,6 +349,10 @@ private extension Chip {
     /// `solid` 칩의 선택(active) 상태는 기본 강도(`.normal`), 그 외에는 약한 강도(`.light`)를 사용합니다.
     var interactionVariant: Interaction.Variant {
         variant == .solid && active ? .normal : .light
+    }
+    
+    var interactionColor: Color.Semantic {
+        variant == .solid && active ? .surfaceBrandPrimary : .foregroundNeutralPrimary
     }
     
     var imageSize: CGFloat {
