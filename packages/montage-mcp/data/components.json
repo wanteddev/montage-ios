@@ -1860,9 +1860,9 @@
           "kind": "method"
         },
         {
-          "name": "ringBg(_:color:)",
-          "signature": "func ringBg(Bool, color: SwiftUI.Color) -> PushBadge",
-          "summary": "배경과 뱃지를 분리하는 링 배경을 설정합니다.",
+          "name": "outlineBorder(_:color:)",
+          "signature": "func outlineBorder(Bool, color: SwiftUI.Color) -> PushBadge",
+          "summary": "배경과 뱃지를 분리하는 아웃라인 보더를 설정합니다.",
           "kind": "method"
         },
         {
