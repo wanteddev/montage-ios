@@ -33,8 +33,8 @@ struct PushBadgePreview: View {
     @State private var positionYIndex = 0
     @State private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
     @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
-    @State private var ringBg = false
-    @State private var ringBgColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
+    @State private var outlineBorder = false
+    @State private var outlineBorderColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
     @State private var insetX: CGFloat = 0
     @State private var insetY: CGFloat = 0
 
@@ -49,8 +49,8 @@ struct PushBadgePreview: View {
                     size: sizes[sizeIndex],
                     fontColor: fontColor,
                     backgroundColor: backgroundColor,
-                    ringBg: ringBg,
-                    ringBgColor: ringBgColor,
+                    outlineBorder: outlineBorder,
+                    outlineBorderColor: outlineBorderColor,
                     position: positionYs[positionYIndex],
                     inset: .init(width: insetX, height: insetY)
                 )
@@ -63,9 +63,9 @@ struct PushBadgePreview: View {
             ColorPickerOptionRow("fontColor", selection: $fontColor)
             ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
             Divider()
-            ToggleOptionRow("ringBg", isOn: $ringBg)
-            if ringBg {
-                ColorPickerOptionRow("ringBgColor", selection: $ringBgColor)
+            ToggleOptionRow("outlineBorder", isOn: $outlineBorder)
+            if outlineBorder {
+                ColorPickerOptionRow("outlineBorderColor", selection: $outlineBorderColor)
             }
             Divider()
             Text("position")
