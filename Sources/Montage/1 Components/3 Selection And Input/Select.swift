@@ -487,7 +487,9 @@ public struct Select: View {
     }
 
     private var menu: some View {
-        VStack(spacing: 4) {
+        // BottomSheet가 스크롤 오프셋 변화마다 content를 재평가하므로,
+        // 항목이 많을 때 eager 렌더링(VStack)은 스크롤 hitch를 유발한다
+        LazyVStack(spacing: 4) {
             ForEach(items.indices, id: \.self) { index in
                 Group {
                     let cell = ListCell(title: items[index].text) {
