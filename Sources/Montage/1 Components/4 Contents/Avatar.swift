@@ -174,7 +174,7 @@ public struct Avatar: View {
                 $0.pushBadge(
                     variant: .dot,
                     size: pushBadgeSize,
-                    ringBg: true,
+                    outlineBorder: true,
                     inset: pushBadgeInset
                 )
             }
@@ -205,7 +205,7 @@ public struct Avatar: View {
     /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
     ///
     /// 모든 유형(.person, .company, .academy)의 아바타에 적용할 수 있습니다.
-    /// 뱃지는 배경과 분리되도록 링 배경(ringBg)이 기본 적용되며, 유형·크기에 따라 부착 위치가 안쪽으로 보정됩니다.
+    /// 뱃지는 배경과 분리되도록 아웃라인 보더(outlineBorder)가 기본 적용되며, 유형·크기에 따라 부착 위치가 안쪽으로 보정됩니다.
     ///
     /// - Parameters:
     ///   - pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
