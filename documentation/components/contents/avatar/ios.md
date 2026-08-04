@@ -160,6 +160,7 @@ URL 문자열로 아바타를 초기화합니다.
 
   커스텀 크기 사용 시 다음 규칙이 자동 적용됩니다:
   - pushBadge size: 36pt 이하 `.xsmall`, 37~52pt `.small`, 53pt 이상 `.medium`
+  - pushBadge inset: person `round(0.293 × 크기 / 2)`, company/academy `round(0.293 × (크기 × 0.25 + 2))`
   - cornerRadius (company/academy): 크기의 25%에 +2 (짝수로 올림 보정)
 
 

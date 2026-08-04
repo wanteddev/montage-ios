@@ -94,7 +94,9 @@ public struct Avatar: View {
         /// 커스텀 크기
         ///
         /// 커스텀 크기 사용 시 다음 규칙이 자동 적용됩니다:
-        /// - pushBadge size: 36pt 이하 `.xsmall`, 37~52pt `.small`, 53pt 이상 `.medium`
+        /// - pushBadge size: 36pt 이하 `.xsmall`, 37\~52pt `.small`, 53pt 이상 `.medium`
+        /// - pushBadge inset: person `round(0.293 × 크기 / 2)`,
+        ///   company/academy `round(0.293 × (크기 × 0.25 + 2))`
         /// - cornerRadius (company/academy): 크기의 25%에 +2 (짝수로 올림 보정)
         ///
         /// ``Avatar/cornerRadius(_:)``로 cornerRadius를 직접 지정하거나,
@@ -317,10 +319,15 @@ private extension Avatar {
 
     /// 뱃지를 아바타 바운딩 박스 코너에서 안쪽으로 들이는 여백(상단·우측 padding).
     ///
-    /// - person(원형): 원형 45° 접점 기준(≈ 0.29 × 반지름). 24/32/40/48/56 → 4/5/6/7/8.
-    /// - company·academy(둥근 사각): 24/32/40/48/56 → 2/3/4/4/5.
-    /// 커스텀 크기는 각 유형의 비율로 산정한다.
+    /// 뱃지 중심을 코너 반경의 45° 접점에 두기 위해 반경에 `1 - cos(45°)`(= 0.293)를 곱한 값을 사용한다.
+    /// - person(원형, 반경 = 크기 / 2): `round(0.293 × 크기 / 2)`. 24/32/40/48/56 → 4/5/6/7/8.
+    /// - company·academy(둥근 사각, 반경 = 크기 × 0.25 + 2): `round(0.293 × (크기 × 0.25 + 2))`.
+    ///   24/32/40/48/56 → 2/3/4/4/5.
+    ///
+    /// 고정 크기는 위 수식으로 산출된 디자인 확정값을 그대로 사용하고, 커스텀 크기는 수식으로 계산한다.
     var pushBadgeInset: CGSize {
+        // 45° 접점 보정 계수(1 - cos(45°)). 웹·Android와 동일한 디자인 확정값을 사용한다.
+        let tangentRatio: CGFloat = 0.293
         let inset: CGFloat
         switch variant {
         case .person:
@@ -330,7 +337,7 @@ private extension Avatar {
             case .medium: inset = 6
             case .large: inset = 7
             case .xlarge: inset = 8
-            case .custom(let value): inset = (value * 0.15).rounded()
+            case .custom(let value): inset = (tangentRatio * (value / 2)).rounded()
             }
         case .company, .academy:
             switch size {
@@ -339,7 +346,7 @@ private extension Avatar {
             case .medium: inset = 4
             case .large: inset = 4
             case .xlarge: inset = 5
-            case .custom(let value): inset = (value * 0.09).rounded()
+            case .custom(let value): inset = (tangentRatio * (value * 0.25 + 2)).rounded()
             }
         }
         return .init(width: inset, height: inset)
