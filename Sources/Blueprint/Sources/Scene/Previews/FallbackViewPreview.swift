@@ -11,7 +11,8 @@ import Montage
 struct FallbackViewPreview: View {
     private let buttonActionAreaLabels = ["none", "single", "horizontal", "vertical"]
 
-    @State private var showTitle: Bool = true
+    @State private var title: String = "타이틀이 들어가요."
+    @State private var description: String = "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요."
     @State private var buttonActionAreaIndex: Int = 1
 
     private var buttonActionArea: FallbackView.ButtonActionArea? {
@@ -36,12 +37,13 @@ struct FallbackViewPreview: View {
     var body: some View {
         PreviewLayout {
             FallbackView(
-                title: showTitle ? "타이틀이 들어갈수도 있고, 안들어갈 수도 있어요." : nil,
-                description: "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요.",
+                title: title.isEmpty ? nil : title,
+                description: description,
                 buttonActionArea: buttonActionArea
             )
         } options: {
-            ToggleOptionRow("Title", isOn: $showTitle)
+            TextFieldOptionRow("title", text: $title, placeholder: "비우면 타이틀을 표시하지 않아요")
+            TextAreaOptionRow("description", text: $description)
             SegmentedIndexRow(
                 "buttonActionArea",
                 index: $buttonActionAreaIndex,
