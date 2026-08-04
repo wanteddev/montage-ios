@@ -121,12 +121,21 @@
           "cases": [
             "automatic",
             "manual"
+          ],
+          "caseSignatures": [
+            "automatic",
+            "manual(_:)"
           ]
         },
         {
           "name": "ActionArea.ButtonInfo",
           "kind": "struct",
           "summary": "ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(text:action:)"
+            }
+          ],
           "staticMethods": [
             {
               "name": "custom(_:)",
@@ -139,7 +148,15 @@
         {
           "name": "ActionArea.Model",
           "kind": "struct",
-          "summary": "ActionArea를 구성하기 위한 모델 구조체입니다."
+          "summary": "ActionArea를 구성하기 위한 모델 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(variant:backgroundTransparencyControl:caption:)"
+            },
+            {
+              "signature": "init(variant:backgroundTransparencyControl:caption:extra:extraDivider:)"
+            }
+          ]
         },
         {
           "name": "ActionArea.Variant",
@@ -149,6 +166,11 @@
             "cancel",
             "neutral",
             "strong"
+          ],
+          "caseSignatures": [
+            "cancel(main:)",
+            "neutral(main:sub:alternative:)",
+            "strong(main:sub:alternative:)"
           ]
         }
       ]
@@ -202,6 +224,14 @@
           "summary": "아바타의 크기를 정의하는 열거형입니다.",
           "cases": [
             "custom",
+            "large",
+            "medium",
+            "small",
+            "xlarge",
+            "xsmall"
+          ],
+          "caseSignatures": [
+            "custom(_:)",
             "large",
             "medium",
             "small",
@@ -319,6 +349,13 @@
             "fixedRatio",
             "flexible",
             "hug"
+          ],
+          "caseSignatures": [
+            "fill",
+            "fixedHeight(_:)",
+            "fixedRatio(_:)",
+            "flexible",
+            "hug"
           ]
         }
       ]
@@ -404,6 +441,11 @@
             "assistive",
             "negative",
             "primary"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         },
         {
@@ -415,6 +457,11 @@
             "medium",
             "small",
             "xsmall"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         },
         {
@@ -424,6 +471,11 @@
           "cases": [
             "outlined",
             "solid"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         }
       ]
@@ -761,6 +813,11 @@
             "medium",
             "small",
             "xsmall"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         },
         {
@@ -821,6 +878,10 @@
           "cases": [
             "accent",
             "neutral"
+          ],
+          "caseSignatures": [
+            "accent(_:background:)",
+            "neutral(_:)"
           ]
         },
         {
@@ -867,6 +928,21 @@
             "horizontal",
             "single",
             "vertical"
+          ],
+          "caseSignatures": [
+            "horizontal(main:alternative:)",
+            "single(_:)",
+            "vertical(main:alternative:)"
+          ]
+        },
+        {
+          "name": "FallbackView.ButtonActionArea.ButtonInfo",
+          "kind": "struct",
+          "summary": "버튼에 표시할 텍스트와 탭 시 실행할 액션을 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(text:action:)"
+            }
           ]
         }
       ]
@@ -932,6 +1008,11 @@
             "medium",
             "small",
             "xsmall"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         },
         {
@@ -1214,6 +1295,13 @@
             "medium",
             "small",
             "xlarge"
+          ],
+          "caseSignatures": [
+            "custom(size:)",
+            "large",
+            "medium",
+            "small",
+            "xlarge"
           ]
         },
         {
@@ -1222,6 +1310,11 @@
           "summary": "버튼 사이즈를 결정하는 열거형입니다.",
           "cases": [
             "custom",
+            "medium",
+            "small"
+          ],
+          "caseSignatures": [
+            "custom(size:)",
             "medium",
             "small"
           ]
@@ -1235,6 +1328,12 @@
             "normal",
             "outlined",
             "solid"
+          ],
+          "caseSignatures": [
+            "background(size:isAlternative:)",
+            "normal(size:)",
+            "outlined(size:)",
+            "solid(size:)"
           ]
         }
       ]
@@ -1476,6 +1575,10 @@
           "summary": "로딩 애니메이션의 종류를 정의하는 열거형입니다.",
           "cases": [
             "circular",
+            "wanted"
+          ],
+          "caseSignatures": [
+            "circular(color:)",
             "wanted"
           ]
         }
@@ -1782,6 +1885,10 @@
           "cases": [
             "fixed",
             "hug"
+          ],
+          "caseSignatures": [
+            "fixed(_:)",
+            "hug"
           ]
         }
       ]
@@ -1824,12 +1931,21 @@
           "cases": [
             "horizontal",
             "vertical"
+          ],
+          "caseSignatures": [
+            "horizontal(labels:)",
+            "vertical(stepContents:)"
           ]
         },
         {
           "name": "ProgressTracker.VerticalStepContent",
           "kind": "struct",
-          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다."
+          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다.",
+          "initializers": [
+            {
+              "signature": "init(label:labelAccessoryView:contentView:)"
+            }
+          ]
         }
       ]
     },
@@ -1893,6 +2009,21 @@
             "bottom",
             "center",
             "top"
+          ],
+          "caseSignatures": [
+            "bottom(_:)",
+            "center(_:)",
+            "top(_:)"
+          ]
+        },
+        {
+          "name": "PushBadge.Position.HorizontalPosition",
+          "kind": "enum",
+          "summary": "수평 위치를 정의하는 열거형입니다.",
+          "cases": [
+            "center",
+            "leading",
+            "trailing"
           ]
         },
         {
@@ -1913,6 +2044,11 @@
             "dot",
             "maxCount",
             "text"
+          ],
+          "caseSignatures": [
+            "dot",
+            "maxCount(_:max:)",
+            "text(_:)"
           ]
         }
       ]
@@ -2012,6 +2148,11 @@
           "name": "ScrollView.ScrollStatus",
           "kind": "struct",
           "summary": "스크롤 뷰의 상태를 추적하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(axis:scrollViewSize:contentSize:contentOffset:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "axis",
@@ -2134,7 +2275,12 @@
         {
           "name": "SegmentedControl.Item",
           "kind": "struct",
-          "summary": "세그먼트 컨트롤의 항목을 나타내는 구조체입니다."
+          "summary": "세그먼트 컨트롤의 항목을 나타내는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(leadingIcon:title:)"
+            }
+          ]
         },
         {
           "name": "SegmentedControl.Size",
@@ -2204,6 +2350,11 @@
           "name": "Select.Item",
           "kind": "struct",
           "summary": "Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.",
+          "initializers": [
+            {
+              "signature": "init(text:icon:isNegative:isSelected:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "icon",
@@ -2239,6 +2390,11 @@
             "custom",
             "icon",
             "iconButton"
+          ],
+          "caseSignatures": [
+            "custom(_:)",
+            "icon(_:)",
+            "iconButton(_:)"
           ]
         },
         {
@@ -2275,6 +2431,10 @@
           "cases": [
             "multiple",
             "single"
+          ],
+          "caseSignatures": [
+            "multiple(render:overflow:menuPrimaryButtonTitle:)",
+            "single(selectionType:menuPrimaryButtonTitle:)"
           ]
         }
       ]
@@ -2351,6 +2511,11 @@
           "name": "Skeleton.SkeletonView",
           "kind": "struct",
           "summary": "스켈레톤 로딩 UI를 표시하는 뷰입니다.",
+          "initializers": [
+            {
+              "signature": "init(_:)"
+            }
+          ],
           "modifiers": [
             {
               "name": "color(_:)",
@@ -2441,6 +2606,11 @@
             "long",
             "short"
           ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "rawValue",
@@ -2457,12 +2627,24 @@
           "cases": [
             "bottom",
             "top"
+          ],
+          "caseSignatures": [
+            "bottom(offset:)",
+            "top(offset:)"
           ]
         },
         {
           "name": "SnackBar.Model",
           "kind": "struct",
-          "summary": "SnackBar의 데이터 모델을 정의하는 구조체입니다."
+          "summary": "SnackBar의 데이터 모델을 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(duration:heading:description:action:)"
+            },
+            {
+              "signature": "init(duration:heading:description:extraContents:action:)"
+            }
+          ]
         }
       ]
     },
@@ -2638,6 +2820,11 @@
             "fixed",
             "limit",
             "normal"
+          ],
+          "caseSignatures": [
+            "fixed(min:max:)",
+            "limit",
+            "normal"
           ]
         },
         {
@@ -2652,6 +2839,15 @@
             "primaryIconButton",
             "segmentedControl",
             "slotView"
+          ],
+          "caseSignatures": [
+            "button(color:title:handler:)",
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "iconButton(icon:tintColor:handler:)",
+            "primaryIconButton(icon:handler:)",
+            "segmentedControl(selectedIndex:icons:accessibilityLabels:onSelect:)",
+            "slotView(_:)"
           ],
           "staticMethods": [
             {
@@ -2740,6 +2936,11 @@
           "cases": [
             "assistive",
             "primary"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         },
         {
@@ -2749,6 +2950,11 @@
           "cases": [
             "medium",
             "small"
+          ],
+          "initializers": [
+            {
+              "signature": "init(rawValue:)"
+            }
           ]
         }
       ]
@@ -2833,6 +3039,11 @@
           "name": "TextField.AutoCompletionDataSource",
           "kind": "struct",
           "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다.",
+          "initializers": [
+            {
+              "signature": "init(numberOfSections:sectionTitleAt:numberOfItemsInSection:cellForItemAt:headerView:footerView:maxHeight:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "totalNumberOfItems",
@@ -2864,7 +3075,12 @@
         {
           "name": "TextField.TrailingButtonInfo",
           "kind": "struct",
-          "summary": "텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다."
+          "summary": "텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.",
+          "initializers": [
+            {
+              "signature": "init(title:disable:handler:)"
+            }
+          ]
         }
       ]
     },
@@ -2955,12 +3171,21 @@
           "cases": [
             "bottom",
             "top"
+          ],
+          "caseSignatures": [
+            "bottom(offset:)",
+            "top(offset:)"
           ]
         },
         {
           "name": "Toast.Model",
           "kind": "struct",
-          "summary": "토스트 메시지의 데이터 모델을 정의하는 구조체입니다."
+          "summary": "토스트 메시지의 데이터 모델을 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(_:message:)"
+            }
+          ]
         },
         {
           "name": "Toast.Variant",
@@ -2970,6 +3195,12 @@
             "cautionary",
             "negative",
             "normal",
+            "positive"
+          ],
+          "caseSignatures": [
+            "cautionary",
+            "negative",
+            "normal(_:tint:)",
             "positive"
           ]
         }
@@ -3004,6 +3235,12 @@
             "leading",
             "top",
             "trailing"
+          ],
+          "caseSignatures": [
+            "bottom(arrowPosition:)",
+            "leading(arrowPosition:)",
+            "top(arrowPosition:)",
+            "trailing(arrowPosition:)"
           ]
         },
         {
@@ -3079,6 +3316,11 @@
           "name": "TopNavigation.LeadingButton",
           "kind": "struct",
           "summary": "내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다.",
+          "initializers": [
+            {
+              "signature": "init(_:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "body",
@@ -3094,9 +3336,50 @@
           "summary": "TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다."
         },
         {
+          "name": "TopNavigation.Resource.LeadingButtonInfo",
+          "kind": "enum",
+          "summary": "TopNavigation의 좌측에 표시될 내용들의 열거형입니다.",
+          "cases": [
+            "back",
+            "icon",
+            "text"
+          ],
+          "caseSignatures": [
+            "back(action:)",
+            "icon(_:action:)",
+            "text(_:action:)"
+          ]
+        },
+        {
+          "name": "TopNavigation.Resource.TrailingButtonInfo",
+          "kind": "enum",
+          "summary": "TopNavigation의 우측에 표시될 내용들의 열거형입니다.",
+          "cases": [
+            "icon",
+            "text"
+          ],
+          "caseSignatures": [
+            "icon(_:disable:showPushBadge:action:)",
+            "text(_:disable:action:)"
+          ],
+          "modifiers": [
+            {
+              "name": "hash(into:)",
+              "signature": "func hash(into: inout Hasher)",
+              "summary": "해시 값을 생성합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
           "name": "TopNavigation.TrailingIconButton",
           "kind": "struct",
           "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.",
+          "initializers": [
+            {
+              "signature": "init(icon:disable:showPushBadge:action:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "body",
@@ -3110,6 +3393,11 @@
           "name": "TopNavigation.TrailingTextButton",
           "kind": "struct",
           "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.",
+          "initializers": [
+            {
+              "signature": "init(text:disable:action:)"
+            }
+          ],
           "instanceProperties": [
             {
               "name": "body",
