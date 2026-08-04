@@ -42,7 +42,7 @@ struct FallbackViewPreview: View {
                 buttonActionArea: buttonActionArea
             )
         } options: {
-            TextFieldOptionRow("title", text: $title, placeholder: "비우면 타이틀을 표시하지 않아요")
+            TextAreaOptionRow("title", text: $title, placeholder: "비우면 타이틀을 표시하지 않아요")
             TextAreaOptionRow("description", text: $description)
             SegmentedIndexRow(
                 "buttonActionArea",
