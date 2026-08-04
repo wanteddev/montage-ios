@@ -132,6 +132,17 @@ describe("Streamable HTTP transport (POST/GET/DELETE /mcp)", () => {
     await res.text();
   });
 
+  it("answers a malformed JSON body with a JSON-RPC parse error", async () => {
+    const res = await fetch(`${baseUrl}/mcp`, {
+      method: "POST",
+      headers: { "content-type": "application/json", accept: JSON_AND_SSE },
+      body: '{"jsonrpc":"2.0",',
+    });
+    expect(res.status).toBe(400);
+    const body = await readJsonRpc(res);
+    expect((body.error as Record<string, unknown>).code).toBe(-32700);
+  });
+
   it("rejects GET /mcp without a session id", async () => {
     const res = await fetch(`${baseUrl}/mcp`, {
       method: "GET",
