@@ -45,7 +45,9 @@ function renderComponent(c: ComponentRecord): string {
   if (enums.length > 0) {
     lines.push("", "## Enums (variants / sizes / colors)", "");
     for (const e of enums) {
-      const cases = (e.cases ?? []).map((s) => `\`.${s}\``).join(", ");
+      // associated value가 있는 enum은 이름만으로 호출을 쓸 수 없으므로
+      // 파라미터 라벨이 남은 시그니처를 우선 출력한다 (예: `.bottom(offset:)`).
+      const cases = (e.caseSignatures ?? e.cases ?? []).map((s) => `\`.${s}\``).join(", ");
       const summary = e.summary ? ` — ${e.summary}` : "";
       lines.push(`- **${e.name}**${summary}`);
       if (cases) lines.push(`  - cases: ${cases}`);
@@ -57,6 +59,13 @@ function renderComponent(c: ComponentRecord): string {
     for (const t of others) {
       const summary = t.summary ? ` — ${t.summary}` : "";
       lines.push(`- **${t.name}** (\`${t.kind}\`)${summary}`);
+      // 중첩 타입을 만드는 유일한 계약이므로 이니셜라이저를 함께 노출한다
+      // (예: `ActionArea.ButtonInfo.init(text:action:)`).
+      if (t.initializers && t.initializers.length > 0) {
+        for (const init of t.initializers) {
+          lines.push(`  - init \`${t.name}.${init.signature}\``);
+        }
+      }
       if (t.staticMethods && t.staticMethods.length > 0) {
         for (const sm of t.staticMethods) {
           lines.push(`  - static \`${sm.signature}\``);
