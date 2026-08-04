@@ -9,36 +9,46 @@ import SwiftUI
 import Montage
 
 struct FallbackViewPreview: View {
-    @State private var showImage: Bool = true
-    @State private var showTitle: Bool = true
-    @State private var showButton: Bool = true
+    private let buttonActionAreaLabels = ["none", "single", "horizontal", "vertical"]
+
+    @State private var title: String = "타이틀이 들어가요."
+    @State private var description: String = "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요."
+    @State private var buttonActionAreaIndex: Int = 1
+
+    private var buttonActionArea: FallbackView.ButtonActionArea? {
+        switch buttonActionAreaIndex {
+        case 1:
+            return .single(.init(text: "액션", action: {}))
+        case 2:
+            return .horizontal(
+                main: .init(text: "메인 액션", action: {}),
+                alternative: .init(text: "대체 액션", action: {})
+            )
+        case 3:
+            return .vertical(
+                main: .init(text: "메인 액션", action: {}),
+                alternative: .init(text: "대체 액션", action: {})
+            )
+        default:
+            return nil
+        }
+    }
 
     var body: some View {
         PreviewLayout {
             FallbackView(
-                image: showImage ? {
-                    AsyncImage(url: URL(string: "https://static.wanted.co.kr/images/error/lighthouse.png")) {
-                        $0.image?.resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.horizontal, 20)
-                    }
-                    .frame(height: 320)
-                } : nil,
-                title: showTitle ? "타이틀이 들어갈수도 있고, 안들어갈 수도 있어요." : nil,
-                description: "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요."
-            ) {
-                Group {
-                    if showButton {
-                        Button(variant: .outlined, text: "텍스트")
-                    }
-                }
-            }
+                title: title.isEmpty ? nil : title,
+                description: description,
+                buttonActionArea: buttonActionArea
+            )
         } options: {
-            HStack {
-                ToggleOption("Image", isOn: $showImage)
-                ToggleOption("Title", isOn: $showTitle)
-                ToggleOption("Button", isOn: $showButton)
-            }
+            TextAreaOptionRow("title", text: $title, placeholder: "비우면 타이틀을 표시하지 않아요")
+            TextAreaOptionRow("description", text: $description)
+            SegmentedIndexRow(
+                "buttonActionArea",
+                index: $buttonActionAreaIndex,
+                labels: buttonActionAreaLabels
+            )
         }
     }
 }

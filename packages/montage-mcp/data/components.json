@@ -853,12 +853,23 @@
       "summary": "콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(image:title:description:button:)"
+          "signature": "init(title:description:buttonActionArea:)"
         }
       ],
       "modifiers": [],
       "staticMembers": [],
-      "nestedTypes": []
+      "nestedTypes": [
+        {
+          "name": "FallbackView.ButtonActionArea",
+          "kind": "enum",
+          "summary": "하단 버튼 영역의 버튼 구성과 배치를 정의합니다.",
+          "cases": [
+            "horizontal",
+            "single",
+            "vertical"
+          ]
+        }
+      ]
     },
     {
       "slug": "filterbutton",
