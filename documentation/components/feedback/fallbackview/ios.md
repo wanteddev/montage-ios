@@ -17,21 +17,25 @@ FallbackView(
     description: "검색 결과가 없습니다."
 )
 
-// 모든 요소를 사용한 예시
+// 버튼 1개를 사용한 예시
 FallbackView(
     title: "데이터가 없습니다.",
     description: "새로운 항목을 추가해 보세요.",
-    button: {
-        Button(variant: .outlined, color: .assistive, text: "추가하기") {
-            // 버튼 동작
-        }
-    }
+    buttonActionArea: .single(
+        .init(text: "추가하기", action: { addItem() })
+    )
+)
+
+// 버튼 2개를 가로로 배치한 예시
+FallbackView(
+    title: "불러올 수 없어요.",
+    description: "네트워크 상태를 확인해 주세요.",
+    buttonActionArea: .horizontal(
+        main: .init(text: "다시 시도", action: { retry() }),
+        alternative: .init(text: "홈으로", action: { goHome() })
+    )
 )
 ```
-
->  **Note**
->
-> 버튼 영역은 `Assistive` 색상 버튼을 사용합니다. 여러 액션이 필요하면 `HStack`·`VStack`으로 직접 배치해 전달합니다.
 
 ## Topics
 
@@ -39,7 +43,7 @@ FallbackView(
 
 <details>
 
-<summary>``init(title: String?, description: String, button: (() -> any View)?)``</summary>
+<summary>``init(title: String?, description: String, buttonActionArea: ButtonActionArea?)``</summary>
 
 
 FallbackView 컴포넌트를 초기화합니다.
@@ -49,10 +53,10 @@ FallbackView 컴포넌트를 초기화합니다.
   | --- | --- |
   | `title` | 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용 |
   | `description` | 상황을 설명하는 텍스트 |
-  | `button` | 하단에 표시할 버튼 뷰를 반환하는 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `buttonActionArea` | 하단 버튼 영역의 구성, 생략하거나 `nil`을 전달하면 버튼을 표시하지 않음 |
 - **Discussion**
 
-  원하는 레이아웃을 구성하기 위해 제목과 버튼을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 최대 2줄로 표시됩니다.
+  원하는 레이아웃을 구성하기 위해 제목과 버튼 영역을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 최대 2줄로 표시됩니다.
 </details>
 
 ### Instance Properties
@@ -63,6 +67,86 @@ FallbackView 컴포넌트를 초기화합니다.
 
 
 뷰의 내용과 동작을 정의합니다.
+</details>
+
+### Enumerations
+
+<details>
+
+<summary>``enum ButtonActionArea``</summary>
+
+
+하단 버튼 영역의 버튼 구성과 배치를 정의합니다.
+- **Overview**
+
+  버튼은 항상 `Assistive` 색상의 외곽선(`outlined`) 스타일로 표시됩니다.
+#### Structures
+
+<details>
+
+<summary>``struct ButtonInfo``</summary>
+
+
+버튼에 표시할 텍스트와 탭 시 실행할 액션을 정의하는 구조체입니다.
+##### Initializers
+
+<details>
+
+<summary>``init(text: String, action: () -> Void)``</summary>
+
+
+버튼 정보를 초기화합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 버튼에 표시할 텍스트 |
+  | `action` | 버튼 탭 시 실행할 액션 |
+</details>
+
+</details>
+
+#### Enumeration Cases
+
+<details>
+
+<summary>``case horizontal(main: ButtonInfo, alternative: ButtonInfo)``</summary>
+
+
+버튼 2개를 가로로 배치합니다. 대체 버튼이 왼쪽, 주 버튼이 오른쪽에 표시됩니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `main` | 주 버튼 정보 |
+  | `alternative` | 대체 버튼 정보 |
+</details>
+<details>
+
+<summary>``case single(ButtonInfo)``</summary>
+
+
+버튼 1개를 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `buttonInfo` | 버튼 정보 |
+</details>
+<details>
+
+<summary>``case vertical(main: ButtonInfo, alternative: ButtonInfo)``</summary>
+
+
+버튼 2개를 세로로 배치합니다. 주 버튼이 위, 대체 버튼이 아래에 표시됩니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `main` | 주 버튼 정보 |
+  | `alternative` | 대체 버튼 정보 |
+</details>
+
 </details>
 
 ## Relationships
