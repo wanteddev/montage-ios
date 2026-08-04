@@ -21,7 +21,15 @@ export interface NestedTypeRecord {
   name: string;
   kind: string;
   summary?: string;
+  /** Case names without parameter labels (e.g. `bottom`). Always present for enums. */
   cases?: string[];
+  /**
+   * Full case signatures including parameter labels (e.g. `bottom(offset:)`).
+   * Only emitted when at least one case carries associated values, since the
+   * bare name alone is not enough to write the call.
+   */
+  caseSignatures?: string[];
+  initializers?: InitializerRecord[];
   modifiers?: MemberRecord[];
   staticMethods?: MemberRecord[];
   staticProperties?: MemberRecord[];

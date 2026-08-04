@@ -80,6 +80,31 @@ describe("get_component", () => {
     expect(r.content[0]!.text).toMatch(/^# Button/);
   });
 
+  it("renders enum cases with their associated value labels", async () => {
+    // `.bottom`만 노출하면 offset을 넘길 수 있다는 사실을 알 수 없다.
+    const snackBar = await get("get_component").handler({ componentName: "SnackBar" });
+    expect(snackBar.content[0]!.text).toMatch(/`\.bottom\(offset:\)`/);
+    expect(snackBar.content[0]!.text).toMatch(/`\.top\(offset:\)`/);
+
+    const popup = await get("get_component").handler({ componentName: "Popup" });
+    expect(popup.content[0]!.text).toMatch(/`\.fixed\(_:\)`/);
+    // associated value가 없는 case는 이름 그대로 유지된다.
+    expect(popup.content[0]!.text).toMatch(/`\.hug`/);
+  });
+
+  it("keeps bare case names for enums without associated values", async () => {
+    const r = await get("get_component").handler({ componentName: "Button" });
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/`\.solid`/);
+    expect(text).not.toMatch(/`\.solid\(/);
+  });
+
+  it("renders initializers of nested types", async () => {
+    const r = await get("get_component").handler({ componentName: "ActionArea" });
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/ActionArea\.ButtonInfo\.init\(text:action:\)/);
+  });
+
   it("returns error for unknown component", async () => {
     const r = await get("get_component").handler({ componentName: "Nope" });
     expect(r.isError).toBe(true);
