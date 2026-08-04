@@ -11,7 +11,7 @@ import SwiftUI
 /// 사용자, 회사, 학원의 프로필 이미지를 표시하는 아바타 컴포넌트입니다.
 ///
 /// 원형 또는 둥근 모서리 사각형 형태로 프로필 이미지를 표시합니다.
-/// 이미지 URL이 유효하지 않을 경우 각 유형별 기본 이미지를 표시합니다.
+/// 이미지 URL이 유효하지 않을 경우 각 유형별 기본 아이콘을 표시합니다.
 ///
 /// ```swift
 /// // 기본 사용자 아바타
@@ -45,14 +45,14 @@ public struct Avatar: View {
             }
         }
 
-        fileprivate var placeholderImageName: String {
+        fileprivate var placeholderIcon: Icon {
             switch self {
             case .person:
-                "avatarPlaceholderPerson"
+                .personFill
             case .company:
-                "avatarPlaceholderCompany"
+                .companyFill
             case .academy:
-                "avatarPlaceholderAcademy"
+                .graduationFill
             }
         }
         
@@ -270,16 +270,30 @@ private extension Avatar {
                     .aspectRatio(contentMode: contentMode)
                     .background(SwiftUI.Color.semantic(.staticWhite))
             } placeholder: {
-                Image(variant.placeholderImageName, bundle: .module)
-                    .resizable()
-                    .background(
-                        SwiftUI.Color.semantic(.backgroundNeutralPrimary)
-                    )
+                placeholderContent
             }
         case .image(let image):
             image.resizable()
                 .aspectRatio(contentMode: contentMode)
         }
+    }
+
+    /// 이미지를 불러오지 못했을 때 표시하는 아이콘 기반 fallback입니다.
+    ///
+    /// 반투명한 `surfaceNeutralStrong` 위에 아이콘을 올리므로,
+    /// 아래에 불투명한 `surfaceNeutralPrimary` 배경 레이어를 함께 깔아 줍니다.
+    var placeholderContent: some View {
+        Image.icon(variant.placeholderIcon)
+            .resizable()
+            .frame(width: placeholderIconSize, height: placeholderIconSize)
+            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(SwiftUI.Color.semantic(.surfaceNeutralStrong))
+            .background(SwiftUI.Color.semantic(.surfaceNeutralPrimary))
+    }
+
+    var placeholderIconSize: CGFloat {
+        size.containerSize.width / 1.5
     }
 
     var resolvedCornerRadius: CGFloat {
