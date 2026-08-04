@@ -1,5 +1,10 @@
 import { randomUUID } from "node:crypto";
-import express, { type Express, type Request, type Response } from "express";
+import express, {
+  type Express,
+  type NextFunction,
+  type Request,
+  type Response,
+} from "express";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
@@ -143,6 +148,18 @@ export function createApp(config: RuntimeConfig): Express {
 
   app.get("/mcp", handleStreamableSessionRequest);
   app.delete("/mcp", handleStreamableSessionRequest);
+
+  // express.json() rejects a malformed body before the route handlers run, so their
+  // try/catch never sees it and Express would answer with its default HTML error page.
+  // Translate it into a JSON-RPC parse error instead.
+  app.use("/mcp", (err: unknown, _req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof SyntaxError && "body" in err) {
+      logDebug("/mcp rejected — malformed JSON body");
+      res.status(400).json(jsonRpcError(-32700, "parse error: request body is not valid JSON"));
+      return;
+    }
+    next(err);
+  });
 
   // --- Legacy HTTP+SSE (deprecated, kept for backward compatibility) --------
 
