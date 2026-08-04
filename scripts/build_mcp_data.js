@@ -166,6 +166,15 @@ function extractMembers(json, componentDir, sectionTitle) {
   return out;
 }
 
+/**
+ * 중첩 타입으로 수집할 심볼 종류.
+ *
+ * DocC는 자식을 가진 심볼에만 디렉토리를 만들기 때문에 대부분은 타입이지만,
+ * associated value를 가진 enum case처럼 자식이 생기는 멤버도 있을 수 있다.
+ * 타입이 아닌 멤버가 `nestedTypes`에 섞이지 않도록 종류로 걸러낸다.
+ */
+const NESTED_TYPE_KINDS = new Set(['struct', 'enum', 'class', 'protocol', 'actor', 'typealias']);
+
 function extractNestedTypes(componentDir, componentName) {
   if (!fs.existsSync(componentDir)) return [];
   const entries = fs.readdirSync(componentDir, { withFileTypes: true });
@@ -183,6 +192,13 @@ function extractNestedTypes(componentDir, componentName) {
     }
     const symbolKind = typeJson?.metadata?.symbolKind;
     if (!symbolKind) continue;
+    const nestedDir = path.join(componentDir, slug);
+    // 타입이 아닌 심볼(enum case 등)은 nestedTypes에 넣지 않되, 그 하위에 있는
+    // 실제 타입은 놓치지 않도록 재귀는 그대로 수행한다.
+    if (!NESTED_TYPE_KINDS.has(symbolKind)) {
+      types.push(...extractNestedTypes(nestedDir, componentName));
+      continue;
+    }
     const title = typeJson?.metadata?.title || slug;
     const record = {
       name: title,
@@ -192,15 +208,22 @@ function extractNestedTypes(componentDir, componentName) {
     if (symbolKind === 'enum') {
       const casesSec = findSection(typeJson, (t) => t === 'Enumeration Cases' || t === 'Cases');
       if (casesSec) {
-        record.cases = (casesSec.identifiers || []).map((id) => {
-          const t = tail(id);
-          return t.replace(/\(.*\)$/, '');
-        });
+        const caseTails = (casesSec.identifiers || []).map((id) => tail(id));
+        record.cases = caseTails.map((t) => t.replace(/\(.*\)$/, ''));
+        // associated value가 있는 case는 이름만으로는 호출 형태를 알 수 없으므로
+        // 파라미터 라벨이 남은 전체 시그니처를 함께 노출한다.
+        // (`cases`는 기존 소비자 호환을 위해 이름만 유지)
+        if (caseTails.some((t) => t.includes('('))) {
+          record.caseSignatures = caseTails;
+        }
       }
     }
+    // 중첩 타입의 이니셜라이저는 그 타입을 만드는 유일한 계약이므로 함께 노출한다.
+    // (예: `FallbackView.ButtonActionArea.ButtonInfo.init(text:action:)`)
+    const inits = extractInitializers(typeJson);
+    if (inits.length > 0) record.initializers = inits;
     // Static factories like `TopNavigation.LeadingButton.back(action:)` live as
     // "Type Methods" / "Type Properties" inside the nested-type subdir.
-    const nestedDir = path.join(componentDir, slug);
     if (fs.existsSync(nestedDir)) {
       const staticMethods = extractMembers(typeJson, nestedDir, 'Type Methods');
       const staticProps = extractMembers(typeJson, nestedDir, 'Type Properties');
@@ -212,6 +235,8 @@ function extractNestedTypes(componentDir, componentName) {
       if (instanceProps.length > 0) record.instanceProperties = instanceProps;
     }
     types.push(record);
+    // 2단 이상 중첩된 타입(예: `ButtonActionArea` 안의 `ButtonInfo`)도 수집한다.
+    types.push(...extractNestedTypes(nestedDir, componentName));
   }
   return types;
 }
