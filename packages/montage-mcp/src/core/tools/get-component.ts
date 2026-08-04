@@ -51,6 +51,14 @@ function renderComponent(c: ComponentRecord): string {
       const summary = e.summary ? ` — ${e.summary}` : "";
       lines.push(`- **${e.name}**${summary}`);
       if (cases) lines.push(`  - cases: ${cases}`);
+      // enum도 직접 만들어야 하는 이니셜라이저가 있으면 노출한다. 합성된
+      // `init(rawValue:)`는 생성기(`scripts/build_mcp_data.js`)에서 이미 걸러지므로
+      // 여기 남는 것은 실제로 알아야 하는 API뿐이다.
+      if (e.initializers && e.initializers.length > 0) {
+        for (const init of e.initializers) {
+          lines.push(`  - init \`${e.name}.${init.signature}\``);
+        }
+      }
     }
   }
 

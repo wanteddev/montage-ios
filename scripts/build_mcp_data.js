@@ -220,7 +220,13 @@ function extractNestedTypes(componentDir, componentName) {
     }
     // 중첩 타입의 이니셜라이저는 그 타입을 만드는 유일한 계약이므로 함께 노출한다.
     // (예: `FallbackView.ButtonActionArea.ButtonInfo.init(text:action:)`)
-    const inits = extractInitializers(typeJson);
+    //
+    // 단, raw value를 가진 enum에 컴파일러가 합성하는 `init(rawValue:)`는 제외한다.
+    // 소비자가 알아야 할 API가 아니면서 색인 전반에 반복돼 노이즈만 늘리고,
+    // enum이 `String` 기반이라는 사실은 case 목록으로 이미 드러난다.
+    const inits = extractInitializers(typeJson).filter(
+      (i) => !(symbolKind === 'enum' && i.signature === 'init(rawValue:)'),
+    );
     if (inits.length > 0) record.initializers = inits;
     // Static factories like `TopNavigation.LeadingButton.back(action:)` live as
     // "Type Methods" / "Type Properties" inside the nested-type subdir.

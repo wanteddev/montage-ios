@@ -105,6 +105,16 @@ describe("get_component", () => {
     expect(text).toMatch(/ActionArea\.ButtonInfo\.init\(text:action:\)/);
   });
 
+  it("omits the synthesized init(rawValue:) of raw-value enums", async () => {
+    // `Button.Variant`·`Button.Size` 등은 String raw value를 가지므로 컴파일러가
+    // `init(rawValue:)`를 합성한다. 소비자가 알아야 할 API가 아니라 노이즈이므로
+    // 생성기 단계에서 제외되고, 따라서 응답에도 나타나지 않아야 한다.
+    for (const componentName of ["Button", "Chip", "TextButton"]) {
+      const r = await get("get_component").handler({ componentName });
+      expect(r.content[0]!.text).not.toMatch(/init\(rawValue:\)/);
+    }
+  });
+
   it("returns error for unknown component", async () => {
     const r = await get("get_component").handler({ componentName: "Nope" });
     expect(r.isError).toBe(true);
