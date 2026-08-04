@@ -14,11 +14,21 @@ function escapeHtml(value: string): string {
 
 export function renderIndexPage(_origin: string): string {
   const safeOrigin = escapeHtml(PUBLIC_ORIGIN);
+  const mcpUrl = `${safeOrigin}/mcp`;
   const sseUrl = `${safeOrigin}/sse`;
-  const remoteAddCmd = `claude mcp add --transport sse montage-ios ${sseUrl}`;
+  const remoteAddCmd = `claude mcp add --transport http montage-ios ${mcpUrl}`;
   const cursorJson = `{
   "mcpServers": {
     "montage-ios": {
+      "type": "http",
+      "url": "${mcpUrl}"
+    }
+  }
+}`;
+  const legacySseJson = `{
+  "mcpServers": {
+    "montage-ios": {
+      "type": "sse",
       "url": "${sseUrl}"
     }
   }
@@ -107,18 +117,25 @@ export function renderIndexPage(_origin: string): string {
 
   <p>이 서버는 AI 코딩 어시스턴트(Claude Code, Cursor 등)에 Montage 컴포넌트 문서·디자인 토큰·아이콘·Figma 매핑 도구를 제공합니다. 아래 안내를 따라 클라이언트에 등록하면 바로 사용할 수 있습니다.</p>
 
-  <h2>1. Claude Code (원격 SSE)</h2>
-  <p>가장 권장되는 방식. 항상 최신 데이터를 사용합니다.</p>
+  <h2>1. Claude Code (원격 Streamable HTTP)</h2>
+  <p>가장 권장되는 방식. 항상 최신 데이터를 사용하며, 터미널·데스크탑 앱 모두 지원합니다.</p>
   <div class="block">
     <pre id="cmd-remote">${escapeHtml(remoteAddCmd)}</pre>
     <button class="copy" data-target="cmd-remote">복사</button>
   </div>
 
   <h2>2. Cursor / 기타 MCP 클라이언트</h2>
-  <p>설정 파일에 SSE 엔드포인트를 추가합니다.</p>
+  <p>설정 파일에 Streamable HTTP 엔드포인트를 추가합니다.</p>
   <div class="block">
     <pre id="cmd-cursor">${escapeHtml(cursorJson)}</pre>
     <button class="copy" data-target="cmd-cursor">복사</button>
+  </div>
+
+  <h2>3. 레거시 SSE (하위 호환)</h2>
+  <p>Streamable HTTP를 지원하지 않는 구버전 클라이언트만 사용하세요. MCP 스펙에서 폐기된 방식이며, 새 설정에는 권장하지 않습니다.</p>
+  <div class="block">
+    <pre id="cmd-sse">${escapeHtml(legacySseJson)}</pre>
+    <button class="copy" data-target="cmd-sse">복사</button>
   </div>
 
   <h2>제공 도구</h2>
@@ -142,8 +159,11 @@ export function renderIndexPage(_origin: string): string {
   <h2>엔드포인트</h2>
   <ul>
     <li><code>GET /</code> — 이 안내 페이지</li>
-    <li><code>GET /sse</code> — MCP SSE 스트림</li>
-    <li><code>POST /messages?sessionId=...</code> — MCP 메시지 수신</li>
+    <li><code>POST /mcp</code> — MCP Streamable HTTP 요청</li>
+    <li><code>GET /mcp</code> — MCP Streamable HTTP 알림 스트림</li>
+    <li><code>DELETE /mcp</code> — MCP 세션 종료</li>
+    <li><code>GET /sse</code> — MCP SSE 스트림 (레거시)</li>
+    <li><code>POST /messages?sessionId=...</code> — MCP 메시지 수신 (레거시)</li>
     <li><code>GET /healthz</code> — 헬스체크 JSON</li>
   </ul>
 </main>

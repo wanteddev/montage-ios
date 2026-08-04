@@ -25,8 +25,10 @@ Provides AI coding assistants with access to Montage component documentation, de
 ### A. As a remote MCP
 
 ```bash
-claude mcp add --transport sse montage-ios https://<your-host>/sse
+claude mcp add --transport http montage-ios https://<your-host>/mcp
 ```
+
+The legacy HTTP+SSE transport (`--transport sse`, `https://<your-host>/sse`) is still served for backward compatibility, but it is deprecated in the MCP spec and unsupported by some clients — prefer Streamable HTTP for new setups.
 
 Wanted Lab employees: see the internal Confluence/Slack for the official endpoint URL. External users should self-host (option B below).
 

@@ -25,8 +25,10 @@ Wanted Lab의 [Montage iOS 디자인 시스템](https://github.com/wanteddev/mon
 ### A. 원격 MCP로 사용
 
 ```bash
-claude mcp add --transport sse montage-ios https://<your-host>/sse
+claude mcp add --transport http montage-ios https://<your-host>/mcp
 ```
+
+레거시 HTTP+SSE 전송(`--transport sse`, `https://<your-host>/sse`)도 하위 호환을 위해 계속 제공되지만, MCP 스펙에서 폐기됐고 일부 클라이언트는 지원하지 않습니다. 새로 설정할 때는 Streamable HTTP를 사용하세요.
 
 Wanted Lab 구성원은 사내 Confluence/Slack에서 공식 엔드포인트 URL을 확인하세요. 외부 사용자는 아래 B 옵션으로 self-host 하세요.
 
