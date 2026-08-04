@@ -87,7 +87,7 @@ public struct FallbackView: View {
     /// FallbackView 컴포넌트를 초기화합니다.
     ///
     /// 원하는 레이아웃을 구성하기 위해 제목과 버튼 영역을 선택적으로 제공할 수 있습니다.
-    /// 설명은 필수이며, 최대 2줄로 표시됩니다.
+    /// 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
     ///
     /// - Parameters:
     ///   - title: 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용
@@ -118,6 +118,7 @@ public struct FallbackView: View {
                             Text(title)
                                 .paragraph(variant: .headline1, weight: .bold)
                                 .multilineTextAlignment(.center)
+                                .lineLimit(2)
                             Spacer()
                         }
                     }
