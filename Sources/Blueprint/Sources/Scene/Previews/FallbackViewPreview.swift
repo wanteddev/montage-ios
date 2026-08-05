@@ -44,10 +44,10 @@ struct FallbackViewPreview: View {
         PreviewLayout {
             FallbackView(
                 title: title.isEmpty ? nil : title,
-                description: description,
-                buttonActionArea: buttonActionArea,
-                padding: padding
+                description: description
             )
+            .buttonActionArea(buttonActionArea)
+            .padding(padding)
         } options: {
             TextAreaOptionRow("title", text: $title, placeholder: "비우면 타이틀을 표시하지 않아요")
             TextAreaOptionRow("description", text: $description)
