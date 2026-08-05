@@ -894,7 +894,7 @@
       "summary": "콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:description:buttonActionArea:)"
+          "signature": "init(title:description:buttonActionArea:padding:)"
         }
       ],
       "modifiers": [],
@@ -923,6 +923,21 @@
             {
               "signature": "init(text:action:)"
             }
+          ]
+        },
+        {
+          "name": "FallbackView.Padding",
+          "kind": "enum",
+          "summary": "콘텐츠 영역의 상하 여백 크기를 정의합니다.",
+          "cases": [
+            "compact",
+            "custom",
+            "normal"
+          ],
+          "caseSignatures": [
+            "compact",
+            "custom(_:)",
+            "normal"
           ]
         }
       ]

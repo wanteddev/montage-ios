@@ -35,6 +35,12 @@ FallbackView(
         alternative: .init(text: "홈으로", action: { goHome() })
     )
 )
+
+// 상하 여백을 좁게 적용한 예시
+FallbackView(
+    description: "검색 결과가 없습니다.",
+    padding: .compact
+)
 ```
 
 ## Topics
@@ -43,7 +49,7 @@ FallbackView(
 
 <details>
 
-<summary>``init(title: String?, description: String, buttonActionArea: ButtonActionArea?)``</summary>
+<summary>``init(title: String?, description: String, buttonActionArea: ButtonActionArea?, padding: Padding)``</summary>
 
 
 FallbackView 컴포넌트를 초기화합니다.
@@ -54,9 +60,12 @@ FallbackView 컴포넌트를 초기화합니다.
   | `title` | 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용 |
   | `description` | 상황을 설명하는 텍스트 |
   | `buttonActionArea` | 하단 버튼 영역의 구성, 생략하거나 `nil`을 전달하면 버튼을 표시하지 않음 |
+  | `padding` | 콘텐츠 영역의 상하 여백 크기, 생략하면 기본값으로 `.normal` 적용 |
 - **Discussion**
 
   원하는 레이아웃을 구성하기 위해 제목과 버튼 영역을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
+
+  콘텐츠는 상위 뷰의 세로 중앙에 배치되며, `padding`으로 확보할 최소 상하 여백을 조절할 수 있습니다.
 </details>
 
 ### Instance Properties
@@ -145,6 +154,40 @@ FallbackView 컴포넌트를 초기화합니다.
   | --- | --- |
   | `main` | 주 버튼 정보 |
   | `alternative` | 대체 버튼 정보 |
+</details>
+
+</details>
+<details>
+
+<summary>``enum Padding``</summary>
+
+
+콘텐츠 영역의 상하 여백 크기를 정의합니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case compact``</summary>
+
+
+좁은 여백(80)을 적용합니다. 화면 일부 영역만 대체할 때 사용합니다.
+</details>
+<details>
+
+<summary>``case custom(CGFloat)``</summary>
+
+
+커스텀 여백
+- **Discussion**
+
+  `normal`, `compact`로 표현할 수 없는 레이아웃에서만 사용합니다. 디자인 시스템의 기본 여백을 우선 사용하는 것을 권장합니다.
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+
+기본 여백(160)을 적용합니다. 화면 전체를 대체할 때 사용합니다.
 </details>
 
 </details>
