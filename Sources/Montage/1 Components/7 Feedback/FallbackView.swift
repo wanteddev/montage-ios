@@ -90,17 +90,11 @@ public struct FallbackView: View {
         case normal
         /// 좁은 여백(80)을 적용합니다. 화면 일부 영역만 대체할 때 사용합니다.
         case compact
-        /// 커스텀 여백
-        ///
-        /// `normal`, `compact`로 표현할 수 없는 레이아웃에서만 사용합니다.
-        /// 디자인 시스템의 기본 여백을 우선 사용하는 것을 권장합니다.
-        case custom(CGFloat)
 
         internal var verticalSpacing: CGFloat {
             switch self {
             case .normal: 160
             case .compact: 80
-            case let .custom(value): value
             }
         }
     }
@@ -170,7 +164,6 @@ public struct FallbackView: View {
                     buttonArea(buttonActionArea)
                 }
             }
-            .padding(.vertical, .spacing12)
 
             Spacer(minLength: padding.verticalSpacing)
         }

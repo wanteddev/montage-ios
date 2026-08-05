@@ -10,13 +10,12 @@ import Montage
 
 struct FallbackViewPreview: View {
     private let buttonActionAreaLabels = ["none", "single", "horizontal", "vertical"]
-    private let paddingLabels = ["normal", "compact", "custom"]
+    private let paddingLabels = ["normal", "compact"]
 
     @State private var title: String = "타이틀이 들어가요."
     @State private var description: String = "상황에 대한 설명이 들어가요.\n설명은 최대 두 줄로 작성해요."
     @State private var buttonActionAreaIndex: Int = 1
     @State private var paddingIndex: Int = 0
-    @State private var customPadding: CGFloat = 40
 
     private var buttonActionArea: FallbackView.ButtonActionArea? {
         switch buttonActionAreaIndex {
@@ -38,14 +37,7 @@ struct FallbackViewPreview: View {
     }
 
     private var padding: FallbackView.Padding {
-        switch paddingIndex {
-        case 1:
-            return .compact
-        case 2:
-            return .custom(customPadding)
-        default:
-            return .normal
-        }
+        paddingIndex == 1 ? .compact : .normal
     }
 
     var body: some View {
@@ -69,9 +61,6 @@ struct FallbackViewPreview: View {
                 index: $paddingIndex,
                 labels: paddingLabels
             )
-            if paddingIndex == 2 {
-                SliderOptionRow("customPadding", value: $customPadding, in: 0...200, step: 1)
-            }
         }
     }
 }
