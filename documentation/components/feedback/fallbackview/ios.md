@@ -20,17 +20,19 @@ FallbackView(
 // 버튼 1개를 사용한 예시
 FallbackView(
     title: "데이터가 없습니다.",
-    description: "새로운 항목을 추가해 보세요.",
-    buttonActionArea: .single(
-        .init(text: "추가하기", action: { addItem() })
-    )
+    description: "새로운 항목을 추가해 보세요."
+)
+.buttonActionArea(
+    .single(.init(text: "추가하기", action: { addItem() }))
 )
 
 // 버튼 2개를 가로로 배치한 예시
 FallbackView(
     title: "불러올 수 없어요.",
-    description: "네트워크 상태를 확인해 주세요.",
-    buttonActionArea: .horizontal(
+    description: "네트워크 상태를 확인해 주세요."
+)
+.buttonActionArea(
+    .horizontal(
         main: .init(text: "다시 시도", action: { retry() }),
         alternative: .init(text: "홈으로", action: { goHome() })
     )
@@ -38,9 +40,9 @@ FallbackView(
 
 // 상하 여백을 좁게 적용한 예시
 FallbackView(
-    description: "검색 결과가 없습니다.",
-    padding: .compact
+    description: "검색 결과가 없습니다."
 )
+.padding(.compact)
 ```
 
 ## Topics
@@ -49,7 +51,7 @@ FallbackView(
 
 <details>
 
-<summary>``init(title: String?, description: String, buttonActionArea: ButtonActionArea?, padding: Padding)``</summary>
+<summary>``init(title: String?, description: String)``</summary>
 
 
 FallbackView 컴포넌트를 초기화합니다.
@@ -59,13 +61,11 @@ FallbackView 컴포넌트를 초기화합니다.
   | --- | --- |
   | `title` | 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용 |
   | `description` | 상황을 설명하는 텍스트 |
-  | `buttonActionArea` | 하단 버튼 영역의 구성, 생략하거나 `nil`을 전달하면 버튼을 표시하지 않음 |
-  | `padding` | 콘텐츠 영역의 상하 여백 크기, 생략하면 기본값으로 `.normal` 적용 |
 - **Discussion**
 
-  원하는 레이아웃을 구성하기 위해 제목과 버튼 영역을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
+  원하는 레이아웃을 구성하기 위해 제목을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
 
-  콘텐츠는 상위 뷰의 세로 중앙에 배치되며, `padding`으로 확보할 최소 상하 여백을 조절할 수 있습니다.
+  하단 버튼 영역과 상하 여백은 [buttonActionArea(_:)](/documentation/montage/fallbackview/buttonactionarea(_:).md), [padding(_:)](/documentation/montage/fallbackview/padding(_:).md) 수정자로 구성합니다.
 </details>
 
 ### Instance Properties
@@ -76,6 +76,42 @@ FallbackView 컴포넌트를 초기화합니다.
 
 
 뷰의 내용과 동작을 정의합니다.
+</details>
+
+### Instance Methods
+
+<details>
+
+<summary>``func buttonActionArea(ButtonActionArea?) -> FallbackView``</summary>
+
+
+하단 버튼 영역의 구성을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `buttonActionArea` | 하단 버튼 영역의 구성, `nil`을 전달하면 버튼을 표시하지 않음 |
+- **Return Value**
+
+  수정된 FallbackView 인스턴스
+</details>
+<details>
+
+<summary>``func padding(Padding) -> FallbackView``</summary>
+
+
+콘텐츠 영역의 상하 여백 크기를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `padding` | 콘텐츠 영역의 상하 여백 크기 |
+- **Return Value**
+
+  수정된 FallbackView 인스턴스
+- **Discussion**
+
+  콘텐츠는 상위 뷰의 세로 중앙에 배치되며, 이 여백은 상위 뷰가 충분히 크지 않을 때 확보할 최소 여백입니다.
 </details>
 
 ### Enumerations

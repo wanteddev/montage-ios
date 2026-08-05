@@ -894,10 +894,23 @@
       "summary": "콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:description:buttonActionArea:padding:)"
+          "signature": "init(title:description:)"
         }
       ],
-      "modifiers": [],
+      "modifiers": [
+        {
+          "name": "buttonActionArea(_:)",
+          "signature": "func buttonActionArea(ButtonActionArea?) -> FallbackView",
+          "summary": "하단 버튼 영역의 구성을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "padding(_:)",
+          "signature": "func padding(Padding) -> FallbackView",
+          "summary": "콘텐츠 영역의 상하 여백 크기를 설정합니다.",
+          "kind": "method"
+        }
+      ],
       "staticMembers": [],
       "nestedTypes": [
         {
