@@ -931,12 +931,6 @@
           "summary": "콘텐츠 영역의 상하 여백 크기를 정의합니다.",
           "cases": [
             "compact",
-            "custom",
-            "normal"
-          ],
-          "caseSignatures": [
-            "compact",
-            "custom(_:)",
             "normal"
           ]
         }

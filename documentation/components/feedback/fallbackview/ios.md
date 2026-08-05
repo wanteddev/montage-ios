@@ -174,16 +174,6 @@ FallbackView 컴포넌트를 초기화합니다.
 </details>
 <details>
 
-<summary>``case custom(CGFloat)``</summary>
-
-
-커스텀 여백
-- **Discussion**
-
-  `normal`, `compact`로 표현할 수 없는 레이아웃에서만 사용합니다. 디자인 시스템의 기본 여백을 우선 사용하는 것을 권장합니다.
-</details>
-<details>
-
 <summary>``case normal``</summary>
 
 
