@@ -313,8 +313,7 @@ public struct TopNavigation: View {
         @State private var totalSizeOfTrailings: CGSize = .zero
         @State private var internalSearchTerm = ""
         @State private var internalFocused = false
-        @FocusState private var focusState: Bool
-        
+
         private var searchTerm: Binding<String> {
             externalSearchTerm ?? $internalSearchTerm
         }
@@ -404,68 +403,13 @@ public struct TopNavigation: View {
 
         @ViewBuilder
         private var searchField: some View {
-            HStack(alignment: .center, spacing: 4) {
-                Image.icon(.search)
-                    .resizable()
-                    .foregroundStyle(SwiftUI.Color.semantic( .foregroundNeutralQuaternary))
-                    .frame(width: 20, height: 20)
-                    .padding(.horizontal, 2)
-                
-                ZStack(alignment: .trailing) {
-                    SwiftUI.TextField(
-                        "",
-                        text: searchTerm,
-                        prompt: {
-                            if let searchPlaceholder {
-                                Text(searchPlaceholder)
-                                    .typography(variant: .body1, weight: .regular, semantic: .foregroundNeutralQuaternary)
-                            } else {
-                                nil
-                            }
-                        }()
-                    )
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-                    .submitLabel(.search)
-                    .onSubmit(onSubmit ?? {})
-                    .font(.font(variant: .body1, weight: .regular))
-                    .foregroundStyle(SwiftUI.Color.semantic( .foregroundNeutralPrimary))
-                    .frame(height: 24)
-                    .frame(maxWidth: .infinity)
-                    .focused($focusState)
-                    .onChange(of: focused.wrappedValue) {
-                        if focusState != $0 {
-                            focusState = $0
-                        }
-                    }
-                    .onChange(of: $focusState.wrappedValue) {
-                        if focused.wrappedValue != $0 {
-                            focused.wrappedValue = $0
-                            onSearchFocusChange?($0)
-                        }
-                    }
-                    .onChange(of: searchTerm.wrappedValue) {
-                        onSearchTextChange?($0)
-                    }
-                    
-                    if searchTerm.wrappedValue.isNotEmpty {
-                        SwiftUI.Button {
-                            searchTerm.wrappedValue = ""
-                        } label: {
-                            Image.icon(.circleCloseFill)
-                                .resizable()
-                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralQuaternary))
-                                .frame(width: 20, height: 20)
-                        }
-                    }
-                }
-            }
-            .padding(8)
-            .background {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
-            }
-            .padding(.vertical, 8)
+            SearchField(text: searchTerm)
+                .placeholder(searchPlaceholder)
+                .focused(focused)
+                .onSubmit { onSubmit?() }
+                .onTextChange { onSearchTextChange?($0) }
+                .onFocusChange { onSearchFocusChange?($0) }
+                .padding(.vertical, 8)
         }
     }
     

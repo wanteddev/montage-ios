@@ -2164,6 +2164,90 @@
       ]
     },
     {
+      "slug": "searchfield",
+      "name": "SearchField",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct SearchField",
+      "summary": "검색어 입력을 위한 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(text:)"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "disable(_:)",
+          "signature": "func disable(Bool) -> SearchField",
+          "summary": "검색 필드의 활성화 상태를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "focused(_:)",
+          "signature": "func focused(Binding<Bool>) -> SearchField",
+          "summary": "검색 필드의 포커스 상태를 외부 바인딩과 연결합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onFocusChange(_:)",
+          "signature": "func onFocusChange((Bool) -> Void) -> SearchField",
+          "summary": "포커스 상태가 변경될 때 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onSubmit(_:)",
+          "signature": "func onSubmit(() -> Void) -> SearchField",
+          "summary": "검색어 제출 시 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onTextChange(_:)",
+          "signature": "func onTextChange((String) -> Void) -> SearchField",
+          "summary": "검색어가 변경될 때마다 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "placeholder(_:)",
+          "signature": "func placeholder(String?) -> SearchField",
+          "summary": "검색어가 없을 때 표시할 플레이스홀더를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> SearchField",
+          "summary": "검색 필드의 사이즈를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "variant(_:)",
+          "signature": "func variant(Variant) -> SearchField",
+          "summary": "검색 필드의 스타일을 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "SearchField.Size",
+          "kind": "enum",
+          "summary": "검색 필드의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
+        },
+        {
+          "name": "SearchField.Variant",
+          "kind": "enum",
+          "summary": "검색 필드의 스타일을 정의합니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "sectionheader",
       "name": "SectionHeader",
       "category": "contents",

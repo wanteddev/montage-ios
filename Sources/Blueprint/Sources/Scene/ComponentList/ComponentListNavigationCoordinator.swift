@@ -43,6 +43,7 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .snackbar: SnackBarPreview()
         case .tooltip: TooltipPreview()
         case .actionArea: ActionAreaPreview()
+        case .searchField: SearchFieldPreview()
         case .textArea: TextAreaPreview()
         case .textField: TextFieldPreview()
         case .formControl: FormControlPreview()
