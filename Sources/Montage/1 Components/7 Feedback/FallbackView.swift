@@ -37,6 +37,12 @@ import SwiftUI
 ///         alternative: .init(text: "홈으로", action: { goHome() })
 ///     )
 /// )
+///
+/// // 상하 여백을 좁게 적용한 예시
+/// FallbackView(
+///     description: "검색 결과가 없습니다.",
+///     padding: .compact
+/// )
 /// ```
 public struct FallbackView: View {
 
@@ -78,29 +84,56 @@ public struct FallbackView: View {
         }
     }
 
+    /// 콘텐츠 영역의 상하 여백 크기를 정의합니다.
+    public enum Padding {
+        /// 기본 여백(160)을 적용합니다. 화면 전체를 대체할 때 사용합니다.
+        case normal
+        /// 좁은 여백(80)을 적용합니다. 화면 일부 영역만 대체할 때 사용합니다.
+        case compact
+        /// 커스텀 여백
+        ///
+        /// `normal`, `compact`로 표현할 수 없는 레이아웃에서만 사용합니다.
+        /// 디자인 시스템의 기본 여백을 우선 사용하는 것을 권장합니다.
+        case custom(CGFloat)
+
+        internal var verticalSpacing: CGFloat {
+            switch self {
+            case .normal: 160
+            case .compact: 80
+            case let .custom(value): value
+            }
+        }
+    }
+
     // MARK: - Initializers
 
     private let title: String?
     private let description: String
     private let buttonActionArea: ButtonActionArea?
+    private let padding: Padding
 
     /// FallbackView 컴포넌트를 초기화합니다.
     ///
     /// 원하는 레이아웃을 구성하기 위해 제목과 버튼 영역을 선택적으로 제공할 수 있습니다.
     /// 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
     ///
+    /// 콘텐츠는 상위 뷰의 세로 중앙에 배치되며, `padding`으로 확보할 최소 상하 여백을 조절할 수 있습니다.
+    ///
     /// - Parameters:
     ///   - title: 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용
     ///   - description: 상황을 설명하는 텍스트
     ///   - buttonActionArea: 하단 버튼 영역의 구성, 생략하거나 `nil`을 전달하면 버튼을 표시하지 않음
+    ///   - padding: 콘텐츠 영역의 상하 여백 크기, 생략하면 기본값으로 `.normal` 적용
     public init(
         title: String? = nil,
         description: String,
-        buttonActionArea: ButtonActionArea? = nil
+        buttonActionArea: ButtonActionArea? = nil,
+        padding: Padding = .normal
     ) {
         self.title = title
         self.description = description
         self.buttonActionArea = buttonActionArea
+        self.padding = padding
     }
 
     // MARK: - Body
@@ -108,7 +141,7 @@ public struct FallbackView: View {
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .center, spacing: .zero) {
-            Spacer()
+            Spacer(minLength: padding.verticalSpacing)
 
             VStack(spacing: .spacing24) {
                 VStack(spacing: .spacing12) {
@@ -139,7 +172,7 @@ public struct FallbackView: View {
             }
             .padding(.vertical, .spacing12)
 
-            Spacer()
+            Spacer(minLength: padding.verticalSpacing)
         }
     }
 
