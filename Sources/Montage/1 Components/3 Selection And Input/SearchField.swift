@@ -192,7 +192,9 @@ private extension SearchField {
             .onTapGesture {
                 focusState = true
             }
-            .allowsHitTesting(disable == false)
+            // allowsHitTesting은 포인터 입력만 막아 보조 기술에 비활성 상태가 전달되지 않는다.
+            // disabled를 써야 VoiceOver가 "사용 안 함"으로 읽고 포커스 이동도 함께 차단된다.
+            .disabled(disable)
     }
 
     var contentRow: some View {
@@ -221,9 +223,20 @@ private extension SearchField {
                 .onChange(of: text) { newValue in
                     onTextChange?(newValue)
                 }
+                // 비활성 상태에서는 외부 바인딩이 포커스를 켜지 못하게 막는다.
+                // (막지 않으면 disable인 필드에 키보드가 올라온다)
                 .onChange(of: focused.wrappedValue) { newValue in
-                    if focusState != newValue {
-                        focusState = newValue
+                    let target = disable ? false : newValue
+                    if focusState != target {
+                        focusState = target
+                    }
+                }
+                // 비활성화되면 열려 있던 포커스를 내리고, 다시 활성화되면 바인딩이 요청한 포커스를 반영한다.
+                // (활성화 방향을 처리하지 않으면 focused == true인데 포커스가 없는 상태로 남는다)
+                .onChange(of: disable) { isDisabled in
+                    let target = isDisabled ? false : focused.wrappedValue
+                    if focusState != target {
+                        focusState = target
                     }
                 }
                 .onChange(of: focusState) { newValue in

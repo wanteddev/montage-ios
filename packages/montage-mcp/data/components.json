@@ -2166,7 +2166,7 @@
     {
       "slug": "searchfield",
       "name": "SearchField",
-      "category": "uncategorized",
+      "category": "selection-input",
       "kind": "struct",
       "declaration": "struct SearchField",
       "summary": "검색어 입력을 위한 컴포넌트입니다.",
