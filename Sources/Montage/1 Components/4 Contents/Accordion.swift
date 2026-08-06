@@ -278,8 +278,8 @@ public struct Accordion: View {
                 .padding(.horizontal, fillWidth ? 20 : 0)
                 .modifier(ListCellInteractionModifier(
                     pressed: $isPressed,
-                    fillWidth: fillWidth,
-                    interactionPadding: 12
+                    outset: fillWidth ? 0 : 12,
+                    radius: fillWidth ? 0 : 12
                 ))
                 .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
                     withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {

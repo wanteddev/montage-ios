@@ -19,7 +19,7 @@ struct IconPreview: View {
             // 바깥 ScrollView 하나로 전체를 스크롤하도록 LazyVStack을 쓴다.
             LazyVStack(spacing: 0) {
                 ForEach(iconList, id: \.rawValue) { icon in
-                    ListCell(title: icon.rawValue)
+                    ListCell(label: icon.rawValue)
                         .leadingContent {
                             Image.icon(
                                 icon,

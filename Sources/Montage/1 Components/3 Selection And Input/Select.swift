@@ -429,7 +429,7 @@ public struct Select: View {
         LazyVStack(spacing: 4) {
             ForEach(items.indices, id: \.self) { index in
                 Group {
-                    let cell = ListCell(title: items[index].text) {
+                    let cell = ListCell(label: items[index].text) {
                         switch variant {
                         case .single(_, let primaryButtonTitle):
                             deselectAll()

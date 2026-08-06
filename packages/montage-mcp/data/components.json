@@ -1435,20 +1435,20 @@
       "summary": "텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:onTap:)"
+          "signature": "init(label:onTap:)"
         }
       ],
       "modifiers": [
         {
-          "name": "caption(_:)",
-          "signature": "func caption(String?) -> ListCell",
-          "summary": "셀에 부가 설명(캡션)을 추가합니다.",
-          "kind": "method"
-        },
-        {
           "name": "chevron(_:)",
           "signature": "func chevron(Bool) -> ListCell",
           "summary": "셀 우측에 화살표(chevron) 아이콘을 추가합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "description(_:)",
+          "signature": "func description(String?) -> ListCell",
+          "summary": "셀에 부가 설명을 추가합니다.",
           "kind": "method"
         },
         {
@@ -1464,21 +1464,51 @@
           "kind": "method"
         },
         {
-          "name": "fillWidth(_:)",
-          "signature": "func fillWidth(Bool) -> ListCell",
-          "summary": "셀의 좌우 여백 사용 여부를 설정합니다.",
+          "name": "extraContent(_:)",
+          "signature": "func extraContent<V>(() -> V) -> ListCell",
+          "summary": "설명 아래에 자유 콘텐츠를 표시합니다.",
           "kind": "method"
         },
         {
           "name": "highlight(_:)",
           "signature": "func highlight(String) -> ListCell",
-          "summary": "타이틀의 특정 텍스트를 강조 표시합니다.",
+          "summary": "라벨의 특정 텍스트를 강조 표시합니다.",
           "kind": "method"
         },
         {
-          "name": "interactionPadding(_:)",
-          "signature": "func interactionPadding(CGFloat) -> ListCell",
-          "summary": "셀의 인터랙션 효과 영역의 좌우 패딩을 조정합니다.",
+          "name": "interactionOutset(_:)",
+          "signature": "func interactionOutset(CGFloat) -> ListCell",
+          "summary": "인터랙션 효과(hover·pressed 배경)가 셀 경계 바깥으로 확장되는 정도를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "interactionRadius(_:)",
+          "signature": "func interactionRadius(CGFloat) -> ListCell",
+          "summary": "인터랙션 효과 영역의 모서리 둥글기를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelColor(_:)",
+          "signature": "func labelColor(Color.Semantic) -> ListCell",
+          "summary": "라벨 텍스트의 color 속성을 조정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelTrailingContent(_:)",
+          "signature": "func labelTrailingContent<V>(() -> V) -> ListCell",
+          "summary": "라벨 행의 오른쪽 끝에 콘텐츠를 표시합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelVariant(_:)",
+          "signature": "func labelVariant(Typography.Variant) -> ListCell",
+          "summary": "라벨 텍스트의 variant 속성을 조정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelWeight(_:)",
+          "signature": "func labelWeight(Typography.Weight) -> ListCell",
+          "summary": "라벨 텍스트의 weight 속성을 조정합니다.",
           "kind": "method"
         },
         {
@@ -1496,25 +1526,7 @@
         {
           "name": "textEllipsis(_:)",
           "signature": "func textEllipsis(Bool) -> ListCell",
-          "summary": "타이틀 텍스트의 생략 처리 여부를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "titleColor(_:)",
-          "signature": "func titleColor(Color.Semantic) -> ListCell",
-          "summary": "타이틀 텍스트의 color 속성을 조정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "titleVariant(_:)",
-          "signature": "func titleVariant(Typography.Variant) -> ListCell",
-          "summary": "타이틀 텍스트의 variant 속성을 조정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "titleWeight(_:)",
-          "signature": "func titleWeight(Typography.Weight) -> ListCell",
-          "summary": "타이틀 텍스트의 weight 속성을 조정합니다.",
+          "summary": "텍스트의 생략 처리 여부를 설정합니다.",
           "kind": "method"
         },
         {
@@ -1525,7 +1537,7 @@
         },
         {
           "name": "verticalAlign(_:)",
-          "signature": "func verticalAlign(VerticalAlignment) -> ListCell",
+          "signature": "func verticalAlign(VerticalAlign) -> ListCell",
           "summary": "셀 내 콘텐츠의 수직 정렬을 조정합니다.",
           "kind": "method"
         },
@@ -1539,10 +1551,27 @@
       "staticMembers": [],
       "nestedTypes": [
         {
+          "name": "ListCell.VerticalAlign",
+          "kind": "enum",
+          "summary": "셀 내 콘텐츠의 수직 정렬을 나타내는 열거형입니다.",
+          "cases": [
+            "center",
+            "top"
+          ]
+        },
+        {
           "name": "ListCell.VerticalPadding",
           "kind": "enum",
           "summary": "상하 여백을 나타내는 열거형입니다.",
           "cases": [
+            "custom",
+            "large",
+            "medium",
+            "none",
+            "small"
+          ],
+          "caseSignatures": [
+            "custom(_:)",
             "large",
             "medium",
             "none",

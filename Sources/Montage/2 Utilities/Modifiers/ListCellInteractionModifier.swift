@@ -9,12 +9,15 @@ import SwiftUI
 
 struct ListCellInteractionModifier: ViewModifier {
     @Binding private var pressed: Bool
-    private let fillWidth: Bool
-    private let interactionPadding: CGFloat
-    init(pressed: Binding<Bool>, fillWidth: Bool, interactionPadding: CGFloat) {
+    /// 인터랙션 배경이 콘텐츠 경계 바깥으로 확장되는 좌우 크기.
+    private let outset: CGFloat
+    /// 인터랙션 배경의 모서리 반경. `outset`과 독립적으로 지정한다.
+    private let radius: CGFloat
+
+    init(pressed: Binding<Bool>, outset: CGFloat, radius: CGFloat) {
         _pressed = pressed
-        self.fillWidth = fillWidth
-        self.interactionPadding = interactionPadding
+        self.outset = outset
+        self.radius = radius
     }
 
     @State private var labelSize: CGSize = .zero
@@ -29,10 +32,10 @@ struct ListCellInteractionModifier: ViewModifier {
                     color: .foregroundNeutralPrimary
                 )
                 .frame(
-                    width: labelSize.width + (fillWidth ? 0 : interactionPadding * 2),
+                    width: labelSize.width + outset * 2,
                     height: labelSize.height
                 )
-                .clipShape(RoundedRectangle(cornerRadius: fillWidth ? 0 : 12))
+                .clipShape(RoundedRectangle(cornerRadius: radius))
             )
     }
 }
