@@ -89,7 +89,7 @@ struct SelectPreview: View {
             .bottomSheet(isPresented: $showSheet) {
                 VStack {
                     ForEach(items.indices, id: \.self) { index in
-                        ListCell(title: items[index].text) {
+                        ListCell(label: items[index].text) {
                             switch variants[variantIndex] {
                             case .single:
                                 items = items.map {
