@@ -22,21 +22,29 @@ import SwiftUI
 /// // 버튼 1개를 사용한 예시
 /// FallbackView(
 ///     title: "데이터가 없습니다.",
-///     description: "새로운 항목을 추가해 보세요.",
-///     buttonActionArea: .single(
-///         .init(text: "추가하기", action: { addItem() })
-///     )
+///     description: "새로운 항목을 추가해 보세요."
+/// )
+/// .buttonActionArea(
+///     .single(.init(text: "추가하기", action: { addItem() }))
 /// )
 ///
 /// // 버튼 2개를 가로로 배치한 예시
 /// FallbackView(
 ///     title: "불러올 수 없어요.",
-///     description: "네트워크 상태를 확인해 주세요.",
-///     buttonActionArea: .horizontal(
+///     description: "네트워크 상태를 확인해 주세요."
+/// )
+/// .buttonActionArea(
+///     .horizontal(
 ///         main: .init(text: "다시 시도", action: { retry() }),
 ///         alternative: .init(text: "홈으로", action: { goHome() })
 ///     )
 /// )
+///
+/// // 상하 여백을 좁게 적용한 예시
+/// FallbackView(
+///     description: "검색 결과가 없습니다."
+/// )
+/// .padding(.compact)
 /// ```
 public struct FallbackView: View {
 
@@ -78,29 +86,42 @@ public struct FallbackView: View {
         }
     }
 
+    /// 콘텐츠 영역의 상하 여백 크기를 정의합니다.
+    public enum Padding {
+        /// 기본 여백(160)을 적용합니다. 화면 전체를 대체할 때 사용합니다.
+        case normal
+        /// 좁은 여백(80)을 적용합니다. 화면 일부 영역만 대체할 때 사용합니다.
+        case compact
+
+        internal var verticalSpacing: CGFloat {
+            switch self {
+            case .normal: 160
+            case .compact: 80
+            }
+        }
+    }
+
     // MARK: - Initializers
 
     private let title: String?
     private let description: String
-    private let buttonActionArea: ButtonActionArea?
 
     /// FallbackView 컴포넌트를 초기화합니다.
     ///
-    /// 원하는 레이아웃을 구성하기 위해 제목과 버튼 영역을 선택적으로 제공할 수 있습니다.
+    /// 원하는 레이아웃을 구성하기 위해 제목을 선택적으로 제공할 수 있습니다.
     /// 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
+    ///
+    /// 하단 버튼 영역과 상하 여백은 ``buttonActionArea(_:)``, ``padding(_:)`` 수정자로 구성합니다.
     ///
     /// - Parameters:
     ///   - title: 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용
     ///   - description: 상황을 설명하는 텍스트
-    ///   - buttonActionArea: 하단 버튼 영역의 구성, 생략하거나 `nil`을 전달하면 버튼을 표시하지 않음
     public init(
         title: String? = nil,
-        description: String,
-        buttonActionArea: ButtonActionArea? = nil
+        description: String
     ) {
         self.title = title
         self.description = description
-        self.buttonActionArea = buttonActionArea
     }
 
     // MARK: - Body
@@ -108,7 +129,7 @@ public struct FallbackView: View {
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(alignment: .center, spacing: .zero) {
-            Spacer()
+            Spacer(minLength: padding.verticalSpacing)
 
             VStack(spacing: .spacing24) {
                 VStack(spacing: .spacing12) {
@@ -126,7 +147,7 @@ public struct FallbackView: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .paragraph(variant: .body2, semantic: .foregroundNeutralSecondary)
+                            .paragraph(variant: .body2Reading, semantic: .foregroundNeutralSecondary)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                         Spacer()
@@ -137,10 +158,36 @@ public struct FallbackView: View {
                     buttonArea(buttonActionArea)
                 }
             }
-            .padding(.vertical, .spacing12)
 
-            Spacer()
+            Spacer(minLength: padding.verticalSpacing)
         }
+    }
+
+    // MARK: - Modifiers
+
+    private var buttonActionArea: ButtonActionArea?
+    private var padding: Padding = .normal
+
+    /// 하단 버튼 영역의 구성을 설정합니다.
+    ///
+    /// - Parameter buttonActionArea: 하단 버튼 영역의 구성, `nil`을 전달하면 버튼을 표시하지 않음
+    /// - Returns: 수정된 FallbackView 인스턴스
+    public func buttonActionArea(_ buttonActionArea: ButtonActionArea?) -> Self {
+        var zelf = self
+        zelf.buttonActionArea = buttonActionArea
+        return zelf
+    }
+
+    /// 콘텐츠 영역의 상하 여백 크기를 설정합니다.
+    ///
+    /// 콘텐츠는 상위 뷰의 세로 중앙에 배치되며, 이 여백은 상위 뷰가 충분히 크지 않을 때 확보할 최소 여백입니다.
+    ///
+    /// - Parameter padding: 콘텐츠 영역의 상하 여백 크기
+    /// - Returns: 수정된 FallbackView 인스턴스
+    public func padding(_ padding: Padding) -> Self {
+        var zelf = self
+        zelf.padding = padding
+        return zelf
     }
 
     @ViewBuilder
