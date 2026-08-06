@@ -749,6 +749,9 @@ private extension TextField {
                 }
                 .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: disable ? nil : handler))
                 .allowsHitTesting(disable == false)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(title)
+                .accessibilityAddTraits(.isButton)
         }
 
         var textColor: Color.Semantic {
