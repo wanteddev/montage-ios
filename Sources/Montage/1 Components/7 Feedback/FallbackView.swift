@@ -147,7 +147,7 @@ public struct FallbackView: View {
                     HStack {
                         Spacer()
                         Text(description)
-                            .paragraph(variant: .body2, semantic: .foregroundNeutralSecondary)
+                            .paragraph(variant: .body2Reading, semantic: .foregroundNeutralSecondary)
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                         Spacer()
