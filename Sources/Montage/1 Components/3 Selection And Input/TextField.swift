@@ -752,6 +752,7 @@ private extension TextField {
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(title)
                 .accessibilityAddTraits(.isButton)
+                .accessibilityRespondsToUserInteraction(disable == false)
         }
 
         var textColor: Color.Semantic {
