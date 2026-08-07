@@ -261,12 +261,16 @@ struct TextFieldPreview: View {
                     HStack {
                         HStack {
                             Text("Secured")
-                            Switch(checked: secured) { secured = $0 }
+                            Switch(checked: secured) {
+                                secured = $0
+                                if $0 { usingSuggestions = false }
+                            }
                         }
                         Spacer()
                         HStack {
                             Text("AutoComplete")
                             Switch(checked: usingSuggestions) { usingSuggestions = $0 }
+                                .disable(secured)
                         }
                     }
                     if secured {

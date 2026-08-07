@@ -457,7 +457,9 @@ private extension TextField {
         }
         .modifier(
             FloatModifier(
-                isPresented: (autoCompletionDataSource?.totalNumberOfItems ?? 0) > 0 && textFieldFocusState,
+                isPresented: !secured
+                    && (autoCompletionDataSource?.totalNumberOfItems ?? 0) > 0
+                    && textFieldFocusState,
                 updatingValue: Binding(
                     get: {
                         if autoCompletionDataSource == nil || autoCompletionContentHeight == 0 {
