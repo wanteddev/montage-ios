@@ -101,9 +101,9 @@ public struct PushBadge: View {
     public init(variant: Variant) {
         self.variant = variant
     }
-    
+
     // MARK: - Body
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         Group {
@@ -124,30 +124,24 @@ public struct PushBadge: View {
                 textBadge(count > max ? "\(max)+" : "\(count)")
             }
         }
+        // 뱃지는 아이콘·아바타 위에 얹히는 오버레이인데 대상은 Dynamic Type으로 커지지 않는다.
+        // 접근성 단계까지 확대하면 뱃지가 대상을 덮어버리므로 표준 최대치인 xxxLarge에서 멈춘다.
+        // (하위 뷰인 ``TextBadge``의 스케일 계수가 이 제한을 반영하도록 바깥에서 건다.)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
     }
 
     /// 문자열 뱃지(text·maxCount 공용) 본문을 구성합니다.
-    @ViewBuilder
-    private func textBadge(_ text: String) -> some View {
-        Text(text)
-            .font(font)
-            .frame(minWidth: textMinSize.width)
-            .frame(height: textMinSize.height)
-            .foregroundStyle(fontColor)
-            .padding(fontPadding)
-            .background {
-                RoundedRectangle(cornerRadius: .radiusFull)
-                    .foregroundColor(backgroundColor)
-            }
-            .padding(outlineBorder ? textOutlineGap : 0)
-            .background {
-                if outlineBorder {
-                    RoundedRectangle(cornerRadius: .radiusFull)
-                        .foregroundColor(outlineBorderColor)
-                }
-            }
+    private func textBadge(_ text: String) -> TextBadge {
+        TextBadge(
+            text: text,
+            size: size,
+            fontColor: fontColor,
+            backgroundColor: backgroundColor,
+            outlineBorder: outlineBorder,
+            outlineBorderColor: outlineBorderColor
+        )
     }
-    
+
     // MARK: - Modifiers
     private var size: Size = .xsmall
     private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
@@ -203,35 +197,127 @@ public struct PushBadge: View {
     }
 }
 
-private extension PushBadge {
-    var font: Font? {
+/// text·maxCount 뱃지의 본문.
+///
+/// 한 글자일 때는 최소 너비 + 좌우 패딩 대신 ``badgeSize`` 정사각형으로 고정한다. 글자 폭이
+/// 최소 너비를 넘으면(한글 한 글자, `M`, `W` 등) 뱃지가 그만큼 늘어나 디자인 스펙인 정원에서
+/// 벗어나기 때문이다.
+///
+/// ``PushBadge``가 아닌 별도 뷰로 분리한 이유는 Dynamic Type 제한 때문이다. `@ScaledMetric`은
+/// 선언된 뷰가 물려받은 환경으로 값이 정해지므로, 같은 뷰의 body에서 `dynamicTypeSize(_:)`를
+/// 걸면 폰트에만 적용되고 배율에는 반영되지 않아 글자와 상자가 어긋난다.
+private struct TextBadge: View {
+    let text: String
+    let size: PushBadge.Size
+    let fontColor: SwiftUI.Color
+    let backgroundColor: SwiftUI.Color
+    let outlineBorder: Bool
+    let outlineBorderColor: SwiftUI.Color
+
+    /// 뱃지 크기를 폰트와 같은 배율로 키우기 위한 스케일 계수.
+    ///
+    /// 폰트는 ``Typography/Variant/textStyle`` 기준으로 스케일되는데 뱃지 크기·패딩이 고정값이면
+    /// 큰 글자에서 텍스트가 잘리거나 정원이 캡슐로 늘어난다. ``size``에 따라 쓰는 텍스트 스타일이
+    /// 다르므로 두 배율을 모두 선언해두고 ``typeScale``에서 골라 쓴다.
+    @ScaledMetric(relativeTo: .caption2) private var captionScale: CGFloat = 1
+    @ScaledMetric(relativeTo: .footnote) private var footnoteScale: CGFloat = 1
+
+    var body: some View {
+        // 빈 문자열도 정사각형으로 처리해 폭이 0에 가까운 조각 뱃지가 생기지 않게 한다.
+        let isSingleCharacter = text.count <= 1
+        let scaledBadgeSize = badgeSize * typeScale
+
+        Text(text)
+            .typography(variant: typographyVariant, weight: .bold, color: fontColor)
+            .frame(minWidth: isSingleCharacter ? scaledBadgeSize : textMinSize.width * typeScale)
+            .frame(height: isSingleCharacter ? scaledBadgeSize : textMinSize.height * typeScale)
+            .padding(isSingleCharacter ? EdgeInsets() : scaledFontPadding)
+            .background {
+                RoundedRectangle(cornerRadius: .radiusFull)
+                    .foregroundColor(backgroundColor)
+            }
+            .padding(outlineBorder ? textOutlineGap * typeScale : 0)
+            .background {
+                if outlineBorder {
+                    RoundedRectangle(cornerRadius: .radiusFull)
+                        .foregroundColor(outlineBorderColor)
+                }
+            }
+    }
+
+    /// 뱃지 문자열에 적용할 타이포그래피 변형. 폰트와 자간이 여기서 함께 결정된다.
+    private var typographyVariant: Typography.Variant {
         switch size {
-        case .xsmall, .small: .font(variant: .caption2, weight: .bold)
-        case .medium: .font(variant: .label1, weight: .bold)
+        case .xsmall, .small: .caption2
+        case .medium: .label1
         }
     }
-    
-    var fontPadding: EdgeInsets {
+
+    /// ``typographyVariant``의 텍스트 스타일에 대응하는 Dynamic Type 배율.
+    private var typeScale: CGFloat {
+        switch size {
+        case .xsmall, .small: captionScale
+        case .medium: footnoteScale
+        }
+    }
+
+    /// 뱃지의 전체 크기(한 글자일 때의 정사각 한 변).
+    ///
+    /// 두 글자 이상일 때의 높이(``textMinSize``의 height + ``fontPadding`` 상하)와 같은 값이다.
+    private var badgeSize: CGFloat {
+        switch size {
+        case .xsmall: 16
+        case .small: 20
+        case .medium: 24
+        }
+    }
+
+    private var fontPadding: EdgeInsets {
         switch size {
         case .xsmall: .init(top: 1, leading: 4, bottom: 1, trailing: 4)
         case .small: .init(top: 3, leading: 6, bottom: 3, trailing: 6)
         case .medium: .init(top: 2, leading: 7, bottom: 2, trailing: 7)
         }
     }
-    
+
+    /// Dynamic Type 배율을 적용한 ``fontPadding``.
+    private var scaledFontPadding: EdgeInsets {
+        let padding = fontPadding
+        return .init(
+            top: padding.top * typeScale,
+            leading: padding.leading * typeScale,
+            bottom: padding.bottom * typeScale,
+            trailing: padding.trailing * typeScale
+        )
+    }
+
+    /// 두 글자 이상일 때의 텍스트 영역 최소 크기.
+    ///
+    /// 한 글자일 때는 이 값 대신 ``badgeSize`` 정사각형을 쓴다.
+    private var textMinSize: CGSize {
+        switch size {
+        case .xsmall: .init(width: 8, height: 14)
+        case .small: .init(width: 8, height: 14)
+        case .medium: .init(width: 10, height: 20)
+        }
+    }
+
+    /// 아웃라인 보더 여백(뱃지 상하좌우로 이 값만큼 테두리가 확장된다).
+    private var textOutlineGap: CGFloat {
+        switch size {
+        case .xsmall: 1
+        case .small: 1.5
+        case .medium: 2
+        }
+    }
+}
+
+private extension PushBadge {
     var dotSize: CGSize {
         switch size {
         case .xsmall: .init(width: 4, height: 4)
         case .small: .init(width: 6, height: 6)
         case .medium: .init(width: 8, height: 8)
-        }
-    }
-    
-    var textMinSize: CGSize {
-        switch size {
-        case .xsmall: .init(width: 8, height: 14)
-        case .small: .init(width: 8, height: 14)
-        case .medium: .init(width: 10, height: 20)
         }
     }
 
@@ -244,15 +330,6 @@ private extension PushBadge {
         case .xsmall: 5
         case .small: 8
         case .medium: 10
-        }
-    }
-
-    /// text·maxCount 뱃지의 아웃라인 보더 여백(뱃지 상하좌우로 이 값만큼 테두리가 확장된다).
-    var textOutlineGap: CGFloat {
-        switch size {
-        case .xsmall: 1
-        case .small: 1.5
-        case .medium: 2
         }
     }
 }
