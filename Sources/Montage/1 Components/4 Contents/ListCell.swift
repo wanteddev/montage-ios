@@ -115,6 +115,9 @@ public struct ListCell: View {
     /// 라벨 행에 들어가는 콘텐츠의 고정 높이입니다.
     private static let labelContentHeight: CGFloat = 22
 
+    /// 선택 상태를 나타내는 체크 아이콘의 크기입니다.
+    private static let selectedCheckSize: CGFloat = 22
+
     // MARK: - Initializer
 
     private let label: String
@@ -327,12 +330,15 @@ public struct ListCell: View {
 
     /// 셀을 선택된 상태로 설정합니다.
     ///
-    /// 선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정됩니다.
-    /// `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
+    /// 선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며,
+    /// 셀 오른쪽 끝에 체크 아이콘이 표시됩니다.
     ///
     /// - Parameters:
     ///   - selected: 선택 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
+    ///
+    /// - Important: 체크 아이콘은 ``trailingContent(_:)`` 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다.
+    ///   선택 상태와 별개의 우측 콘텐츠가 필요하면 ``labelTrailingContent(_:)`` 또는 ``extraContent(_:)``를 사용하세요.
     public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
         zelf.selected = selected
@@ -492,6 +498,10 @@ extension ListCell {
         disable ? .foregroundDisablePrimary : .foregroundNeutralQuaternary
     }
 
+    private var selectedCheckColor: Color.Semantic {
+        disable ? .foregroundDisablePrimary : .surfaceBrandPrimary
+    }
+
     private var row: some View {
         HStack(alignment: verticalAlignment.alignment, spacing: 0) {
             if let leadingContent {
@@ -527,7 +537,16 @@ extension ListCell {
                 }
             }
 
-            if let trailingContent {
+            // 선택된 셀은 체크 아이콘이 trailing 자리를 대신 차지한다.
+            if selected {
+                Image.icon(.check)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundStyle(SwiftUI.Color.semantic(selectedCheckColor))
+                    .frame(width: Self.selectedCheckSize, height: Self.selectedCheckSize)
+                    .frame(minHeight: Self.rowMinHeight)
+                    .padding(.leading, 8)
+            } else if let trailingContent {
                 HStack(alignment: .center, spacing: 8) {
                     trailingContent(selected)
                 }
