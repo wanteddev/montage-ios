@@ -366,7 +366,7 @@ ListCell(label: "커스텀")
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며, 셀 오른쪽 끝에 체크 아이콘이 표시됩니다.
+  선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며, trailing 영역에 체크 아이콘이 표시됩니다. [chevron(_:)](/documentation/montage/listcell/chevron(_:).md)을 켠 셀에서는 화살표가 체크 아이콘 오른쪽에 그대로 남습니다.
   >  **Important**
   >
   > 체크 아이콘은 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md) 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다. 선택 상태와 별개의 우측 콘텐츠가 필요하면 [labelTrailingResources(_:)](/documentation/montage/listcell/labeltrailingresources(_:).md) 또는 [extraResources(_:)](/documentation/montage/listcell/extraresources(_:).md)를 사용하세요.
@@ -471,7 +471,11 @@ ListCell(label: "커스텀")
 
   슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다. 예를 들어 [ListCell.Resource.Trailing.switch(checked:onSelect:)](/documentation/montage/listcell/resource/trailing/switch(checked:onselect:).md)는 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md)에만 넘길 수 있고, [leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md)에 넘기면 컴파일되지 않습니다.
 
-  각 요소의 크기와 정렬은 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다. 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
+  미리 정의된 요소는 크기와 정렬이 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다. 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
+  >  **Important**
+  >
+  > `slot(_:)`으로 넣은 뷰에는 이 크기 제약이 적용되지 않습니다. 행 높이가 밀리지 않게 하려면 사용처에서 `frame(...)`이나 `fixedSize(...)`로 크기를 직접 정해야 합니다.
+
 #### Enumerations
 
 <details>
