@@ -63,10 +63,7 @@ struct ListCellPreview: View {
                     Checkmark(checked: selected)
 
                     if multipleLeadingContent {
-                        Image.icon(.star)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .scaledToFit()
+                        Avatar("", variant: .person, size: .xsmall)
                     }
                 }
             }

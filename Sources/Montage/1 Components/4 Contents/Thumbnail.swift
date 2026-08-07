@@ -179,6 +179,11 @@ public struct Thumbnail: View {
 
     @State private var proposedWidth: CGFloat = .zero
 
+    /// 상위 컨테이너가 `disabled(_:)`로 비활성화되면 이미지도 흐리게 표시한다.
+    ///
+    /// 이미지 계열은 색 토큰으로 비활성을 표현할 수 없어 불투명도를 낮춘다.
+    @Environment(\.isEnabled) private var isEnabled
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
@@ -204,6 +209,7 @@ public struct Thumbnail: View {
         .if (thumbnailWidth > 0) {
             $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
         }
+        .opacity(isEnabled ? 1 : Double(CGFloat.opacity43))
     }
 
     private var thumbnailWidth: CGFloat {
