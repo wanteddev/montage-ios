@@ -297,7 +297,7 @@ private extension SearchField {
             // outlined는 배경을 비워 뒤 콘텐츠가 비치도록 하고, disable일 때만 표면을 채운다.
             if disable {
                 surface
-                    .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
+                    .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
             } else {
                 surface
                     .fill(SwiftUI.Color.clear)
