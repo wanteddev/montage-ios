@@ -89,7 +89,7 @@ struct SelectPreview: View {
             .bottomSheet(isPresented: $showSheet) {
                 VStack {
                     ForEach(items.indices, id: \.self) { index in
-                        ListCell(title: items[index].text) {
+                        ListCell(label: items[index].text) {
                             switch variants[variantIndex] {
                             case .single:
                                 items = items.map {
@@ -104,10 +104,8 @@ struct SelectPreview: View {
                                 break
                             }
                         }
+                        // selected 상태의 체크 아이콘은 ListCell이 직접 그린다.
                         .selected(items[index].isSelected)
-                        .trailingContent { active in
-                            Checkmark(checked: active)
-                        }
                     }
                 }
             }

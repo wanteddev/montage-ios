@@ -429,7 +429,7 @@ public struct Select: View {
         LazyVStack(spacing: 4) {
             ForEach(items.indices, id: \.self) { index in
                 Group {
-                    let cell = ListCell(title: items[index].text) {
+                    let cell = ListCell(label: items[index].text) {
                         switch variant {
                         case .single(_, let primaryButtonTitle):
                             deselectAll()
@@ -447,28 +447,13 @@ public struct Select: View {
                     case .single(let selectionType, _):
                         switch selectionType {
                         case .checkmark:
+                            // 체크 아이콘은 ListCell이 selected 상태에서 직접 그린다.
                             cell.selected(items[index].isSelected)
-                                .trailingContent { active in
-                                    Group {
-                                        if active {
-                                            Image.icon(.check)
-                                                .resizable()
-                                                .foregroundStyle(
-                                                    SwiftUI.Color.semantic(.surfaceBrandPrimary)
-                                                )
-                                                .frame(width: 24, height: 24)
-                                        }
-                                    }
-                                }
                         case .radio:
-                            cell.leadingContent {
-                                Radio(checked: items[index].isSelected)
-                            }
+                            cell.leadingResources([.radio(checked: items[index].isSelected)])
                         }
                     case .multiple:
-                        cell.leadingContent {
-                            Checkbox(checked: items[index].isSelected)
-                        }
+                        cell.leadingResources([.checkbox(checked: items[index].isSelected)])
                     }
                 }
             }
