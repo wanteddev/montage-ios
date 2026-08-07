@@ -68,13 +68,20 @@ struct SelectPreview: View {
         }
     }
     
-    var years: [String] {
-        Array(Set(items.map { String($0.text.split(separator: "-")[0]) })).sorted()
+    var years: [Int] {
+        Array(Calendar.current.component(.year, from: Date(timeIntervalSince1970: 0))...thisYear)
     }
-    var months: [String] {
-        Array(Set(items.map { String($0.text.split(separator: "-")[1]) })).sorted()
+    var months: [Int] {
+        Array(1...12)
     }
-    
+    var thisYear: Int {
+        Calendar.current.component(.year,from: Date())
+    }
+    var thisMonth: Int {
+        Calendar.current.component(.month, from: Date())
+    }
+    @Environment(\.colorScheme) private var colorScheme
+
     @State private var items: [Select.Item] = [
         .init(text: "값1"),
         .init(text: "값2(icon)", icon: .apps),
@@ -113,22 +120,30 @@ struct SelectPreview: View {
                     if itemCountClassIndex == 3 {
                         HStack {
                             Picker("year", selection: $selectedYearIndex) {
-                                
                                 ForEach(years.indices, id: \.self) {
-                                    Text(years[$0]).tag(years[$0])
+                                    Text(String(years[$0])).tag($0)
                                 }
                             }
                             .pickerStyle(.wheel)
                             Picker("month", selection: $selectedMonthIndex) {
-                                ForEach(months.indices, id: \.self) {
-                                    Text(months[$0]).tag(months[$0])
+                                Group {
+                                    if years[selectedYearIndex] == thisYear {
+                                        let months = months.filter { $0 <= thisMonth }
+                                        ForEach(months.indices, id: \.self) {
+                                            Text(String(months[$0])).tag($0)
+                                        }
+                                    } else {
+                                        ForEach(months.indices, id: \.self) {
+                                            Text(String(months[$0])).tag($0)
+                                        }
+                                    }
                                 }
                             }
                             .pickerStyle(.wheel)
                         }
                         ActionArea(
                             variant: .strong(main: .init(text: "확인", action: {
-                                let selectedYearMonth = "\(years[selectedYearIndex])-\(months[selectedMonthIndex])"
+                                let selectedYearMonth = "\(years[selectedYearIndex]).\(String(format: "%02d", months[selectedMonthIndex]))"
                                 items = items.map {
                                     if $0.text == selectedYearMonth {
                                         var mutated = $0
@@ -143,6 +158,7 @@ struct SelectPreview: View {
                                 showSheet = false
                             }))
                         )
+                        .padding(.horizontal, -16)
                     } else {
                         VStack {
                             ForEach(items.indices, id: \.self) { index in
@@ -166,6 +182,27 @@ struct SelectPreview: View {
                                     Checkmark(checked: active)
                                 }
                             }
+                        }
+                    }
+                }
+                .if(itemCountClassIndex == 3) {
+                    $0.overlay {
+                        HStack {
+                            Spacer()
+                            IconButton(icon: .calendar) {
+                                showSheet.toggle()
+                            }
+                            .iconColor(.semantic(.labelAlternative))
+                            .background {
+                                if colorScheme == .light {
+                                    SwiftUI.Color.atomic(.common100).opacity(0.8)
+                                        .background(.ultraThinMaterial)
+                                } else {
+                                    SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                                        .background(.ultraThinMaterial)
+                                }
+                            }
+                            .padding(.horizontal, 12)
                         }
                     }
                 }
@@ -303,44 +340,15 @@ struct SelectPreview: View {
                     .init(text: "negative", isNegative: true)
                 ]
             case .yearMonth:
-                items = [
-                    .init(text: "2024-01"),
-                    .init(text: "2024-02"),
-                    .init(text: "2024-03"),
-                    .init(text: "2024-04"),
-                    .init(text: "2024-05"),
-                    .init(text: "2024-06"),
-                    .init(text: "2024-07"),
-                    .init(text: "2024-08"),
-                    .init(text: "2024-09"),
-                    .init(text: "2024-10"),
-                    .init(text: "2024-11"),
-                    .init(text: "2024-12"),
-                    .init(text: "2025-01"),
-                    .init(text: "2025-02"),
-                    .init(text: "2025-03"),
-                    .init(text: "2025-04"),
-                    .init(text: "2025-05"),
-                    .init(text: "2025-06"),
-                    .init(text: "2025-07"),
-                    .init(text: "2025-08"),
-                    .init(text: "2025-09"),
-                    .init(text: "2025-10"),
-                    .init(text: "2025-11"),
-                    .init(text: "2025-12"),
-                    .init(text: "2026-01"),
-                    .init(text: "2026-02"),
-                    .init(text: "2026-03"),
-                    .init(text: "2026-04"),
-                    .init(text: "2026-05"),
-                    .init(text: "2026-06"),
-                    .init(text: "2026-07"),
-                    .init(text: "2026-08"),
-                    .init(text: "2026-09"),
-                    .init(text: "2026-10"),
-                    .init(text: "2026-11"),
-                    .init(text: "2026-12"),
-                ]
+                items = years.flatMap { year in
+                    months.compactMap { month in
+                        if year < thisYear || month <= thisMonth {
+                            return .init(text: "\(year).\(String(format: "%02d", month))")
+                        } else {
+                            return nil
+                        }
+                    }
+                }
             }
         }
     }
