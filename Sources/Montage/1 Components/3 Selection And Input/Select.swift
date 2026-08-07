@@ -447,19 +447,8 @@ public struct Select: View {
                     case .single(let selectionType, _):
                         switch selectionType {
                         case .checkmark:
+                            // 체크 아이콘은 ListCell이 selected 상태에서 직접 그린다.
                             cell.selected(items[index].isSelected)
-                                .trailingContent { active in
-                                    Group {
-                                        if active {
-                                            Image.icon(.check)
-                                                .resizable()
-                                                .foregroundStyle(
-                                                    SwiftUI.Color.semantic(.surfaceBrandPrimary)
-                                                )
-                                                .frame(width: 24, height: 24)
-                                        }
-                                    }
-                                }
                         case .radio:
                             cell.leadingContent {
                                 Radio(checked: items[index].isSelected)
