@@ -166,6 +166,7 @@ public struct TextField: View {
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
+    private var secured = false
     /// 텍스트 필드의 상태를 설정합니다.
     ///
     /// - Parameter status: 텍스트 필드의 상태
@@ -256,6 +257,19 @@ public struct TextField: View {
         zelf.customBackgroundColor = color
         return zelf
     }
+
+    /// 입력한 내용을 가릴지 설정합니다.
+    ///
+    /// 비밀번호처럼 노출되면 안 되는 값을 입력받을 때 사용합니다.
+    ///
+    /// - Parameter secured: 입력 내용을 가릴지 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    /// - Note: 자동완성은 가려진 입력에서 동작하지 않습니다.
+    public func secured(_ secured: Bool = true) -> Self {
+        var zelf = self
+        zelf.secured = secured
+        return zelf
+    }
     
     // MARK: - Body
     
@@ -302,6 +316,29 @@ public struct TextField: View {
 // MARK: - Private
 
 private extension TextField {
+    /// 가려진 입력 여부에 따라 `SecureField`와 `TextField`를 분기한다.
+    ///
+    /// `secured`는 화면이 살아 있는 동안 바뀌지 않는 설정이므로, 이 분기로 입력 중 포커스를 잃지 않는다.
+    @ViewBuilder
+    var textInput: some View {
+        if secured {
+            SwiftUI.SecureField("", text: $text, prompt: promptText)
+        } else {
+            SwiftUI.TextField("", text: $text, prompt: promptText)
+        }
+    }
+
+    var promptText: Text? {
+        guard let placeholder else { return nil }
+
+        return Text(placeholder)
+            .typography(
+                variant: .body1,
+                weight: .regular,
+                color: placeholderTextColor
+            )
+    }
+
     var inputField: some View {
         HStack(spacing: -1) {
             ZStack {
@@ -312,22 +349,7 @@ private extension TextField {
                             .frame(width: 22, height: 22)
                             .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
                     }
-                    SwiftUI.TextField(
-                        "",
-                        text: $text,
-                        prompt: {
-                            if let placeholder {
-                                Text(placeholder)
-                                    .typography(
-                                        variant: .body1,
-                                        weight: .regular,
-                                        color: placeholderTextColor
-                                    )
-                            } else {
-                                nil
-                            }
-                        }()
-                    )
+                    textInput
                     .autocorrectionDisabled(fixAutocorrection)
                     .font(.font(variant: .body1, weight: .regular))
                     .foregroundStyle(fieldTextColor)
