@@ -49,6 +49,32 @@ struct ListCellPreview: View {
         longText ? "이것은 두 줄 이상으로 표현될 수 있는 긴 설명입니다. 충분히 길어야 줄 바꿈이 됩니다." : "설명"
     }
 
+    var leadingResourceList: [ListCell.Resource.Leading] {
+        guard leadingContent else { return [] }
+        return multipleLeadingContent
+            ? [.checkbox(checked: selected), .avatar("", variant: .person)]
+            : [.checkbox(checked: selected)]
+    }
+
+    var labelTrailingResourceList: [ListCell.Resource.LabelTrailing] {
+        guard labelTrailingContent else { return [] }
+        return multipleLabelTrailingContent
+            ? [.contentBadge(title: "배지"), .icon(.check, tintColor: .semantic(.surfaceBrandPrimary))]
+            : [.contentBadge(title: "배지")]
+    }
+
+    var trailingResourceList: [ListCell.Resource.Trailing] {
+        guard trailingContent else { return [] }
+        return multipleTrailingContent
+            ? [.value("값"), .iconButton(.chevronRight)]
+            : [.iconButton(.chevronRight)]
+    }
+
+    var extraResourceList: [ListCell.Resource.Extra] {
+        guard extraContent else { return [] }
+        return [.contentBadge(.outlined, title: "서울"), .contentBadge(.outlined, title: "5년차")]
+    }
+
     var body: some View {
         PreviewLayout {
             ListCell(label: labelText, onTap: {
@@ -58,43 +84,10 @@ struct ListCellPreview: View {
             .verticalPadding(verticalPaddings[verticalPaddingIndex])
             .verticalAlign(verticalAlignments[verticalAlignmentIndex])
             .chevron(chevron)
-            .leadingContent {
-                if leadingContent {
-                    Checkmark(checked: selected)
-
-                    if multipleLeadingContent {
-                        Avatar("", variant: .person, size: .xsmall)
-                    }
-                }
-            }
-            .labelTrailingContent {
-                if labelTrailingContent {
-                    ContentBadge(text: "배지")
-
-                    if multipleLabelTrailingContent {
-                        Image.icon(.check)
-                            .resizable()
-                            .renderingMode(.template)
-                            .foregroundStyle(SwiftUI.Color.semantic(.surfaceBrandPrimary))
-                            .frame(width: 16, height: 16)
-                    }
-                }
-            }
-            .trailingContent { selected in
-                if trailingContent {
-                    if multipleTrailingContent {
-                        Text("값")
-                    }
-
-                    Checkmark(checked: selected)
-                }
-            }
-            .extraContent {
-                if extraContent {
-                    ContentBadge(variant: .outlined, text: "서울")
-                    ContentBadge(variant: .outlined, text: "5년차")
-                }
-            }
+            .leadingResources(leadingResourceList)
+            .labelTrailingResources(labelTrailingResourceList)
+            .trailingResources(trailingResourceList)
+            .extraResources(extraResourceList)
             .textEllipsis(textEllipsis)
             .divider(divider)
             .disable(disable)
