@@ -374,7 +374,11 @@ ListCell(label: "김티드")
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정됩니다. `trailingContent` 클로저의 파라미터로 선택된 상태 여부가 전달됩니다.
+  선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며, 셀 오른쪽 끝에 체크 아이콘이 표시됩니다.
+  >  **Important**
+  >
+  > 체크 아이콘은 [trailingContent(_:)](/documentation/montage/listcell/trailingcontent(_:).md) 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다. 선택 상태와 별개의 우측 콘텐츠가 필요하면 [labelTrailingContent(_:)](/documentation/montage/listcell/labeltrailingcontent(_:).md) 또는 [extraContent(_:)](/documentation/montage/listcell/extracontent(_:).md)를 사용하세요.
+
 </details>
 <details>
 
