@@ -161,6 +161,9 @@ public struct ListCell: View {
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
         .accessibilityElement(children: .combine)
         .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
+        // 선택 상태는 체크 아이콘으로만 표현되는데 children을 combine하므로
+        // 트레이트로 따로 전달하지 않으면 보조 기술이 선택 여부를 알 수 없다.
+        .if(selected) { $0.accessibilityAddTraits(.isSelected) }
         // allowsHitTesting은 포인터 입력만 막아 보조 기술에 비활성 상태가 전달되지 않는다.
         // disabled를 써야 VoiceOver가 "사용 안 함"으로 읽고 포커스 이동도 함께 차단된다.
         .disabled(disable)
@@ -327,7 +330,8 @@ public struct ListCell: View {
     /// 셀을 선택된 상태로 설정합니다.
     ///
     /// 선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며,
-    /// 셀 오른쪽 끝에 체크 아이콘이 표시됩니다.
+    /// trailing 영역에 체크 아이콘이 표시됩니다.
+    /// ``chevron(_:)``을 켠 셀에서는 화살표가 체크 아이콘 오른쪽에 그대로 남습니다.
     ///
     /// - Parameters:
     ///   - selected: 선택 여부, 생략하면 기본값으로 `true` 적용
@@ -646,8 +650,11 @@ extension ListCell {
     /// 예를 들어 ``Trailing/switch(checked:onSelect:)``는 ``ListCell/trailingResources(_:)``에만 넘길 수 있고,
     /// ``ListCell/leadingResources(_:)``에 넘기면 컴파일되지 않습니다.
     ///
-    /// 각 요소의 크기와 정렬은 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다.
+    /// 미리 정의된 요소는 크기와 정렬이 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다.
     /// 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
+    ///
+    /// - Important: `slot(_:)`으로 넣은 뷰에는 이 크기 제약이 적용되지 않습니다.
+    ///   행 높이가 밀리지 않게 하려면 사용처에서 `frame(...)`이나 `fixedSize(...)`로 크기를 직접 정해야 합니다.
     public enum Resource {
         /// 셀 좌측(``ListCell/leadingResources(_:)``)에 표시할 요소입니다.
         public enum Leading {
