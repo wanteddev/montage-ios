@@ -10,7 +10,7 @@ import Montage
 
 struct PushBadgePreview: View {
     var variants: [PushBadge.Variant] {
-        [.dot, .text("N"), .maxCount(Int(number))]
+        [.dot, .text(text), .maxCount(Int(number))]
     }
 
     var positionYs: [PushBadge.Position] {
@@ -27,6 +27,7 @@ struct PushBadgePreview: View {
     ]
 
     @State private var variantIndex = 0
+    @State private var text = "N"
     @State private var number = 1.0
     @State private var sizeIndex = 0
     @State private var positionXIndex = 2
@@ -56,6 +57,9 @@ struct PushBadgePreview: View {
                 )
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            if case .text = variants[variantIndex] {
+                TextFieldOptionRow("text", text: $text, placeholder: "표시할 문자열")
+            }
             if case .maxCount = variants[variantIndex] {
                 SliderOptionRow("count", value: $number, in: 1...110, step: 1)
             }
