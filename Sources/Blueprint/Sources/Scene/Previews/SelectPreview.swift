@@ -28,7 +28,9 @@ struct SelectPreview: View {
     @State private var customMenu: Bool = false
     @State private var menuResizeIndex = 0
     @State private var itemCountClassIndex: Int = 0
-
+    @State private var selectedYearIndex: Int = 0
+    @State private var selectedMonthIndex: Int = 0
+    
     private let selectionTypes: [Select.SingleSelectionType] = [.checkmark, .radio]
     private let renders: [Select.Render] = [.text, .chip]
     
@@ -59,11 +61,18 @@ struct SelectPreview: View {
     ]
     
     private enum ItemCountClass: String, CaseIterable {
-        case few, medium, many
+        case few, medium, many, yearMonth
         
         var description: String {
             self.rawValue
         }
+    }
+    
+    var years: [String] {
+        Array(Set(items.map { String($0.text.split(separator: "-")[0]) })).sorted()
+    }
+    var months: [String] {
+        Array(Set(items.map { String($0.text.split(separator: "-")[1]) })).sorted()
     }
     
     @State private var items: [Select.Item] = [
@@ -101,26 +110,61 @@ struct SelectPreview: View {
                 .leadingContent(leadingContents[leadingContentIndex])
                 .menuResize(bottomSheetResizes[menuResizeIndex])
                 .bottomSheet(isPresented: $showSheet) {
-                    VStack {
-                        ForEach(items.indices, id: \.self) { index in
-                            ListCell(title: items[index].text) {
-                                switch variants[variantIndex] {
-                                case .single:
-                                    items = items.map {
+                    if itemCountClassIndex == 3 {
+                        HStack {
+                            Picker("year", selection: $selectedYearIndex) {
+                                
+                                ForEach(years.indices, id: \.self) {
+                                    Text(years[$0]).tag(years[$0])
+                                }
+                            }
+                            .pickerStyle(.wheel)
+                            Picker("month", selection: $selectedMonthIndex) {
+                                ForEach(months.indices, id: \.self) {
+                                    Text(months[$0]).tag(months[$0])
+                                }
+                            }
+                            .pickerStyle(.wheel)
+                        }
+                        ActionArea(
+                            variant: .strong(main: .init(text: "확인", action: {
+                                let selectedYearMonth = "\(years[selectedYearIndex])-\(months[selectedMonthIndex])"
+                                items = items.map {
+                                    if $0.text == selectedYearMonth {
+                                        var mutated = $0
+                                        mutated.isSelected = true
+                                        return mutated
+                                    } else {
                                         var mutated = $0
                                         mutated.isSelected = false
                                         return mutated
                                     }
-                                    fallthrough
-                                case .multiple:
-                                    items[index].isSelected.toggle()
-                                @unknown default:
-                                    break
                                 }
-                            }
-                            .selected(items[index].isSelected)
-                            .trailingContent { active in
-                                Checkmark(checked: active)
+                                showSheet = false
+                            }))
+                        )
+                    } else {
+                        VStack {
+                            ForEach(items.indices, id: \.self) { index in
+                                ListCell(title: items[index].text) {
+                                    switch variants[variantIndex] {
+                                    case .single:
+                                        items = items.map {
+                                            var mutated = $0
+                                            mutated.isSelected = false
+                                            return mutated
+                                        }
+                                        fallthrough
+                                    case .multiple:
+                                        items[index].isSelected.toggle()
+                                    @unknown default:
+                                        break
+                                    }
+                                }
+                                .selected(items[index].isSelected)
+                                .trailingContent { active in
+                                    Checkmark(checked: active)
+                                }
                             }
                         }
                     }
@@ -257,6 +301,45 @@ struct SelectPreview: View {
                     .init(text: "값14"),
                     .init(text: "아이콘", icon: .apps),
                     .init(text: "negative", isNegative: true)
+                ]
+            case .yearMonth:
+                items = [
+                    .init(text: "2024-01"),
+                    .init(text: "2024-02"),
+                    .init(text: "2024-03"),
+                    .init(text: "2024-04"),
+                    .init(text: "2024-05"),
+                    .init(text: "2024-06"),
+                    .init(text: "2024-07"),
+                    .init(text: "2024-08"),
+                    .init(text: "2024-09"),
+                    .init(text: "2024-10"),
+                    .init(text: "2024-11"),
+                    .init(text: "2024-12"),
+                    .init(text: "2025-01"),
+                    .init(text: "2025-02"),
+                    .init(text: "2025-03"),
+                    .init(text: "2025-04"),
+                    .init(text: "2025-05"),
+                    .init(text: "2025-06"),
+                    .init(text: "2025-07"),
+                    .init(text: "2025-08"),
+                    .init(text: "2025-09"),
+                    .init(text: "2025-10"),
+                    .init(text: "2025-11"),
+                    .init(text: "2025-12"),
+                    .init(text: "2026-01"),
+                    .init(text: "2026-02"),
+                    .init(text: "2026-03"),
+                    .init(text: "2026-04"),
+                    .init(text: "2026-05"),
+                    .init(text: "2026-06"),
+                    .init(text: "2026-07"),
+                    .init(text: "2026-08"),
+                    .init(text: "2026-09"),
+                    .init(text: "2026-10"),
+                    .init(text: "2026-11"),
+                    .init(text: "2026-12"),
                 ]
             }
         }
