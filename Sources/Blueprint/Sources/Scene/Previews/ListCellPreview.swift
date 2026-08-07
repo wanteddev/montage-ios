@@ -117,6 +117,9 @@ struct ListCellPreview: View {
             }
             HStack {
                 ToggleOption("Label Trailing", isOn: $labelTrailingContent)
+                ToggleOption("+ 다중", isOn: $multipleLabelTrailingContent)
+            }
+            HStack {
                 ToggleOption("Extra Content", isOn: $extraContent)
             }
             HStack {
