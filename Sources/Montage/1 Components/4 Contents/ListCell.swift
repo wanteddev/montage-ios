@@ -10,8 +10,8 @@ import SwiftUI
 /// 텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.
 ///
 /// `ListCell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다.
-/// 라벨, 부가 설명과 함께 네 종류의 콘텐츠 슬롯(``leadingContent(_:)``, ``labelTrailingContent(_:)``,
-/// ``trailingContent(_:)``, ``extraContent(_:)``)을 제공하며 다양한 스타일로 커스터마이징할 수 있습니다.
+/// 라벨, 부가 설명과 함께 네 종류의 콘텐츠 슬롯(``leadingResources(_:)``, ``labelTrailingResources(_:)``,
+/// ``trailingResources(_:)``, ``extraResources(_:)``)을 제공하며 다양한 스타일로 커스터마이징할 수 있습니다.
 ///
 /// ```swift
 /// // 기본 셀
@@ -21,14 +21,11 @@ import SwiftUI
 /// ListCell(label: "설명이 있는 셀")
 ///     .description("부가 설명 텍스트")
 ///
-/// // 리딩 콘텐츠와 선택 상태의 셀
+/// // 리딩 요소와 선택 상태의 셀
 /// ListCell(label: "커스텀 셀", onTap: {
 ///     print("셀이 탭되었습니다")
 /// })
-/// .leadingContent {
-///     Image.icon(.person)
-///         .frame(width: 24, height: 24)
-/// }
+/// .leadingResources([.icon(.person)])
 /// .selected(true)
 /// .chevron(true)
 /// ```
@@ -36,24 +33,26 @@ import SwiftUI
 /// ## 콘텐츠 슬롯
 ///
 /// 네 슬롯은 셀 안에서 각각 다음 위치를 차지하며, 슬롯마다 여러 요소를 나열할 수 있습니다.
+/// 슬롯에 넣을 수 있는 요소는 ``Resource``에 슬롯별로 정의되어 있어, 다른 슬롯 전용 요소를 넘기면 컴파일되지 않습니다.
 ///
-/// - ``leadingContent(_:)``: 라벨 앞, 항목 간 간격 8
-/// - ``labelTrailingContent(_:)``: 라벨 바로 뒤, 항목 간 간격 4
-/// - ``trailingContent(_:)``: 셀 오른쪽 끝, 항목 간 간격 8
-/// - ``extraContent(_:)``: 설명 아래, 항목 간 간격 6
+/// - ``leadingResources(_:)``: 라벨 앞, 항목 간 간격 8
+/// - ``labelTrailingResources(_:)``: 라벨 바로 뒤, 항목 간 간격 4
+/// - ``trailingResources(_:)``: 셀 오른쪽 끝, 항목 간 간격 8
+/// - ``extraResources(_:)``: 설명 아래, 항목 간 간격 6
 ///
 /// ```swift
 /// ListCell(label: "김티드")
 ///     .description("iOS 개발자")
-///     .labelTrailingContent {
-///         ContentBadge(text: "신규")
-///     }
-///     .extraContent {
-///         ContentBadge(variant: .outlined, text: "서울")
-///     }
-///     .trailingContent { _ in
-///         Text("값")
-///     }
+///     .labelTrailingResources([.contentBadge(title: "신규")])
+///     .extraResources([.contentBadge(.outlined, title: "서울")])
+///     .trailingResources([.value("값")])
+/// ```
+///
+/// 목록에 없는 구성이 필요하면 각 슬롯 타입의 `slot(_:)` 팩토리로 임의 뷰를 넣을 수 있습니다.
+///
+/// ```swift
+/// ListCell(label: "커스텀")
+///     .trailingResources([.slot { MyCustomView() }])
 /// ```
 public struct ListCell: View {
     // MARK: - Types
@@ -138,9 +137,6 @@ public struct ListCell: View {
 
     // MARK: - Body
     @State private var isPressed = false
-    @State private var leadingContentEmpty = false
-    @State private var trailingContentEmpty = false
-    @State private var labelTrailingContentEmpty = true
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -180,10 +176,10 @@ public struct ListCell: View {
     private var selected = false
     private var divider = false
     private var chevron = false
-    private var leadingContent: (() -> AnyView)? = nil
-    private var labelTrailingContent: (() -> AnyView)? = nil
-    private var trailingContent: ((Bool) -> AnyView)? = nil
-    private var extraContent: (() -> AnyView)? = nil
+    private var leadingResources: [Resource.Leading] = []
+    private var labelTrailingResources: [Resource.LabelTrailing] = []
+    private var trailingResources: [Resource.Trailing] = []
+    private var extraResources: [Resource.Extra] = []
     private var interactionOutset: CGFloat = 12
     private var interactionRadius: CGFloat? = nil
     private var verticalAlignment: VerticalAlign = .top
@@ -337,8 +333,8 @@ public struct ListCell: View {
     ///   - selected: 선택 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     ///
-    /// - Important: 체크 아이콘은 ``trailingContent(_:)`` 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다.
-    ///   선택 상태와 별개의 우측 콘텐츠가 필요하면 ``labelTrailingContent(_:)`` 또는 ``extraContent(_:)``를 사용하세요.
+    /// - Important: 체크 아이콘은 ``trailingResources(_:)`` 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다.
+    ///   선택 상태와 별개의 우측 콘텐츠가 필요하면 ``labelTrailingResources(_:)`` 또는 ``extraResources(_:)``를 사용하세요.
     public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
         zelf.selected = selected
@@ -369,87 +365,89 @@ public struct ListCell: View {
         return zelf
     }
 
-    /// 셀 좌측에 추가 콘텐츠를 표시합니다.
+    /// 셀 좌측에 표시할 요소를 지정합니다.
     ///
     /// 아이콘, 체크박스, 아바타, 썸네일 등을 셀 라벨 앞에 배치할 수 있습니다.
-    /// 여러 요소를 나열하면 8포인트 간격으로 가로 배치됩니다.
+    /// 여러 개를 넘기면 8포인트 간격으로 가로 배치됩니다.
     ///
     /// ```swift
     /// ListCell(label: "김티드")
-    ///     .leadingContent {
-    ///         Checkbox(checked: isChecked)
-    ///         Avatar(image: profileImage)
-    ///     }
+    ///     .leadingResources([
+    ///         .checkbox(checked: isChecked),
+    ///         .avatar(profileImageURL, variant: .person)
+    ///     ])
     /// ```
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저
+    ///   - resources: 표시할 요소 목록
     /// - Returns: 수정된 ListCell 인스턴스
-    public func leadingContent<V: View>(@ViewBuilder _ contents: @escaping () -> V) -> Self {
+    public func leadingResources(_ resources: [Resource.Leading]) -> Self {
         var zelf = self
-        zelf.leadingContent = { AnyView(contents()) }
+        zelf.leadingResources = resources
         return zelf
     }
 
-    /// 라벨 행의 오른쪽 끝에 콘텐츠를 표시합니다.
+    /// 라벨 행의 오른쪽 끝에 표시할 요소를 지정합니다.
     ///
     /// 배지나 인증 아이콘처럼 라벨에 딸린 요소를 배치할 때 사용합니다.
-    /// 여러 요소를 나열하면 4포인트 간격으로 가로 배치되며, 높이가 22포인트로 고정되어 행 높이를 늘리지 않습니다.
+    /// 여러 개를 넘기면 4포인트 간격으로 가로 배치되며, 높이가 22포인트로 고정되어 행 높이를 늘리지 않습니다.
     ///
     /// ```swift
     /// ListCell(label: "김티드")
-    ///     .labelTrailingContent {
-    ///         ContentBadge(text: "신규")
-    ///     }
+    ///     .labelTrailingResources([.contentBadge(title: "신규")])
     /// ```
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저
+    ///   - resources: 표시할 요소 목록
     /// - Returns: 수정된 ListCell 인스턴스
     ///
     /// - Note: 라벨이 2줄 이상일 때 표시 위치는 ``verticalAlign(_:)``을 따릅니다.
-    public func labelTrailingContent<V: View>(@ViewBuilder _ contents: @escaping () -> V) -> Self {
+    public func labelTrailingResources(_ resources: [Resource.LabelTrailing]) -> Self {
         var zelf = self
-        zelf.labelTrailingContent = { AnyView(contents()) }
+        zelf.labelTrailingResources = resources
         return zelf
     }
 
-    /// 셀 우측에 추가 콘텐츠를 표시합니다.
+    /// 셀 우측에 표시할 요소를 지정합니다.
     ///
-    /// 값 텍스트, 배지, 버튼, 스위치 등 추가 UI 요소를 셀 오른쪽 끝에 배치할 수 있습니다.
-    /// 여러 요소를 나열하면 8포인트 간격으로 가로 배치됩니다.
-    /// 클로저 파라미터를 통해 셀의 선택된 상태를 전달받을 수 있습니다.
+    /// 값 텍스트, 배지, 버튼, 스위치 등을 셀 오른쪽 끝에 배치할 수 있습니다.
+    /// 여러 개를 넘기면 8포인트 간격으로 가로 배치됩니다.
+    ///
+    /// ```swift
+    /// ListCell(label: "알림 받기")
+    ///     .trailingResources([.switch(checked: isOn, onSelect: { isOn = $0 })])
+    /// ```
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음)
+    ///   - resources: 표시할 요소 목록
     /// - Returns: 수정된 ListCell 인스턴스
-    public func trailingContent<V: View>(@ViewBuilder _ contents: @escaping (Bool) -> V) -> Self {
+    ///
+    /// - Important: ``selected(_:)``가 `true`인 셀은 체크 아이콘이 이 자리를 대신 차지해 요소가 표시되지 않습니다.
+    public func trailingResources(_ resources: [Resource.Trailing]) -> Self {
         var zelf = self
-        zelf.trailingContent = { AnyView(contents($0)) }
+        zelf.trailingResources = resources
         return zelf
     }
 
-    /// 설명 아래에 자유 콘텐츠를 표시합니다.
+    /// 설명 아래에 표시할 요소를 지정합니다.
     ///
-    /// 셀 폭을 모두 사용하는 자유 슬롯으로, 여러 요소를 나열하면 6포인트 간격으로 가로 배치됩니다.
+    /// 셀 폭을 모두 사용하며, 여러 개를 넘기면 6포인트 간격으로 가로 배치됩니다.
     ///
     /// ```swift
     /// ListCell(label: "김티드")
     ///     .description("iOS 개발자")
-    ///     .extraContent {
-    ///         ContentBadge(variant: .outlined, text: "서울")
-    ///         ContentBadge(variant: .outlined, text: "5년차")
-    ///     }
+    ///     .extraResources([
+    ///         .contentBadge(.outlined, title: "서울"),
+    ///         .contentBadge(.outlined, title: "5년차")
+    ///     ])
     /// ```
     ///
     /// - Parameters:
-    ///   - contents: 표시할 콘텐츠를 생성하는 클로저
+    ///   - resources: 표시할 요소 목록
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 슬롯 내부 구성은 사용처가 정하며, 그 안의 타이포그래피와 색상은 컴포넌트가 보장하지 않습니다.
-    public func extraContent<V: View>(@ViewBuilder _ contents: @escaping () -> V) -> Self {
+    public func extraResources(_ resources: [Resource.Extra]) -> Self {
         var zelf = self
-        zelf.extraContent = { AnyView(contents()) }
+        zelf.extraResources = resources
         return zelf
     }
 
@@ -504,13 +502,14 @@ extension ListCell {
 
     private var row: some View {
         HStack(alignment: verticalAlignment.alignment, spacing: 0) {
-            if let leadingContent {
+            if leadingResources.isEmpty == false {
                 HStack(alignment: .center, spacing: 8) {
-                    leadingContent()
+                    ForEach(Array(leadingResources.enumerated()), id: \.offset) { _, resource in
+                        resource.view
+                    }
                 }
-                .ifEmptyView { leadingContentEmpty = $0 }
-                .frame(minHeight: leadingContentEmpty ? 0 : Self.rowMinHeight)
-                .padding(.trailing, leadingContentEmpty ? 0 : 8)
+                .frame(minHeight: Self.rowMinHeight)
+                .padding(.trailing, 8)
             }
 
             VStack(alignment: .leading, spacing: 0) {
@@ -529,9 +528,11 @@ extension ListCell {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if let extraContent {
+                if extraResources.isEmpty == false {
                     HStack(alignment: .center, spacing: 6) {
-                        extraContent()
+                        ForEach(Array(extraResources.enumerated()), id: \.offset) { _, resource in
+                            resource.view
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -546,13 +547,14 @@ extension ListCell {
                     .frame(width: Self.selectedCheckSize, height: Self.selectedCheckSize)
                     .frame(minHeight: Self.rowMinHeight)
                     .padding(.leading, 8)
-            } else if let trailingContent {
+            } else if trailingResources.isEmpty == false {
                 HStack(alignment: .center, spacing: 8) {
-                    trailingContent(selected)
+                    ForEach(Array(trailingResources.enumerated()), id: \.offset) { _, resource in
+                        resource.view
+                    }
                 }
-                .ifEmptyView { trailingContentEmpty = $0 }
-                .frame(minHeight: trailingContentEmpty ? 0 : Self.rowMinHeight)
-                .padding(.leading, trailingContentEmpty ? 0 : 8)
+                .frame(minHeight: Self.rowMinHeight)
+                .padding(.leading, 8)
             }
 
             if chevron {
@@ -582,21 +584,22 @@ extension ListCell {
             }
             .fixedSize(horizontal: false, vertical: true)
             // labelTrailing이 없을 때만 라벨이 행을 채운다.
-            // 있을 때는 라벨이 hug해서 짧으면 콘텐츠가 바로 옆에 붙고, 길면 아래 Spacer가 0으로 줄며
-            // 콘텐츠 자리를 뺀 남은 폭에서 줄바꿈된다.
-            .if(labelTrailingContentEmpty) {
+            // 있을 때는 라벨이 hug해서 짧으면 요소가 바로 옆에 붙고, 길면 아래 Spacer가 0으로 줄며
+            // 요소 자리를 뺀 남은 폭에서 줄바꿈된다.
+            .if(labelTrailingResources.isEmpty) {
                 $0.frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            if let labelTrailingContent {
+            if labelTrailingResources.isEmpty == false {
                 HStack(alignment: .center, spacing: 4) {
-                    labelTrailingContent()
+                    ForEach(Array(labelTrailingResources.enumerated()), id: \.offset) { _, resource in
+                        resource.view
+                    }
                 }
-                .ifEmptyView { labelTrailingContentEmpty = $0 }
-                // 라벨이 길어져도 콘텐츠는 축소되지 않는다.
+                // 라벨이 길어져도 요소는 축소되지 않는다.
                 .fixedSize(horizontal: true, vertical: false)
-                .frame(height: labelTrailingContentEmpty ? 0 : Self.labelContentHeight)
-                .padding(.leading, labelTrailingContentEmpty ? 0 : 4)
+                .frame(height: Self.labelContentHeight)
+                .padding(.leading, 4)
 
                 Spacer(minLength: 0)
             }
@@ -631,6 +634,307 @@ extension ListCell {
                         semantic: resolvedLabelColor
                     )
             }
+        }
+    }
+}
+
+// MARK: - Resource
+extension ListCell {
+    /// ``ListCell``의 각 슬롯에 표시할 요소들의 Namespace입니다.
+    ///
+    /// 슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다.
+    /// 예를 들어 ``Trailing/switch(checked:onSelect:)``는 ``ListCell/trailingResources(_:)``에만 넘길 수 있고,
+    /// ``ListCell/leadingResources(_:)``에 넘기면 컴파일되지 않습니다.
+    ///
+    /// 각 요소의 크기와 정렬은 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다.
+    /// 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
+    public enum Resource {
+        /// 셀 좌측(``ListCell/leadingResources(_:)``)에 표시할 요소입니다.
+        public enum Leading {
+            /// 아이콘 (22×22)
+            /// - Parameters:
+            ///   - icon: 표시할 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
+            case icon(
+                _ icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+            )
+
+            /// 배경이 있는 큰 아이콘 (컨테이너 36×36 / 아이콘 20×20)
+            /// - Parameters:
+            ///   - icon: 표시할 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
+            case largeIcon(
+                _ icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+            )
+
+            /// 체크박스
+            /// - Parameters:
+            ///   - checked: 선택 여부
+            ///   - onSelect: 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용
+            case checkbox(checked: Bool, onSelect: ((Bool) -> Void)? = nil)
+
+            /// 라디오
+            /// - Parameters:
+            ///   - checked: 선택 여부
+            ///   - onSelect: 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용
+            case radio(checked: Bool, onSelect: ((Bool) -> Void)? = nil)
+
+            /// 아바타 (40×40)
+            /// - Parameters:
+            ///   - imageUrl: 표시할 이미지의 URL 문자열
+            ///   - variant: 아바타 유형
+            case avatar(_ imageUrl: String, variant: Avatar.Variant)
+
+            /// 썸네일 (56×56 정사각, 둥근 모서리·테두리 적용)
+            /// - Parameter imageUrl: 표시할 이미지의 URL 문자열
+            case thumbnail(_ imageUrl: String)
+
+            /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
+            case slotView(() -> AnyView)
+
+            /// 목록에 없는 구성을 직접 배치합니다.
+            ///
+            /// - Parameter content: 표시할 뷰를 생성하는 클로저
+            /// - Returns: 구성된 요소
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Leading {
+                .slotView { AnyView(content()) }
+            }
+        }
+
+        /// 셀 우측(``ListCell/trailingResources(_:)``)에 표시할 요소입니다.
+        public enum Trailing {
+            /// 값 텍스트
+            /// - Parameter text: 표시할 텍스트
+            case value(_ text: String)
+
+            /// 아이콘 (22×22)
+            /// - Parameters:
+            ///   - icon: 표시할 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용
+            case icon(
+                _ icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralQuaternary)
+            )
+
+            /// 아이콘 버튼 (배경 없음)
+            /// - Parameters:
+            ///   - icon: 버튼 아이콘
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case iconButton(_ icon: Icon, handler: (() -> Void)? = nil)
+
+            /// 텍스트 버튼
+            /// - Parameters:
+            ///   - title: 버튼 텍스트
+            ///   - color: 버튼 색상, 생략하면 기본값으로 `.assistive` 적용
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case textButton(
+                title: String,
+                color: TextButton.Color = .assistive,
+                handler: (() -> Void)? = nil
+            )
+
+            /// 버튼
+            /// - Parameters:
+            ///   - title: 버튼 텍스트
+            ///   - color: 버튼 색상, 생략하면 기본값으로 `.assistive` 적용
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case button(
+                title: String,
+                color: Button.Color = .assistive,
+                handler: (() -> Void)? = nil
+            )
+
+            /// 콘텐츠 배지
+            /// - Parameters:
+            ///   - variant: 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
+            ///   - title: 배지 텍스트
+            case contentBadge(_ variant: ContentBadge.Variant = .solid, title: String)
+
+            /// 스위치
+            /// - Parameters:
+            ///   - checked: 켜짐 여부
+            ///   - onSelect: 값 변경 핸들러, 생략하면 기본값으로 `nil` 적용
+            case `switch`(checked: Bool, onSelect: ((Bool) -> Void)? = nil)
+
+            /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
+            case slotView(() -> AnyView)
+
+            /// 목록에 없는 구성을 직접 배치합니다.
+            ///
+            /// - Parameter content: 표시할 뷰를 생성하는 클로저
+            /// - Returns: 구성된 요소
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Trailing {
+                .slotView { AnyView(content()) }
+            }
+        }
+
+        /// 라벨 행 오른쪽 끝(``ListCell/labelTrailingResources(_:)``)에 표시할 요소입니다.
+        public enum LabelTrailing {
+            /// 콘텐츠 배지
+            /// - Parameters:
+            ///   - variant: 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
+            ///   - title: 배지 텍스트
+            case contentBadge(_ variant: ContentBadge.Variant = .solid, title: String)
+
+            /// 아이콘 (22×22)
+            /// - Parameters:
+            ///   - icon: 표시할 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
+            case icon(
+                _ icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+            )
+
+            /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
+            case slotView(() -> AnyView)
+
+            /// 목록에 없는 구성을 직접 배치합니다.
+            ///
+            /// - Parameter content: 표시할 뷰를 생성하는 클로저
+            /// - Returns: 구성된 요소
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> LabelTrailing {
+                .slotView { AnyView(content()) }
+            }
+        }
+
+        /// 설명 아래(``ListCell/extraResources(_:)``)에 표시할 요소입니다.
+        public enum Extra {
+            /// 텍스트
+            /// - Parameter text: 표시할 텍스트
+            case text(_ text: String)
+
+            /// 콘텐츠 배지
+            /// - Parameters:
+            ///   - variant: 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
+            ///   - title: 배지 텍스트
+            case contentBadge(_ variant: ContentBadge.Variant = .solid, title: String)
+
+            /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
+            case slotView(() -> AnyView)
+
+            /// 목록에 없는 구성을 직접 배치합니다.
+            ///
+            /// - Parameter content: 표시할 뷰를 생성하는 클로저
+            /// - Returns: 구성된 요소
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Extra {
+                .slotView { AnyView(content()) }
+            }
+        }
+    }
+}
+
+// MARK: - Resource Rendering
+extension ListCell.Resource {
+    /// 슬롯 아이콘의 한 변 크기.
+    fileprivate static var iconSize: CGFloat { 22 }
+    /// ``Leading/largeIcon(_:tintColor:)`` 컨테이너의 한 변 크기.
+    fileprivate static var largeIconContainerSize: CGFloat { 36 }
+    /// ``Leading/largeIcon(_:tintColor:)`` 안쪽 아이콘의 한 변 크기.
+    fileprivate static var largeIconSize: CGFloat { 20 }
+    /// ``Leading/largeIcon(_:tintColor:)`` 컨테이너의 모서리 반경.
+    fileprivate static var largeIconCornerRadius: CGFloat { 12 }
+    /// ``Leading/thumbnail(_:)``의 한 변 크기.
+    fileprivate static var thumbnailSize: CGFloat { 56 }
+
+    /// 지정한 크기의 템플릿 아이콘을 만든다.
+    fileprivate static func iconView(
+        _ icon: Icon,
+        tintColor: SwiftUI.Color,
+        size: CGFloat
+    ) -> some View {
+        Image.icon(icon)
+            .resizable()
+            .renderingMode(.template)
+            .foregroundStyle(tintColor)
+            .frame(width: size, height: size)
+    }
+}
+
+extension ListCell.Resource.Leading {
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case let .icon(icon, tintColor):
+            ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.iconSize)
+        case let .largeIcon(icon, tintColor):
+            ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.largeIconSize)
+                .frame(
+                    width: ListCell.Resource.largeIconContainerSize,
+                    height: ListCell.Resource.largeIconContainerSize
+                )
+                .background(
+                    RoundedRectangle(cornerRadius: ListCell.Resource.largeIconCornerRadius)
+                        .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
+                )
+        case let .checkbox(checked, onSelect):
+            Checkbox(checked: checked, onSelect: onSelect)
+        case let .radio(checked, onSelect):
+            Radio(checked: checked, onSelect: onSelect)
+        case let .avatar(imageUrl, variant):
+            Avatar(imageUrl, variant: variant, size: .medium)
+        case let .thumbnail(imageUrl):
+            Thumbnail(urlString: imageUrl, ratio: .r1x1)
+                .width(ListCell.Resource.thumbnailSize)
+                .radius()
+                .border()
+        case let .slotView(content):
+            content()
+        }
+    }
+}
+
+extension ListCell.Resource.Trailing {
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case let .value(text):
+            Text(text)
+                .paragraph(variant: .body2, semantic: .foregroundNeutralTertiary)
+        case let .icon(icon, tintColor):
+            ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.iconSize)
+        case let .iconButton(icon, handler):
+            IconButton(variant: .normal(size: .small), icon: icon, handler: handler)
+        case let .textButton(title, color, handler):
+            TextButton(color: color, size: .small, text: title, handler: handler)
+        case let .button(title, color, handler):
+            Button(variant: .outlined, color: color, size: .xsmall, text: title, handler: handler)
+        case let .contentBadge(variant, title):
+            ContentBadge(variant: variant, text: title)
+        case let .switch(checked, onSelect):
+            Switch(checked: checked, onSelect: onSelect)
+        case let .slotView(content):
+            content()
+        }
+    }
+}
+
+extension ListCell.Resource.LabelTrailing {
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case let .contentBadge(variant, title):
+            ContentBadge(variant: variant, text: title)
+        case let .icon(icon, tintColor):
+            ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.iconSize)
+        case let .slotView(content):
+            content()
+        }
+    }
+}
+
+extension ListCell.Resource.Extra {
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case let .text(text):
+            Text(text)
+                .paragraph(variant: .label2, semantic: .foregroundNeutralTertiary)
+        case let .contentBadge(variant, title):
+            ContentBadge(variant: variant, text: title)
+        case let .slotView(content):
+            content()
         }
     }
 }

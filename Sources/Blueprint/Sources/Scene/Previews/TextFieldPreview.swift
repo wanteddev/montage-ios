@@ -147,16 +147,11 @@ struct TextFieldPreview: View {
                     }
                 }
                 .highlight(trimmed)
-                .leadingContent {
-                    Group {
-                        if indexPath.section == 0 {
-                            Image.icon(.search)
-                                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
-                        } else {
-                            Avatar("", variant: .company, size: .medium)
-                        }
-                    }
-                }
+                .leadingResources([
+                    indexPath.section == 0
+                        ? .icon(.search, tintColor: .semantic(.foregroundNeutralTertiary))
+                        : .avatar("", variant: .company)
+                ])
                 .if(indexPath.section == 1) {
                     $0.description("설명")
                 }

@@ -20,13 +20,15 @@ struct IconPreview: View {
             LazyVStack(spacing: 0) {
                 ForEach(iconList, id: \.rawValue) { icon in
                     ListCell(label: icon.rawValue)
-                        .leadingContent {
-                            Image.icon(
-                                icon,
-                                renderingMode: .original,
-                                color: color == .clear ? nil : color
-                            )
-                        }
+                        .leadingResources([
+                            .slot {
+                                Image.icon(
+                                    icon,
+                                    renderingMode: .original,
+                                    color: color == .clear ? nil : color
+                                )
+                            }
+                        ])
                 }
             }
         } options: {

@@ -9,7 +9,7 @@ description: 텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포�
 
 ## Overview
 
-`ListCell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다. 라벨, 부가 설명과 함께 네 종류의 콘텐츠 슬롯([leadingContent(_:)](/documentation/montage/listcell/leadingcontent(_:).md), [labelTrailingContent(_:)](/documentation/montage/listcell/labeltrailingcontent(_:).md), [trailingContent(_:)](/documentation/montage/listcell/trailingcontent(_:).md), [extraContent(_:)](/documentation/montage/listcell/extracontent(_:).md))을 제공하며 다양한 스타일로 커스터마이징할 수 있습니다.
+`ListCell`은 앱 내에서 리스트 형태로 정보를 표시할 때 사용되는 기본 컴포넌트입니다. 라벨, 부가 설명과 함께 네 종류의 콘텐츠 슬롯([leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md), [labelTrailingResources(_:)](/documentation/montage/listcell/labeltrailingresources(_:).md), [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md), [extraResources(_:)](/documentation/montage/listcell/extraresources(_:).md))을 제공하며 다양한 스타일로 커스터마이징할 수 있습니다.
 
 ```swift
 // 기본 셀
@@ -19,39 +19,37 @@ ListCell(label: "기본 셀")
 ListCell(label: "설명이 있는 셀")
     .description("부가 설명 텍스트")
 
-// 리딩 콘텐츠와 선택 상태의 셀
+// 리딩 요소와 선택 상태의 셀
 ListCell(label: "커스텀 셀", onTap: {
     print("셀이 탭되었습니다")
 })
-.leadingContent {
-    Image.icon(.person)
-        .frame(width: 24, height: 24)
-}
+.leadingResources([.icon(.person)])
 .selected(true)
 .chevron(true)
 ```
 
 ## 콘텐츠 슬롯
 
-네 슬롯은 셀 안에서 각각 다음 위치를 차지하며, 슬롯마다 여러 요소를 나열할 수 있습니다.
+네 슬롯은 셀 안에서 각각 다음 위치를 차지하며, 슬롯마다 여러 요소를 나열할 수 있습니다. 슬롯에 넣을 수 있는 요소는 [ListCell.Resource](/documentation/montage/listcell/resource.md)에 슬롯별로 정의되어 있어, 다른 슬롯 전용 요소를 넘기면 컴파일되지 않습니다.
 
-- [leadingContent(_:)](/documentation/montage/listcell/leadingcontent(_:).md): 라벨 앞, 항목 간 간격 8
-- [labelTrailingContent(_:)](/documentation/montage/listcell/labeltrailingcontent(_:).md): 라벨 바로 뒤, 항목 간 간격 4
-- [trailingContent(_:)](/documentation/montage/listcell/trailingcontent(_:).md): 셀 오른쪽 끝, 항목 간 간격 8
-- [extraContent(_:)](/documentation/montage/listcell/extracontent(_:).md): 설명 아래, 항목 간 간격 6
+- [leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md): 라벨 앞, 항목 간 간격 8
+- [labelTrailingResources(_:)](/documentation/montage/listcell/labeltrailingresources(_:).md): 라벨 바로 뒤, 항목 간 간격 4
+- [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md): 셀 오른쪽 끝, 항목 간 간격 8
+- [extraResources(_:)](/documentation/montage/listcell/extraresources(_:).md): 설명 아래, 항목 간 간격 6
 
 ```swift
 ListCell(label: "김티드")
     .description("iOS 개발자")
-    .labelTrailingContent {
-        ContentBadge(text: "신규")
-    }
-    .extraContent {
-        ContentBadge(variant: .outlined, text: "서울")
-    }
-    .trailingContent { _ in
-        Text("값")
-    }
+    .labelTrailingResources([.contentBadge(title: "신규")])
+    .extraResources([.contentBadge(.outlined, title: "서울")])
+    .trailingResources([.value("값")])
+```
+
+목록에 없는 구성이 필요하면 각 슬롯 타입의 `slot(_:)` 팩토리로 임의 뷰를 넣을 수 있습니다.
+
+```swift
+ListCell(label: "커스텀")
+    .trailingResources([.slot { MyCustomView() }])
 ```
 
 ## Topics
@@ -159,34 +157,30 @@ ListCell(label: "김티드")
 </details>
 <details>
 
-<summary>``func extraContent<V>(() -> V) -> ListCell``</summary>
+<summary>``func extraResources([Resource.Extra]) -> ListCell``</summary>
 
 
-설명 아래에 자유 콘텐츠를 표시합니다.
+설명 아래에 표시할 요소를 지정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 표시할 콘텐츠를 생성하는 클로저 |
+  | `resources` | 표시할 요소 목록 |
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  셀 폭을 모두 사용하는 자유 슬롯으로, 여러 요소를 나열하면 6포인트 간격으로 가로 배치됩니다.
+  셀 폭을 모두 사용하며, 여러 개를 넘기면 6포인트 간격으로 가로 배치됩니다.
 
   ```swift
   ListCell(label: "김티드")
       .description("iOS 개발자")
-      .extraContent {
-          ContentBadge(variant: .outlined, text: "서울")
-          ContentBadge(variant: .outlined, text: "5년차")
-      }
+      .extraResources([
+          .contentBadge(.outlined, title: "서울"),
+          .contentBadge(.outlined, title: "5년차")
+      ])
   ```
-
-  >  **Note**
-  >
-  > 슬롯 내부 구성은 사용처가 정하며, 그 안의 타이포그래피와 색상은 컴포넌트가 보장하지 않습니다.
 
 </details>
 <details>
@@ -268,27 +262,25 @@ ListCell(label: "김티드")
 </details>
 <details>
 
-<summary>``func labelTrailingContent<V>(() -> V) -> ListCell``</summary>
+<summary>``func labelTrailingResources([Resource.LabelTrailing]) -> ListCell``</summary>
 
 
-라벨 행의 오른쪽 끝에 콘텐츠를 표시합니다.
+라벨 행의 오른쪽 끝에 표시할 요소를 지정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 표시할 콘텐츠를 생성하는 클로저 |
+  | `resources` | 표시할 요소 목록 |
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  배지나 인증 아이콘처럼 라벨에 딸린 요소를 배치할 때 사용합니다. 여러 요소를 나열하면 4포인트 간격으로 가로 배치되며, 높이가 22포인트로 고정되어 행 높이를 늘리지 않습니다.
+  배지나 인증 아이콘처럼 라벨에 딸린 요소를 배치할 때 사용합니다. 여러 개를 넘기면 4포인트 간격으로 가로 배치되며, 높이가 22포인트로 고정되어 행 높이를 늘리지 않습니다.
 
   ```swift
   ListCell(label: "김티드")
-      .labelTrailingContent {
-          ContentBadge(text: "신규")
-      }
+      .labelTrailingResources([.contentBadge(title: "신규")])
   ```
 
   >  **Note**
@@ -333,28 +325,28 @@ ListCell(label: "김티드")
 </details>
 <details>
 
-<summary>``func leadingContent<V>(() -> V) -> ListCell``</summary>
+<summary>``func leadingResources([Resource.Leading]) -> ListCell``</summary>
 
 
-셀 좌측에 추가 콘텐츠를 표시합니다.
+셀 좌측에 표시할 요소를 지정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 표시할 콘텐츠를 생성하는 클로저 |
+  | `resources` | 표시할 요소 목록 |
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  아이콘, 체크박스, 아바타, 썸네일 등을 셀 라벨 앞에 배치할 수 있습니다. 여러 요소를 나열하면 8포인트 간격으로 가로 배치됩니다.
+  아이콘, 체크박스, 아바타, 썸네일 등을 셀 라벨 앞에 배치할 수 있습니다. 여러 개를 넘기면 8포인트 간격으로 가로 배치됩니다.
 
   ```swift
   ListCell(label: "김티드")
-      .leadingContent {
-          Checkbox(checked: isChecked)
-          Avatar(image: profileImage)
-      }
+      .leadingResources([
+          .checkbox(checked: isChecked),
+          .avatar(profileImageURL, variant: .person)
+      ])
   ```
 
 </details>
@@ -377,7 +369,7 @@ ListCell(label: "김티드")
   선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며, 셀 오른쪽 끝에 체크 아이콘이 표시됩니다.
   >  **Important**
   >
-  > 체크 아이콘은 [trailingContent(_:)](/documentation/montage/listcell/trailingcontent(_:).md) 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다. 선택 상태와 별개의 우측 콘텐츠가 필요하면 [labelTrailingContent(_:)](/documentation/montage/listcell/labeltrailingcontent(_:).md) 또는 [extraContent(_:)](/documentation/montage/listcell/extracontent(_:).md)를 사용하세요.
+  > 체크 아이콘은 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md) 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다. 선택 상태와 별개의 우측 콘텐츠가 필요하면 [labelTrailingResources(_:)](/documentation/montage/listcell/labeltrailingresources(_:).md) 또는 [extraResources(_:)](/documentation/montage/listcell/extraresources(_:).md)를 사용하세요.
 
 </details>
 <details>
@@ -400,21 +392,31 @@ ListCell(label: "김티드")
 </details>
 <details>
 
-<summary>``func trailingContent<V>((Bool) -> V) -> ListCell``</summary>
+<summary>``func trailingResources([Resource.Trailing]) -> ListCell``</summary>
 
 
-셀 우측에 추가 콘텐츠를 표시합니다.
+셀 우측에 표시할 요소를 지정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 표시할 콘텐츠를 생성하는 클로저 (선택된 상태를 파라미터로 받음) |
+  | `resources` | 표시할 요소 목록 |
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  값 텍스트, 배지, 버튼, 스위치 등 추가 UI 요소를 셀 오른쪽 끝에 배치할 수 있습니다. 여러 요소를 나열하면 8포인트 간격으로 가로 배치됩니다. 클로저 파라미터를 통해 셀의 선택된 상태를 전달받을 수 있습니다.
+  값 텍스트, 배지, 버튼, 스위치 등을 셀 오른쪽 끝에 배치할 수 있습니다. 여러 개를 넘기면 8포인트 간격으로 가로 배치됩니다.
+
+  ```swift
+  ListCell(label: "알림 받기")
+      .trailingResources([.switch(checked: isOn, onSelect: { isOn = $0 })])
+  ```
+
+  >  **Important**
+  >
+  > [selected(_:)](/documentation/montage/listcell/selected(_:).md)가 `true`인 셀은 체크 아이콘이 이 자리를 대신 차지해 요소가 표시되지 않습니다.
+
 </details>
 <details>
 
@@ -459,6 +461,381 @@ ListCell(label: "김티드")
 
 ### Enumerations
 
+<details>
+
+<summary>``enum Resource``</summary>
+
+
+[ListCell](/documentation/montage/listcell.md)의 각 슬롯에 표시할 요소들의 Namespace입니다.
+- **Overview**
+
+  슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다. 예를 들어 [ListCell.Resource.Trailing.switch(checked:onSelect:)](/documentation/montage/listcell/resource/trailing/switch(checked:onselect:).md)는 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md)에만 넘길 수 있고, [leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md)에 넘기면 컴파일되지 않습니다.
+
+  각 요소의 크기와 정렬은 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다. 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
+#### Enumerations
+
+<details>
+
+<summary>``enum Extra``</summary>
+
+
+설명 아래([extraResources(_:)](/documentation/montage/listcell/extraresources(_:).md))에 표시할 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case contentBadge(ContentBadge.Variant, title: String)``</summary>
+
+
+콘텐츠 배지
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
+  | `title` | 배지 텍스트 |
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+임의 뷰. [slot(_:)](/documentation/montage/listcell/resource/extra/slot(_:).md) 팩토리로 생성합니다.
+</details>
+<details>
+
+<summary>``case text(String)``</summary>
+
+
+텍스트
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 표시할 텍스트 |
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Extra``</summary>
+
+
+목록에 없는 구성을 직접 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  구성된 요소
+</details>
+
+</details>
+<details>
+
+<summary>``enum LabelTrailing``</summary>
+
+
+라벨 행 오른쪽 끝([labelTrailingResources(_:)](/documentation/montage/listcell/labeltrailingresources(_:).md))에 표시할 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case contentBadge(ContentBadge.Variant, title: String)``</summary>
+
+
+콘텐츠 배지
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
+  | `title` | 배지 텍스트 |
+</details>
+<details>
+
+<summary>``case icon(Icon, tintColor: SwiftUI.Color)``</summary>
+
+
+아이콘 (22×22)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+임의 뷰. [slot(_:)](/documentation/montage/listcell/resource/labeltrailing/slot(_:).md) 팩토리로 생성합니다.
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> LabelTrailing``</summary>
+
+
+목록에 없는 구성을 직접 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  구성된 요소
+</details>
+
+</details>
+<details>
+
+<summary>``enum Leading``</summary>
+
+
+셀 좌측([leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md))에 표시할 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case avatar(String, variant: Avatar.Variant)``</summary>
+
+
+아바타 (40×40)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `imageUrl` | 표시할 이미지의 URL 문자열 |
+  | `variant` | 아바타 유형 |
+</details>
+<details>
+
+<summary>``case checkbox(checked: Bool, onSelect: ((Bool) -> Void)?)``</summary>
+
+
+체크박스
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 선택 여부 |
+  | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case icon(Icon, tintColor: SwiftUI.Color)``</summary>
+
+
+아이콘 (22×22)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+</details>
+<details>
+
+<summary>``case largeIcon(Icon, tintColor: SwiftUI.Color)``</summary>
+
+
+배경이 있는 큰 아이콘 (컨테이너 36×36 / 아이콘 20×20)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+</details>
+<details>
+
+<summary>``case radio(checked: Bool, onSelect: ((Bool) -> Void)?)``</summary>
+
+
+라디오
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 선택 여부 |
+  | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+임의 뷰. [slot(_:)](/documentation/montage/listcell/resource/leading/slot(_:).md) 팩토리로 생성합니다.
+</details>
+<details>
+
+<summary>``case thumbnail(String)``</summary>
+
+
+썸네일 (56×56 정사각, 둥근 모서리·테두리 적용)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `imageUrl` | 표시할 이미지의 URL 문자열 |
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Leading``</summary>
+
+
+목록에 없는 구성을 직접 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  구성된 요소
+</details>
+
+</details>
+<details>
+
+<summary>``enum Trailing``</summary>
+
+
+셀 우측([trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md))에 표시할 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case button(title: String, color: Button.Color, handler: (() -> Void)?)``</summary>
+
+
+버튼
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 버튼 텍스트 |
+  | `color` | 버튼 색상, 생략하면 기본값으로 `.assistive` 적용 |
+  | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case contentBadge(ContentBadge.Variant, title: String)``</summary>
+
+
+콘텐츠 배지
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
+  | `title` | 배지 텍스트 |
+</details>
+<details>
+
+<summary>``case icon(Icon, tintColor: SwiftUI.Color)``</summary>
+
+
+아이콘 (22×22)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용 |
+</details>
+<details>
+
+<summary>``case iconButton(Icon, handler: (() -> Void)?)``</summary>
+
+
+아이콘 버튼 (배경 없음)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 버튼 아이콘 |
+  | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+임의 뷰. [slot(_:)](/documentation/montage/listcell/resource/trailing/slot(_:).md) 팩토리로 생성합니다.
+</details>
+<details>
+
+<summary>``case `switch`(checked: Bool, onSelect: ((Bool) -> Void)?)``</summary>
+
+
+스위치
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `checked` | 켜짐 여부 |
+  | `onSelect` | 값 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case textButton(title: String, color: TextButton.Color, handler: (() -> Void)?)``</summary>
+
+
+텍스트 버튼
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `title` | 버튼 텍스트 |
+  | `color` | 버튼 색상, 생략하면 기본값으로 `.assistive` 적용 |
+  | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case value(String)``</summary>
+
+
+값 텍스트
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 표시할 텍스트 |
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Trailing``</summary>
+
+
+목록에 없는 구성을 직접 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  구성된 요소
+</details>
+
+</details>
+
+</details>
 <details>
 
 <summary>``enum VerticalAlign``</summary>
