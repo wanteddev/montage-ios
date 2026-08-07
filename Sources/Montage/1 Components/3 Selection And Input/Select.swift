@@ -450,14 +450,10 @@ public struct Select: View {
                             // 체크 아이콘은 ListCell이 selected 상태에서 직접 그린다.
                             cell.selected(items[index].isSelected)
                         case .radio:
-                            cell.leadingContent {
-                                Radio(checked: items[index].isSelected)
-                            }
+                            cell.leadingResources([.radio(checked: items[index].isSelected)])
                         }
                     case .multiple:
-                        cell.leadingContent {
-                            Checkbox(checked: items[index].isSelected)
-                        }
+                        cell.leadingResources([.checkbox(checked: items[index].isSelected)])
                     }
                 }
             }

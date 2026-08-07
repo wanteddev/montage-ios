@@ -1464,9 +1464,9 @@
           "kind": "method"
         },
         {
-          "name": "extraContent(_:)",
-          "signature": "func extraContent<V>(() -> V) -> ListCell",
-          "summary": "설명 아래에 자유 콘텐츠를 표시합니다.",
+          "name": "extraResources(_:)",
+          "signature": "func extraResources([Resource.Extra]) -> ListCell",
+          "summary": "설명 아래에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -1494,9 +1494,9 @@
           "kind": "method"
         },
         {
-          "name": "labelTrailingContent(_:)",
-          "signature": "func labelTrailingContent<V>(() -> V) -> ListCell",
-          "summary": "라벨 행의 오른쪽 끝에 콘텐츠를 표시합니다.",
+          "name": "labelTrailingResources(_:)",
+          "signature": "func labelTrailingResources([Resource.LabelTrailing]) -> ListCell",
+          "summary": "라벨 행의 오른쪽 끝에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -1512,9 +1512,9 @@
           "kind": "method"
         },
         {
-          "name": "leadingContent(_:)",
-          "signature": "func leadingContent<V>(() -> V) -> ListCell",
-          "summary": "셀 좌측에 추가 콘텐츠를 표시합니다.",
+          "name": "leadingResources(_:)",
+          "signature": "func leadingResources([Resource.Leading]) -> ListCell",
+          "summary": "셀 좌측에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -1530,9 +1530,9 @@
           "kind": "method"
         },
         {
-          "name": "trailingContent(_:)",
-          "signature": "func trailingContent<V>((Bool) -> V) -> ListCell",
-          "summary": "셀 우측에 추가 콘텐츠를 표시합니다.",
+          "name": "trailingResources(_:)",
+          "signature": "func trailingResources([Resource.Trailing]) -> ListCell",
+          "summary": "셀 우측에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -1550,6 +1550,121 @@
       ],
       "staticMembers": [],
       "nestedTypes": [
+        {
+          "name": "ListCell.Resource",
+          "kind": "enum",
+          "summary": "ListCell의 각 슬롯에 표시할 요소들의 Namespace입니다."
+        },
+        {
+          "name": "ListCell.Resource.Extra",
+          "kind": "enum",
+          "summary": "설명 아래(extraResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "contentBadge",
+            "slotView",
+            "text"
+          ],
+          "caseSignatures": [
+            "contentBadge(_:title:)",
+            "slotView(_:)",
+            "text(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Extra",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Resource.LabelTrailing",
+          "kind": "enum",
+          "summary": "라벨 행 오른쪽 끝(labelTrailingResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "contentBadge",
+            "icon",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> LabelTrailing",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Resource.Leading",
+          "kind": "enum",
+          "summary": "셀 좌측(leadingResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "avatar",
+            "checkbox",
+            "icon",
+            "largeIcon",
+            "radio",
+            "slotView",
+            "thumbnail"
+          ],
+          "caseSignatures": [
+            "avatar(_:variant:)",
+            "checkbox(checked:onSelect:)",
+            "icon(_:tintColor:)",
+            "largeIcon(_:tintColor:)",
+            "radio(checked:onSelect:)",
+            "slotView(_:)",
+            "thumbnail(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Resource.Trailing",
+          "kind": "enum",
+          "summary": "셀 우측(trailingResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "button",
+            "contentBadge",
+            "icon",
+            "iconButton",
+            "slotView",
+            "switch",
+            "textButton",
+            "value"
+          ],
+          "caseSignatures": [
+            "button(title:color:handler:)",
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "iconButton(_:handler:)",
+            "slotView(_:)",
+            "switch(checked:onSelect:)",
+            "textButton(title:color:handler:)",
+            "value(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Trailing",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
         {
           "name": "ListCell.VerticalAlign",
           "kind": "enum",
