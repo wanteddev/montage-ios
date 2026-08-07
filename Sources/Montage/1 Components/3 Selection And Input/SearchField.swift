@@ -291,7 +291,8 @@ private extension SearchField {
         case .solid:
             surface
                 .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
-                .background(.ultraThinMaterial, in: surface)
+                // `.bar`는 UIKit의 systemChromeMaterial에 대응한다(Figma의 iOS/Materials/Chrome).
+                .background(.bar, in: surface)
         case .outlined:
             // outlined는 배경을 비워 뒤 콘텐츠가 비치도록 하고, disable일 때만 표면을 채운다.
             if disable {
@@ -300,7 +301,7 @@ private extension SearchField {
             } else {
                 surface
                     .fill(SwiftUI.Color.clear)
-                    .background(.ultraThinMaterial, in: surface)
+                    .background(.bar, in: surface)
             }
         }
     }

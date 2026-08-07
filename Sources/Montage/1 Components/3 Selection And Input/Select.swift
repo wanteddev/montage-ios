@@ -353,7 +353,8 @@ public struct Select: View {
                             ? SwiftUI.Color.atomic(.common100).opacity(0.8)
                             : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
                     )
-                    .background(.ultraThinMaterial, in: surface)
+                    // `.bar`는 UIKit의 systemChromeMaterial에 대응한다(Figma의 iOS/Materials/Chrome).
+                    .background(.bar, in: surface)
             }
         }
         .overlay {
