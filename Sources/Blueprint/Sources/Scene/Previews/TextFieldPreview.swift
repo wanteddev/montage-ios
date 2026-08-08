@@ -93,6 +93,7 @@ struct TextFieldPreview: View {
     @State private var description: Bool = false
     @State private var placeholder: Bool = true
     @State private var trailingButton: Bool = false
+    @State private var secured: Bool = false
     @State private var trailingContent: Content = .none
     @State private var usingSuggestions: Bool = false
     @State private var autoCompletionDataSource: Montage.TextField.AutoCompletionDataSource? = nil
@@ -125,6 +126,7 @@ struct TextFieldPreview: View {
                 .requiredBadge(requiredBadge)
                 .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
                 .icon(icon ? .verifiedCheckFill : nil)
+                .secured(secured)
                 .trailingButton(
                     trailingButton ? TextField.TrailingButtonInfo(
                         variant: .primary,
@@ -257,8 +259,24 @@ struct TextFieldPreview: View {
                         }
                     }
                     HStack {
-                        Text("AutoComplete")
-                        Switch(checked: usingSuggestions) { usingSuggestions = $0 }
+                        HStack {
+                            Text("Secured")
+                            Switch(checked: secured) {
+                                secured = $0
+                                if $0 { usingSuggestions = false }
+                            }
+                        }
+                        Spacer()
+                        HStack {
+                            Text("AutoComplete")
+                            Switch(checked: usingSuggestions) { usingSuggestions = $0 }
+                                .disable(secured)
+                        }
+                    }
+                    if secured {
+                        Text("* 가려진 입력에서는 자동완성이 동작하지 않습니다.")
+                            .font(.caption)
+                            .foregroundStyle(SwiftUI.Color.secondary)
                     }
                     if usingSuggestions {
                         Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")
