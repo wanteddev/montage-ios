@@ -446,12 +446,13 @@ public struct TextArea: View {
             if disable {
                 SwiftUI.Color.semantic(.surfaceNeutralTertiary)
             } else {
+                // `.bar`는 UIKit의 systemChromeMaterial에 대응한다(Figma의 iOS/Materials/Chrome).
                 if colorScheme == .light {
                     SwiftUI.Color.atomic(.common100).opacity(0.8)
-                        .background(.ultraThinMaterial)
+                        .background(.bar)
                 } else {
                     SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                        .background(.ultraThinMaterial)
+                        .background(.bar)
                 }
             }
         }
