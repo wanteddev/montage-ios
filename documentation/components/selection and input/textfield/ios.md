@@ -161,7 +161,7 @@ TextField(text: $inputText)
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `disable` | 비활성화 여부, `true`이면 자동수정과 맞춤법 검사를 사용하지 않음 |
+  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스

@@ -293,7 +293,7 @@ public struct TextField: View {
     /// 호출부에서 인스턴스 바깥에 같은 모디파이어를 붙이면 내부 설정에 덮어써집니다.
     /// 반드시 이 모디파이어로 설정해 주세요.
     ///
-    /// - Parameter disable: 비활성화 여부, `true`이면 자동수정과 맞춤법 검사를 사용하지 않음
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 텍스트 필드 인스턴스
     public func autocorrectionDisabled(_ disable: Bool = true) -> Self {
         var zelf = self
