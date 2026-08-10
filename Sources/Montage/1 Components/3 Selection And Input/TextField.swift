@@ -36,6 +36,11 @@ import SwiftUI
 /// // 사이즈를 지정한 텍스트 필드
 /// TextField(text: $inputText)
 ///    .size(.medium)
+///
+/// // 자동수정·맞춤법 검사를 끈 이메일 입력 필드
+/// TextField(text: $inputText)
+///    .placeholder("이메일을 입력하세요")
+///    .autocorrectionDisabled()
 /// ```
 public struct TextField: View {
     // MARK: - Types
@@ -170,6 +175,7 @@ public struct TextField: View {
     private var customBackgroundColor: SwiftUI.Color?
     private var maxLength: Int?
     private var onTextChange: ((String) -> Void)?
+    private var autocorrectionDisabled = false
 
     /// 텍스트 필드의 사이즈를 설정합니다.
     ///
@@ -275,6 +281,23 @@ public struct TextField: View {
     public func onTextChange(_ handler: @escaping (String) -> Void) -> Self {
         var zelf = self
         zelf.onTextChange = handler
+        return zelf
+    }
+
+    /// 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
+    ///
+    /// 이메일·아이디·인증 코드처럼 자동수정이 오히려 방해가 되는 입력에서 사용합니다.
+    /// `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
+    ///
+    /// 텍스트 필드가 내부에서 SwiftUI의 `autocorrectionDisabled(_:)`를 직접 적용하므로,
+    /// 호출부에서 인스턴스 바깥에 같은 모디파이어를 붙이면 내부 설정에 덮어써집니다.
+    /// 반드시 이 모디파이어로 설정해 주세요.
+    ///
+    /// - Parameter disable: 비활성화 여부, `true`이면 자동수정과 맞춤법 검사를 사용하지 않음
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func autocorrectionDisabled(_ disable: Bool = true) -> Self {
+        var zelf = self
+        zelf.autocorrectionDisabled = disable
         return zelf
     }
 
@@ -398,7 +421,9 @@ private extension TextField {
             }
 
             SwiftUI.TextField("", text: $text)
-            .autocorrectionDisabled(fixAutocorrection)
+            // fixAutocorrection은 clear 버튼의 자동완성 잔상을 지우려고 한 프레임만 켜는 내부 트릭이므로,
+            // 호출부 설정(autocorrectionDisabled)과 OR로 합성해 외부 설정을 덮어쓰지 않게 한다.
+            .autocorrectionDisabled(autocorrectionDisabled || fixAutocorrection)
             .font(.font(variant: size.inputVariant, weight: .regular))
             .foregroundStyle(fieldTextColor)
             .focused($textFieldFocusState)

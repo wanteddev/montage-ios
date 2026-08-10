@@ -28,6 +28,10 @@ import SwiftUI
 /// SearchField(text: $keyword)
 ///    .focused($isFocused)
 ///    .onSubmit { search(keyword) }
+///
+/// // 자동수정·맞춤법 검사를 끈 검색 필드
+/// SearchField(text: $keyword)
+///    .autocorrectionDisabled()
 /// ```
 public struct SearchField: View {
     // MARK: - Types
@@ -72,6 +76,7 @@ public struct SearchField: View {
     private var onSubmit: (() -> Void)?
     private var onTextChange: ((String) -> Void)?
     private var onFocusChange: ((Bool) -> Void)?
+    private var autocorrectionDisabled = false
 
     /// 검색 필드의 스타일을 설정합니다.
     ///
@@ -157,6 +162,23 @@ public struct SearchField: View {
         return zelf
     }
 
+    /// 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
+    ///
+    /// 사람 이름·회사명·약어처럼 사전에 없는 검색어를 자주 입력하는 화면에서 사용합니다.
+    /// `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
+    ///
+    /// 검색 필드가 내부에서 SwiftUI의 `autocorrectionDisabled(_:)`를 직접 적용하므로,
+    /// 호출부에서 인스턴스 바깥에 같은 모디파이어를 붙이면 내부 설정에 덮어써집니다.
+    /// 반드시 이 모디파이어로 설정해 주세요.
+    ///
+    /// - Parameter disable: 비활성화 여부, `true`이면 자동수정과 맞춤법 검사를 사용하지 않음
+    /// - Returns: 수정된 검색 필드 인스턴스
+    public func autocorrectionDisabled(_ disable: Bool = true) -> Self {
+        var zelf = self
+        zelf.autocorrectionDisabled = disable
+        return zelf
+    }
+
     // MARK: - Body
 
     @FocusState private var focusState: Bool
@@ -206,7 +228,9 @@ private extension SearchField {
                 .padding(size.iconPadding)
 
             SwiftUI.TextField("", text: $text)
-                .autocorrectionDisabled(fixAutocorrection)
+                // fixAutocorrection은 clear 버튼의 자동완성 잔상을 지우려고 한 프레임만 켜는 내부 트릭이므로,
+                // 호출부 설정(autocorrectionDisabled)과 OR로 합성해 외부 설정을 덮어쓰지 않게 한다.
+                .autocorrectionDisabled(autocorrectionDisabled || fixAutocorrection)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.search)
                 .onSubmit { onSubmit?() }

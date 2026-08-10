@@ -30,6 +30,10 @@ import SwiftUI
 /// TextArea(text: $longText)
 ///     .maxLength(100)
 ///     .onTextChange { characterCount = $0.count }
+///
+/// // 자동수정·맞춤법 검사를 끈 텍스트 영역
+/// TextArea(text: $longText)
+///     .autocorrectionDisabled()
 /// ```
 public struct TextArea: View {
     // MARK: - Types
@@ -191,6 +195,7 @@ public struct TextArea: View {
     private var maxLength: Int?
     private var inputTransform: ((String) -> String)?
     private var onTextChange: ((String) -> Void)?
+    private var autocorrectionDisabled = false
 
     /// 텍스트 영역의 사이즈를 설정합니다.
     ///
@@ -251,6 +256,22 @@ public struct TextArea: View {
     public func onTextChange(_ handler: @escaping (String) -> Void) -> Self {
         var zelf = self
         zelf.onTextChange = handler
+        return zelf
+    }
+
+    /// 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
+    ///
+    /// 코드 조각·고유명사처럼 사전에 없는 텍스트를 자주 입력하는 화면에서 사용합니다.
+    /// `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
+    ///
+    /// 텍스트 영역의 입력부는 `UITextView`를 감싼 뷰이므로 SwiftUI의 `autocorrectionDisabled(_:)`를
+    /// 인스턴스 바깥에 붙여도 입력부까지 전달되지 않습니다. 반드시 이 모디파이어로 설정해 주세요.
+    ///
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func autocorrectionDisabled(_ disable: Bool = true) -> Self {
+        var zelf = self
+        zelf.autocorrectionDisabled = disable
         return zelf
     }
 
@@ -373,6 +394,9 @@ public struct TextArea: View {
                 UITextViewWrapper(text: $text, inputVariant: size.inputVariant)
                     .inputLimit(maxLength)
                     .inputTransform(inputTransform)
+                    // UITextView는 UIViewRepresentable 안에 있어 SwiftUI의 autocorrectionDisabled(_:)가
+                    // 닿지 않으므로, 래퍼가 값을 받아 입력 트레이트에 직접 반영한다.
+                    .autocorrection(disabled: autocorrectionDisabled)
                     .frameHeight(
                         minHeight: resolvedMinHeight,
                         maxHeight: resolvedMaxHeight
@@ -626,12 +650,14 @@ public struct TextArea: View {
             textView.isScrollEnabled = false
             textView.backgroundColor = .clear
             textView.delegate = context.coordinator
+            applyAutocorrectionTraits(to: textView)
             return textView
         }
 
         func updateUIView(_ uiView: UITextView, context: Context) {
             // 사이즈(=입력 타이포그래피) 변경에 반응하도록 폰트를 갱신한다.
             uiView.font = UIFont.font(variant: inputVariant)
+            applyAutocorrectionTraits(to: uiView)
 
             // inputLimit 인터페이스의 구현 책임: 현재 텍스트가 제한을 초과하면(예: 외부에서 inputLimit을
             // 축소한 경우) 잘라낸다. 입력 시점 제한(shouldChangeTextIn)이 막지 못하는 경로를 보완한다.
@@ -762,6 +788,31 @@ public struct TextArea: View {
         private var maxHeight: CGFloat?
         private var inputLimit: Int?
         private var inputTransform: ((String) -> String)?
+        private var autocorrectionDisabled = false
+
+        /// 자동수정·맞춤법 검사 설정을 UITextView의 입력 트레이트에 반영한다.
+        ///
+        /// `spellCheckingType`의 `.default`는 자동수정 설정을 따라가므로 `autocorrectionType`만
+        /// 지정해도 되지만, 의도를 드러내기 위해 두 트레이트를 함께 명시한다.
+        /// 이미 편집 중인 상태에서 값이 바뀌면 키보드가 새 트레이트를 읽도록 입력 뷰를 갱신한다.
+        private func applyAutocorrectionTraits(to textView: UITextView) {
+            let type: UITextAutocorrectionType = autocorrectionDisabled ? .no : .default
+            let spellChecking: UITextSpellCheckingType = autocorrectionDisabled ? .no : .default
+            guard textView.autocorrectionType != type || textView.spellCheckingType != spellChecking else {
+                return
+            }
+            textView.autocorrectionType = type
+            textView.spellCheckingType = spellChecking
+            if textView.isFirstResponder {
+                textView.reloadInputViews()
+            }
+        }
+
+        func autocorrection(disabled: Bool) -> Self {
+            var zelf = self
+            zelf.autocorrectionDisabled = disabled
+            return zelf
+        }
 
         func inputLimit(_ limit: Int?) -> Self {
             var zelf = self
