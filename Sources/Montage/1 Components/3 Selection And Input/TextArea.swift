@@ -356,24 +356,24 @@ public struct TextArea: View {
     /// 텍스트 영역 하단에 표시할 UI 요소를 설정합니다.
     ///
     /// - Parameters:
-    ///   - leadingResources: 왼쪽에 표시할 UI 요소 배열 (최대 3개)
-    ///   - trailingResources: 오른쪽에 표시할 UI 요소 배열 (최대 3개)
+    ///   - leading: 왼쪽에 표시할 UI 요소 배열 (최대 3개)
+    ///   - trailing: 오른쪽에 표시할 UI 요소 배열 (최대 3개)
     ///   - leadingResourceSpacing: 왼쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용
     ///   - trailingResourceSpacing: 오른쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
     /// - Note: `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 ``Resource/Trailing``에만
     ///   정의되어 있습니다. leading에 넘기면 컴파일되지 않습니다.
     public func bottomResources(
-        leading leadingResources: [Resource.Leading] = [],
-        trailing trailingResources: [Resource.Trailing] = [],
+        leading: [Resource.Leading] = [],
+        trailing: [Resource.Trailing] = [],
         leadingResourceSpacing: CGFloat? = nil,
         trailingResourceSpacing: CGFloat? = nil
     ) -> Self {
         var zelf = self
-        zelf.leadingResources = Array(leadingResources.prefix(3))
+        zelf.leadingResources = Array(leading.prefix(3))
         zelf.leadingResourceSpacing = leadingResourceSpacing
 
-        zelf.trailingResources = Array(trailingResources.prefix(3))
+        zelf.trailingResources = Array(trailing.prefix(3))
         zelf.trailingResourceSpacing = trailingResourceSpacing
         return zelf
     }

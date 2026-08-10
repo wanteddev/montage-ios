@@ -95,8 +95,8 @@ TextArea(text: $longText)
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `leadingResources` | 왼쪽에 표시할 UI 요소 배열 (최대 3개) |
-  | `trailingResources` | 오른쪽에 표시할 UI 요소 배열 (최대 3개) |
+  | `leading` | 왼쪽에 표시할 UI 요소 배열 (최대 3개) |
+  | `trailing` | 오른쪽에 표시할 UI 요소 배열 (최대 3개) |
   | `leadingResourceSpacing` | 왼쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용 |
   | `trailingResourceSpacing` | 오른쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용 |
 - **Return Value**
