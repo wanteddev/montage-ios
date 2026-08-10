@@ -87,7 +87,7 @@ TextArea(text: $longText)
 </details>
 <details>
 
-<summary>``func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea``</summary>
+<summary>``func bottomResources(leading: [Resource.Leading], trailing: [Resource.Trailing], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea``</summary>
 
 
 텍스트 영역 하단에 표시할 UI 요소를 설정합니다.
@@ -105,7 +105,7 @@ TextArea(text: $longText)
 - **Discussion**
   >  **Note**
   >
-  > `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 leading에 전달되면 무시됩니다.
+  > `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 [TextArea.Resource.Trailing](/documentation/montage/textarea/resource/trailing.md)에만 정의되어 있습니다. leading에 넘기면 컴파일되지 않습니다.
 
 </details>
 <details>
@@ -285,15 +285,114 @@ TextArea(text: $longText)
 <summary>``enum Resource``</summary>
 
 
-텍스트 영역 하단(Bottom Content)에 표시할 수 있는 UI 요소를 정의합니다.
+텍스트 영역 하단(Bottom Content)에 표시할 요소들의 Namespace입니다.
 - **Overview**
 
-  프리셋(`button`·`iconButton`·`icon`·`contentBadge`·`segmentedControl`· `primaryIconButton`)과 임의 뷰([slot(_:)](/documentation/montage/textarea/resource/slot(_:).md))를 지원합니다. 각 요소의 크기는 TextArea의 [TextArea.Size](/documentation/montage/textarea/size.md)에 따라 자동으로 조정됩니다.
-  >  **Note**
-  >
-  > 디자인 가이드 기준 `button`·`primaryIconButton`은 trailing 전용으로 권장됩니다.
+  슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다. 예를 들어 [TextArea.Resource.Trailing.button(color:title:handler:)](/documentation/montage/textarea/resource/trailing/button(color:title:handler:).md)는 디자인 가이드상 trailing 전용이라 [bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)](/documentation/montage/textarea/bottomresources(leading:trailing:leadingresourcespacing:trailingresourcespacing:).md)의 `trailing`에만 넘길 수 있고, `leading`에 넘기면 컴파일되지 않습니다.
 
-#### Enumeration Cases
+  각 요소의 크기는 TextArea의 [TextArea.Size](/documentation/montage/textarea/size.md)에 따라 자동으로 조정됩니다. 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
+#### Enumerations
+
+<details>
+
+<summary>``enum Leading``</summary>
+
+
+Bottom Content 왼쪽에 표시할 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case contentBadge(ContentBadge.Variant, title: String)``</summary>
+
+
+콘텐츠 뱃지
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
+  | `title` | 뱃지 텍스트 |
+</details>
+<details>
+
+<summary>``case icon(Icon, tintColor: SwiftUI.Color)``</summary>
+
+
+단순 아이콘
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용 |
+</details>
+<details>
+
+<summary>``case iconButton(icon: Icon, tintColor: SwiftUI.Color, handler: (() -> Void)?)``</summary>
+
+
+아이콘 버튼(배경 없음)
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 버튼 아이콘 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용 |
+  | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+</details>
+<details>
+
+<summary>``case segmentedControl(selectedIndex: Binding<Int>, icons: [Icon], accessibilityLabels: [String], onSelect: ((Int) -> Void)?)``</summary>
+
+
+세그먼트 컨트롤(아이콘 전용). 표준 [SegmentedControl](/documentation/montage/segmentedcontrol.md)을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `selectedIndex` | 선택된 세그먼트 인덱스 바인딩 |
+  | `icons` | 세그먼트 아이콘 배열 |
+  | `accessibilityLabels` | 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용 |
+  | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+- **Discussion**
+
+  `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다. 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+임의 뷰. [slot(_:)](/documentation/montage/textarea/resource/leading/slot(_:).md) 팩토리로 생성합니다.
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Leading``</summary>
+
+
+목록에 없는 구성을 직접 배치합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
+- **Return Value**
+
+  구성된 요소
+</details>
+
+</details>
+<details>
+
+<summary>``enum Trailing``</summary>
+
+
+Bottom Content 오른쪽에 표시할 요소입니다.
+##### Enumeration Cases
 
 <details>
 
@@ -385,27 +484,17 @@ Primary 아이콘 버튼(Solid)
 <summary>``case slotView(() -> AnyView)``</summary>
 
 
-임의 뷰. `.slot { ... }` 팩토리로 생성합니다.
+임의 뷰. [slot(_:)](/documentation/montage/textarea/resource/trailing/slot(_:).md) 팩토리로 생성합니다.
 </details>
 
-#### Instance Properties
+##### Type Methods
 
 <details>
 
-<summary>``var isLeadingAllowed: Bool``</summary>
+<summary>``static func slot<V>(() -> V) -> Trailing``</summary>
 
 
-leading(왼쪽)에 배치할 수 있는 리소스인지 여부. `button`·`primaryIconButton`은 trailing 전용입니다.
-</details>
-
-#### Type Methods
-
-<details>
-
-<summary>``static func slot<V>(() -> V) -> Resource``</summary>
-
-
-임의 뷰를 Bottom Content에 배치합니다.
+목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
   | Parameter | Description |
@@ -413,7 +502,9 @@ leading(왼쪽)에 배치할 수 있는 리소스인지 여부. `button`·`prima
   | `content` | 표시할 뷰를 생성하는 클로저 |
 - **Return Value**
 
-  구성된 리소스
+  구성된 요소
+</details>
+
 </details>
 
 </details>

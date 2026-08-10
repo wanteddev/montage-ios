@@ -120,7 +120,7 @@ struct ModalNavigationPreview: View {
         [.normal, .display, .emphasized, .floating]
     }
 
-    private var leadingButtons: [TopNavigation.Resource.LeadingButtonInfo?] {
+    private var leadingButtons: [TopNavigation.Resource.Leading?] {
         [
             nil,
             .back(action: {
@@ -135,7 +135,7 @@ struct ModalNavigationPreview: View {
         ]
     }
 
-    private let actions: [TopNavigation.Resource.TrailingButtonInfo] = {
+    private let actions: [TopNavigation.Resource.Trailing] = {
         [
             .icon(.close, action: {}),
             .icon(.download, showPushBadge: true, action: {}),
@@ -145,8 +145,8 @@ struct ModalNavigationPreview: View {
 }
 
 extension ModalNavigation.Variant: CaseDescribable {}
-extension TopNavigation.Resource.LeadingButtonInfo: CaseDescribable {}
-extension TopNavigation.Resource.TrailingButtonInfo: CaseDescribable {}
+extension TopNavigation.Resource.Leading: CaseDescribable {}
+extension TopNavigation.Resource.Trailing: CaseDescribable {}
 
 #Preview {
     ModalNavigationPreview()

@@ -2989,7 +2989,7 @@
         },
         {
           "name": "bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)",
-          "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
+          "signature": "func bottomResources(leading: [Resource.Leading], trailing: [Resource.Trailing], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
           "summary": "텍스트 영역 하단에 표시할 UI 요소를 설정합니다.",
           "kind": "method"
         },
@@ -3062,7 +3062,39 @@
         {
           "name": "TextArea.Resource",
           "kind": "enum",
-          "summary": "텍스트 영역 하단(Bottom Content)에 표시할 수 있는 UI 요소를 정의합니다.",
+          "summary": "텍스트 영역 하단(Bottom Content)에 표시할 요소들의 Namespace입니다."
+        },
+        {
+          "name": "TextArea.Resource.Leading",
+          "kind": "enum",
+          "summary": "Bottom Content 왼쪽에 표시할 요소입니다.",
+          "cases": [
+            "contentBadge",
+            "icon",
+            "iconButton",
+            "segmentedControl",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "iconButton(icon:tintColor:handler:)",
+            "segmentedControl(selectedIndex:icons:accessibilityLabels:onSelect:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "TextArea.Resource.Trailing",
+          "kind": "enum",
+          "summary": "Bottom Content 오른쪽에 표시할 요소입니다.",
           "cases": [
             "button",
             "contentBadge",
@@ -3084,17 +3116,9 @@
           "staticMethods": [
             {
               "name": "slot(_:)",
-              "signature": "static func slot<V>(() -> V) -> Resource",
-              "summary": "임의 뷰를 Bottom Content에 배치합니다.",
+              "signature": "static func slot<V>(() -> V) -> Trailing",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
               "kind": "method"
-            }
-          ],
-          "instanceProperties": [
-            {
-              "name": "isLeadingAllowed",
-              "signature": "var isLeadingAllowed: Bool",
-              "summary": "leading(왼쪽)에 배치할 수 있는 리소스인지 여부. button·primaryIconButton은 trailing 전용입니다.",
-              "kind": "property"
             }
           ]
         },
@@ -3561,12 +3585,12 @@
         {
           "name": "TopNavigation.Resource",
           "kind": "enum",
-          "summary": "TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다."
+          "summary": "TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다."
         },
         {
-          "name": "TopNavigation.Resource.LeadingButtonInfo",
+          "name": "TopNavigation.Resource.Leading",
           "kind": "enum",
-          "summary": "TopNavigation의 좌측에 표시될 내용들의 열거형입니다.",
+          "summary": "내비게이션 바 좌측(leading)에 표시할 요소입니다.",
           "cases": [
             "back",
             "icon",
@@ -3579,9 +3603,9 @@
           ]
         },
         {
-          "name": "TopNavigation.Resource.TrailingButtonInfo",
+          "name": "TopNavigation.Resource.Trailing",
           "kind": "enum",
-          "summary": "TopNavigation의 우측에 표시될 내용들의 열거형입니다.",
+          "summary": "내비게이션 바 우측(trailing)에 표시할 요소입니다.",
           "cases": [
             "icon",
             "text"
