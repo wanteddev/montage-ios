@@ -27,7 +27,15 @@ Button(icon: .bell, handler: { print("알림 보기") })
 // 로딩 상태 설정
 Button(text: "저장")
     .loading(true)
+
+// 비활성화
+Button(text: "저장")
+    .disabled(isFormInvalid)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -161,30 +169,6 @@ Button(text: "저장")
   ```swift
   Button(variant: .outlined, text: "복사")
       .contentColor(.red)
-  ```
-
-</details>
-<details>
-
-<summary>``func disable(Bool) -> Button``</summary>
-
-
-버튼을 비활성화 상태로 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 버튼 인스턴스
-- **Discussion**
-
-  비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
-
-  ```swift
-  Button(text: "저장")
-      .disable(isFormInvalid)
   ```
 
 </details>

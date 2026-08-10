@@ -33,7 +33,15 @@ TextArea(text: $longText)
 // 자동수정·맞춤법 검사를 끈 텍스트 영역
 TextArea(text: $longText)
     .autocorrectionDisabled()
+
+// 비활성화
+TextArea(text: $longText)
+    .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -107,21 +115,6 @@ TextArea(text: $longText)
   >
   > `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 [TextArea.Resource.Trailing](/documentation/montage/textarea/resource/trailing.md)에만 정의되어 있습니다. leading에 넘기면 컴파일되지 않습니다.
 
-</details>
-<details>
-
-<summary>``func disable(Bool) -> TextArea``</summary>
-
-
-텍스트 영역의 활성화 상태를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 텍스트 영역 인스턴스
 </details>
 <details>
 

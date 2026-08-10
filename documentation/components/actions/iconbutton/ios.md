@@ -23,7 +23,15 @@ IconButton(
     icon: .arrowLeft,
     handler: { print("뒤로 가기 버튼 탭됨") }
 )
+
+// 비활성화
+IconButton(icon: .bell)
+    .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -95,21 +103,6 @@ IconButton(
   >
   > Outlined 에서만 사용 가능합니다.
 
-</details>
-<details>
-
-<summary>``func disable(Bool) -> IconButton``</summary>
-
-
-버튼의 비활성화 여부를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `value` | 비활성화 여부, true이면 버튼이 비활성화됩니다. |
-- **Return Value**
-
-  수정된 IconButton 인스턴스
 </details>
 <details>
 

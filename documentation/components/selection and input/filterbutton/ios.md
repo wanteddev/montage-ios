@@ -21,7 +21,15 @@ FilterButton(
 .backgroundColor(.semantic(.surfaceBrandPrimary))
 .fontColor(.semantic(.staticWhite))
 .active(true, label: "최신순")
+
+// 비활성화
+FilterButton(text: "카테고리", state: $state)
+    .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -98,21 +106,6 @@ FilterButton(
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 배경색 |
-- **Return Value**
-
-  수정된 버튼 인스턴스
-</details>
-<details>
-
-<summary>``func disabled(Bool) -> FilterButton``</summary>
-
-
-버튼의 비활성화 여부를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
 - **Return Value**
 
   수정된 버튼 인스턴스

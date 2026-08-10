@@ -26,7 +26,15 @@ Slider(
 )
 .label()
 .heading()
+
+// 비활성화
+Slider()
+    .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -76,21 +84,6 @@ Slider(
 
 ### Instance Methods
 
-<details>
-
-<summary>``func disable(Bool) -> Slider``</summary>
-
-
-슬라이더의 활성화 상태를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 슬라이더 인스턴스
-</details>
 <details>
 
 <summary>``func heading(Bool) -> Slider``</summary>

@@ -21,7 +21,15 @@ Select(
     items: $items
 )
 .placeholder("선택하세요")
+
+// 비활성화
+Select(variant: .single(), items: $items)
+    .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -114,21 +122,6 @@ Select 컴포넌트 초기화
 
 ### Instance Methods
 
-<details>
-
-<summary>``func disable(Bool) -> Select``</summary>
-
-
-활성화 여부를 조정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 Select 인스턴스
-</details>
 <details>
 
 <summary>``func leadingContent(LeadingContent?) -> Select``</summary>

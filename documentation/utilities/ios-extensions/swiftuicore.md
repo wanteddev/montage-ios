@@ -216,7 +216,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func framedStyle(status: FramedStyle.Status, borderRadius: CGFloat, shadowLevel: Shadow.Level, disabled: Bool) -> some View``</summary>
+<summary>``func framedStyle(status: FramedStyle.Status, borderRadius: CGFloat, shadowLevel: Shadow.Level) -> some View``</summary>
 
 
 현재 뷰에 프레임 스타일을 적용합니다.
@@ -227,7 +227,6 @@ View를 UIImage로 변환합니다.
   | `status` | 프레임 상태, 생략하면 기본값으로 `.normal` 적용 |
   | `borderRadius` | 테두리 반경, 생략하면 기본값으로 `0` 적용 |
   | `shadowLevel` | 그림자 레벨, 생략하면 기본값으로 `.xsmall` 적용 |
-  | `disabled` | 비활성화 상태 여부, 생략하면 기본값으로 `false` 적용 |
 - **Return Value**
 
   프레임 스타일이 적용된 뷰
@@ -237,6 +236,10 @@ View를 UIImage로 변환합니다.
   >  **Note**
   >
   > 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.
+
+  >  **Note**
+  >
+  > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 
   ```swift
@@ -255,7 +258,8 @@ View를 UIImage로 변환합니다.
   
   // 비활성화된 프레임
   Text("비활성화된 텍스트")
-      .framedStyle(disabled: true)
+      .framedStyle()
+      .disabled(true)
   
   // 부정적 상태의 프레임 (오류 표시)
   Text("오류 메시지")

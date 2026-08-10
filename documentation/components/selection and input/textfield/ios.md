@@ -40,7 +40,15 @@ TextField(text: $inputText)
 TextField(text: $inputText)
    .placeholder("이메일을 입력하세요")
    .autocorrectionDisabled()
+
+// 비활성화
+TextField(text: $inputText)
+   .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 트레일링 버튼만 따로 비활성화하려면 [TextField.TrailingButtonInfo](/documentation/montage/textfield/trailingbuttoninfo.md)의 `disable`을 사용합니다.
 
 ## Topics
 
@@ -182,21 +190,6 @@ TextField(text: $inputText)
   | Parameter | Description |
   | --- | --- |
   | `color` | 설정할 배경색 |
-- **Return Value**
-
-  수정된 텍스트 필드 인스턴스
-</details>
-<details>
-
-<summary>``func disable(Bool) -> TextField``</summary>
-
-
-텍스트 필드의 활성화 상태를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, `true`이면 비활성화 |
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
