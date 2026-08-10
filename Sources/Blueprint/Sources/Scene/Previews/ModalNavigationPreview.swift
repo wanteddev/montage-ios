@@ -95,18 +95,18 @@ struct ModalNavigationPreview: View {
                                 {
                                     AnyView(TopNavigation.TrailingIconButton(
                                         icon: i,
-                                        disable: d,
                                         showPushBadge: s,
                                         action: a
-                                    ))
+                                    )
+                                    .disabled(d))
                                 }
                             case let .text(t, d, a):
                                 {
                                     AnyView(TopNavigation.TrailingTextButton(
                                         text: t,
-                                        disable: d,
                                         action: a
-                                    ))
+                                    )
+                                    .disabled(d))
                                 }
                             }
                         }

@@ -41,7 +41,15 @@ import SwiftUI
 /// TextField(text: $inputText)
 ///    .placeholder("이메일을 입력하세요")
 ///    .autocorrectionDisabled()
+///
+/// // 비활성화
+/// TextField(text: $inputText)
+///    .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 트레일링 버튼만 따로 비활성화하려면 ``TrailingButtonInfo``의 `disable`을 사용합니다.
 public struct TextField: View {
     // MARK: - Types
 
@@ -166,7 +174,6 @@ public struct TextField: View {
 
     private var size: Size = .large
     private var status: Status = .normal
-    private var disable = false
     private var placeholder: String? = nil
     private var icon: Icon? = nil
     private var trailingButton: TrailingButtonInfo? = nil
@@ -194,16 +201,6 @@ public struct TextField: View {
     public func status(_ status: Status) -> Self {
         var zelf = self
         zelf.status = status
-        return zelf
-    }
-    
-    /// 텍스트 필드의 활성화 상태를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, `true`이면 비활성화
-    /// - Returns: 수정된 텍스트 필드 인스턴스
-    public func disable(_ disable: Bool) -> Self {
-        var zelf = self
-        zelf.disable = disable
         return zelf
     }
     
@@ -303,6 +300,7 @@ public struct TextField: View {
 
     // MARK: - Body
     
+    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.colorScheme) private var colorScheme
     @State private var textFieldGlobalFrame: CGRect = .zero
@@ -319,6 +317,8 @@ public struct TextField: View {
 // MARK: - Private
 
 private extension TextField {
+    var isDisabled: Bool { isEnabled == false }
+
     var inputField: some View {
         HStack(spacing: .spacing4) {
             contentRow
@@ -328,7 +328,7 @@ private extension TextField {
                 TrailingButton(
                     size: size,
                     title: trailingButton.title,
-                    disable: disable || trailingButton.disable,
+                    disable: trailingButton.disable,
                     handler: trailingButton.handler
                 )
             }
@@ -353,7 +353,6 @@ private extension TextField {
         .onTapGesture {
             textFieldFocusState = true
         }
-        .allowsHitTesting(disable == false)
         .overlay {
             autoCompletionContent.opacity(0)
                 .onGeometryChange(
@@ -506,7 +505,7 @@ private extension TextField {
         // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거한다.
         // 외형(둥근 모서리·머티리얼)은 동일하게 유지한다. (drop shadow 제거)
         let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
-        if disable {
+        if isDisabled {
             surface
                 .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
         } else {
@@ -522,7 +521,7 @@ private extension TextField {
 
     @ViewBuilder
     var focusRing: some View {
-        if textFieldFocusState, disable == false {
+        if textFieldFocusState, isDisabled == false {
             RoundedRectangle(cornerRadius: size.cornerRadius + .spacing4)
                 .strokeBorder(focusRingColor, lineWidth: 4)
                 .padding(-.spacing4)
@@ -591,8 +590,8 @@ private extension TextField {
     }
     
     var fieldStrokeColor: SwiftUI.Color {
-        // disable 상태에서는 status와 무관하게 normal과 동일한 border 색상을 사용한다. (negative 포함)
-        if disable {
+        // 비활성 상태에서는 status와 무관하게 normal과 동일한 border 색상을 사용한다. (negative 포함)
+        if isDisabled {
             .semantic(.lineNeutralSecondary)
         } else if textFieldFocusState {
             switch status {
@@ -639,7 +638,7 @@ private extension TextField {
     }
 
     var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
     
     var fieldTextColor: SwiftUI.Color {
@@ -753,7 +752,11 @@ private extension TextField {
             self.handler = handler
         }
 
+        @Environment(\.isEnabled) private var isEnabled
         @State private var isPressed = false
+
+        /// 필드 전체가 비활성이거나(`isEnabled == false`) 트레일링 버튼만 따로 비활성인 경우를 함께 다룬다.
+        private var isDisabled: Bool { isEnabled == false || disable }
 
         var body: some View {
             Text(title)
@@ -772,16 +775,16 @@ private extension TextField {
                     RoundedRectangle(cornerRadius: size.trailingButtonRadius)
                         .strokeBorder(SwiftUI.Color.semantic(.lineNeutralSecondary), lineWidth: 1)
                 }
-                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: disable ? nil : handler))
-                .allowsHitTesting(disable == false)
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: isDisabled ? nil : handler))
+                .allowsHitTesting(isDisabled == false)
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(title)
                 .accessibilityAddTraits(.isButton)
-                .accessibilityRespondsToUserInteraction(disable == false)
+                .accessibilityRespondsToUserInteraction(isDisabled == false)
         }
 
         var textColor: Color.Semantic {
-            disable ? .foregroundDisablePrimary : .foregroundNeutralPrimary
+            isDisabled ? .foregroundDisablePrimary : .foregroundNeutralPrimary
         }
     }
 }

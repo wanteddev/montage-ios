@@ -90,13 +90,13 @@ struct ListCellPreview: View {
             .extraResources(extraResourceList)
             .textEllipsis(textEllipsis)
             .divider(divider)
-            .disable(disable)
             .interactionOutset(interactionOutset)
             .interactionRadius(interactionRadius)
             .selected(selected)
             .if(!highlightText.isEmpty) {
                 $0.highlight(highlightText)
             }
+            .disabled(disable)
         } options: {
             SegmentedIndexRow("Vertical Padding", index: $verticalPaddingIndex, labels: verticalPaddings.map(\.description))
             if isCustomVerticalPadding {

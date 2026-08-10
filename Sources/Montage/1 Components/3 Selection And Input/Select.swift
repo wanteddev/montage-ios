@@ -22,7 +22,14 @@ import SwiftUI
 ///     items: $items
 /// )
 /// .placeholder("선택하세요")
+///
+/// // 비활성화
+/// Select(variant: .single(), items: $items)
+///     .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct Select: View {
     // MARK: - Types
 
@@ -153,7 +160,6 @@ public struct Select: View {
     private var negative = false
     private var render: Render = .text
     private var placeholder = ""
-    private var disable = false
     private var leadingContent: LeadingContent?
     private var menuResize: BottomSheet.Resize = .hug
     private var size: Size = .large
@@ -185,15 +191,6 @@ public struct Select: View {
         return zelf
     }
 
-    /// 활성화 여부를 조정합니다.
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 Select 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
-
     /// 왼쪽 컨텐츠를 추가합니다.
     /// - Parameter content: 표시할 선행 콘텐츠
     /// - Returns: 수정된 Select 인스턴스
@@ -214,10 +211,13 @@ public struct Select: View {
 
     // MARK: - Body
 
+    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.colorScheme) private var colorScheme
     @State private var defaultMenuPresented = false
     @State private var bottomSheetContentHeight: CGFloat = .zero
     @State private var pureBottomSheetHeight: CGFloat = .zero
+
+    private var isDisabled: Bool { isEnabled == false }
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -286,7 +286,6 @@ public struct Select: View {
                             } else {
                                 let chips = Chips(
                                     items: selectedItems,
-                                    disable: disable,
                                     onTapItem: { item in
                                         let index = items.enumerated()
                                             .first { $0.element == item }?
@@ -326,10 +325,8 @@ public struct Select: View {
             ) {
                 menuPresented.wrappedValue.toggle()
             }
-            .iconColor(
-                disable
-                    ? SwiftUI.Color.semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
-            )
+            // 비활성 색상(foreground/disable/primary)은 IconButton이 `\.isEnabled`를 읽어 직접 적용한다.
+            .iconColor(.semantic(.foregroundNeutralTertiary))
             .padding(.horizontal, 4)
             .frame(height: size.contentMinHeight)
             .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
@@ -343,7 +340,7 @@ public struct Select: View {
         // 외형(둥근 모서리·머티리얼·테두리)은 동일하게 유지한다. (drop shadow 제거)
         .background {
             let surface = surfaceShape
-            if disable {
+            if isDisabled {
                 surface
                     .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
             } else {
@@ -363,7 +360,6 @@ public struct Select: View {
         // 메뉴가 열렸을 때 TextField와 동일하게 내부 border(primary 43%)에 더해
         // 외부 Focus Ring(primary 12%)을 그린다.
         .background { focusRing }
-        .allowsHitTesting(disable == false)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(placeholder)
         .accessibilityValue(selectedItems.map(\.text).joined(separator: ", "))
@@ -478,7 +474,7 @@ public struct Select: View {
     }
 
     private var strokeColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             .semantic(.lineNeutralSecondary)
         } else if negative {
             menuPresented.wrappedValue
@@ -495,7 +491,7 @@ public struct Select: View {
 
     @ViewBuilder
     private var focusRing: some View {
-        if menuPresented.wrappedValue, disable == false {
+        if menuPresented.wrappedValue, isDisabled == false {
             RoundedRectangle(cornerRadius: size.cornerRadius + .spacing4)
                 .strokeBorder(focusRingColor, lineWidth: 4)
                 .padding(-.spacing4)
@@ -517,19 +513,22 @@ public struct Select: View {
     }
 
     private var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralQuaternary)
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralQuaternary)
     }
 
     private var textColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundNeutralTertiary) : .semantic(.foregroundNeutralPrimary)
+        isDisabled ? .semantic(.foregroundNeutralTertiary) : .semantic(.foregroundNeutralPrimary)
     }
 
     // MARK: - Inner View
 
     private struct Chips: View {
+        @Environment(\.isEnabled) private var isEnabled
+
         var items: [Select.Item]
-        var disable: Bool
         var onTapItem: ((Select.Item) -> Void)?
+
+        private var isDisabled: Bool { isEnabled == false }
 
         var body: some View {
             ForEach(items.indices, id: \.self) { index in
@@ -547,7 +546,7 @@ public struct Select: View {
                     if let icon = item.icon {
                         mutated = mutated.leadingImage(Image.icon(icon))
                     }
-                    if item.isNegative, disable == false {
+                    if item.isNegative, isDisabled == false {
                         mutated = mutated.borderColor(.semantic(.lineNegativePrimary))
                     }
                     return mutated
@@ -559,9 +558,9 @@ public struct Select: View {
             }
         }
 
-        /// 아이콘(leading/close) 색상입니다. disable은 foreground/disable/primary, negative는 foreground/negative/primary, 그 외 foreground/neutral/primary.
+        /// 아이콘(leading/close) 색상입니다. 비활성은 foreground/disable/primary, negative는 foreground/negative/primary, 그 외 foreground/neutral/primary.
         private func iconColor(_ item: Select.Item) -> SwiftUI.Color {
-            if disable {
+            if isDisabled {
                 return .semantic(.foregroundDisablePrimary)
             } else if item.isNegative {
                 return .semantic(.foregroundNegativePrimary)
@@ -570,9 +569,9 @@ public struct Select: View {
             }
         }
 
-        /// 텍스트 색상입니다. disable/그 외는 foreground/neutral/primary, negative는 foreground/negative/primary.
+        /// 텍스트 색상입니다. 비활성·그 외는 foreground/neutral/primary, negative는 foreground/negative/primary.
         private func fontColor(_ item: Select.Item) -> SwiftUI.Color {
-            if item.isNegative, disable == false {
+            if item.isNegative, isDisabled == false {
                 return .semantic(.foregroundNegativePrimary)
             } else {
                 return .semantic(.foregroundNeutralPrimary)

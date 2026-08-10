@@ -122,7 +122,6 @@ struct TextAreaPreview: View {
                 .size(size.s)
                 .resize(resize.r)
                 .negative(negative)
-                .disable(disable)
                 .bottomResources(
                     leading: leadingResources,
                     trailing: trailingResources
@@ -134,6 +133,7 @@ struct TextAreaPreview: View {
                 // resize 변경 시 뷰 아이덴티티를 리셋해 높이를 재계산한다.
                 // text를 건드리면 placeholder 조건(text.isEmpty)이 깨지므로 .id로 처리한다.
                 .id(resize)
+                .disabled(disable)
         } options: {
             SegmentedIndexRow("size", index: Binding(
                 get: { Size.allCases.firstIndex(of: size) ?? 0 },

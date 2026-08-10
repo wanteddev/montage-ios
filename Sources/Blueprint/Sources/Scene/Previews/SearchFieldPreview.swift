@@ -58,11 +58,11 @@ struct SearchFieldPreview: View {
             SearchField(text: $text)
                 .variant(variant.v)
                 .size(fieldSize.s)
-                .disable(disable)
                 .placeholder(placeholder ? "검색어를 입력해 주세요." : nil)
                 .focused($focused)
                 .autocorrectionDisabled(autocorrectionDisabled)
                 .onSubmit { submittedKeyword = text }
+                .disabled(disable)
         } options: {
             SegmentedOptionRow("variant", selection: $variant)
             SegmentedOptionRow("size", selection: $fieldSize)

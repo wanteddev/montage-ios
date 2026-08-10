@@ -100,6 +100,7 @@ public struct Category: View {
                                 itemModifier(index, $0)
                             }
                             .contentShape(Rectangle())
+                            .disabled(itemDisabled(index))
                         }
                     }
                     Spacer(minLength: 0)
@@ -146,7 +147,27 @@ public struct Category: View {
     private var verticalPadding = false
     private var icon: Icon? = nil
     private var iconButtonAction: (() -> Void)?
-    
+    private var itemDisabled: (Int) -> Bool = { _ in false }
+
+    /// 개별 카테고리 항목의 비활성 여부를 설정합니다.
+    ///
+    /// `itemModifier`는 `Chip`을 반환해야 하므로 SwiftUI 표준 `disabled(_:)`를 그 안에서 쓸 수 없습니다.
+    /// 항목별로 비활성 상태를 지정할 때 이 모디파이어를 사용합니다.
+    /// 카테고리 전체를 비활성화할 때는 `disabled(_:)`를 그대로 사용하면 됩니다.
+    ///
+    /// ```swift
+    /// Category(selectedIndex: $index, items: titles)
+    ///     .itemDisabled { soldOutIndices.contains($0) }
+    /// ```
+    ///
+    /// - Parameter predicate: 항목 인덱스를 받아 비활성 여부를 반환하는 클로저
+    /// - Returns: 수정된 카테고리 인스턴스
+    public func itemDisabled(_ predicate: @escaping (Int) -> Bool) -> Self {
+        var zelf = self
+        zelf.itemDisabled = predicate
+        return zelf
+    }
+
     /// 카테고리 아이템 스타일을 설정합니다.
     ///
     /// - Parameter variant: 아이템 스타일 (.normal 또는 .alternative)

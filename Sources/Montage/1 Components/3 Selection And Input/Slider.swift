@@ -28,7 +28,14 @@ import SwiftUI
 /// )
 /// .label()
 /// .heading()
+///
+/// // 비활성화
+/// Slider()
+///     .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct Slider: View {
     // MARK: - Initializer
     private let isRangeSlider: Bool
@@ -86,6 +93,7 @@ public struct Slider: View {
     
     // MARK: - Body
     
+    @Environment(\.isEnabled) private var isEnabled
     @State private var thumbRatio1 = 0.0
     @State private var thumbRatio2 = 1.0
     @State private var focusedThumb: Int?
@@ -101,18 +109,18 @@ public struct Slider: View {
                     .typography(
                         variant: .headline2,
                         weight: .bold,
-                        semantic: disable ? .surfaceDisablePrimary : .foregroundNeutralPrimary
+                        semantic: isEnabled ? .foregroundNeutralPrimary : .surfaceDisablePrimary
                     )
             }
-            
+
             ZStack(alignment: .topLeading) {
                 // lines
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
-                        Line(kind: .outer, disable: disable)
+                        Line(kind: .outer)
                             .frame(width: lineLength)
                         
-                        Line(kind: .inner, disable: disable)
+                        Line(kind: .inner)
                             .frame(width: min(lineLength, lineLength * (highThumbRatio - lowThumbRatio)))
                             .offset(x: max(0, lineLength * lowThumbRatio))
                     }
@@ -149,8 +157,7 @@ public struct Slider: View {
                     Thumb(
                         title: label ? labelFormatter(value(from: thumbRatio1)) : nil,
                         value: thumbRatio1,
-                        maxValue: lineLength,
-                        disable: disable
+                        maxValue: lineLength
                     )
                     .zIndex(focusedThumb == 1 ? 1 : 0)
                     .offset(x: max(0, lineLength * thumbRatio1))
@@ -168,8 +175,7 @@ public struct Slider: View {
                 Thumb(
                     title: label ? labelFormatter(value(from: thumbRatio2)) : nil,
                     value: thumbRatio2,
-                    maxValue: lineLength,
-                    disable: disable
+                    maxValue: lineLength
                 )
                 .zIndex(focusedThumb == 2 ? 1 : 0)
                 .offset(x: max(0, lineLength * thumbRatio2))
@@ -231,11 +237,9 @@ public struct Slider: View {
                 onChanged?(lowValue, highValue)
             }
         }
-        .allowsHitTesting(!disable)
         .modifier(SliderAccessibilityModifier(
             label: String(localized: "슬라이더", bundle: .module),
             value: headingLabel,
-            disable: disable,
             onAdjust: handleAccessibilityAdjust
         ))
     }
@@ -243,7 +247,6 @@ public struct Slider: View {
     // MARK: - Modifiers
     private var heading = false
     private var label = false
-    private var disable = false
     /// 슬라이더 상단에 제목을 표시할지 여부를 설정합니다.
     ///
     /// - Parameter heading: 제목 표시 여부, 생략하면 기본값으로 `true` 적용
@@ -264,20 +267,10 @@ public struct Slider: View {
         return zelf
     }
     
-    /// 슬라이더의 활성화 상태를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 슬라이더 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
-    
     // MARK: - private
 
     private func handleAccessibilityAdjust(_ direction: AccessibilityAdjustmentDirection) {
-        guard !disable else { return }
+        guard isEnabled else { return }
         let step = 0.05
         switch direction {
         case .increment:
@@ -338,22 +331,22 @@ public struct Slider: View {
         enum Kind {
             case inner, outer
         }
-        
+
+        @Environment(\.isEnabled) private var isEnabled
+
         private let kind: Kind
-        private let disable: Bool
-        
-        init(kind: Kind, disable: Bool) {
+
+        init(kind: Kind) {
             self.kind = kind
-            self.disable = disable
         }
-        
+
         var body: some View {
             RoundedRectangle(cornerRadius: .infinity)
                 .fill(lineColor)
         }
-        
+
         var lineColor: SwiftUI.Color {
-            guard !disable else { return .semantic(.surfaceDisablePrimary) }
+            guard isEnabled else { return .semantic(.surfaceDisablePrimary) }
             return switch kind {
             case .inner:
                 .semantic(.surfaceBrandPrimary)
@@ -364,18 +357,18 @@ public struct Slider: View {
     }
     
     private struct Thumb: View {
+        @Environment(\.isEnabled) private var isEnabled
+
         private let title: String?
         private let value: CGFloat
         private let maxValue: CGFloat
-        private let disable: Bool
 
-        init(title: String?, value: CGFloat, maxValue: CGFloat, disable: Bool) {
+        init(title: String?, value: CGFloat, maxValue: CGFloat) {
             self.title = title
             self.value = value
             self.maxValue = maxValue
-            self.disable = disable
         }
-        
+
         @State private var isDragging = false
         @State private var textSize: CGSize = .zero
         var body: some View {
@@ -383,7 +376,7 @@ public struct Slider: View {
                 Circle()
                     .frame(width: Slider.diameter, height: Slider.diameter)
                     .foregroundStyle(
-                        SwiftUI.Color.semantic(disable ? .surfaceDisablePrimary : .surfaceBrandPrimary)
+                        SwiftUI.Color.semantic(isEnabled ? .surfaceBrandPrimary : .surfaceDisablePrimary)
                     )
                     .contentShape(Rectangle())
                     .background {
@@ -397,7 +390,7 @@ public struct Slider: View {
                     }
                     .overlay {
                         if let title {
-                            Label(title: title, value: value, maxValue: maxValue, disable: disable)
+                            Label(title: title, value: value, maxValue: maxValue)
                         }
                     }
                 
@@ -414,21 +407,21 @@ public struct Slider: View {
     }
     
     private struct Label: View {
+        @Environment(\.isEnabled) private var isEnabled
+
         private let title: String
         private let value: CGFloat
         private let maxValue: CGFloat
-        private let disable: Bool
         private var isSpacer = false
-        
-        init(title: String, value: CGFloat, maxValue: CGFloat, disable: Bool) {
+
+        init(title: String, value: CGFloat, maxValue: CGFloat) {
             self.title = title
             self.value = value
             self.maxValue = maxValue
-            self.disable = disable
         }
-        
+
         static func spacer(for title: String) -> Label {
-            var view = Label(title: title, value: 0, maxValue: 0, disable: false)
+            var view = Label(title: title, value: 0, maxValue: 0)
             view.isSpacer = true
             return view
         }
@@ -440,7 +433,7 @@ public struct Slider: View {
                 .typography(
                     variant: .label1,
                     weight: .medium,
-                    semantic: disable ? .surfaceDisablePrimary : .foregroundNeutralPrimary
+                    semantic: isEnabled ? .foregroundNeutralPrimary : .surfaceDisablePrimary
                 )
             Group {
                 if isSpacer {
@@ -481,7 +474,6 @@ public struct Slider: View {
 private struct SliderAccessibilityModifier: ViewModifier {
     let label: String
     let value: String
-    let disable: Bool
     let onAdjust: (AccessibilityAdjustmentDirection) -> Void
 
     func body(content: Content) -> some View {

@@ -106,6 +106,7 @@ struct TextFieldPreview: View {
     @State private var icon: Bool = false
     @State private var placeholder: Bool = true
     @State private var trailingButton: Bool = false
+    @State private var trailingButtonDisable: Bool = false
     @State private var trailingContent: Content = .none
     @State private var usingSuggestions: Bool = false
     @State private var autoCompletionDataSource: Montage.TextField.AutoCompletionDataSource? = nil
@@ -182,12 +183,12 @@ struct TextFieldPreview: View {
                     )
                     .size(fieldSize.s)
                     .status(variant.v)
-                    .disable(disable)
                     .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
                     .icon(icon ? .verifiedCheckFill : nil)
                     .trailingButton(
                         trailingButton ? TextField.TrailingButtonInfo(
                             title: "텍스트",
+                            disable: trailingButtonDisable,
                             handler: { print("trailing button tapped") }
                         ) : nil
                     )
@@ -209,6 +210,7 @@ struct TextFieldPreview: View {
                     .onChange(of: usingSuggestions) { _ in
                         refreshAutoCompletion()
                     }
+                    .disabled(disable)
             }
         } options: {
             SegmentedOptionRow("size", selection: $fieldSize)
@@ -220,6 +222,10 @@ struct TextFieldPreview: View {
             HStack {
                 ToggleOption("disable", isOn: $disable)
                 ToggleOption("trailingButton", isOn: $trailingButton)
+            }
+            // 필드 전체 비활성(disable)과 트레일링 버튼만 비활성이 구분되는지 확인하는 옵션이다.
+            if trailingButton {
+                ToggleOptionRow("trailingButtonDisable", isOn: $trailingButtonDisable)
             }
             SegmentedOptionRow("trailingContent", selection: $trailingContent)
             HStack {

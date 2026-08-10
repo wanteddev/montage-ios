@@ -25,14 +25,14 @@ struct SliderPreview: View {
                 })
                 .heading(heading)
                 .label(label)
-                .disable(disable)
+                .disabled(disable)
             } else {
                 Slider(isRangeSlider: true, minValue: CGFloat(lowerBound), maxValue: CGFloat(upperBound), labelFormatter: { value in
                     "\(Int(value.rounded()))\(unit)"
                 })
                 .heading(heading)
                 .label(label)
-                .disable(disable)
+                .disabled(disable)
             }
         } options: {
             HStack {

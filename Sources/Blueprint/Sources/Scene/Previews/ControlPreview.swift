@@ -39,7 +39,6 @@ struct ControlPreview: View {
                     ) {
                         state = $0
                     }
-                    .disable(disabled)
                     .bold(bold)
                     .tight(tight)
                     .label(label, fillWidth: fillWidth)
@@ -47,6 +46,7 @@ struct ControlPreview: View {
                         $0.labelTypography(.heading2, weight: .medium, color: .semantic(.foregroundAccentPink))
                     }
                     .border(guideLine ? Color.blue : Color.clear)
+                    .disabled(disabled)
                     Spacer()
                 }
                 HStack {
@@ -57,7 +57,6 @@ struct ControlPreview: View {
                     ) {
                         checked = $0
                     }
-                    .disable(disabled)
                     .bold(bold)
                     .tight(tight)
                     .label(label, fillWidth: fillWidth)
@@ -65,6 +64,7 @@ struct ControlPreview: View {
                         $0.labelTypography(.heading2, weight: .bold, color: .semantic(.foregroundAccentPink))
                     }
                     .border(guideLine ? Color.blue : Color.clear)
+                    .disabled(disabled)
                     Spacer()
                 }
                 HStack {
@@ -75,7 +75,6 @@ struct ControlPreview: View {
                     ) {
                         selected = $0
                     }
-                    .disable(disabled)
                     .bold(bold)
                     .tight(tight)
                     .label(label, fillWidth: fillWidth)
@@ -83,6 +82,7 @@ struct ControlPreview: View {
                         $0.labelTypography(.heading2, weight: .bold, color: .semantic(.foregroundAccentPink))
                     }
                     .border(guideLine ? Color.blue : Color.clear)
+                    .disabled(disabled)
                     Spacer()
                 }
                 Switch(
@@ -91,7 +91,7 @@ struct ControlPreview: View {
                 ) {
                     switched = $0
                 }
-                .disable(disabled)
+                .disabled(disabled)
                 .border(guideLine ? Color.blue : Color.clear)
             }
         } options: {

@@ -9,15 +9,15 @@ import SwiftUI
 import Montage
 
 struct CategoryPreview: View {
-    @State var showGuideLine: Bool = false
-    @State var selectedIndex: Int = 0
-    @State var items: [Select.Item] = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"].map { Select.Item(text: $0) }
-    @State var isAlternative: Bool = false
-    @State var sizeIndex: Int = 1
-    @State var horizontalPadding: Bool = false
-    @State var verticalPadding: Bool = false
-    @State var icon: Bool = false
-    @State var alertPresented = false
+    @State private var showGuideLine: Bool = false
+    @State private var selectedIndex: Int = 0
+    @State private var items: [Select.Item] = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"].map { Select.Item(text: $0) }
+    @State private var isAlternative: Bool = false
+    @State private var sizeIndex: Int = 1
+    @State private var horizontalPadding: Bool = false
+    @State private var verticalPadding: Bool = false
+    @State private var icon: Bool = false
+    @State private var alertPresented = false
 
     private let sizes: [Montage.Category.Size] = [
         .small, .medium, .large, .xlarge
@@ -25,9 +25,8 @@ struct CategoryPreview: View {
 
     var body: some View {
         PreviewLayout {
-            Category(selectedIndex: $selectedIndex, items: items.map(\.text), itemModifier: { index, chip in
-                chip.disabled(items[index].isSelected)
-            })
+            Category(selectedIndex: $selectedIndex, items: items.map(\.text))
+            .itemDisabled { items[$0].isSelected }
             .variant(isAlternative ? .alternative : .normal)
             .size(sizes[sizeIndex])
             .horizontalPadding(horizontalPadding)

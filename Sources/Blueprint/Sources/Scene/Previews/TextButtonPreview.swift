@@ -40,12 +40,12 @@ struct TextButtonPreview: View {
             ) {
                 print("tapped")
             }
-            .disable(disable)
             .contentColor(contentColor ? .semantic(.foregroundAccentCyan) : nil)
             .fontVariant(fontVariant ? .heading1 : nil)
             .fontWeight(fontWeight ? .regular : nil)
             .loading(loading)
             .padding(.vertical, 4)
+            .disabled(disable)
         } options: {
             SegmentedIndexRow("color", index: $colorIndex, labels: colors.map(\.description))
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))

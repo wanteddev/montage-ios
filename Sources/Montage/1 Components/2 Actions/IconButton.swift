@@ -22,8 +22,16 @@ import SwiftUI
 ///     icon: .arrowLeft,
 ///     handler: { print("뒤로 가기 버튼 탭됨") }
 /// )
+///
+/// // 비활성화
+/// IconButton(icon: .bell)
+///     .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct IconButton: View {
+    @Environment(\.isEnabled) private var isEnabled
     @State private var isPressed = false
 
     private let variant: IconButton.Variant
@@ -44,7 +52,6 @@ public struct IconButton: View {
     ) {
         self.variant = variant
         self.icon = icon
-        self.disable = false
         self.disableInteraction = false
         self.showPushBadge = false
         self.extraPadding = .zero
@@ -57,7 +64,6 @@ public struct IconButton: View {
 
     // MARK: - Modifiers
 
-    private var disable: Bool
     private var disableInteraction: Bool
     private var showPushBadge: Bool
     private var extraPadding: CGFloat
@@ -65,15 +71,6 @@ public struct IconButton: View {
     private var backgroundColor: SwiftUI.Color?
     private var borderColor: SwiftUI.Color?
     private var customInteractionColor: Color.Semantic?
-
-    /// 버튼의 비활성화 여부를 설정합니다.
-    /// - Parameter value: 비활성화 여부, true이면 버튼이 비활성화됩니다.
-    /// - Returns: 수정된 IconButton 인스턴스
-    public func disable(_ value: Bool = true) -> Self {
-        var copy = self
-        copy.disable = value
-        return copy
-    }
 
     /// hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
     /// - Parameter value: 인터랙션 효과 차단 여부
@@ -160,8 +157,10 @@ public struct IconButton: View {
 
     // MARK: Private Computed Property
 
+    private var isDisabled: Bool { isEnabled == false }
+
     private var _iconColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             SwiftUI.Color(uiColor: variant.disabledIconColor)
         } else {
             if let iconColor {
@@ -181,7 +180,7 @@ public struct IconButton: View {
     }
 
     private var _backgroundColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             SwiftUI.Color(uiColor: variant.disabledBackgroundColor)
         } else {
             if let backgroundColor {
@@ -210,7 +209,7 @@ public struct IconButton: View {
             .padding(totalPadding)
             .background {
                 Interaction(
-                    state: (isPressed && !disable && !disableInteraction) ? .pressed : .normal,
+                    state: (isPressed && !isDisabled && !disableInteraction) ? .pressed : .normal,
                     variant: variant.interactionVariant,
                     color: customInteractionColor ?? variant.interactionColor
                 )
@@ -220,7 +219,6 @@ public struct IconButton: View {
                 backgroundLayer(metrics: m)
             }
             .frame(width: containerSize, height: containerSize)
-            .allowsHitTesting(disable == false)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")
