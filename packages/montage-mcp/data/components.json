@@ -2343,6 +2343,12 @@
       ],
       "modifiers": [
         {
+          "name": "autocorrectionDisabled(_:)",
+          "signature": "func autocorrectionDisabled(Bool) -> SearchField",
+          "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "disable(_:)",
           "signature": "func disable(Bool) -> SearchField",
           "summary": "검색 필드의 활성화 상태를 설정합니다.",
@@ -2976,6 +2982,12 @@
       ],
       "modifiers": [
         {
+          "name": "autocorrectionDisabled(_:)",
+          "signature": "func autocorrectionDisabled(Bool) -> TextArea",
+          "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)",
           "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
           "summary": "텍스트 영역 하단에 표시할 UI 요소를 설정합니다.",
@@ -3182,6 +3194,12 @@
         }
       ],
       "modifiers": [
+        {
+          "name": "autocorrectionDisabled(_:)",
+          "signature": "func autocorrectionDisabled(Bool) -> TextField",
+          "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
+          "kind": "method"
+        },
         {
           "name": "backgroundColor(_:)",
           "signature": "func backgroundColor(SwiftUI.Color?) -> TextField",
