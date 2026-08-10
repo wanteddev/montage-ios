@@ -65,7 +65,7 @@ TopNavigation(
 
 <details>
 
-<summary>``init(Resource.LeadingButtonInfo?)``</summary>
+<summary>``init(Resource.Leading?)``</summary>
 
 
 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
@@ -351,15 +351,18 @@ TopNavigation을 초기화합니다.
 <summary>``enum Resource``</summary>
 
 
-TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
+TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
+- **Overview**
+
+  슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다.
 #### Enumerations
 
 <details>
 
-<summary>``enum LeadingButtonInfo``</summary>
+<summary>``enum Leading``</summary>
 
 
-TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
+내비게이션 바 좌측(leading)에 표시할 요소입니다.
 - **Overview**
 
   뒤로가기 버튼, 아이콘 버튼, 텍스트 버튼을 지원합니다.
@@ -414,10 +417,10 @@ TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
 </details>
 <details>
 
-<summary>``enum TrailingButtonInfo``</summary>
+<summary>``enum Trailing``</summary>
 
 
-TopNavigation의 우측에 표시될 내용들의 열거형입니다.
+내비게이션 바 우측(trailing)에 표시할 요소입니다.
 - **Overview**
 
   아이콘 버튼과 텍스트 버튼을 지원합니다.
@@ -434,16 +437,16 @@ TopNavigation의 우측에 표시될 내용들의 열거형입니다.
 
 <details>
 
-<summary>``static func == (TopNavigation.Resource.TrailingButtonInfo, TopNavigation.Resource.TrailingButtonInfo) -> Bool``</summary>
+<summary>``static func == (TopNavigation.Resource.Trailing, TopNavigation.Resource.Trailing) -> Bool``</summary>
 
 
-두 개의 TrailingButtonInfo 인스턴스를 비교합니다.
+두 개의 Trailing 인스턴스를 비교합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `lhs` | 비교할 첫 번째 TrailingButtonInfo 인스턴스 |
-  | `rhs` | 비교할 두 번째 TrailingButtonInfo 인스턴스 |
+  | `lhs` | 비교할 첫 번째 Trailing 인스턴스 |
+  | `rhs` | 비교할 두 번째 Trailing 인스턴스 |
 - **Return Value**
 
   두 인스턴스가 같은지 여부

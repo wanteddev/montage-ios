@@ -469,14 +469,14 @@ extension TopNavigation {
     ///
     /// 버튼이 없을 경우에는 투명한 공간을 차지하여 레이아웃이 유지됩니다.
     public struct LeadingButton: View {
-        let action: Resource.LeadingButtonInfo?
+        let action: Resource.Leading?
         
         /// 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - action: 버튼 액션
         /// - Returns: LeadingButton 인스턴스
-        public init(_ action: Resource.LeadingButtonInfo?) {
+        public init(_ action: Resource.Leading?) {
             self.action = action
         }
         
@@ -608,9 +608,11 @@ extension TopNavigation {
 }
 
 extension TopNavigation {
-    /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
+    /// TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
+    ///
+    /// 슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다.
     public enum Resource {
-        /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
+        /// 내비게이션 바 좌측(leading)에 표시할 요소입니다.
         ///
         /// 뒤로가기 버튼, 아이콘 버튼, 텍스트 버튼을 지원합니다.
         ///
@@ -619,7 +621,7 @@ extension TopNavigation {
         ///     .leadingContent { /* ... */ }
         ///
         /// ```
-        public enum LeadingButtonInfo {
+        public enum Leading {
             /// 뒤로가기 버튼
             /// - Parameter action: 뒤로가기 버튼 클릭시 동작할 액션
             case back(action: () -> Void)
@@ -635,7 +637,7 @@ extension TopNavigation {
             case text(_ text: String, action: () -> Void)
         }
         
-        /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
+        /// 내비게이션 바 우측(trailing)에 표시할 요소입니다.
         ///
         /// 아이콘 버튼과 텍스트 버튼을 지원합니다.
         ///
@@ -646,7 +648,7 @@ extension TopNavigation {
         ///         { TopNavigation.TrailingTextButton(text: "완료") { /* ... */ } }
         ///     )
         /// ```
-        public enum TrailingButtonInfo: Hashable {
+        public enum Trailing: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
             ///   - icon: 아이콘 버튼의 아이콘
@@ -676,15 +678,15 @@ extension TopNavigation {
                 }
             }
             
-            /// 두 개의 TrailingButtonInfo 인스턴스를 비교합니다.
+            /// 두 개의 Trailing 인스턴스를 비교합니다.
             ///
             /// - Parameters:
-            ///   - lhs: 비교할 첫 번째 TrailingButtonInfo 인스턴스
-            ///   - rhs: 비교할 두 번째 TrailingButtonInfo 인스턴스
+            ///   - lhs: 비교할 첫 번째 Trailing 인스턴스
+            ///   - rhs: 비교할 두 번째 Trailing 인스턴스
             /// - Returns: 두 인스턴스가 같은지 여부
             public static func == (
-                lhs: TopNavigation.Resource.TrailingButtonInfo,
-                rhs: TopNavigation.Resource.TrailingButtonInfo
+                lhs: TopNavigation.Resource.Trailing,
+                rhs: TopNavigation.Resource.Trailing
             ) -> Bool {
                 switch (lhs, rhs) {
                 case let (.icon(li, ld, ls, _), .icon(ri, rd, rs, _)):

@@ -68,95 +68,151 @@ public struct TextArea: View {
         }
     }
 
-    /// 텍스트 영역 하단(Bottom Content)에 표시할 수 있는 UI 요소를 정의합니다.
+    /// 텍스트 영역 하단(Bottom Content)에 표시할 요소들의 Namespace입니다.
     ///
-    /// 프리셋(``button``·``iconButton``·``icon``·``contentBadge``·``segmentedControl``·
-    /// ``primaryIconButton``)과 임의 뷰(``slot(_:)``)를 지원합니다. 각 요소의 크기는 TextArea의
-    /// ``Size``에 따라 자동으로 조정됩니다.
+    /// 슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다.
+    /// 예를 들어 ``Trailing/button(color:title:handler:)``는 디자인 가이드상 trailing 전용이라
+    /// ``TextArea/bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)``의
+    /// `trailing`에만 넘길 수 있고, `leading`에 넘기면 컴파일되지 않습니다.
     ///
-    /// - Note: 디자인 가이드 기준 `button`·`primaryIconButton`은 trailing 전용으로 권장됩니다.
+    /// 각 요소의 크기는 TextArea의 ``Size``에 따라 자동으로 조정됩니다.
+    /// 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
     public enum Resource {
-        /// 텍스트 버튼(Outlined)
-        /// - Parameters:
-        ///   - color: 버튼 색상, 생략하면 기본값으로 `.assistive` 적용
-        ///   - title: 버튼 텍스트
-        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
-        case button(
-            color: Button.Color = .assistive,
-            title: String,
-            handler: (() -> Void)? = nil
-        )
+        /// Bottom Content 왼쪽에 표시할 요소입니다.
+        public enum Leading {
+            /// 아이콘 버튼(배경 없음)
+            /// - Parameters:
+            ///   - icon: 버튼 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case iconButton(
+                icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralTertiary),
+                handler: (() -> Void)? = nil
+            )
 
-        /// 아이콘 버튼(배경 없음)
-        /// - Parameters:
-        ///   - icon: 버튼 아이콘
-        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용
-        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
-        case iconButton(
-            icon: Icon,
-            tintColor: SwiftUI.Color = .semantic(.foregroundNeutralTertiary),
-            handler: (() -> Void)? = nil
-        )
+            /// 단순 아이콘
+            /// - Parameters:
+            ///   - icon: 표시할 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용
+            case icon(
+                _ icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralQuaternary)
+            )
 
-        /// Primary 아이콘 버튼(Solid)
-        /// - Parameters:
-        ///   - icon: 버튼 아이콘
-        ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
-        case primaryIconButton(
-            icon: Icon,
-            handler: (() -> Void)? = nil
-        )
+            /// 콘텐츠 뱃지
+            /// - Parameters:
+            ///   - variant: 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
+            ///   - title: 뱃지 텍스트
+            case contentBadge(
+                _ variant: ContentBadge.Variant = .solid,
+                title: String
+            )
 
-        /// 단순 아이콘
-        /// - Parameters:
-        ///   - icon: 표시할 아이콘
-        ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용
-        case icon(
-            _ icon: Icon,
-            tintColor: SwiftUI.Color = .semantic(.foregroundNeutralQuaternary)
-        )
+            /// 세그먼트 컨트롤(아이콘 전용). 표준 ``SegmentedControl``을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
+            ///
+            /// `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다.
+            /// 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
+            /// - Parameters:
+            ///   - selectedIndex: 선택된 세그먼트 인덱스 바인딩
+            ///   - icons: 세그먼트 아이콘 배열
+            ///   - accessibilityLabels: 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용
+            ///   - onSelect: 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용
+            case segmentedControl(
+                selectedIndex: Binding<Int>,
+                icons: [Icon],
+                accessibilityLabels: [String] = [],
+                onSelect: ((Int) -> Void)? = nil
+            )
 
-        /// 콘텐츠 뱃지
-        /// - Parameters:
-        ///   - variant: 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
-        ///   - title: 뱃지 텍스트
-        case contentBadge(
-            _ variant: ContentBadge.Variant = .solid,
-            title: String
-        )
+            /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
+            case slotView(() -> AnyView)
 
-        /// 세그먼트 컨트롤(아이콘 전용). 표준 ``SegmentedControl``을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
-        ///
-        /// `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다.
-        /// 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
-        /// - Parameters:
-        ///   - selectedIndex: 선택된 세그먼트 인덱스 바인딩
-        ///   - icons: 세그먼트 아이콘 배열
-        ///   - accessibilityLabels: 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용
-        ///   - onSelect: 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용
-        case segmentedControl(
-            selectedIndex: Binding<Int>,
-            icons: [Icon],
-            accessibilityLabels: [String] = [],
-            onSelect: ((Int) -> Void)? = nil
-        )
-
-        /// 임의 뷰. `.slot { ... }` 팩토리로 생성합니다.
-        case slotView(() -> AnyView)
-
-        /// 임의 뷰를 Bottom Content에 배치합니다.
-        ///
-        /// - Parameter content: 표시할 뷰를 생성하는 클로저
-        /// - Returns: 구성된 리소스
-        public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Resource {
-            .slotView { AnyView(content()) }
+            /// 목록에 없는 구성을 직접 배치합니다.
+            ///
+            /// - Parameter content: 표시할 뷰를 생성하는 클로저
+            /// - Returns: 구성된 요소
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Leading {
+                .slotView { AnyView(content()) }
+            }
         }
 
-        /// leading(왼쪽)에 배치할 수 있는 리소스인지 여부. `button`·`primaryIconButton`은 trailing 전용입니다.
-        public var isLeadingAllowed: Bool {
-            switch self {
-            case .button, .primaryIconButton: false
-            default: true
+        /// Bottom Content 오른쪽에 표시할 요소입니다.
+        public enum Trailing {
+            /// 텍스트 버튼(Outlined)
+            /// - Parameters:
+            ///   - color: 버튼 색상, 생략하면 기본값으로 `.assistive` 적용
+            ///   - title: 버튼 텍스트
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case button(
+                color: Button.Color = .assistive,
+                title: String,
+                handler: (() -> Void)? = nil
+            )
+
+            /// 아이콘 버튼(배경 없음)
+            /// - Parameters:
+            ///   - icon: 버튼 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case iconButton(
+                icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralTertiary),
+                handler: (() -> Void)? = nil
+            )
+
+            /// Primary 아이콘 버튼(Solid)
+            /// - Parameters:
+            ///   - icon: 버튼 아이콘
+            ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
+            case primaryIconButton(
+                icon: Icon,
+                handler: (() -> Void)? = nil
+            )
+
+            /// 단순 아이콘
+            /// - Parameters:
+            ///   - icon: 표시할 아이콘
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용
+            case icon(
+                _ icon: Icon,
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralQuaternary)
+            )
+
+            /// 콘텐츠 뱃지
+            /// - Parameters:
+            ///   - variant: 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용
+            ///   - title: 뱃지 텍스트
+            case contentBadge(
+                _ variant: ContentBadge.Variant = .solid,
+                title: String
+            )
+
+            /// 세그먼트 컨트롤(아이콘 전용). 표준 ``SegmentedControl``을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
+            ///
+            /// `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다.
+            /// 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
+            /// - Parameters:
+            ///   - selectedIndex: 선택된 세그먼트 인덱스 바인딩
+            ///   - icons: 세그먼트 아이콘 배열
+            ///   - accessibilityLabels: 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용
+            ///   - onSelect: 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용
+            case segmentedControl(
+                selectedIndex: Binding<Int>,
+                icons: [Icon],
+                accessibilityLabels: [String] = [],
+                onSelect: ((Int) -> Void)? = nil
+            )
+
+            /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
+            case slotView(() -> AnyView)
+
+            /// 목록에 없는 구성을 직접 배치합니다.
+            ///
+            /// - Parameter content: 표시할 뷰를 생성하는 클로저
+            /// - Returns: 구성된 요소
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Trailing {
+                .slotView { AnyView(content()) }
             }
         }
     }
@@ -187,8 +243,8 @@ public struct TextArea: View {
     private var negative = false
     private var disable = false
     private var placeholder: String? = nil
-    private var leadingResources: [Resource] = []
-    private var trailingResources: [Resource] = []
+    private var leadingResources: [Resource.Leading] = []
+    private var trailingResources: [Resource.Trailing] = []
     // nil이면 사이즈별 기본 간격(``Size/resourceSpacing``)을 사용한다.
     private var leadingResourceSpacing: CGFloat?
     private var trailingResourceSpacing: CGFloat?
@@ -305,16 +361,16 @@ public struct TextArea: View {
     ///   - leadingResourceSpacing: 왼쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용
     ///   - trailingResourceSpacing: 오른쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용
     /// - Returns: 수정된 텍스트 영역 인스턴스
-    /// - Note: `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 leading에 전달되면 무시됩니다.
+    /// - Note: `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 ``Resource/Trailing``에만
+    ///   정의되어 있습니다. leading에 넘기면 컴파일되지 않습니다.
     public func bottomResources(
-        leading leadingResources: [Resource] = [],
-        trailing trailingResources: [Resource] = [],
+        leading leadingResources: [Resource.Leading] = [],
+        trailing trailingResources: [Resource.Trailing] = [],
         leadingResourceSpacing: CGFloat? = nil,
         trailingResourceSpacing: CGFloat? = nil
     ) -> Self {
         var zelf = self
-        // leading 전용 제약: trailing 전용 프리셋은 걸러낸다.
-        zelf.leadingResources = Array(leadingResources.filter(\.isLeadingAllowed).prefix(3))
+        zelf.leadingResources = Array(leadingResources.prefix(3))
         zelf.leadingResourceSpacing = leadingResourceSpacing
 
         zelf.trailingResources = Array(trailingResources.prefix(3))
@@ -528,17 +584,17 @@ public struct TextArea: View {
     private struct Bottom: View {
         private let size: Size
         private let disable: Bool
-        private let leadingResources: [Resource]
+        private let leadingResources: [Resource.Leading]
         private let leadingResourceSpacing: CGFloat?
-        private let trailingResources: [Resource]
+        private let trailingResources: [Resource.Trailing]
         private let trailingResourceSpacing: CGFloat?
 
         init(
             _ size: Size,
             _ disable: Bool,
-            _ leadingResources: [Resource],
+            _ leadingResources: [Resource.Leading],
             _ leadingResourceSpacing: CGFloat?,
-            _ trailingResources: [Resource],
+            _ trailingResources: [Resource.Trailing],
             _ trailingResourceSpacing: CGFloat?
         ) {
             self.size = size
@@ -555,7 +611,7 @@ public struct TextArea: View {
                 if leadingResources.isEmpty == false {
                     HStack(spacing: leadingResourceSpacing ?? size.resourceSpacing) {
                         ForEach(leadingResources.indices, id: \.self) { index in
-                            component(leadingResources[index])
+                            leadingResources[index].view(size: size)
                         }
                     }
                 }
@@ -563,70 +619,10 @@ public struct TextArea: View {
                 if trailingResources.isEmpty == false {
                     HStack(spacing: trailingResourceSpacing ?? size.resourceSpacing) {
                         ForEach(trailingResources.indices, id: \.self) { index in
-                            component(trailingResources[index])
+                            trailingResources[index].view(size: size)
                         }
                     }
                 }
-            }
-        }
-
-        @ViewBuilder
-        func component(_ resource: Resource) -> some View {
-            switch resource {
-            case let .button(color, title, handler):
-                Button(
-                    variant: .outlined,
-                    color: color,
-                    size: size.buttonSize,
-                    text: title,
-                    handler: handler
-                )
-            case let .iconButton(icon, tintColor, handler):
-                // 아이콘 계열 요소는 사이즈별 정렬 래퍼(``Size/resourceWrapperSize``)로 감싸 Bottom Content
-                // 정렬 기준을 통일한다. 요소가 래퍼보다 크면(예: 아이콘 버튼 large 32) 래퍼를 넘어 중앙 정렬로 렌더된다.
-                IconButton(
-                    variant: .normal(size: size.normalIconButtonSize),
-                    icon: icon,
-                    handler: handler
-                )
-                .iconColor(tintColor)
-                .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
-            case let .primaryIconButton(icon, handler):
-                Button(
-                    variant: .solid,
-                    color: .primary,
-                    size: size.buttonSize,
-                    icon: icon,
-                    handler: handler
-                )
-                .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
-            case let .icon(icon, tintColor):
-                Image.icon(icon)
-                    .resizable()
-                    .foregroundColor(tintColor)
-                    .frame(width: size.resourceIconSize, height: size.resourceIconSize)
-                    .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
-            case let .contentBadge(variant, title):
-                ContentBadge(variant: variant, text: title)
-                    .size(size.contentBadgeSize)
-                    .colorStyle(.neutral())
-            case let .segmentedControl(selectedIndex, icons, accessibilityLabels, onSelect):
-                SegmentedControl(
-                    selectedIndex: selectedIndex,
-                    items: icons.indices.map { index in
-                        SegmentedControl.Item(
-                            leadingIcon: .icon(icons[index]),
-                            title: index < accessibilityLabels.count && accessibilityLabels[index].isEmpty == false
-                                ? accessibilityLabels[index]
-                                : icons[index].rawValue
-                        )
-                    },
-                    onSelect: onSelect
-                )
-                .iconOnly()
-                .size(.small)
-            case let .slotView(content):
-                content()
             }
         }
     }
@@ -837,6 +833,158 @@ public struct TextArea: View {
     class CustomTextView: UITextView {
         override var intrinsicContentSize: CGSize {
             sizeThatFits(CGSize(width: frame.width, height: CGFloat.greatestFiniteMagnitude))
+        }
+    }
+}
+
+// MARK: - Resource Rendering
+
+extension TextArea.Resource {
+    /// 텍스트 버튼(Outlined).
+    fileprivate static func buttonView(
+        color: Button.Color,
+        title: String,
+        handler: (() -> Void)?,
+        size: TextArea.Size
+    ) -> some View {
+        Button(
+            variant: .outlined,
+            color: color,
+            size: size.buttonSize,
+            text: title,
+            handler: handler
+        )
+    }
+
+    /// 배경 없는 아이콘 버튼.
+    ///
+    /// 아이콘 계열 요소는 사이즈별 정렬 래퍼(`Size.resourceWrapperSize`)로 감싸 Bottom Content
+    /// 정렬 기준을 통일한다. 요소가 래퍼보다 크면(예: 아이콘 버튼 large 32) 래퍼를 넘어 중앙 정렬로 렌더된다.
+    fileprivate static func iconButtonView(
+        _ icon: Icon,
+        tintColor: SwiftUI.Color,
+        handler: (() -> Void)?,
+        size: TextArea.Size
+    ) -> some View {
+        IconButton(
+            variant: .normal(size: size.normalIconButtonSize),
+            icon: icon,
+            handler: handler
+        )
+        .iconColor(tintColor)
+        .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
+    }
+
+    /// Primary 아이콘 버튼(Solid).
+    fileprivate static func primaryIconButtonView(
+        _ icon: Icon,
+        handler: (() -> Void)?,
+        size: TextArea.Size
+    ) -> some View {
+        Button(
+            variant: .solid,
+            color: .primary,
+            size: size.buttonSize,
+            icon: icon,
+            handler: handler
+        )
+        .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
+    }
+
+    /// 단순 아이콘.
+    fileprivate static func iconView(
+        _ icon: Icon,
+        tintColor: SwiftUI.Color,
+        size: TextArea.Size
+    ) -> some View {
+        Image.icon(icon)
+            .resizable()
+            .foregroundColor(tintColor)
+            .frame(width: size.resourceIconSize, height: size.resourceIconSize)
+            .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
+    }
+
+    /// 콘텐츠 뱃지.
+    fileprivate static func contentBadgeView(
+        _ variant: ContentBadge.Variant,
+        title: String,
+        size: TextArea.Size
+    ) -> some View {
+        ContentBadge(variant: variant, text: title)
+            .size(size.contentBadgeSize)
+            .colorStyle(.neutral())
+    }
+
+    /// 아이콘 전용 세그먼트 컨트롤.
+    fileprivate static func segmentedControlView(
+        selectedIndex: Binding<Int>,
+        icons: [Icon],
+        accessibilityLabels: [String],
+        onSelect: ((Int) -> Void)?
+    ) -> some View {
+        SegmentedControl(
+            selectedIndex: selectedIndex,
+            items: icons.indices.map { index in
+                SegmentedControl.Item(
+                    leadingIcon: .icon(icons[index]),
+                    title: index < accessibilityLabels.count && accessibilityLabels[index].isEmpty == false
+                        ? accessibilityLabels[index]
+                        : icons[index].rawValue
+                )
+            },
+            onSelect: onSelect
+        )
+        .iconOnly()
+        .size(.small)
+    }
+}
+
+extension TextArea.Resource.Leading {
+    @ViewBuilder
+    func view(size: TextArea.Size) -> some View {
+        switch self {
+        case let .iconButton(icon, tintColor, handler):
+            TextArea.Resource.iconButtonView(icon, tintColor: tintColor, handler: handler, size: size)
+        case let .icon(icon, tintColor):
+            TextArea.Resource.iconView(icon, tintColor: tintColor, size: size)
+        case let .contentBadge(variant, title):
+            TextArea.Resource.contentBadgeView(variant, title: title, size: size)
+        case let .segmentedControl(selectedIndex, icons, accessibilityLabels, onSelect):
+            TextArea.Resource.segmentedControlView(
+                selectedIndex: selectedIndex,
+                icons: icons,
+                accessibilityLabels: accessibilityLabels,
+                onSelect: onSelect
+            )
+        case let .slotView(content):
+            content()
+        }
+    }
+}
+
+extension TextArea.Resource.Trailing {
+    @ViewBuilder
+    func view(size: TextArea.Size) -> some View {
+        switch self {
+        case let .button(color, title, handler):
+            TextArea.Resource.buttonView(color: color, title: title, handler: handler, size: size)
+        case let .iconButton(icon, tintColor, handler):
+            TextArea.Resource.iconButtonView(icon, tintColor: tintColor, handler: handler, size: size)
+        case let .primaryIconButton(icon, handler):
+            TextArea.Resource.primaryIconButtonView(icon, handler: handler, size: size)
+        case let .icon(icon, tintColor):
+            TextArea.Resource.iconView(icon, tintColor: tintColor, size: size)
+        case let .contentBadge(variant, title):
+            TextArea.Resource.contentBadgeView(variant, title: title, size: size)
+        case let .segmentedControl(selectedIndex, icons, accessibilityLabels, onSelect):
+            TextArea.Resource.segmentedControlView(
+                selectedIndex: selectedIndex,
+                icons: icons,
+                accessibilityLabels: accessibilityLabels,
+                onSelect: onSelect
+            )
+        case let .slotView(content):
+            content()
         }
     }
 }

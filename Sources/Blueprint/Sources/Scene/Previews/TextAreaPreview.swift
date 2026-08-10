@@ -45,7 +45,31 @@ struct TextAreaPreview: View {
         }
     }
 
-    var resources: [TextArea.Resource?] {
+    var leadingPresets: [TextArea.Resource.Leading] {
+        [
+            .iconButton(
+                icon: .send,
+                handler: {}
+            ),
+            .icon(
+                .chevronDown
+            ),
+            .contentBadge(
+                title: "Badge"
+            ),
+            .segmentedControl(
+                selectedIndex: $segmentIndex,
+                icons: [.send, .chevronDown],
+                accessibilityLabels: ["전송", "더 보기"]
+            ),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+            }
+        ]
+    }
+
+    var trailingPresets: [TextArea.Resource.Trailing] {
         [
             .button(
                 title: "Text",
@@ -85,8 +109,8 @@ struct TextAreaPreview: View {
     @FocusState private var focusState: Bool
     @State private var disable: Bool = false
     @State private var placeholder: Bool = true
-    @State private var leadingResources = [TextArea.Resource]()
-    @State private var trailingResources = [TextArea.Resource]()
+    @State private var leadingResources = [TextArea.Resource.Leading]()
+    @State private var trailingResources = [TextArea.Resource.Trailing]()
     @State private var maxLength: CGFloat = 0
     @State private var characterCount: Int = 0
     @State private var segmentIndex: Int = 0
@@ -132,30 +156,24 @@ struct TextAreaPreview: View {
             }
             ToggleOption("autocorrectionDisabled", isOn: $autocorrectionDisabled)
             MenuOptionRow("leading", menuLabel: "add") {
-                ForEach(resources.indices, id: \.self) { index in
-                    if resources[index]?.isLeadingAllowed ?? false {
-                        Button {
-                            if let resource = resources[index] {
-                                leadingResources.append(resource)
-                                leadingResources = Array(leadingResources.prefix(3))
-                            }
-                        } label: {
-                            Text(resources[index]?.description ?? "none")
-                        }
+                ForEach(leadingPresets.indices, id: \.self) { index in
+                    Button {
+                        leadingResources.append(leadingPresets[index])
+                        leadingResources = Array(leadingResources.prefix(3))
+                    } label: {
+                        Text(leadingPresets[index].description)
                     }
                 }
             } accessory: {
                 Button("reset") { leadingResources.removeAll() }
             }
             MenuOptionRow("trailing", menuLabel: "add") {
-                ForEach(resources.indices, id: \.self) { index in
+                ForEach(trailingPresets.indices, id: \.self) { index in
                     Button {
-                        if let resource = resources[index] {
-                            trailingResources.append(resource)
-                            trailingResources = Array(trailingResources.prefix(3))
-                        }
+                        trailingResources.append(trailingPresets[index])
+                        trailingResources = Array(trailingResources.prefix(3))
                     } label: {
-                        Text(resources[index]?.description ?? "none")
+                        Text(trailingPresets[index].description)
                     }
                 }
             } accessory: {
@@ -174,7 +192,8 @@ struct TextAreaPreview: View {
     }
 }
 
-extension TextArea.Resource: CaseDescribable {}
+extension TextArea.Resource.Leading: CaseDescribable {}
+extension TextArea.Resource.Trailing: CaseDescribable {}
 
 #Preview {
     TextAreaPreview()
