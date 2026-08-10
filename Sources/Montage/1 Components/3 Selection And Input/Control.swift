@@ -75,7 +75,10 @@ struct Control: View {
 
     // MARK: - Body
 
+    @Environment(\.isEnabled) private var isEnabled
     @SwiftUI.State private var isPressed = false
+
+    private var isDisabled: Bool { isEnabled == false }
 
     @ViewBuilder private var switchThumb: some View {
         let thumbInset: CGFloat = 2
@@ -107,7 +110,7 @@ struct Control: View {
             // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
             ZStack {
                 Capsule()
-                    .fill(SwiftUI.Color.semantic(.lineNeutralPrimary).opacity(disable ? 0.43 : 1))
+                    .fill(SwiftUI.Color.semantic(.lineNeutralPrimary).opacity(isDisabled ? 0.43 : 1))
                 Capsule()
                     .fill(backgroundColor)
             }
@@ -118,7 +121,6 @@ struct Control: View {
             .animation(.easeOut(duration: 0.2), value: state.isUnchecked)
             .contentShape(Capsule())
             .onTapGesture {
-                guard disable == false else { return }
                 onSelect?(state.isUnchecked ? .checked : .unchecked)
             }
             .accessibilityRepresentation {
@@ -129,7 +131,6 @@ struct Control: View {
                         set: { onSelect?($0 ? .checked : .unchecked) })
                 )
                 .labelsHidden()
-                .disabled(disable)
             }
         default:
             HStack(alignment: .top, spacing: spacing) {
@@ -171,7 +172,6 @@ struct Control: View {
                             }
                     )
                 )
-                .disabled(disable)
 
                 if label.isNotEmpty {
                     Text(label)
@@ -185,7 +185,6 @@ struct Control: View {
                         .padding(.vertical, size == .medium ? 1 : 0)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            guard disable == false else { return }
                             onSelect?(state.isUnchecked ? .checked : .unchecked)
                         }
                 }
@@ -206,7 +205,6 @@ struct Control: View {
     private var labelColor: SwiftUI.Color?
     private var isBold = false
     private var tight = false
-    private var disable = false
 
     /// 레이블 텍스트를 설정합니다.
     ///
@@ -272,18 +270,6 @@ struct Control: View {
         zelf.tight = tight
         return zelf
     }
-
-    /// 컨트롤을 비활성화합니다.
-    ///
-    /// 비활성화된 컨트롤은 사용자 상호작용이 불가능하며, 시각적으로도 흐리게 표시됩니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 컨트롤 인스턴스
-    func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
 }
 
 extension Control {
@@ -305,7 +291,7 @@ extension Control {
         switch variant {
         case .checkmark:
             .semantic(state.isUnchecked ? .foregroundNeutralQuaternary : .surfaceBrandPrimary)
-                .opacity(disable ? 0.43 : 1)
+                .opacity(isDisabled ? 0.43 : 1)
         case .checkbox, .radio:
             .semantic(.staticWhite)
         case .switch:
@@ -338,14 +324,14 @@ extension Control {
         switch variant {
         case .switch:
             if state.isUnchecked {
-                disable ? .clear : .semantic(.surfaceNeutralStrong)
+                isDisabled ? .clear : .semantic(.surfaceNeutralStrong)
             } else {
-                .semantic(.surfaceBrandPrimary).opacity(disable ? 0.43 : 1)
+                .semantic(.surfaceBrandPrimary).opacity(isDisabled ? 0.43 : 1)
             }
         case .checkmark:
             .clear
         case .checkbox, .radio:
-            state.isUnchecked ? .clear : .semantic(.surfaceBrandPrimary).opacity(disable ? 0.43 : 1)
+            state.isUnchecked ? .clear : .semantic(.surfaceBrandPrimary).opacity(isDisabled ? 0.43 : 1)
         }
     }
 
@@ -353,7 +339,7 @@ extension Control {
         switch variant {
         case .checkmark, .switch: .clear
         case .checkbox, .radio:
-            .semantic(state.isUnchecked ? .lineNeutralPrimary : .surfaceBrandPrimary).opacity(disable ? 0.43 : 1)
+            .semantic(state.isUnchecked ? .lineNeutralPrimary : .surfaceBrandPrimary).opacity(isDisabled ? 0.43 : 1)
         }
     }
 
@@ -443,7 +429,7 @@ extension Control {
         (
             variant: labelVariant ?? (size == .small ? .label1 : .body2),
             weight: labelWeight ?? .regular,
-            color: disable ? .semantic(.foregroundDisablePrimary) : labelColor ?? .semantic(.foregroundNeutralPrimary)
+            color: isDisabled ? .semantic(.foregroundDisablePrimary) : labelColor ?? .semantic(.foregroundNeutralPrimary)
         )
     }
 

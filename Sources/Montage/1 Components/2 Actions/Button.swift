@@ -26,7 +26,14 @@ import SwiftUI
 /// // 로딩 상태 설정
 /// Button(text: "저장")
 ///     .loading(true)
+///
+/// // 비활성화
+/// Button(text: "저장")
+///     .disabled(isFormInvalid)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct Button: View {
     
     // MARK: - Types
@@ -168,7 +175,6 @@ public struct Button: View {
     
     // MARK: - Modifiers
     
-    private var disable: Bool = false
     private var contentColor: SwiftUI.Color? = nil
     private var customBackgroundColor: SwiftUI.Color? = nil
     private var customBorderColor: SwiftUI.Color? = nil
@@ -176,24 +182,7 @@ public struct Button: View {
     private var fontWeight: Typography.Weight? = nil
     private var loading = false
     private var fillWidth = false
-    
-    /// 버튼을 비활성화 상태로 설정합니다.
-    ///
-    /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
-    ///
-    /// ```swift
-    /// Button(text: "저장")
-    ///     .disable(isFormInvalid)
-    /// ```
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
-    
+
     /// 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
     ///
     /// ```swift
@@ -338,9 +327,10 @@ public struct Button: View {
     }
     
     // MARK: - Body
-    
+
+    @Environment(\.isEnabled) private var isEnabled
     @State private var isPressed = false
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
@@ -397,7 +387,7 @@ public struct Button: View {
             .padding(.horizontal, -interactionHorizontalOffset)
         }
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
-        .allowsHitTesting(!disable && !loading)
+        .allowsHitTesting(!loading)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(text ?? leadingIcon?.rawValue ?? "")
         .accessibilityAddTraits(.isButton)
@@ -406,6 +396,8 @@ public struct Button: View {
 }
 
 private extension Button {
+    var isDisabled: Bool { isEnabled == false }
+
     static func resolveColor(variant: Variant, color: Color) -> Color {
         if variant == .outlined && color == .negative {
             #if DEBUG
@@ -419,7 +411,7 @@ private extension Button {
     var backgroundColor: SwiftUI.Color {
         switch variant {
         case .solid:
-            if disable {
+            if isDisabled {
                 .semantic(.surfaceDisablePrimary)
             } else {
                 if let customBackgroundColor {
@@ -433,7 +425,7 @@ private extension Button {
                 }
             }
         case .outlined:
-            if !disable, let customBackgroundColor {
+            if !isDisabled, let customBackgroundColor {
                 customBackgroundColor
             } else {
                 .clear
@@ -444,7 +436,7 @@ private extension Button {
     
     var borderColor: SwiftUI.Color {
         if variant == .outlined {
-            if disable {
+            if isDisabled {
                 .semantic(.lineNeutralSecondary)
             } else {
                 if let customBorderColor {
@@ -461,7 +453,7 @@ private extension Button {
     var foregroundColor: SwiftUI.Color {
         switch variant {
         case .solid:
-            if disable {
+            if isDisabled {
                 .semantic(.foregroundDisablePrimary)
             } else if let contentColor {
                 contentColor
@@ -473,7 +465,7 @@ private extension Button {
                 }
             }
         case .outlined, .text:
-            if disable {
+            if isDisabled {
                 .semantic(.foregroundDisablePrimary)
             } else if let contentColor {
                 contentColor

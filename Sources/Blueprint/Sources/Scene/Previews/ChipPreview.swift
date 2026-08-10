@@ -24,7 +24,6 @@ struct ChipPreview: View {
                 text: text
             )
             .active(active)
-            .disabled(disable)
             .modifying {
                 if backgroundColor == .clear {
                     $0
@@ -81,6 +80,7 @@ struct ChipPreview: View {
                     $0
                 }
             }
+            .disabled(disable)
         } options: {
             SegmentedIndexRow("Variant", index: Binding(
                 get: { variant == .solid ? 0 : 1 },

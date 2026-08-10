@@ -15,7 +15,14 @@ import SwiftUI
 /// ```swift
 /// TextButton(text: "더 보기", handler: { showMore() })
 /// TextButton(color: .assistive, text: "상세보기", trailingIcon: .chevronRight)
+///
+/// // 비활성화
+/// TextButton(text: "저장")
+///     .disabled(isFormInvalid)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct TextButton: View {
     private let base: Button
 
@@ -78,21 +85,6 @@ public struct TextButton: View {
 
     private init(base: Button) {
         self.base = base
-    }
-
-    /// 버튼을 비활성화 상태로 설정합니다.
-    ///
-    /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
-    ///
-    /// ```swift
-    /// TextButton(text: "저장")
-    ///     .disable(isFormInvalid)
-    /// ```
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        .init(base: base.disable(disable))
     }
 
     /// 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.

@@ -22,8 +22,14 @@ import SwiftUI
 /// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
 /// .active(true, label: "최신순")
+///
+/// // 비활성화
+/// FilterButton(text: "카테고리", state: $state)
+///     .disabled(true)
 /// ```
 ///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct FilterButton: View {
     // MARK: - Types
 
@@ -87,6 +93,7 @@ public struct FilterButton: View {
     
     // MARK: - Body
     
+    @Environment(\.isEnabled) private var isEnabled
     @SwiftUI.State private var isPressed = false
     
     /// 뷰의 내용과 동작을 정의합니다.
@@ -122,7 +129,6 @@ public struct FilterButton: View {
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
-        .disabled(disable)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(text)
         .accessibilityAddTraits(.isButton)
@@ -133,7 +139,6 @@ public struct FilterButton: View {
     
     private var active = false
     private var activeLabel: String?
-    private var disable = false
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
@@ -150,16 +155,6 @@ public struct FilterButton: View {
         var view = self
         view.active = active
         view.activeLabel = label
-        return view
-    }
-    
-    /// 버튼의 비활성화 여부를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    public func disabled(_ disable: Bool = true) -> Self {
-        var view = self
-        view.disable = disable
         return view
     }
     
@@ -261,8 +256,10 @@ extension FilterButton.Variant {
 }
 
 private extension FilterButton {
+    var isDisabled: Bool { isEnabled == false }
+
     var backgroundColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             switch variant {
             case .solid:
                 return .semantic(.surfaceDisablePrimary)
@@ -282,7 +279,7 @@ private extension FilterButton {
     }
     
     var fontColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
@@ -292,7 +289,7 @@ private extension FilterButton {
     }
     
     var iconColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
@@ -314,7 +311,7 @@ private extension FilterButton {
     
     var borderColor: SwiftUI.Color {
         guard variant == .outlined else { return .clear }
-        if disable {
+        if isDisabled {
             return .semantic(.lineNeutralSecondary)
         } else if active {
             return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.28)

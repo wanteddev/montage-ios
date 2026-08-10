@@ -32,7 +32,14 @@ import SwiftUI
 /// // 자동수정·맞춤법 검사를 끈 검색 필드
 /// SearchField(text: $keyword)
 ///    .autocorrectionDisabled()
+///
+/// // 비활성화
+/// SearchField(text: $keyword)
+///    .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct SearchField: View {
     // MARK: - Types
 
@@ -70,7 +77,6 @@ public struct SearchField: View {
 
     private var variant: Variant = .solid
     private var size: Size = .large
-    private var disable = false
     private var placeholder: String?
     private var externalFocused: Binding<Bool>?
     private var onSubmit: (() -> Void)?
@@ -95,16 +101,6 @@ public struct SearchField: View {
     public func size(_ size: Size) -> Self {
         var zelf = self
         zelf.size = size
-        return zelf
-    }
-
-    /// 검색 필드의 활성화 상태를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, `true`이면 비활성화
-    /// - Returns: 수정된 검색 필드 인스턴스
-    public func disable(_ disable: Bool) -> Self {
-        var zelf = self
-        zelf.disable = disable
         return zelf
     }
 
@@ -181,6 +177,7 @@ public struct SearchField: View {
 
     // MARK: - Body
 
+    @Environment(\.isEnabled) private var isEnabled
     @FocusState private var focusState: Bool
     @State private var internalFocused = false
     @State private var fixAutocorrection = false
@@ -194,6 +191,8 @@ public struct SearchField: View {
 // MARK: - Private
 
 private extension SearchField {
+    var isDisabled: Bool { isEnabled == false }
+
     var focused: Binding<Bool> {
         externalFocused ?? $internalFocused
     }
@@ -214,9 +213,6 @@ private extension SearchField {
             .onTapGesture {
                 focusState = true
             }
-            // allowsHitTesting은 포인터 입력만 막아 보조 기술에 비활성 상태가 전달되지 않는다.
-            // disabled를 써야 VoiceOver가 "사용 안 함"으로 읽고 포커스 이동도 함께 차단된다.
-            .disabled(disable)
     }
 
     var contentRow: some View {
@@ -248,17 +244,17 @@ private extension SearchField {
                     onTextChange?(newValue)
                 }
                 // 비활성 상태에서는 외부 바인딩이 포커스를 켜지 못하게 막는다.
-                // (막지 않으면 disable인 필드에 키보드가 올라온다)
+                // (막지 않으면 비활성 필드에 키보드가 올라온다)
                 .onChange(of: focused.wrappedValue) { newValue in
-                    let target = disable ? false : newValue
+                    let target = isDisabled ? false : newValue
                     if focusState != target {
                         focusState = target
                     }
                 }
                 // 비활성화되면 열려 있던 포커스를 내리고, 다시 활성화되면 바인딩이 요청한 포커스를 반영한다.
                 // (활성화 방향을 처리하지 않으면 focused == true인데 포커스가 없는 상태로 남는다)
-                .onChange(of: disable) { isDisabled in
-                    let target = isDisabled ? false : focused.wrappedValue
+                .onChange(of: isEnabled) { isEnabled in
+                    let target = isEnabled ? focused.wrappedValue : false
                     if focusState != target {
                         focusState = target
                     }
@@ -293,7 +289,7 @@ private extension SearchField {
 
     @ViewBuilder
     var clearButton: some View {
-        if text.isNotEmpty, disable == false {
+        if text.isNotEmpty, isDisabled == false {
             IconButton(
                 variant: .normal(size: size.clearButtonSize),
                 icon: .circleCloseFill
@@ -317,8 +313,8 @@ private extension SearchField {
                 .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
                 .background(.ultraThinMaterial, in: surface)
         case .outlined:
-            // outlined는 배경을 비워 뒤 콘텐츠가 비치도록 하고, disable일 때만 표면을 채운다.
-            if disable {
+            // outlined는 배경을 비워 뒤 콘텐츠가 비치도록 하고, 비활성일 때만 표면을 채운다.
+            if isDisabled {
                 surface
                     .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
             } else {
@@ -335,16 +331,16 @@ private extension SearchField {
         case .solid:
             nil
         case .outlined:
-            disable ? .semantic(.lineNeutralTertiary) : .semantic(.lineNeutralSecondary)
+            isDisabled ? .semantic(.lineNeutralTertiary) : .semantic(.lineNeutralSecondary)
         }
     }
 
     var iconColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
 
     var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
 }
 

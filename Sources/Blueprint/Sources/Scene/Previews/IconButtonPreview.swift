@@ -105,7 +105,6 @@ struct IconButtonPreview: View {
                     print("tapped")
                 }
             )
-            .disable(disable)
             .disableInteraction(disableInteraction)
             .showPushBadge(isNormal ? showPushBadge : false)
             .padding(isOutlinedOrSolid ? padding : 0)
@@ -137,6 +136,7 @@ struct IconButtonPreview: View {
                     $0
                 }
             }
+            .disabled(disable)
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if variantIndex == 0 {

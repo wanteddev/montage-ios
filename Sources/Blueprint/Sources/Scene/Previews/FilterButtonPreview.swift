@@ -21,7 +21,6 @@ struct FilterButtonPreview: View {
                 state: $state
             )
             .active(active, label: activeLabel)
-            .disabled(disable)
             .modifying {
                 if fontColor == .clear {
                     $0
@@ -36,6 +35,7 @@ struct FilterButtonPreview: View {
                     $0.iconColor(iconColor)
                 }
             }
+            .disabled(disable)
         } options: {
             SegmentedIndexRow("Variant", index: Binding(
                 get: { variant == .solid ? 0 : 1 },

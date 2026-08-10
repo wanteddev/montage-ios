@@ -45,13 +45,13 @@ struct ButtonPreview: View {
                 ) {
                     print("tapped")
                 }
-                .disable(disable)
                 .contentColor(contentColor ? .semantic(.foregroundAccentCyan) : nil)
                 .backgroundColor(backgroundColor ? .semantic(.surfaceAccentCyanOpaque) : nil)
                 .borderColor(borderColor ? .semantic(.surfaceAccentPurpleOpaque) : nil)
                 .fontVariant(fontVariant ? .heading1 : nil)
                 .fontWeight(fontWeight ? .regular : nil)
                 .loading(loading)
+                .disabled(disable)
             } else {
                 VStack {
                     Button(
@@ -64,7 +64,6 @@ struct ButtonPreview: View {
                     ) {
                         print("tapped")
                     }
-                    .disable(disable)
                     .contentColor(contentColor ? .semantic(.foregroundAccentCyan) : nil)
                     .backgroundColor(backgroundColor ? .semantic(.surfaceAccentCyanOpaque) : nil)
                     .borderColor(borderColor ? .semantic(.surfaceAccentPurpleOpaque) : nil)
@@ -72,6 +71,7 @@ struct ButtonPreview: View {
                     .fontWeight(fontWeight ? .regular : nil)
                     .loading(loading)
                     .fillWidth(fillWidth)
+                    .disabled(disable)
                     Button(
                         variant: variants[variantIndex],
                         color: color,
@@ -82,7 +82,6 @@ struct ButtonPreview: View {
                     ) {
                         print("tapped")
                     }
-                    .disable(disable)
                     .contentColor(contentColor ? .semantic(.foregroundAccentCyan) : nil)
                     .backgroundColor(backgroundColor ? .semantic(.surfaceAccentCyanOpaque) : nil)
                     .borderColor(borderColor ? .semantic(.surfaceAccentPurpleOpaque) : nil)
@@ -90,6 +89,7 @@ struct ButtonPreview: View {
                     .fontWeight(fontWeight ? .regular : nil)
                     .loading(loading)
                     .fillWidth(fillWidth)
+                    .disabled(disable)
                 }
             }
         } options: {

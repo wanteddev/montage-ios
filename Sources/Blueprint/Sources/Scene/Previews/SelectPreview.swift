@@ -83,9 +83,9 @@ struct SelectPreview: View {
             .size(sizes[sizeIndex])
             .negative(negative)
             .placeholder("선택해 주세요.")
-            .disable(disable)
             .leadingContent(leadingContents[leadingContentIndex])
             .menuResize(bottomSheetResizes[menuResizeIndex])
+            .disabled(disable)
             .bottomSheet(isPresented: $showSheet) {
                 VStack {
                     ForEach(items.indices, id: \.self) { index in

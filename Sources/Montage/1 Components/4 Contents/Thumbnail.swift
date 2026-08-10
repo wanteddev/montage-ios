@@ -30,7 +30,16 @@ import SwiftUI
 /// Thumbnail(urlString: imageURL, ratio: .r1x1)
 ///    .width(50)
 ///    .border(true)
+///
+/// // 비활성화
+/// Thumbnail(urlString: imageURL, ratio: .r1x1)
+///    .width(100)
+///    .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 이미지는 색 토큰으로 비활성을 표현할 수 없어 불투명도 `Opacity/43`을 적용합니다.
 public struct Thumbnail: View {
 
     // MARK: - Ratio Enum
@@ -179,7 +188,7 @@ public struct Thumbnail: View {
 
     @State private var proposedWidth: CGFloat = .zero
 
-    /// 상위 컨테이너가 `disabled(_:)`로 비활성화되면 이미지도 흐리게 표시한다.
+    // 이미지 계열은 색 토큰으로 비활성을 표현할 수 없어 불투명도를 낮춘다.
     ///
     /// 이미지 계열은 색 토큰으로 비활성을 표현할 수 없어 불투명도를 낮춘다.
     @Environment(\.isEnabled) private var isEnabled

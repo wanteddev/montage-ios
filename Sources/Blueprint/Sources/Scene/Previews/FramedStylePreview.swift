@@ -16,18 +16,22 @@ struct FramedStylePreview: View {
 
     var body: some View {
         PreviewLayout {
+            // 콘텐츠를 Button으로 두면 disabled가 프레임 테두리뿐 아니라 내부 콘텐츠까지
+            // 전달되는지 함께 확인할 수 있다. (Text는 `disabled(_:)`에 시각적으로 반응하지 않는다)
             ZStack {
                 Rectangle()
                     .foregroundColor(.semantic(.backgroundNeutralSecondary))
                     .frame(height: 80)
-                Text("Preview")
+                Montage.Button(size: .small, text: "Preview") {
+                    print("tapped")
+                }
             }
             .framedStyle(
                 status: FramedStyle.Status.allCases[statusIndex],
                 borderRadius: borderRadius,
-                shadowLevel: Shadow.Level.allCases[shadowIndex],
-                disabled: disabled
+                shadowLevel: Shadow.Level.allCases[shadowIndex]
             )
+            .disabled(disabled)
         } options: {
             SegmentedIndexRow("status", index: $statusIndex, labels: FramedStyle.Status.allCases.map(\.description))
             SliderOptionRow("borderRadius", value: $borderRadius, in: 0...20, step: 1)

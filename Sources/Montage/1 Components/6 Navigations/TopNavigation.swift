@@ -515,32 +515,28 @@ extension TopNavigation {
     /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.
     ///
     /// ```swift
-    /// TrailingTextButton(
-    ///     text: "확인",
-    ///     disable: false
-    /// ) {
+    /// TrailingTextButton(text: "확인") {
     ///     // 버튼 액션
     /// }
+    /// .disabled(isFormInvalid)
     /// ```
+    ///
+    /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
     public struct TrailingTextButton: View {
         private let text: String
-        private let disable: Bool
         private let action: () -> Void
-        
+
         /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - text: 버튼에 표시할 텍스트
-        ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
         ///   - action: 버튼 액션
         /// - Returns: TrailingTextButton 인스턴스
         public init(
             text: String,
-            disable: Bool = false,
             action: @escaping () -> Void
         ) {
             self.text = text
-            self.disable = disable
             self.action = action
         }
 
@@ -549,7 +545,6 @@ extension TopNavigation {
             TextButton(text: text) {
                 action()
             }
-            .disable(disable)
             .contentColor(.semantic(.foregroundNeutralPrimary))
             .fontVariant(.headline2)
             .fontWeight(.regular)
@@ -559,7 +554,7 @@ extension TopNavigation {
     
     /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.
     ///
-    /// 비활성화(disable), 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
+    /// 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
     ///
     /// ```swift
     /// TrailingIconButton(
@@ -568,39 +563,37 @@ extension TopNavigation {
     /// ) {
     ///     // 버튼 액션
     /// }
+    /// .disabled(true)
     /// ```
+    ///
+    /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
     public struct TrailingIconButton: View {
         private let icon: Icon
-        private let disable: Bool
         private let showPushBadge: Bool
         private let action: () -> Void
-        
+
         /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - icon: 아이콘 버튼의 아이콘
-        ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
         ///   - showPushBadge: PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용
         ///   - action: 아이콘 버튼 클릭시 동작할 액션
         /// - Returns: TrailingIconButton 인스턴스
         public init(
             icon: Icon,
-            disable: Bool = false,
             showPushBadge: Bool = false,
             action: @escaping () -> Void
         ) {
             self.icon = icon
-            self.disable = disable
             self.showPushBadge = showPushBadge
             self.action = action
         }
-        
+
         /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             IconButton(icon: icon) {
                 action()
             }
-            .disable(disable)
             .showPushBadge(showPushBadge)
             .frame(width: 24, height: 24)
         }

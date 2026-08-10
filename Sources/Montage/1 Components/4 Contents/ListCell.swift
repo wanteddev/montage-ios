@@ -54,6 +54,19 @@ import SwiftUI
 /// ListCell(label: "커스텀")
 ///     .trailingResources([.slot { MyCustomView() }])
 /// ```
+///
+/// ## 비활성화
+///
+/// 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지
+/// 함께 비활성 스타일로 표시됩니다. 비활성 셀은 탭 이벤트를 받지 않으며 라벨·설명·콘텐츠 슬롯에
+/// `foregroundDisablePrimary` 색상이 적용됩니다.
+///
+/// ```swift
+/// ListCell(label: "비활성 셀")
+///     .disabled(true)
+/// ```
+///
+/// - Note: 콘텐츠 슬롯에는 전경색으로 전달되므로, 슬롯 안에서 색상을 직접 지정한 뷰에는 적용되지 않습니다.
 public struct ListCell: View {
     // MARK: - Types
     /// 상하 여백을 나타내는 열거형입니다.
@@ -136,6 +149,7 @@ public struct ListCell: View {
     }
 
     // MARK: - Body
+    @Environment(\.isEnabled) private var isEnabled
     @State private var isPressed = false
 
     /// 뷰의 내용과 동작을 정의합니다.
@@ -164,9 +178,6 @@ public struct ListCell: View {
         // 선택 상태는 체크 아이콘으로만 표현되는데 children을 combine하므로
         // 트레이트로 따로 전달하지 않으면 보조 기술이 선택 여부를 알 수 없다.
         .if(selected) { $0.accessibilityAddTraits(.isSelected) }
-        // allowsHitTesting은 포인터 입력만 막아 보조 기술에 비활성 상태가 전달되지 않는다.
-        // disabled를 써야 VoiceOver가 "사용 안 함"으로 읽고 포커스 이동도 함께 차단된다.
-        .disabled(disable)
     }
 
     // MARK: - Modifiers
@@ -175,7 +186,6 @@ public struct ListCell: View {
     private var verticalPadding: VerticalPadding = .medium
     private var textEllipsis = false
     private var descriptionText: String? = nil
-    private var disable = false
     private var selected = false
     private var divider = false
     private var chevron = false
@@ -309,21 +319,6 @@ public struct ListCell: View {
     public func description(_ description: String? = nil) -> Self {
         var zelf = self
         zelf.descriptionText = description
-        return zelf
-    }
-
-    /// 셀의 비활성화 상태를 설정합니다.
-    ///
-    /// 비활성화된 셀은 탭 이벤트를 받지 않으며, 라벨·설명·콘텐츠 슬롯에 `foregroundDisablePrimary` 색상이 적용됩니다.
-    ///
-    /// - Parameters:
-    ///   - disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 콘텐츠 슬롯에는 전경색으로 전달되므로, 슬롯 안에서 색상을 직접 지정한 뷰에는 적용되지 않습니다.
-    public func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
         return zelf
     }
 
@@ -472,6 +467,8 @@ public struct ListCell: View {
 
 // MARK: - Private
 extension ListCell {
+    private var isDisabled: Bool { isEnabled == false }
+
     /// 인터랙션 효과 적용 여부.
     ///
     /// 상하 여백이 없는 셀은 배경이 텍스트에 바짝 붙어 눌림 표현이 오히려 노이즈가 되므로 사용하지 않는다.
@@ -485,7 +482,7 @@ extension ListCell {
     }
 
     private var resolvedLabelColor: Color.Semantic {
-        if disable {
+        if isDisabled {
             .foregroundDisablePrimary
         } else {
             selected ? .surfaceBrandPrimary : labelTypography.color
@@ -493,15 +490,15 @@ extension ListCell {
     }
 
     private var resolvedDescriptionColor: Color.Semantic {
-        disable ? .foregroundDisablePrimary : .foregroundNeutralTertiary
+        isDisabled ? .foregroundDisablePrimary : .foregroundNeutralTertiary
     }
 
     private var chevronColor: Color.Semantic {
-        disable ? .foregroundDisablePrimary : .foregroundNeutralQuaternary
+        isDisabled ? .foregroundDisablePrimary : .foregroundNeutralQuaternary
     }
 
     private var selectedCheckColor: Color.Semantic {
-        disable ? .foregroundDisablePrimary : .surfaceBrandPrimary
+        isDisabled ? .foregroundDisablePrimary : .surfaceBrandPrimary
     }
 
     private var row: some View {
@@ -573,7 +570,7 @@ extension ListCell {
         }
         // 슬롯 콘텐츠에는 비활성일 때만 색을 강제하고, 그 외에는 사용처가 지정한 색을 그대로 둔다.
         // 자기 색을 직접 그리는 컴포넌트(ContentBadge·Switch 등)는 이 전경색을 따르지 않는다.
-        .if(disable) {
+        .if(isDisabled) {
             $0.foregroundStyle(SwiftUI.Color.semantic(.foregroundDisablePrimary))
         }
     }

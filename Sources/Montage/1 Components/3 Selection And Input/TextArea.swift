@@ -34,7 +34,14 @@ import SwiftUI
 /// // 자동수정·맞춤법 검사를 끈 텍스트 영역
 /// TextArea(text: $longText)
 ///     .autocorrectionDisabled()
+///
+/// // 비활성화
+/// TextArea(text: $longText)
+///     .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct TextArea: View {
     // MARK: - Types
 
@@ -241,7 +248,6 @@ public struct TextArea: View {
     private var size: Size = .large
     private var resize: Resize = .normal
     private var negative = false
-    private var disable = false
     private var placeholder: String? = nil
     private var leadingResources: [Resource.Leading] = []
     private var trailingResources: [Resource.Trailing] = []
@@ -343,16 +349,6 @@ public struct TextArea: View {
         return zelf
     }
 
-    /// 텍스트 영역의 활성화 상태를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 텍스트 영역 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
-
     /// 텍스트 영역 하단에 표시할 UI 요소를 설정합니다.
     ///
     /// - Parameters:
@@ -390,7 +386,11 @@ public struct TextArea: View {
 
     // MARK: - Body
 
+    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.colorScheme) private var colorScheme
+
+    private var isDisabled: Bool { isEnabled == false }
+
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var internalFocusState
 
@@ -465,7 +465,7 @@ public struct TextArea: View {
                     .foregroundStyle(editorTextColor)
                     .font(.font(variant: size.inputVariant))
                     .lineSpacing(size.inputVariant.lineSpacing)
-                    .if(!disable) {
+                    .if(!isDisabled) {
                         $0.focused(focus)
                     }
                     .onChange(of: text) { newValue in
@@ -493,7 +493,6 @@ public struct TextArea: View {
             if leadingResources.isEmpty == false || trailingResources.isEmpty == false {
                 Bottom(
                     size,
-                    disable,
                     leadingResources,
                     leadingResourceSpacing,
                     trailingResources,
@@ -511,7 +510,6 @@ public struct TextArea: View {
         }
         // focusRing은 어떤 clip보다 뒤(=바깥)에 그려져야 테두리 밖으로 번질 수 있다.
         .background { focusRing }
-        .allowsHitTesting(disable == false)
         .contentShape(RoundedRectangle(cornerRadius: size.cornerRadius))
         .onTapGesture {
             focus.wrappedValue = true
@@ -523,7 +521,7 @@ public struct TextArea: View {
     @ViewBuilder
     private var editorBackground: some View {
         Group {
-            if disable {
+            if isDisabled {
                 SwiftUI.Color.semantic(.surfaceNeutralTertiary)
             } else {
                 if colorScheme == .light {
@@ -542,7 +540,7 @@ public struct TextArea: View {
     /// negative 상태에서는 빨간 ring을 사용한다.
     @ViewBuilder
     private var focusRing: some View {
-        if focus.wrappedValue, disable == false {
+        if focus.wrappedValue, isDisabled == false {
             RoundedRectangle(cornerRadius: size.cornerRadius + 4)
                 .strokeBorder(focusRingColor, lineWidth: 4)
                 .padding(-4)
@@ -556,7 +554,7 @@ public struct TextArea: View {
     }
 
     private var editorStrokeColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             SwiftUI.Color.semantic(.lineNeutralTertiary)
         } else if negative {
             SwiftUI.Color.semantic(.lineNegativeStrong)
@@ -572,18 +570,17 @@ public struct TextArea: View {
     }
 
     private var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
 
     private var editorTextColor: SwiftUI.Color {
-        disable ? .semantic(.foregroundNeutralTertiary) : .semantic(.foregroundNeutralPrimary)
+        isDisabled ? .semantic(.foregroundNeutralTertiary) : .semantic(.foregroundNeutralPrimary)
     }
 
     // MARK: - Inner View
 
     private struct Bottom: View {
         private let size: Size
-        private let disable: Bool
         private let leadingResources: [Resource.Leading]
         private let leadingResourceSpacing: CGFloat?
         private let trailingResources: [Resource.Trailing]
@@ -591,14 +588,12 @@ public struct TextArea: View {
 
         init(
             _ size: Size,
-            _ disable: Bool,
             _ leadingResources: [Resource.Leading],
             _ leadingResourceSpacing: CGFloat?,
             _ trailingResources: [Resource.Trailing],
             _ trailingResourceSpacing: CGFloat?
         ) {
             self.size = size
-            self.disable = disable
             self.leadingResources = leadingResources
             self.leadingResourceSpacing = leadingResourceSpacing
             self.trailingResources = trailingResources

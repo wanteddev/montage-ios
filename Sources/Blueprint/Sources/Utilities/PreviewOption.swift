@@ -343,12 +343,12 @@ struct PrevNextOptionRow: View {
             Button(variant: .outlined, size: .small, text: "Previous") {
                 value = max(range.lowerBound, value - 1)
             }
-            .disable(value <= range.lowerBound)
+            .disabled(value <= range.lowerBound)
 
             Button(variant: .outlined, size: .small, text: "Next") {
                 value = min(range.upperBound, value + 1)
             }
-            .disable(value >= range.upperBound)
+            .disabled(value >= range.upperBound)
             Spacer()
         }
     }

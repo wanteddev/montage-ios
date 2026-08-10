@@ -28,7 +28,7 @@ import Montage
 /// ```swift
 /// // 상단 미리보기 / 하단 옵션
 /// PreviewLayout {
-///     MyComponent().disable(disable)
+///     MyComponent().disabled(disable)
 /// } options: {
 ///     SegmentedOptionRow("size", selection: $size)
 ///     ToggleOptionRow("disable", isOn: $disable)
