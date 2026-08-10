@@ -35,6 +35,11 @@ TextField(text: $inputText)
 // 사이즈를 지정한 텍스트 필드
 TextField(text: $inputText)
    .size(.medium)
+
+// 자동수정·맞춤법 검사를 끈 이메일 입력 필드
+TextField(text: $inputText)
+   .placeholder("이메일을 입력하세요")
+   .autocorrectionDisabled()
 ```
 
 ## Topics
@@ -146,6 +151,26 @@ TextField(text: $inputText)
 
 ### Instance Methods
 
+<details>
+
+<summary>``func autocorrectionDisabled(Bool) -> TextField``</summary>
+
+
+자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `disable` | 비활성화 여부, `true`이면 자동수정과 맞춤법 검사를 사용하지 않음 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  이메일·아이디·인증 코드처럼 자동수정이 오히려 방해가 되는 입력에서 사용합니다. `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
+
+  텍스트 필드가 내부에서 SwiftUI의 `autocorrectionDisabled(_:)`를 직접 적용하므로, 호출부에서 인스턴스 바깥에 같은 모디파이어를 붙이면 내부 설정에 덮어써집니다. 반드시 이 모디파이어로 설정해 주세요.
+</details>
 <details>
 
 <summary>``func backgroundColor(SwiftUI.Color?) -> TextField``</summary>

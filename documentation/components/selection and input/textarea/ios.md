@@ -29,6 +29,10 @@ TextArea(text: $longText)
 TextArea(text: $longText)
     .maxLength(100)
     .onTextChange { characterCount = $0.count }
+
+// 자동수정·맞춤법 검사를 끈 텍스트 영역
+TextArea(text: $longText)
+    .autocorrectionDisabled()
 ```
 
 ## Topics
@@ -61,6 +65,26 @@ TextArea(text: $longText)
 
 ### Instance Methods
 
+<details>
+
+<summary>``func autocorrectionDisabled(Bool) -> TextArea``</summary>
+
+
+자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  코드 조각·고유명사처럼 사전에 없는 텍스트를 자주 입력하는 화면에서 사용합니다. `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
+
+  텍스트 영역의 입력부는 `UITextView`를 감싼 뷰이므로 SwiftUI의 `autocorrectionDisabled(_:)`를 인스턴스 바깥에 붙여도 입력부까지 전달되지 않습니다. 반드시 이 모디파이어로 설정해 주세요.
+</details>
 <details>
 
 <summary>``func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea``</summary>
