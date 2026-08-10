@@ -111,6 +111,7 @@ struct TextFieldPreview: View {
     @State private var autoCompletionDataSource: Montage.TextField.AutoCompletionDataSource? = nil
     @State private var maxLength: CGFloat = 0
     @State private var characterCount: Int = 0
+    @State private var autocorrectionDisabled: Bool = false
     
     let candidates: [String] = [
         "aaa1", "bbb1", "ccc1", "ddd1", "eee1", "fff1", "ggg1", "hhh1", "iii1", "jjj1", "kkk1",
@@ -198,6 +199,7 @@ struct TextFieldPreview: View {
                         }
                     }
                     .maxLength(maxLength > 0 ? Int(maxLength) : nil)
+                    .autocorrectionDisabled(autocorrectionDisabled)
                     .onTextChange { characterCount = $0.count }
                     .onChange(of: text) { _ in
                         refreshAutoCompletion()
@@ -226,6 +228,7 @@ struct TextFieldPreview: View {
                 SwiftUI.Slider(value: $maxLength, in: 0...100, step: 10)
                 Text(maxLength > 0 ? "\(characterCount)/\(Int(maxLength))" : "off")
             }
+            ToggleOption("autocorrectionDisabled", isOn: $autocorrectionDisabled)
             HStack {
                 ToggleOption("autoComplete", isOn: $usingSuggestions)
             }

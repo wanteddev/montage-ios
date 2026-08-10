@@ -90,6 +90,7 @@ struct TextAreaPreview: View {
     @State private var maxLength: CGFloat = 0
     @State private var characterCount: Int = 0
     @State private var segmentIndex: Int = 0
+    @State private var autocorrectionDisabled: Bool = false
 
     var body: some View {
         PreviewLayout {
@@ -103,6 +104,7 @@ struct TextAreaPreview: View {
                     trailing: trailingResources
                 )
                 .maxLength(maxLength > 0 ? Int(maxLength) : nil)
+                .autocorrectionDisabled(autocorrectionDisabled)
                 .onTextChange { characterCount = $0.count }
                 .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
                 // resize 변경 시 뷰 아이덴티티를 리셋해 높이를 재계산한다.
@@ -128,6 +130,7 @@ struct TextAreaPreview: View {
                 ToggleOption("disable", isOn: $disable)
                 ToggleOption("negative", isOn: $negative)
             }
+            ToggleOption("autocorrectionDisabled", isOn: $autocorrectionDisabled)
             MenuOptionRow("leading", menuLabel: "add") {
                 ForEach(resources.indices, id: \.self) { index in
                     if resources[index]?.isLeadingAllowed ?? false {

@@ -51,6 +51,7 @@ struct SearchFieldPreview: View {
     @State private var placeholder: Bool = true
     @State private var focused: Bool = false
     @State private var submittedKeyword: String = ""
+    @State private var autocorrectionDisabled: Bool = false
 
     var body: some View {
         PreviewLayout {
@@ -60,6 +61,7 @@ struct SearchFieldPreview: View {
                 .disable(disable)
                 .placeholder(placeholder ? "검색어를 입력해 주세요." : nil)
                 .focused($focused)
+                .autocorrectionDisabled(autocorrectionDisabled)
                 .onSubmit { submittedKeyword = text }
         } options: {
             SegmentedOptionRow("variant", selection: $variant)
@@ -69,6 +71,7 @@ struct SearchFieldPreview: View {
                 ToggleOption("disable", isOn: $disable)
             }
             ToggleOption("focused", isOn: $focused)
+            ToggleOption("autocorrectionDisabled", isOn: $autocorrectionDisabled)
             Text("제출된 검색어: \(submittedKeyword.isEmpty ? "-" : submittedKeyword)")
                 .foregroundStyle(SwiftUI.Color.secondary)
         }
