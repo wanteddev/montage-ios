@@ -31,7 +31,15 @@ SearchField(text: $keyword)
 // 자동수정·맞춤법 검사를 끈 검색 필드
 SearchField(text: $keyword)
    .autocorrectionDisabled()
+
+// 비활성화
+SearchField(text: $keyword)
+   .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -81,21 +89,6 @@ SearchField(text: $keyword)
   사람 이름·회사명·약어처럼 사전에 없는 검색어를 자주 입력하는 화면에서 사용합니다. `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
 
   검색 필드가 내부에서 SwiftUI의 `autocorrectionDisabled(_:)`를 직접 적용하므로, 호출부에서 인스턴스 바깥에 같은 모디파이어를 붙이면 내부 설정에 덮어써집니다. 반드시 이 모디파이어로 설정해 주세요.
-</details>
-<details>
-
-<summary>``func disable(Bool) -> SearchField``</summary>
-
-
-검색 필드의 활성화 상태를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, `true`이면 비활성화 |
-- **Return Value**
-
-  수정된 검색 필드 인스턴스
 </details>
 <details>
 

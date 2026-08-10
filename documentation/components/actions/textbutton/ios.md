@@ -14,7 +14,15 @@ Text만 있는 스타일의 버튼으로, 가벼운 액션이나 링크 형태�
 ```swift
 TextButton(text: "더 보기", handler: { showMore() })
 TextButton(color: .assistive, text: "상세보기", trailingIcon: .chevronRight)
+
+// 비활성화
+TextButton(text: "저장")
+    .disabled(isFormInvalid)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -69,30 +77,6 @@ Text 스타일의 버튼을 생성합니다.
   ```swift
   TextButton(text: "복사")
       .contentColor(.red)
-  ```
-
-</details>
-<details>
-
-<summary>``func disable(Bool) -> TextButton``</summary>
-
-
-버튼을 비활성화 상태로 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 버튼 인스턴스
-- **Discussion**
-
-  비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
-
-  ```swift
-  TextButton(text: "저장")
-      .disable(isFormInvalid)
   ```
 
 </details>

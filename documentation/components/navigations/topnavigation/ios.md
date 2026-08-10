@@ -95,7 +95,7 @@ TopNavigation(
 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.
 - **Overview**
 
-  비활성화(disable), 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
+  푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
 
   ```swift
   TrailingIconButton(
@@ -104,13 +104,18 @@ TopNavigation(
   ) {
       // 버튼 액션
   }
+  .disabled(true)
   ```
+
+  >  **Note**
+  >
+  > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 
 #### Initializers
 
 <details>
 
-<summary>``init(icon: Icon, disable: Bool, showPushBadge: Bool, action: () -> Void)``</summary>
+<summary>``init(icon: Icon, showPushBadge: Bool, action: () -> Void)``</summary>
 
 
 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
@@ -119,7 +124,6 @@ TopNavigation(
   | Parameter | Description |
   | --- | --- |
   | `icon` | 아이콘 버튼의 아이콘 |
-  | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `showPushBadge` | PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 아이콘 버튼 클릭시 동작할 액션 |
 </details>
@@ -144,19 +148,21 @@ TopNavigation(
 - **Overview**
 
   ```swift
-  TrailingTextButton(
-      text: "확인",
-      disable: false
-  ) {
+  TrailingTextButton(text: "확인") {
       // 버튼 액션
   }
+  .disabled(isFormInvalid)
   ```
+
+  >  **Note**
+  >
+  > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 
 #### Initializers
 
 <details>
 
-<summary>``init(text: String, disable: Bool, action: () -> Void)``</summary>
+<summary>``init(text: String, action: () -> Void)``</summary>
 
 
 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
@@ -165,7 +171,6 @@ TopNavigation(
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
-  | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 버튼 액션 |
 </details>
 

@@ -52,6 +52,19 @@ ListCell(label: "커스텀")
     .trailingResources([.slot { MyCustomView() }])
 ```
 
+## 비활성화
+
+비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 비활성 셀은 탭 이벤트를 받지 않으며 라벨·설명·콘텐츠 슬롯에 `foregroundDisablePrimary` 색상이 적용됩니다.
+
+```swift
+ListCell(label: "비활성 셀")
+    .disabled(true)
+```
+
+>  **Note**
+>
+> 콘텐츠 슬롯에는 전경색으로 전달되므로, 슬롯 안에서 색상을 직접 지정한 뷰에는 적용되지 않습니다.
+
 ## Topics
 
 ### Initializers
@@ -117,28 +130,6 @@ ListCell(label: "커스텀")
 - **Discussion**
 
   설명은 라벨 아래에 작은 글씨로 표시되는 부가 설명 텍스트입니다.
-</details>
-<details>
-
-<summary>``func disable(Bool) -> ListCell``</summary>
-
-
-셀의 비활성화 상태를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 ListCell 인스턴스
-- **Discussion**
-
-  비활성화된 셀은 탭 이벤트를 받지 않으며, 라벨·설명·콘텐츠 슬롯에 `foregroundDisablePrimary` 색상이 적용됩니다.
-  >  **Note**
-  >
-  > 콘텐츠 슬롯에는 전경색으로 전달되므로, 슬롯 안에서 색상을 직접 지정한 뷰에는 적용되지 않습니다.
-
 </details>
 <details>
 

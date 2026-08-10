@@ -395,12 +395,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Button",
-          "summary": "버튼을 비활성화 상태로 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "fill(horizontal:vertical:)",
           "signature": "func fill(horizontal: Bool, vertical: Bool) -> Button",
           "summary": "버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.",
@@ -544,6 +538,12 @@
           "kind": "method"
         },
         {
+          "name": "itemDisabled(_:)",
+          "signature": "func itemDisabled((Int) -> Bool) -> Category",
+          "summary": "개별 카테고리 항목의 비활성 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "size(_:)",
           "signature": "func size(Size) -> Category",
           "summary": "카테고리 아이템 크기를 설정합니다.",
@@ -609,12 +609,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Checkbox",
-          "summary": "컨트롤을 비활성화합니다.",
-          "kind": "method"
-        },
-        {
           "name": "label(_:fillWidth:)",
           "signature": "func label(String, fillWidth: Bool) -> Checkbox",
           "summary": "레이블 텍스트를 설정합니다.",
@@ -673,12 +667,6 @@
           "name": "bold(_:)",
           "signature": "func bold(Bool) -> Checkmark",
           "summary": "레이블을 볼드체로 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Checkmark",
-          "summary": "컨트롤을 비활성화합니다.",
           "kind": "method"
         },
         {
@@ -748,12 +736,6 @@
           "name": "borderColor(_:)",
           "signature": "func borderColor(SwiftUI.Color) -> Chip",
           "summary": "칩의 테두리 색상을 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disabled(_:)",
-          "signature": "func disabled(Bool) -> Chip",
-          "summary": "칩의 비활성화 여부를 설정합니다.",
           "kind": "method"
         },
         {
@@ -978,12 +960,6 @@
           "name": "backgroundColor(_:)",
           "signature": "func backgroundColor(SwiftUI.Color) -> FilterButton",
           "summary": "버튼의 배경색을 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disabled(_:)",
-          "signature": "func disabled(Bool) -> FilterButton",
-          "summary": "버튼의 비활성화 여부를 설정합니다.",
           "kind": "method"
         },
         {
@@ -1244,12 +1220,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> IconButton",
-          "summary": "버튼의 비활성화 여부를 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "disableInteraction(_:)",
           "signature": "func disableInteraction(Bool) -> IconButton",
           "summary": "hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).",
@@ -1449,12 +1419,6 @@
           "name": "description(_:)",
           "signature": "func description(String?) -> ListCell",
           "summary": "셀에 부가 설명을 추가합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> ListCell",
-          "summary": "셀의 비활성화 상태를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2214,12 +2178,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Radio",
-          "summary": "컨트롤을 비활성화합니다.",
-          "kind": "method"
-        },
-        {
           "name": "label(_:fillWidth:)",
           "signature": "func label(String, fillWidth: Bool) -> Radio",
           "summary": "레이블 텍스트를 설정합니다.",
@@ -2346,12 +2304,6 @@
           "name": "autocorrectionDisabled(_:)",
           "signature": "func autocorrectionDisabled(Bool) -> SearchField",
           "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> SearchField",
-          "summary": "검색 필드의 활성화 상태를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2538,12 +2490,6 @@
         }
       ],
       "modifiers": [
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Select",
-          "summary": "활성화 여부를 조정합니다.",
-          "kind": "method"
-        },
         {
           "name": "leadingContent(_:)",
           "signature": "func leadingContent(LeadingContent?) -> Select",
@@ -2789,12 +2735,6 @@
       ],
       "modifiers": [
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Slider",
-          "summary": "슬라이더의 활성화 상태를 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "heading(_:)",
           "signature": "func heading(Bool) -> Slider",
           "summary": "슬라이더 상단에 제목을 표시할지 여부를 설정합니다.",
@@ -2886,14 +2826,7 @@
           "signature": "init(checked:size:onSelect:)"
         }
       ],
-      "modifiers": [
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Switch",
-          "summary": "컨트롤을 비활성화합니다.",
-          "kind": "method"
-        }
-      ],
+      "modifiers": [],
       "staticMembers": [],
       "nestedTypes": [
         {
@@ -2991,12 +2924,6 @@
           "name": "bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)",
           "signature": "func bottomResources(leading: [Resource.Leading], trailing: [Resource.Trailing], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
           "summary": "텍스트 영역 하단에 표시할 UI 요소를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> TextArea",
-          "summary": "텍스트 영역의 활성화 상태를 설정합니다.",
           "kind": "method"
         },
         {
@@ -3153,12 +3080,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> TextButton",
-          "summary": "버튼을 비활성화 상태로 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "fill(horizontal:vertical:)",
           "signature": "func fill(horizontal: Bool, vertical: Bool) -> TextButton",
           "summary": "버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.",
@@ -3228,12 +3149,6 @@
           "name": "backgroundColor(_:)",
           "signature": "func backgroundColor(SwiftUI.Color?) -> TextField",
           "summary": "텍스트 필드의 배경색을 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> TextField",
-          "summary": "텍스트 필드의 활성화 상태를 설정합니다.",
           "kind": "method"
         },
         {
@@ -3629,7 +3544,7 @@
           "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.",
           "initializers": [
             {
-              "signature": "init(icon:disable:showPushBadge:action:)"
+              "signature": "init(icon:showPushBadge:action:)"
             }
           ],
           "instanceProperties": [
@@ -3647,7 +3562,7 @@
           "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.",
           "initializers": [
             {
-              "signature": "init(text:disable:action:)"
+              "signature": "init(text:action:)"
             }
           ],
           "instanceProperties": [

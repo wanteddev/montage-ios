@@ -20,7 +20,15 @@ Radio(checked: true) { checked in
 Radio(checked: false, size: .small) { checked in
     print("라디오 버튼 선택 상태: \(checked)")
 }
+
+// 비활성화
+Radio(checked: false)
+    .disabled(true)
 ```
+
+>  **Note**
+>
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
 ## Topics
 
@@ -76,21 +84,6 @@ Radio(checked: false, size: .small) { checked in
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 
-</details>
-<details>
-
-<summary>``func disable(Bool) -> Radio``</summary>
-
-
-컨트롤을 비활성화합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 라디오 버튼 컴포넌트
 </details>
 <details>
 
