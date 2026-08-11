@@ -13,6 +13,20 @@ struct ListCellPreview: View {
     /// 프리뷰에서 무한히 쌓이면 셀이 화면을 넘어가므로 여기서만 상한을 둔다.
     private static let slotCapacity = 3
 
+    /// 슬롯에 담은 요소 하나.
+    ///
+    /// 만들어진 `Resource` 대신 프리셋 번호를 들고 있다가 렌더마다 다시 만든다.
+    /// checkbox·radio·switch는 `checked`를 `Binding`이 아닌 `Bool`로 받으므로 `Resource` 값을
+    /// 그대로 저장하면 담은 시점의 `checked`가 굳어 탭해도 외관이 바뀌지 않는다.
+    ///
+    /// `checked`를 프리셋이 아니라 이 항목에 두는 이유는 같은 프리셋을 여러 번 담을 수 있기 때문이다.
+    /// 상태를 프리셋 쪽에 두면 checkbox 두 개가 한 값을 공유해 하나를 눌렀을 때 둘이 같이 바뀐다.
+    private struct SlotItem: Identifiable {
+        let id = UUID()
+        let presetIndex: Int
+        var checked = false
+    }
+
     @State private var description = false
     @State private var verticalPaddingIndex = 1
     @State private var customVerticalPadding: CGFloat = 24
@@ -27,18 +41,10 @@ struct ListCellPreview: View {
     @State private var selected = false
     @State private var highlightText: String = ""
 
-    // 슬롯에 담은 요소는 "만들어진 Resource" 대신 프리셋 인덱스로 들고 있는다.
-    // checkbox·radio·switch는 checked를 Binding이 아닌 Bool로 받으므로, Resource 값을
-    // @State에 저장하면 담은 시점의 checked가 그대로 굳어 탭해도 외관이 바뀌지 않는다.
-    // 인덱스만 저장하고 렌더마다 프리셋을 다시 만들면 아래 상태들이 그대로 반영된다.
-    @State private var leadingSelection: [Int] = []
-    @State private var labelTrailingSelection: [Int] = []
-    @State private var trailingSelection: [Int] = []
-    @State private var extraSelection: [Int] = []
-
-    @State private var checkboxChecked = false
-    @State private var radioChecked = false
-    @State private var switchChecked = true
+    @State private var leadingItems: [SlotItem] = []
+    @State private var labelTrailingItems: [SlotItem] = []
+    @State private var trailingItems: [SlotItem] = []
+    @State private var extraItems: [SlotItem] = []
 
     var verticalPaddings: [ListCell.VerticalPadding] {
         [.none, .small, .medium, .large, .custom(customVerticalPadding)]
@@ -58,81 +64,95 @@ struct ListCellPreview: View {
         longText ? "이것은 두 줄 이상으로 표현될 수 있는 긴 설명입니다. 충분히 길어야 줄 바꿈이 됩니다." : "설명"
     }
 
-    // 각 슬롯의 프리셋은 enum case를 하나씩 빠짐없이 담는다.
-    // slot(_:)에 넣은 뷰는 셀 스펙에 맞춘 크기 제약을 받지 않으므로 프리뷰에서도
-    // frame으로 직접 크기를 정해 행 높이가 밀리지 않게 한다.
+    // 각 슬롯의 프리셋은 enum case를 하나씩 빠짐없이 담는다. 상태를 가지는 case는 항목의
+    // checked·onSelect를 받아 만들고, 나머지는 인자를 무시한다.
+    // slot(_:)에 넣은 뷰는 셀 스펙에 맞춘 크기 제약을 받지 않으므로 frame으로 직접 크기를 정해
+    // 행 높이가 밀리지 않게 한다.
 
-    var leadingPresets: [ListCell.Resource.Leading] {
-        [
-            .icon(.check),
-            .largeIcon(.check),
-            .checkbox(checked: checkboxChecked, onSelect: { checkboxChecked = $0 }),
-            .radio(checked: radioChecked, onSelect: { radioChecked = $0 }),
-            .avatar("", variant: .person),
-            .thumbnail(""),
-            .slot {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.semantic(.foregroundBrandPrimary))
-                    .frame(width: 22, height: 22)
-            }
-        ]
+    @ViewBuilder
+    private var slotSampleView: some View {
+        Image(systemName: "star.fill")
+            .foregroundColor(.semantic(.foregroundBrandPrimary))
+            .frame(width: 22, height: 22)
     }
 
-    var labelTrailingPresets: [ListCell.Resource.LabelTrailing] {
-        [
-            .contentBadge(title: "배지"),
-            .icon(.check, tintColor: .semantic(.surfaceBrandPrimary)),
-            .slot {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.semantic(.foregroundBrandPrimary))
-                    .frame(width: 22, height: 22)
-            }
-        ]
+    private func leadingPreset(
+        _ index: Int,
+        checked: Bool = false,
+        onSelect: ((Bool) -> Void)? = nil
+    ) -> ListCell.Resource.Leading {
+        switch index {
+        case 0: return .icon(.check)
+        case 1: return .largeIcon(.check)
+        case 2: return .checkbox(checked: checked, onSelect: onSelect)
+        case 3: return .radio(checked: checked, onSelect: onSelect)
+        case 4: return .avatar("", variant: .person)
+        case 5: return .thumbnail("")
+        default: return .slot { slotSampleView }
+        }
     }
 
-    var trailingPresets: [ListCell.Resource.Trailing] {
-        [
-            .value("값"),
-            .icon(.chevronRight),
-            .iconButton(.chevronRight, handler: {}),
-            .textButton(title: "텍스트", handler: {}),
-            .button(title: "버튼", handler: {}),
-            .contentBadge(title: "배지"),
-            .switch(checked: switchChecked, onSelect: { switchChecked = $0 }),
-            .slot {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.semantic(.foregroundBrandPrimary))
-                    .frame(width: 22, height: 22)
-            }
-        ]
+    private func labelTrailingPreset(_ index: Int) -> ListCell.Resource.LabelTrailing {
+        switch index {
+        case 0: return .contentBadge(title: "배지")
+        case 1: return .icon(.check, tintColor: .semantic(.surfaceBrandPrimary))
+        default: return .slot { slotSampleView }
+        }
     }
 
-    var extraPresets: [ListCell.Resource.Extra] {
-        [
-            .text("텍스트"),
-            .contentBadge(.outlined, title: "서울"),
-            .slot {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.semantic(.foregroundBrandPrimary))
-                    .frame(width: 22, height: 22)
-            }
-        ]
+    private func trailingPreset(
+        _ index: Int,
+        checked: Bool = false,
+        onSelect: ((Bool) -> Void)? = nil
+    ) -> ListCell.Resource.Trailing {
+        switch index {
+        case 0: return .value("값")
+        case 1: return .icon(.chevronRight)
+        case 2: return .iconButton(.chevronRight, handler: {})
+        case 3: return .textButton(title: "텍스트", handler: {})
+        case 4: return .button(title: "버튼", handler: {})
+        case 5: return .contentBadge(title: "배지")
+        case 6: return .switch(checked: checked, onSelect: onSelect)
+        default: return .slot { slotSampleView }
+        }
     }
+
+    private func extraPreset(_ index: Int) -> ListCell.Resource.Extra {
+        switch index {
+        case 0: return .text("텍스트")
+        case 1: return .contentBadge(.outlined, title: "서울")
+        default: return .slot { slotSampleView }
+        }
+    }
+
+    // 메뉴에 띄울 이름. 프리셋 목록을 두 번 적지 않도록 빌더에서 뽑아 쓴다.
+    var leadingLabels: [String] { (0..<7).map { leadingPreset($0).description } }
+    var labelTrailingLabels: [String] { (0..<3).map { labelTrailingPreset($0).description } }
+    var trailingLabels: [String] { (0..<8).map { trailingPreset($0).description } }
+    var extraLabels: [String] { (0..<3).map { extraPreset($0).description } }
 
     var leadingResourceList: [ListCell.Resource.Leading] {
-        leadingSelection.map { leadingPresets[$0] }
+        leadingItems.map { item in
+            leadingPreset(item.presetIndex, checked: item.checked) { newValue in
+                setChecked(newValue, for: item.id, in: $leadingItems)
+            }
+        }
     }
 
     var labelTrailingResourceList: [ListCell.Resource.LabelTrailing] {
-        labelTrailingSelection.map { labelTrailingPresets[$0] }
+        labelTrailingItems.map { labelTrailingPreset($0.presetIndex) }
     }
 
     var trailingResourceList: [ListCell.Resource.Trailing] {
-        trailingSelection.map { trailingPresets[$0] }
+        trailingItems.map { item in
+            trailingPreset(item.presetIndex, checked: item.checked) { newValue in
+                setChecked(newValue, for: item.id, in: $trailingItems)
+            }
+        }
     }
 
     var extraResourceList: [ListCell.Resource.Extra] {
-        extraSelection.map { extraPresets[$0] }
+        extraItems.map { extraPreset($0.presetIndex) }
     }
 
     var body: some View {
@@ -168,12 +188,12 @@ struct ListCellPreview: View {
                 ToggleOption("Divider", isOn: $divider)
             }
             HStack {
-                slotMenu("Leading", selection: $leadingSelection, presets: leadingPresets)
-                slotMenu("Label Trailing", selection: $labelTrailingSelection, presets: labelTrailingPresets)
+                slotMenu("Leading", labels: leadingLabels, items: $leadingItems)
+                slotMenu("Label Trailing", labels: labelTrailingLabels, items: $labelTrailingItems)
             }
             HStack {
-                slotMenu("Trailing", selection: $trailingSelection, presets: trailingPresets)
-                slotMenu("Extra", selection: $extraSelection, presets: extraPresets)
+                slotMenu("Trailing", labels: trailingLabels, items: $trailingItems)
+                slotMenu("Extra", labels: extraLabels, items: $extraItems)
             }
             HStack {
                 ToggleOption("Text Ellipsis", isOn: $textEllipsis)
@@ -193,22 +213,28 @@ struct ListCellPreview: View {
     /// 슬롯 하나의 프리셋을 골라 담는 메뉴. 항목을 누르면 추가되고, reset으로 비운다.
     ///
     /// 한 줄에 두 슬롯씩 나열하므로 행 단위인 `MenuOptionRow`가 아니라 인라인용 `MenuOption`을 쓴다.
-    private func slotMenu<Preset: CaseDescribable>(
+    private func slotMenu(
         _ title: String,
-        selection: Binding<[Int]>,
-        presets: [Preset]
+        labels: [String],
+        items: Binding<[SlotItem]>
     ) -> some View {
         MenuOption(title, menuLabel: "add") {
-            ForEach(presets.indices, id: \.self) { index in
+            ForEach(labels.indices, id: \.self) { index in
                 Button {
-                    selection.wrappedValue = Array((selection.wrappedValue + [index]).suffix(Self.slotCapacity))
+                    let appended = items.wrappedValue + [SlotItem(presetIndex: index)]
+                    items.wrappedValue = Array(appended.suffix(Self.slotCapacity))
                 } label: {
-                    Text(presets[index].description)
+                    Text(labels[index])
                 }
             }
         } accessory: {
-            Button("reset") { selection.wrappedValue.removeAll() }
+            Button("reset") { items.wrappedValue.removeAll() }
         }
+    }
+
+    private func setChecked(_ value: Bool, for id: UUID, in items: Binding<[SlotItem]>) {
+        guard let index = items.wrappedValue.firstIndex(where: { $0.id == id }) else { return }
+        items.wrappedValue[index].checked = value
     }
 }
 
