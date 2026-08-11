@@ -95,7 +95,7 @@ struct ListCellPreview: View {
     private func labelTrailingPreset(_ index: Int) -> ListCell.Resource.LabelTrailing {
         switch index {
         case 0: return .contentBadge(title: "배지")
-        case 1: return .icon(.check, tintColor: .semantic(.surfaceBrandPrimary))
+        case 1: return .icon(.check)
         default: return .slot { slotSampleView }
         }
     }
