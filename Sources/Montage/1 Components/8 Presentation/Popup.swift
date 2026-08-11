@@ -107,7 +107,9 @@ public struct Popup: View {
 
                 if let actionAreaModel {
                     ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(scrolledToBottom)
+                        .transparentBackground(
+                            backgroundTransparency(for: actionAreaModel.backgroundTransparencyControl)
+                        )
                         .caption(actionAreaModel.caption)
                         .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                         .padding(.bottom, 20)
@@ -220,15 +222,38 @@ public struct Popup: View {
         navigationHeight + contentHeight + actionAreaHeight
     }
 
+    /// 콘텐츠가 실제로 보이는 영역의 높이.
+    ///
+    /// `.fixed`는 지정한 높이를 그대로 쓰고, `.hug`는 콘텐츠 높이를 `popupMaxHeight`로 제한한 값이다.
+    /// 스크롤 가능 여부와 스크롤 끝 판정이 모두 이 값을 기준으로 계산된다.
+    private var viewportHeight: CGFloat {
+        if case .fixed(let height) = resize {
+            height
+        } else {
+            min(popupMaxHeight, popupContentHeight)
+        }
+    }
+
+    /// `contentOffset`은 최상단에서 0이고 아래로 스크롤할수록 음수가 되므로,
+    /// 스크롤 끝 오프셋은 `viewportHeight - popupContentHeight`가 된다.
     private var scrolledToBottom: Bool {
-        Int(contentOffset) <= Int(popupMaxHeight) - Int(popupContentHeight)
+        Int(contentOffset) <= Int(viewportHeight) - Int(popupContentHeight)
     }
 
     private var scrollable: Bool {
-        if case .fixed(let height) = resize {
-            popupContentHeight > height
+        popupContentHeight > viewportHeight
+    }
+
+    /// ActionArea의 배경 투명도.
+    ///
+    /// 모델이 `.manual`로 값을 지정하면 그 값을 존중하고, `.automatic`이면 스크롤이 끝에 닿았는지로 판단한다.
+    private func backgroundTransparency(
+        for control: ActionArea.BackgroundTransparencyControl
+    ) -> Bool {
+        if case .manual(let transparency) = control {
+            transparency
         } else {
-            popupContentHeight > popupMaxHeight
+            scrolledToBottom
         }
     }
 }
