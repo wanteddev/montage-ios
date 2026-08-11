@@ -167,24 +167,6 @@ Chip(text: "김티드")
 </details>
 <details>
 
-<summary>``func iconOnly(Bool) -> Chip``</summary>
-
-
-아이콘만 표시하는 정사각 형태 여부를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `iconOnly` | 아이콘 전용 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 칩 인스턴스
-- **Discussion**
-
-  `true`이면 텍스트 없이 leading 슬롯(없으면 trailing 슬롯)만 너비와 높이가 같은 정사각 형태로 중앙 정렬해 표시합니다. 표시할 콘텐츠는 [leadingContent(_:)](/documentation/montage/chip/leadingcontent(_:).md) 또는 [trailingContent(_:)](/documentation/montage/chip/trailingcontent(_:).md)로 지정합니다.
-</details>
-<details>
-
 <summary>``func leadingContent<V>(() -> V) -> Chip``</summary>
 
 
