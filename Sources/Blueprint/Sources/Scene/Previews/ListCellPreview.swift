@@ -9,18 +9,14 @@ import SwiftUI
 import Montage
 
 struct ListCellPreview: View {
-    @State private var isOn: Bool = true
+    /// 슬롯당 담을 수 있는 요소 수. `ListCell`은 개수를 제한하지 않지만,
+    /// 프리뷰에서 무한히 쌓이면 셀이 화면을 넘어가므로 여기서만 상한을 둔다.
+    private static let slotCapacity = 3
+
     @State private var description = false
     @State private var verticalPaddingIndex = 1
     @State private var customVerticalPadding: CGFloat = 24
     @State private var chevron = false
-    @State private var leadingContent = false
-    @State private var multipleLeadingContent = false
-    @State private var labelTrailingContent = false
-    @State private var multipleLabelTrailingContent = false
-    @State private var trailingContent = false
-    @State private var multipleTrailingContent = false
-    @State private var extraContent = false
     @State private var verticalAlignmentIndex = 0
     @State private var textEllipsis = false
     @State private var divider = false
@@ -30,6 +26,19 @@ struct ListCellPreview: View {
     @State private var interactionRadius: CGFloat = 16
     @State private var selected = false
     @State private var highlightText: String = ""
+
+    // 슬롯에 담은 요소는 "만들어진 Resource" 대신 프리셋 인덱스로 들고 있는다.
+    // checkbox·radio·switch는 checked를 Binding이 아닌 Bool로 받으므로, Resource 값을
+    // @State에 저장하면 담은 시점의 checked가 그대로 굳어 탭해도 외관이 바뀌지 않는다.
+    // 인덱스만 저장하고 렌더마다 프리셋을 다시 만들면 아래 상태들이 그대로 반영된다.
+    @State private var leadingSelection: [Int] = []
+    @State private var labelTrailingSelection: [Int] = []
+    @State private var trailingSelection: [Int] = []
+    @State private var extraSelection: [Int] = []
+
+    @State private var checkboxChecked = false
+    @State private var radioChecked = false
+    @State private var switchChecked = true
 
     var verticalPaddings: [ListCell.VerticalPadding] {
         [.none, .small, .medium, .large, .custom(customVerticalPadding)]
@@ -49,30 +58,81 @@ struct ListCellPreview: View {
         longText ? "이것은 두 줄 이상으로 표현될 수 있는 긴 설명입니다. 충분히 길어야 줄 바꿈이 됩니다." : "설명"
     }
 
+    // 각 슬롯의 프리셋은 enum case를 하나씩 빠짐없이 담는다.
+    // slot(_:)에 넣은 뷰는 셀 스펙에 맞춘 크기 제약을 받지 않으므로 프리뷰에서도
+    // frame으로 직접 크기를 정해 행 높이가 밀리지 않게 한다.
+
+    var leadingPresets: [ListCell.Resource.Leading] {
+        [
+            .icon(.check),
+            .largeIcon(.check),
+            .checkbox(checked: checkboxChecked, onSelect: { checkboxChecked = $0 }),
+            .radio(checked: radioChecked, onSelect: { radioChecked = $0 }),
+            .avatar("", variant: .person),
+            .thumbnail(""),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+                    .frame(width: 22, height: 22)
+            }
+        ]
+    }
+
+    var labelTrailingPresets: [ListCell.Resource.LabelTrailing] {
+        [
+            .contentBadge(title: "배지"),
+            .icon(.check, tintColor: .semantic(.surfaceBrandPrimary)),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+                    .frame(width: 22, height: 22)
+            }
+        ]
+    }
+
+    var trailingPresets: [ListCell.Resource.Trailing] {
+        [
+            .value("값"),
+            .icon(.chevronRight),
+            .iconButton(.chevronRight, handler: {}),
+            .textButton(title: "텍스트", handler: {}),
+            .button(title: "버튼", handler: {}),
+            .contentBadge(title: "배지"),
+            .switch(checked: switchChecked, onSelect: { switchChecked = $0 }),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+                    .frame(width: 22, height: 22)
+            }
+        ]
+    }
+
+    var extraPresets: [ListCell.Resource.Extra] {
+        [
+            .text("텍스트"),
+            .contentBadge(.outlined, title: "서울"),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+                    .frame(width: 22, height: 22)
+            }
+        ]
+    }
+
     var leadingResourceList: [ListCell.Resource.Leading] {
-        guard leadingContent else { return [] }
-        return multipleLeadingContent
-            ? [.checkbox(checked: selected), .avatar("", variant: .person)]
-            : [.checkbox(checked: selected)]
+        leadingSelection.map { leadingPresets[$0] }
     }
 
     var labelTrailingResourceList: [ListCell.Resource.LabelTrailing] {
-        guard labelTrailingContent else { return [] }
-        return multipleLabelTrailingContent
-            ? [.contentBadge(title: "배지"), .icon(.check, tintColor: .semantic(.surfaceBrandPrimary))]
-            : [.contentBadge(title: "배지")]
+        labelTrailingSelection.map { labelTrailingPresets[$0] }
     }
 
     var trailingResourceList: [ListCell.Resource.Trailing] {
-        guard trailingContent else { return [] }
-        return multipleTrailingContent
-            ? [.value("값"), .iconButton(.chevronRight)]
-            : [.iconButton(.chevronRight)]
+        trailingSelection.map { trailingPresets[$0] }
     }
 
     var extraResourceList: [ListCell.Resource.Extra] {
-        guard extraContent else { return [] }
-        return [.contentBadge(.outlined, title: "서울"), .contentBadge(.outlined, title: "5년차")]
+        extraSelection.map { extraPresets[$0] }
     }
 
     var body: some View {
@@ -108,19 +168,12 @@ struct ListCellPreview: View {
                 ToggleOption("Divider", isOn: $divider)
             }
             HStack {
-                ToggleOption("Leading Content", isOn: $leadingContent)
-                ToggleOption("+ 다중", isOn: $multipleLeadingContent)
+                slotMenu("Leading", selection: $leadingSelection, presets: leadingPresets)
+                slotMenu("Label Trailing", selection: $labelTrailingSelection, presets: labelTrailingPresets)
             }
             HStack {
-                ToggleOption("Trailing Content", isOn: $trailingContent)
-                ToggleOption("+ 다중", isOn: $multipleTrailingContent)
-            }
-            HStack {
-                ToggleOption("Label Trailing", isOn: $labelTrailingContent)
-                ToggleOption("+ 다중", isOn: $multipleLabelTrailingContent)
-            }
-            HStack {
-                ToggleOption("Extra Content", isOn: $extraContent)
+                slotMenu("Trailing", selection: $trailingSelection, presets: trailingPresets)
+                slotMenu("Extra", selection: $extraSelection, presets: extraPresets)
             }
             HStack {
                 ToggleOption("Text Ellipsis", isOn: $textEllipsis)
@@ -136,10 +189,35 @@ struct ListCellPreview: View {
             TextFieldOptionRow("Highlight Text", text: $highlightText)
         }
     }
+
+    /// 슬롯 하나의 프리셋을 골라 담는 메뉴. 항목을 누르면 추가되고, reset으로 비운다.
+    ///
+    /// 한 줄에 두 슬롯씩 나열하므로 행 단위인 `MenuOptionRow`가 아니라 인라인용 `MenuOption`을 쓴다.
+    private func slotMenu<Preset: CaseDescribable>(
+        _ title: String,
+        selection: Binding<[Int]>,
+        presets: [Preset]
+    ) -> some View {
+        MenuOption(title, menuLabel: "add") {
+            ForEach(presets.indices, id: \.self) { index in
+                Button {
+                    selection.wrappedValue = Array((selection.wrappedValue + [index]).suffix(Self.slotCapacity))
+                } label: {
+                    Text(presets[index].description)
+                }
+            }
+        } accessory: {
+            Button("reset") { selection.wrappedValue.removeAll() }
+        }
+    }
 }
 
 extension ListCell.VerticalPadding: CaseDescribable {}
 extension ListCell.VerticalAlign: CaseDescribable {}
+extension ListCell.Resource.Leading: CaseDescribable {}
+extension ListCell.Resource.LabelTrailing: CaseDescribable {}
+extension ListCell.Resource.Trailing: CaseDescribable {}
+extension ListCell.Resource.Extra: CaseDescribable {}
 
 #Preview {
     ListCellPreview()
