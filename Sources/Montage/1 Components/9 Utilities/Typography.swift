@@ -268,6 +268,11 @@ extension Typography.Variant {
     /// 각 variant의 고정 크기는 그대로 두되, 사용자가 시스템 글자 크기를 키우면 여기에 매핑된
     /// 텍스트 스타일의 스케일 곡선을 따라 커진다. 큰 글자(display/title)는 완만하게, 작은
     /// 글자(caption)는 더 적극적으로 커지도록 역할·크기가 가장 가까운 스타일에 연결한다.
+    ///
+    /// 단 ``Variant/caption2``는 이름이 같은 `.caption2` 대신 ``Variant/caption1``과 같은
+    /// `.caption`을 쓴다. `.caption2` 곡선만 유독 가팔라서(11pt 기준 xLarge 15pt, xxxLarge 19pt)
+    /// 가장 작아야 할 caption2가 caption1·label2를 추월하고 xxxLarge에서는 label1과 같아진다.
+    /// 같은 곡선에 두면 caption2가 caption1 아래 자리를 지켜 크기 위계가 모든 단계에서 보존된다.
     public var textStyle: Font.TextStyle {
         switch self {
         case .display1, .display2, .display3: .largeTitle
@@ -278,8 +283,7 @@ extension Typography.Variant {
         case .body1, .body1Reading: .body
         case .body2, .body2Reading: .subheadline
         case .label1, .label1Reading, .label2: .footnote
-        case .caption1: .caption
-        case .caption2: .caption2
+        case .caption1, .caption2: .caption
         }
     }
 
@@ -295,8 +299,7 @@ extension Typography.Variant {
         case .body1, .body1Reading: .body
         case .body2, .body2Reading: .subheadline
         case .label1, .label1Reading, .label2: .footnote
-        case .caption1: .caption1
-        case .caption2: .caption2
+        case .caption1, .caption2: .caption1
         }
     }
 }
