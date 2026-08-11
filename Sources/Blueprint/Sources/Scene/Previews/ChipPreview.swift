@@ -11,10 +11,30 @@ struct ChipPreview: View {
     @State private var fontColor: SwiftUI.Color = .clear
     @State private var activeColor: SwiftUI.Color = .clear
     @State private var borderColor: SwiftUI.Color = .clear
-    @State private var leadingImage = false
-    @State private var trailingImage = false
+    @State private var leadingContent = false
+    @State private var trailingContent = false
     @State private var iconOnly = false
-    @State private var imageColor: SwiftUI.Color = .clear
+    @State private var iconColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+
+    /// 칩 사이즈별 시안 권장 슬롯 크기.
+    ///
+    /// `Chip`은 슬롯 뷰에 크기를 강제하지 않으므로 사용처인 프리뷰가 직접 지정한다.
+    private var slotIconSize: CGFloat {
+        switch size {
+        case .large: return 16
+        case .medium, .small: return 14
+        case .xsmall: return 12
+        }
+    }
+
+    private func slotIcon(_ icon: Icon) -> some View {
+        Image.icon(icon)
+            .resizable()
+            .renderingMode(.template)
+            .scaledToFit()
+            .frame(width: slotIconSize, height: slotIconSize)
+            .foregroundStyle(iconColor)
+    }
 
     var body: some View {
         PreviewLayout {
@@ -46,13 +66,6 @@ struct ChipPreview: View {
                 }
             }
             .modifying {
-                if imageColor == .clear {
-                    $0
-                } else {
-                    $0.imageColor(imageColor)
-                }
-            }
-            .modifying {
                 if borderColor == .clear {
                     $0
                 } else {
@@ -60,15 +73,15 @@ struct ChipPreview: View {
                 }
             }
             .modifying {
-                if leadingImage {
-                    $0.leadingImage(Image.icon(.bell))
+                if leadingContent {
+                    $0.leadingContent { slotIcon(.bell) }
                 } else {
                     $0
                 }
             }
             .modifying {
-                if trailingImage {
-                    $0.trailingImage(Image.icon(.bell))
+                if trailingContent {
+                    $0.trailingContent { slotIcon(.closeThick) }
                 } else {
                     $0
                 }
@@ -111,14 +124,14 @@ struct ChipPreview: View {
                 ToggleOption("Active", isOn: $active)
             }
             HStack {
-                ToggleOption("Leading Image", isOn: $leadingImage)
-                ToggleOption("Trailing Image", isOn: $trailingImage)
+                ToggleOption("Leading Content", isOn: $leadingContent)
+                ToggleOption("Trailing Content", isOn: $trailingContent)
             }
             ToggleOption("Icon Only", isOn: $iconOnly)
             ColorPickerOptionRow("Background Color", selection: $backgroundColor)
             ColorPickerOptionRow("Font Color", selection: $fontColor)
             ColorPickerOptionRow("Active Color", selection: $activeColor)
-            ColorPickerOptionRow("Image Color", selection: $imageColor)
+            ColorPickerOptionRow("Slot Icon Color", selection: $iconColor)
             ColorPickerOptionRow("Border Color", selection: $borderColor)
         }
     }
