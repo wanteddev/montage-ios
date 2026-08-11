@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 356,
+  "count": 357,
   "icons": [
     "agent",
     "agentColor",
@@ -182,6 +182,7 @@
     "graduationFill",
     "handle",
     "handleDesktop",
+    "hashTag",
     "heart",
     "heartFill",
     "heartInHeart",
