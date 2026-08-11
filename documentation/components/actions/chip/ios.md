@@ -9,7 +9,7 @@ description: 칩 컴포넌트입니다.
 
 ## Overview
 
-텍스트와 이미지를 포함하는 칩 형태의 버튼입니다. 다양한 크기와 스타일을 지원하며, 탭 이벤트를 처리할 수 있습니다.
+텍스트와 콘텐츠를 포함하는 칩 형태의 버튼입니다. 다양한 크기와 스타일을 지원하며, 탭 이벤트를 처리할 수 있습니다.
 
 ```swift
 Chip(
@@ -19,16 +19,39 @@ Chip(
 )
 .backgroundColor(.semantic(.surfaceBrandPrimary))
 .fontColor(.semantic(.staticWhite))
-.leadingImage(Image(systemName: "heart"))
+.leadingContent {
+    Image.icon(.heart)
+        .resizable()
+        .renderingMode(.template)
+        .frame(width: 14, height: 14)
+        .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+}
 
 // 비활성화
 Chip(text: "필터")
     .disabled(true)
 ```
 
+## 콘텐츠 슬롯
+
+텍스트 앞뒤에 임의의 뷰를 하나씩 넣을 수 있는 슬롯입니다.
+
+- [leadingContent(_:)](/documentation/montage/chip/leadingcontent(_:).md): 텍스트 앞
+- [trailingContent(_:)](/documentation/montage/chip/trailingcontent(_:).md): 텍스트 뒤
+
+슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다. 시안상 슬롯은 정사각 아이콘 자리이며 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+
+```swift
+Chip(text: "김티드")
+    .leadingContent {
+        Thumbnail(urlString: profileImageURL, ratio: .r1x1)
+            .width(14)
+    }
+```
+
 >  **Note**
 >
-> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+> 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 슬롯 뷰에는 색을 강제하지 않으므로, 비활성 상태의 색 변화가 필요하면 사용처에서 처리합니다.
 
 ## Topics
 
@@ -158,52 +181,75 @@ Chip(text: "필터")
   수정된 칩 인스턴스
 - **Discussion**
 
-  `true`이면 텍스트 없이 `leadingImage`(없으면 `trailingImage`)만 너비와 높이가 같은 정사각 형태로 중앙 정렬해 표시합니다. 표시할 이미지는 `leadingImage(_:)` 또는 `trailingImage(_:)`로 지정합니다.
+  `true`이면 텍스트 없이 leading 슬롯(없으면 trailing 슬롯)만 너비와 높이가 같은 정사각 형태로 중앙 정렬해 표시합니다. 표시할 콘텐츠는 [leadingContent(_:)](/documentation/montage/chip/leadingcontent(_:).md) 또는 [trailingContent(_:)](/documentation/montage/chip/trailingcontent(_:).md)로 지정합니다.
 </details>
 <details>
 
-<summary>``func imageColor(SwiftUI.Color) -> Chip``</summary>
+<summary>``func leadingContent<V>(() -> V) -> Chip``</summary>
 
 
-이미지의 색상을 설정합니다.
+텍스트 앞에 표시할 콘텐츠를 지정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `color` | 이미지에 적용할 색상 |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
 - **Return Value**
 
   수정된 칩 인스턴스
+- **Discussion**
+
+  슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다. 시안상 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+
+  ```swift
+  Chip(text: "김티드")
+      .leadingContent {
+          Image.icon(.bell)
+              .resizable()
+              .renderingMode(.template)
+              .frame(width: 14, height: 14)
+              .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+      }
+  ```
+
+  >  **Note**
+  >
+  > 4.0.0에서 제거된 `leadingImage(_:)`·`imageColor(_:)`를 대체합니다. `leadingImage(Image.icon(.bell))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
+
 </details>
 <details>
 
-<summary>``func leadingImage(Image) -> Chip``</summary>
+<summary>``func trailingContent<V>(() -> V) -> Chip``</summary>
 
 
-칩의 좌측에 이미지를 추가합니다.
+텍스트 뒤에 표시할 콘텐츠를 지정합니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `image` | 표시할 이미지 |
+  | `content` | 표시할 뷰를 생성하는 클로저 |
 - **Return Value**
 
   수정된 칩 인스턴스
-</details>
-<details>
+- **Discussion**
 
-<summary>``func trailingImage(Image) -> Chip``</summary>
+  슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다. 시안상 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
 
+  ```swift
+  Chip(text: "김티드")
+      .trailingContent {
+          Image.icon(.closeThick)
+              .resizable()
+              .renderingMode(.template)
+              .frame(width: 14, height: 14)
+              .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+      }
+  ```
 
-칩의 우측에 이미지를 추가합니다.
+  >  **Note**
+  >
+  > 4.0.0에서 제거된 `trailingImage(_:)`·`imageColor(_:)`를 대체합니다. `trailingImage(Image.icon(.closeThick))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
 
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `image` | 표시할 이미지 |
-- **Return Value**
-
-  수정된 칩 인스턴스
 </details>
 
 ### Enumerations

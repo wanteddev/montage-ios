@@ -751,21 +751,15 @@
           "kind": "method"
         },
         {
-          "name": "imageColor(_:)",
-          "signature": "func imageColor(SwiftUI.Color) -> Chip",
-          "summary": "이미지의 색상을 설정합니다.",
+          "name": "leadingContent(_:)",
+          "signature": "func leadingContent<V>(() -> V) -> Chip",
+          "summary": "텍스트 앞에 표시할 콘텐츠를 지정합니다.",
           "kind": "method"
         },
         {
-          "name": "leadingImage(_:)",
-          "signature": "func leadingImage(Image) -> Chip",
-          "summary": "칩의 좌측에 이미지를 추가합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "trailingImage(_:)",
-          "signature": "func trailingImage(Image) -> Chip",
-          "summary": "칩의 우측에 이미지를 추가합니다.",
+          "name": "trailingContent(_:)",
+          "signature": "func trailingContent<V>(() -> V) -> Chip",
+          "summary": "텍스트 뒤에 표시할 콘텐츠를 지정합니다.",
           "kind": "method"
         }
       ],
