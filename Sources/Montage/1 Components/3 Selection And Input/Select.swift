@@ -525,6 +525,11 @@ public struct Select: View {
     private struct Chips: View {
         @Environment(\.isEnabled) private var isEnabled
 
+        /// 칩 슬롯 아이콘의 한 변 크기입니다.
+        ///
+        /// `Chip`은 슬롯 뷰에 크기를 강제하지 않으므로 `xsmall` 칩의 시안 크기를 사용처에서 지정한다.
+        private static let iconSize: CGFloat = 12
+
         var items: [Select.Item]
         var onTapItem: ((Select.Item) -> Void)?
 
@@ -539,12 +544,16 @@ public struct Select: View {
                     text: item.text
                 )
                 .fontColor(fontColor(item))
-                .imageColor(iconColor(item))
-                .trailingImage(Image.icon(.closeThick))
+                .trailingContent {
+                    Self.iconView(.closeThick, color: iconColor(item))
+                }
                 .modifying {
                     var mutated = $0
                     if let icon = item.icon {
-                        mutated = mutated.leadingImage(Image.icon(icon))
+                        let color = iconColor(item)
+                        mutated = mutated.leadingContent {
+                            Self.iconView(icon, color: color)
+                        }
                     }
                     if item.isNegative, isDisabled == false {
                         mutated = mutated.borderColor(.semantic(.lineNegativePrimary))
@@ -556,6 +565,16 @@ public struct Select: View {
                     onTapItem?(items[index])
                 }
             }
+        }
+
+        /// 칩 슬롯에 넣을 템플릿 아이콘입니다.
+        private static func iconView(_ icon: Icon, color: SwiftUI.Color) -> some View {
+            Image.icon(icon)
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: iconSize, height: iconSize)
+                .foregroundStyle(color)
         }
 
         /// 아이콘(leading/close) 색상입니다. 비활성은 foreground/disable/primary, negative는 foreground/negative/primary, 그 외 foreground/neutral/primary.

@@ -9,7 +9,7 @@ import SwiftUI
 
 /// 칩 컴포넌트입니다.
 ///
-/// 텍스트와 이미지를 포함하는 칩 형태의 버튼입니다.
+/// 텍스트와 콘텐츠를 포함하는 칩 형태의 버튼입니다.
 /// 다양한 크기와 스타일을 지원하며, 탭 이벤트를 처리할 수 있습니다.
 ///
 /// ```swift
@@ -20,15 +20,40 @@ import SwiftUI
 /// )
 /// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
-/// .leadingImage(Image(systemName: "heart"))
+/// .leadingContent {
+///     Image.icon(.heart)
+///         .resizable()
+///         .renderingMode(.template)
+///         .frame(width: 14, height: 14)
+///         .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+/// }
 ///
 /// // 비활성화
 /// Chip(text: "필터")
 ///     .disabled(true)
 /// ```
 ///
+/// ## 콘텐츠 슬롯
+///
+/// 텍스트 앞뒤에 임의의 뷰를 하나씩 넣을 수 있는 슬롯입니다.
+///
+/// - ``leadingContent(_:)``: 텍스트 앞
+/// - ``trailingContent(_:)``: 텍스트 뒤
+///
+/// 슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다.
+/// 시안상 슬롯은 정사각 아이콘 자리이며 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+///
+/// ```swift
+/// Chip(text: "김티드")
+///     .leadingContent {
+///         Thumbnail(urlString: profileImageURL, ratio: .r1x1)
+///             .width(14)
+///     }
+/// ```
+///
 /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 /// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 슬롯 뷰에는 색을 강제하지 않으므로, 비활성 상태의 색 변화가 필요하면 사용처에서 처리합니다.
 public struct Chip: View {
     /// 칩의 외관을 결정하는 열거형입니다.
     public enum Variant {
@@ -128,27 +153,17 @@ public struct Chip: View {
     /// `iconOnly`일 때 표시하는 아이콘 전용 정사각 뷰입니다.
     @ViewBuilder
     private var iconOnlyContent: some View {
-        if let image = leadingImage ?? trailingImage {
-            image
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .frame(width: imageSize, height: imageSize)
-                .foregroundStyle(imageColor)
+        if let slot = leadingContent ?? trailingContent {
+            slot()
                 .frame(width: iconOnlySize, height: iconOnlySize)
         }
     }
 
-    /// 기본(텍스트 + 선택적 아이콘) 내용 뷰입니다.
+    /// 기본(텍스트 + 선택적 콘텐츠) 내용 뷰입니다.
     private var defaultContent: some View {
         HStack(spacing: contentSpacing) {
-            if let leadingImage {
-                leadingImage
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
-                    .foregroundStyle(imageColor)
+            if let leadingContent {
+                leadingContent()
             }
 
             Text(text)
@@ -157,13 +172,8 @@ public struct Chip: View {
                 .truncationMode(.tail)
                 .padding(.horizontal, textPadding)
 
-            if let trailingImage {
-                trailingImage
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
-                    .foregroundStyle(imageColor)
+            if let trailingContent {
+                trailingContent()
             }
         }
         .padding(contentPadding)
@@ -176,10 +186,9 @@ public struct Chip: View {
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
-    private var customImageColor: SwiftUI.Color?
     private var customBorderColor: SwiftUI.Color?
-    private var leadingImage: Image?
-    private var trailingImage: Image?
+    private var leadingContent: (() -> AnyView)?
+    private var trailingContent: (() -> AnyView)?
     private var fillHorizontal = false
     private var fillVertical = false
     
@@ -195,9 +204,9 @@ public struct Chip: View {
 
     /// 아이콘만 표시하는 정사각 형태 여부를 설정합니다.
     ///
-    /// `true`이면 텍스트 없이 `leadingImage`(없으면 `trailingImage`)만 너비와 높이가 같은
-    /// 정사각 형태로 중앙 정렬해 표시합니다. 표시할 이미지는 `leadingImage(_:)` 또는
-    /// `trailingImage(_:)`로 지정합니다.
+    /// `true`이면 텍스트 없이 leading 슬롯(없으면 trailing 슬롯)만 너비와 높이가 같은
+    /// 정사각 형태로 중앙 정렬해 표시합니다. 표시할 콘텐츠는 ``leadingContent(_:)`` 또는
+    /// ``trailingContent(_:)``로 지정합니다.
     ///
     /// - Parameter iconOnly: 아이콘 전용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 칩 인스턴스
@@ -237,16 +246,6 @@ public struct Chip: View {
         return view
     }
     
-    /// 이미지의 색상을 설정합니다.
-    ///
-    /// - Parameter color: 이미지에 적용할 색상
-    /// - Returns: 수정된 칩 인스턴스
-    public func imageColor(_ color: SwiftUI.Color) -> Self {
-        var view = self
-        view.customImageColor = color
-        return view
-    }
-
     /// 칩의 테두리 색상을 설정합니다.
     ///
     /// > `outlined` variant에서만 적용됩니다. (`solid`는 테두리를 그리지 않습니다.)
@@ -259,23 +258,57 @@ public struct Chip: View {
         return view
     }
 
-    /// 칩의 좌측에 이미지를 추가합니다.
+    /// 텍스트 앞에 표시할 콘텐츠를 지정합니다.
     ///
-    /// - Parameter image: 표시할 이미지
+    /// 슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다.
+    /// 시안상 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+    ///
+    /// ```swift
+    /// Chip(text: "김티드")
+    ///     .leadingContent {
+    ///         Image.icon(.bell)
+    ///             .resizable()
+    ///             .renderingMode(.template)
+    ///             .frame(width: 14, height: 14)
+    ///             .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+    ///     }
+    /// ```
+    ///
+    /// - Parameter content: 표시할 뷰를 생성하는 클로저
     /// - Returns: 수정된 칩 인스턴스
-    public func leadingImage(_ image: Image) -> Self {
+    ///
+    /// - Note: 4.0.0에서 제거된 `leadingImage(_:)`·`imageColor(_:)`를 대체합니다.
+    ///   `leadingImage(Image.icon(.bell))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
+    public func leadingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var view = self
-        view.leadingImage = image
+        view.leadingContent = { AnyView(content()) }
         return view
     }
-    
-    /// 칩의 우측에 이미지를 추가합니다.
+
+    /// 텍스트 뒤에 표시할 콘텐츠를 지정합니다.
     ///
-    /// - Parameter image: 표시할 이미지
+    /// 슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다.
+    /// 시안상 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+    ///
+    /// ```swift
+    /// Chip(text: "김티드")
+    ///     .trailingContent {
+    ///         Image.icon(.closeThick)
+    ///             .resizable()
+    ///             .renderingMode(.template)
+    ///             .frame(width: 14, height: 14)
+    ///             .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+    ///     }
+    /// ```
+    ///
+    /// - Parameter content: 표시할 뷰를 생성하는 클로저
     /// - Returns: 수정된 칩 인스턴스
-    public func trailingImage(_ image: Image) -> Self {
+    ///
+    /// - Note: 4.0.0에서 제거된 `trailingImage(_:)`·`imageColor(_:)`를 대체합니다.
+    ///   `trailingImage(Image.icon(.closeThick))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
+    public func trailingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var view = self
-        view.trailingImage = image
+        view.trailingContent = { AnyView(content()) }
         return view
     }
 }
@@ -313,16 +346,6 @@ private extension Chip {
         }
     }
     
-    var imageColor: SwiftUI.Color {
-        if isDisabled {
-            return .semantic(.foregroundDisablePrimary)
-        } else if active {
-            return activeContentColor
-        } else {
-            return customImageColor ?? .semantic(.foregroundNeutralPrimary)
-        }
-    }
-    
     var activeContentColor: SwiftUI.Color {
         customActiveColor ?? .semantic(.surfaceBrandPrimary)
     }
@@ -353,15 +376,6 @@ private extension Chip {
         variant == .solid && active ? .surfaceBrandPrimary : .foregroundNeutralPrimary
     }
     
-    var imageSize: CGFloat {
-        switch size {
-        case .large: return 16
-        case .medium: return 14
-        case .small: return 14
-        case .xsmall: return 12
-        }
-    }
-
     /// `iconOnly`일 때 사용하는 정사각 한 변의 길이입니다(칩 높이와 동일).
     var iconOnlySize: CGFloat {
         switch size {
