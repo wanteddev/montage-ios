@@ -140,27 +140,8 @@ public struct Chip: View {
         .accessibilityValue(active ? String(localized: "선택됨", bundle: .module) : "")
     }
 
-    /// 칩의 내용 영역입니다. `iconOnly` 여부에 따라 아이콘 전용 정사각 뷰 또는 기본 뷰를 반환합니다.
-    @ViewBuilder
+    /// 칩의 내용 영역입니다(텍스트 + 선택적 슬롯 콘텐츠).
     private var content: some View {
-        if iconOnly {
-            iconOnlyContent
-        } else {
-            defaultContent
-        }
-    }
-
-    /// `iconOnly`일 때 표시하는 아이콘 전용 정사각 뷰입니다.
-    @ViewBuilder
-    private var iconOnlyContent: some View {
-        if let slot = leadingContent ?? trailingContent {
-            slot()
-                .frame(width: iconOnlySize, height: iconOnlySize)
-        }
-    }
-
-    /// 기본(텍스트 + 선택적 콘텐츠) 내용 뷰입니다.
-    private var defaultContent: some View {
         HStack(spacing: contentSpacing) {
             if let leadingContent {
                 leadingContent()
@@ -182,7 +163,6 @@ public struct Chip: View {
     // MARK: - Modifiers
 
     private var active = false
-    private var iconOnly = false
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
@@ -202,20 +182,6 @@ public struct Chip: View {
         return view
     }
 
-    /// 아이콘만 표시하는 정사각 형태 여부를 설정합니다.
-    ///
-    /// `true`이면 텍스트 없이 leading 슬롯(없으면 trailing 슬롯)만 너비와 높이가 같은
-    /// 정사각 형태로 중앙 정렬해 표시합니다. 표시할 콘텐츠는 ``leadingContent(_:)`` 또는
-    /// ``trailingContent(_:)``로 지정합니다.
-    ///
-    /// - Parameter iconOnly: 아이콘 전용 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 칩 인스턴스
-    public func iconOnly(_ iconOnly: Bool = true) -> Self {
-        var view = self
-        view.iconOnly = iconOnly
-        return view
-    }
-    
     /// 칩의 배경색을 설정합니다.
     ///
     /// - Parameter color: 적용할 배경색
@@ -374,16 +340,6 @@ private extension Chip {
     
     var interactionColor: Color.Semantic {
         variant == .solid && active ? .surfaceBrandPrimary : .foregroundNeutralPrimary
-    }
-    
-    /// `iconOnly`일 때 사용하는 정사각 한 변의 길이입니다(칩 높이와 동일).
-    var iconOnlySize: CGFloat {
-        switch size {
-        case .large: return 40
-        case .medium: return 36
-        case .small: return 32
-        case .xsmall: return 24
-        }
     }
     
     var typoVariant: Typography.Variant {

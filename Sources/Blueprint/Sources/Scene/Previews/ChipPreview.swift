@@ -13,7 +13,6 @@ struct ChipPreview: View {
     @State private var borderColor: SwiftUI.Color = .clear
     @State private var leadingContent = false
     @State private var trailingContent = false
-    @State private var iconOnly = false
     @State private var iconColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
 
     /// 칩 사이즈별 시안 권장 슬롯 크기.
@@ -86,13 +85,6 @@ struct ChipPreview: View {
                     $0
                 }
             }
-            .modifying {
-                if iconOnly {
-                    $0.iconOnly()
-                } else {
-                    $0
-                }
-            }
             .disabled(disable)
         } options: {
             SegmentedIndexRow("Variant", index: Binding(
@@ -127,7 +119,6 @@ struct ChipPreview: View {
                 ToggleOption("Leading Content", isOn: $leadingContent)
                 ToggleOption("Trailing Content", isOn: $trailingContent)
             }
-            ToggleOption("Icon Only", isOn: $iconOnly)
             ColorPickerOptionRow("Background Color", selection: $backgroundColor)
             ColorPickerOptionRow("Font Color", selection: $fontColor)
             ColorPickerOptionRow("Active Color", selection: $activeColor)
