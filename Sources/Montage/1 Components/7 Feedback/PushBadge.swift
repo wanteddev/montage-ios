@@ -214,13 +214,52 @@ private struct TextBadge: View {
     let outlineBorder: Bool
     let outlineBorderColor: SwiftUI.Color
 
+    /// 뱃지 문자열에 적용할 타이포그래피 변형. 폰트와 자간이 여기서 함께 결정된다.
+    private let typographyVariant: Typography.Variant
+
     /// 뱃지 크기를 폰트와 같은 배율로 키우기 위한 스케일 계수.
     ///
     /// 폰트는 ``Typography/Variant/textStyle`` 기준으로 스케일되는데 뱃지 크기·패딩이 고정값이면
-    /// 큰 글자에서 텍스트가 잘리거나 정원이 캡슐로 늘어난다. ``size``에 따라 쓰는 텍스트 스타일이
-    /// 다르므로 두 배율을 모두 선언해두고 ``typeScale``에서 골라 쓴다.
-    @ScaledMetric(relativeTo: .caption2) private var captionScale: CGFloat = 1
-    @ScaledMetric(relativeTo: .footnote) private var footnoteScale: CGFloat = 1
+    /// 큰 글자에서 텍스트가 잘리거나 정원이 캡슐로 늘어난다.
+    ///
+    /// 기준 스타일을 ``typographyVariant``에서 그대로 가져오는 것이 핵심이다. 상자와 글자가 서로
+    /// 다른 곡선을 타면 큰 글자에서 둘의 비율이 어긋나고, ``PushBadge/Size`` 간 크기 순서까지
+    /// 뒤집힌다. (실제로 상자만 `.caption2`·`.footnote`로 나눠 걸었을 때 xLarge부터 small이
+    /// medium보다 커졌다.)
+    ///
+    /// 1이 아니라 ``scaleBase``(100)를 스케일하는 이유는 정밀도다. `UIFontMetrics`는 스케일 결과를
+    /// 반올림하므로 1을 스케일하면 배율이 큰 폭으로 튄다. (xLarge의 `.caption` 곡선은 실제 폰트
+    /// 배율이 \~1.17인데 1 → 1.333으로 나온다.) 100을 스케일해 나누면 오차가 1% 아래로 줄어든다.
+    @ScaledMetric private var scaledBase: CGFloat
+
+    /// ``scaledBase``의 기준값. 이 값으로 나눠 배율을 얻는다.
+    private static let scaleBase: CGFloat = 100
+
+    /// Dynamic Type 확대 배율.
+    private var typeScale: CGFloat { scaledBase / Self.scaleBase }
+
+    init(
+        text: String,
+        size: PushBadge.Size,
+        fontColor: SwiftUI.Color,
+        backgroundColor: SwiftUI.Color,
+        outlineBorder: Bool,
+        outlineBorderColor: SwiftUI.Color
+    ) {
+        self.text = text
+        self.size = size
+        self.fontColor = fontColor
+        self.backgroundColor = backgroundColor
+        self.outlineBorder = outlineBorder
+        self.outlineBorderColor = outlineBorderColor
+
+        let variant: Typography.Variant = switch size {
+        case .xsmall, .small: .caption2
+        case .medium: .label1
+        }
+        self.typographyVariant = variant
+        _scaledBase = ScaledMetric(wrappedValue: Self.scaleBase, relativeTo: variant.textStyle)
+    }
 
     var body: some View {
         // 빈 문자열도 정사각형으로 처리해 폭이 0에 가까운 조각 뱃지가 생기지 않게 한다.
@@ -243,22 +282,6 @@ private struct TextBadge: View {
                         .foregroundColor(outlineBorderColor)
                 }
             }
-    }
-
-    /// 뱃지 문자열에 적용할 타이포그래피 변형. 폰트와 자간이 여기서 함께 결정된다.
-    private var typographyVariant: Typography.Variant {
-        switch size {
-        case .xsmall, .small: .caption2
-        case .medium: .label1
-        }
-    }
-
-    /// ``typographyVariant``의 텍스트 스타일에 대응하는 Dynamic Type 배율.
-    private var typeScale: CGFloat {
-        switch size {
-        case .xsmall, .small: captionScale
-        case .medium: footnoteScale
-        }
     }
 
     /// 뱃지의 전체 크기(한 글자일 때의 정사각 한 변).
