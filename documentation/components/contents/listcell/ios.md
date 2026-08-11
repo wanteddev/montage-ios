@@ -561,7 +561,7 @@ ListCell(label: "비활성 셀")
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
-  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
 </details>
 <details>
 
@@ -635,7 +635,7 @@ ListCell(label: "비활성 셀")
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
-  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용 |
 </details>
 <details>
 
@@ -648,7 +648,7 @@ ListCell(label: "비활성 셀")
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
-  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용 |
 </details>
 <details>
 
@@ -715,7 +715,7 @@ ListCell(label: "비활성 셀")
 <summary>``case button(title: String, color: Button.Color, handler: (() -> Void)?)``</summary>
 
 
-버튼
+버튼 (Solid / Small)
 
 - **Parameters**
   | Parameter | Description |
@@ -748,7 +748,7 @@ ListCell(label: "비활성 셀")
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
-  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용 |
+  | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용 |
 </details>
 <details>
 
