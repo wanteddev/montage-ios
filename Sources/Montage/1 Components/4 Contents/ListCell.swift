@@ -658,19 +658,19 @@ extension ListCell {
             /// 아이콘 (22×22)
             /// - Parameters:
             ///   - icon: 표시할 아이콘
-            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용
             case icon(
                 _ icon: Icon,
-                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralTertiary)
             )
 
             /// 배경이 있는 큰 아이콘 (컨테이너 36×36 / 아이콘 20×20)
             /// - Parameters:
             ///   - icon: 표시할 아이콘
-            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용
             case largeIcon(
                 _ icon: Icon,
-                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralSecondary)
             )
 
             /// 체크박스
@@ -716,13 +716,13 @@ extension ListCell {
             /// 아이콘 (22×22)
             /// - Parameters:
             ///   - icon: 표시할 아이콘
-            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용
             case icon(
                 _ icon: Icon,
-                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralQuaternary)
+                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralSecondary)
             )
 
-            /// 아이콘 버튼 (배경 없음)
+            /// 아이콘 버튼 (컨테이너 32×32 / 아이콘 20×20, 배경 없음)
             /// - Parameters:
             ///   - icon: 버튼 아이콘
             ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
@@ -739,7 +739,7 @@ extension ListCell {
                 handler: (() -> Void)? = nil
             )
 
-            /// 버튼
+            /// 버튼 (Solid / Small)
             /// - Parameters:
             ///   - title: 버튼 텍스트
             ///   - color: 버튼 색상, 생략하면 기본값으로 `.assistive` 적용
@@ -785,10 +785,10 @@ extension ListCell {
             /// 아이콘 (22×22)
             /// - Parameters:
             ///   - icon: 표시할 아이콘
-            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
+            ///   - tintColor: 아이콘 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용
             case icon(
                 _ icon: Icon,
-                tintColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+                tintColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
             )
 
             /// 임의 뷰. ``slot(_:)`` 팩토리로 생성합니다.
@@ -899,11 +899,11 @@ extension ListCell.Resource.Trailing {
         case let .icon(icon, tintColor):
             ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.iconSize)
         case let .iconButton(icon, handler):
-            IconButton(variant: .normal(size: .small), icon: icon, handler: handler)
+            IconButton(variant: .normal(size: .large), icon: icon, handler: handler)
         case let .textButton(title, color, handler):
             TextButton(color: color, size: .small, text: title, handler: handler)
         case let .button(title, color, handler):
-            Button(variant: .outlined, color: color, size: .xsmall, text: title, handler: handler)
+            Button(variant: .solid, color: color, size: .small, text: title, handler: handler)
         case let .contentBadge(variant, title):
             ContentBadge(variant: variant, text: title)
         case let .switch(checked, onSelect):

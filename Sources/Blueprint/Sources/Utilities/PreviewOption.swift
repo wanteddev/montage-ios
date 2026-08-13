@@ -258,11 +258,91 @@ struct ColorPickerOptionRow: View {
     }
 }
 
-/// 라벨 + `Menu` 옵션 행. 메뉴 항목을 누르면 액션이 실행되는 형태에 쓴다.
+/// 라벨 + `Menu` 옵션 쌍. 메뉴 항목을 누르면 액션이 실행되는 형태에 쓴다.
 ///
 /// "현재 선택값을 메뉴 라벨로 보여주며 각 항목이 임의 액션을 실행"하거나(예: 인덱스 변경)
 /// "항목을 누를 때마다 컬렉션에 추가"하는 등 항목별 액션이 단순 바인딩이 아닐 때 쓴다.
 /// `accessory`로 메뉴 옆에 reset 버튼 같은 보조 컨트롤을 둘 수 있다.
+///
+/// `View` 본문이 `Text`와 `Menu`를 함께 반환하므로, 하나의 `HStack` 안에 여러 개를
+/// 인라인으로 배치해 한 줄에 여러 메뉴를 나열할 수 있다. 한 줄을 단독으로 차지해야 하면
+/// ``MenuOptionRow``를 쓴다.
+///
+/// ```swift
+/// HStack {
+///     MenuOption("leading", menuLabel: "add") { … } accessory: { … }
+///     MenuOption("trailing", menuLabel: "add") { … } accessory: { … }
+/// }
+/// ```
+struct MenuOption<Content: View, Accessory: View>: View {
+    private let title: String
+    private let menuLabel: String
+    private let content: Content
+    private let accessory: Accessory
+    /// 메뉴 라벨이 남는 폭을 모두 차지할지 여부.
+    ///
+    /// 폭을 채우면 menuLabel이 폭이 다른 문자열로 바뀌어도 버튼 프레임이 그대로여서
+    /// 행이 reflow되지 않는다. 다만 accessory가 있으면 그만큼 오른쪽 끝까지 밀려
+    /// 메뉴와 멀어지고, 인라인으로 여러 개를 나열할 때는 서로 폭을 다투게 된다.
+    /// 그래서 확장은 ``MenuOptionRow``가 accessory 없이 단독으로 쓰일 때만 켠다.
+    fileprivate let expandsMenuLabel: Bool
+
+    fileprivate init(
+        title: String,
+        menuLabel: String,
+        content: Content,
+        accessory: Accessory,
+        expandsMenuLabel: Bool
+    ) {
+        self.title = title
+        self.menuLabel = menuLabel
+        self.content = content
+        self.accessory = accessory
+        self.expandsMenuLabel = expandsMenuLabel
+    }
+
+    init(
+        _ title: String,
+        menuLabel: String,
+        @ViewBuilder content: () -> Content,
+        @ViewBuilder accessory: () -> Accessory
+    ) {
+        self.init(
+            title: title,
+            menuLabel: menuLabel,
+            content: content(),
+            accessory: accessory(),
+            expandsMenuLabel: false
+        )
+    }
+
+    @ViewBuilder
+    var body: some View {
+        Text(title)
+        Menu {
+            content
+        } label: {
+            Text(menuLabel)
+                .frame(maxWidth: expandsMenuLabel ? .infinity : nil, alignment: .leading)
+        }
+        accessory
+    }
+}
+
+// accessory가 필요 없는 일반적인 경우를 위한 편의 이니셜라이저.
+extension MenuOption where Accessory == EmptyView {
+    init(_ title: String, menuLabel: String, @ViewBuilder content: () -> Content) {
+        self.init(
+            title: title,
+            menuLabel: menuLabel,
+            content: content(),
+            accessory: EmptyView(),
+            expandsMenuLabel: false
+        )
+    }
+}
+
+/// ``MenuOption`` 하나를 한 줄에 단독으로 배치하는 옵션 행.
 ///
 /// ```swift
 /// // 현재 선택값을 라벨로 표시하는 단일 선택 메뉴
@@ -280,10 +360,7 @@ struct ColorPickerOptionRow: View {
 /// }
 /// ```
 struct MenuOptionRow<Content: View, Accessory: View>: View {
-    private let title: String
-    private let menuLabel: String
-    private let content: Content
-    private let accessory: Accessory
+    private let option: MenuOption<Content, Accessory>
 
     init(
         _ title: String,
@@ -291,23 +368,23 @@ struct MenuOptionRow<Content: View, Accessory: View>: View {
         @ViewBuilder content: () -> Content,
         @ViewBuilder accessory: () -> Accessory
     ) {
-        self.title = title
-        self.menuLabel = menuLabel
-        self.content = content()
-        self.accessory = accessory()
+        // accessory가 있는 행은 menuLabel이 "add"처럼 고정된 문구여서 reflow될 일이 없다.
+        // 폭을 채우면 accessory만 행 오른쪽 끝으로 밀리므로 확장하지 않는다.
+        self.option = MenuOption(
+            title: title,
+            menuLabel: menuLabel,
+            content: content(),
+            accessory: accessory(),
+            expandsMenuLabel: false
+        )
     }
 
     var body: some View {
         HStack {
-            Text(title)
-            // 메뉴 라벨이 가용 최대폭을 차지하도록 둔다. 선택값(menuLabel)이 폭이 다른
-            // 문자열로 바뀌어도 버튼 프레임이 그대로라 행이 reflow되지 않는다.
-            Menu {
-                content
-            } label: {
-                Text(menuLabel).frame(maxWidth: .infinity, alignment: .leading)
-            }
-            accessory
+            option
+            // 라벨이 폭을 채우는 경우엔 0으로 접히고, 그렇지 않으면 남는 폭을 흡수해
+            // 메뉴와 accessory를 왼쪽에 붙여 둔다.
+            Spacer(minLength: 0)
         }
     }
 }
@@ -315,7 +392,15 @@ struct MenuOptionRow<Content: View, Accessory: View>: View {
 // accessory가 필요 없는 일반적인 경우를 위한 편의 이니셜라이저.
 extension MenuOptionRow where Accessory == EmptyView {
     init(_ title: String, menuLabel: String, @ViewBuilder content: () -> Content) {
-        self.init(title, menuLabel: menuLabel, content: content, accessory: { EmptyView() })
+        // 이 형태는 menuLabel에 현재 선택값을 표시하는 용도라 라벨이 행의 남는 폭을 채운다.
+        // 선택값이 폭이 다른 문자열로 바뀌어도 버튼 프레임이 그대로여서 행이 reflow되지 않는다.
+        self.option = MenuOption(
+            title: title,
+            menuLabel: menuLabel,
+            content: content(),
+            accessory: EmptyView(),
+            expandsMenuLabel: true
+        )
     }
 }
 
