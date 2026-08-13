@@ -183,6 +183,7 @@ public struct TextField: View {
     private var maxLength: Int?
     private var onTextChange: ((String) -> Void)?
     private var autocorrectionDisabled = false
+    private var secured = false
 
     /// 텍스트 필드의 사이즈를 설정합니다.
     ///
@@ -298,6 +299,19 @@ public struct TextField: View {
         return zelf
     }
 
+    /// 입력한 내용을 가릴지 설정합니다.
+    ///
+    /// 비밀번호처럼 노출되면 안 되는 값을 입력받을 때 사용합니다.
+    ///
+    /// - Parameter secured: 입력 내용을 가릴지 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    /// - Note: 자동완성은 가려진 입력에서 동작하지 않습니다.
+    public func secured(_ secured: Bool = true) -> Self {
+        var zelf = self
+        zelf.secured = secured
+        return zelf
+    }
+
     // MARK: - Body
     
     @Environment(\.isEnabled) private var isEnabled
@@ -318,6 +332,18 @@ public struct TextField: View {
 
 private extension TextField {
     var isDisabled: Bool { isEnabled == false }
+
+    /// 가려진 입력 여부에 따라 `SecureField`와 `TextField`를 분기한다.
+    ///
+    /// `secured`는 화면이 살아 있는 동안 바뀌지 않는 설정이므로, 이 분기로 입력 중 포커스를 잃지 않는다.
+    @ViewBuilder
+    var textInput: some View {
+        if secured {
+            SwiftUI.SecureField("", text: $text)
+        } else {
+            SwiftUI.TextField("", text: $text)
+        }
+    }
 
     var inputField: some View {
         HStack(spacing: .spacing4) {
@@ -363,7 +389,9 @@ private extension TextField {
         }
         .modifier(
             FloatModifier(
-                isPresented: (autoCompletionDataSource?.totalNumberOfItems ?? 0) > 0 && textFieldFocusState,
+                isPresented: !secured
+                    && (autoCompletionDataSource?.totalNumberOfItems ?? 0) > 0
+                    && textFieldFocusState,
                 updatingValue: Binding(
                     get: {
                         if autoCompletionDataSource == nil || autoCompletionContentHeight == 0 {
@@ -419,7 +447,7 @@ private extension TextField {
                     .padding(size.iconPadding)
             }
 
-            SwiftUI.TextField("", text: $text)
+            textInput
             // fixAutocorrection은 clear 버튼의 자동완성 잔상을 지우려고 한 프레임만 켜는 내부 트릭이므로,
             // 호출부 설정(autocorrectionDisabled)과 OR로 합성해 외부 설정을 덮어쓰지 않게 한다.
             .autocorrectionDisabled(autocorrectionDisabled || fixAutocorrection)

@@ -3170,6 +3170,12 @@
           "kind": "method"
         },
         {
+          "name": "secured(_:)",
+          "signature": "func secured(Bool) -> TextField",
+          "summary": "입력한 내용을 가릴지 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "status(_:)",
           "signature": "func status(Status) -> TextField",
           "summary": "텍스트 필드의 상태를 설정합니다.",

@@ -107,7 +107,9 @@ public struct Popup: View {
 
                 if let actionAreaModel {
                     ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(scrolledToBottom)
+                        .transparentBackground(
+                            backgroundTransparency(for: actionAreaModel.backgroundTransparencyControl)
+                        )
                         .caption(actionAreaModel.caption)
                         .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
                         .padding(.bottom, 20)
@@ -220,15 +222,46 @@ public struct Popup: View {
         navigationHeight + contentHeight + actionAreaHeight
     }
 
+    /// 콘텐츠가 실제로 보이는 영역의 높이.
+    ///
+    /// `.fixed`는 지정한 높이를 그대로 쓰고, `.hug`는 콘텐츠 높이를 `popupMaxHeight`로 제한한 값이다.
+    /// 스크롤 가능 여부와 스크롤 끝 판정이 모두 이 값을 기준으로 계산된다.
+    private var viewportHeight: CGFloat {
+        if case .fixed(let height) = resize {
+            height
+        } else {
+            min(popupMaxHeight, popupContentHeight)
+        }
+    }
+
+    /// 스크롤 끝 판정에 허용하는 오프셋 오차.
+    ///
+    /// @2x·@3x 화면에서 1pt는 2~3픽셀이므로, 1픽셀에도 못 미치는 레이아웃 오차로 판정이 뒤집히지 않도록 둔다.
+    private static let bottomOffsetTolerance: CGFloat = 0.5
+
+    /// `contentOffset`은 최상단에서 0이고 아래로 스크롤할수록 음수가 되므로,
+    /// 스크롤 끝 오프셋은 `viewportHeight - popupContentHeight`가 된다.
+    ///
+    /// 비교는 `CGFloat`로 직접 한다. `Int` 변환은 세 값의 소수부를 각각 버리기 때문에
+    /// 실제로 끝에 닿은 상황에서도 판정이 최대 1pt 어긋날 수 있다.
     private var scrolledToBottom: Bool {
-        Int(contentOffset) <= Int(popupMaxHeight) - Int(popupContentHeight)
+        contentOffset <= viewportHeight - popupContentHeight + Self.bottomOffsetTolerance
     }
 
     private var scrollable: Bool {
-        if case .fixed(let height) = resize {
-            popupContentHeight > height
+        popupContentHeight > viewportHeight
+    }
+
+    /// ActionArea의 배경 투명도.
+    ///
+    /// 모델이 `.manual`로 값을 지정하면 그 값을 존중하고, `.automatic`이면 스크롤이 끝에 닿았는지로 판단한다.
+    private func backgroundTransparency(
+        for control: ActionArea.BackgroundTransparencyControl
+    ) -> Bool {
+        if case .manual(let transparency) = control {
+            transparency
         } else {
-            popupContentHeight > popupMaxHeight
+            scrolledToBottom
         }
     }
 }

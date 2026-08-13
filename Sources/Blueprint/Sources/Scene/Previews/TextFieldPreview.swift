@@ -107,6 +107,7 @@ struct TextFieldPreview: View {
     @State private var placeholder: Bool = true
     @State private var trailingButton: Bool = false
     @State private var trailingButtonDisable: Bool = false
+    @State private var secured: Bool = false
     @State private var trailingContent: Content = .none
     @State private var usingSuggestions: Bool = false
     @State private var autoCompletionDataSource: Montage.TextField.AutoCompletionDataSource? = nil
@@ -185,6 +186,7 @@ struct TextFieldPreview: View {
                     .status(variant.v)
                     .placeholder(placeholder ? "텍스트를 입력해 주세요." : nil)
                     .icon(icon ? .verifiedCheckFill : nil)
+                    .secured(secured)
                     .trailingButton(
                         trailingButton ? TextField.TrailingButtonInfo(
                             title: "텍스트",
@@ -236,7 +238,12 @@ struct TextFieldPreview: View {
             }
             ToggleOption("autocorrectionDisabled", isOn: $autocorrectionDisabled)
             HStack {
+                ToggleOption("secured", isOn: $secured)
                 ToggleOption("autoComplete", isOn: $usingSuggestions)
+            }
+            if secured {
+                Text("* 가려진 입력에서는 자동완성이 동작하지 않습니다.")
+                    .foregroundStyle(SwiftUI.Color.secondary)
             }
             if usingSuggestions {
                 Text("* 다음 목록 중 매칭되는 값들이 제안됩니다:\n  \(candidates.joined(separator: ", "))")

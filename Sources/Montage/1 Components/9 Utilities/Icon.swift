@@ -213,6 +213,7 @@ public enum Icon: String, CaseIterable {
     case graduationFill
     case handle
     case handleDesktop
+    case hashTag
     case heart
     case heartFill
     case heartInHeart
