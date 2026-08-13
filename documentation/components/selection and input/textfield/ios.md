@@ -262,21 +262,6 @@ TextField(text: $inputText)
 </details>
 <details>
 
-<summary>``func size(Size) -> TextField``</summary>
-
-
-텍스트 필드의 사이즈를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `size` | 텍스트 필드의 사이즈 |
-- **Return Value**
-
-  수정된 텍스트 필드 인스턴스
-</details>
-<details>
-
 <summary>``func secured(Bool) -> TextField``</summary>
 
 
@@ -296,6 +281,21 @@ TextField(text: $inputText)
   >
   > 자동완성은 가려진 입력에서 동작하지 않습니다.
 
+</details>
+<details>
+
+<summary>``func size(Size) -> TextField``</summary>
+
+
+텍스트 필드의 사이즈를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `size` | 텍스트 필드의 사이즈 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
 </details>
 <details>
 
