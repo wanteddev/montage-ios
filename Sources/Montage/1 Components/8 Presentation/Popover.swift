@@ -39,7 +39,6 @@ public enum Popover {
 
         func body(content: Content) -> some View {
             content
-                .padding(8)
                 .background {
                     popoverContent
                         .onGeometryChange(
@@ -157,7 +156,6 @@ public enum Popover {
 
         func body(content: Content) -> some View {
             content
-                .padding(8)
                 .background {
                     popoverContent()
                         .onGeometryChange(
@@ -176,10 +174,16 @@ public enum Popover {
     }
     
     struct PopoverPresenter<V: View>: UIViewControllerRepresentable {
+        /// 앵커와 팝오버 사이 간격.
+        ///
+        /// 앵커 뷰에 패딩을 주면 SwiftUI 레이아웃 크기까지 커지므로,
+        /// `sourceRect`를 바깥으로 넓혀 레이아웃에 영향 없이 간격만 확보한다.
+        private static var anchorSpacing: CGFloat { 8 }
+
         @Binding var isPresented: Bool
         let contentSize: CGSize
         let popoverContent: () -> V
-        
+
         func makeUIViewController(context: Context) -> UIViewController {
             let vc = UIViewController()
             vc.view.backgroundColor = .clear
@@ -211,11 +215,8 @@ public enum Popover {
             
             if let popover = contentVC.popoverPresentationController {
                 popover.sourceView = uiViewController.view
-                popover.sourceRect = CGRect(
-                    x: uiViewController.view.bounds.minX,
-                    y: uiViewController.view.bounds.minY,
-                    width: uiViewController.view.bounds.width,
-                    height: uiViewController.view.bounds.height)
+                popover.sourceRect = uiViewController.view.bounds
+                    .insetBy(dx: -Self.anchorSpacing, dy: -Self.anchorSpacing)
                 popover.permittedArrowDirections = [.any]
                 popover.popoverLayoutMargins = .init(top: 8, left: 8, bottom: 8, right: 8)
                 popover.popoverBackgroundViewClass = NoArrowPopoverBackground.self
