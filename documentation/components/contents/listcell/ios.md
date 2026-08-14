@@ -52,6 +52,19 @@ ListCell(label: "커스텀")
     .trailingResources([.slot { MyCustomView() }])
 ```
 
+## 셀 형태
+
+셀이 놓이는 리스트를 기준으로 두 형태 중 하나를 [variant(_:)](/documentation/montage/listcell/variant(_:).md)로 정합니다. 좌우 여백을 리스트가 주는 [ListCell.Variant.inset](/documentation/montage/listcell/variant/inset.md)이 기본값이고, 셀이 리스트 폭을 채우며 좌우 여백을 직접 갖는 형태는 [ListCell.Variant.full](/documentation/montage/listcell/variant/full.md)입니다. 콘텐츠가 놓이는 자리는 두 형태가 같고, 인터랙션 배경이 리스트 좌우 끝까지 닿는지만 달라집니다.
+
+```swift
+// 리스트가 좌우 여백을 주는 경우 (기본값)
+ListCell(label: "메뉴 항목")
+
+// 셀이 리스트 폭을 채우는 경우
+ListCell(label: "설정 항목")
+    .variant(.full)
+```
+
 ## 비활성화
 
 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 비활성 셀은 탭 이벤트를 받지 않으며 라벨·설명·콘텐츠 슬롯에 `foregroundDisablePrimary` 색상이 적용됩니다.
@@ -179,7 +192,7 @@ ListCell(label: "비활성 셀")
 <summary>``func highlight(String) -> ListCell``</summary>
 
 
-라벨의 특정 텍스트를 강조 표시합니다.
+라벨과 설명의 특정 텍스트를 강조 표시합니다.
 
 - **Parameters**
   | Parameter | Description |
@@ -190,51 +203,7 @@ ListCell(label: "비활성 셀")
   수정된 ListCell 인스턴스
 - **Discussion**
 
-  지정한 문자열과 일치하는 부분을 굵은 글씨(bold)로 강조 표시합니다. 대소문자를 구분하지 않으며, 첫 번째로 일치하는 부분만 강조됩니다.
-</details>
-<details>
-
-<summary>``func interactionOutset(CGFloat) -> ListCell``</summary>
-
-
-인터랙션 효과(hover·pressed 배경)가 셀 경계 바깥으로 확장되는 정도를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `outset` | 좌우로 확장할 크기 (포인트 단위), 생략하면 기본값으로 `12` 적용 |
-- **Return Value**
-
-  수정된 ListCell 인스턴스
-- **Discussion**
-
-  메뉴처럼 좌우 여백이 있는 컨테이너 안에서는 기본값 `12`를 그대로 사용해 여백까지 배경을 넓히고, 셀이 화면 폭을 그대로 채우는 목록에서는 `0`을 지정합니다.
-  >  **Note**
-  >
-  > 모서리 둥글기는 [interactionRadius(_:)](/documentation/montage/listcell/interactionradius(_:).md)로 따로 정하며 `outset`과 독립적으로 동작합니다.
-
-  >  **Note**
-  >
-  > 4.0.0에서 제거된 `fillWidth(_:)`·`interactionPadding(_:)`을 대체합니다. `fillWidth(true)`는 `interactionOutset(0)`, `fillWidth(false)`는 `interactionOutset(12)`에 대응하며, `fillWidth(true)`가 적용하던 셀 좌우 20포인트 여백은 더 이상 자동으로 붙지 않으므로 필요하면 사용처에서 직접 지정합니다.
-
-</details>
-<details>
-
-<summary>``func interactionRadius(CGFloat) -> ListCell``</summary>
-
-
-인터랙션 효과 영역의 모서리 둥글기를 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `radius` | 적용할 모서리 반경 (포인트 단위) |
-- **Return Value**
-
-  수정된 ListCell 인스턴스
-- **Discussion**
-
-  지정하지 않으면 [interactionOutset(_:)](/documentation/montage/listcell/interactionoutset(_:).md)이 `0`보다 클 때 `16`, 그 외에는 `0`이 적용됩니다.
+  지정한 문자열과 일치하는 부분을 굵은 글씨(bold)로 강조 표시합니다. 대소문자를 구분하지 않으며, 라벨과 [description(_:)](/documentation/montage/listcell/description(_:).md) 각각에서 첫 번째로 일치하는 부분만 강조됩니다.
 </details>
 <details>
 
@@ -360,7 +329,7 @@ ListCell(label: "비활성 셀")
   선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며, trailing 영역에 체크 아이콘이 표시됩니다. [chevron(_:)](/documentation/montage/listcell/chevron(_:).md)을 켠 셀에서는 화살표가 체크 아이콘 오른쪽에 그대로 남습니다.
   >  **Important**
   >
-  > 체크 아이콘은 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md) 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다. 선택 상태와 별개의 우측 콘텐츠가 필요하면 [labelTrailingResources(_:)](/documentation/montage/listcell/labeltrailingresources(_:).md) 또는 [extraResources(_:)](/documentation/montage/listcell/extraresources(_:).md)를 사용하세요.
+  > 체크 아이콘은 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md)와 자리를 공유하므로 둘을 함께 표시할 수 없습니다. trailing 요소가 있으면 그쪽이 표시되고 체크 아이콘은 나타나지 않으며, 이때 선택 상태는 라벨의 색과 굵기로만 드러납니다. 선택 여부를 아이콘으로도 보여야 하면 [leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md)의 체크박스·라디오를 사용하세요.
 
 </details>
 <details>
@@ -404,9 +373,41 @@ ListCell(label: "비활성 셀")
       .trailingResources([.switch(checked: isOn, onSelect: { isOn = $0 })])
   ```
 
-  >  **Important**
+  >  **Note**
   >
-  > [selected(_:)](/documentation/montage/listcell/selected(_:).md)가 `true`인 셀은 체크 아이콘이 이 자리를 대신 차지해 요소가 표시되지 않습니다.
+  > [selected(_:)](/documentation/montage/listcell/selected(_:).md)가 `true`인 셀에서도 이 요소가 우선 표시되며, 선택 상태의 체크 아이콘은 이 슬롯이 비었을 때만 나타납니다.
+
+</details>
+<details>
+
+<summary>``func variant(Variant) -> ListCell``</summary>
+
+
+셀의 형태를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | 적용할 셀 형태, 생략하면 기본값으로 `.inset` 적용 |
+- **Return Value**
+
+  수정된 ListCell 인스턴스
+- **Discussion**
+
+  셀의 좌우 여백과 인터랙션 효과(hover·pressed 배경)의 확장 폭·모서리 둥글기가 함께 정해집니다. 두 형태의 차이는 [ListCell.Variant](/documentation/montage/listcell/variant.md)를 참고하세요.
+
+  ```swift
+  // 리스트가 좌우 여백을 주는 경우 (기본값)
+  ListCell(label: "메뉴 항목")
+  
+  // 셀이 리스트 폭을 채우는 경우
+  ListCell(label: "설정 항목")
+      .variant(.full)
+  ```
+
+  >  **Note**
+  >
+  > 4.0.0에서 제거된 `fillWidth(_:)`·`interactionPadding(_:)`을 대체합니다. `fillWidth(false)`는 [ListCell.Variant.inset](/documentation/montage/listcell/variant/inset.md), `fillWidth(true)`는 [ListCell.Variant.full](/documentation/montage/listcell/variant/full.md)에 대응합니다.
 
 </details>
 <details>
@@ -828,6 +829,39 @@ ListCell(label: "비활성 셀")
   구성된 요소
 </details>
 
+</details>
+
+</details>
+<details>
+
+<summary>``enum Variant``</summary>
+
+
+셀이 놓이는 리스트(컨테이너)의 가장자리를 기준으로 한 셀의 형태입니다.
+- **Overview**
+
+  좌우 여백과 인터랙션 배경의 확장 폭·모서리 둥글기를 하나로 묶은 값으로, 세 값을 따로 지정할 수는 없습니다. 두 형태 모두 콘텐츠는 리스트 기준 같은 자리에 놓이고, 인터랙션 배경이 리스트 좌우 끝까지 닿는지만 달라집니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case full``</summary>
+
+
+인터랙션 배경이 리스트 좌우 끝까지 각지게 채우는 형태입니다.
+- **Discussion**
+
+  셀이 리스트 폭을 채우고 좌우 여백 20을 직접 가지며, 인터랙션 배경은 셀과 같은 크기로 그려집니다.
+</details>
+<details>
+
+<summary>``case inset``</summary>
+
+
+인터랙션 배경이 리스트 좌우 끝에 닿지 않고 안쪽에 둥글게 그려지는 형태입니다.
+- **Discussion**
+
+  셀은 콘텐츠 폭을 그대로 쓰고 좌우 여백은 리스트가 줍니다. 인터랙션 배경만 셀보다 좌우로 12 넓어지고 모서리가 16 둥글게 처리됩니다.
 </details>
 
 </details>
