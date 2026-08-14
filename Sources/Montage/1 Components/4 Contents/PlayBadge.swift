@@ -64,11 +64,7 @@ public struct PlayBadge: View {
                         Circle()
                             .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
                     } else {
-                        ZStack {
-                            Circle()
-                                .fill(.ultraThinMaterial)
-                                .clipShape(Circle())
-                        }
+                        MaterialBackground(in: Circle())
                     }
                 }
                 .frame(width: circleDiameter, height: circleDiameter)

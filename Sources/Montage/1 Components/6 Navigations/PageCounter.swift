@@ -78,13 +78,10 @@ public struct PageCounter: View {
                 RoundedRectangle(cornerRadius: height / 2)
                     .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
             } else {
-                ZStack {
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: height / 2))
-                    RoundedRectangle(cornerRadius: height / 2)
-                        .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.43))
-                }
+                MaterialBackground(
+                    in: RoundedRectangle(cornerRadius: height / 2),
+                    tint: .atomic(.coolNeutral30).opacity(0.43)
+                )
             }
         }
     }

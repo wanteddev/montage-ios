@@ -232,11 +232,10 @@ public struct IconButton: View {
         case .normal:
             EmptyView()
         case .background(_, let alternative):
-            ZStack {
+            if alternative {
                 shape.fill(_backgroundColor)
-                if alternative == false {
-                    shape.fill(.regularMaterial)
-                }
+            } else {
+                MaterialBackground(in: shape, tint: _backgroundColor)
             }
         case .outlined:
             ZStack {
@@ -244,9 +243,7 @@ public struct IconButton: View {
                 shape.stroke(_strokeColor, lineWidth: 1)
             }
         case .solid:
-            shape.fill(_backgroundColor)
-                .background(.ultraThinMaterial)
-                .clipShape(shape)
+            MaterialBackground(in: shape, tint: _backgroundColor)
         }
     }
 }

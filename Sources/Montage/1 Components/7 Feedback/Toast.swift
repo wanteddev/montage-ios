@@ -230,14 +230,10 @@ public struct Toast: View, KeyboardReadable {
         @Environment(\.colorScheme) private var colorScheme
 
         var body: some View {
-            ZStack {
-                SwiftUI.Color.semantic(.surfaceNeutralInverse).opacity(
-                    colorScheme == .light ? 0.5 : 0.46)
-                SwiftUI.Color.semantic(.surfaceBrandPrimary).opacity(0.05)
-            }
-            .background(
-                .ultraThinMaterial
-            )
+            MaterialBackground(tint: [
+                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? 0.5 : 0.46),
+                .semantic(.surfaceBrandPrimary).opacity(0.05),
+            ])
         }
     }
 }

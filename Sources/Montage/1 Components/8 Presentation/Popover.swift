@@ -137,8 +137,10 @@ public enum Popover {
             }
             .frame(minWidth: 140, maxWidth: 360)
             .fixedSize(horizontal: true, vertical: true)
-            .background(.ultraThinMaterial)
-            .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary).opacity(0.88))
+            .materialBackground(
+                in: RoundedRectangle(cornerRadius: 12),
+                tint: .semantic(.surfaceElevatedPrimary).opacity(0.88)
+            )
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }

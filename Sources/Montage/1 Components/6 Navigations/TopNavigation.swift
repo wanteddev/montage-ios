@@ -223,12 +223,10 @@ public struct TopNavigation: View {
                 onSearchFocusChange: onSearchFocusChange
             )
             .background {
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .opacity(backgroundOpacity)
-                    backgroundView
-                        .opacity(backgroundOpacity * 0.7)
-                }
+                MaterialBackground(
+                    materialOpacity: backgroundOpacity,
+                    tint: backgroundView.opacity(backgroundOpacity * 0.7)
+                )
                 .if(variant == .floating) {
                     $0.mask {
                         LinearGradient(

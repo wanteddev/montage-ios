@@ -116,8 +116,10 @@ struct PopoverPreview: View {
             .padding(20)
         }
         .frame(width: 300)
-        .background(.ultraThinMaterial)
+        // 머티리얼은 틴트 컬러보다 아래에 깔아야 한다. 순서가 뒤집히면 머티리얼의 틴트 필름이
+        // 컬러를 덮어 다크 모드에서 배경이 밝게 뜬다.
         .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary).opacity(0.88))
+        .background(.bar)
     }
 }
 
