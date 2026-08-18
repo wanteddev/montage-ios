@@ -13,6 +13,12 @@ struct ListCellPreview: View {
     /// 프리뷰에서 무한히 쌓이면 셀이 화면을 넘어가므로 여기서만 상한을 둔다.
     private static let slotCapacity = 3
 
+    /// 리스트 예시에 담는 셀 수.
+    private static let listSampleCount = 2
+
+    /// 리스트 예시가 `inset` 셀에 주는 좌우 여백. 4.0.0 스펙의 리스트 여백과 같은 값이다.
+    private static let listHorizontalPadding: CGFloat = 20
+
     /// 슬롯에 담은 요소 하나.
     ///
     /// 만들어진 `Resource` 대신 프리셋 번호를 들고 있다가 렌더마다 다시 만든다.
@@ -36,8 +42,7 @@ struct ListCellPreview: View {
     @State private var divider = false
     @State private var disable = false
     @State private var longText = false
-    @State private var interactionOutset: CGFloat = 12
-    @State private var interactionRadius: CGFloat = 16
+    @State private var variantIndex = 0
     @State private var selected = false
     @State private var highlightText: String = ""
 
@@ -55,6 +60,8 @@ struct ListCellPreview: View {
     }
 
     let verticalAlignments: [ListCell.VerticalAlign] = [.top, .center]
+
+    let variants: [ListCell.Variant] = [.inset, .full]
 
     var labelText: String {
         longText ? "이것은 세 줄 이상으로 표현될 수 있는 긴 문장입니다. 충분히 길어야 줄 바꿈이 됩니다. 더욱 더 많이 길어야 합니다." : "텍스트"
@@ -157,27 +164,15 @@ struct ListCellPreview: View {
 
     var body: some View {
         PreviewLayout {
-            ListCell(label: labelText, onTap: {
-                print("helloworld")
-            })
-            .description(description ? descriptionText : nil)
-            .verticalPadding(verticalPaddings[verticalPaddingIndex])
-            .verticalAlign(verticalAlignments[verticalAlignmentIndex])
-            .chevron(chevron)
-            .leadingResources(leadingResourceList)
-            .labelTrailingResources(labelTrailingResourceList)
-            .trailingResources(trailingResourceList)
-            .extraResources(extraResourceList)
-            .textEllipsis(textEllipsis)
-            .divider(divider)
-            .interactionOutset(interactionOutset)
-            .interactionRadius(interactionRadius)
-            .selected(selected)
-            .if(!highlightText.isEmpty) {
-                $0.highlight(highlightText)
+            VStack(alignment: .leading, spacing: 8) {
+                caption("Single")
+                cell(divider: divider)
+
+                caption("In List")
+                listSample
             }
-            .disabled(disable)
         } options: {
+            SegmentedIndexRow("Variant", index: $variantIndex, labels: variants.map(\.description))
             SegmentedIndexRow("Vertical Padding", index: $verticalPaddingIndex, labels: verticalPaddings.map(\.description))
             if isCustomVerticalPadding {
                 SliderOptionRow("Custom Vertical Padding", value: $customVerticalPadding, in: 0...40, step: 1, format: { "\(Int(Double($0)))pt" })
@@ -204,10 +199,61 @@ struct ListCellPreview: View {
                 ToggleOption("Selected", isOn: $selected)
             }
             SegmentedIndexRow("Vertical Alignment", index: $verticalAlignmentIndex, labels: verticalAlignments.map(\.description))
-            SliderOptionRow("Interaction Outset", value: $interactionOutset, in: 0...20, step: 1, format: { "\(Int(Double($0)))pt" })
-            SliderOptionRow("Interaction Radius", value: $interactionRadius, in: 0...20, step: 1, format: { "\(Int(Double($0)))pt" })
             TextFieldOptionRow("Highlight Text", text: $highlightText)
         }
+    }
+
+    /// 옵션을 그대로 반영한 셀 하나.
+    ///
+    /// 낱개 미리보기와 리스트 예시가 같은 설정을 쓰도록 한곳에서 만든다.
+    private func cell(divider: Bool) -> some View {
+        ListCell(label: labelText, onTap: {
+            print("helloworld")
+        })
+        .description(description ? descriptionText : nil)
+        .verticalPadding(verticalPaddings[verticalPaddingIndex])
+        .verticalAlign(verticalAlignments[verticalAlignmentIndex])
+        .chevron(chevron)
+        .leadingResources(leadingResourceList)
+        .labelTrailingResources(labelTrailingResourceList)
+        .trailingResources(trailingResourceList)
+        .extraResources(extraResourceList)
+        .textEllipsis(textEllipsis)
+        .divider(divider)
+        .variant(variants[variantIndex])
+        .selected(selected)
+        .if(!highlightText.isEmpty) {
+            $0.highlight(highlightText)
+        }
+        .disabled(disable)
+    }
+
+    /// 셀을 리스트에 담았을 때의 모습.
+    ///
+    /// `variant`는 셀이 아니라 셀이 놓이는 리스트의 가장자리를 기준으로 정의되므로,
+    /// 좌우 여백을 리스트가 주는 `inset`과 셀이 직접 갖는 `full`의 차이는 컨테이너에 담아야 드러난다.
+    /// 여기서는 리스트 가장자리를 눈으로 확인할 수 있게 테두리를 둘렀다.
+    private var listSample: some View {
+        VStack(spacing: 0) {
+            ForEach(0..<Self.listSampleCount, id: \.self) { index in
+                // 마지막 셀 아래 구분선은 리스트 테두리와 겹치므로 그리지 않는다.
+                cell(divider: divider && index < Self.listSampleCount - 1)
+            }
+        }
+        // inset은 리스트가 좌우 여백을 주고, full은 셀이 직접 갖는다.
+        .padding(.horizontal, variants[variantIndex] == .inset ? Self.listHorizontalPadding : 0)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .strokeBorder(SwiftUI.Color.semantic(.lineNeutralPrimaryOpaque), lineWidth: 1)
+        )
+    }
+
+    private func caption(_ text: String) -> some View {
+        Text(text)
+            .font(.caption)
+            .foregroundStyle(.secondary)
     }
 
     /// 슬롯 하나의 프리셋을 골라 담는 메뉴. 항목을 누르면 추가되고, reset으로 비운다.
@@ -238,6 +284,7 @@ struct ListCellPreview: View {
     }
 }
 
+extension ListCell.Variant: CaseDescribable {}
 extension ListCell.VerticalPadding: CaseDescribable {}
 extension ListCell.VerticalAlign: CaseDescribable {}
 extension ListCell.Resource.Leading: CaseDescribable {}

@@ -55,6 +55,22 @@ import SwiftUI
 ///     .trailingResources([.slot { MyCustomView() }])
 /// ```
 ///
+/// ## 셀 형태
+///
+/// 셀이 놓이는 리스트를 기준으로 두 형태 중 하나를 ``variant(_:)``로 정합니다.
+/// 좌우 여백을 리스트가 주는 ``Variant/inset``이 기본값이고,
+/// 셀이 리스트 폭을 채우며 좌우 여백을 직접 갖는 형태는 ``Variant/full``입니다.
+/// 콘텐츠가 놓이는 자리는 두 형태가 같고, 인터랙션 배경이 리스트 좌우 끝까지 닿는지만 달라집니다.
+///
+/// ```swift
+/// // 리스트가 좌우 여백을 주는 경우 (기본값)
+/// ListCell(label: "메뉴 항목")
+///
+/// // 셀이 리스트 폭을 채우는 경우
+/// ListCell(label: "설정 항목")
+///     .variant(.full)
+/// ```
+///
 /// ## 비활성화
 ///
 /// 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지
@@ -69,6 +85,46 @@ import SwiftUI
 /// - Note: 콘텐츠 슬롯에는 전경색으로 전달되므로, 슬롯 안에서 색상을 직접 지정한 뷰에는 적용되지 않습니다.
 public struct ListCell: View {
     // MARK: - Types
+    /// 셀이 놓이는 리스트(컨테이너)의 가장자리를 기준으로 한 셀의 형태입니다.
+    ///
+    /// 좌우 여백과 인터랙션 배경의 확장 폭·모서리 둥글기를 하나로 묶은 값으로, 세 값을 따로 지정할 수는 없습니다.
+    /// 두 형태 모두 콘텐츠는 리스트 기준 같은 자리에 놓이고, 인터랙션 배경이 리스트 좌우 끝까지 닿는지만 달라집니다.
+    public enum Variant: Equatable {
+        /// 인터랙션 배경이 리스트 좌우 끝에 닿지 않고 안쪽에 둥글게 그려지는 형태입니다.
+        ///
+        /// 셀은 콘텐츠 폭을 그대로 쓰고 좌우 여백은 리스트가 줍니다.
+        /// 인터랙션 배경만 셀보다 좌우로 12 넓어지고 모서리가 16 둥글게 처리됩니다.
+        case inset
+        /// 인터랙션 배경이 리스트 좌우 끝까지 각지게 채우는 형태입니다.
+        ///
+        /// 셀이 리스트 폭을 채우고 좌우 여백 20을 직접 가지며, 인터랙션 배경은 셀과 같은 크기로 그려집니다.
+        case full
+
+        /// 셀 내부의 좌우 여백.
+        var horizontalPadding: CGFloat {
+            switch self {
+            case .inset: 0
+            case .full: 20
+            }
+        }
+
+        /// 인터랙션 배경이 셀 경계 바깥으로 확장되는 좌우 크기.
+        var interactionOutset: CGFloat {
+            switch self {
+            case .inset: 12
+            case .full: 0
+            }
+        }
+
+        /// 인터랙션 배경의 모서리 반경.
+        var interactionRadius: CGFloat {
+            switch self {
+            case .inset: 16
+            case .full: 0
+            }
+        }
+    }
+
     /// 상하 여백을 나타내는 열거형입니다.
     ///
     /// 셀 컴포넌트의 상하 여백을 조정할 때 사용되며, 각 케이스는 다양한 크기의 여백을 제공합니다.
@@ -130,6 +186,9 @@ public struct ListCell: View {
     /// 선택 상태를 나타내는 체크 아이콘의 크기입니다.
     private static let selectedCheckSize: CGFloat = 22
 
+    /// 설명 텍스트의 Typography 변형입니다.
+    private static let descriptionVariant: Typography.Variant = .label2
+
     // MARK: - Initializer
 
     private let label: String
@@ -164,19 +223,21 @@ public struct ListCell: View {
                 .background()
                 .if(divider)
         }
+        // 인터랙션 배경은 이 여백까지 포함한 셀 크기를 기준으로 그려진다.
+        .padding(.horizontal, variant.horizontalPadding)
         .if(interactionEnabled) {
             $0.modifier(ListCellInteractionModifier(
                 pressed: $isPressed,
-                outset: interactionOutset,
-                radius: resolvedInteractionRadius
+                outset: variant.interactionOutset,
+                radius: variant.interactionRadius
             ))
         }
         .contentShape(Rectangle())
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: onTap))
         .accessibilityElement(children: .combine)
         .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
-        // 선택 상태는 체크 아이콘으로만 표현되는데 children을 combine하므로
-        // 트레이트로 따로 전달하지 않으면 보조 기술이 선택 여부를 알 수 없다.
+        // 선택 상태를 나타내는 체크 아이콘은 trailing이 있으면 표시되지 않는 데다
+        // children을 combine하므로, 트레이트로 따로 전달하지 않으면 보조 기술이 선택 여부를 알 수 없다.
         .if(selected) { $0.accessibilityAddTraits(.isSelected) }
     }
 
@@ -193,8 +254,7 @@ public struct ListCell: View {
     private var labelTrailingResources: [Resource.LabelTrailing] = []
     private var trailingResources: [Resource.Trailing] = []
     private var extraResources: [Resource.Extra] = []
-    private var interactionOutset: CGFloat = 12
-    private var interactionRadius: CGFloat? = nil
+    private var variant: Variant = .inset
     private var verticalAlignment: VerticalAlign = .top
     private var highlightText: String? = nil
 
@@ -262,36 +322,29 @@ public struct ListCell: View {
         return zelf
     }
 
-    /// 인터랙션 효과(hover·pressed 배경)가 셀 경계 바깥으로 확장되는 정도를 설정합니다.
+    /// 셀의 형태를 설정합니다.
     ///
-    /// 메뉴처럼 좌우 여백이 있는 컨테이너 안에서는 기본값 `12`를 그대로 사용해 여백까지 배경을 넓히고,
-    /// 셀이 화면 폭을 그대로 채우는 목록에서는 `0`을 지정합니다.
+    /// 셀의 좌우 여백과 인터랙션 효과(hover·pressed 배경)의 확장 폭·모서리 둥글기가 함께 정해집니다.
+    /// 두 형태의 차이는 ``Variant``를 참고하세요.
+    ///
+    /// ```swift
+    /// // 리스트가 좌우 여백을 주는 경우 (기본값)
+    /// ListCell(label: "메뉴 항목")
+    ///
+    /// // 셀이 리스트 폭을 채우는 경우
+    /// ListCell(label: "설정 항목")
+    ///     .variant(.full)
+    /// ```
     ///
     /// - Parameters:
-    ///   - outset: 좌우로 확장할 크기 (포인트 단위), 생략하면 기본값으로 `12` 적용
+    ///   - variant: 적용할 셀 형태, 생략하면 기본값으로 `.inset` 적용
     /// - Returns: 수정된 ListCell 인스턴스
-    ///
-    /// - Note: 모서리 둥글기는 ``interactionRadius(_:)``로 따로 정하며 `outset`과 독립적으로 동작합니다.
     ///
     /// - Note: 4.0.0에서 제거된 `fillWidth(_:)`·`interactionPadding(_:)`을 대체합니다.
-    ///   `fillWidth(true)`는 `interactionOutset(0)`, `fillWidth(false)`는 `interactionOutset(12)`에 대응하며,
-    ///   `fillWidth(true)`가 적용하던 셀 좌우 20포인트 여백은 더 이상 자동으로 붙지 않으므로 필요하면 사용처에서 직접 지정합니다.
-    public func interactionOutset(_ outset: CGFloat = 12) -> Self {
+    ///   `fillWidth(false)`는 ``Variant/inset``, `fillWidth(true)`는 ``Variant/full``에 대응합니다.
+    public func variant(_ variant: Variant = .inset) -> Self {
         var zelf = self
-        zelf.interactionOutset = outset
-        return zelf
-    }
-
-    /// 인터랙션 효과 영역의 모서리 둥글기를 설정합니다.
-    ///
-    /// 지정하지 않으면 ``interactionOutset(_:)``이 `0`보다 클 때 `16`, 그 외에는 `0`이 적용됩니다.
-    ///
-    /// - Parameters:
-    ///   - radius: 적용할 모서리 반경 (포인트 단위)
-    /// - Returns: 수정된 ListCell 인스턴스
-    public func interactionRadius(_ radius: CGFloat) -> Self {
-        var zelf = self
-        zelf.interactionRadius = radius
+        zelf.variant = variant
         return zelf
     }
 
@@ -332,8 +385,9 @@ public struct ListCell: View {
     ///   - selected: 선택 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 ListCell 인스턴스
     ///
-    /// - Important: 체크 아이콘은 ``trailingResources(_:)`` 자리를 대신 차지하므로 둘을 함께 표시할 수 없습니다.
-    ///   선택 상태와 별개의 우측 콘텐츠가 필요하면 ``labelTrailingResources(_:)`` 또는 ``extraResources(_:)``를 사용하세요.
+    /// - Important: 체크 아이콘은 ``trailingResources(_:)``와 자리를 공유하므로 둘을 함께 표시할 수 없습니다.
+    ///   trailing 요소가 있으면 그쪽이 표시되고 체크 아이콘은 나타나지 않으며, 이때 선택 상태는 라벨의 색과 굵기로만 드러납니다.
+    ///   선택 여부를 아이콘으로도 보여야 하면 ``leadingResources(_:)``의 체크박스·라디오를 사용하세요.
     public func selected(_ selected: Bool = true) -> Self {
         var zelf = self
         zelf.selected = selected
@@ -421,7 +475,7 @@ public struct ListCell: View {
     ///   - resources: 표시할 요소 목록
     /// - Returns: 수정된 ListCell 인스턴스
     ///
-    /// - Important: ``selected(_:)``가 `true`인 셀은 체크 아이콘이 이 자리를 대신 차지해 요소가 표시되지 않습니다.
+    /// - Note: ``selected(_:)``가 `true`인 셀에서도 이 요소가 우선 표시되며, 선택 상태의 체크 아이콘은 이 슬롯이 비었을 때만 나타납니다.
     public func trailingResources(_ resources: [Resource.Trailing]) -> Self {
         var zelf = self
         zelf.trailingResources = resources
@@ -450,10 +504,10 @@ public struct ListCell: View {
         return zelf
     }
 
-    /// 라벨의 특정 텍스트를 강조 표시합니다.
+    /// 라벨과 설명의 특정 텍스트를 강조 표시합니다.
     ///
     /// 지정한 문자열과 일치하는 부분을 굵은 글씨(bold)로 강조 표시합니다.
-    /// 대소문자를 구분하지 않으며, 첫 번째로 일치하는 부분만 강조됩니다.
+    /// 대소문자를 구분하지 않으며, 라벨과 ``description(_:)`` 각각에서 첫 번째로 일치하는 부분만 강조됩니다.
     ///
     /// - Parameters:
     ///   - text: 강조할 텍스트 문자열
@@ -475,10 +529,6 @@ extension ListCell {
     /// `custom(0)`도 `none`과 결과가 같으므로 케이스가 아닌 실제 여백 값으로 판단한다.
     private var interactionEnabled: Bool {
         verticalPadding.length > 0
-    }
-
-    private var resolvedInteractionRadius: CGFloat {
-        interactionRadius ?? (interactionOutset > 0 ? 16 : 0)
     }
 
     private var resolvedLabelColor: Color.Semantic {
@@ -517,11 +567,7 @@ extension ListCell {
                 labelRow
 
                 if let descriptionText {
-                    Text(descriptionText)
-                        .paragraph(
-                            variant: .label2,
-                            semantic: resolvedDescriptionColor
-                        )
+                    descriptionView(descriptionText)
                         .if(textEllipsis) {
                             $0.lineLimit(1)
                         }
@@ -539,16 +585,10 @@ extension ListCell {
                 }
             }
 
-            // 선택된 셀은 체크 아이콘이 trailing 자리를 대신 차지한다.
-            if selected {
-                Image.icon(.check)
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundStyle(SwiftUI.Color.semantic(selectedCheckColor))
-                    .frame(width: Self.selectedCheckSize, height: Self.selectedCheckSize)
-                    .frame(minHeight: Self.rowMinHeight)
-                    .padding(.leading, 8)
-            } else if trailingResources.isEmpty == false {
+            // 선택 상태의 체크 아이콘은 trailing과 자리를 공유한다.
+            // 사용처가 넣은 요소를 지우지 않도록 trailing이 있으면 그쪽을 그리고,
+            // 슬롯이 비었을 때만 체크 아이콘이 그 자리를 차지한다.
+            if trailingResources.isEmpty == false {
                 HStack(alignment: .center, spacing: 8) {
                     ForEach(Array(trailingResources.enumerated()), id: \.offset) { _, resource in
                         resource.view
@@ -556,6 +596,14 @@ extension ListCell {
                 }
                 .frame(minHeight: Self.rowMinHeight)
                 .padding(.leading, 8)
+            } else if selected {
+                Image.icon(.check)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundStyle(SwiftUI.Color.semantic(selectedCheckColor))
+                    .frame(width: Self.selectedCheckSize, height: Self.selectedCheckSize)
+                    .frame(minHeight: Self.rowMinHeight)
+                    .padding(.leading, 8)
             }
 
             if chevron {
@@ -611,31 +659,65 @@ extension ListCell {
 
     private var labelView: some View {
         Group {
-            if let highlightText {
-                let attributedString: AttributedString = {
-                    var string = AttributedString(stringLiteral: label)
-                    string.font = .font(variant: labelTypography.variant, weight: selected ? .bold : labelTypography.weight)
-                    string.foregroundColor = .semantic(resolvedLabelColor)
-                    guard let range = string.range(of: highlightText, options: .caseInsensitive) else {
-                        return string
-                    }
-                    string[range].font = .font(variant: labelTypography.variant, weight: .bold)
-                    string[range].foregroundColor = .semantic(resolvedLabelColor)
-                    return string
-                }()
-
-                Text(attributedString)
-                    .tracking(labelTypography.variant.tracking)
-                    .adjustLineHeight(variant: labelTypography.variant)
-            } else {
+            if highlightText == nil {
                 Text(label)
                     .paragraph(
                         variant: labelTypography.variant,
                         weight: selected ? .bold : labelTypography.weight,
                         semantic: resolvedLabelColor
                     )
+            } else {
+                highlightedText(
+                    label,
+                    variant: labelTypography.variant,
+                    weight: selected ? .bold : labelTypography.weight,
+                    color: resolvedLabelColor
+                )
             }
         }
+    }
+
+    private func descriptionView(_ text: String) -> some View {
+        Group {
+            if highlightText == nil {
+                Text(text)
+                    .paragraph(
+                        variant: Self.descriptionVariant,
+                        semantic: resolvedDescriptionColor
+                    )
+            } else {
+                highlightedText(
+                    text,
+                    variant: Self.descriptionVariant,
+                    weight: .regular,
+                    color: resolvedDescriptionColor
+                )
+            }
+        }
+    }
+
+    /// ``highlight(_:)``로 지정한 문자열만 굵게 강조한 텍스트를 만든다.
+    ///
+    /// 대소문자를 구분하지 않으며 처음 일치하는 부분 하나만 강조한다.
+    /// 한 문자열 안에서 구간별로 두께가 달라야 하므로 `paragraph(...)` 대신 `AttributedString`으로 직접 스타일을 입히고,
+    /// 그때 빠지는 자간과 줄 높이는 뒤에서 다시 적용한다.
+    private func highlightedText(
+        _ text: String,
+        variant: Typography.Variant,
+        weight: Typography.Weight,
+        color: Color.Semantic
+    ) -> some View {
+        var string = AttributedString(stringLiteral: text)
+        string.font = .font(variant: variant, weight: weight)
+        string.foregroundColor = .semantic(color)
+
+        if let highlightText, let range = string.range(of: highlightText, options: .caseInsensitive) {
+            string[range].font = .font(variant: variant, weight: .bold)
+        }
+
+        return Text(string)
+            .tracking(variant.tracking)
+            .adjustLineHeight(variant: variant)
     }
 }
 
