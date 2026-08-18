@@ -56,7 +56,7 @@ public struct PlayBadge: View {
         Image.icon(.play)
             .resizable()
             .renderingMode(.template)
-            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.88))
             .frame(width: playIconSize.width, height: playIconSize.height)
             .background {
                 Group {
