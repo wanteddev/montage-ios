@@ -123,7 +123,6 @@ public struct Chip: View {
                 .inset(by: 0.5)
                 .stroke(borderColor, lineWidth: currentBorderWidth)
         )
-        .opacity(isDisabled ? 0.5 : 1.0)
         .contentShape(Rectangle())
         .background(
             Interaction(
