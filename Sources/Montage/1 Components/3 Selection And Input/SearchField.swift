@@ -330,7 +330,7 @@ private extension SearchField {
         case .solid:
             tintedSurface(
                 surface,
-                tint: .semantic(.effectTransparentPrimary),
+                tint: .semantic(.backgroundNeutralPrimary).opacity(0.05),
                 flatTint: .semantic(.surfaceNeutralSecondary)
             )
         case .outlined:
@@ -341,7 +341,7 @@ private extension SearchField {
             } else {
                 tintedSurface(
                     surface,
-                    tint: .semantic(.effectTransparentSecondary),
+                    tint: .semantic(.backgroundNeutralPrimary).opacity(0.61),
                     flatTint: .clear
                 )
             }
