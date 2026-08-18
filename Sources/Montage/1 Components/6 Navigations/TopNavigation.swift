@@ -403,6 +403,9 @@ public struct TopNavigation: View {
         private var searchField: some View {
             SearchField(text: searchTerm)
                 .placeholder(searchPlaceholder)
+                // TopNavigation이 이미 머티리얼 배경을 깔기 때문에 검색 필드까지 머티리얼을 쌓으면
+                // 흐림은 더해지지 않고 틴트만 중복돼 표면이 밝아진다.
+                .disableMaterial()
                 .focused(focused)
                 .onSubmit { onSubmit?() }
                 .onTextChange { onSearchTextChange?($0) }
