@@ -83,6 +83,7 @@ public struct SearchField: View {
     private var onTextChange: ((String) -> Void)?
     private var onFocusChange: ((Bool) -> Void)?
     private var autocorrectionDisabled = false
+    private var materialDisabled = false
 
     /// 검색 필드의 스타일을 설정합니다.
     ///
@@ -172,6 +173,24 @@ public struct SearchField: View {
     public func autocorrectionDisabled(_ disable: Bool = true) -> Self {
         var zelf = self
         zelf.autocorrectionDisabled = disable
+        return zelf
+    }
+
+    /// 배경 머티리얼을 생략할지 설정합니다.
+    ///
+    /// ``TopNavigation``처럼 컨테이너가 이미 머티리얼 배경을 깔고 있는 자리에서는 검색 필드가
+    /// 그 위에 머티리얼을 한 겹 더 쌓아 표면이 필요 이상으로 밝아집니다. 그런 경우 이 모디파이어로
+    /// 머티리얼을 끄고 틴트만 남깁니다.
+    ///
+    /// 머티리얼 중첩은 컴포넌트를 조합하는 쪽에서만 판단할 수 있어 Montage 내부 전용으로 두고
+    /// `public`으로 열지 않습니다. 호출부에서 검색 필드를 직접 배치할 때는 컨테이너 배경에 따라
+    /// 이 값을 조정할 필요가 없습니다.
+    ///
+    /// - Parameter disable: 머티리얼을 생략할지 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 검색 필드 인스턴스
+    func disableMaterial(_ disable: Bool = true) -> Self {
+        var zelf = self
+        zelf.materialDisabled = disable
         return zelf
     }
 
@@ -309,15 +328,47 @@ private extension SearchField {
         let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
         switch variant {
         case .solid:
-            MaterialBackground(in: surface, tint: .semantic(.effectTransparentPrimary))
+            tintedSurface(
+                surface,
+                tint: .semantic(.effectTransparentPrimary),
+                flatTint: .semantic(.surfaceNeutralSecondary)
+            )
         case .outlined:
             // outlined는 배경을 비워 뒤 콘텐츠가 비치도록 하고, 비활성일 때만 표면을 채운다.
             if isDisabled {
                 surface
                     .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
             } else {
-                MaterialBackground(in: surface, tint: SwiftUI.Color(white: 1, opacity: 0.61))
+                tintedSurface(
+                    surface,
+                    tint: .semantic(.effectTransparentSecondary),
+                    flatTint: .clear
+                )
             }
+        }
+    }
+
+    /// 머티리얼 위에 틴트를 얹은 표면. `disableMaterial(_:)`이 켜져 있으면 머티리얼을 빼고 `flatTint`만 그린다.
+    ///
+    /// 머티리얼이 있을 때와 없을 때 필요한 색이 다르다. 머티리얼은 스스로 표면을 배경보다 어둡게
+    /// 만들어 경계를 잡아 주므로 그 위에는 투명 틴트(`effectTransparent*`)를 얹는다. 머티리얼을
+    /// 빼면 그 경계가 사라지므로, 피그마 스펙에서 머티리얼(background blur) 효과만 제거한
+    /// 채워진 색(`Fill/Normal` 계열)을 직접 써야 한다.
+    ///
+    /// - Parameters:
+    ///   - shape: 표면 모양
+    ///   - tint: 머티리얼 위에 얹을 틴트
+    ///   - flatTint: 머티리얼을 뺐을 때 표면에 채울 색
+    @ViewBuilder
+    func tintedSurface<S: Shape>(
+        _ shape: S,
+        tint: SwiftUI.Color,
+        flatTint: SwiftUI.Color
+    ) -> some View {
+        if materialDisabled {
+            shape.fill(flatTint)
+        } else {
+            MaterialBackground(in: shape, tint: tint)
         }
     }
 
