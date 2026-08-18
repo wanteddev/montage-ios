@@ -64,7 +64,10 @@ public struct PlayBadge: View {
                         Circle()
                             .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
                     } else {
-                        MaterialBackground(in: Circle())
+                        MaterialBackground(
+                            in: Circle(),
+                            tint: .atomic(.coolNeutral40).opacity(0.28)
+                        )
                     }
                 }
                 .frame(width: circleDiameter, height: circleDiameter)
