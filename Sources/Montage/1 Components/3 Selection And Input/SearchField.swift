@@ -330,7 +330,10 @@ private extension SearchField {
         case .solid:
             tintedSurface(
                 surface,
-                tint: .semantic(.backgroundNeutralPrimary).opacity(0.05),
+                tint: [
+                    .semantic(.backgroundNeutralPrimary).opacity(CGFloat.opacity61),
+                    .semantic(.surfaceNeutralSecondary)
+                ],
                 flatTint: .semantic(.surfaceNeutralSecondary)
             )
         case .outlined:
@@ -341,7 +344,7 @@ private extension SearchField {
             } else {
                 tintedSurface(
                     surface,
-                    tint: .semantic(.backgroundNeutralPrimary).opacity(0.61),
+                    tint: [.semantic(.backgroundNeutralPrimary).opacity(0.61)],
                     flatTint: .clear
                 )
             }
@@ -362,7 +365,7 @@ private extension SearchField {
     @ViewBuilder
     func tintedSurface<S: Shape>(
         _ shape: S,
-        tint: SwiftUI.Color,
+        tint: [SwiftUI.Color],
         flatTint: SwiftUI.Color
     ) -> some View {
         if materialDisabled {
