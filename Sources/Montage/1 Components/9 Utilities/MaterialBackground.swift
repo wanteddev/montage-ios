@@ -93,13 +93,13 @@ extension View {
     /// // 단일 틴트
     /// content.materialBackground(
     ///     in: RoundedRectangle(cornerRadius: 12),
-    ///     tint: .semantic(.surfaceElevatedPrimary).opacity(0.88)
+    ///     tint: .semantic(.surfaceElevatedPrimary).opacity(.opacity88)
     /// )
     ///
     /// // 두 겹 틴트 (배열 앞쪽이 아래)
     /// content.materialBackground(tint: [
-    ///     .semantic(.surfaceNeutralInverse).opacity(0.46),
-    ///     .semantic(.surfaceBrandPrimary).opacity(0.05),
+    ///     .semantic(.surfaceNeutralInverse).opacity(.opacity52),
+    ///     .semantic(.surfaceBrandPrimary).opacity(.opacity5),
     /// ])
     /// ```
     func materialBackground<S: Shape>(

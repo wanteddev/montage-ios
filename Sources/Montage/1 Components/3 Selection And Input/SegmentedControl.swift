@@ -147,7 +147,7 @@ public struct SegmentedControl: View {
                         RoundedRectangle(cornerRadius: buttonCornerRadius)
                             .fill(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
                             .shadow(
-                                color: SwiftUI.Color(red: 0.09, green: 0.09, blue: 0.09, opacity: 0.1),
+                                color: SwiftUI.Color(red: 0.09, green: 0.09, blue: 0.09, opacity: .opacity8),
                                 radius: 2,
                                 x: 0,
                                 y: 1

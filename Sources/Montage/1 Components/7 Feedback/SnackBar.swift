@@ -275,11 +275,9 @@ public struct SnackBar: View {
     }
 
     private struct BackgroundView: View {
-        @Environment(\.colorScheme) private var colorScheme
-
         var body: some View {
             MaterialBackground(tint: [
-                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? 0.5 : 0.46),
+                .semantic(.surfaceNeutralInverse).opacity(.opacity52),
                 .semantic(.surfaceBrandPrimary).opacity(.opacity5),
             ])
         }
