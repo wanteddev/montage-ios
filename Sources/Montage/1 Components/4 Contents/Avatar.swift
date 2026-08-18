@@ -204,7 +204,7 @@ public struct Avatar: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(variant.accessibilityDescription)
             .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
-            .opacity(isEnabled ? 1 : Double(CGFloat.opacity43))
+            .opacity(isEnabled ? 1 : .opacity43)
     }
 
     private var pushBadge = false

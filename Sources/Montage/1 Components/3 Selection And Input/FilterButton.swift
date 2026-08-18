@@ -232,7 +232,7 @@ extension FilterButton.Variant {
         case .solid:
             .semantic(.surfaceNeutralInverse)
         case .outlined:
-            .semantic(.surfaceBrandPrimary).withAlphaComponent(0.05)
+            .semantic(.surfaceBrandPrimary).withAlphaComponent(.opacity5)
         }
     }
     
@@ -314,7 +314,7 @@ private extension FilterButton {
         if isDisabled {
             return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.28)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(.opacity28)
         } else {
             return .semantic(.lineNeutralSecondary)
         }

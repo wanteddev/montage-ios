@@ -347,8 +347,8 @@ public struct Select: View {
                 MaterialBackground(
                     in: surface,
                     tint: colorScheme == .light
-                        ? SwiftUI.Color.atomic(.common100).opacity(0.8)
-                        : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                        ? SwiftUI.Color.atomic(.common100).opacity(.opacity74)
+                        : SwiftUI.Color.atomic(.coolNeutral17).opacity(.opacity61)
                 )
             }
         }

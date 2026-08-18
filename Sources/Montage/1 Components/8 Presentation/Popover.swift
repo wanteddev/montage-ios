@@ -139,7 +139,7 @@ public enum Popover {
             .fixedSize(horizontal: true, vertical: true)
             .materialBackground(
                 in: RoundedRectangle(cornerRadius: 12),
-                tint: .semantic(.surfaceElevatedPrimary).opacity(0.88)
+                tint: .semantic(.surfaceElevatedPrimary).opacity(.opacity88)
             )
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }

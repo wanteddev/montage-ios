@@ -232,7 +232,7 @@ public struct Toast: View, KeyboardReadable {
         var body: some View {
             MaterialBackground(tint: [
                 .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? 0.5 : 0.46),
-                .semantic(.surfaceBrandPrimary).opacity(0.05),
+                .semantic(.surfaceBrandPrimary).opacity(.opacity5),
             ])
         }
     }

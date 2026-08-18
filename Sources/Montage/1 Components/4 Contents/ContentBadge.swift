@@ -209,7 +209,7 @@ private extension ContentBadge {
         case .neutral:
             return variant == .solid ? .semantic(.surfaceNeutralSecondary) : .clear
         case let .accent(contentColor, backgroundColor):
-            return (backgroundColor ?? contentColor).opacity(0.08)
+            return (backgroundColor ?? contentColor).opacity(.opacity8)
         }
     }
     
@@ -240,7 +240,7 @@ private extension ContentBadge {
         case .neutral:
             return variant == .solid ? .clear : .semantic(.lineNeutralPrimary)
         case let .accent(contentColor, backgroundColor):
-            return (backgroundColor ?? contentColor).opacity(0.43)
+            return (backgroundColor ?? contentColor).opacity(.opacity43)
         }
     }
     

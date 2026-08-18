@@ -219,8 +219,8 @@ public enum Tooltip {
 }
 
 struct TooltipView: View {
-    private let lowerLayerColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary).opacity(0.05)
-    private let upperLayerColor: SwiftUI.Color = .semantic(.surfaceNeutralInverse).opacity(0.74)
+    private let lowerLayerColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary).opacity(.opacity5)
+    private let upperLayerColor: SwiftUI.Color = .semantic(.surfaceNeutralInverse).opacity(.opacity74)
     private let contentColor: SwiftUI.Color = .semantic(.foregroundNeutralInverse)
     
     // MARK: - Initializer

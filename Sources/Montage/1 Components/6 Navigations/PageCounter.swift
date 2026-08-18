@@ -56,19 +56,19 @@ public struct PageCounter: View {
                 .paragraph(
                     variant: typography,
                     weight: .bold,
-                    color: .semantic(.staticWhite).opacity(alternative ? 0.88 : 0.74)
+                    color: .semantic(.staticWhite).opacity(alternative ? .opacity88 : .opacity74)
                 )
             Text("/")
                 .paragraph(
                     variant: typography,
                     weight: .regular,
-                    color: .semantic(.staticWhite).opacity(alternative ? 0.52 : 0.28)
+                    color: .semantic(.staticWhite).opacity(alternative ? .opacity52 : .opacity28)
                 )
             Text("\(totalPages)")
                 .paragraph(
                     variant: typography,
                     weight: .bold,
-                    color: .semantic(.staticWhite).opacity(alternative ? 0.88 : 0.74)
+                    color: .semantic(.staticWhite).opacity(alternative ? .opacity88 : .opacity74)
                 )
         }
         .padding(.horizontal, horizontalPadding)
@@ -76,11 +76,11 @@ public struct PageCounter: View {
         .background {
             if alternative {
                 RoundedRectangle(cornerRadius: height / 2)
-                    .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
+                    .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(.opacity61))
             } else {
                 MaterialBackground(
                     in: RoundedRectangle(cornerRadius: height / 2),
-                    tint: .atomic(.coolNeutral30).opacity(0.43)
+                    tint: .atomic(.coolNeutral30).opacity(.opacity43)
                 )
             }
         }

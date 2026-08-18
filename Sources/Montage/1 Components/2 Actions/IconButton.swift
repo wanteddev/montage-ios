@@ -391,7 +391,7 @@ extension IconButton.Variant {
             .clear
         case .background(_, let isAlternative):
             if isAlternative {
-                .atomic(.coolNeutral30).withAlphaComponent(0.61)
+                .atomic(.coolNeutral30).withAlphaComponent(.opacity61)
             } else {
                 // material이 적용되어 있기 때문에 값에 무관
                 .clear
@@ -406,7 +406,7 @@ extension IconButton.Variant {
         case .normal, .outlined:
             .clear
         case .background:
-            .semantic(.surfaceNeutralTertiary).withAlphaComponent(0.05)
+            .semantic(.surfaceNeutralTertiary).withAlphaComponent(.opacity5)
         case .solid:
             .semantic(.surfaceNeutralSecondary)
         }
@@ -417,9 +417,9 @@ extension IconButton.Variant {
         case .normal, .outlined: .semantic(.foregroundNeutralPrimary)
         case .background(_, let isAlternative):
             if isAlternative {
-                .semantic(.staticWhite).withAlphaComponent(0.88)
+                .semantic(.staticWhite).withAlphaComponent(.opacity88)
             } else {
-                .atomic(.coolNeutral50).withAlphaComponent(0.74)
+                .atomic(.coolNeutral50).withAlphaComponent(.opacity74)
             }
         case .solid: .semantic(.staticWhite)
         }
@@ -430,13 +430,13 @@ extension IconButton.Variant {
         case .normal, .outlined, .solid:
             .semantic(.foregroundDisablePrimary)
         case .background:
-            .atomic(.coolNeutral50).withAlphaComponent(0.22)
+            .atomic(.coolNeutral50).withAlphaComponent(.opacity22)
         }
     }
 
     var borderColor: UIColor {
         switch self {
-        case .outlined: .semantic(.lineNeutralSecondary).withAlphaComponent(0.16)
+        case .outlined: .semantic(.lineNeutralSecondary).withAlphaComponent(.opacity16)
         default: .clear
         }
     }

@@ -670,7 +670,7 @@ public enum Color {
         public func resolve(_ traitCollection: UITraitCollection) -> UIColor {
             let style = traitCollection.userInterfaceStyle
             let atomicColor: Color.Atomic
-            var opacity: CGFloat = .opacity100
+            var opacity: Double = .opacity100
             
             switch self {
             // MARK: Static

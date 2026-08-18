@@ -77,7 +77,7 @@ public struct Interaction: View {
 
 extension Interaction.State {
     /// 상태별 기본 불투명도. 값은 모두 Opacity 토큰과 일치한다.
-    var alpha: CGFloat {
+    var alpha: Double {
         switch self {
         case .normal:
             .opacity0
@@ -93,7 +93,7 @@ extension Interaction.State {
 
 extension Interaction.Variant {
     /// ``Interaction/State/alpha``에 곱해지는 강도 배율. 불투명도 자체가 아니므로 토큰을 쓰지 않는다.
-    var weight: CGFloat {
+    var weight: Double {
         switch self {
         case .normal:
             1

@@ -52,7 +52,7 @@ extension View {
                         let pasteBoard = UIPasteboard.general
                         pasteBoard.string = message
                     } label: {
-                        StrokeText(text: message, font: font ?? .system(size: 12), color: .gray.opacity(0.5))
+                        StrokeText(text: message, font: font ?? .system(size: 12), color: .gray.opacity(.opacity52))
                             .multilineTextAlignment(.center)
                             .foregroundColor(.red)
                             .padding(3)
@@ -166,7 +166,7 @@ private struct DimensionView: View {
                     Text("\(String(format: "%.1f", value))")
                         .font(.system(size: 10))
                         .minimumScaleFactor(0.3)
-                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
+                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(.opacity74))
                         .layoutPriority(1)
                     Rectangle()
                         .frame(height: hairline)
@@ -183,7 +183,7 @@ private struct DimensionView: View {
                     Text("\(String(format: "%.1f", value))")
                         .font(.system(size: 10))
                         .minimumScaleFactor(0.3)
-                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
+                        .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(.opacity74))
                         .layoutPriority(1)
                     Rectangle()
                         .frame(width: hairline)
@@ -213,7 +213,7 @@ private struct DimensionBoxView: View {
                 Text("\(String(format: "%.1f", width))x\(String(format: "%.1f", height))")
                     .font(.system(size: 10))
                     .minimumScaleFactor(0.3)
-                    .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(0.7))
+                    .background(Rectangle().foregroundStyle(SwiftUI.Color.white).opacity(.opacity74))
             }
             .foregroundStyle(.red)
     }
