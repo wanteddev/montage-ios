@@ -309,18 +309,14 @@ private extension SearchField {
         let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
         switch variant {
         case .solid:
-            surface
-                .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
-                .background(.ultraThinMaterial, in: surface)
+            MaterialBackground(in: surface, tint: .semantic(.surfaceNeutralSecondary))
         case .outlined:
             // outlined는 배경을 비워 뒤 콘텐츠가 비치도록 하고, 비활성일 때만 표면을 채운다.
             if isDisabled {
                 surface
                     .fill(SwiftUI.Color.semantic(.surfaceNeutralSecondary))
             } else {
-                surface
-                    .fill(SwiftUI.Color.clear)
-                    .background(.ultraThinMaterial, in: surface)
+                MaterialBackground(in: surface)
             }
         }
     }

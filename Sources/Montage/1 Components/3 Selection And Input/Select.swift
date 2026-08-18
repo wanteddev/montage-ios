@@ -344,13 +344,12 @@ public struct Select: View {
                 surface
                     .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
             } else {
-                surface
-                    .fill(
-                        colorScheme == .light
-                            ? SwiftUI.Color.atomic(.common100).opacity(0.8)
-                            : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                    )
-                    .background(.ultraThinMaterial, in: surface)
+                MaterialBackground(
+                    in: surface,
+                    tint: colorScheme == .light
+                        ? SwiftUI.Color.atomic(.common100).opacity(0.8)
+                        : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+                )
             }
         }
         .overlay {

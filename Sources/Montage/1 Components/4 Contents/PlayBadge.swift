@@ -56,7 +56,7 @@ public struct PlayBadge: View {
         Image.icon(.play)
             .resizable()
             .renderingMode(.template)
-            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(0.88))
             .frame(width: playIconSize.width, height: playIconSize.height)
             .background {
                 Group {
@@ -64,11 +64,10 @@ public struct PlayBadge: View {
                         Circle()
                             .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
                     } else {
-                        ZStack {
-                            Circle()
-                                .fill(.ultraThinMaterial)
-                                .clipShape(Circle())
-                        }
+                        MaterialBackground(
+                            in: Circle(),
+                            tint: .atomic(.coolNeutral40).opacity(0.28)
+                        )
                     }
                 }
                 .frame(width: circleDiameter, height: circleDiameter)

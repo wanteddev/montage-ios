@@ -97,15 +97,15 @@ public struct ModalNavigation: View {
             .padding(.bottom, variant.contentBottomPadding)
         }
         .background {
-            ZStack {
+            Group {
                 if isMaterialBackgroundDisabled {
                     backgroundColor
                         .opacity(backgroundOpacity)
                 } else {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .opacity(backgroundOpacity)
-                    backgroundColor
-                        .opacity(backgroundOpacity * 0.7)
+                    MaterialBackground(
+                        materialOpacity: backgroundOpacity,
+                        tint: backgroundColor.opacity(backgroundOpacity * 0.7)
+                    )
                 }
             }
             .if(variant.isFloating) {

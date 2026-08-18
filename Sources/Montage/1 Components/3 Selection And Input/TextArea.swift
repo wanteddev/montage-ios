@@ -520,20 +520,19 @@ public struct TextArea: View {
 
     @ViewBuilder
     private var editorBackground: some View {
-        Group {
-            if isDisabled {
-                SwiftUI.Color.semantic(.surfaceNeutralTertiary)
-            } else {
-                if colorScheme == .light {
-                    SwiftUI.Color.atomic(.common100).opacity(0.8)
-                        .background(.ultraThinMaterial)
-                } else {
-                    SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                        .background(.ultraThinMaterial)
-                }
-            }
+        // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거한다.
+        let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
+        if isDisabled {
+            surface
+                .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
+        } else {
+            MaterialBackground(
+                in: surface,
+                tint: colorScheme == .light
+                    ? SwiftUI.Color.atomic(.common100).opacity(0.8)
+                    : SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
+            )
         }
-        .clipShape(RoundedRectangle(cornerRadius: size.cornerRadius))
     }
 
     /// 포커스 시 테두리 바깥에 표시되는 4px Focus Ring. TextField와 동일한 메커니즘이며,
