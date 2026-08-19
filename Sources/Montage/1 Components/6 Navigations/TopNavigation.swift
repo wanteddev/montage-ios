@@ -411,7 +411,7 @@ public struct TopNavigation: View {
                     .frame(width: 20, height: 20)
                     .padding(.horizontal, 2)
                 
-                ZStack(alignment: .trailing) {
+                HStack(alignment: .center, spacing: 8) {
                     SwiftUI.TextField(
                         "",
                         text: searchTerm,
