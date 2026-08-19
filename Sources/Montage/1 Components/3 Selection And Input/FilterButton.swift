@@ -112,7 +112,6 @@ public struct FilterButton: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .stroke(borderColor, lineWidth: borderWidth)
         )
-        .opacity(disable ? 0.5 : 1.0)
         .contentShape(Rectangle())
         .background(
             Interaction(
