@@ -346,7 +346,7 @@ public enum Skeleton {
             self.skeletonView = skeletonView
         }
         
-        @State private var animationOpacity: CGFloat = 1
+        @State private var animationOpacity: Double = 1
         
         func body(content: Content) -> some View {
             ZStack {
@@ -357,7 +357,7 @@ public enum Skeleton {
                         .onAppear {
                             withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 1)
                                 .repeatForever(autoreverses: true)) {
-                                    animationOpacity = 0.5
+                                    animationOpacity = .opacity52
                                 }
                         }
                         .onDisappear {

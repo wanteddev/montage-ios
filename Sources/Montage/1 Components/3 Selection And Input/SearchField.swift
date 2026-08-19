@@ -331,7 +331,7 @@ private extension SearchField {
             tintedSurface(
                 surface,
                 tint: [
-                    .semantic(.backgroundNeutralPrimary).opacity(CGFloat.opacity61),
+                    .semantic(.backgroundNeutralPrimary).opacity(.opacity61),
                     .semantic(.surfaceNeutralSecondary)
                 ],
                 flatTint: .semantic(.surfaceNeutralSecondary)
@@ -344,7 +344,7 @@ private extension SearchField {
             } else {
                 tintedSurface(
                     surface,
-                    tint: [.semantic(.backgroundNeutralPrimary).opacity(0.61)],
+                    tint: [.semantic(.backgroundNeutralPrimary).opacity(.opacity61)],
                     flatTint: .clear
                 )
             }

@@ -218,7 +218,7 @@ public struct Thumbnail: View {
         .if (thumbnailWidth > 0) {
             $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
         }
-        .opacity(isEnabled ? 1 : Double(CGFloat.opacity43))
+        .opacity(isEnabled ? 1 : .opacity43)
     }
 
     private var thumbnailWidth: CGFloat {

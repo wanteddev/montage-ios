@@ -226,7 +226,7 @@ public struct SnackBar: View {
                         IconButton(variant: .normal(size: .large), icon: .close) {
                             dismiss()
                         }
-                        .iconColor(.semantic(.staticWhite).opacity(0.61))
+                        .iconColor(.semantic(.staticWhite).opacity(.opacity61))
                         .padding(.horizontal, 2)
                     }
                 }
@@ -279,8 +279,8 @@ public struct SnackBar: View {
 
         var body: some View {
             MaterialBackground(tint: [
-                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? 0.5 : 0.46),
-                .semantic(.surfaceBrandPrimary).opacity(0.05),
+                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? .opacity52 : .opacity43),
+                .semantic(.surfaceBrandPrimary).opacity(.opacity5),
             ])
         }
     }

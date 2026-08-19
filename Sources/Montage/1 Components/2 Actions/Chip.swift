@@ -123,7 +123,6 @@ public struct Chip: View {
                 .inset(by: 0.5)
                 .stroke(borderColor, lineWidth: currentBorderWidth)
         )
-        .opacity(isDisabled ? 0.5 : 1.0)
         .contentShape(Rectangle())
         .background(
             Interaction(
@@ -321,7 +320,7 @@ private extension Chip {
         if isDisabled {
             return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(0.28)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(.opacity28)
         } else {
             return customBorderColor ?? .semantic(.lineNeutralSecondary)
         }

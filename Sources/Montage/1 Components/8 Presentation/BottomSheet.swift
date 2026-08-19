@@ -147,7 +147,7 @@ public struct BottomSheet: View {
         .opacity(isContentMeasured ? 1 : 0)
         .background(
             SwiftUI.Color.semantic(.backgroundNeutralPrimary)
-                .opacity(0.8)
+                .opacity(.opacity88)
         )
         .presentationDetents(detents)
         .presentationDragIndicator(.hidden)

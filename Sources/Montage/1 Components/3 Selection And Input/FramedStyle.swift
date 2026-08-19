@@ -45,7 +45,7 @@ public enum FramedStyle {
                 .overlay {
                     RoundedRectangle(cornerRadius: borderRadius)
                         .strokeBorder(borderColor, lineWidth: borderWidth)
-                        .opacity(isEnabled ? 1 : Double(CGFloat.opacity43))
+                        .opacity(isEnabled ? 1 : .opacity43)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: borderRadius))
                 // 그림자를 배경 Shape의 fill에 analytic(`ShapeStyle.shadow`)으로 적용해 오프스크린
@@ -65,9 +65,9 @@ public enum FramedStyle {
             case .normal:
                 .semantic(.lineNeutralSecondary)
             case .selected:
-                .semantic(.surfaceBrandPrimary).opacity(0.43)
+                .semantic(.surfaceBrandPrimary).opacity(.opacity43)
             case .negative:
-                .semantic(.foregroundNegativePrimary).opacity(0.28)
+                .semantic(.foregroundNegativePrimary).opacity(.opacity28)
             }
         }
     }

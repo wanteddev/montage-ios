@@ -420,7 +420,7 @@ private extension Button {
                     switch color {
                     case .primary: .semantic(.surfaceBrandPrimary)
                     case .assistive: .semantic(.surfaceNeutralSecondary)
-                    case .negative: .semantic(.foregroundNegativePrimary).opacity(0.12)
+                    case .negative: .semantic(.foregroundNegativePrimary).opacity(.opacity12)
                     }
                 }
             }

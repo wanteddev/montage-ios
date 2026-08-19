@@ -88,7 +88,7 @@ struct Control: View {
             let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
             Capsule()
                 .fill(SwiftUI.Color.semantic(.staticWhite))
-                .shadow(color: SwiftUI.Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
+                .shadow(color: SwiftUI.Color.black.opacity(.opacity12), radius: 2, x: 0, y: 1)
                 .frame(width: thumbWidth, height: thumbHeight)
                 .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
         } else {
@@ -96,7 +96,7 @@ struct Control: View {
             let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
             Circle()
                 .fill(SwiftUI.Color.semantic(.staticWhite))
-                .shadow(color: SwiftUI.Color.black.opacity(0.12), radius: 2, x: 0, y: 1)
+                .shadow(color: SwiftUI.Color.black.opacity(.opacity12), radius: 2, x: 0, y: 1)
                 .frame(width: thumbWidth, height: thumbHeight)
                 .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
         }
@@ -110,7 +110,7 @@ struct Control: View {
             // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
             ZStack {
                 Capsule()
-                    .fill(SwiftUI.Color.semantic(.lineNeutralPrimary).opacity(isDisabled ? 0.43 : 1))
+                    .fill(SwiftUI.Color.semantic(.lineNeutralPrimary).opacity(isDisabled ? .opacity43 : 1))
                 Capsule()
                     .fill(backgroundColor)
             }
@@ -291,7 +291,7 @@ extension Control {
         switch variant {
         case .checkmark:
             .semantic(state.isUnchecked ? .foregroundNeutralQuaternary : .surfaceBrandPrimary)
-                .opacity(isDisabled ? 0.43 : 1)
+                .opacity(isDisabled ? .opacity43 : 1)
         case .checkbox, .radio:
             .semantic(.staticWhite)
         case .switch:
@@ -326,12 +326,12 @@ extension Control {
             if state.isUnchecked {
                 isDisabled ? .clear : .semantic(.surfaceNeutralStrong)
             } else {
-                .semantic(.surfaceBrandPrimary).opacity(isDisabled ? 0.43 : 1)
+                .semantic(.surfaceBrandPrimary).opacity(isDisabled ? .opacity43 : 1)
             }
         case .checkmark:
             .clear
         case .checkbox, .radio:
-            state.isUnchecked ? .clear : .semantic(.surfaceBrandPrimary).opacity(isDisabled ? 0.43 : 1)
+            state.isUnchecked ? .clear : .semantic(.surfaceBrandPrimary).opacity(isDisabled ? .opacity43 : 1)
         }
     }
 
@@ -339,7 +339,7 @@ extension Control {
         switch variant {
         case .checkmark, .switch: .clear
         case .checkbox, .radio:
-            .semantic(state.isUnchecked ? .lineNeutralPrimary : .surfaceBrandPrimary).opacity(isDisabled ? 0.43 : 1)
+            .semantic(state.isUnchecked ? .lineNeutralPrimary : .surfaceBrandPrimary).opacity(isDisabled ? .opacity43 : 1)
         }
     }
 

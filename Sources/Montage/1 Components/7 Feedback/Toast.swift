@@ -231,8 +231,8 @@ public struct Toast: View, KeyboardReadable {
 
         var body: some View {
             MaterialBackground(tint: [
-                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? 0.5 : 0.46),
-                .semantic(.surfaceBrandPrimary).opacity(0.05),
+                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? .opacity52 : .opacity43),
+                .semantic(.surfaceBrandPrimary).opacity(.opacity5),
             ])
         }
     }
