@@ -94,8 +94,14 @@
       ],
       "modifiers": [
         {
-          "name": "caption(_:)",
-          "signature": "func caption(String?) -> ActionArea",
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color?) -> ActionArea",
+          "summary": "배경 색상을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "caption(_:icon:)",
+          "signature": "func caption(String?, icon: Icon?) -> ActionArea",
           "summary": "버튼 위에 표시할 캡션 텍스트를 설정합니다.",
           "kind": "method"
         },
@@ -103,12 +109,6 @@
           "name": "extra(_:divider:)",
           "signature": "func extra<V>(() -> V, divider: Bool) -> ActionArea",
           "summary": "버튼 위에 표시할 추가 콘텐츠를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "gradientColor(_:)",
-          "signature": "func gradientColor(SwiftUI.Color?) -> ActionArea",
-          "summary": "상단 그라데이션 및 배경의 색상을 설정합니다.",
           "kind": "method"
         },
         {
@@ -157,10 +157,10 @@
           "summary": "ActionArea를 구성하기 위한 모델 구조체입니다.",
           "initializers": [
             {
-              "signature": "init(variant:backgroundTransparencyControl:caption:extra:extraDivider:gradientColor:)"
+              "signature": "init(variant:backgroundTransparencyControl:caption:captionIcon:backgroundColor:)"
             },
             {
-              "signature": "init(variant:backgroundTransparencyControl:caption:gradientColor:)"
+              "signature": "init(variant:backgroundTransparencyControl:caption:captionIcon:extra:extraDivider:backgroundColor:)"
             }
           ]
         },

@@ -46,7 +46,39 @@ title: SwiftUICore
 
 <details>
 
-<summary>``func actionArea<V>(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, extra: () -> V, extraDivider: Bool, gradientColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
+
+
+현재 뷰에 하단 ActionArea를 적용합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `variant` | ActionArea의 버튼 레이아웃 변형 |
+  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
+  | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
+  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
+  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+- **Return Value**
+
+  ActionArea가 적용된 뷰
+- **Discussion**
+
+  ```swift
+  contentView
+      .actionArea(
+          variant: .strong(
+              main: .init(text: "확인", action: { confirmAction() }),
+              sub: .init(text: "취소", action: { cancelAction() })
+          ),
+          caption: "변경 사항을 저장하시겠습니까?"
+      )
+  ```
+
+</details>
+<details>
+
+<summary>``func actionArea<V>(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -57,9 +89,10 @@ title: SwiftUICore
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
   | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `true` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
+  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `extra` | 추가 콘텐츠를 생성하는 클로저 |
   | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
-  | `gradientColor` | 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 - **Return Value**
 
   ActionArea가 적용된 뷰
@@ -78,37 +111,6 @@ title: SwiftUICore
                   .typography(variant: .label2)
           },
           extraDivider: true
-      )
-  ```
-
-</details>
-<details>
-
-<summary>``func actionArea(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, gradientColor: SwiftUI.Color?) -> some View``</summary>
-
-
-현재 뷰에 하단 ActionArea를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
-  | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `gradientColor` | 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
-- **Return Value**
-
-  ActionArea가 적용된 뷰
-- **Discussion**
-
-  ```swift
-  contentView
-      .actionArea(
-          variant: .strong(
-              main: .init(text: "확인", action: { confirmAction() }),
-              sub: .init(text: "취소", action: { cancelAction() })
-          ),
-          caption: "변경 사항을 저장하시겠습니까?"
       )
   ```
 

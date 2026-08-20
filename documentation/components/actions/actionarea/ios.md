@@ -104,7 +104,7 @@ ActionArea를 구성하기 위한 모델 구조체입니다.
 
 <details>
 
-<summary>``init<V>(variant: ActionArea.Variant, backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl, caption: String?, extra: () -> V, extraDivider: Bool, gradientColor: SwiftUI.Color?)``</summary>
+<summary>``init(variant: ActionArea.Variant, backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?)``</summary>
 
 
 ActionArea 모델을 초기화합니다.
@@ -115,13 +115,12 @@ ActionArea 모델을 초기화합니다.
   | `variant` | 버튼 레이아웃 변형 |
   | `backgroundTransparencyControl` | 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `extra` | 추가 콘텐츠를 생성하는 클로저 |
-  | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
-  | `gradientColor` | 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
+  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 </details>
 <details>
 
-<summary>``init(variant: ActionArea.Variant, backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl, caption: String?, gradientColor: SwiftUI.Color?)``</summary>
+<summary>``init<V>(variant: ActionArea.Variant, backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?)``</summary>
 
 
 ActionArea 모델을 초기화합니다.
@@ -132,7 +131,10 @@ ActionArea 모델을 초기화합니다.
   | `variant` | 버튼 레이아웃 변형 |
   | `backgroundTransparencyControl` | 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `gradientColor` | 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
+  | `extra` | 추가 콘텐츠를 생성하는 클로저 |
+  | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
+  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 </details>
 
 </details>
@@ -166,7 +168,25 @@ ActionArea 컴포넌트를 초기화합니다.
 
 <details>
 
-<summary>``func caption(String?) -> ActionArea``</summary>
+<summary>``func backgroundColor(SwiftUI.Color?) -> ActionArea``</summary>
+
+
+배경 색상을 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `backgroundColor` | 설정할 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+- **Return Value**
+
+  수정된 ActionArea 인스턴스
+- **Discussion**
+
+  지정한 색은 배경뿐 아니라 상단 sticky 그라데이션의 시작색으로도 함께 적용됩니다. 두 색이 어긋나면 경계가 보이므로 값을 분리하지 않습니다.
+</details>
+<details>
+
+<summary>``func caption(String?, icon: Icon?) -> ActionArea``</summary>
 
 
 버튼 위에 표시할 캡션 텍스트를 설정합니다.
@@ -175,9 +195,19 @@ ActionArea 컴포넌트를 초기화합니다.
   | Parameter | Description |
   | --- | --- |
   | `caption` | 표시할 캡션 텍스트 |
+  | `icon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
 - **Return Value**
 
   수정된 ActionArea 인스턴스
+- **Discussion**
+
+  `icon`을 지정하면 캡션 텍스트 앞에 16pt 아이콘을 함께 표시합니다. 아이콘 색은 캡션 텍스트와 같습니다.
+
+  ```swift
+  .caption("변경 사항을 저장하시겠습니까?")                      // 텍스트만
+  .caption("변경 사항을 저장하시겠습니까?", icon: .circleInfo)   // 아이콘 + 텍스트
+  ```
+
 </details>
 <details>
 
@@ -191,21 +221,6 @@ ActionArea 컴포넌트를 초기화합니다.
   | --- | --- |
   | `content` | 표시할 추가 콘텐츠를 생성하는 클로저 |
   | `divider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
-- **Return Value**
-
-  수정된 ActionArea 인스턴스
-</details>
-<details>
-
-<summary>``func gradientColor(SwiftUI.Color?) -> ActionArea``</summary>
-
-
-상단 그라데이션 및 배경의 색상을 설정합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `gradientColor` | 설정할 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 - **Return Value**
 
   수정된 ActionArea 인스턴스
@@ -314,7 +329,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 
 <details>
 
-<summary>``func actionArea(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, gradientColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -325,7 +340,8 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
   | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `gradientColor` | 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
+  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 - **Return Value**
 
   ActionArea가 적용된 뷰
@@ -346,7 +362,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 
 <details>
 
-<summary>``func actionArea<V>(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, extra: () -> V, extraDivider: Bool, gradientColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea<V>(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -357,9 +373,10 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
   | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `true` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
+  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `extra` | 추가 콘텐츠를 생성하는 클로저 |
   | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
-  | `gradientColor` | 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 - **Return Value**
 
   ActionArea가 적용된 뷰
