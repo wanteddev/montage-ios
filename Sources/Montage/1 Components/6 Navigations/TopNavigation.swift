@@ -818,16 +818,11 @@ struct TopNavigationModifier: ViewModifier {
             }
             
             if let actionAreaModel {
-                ActionArea(variant: actionAreaModel.variant)
-                    .caption(actionAreaModel.caption)
-                    .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
-                    .modifying {
-                        if case .manual(let transparency) = actionAreaModel.backgroundTransparencyControl {
-                            $0.transparentBackground(transparency)
-                        } else {
-                            $0.transparentBackground(scrollStatus.scrolledToMax)
-                        }
-                    }
+                actionAreaModel.makeActionArea(
+                    transparentBackground: actionAreaModel.resolvedTransparentBackground(
+                        automatic: scrollStatus.scrolledToMax
+                    )
+                )
             }
         }
     }

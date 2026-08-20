@@ -307,6 +307,42 @@ extension ActionArea {
         }
     }
     
+}
+
+extension ActionArea.Model {
+    /// 모델의 구성을 적용한 ``ActionArea``를 만듭니다.
+    ///
+    /// `actionArea(_:)` 모디파이어와 `TopNavigation`·`Popup`·`BottomSheet`가 이 메서드를 공유합니다.
+    /// ``ActionArea/Model``에 속성이 추가되면 이곳만 고치면 모든 소비자에 반영됩니다.
+    ///
+    /// 배경 투명도는 소비자마다 해소 방식이 달라(스크롤 컨테이너를 소유하는지 여부) 결과값을 받습니다.
+    ///
+    /// - Parameter transparentBackground: 적용할 배경 투명 여부
+    /// - Returns: 모델의 구성이 적용된 ActionArea
+    func makeActionArea(transparentBackground: Bool) -> ActionArea {
+        ActionArea(variant: variant)
+            .caption(caption, icon: captionIcon)
+            .extra(extra, divider: extraDivider)
+            .backgroundColor(backgroundColor)
+            .transparentBackground(transparentBackground)
+    }
+
+    /// ``ActionArea/BackgroundTransparencyControl``을 실제 투명 여부로 해소합니다.
+    ///
+    /// `.manual`이면 지정한 값을, `.automatic`이면 `automatic`으로 전달된 값을 사용합니다.
+    ///
+    /// - Parameter automatic: `.automatic`일 때 사용할 값. 스크롤 상태를 아는 소비자가 계산해 넘깁니다.
+    /// - Returns: 해소된 배경 투명 여부
+    func resolvedTransparentBackground(automatic: Bool) -> Bool {
+        if case .manual(let transparency) = backgroundTransparencyControl {
+            transparency
+        } else {
+            automatic
+        }
+    }
+}
+
+extension ActionArea {
     /// ActionArea의 배경 투명도를 제어하는 열거형입니다.
     public enum BackgroundTransparencyControl {
         /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
@@ -524,17 +560,10 @@ struct ActionAreaModifier: ViewModifier {
         VStack(spacing: 0) {
             content
 
-            ActionArea(variant: model.variant)
-                .caption(model.caption, icon: model.captionIcon)
-                .extra(model.extra, divider: model.extraDivider)
-                .backgroundColor(model.backgroundColor)
-                .modifying {
-                    if case .manual(let transparency) = model.backgroundTransparencyControl {
-                        $0.transparentBackground(transparency)
-                    } else {
-                        $0
-                    }
-                }
+            // 이 모디파이어는 스크롤 컨테이너를 소유하지 않아 `.automatic`을 해소할 신호가 없다.
+            model.makeActionArea(
+                transparentBackground: model.resolvedTransparentBackground(automatic: false)
+            )
         }
     }
 }

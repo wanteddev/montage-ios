@@ -134,10 +134,11 @@ public struct BottomSheet: View {
                 }
                 
                 if let actionAreaModel {
-                    ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(scrollStatus.scrolledToMax)
-                        .caption(actionAreaModel.caption)
-                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                    // NOTE: 다른 소비자와 달리 backgroundTransparencyControl을 보지 않는다.
+                    // 기존 동작을 유지한 것이며, 정리는 투명도 API 리팩토링에서 함께 다룬다.
+                    actionAreaModel.makeActionArea(
+                        transparentBackground: scrollStatus.scrolledToMax
+                    )
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                             actionAreaHeight = $0
                         })

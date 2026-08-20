@@ -106,12 +106,11 @@ public struct Popup: View {
                 }
 
                 if let actionAreaModel {
-                    ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(
-                            backgroundTransparency(for: actionAreaModel.backgroundTransparencyControl)
+                    actionAreaModel.makeActionArea(
+                        transparentBackground: backgroundTransparency(
+                            for: actionAreaModel.backgroundTransparencyControl
                         )
-                        .caption(actionAreaModel.caption)
-                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                    )
                         .padding(.bottom, 20)
                         .onGeometryChange(
                             for: CGFloat.self, of: { $0.size.height },
