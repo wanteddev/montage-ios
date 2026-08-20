@@ -41,13 +41,14 @@ struct ActionAreaPreview: View {
         }
     }
 
-    @State var variantIndex: Int = 0
+    @State private var variantIndex: Int = 0
     @State private var caption = false
     @State private var extra = false
     @State private var extraDivider = true
     @State private var gradientIndex = 0
     @State private var transparency = false
     @State private var customGradientColor = false
+    @State private var gradientColor: SwiftUI.Color = .semantic(.surfaceAccentVioletOpaque)
     @State private var mainToastModel: Toast.Model?
     @State private var subToastModel: Toast.Model?
     @State private var alternativeToastModel: Toast.Model?
@@ -152,7 +153,7 @@ struct ActionAreaPreview: View {
                     }
                 },
                 extraDivider: extraDivider,
-                gradientColor: customGradientColor ? .semantic(.surfaceAccentVioletOpaque) : nil
+                gradientColor: customGradientColor ? gradientColor : nil
             )
         } options: {
             MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
@@ -178,6 +179,9 @@ struct ActionAreaPreview: View {
                 ToggleOptionRow("transparency", isOn: $transparency)
             }
             ToggleOptionRow("gradientColor", isOn: $customGradientColor)
+            if customGradientColor {
+                ColorPickerOptionRow("color", selection: $gradientColor)
+            }
         }
         .toast($mainToastModel)
         .toast($subToastModel)

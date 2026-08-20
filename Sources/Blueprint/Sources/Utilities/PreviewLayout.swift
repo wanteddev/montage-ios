@@ -151,11 +151,13 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                     options
                         .font(.caption)
                 }
+                .padding(.horizontal)
 
                 header("Preview")
+                    .padding(.horizontal)
+
                 preview
             }
-            .padding(.horizontal)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         )
     }
