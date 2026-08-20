@@ -116,6 +116,7 @@ public struct ActionArea: View, KeyboardReadable {
     private var caption: String?
     private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
+    private var customGradientColor: SwiftUI.Color?
 
     /// 배경을 투명하게 설정합니다.
     ///
@@ -149,6 +150,16 @@ public struct ActionArea: View, KeyboardReadable {
         var zelf = self
         zelf.extra = { AnyView(content()) }
         zelf.extraDivider = divider
+        return zelf
+    }
+
+    /// 상단 그라데이션 및 배경의 색상을 설정합니다.
+    ///
+    /// - Parameter gradientColor: 설정할 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
+    /// - Returns: 수정된 ActionArea 인스턴스
+    public func gradientColor(_ gradientColor: SwiftUI.Color?) -> Self {
+        var zelf = self
+        zelf.customGradientColor = gradientColor
         return zelf
     }
 }
@@ -223,6 +234,7 @@ extension ActionArea {
         let caption: String?
         let extra: () -> AnyView
         let extraDivider: Bool
+        let gradientColor: SwiftUI.Color?
 
         /// ActionArea 모델을 초기화합니다.
         ///
@@ -230,16 +242,19 @@ extension ActionArea {
         ///   - variant: 버튼 레이아웃 변형
         ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
         ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+        ///   - gradientColor: 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
         public init(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
-            caption: String? = nil
+            caption: String? = nil,
+            gradientColor: SwiftUI.Color? = nil
         ) {
             self.variant = variant
             self.backgroundTransparencyControl = backgroundTransparencyControl
             self.caption = caption
             self.extra = { AnyView(EmptyView()) }
             self.extraDivider = true
+            self.gradientColor = gradientColor
         }
 
         /// ActionArea 모델을 초기화합니다.
@@ -250,18 +265,21 @@ extension ActionArea {
         ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
         ///   - extra: 추가 콘텐츠를 생성하는 클로저
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
+        ///   - gradientColor: 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
         public init<V: View>(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
             caption: String? = nil,
             @ViewBuilder extra: @escaping () -> V,
-            extraDivider: Bool = true
+            extraDivider: Bool = true,
+            gradientColor: SwiftUI.Color? = nil
         ) {
             self.variant = variant
             self.backgroundTransparencyControl = backgroundTransparencyControl
             self.caption = caption
             self.extra = { AnyView(extra()) }
             self.extraDivider = extraDivider
+            self.gradientColor = gradientColor
         }
     }
     
@@ -294,15 +312,19 @@ extension ActionArea {
         }
     }
 
+    private var baseColor: SwiftUI.Color {
+        customGradientColor ?? .semantic(.surfaceElevatedPrimary)
+    }
+
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
-                .semantic(.surfaceElevatedPrimary).opacity($0)
+                baseColor.opacity($0)
             }
     }
 
     private var backgroundColor: SwiftUI.Color {
-        .semantic(.surfaceElevatedPrimary).opacity(backgroundOpacity)
+        baseColor.opacity(backgroundOpacity)
     }
     
     private func applyTransparentBackground(_ transparentBackground: Bool, animated: Bool) {
@@ -471,6 +493,7 @@ struct ActionAreaModifier: ViewModifier {
             ActionArea(variant: model.variant)
                 .caption(model.caption)
                 .extra(model.extra, divider: model.extraDivider)
+                .gradientColor(model.gradientColor)
                 .modifying {
                     if case .manual(let transparency) = model.backgroundTransparencyControl {
                         $0.transparentBackground(transparency)
@@ -491,6 +514,7 @@ extension View {
     ///   - variant: ActionArea의 버튼 레이아웃 변형
     ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `false` 적용
     ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - gradientColor: 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
     /// - Returns: ActionArea가 적용된 뷰
     ///
     /// ```swift
@@ -506,14 +530,16 @@ extension View {
     public func actionArea(
         variant: ActionArea.Variant,
         backgroundTransparency: Bool = false,
-        caption: String? = nil
+        caption: String? = nil,
+        gradientColor: SwiftUI.Color? = nil
     ) -> some View {
         modifier(
             ActionAreaModifier(
                 model: .init(
                     variant: variant,
                     backgroundTransparencyControl: .manual(backgroundTransparency),
-                    caption: caption
+                    caption: caption,
+                    gradientColor: gradientColor
                 )
             )
         )
@@ -527,6 +553,7 @@ extension View {
     ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
     ///   - extra: 추가 콘텐츠를 생성하는 클로저
     ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - gradientColor: 상단 그라데이션 및 배경의 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
     /// - Returns: ActionArea가 적용된 뷰
     ///
     /// ```swift
@@ -549,7 +576,8 @@ extension View {
         backgroundTransparency: Bool = true,
         caption: String? = nil,
         @ViewBuilder extra: @escaping () -> V,
-        extraDivider: Bool = true
+        extraDivider: Bool = true,
+        gradientColor: SwiftUI.Color? = nil
     ) -> some View {
         modifier(
             ActionAreaModifier(
@@ -558,7 +586,8 @@ extension View {
                     backgroundTransparencyControl: .manual(backgroundTransparency),
                     caption: caption,
                     extra: extra,
-                    extraDivider: extraDivider
+                    extraDivider: extraDivider,
+                    gradientColor: gradientColor
                 )
             )
         )

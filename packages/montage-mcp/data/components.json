@@ -106,6 +106,12 @@
           "kind": "method"
         },
         {
+          "name": "gradientColor(_:)",
+          "signature": "func gradientColor(SwiftUI.Color?) -> ActionArea",
+          "summary": "상단 그라데이션 및 배경의 색상을 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "transparentBackground(_:)",
           "signature": "func transparentBackground(Bool) -> ActionArea",
           "summary": "배경을 투명하게 설정합니다.",
@@ -151,10 +157,10 @@
           "summary": "ActionArea를 구성하기 위한 모델 구조체입니다.",
           "initializers": [
             {
-              "signature": "init(variant:backgroundTransparencyControl:caption:)"
+              "signature": "init(variant:backgroundTransparencyControl:caption:extra:extraDivider:gradientColor:)"
             },
             {
-              "signature": "init(variant:backgroundTransparencyControl:caption:extra:extraDivider:)"
+              "signature": "init(variant:backgroundTransparencyControl:caption:gradientColor:)"
             }
           ]
         },

@@ -47,6 +47,7 @@ struct ActionAreaPreview: View {
     @State private var extraDivider = true
     @State private var gradientIndex = 0
     @State private var transparency = false
+    @State private var customGradientColor = false
     @State private var mainToastModel: Toast.Model?
     @State private var subToastModel: Toast.Model?
     @State private var alternativeToastModel: Toast.Model?
@@ -150,7 +151,8 @@ struct ActionAreaPreview: View {
                             .frame(height: 50)
                     }
                 },
-                extraDivider: extraDivider
+                extraDivider: extraDivider,
+                gradientColor: customGradientColor ? .semantic(.surfaceAccentVioletOpaque) : nil
             )
         } options: {
             MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
@@ -175,6 +177,7 @@ struct ActionAreaPreview: View {
             if gradientIndex == 1 {
                 ToggleOptionRow("transparency", isOn: $transparency)
             }
+            ToggleOptionRow("gradientColor", isOn: $customGradientColor)
         }
         .toast($mainToastModel)
         .toast($subToastModel)
