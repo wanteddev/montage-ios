@@ -134,6 +134,9 @@ struct ActionAreaPreview: View {
 
     @State private var scrollStatus: Montage.ScrollView.ScrollStatus = .init()
 
+    /// `PreviewLayout`이 미리보기 영역에 주는 좌우 여백(`.padding(.horizontal)` 기본값).
+    private let previewInset: CGFloat = 16
+
     var body: some View {
         PreviewLayout(mode: .upsideDown) {
             ScrollView(scrollStatus: $scrollStatus) {
@@ -142,8 +145,10 @@ struct ActionAreaPreview: View {
                         TextField(text: .constant("Item \($0)"))
                     }
                 }
-                // ActionArea의 배경·그래디언트는 화면 폭을 꽉 채워야 하므로 패딩은 스크롤 콘텐츠에만 넣는다.
-                .padding(.horizontal)
+                // 아래에서 미리보기 전체를 화면 폭까지 넓히므로, 항목 자체의 좌우 여백은 여기서 되돌린다.
+                // 하단 20은 ActionArea 그래디언트가 자기 경계 위로 덮는 만큼(offset -20)을 비워 준다.
+                .padding(.horizontal, previewInset)
+                .padding(.bottom, 20)
             }
             .actionArea(
                 variant: currentVariant,
@@ -159,6 +164,9 @@ struct ActionAreaPreview: View {
                 extraDivider: extraDivider,
                 backgroundColor: customBackgroundColor ? backgroundColor : nil
             )
+            // PreviewLayout이 미리보기에 좌우 여백을 주는데, ActionArea의 배경·그래디언트는 화면 폭을
+            // 꽉 채워야 하므로 그만큼 되돌린다. (공용 컨테이너를 고치지 않고 이 프리뷰에서만 처리)
+            .padding(.horizontal, -previewInset)
         } options: {
             MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
                 ForEach(VariantKind.allCases.indices, id: \.self) { v in
