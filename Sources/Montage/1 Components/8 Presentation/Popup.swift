@@ -107,9 +107,11 @@ public struct Popup: View {
 
                 if let actionArea {
                     actionArea()
+                        // 스크롤이 없는 팝업은 가려진 콘텐츠도 없으므로 바닥에 닿은 것으로 본다.
+                        // (`nil`은 "신호 없음"이라 ActionArea가 그라데이션을 그린다)
                         .environment(
                             \.actionAreaScrollReachedEnd,
-                            scrollable ? scrolledToBottom : nil
+                            scrollable ? scrolledToBottom : true
                         )
                         .padding(.bottom, 20)
                         .onGeometryChange(

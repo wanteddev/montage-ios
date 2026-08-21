@@ -65,7 +65,8 @@ public struct ActionArea: View, KeyboardReadable {
                     .padding(.top, 20)
                     .padding(.horizontal, 24)
                     .padding(.bottom, 20)
-                    .background(baseColor)
+                    .background(backgroundColor)
+                    .animation(.easeInOut(duration: 0.5), value: hidesBackground)
                     .ifEmptyView { isExtraEmpty = $0 }
 
                 if !isExtraEmpty && extraDivider {
@@ -98,7 +99,8 @@ public struct ActionArea: View, KeyboardReadable {
             }
             .padding(.horizontal, 20)
             .padding(.bottom, isKeyboardVisible ? 20 : 0)
-            .background(baseColor)
+            .background(backgroundColor)
+            .animation(.easeInOut(duration: 0.5), value: hidesBackground)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
     }
@@ -277,6 +279,20 @@ extension ActionArea {
         }
     }
 
+    /// 그라데이션을 끌 때는 배경도 함께 걷어 페이지 배경이 그대로 비치게 한다.
+    ///
+    /// 다크 모드에서는 ActionArea 배경(`surfaceElevatedPrimary`)과 페이지 배경이 다른 색이라,
+    /// 그라데이션만 끄고 배경을 남기면 경계가 선처럼 드러난다. 라이트 모드에서는 두 색이 사실상
+    /// 같아 티가 나지 않을 뿐이다. extra 슬롯이 있으면 그 영역은 배경이 있어야 하므로 유지한다.
+    private var hidesBackground: Bool {
+        !showsGradient && isExtraEmpty
+    }
+
+    /// 실제로 칠하는 배경색. 바닥에 닿으면 투명해진다.
+    private var backgroundColor: SwiftUI.Color {
+        baseColor.opacity(hidesBackground ? 0 : 1)
+    }
+
     private var baseColor: SwiftUI.Color {
         customBackgroundColor ?? .semantic(.surfaceElevatedPrimary)
     }
@@ -293,10 +309,13 @@ extension ActionArea {
         explicitScrollReachedEnd ?? inheritedScrollReachedEnd
     }
 
-    /// 그라데이션은 "아래에 가려진 콘텐츠가 있다"는 표시다.
-    /// 스크롤 컨테이너가 없으면(`nil`) 가려진 것도 없으므로 그리지 않는다.
+    /// 그라데이션은 "아래에 가려진 콘텐츠가 있다"는 표시이면서, ActionArea 배경에서 페이지 배경으로
+    /// 넘어가는 경계를 부드럽게 잇는 역할도 한다. 그래서 끄는 쪽이 예외다.
+    ///
+    /// 바닥에 닿았다는 신호(`true`)를 받았을 때만 끄고, 신호가 없으면(`nil`) 가려진 콘텐츠가
+    /// 있는지 알 수 없으므로 그린다.
     private var showsGradient: Bool {
-        scrollReachedEnd == false
+        scrollReachedEnd != true
     }
     
 }

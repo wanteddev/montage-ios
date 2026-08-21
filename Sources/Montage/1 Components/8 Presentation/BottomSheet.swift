@@ -219,10 +219,10 @@ public struct BottomSheet: View {
             (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2)
     }
 
-    /// 콘텐츠가 스크롤될 때만 하단 도달 여부가 의미를 갖는다.
-    /// 스크롤이 없는 시트는 가려진 콘텐츠도 없으므로 `nil`을 내려 그라데이션을 끈다.
-    private var contentScrollReachedEnd: Bool? {
-        isContentScrollable ? scrollStatus.reachedEnd : nil
+    /// 스크롤이 없는 시트는 가려진 콘텐츠도 없으므로 바닥에 닿은 것으로 본다.
+    /// (`nil`을 내리면 "신호 없음"이 되어 ``ActionArea``가 그라데이션을 그린다)
+    private var contentScrollReachedEnd: Bool {
+        isContentScrollable ? scrollStatus.reachedEnd : true
     }
 
     @ViewBuilder
