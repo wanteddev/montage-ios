@@ -148,20 +148,17 @@ struct ActionAreaPreview: View {
                 .padding(.horizontal, previewInset)
                 .padding(.bottom, 20)
             }
-            .actionArea(
-                variant: currentVariant,
-                scrollReachedEnd: scrollSignalIndex == 0 ? nil : manualScrollReachedEnd,
-                caption: caption ? "caption" : nil,
-                captionIcon: captionIcon ? .circleInfo : nil,
-                extra: {
-                    if extra {
-                        Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
-                            .frame(height: 50)
-                    }
-                },
-                extraDivider: extraDivider,
-                backgroundColor: customBackgroundColor ? backgroundColor : nil
-            )
+            .actionArea(scrollReachedEnd: scrollSignalIndex == 0 ? nil : manualScrollReachedEnd) {
+                ActionArea(variant: currentVariant)
+                    .caption(caption ? "caption" : nil, icon: captionIcon ? .circleInfo : nil)
+                    .extra({
+                        if extra {
+                            Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
+                                .frame(height: 50)
+                        }
+                    }, divider: extraDivider)
+                    .backgroundColor(customBackgroundColor ? backgroundColor : nil)
+            }
             // PreviewLayout이 미리보기에 좌우 여백을 주는데, ActionArea의 배경·그래디언트는 화면 폭을
             // 꽉 채워야 하므로 그만큼 되돌린다. (공용 컨테이너를 고치지 않고 이 프리뷰에서만 처리)
             .padding(.horizontal, -previewInset)

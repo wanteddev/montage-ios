@@ -75,26 +75,25 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var actionAreaModel: ActionArea.Model? {
-        if actionArea {
-            .init(
+    private var actionAreaSlot: (() -> ActionArea)? {
+        guard actionArea else { return nil }
+
+        return {
+            ActionArea(
                 variant: .strong(
                     main: .init(text: "메인", action: {}),
                     sub: actionAreaSub ? .init(text: "서브", action: {}) : nil,
                     alternative: actionAreaAlt ? .init(text: "대체", action: {}) : nil
-                ),
-                caption: actionAreaCaption ? "캡션" : nil,
-                extra: {
-                    if actionAreaExtra {
-                        Rectangle()
-                            .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
-                            .frame(height: 100)
-                    }
-                },
-                extraDivider: true
+                )
             )
-        } else {
-            nil
+            .caption(actionAreaCaption ? "캡션" : nil)
+            .extra({
+                if actionAreaExtra {
+                    Rectangle()
+                        .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
+                        .frame(height: 100)
+                }
+            })
         }
     }
     
@@ -168,7 +167,7 @@ struct TopNavigationPreview: View {
                 .frame(width: 24, height: 24)
             } : nil,
             trailingContents: trailingContents,
-            withBottom: actionAreaModel,
+            actionArea: actionAreaSlot,
             searchPlaceholder: "검색하세요",
             searchTerm: $term,
             searchFocused: $focused

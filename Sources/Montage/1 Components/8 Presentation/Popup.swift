@@ -105,8 +105,8 @@ public struct Popup: View {
                     navigationView
                 }
 
-                if let actionAreaModel {
-                    actionAreaModel.makeActionArea()
+                if let actionArea {
+                    actionArea()
                         .environment(
                             \.actionAreaScrollReachedEnd,
                             scrollable ? scrolledToBottom : nil
@@ -151,7 +151,7 @@ public struct Popup: View {
     private var resize: Resize = .hug
     private var ignoresEdgeInsets = false
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionArea.Model?
+    private var actionArea: (() -> ActionArea)?
 
     /// 팝업 모달의 크기를 설정합니다.
     ///
@@ -185,11 +185,11 @@ public struct Popup: View {
 
     /// 팝업 모달 하단에 액션 영역을 설정합니다.
     ///
-    /// - Parameter actionAreaModel: 액션 영역 모델
+    /// - Parameter actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
     /// - Returns: 수정된 팝업 모달 뷰
-    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
+    public func modalActionArea(_ actionArea: (() -> ActionArea)?) -> Self {
         var zelf = self
-        zelf.actionAreaModel = actionAreaModel
+        zelf.actionArea = actionArea
         return zelf
     }
 
@@ -259,7 +259,7 @@ struct PopupModifier: ViewModifier {
     private let ignoresEdgeInsets: Bool
     private let popupContent: () -> AnyView
     private let navigation: (() -> ModalNavigation)?
-    private let actionAreaModel: ActionArea.Model?
+    private let actionArea: (() -> ActionArea)?
 
     init<V: View>(
         isPresented: Binding<Bool>,
@@ -267,14 +267,14 @@ struct PopupModifier: ViewModifier {
         ignoresEdgeInsets: Bool = false,
         @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil,
-        actionAreaModel: ActionArea.Model? = nil
+        actionArea: (() -> ActionArea)? = nil
     ) {
         _isPresented = isPresented
         self.resize = resize
         self.ignoresEdgeInsets = ignoresEdgeInsets
         popupContent = { AnyView(content()) }
         self.navigation = navigation
-        self.actionAreaModel = actionAreaModel
+        self.actionArea = actionArea
     }
 
     @State private var opacity: CGFloat = 0
@@ -289,7 +289,7 @@ struct PopupModifier: ViewModifier {
                 .resize(resize)
                 .ignoresEdgeInsets(ignoresEdgeInsets)
                 .modalNavigation(navigation)
-                .modalActionArea(actionAreaModel)
+                .modalActionArea(actionArea)
                 .opacity(opacity)
             }
             .transaction { transaction in
@@ -351,7 +351,7 @@ extension View {
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
     ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 팝업 모달이 적용된 뷰
@@ -359,7 +359,7 @@ extension View {
         isPresented: Binding<Bool>,
         resize: Popup.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
+        actionArea: (() -> ActionArea)? = nil,
         @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil
     ) -> some View {
@@ -370,7 +370,7 @@ extension View {
                 ignoresEdgeInsets: ignoresEdgeInsets,
                 content,
                 navigation: navigation,
-                actionAreaModel: actionAreaModel
+                actionArea: actionArea
             )
         )
     }

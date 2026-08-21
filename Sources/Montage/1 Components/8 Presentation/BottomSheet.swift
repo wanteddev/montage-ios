@@ -132,8 +132,8 @@ public struct BottomSheet: View {
                     }
                 }
                 
-                if let actionAreaModel {
-                    actionAreaModel.makeActionArea()
+                if let actionArea {
+                    actionArea()
                         .environment(\.actionAreaScrollReachedEnd, contentScrollReachedEnd)
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                             actionAreaHeight = $0
@@ -158,7 +158,7 @@ public struct BottomSheet: View {
     private var needHandle = true
     private var resize: Resize = .hug
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionArea.Model?
+    private var actionArea: (() -> ActionArea)?
     private var ignoresEdgeInsets = false
     
     /// 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
@@ -193,11 +193,11 @@ public struct BottomSheet: View {
     
     /// 바텀 시트 하단에 액션 영역을 설정합니다.
     ///
-    /// - Parameter actionAreaModel: 액션 영역 모델
+    /// - Parameter actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
     /// - Returns: 수정된 바텀 시트 뷰
-    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
+    public func modalActionArea(_ actionArea: (() -> ActionArea)?) -> Self {
         var zelf = self
-        zelf.actionAreaModel = actionAreaModel
+        zelf.actionArea = actionArea
         return zelf
     }
     
@@ -254,7 +254,7 @@ public struct BottomSheet: View {
         : .init(
             top: navigation == nil ? 20 : 0,
             leading: 20,
-            bottom: actionAreaModel == nil ? 0 : 20,
+            bottom: actionArea == nil ? 0 : 20,
             trailing: 20
         )
     }
@@ -310,7 +310,7 @@ struct BottomSheetModifier: ViewModifier {
     private let needHandle: Bool
     private let resize: BottomSheet.Resize
     private let ignoresEdgeInsets: Bool
-    private let actionAreaModel: ActionArea.Model?
+    private let actionArea: (() -> ActionArea)?
     private let navigation: (() -> ModalNavigation)?
     private let onDismiss: (() -> Void)?
     private let bottomSheetContent: () -> AnyView
@@ -321,7 +321,7 @@ struct BottomSheetModifier: ViewModifier {
         needHandle: Bool = true,
         resize: BottomSheet.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
+        actionArea: (() -> ActionArea)? = nil,
         navigation: (() -> ModalNavigation)? = nil,
         onDismiss: (() -> Void)? = nil,
         @ViewBuilder _ content: @escaping () -> V
@@ -331,7 +331,7 @@ struct BottomSheetModifier: ViewModifier {
         self.needHandle = needHandle
         self.resize = resize
         self.ignoresEdgeInsets = ignoresEdgeInsets
-        self.actionAreaModel = actionAreaModel
+        self.actionArea = actionArea
         self.navigation = navigation
         self.onDismiss = onDismiss
         bottomSheetContent = { AnyView(content()) }
@@ -352,7 +352,7 @@ struct BottomSheetModifier: ViewModifier {
                         .resize(.fill)
                         .ignoresEdgeInsets(ignoresEdgeInsets)
                         .modalNavigation(navigation)
-                        .modalActionArea(actionAreaModel)
+                        .modalActionArea(actionArea)
                     }
                 } else {
                     $0.sheet(
@@ -366,7 +366,7 @@ struct BottomSheetModifier: ViewModifier {
                         .resize(resize)
                         .ignoresEdgeInsets(ignoresEdgeInsets)
                         .modalNavigation(navigation)
-                        .modalActionArea(actionAreaModel)
+                        .modalActionArea(actionArea)
                     }
                 }
             }
@@ -386,7 +386,7 @@ extension View {
     ///   - needHandle: 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
     ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - onDismiss: 모달이 닫힐때 호출될 클로저
     ///   - content: 모달에 표시할 콘텐츠 클로저
@@ -397,7 +397,7 @@ extension View {
         needHandle: Bool = true,
         resize: BottomSheet.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
+        actionArea: (() -> ActionArea)? = nil,
         navigation: (() -> ModalNavigation)? = nil,
         onDismiss: (() -> Void)? = nil,
         @ViewBuilder _ content: @escaping () -> V
@@ -409,7 +409,7 @@ extension View {
                 needHandle: needHandle,
                 resize: resize,
                 ignoresEdgeInsets: ignoresEdgeInsets,
-                actionAreaModel: actionAreaModel,
+                actionArea: actionArea,
                 navigation: navigation,
                 onDismiss: onDismiss,
                 content

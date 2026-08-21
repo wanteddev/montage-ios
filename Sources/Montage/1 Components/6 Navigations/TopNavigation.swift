@@ -723,7 +723,7 @@ struct TopNavigationModifier: ViewModifier {
     private let backgroundColor: SwiftUI.Color?
     private let leadingContent: (() -> any View)?
     private let trailingContents: [() -> any View]
-    private let actionAreaModel: ActionArea.Model?
+    private let actionArea: (() -> ActionArea)?
     private let searchPlaceholder: String?
     private let externalSearchTerm: Binding<String>?
     private let externalFocused: Binding<Bool>?
@@ -735,7 +735,7 @@ struct TopNavigationModifier: ViewModifier {
         backgroundColor: SwiftUI.Color?,
         leadingContent: (() -> any View)?,
         trailingContents: [() -> any View],
-        actionAreaModel: ActionArea.Model?,
+        actionArea: (() -> ActionArea)?,
         searchPlaceholder: String?,
         searchTerm: Binding<String>?,
         searchFocused: Binding<Bool>?,
@@ -746,7 +746,7 @@ struct TopNavigationModifier: ViewModifier {
         self.backgroundColor = backgroundColor
         self.leadingContent = leadingContent
         self.trailingContents = trailingContents
-        self.actionAreaModel = actionAreaModel
+        self.actionArea = actionArea
         self.searchPlaceholder = searchPlaceholder
         self.externalSearchTerm = searchTerm
         self.externalFocused = searchFocused
@@ -817,8 +817,8 @@ struct TopNavigationModifier: ViewModifier {
                 }
             }
             
-            if let actionAreaModel {
-                actionAreaModel.makeActionArea()
+            if let actionArea {
+                actionArea()
                     .environment(\.actionAreaScrollReachedEnd, scrollStatus.reachedEnd)
             }
         }
@@ -840,7 +840,7 @@ extension View {
     ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용
     ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
-    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
     ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
     ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
@@ -852,7 +852,7 @@ extension View {
         backgroundColor: SwiftUI.Color? = nil,
         leadingContent: (() -> any View)? = nil,
         trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil,
+        actionArea: (() -> ActionArea)? = nil,
         searchPlaceholder: String? = nil,
         searchTerm: Binding<String>? = nil,
         searchFocused: Binding<Bool>? = nil,
@@ -865,7 +865,7 @@ extension View {
                 backgroundColor: backgroundColor,
                 leadingContent: leadingContent.map { v in { AnyView(v()) } },
                 trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model,
+                actionArea: actionArea,
                 searchPlaceholder: searchPlaceholder,
                 searchTerm: searchTerm,
                 searchFocused: searchFocused,
@@ -882,7 +882,7 @@ extension View {
     ///   - backgroundColor: 배경색, 생략하면 기본값으로 `nil` 적용
     ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
-    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
     ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
     ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
@@ -894,7 +894,7 @@ extension View {
         backgroundColor: SwiftUI.Color? = nil,
         leadingContent: (() -> any View)? = nil,
         trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil,
+        actionArea: (() -> ActionArea)? = nil,
         searchPlaceholder: String? = nil,
         searchTerm: Binding<String>? = nil,
         searchFocused: Binding<Bool>? = nil,
@@ -907,7 +907,7 @@ extension View {
                 backgroundColor: backgroundColor,
                 leadingContent: leadingContent.map { v in { AnyView(v()) } },
                 trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model,
+                actionArea: actionArea,
                 searchPlaceholder: searchPlaceholder,
                 searchTerm: searchTerm,
                 searchFocused: searchFocused,

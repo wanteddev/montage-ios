@@ -370,25 +370,28 @@ public struct Select: View {
             $0.bottomSheet(
                 isPresented: $defaultMenuPresented,
                 resize: menuResize,
-                actionAreaModel: actionAreaButtonTitle.map {
-                    .init(
-                        variant: .neutral(
-                            main: .init(
-                                text: $0,
-                                action: {
-                                    defaultMenuPresented.toggle()
-                                }),
-                            sub: .custom {
-                                Button(
-                                    variant: .outlined,
-                                    color: .assistive,
-                                    size: .large,
-                                    icon: .refresh
-                                ) {
-                                    deselectAll()
+                actionArea: actionAreaButtonTitle.map { title in
+                    {
+                        ActionArea(
+                            variant: .neutral(
+                                main: .init(
+                                    text: title,
+                                    action: {
+                                        defaultMenuPresented.toggle()
+                                    }),
+                                sub: .custom {
+                                    Button(
+                                        variant: .outlined,
+                                        color: .assistive,
+                                        size: .large,
+                                        icon: .refresh
+                                    ) {
+                                        deselectAll()
+                                    }
                                 }
-                            }
-                        ))
+                            )
+                        )
+                    }
                 }
             ) {
                 menu

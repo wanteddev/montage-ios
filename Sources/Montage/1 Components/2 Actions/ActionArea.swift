@@ -237,83 +237,6 @@ extension ActionArea {
             return zelf
         }
     }
-
-    /// ActionArea를 구성하기 위한 모델 구조체입니다.
-    ///
-    /// 이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다.
-    /// 버튼 레이아웃, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
-    public struct Model {
-        let variant: ActionArea.Variant
-        let caption: String?
-        let captionIcon: Icon?
-        let extra: () -> AnyView
-        let extraDivider: Bool
-        let backgroundColor: SwiftUI.Color?
-
-        /// ActionArea 모델을 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 버튼 레이아웃 변형
-        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-        ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
-        ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
-        public init(
-            variant: ActionArea.Variant,
-            caption: String? = nil,
-            captionIcon: Icon? = nil,
-            backgroundColor: SwiftUI.Color? = nil
-        ) {
-            self.variant = variant
-            self.caption = caption
-            self.captionIcon = captionIcon
-            self.extra = { AnyView(EmptyView()) }
-            self.extraDivider = true
-            self.backgroundColor = backgroundColor
-        }
-
-        /// ActionArea 모델을 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 버튼 레이아웃 변형
-        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-        ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
-        ///   - extra: 추가 콘텐츠를 생성하는 클로저
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
-        ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
-        public init<V: View>(
-            variant: ActionArea.Variant,
-            caption: String? = nil,
-            captionIcon: Icon? = nil,
-            @ViewBuilder extra: @escaping () -> V,
-            extraDivider: Bool = true,
-            backgroundColor: SwiftUI.Color? = nil
-        ) {
-            self.variant = variant
-            self.caption = caption
-            self.captionIcon = captionIcon
-            self.extra = { AnyView(extra()) }
-            self.extraDivider = extraDivider
-            self.backgroundColor = backgroundColor
-        }
-    }
-    
-}
-
-extension ActionArea.Model {
-    /// 모델의 구성을 적용한 ``ActionArea``를 만듭니다.
-    ///
-    /// `actionArea(_:)` 모디파이어와 `TopNavigation`·`Popup`·`BottomSheet`가 이 메서드를 공유합니다.
-    /// ``ActionArea/Model``에 속성이 추가되면 이곳만 고치면 모든 소비자에 반영됩니다.
-    ///
-    /// 스크롤 신호는 ``ActionArea``가 environment로 받으므로 이 메서드는 구성만 옮깁니다.
-    ///
-    /// - Returns: 모델의 구성이 적용된 ActionArea
-    func makeActionArea() -> ActionArea {
-        ActionArea(variant: variant)
-            .caption(caption, icon: captionIcon)
-            .extra(extra, divider: extraDivider)
-            .backgroundColor(backgroundColor)
-    }
 }
 
 // MARK: - Scroll Signal
@@ -514,11 +437,11 @@ extension ActionArea {
 
 struct ActionAreaModifier: ViewModifier {
     // MARK: - Initializer
-    private let model: ActionArea.Model
+    private let actionArea: () -> ActionArea
     private let explicitScrollReachedEnd: Bool?
 
-    init(model: ActionArea.Model, scrollReachedEnd: Bool? = nil) {
-        self.model = model
+    init(scrollReachedEnd: Bool? = nil, actionArea: @escaping () -> ActionArea) {
+        self.actionArea = actionArea
         explicitScrollReachedEnd = scrollReachedEnd
     }
 
@@ -531,7 +454,7 @@ struct ActionAreaModifier: ViewModifier {
         VStack(spacing: 0) {
             content
 
-            model.makeActionArea()
+            actionArea()
         }
         // 스크롤 컨테이너는 콘텐츠 쪽에 있으므로 preference로 받아 environment로 되돌려 준다.
         .onPreferenceChange(ScrollReachedEndPreferenceKey.self) { inheritedScrollReachedEnd = $0 }
@@ -547,94 +470,34 @@ struct ActionAreaModifier: ViewModifier {
 extension View {
     /// 현재 뷰에 하단 ActionArea를 적용합니다.
     ///
-    /// - Parameters:
-    ///   - variant: ActionArea의 버튼 레이아웃 변형
-    ///   - scrollReachedEnd: 콘텐츠 스크롤이 바닥에 닿았는지 여부. ``Montage/ScrollView``를 쓰면 자동으로
-    ///     전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다.
-    ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
-    ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
-    /// - Returns: ActionArea가 적용된 뷰
+    /// 구성은 ``ActionArea``의 모디파이어 체인으로 하고, 완성된 인스턴스를 이 슬롯에 넘깁니다.
     ///
     /// ```swift
     /// contentView
-    ///     .actionArea(
-    ///         variant: .strong(
+    ///     .actionArea {
+    ///         ActionArea(variant: .strong(
     ///             main: .init(text: "확인", action: { confirmAction() }),
     ///             sub: .init(text: "취소", action: { cancelAction() })
-    ///         ),
-    ///         caption: "변경 사항을 저장하시겠습니까?"
-    ///     )
+    ///         ))
+    ///         .caption("변경 사항을 저장하시겠습니까?")
+    ///     }
     /// ```
+    ///
+    /// - Parameters:
+    ///   - scrollReachedEnd: 콘텐츠 스크롤이 바닥에 닿았는지 여부. ``Montage/ScrollView``를 쓰면 자동으로
+    ///     전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다.
+    ///   - actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
+    /// - Returns: ActionArea가 적용된 뷰
+    ///
+    /// - Note: 슬롯 클로저에 `@ViewBuilder`를 붙이지 않았습니다. 붙이면 `if`문이 `_ConditionalContent`를
+    ///   만들어 ``ActionArea`` 타입 제약이 깨집니다. 공개 모디파이어가 모두 `Self`를 돌려주므로
+    ///   체인과 삼항 연산자는 그대로 쓸 수 있습니다.
     public func actionArea(
-        variant: ActionArea.Variant,
         scrollReachedEnd: Bool? = nil,
-        caption: String? = nil,
-        captionIcon: Icon? = nil,
-        backgroundColor: SwiftUI.Color? = nil
+        _ actionArea: @escaping () -> ActionArea
     ) -> some View {
         modifier(
-            ActionAreaModifier(
-                model: .init(
-                    variant: variant,
-                    caption: caption,
-                    captionIcon: captionIcon,
-                    backgroundColor: backgroundColor
-                ),
-                scrollReachedEnd: scrollReachedEnd
-            )
-        )
-    }
-    
-    /// 현재 뷰에 하단 ActionArea를 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: ActionArea의 버튼 레이아웃 변형
-    ///   - scrollReachedEnd: 콘텐츠 스크롤이 바닥에 닿았는지 여부. ``Montage/ScrollView``를 쓰면 자동으로
-    ///     전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다.
-    ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
-    ///   - extra: 추가 콘텐츠를 생성하는 클로저
-    ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
-    ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
-    /// - Returns: ActionArea가 적용된 뷰
-    ///
-    /// ```swift
-    /// contentView
-    ///     .actionArea(
-    ///         variant: .strong(
-    ///             main: .init(text: "확인", action: { confirmAction() }),
-    ///             sub: .init(text: "취소", action: { cancelAction() })
-    ///         ),
-    ///         caption: "변경 사항을 저장하시겠습니까?",
-    ///         extra: {
-    ///             Text("추가 정보")
-    ///                 .typography(variant: .label2)
-    ///         },
-    ///         extraDivider: true
-    ///     )
-    /// ```
-    public func actionArea<V: View>(
-        variant: ActionArea.Variant,
-        scrollReachedEnd: Bool? = nil,
-        caption: String? = nil,
-        captionIcon: Icon? = nil,
-        @ViewBuilder extra: @escaping () -> V,
-        extraDivider: Bool = true,
-        backgroundColor: SwiftUI.Color? = nil
-    ) -> some View {
-        modifier(
-            ActionAreaModifier(
-                model: .init(
-                    variant: variant,
-                    caption: caption,
-                    captionIcon: captionIcon,
-                    extra: extra,
-                    extraDivider: extraDivider,
-                    backgroundColor: backgroundColor
-                ),
-                scrollReachedEnd: scrollReachedEnd
-            )
+            ActionAreaModifier(scrollReachedEnd: scrollReachedEnd, actionArea: actionArea)
         )
     }
 }
