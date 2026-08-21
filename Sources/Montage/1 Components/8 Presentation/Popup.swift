@@ -107,8 +107,8 @@ public struct Popup: View {
 
                 if let actionAreaModel {
                     actionAreaModel.makeActionArea(
-                        transparentBackground: backgroundTransparency(
-                            for: actionAreaModel.backgroundTransparencyControl
+                        transparentBackground: actionAreaModel.resolvedTransparentBackground(
+                            automatic: scrolledToBottom
                         )
                     )
                         .padding(.bottom, 20)
@@ -249,19 +249,6 @@ public struct Popup: View {
 
     private var scrollable: Bool {
         popupContentHeight > viewportHeight
-    }
-
-    /// ActionArea의 배경 투명도.
-    ///
-    /// 모델이 `.manual`로 값을 지정하면 그 값을 존중하고, `.automatic`이면 스크롤이 끝에 닿았는지로 판단한다.
-    private func backgroundTransparency(
-        for control: ActionArea.BackgroundTransparencyControl
-    ) -> Bool {
-        if case .manual(let transparency) = control {
-            transparency
-        } else {
-            scrolledToBottom
-        }
     }
 }
 
