@@ -39,7 +39,7 @@
 
 ### 1. 컬러 시맨틱 토큰
 
-`Color.semantic(_:)` / `UIColor.semantic(_:)`에 넘기는 토큰 이름이 전부 바뀝니다. 값은 동일하므로 렌더 결과에 차이가 없습니다.
+`Color.semantic(_:)` / `UIColor.semantic(_:)`에 넘기는 토큰 이름이 전부 바뀝니다. 아래 표의 대응은 **RedOrange 계열 2건을 빼면 값이 같아서** 렌더 결과가 달라지지 않습니다. RedOrange는 4.0에 대응 토큰이 없어 직접 골라야 하고 색이 바뀝니다.
 
 #### 새 이름 규칙
 
@@ -84,7 +84,7 @@
 | `.accentForegroundGreen` | `.foregroundPositivePrimary` |
 | `.accentForegroundOrange` | `.foregroundCautionaryPrimary` |
 | `.accentForegroundRed` | `.foregroundNegativeStrong` |
-| `.accentForegroundRedOrange` | `.foregroundNegativePrimary` |
+| `.accentForegroundRedOrange` | **대응 없음** (아래 참고) |
 | `.accentForegroundLime` | `.foregroundAccentLime` |
 | `.accentForegroundCyan` | `.foregroundAccentCyan` |
 | `.accentForegroundLightBlue` | `.foregroundAccentLightBlue` |
@@ -92,7 +92,7 @@
 | `.accentForegroundPurple` | `.foregroundAccentPurple` |
 | `.accentForegroundPink` | `.foregroundAccentPink` |
 
-> `accentForeground{색}` 중 Blue·Green·Orange·Red·RedOrange는 액센트 계열에서 **의미 색(brand/positive/cautionary/negative)으로 승격**됐습니다. 이름만 옮기지 말고 그 자리가 정말 의미 색인지 확인해주세요.
+> `accentForeground{색}` 중 Blue·Green·Orange·Red는 액센트 계열에서 **의미 색(brand/positive/cautionary/negative)으로 승격**됐습니다. 이름만 옮기지 말고 그 자리가 정말 의미 색인지 확인해주세요.
 
 #### Background · Surface - 면
 
@@ -105,6 +105,11 @@
 | `.fillNormal` | `.surfaceNeutralSecondary` |
 | `.fillAlternative` | `.surfaceNeutralTertiary` |
 | `.fillStrong` | `.surfaceNeutralStrong` |
+| `.fillPrimary` | `.surfaceBrandSubtle` |
+| `.fillNegative` | `.surfaceNegativeStrong` |
+| `.backgroundStatusPositive` | `.surfacePositivePrimary` |
+| `.backgroundStatusCautionary` | `.surfaceCautionaryPrimary` |
+| `.backgroundStatusNegative` | `.surfaceNegativePrimary` |
 | `.inverseBackground` | `.surfaceNeutralInverse` |
 | `.primaryNormal` | `.surfaceBrandPrimary` |
 | `.primaryStrong` | `.surfaceBrandStrong` |
@@ -115,11 +120,13 @@
 | `.accentBackgroundLightBlue` | `.surfaceAccentLightBlueOpaque` |
 | `.accentBackgroundViolet` | `.surfaceAccentVioletOpaque` |
 | `.accentBackgroundPink` | `.surfaceAccentPinkOpaque` |
-| `.accentBackgroundRedOrange` | `.foregroundNegativePrimary` |
+| `.accentBackgroundRedOrange` | **대응 없음** (아래 참고) |
 
 > `background`는 화면 바탕(Primary·Secondary) 두 종만 남고, 나머지는 전부 `surface`로 넘어갔습니다.
 >
 > `accentBackground{색}`은 기본이 **불투명(`Opaque`)** 대응입니다. 반투명 위에 겹쳐 쓰던 자리라면 접미사 없는 `.surfaceAccent{색}`을 쓰세요.
+>
+> **RedOrange 계열은 4.0 시맨틱에서 없어졌습니다.** `accentForegroundRedOrange`와 `accentBackgroundRedOrange`에 대응하는 4.0 토큰이 없습니다(프리미티브 `redOrange*`는 그대로 남아 있습니다). 1:1 치환이 불가능하니 그 자리의 의도를 보고 직접 골라야 하고, 무엇을 고르든 **색이 바뀝니다.** 원티드 앱은 이 토큰을 쓰던 세 곳이 모두 텍스트·아이콘 색이어서 `.foregroundNegativePrimary`로 옮겼는데, 그 결과 `redOrange50/60`이 `red50/60`으로 바뀌었습니다. 면 색으로 쓰던 자리라면 `.surfaceNegativePrimary`나 프리미티브 `redOrange*` 직접 지정이 원래 값에 더 가깝습니다.
 
 #### Line - 테두리·구분선
 
@@ -131,17 +138,24 @@
 | `.lineSolidNormal` | `.lineNeutralPrimaryOpaque` |
 | `.lineSolidNeutral` | `.lineNeutralSecondaryOpaque` |
 | `.lineSolidAlternative` | `.lineNeutralTertiaryOpaque` |
+| `.linePrimaryStrong` | `.lineBrandStrong` |
+| `.lineStatusPositiveNormal` | `.linePositivePrimary` |
+| `.lineStatusCautionaryNormal` | `.lineCautionaryPrimary` |
+| `.lineStatusNegativeStrong` | `.lineNegativeStrong` |
 
 #### Effect - 딤·투명 레이어
 
 | 3.x | 4.0 |
 |---|---|
 | `.materialDimmer` | `.effectDimmerPrimary` |
+| `.backgroundTransparent` | `.effectTransparentPrimary` |
 | `.backgroundTransparentAlternative` | `.effectTransparentSecondary` |
 
 #### 위 표에 없는 토큰
 
-4.0에서 새로 생긴 토큰(`surfaceBrandSubtle`, `lineBrandFocus`, `lineNegativeFocus`, `surfacePositivePrimary` 등)과 프리미티브 토큰(`neutral*`, `blue*`, `coolNeutral*` …)은 `Color.Semantic`에서 직접 확인해주세요. 프리미티브 이름은 변경되지 않았습니다.
+4.0에서 새로 생긴 토큰(`lineBrandFocus`, `lineNegativeFocus`, `foregroundAccent*` 등)과 프리미티브 토큰(`neutral*`, `blue*`, `coolNeutral*` …)은 `Color.Semantic`에서 직접 확인해주세요. 프리미티브 이름은 변경되지 않았습니다.
+
+위 표에서 못 찾은 3.x 토큰은 `Color.Semantic` 각 케이스의 doc 주석을 보면 됩니다. 리네임된 토큰에는 `/// … (구 labelNormal)`처럼 3.x 이름이 적혀 있습니다.
 
 #### 일괄 치환
 
@@ -312,6 +326,8 @@ FormControl { _ in
 // 이렇게
 .actionArea { ActionArea(variant: isEditing ? a : b) }
 ```
+
+> **이 항목과 아래 스펙 표는 `release/4.0.0`에 아직 반영되지 않았습니다.** 투명 배경 API 제거와 `.scrollReachedEnd(_:)`·`.backgroundColor(_:)`·`.caption(_:icon:)` 신설은 `refactor/WRP-2472-2`(`0828afe4`)에 있고, 그 브랜치가 `release/4.0.0`에 머지되면 유효해집니다. 그 전 커밋을 쓰고 있다면 `transparentBackground` 계열이 아직 살아 있으니 이 절은 건너뛰세요.
 
 투명 배경 API가 없어졌습니다. 배경은 항상 불투명하고, **상단 그라데이션만** "아래에 가려진 콘텐츠가 있다"는 신호로 켜졌다 꺼집니다(0.5초 페이드).
 
@@ -607,6 +623,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Avatar · Thumbnail** | 비활성 시 `opacity43` 적용 |
 | **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
 | **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6~8px 레이아웃 이동) |
+| **RedOrange 토큰** | `accentForegroundRedOrange`·`accentBackgroundRedOrange`에 대응 토큰이 없어 무엇으로 옮기든 **색이 바뀝니다.** 이 토큰을 쓰던 자리를 전부 찾아 확인해주세요 |
 
 ---
 
