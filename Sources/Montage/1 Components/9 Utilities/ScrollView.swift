@@ -107,6 +107,11 @@ public struct ScrollView: View {
             key: ScrollReachedEndPreferenceKey.self,
             value: axis == .vertical ? scrollStatus.wrappedValue.reachedEnd : nil
         )
+        // 세로 오프셋도 함께 올려 ``ScreenScaffold``의 ``TopNavigation``이 배경 농도를 정하게 한다.
+        .preference(
+            key: ScrollOffsetPreferenceKey.self,
+            value: axis == .vertical ? scrollStatus.wrappedValue.contentOffset.y : nil
+        )
         .if(onRefresh != nil) {
             if #available(iOS 18, *) {
             	$0.pullToRefresh(scrollYOffset: scrollStatus.contentOffset.y) {
@@ -283,6 +288,76 @@ private struct ScrollReachedEndReporter: ViewModifier {
                 }
             }
             .preference(key: ScrollReachedEndPreferenceKey.self, value: reachedEnd)
+    }
+}
+
+public extension View {
+    /// 세로 스크롤 오프셋을 스스로 재서 상위 ``ScreenScaffold``에 전달합니다.
+    ///
+    /// ``ScreenScaffold``의 ``TopNavigation``은 이 값으로 배경 농도를 정합니다. 스크롤을 스캐폴드가
+    /// 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.content`에서만 붙입니다.
+    ///
+    /// ```swift
+    /// ScreenScaffold(scrollContainer: .content) {
+    ///     List {
+    ///         ForEach(items) { row($0) }
+    ///     }
+    ///     .reportsScrollOffset()
+    ///     .reportsScrollReachedEnd()
+    /// }
+    /// ```
+    ///
+    /// - Parameter isEnabled: 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 스크롤 오프셋을 올리는 뷰
+    ///
+    /// - Important: 스크롤 기하를 읽는 `onScrollGeometryChange`가 iOS 18부터라 이 수정자도
+    ///   iOS 18 이상에서만 쓸 수 있습니다. 그 아래 버전에서는 ``TopNavigation``이 배경 농도를
+    ///   바꿀 근거를 얻지 못해 불투명 배경으로 고정됩니다.
+    @available(iOS 18, *)
+    func reportsScrollOffset(_ isEnabled: Bool = true) -> some View {
+        modifier(ScrollOffsetReporter(isEnabled: isEnabled))
+    }
+}
+
+/// 스크롤 기하를 읽어 세로 오프셋을 preference로 올리는 수정자입니다.
+@available(iOS 18, *)
+private struct ScrollOffsetReporter: ViewModifier {
+    let isEnabled: Bool
+
+    @State private var offset: CGFloat?
+
+    func body(content: Content) -> some View {
+        content
+            .modifying { view in
+                if isEnabled {
+                    // ``Montage/ScrollView``가 올리는 값과 부호를 맞춘다. 최상단이 0이고
+                    // 아래로 내릴수록 음수다.
+                    view.onScrollGeometryChange(for: CGFloat.self) { geometry in
+                        -(geometry.contentOffset.y + geometry.contentInsets.top)
+                    } action: { _, newValue in
+                        offset = newValue
+                    }
+                } else {
+                    view
+                }
+            }
+            .preference(key: ScrollOffsetPreferenceKey.self, value: offset)
+    }
+}
+
+/// 세로 스크롤 컨테이너의 오프셋을 상위로 전달하는 키입니다.
+///
+/// `nil`은 "오프셋을 올려 주는 세로 스크롤 컨테이너가 없다"는 뜻입니다. 이때 ``TopNavigation``은
+/// 스크롤 위치를 알 수 없으므로 배경을 불투명하게 고정합니다 - 투명하게 두면 콘텐츠가 내비게이션
+/// 글자와 겹쳐 읽을 수 없게 됩니다.
+///
+/// 스크롤 컨테이너가 여럿이면 가장 많이 내려간 쪽(가장 작은 값)을 따릅니다.
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat? = nil
+
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
+        guard let next = nextValue() else { return }
+        value = min(value ?? next, next)
     }
 }
 
