@@ -46,7 +46,7 @@ title: SwiftUICore
 
 <details>
 
-<summary>``func actionArea(variant: ActionArea.Variant, scrollReachedEnd: Bool?, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea(scrollReachedEnd: Bool?, () -> ActionArea) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -54,65 +54,29 @@ title: SwiftUICore
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `variant` | ActionArea의 버튼 레이아웃 변형 |
   | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
-  | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
-  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저 |
 - **Return Value**
 
   ActionArea가 적용된 뷰
 - **Discussion**
 
-  ```swift
-  contentView
-      .actionArea(
-          variant: .strong(
-              main: .init(text: "확인", action: { confirmAction() }),
-              sub: .init(text: "취소", action: { cancelAction() })
-          ),
-          caption: "변경 사항을 저장하시겠습니까?"
-      )
-  ```
-
-</details>
-<details>
-
-<summary>``func actionArea<V>(variant: ActionArea.Variant, scrollReachedEnd: Bool?, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
-
-
-현재 뷰에 하단 ActionArea를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
-  | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
-  | `extra` | 추가 콘텐츠를 생성하는 클로저 |
-  | `extraDivider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
-  | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
-- **Return Value**
-
-  ActionArea가 적용된 뷰
-- **Discussion**
+  구성은 [ActionArea](/documentation/montage/actionarea.md)의 모디파이어 체인으로 하고, 완성된 인스턴스를 이 슬롯에 넘깁니다.
 
   ```swift
   contentView
-      .actionArea(
-          variant: .strong(
+      .actionArea {
+          ActionArea(variant: .strong(
               main: .init(text: "확인", action: { confirmAction() }),
               sub: .init(text: "취소", action: { cancelAction() })
-          ),
-          caption: "변경 사항을 저장하시겠습니까?",
-          extra: {
-              Text("추가 정보")
-                  .typography(variant: .label2)
-          },
-          extraDivider: true
-      )
+          ))
+          .caption("변경 사항을 저장하시겠습니까?")
+      }
   ```
+
+  >  **Note**
+  >
+  > 슬롯 클로저에 `@ViewBuilder`를 붙이지 않았습니다. 붙이면 `if`문이 `_ConditionalContent`를 만들어 [ActionArea](/documentation/montage/actionarea.md) 타입 제약이 깨집니다. 공개 모디파이어가 모두 `Self`를 돌려주므로 체인과 삼항 연산자는 그대로 쓸 수 있습니다.
 
 </details>
 <details>
@@ -142,7 +106,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, navigation: (() -> ModalNavigation)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
+<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, actionArea: (() -> ActionArea)?, navigation: (() -> ModalNavigation)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
@@ -155,7 +119,7 @@ View를 UIImage로 변환합니다.
   | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
-  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onDismiss` | 모달이 닫힐때 호출될 클로저 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
@@ -445,7 +409,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, actionArea: (() -> ActionArea)?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 
 팝업 모달을 표시합니다.
@@ -456,7 +420,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용 |
-  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**
@@ -742,7 +706,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
+<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], actionArea: (() -> ActionArea)?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
 
 
 현재 뷰에 TopNavigation 바를 적용합니다.
@@ -755,7 +719,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `backgroundColor` | 배경색, 생략하면 기본값으로 `nil` 적용 |
   | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `model` | 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
   | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
@@ -766,7 +730,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func topNavigation(variant: TopNavigation.Variant, titleView: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
+<summary>``func topNavigation(variant: TopNavigation.Variant, titleView: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], actionArea: (() -> ActionArea)?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
 
 
 현재 뷰에 TopNavigation 바를 적용합니다.
@@ -779,7 +743,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `backgroundColor` | TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용 |
   | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `model` | 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
   | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |

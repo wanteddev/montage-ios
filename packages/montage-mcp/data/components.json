@@ -139,19 +139,6 @@
           ]
         },
         {
-          "name": "ActionArea.Model",
-          "kind": "struct",
-          "summary": "ActionArea를 구성하기 위한 모델 구조체입니다.",
-          "initializers": [
-            {
-              "signature": "init(variant:caption:captionIcon:backgroundColor:)"
-            },
-            {
-              "signature": "init(variant:caption:captionIcon:extra:extraDivider:backgroundColor:)"
-            }
-          ]
-        },
-        {
           "name": "ActionArea.Variant",
           "kind": "enum",
           "summary": "ActionArea의 버튼 레이아웃 변형을 정의합니다.",
@@ -307,7 +294,7 @@
         },
         {
           "name": "modalActionArea(_:)",
-          "signature": "func modalActionArea(ActionArea.Model?) -> BottomSheet",
+          "signature": "func modalActionArea((() -> ActionArea)?) -> BottomSheet",
           "summary": "바텀 시트 하단에 액션 영역을 설정합니다.",
           "kind": "method"
         },
@@ -1948,7 +1935,7 @@
         },
         {
           "name": "modalActionArea(_:)",
-          "signature": "func modalActionArea(ActionArea.Model?) -> Popup",
+          "signature": "func modalActionArea((() -> ActionArea)?) -> Popup",
           "summary": "팝업 모달 하단에 액션 영역을 설정합니다.",
           "kind": "method"
         },

@@ -93,7 +93,7 @@ YourView()
 </details>
 <details>
 
-<summary>``func modalActionArea(ActionArea.Model?) -> Popup``</summary>
+<summary>``func modalActionArea((() -> ActionArea)?) -> Popup``</summary>
 
 
 팝업 모달 하단에 액션 영역을 설정합니다.
@@ -101,7 +101,7 @@ YourView()
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `actionAreaModel` | 액션 영역 모델 |
+  | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저 |
 - **Return Value**
 
   수정된 팝업 모달 뷰
@@ -177,7 +177,7 @@ YourView()
 
 <details>
 
-<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, actionAreaModel: ActionArea.Model?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, actionArea: (() -> ActionArea)?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
 
 
 팝업 모달을 표시합니다.
@@ -188,7 +188,7 @@ YourView()
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용 |
-  | `actionAreaModel` | 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**
