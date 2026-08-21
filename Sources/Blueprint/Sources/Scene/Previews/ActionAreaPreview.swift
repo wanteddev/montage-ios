@@ -41,12 +41,15 @@ struct ActionAreaPreview: View {
         }
     }
 
-    @State var variantIndex: Int = 0
+    @State private var variantIndex: Int = 0
     @State private var caption = false
     @State private var extra = false
     @State private var extraDivider = true
     @State private var gradientIndex = 0
     @State private var transparency = false
+    @State private var customBackgroundColor = false
+    @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceAccentVioletOpaque)
+    @State private var captionIcon = false
     @State private var mainToastModel: Toast.Model?
     @State private var subToastModel: Toast.Model?
     @State private var alternativeToastModel: Toast.Model?
@@ -131,6 +134,9 @@ struct ActionAreaPreview: View {
 
     @State private var scrollStatus: Montage.ScrollView.ScrollStatus = .init()
 
+    /// `PreviewLayout`이 미리보기 영역에 주는 좌우 여백(`.padding(.horizontal)` 기본값).
+    private let previewInset: CGFloat = 16
+
     var body: some View {
         PreviewLayout(mode: .upsideDown) {
             ScrollView(scrollStatus: $scrollStatus) {
@@ -139,19 +145,28 @@ struct ActionAreaPreview: View {
                         TextField(text: .constant("Item \($0)"))
                     }
                 }
+                // 아래에서 미리보기 전체를 화면 폭까지 넓히므로, 항목 자체의 좌우 여백은 여기서 되돌린다.
+                // 하단 20은 ActionArea 그래디언트가 자기 경계 위로 덮는 만큼(offset -20)을 비워 준다.
+                .padding(.horizontal, previewInset)
+                .padding(.bottom, 20)
             }
             .actionArea(
                 variant: currentVariant,
                 backgroundTransparency: gradientIndex == 0 ? scrollStatus.scrolledToMax : transparency,
                 caption: caption ? "caption" : nil,
+                captionIcon: captionIcon ? .circleInfo : nil,
                 extra: {
                     if extra {
                         Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
                             .frame(height: 50)
                     }
                 },
-                extraDivider: extraDivider
+                extraDivider: extraDivider,
+                backgroundColor: customBackgroundColor ? backgroundColor : nil
             )
+            // PreviewLayout이 미리보기에 좌우 여백을 주는데, ActionArea의 배경·그래디언트는 화면 폭을
+            // 꽉 채워야 하므로 그만큼 되돌린다. (공용 컨테이너를 고치지 않고 이 프리뷰에서만 처리)
+            .padding(.horizontal, -previewInset)
         } options: {
             MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
                 ForEach(VariantKind.allCases.indices, id: \.self) { v in
@@ -162,25 +177,44 @@ struct ActionAreaPreview: View {
                     }
                 }
             }
-            HStack {
-                if VariantKind.allCases[variantIndex].isStrongOrNeutral {
+            // 토글 4개를 한 줄에 두면 라벨이 줄바꿈되므로 caption 쌍과 extra 쌍을 나눈다.
+            if VariantKind.allCases[variantIndex].isStrongOrNeutral {
+                HStack {
                     ToggleOption("caption", isOn: $caption)
+                    if caption {
+                        ToggleOption("captionIcon", isOn: $captionIcon)
+                    }
+                    Spacer(minLength: 0)
                 }
+            }
+            HStack {
                 ToggleOption("extra", isOn: $extra)
                 if extra {
                     ToggleOption("extraDivider", isOn: $extraDivider)
                 }
+                Spacer(minLength: 0)
             }
             SegmentedIndexRow("background Transparency", index: $gradientIndex, labels: ["Scroll-synced", "Manually-controlled"])
             if gradientIndex == 1 {
                 ToggleOptionRow("transparency", isOn: $transparency)
+            }
+            ToggleOptionRow("backgroundColor", isOn: $customBackgroundColor)
+            if customBackgroundColor {
+                ColorPickerOptionRow("color", selection: $backgroundColor)
             }
         }
         .toast($mainToastModel)
         .toast($subToastModel)
         .toast($alternativeToastModel)
         .onChange(of: variantIndex) { _ in
-            caption = false
+            // 캡션을 지원하지 않는 variant로 바뀔 때만 끈다. 지원 variant끼리 이동할 때
+            // 초기화하면 켜 둔 캡션이 사라진다.
+            if !VariantKind.allCases[variantIndex].isStrongOrNeutral {
+                caption = false
+            }
+        }
+        .onChange(of: caption) { _ in
+            captionIcon = false
         }
         .onChange(of: extra) { _ in
             extraDivider = true

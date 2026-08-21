@@ -62,14 +62,15 @@ public struct ActionArea: View, KeyboardReadable {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
                 extra()
-                    .padding([.top, .horizontal], 20)
-                    .padding(.bottom, 24)
+                    .padding(.top, 20)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 20)
                     .background(backgroundColor)
                     .ifEmptyView { isExtraEmpty = $0 }
 
                 if !isExtraEmpty && extraDivider {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralSecondary))
+                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralTertiary))
                         .frame(height: 1)
                 }
             }
@@ -114,8 +115,10 @@ public struct ActionArea: View, KeyboardReadable {
     
     private var transparentBackground = false
     private var caption: String?
+    private var captionIcon: Icon?
     private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
+    private var customBackgroundColor: SwiftUI.Color?
 
     /// 배경을 투명하게 설정합니다.
     ///
@@ -131,11 +134,21 @@ public struct ActionArea: View, KeyboardReadable {
 
     /// 버튼 위에 표시할 캡션 텍스트를 설정합니다.
     ///
-    /// - Parameter caption: 표시할 캡션 텍스트
+    /// `icon`을 지정하면 캡션 텍스트 앞에 16pt 아이콘을 함께 표시합니다. 아이콘 색은 캡션 텍스트와 같습니다.
+    ///
+    /// ```swift
+    /// .caption("변경 사항을 저장하시겠습니까?")                      // 텍스트만
+    /// .caption("변경 사항을 저장하시겠습니까?", icon: .circleInfo)   // 아이콘 + 텍스트
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - caption: 표시할 캡션 텍스트
+    ///   - icon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func caption(_ caption: String?) -> Self {
+    public func caption(_ caption: String?, icon: Icon? = nil) -> Self {
         var zelf = self
         zelf.caption = caption
+        zelf.captionIcon = icon
         return zelf
     }
 
@@ -149,6 +162,19 @@ public struct ActionArea: View, KeyboardReadable {
         var zelf = self
         zelf.extra = { AnyView(content()) }
         zelf.extraDivider = divider
+        return zelf
+    }
+
+    /// 배경 색상을 설정합니다.
+    ///
+    /// 지정한 색은 배경뿐 아니라 상단 sticky 그라데이션의 시작색으로도 함께 적용됩니다.
+    /// 두 색이 어긋나면 경계가 보이므로 값을 분리하지 않습니다.
+    ///
+    /// - Parameter backgroundColor: 설정할 색상. `nil`을 전달하면 기본 배경색을 사용합니다.
+    /// - Returns: 수정된 ActionArea 인스턴스
+    public func backgroundColor(_ backgroundColor: SwiftUI.Color?) -> Self {
+        var zelf = self
+        zelf.customBackgroundColor = backgroundColor
         return zelf
     }
 }
@@ -221,8 +247,10 @@ extension ActionArea {
         let variant: ActionArea.Variant
         let backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl
         let caption: String?
+        let captionIcon: Icon?
         let extra: () -> AnyView
         let extraDivider: Bool
+        let backgroundColor: SwiftUI.Color?
 
         /// ActionArea 모델을 초기화합니다.
         ///
@@ -230,16 +258,23 @@ extension ActionArea {
         ///   - variant: 버튼 레이아웃 변형
         ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
         ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
+        ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
+        ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
         public init(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
-            caption: String? = nil
+            caption: String? = nil,
+            captionIcon: Icon? = nil,
+            backgroundColor: SwiftUI.Color? = nil
         ) {
             self.variant = variant
             self.backgroundTransparencyControl = backgroundTransparencyControl
             self.caption = caption
+            self.captionIcon = captionIcon
             self.extra = { AnyView(EmptyView()) }
             self.extraDivider = true
+            self.backgroundColor = backgroundColor
         }
 
         /// ActionArea 모델을 초기화합니다.
@@ -248,23 +283,66 @@ extension ActionArea {
         ///   - variant: 버튼 레이아웃 변형
         ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
         ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
+        ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
         ///   - extra: 추가 콘텐츠를 생성하는 클로저
         ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
+        ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
         public init<V: View>(
             variant: ActionArea.Variant,
             backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
             caption: String? = nil,
+            captionIcon: Icon? = nil,
             @ViewBuilder extra: @escaping () -> V,
-            extraDivider: Bool = true
+            extraDivider: Bool = true,
+            backgroundColor: SwiftUI.Color? = nil
         ) {
             self.variant = variant
             self.backgroundTransparencyControl = backgroundTransparencyControl
             self.caption = caption
+            self.captionIcon = captionIcon
             self.extra = { AnyView(extra()) }
             self.extraDivider = extraDivider
+            self.backgroundColor = backgroundColor
         }
     }
     
+}
+
+extension ActionArea.Model {
+    /// 모델의 구성을 적용한 ``ActionArea``를 만듭니다.
+    ///
+    /// `actionArea(_:)` 모디파이어와 `TopNavigation`·`Popup`·`BottomSheet`가 이 메서드를 공유합니다.
+    /// ``ActionArea/Model``에 속성이 추가되면 이곳만 고치면 모든 소비자에 반영됩니다.
+    ///
+    /// 배경 투명도는 소비자마다 해소 방식이 달라(스크롤 컨테이너를 소유하는지 여부) 결과값을 받습니다.
+    ///
+    /// - Parameter transparentBackground: 적용할 배경 투명 여부
+    /// - Returns: 모델의 구성이 적용된 ActionArea
+    func makeActionArea(transparentBackground: Bool) -> ActionArea {
+        ActionArea(variant: variant)
+            .caption(caption, icon: captionIcon)
+            .extra(extra, divider: extraDivider)
+            .backgroundColor(backgroundColor)
+            .transparentBackground(transparentBackground)
+    }
+
+    /// ``ActionArea/BackgroundTransparencyControl``을 실제 투명 여부로 해소합니다.
+    ///
+    /// `.manual`이면 지정한 값을, `.automatic`이면 `automatic`으로 전달된 값을 사용합니다.
+    ///
+    /// - Parameter automatic: `.automatic`일 때 사용할 값. 스크롤 상태를 아는 소비자가 계산해 넘깁니다.
+    /// - Returns: 해소된 배경 투명 여부
+    func resolvedTransparentBackground(automatic: Bool) -> Bool {
+        if case .manual(let transparency) = backgroundTransparencyControl {
+            transparency
+        } else {
+            automatic
+        }
+    }
+}
+
+extension ActionArea {
     /// ActionArea의 배경 투명도를 제어하는 열거형입니다.
     public enum BackgroundTransparencyControl {
         /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
@@ -288,21 +366,35 @@ extension ActionArea {
     private var captionView: some View {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
-                Text(caption)
-                    .paragraph(variant: .label2, semantic: .foregroundNeutralTertiary)
+                HStack(spacing: 4) {
+                    if let captionIcon {
+                        Image.icon(captionIcon)
+                            .resizable()
+                            .renderingMode(.template)
+                            .frame(width: 16, height: 16)
+                            .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
+                    }
+
+                    Text(caption)
+                        .paragraph(variant: .label2, weight: .medium, semantic: .foregroundNeutralTertiary)
+                }
             }
         }
+    }
+
+    private var baseColor: SwiftUI.Color {
+        customBackgroundColor ?? .semantic(.surfaceElevatedPrimary)
     }
 
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
-                .semantic(.surfaceElevatedPrimary).opacity($0)
+                baseColor.opacity($0)
             }
     }
 
     private var backgroundColor: SwiftUI.Color {
-        .semantic(.surfaceElevatedPrimary).opacity(backgroundOpacity)
+        baseColor.opacity(backgroundOpacity)
     }
     
     private func applyTransparentBackground(_ transparentBackground: Bool, animated: Bool) {
@@ -468,16 +560,10 @@ struct ActionAreaModifier: ViewModifier {
         VStack(spacing: 0) {
             content
 
-            ActionArea(variant: model.variant)
-                .caption(model.caption)
-                .extra(model.extra, divider: model.extraDivider)
-                .modifying {
-                    if case .manual(let transparency) = model.backgroundTransparencyControl {
-                        $0.transparentBackground(transparency)
-                    } else {
-                        $0
-                    }
-                }
+            // 이 모디파이어는 스크롤 컨테이너를 소유하지 않아 `.automatic`을 해소할 신호가 없다.
+            model.makeActionArea(
+                transparentBackground: model.resolvedTransparentBackground(automatic: false)
+            )
         }
     }
 }
@@ -491,6 +577,8 @@ extension View {
     ///   - variant: ActionArea의 버튼 레이아웃 변형
     ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `false` 적용
     ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
+    ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
     /// - Returns: ActionArea가 적용된 뷰
     ///
     /// ```swift
@@ -506,14 +594,18 @@ extension View {
     public func actionArea(
         variant: ActionArea.Variant,
         backgroundTransparency: Bool = false,
-        caption: String? = nil
+        caption: String? = nil,
+        captionIcon: Icon? = nil,
+        backgroundColor: SwiftUI.Color? = nil
     ) -> some View {
         modifier(
             ActionAreaModifier(
                 model: .init(
                     variant: variant,
                     backgroundTransparencyControl: .manual(backgroundTransparency),
-                    caption: caption
+                    caption: caption,
+                    captionIcon: captionIcon,
+                    backgroundColor: backgroundColor
                 )
             )
         )
@@ -525,8 +617,10 @@ extension View {
     ///   - variant: ActionArea의 버튼 레이아웃 변형
     ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `true` 적용
     ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - captionIcon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
     ///   - extra: 추가 콘텐츠를 생성하는 클로저
     ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - backgroundColor: 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
     /// - Returns: ActionArea가 적용된 뷰
     ///
     /// ```swift
@@ -548,8 +642,10 @@ extension View {
         variant: ActionArea.Variant,
         backgroundTransparency: Bool = true,
         caption: String? = nil,
+        captionIcon: Icon? = nil,
         @ViewBuilder extra: @escaping () -> V,
-        extraDivider: Bool = true
+        extraDivider: Bool = true,
+        backgroundColor: SwiftUI.Color? = nil
     ) -> some View {
         modifier(
             ActionAreaModifier(
@@ -557,8 +653,10 @@ extension View {
                     variant: variant,
                     backgroundTransparencyControl: .manual(backgroundTransparency),
                     caption: caption,
+                    captionIcon: captionIcon,
                     extra: extra,
-                    extraDivider: extraDivider
+                    extraDivider: extraDivider,
+                    backgroundColor: backgroundColor
                 )
             )
         )

@@ -134,10 +134,11 @@ public struct BottomSheet: View {
                 }
                 
                 if let actionAreaModel {
-                    ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(scrollStatus.scrolledToMax)
-                        .caption(actionAreaModel.caption)
-                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                    actionAreaModel.makeActionArea(
+                        transparentBackground: actionAreaModel.resolvedTransparentBackground(
+                            automatic: scrollStatus.scrolledToMax
+                        )
+                    )
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                             actionAreaHeight = $0
                         })
