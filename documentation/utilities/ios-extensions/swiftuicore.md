@@ -46,7 +46,7 @@ title: SwiftUICore
 
 <details>
 
-<summary>``func actionArea(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea(variant: ActionArea.Variant, scrollReachedEnd: Bool?, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -55,7 +55,7 @@ title: SwiftUICore
   | Parameter | Description |
   | --- | --- |
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
+  | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
@@ -78,7 +78,7 @@ title: SwiftUICore
 </details>
 <details>
 
-<summary>``func actionArea<V>(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea<V>(variant: ActionArea.Variant, scrollReachedEnd: Bool?, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -87,7 +87,7 @@ title: SwiftUICore
   | Parameter | Description |
   | --- | --- |
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `true` 적용 |
+  | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `extra` | 추가 콘텐츠를 생성하는 클로저 |

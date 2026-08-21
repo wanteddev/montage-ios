@@ -112,27 +112,14 @@
           "kind": "method"
         },
         {
-          "name": "transparentBackground(_:)",
-          "signature": "func transparentBackground(Bool) -> ActionArea",
-          "summary": "배경을 투명하게 설정합니다.",
+          "name": "scrollReachedEnd(_:)",
+          "signature": "func scrollReachedEnd(Bool) -> ActionArea",
+          "summary": "스크롤이 바닥에 닿았는지를 직접 알려줍니다.",
           "kind": "method"
         }
       ],
       "staticMembers": [],
       "nestedTypes": [
-        {
-          "name": "ActionArea.BackgroundTransparencyControl",
-          "kind": "enum",
-          "summary": "ActionArea의 배경 투명도를 제어하는 열거형입니다.",
-          "cases": [
-            "automatic",
-            "manual"
-          ],
-          "caseSignatures": [
-            "automatic",
-            "manual(_:)"
-          ]
-        },
         {
           "name": "ActionArea.ButtonInfo",
           "kind": "struct",
@@ -157,10 +144,10 @@
           "summary": "ActionArea를 구성하기 위한 모델 구조체입니다.",
           "initializers": [
             {
-              "signature": "init(variant:backgroundTransparencyControl:caption:captionIcon:backgroundColor:)"
+              "signature": "init(variant:caption:captionIcon:backgroundColor:)"
             },
             {
-              "signature": "init(variant:backgroundTransparencyControl:caption:captionIcon:extra:extraDivider:backgroundColor:)"
+              "signature": "init(variant:caption:captionIcon:extra:extraDivider:backgroundColor:)"
             }
           ]
         },

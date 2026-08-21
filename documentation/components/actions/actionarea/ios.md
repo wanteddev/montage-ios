@@ -99,12 +99,12 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 ActionArea를 구성하기 위한 모델 구조체입니다.
 - **Overview**
 
-  이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다. 버튼 레이아웃, 배경 투명도, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
+  이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다. 버튼 레이아웃, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
 #### Initializers
 
 <details>
 
-<summary>``init(variant: ActionArea.Variant, backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?)``</summary>
+<summary>``init(variant: ActionArea.Variant, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?)``</summary>
 
 
 ActionArea 모델을 초기화합니다.
@@ -113,14 +113,13 @@ ActionArea 모델을 초기화합니다.
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼 레이아웃 변형 |
-  | `backgroundTransparencyControl` | 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
 </details>
 <details>
 
-<summary>``init<V>(variant: ActionArea.Variant, backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?)``</summary>
+<summary>``init<V>(variant: ActionArea.Variant, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?)``</summary>
 
 
 ActionArea 모델을 초기화합니다.
@@ -129,7 +128,6 @@ ActionArea 모델을 초기화합니다.
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼 레이아웃 변형 |
-  | `backgroundTransparencyControl` | 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용 |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `extra` | 추가 콘텐츠를 생성하는 클로저 |
@@ -227,49 +225,31 @@ ActionArea 컴포넌트를 초기화합니다.
 </details>
 <details>
 
-<summary>``func transparentBackground(Bool) -> ActionArea``</summary>
+<summary>``func scrollReachedEnd(Bool) -> ActionArea``</summary>
 
 
-배경을 투명하게 설정합니다.
+스크롤이 바닥에 닿았는지를 직접 알려줍니다.
 
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `transparentBackground` | 배경 투명 여부, 생략하면 기본값으로 `true` 적용 |
+  | `reachedEnd` | 스크롤이 끝에 닿았는지 여부. `true`면 그라데이션을 숨깁니다. |
 - **Return Value**
 
   수정된 ActionArea 인스턴스
 - **Discussion**
 
-  이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
+  [ActionArea](/documentation/montage/actionarea.md)는 상단 그라데이션으로 “아래에 가려진 콘텐츠가 있다”를 표현합니다. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 이 값이 자동으로 전달되므로 이 수정자는 필요 없습니다. `SwiftUI.ScrollView`·`List`처럼 신호를 올려주지 않는 컨테이너를 쓸 때만 사용합니다.
+
+  ```swift
+  ActionArea(variant: .strong(main: .init(text: "확인", action: {})))
+      .scrollReachedEnd(scrollProxy.isAtBottom)
+  ```
+
 </details>
 
 ### Enumerations
 
-<details>
-
-<summary>``enum BackgroundTransparencyControl``</summary>
-
-
-ActionArea의 배경 투명도를 제어하는 열거형입니다.
-#### Enumeration Cases
-
-<details>
-
-<summary>``case automatic``</summary>
-
-
-자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
-</details>
-<details>
-
-<summary>``case manual(Bool)``</summary>
-
-
-수동으로 배경 투명도를 설정합니다. true면 배경이 투명해지고, false면 배경이 표시됩니다.
-</details>
-
-</details>
 <details>
 
 <summary>``enum Variant``</summary>
@@ -329,7 +309,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 
 <details>
 
-<summary>``func actionArea(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea(variant: ActionArea.Variant, scrollReachedEnd: Bool?, caption: String?, captionIcon: Icon?, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -338,7 +318,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
   | Parameter | Description |
   | --- | --- |
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `false` 적용 |
+  | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `backgroundColor` | 배경 및 상단 그라데이션 시작 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
@@ -362,7 +342,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 
 <details>
 
-<summary>``func actionArea<V>(variant: ActionArea.Variant, backgroundTransparency: Bool, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
+<summary>``func actionArea<V>(variant: ActionArea.Variant, scrollReachedEnd: Bool?, caption: String?, captionIcon: Icon?, extra: () -> V, extraDivider: Bool, backgroundColor: SwiftUI.Color?) -> some View``</summary>
 
 
 현재 뷰에 하단 ActionArea를 적용합니다.
@@ -371,7 +351,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
   | Parameter | Description |
   | --- | --- |
   | `variant` | ActionArea의 버튼 레이아웃 변형 |
-  | `backgroundTransparency` | 배경 투명도 설정, 생략하면 기본값으로 `true` 적용 |
+  | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
   | `caption` | 캡션 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `captionIcon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
   | `extra` | 추가 콘텐츠를 생성하는 클로저 |
