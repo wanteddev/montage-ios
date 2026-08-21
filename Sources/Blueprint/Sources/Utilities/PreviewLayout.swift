@@ -44,7 +44,8 @@ import Montage
 ///
 /// // 상단 고정 바 + 하단 옵션 패널 + 헤더 닫기 버튼 (TopNavigation)
 /// PreviewLayout(mode: .pinnedTop) {
-///     content.topNavigation(variant: variant, title: title)
+///     ScreenScaffold { content }
+///         .topNavigation { TopNavigation().variant(variant).title(title) }
 /// } options: {
 ///     SegmentedIndexRow("variant", index: $variantIndex, labels: labels)
 /// } accessory: {
