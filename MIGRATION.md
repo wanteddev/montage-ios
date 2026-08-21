@@ -192,10 +192,21 @@ find . -name "*.swift" -exec sed -i '' \
 | 3.x | 4.0 |
 |---|---|
 | `.spacing(.pt02)` … `.spacing(.pt72)` | `.spacing2` … `.spacing72` |
-| `.opacity(.zero)` | `.opacity0` |
+| `.opacity(.p000)` | `.opacity0` |
+| `.opacity(.p005)` | `.opacity5` |
 | `.opacity(.p008)` | `.opacity8` |
 | `.opacity(.p012)` | `.opacity12` |
+| `.opacity(.p016)` | `.opacity16` |
+| `.opacity(.p022)` | `.opacity22` |
+| `.opacity(.p028)` | `.opacity28` |
+| `.opacity(.p032)` | `.opacity32` |
+| `.opacity(.p035)` | `.opacity35` |
 | `.opacity(.p043)` | `.opacity43` |
+| `.opacity(.p052)` | `.opacity52` |
+| `.opacity(.p061)` | `.opacity61` |
+| `.opacity(.p074)` | `.opacity74` |
+| `.opacity(.p088)` | `.opacity88` |
+| `.opacity(.p097)` | `.opacity97` |
 | `.opacity(.p100)` | `.opacity100` |
 
 `pt08` → `spacing8`처럼 **0 패딩이 사라집니다**. `spacing08`이 아닙니다.
@@ -209,7 +220,7 @@ Opacity 토큰은 `Double`로 이관됐습니다. `withAlphaComponent(0)`처럼 
 | 3.x | 4.0 | 비고 |
 |---|---|---|
 | `.disable(_:)` | `.disabled(_:)` | SwiftUI 표준 모디파이어로 흡수. 컴포넌트가 `isEnabled` 환경값을 읽습니다 |
-| `scrollStatus.scrolledToMax` | `scrollStatus.reachedEnd` | `Montage.ScrollView`의 `ScrollStatus` 프로퍼티 |
+| `scrollStatus.scrolledToMax` | `scrollStatus.reachedEnd` | `Montage.ScrollView`의 `ScrollStatus` 프로퍼티. **`release/4.0.0`에는 아직 없습니다** - `refactor/WRP-2472-2`에만 있고, 현재 릴리스에서는 `scrolledToMax`를 그대로 쓰세요 |
 
 `disable()` → `disabled()`는 이름만 바뀌는 게 아닙니다. 3.x는 컴포넌트가 스스로 `opacity`를 깔았고, 4.0은 SwiftUI `isEnabled`를 타고 색 토큰(`foregroundDisablePrimary` 등)으로 표현합니다. [시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경)을 확인해주세요.
 
@@ -349,7 +360,7 @@ FormControl { _ in
 | `.gradientColor(_:)` | `.backgroundColor(_:)` (배경과 그라데이션 시작색에 함께 적용) |
 | - | `.scrollReachedEnd(_:)` 신설 |
 
-`Montage.ScrollView`를 쓰면 스크롤 바닥 도달이 자동 전달되므로 아무것도 넘기지 않아도 3.x의 `.automatic`과 동등합니다. `SwiftUI.ScrollView`/`List`처럼 신호를 올려주지 않는 컨테이너를 쓸 때만 `actionArea(scrollReachedEnd:)`로 직접 넘기세요.
+`Montage.ScrollView`를 쓰면 스크롤 바닥 도달이 자동 전달되므로 아무것도 넘기지 않아도 3.x의 `.automatic`과 동등합니다. `SwiftUI.ScrollView`/`List`처럼 신호를 올려주지 않는 컨테이너를 쓸 때만 `actionArea(scrollReachedEnd:)`로 직접 넘기세요. **이 단락은 `refactor/WRP-2472-2` 기준입니다** - `release/4.0.0`에는 `scrollReachedEnd` 계열이 없고 `actionArea(backgroundTransparency:)`가 그 역할을 합니다.
 
 **`.manual`로 배경을 직접 투명하게 만들던 자리는 대체 수단이 없습니다.** 스크롤과 무관하게 투명 배경이 필요했다면 `backgroundColor(.clear)`로 명시하거나, 정말 그 표현이 필요한지 디자이너와 다시 확인해주세요.
 
@@ -619,7 +630,8 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
 | **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
-| **ActionArea** | 투명 배경 API 제거 → **배경이 항상 불투명**해집니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
+| **ActionArea** (`release/4.0.0`) | `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
+| **ActionArea** (`refactor/WRP-2472-2` 대기) | 투명 배경 API 제거 → **배경이 항상 불투명**해집니다. 아직 `release/4.0.0`에는 반영되지 않았습니다 |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 회사 로고가 조금 더 둥글어집니다 |
 | **FallbackView** | 상하 최소 여백 160 내장. 밖의 여백·고정 높이를 정리하지 않으면 이중 적용. 설명 타이포가 `body2` → `body2Reading`으로 행간이 늘어납니다 |
 | **입력 컴포넌트** | 라벨이 필드 위로, 에러가 필드 아래로, 카운터가 필드 아래 우측으로 나옵니다. 필드 높이와 폼 전체 높이가 달라집니다 |
