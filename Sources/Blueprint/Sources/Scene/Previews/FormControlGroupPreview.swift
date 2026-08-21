@@ -80,6 +80,7 @@ struct FormControlGroupPreview: View {
         TextArea(text: $bio)
             .resize(.fixed(min: 200, max: 300))
             .placeholder("자기소개를 입력하세요")
+            .labelPlacement(.leading)
             .label("자기소개")
     }
 }
