@@ -170,7 +170,7 @@ public struct ActionArea: View, KeyboardReadable {
     /// 지정한 색은 배경뿐 아니라 상단 sticky 그라데이션의 시작색으로도 함께 적용됩니다.
     /// 두 색이 어긋나면 경계가 보이므로 값을 분리하지 않습니다.
     ///
-    /// - Parameter backgroundColor: 설정할 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다.
+    /// - Parameter backgroundColor: 설정할 색상. `nil`을 전달하면 기본 배경색을 사용합니다.
     /// - Returns: 수정된 ActionArea 인스턴스
     public func backgroundColor(_ backgroundColor: SwiftUI.Color?) -> Self {
         var zelf = self

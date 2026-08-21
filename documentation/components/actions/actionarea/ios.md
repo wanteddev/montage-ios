@@ -176,7 +176,7 @@ ActionArea 컴포넌트를 초기화합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `backgroundColor` | 설정할 색상, 생략하면 기본값으로 `nil`을 적용하여 기본 배경색을 사용합니다. |
+  | `backgroundColor` | 설정할 색상. `nil`을 전달하면 기본 배경색을 사용합니다. |
 - **Return Value**
 
   수정된 ActionArea 인스턴스

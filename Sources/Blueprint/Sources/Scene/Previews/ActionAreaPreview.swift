@@ -207,7 +207,11 @@ struct ActionAreaPreview: View {
         .toast($subToastModel)
         .toast($alternativeToastModel)
         .onChange(of: variantIndex) { _ in
-            caption = false
+            // 캡션을 지원하지 않는 variant로 바뀔 때만 끈다. 지원 variant끼리 이동할 때
+            // 초기화하면 켜 둔 캡션이 사라진다.
+            if !VariantKind.allCases[variantIndex].isStrongOrNeutral {
+                caption = false
+            }
         }
         .onChange(of: caption) { _ in
             captionIcon = false

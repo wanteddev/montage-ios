@@ -134,10 +134,10 @@ public struct BottomSheet: View {
                 }
                 
                 if let actionAreaModel {
-                    // NOTE: 다른 소비자와 달리 backgroundTransparencyControl을 보지 않는다.
-                    // 기존 동작을 유지한 것이며, 정리는 투명도 API 리팩토링에서 함께 다룬다.
                     actionAreaModel.makeActionArea(
-                        transparentBackground: scrollStatus.scrolledToMax
+                        transparentBackground: actionAreaModel.resolvedTransparentBackground(
+                            automatic: scrollStatus.scrolledToMax
+                        )
                     )
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                             actionAreaHeight = $0
