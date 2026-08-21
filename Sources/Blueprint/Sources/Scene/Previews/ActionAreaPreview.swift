@@ -135,6 +135,9 @@ struct ActionAreaPreview: View {
     /// `PreviewLayout`이 미리보기 영역에 주는 좌우 여백(`.padding(.horizontal)` 기본값).
     private let previewInset: CGFloat = 16
 
+    /// ActionArea 버튼의 좌우 여백. 목록 항목을 버튼과 같은 선에 맞춘다.
+    private let contentInset: CGFloat = 20
+
     /// ActionArea 뒤에 깔리는 페이지 바탕색.
     private var previewBackground: SwiftUI.Color {
         customBackgroundColor ? backgroundColor : .semantic(.backgroundNeutralPrimary)
@@ -148,9 +151,10 @@ struct ActionAreaPreview: View {
                         TextField(text: .constant("Item \($0)"))
                     }
                 }
-                // 아래에서 미리보기 전체를 화면 폭까지 넓히므로, 항목 자체의 좌우 여백은 여기서 되돌린다.
+                // 아래에서 미리보기 전체를 화면 폭까지 넓히므로, 항목 자체의 좌우 여백은 여기서 준다.
+                // ActionArea 버튼과 같은 선에 맞아야 실제 화면처럼 보이므로 버튼 여백을 그대로 쓴다.
                 // 하단 20은 ActionArea 그래디언트가 자기 경계 위로 덮는 만큼(offset -20)을 비워 준다.
-                .padding(.horizontal, previewInset)
+                .padding(.horizontal, contentInset)
                 .padding(.bottom, 20)
             }
             .actionArea(scrollReachedEnd: scrollSignalIndex == 0 ? nil : manualScrollReachedEnd) {
