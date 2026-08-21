@@ -106,11 +106,11 @@ public struct Popup: View {
                 }
 
                 if let actionAreaModel {
-                    actionAreaModel.makeActionArea(
-                        transparentBackground: actionAreaModel.resolvedTransparentBackground(
-                            automatic: scrolledToBottom
+                    actionAreaModel.makeActionArea()
+                        .environment(
+                            \.actionAreaScrollReachedEnd,
+                            scrollable ? scrolledToBottom : nil
                         )
-                    )
                         .padding(.bottom, 20)
                         .onGeometryChange(
                             for: CGFloat.self, of: { $0.size.height },
@@ -250,6 +250,7 @@ public struct Popup: View {
     private var scrollable: Bool {
         popupContentHeight > viewportHeight
     }
+
 }
 
 struct PopupModifier: ViewModifier {

@@ -45,8 +45,8 @@ struct ActionAreaPreview: View {
     @State private var caption = false
     @State private var extra = false
     @State private var extraDivider = true
-    @State private var gradientIndex = 0
-    @State private var transparency = false
+    @State private var scrollSignalIndex = 0
+    @State private var manualScrollReachedEnd = false
     @State private var customBackgroundColor = false
     @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceAccentVioletOpaque)
     @State private var captionIcon = false
@@ -132,14 +132,12 @@ struct ActionAreaPreview: View {
         }
     }
 
-    @State private var scrollStatus: Montage.ScrollView.ScrollStatus = .init()
-
     /// `PreviewLayout`이 미리보기 영역에 주는 좌우 여백(`.padding(.horizontal)` 기본값).
     private let previewInset: CGFloat = 16
 
     var body: some View {
         PreviewLayout(mode: .upsideDown) {
-            ScrollView(scrollStatus: $scrollStatus) {
+            Montage.ScrollView {
                 LazyVStack {
                     ForEach(0..<30, id: \.self) {
                         TextField(text: .constant("Item \($0)"))
@@ -152,7 +150,7 @@ struct ActionAreaPreview: View {
             }
             .actionArea(
                 variant: currentVariant,
-                backgroundTransparency: gradientIndex == 0 ? scrollStatus.scrolledToMax : transparency,
+                scrollReachedEnd: scrollSignalIndex == 0 ? nil : manualScrollReachedEnd,
                 caption: caption ? "caption" : nil,
                 captionIcon: captionIcon ? .circleInfo : nil,
                 extra: {
@@ -194,9 +192,10 @@ struct ActionAreaPreview: View {
                 }
                 Spacer(minLength: 0)
             }
-            SegmentedIndexRow("background Transparency", index: $gradientIndex, labels: ["Scroll-synced", "Manually-controlled"])
-            if gradientIndex == 1 {
-                ToggleOptionRow("transparency", isOn: $transparency)
+            // Auto는 인자를 넘기지 않는 경로다. Montage.ScrollView가 하단 도달 여부를 스스로 올려 준다.
+            SegmentedIndexRow("scroll signal", index: $scrollSignalIndex, labels: ["Auto", "Manual"])
+            if scrollSignalIndex == 1 {
+                ToggleOptionRow("scrollReachedEnd", isOn: $manualScrollReachedEnd)
             }
             ToggleOptionRow("backgroundColor", isOn: $customBackgroundColor)
             if customBackgroundColor {

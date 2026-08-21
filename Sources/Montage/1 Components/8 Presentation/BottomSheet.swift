@@ -106,8 +106,7 @@ public struct BottomSheet: View {
                             .frame(width: 40, height: 5)
                     }
                 }
-                if bottomSheetContentHeight > bottomSheetMaxHeight ||
-                    (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
+                if isContentScrollable {
                     ZStack(alignment: .top) {
                         ScrollView(scrollStatus: $scrollStatus) {
                             VStack(spacing: 0) {
@@ -134,11 +133,8 @@ public struct BottomSheet: View {
                 }
                 
                 if let actionAreaModel {
-                    actionAreaModel.makeActionArea(
-                        transparentBackground: actionAreaModel.resolvedTransparentBackground(
-                            automatic: scrollStatus.scrolledToMax
-                        )
-                    )
+                    actionAreaModel.makeActionArea()
+                        .environment(\.actionAreaScrollReachedEnd, contentScrollReachedEnd)
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                             actionAreaHeight = $0
                         })
@@ -217,6 +213,18 @@ public struct BottomSheet: View {
     
     // MARK: - Private
     
+    /// 콘텐츠가 시트 높이를 넘겨 스크롤이 생기는지 여부.
+    private var isContentScrollable: Bool {
+        bottomSheetContentHeight > bottomSheetMaxHeight ||
+            (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2)
+    }
+
+    /// 콘텐츠가 스크롤될 때만 하단 도달 여부가 의미를 갖는다.
+    /// 스크롤이 없는 시트는 가려진 콘텐츠도 없으므로 `nil`을 내려 그라데이션을 끈다.
+    private var contentScrollReachedEnd: Bool? {
+        isContentScrollable ? scrollStatus.scrolledToMax : nil
+    }
+
     @ViewBuilder
     private var navigationView: some View {
         Group {

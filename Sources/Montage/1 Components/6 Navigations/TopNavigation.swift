@@ -818,11 +818,8 @@ struct TopNavigationModifier: ViewModifier {
             }
             
             if let actionAreaModel {
-                actionAreaModel.makeActionArea(
-                    transparentBackground: actionAreaModel.resolvedTransparentBackground(
-                        automatic: scrollStatus.scrolledToMax
-                    )
-                )
+                actionAreaModel.makeActionArea()
+                    .environment(\.actionAreaScrollReachedEnd, scrollStatus.scrolledToMax)
             }
         }
     }

@@ -101,6 +101,12 @@ public struct ScrollView: View {
         .onPreferenceChange(ScrollViewSizePreferenceKey.self) {
             scrollStatus.wrappedValue.scrollViewSize = $0
         }
+        // 하단 도달 여부를 위로 올려 ``ActionArea``가 그라데이션 표시를 스스로 정하게 한다.
+        // 가로 스크롤(캐러셀 등)은 하단이라는 개념이 없어 신호를 내지 않는다.
+        .preference(
+            key: ScrollReachedEndPreferenceKey.self,
+            value: axis == .vertical ? scrollStatus.wrappedValue.scrolledToMax : nil
+        )
         .if(onRefresh != nil) {
             if #available(iOS 18, *) {
             	$0.pullToRefresh(scrollYOffset: scrollStatus.contentOffset.y) {
@@ -216,4 +222,17 @@ struct OffsetPreferenceKey: PreferenceKey {
 struct ScrollViewSizePreferenceKey: PreferenceKey {
     public static var defaultValue: CGSize = .zero
     public static func reduce(value _: inout CGSize, nextValue _: () -> CGSize) {}
+}
+
+/// 세로 스크롤 컨테이너가 바닥에 닿았는지를 상위로 전달하는 키입니다.
+///
+/// `nil`은 "세로 스크롤 컨테이너가 없다"는 뜻이고, 이때 ``ActionArea``는 그라데이션을 그리지 않습니다.
+/// 스크롤 컨테이너가 여럿이면 하나라도 끝에 닿지 않은 쪽을 따른다 - 가려진 콘텐츠가 남아 있다는 뜻이기 때문이다.
+struct ScrollReachedEndPreferenceKey: PreferenceKey {
+    static let defaultValue: Bool? = nil
+
+    static func reduce(value: inout Bool?, nextValue: () -> Bool?) {
+        guard let next = nextValue() else { return }
+        value = (value ?? true) && next
+    }
 }
