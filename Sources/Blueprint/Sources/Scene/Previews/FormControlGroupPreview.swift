@@ -14,6 +14,11 @@ struct FormControlGroupPreview: View {
     @State private var email = ""
     @State private var phone = ""
     @State private var bio = ""
+    @State private var regions: [Select.Item] = [
+        Select.Item(text: "서울"),
+        Select.Item(text: "성남"),
+        Select.Item(text: "부산"),
+    ]
 
     @State private var grouped = true
     @State private var autoLabelWidth = true
@@ -46,29 +51,36 @@ struct FormControlGroupPreview: View {
         }
     }
 
-    /// 라벨 길이가 제각각인 leading FormControl 묶음. 마지막은 TextArea라 높이가 커진다.
+    /// 라벨 길이가 제각각인 leading 입력 묶음. 마지막은 TextArea라 높이가 커진다.
+    ///
+    /// 입력 컴포넌트가 `label`·`labelPlacement`를 직접 제공하므로 FormControl로 감싸지 않는다.
     @ViewBuilder
     private var fields: some View {
-        textField("이름", text: $name, placeholder: "이름")
-        textField("이메일 주소", text: $email, placeholder: "이메일")
-        textField("전화번호", text: $phone, placeholder: "전화")
-        FormControl { context in
-            TextArea(text: $bio)
-                .resize(.fixed(min: 200, max: 300))
-                .negative(context.status == .negative)
-                .placeholder("자기소개를 입력하세요")
-        }
-        .label("자기소개")
-    }
+        Montage.TextField(text: $name)
+            .placeholder("이름")
+            .labelPlacement(.leading)
+            .label("이름")
 
-    private func textField(_ label: String, text: Binding<String>, placeholder: String) -> some View {
-        FormControl { context in
-            Montage.TextField(text: text)
-                .status(context.status.textFieldStatus)
-                .placeholder(placeholder)
-        }
-        .labelPlacement(.leading)
-        .label(label)
+        Montage.TextField(text: $email)
+            .placeholder("이메일")
+            .labelPlacement(.leading)
+            .label("이메일 주소")
+
+        Montage.TextField(text: $phone)
+            .placeholder("전화")
+            .labelPlacement(.leading)
+            .label("전화번호")
+            .message("'-' 없이 숫자만 입력해 주세요.")
+
+        Select(variant: .single(), items: $regions)
+            .placeholder("지역을 선택하세요")
+            .labelPlacement(.leading)
+            .label("근무 지역", required: true)
+
+        TextArea(text: $bio)
+            .resize(.fixed(min: 200, max: 300))
+            .placeholder("자기소개를 입력하세요")
+            .label("자기소개")
     }
 }
 

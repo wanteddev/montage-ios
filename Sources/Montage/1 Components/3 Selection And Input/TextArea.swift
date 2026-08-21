@@ -245,9 +245,13 @@ public struct TextArea: View {
 
     // MARK: - Modifiers
 
-    private var size: Size = .large
+    /// 호출부가 ``size(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파값 → 기본값(`.large`) 순으로 결정된다.
+    private var explicitSize: Size?
     private var resize: Resize = .normal
-    private var negative = false
+    /// 호출부가 ``negative(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파 상태를 따른다.
+    private var explicitNegative: Bool?
+    /// ``FormControl`` 래퍼 설정. ``label(_:required:)`` 등이 채우고, ``body``가 감쌀 때 적용한다.
+    private var formControlAttributes = FormControl.Attributes()
     private var placeholder: String? = nil
     private var leadingResources: [Resource.Leading] = []
     private var trailingResources: [Resource.Trailing] = []
@@ -265,7 +269,7 @@ public struct TextArea: View {
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func size(_ size: Size) -> Self {
         var zelf = self
-        zelf.size = size
+        zelf.explicitSize = size
         return zelf
     }
 
@@ -345,7 +349,7 @@ public struct TextArea: View {
     /// - Returns: 수정된 텍스트 영역 인스턴스
     public func negative(_ negative: Bool = true) -> Self {
         var zelf = self
-        zelf.negative = negative
+        zelf.explicitNegative = negative
         return zelf
     }
 
@@ -384,6 +388,82 @@ public struct TextArea: View {
         return zelf
     }
 
+    // MARK: - FormControl Modifiers
+
+    /// 제목(라벨)을 붙이고 필수 표시(`*`) 여부를 설정합니다.
+    ///
+    /// 이 모디파이어를 쓰면 텍스트 영역이 ``FormControl``로 감싸져 라벨·메시지·액세서리가 함께 배치되고,
+    /// 라벨이 입력의 접근성 라벨로 연결됩니다.
+    ///
+    /// ```swift
+    /// TextArea(text: $bio)
+    ///     .placeholder("자기소개를 입력하세요")
+    ///     .label("자기소개")
+    ///     .message("200자 이내로 작성해 주세요.")
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - text: 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다.
+    ///   - required: 필수 입력 표시(`*`) 여부, 생략하면 기본값으로 `false` 적용
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func label(_ text: String?, required: Bool = false) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.labelText = text
+        zelf.formControlAttributes.isRequired = required
+        return zelf
+    }
+
+    /// 입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
+    ///
+    /// 메시지 색은 ``negative(_:)``에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
+    /// 메시지는 입력의 접근성 힌트로도 연결됩니다.
+    ///
+    /// - Parameter text: 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다.
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func message(_ text: String?) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.messageText = text
+        return zelf
+    }
+
+    /// 라벨 위치를 설정합니다.
+    ///
+    /// - Parameter placement: 라벨 위치, 생략하면 기본값으로 `.top` 적용
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    /// - Note: `.leading` 배치에서 라벨은 입력 전체가 아니라 **첫 줄** 중앙에 정렬됩니다.
+    public func labelPlacement(_ placement: FormControl.LabelPlacement) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.labelPlacement = placement
+        return zelf
+    }
+
+    /// leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
+    ///
+    /// 여러 입력의 라벨 열을 한꺼번에 맞추려면 각 입력에 반복하지 말고 ``FormControlGroup``을 사용하세요.
+    /// ``FormControl/LabelPlacement/top`` 배치에는 영향이 없습니다.
+    ///
+    /// - Parameter width: 라벨 열 폭(pt)
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func labelWidth(_ width: CGFloat) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.explicitLabelWidth = width
+        return zelf
+    }
+
+    /// 메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.
+    ///
+    /// 입력 **바깥** 아래에 붙는 보조 요소입니다. 입력 상자 **안쪽** 하단에 요소를 배치하려면
+    /// ``bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)``를 사용하세요.
+    ///
+    /// - Parameter accessory: 표시할 액세서리 뷰 빌더
+    /// - Returns: 수정된 텍스트 영역 인스턴스
+    public func accessory<Accessory: View>(@ViewBuilder _ accessory: () -> Accessory) -> Self {
+        let view = AnyView(accessory())
+        var zelf = self
+        zelf.formControlAttributes.accessoryView = view
+        return zelf
+    }
+
     // MARK: - Body
 
     @Environment(\.isEnabled) private var isEnabled
@@ -393,6 +473,21 @@ public struct TextArea: View {
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @FocusState private var internalFocusState
+
+    /// ``FormControl``이 전파한 크기. 슬롯 밖에서는 `nil`이다.
+    @Environment(\.formControlSize) private var inheritedSize
+    /// ``FormControl``이 전파한 상태. 슬롯 밖에서는 `nil`이다.
+    @Environment(\.formControlStatus) private var inheritedStatus
+
+    /// 실제로 적용할 사이즈. 명시값 > ``FormControl`` 전파값 > 기본값(`.large`) 순.
+    private var size: Size {
+        explicitSize ?? inheritedSize?.textAreaSize ?? .large
+    }
+
+    /// 실제로 적용할 오류 상태. 명시값 > ``FormControl`` 전파값 > 기본값(`false`) 순.
+    private var negative: Bool {
+        explicitNegative ?? inheritedStatus?.isNegative ?? false
+    }
 
     /// 최소로 보장하는 줄 수.
     private let minRows = 2
@@ -438,8 +533,22 @@ public struct TextArea: View {
     }
 
     /// 뷰의 내용과 동작을 정의합니다.
+    ///
+    /// 항상 ``FormControl``로 감싼다. 라벨·메시지 유무로 분기하면 값이 런타임에 바뀔 때
+    /// 뷰 identity가 갈려 입력 중 포커스가 풀리므로, 설정이 비어 있어도 래퍼를 유지한다.
     public var body: some View {
-        editor
+        FormControl { editor }
+            .size(formControlSize)
+            .status(negative ? .negative : .normal)
+            .applying(formControlAttributes)
+    }
+
+    /// 자신의 사이즈를 ``FormControl`` 래퍼 값으로 매핑한다. (라벨 타이포그래피 결정)
+    private var formControlSize: FormControl.Size {
+        switch size {
+        case .large: .large
+        case .medium: .medium
+        }
     }
 
     // MARK: - Private
