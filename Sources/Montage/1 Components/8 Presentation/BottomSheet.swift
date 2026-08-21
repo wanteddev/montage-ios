@@ -222,7 +222,7 @@ public struct BottomSheet: View {
     /// 콘텐츠가 스크롤될 때만 하단 도달 여부가 의미를 갖는다.
     /// 스크롤이 없는 시트는 가려진 콘텐츠도 없으므로 `nil`을 내려 그라데이션을 끈다.
     private var contentScrollReachedEnd: Bool? {
-        isContentScrollable ? scrollStatus.scrolledToMax : nil
+        isContentScrollable ? scrollStatus.reachedEnd : nil
     }
 
     @ViewBuilder

@@ -105,7 +105,7 @@ public struct ScrollView: View {
         // 가로 스크롤(캐러셀 등)은 하단이라는 개념이 없어 신호를 내지 않는다.
         .preference(
             key: ScrollReachedEndPreferenceKey.self,
-            value: axis == .vertical ? scrollStatus.wrappedValue.scrolledToMax : nil
+            value: axis == .vertical ? scrollStatus.wrappedValue.reachedEnd : nil
         )
         .if(onRefresh != nil) {
             if #available(iOS 18, *) {
@@ -189,8 +189,10 @@ public struct ScrollView: View {
             self.contentOffset = contentOffset
         }
 
-        /// 스크롤이 최대 위치에 도달했는지 여부입니다.
-        public var scrolledToMax: Bool {
+        /// 스크롤이 끝(세로는 바닥, 가로는 오른쪽 끝)에 도달했는지 여부입니다.
+        ///
+        /// ``ActionArea``의 상단 그라데이션은 이 값으로 표시 여부를 정합니다.
+        public var reachedEnd: Bool {
             // FloatingPoint 오류를 보정하기 위해 0.1을 빼줍니다.
             if axis == .vertical {
                 contentOffset.y - 0.1 <= scrollViewSize.height - contentSize.height

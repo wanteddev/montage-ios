@@ -819,7 +819,7 @@ struct TopNavigationModifier: ViewModifier {
             
             if let actionAreaModel {
                 actionAreaModel.makeActionArea()
-                    .environment(\.actionAreaScrollReachedEnd, scrollStatus.scrolledToMax)
+                    .environment(\.actionAreaScrollReachedEnd, scrollStatus.reachedEnd)
             }
         }
     }

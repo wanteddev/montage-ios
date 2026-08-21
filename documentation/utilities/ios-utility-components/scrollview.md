@@ -93,17 +93,20 @@ ScrollView(scrollStatus: $scrollStatus,
 </details>
 <details>
 
+<summary>``var reachedEnd: Bool``</summary>
+
+
+스크롤이 끝(세로는 바닥, 가로는 오른쪽 끝)에 도달했는지 여부입니다.
+- **Discussion**
+
+  [ActionArea](/documentation/montage/actionarea.md)의 상단 그라데이션은 이 값으로 표시 여부를 정합니다.
+</details>
+<details>
+
 <summary>``var scrollViewSize: CGSize``</summary>
 
 
 스크롤 뷰 크기
-</details>
-<details>
-
-<summary>``var scrolledToMax: Bool``</summary>
-
-
-스크롤이 최대 위치에 도달했는지 여부입니다.
 </details>
 
 </details>

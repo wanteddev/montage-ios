@@ -2256,15 +2256,15 @@
               "kind": "property"
             },
             {
-              "name": "scrollViewSize",
-              "signature": "var scrollViewSize: CGSize",
-              "summary": "스크롤 뷰 크기",
+              "name": "reachedEnd",
+              "signature": "var reachedEnd: Bool",
+              "summary": "스크롤이 끝(세로는 바닥, 가로는 오른쪽 끝)에 도달했는지 여부입니다.",
               "kind": "property"
             },
             {
-              "name": "scrolledToMax",
-              "signature": "var scrolledToMax: Bool",
-              "summary": "스크롤이 최대 위치에 도달했는지 여부입니다.",
+              "name": "scrollViewSize",
+              "signature": "var scrollViewSize: CGSize",
+              "summary": "스크롤 뷰 크기",
               "kind": "property"
             }
           ]
