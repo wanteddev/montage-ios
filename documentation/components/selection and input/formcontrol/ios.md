@@ -42,9 +42,9 @@ FormControl {
 .label("이름")
 ```
 
->  **Note**
+> **Note**
 >
-> Montage 입력 컴포넌트는 [label(_:required:)](/documentation/montage/textfield/label(_:required:).md) 등 같은 이름의 모디파이어를 직접 제공하므로, 단일 입력을 감쌀 때는 FormControl을 명시하지 않고 입력에 바로 붙이는 쪽이 간결합니다. FormControl을 직접 쓰는 경우는 앱에서 만든 커스텀 입력을 감쌀 때입니다.
+> Montage 입력 컴포넌트는 [label(_:required:)](/documentation/montage/textfield/label(_:required:).md) 등 같은 이름의 모디파이어를 직접 제공합니다. 단일 입력을 감쌀 때는 FormControl을 명시하지 않고 입력에 바로 붙이는 쪽이 간결하지만, 위 예제처럼 FormControl로 직접 감싸는 구성도 그대로 지원됩니다. 앱에서 만든 커스텀 입력을 감쌀 때나 입력 종류가 런타임에 바뀌어 래퍼 설정을 한곳에 모아 두고 싶을 때는 FormControl을 직접 쓰세요.
 
 ## Topics
 
@@ -92,6 +92,7 @@ FormControl {
   | Parameter | Description |
   | --- | --- |
   | `input` | 감쌀 입력 컴포넌트를 반환하는 뷰 빌더 |
+
 - **Discussion**
 
   FormControl의 [size(_:)](/documentation/montage/formcontrol/size(_:).md)·[status(_:)](/documentation/montage/formcontrol/status(_:).md)는 슬롯 안의 Montage 입력 컴포넌트에 자동으로 전파되므로 호출부에서 다시 넘길 필요가 없습니다.
@@ -104,6 +105,7 @@ FormControl {
 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)를 전달받는 슬롯으로 FormControl을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `input` | 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)를 받아 감쌀 입력 컴포넌트를 반환하는 뷰 빌더 |

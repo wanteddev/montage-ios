@@ -137,9 +137,11 @@ Select 컴포넌트 초기화
 메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `accessory` | 표시할 액세서리 뷰 빌더 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -155,10 +157,12 @@ Select 컴포넌트 초기화
 제목(라벨)을 붙이고 필수 표시(`*`) 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다. |
   | `required` | 필수 입력 표시(`*`) 여부, 생략하면 기본값으로 `false` 적용 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -172,7 +176,7 @@ Select 컴포넌트 초기화
       .label("근무 지역", required: true)
   ```
 
-  >  **Note**
+  > **Note**
   >
   > Select는 자신의 접근성 라벨을 placeholder로 정의하므로, 라벨을 붙이면 그 값이 우선합니다.
 
@@ -185,9 +189,11 @@ Select 컴포넌트 초기화
 라벨 위치를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placement` | 라벨 위치, 생략하면 기본값으로 `.top` 적용 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -200,9 +206,11 @@ Select 컴포넌트 초기화
 leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `width` | 라벨 열 폭(pt) |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -252,9 +260,11 @@ leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
 입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다. |
+
 - **Return Value**
 
   수정된 Select 인스턴스
