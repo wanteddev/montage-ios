@@ -122,7 +122,7 @@
 | `.accentBackgroundPink` | `.surfaceAccentPinkOpaque` |
 | `.accentBackgroundRedOrange` | **대응 없음** (아래 참고) |
 
-> `background`는 화면 바탕(Primary·Secondary) 두 종만 남고, 나머지는 전부 `surface`로 넘어갔습니다.
+> `background`는 화면 바탕(Primary·Secondary) 두 종만 남았습니다. 나머지는 면 토큰이면 `surface`로, 투명 레이어인 `backgroundTransparent*`는 `effect`로 갈라졌습니다 (`backgroundTransparent` → `effectTransparentPrimary`, `backgroundTransparentAlternative` → `effectTransparentSecondary`). 값은 그대로입니다.
 >
 > `accentBackground{색}`은 기본이 **불투명(`Opaque`)** 대응입니다. 반투명 위에 겹쳐 쓰던 자리라면 접미사 없는 `.surfaceAccent{색}`을 쓰세요.
 >
