@@ -549,6 +549,39 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
+<summary>``func reportsScrollReachedEnd(Bool) -> some View``</summary>
+
+
+스크롤이 바닥에 닿았는지를 스스로 재서 하위 [ActionArea](/documentation/montage/actionarea.md)에 전달합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isEnabled` | 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용 |
+- **Return Value**
+
+  하단 도달 신호를 올리는 뷰
+- **Discussion**
+
+  [ScrollView](/documentation/montage/scrollview.md)는 이 신호를 자동으로 올리므로 이 수정자가 필요 없습니다. 신호를 올려주지 않는 `SwiftUI.ScrollView`·`List`에만 붙입니다.
+
+  ```swift
+  List {
+      ForEach(items) { row($0) }
+  }
+  .reportsScrollReachedEnd()
+  .actionArea {
+      ActionArea(variant: .neutral(main: .init(text: "저장", action: save)))
+  }
+  ```
+
+  >  **Important**
+  >
+  > iOS 18 미만에서는 스크롤 기하를 읽을 방법이 없어 신호를 올리지 않습니다. 그 구간에서도 그라데이션이 필요하면 호출부가 직접 잰 값을 [scrollReachedEnd(_:)](/documentation/montage/actionarea/scrollreachedend(_:).md)나 `actionArea(scrollReachedEnd:_:)`로 넘기세요.
+
+</details>
+<details>
+
 <summary>``func shadow(Shadow.Level) -> some View``</summary>
 
 

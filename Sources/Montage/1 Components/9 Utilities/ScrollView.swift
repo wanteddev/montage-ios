@@ -226,6 +226,63 @@ struct ScrollViewSizePreferenceKey: PreferenceKey {
     public static func reduce(value _: inout CGSize, nextValue _: () -> CGSize) {}
 }
 
+// MARK: - Scroll Reached End Reporter
+
+public extension View {
+    /// 스크롤이 바닥에 닿았는지를 스스로 재서 하위 ``ActionArea``에 전달합니다.
+    ///
+    /// ``Montage/ScrollView``는 이 신호를 자동으로 올리므로 이 수정자가 필요 없습니다.
+    /// 신호를 올려주지 않는 `SwiftUI.ScrollView`·`List`에만 붙입니다.
+    ///
+    /// ```swift
+    /// List {
+    ///     ForEach(items) { row($0) }
+    /// }
+    /// .reportsScrollReachedEnd()
+    /// .actionArea {
+    ///     ActionArea(variant: .neutral(main: .init(text: "저장", action: save)))
+    /// }
+    /// ```
+    ///
+    /// - Parameter isEnabled: 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 하단 도달 신호를 올리는 뷰
+    ///
+    /// - Important: iOS 18 미만에서는 스크롤 기하를 읽을 방법이 없어 신호를 올리지 않습니다.
+    ///   그 구간에서도 그라데이션이 필요하면 호출부가 직접 잰 값을
+    ///   ``ActionArea/scrollReachedEnd(_:)``나 `actionArea(scrollReachedEnd:_:)`로 넘기세요.
+    func reportsScrollReachedEnd(_ isEnabled: Bool = true) -> some View {
+        modifier(ScrollReachedEndReporter(isEnabled: isEnabled))
+    }
+}
+
+/// 스크롤 기하를 읽어 하단 도달 여부를 preference로 올리는 수정자입니다.
+private struct ScrollReachedEndReporter: ViewModifier {
+    /// 소수점 오차와 1pt 미만의 어긋남을 바닥으로 본다.
+    private static let tolerance: CGFloat = 1
+
+    let isEnabled: Bool
+
+    @State private var reachedEnd: Bool?
+
+    func body(content: Content) -> some View {
+        content
+            .modifying { view in
+                if #available(iOS 18, *), isEnabled {
+                    view.onScrollGeometryChange(for: Bool.self) { geometry in
+                        let visibleBottom = geometry.contentOffset.y + geometry.containerSize.height
+                        let contentBottom = geometry.contentSize.height + geometry.contentInsets.bottom
+                        return visibleBottom >= contentBottom - Self.tolerance
+                    } action: { _, newValue in
+                        reachedEnd = newValue
+                    }
+                } else {
+                    view
+                }
+            }
+            .preference(key: ScrollReachedEndPreferenceKey.self, value: reachedEnd)
+    }
+}
+
 /// 세로 스크롤 컨테이너가 바닥에 닿았는지를 상위로 전달하는 키입니다.
 ///
 /// `nil`은 "세로 스크롤 컨테이너가 없다"는 뜻이고, 이때 ``ActionArea``는 그라데이션을 그리지 않습니다.
