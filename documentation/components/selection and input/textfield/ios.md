@@ -155,10 +155,31 @@ TextField(text: $inputText)
 
 
 뷰의 내용과 동작을 정의합니다.
+- **Discussion**
+
+  항상 [FormControl](/documentation/montage/formcontrol.md)로 감싼다. 라벨·메시지 유무로 분기하면 값이 런타임에 바뀔 때 뷰 identity가 갈려 입력 중 포커스가 풀리므로, 설정이 비어 있어도 래퍼를 유지한다.
 </details>
 
 ### Instance Methods
 
+<details>
+
+<summary>``func accessory<Accessory>(() -> Accessory) -> TextField``</summary>
+
+
+메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `accessory` | 표시할 액세서리 뷰 빌더 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  글자 수 카운트, 타이머 등 입력 아래에 붙는 보조 요소를 자유롭게 구성할 수 있습니다. 스타일(타이포그래피·색)은 호출부에서 지정합니다.
+</details>
 <details>
 
 <summary>``func autocorrectionDisabled(Bool) -> TextField``</summary>
@@ -211,6 +232,66 @@ TextField(text: $inputText)
 </details>
 <details>
 
+<summary>``func label(String?, required: Bool) -> TextField``</summary>
+
+
+제목(라벨)을 붙이고 필수 표시(`*`) 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다. |
+  | `required` | 필수 입력 표시(`*`) 여부, 생략하면 기본값으로 `false` 적용 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  이 모디파이어를 쓰면 텍스트 필드가 [FormControl](/documentation/montage/formcontrol.md)로 감싸져 라벨·메시지·액세서리가 함께 배치되고, 라벨이 입력의 접근성 라벨로 연결됩니다. [FormControl](/documentation/montage/formcontrol.md)을 직접 조합하는 것과 결과가 같습니다.
+
+  ```swift
+  TextField(text: $email)
+      .placeholder("이메일을 입력하세요")
+      .label("이메일", required: true)
+      .message("회사 이메일을 입력해 주세요.")
+  ```
+
+</details>
+<details>
+
+<summary>``func labelPlacement(FormControl.LabelPlacement) -> TextField``</summary>
+
+
+라벨 위치를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `placement` | 라벨 위치, 생략하면 기본값으로 `.top` 적용 |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+</details>
+<details>
+
+<summary>``func labelWidth(CGFloat) -> TextField``</summary>
+
+
+leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `width` | 라벨 열 폭(pt) |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  여러 입력의 라벨 열을 한꺼번에 맞추려면 각 입력에 반복하지 말고 [FormControlGroup](/documentation/montage/formcontrolgroup.md)을 사용하세요. [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치에는 영향이 없습니다.
+</details>
+<details>
+
 <summary>``func maxLength(Int?) -> TextField``</summary>
 
 
@@ -226,6 +307,24 @@ TextField(text: $inputText)
 - **Discussion**
 
   입력/붙여넣기로 텍스트가 제한을 초과하면 앞에서부터 `limit` 글자만 남기고 잘립니다. 글자 수는 문자(grapheme cluster) 단위로 계산됩니다. `nil`이면 길이를 제한하지 않습니다.
+</details>
+<details>
+
+<summary>``func message(String?) -> TextField``</summary>
+
+
+입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다. |
+- **Return Value**
+
+  수정된 텍스트 필드 인스턴스
+- **Discussion**
+
+  메시지 색은 [status(_:)](/documentation/montage/textfield/status(_:).md)에 따라 결정되며 `.negative`에서만 강조 색으로 표시됩니다. 메시지는 입력의 접근성 힌트로도 연결됩니다.
 </details>
 <details>
 
