@@ -100,6 +100,23 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
     /// `options` 클로저가 `EmptyView`이면 옵션 섹션(과 "Options" 헤더)을 그리지 않는다.
     private var hasOptions: Bool { Options.self != EmptyView.self }
 
+    // MARK: - Modifiers
+
+    private var backgroundColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
+
+    /// 컨테이너 전체(미리보기 + 옵션 영역)의 바탕색을 바꾼다.
+    ///
+    /// 배경색을 옵션으로 바꿔 보는 미리보기(예: ActionArea)에서, 화면 바탕까지 같이 칠해
+    /// 실제 화면과 같은 조건으로 확인하기 위한 것이다. 생략하면 기본 배경색을 쓴다.
+    ///
+    /// - Parameter color: 컨테이너 바탕색
+    /// - Returns: 수정된 컨테이너
+    func backgroundColor(_ color: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.backgroundColor = color
+        return zelf
+    }
+
     var body: some View {
         modeBody
             // 체커 상태를 하위 뷰에 전달한다(``previewCheckered()``가 소비). `.navigation` 모드처럼
@@ -215,7 +232,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 }
                 .padding(.horizontal)
             }
-            .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            .background(backgroundColor)
         }
         .navigationViewStyle(.stack)
     }
@@ -231,7 +248,8 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 checkerSize: checkerSize,
                 checkerColor: .red
             )
-            .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            // 상태 바·홈 인디케이터 영역까지 같은 색으로 이어지도록 배경만 safe area 밖으로 넓힌다.
+            .background(backgroundColor.ignoresSafeArea())
     }
 
     /// 섹션 헤더: 제목 + (옵션) 추가 버튼 + 체커 토글, 그리고 체커 ON 시 크기 조절 슬라이더.

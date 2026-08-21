@@ -135,6 +135,11 @@ struct ActionAreaPreview: View {
     /// `PreviewLayout`이 미리보기 영역에 주는 좌우 여백(`.padding(.horizontal)` 기본값).
     private let previewInset: CGFloat = 16
 
+    /// ActionArea 뒤에 깔리는 페이지 바탕색.
+    private var previewBackground: SwiftUI.Color {
+        customBackgroundColor ? backgroundColor : .semantic(.backgroundNeutralPrimary)
+    }
+
     var body: some View {
         PreviewLayout(mode: .upsideDown) {
             Montage.ScrollView {
@@ -162,6 +167,7 @@ struct ActionAreaPreview: View {
             // PreviewLayout이 미리보기에 좌우 여백을 주는데, ActionArea의 배경·그래디언트는 화면 폭을
             // 꽉 채워야 하므로 그만큼 되돌린다. (공용 컨테이너를 고치지 않고 이 프리뷰에서만 처리)
             .padding(.horizontal, -previewInset)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } options: {
             MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
                 ForEach(VariantKind.allCases.indices, id: \.self) { v in
@@ -199,6 +205,10 @@ struct ActionAreaPreview: View {
                 ColorPickerOptionRow("color", selection: $backgroundColor)
             }
         }
+        // backgroundColor를 바꾸면 화면 바탕도 같이 칠한다. 그래디언트는 ActionArea 색에서 페이지
+        // 색으로 넘어가는 구간이라, 바탕이 기본색이면 커스텀 색을 넣었을 때 경계만 도드라져
+        // 실제 화면과 다르게 보인다.
+        .backgroundColor(previewBackground)
         .toast($mainToastModel)
         .toast($subToastModel)
         .toast($alternativeToastModel)
