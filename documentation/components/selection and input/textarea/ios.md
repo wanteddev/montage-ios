@@ -69,10 +69,31 @@ TextArea(text: $longText)
 
 
 뷰의 내용과 동작을 정의합니다.
+- **Discussion**
+
+  항상 [FormControl](/documentation/montage/formcontrol.md)로 감싼다. 라벨·메시지 유무로 분기하면 값이 런타임에 바뀔 때 뷰 identity가 갈려 입력 중 포커스가 풀리므로, 설정이 비어 있어도 래퍼를 유지한다.
 </details>
 
 ### Instance Methods
 
+<details>
+
+<summary>``func accessory<Accessory>(() -> Accessory) -> TextArea``</summary>
+
+
+메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `accessory` | 표시할 액세서리 뷰 빌더 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  입력 **바깥** 아래에 붙는 보조 요소입니다. 입력 상자 **안쪽** 하단에 요소를 배치하려면 [bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)](/documentation/montage/textarea/bottomresources(leading:trailing:leadingresourcespacing:trailingresourcespacing:).md)를 사용하세요.
+</details>
 <details>
 
 <summary>``func autocorrectionDisabled(Bool) -> TextArea``</summary>
@@ -136,6 +157,71 @@ TextArea(text: $longText)
 </details>
 <details>
 
+<summary>``func label(String?, required: Bool) -> TextArea``</summary>
+
+
+제목(라벨)을 붙이고 필수 표시(`*`) 여부를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다. |
+  | `required` | 필수 입력 표시(`*`) 여부, 생략하면 기본값으로 `false` 적용 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  이 모디파이어를 쓰면 텍스트 영역이 [FormControl](/documentation/montage/formcontrol.md)로 감싸져 라벨·메시지·액세서리가 함께 배치되고, 라벨이 입력의 접근성 라벨로 연결됩니다.
+
+  ```swift
+  TextArea(text: $bio)
+      .placeholder("자기소개를 입력하세요")
+      .label("자기소개")
+      .message("200자 이내로 작성해 주세요.")
+  ```
+
+</details>
+<details>
+
+<summary>``func labelPlacement(FormControl.LabelPlacement) -> TextArea``</summary>
+
+
+라벨 위치를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `placement` | 라벨 위치, 생략하면 기본값으로 `.top` 적용 |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+  >  **Note**
+  >
+  > `.leading` 배치에서 라벨은 입력 전체가 아니라 **첫 줄** 중앙에 정렬됩니다.
+
+</details>
+<details>
+
+<summary>``func labelWidth(CGFloat) -> TextArea``</summary>
+
+
+leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `width` | 라벨 열 폭(pt) |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  여러 입력의 라벨 열을 한꺼번에 맞추려면 각 입력에 반복하지 말고 [FormControlGroup](/documentation/montage/formcontrolgroup.md)을 사용하세요. [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치에는 영향이 없습니다.
+</details>
+<details>
+
 <summary>``func maxLength(Int?) -> TextArea``</summary>
 
 
@@ -151,6 +237,24 @@ TextArea(text: $longText)
 - **Discussion**
 
   카운터 UI를 표시하지 않고 입력 길이만 제한합니다. 사후 변형이 아닌 입력 단계에서 제한하므로 UITextView의 텍스트와 UndoManager가 일관되게 유지되며, 초과 입력/붙여넣기는 허용분만 잘라서 삽입됩니다.
+</details>
+<details>
+
+<summary>``func message(String?) -> TextArea``</summary>
+
+
+입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다. |
+- **Return Value**
+
+  수정된 텍스트 영역 인스턴스
+- **Discussion**
+
+  메시지 색은 [negative(_:)](/documentation/montage/textarea/negative(_:).md)에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다. 메시지는 입력의 접근성 힌트로도 연결됩니다.
 </details>
 <details>
 

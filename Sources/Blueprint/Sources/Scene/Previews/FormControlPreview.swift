@@ -87,23 +87,19 @@ struct FormControlPreview: View {
 
     /// 옵션 상태를 반영해 구성한 FormControl. `labelWidth`는 leading 배치 + 토글 ON일 때만 적용한다.
     private var configuredControl: some View {
-        // FormControl에만 size·status를 설정하면, context로 전달되어 내부 입력 컴포넌트까지 반영된다.
-        var control = FormControl { context in
+        // FormControl에만 size·status를 설정하면 내부 입력 컴포넌트까지 자동으로 전파된다.
+        // (입력 타입이 런타임에 바뀌는 화면이라 입력별 모디파이어 대신 FormControl을 직접 조합한다)
+        var control = FormControl {
             switch inputIndex {
             case 1:
                 TextArea(text: $text)
-                    .size(context.size == .medium ? .medium : .large)
-                    .negative(context.status == .negative)
                     .maxLength(showAccessory ? limit : nil)
                     .placeholder("내용을 입력하세요")
             case 2:
                 Select(variant: .single(), items: $selectItems)
-                    .negative(context.status == .negative)
                     .placeholder("선택하세요")
             default:
                 Montage.TextField(text: $text)
-                    .size(context.size == .medium ? .medium : .large)
-                    .status(context.status.textFieldStatus)
                     .maxLength(showAccessory ? limit : nil)
                     .placeholder("이메일을 입력하세요")
             }
