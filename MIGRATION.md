@@ -327,7 +327,17 @@ FormControl { _ in
 .actionArea { ActionArea(variant: isEditing ? a : b) }
 ```
 
-> **이 항목과 아래 스펙 표는 `release/4.0.0`에 아직 반영되지 않았습니다.** 투명 배경 API 제거와 `.scrollReachedEnd(_:)`·`.backgroundColor(_:)`·`.caption(_:icon:)` 신설은 `refactor/WRP-2472-2`(`0828afe4`)에 있고, 그 브랜치가 `release/4.0.0`에 머지되면 유효해집니다. 그 전 커밋을 쓰고 있다면 `transparentBackground` 계열이 아직 살아 있으니 이 절은 건너뛰세요.
+> **이 절은 `release/4.0.0`에 절반만 반영돼 있습니다.** 아래는 `release/4.0.0`(`f45eba56`, PR #581) 기준 현황입니다.
+>
+> | 항목 | `release/4.0.0` |
+> |---|---|
+> | `.gradientColor(_:)` → `.backgroundColor(_:)` | 반영됨 |
+> | `.caption(_:icon:)` 신설 | 반영됨 |
+> | 아래 스펙 표 전체(`extra` 여백·구분선 색·캡션 weight) | 반영됨 |
+> | 투명 배경 API 제거 | **아직 아님** |
+> | `.scrollReachedEnd(_:)` 신설 | **아직 아님** |
+>
+> 투명 배경 API 제거(`transparentBackground`·`BackgroundTransparencyControl`·`actionArea(backgroundTransparency:)`)와 `.scrollReachedEnd(_:)`는 `refactor/WRP-2472-2`에만 있습니다. 두 브랜치가 분기 상태이고 그쪽에 열린 PR이 없어 머지 시점이 미정입니다. 지금 `release/4.0.0`을 쓰고 있다면 투명 배경 API는 그대로 쓸 수 있고 `scrollReachedEnd`는 없다고 보면 됩니다.
 
 투명 배경 API가 없어졌습니다. 배경은 항상 불투명하고, **상단 그라데이션만** "아래에 가려진 콘텐츠가 있다"는 신호로 켜졌다 꺼집니다(0.5초 페이드).
 
