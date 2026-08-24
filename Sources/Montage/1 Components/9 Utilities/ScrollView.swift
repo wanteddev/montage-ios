@@ -255,7 +255,7 @@ public extension View {
     /// - Parameter isEnabled: 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 하단 도달 신호를 올리는 뷰
     ///
-    /// - Important: iOS 18 미만에서는 ``SwiftUI/View/scrollContentBottomMarker(isLast:)``를
+    /// - Important: 배포 타깃이 iOS 18 미만이면 ``SwiftUI/View/scrollContentBottomMarker(isLast:)``를
     ///   마지막 요소에 함께 붙여야 합니다. 스크롤 기하를 한 번에 읽는 `onScrollGeometryChange`가
     ///   iOS 18부터라, 그 아래에서는 마지막 요소의 위치로 바닥을 가늠하기 때문입니다.
     ///   마커가 없으면 콘텐츠가 남아 있다고 보아 ``ActionArea``가 그라데이션을 계속 그립니다.
@@ -269,12 +269,15 @@ public extension View {
     /// `List`는 화면 밖 행을 만들지 않아 콘텐츠 전체 높이를 알 수 없으므로, 마지막 요소가
     /// 어디까지 내려왔는지를 직접 알려 줘야 합니다.
     ///
-    /// iOS 18 이상에서는 스크롤 기하를 직접 읽으므로 이 수정자가 아무 일도 하지 않습니다.
-    /// 버전에 따라 호출을 나누지 말고 항상 붙여 두면 됩니다.
-    ///
     /// - Parameter isLast: 이 요소가 마지막인지 여부, 생략하면 기본값으로 `true` 적용.
     ///   `false`면 아무 일도 하지 않습니다
     /// - Returns: 콘텐츠 바닥 위치를 올리는 뷰
+    ///
+    /// - Important: 배포 타깃이 iOS 18 미만일 때만 쓸 수 있습니다. iOS 18부터는
+    ///   ``SwiftUI/View/reportsScrollReachedEnd(_:)``가 스크롤 기하를 직접 읽어 마커가 필요 없고,
+    ///   붙여 둬도 행마다 `GeometryReader`를 다는 비용만 남습니다. 타깃을 18로 올리면 컴파일러가
+    ///   이 호출을 잡아 주므로 그때 지우세요.
+    @available(iOS, obsoleted: 18, message: "iOS 18부터는 reportsScrollReachedEnd()가 스크롤 기하를 직접 읽으므로 마커가 필요 없습니다.")
     func scrollContentBottomMarker(isLast: Bool = true) -> some View {
         overlay {
             if isLast {
