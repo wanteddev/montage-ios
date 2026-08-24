@@ -81,8 +81,8 @@ struct BottomSheetPreview: View {
             isFullScreenCover: isFullModal,
             needHandle: handle,
             resize: bottomSheetResizes[resizeIndex],
-            actionArea: actionArea ? actionAreaSlot : nil,
             navigation: navigation ? { navigationContent } : nil,
+            actionArea: actionArea ? actionAreaSlot : nil,
             { modalContent }
         )
         .onChange(of: isFullModal) { _ in

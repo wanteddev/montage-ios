@@ -298,7 +298,7 @@ public extension View {
     /// 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.content`에서만 붙입니다.
     ///
     /// ```swift
-    /// ScreenScaffold(scrollContainer: .content) {
+    /// ScreenScaffold(scrollContainer: .custom) {
     ///     List {
     ///         ForEach(items) { row($0) }
     ///     }

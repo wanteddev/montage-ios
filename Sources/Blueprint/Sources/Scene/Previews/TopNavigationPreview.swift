@@ -146,50 +146,46 @@ struct TopNavigationPreview: View {
     }
 
     var preview: some View {
-        ScreenScaffold {
-            VStack(alignment: .leading) {
-                ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
-                    ZStack {
-                        SwiftUI.Color.semantic(.allCases[index])
-                        Text("Item \(index)")
-                            .padding()
-                    }
-                }
-            }
-            .padding()
-        }
-        .topNavigation {
-            TopNavigation(backgroundColor: backgroundColor)
-                .variant(currentVariant)
-                .title(title)
-                .trailingContents(trailingContents)
-                .searchField(
-                    placeholder: "검색하세요",
-                    searchTerm: $term,
-                    focused: $focused,
-                    onSubmit: { print("\(term) 검색됨") }
-                )
-                .modifying {
-                    var mutated = $0
-                    if leading {
-                        mutated = mutated.leadingContent {
-                            IconButton(icon: .chevronLeft) {
-                                presentationMode.wrappedValue.dismiss()
+        ScreenScaffold(
+            navigation: {
+                TopNavigation(backgroundColor: backgroundColor)
+                    .variant(currentVariant)
+                    .title(title)
+                    .trailingContents(trailingContents)
+                    .searchField(
+                        placeholder: "검색하세요",
+                        searchTerm: $term,
+                        focused: $focused,
+                        onSubmit: { print("\(term) 검색됨") }
+                    )
+                    .modifying {
+                        var mutated = $0
+                        if leading {
+                            mutated = mutated.leadingContent {
+                                IconButton(icon: .chevronLeft) {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                                .frame(width: 24, height: 24)
                             }
-                            .frame(width: 24, height: 24)
+                        }
+                        return mutated
+                    }
+            },
+            actionArea: actionAreaSlot,
+            {
+                VStack(alignment: .leading) {
+                    ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
+                        ZStack {
+                            SwiftUI.Color.semantic(.allCases[index])
+                            Text("Item \(index)")
+                                .padding()
                         }
                     }
-                    return mutated
                 }
-        }
-        .backgroundColor(backgroundColor)
-        .modifying {
-            var mutated = $0
-            if let actionAreaSlot {
-                mutated = mutated.actionArea(actionAreaSlot)
+                .padding()
             }
-            return mutated
-        }
+        )
+        .backgroundColor(backgroundColor)
         .onChange(of: focused) { newValue in
             if isSearchVariant {
                 withAnimation(.easeInOut(duration: 0.2)) {

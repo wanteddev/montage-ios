@@ -70,18 +70,6 @@ struct PopupPreview: View {
         .popup(
             isPresented: $show,
             resize: resize,
-            actionArea: actionArea ? actionAreaSlot : nil,
-            {
-                VStack {
-                    ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
-                        HStack {
-                            Text("Item \(index)")
-                            TextField(text: .constant(""))
-                        }
-                    }
-                }
-                .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
-            },
             navigation: navigation
                 ? {
                     ModalNavigation()
@@ -117,7 +105,19 @@ struct PopupPreview: View {
                             ]
                         )
                 }
-                : nil
+                : nil,
+            actionArea: actionArea ? actionAreaSlot : nil,
+            {
+                VStack {
+                    ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
+                        HStack {
+                            Text("Item \(index)")
+                            TextField(text: .constant(""))
+                        }
+                    }
+                }
+                .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            }
         )
     }
 
