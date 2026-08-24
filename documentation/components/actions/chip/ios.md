@@ -65,12 +65,14 @@ Chip(text: "김티드")
 칩을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 칩의 외관 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `size` | 칩의 크기, 생략하면 기본값으로 `.medium` 적용 |
   | `text` | 칩에 표시할 텍스트 |
   | `handler` | 칩 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -93,9 +95,11 @@ Chip(text: "김티드")
 칩의 선택 상태를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `active` | 선택 상태 여부 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -108,9 +112,11 @@ Chip(text: "김티드")
 칩의 활성화 상태 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 활성화 상태일 때의 색상 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -123,9 +129,11 @@ Chip(text: "김티드")
 칩의 배경색을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 배경색 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -138,9 +146,11 @@ Chip(text: "김티드")
 칩의 테두리 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 테두리 색상 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -158,9 +168,11 @@ Chip(text: "김티드")
 칩의 텍스트 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 텍스트 색상 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -173,9 +185,11 @@ Chip(text: "김티드")
 텍스트 앞에 표시할 콘텐츠를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -207,9 +221,11 @@ Chip(text: "김티드")
 텍스트 뒤에 표시할 콘텐츠를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 칩 인스턴스

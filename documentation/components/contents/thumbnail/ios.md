@@ -50,10 +50,12 @@ Thumbnail(urlString: imageURL, ratio: .r1x1)
 썸네일을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `urlString` | 로드할 이미지의 URL 문자열 |
   | `ratio` | 적용할 가로세로 비율 |
+
 </details>
 
 ### Instance Properties
@@ -76,9 +78,11 @@ Thumbnail(urlString: imageURL, ratio: .r1x1)
 썸네일에 테두리를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `border` | 테두리 적용 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 Thumbnail 인스턴스
@@ -91,9 +95,11 @@ Thumbnail(urlString: imageURL, ratio: .r1x1)
 썸네일에 둥근 모서리를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `radius` | 둥근 모서리 적용 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 Thumbnail 인스턴스
@@ -106,9 +112,11 @@ Thumbnail(urlString: imageURL, ratio: .r1x1)
 썸네일의 너비를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `width` | 썸네일의 너비 |
+
 - **Return Value**
 
   수정된 Thumbnail 인스턴스

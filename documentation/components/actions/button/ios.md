@@ -49,6 +49,7 @@ Button(text: "저장")
 텍스트가 없고 아이콘만 있는 버튼을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼의 스타일, 생략하면 기본값으로 `.solid` 적용 |
@@ -56,6 +57,7 @@ Button(text: "저장")
   | `size` | 버튼의 크기, 생략하면 기본값으로 `.large` 적용 |
   | `icon` | 버튼에 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
+
 - **Discussion**
 
   ```swift
@@ -72,6 +74,7 @@ Button(text: "저장")
 버튼을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼의 스타일, 생략하면 기본값으로 `.solid` 적용 |
@@ -81,6 +84,7 @@ Button(text: "저장")
   | `leadingIcon` | 텍스트 앞에 표시할 아이콘 |
   | `trailingIcon` | 텍스트 뒤에 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
+
 - **Discussion**
 
   ```swift
@@ -110,9 +114,11 @@ Button(text: "저장")
 버튼 배경색을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `backgroundColor` | 설정할 배경색 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -134,9 +140,11 @@ Button(text: "저장")
 버튼 테두리 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `borderColor` | 설정할 테두리 색상 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -158,9 +166,11 @@ Button(text: "저장")
 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contentColor` | 설정할 색상 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -184,10 +194,12 @@ Button(text: "저장")
 
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fillHorizontal` | 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용 |
   | `fillVertical` | 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -214,9 +226,11 @@ Button(text: "저장")
 버튼이 수평으로 공간을 채우도록 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fillWidth` | 채우기 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -237,9 +251,11 @@ Button(text: "저장")
 버튼 텍스트의 폰트 변형을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fontVariant` | 설정할 폰트 변형 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -261,9 +277,11 @@ Button(text: "저장")
 버튼 텍스트의 폰트 두께를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fontWeight` | 설정할 폰트 두께 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -285,9 +303,11 @@ Button(text: "저장")
 버튼을 로딩 상태로 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `loading` | 로딩 상태 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스

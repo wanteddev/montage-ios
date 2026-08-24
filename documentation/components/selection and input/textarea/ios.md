@@ -55,10 +55,12 @@ TextArea(text: $longText)
 텍스트 영역을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 텍스트 영역의 값을 바인딩 |
   | `focus` | 텍스트 영역의 포커스 상태를 바인딩, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -81,9 +83,11 @@ TextArea(text: $longText)
 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -101,12 +105,14 @@ TextArea(text: $longText)
 텍스트 영역 하단에 표시할 UI 요소를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `leading` | 왼쪽에 표시할 UI 요소 배열 (최대 3개) |
   | `trailing` | 오른쪽에 표시할 UI 요소 배열 (최대 3개) |
   | `leadingResourceSpacing` | 왼쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용 |
   | `trailingResourceSpacing` | 오른쪽 요소 간의 간격, 생략하면 사이즈별 기본값(large 8 / medium 6) 적용 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -124,9 +130,11 @@ TextArea(text: $longText)
 입력되는 텍스트를 입력 시점에 변환할 클로저를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `transform` | 입력 조각을 변환하는 클로저, nil이면 변환하지 않음 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -142,9 +150,11 @@ TextArea(text: $longText)
 최대 글자 수를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `limit` | 최대 글자 수, nil이면 제한 없음 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -160,9 +170,11 @@ TextArea(text: $longText)
 텍스트 영역의 오류 상태를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `negative` | 오류 상태 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -178,9 +190,11 @@ TextArea(text: $longText)
 텍스트가 변경될 때마다 호출할 클로저를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `handler` | 변경된 텍스트를 전달받는 클로저 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -196,9 +210,11 @@ TextArea(text: $longText)
 텍스트 영역에 입력된 텍스트가 없을 때 표시할 플레이스홀더를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 표시할 플레이스홀더 텍스트 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -211,9 +227,11 @@ TextArea(text: $longText)
 텍스트 영역의 크기 조절 방식을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resize` | 크기 조절 방식 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -226,9 +244,11 @@ TextArea(text: $longText)
 텍스트 영역의 사이즈를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 텍스트 영역의 사이즈 |
+
 - **Return Value**
 
   수정된 텍스트 영역 인스턴스
@@ -252,10 +272,12 @@ TextArea(text: $longText)
 텍스트 영역의 최소 및 최대 높이를 지정합니다. 초과 부분은 스크롤할 수 있습니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `min` | 최소 높이 |
   | `max` | 최대 높이 |
+
 </details>
 <details>
 
@@ -302,10 +324,12 @@ Bottom Content 왼쪽에 표시할 요소입니다.
 콘텐츠 뱃지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `title` | 뱃지 텍스트 |
+
 </details>
 <details>
 
@@ -315,10 +339,12 @@ Bottom Content 왼쪽에 표시할 요소입니다.
 단순 아이콘
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용 |
+
 </details>
 <details>
 
@@ -328,11 +354,13 @@ Bottom Content 왼쪽에 표시할 요소입니다.
 아이콘 버튼(배경 없음)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 버튼 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -342,12 +370,14 @@ Bottom Content 왼쪽에 표시할 요소입니다.
 세그먼트 컨트롤(아이콘 전용). 표준 [SegmentedControl](/documentation/montage/segmentedcontrol.md)을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectedIndex` | 선택된 세그먼트 인덱스 바인딩 |
   | `icons` | 세그먼트 아이콘 배열 |
   | `accessibilityLabels` | 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용 |
   | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 - **Discussion**
 
   `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다. 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
@@ -370,9 +400,11 @@ Bottom Content 왼쪽에 표시할 요소입니다.
 목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   구성된 요소
@@ -395,11 +427,13 @@ Bottom Content 오른쪽에 표시할 요소입니다.
 텍스트 버튼(Outlined)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 버튼 색상, 생략하면 기본값으로 `.assistive` 적용 |
   | `title` | 버튼 텍스트 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -409,10 +443,12 @@ Bottom Content 오른쪽에 표시할 요소입니다.
 콘텐츠 뱃지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 뱃지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `title` | 뱃지 텍스트 |
+
 </details>
 <details>
 
@@ -422,10 +458,12 @@ Bottom Content 오른쪽에 표시할 요소입니다.
 단순 아이콘
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralQuaternary)` 적용 |
+
 </details>
 <details>
 
@@ -435,11 +473,13 @@ Bottom Content 오른쪽에 표시할 요소입니다.
 아이콘 버튼(배경 없음)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 버튼 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -449,10 +489,12 @@ Bottom Content 오른쪽에 표시할 요소입니다.
 Primary 아이콘 버튼(Solid)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 버튼 아이콘 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -462,12 +504,14 @@ Primary 아이콘 버튼(Solid)
 세그먼트 컨트롤(아이콘 전용). 표준 [SegmentedControl](/documentation/montage/segmentedcontrol.md)을 `small` 크기·`iconOnly`로 렌더링하며 정방형 아이콘만 받습니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectedIndex` | 선택된 세그먼트 인덱스 바인딩 |
   | `icons` | 세그먼트 아이콘 배열 |
   | `accessibilityLabels` | 세그먼트별 VoiceOver 라벨 배열, 생략하면 기본값으로 `[]` 적용 |
   | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 - **Discussion**
 
   `accessibilityLabels`는 각 세그먼트의 항목 제목으로 전달됩니다. 라벨을 생략하거나 개수가 부족하면 해당 세그먼트는 아이콘 이름으로 대체됩니다.
@@ -490,9 +534,11 @@ Primary 아이콘 버튼(Solid)
 목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   구성된 요소

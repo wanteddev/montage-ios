@@ -71,9 +71,11 @@ TopNavigation(
 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `action` | 버튼 액션 |
+
 </details>
 
 #### Instance Properties
@@ -121,11 +123,13 @@ TopNavigation(
 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 아이콘 버튼의 아이콘 |
   | `showPushBadge` | PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 아이콘 버튼 클릭시 동작할 액션 |
+
 </details>
 
 #### Instance Properties
@@ -168,10 +172,12 @@ TopNavigation(
 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 버튼 액션 |
+
 </details>
 
 #### Instance Properties
@@ -196,10 +202,12 @@ TopNavigation(
 TopNavigation을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollOffset` | 스크롤 오프셋 값. 생략하면 [ScreenScaffold](/documentation/montage/screenscaffold.md)가 내려 주는 값을 씁니다. 스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다 |
   | `backgroundColor` | 배경색 |
+
 </details>
 
 ### Instance Properties
@@ -222,9 +230,11 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 왼쪽(leadingContent) 영역에 표시할 뷰를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | leadingContent 영역에 표시할 뷰를 반환하는 클로저 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -240,6 +250,7 @@ TopNavigation을 초기화합니다.
 검색 필드의 속성과 동작을 설정합니다. variant가 `.search`일 때만 적용됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 검색 필드에 표시할 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
@@ -248,6 +259,7 @@ TopNavigation을 초기화합니다.
   | `onSubmit` | 검색어 제출 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onTextChange` | 검색어 텍스트 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onFocusChange` | 검색 필드 포커스 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -260,9 +272,11 @@ TopNavigation을 초기화합니다.
 텍스트 기반 타이틀을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 타이틀에 표시할 문자열 |
+
 - **Return Value**
 
   수정된 내비게이션 바 인스턴스
@@ -280,9 +294,11 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 타이틀 뷰를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 타이틀 뷰를 반환하는 클로저 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -302,9 +318,11 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contents` | Trailing 영역에 표시할 뷰들을 반환하는 클로저들 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -320,9 +338,11 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contents` | Trailing 영역에 표시할 뷰들을 반환하는 클로저 배열 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -338,9 +358,11 @@ TopNavigation을 초기화합니다.
 내비게이션 바의 스타일(Variant)을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 적용할 내비게이션 스타일 |
+
 - **Return Value**
 
   수정된 내비게이션 바 인스턴스
@@ -388,9 +410,11 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 뒤로가기 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `action` | 뒤로가기 버튼 클릭시 동작할 액션 |
+
 </details>
 <details>
 
@@ -400,10 +424,12 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 아이콘 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `action` | 아이콘 버튼 클릭시 동작할 액션 |
+
 </details>
 <details>
 
@@ -413,10 +439,12 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 텍스트 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 텍스트 버튼 클릭시 동작할 액션 |
+
 </details>
 
 </details>
@@ -448,10 +476,12 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 두 개의 Trailing 인스턴스를 비교합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `lhs` | 비교할 첫 번째 Trailing 인스턴스 |
   | `rhs` | 비교할 두 번째 Trailing 인스턴스 |
+
 - **Return Value**
 
   두 인스턴스가 같은지 여부
@@ -467,12 +497,14 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 icon 형태의 Action입니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 아이콘 버튼의 아이콘 |
   | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `showPushBadge` | PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 아이콘 클릭시 동작할 액션 |
+
 </details>
 <details>
 
@@ -482,11 +514,13 @@ icon 형태의 Action입니다.
 text 형태의 Action입니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 텍스트 버튼의 텍스트 |
   | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 텍스트 클릭시 동작할 액션 |
+
 </details>
 
 ##### Instance Methods
@@ -499,9 +533,11 @@ text 형태의 Action입니다.
 해시 값을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `hasher` | 해시 값을 생성할 해시 값 |
+
 </details>
 
 </details>

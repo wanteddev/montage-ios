@@ -45,11 +45,13 @@ IconButton(icon: .bell)
 아이콘 버튼을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: .xlarge)` 적용 |
   | `icon` | 표시할 아이콘 |
   | `handler` | 버튼 탭 시 실행할 핸들러 |
+
 </details>
 
 ### Instance Properties
@@ -72,9 +74,11 @@ IconButton(icon: .bell)
 배경 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 설정할 색상 |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -92,9 +96,11 @@ IconButton(icon: .bell)
 테두리 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 설정할 색상 |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -112,9 +118,11 @@ IconButton(icon: .bell)
 hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `value` | 인터랙션 효과 차단 여부 |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -127,9 +135,11 @@ hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동
 아이콘 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 설정할 색상 |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -142,9 +152,11 @@ hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동
 hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 인터랙션 색상(semantic 토큰) |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -157,9 +169,11 @@ hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기
 버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `value` | 패딩 값 |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -177,9 +191,11 @@ hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기
 푸시 뱃지 표시 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `value` | 푸시 뱃지 표시 여부 |
+
 - **Return Value**
 
   수정된 IconButton 인스턴스
@@ -208,9 +224,11 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 컨테이너 한 변의 크기(포인트) |
+
 </details>
 <details>
 
@@ -258,9 +276,11 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 컨테이너 한 변의 크기(포인트) |
+
 </details>
 <details>
 
@@ -297,10 +317,12 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 배경형 아이콘 버튼 - 반투명 배경을 가진 원형 아이콘
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 컨테이너 한 변의 크기(포인트). 생략하면 기본값 `32`(컨테이너 32 / 아이콘 20). `[24, 64]` 범위로 클램프되며, `32`가 아닌 값은 커스텀 사이즈 규칙으로 계산된다. |
   | `isAlternative` | 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용 |
+
 </details>
 <details>
 
@@ -310,9 +332,11 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 기본형 아이콘 버튼 - 배경 없이 아이콘만 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 아이콘 크기 (`NormalSize`) |
+
 </details>
 <details>
 
@@ -322,9 +346,11 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 아이콘 크기 (`Size`) |
+
 </details>
 <details>
 
@@ -334,9 +360,11 @@ Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 아이콘 크기 (`Size`) |
+
 </details>
 
 </details>

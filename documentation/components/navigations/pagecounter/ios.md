@@ -31,10 +31,12 @@ PageCounter(selectedPage: $currentPage, totalPages: 10)
 카운터 형태의 페이지네이션을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectedPage` | 현재 선택된 페이지 번호 (1부터 시작) |
   | `totalPages` | 전체 페이지 수 |
+
 </details>
 
 ### Instance Properties
@@ -57,9 +59,11 @@ PageCounter(selectedPage: $currentPage, totalPages: 10)
 카운터 페이지네이션의 대체 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `alternative` | 대체 스타일 적용 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 Counter 인스턴스
@@ -75,9 +79,11 @@ PageCounter(selectedPage: $currentPage, totalPages: 10)
 카운터 페이지네이션의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 적용할 카운터 크기 |
+
 - **Return Value**
 
   수정된 Counter 인스턴스

@@ -37,11 +37,13 @@ Switch(checked: true)
 스위치를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `checked` | 스위치의 초기 선택 상태 |
   | `size` | 스위치 크기. 생략하면 기본값으로 `.small` 적용 |
   | `onSelect` | 선택 상태 변경 콜백. 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties

@@ -43,9 +43,11 @@ SectionHeader(title: "카테고리") {
 섹션 헤더를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 표시할 섹션 제목 |
+
 </details>
 
 ### Instance Properties
@@ -68,9 +70,11 @@ SectionHeader(title: "카테고리") {
 헤더 타이틀 옆에 추가 콘텐츠를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 콘텐츠를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 SectionHeader 인스턴스
@@ -86,9 +90,11 @@ SectionHeader(title: "카테고리") {
 섹션 헤더의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 적용할 헤더 크기 |
+
 - **Return Value**
 
   수정된 SectionHeader 인스턴스
@@ -104,9 +110,11 @@ SectionHeader(title: "카테고리") {
 타이틀 텍스트의 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 텍스트 색상 |
+
 - **Return Value**
 
   수정된 SectionHeader 인스턴스
@@ -119,9 +127,11 @@ SectionHeader(title: "카테고리") {
 헤더의 오른쪽에 추가적인 콘텐츠를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 콘텐츠를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 SectionHeader 인스턴스

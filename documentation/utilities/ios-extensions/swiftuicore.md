@@ -20,9 +20,11 @@ title: SwiftUICore
 디자인 시스템 그림자(앰비언트 + 키)를 **analytic drop 그림자**로 적용한 `ShapeStyle`을 반환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `level` | 적용할 그림자 레벨 |
+
 - **Return Value**
 
   그림자가 적용된 `ShapeStyle`
@@ -52,10 +54,12 @@ title: SwiftUICore
 현재 뷰에 하단 ActionArea를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
   | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저 |
+
 - **Return Value**
 
   ActionArea가 적용된 뷰
@@ -87,9 +91,11 @@ title: SwiftUICore
 타이포그래피 변형에 따른 줄 높이를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
+
 - **Return Value**
 
   줄 높이가 적용된 View
@@ -112,6 +118,7 @@ View를 UIImage로 변환합니다.
 바텀 시트 모달을 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
@@ -123,6 +130,7 @@ View를 UIImage로 변환합니다.
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onDismiss` | 모달이 닫힐때 호출될 클로저 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
+
 - **Return Value**
 
   바텀 시트 모달이 적용된 뷰
@@ -138,12 +146,14 @@ View를 UIImage로 변환합니다.
 프리뷰에서 뷰 위에 로그를 출력합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `message` | 출력할 메시지 |
   | `font` | 폰트, 생략하면 기본값으로 `nil` 적용 (시스템 폰트 크기 12) |
   | `alignment` | 정렬, 생략하면 기본값으로 `.center` 적용 |
   | `drawOnPreviewOnly` | 프리뷰에서만 그릴지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   로그가 출력된 View
@@ -156,10 +166,12 @@ View를 UIImage로 변환합니다.
 프리뷰에서 뷰의 주어진 축의 크기를 측정하여 뷰 위에 출력합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `axis` | 측정할 축, 생략하면 기본값으로 `nil` 적용 (가로 및 세로 모두 측정) |
   | `drawOnPreviewOnly` | 프리뷰에서만 그릴지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   뷰 크기가 그려진 View
@@ -172,9 +184,11 @@ View를 UIImage로 변환합니다.
 뷰에서 스와이프 백 제스처를 비활성화하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `disabled` | 스와이프 백 제스처 비활성화 여부 |
+
 - **Return Value**
 
   스와이프 백 제스처가 제어된 뷰
@@ -190,11 +204,13 @@ View를 UIImage로 변환합니다.
 현재 뷰에 프레임 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `status` | 프레임 상태, 생략하면 기본값으로 `.normal` 적용 |
   | `borderRadius` | 테두리 반경, 생략하면 기본값으로 `0` 적용 |
   | `shadowLevel` | 그림자 레벨, 생략하면 기본값으로 `.xsmall` 적용 |
+
 - **Return Value**
 
   프레임 스타일이 적용된 뷰
@@ -247,9 +263,11 @@ View를 UIImage로 변환합니다.
 조건이 true일 때만 View를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `condition` | 표시 조건 |
+
 - **Return Value**
 
   조건에 따라 표시되는 View
@@ -262,11 +280,13 @@ View를 UIImage로 변환합니다.
 조건에 따라 View를 변환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `condition` | 변환 조건 |
   | `transform` | 조건이 true일 때 적용할 변환 |
   | `alternative` | 조건이 false일 때 적용할 변환 (선택적) |
+
 - **Return Value**
 
   변환된 View
@@ -279,9 +299,11 @@ View를 UIImage로 변환합니다.
 View의 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 때 액션을 수행합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `action` | 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 때 실행할 액션 클로져. 파라메터로는 View 크기가 .zero인지 여부가 전달됩니다. |
+
 - **Return Value**
 
   수정된 View
@@ -299,11 +321,13 @@ View의 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 �
 현재 뷰에 로딩 인디케이터와 함께 로딩 오버레이를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isLoading` | 로딩 상태를 제어하는 바인딩 불리언 값 |
   | `type` | 로딩 애니메이션 종류 (.wanted 또는 .circular) |
   | `dimmedColor` | 오버레이 배경색, 생략하면 기본값으로 `.clear` 적용 |
+
 - **Return Value**
 
   로딩 기능이 적용된 뷰
@@ -331,9 +355,11 @@ View의 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 �
 View를 변환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `transform` | 적용할 변환 |
+
 - **Return Value**
 
   변환된 View
@@ -346,9 +372,11 @@ View를 변환합니다.
 View를 변환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `transform` | 적용할 변환 |
+
 - **Return Value**
 
   변환된 View
@@ -361,12 +389,14 @@ View를 변환합니다.
 View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 변환 타입 |
   | `transform` | 지오메트리 변환 |
   | `dueTime` | 디바운스 시간 |
   | `action` | 변경 시 실행할 액션 |
+
 - **Return Value**
 
   디바운스된 View
@@ -379,10 +409,12 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 사용자 정의 팝오버 모디파이어를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 팝오버 표시 여부에 대한 바인딩 |
   | `content` | 팝오버 콘텐츠를 반환하는 클로저 |
+
 - **Return Value**
 
   사용자 정의 팝오버 모디파이어
@@ -395,6 +427,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 일반적인 팝오버 모디파이어를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 팝오버 표시 여부에 대한 바인딩 |
@@ -403,6 +436,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `closeButton` | 팝오버 닫기 버튼 표시 여부 |
   | `action` | 팝오버 행동 버튼 표시 여부 |
   | `subAction` | 팝오버 보조 행동 버튼 표시 여부 |
+
 - **Return Value**
 
   일반적인 팝오버 모디파이어
@@ -415,6 +449,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 팝업 모달을 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
@@ -423,6 +458,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
+
 - **Return Value**
 
   팝업 모달이 적용된 뷰
@@ -438,9 +474,11 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 프리뷰에서 크기가 변경될 때마다 콘솔에 출력합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `label` | 출력할 레이블, 생략하면 기본값으로 `"Unknown"` 적용 |
+
 - **Return Value**
 
   크기가 출력된 View
@@ -453,10 +491,12 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 프리뷰에서 값이 변경될 때마다 콘솔에 출력합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `value` | 출력할 값 |
   | `label` | 출력할 레이블, 생략하면 기본값으로 `"Unknown"` 적용 |
+
 - **Return Value**
 
   값이 출력된 View
@@ -469,10 +509,12 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 스크롤 뷰에 풀-투-리프레시(Pull-to-Refresh) 기능을 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollYOffset` | 스크롤 뷰의 Y축 오프셋 바인딩. 당김 정도를 감지하는 데 사용됩니다. |
   | `refresh` | 리프레시가 트리거될 때 실행될 비동기 클로저입니다. |
+
 - **Return Value**
 
   풀-투-리프레시 기능이, 추가된 뷰
@@ -504,6 +546,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 푸시 알림 뱃지를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용 |
@@ -514,6 +557,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `outlineBorderColor` | 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
   | `inset` | 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용 |
+
 - **Return Value**
 
   뱃지가 적용된 뷰
@@ -538,11 +582,13 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 화면에 View의 frame을 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 표시 색상, 생략하면 기본값으로 `blue` 적용 |
   | `fill` | 배경 채우기 여부, 생략하면 기본값으로 `false` 적용 |
   | `drawOnPreviewOnly` | 프리뷰에서만 그릴지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   인식된 View
@@ -555,9 +601,11 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 세로 스크롤 오프셋을 스스로 재서 상위 [ScreenScaffold](/documentation/montage/screenscaffold.md)에 전달합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isEnabled` | 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   스크롤 오프셋을 올리는 뷰
@@ -588,9 +636,11 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 스크롤이 바닥에 닿았는지를 스스로 재서 하위 [ActionArea](/documentation/montage/actionarea.md)에 전달합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isEnabled` | 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   하단 도달 신호를 올리는 뷰
@@ -621,9 +671,11 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 그림자를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `level` | 적용할 그림자 레벨 |
+
 - **Return Value**
 
   그림자가 적용된 뷰
@@ -654,6 +706,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
@@ -661,6 +714,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `color` | 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.surfaceNeutralSecondary) 사용) |
   | `opacity` | 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용 |
   | `size` | 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용 |
+
 - **Return Value**
 
   스켈레톤 기능이 적용된 뷰
@@ -673,10 +727,12 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 커스텀 스켈레톤 로딩 UI를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
   | `skeletonView` | 커스텀 스켈레톤 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   스켈레톤 기능이 적용된 뷰
@@ -689,12 +745,14 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 SnackBar를 표시하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `model` | SnackBar 모델을 바인딩합니다. nil이 아닌 값이 설정되면 SnackBar가 표시됩니다. |
   | `location` | SnackBar가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: .zero)` 적용 |
   | `closeButtonEnabled` | 닫기 버튼 노출 여부 |
   | `handler` | SnackBar의 액션 버튼이 클릭되었을 때 실행될 클로저 |
+
 - **Return Value**
 
   SnackBar가 적용된 뷰
@@ -727,11 +785,13 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 Toast 메시지를 표시하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `model` | Toast 모델을 바인딩합니다. nil이 아닌 값이 설정되면 Toast가 표시됩니다. |
   | `location` | Toast가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: 0)` 적용 |
   | `duration` | Toast가 표시될 시간, 생략하면 기본값으로 `.short` 적용 |
+
 - **Return Value**
 
   Toast가 적용된 뷰
@@ -759,6 +819,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 툴팁의 표시 여부를 제어하는 바인딩 |
@@ -766,6 +827,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `position` | 툴팁이 표시될 위치 및 화살표 위치 |
   | `size` | 툴팁의 크기, 생략하면 기본값으로 `.medium` 적용 |
   | `message` | 툴팁에 표시될 메시지 |
+
 - **Return Value**
 
   툴팁이 적용된 뷰
@@ -778,9 +840,11 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 사용자 상호작용을 비활성화하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `disabled` | 상호작용 비활성화 여부 |
+
 - **Return Value**
 
   사용자 상호작용이 비활성화된 뷰
@@ -820,9 +884,11 @@ SwiftUI.Color를 UIColor로 변환합니다.
 Atomic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Atomic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 SwiftUI.Color 인스턴스
@@ -835,9 +901,11 @@ Atomic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 Semantic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Semantic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 SwiftUI.Color 인스턴스
@@ -858,10 +926,12 @@ Semantic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 Montage 디자인 시스템의 폰트를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 폰트 크기 |
   | `weight` | 폰트 두께 |
+
 - **Return Value**
 
   생성된 Font 인스턴스
@@ -874,10 +944,12 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 Montage 디자인 시스템의 폰트를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
+
 - **Return Value**
 
   생성된 Font 인스턴스
@@ -898,11 +970,13 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 Montage 디자인 시스템의 아이콘을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 아이콘 타입 |
   | `renderingMode` | `color`가 없을 때의 렌더링 모드 (기본 `.template`) |
   | `color` | 틴트 색. 지정하면 `renderingMode`와 무관하게 색이 적용됩니다. |
+
 - **Return Value**
 
   생성된 Image 인스턴스
@@ -927,11 +1001,13 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `color` | 색상 |
+
 - **Return Value**
 
   단락 스타일이 적용된 View
@@ -944,11 +1020,13 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `semantic` | 시맨틱 색상 |
+
 - **Return Value**
 
   단락 스타일이 적용된 View
@@ -961,11 +1039,13 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 타이포그래피 변형에 따른 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `color` | 색상 |
+
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
@@ -978,11 +1058,13 @@ Montage 디자인 시스템의 아이콘을 생성합니다.
 타이포그래피 변형에 따른 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `semantic` | 시맨틱 색상 |
+
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스

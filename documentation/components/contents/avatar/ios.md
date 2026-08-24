@@ -44,12 +44,14 @@ Avatar("https://example.com/profile.jpg", variant: .person)
 SwiftUI Image로 아바타를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `image` | 표시할 SwiftUI Image |
   | `variant` | 아바타 유형 (.person, .company, .academy) |
   | `size` | 아바타 크기, 생략하면 기본값으로 `.small` 적용 |
   | `onTap` | 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -59,12 +61,14 @@ SwiftUI Image로 아바타를 초기화합니다.
 URL 문자열로 아바타를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `imageUrl` | 표시할 이미지의 URL 문자열 |
   | `variant` | 아바타 유형 (.person, .company, .academy) |
   | `size` | 아바타 크기, 생략하면 기본값으로 `.small` 적용 |
   | `onTap` | 탭 시 실행할 액션, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -87,10 +91,12 @@ URL 문자열로 아바타를 초기화합니다.
 아바타에 테두리를 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 테두리 색상, 생략하면 기본값으로 `.semantic(.lineNeutralTertiary)` 적용 |
   | `width` | 테두리 두께, 생략하면 기본값으로 `1` 적용 |
+
 - **Return Value**
 
   수정된 아바타 인스턴스
@@ -103,9 +109,11 @@ URL 문자열로 아바타를 초기화합니다.
 이미지의 콘텐츠 모드를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contentMode` | 콘텐츠 모드, `.fit` 또는 `.fill` |
+
 - **Return Value**
 
   수정된 아바타 인스턴스
@@ -118,9 +126,11 @@ URL 문자열로 아바타를 초기화합니다.
 아바타의 모서리 반경을 커스텀 값으로 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `cornerRadius` | 모서리 반경 값 |
+
 - **Return Value**
 
   수정된 아바타 인스턴스
@@ -136,10 +146,12 @@ URL 문자열로 아바타를 초기화합니다.
 푸시 알림 표시 뱃지를 아바타에 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `pushBadge` | 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `size` | 뱃지 크기, 생략하면 아바타 크기에 따라 자동 결정 |
+
 - **Return Value**
 
   수정된 아바타 인스턴스

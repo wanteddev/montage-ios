@@ -87,9 +87,11 @@ ModalNavigation()
 내비게이션 바를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollOffset` | 스크롤 오프셋 바인딩, 생략하면 기본값으로 `.constant(0)` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -112,9 +114,11 @@ ModalNavigation()
 내비게이션 바의 배경색을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `backgroundColor` | 배경색 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -127,9 +131,11 @@ ModalNavigation()
 내비게이션 바의 배경 불투명도를 고정값으로 설정합니다. 스크롤에 따른 자동 조절을 비활성화하고 항상 일정한 불투명도를 유지합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fixedBackgroundOpacity` | 고정 배경 불투명도 (0에서 1 사이의 값) |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -142,9 +148,11 @@ ModalNavigation()
 내비게이션 바의 왼쪽 버튼 영역을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 왼쪽에 노출될 컨텐츠 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -157,9 +165,11 @@ ModalNavigation()
 바텀 시트의 핸들 영역 필요 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `needHandleArea` | 핸들 영역 필요 여부 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -187,9 +197,11 @@ ModalNavigation()
 스크롤 오프셋을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollOffset` | 스크롤 오프셋에 대한 바인딩 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -202,9 +214,11 @@ ModalNavigation()
 내비게이션 바의 타이틀을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 타이틀 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -217,9 +231,11 @@ ModalNavigation()
 내비게이션 바의 타이틀 영역을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 타이틀 영역에 표시될 콘텐츠 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -237,9 +253,11 @@ ModalNavigation()
 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contents` | 오른쪽에 노출될 컨텐츠 클로저들 (최대 3개까지 표시) |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -255,9 +273,11 @@ ModalNavigation()
 내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contents` | 오른쪽에 노출될 컨텐츠 배열 (최대 3개까지 표시) |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰
@@ -273,9 +293,11 @@ ModalNavigation()
 내비게이션 바의 스타일을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 내비게이션 바 스타일 |
+
 - **Return Value**
 
   수정된 내비게이션 바 뷰

@@ -40,9 +40,11 @@ PushBadge(variant: .dot)
 PushBadge를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 뱃지의 표시 형태 (dot, text, maxCount) |
+
 </details>
 
 ### Instance Properties
@@ -65,9 +67,11 @@ PushBadge를 초기화합니다.
 배경 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 배경 색상 |
+
 - **Return Value**
 
   배경 색상이 변경된 PushBadge
@@ -80,9 +84,11 @@ PushBadge를 초기화합니다.
 텍스트 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 텍스트 색상 |
+
 - **Return Value**
 
   텍스트 색상이 변경된 PushBadge
@@ -95,10 +101,12 @@ PushBadge를 초기화합니다.
 배경과 뱃지를 분리하는 아웃라인 보더를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `outlineBorder` | 아웃라인 보더 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `color` | 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
+
 - **Return Value**
 
   아웃라인 보더가 설정된 PushBadge
@@ -114,9 +122,11 @@ PushBadge를 초기화합니다.
 뱃지의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 뱃지 크기 |
+
 - **Return Value**
 
   크기가 변경된 PushBadge
@@ -152,9 +162,11 @@ PushBadge를 초기화합니다.
 하단 위치
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `horizontalPosition` | 수평 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 <details>
 
@@ -164,9 +176,11 @@ PushBadge를 초기화합니다.
 중앙 위치
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `horizontalPosition` | 수평 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 <details>
 
@@ -176,9 +190,11 @@ PushBadge를 초기화합니다.
 상단 위치
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `horizontalPosition` | 수평 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 
 #### Enumerations
@@ -270,10 +286,12 @@ PushBadge를 초기화합니다.
 최대치를 적용해 숫자를 표시하는 뱃지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `count` | 표시할 숫자 |
   | `max` | 표기 상한, 생략하면 기본값으로 `99` 적용. `count`가 `max`를 초과하면 `"{max}+"`로 표시 |
+
 </details>
 <details>
 
@@ -283,9 +301,11 @@ PushBadge를 초기화합니다.
 임의의 문자열을 표시하는 뱃지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 표시할 문자열 |
+
 </details>
 
 </details>
@@ -304,6 +324,7 @@ PushBadge를 초기화합니다.
 현재 뷰에 푸시 알림 뱃지를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 뱃지의 표시 형태, 생략하면 기본값으로 `.dot` 적용 |
@@ -314,6 +335,7 @@ PushBadge를 초기화합니다.
   | `outlineBorderColor` | 아웃라인 보더 색상, 생략하면 기본값으로 `.semantic(.backgroundNeutralPrimary)` 적용 |
   | `position` | 뱃지 위치, 생략하면 기본값으로 `.top(.trailing)` 적용 |
   | `inset` | 부착 위치를 대상 안쪽으로 들이는 여백, 생략하면 기본값으로 `.zero` 적용 |
+
 - **Return Value**
 
   뱃지가 적용된 뷰

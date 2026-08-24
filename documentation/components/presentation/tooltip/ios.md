@@ -103,9 +103,11 @@ Button("설정") {
 하단에 툴팁 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `arrowPosition` | 화살표의 수평 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 <details>
 
@@ -115,9 +117,11 @@ Button("설정") {
 왼쪽에 툴팁 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `arrowPosition` | 화살표의 수직 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 <details>
 
@@ -127,9 +131,11 @@ Button("설정") {
 상단에 툴팁 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `arrowPosition` | 화살표의 수평 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 <details>
 
@@ -139,9 +145,11 @@ Button("설정") {
 오른쪽에 툴팁 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `arrowPosition` | 화살표의 수직 위치, 생략하면 기본값으로 `.center` 적용 |
+
 </details>
 
 </details>
@@ -184,6 +192,7 @@ Button("설정") {
 현재 뷰에 툴팁을 표시하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 툴팁의 표시 여부를 제어하는 바인딩 |
@@ -191,6 +200,7 @@ Button("설정") {
   | `position` | 툴팁이 표시될 위치 및 화살표 위치 |
   | `size` | 툴팁의 크기, 생략하면 기본값으로 `.medium` 적용 |
   | `message` | 툴팁에 표시될 메시지 |
+
 - **Return Value**
 
   툴팁이 적용된 뷰

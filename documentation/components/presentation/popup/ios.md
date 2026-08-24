@@ -44,9 +44,11 @@ YourView()
 팝업 모달을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 모달 내에 표시할 콘텐츠를 반환하는 클로저 |
+
 </details>
 
 ### Instance Properties
@@ -69,9 +71,11 @@ YourView()
 컨텐츠의 기본 여백을 무시할지 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `ignoresEdgeInsets` | 여백 무시 여부 |
+
 - **Return Value**
 
   수정된 팝업 모달 뷰
@@ -84,9 +88,11 @@ YourView()
 팝업 모달 하단에 액션 영역을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저 |
+
 - **Return Value**
 
   수정된 팝업 모달 뷰
@@ -99,9 +105,11 @@ YourView()
 팝업 모달 상단에 내비게이션 바를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `navigation` | 내비게이션 바를 반환하는 클로저 |
+
 - **Return Value**
 
   수정된 팝업 모달 뷰
@@ -114,9 +122,11 @@ YourView()
 팝업 모달의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resize` | 팝업 모달의 크기 설정 |
+
 - **Return Value**
 
   수정된 팝업 모달 뷰
@@ -140,9 +150,11 @@ YourView()
 지정한 높이로 고정됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `height` | 높이 |
+
 </details>
 <details>
 
@@ -168,6 +180,7 @@ YourView()
 팝업 모달을 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
@@ -176,6 +189,7 @@ YourView()
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
+
 - **Return Value**
 
   팝업 모달이 적용된 뷰

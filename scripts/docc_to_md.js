@@ -99,7 +99,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
             // 파라미터 정보 추가
             const parameters = symbolJson.primaryContentSections.find(s => s.kind === 'parameters');
             if (parameters) {
-              symbolDetails += '\n- **Parameters**\n';
+              symbolDetails += '\n- **Parameters**\n\n';
               symbolDetails += '  | Parameter | Description |\n';
               symbolDetails += '  | --- | --- |\n';
               parameters.parameters.forEach(param => {
@@ -108,6 +108,7 @@ function renderTopicSection(section, references, depth = 0, mdPath = '') {
                   symbolDetails += `  | \`${param.name}\` | ${paramText} |\n`;
                 }
               });
+              symbolDetails += '\n';
             }
 
             // 리턴값 정보 추가
@@ -731,7 +732,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
         if (symbolJson.primaryContentSections) {
           const parameters = symbolJson.primaryContentSections.find((section) => section.kind === 'parameters');
           if (parameters && parameters.parameters && parameters.parameters.length > 0) {
-            symbolDetails += '\n- **Parameters**\n';
+            symbolDetails += '\n- **Parameters**\n\n';
             symbolDetails += '  | Parameter | Description |\n';
             symbolDetails += '  | --- | --- |\n';
             parameters.parameters.forEach((param) => {
@@ -740,6 +741,7 @@ function renderExtensionMemberMarkdown(ref, dataRoot, mdPath = 'documentation/ut
                 symbolDetails += `  | \`${param.name}\` | ${paramText} |\n`;
               }
             });
+            symbolDetails += '\n';
           }
 
           const isInitializer =

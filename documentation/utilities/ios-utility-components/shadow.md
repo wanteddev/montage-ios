@@ -80,9 +80,11 @@ enum Shadow
 디자인 시스템 그림자(앰비언트 + 키)를 **analytic drop 그림자**로 적용한 `ShapeStyle`을 반환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `level` | 적용할 그림자 레벨 |
+
 - **Return Value**
 
   그림자가 적용된 `ShapeStyle`
@@ -113,9 +115,11 @@ enum Shadow
 현재 뷰에 그림자를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `level` | 적용할 그림자 레벨 |
+
 - **Return Value**
 
   그림자가 적용된 뷰

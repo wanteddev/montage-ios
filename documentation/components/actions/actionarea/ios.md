@@ -61,10 +61,12 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 기본 버튼 정보를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 버튼 클릭 시 실행할 액션 |
+
 </details>
 
 #### Type Methods
@@ -77,9 +79,11 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `custom` | 커스텀 버튼 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   커스텀 뷰가 포함된 ButtonInfo 인스턴스
@@ -102,9 +106,11 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 ActionArea 컴포넌트를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 버튼 영역의 변형 스타일과 버튼 구성 |
+
 </details>
 
 ### Instance Properties
@@ -127,9 +133,11 @@ ActionArea 컴포넌트를 초기화합니다.
 배경 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `backgroundColor` | 설정할 색상. `nil`을 전달하면 기본 배경색을 사용합니다. |
+
 - **Return Value**
 
   수정된 ActionArea 인스턴스
@@ -145,10 +153,12 @@ ActionArea 컴포넌트를 초기화합니다.
 버튼 위에 표시할 캡션 텍스트를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `caption` | 표시할 캡션 텍스트 |
   | `icon` | 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다. |
+
 - **Return Value**
 
   수정된 ActionArea 인스턴스
@@ -170,10 +180,12 @@ ActionArea 컴포넌트를 초기화합니다.
 버튼 위에 표시할 추가 콘텐츠를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 추가 콘텐츠를 생성하는 클로저 |
   | `divider` | 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 ActionArea 인스턴스
@@ -186,9 +198,11 @@ ActionArea 컴포넌트를 초기화합니다.
 스크롤이 바닥에 닿았는지를 직접 알려줍니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `reachedEnd` | 스크롤이 끝에 닿았는지 여부. `true`면 그라데이션을 숨깁니다. |
+
 - **Return Value**
 
   수정된 ActionArea 인스턴스
@@ -221,9 +235,11 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 취소 버튼만 있는 간단한 레이아웃
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `main` | 주 버튼 정보 |
+
 </details>
 <details>
 
@@ -233,11 +249,13 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 중립적인 스타일의 버튼 레이아웃
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `main` | 주 버튼 정보 |
   | `sub` | 보조 버튼 정보, 생략하면 기본값으로 `nil` 적용 |
   | `alternative` | 대체 버튼 정보, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -247,11 +265,13 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 강조된 주 버튼과 보조/대체 버튼이 있는 레이아웃
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `main` | 주 버튼 정보 |
   | `sub` | 보조 버튼 정보, 생략하면 기본값으로 `nil` 적용 |
   | `alternative` | 대체 버튼 정보, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 </details>
@@ -270,10 +290,12 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
 현재 뷰에 하단 ActionArea를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollReachedEnd` | 콘텐츠 스크롤이 바닥에 닿았는지 여부. [ScrollView](/documentation/montage/scrollview.md)를 쓰면 자동으로 전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다. |
   | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저 |
+
 - **Return Value**
 
   ActionArea가 적용된 뷰

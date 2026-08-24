@@ -60,9 +60,11 @@ PlayBadge()
 대체 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `alternative` | 대체 스타일 적용 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 PlayBadge 인스턴스
@@ -78,9 +80,11 @@ PlayBadge()
 재생 배지의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 적용할 배지 크기 |
+
 - **Return Value**
 
   수정된 PlayBadge 인스턴스

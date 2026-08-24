@@ -46,11 +46,13 @@ Checkbox(state: .unchecked)
 불리언 값을 이용해 체크박스를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `checked` | 초기 선택 상태 |
   | `size` | 체크박스 크기. 생략하면 기본값으로 `.medium` 적용 |
   | `onSelect` | 선택 상태 변경 콜백. 생략하면 기본값으로 `nil` 적용 |
+
 - **Discussion**
   >  **Note**
   >
@@ -65,11 +67,13 @@ Checkbox(state: .unchecked)
 상태 값을 이용해 체크박스를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `state` | 체크박스의 초기 상태 |
   | `size` | 체크박스 크기. 생략하면 기본값으로 `.medium` 적용 |
   | `onSelect` | 상태 변경 콜백. 생략하면 기본값으로 `nil` 적용 |
+
 - **Discussion**
   >  **Note**
   >
@@ -97,9 +101,11 @@ Checkbox(state: .unchecked)
 레이블을 볼드체로 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isBold` | 볼드 적용 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 체크박스 컴포넌트
@@ -135,11 +141,13 @@ Checkbox(state: .unchecked)
 레이블의 타이포그래피 속성을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 레이블 변형, 생략하면 기본값으로 `nil` 적용 |
   | `weight` | 레이블 굵기, 생략하면 기본값으로 `nil` 적용 |
   | `color` | 레이블 색상, 생략하면 기본값으로 `nil` 적용 |
+
 - **Return Value**
 
   수정된 체크박스 컴포넌트
@@ -157,9 +165,11 @@ Checkbox(state: .unchecked)
 레이블을 더 조밀한 레이아웃으로 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `tight` | 조밀한 레이아웃 적용 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 체크박스 컴포넌트

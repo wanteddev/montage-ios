@@ -57,10 +57,12 @@ FallbackView(
 FallbackView 컴포넌트를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 강조되어 표시할 제목, 생략하면 기본값으로 `nil` 적용 |
   | `description` | 상황을 설명하는 텍스트 |
+
 - **Discussion**
 
   원하는 레이아웃을 구성하기 위해 제목을 선택적으로 제공할 수 있습니다. 설명은 필수이며, 제목과 설명 모두 최대 2줄로 표시되고 넘치는 텍스트는 말줄임 처리됩니다.
@@ -88,9 +90,11 @@ FallbackView 컴포넌트를 초기화합니다.
 하단 버튼 영역의 구성을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `buttonActionArea` | 하단 버튼 영역의 구성, `nil`을 전달하면 버튼을 표시하지 않음 |
+
 - **Return Value**
 
   수정된 FallbackView 인스턴스
@@ -103,9 +107,11 @@ FallbackView 컴포넌트를 초기화합니다.
 콘텐츠 영역의 상하 여백 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `padding` | 콘텐츠 영역의 상하 여백 크기 |
+
 - **Return Value**
 
   수정된 FallbackView 인스턴스
@@ -143,10 +149,12 @@ FallbackView 컴포넌트를 초기화합니다.
 버튼 정보를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 버튼 탭 시 실행할 액션 |
+
 </details>
 
 </details>
@@ -161,10 +169,12 @@ FallbackView 컴포넌트를 초기화합니다.
 버튼 2개를 가로로 배치합니다. 대체 버튼이 왼쪽, 주 버튼이 오른쪽에 표시됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `main` | 주 버튼 정보 |
   | `alternative` | 대체 버튼 정보 |
+
 </details>
 <details>
 
@@ -174,9 +184,11 @@ FallbackView 컴포넌트를 초기화합니다.
 버튼 1개를 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `buttonInfo` | 버튼 정보 |
+
 </details>
 <details>
 
@@ -186,10 +198,12 @@ FallbackView 컴포넌트를 초기화합니다.
 버튼 2개를 세로로 배치합니다. 주 버튼이 위, 대체 버튼이 아래에 표시됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `main` | 주 버튼 정보 |
   | `alternative` | 대체 버튼 정보 |
+
 </details>
 
 </details>

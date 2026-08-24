@@ -52,11 +52,13 @@ FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64
 컨테이너를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `labelWidth` | 라벨 열 폭을 고정할 값. 생략(`nil`)하면 내부 라벨 최댓값으로 **자동 측정**한다. |
   | `spacing` | FormControl 사이의 세로 간격. 생략하면 기본값으로 `.spacing16` 적용 |
   | `content` | 세로로 쌓을 [FormControl](/documentation/montage/formcontrol.md) 목록 |
+
 </details>
 
 ### Instance Properties

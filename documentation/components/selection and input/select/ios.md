@@ -51,12 +51,14 @@ Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.
 아이템 초기화
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 아이템 텍스트 |
   | `icon` | 아이템 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `isNegative` | 부정적 상태 여부, 생략하면 기본값으로 `false` 적용 |
   | `isSelected` | 선택 여부, 생략하면 기본값으로 `false` 적용 |
+
 </details>
 
 #### Instance Properties
@@ -102,12 +104,14 @@ Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.
 Select 컴포넌트 초기화
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `menuPresented` | 메뉴 표시 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
   | `variant` | 컴포넌트의 시각적/기능적 변형 |
   | `items` | 선택 가능한 항목 배열 (바인딩) |
   | `onTapItem` | 항목 선택 시 호출되는 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -130,9 +134,11 @@ Select 컴포넌트 초기화
 왼쪽 컨텐츠를 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 선행 콘텐츠 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -145,9 +151,11 @@ Select 컴포넌트 초기화
 메뉴의 높이 detent를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `menuResize` | 메뉴 크기 조정 방식 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -160,9 +168,11 @@ Select 컴포넌트 초기화
 negative 상태 여부를 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `negative` | 부정적 상태 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -175,9 +185,11 @@ negative 상태 여부를 조정합니다.
 선택된 항목들이 없는 경우 placeholder를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 표시할 플레이스홀더 텍스트 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -190,9 +202,11 @@ negative 상태 여부를 조정합니다.
 Select 컴포넌트의 사이즈를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 적용할 사이즈, 생략하면 기본값으로 `.large` 적용 |
+
 - **Return Value**
 
   수정된 Select 인스턴스
@@ -216,9 +230,11 @@ Select 컴포넌트의 사이즈를 설정합니다.
 사용자 정의 뷰 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 사용자 정의 뷰를 반환하는 클로저 |
+
 </details>
 <details>
 
@@ -228,9 +244,11 @@ Select 컴포넌트의 사이즈를 설정합니다.
 아이콘 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
+
 </details>
 <details>
 
@@ -240,9 +258,11 @@ Select 컴포넌트의 사이즈를 설정합니다.
 아이콘 버튼 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `iconButton` | 표시할 아이콘 버튼 |
+
 </details>
 
 </details>
@@ -337,11 +357,13 @@ Select 컴포넌트의 사이즈를 정의합니다.
 다중 선택 모드
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `render` | 선택된 항목 표시 방식, 생략하면 기본값으로 `.text` 적용 |
   | `overflow` | 선택된 항목이 여러 줄로 표시되는지 여부, 생략하면 기본값으로 `false` 적용 |
   | `menuPrimaryButtonTitle` | 확인 버튼 제목 |
+
 </details>
 <details>
 
@@ -351,10 +373,12 @@ Select 컴포넌트의 사이즈를 정의합니다.
 단일 선택 모드
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectionType` | 선택 표시 방식, 생략하면 기본값으로 `.radio` 적용 |
   | `menuPrimaryButtonTitle` | 확인 버튼 제목, 생략하면 기본값으로 `nil` 적용 (버튼 표시 안 함) |
+
 </details>
 
 </details>

@@ -58,9 +58,11 @@ YourView()
 바텀 시트 모달을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 모달 내에 표시할 콘텐츠를 반환하는 클로저 |
+
 </details>
 
 ### Instance Properties
@@ -83,9 +85,11 @@ YourView()
 컨텐츠의 기본 여백을 무시할지 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `ignoresEdgeInsets` | 여백 무시 여부 |
+
 - **Return Value**
 
   수정된 바텀 시트 뷰
@@ -98,9 +102,11 @@ YourView()
 바텀 시트 하단에 액션 영역을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저 |
+
 - **Return Value**
 
   수정된 바텀 시트 뷰
@@ -113,9 +119,11 @@ YourView()
 바텀 시트 상단에 내비게이션 바를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `navigation` | 내비게이션 바를 반환하는 클로저 |
+
 - **Return Value**
 
   수정된 바텀 시트 뷰
@@ -128,9 +136,11 @@ YourView()
 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `needHandle` | 핸들 표시 여부 |
+
 - **Return Value**
 
   수정된 바텀 시트 뷰
@@ -143,9 +153,11 @@ YourView()
 바텀 시트의 크기 조절 방식을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resize` | 크기 조절 방식 |
+
 - **Return Value**
 
   수정된 바텀 시트 뷰
@@ -176,9 +188,11 @@ YourView()
 지정한 높이로 고정됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `height` | 높이 |
+
 </details>
 <details>
 
@@ -188,9 +202,11 @@ YourView()
 화면 높이의 특정 비율로 고정됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `ratio` | 비율 (0.0 ~ 1.0) |
+
 </details>
 <details>
 
@@ -223,6 +239,7 @@ YourView()
 바텀 시트 모달을 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
@@ -234,6 +251,7 @@ YourView()
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onDismiss` | 모달이 닫힐때 호출될 클로저 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
+
 - **Return Value**
 
   바텀 시트 모달이 적용된 뷰

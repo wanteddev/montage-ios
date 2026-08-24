@@ -65,12 +65,14 @@ ScreenScaffold(scrollContainer: .custom) {
 화면 스캐폴드를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `scrollContainer` | 스크롤 컨테이너를 누가 둘지, 생략하면 기본값으로 [ScreenScaffold.ScrollContainer.builtIn](/documentation/montage/screenscaffold/scrollcontainer/builtin.md) 적용 |
   | `navigation` | 상단에 배치할 [TopNavigation](/documentation/montage/topnavigation.md)을 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `actionArea` | 하단에 배치할 [ActionArea](/documentation/montage/actionarea.md)를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 화면 본문을 만드는 클로저 |
+
 - **Discussion**
 
   스크롤 오프셋과 하단 도달 여부는 스캐폴드가 슬롯에 넣어 주므로 호출부가 넘기지 않습니다.
@@ -100,9 +102,11 @@ ScreenScaffold(scrollContainer: .custom) {
 화면 전체의 바탕색을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 바탕색, `nil`이면 칠하지 않습니다 |
+
 - **Return Value**
 
   수정된 스캐폴드

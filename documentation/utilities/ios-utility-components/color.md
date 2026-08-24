@@ -1437,9 +1437,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `traitCollection` | 색상을 해석할 UITraitCollection |
+
 - **Return Value**
 
   해석된 UIColor 인스턴스
@@ -2012,9 +2014,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `traitCollection` | 색상을 해석할 UITraitCollection |
+
 - **Return Value**
 
   해석된 UIColor 인스턴스
@@ -2036,9 +2040,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 Atomic 색상 타입에 해당하는 UIColor를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Atomic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 UIColor 인스턴스
@@ -2052,9 +2058,11 @@ Atomic 색상 타입에 해당하는 UIColor를 생성합니다.
 Semantic 색상 타입에 해당하는 UIColor를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Semantic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 UIColor 인스턴스
@@ -2076,9 +2084,11 @@ Semantic 색상 타입에 해당하는 UIColor를 생성합니다.
 Atomic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Atomic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 SwiftUI.Color 인스턴스
@@ -2092,9 +2102,11 @@ Atomic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 Semantic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Semantic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 SwiftUI.Color 인스턴스
