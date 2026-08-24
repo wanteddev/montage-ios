@@ -79,10 +79,11 @@ private extension ScreenScaffoldPreview {
 
         default:
             // List는 스크롤을 스스로 쥐므로 신호를 직접 올린다.
-            // 오프셋 수정자는 iOS 18 이상이라, 그 아래에서는 TopNavigation 배경이 불투명으로 고정된다.
             List {
                 ForEach(0..<itemCounts[itemCountIndex], id: \.self) { index in
                     ListCell(label: "Item \(index)")
+                        // 하단 도달 신호는 iOS 18 미만에서 이 마커를 근거로 삼는다.
+                        .scrollContentBottomMarker(isLast: index == itemCounts[itemCountIndex] - 1)
                 }
                 .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                 // List는 행 배경과 스크롤 배경을 각각 깐다. 둘 다 걷어내지 않으면 스캐폴드
@@ -91,11 +92,11 @@ private extension ScreenScaffoldPreview {
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
+            .reportsScrollReachedEnd()
+            // 오프셋 수정자는 iOS 18 이상이라, 그 아래에서는 TopNavigation 배경이 불투명으로 고정된다.
             .modifying { view in
                 if #available(iOS 18, *) {
-                    view
-                        .reportsScrollOffset()
-                        .reportsScrollReachedEnd()
+                    view.reportsScrollOffset()
                 } else {
                     view
                 }

@@ -241,7 +241,10 @@ public extension View {
     ///
     /// ```swift
     /// List {
-    ///     ForEach(items) { row($0) }
+    ///     ForEach(items) { item in
+    ///         row(item)
+    ///             .scrollContentBottomMarker(isLast: item.id == items.last?.id)
+    ///     }
     /// }
     /// .reportsScrollReachedEnd()
     /// .actionArea {
@@ -252,19 +255,58 @@ public extension View {
     /// - Parameter isEnabled: 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 하단 도달 신호를 올리는 뷰
     ///
-    /// - Important: 스크롤 기하를 읽는 `onScrollGeometryChange`가 iOS 18부터라 이 수정자도
-    ///   iOS 18 이상에서만 쓸 수 있습니다. 그 아래 버전에서도 그라데이션이 필요하면 호출부가
-    ///   직접 잰 값을 ``ActionArea/scrollReachedEnd(_:)``나 `actionArea(scrollReachedEnd:_:)`로
-    ///   넘기세요.
-    @available(iOS 18, *)
+    /// - Important: iOS 18 미만에서는 ``SwiftUI/View/scrollContentBottomMarker(isLast:)``를
+    ///   마지막 요소에 함께 붙여야 합니다. 스크롤 기하를 한 번에 읽는 `onScrollGeometryChange`가
+    ///   iOS 18부터라, 그 아래에서는 마지막 요소의 위치로 바닥을 가늠하기 때문입니다.
+    ///   마커가 없으면 콘텐츠가 남아 있다고 보아 ``ActionArea``가 그라데이션을 계속 그립니다.
     func reportsScrollReachedEnd(_ isEnabled: Bool = true) -> some View {
         modifier(ScrollReachedEndReporter(isEnabled: isEnabled))
+    }
+
+    /// 스크롤 콘텐츠의 마지막 요소에 붙여 콘텐츠 바닥 위치를 컨테이너로 올립니다.
+    ///
+    /// ``SwiftUI/View/reportsScrollReachedEnd(_:)``가 iOS 18 미만에서 바닥 도달을 재는 근거입니다.
+    /// `List`는 화면 밖 행을 만들지 않아 콘텐츠 전체 높이를 알 수 없으므로, 마지막 요소가
+    /// 어디까지 내려왔는지를 직접 알려 줘야 합니다.
+    ///
+    /// iOS 18 이상에서는 스크롤 기하를 직접 읽으므로 이 수정자가 아무 일도 하지 않습니다.
+    /// 버전에 따라 호출을 나누지 말고 항상 붙여 두면 됩니다.
+    ///
+    /// - Parameter isLast: 이 요소가 마지막인지 여부, 생략하면 기본값으로 `true` 적용.
+    ///   `false`면 아무 일도 하지 않습니다
+    /// - Returns: 콘텐츠 바닥 위치를 올리는 뷰
+    func scrollContentBottomMarker(isLast: Bool = true) -> some View {
+        overlay {
+            if isLast {
+                GeometryReader { proxy in
+                    SwiftUI.Color.clear.preference(
+                        key: ScrollContentBottomPreferenceKey.self,
+                        value: proxy.frame(in: .global).maxY
+                    )
+                }
+            }
+        }
+    }
+}
+
+/// 하단 도달 여부를 재는 경로를 iOS 버전에 따라 고르는 수정자입니다.
+private struct ScrollReachedEndReporter: ViewModifier {
+    let isEnabled: Bool
+
+    func body(content: Content) -> some View {
+        content.modifying { view in
+            if #available(iOS 18, *) {
+                view.modifier(ScrollGeometryReachedEndReporter(isEnabled: isEnabled))
+            } else {
+                view.modifier(ContentMarkerReachedEndReporter(isEnabled: isEnabled))
+            }
+        }
     }
 }
 
 /// 스크롤 기하를 읽어 하단 도달 여부를 preference로 올리는 수정자입니다.
 @available(iOS 18, *)
-private struct ScrollReachedEndReporter: ViewModifier {
+private struct ScrollGeometryReachedEndReporter: ViewModifier {
     /// 소수점 오차와 1pt 미만의 어긋남을 바닥으로 본다.
     private static let tolerance: CGFloat = 1
 
@@ -288,6 +330,68 @@ private struct ScrollReachedEndReporter: ViewModifier {
                 }
             }
             .preference(key: ScrollReachedEndPreferenceKey.self, value: isEnabled ? reachedEnd : nil)
+    }
+}
+
+/// 마지막 요소가 올려 준 바닥 위치를 컨테이너 바닥과 견줘 하단 도달 여부를 내는 수정자입니다.
+///
+/// `onScrollGeometryChange`를 쓸 수 없는 iOS 18 미만 경로입니다.
+private struct ContentMarkerReachedEndReporter: ViewModifier {
+    /// 소수점 오차와 1pt 미만의 어긋남을 바닥으로 본다.
+    private static let tolerance: CGFloat = 1
+
+    let isEnabled: Bool
+
+    @State private var reachedEnd: Bool?
+    @State private var containerBottom: CGFloat?
+    @State private var contentBottom: CGFloat?
+
+    func body(content: Content) -> some View {
+        content
+            .background {
+                GeometryReader { proxy in
+                    SwiftUI.Color.clear
+                        .onAppear { containerBottom = proxy.frame(in: .global).maxY }
+                        .onChange(of: proxy.frame(in: .global).maxY) { newValue in
+                            containerBottom = newValue
+                        }
+                }
+            }
+            .onPreferenceChange(ScrollContentBottomPreferenceKey.self) { contentBottom = $0 }
+            // 컨테이너 바닥과 마지막 요소 바닥은 서로 다른 시점에 갱신되므로 둘 다 본다.
+            .onChange(of: contentBottom) { _ in update() }
+            .onChange(of: containerBottom) { _ in update() }
+            // 컨테이너가 사라지면(예: 빈 상태로 전환) 마지막 값이 남지 않게 되돌린다.
+            .onDisappear { reachedEnd = nil }
+            .preference(key: ScrollReachedEndPreferenceKey.self, value: isEnabled ? reachedEnd : nil)
+    }
+
+    private func update() {
+        guard let containerBottom else {
+            reachedEnd = nil
+            return
+        }
+        guard let contentBottom else {
+            // `List`는 화면 밖 행을 만들지 않는다. 마커를 못 찾았다는 건 마지막 요소가
+            // 아직 렌더 범위 밖, 즉 가려진 콘텐츠가 남아 있다는 뜻이다. 마커를 아예 붙이지
+            // 않은 경우도 같은 값이 되는데, 그편이 그라데이션을 잘못 지우는 것보다 안전하다.
+            reachedEnd = false
+            return
+        }
+        reachedEnd = contentBottom <= containerBottom + Self.tolerance
+    }
+}
+
+/// 콘텐츠 마지막 요소의 바닥 위치를 화면 좌표(`.global`)로 올리는 키입니다.
+///
+/// `List` 안에서는 `.named(_:)` 좌표계가 스크롤 오프셋을 반영하지 않아 콘텐츠 기준 위치가
+/// 그대로 올라옵니다. 화면 좌표는 스크롤을 따라 움직이므로 컨테이너 바닥과 바로 견줄 수 있습니다.
+struct ScrollContentBottomPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat? = nil
+
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
+        guard let next = nextValue() else { return }
+        value = max(value ?? next, next)
     }
 }
 
