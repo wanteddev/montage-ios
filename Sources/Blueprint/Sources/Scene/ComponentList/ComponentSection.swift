@@ -31,7 +31,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
     case horizontalProgressTracker, verticalProgressTracker, paginationDots, pageCounter
     case fallbackView, pushBadge, snackbar, toast
     case bottomSheet, popup, popover, tooltip
-    case color, flowLayout, icon, modalNavigation, shadow, typography
+    case color, flowLayout, icon, modalNavigation, screenScaffold, shadow, typography
     
     var state: ComponentState {
         .completed
@@ -54,7 +54,7 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
             return .feedback
         case .bottomSheet, .popup, .popover, .tooltip:
             return .presentation
-        case .color, .flowLayout, .icon, .modalNavigation, .shadow, .typography:
+        case .color, .flowLayout, .icon, .modalNavigation, .screenScaffold, .shadow, .typography:
             return .utilities
         }
     }

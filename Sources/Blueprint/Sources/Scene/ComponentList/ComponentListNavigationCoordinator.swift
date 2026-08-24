@@ -71,6 +71,7 @@ final class ComponentListNavigationCoordinator: ObservableObject {
         case .framedStyle: FramedStylePreview()
         case .popover: PopoverPreview()
         case .modalNavigation: ModalNavigationPreview()
+        case .screenScaffold: ScreenScaffoldPreview()
         }
     }
 }
