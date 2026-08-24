@@ -46,7 +46,7 @@ TextField(text: $inputText)
    .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 트레일링 버튼만 따로 비활성화하려면 [TextField.TrailingButtonInfo](/documentation/montage/textfield/trailingbuttoninfo.md)의 `disable`을 사용합니다.
 
@@ -297,7 +297,7 @@ TextField(text: $inputText)
 - **Discussion**
 
   비밀번호처럼 노출되면 안 되는 값을 입력받을 때 사용합니다.
-  >  **Note**
+  > **Note**
   >
   > 자동완성은 가려진 입력에서 동작하지 않습니다.
 

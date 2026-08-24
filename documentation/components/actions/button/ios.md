@@ -33,7 +33,7 @@ Button(text: "저장")
     .disabled(isFormInvalid)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -188,9 +188,9 @@ Button(text: "저장")
 
 
 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
->  **Deprecated**
+> **Deprecated**
 >
->  `fillWidth(_:Bool)`을 사용하세요. 참고: `vertical` 파라미터는 더 이상 지원되지 않습니다.
+> `fillWidth(_:Bool)`을 사용하세요. 참고: `vertical` 파라미터는 더 이상 지원되지 않습니다.
 
 
 - **Parameters**
@@ -346,7 +346,7 @@ Button(text: "저장")
 
 부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
 - **Discussion**
-  >  **Important**
+  > **Important**
   >
   > `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다. 해당 조합으로 버튼을 생성하면 color가 `.primary`로 폴백됩니다.
 

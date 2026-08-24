@@ -49,7 +49,7 @@ ScreenScaffold(scrollContainer: .custom) {
 
 `List`는 행 배경과 스크롤 배경을 각각 깔기 때문에 둘 다 걷어내야 합니다. 하나만 처리하면 [backgroundColor(_:)](/documentation/montage/screenscaffold/backgroundcolor(_:).md)로 지정한 색이 가려지고, [ActionArea](/documentation/montage/actionarea.md)가 바닥에서 투명해질 때 그 경계가 드러납니다.
 
->  **Note**
+> **Note**
 >
 > [BottomSheet](/documentation/montage/bottomsheet.md)·[Popup](/documentation/montage/popup.md) 안에는 넣지 않습니다. 두 컴포넌트가 같은 일을 하며 [ActionArea](/documentation/montage/actionarea.md) 높이를 자기 높이 계산에 쓰므로 `actionArea:` 인자로 넘기세요. 전체 화면 커버나 push된 목적지는 시트가 아니라 화면이므로 여기에 해당하지 않습니다.
 
@@ -76,7 +76,7 @@ ScreenScaffold(scrollContainer: .custom) {
 - **Discussion**
 
   스크롤 오프셋과 하단 도달 여부는 스캐폴드가 슬롯에 넣어 주므로 호출부가 넘기지 않습니다.
-  >  **Note**
+  > **Note**
   >
   > 슬롯 클로저에 `@ViewBuilder`를 붙이지 않았습니다. 붙이면 `if`문이 `_ConditionalContent`를 만들어 [ActionArea](/documentation/montage/actionarea.md)·[TopNavigation](/documentation/montage/topnavigation.md) 타입 제약이 깨집니다. 조건부로 넣을 때는 `actionArea: isEditing ? slot : nil`처럼 클로저 자체를 갈라 주세요.
 

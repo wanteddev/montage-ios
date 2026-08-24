@@ -36,7 +36,7 @@ FormControlGroup {
 FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64로 고정
 ```
 
->  **Note**
+> **Note**
 >
 > [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치 FormControl에는 영향을 주지 않습니다. 특정 행 하나만 다른 폭으로 두려면 그 FormControl에 [labelWidth(_:)](/documentation/montage/formcontrol/labelwidth(_:).md)를 사용하세요 (per-control 값이 컨테이너 폭보다 우선합니다).
 

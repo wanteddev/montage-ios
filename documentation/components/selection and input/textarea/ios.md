@@ -39,7 +39,7 @@ TextArea(text: $longText)
     .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -117,7 +117,7 @@ TextArea(text: $longText)
 
   수정된 텍스트 영역 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > `button`·`primaryIconButton`은 디자인 가이드상 trailing 전용이므로 [TextArea.Resource.Trailing](/documentation/montage/textarea/resource/trailing.md)에만 정의되어 있습니다. leading에 넘기면 컴파일되지 않습니다.
 

@@ -109,7 +109,7 @@ TopNavigation(
   .disabled(true)
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 
@@ -158,7 +158,7 @@ TopNavigation(
   .disabled(isFormInvalid)
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 
@@ -281,7 +281,7 @@ TopNavigation을 초기화합니다.
 
   수정된 내비게이션 바 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > titleView(_:)와 함께 사용될 경우 이 메서드로 설정된 텍스트만 표시됩니다.
 
@@ -305,7 +305,7 @@ TopNavigation을 초기화합니다.
 - **Discussion**
 
   타이틀에는 텍스트 또는 커스텀 뷰를 사용할 수 있으며, ViewBuilder를 통해 정의됩니다.
-  >  **Note**
+  > **Note**
   >
   > Title(*:)와 함께 사용될 경우 title(*:) 메서드로 설정된 텍스트만 표시됩니다.
 

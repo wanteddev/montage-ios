@@ -78,7 +78,7 @@ title: SwiftUICore
       }
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 슬롯 클로저에 `@ViewBuilder`를 붙이지 않았습니다. 붙이면 `if`문이 `_ConditionalContent`를 만들어 [ActionArea](/documentation/montage/actionarea.md) 타입 제약이 깨집니다. 공개 모디파이어가 모두 `Self`를 돌려주므로 체인과 삼항 연산자는 그대로 쓸 수 있습니다.
 
@@ -217,11 +217,11 @@ View를 UIImage로 변환합니다.
 - **Discussion**
 
   테두리, 배경, 그림자가 있는 프레임을 뷰에 적용하여 일관된 디자인을 제공합니다. 다양한 크기와 상태를 설정할 수 있어 다양한 UI 요소에 활용할 수 있습니다.
-  >  **Note**
+  > **Note**
   >
   > 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.
 
-  >  **Note**
+  > **Note**
   >
   > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -308,7 +308,7 @@ View의 크기가 .zero로 변경되거나 .zero가 아닌 값으로 변경될 �
 
   수정된 View
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > opacity(0), hidden() 등 시각적으로 비어 보이지만 사이즈를 가지는 케이스는 감지되지 않습니다.
 
@@ -521,7 +521,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 - **Discussion**
 
   사용자가 스크롤 뷰를 아래로 당기면 애니메이션과 함께 리프레시 기능을 제공합니다. iOS 18 이상에서 사용 가능하며, 로딩 애니메이션과 함께 당김 정도에 따른 시각적 피드백을 제공합니다.
-  >  **Note**
+  > **Note**
   >
   > iOS 18 이상에서 사용 가능합니다.
 
@@ -623,7 +623,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   }
   ```
 
-  >  **Important**
+  > **Important**
   >
   > 스크롤 기하를 읽는 `onScrollGeometryChange`가 iOS 18부터라 이 수정자도 iOS 18 이상에서만 쓸 수 있습니다. 그 아래 버전에서는 [TopNavigation](/documentation/montage/topnavigation.md)이 배경 농도를 바꿀 근거를 얻지 못해 불투명 배경으로 고정됩니다.
 
@@ -661,7 +661,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   }
   ```
 
-  >  **Important**
+  > **Important**
   >
   > 배포 타깃이 iOS 18 미만이면 `SwiftUI/View/scrollContentBottomMarker(isLast:)`를 마지막 요소에 함께 붙여야 합니다. 스크롤 기하를 한 번에 읽는 `onScrollGeometryChange`가 iOS 18부터라, 그 아래에서는 마지막 요소의 위치로 바닥을 가늠하기 때문입니다. 마커가 없으면 콘텐츠가 남아 있다고 보아 [ActionArea](/documentation/montage/actionarea.md)가 그라데이션을 계속 그립니다.
 
@@ -685,7 +685,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 - **Discussion**
 
   `SwiftUI/View/reportsScrollReachedEnd(_:)`가 iOS 18 미만에서 바닥 도달을 재는 근거입니다. `List`는 화면 밖 행을 만들지 않아 콘텐츠 전체 높이를 알 수 없으므로, 마지막 요소가 어디까지 내려왔는지를 직접 알려 줘야 합니다.
-  >  **Important**
+  > **Important**
   >
   > 배포 타깃이 iOS 18 미만일 때만 쓸 수 있습니다. iOS 18부터는 `SwiftUI/View/reportsScrollReachedEnd(_:)`가 스크롤 기하를 직접 읽어 마커가 필요 없고, 붙여 둬도 행마다 `GeometryReader`를 다는 비용만 남습니다. 타깃을 18로 올리면 컴파일러가 이 호출을 잡아 주므로 그때 지우세요.
 
@@ -709,7 +709,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 - **Discussion**
 
   지정된 레벨의 그림자를 뷰에 적용하여 깊이감을 줍니다. 키 그림자와 앰비언트 그림자가 조합되어 자연스러운 그림자 효과를 만듭니다.
-  >  **Important**
+  > **Important**
   >
   > 이 API는 **임의의 콘텐츠**에 그림자를 적용하므로, 시스템이 콘텐츠의 실루엣을 알기 위해 **오프스크린 렌더링 패스**를 발생시킵니다(특히 `clipShape`/머티리얼과 함께 쓰일 때). 그림자를 그릴 표면의 모양을 알 수 있다면 `Shape`의 `fill`에 적용하는 `ShapeStyle.shadow(_:)` 를 사용해 오프스크린을 피하세요.
 

@@ -21,7 +21,7 @@ Checkmark(checked: true)
     .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -75,11 +75,11 @@ Checkmark(checked: true)
 
   수정된 체크마크 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 이 설정은 `labelTypography`에서 지정한 굵기보다 우선합니다.
 
-  >  **Note**
+  > **Note**
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 
@@ -117,7 +117,7 @@ Checkmark(checked: true)
 
   수정된 체크마크 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 
@@ -139,7 +139,7 @@ Checkmark(checked: true)
 
   수정된 체크마크 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 

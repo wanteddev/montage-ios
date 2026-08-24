@@ -21,7 +21,7 @@ Text("Hello, World!")
     .typography(variant: .heading1, weight: .bold, semantic: .foregroundNeutralPrimary)
 ```
 
->  **Note**
+> **Note**
 >
 > 텍스트 스타일을 적용할 때는 일관성을 위해 직접 폰트를 지정하기보다 Typography 시스템을 사용하는 것이 권장됩니다.
 
@@ -311,7 +311,7 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 
   생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 nil 반환
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 반환 폰트는 `.body` 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
 
@@ -335,7 +335,7 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 
   생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 시스템 폰트로 대체
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 반환 폰트는 variant별 텍스트 스타일([uiTextStyle](/documentation/montage/typography/variant/uitextstyle.md)) 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
 

@@ -202,7 +202,7 @@ leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니
 
   수정된 FormControl 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 메시지 색은 [status(_:)](/documentation/montage/formcontrol/status(_:).md)에 따라 결정됩니다. `.negative`에서만 강조 색으로 표시됩니다.
 

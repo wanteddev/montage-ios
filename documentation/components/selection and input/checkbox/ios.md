@@ -30,7 +30,7 @@ Checkbox(state: .unchecked)
     .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -54,7 +54,7 @@ Checkbox(state: .unchecked)
   | `onSelect` | 선택 상태 변경 콜백. 생략하면 기본값으로 `nil` 적용 |
 
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > `indeterminate` 상태가 필요하다면 `checked` 파라미터를 생략하고 `state` 파라미터를 사용하여 초기 상태를 지정할 수 있습니다.
 
@@ -75,7 +75,7 @@ Checkbox(state: .unchecked)
   | `onSelect` | 상태 변경 콜백. 생략하면 기본값으로 `nil` 적용 |
 
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > `indeterminate` 상태가 필요하지 않다면 `state` 파라미터를 생략하고 `checked` 파라미터를 사용하여 초기 선택 상태를 지정할 수 있습니다.
 
@@ -110,11 +110,11 @@ Checkbox(state: .unchecked)
 
   수정된 체크박스 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 이 설정은 `labelTypography`에서 지정한 굵기보다 우선합니다.
 
-  >  **Note**
+  > **Note**
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 
@@ -152,7 +152,7 @@ Checkbox(state: .unchecked)
 
   수정된 체크박스 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 
@@ -174,7 +174,7 @@ Checkbox(state: .unchecked)
 
   수정된 체크박스 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 레이블이 지정되지 않은 경우 이 설정은 적용되지 않습니다.
 

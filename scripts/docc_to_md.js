@@ -59,7 +59,7 @@ function makeLink(title, url, deprecated = false) {
 function renderDeprecationBlock(symbolJson) {
   if (!symbolJson.deprecationSummary) return '';
   const depText = renderInlineContent(symbolJson.deprecationSummary, symbolJson.references, { joinWith: '' });
-  return `>  **Deprecated**\n>\n>  ${depText}\n\n`;
+  return `> **Deprecated**\n>\n> ${depText}\n\n`;
 }
 
 // 토픽 섹션 변환
@@ -293,7 +293,7 @@ function renderAside(content, references) {
     }
     while (lines.length && lines[lines.length - 1] === '') lines.pop();
     if (!lines.length) continue;
-    md += `>  **${name}**\n>\n`;
+    md += `> **${name}**\n>\n`;
     md +=
       lines.map((l) => (l === '' ? '>' : '> ' + l)).join('\n') + '\n\n';
   }

@@ -23,7 +23,7 @@ Text("Hello, World!")
     .padding(.vertical, .spacing16)
 ```
 
->  **Note**
+> **Note**
 >
 > 간격 이름의 숫자는 포인트 단위의 실제 간격 값을 나타냅니다. 예를 들어 spacing16은 16포인트의 간격을 의미합니다.
 

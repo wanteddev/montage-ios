@@ -29,7 +29,7 @@ IconButton(icon: .bell)
     .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -83,7 +83,7 @@ IconButton(icon: .bell)
 
   수정된 IconButton 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > Outlined, solid variant에서만 사용 가능합니다.
 
@@ -105,7 +105,7 @@ IconButton(icon: .bell)
 
   수정된 IconButton 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > Outlined 에서만 사용 가능합니다.
 
@@ -178,7 +178,7 @@ hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기
 
   수정된 IconButton 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > Outlined, solid variant에서만 사용 가능합니다.
 
@@ -200,7 +200,7 @@ hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기
 
   수정된 IconButton 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > Normal variant에서만 사용 가능합니다.
 

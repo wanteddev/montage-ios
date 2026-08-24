@@ -49,7 +49,7 @@ Chip(text: "김티드")
     }
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 슬롯 뷰에는 색을 강제하지 않으므로, 비활성 상태의 색 변화가 필요하면 사용처에서 처리합니다.
 
@@ -155,7 +155,7 @@ Chip(text: "김티드")
 
   수정된 칩 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > `outlined` variant에서만 적용됩니다. (`solid`는 테두리를 그리지 않습니다.)
 
@@ -208,7 +208,7 @@ Chip(text: "김티드")
       }
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 4.0.0에서 제거된 `leadingImage(_:)`·`imageColor(_:)`를 대체합니다. `leadingImage(Image.icon(.bell))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
 
@@ -244,7 +244,7 @@ Chip(text: "김티드")
       }
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 4.0.0에서 제거된 `trailingImage(_:)`·`imageColor(_:)`를 대체합니다. `trailingImage(Image.icon(.closeThick))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
 

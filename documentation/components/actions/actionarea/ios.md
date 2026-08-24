@@ -34,7 +34,7 @@ ActionArea(variant: .cancel(
 })
 ```
 
->  **Note**
+> **Note**
 >
 > 키보드가 표시될 때 ActionArea가 위치가 자동으로 키보드 상단에 붙어있도록 조정됩니다.
 
@@ -88,7 +88,7 @@ ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.
 
   커스텀 뷰가 포함된 ButtonInfo 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
 
@@ -314,7 +314,7 @@ ActionArea의 버튼 레이아웃 변형을 정의합니다.
       }
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 슬롯 클로저에 `@ViewBuilder`를 붙이지 않았습니다. 붙이면 `if`문이 `_ConditionalContent`를 만들어 [ActionArea](/documentation/montage/actionarea.md) 타입 제약이 깨집니다. 공개 모디파이어가 모두 `Self`를 돌려주므로 체인과 삼항 연산자는 그대로 쓸 수 있습니다.
 

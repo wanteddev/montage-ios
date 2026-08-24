@@ -174,7 +174,7 @@ ModalNavigation()
 
   수정된 내비게이션 바 뷰
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > titleView(_:)와 함께 사용될 경우 이 메서드로 설정된 텍스트만 표시됩니다.
 
@@ -240,7 +240,7 @@ ModalNavigation()
 
   수정된 내비게이션 바 뷰
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > Title(*:)와 함께 사용될 경우 title(*:) 메서드로 설정된 텍스트만 표시됩니다.
 
