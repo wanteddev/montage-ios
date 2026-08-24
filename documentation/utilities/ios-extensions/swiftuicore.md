@@ -106,7 +106,7 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, actionArea: (() -> ActionArea)?, navigation: (() -> ModalNavigation)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
+<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
@@ -119,8 +119,8 @@ View를 UIImage로 변환합니다.
   | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
-  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onDismiss` | 모달이 닫힐때 호출될 클로저 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
 - **Return Value**
@@ -409,7 +409,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, actionArea: (() -> ActionArea)?, () -> V, navigation: (() -> ModalNavigation)?) -> some View``</summary>
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``</summary>
 
 
 팝업 모달을 표시합니다.
@@ -420,9 +420,9 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
-  | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
 - **Return Value**
 
   팝업 모달이 적용된 뷰
@@ -549,6 +549,39 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
+<summary>``func reportsScrollOffset(Bool) -> some View``</summary>
+
+
+세로 스크롤 오프셋을 스스로 재서 상위 [ScreenScaffold](/documentation/montage/screenscaffold.md)에 전달합니다.
+
+- **Parameters**
+  | Parameter | Description |
+  | --- | --- |
+  | `isEnabled` | 신호를 올릴지 여부, 생략하면 기본값으로 `true` 적용 |
+- **Return Value**
+
+  스크롤 오프셋을 올리는 뷰
+- **Discussion**
+
+  [ScreenScaffold](/documentation/montage/screenscaffold.md)의 [TopNavigation](/documentation/montage/topnavigation.md)은 이 값으로 배경 농도를 정합니다. 스크롤을 스캐폴드가 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.content`에서만 붙입니다.
+
+  ```swift
+  ScreenScaffold(scrollContainer: .custom) {
+      List {
+          ForEach(items) { row($0) }
+      }
+      .reportsScrollOffset()
+      .reportsScrollReachedEnd()
+  }
+  ```
+
+  >  **Important**
+  >
+  > 스크롤 기하를 읽는 `onScrollGeometryChange`가 iOS 18부터라 이 수정자도 iOS 18 이상에서만 쓸 수 있습니다. 그 아래 버전에서는 [TopNavigation](/documentation/montage/topnavigation.md)이 배경 농도를 바꿀 근거를 얻지 못해 불투명 배경으로 고정됩니다.
+
+</details>
+<details>
+
 <summary>``func reportsScrollReachedEnd(Bool) -> some View``</summary>
 
 
@@ -577,7 +610,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 
   >  **Important**
   >
-  > iOS 18 미만에서는 스크롤 기하를 읽을 방법이 없어 신호를 올리지 않습니다. 그 구간에서도 그라데이션이 필요하면 호출부가 직접 잰 값을 [scrollReachedEnd(_:)](/documentation/montage/actionarea/scrollreachedend(_:).md)나 `actionArea(scrollReachedEnd:_:)`로 넘기세요.
+  > 스크롤 기하를 읽는 `onScrollGeometryChange`가 iOS 18부터라 이 수정자도 iOS 18 이상에서만 쓸 수 있습니다. 그 아래 버전에서도 그라데이션이 필요하면 호출부가 직접 잰 값을 [scrollReachedEnd(_:)](/documentation/montage/actionarea/scrollreachedend(_:).md)나 `actionArea(scrollReachedEnd:_:)`로 넘기세요.
 
 </details>
 <details>
@@ -736,54 +769,6 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 - **Return Value**
 
   툴팁이 적용된 뷰
-</details>
-<details>
-
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], actionArea: (() -> ActionArea)?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
-
-
-현재 뷰에 TopNavigation 바를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용 |
-  | `title` | 표시할 텍스트 타이틀 |
-  | `backgroundColor` | 배경색, 생략하면 기본값으로 `nil` 적용 |
-  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `actionArea` | 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `onSearch` | 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  TopNavigation이 적용된 뷰
-</details>
-<details>
-
-<summary>``func topNavigation(variant: TopNavigation.Variant, titleView: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], actionArea: (() -> ActionArea)?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
-
-
-현재 뷰에 TopNavigation 바를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용 |
-  | `titleView` | 표시할 제목 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `backgroundColor` | TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용 |
-  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `actionArea` | 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `onSearch` | 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  TopNavigation이 적용된 뷰
 </details>
 <details>
 

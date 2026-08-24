@@ -2181,6 +2181,39 @@
       ]
     },
     {
+      "slug": "screenscaffold",
+      "name": "ScreenScaffold",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct ScreenScaffold",
+      "summary": "화면의 골격을 잡는 컨테이너입니다.",
+      "initializers": [
+        {
+          "signature": "init(scrollContainer:navigation:actionArea:_:)"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color?) -> ScreenScaffold<Content>",
+          "summary": "화면 전체의 바탕색을 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "ScreenScaffold.ScrollContainer",
+          "kind": "enum",
+          "summary": "스크롤 컨테이너를 누가 두는지 정합니다.",
+          "cases": [
+            "builtIn",
+            "custom"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "scrollview",
       "name": "ScrollView",
       "category": "utilities",

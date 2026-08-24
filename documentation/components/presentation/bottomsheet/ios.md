@@ -9,41 +9,41 @@ description: 화면 하단에서 위로 올라오는 바텀 시트 모달 컴포
 
 ## Overview
 
-SwiftUI의 .sheet 수정자와 함께 사용하여 다양한 크기와 동작을 지원하는 바텀 시트를 구현합니다. 내비게이션 바, 액션 영역, 핸들 등의 요소를 설정할 수 있습니다.
+다양한 크기와 동작을 지원하며, 내비게이션 바·액션 영역·핸들을 설정할 수 있습니다.
+
+띄우는 방법은 두 가지입니다. 대개는 `SwiftUI/View/bottomSheet(isPresented:isFullScreenCover:needHandle:resize:ignoresEdgeInsets:navigation:actionArea:onDismiss:_:)` 수정자를 씁니다. 표시 애니메이션과 딤 처리까지 함께 해 줍니다.
 
 ```swift
 @State private var showBottomSheet = false
 
-Button("바텀 시트 열기") {
-    showBottomSheet = true
-}
-.sheet(isPresented: $showBottomSheet) {
-    BottomSheet {
-        VStack(spacing: 16) {
-            Text("바텀 시트 내용")
-            Button("닫기") {
-                showBottomSheet = false
-            }
-        }
-    }
-    .resize(.flexible)
-    .modalNavigation {
-        ModalNavigation()
-            .title("제목")
-    }
-}
-```
-
-모디파이어를 사용하면 더 간편하게 구현할 수 있습니다:
-
-```swift
 YourView()
     .bottomSheet(
         isPresented: $showBottomSheet,
-        resize: .hug
-    ) {
+        resize: .flexible,
+        navigation: {
+            ModalNavigation()
+                .title("제목")
+        },
+        actionArea: {
+            ActionArea(variant: .strong(main: .init(text: "확인", action: confirm)))
+        },
+        {
+            Text("바텀 시트 내용")
+        }
+    )
+```
+
+`presentationDetents`·`interactiveDismissDisabled`처럼 SwiftUI 표준 시트 옵션을 함께 얹어야 할 때는 이 타입을 직접 만들어 `.sheet` 안에 넣습니다. 수정자는 표시까지 맡으므로 그 옵션을 끼워 넣을 자리가 없습니다.
+
+```swift
+.sheet(isPresented: $showBottomSheet) {
+    BottomSheet {
         Text("바텀 시트 내용")
     }
+    .needHandle(false)
+    .presentationDetents([.large])
+    .interactiveDismissDisabled()
+}
 ```
 
 ## Topics
@@ -217,7 +217,7 @@ YourView()
 
 <details>
 
-<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, actionArea: (() -> ActionArea)?, navigation: (() -> ModalNavigation)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
+<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
@@ -230,8 +230,8 @@ YourView()
   | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
   | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
-  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onDismiss` | 모달이 닫힐때 호출될 클로저 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
 - **Return Value**

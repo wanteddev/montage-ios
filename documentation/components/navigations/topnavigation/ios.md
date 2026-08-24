@@ -190,7 +190,7 @@ TopNavigation(
 
 <details>
 
-<summary>``init(scrollOffset: CGFloat, backgroundColor: SwiftUI.Color?)``</summary>
+<summary>``init(scrollOffset: CGFloat?, backgroundColor: SwiftUI.Color?)``</summary>
 
 
 TopNavigation을 초기화합니다.
@@ -198,7 +198,7 @@ TopNavigation을 초기화합니다.
 - **Parameters**
   | Parameter | Description |
   | --- | --- |
-  | `scrollOffset` | 스크롤 오프셋 값 |
+  | `scrollOffset` | 스크롤 오프셋 값. 생략하면 [ScreenScaffold](/documentation/montage/screenscaffold.md)가 내려 주는 값을 씁니다. 스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다 |
   | `backgroundColor` | 배경색 |
 </details>
 
@@ -553,65 +553,6 @@ TopNavigation의 외관을 결정하는 열거형입니다.
 
 검색 내비게이션 바 스타일
 </details>
-
-</details>
-
-### Associated Extensions
-
-<details>
-
-<summary>``extension View``</summary>
-
-<details>
-
-<summary>``func topNavigation(variant: TopNavigation.Variant, titleView: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], actionArea: (() -> ActionArea)?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
-
-
-현재 뷰에 TopNavigation 바를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용 |
-  | `titleView` | 표시할 제목 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `backgroundColor` | TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용 |
-  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `actionArea` | 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `onSearch` | 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  TopNavigation이 적용된 뷰
-</details>
-
-<details>
-
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], actionArea: (() -> ActionArea)?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
-
-
-현재 뷰에 TopNavigation 바를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용 |
-  | `title` | 표시할 텍스트 타이틀 |
-  | `backgroundColor` | 배경색, 생략하면 기본값으로 `nil` 적용 |
-  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `actionArea` | 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `onSearch` | 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  TopNavigation이 적용된 뷰
-</details>
-
 
 </details>
 
