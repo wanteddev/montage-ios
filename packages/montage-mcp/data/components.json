@@ -2183,7 +2183,7 @@
     {
       "slug": "screenscaffold",
       "name": "ScreenScaffold",
-      "category": "uncategorized",
+      "category": "utilities",
       "kind": "struct",
       "declaration": "struct ScreenScaffold",
       "summary": "화면의 골격을 잡는 컨테이너입니다.",

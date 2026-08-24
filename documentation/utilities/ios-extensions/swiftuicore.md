@@ -563,7 +563,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   스크롤 오프셋을 올리는 뷰
 - **Discussion**
 
-  [ScreenScaffold](/documentation/montage/screenscaffold.md)의 [TopNavigation](/documentation/montage/topnavigation.md)은 이 값으로 배경 농도를 정합니다. 스크롤을 스캐폴드가 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.content`에서만 붙입니다.
+  [ScreenScaffold](/documentation/montage/screenscaffold.md)의 [TopNavigation](/documentation/montage/topnavigation.md)은 이 값으로 배경 농도를 정합니다. 스크롤을 스캐폴드가 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.custom`에서만 붙입니다.
 
   ```swift
   ScreenScaffold(scrollContainer: .custom) {

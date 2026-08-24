@@ -287,7 +287,7 @@ private struct ScrollReachedEndReporter: ViewModifier {
                     view
                 }
             }
-            .preference(key: ScrollReachedEndPreferenceKey.self, value: reachedEnd)
+            .preference(key: ScrollReachedEndPreferenceKey.self, value: isEnabled ? reachedEnd : nil)
     }
 }
 
@@ -295,7 +295,7 @@ public extension View {
     /// 세로 스크롤 오프셋을 스스로 재서 상위 ``ScreenScaffold``에 전달합니다.
     ///
     /// ``ScreenScaffold``의 ``TopNavigation``은 이 값으로 배경 농도를 정합니다. 스크롤을 스캐폴드가
-    /// 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.content`에서만 붙입니다.
+    /// 쥐는 `.builtIn`에서는 자동으로 전달되므로, 소비자가 스크롤을 직접 쥐는 `.custom`에서만 붙입니다.
     ///
     /// ```swift
     /// ScreenScaffold(scrollContainer: .custom) {
@@ -341,7 +341,7 @@ private struct ScrollOffsetReporter: ViewModifier {
                     view
                 }
             }
-            .preference(key: ScrollOffsetPreferenceKey.self, value: offset)
+            .preference(key: ScrollOffsetPreferenceKey.self, value: isEnabled ? offset : nil)
     }
 }
 

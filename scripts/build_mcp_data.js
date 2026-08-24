@@ -45,7 +45,7 @@ const CATEGORY_MAP = {
   ],
   utilities: [
     'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
-    'opacity', 'primitive', 'pulltorefresh', 'radius', 'scrollview', 'shadow',
+    'opacity', 'primitive', 'pulltorefresh', 'radius', 'screenscaffold', 'scrollview', 'shadow',
     'spacing', 'typography',
   ],
 };
