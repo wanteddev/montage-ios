@@ -61,10 +61,17 @@ function makeRepo({ archiveFiles = {}, existingDocs = true } = {}) {
 }
 
 function run(repoRoot, env = {}) {
+  // 실행 셸에 MONTAGE_ALLOW_DOC_SHRINK 가 남아 있으면 급감 감지 테스트가 아무 검증도
+  // 하지 못한 채 통과한다. 테스트가 명시로 넘긴 경우만 살리고 나머지는 지운다.
+  const childEnv = { ...process.env, ...env };
+  if (!Object.prototype.hasOwnProperty.call(env, 'MONTAGE_ALLOW_DOC_SHRINK')) {
+    delete childEnv.MONTAGE_ALLOW_DOC_SHRINK;
+  }
+
   const result = spawnSync(process.execPath, ['scripts/docc_to_md.js'], {
     cwd: repoRoot,
     encoding: 'utf-8',
-    env: { ...process.env, ...env },
+    env: childEnv,
   });
   return {
     status: result.status,
