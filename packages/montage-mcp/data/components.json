@@ -3440,10 +3440,16 @@
       "summary": "상단에 표시되는 내비게이션 바 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(scrollOffset:backgroundColor:)"
+          "signature": "init(scrollOffset:)"
         }
       ],
       "modifiers": [
+        {
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color) -> TopNavigation",
+          "summary": "내비게이션 바의 배경색을 설정합니다.",
+          "kind": "method"
+        },
         {
           "name": "leadingContent(_:)",
           "signature": "func leadingContent<V>(() -> V) -> TopNavigation",

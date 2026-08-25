@@ -12,11 +12,9 @@ description: 상단에 표시되는 내비게이션 바 컴포넌트입니다.
 제목, 뒤로가기, 추가 액션 버튼 등을 포함할 수 있으며, 다양한 외관 스타일을 지원합니다. 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 
 ```swift
-TopNavigation(
-    scrollOffset: 0,
-    backgroundColor: .white
-)
+TopNavigation(scrollOffset: 0)
 .variant(.normal)
+.backgroundColor(.white)
 .title("제목")
 .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 .trailingContents(
@@ -26,11 +24,9 @@ TopNavigation(
 ```
 
 ```swift
-TopNavigation(
-    scrollOffset: 0,
-    backgroundColor: .white
-)
+TopNavigation(scrollOffset: 0)
 .variant(.floating)
+.backgroundColor(.white)
 .titleView { /* 제목 컴포넌트 */ }
 .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 .trailingContents(
@@ -196,7 +192,7 @@ TopNavigation(
 
 <details>
 
-<summary>``init(scrollOffset: CGFloat?, backgroundColor: SwiftUI.Color?)``</summary>
+<summary>``init(scrollOffset: CGFloat?)``</summary>
 
 
 TopNavigation을 초기화합니다.
@@ -206,7 +202,6 @@ TopNavigation을 초기화합니다.
   | Parameter | Description |
   | --- | --- |
   | `scrollOffset` | 스크롤 오프셋 값. 생략하면 [ScreenScaffold](/documentation/montage/screenscaffold.md)가 내려 주는 값을 씁니다. 스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다 |
-  | `backgroundColor` | 배경색 |
 
 </details>
 
@@ -222,6 +217,23 @@ TopNavigation을 초기화합니다.
 
 ### Instance Methods
 
+<details>
+
+<summary>``func backgroundColor(SwiftUI.Color) -> TopNavigation``</summary>
+
+
+내비게이션 바의 배경색을 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `backgroundColor` | 배경색 |
+
+- **Return Value**
+
+  수정된 내비게이션 바 인스턴스
+</details>
 <details>
 
 <summary>``func leadingContent<V>(() -> V) -> TopNavigation``</summary>

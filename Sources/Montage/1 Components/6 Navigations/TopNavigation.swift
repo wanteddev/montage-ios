@@ -13,11 +13,9 @@ import SwiftUI
 /// 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 ///
 /// ```swift
-/// TopNavigation(
-///     scrollOffset: 0,
-///     backgroundColor: .white
-/// )
+/// TopNavigation(scrollOffset: 0)
 /// .variant(.normal)
+/// .backgroundColor(.white)
 /// .title("제목")
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -26,11 +24,9 @@ import SwiftUI
 /// )
 /// ```
 /// ```swift
-/// TopNavigation(
-///     scrollOffset: 0,
-///     backgroundColor: .white
-/// )
+/// TopNavigation(scrollOffset: 0)
 /// .variant(.floating)
+/// .backgroundColor(.white)
 /// .titleView { /* 제목 컴포넌트 */ }
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -67,25 +63,22 @@ public struct TopNavigation: View {
     // MARK: - Initializers
     
     private let explicitScrollOffset: CGFloat?
-    private let backgroundColor: SwiftUI.Color?
 
     /// TopNavigation을 초기화합니다.
     ///
     /// - Parameters:
     ///   - scrollOffset: 스크롤 오프셋 값. 생략하면 ``ScreenScaffold``가 내려 주는 값을 씁니다.
     ///     스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다
-    ///   - backgroundColor: 배경색
     public init(
-        scrollOffset: CGFloat? = nil,
-        backgroundColor: SwiftUI.Color? = nil
+        scrollOffset: CGFloat? = nil
     ) {
         explicitScrollOffset = scrollOffset
-        self.backgroundColor = backgroundColor
     }
     
     // MARK: - Modifiers
     
     private var variant: Variant = .normal
+    private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNeutralPrimary)
     private var titleText: String?
     private var titleView: () -> AnyView  = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView  = { AnyView(EmptyView()) }
@@ -107,6 +100,16 @@ public struct TopNavigation: View {
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
         zelf.variant = variant
+        return zelf
+    }
+    
+    /// 내비게이션 바의 배경색을 설정합니다.
+    ///
+    /// - Parameter backgroundColor: 배경색
+    /// - Returns: 수정된 내비게이션 바 인스턴스
+    public func backgroundColor(_ backgroundColor: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.backgroundColor = backgroundColor
         return zelf
     }
     
@@ -226,7 +229,7 @@ public struct TopNavigation: View {
             .background {
                 MaterialBackground(
                     materialOpacity: backgroundOpacity,
-                    tint: backgroundView.opacity(backgroundOpacity * 0.7)
+                    tint: backgroundColor.opacity(backgroundOpacity * 0.7)
                 )
                 .if(variant == .floating) {
                     $0.mask {
@@ -243,11 +246,7 @@ public struct TopNavigation: View {
     }
     
     // MARK: - Computed properties
-    
-    private var backgroundView: SwiftUI.Color {
-        backgroundColor ?? .clear
-    }
-    
+
     @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
 
     /// ``ScreenScaffold``가 내려 주는 스크롤 오프셋. 스캐폴드 밖에서는 최상단(`0`)이다.
