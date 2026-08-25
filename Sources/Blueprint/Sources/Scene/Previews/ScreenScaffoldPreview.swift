@@ -76,6 +76,8 @@ private extension ScreenScaffoldPreview {
             // 스캐폴드가 ScrollView를 깔아 주므로 콘텐츠는 스크롤을 신경 쓰지 않는다.
             itemList
                 .padding(.horizontal, 20)
+                // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
+                .previewCheckered()
 
         default:
             // List는 스크롤을 스스로 쥐므로 신호를 직접 올린다.
@@ -84,6 +86,9 @@ private extension ScreenScaffoldPreview {
                     ListCell(label: "Item \(index)")
                         // 하단 도달 신호는 iOS 18 미만에서 이 마커를 근거로 삼는다.
                         .scrollContentBottomMarker(isLast: index == itemCounts[itemCountIndex] - 1)
+                        // List는 행 단위로만 배경을 줄 수 있어 체커도 행마다 건다. ScrollView처럼
+                        // 격자가 콘텐츠 전체로 이어지지는 않지만, 행과 함께 움직인다.
+                        .previewCheckered()
                 }
                 .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                 // List는 행 배경과 스크롤 배경을 각각 깐다. 둘 다 걷어내지 않으면 스캐폴드

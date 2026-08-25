@@ -60,6 +60,8 @@ struct ModalNavigationPreview: View {
                         }
                     }
                     .padding(.horizontal)
+                    // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
+                    .previewCheckered()
                 }
             )
 
