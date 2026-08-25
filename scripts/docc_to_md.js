@@ -953,6 +953,25 @@ console.log('='.repeat(50));
 console.log('📚 DocC → Markdown 변환 시작');
 console.log('='.repeat(50));
 
+const dataRoot = path.join(
+  repoRoot,
+  '.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data'
+);
+const doccRoot = path.join(dataRoot, 'documentation');
+
+// DocC 아카이브 검증
+//
+// 기존 documentation 폴더를 지우기 전에 반드시 확인한다.
+// xcodebuild docbuild가 실패하면 아카이브가 없거나 비어 있는데, 그 상태로 삭제를
+// 진행하면 문서를 복구하지 못한 채 삭제만 남는다.
+if (!fs.existsSync(doccRoot) || fs.readdirSync(doccRoot).length === 0) {
+  console.error('❌ DocC 아카이브를 찾을 수 없거나 비어 있습니다.');
+  console.error(`   경로: ${doccRoot}`);
+  console.error('   기존 documentation 폴더를 보존한 채 중단합니다.');
+  console.error('   먼저 `make docc`를 실행해 아카이브를 생성하세요.');
+  process.exit(1);
+}
+
 // documentation 폴더 정리
 const documentationDir = path.join(repoRoot, 'documentation');
 if (fs.existsSync(documentationDir)) {
@@ -964,12 +983,6 @@ if (fs.existsSync(documentationDir)) {
 console.log('📂 Swift 타입-파일 매핑 시작...');
 walkSwiftFiles(montageSrcRoot);
 console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
-
-const dataRoot = path.join(
-  repoRoot,
-  '.build/derived_data/Build/Products/Debug-iphoneos/Montage.doccarchive/data'
-);
-const doccRoot = path.join(dataRoot, 'documentation');
 
 console.log('🔎 Extended Module 인덱싱 시작...');
 collectExtendedModuleMarkdown(dataRoot);
