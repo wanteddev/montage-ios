@@ -6,6 +6,13 @@ const repoRoot = path.resolve(__dirname, '..');
 
 const jsonCache = new Map();
 
+// 변환 결과 집계
+//
+// 변환기는 개별 파일의 실패를 로그로만 남기고 계속 진행하므로, 삭제한 documentation
+// 폴더를 되살릴지 판단하려면 성공/실패 건수를 따로 들고 있어야 한다.
+let conversionSuccessCount = 0;
+const conversionFailures = [];
+
 function readJsonCached(filePath) {
   if (jsonCache.has(filePath)) {
     return jsonCache.get(filePath);
@@ -473,8 +480,10 @@ function convertFile(jsonPath) {
     if (convertedSwiftFileMap[jsonFileBase] !== undefined) {
       convertedSwiftFileMap[jsonFileBase].isConverted = true;
     }
+    conversionSuccessCount += 1;
     console.log(`✓ 변환 완료: ${mdPath}`);
   } catch (error) {
+    conversionFailures.push({ jsonPath, message: error.message });
     console.error(`✗ 변환 실패: ${jsonPath}`, error.message);
   }
 }
@@ -964,32 +973,163 @@ const doccRoot = path.join(dataRoot, 'documentation');
 // 기존 documentation 폴더를 지우기 전에 반드시 확인한다.
 // xcodebuild docbuild가 실패하면 아카이브가 없거나 비어 있는데, 그 상태로 삭제를
 // 진행하면 문서를 복구하지 못한 채 삭제만 남는다.
-if (!fs.existsSync(doccRoot) || fs.readdirSync(doccRoot).length === 0) {
-  console.error('❌ DocC 아카이브를 찾을 수 없거나 비어 있습니다.');
+//
+// "폴더가 비어 있지 않다"만 보는 것으로는 부족하다. 빌드가 중간에 끊기면 디렉터리
+// 껍데기만 남거나 JSON이 잘린 채로 남는데, walk()는 .json만 골라 처리하면서 파싱
+// 오류를 로그로만 남기고 계속 진행한다. 그래서 심볼 JSON을 실제로 하나라도 읽을 수
+// 있는지까지 확인해야 삭제만 남는 상황을 막을 수 있다.
+function inspectDoccArchive(dir) {
+  let jsonCount = 0;
+  const stack = [dir];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    let entries;
+    try {
+      entries = fs.readdirSync(current, { withFileTypes: true });
+    } catch (error) {
+      continue;
+    }
+
+    for (const entry of entries) {
+      const full = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(full);
+        continue;
+      }
+      if (!entry.name.endsWith('.json')) continue;
+
+      jsonCount += 1;
+      try {
+        const parsed = JSON.parse(fs.readFileSync(full, 'utf-8'));
+        if (parsed && parsed.metadata) {
+          return { parsable: true, jsonCount };
+        }
+      } catch (error) {
+        // 잘린 JSON은 넘기고 다른 파일로 검증을 계속한다
+      }
+    }
+  }
+
+  return { parsable: false, jsonCount };
+}
+
+const archive = inspectDoccArchive(doccRoot);
+if (!fs.existsSync(doccRoot) || !archive.parsable) {
+  console.error('❌ 사용할 수 있는 DocC 아카이브가 없습니다.');
   console.error(`   경로: ${doccRoot}`);
+  if (!fs.existsSync(doccRoot)) {
+    console.error('   원인: 아카이브 경로가 존재하지 않습니다.');
+  } else if (archive.jsonCount === 0) {
+    console.error('   원인: 아카이브에 심볼 JSON이 없습니다.');
+  } else {
+    console.error(`   원인: JSON ${archive.jsonCount}개를 모두 읽을 수 없습니다 (손상 또는 잘림).`);
+  }
   console.error('   기존 documentation 폴더를 보존한 채 중단합니다.');
   console.error('   먼저 `make docc`를 실행해 아카이브를 생성하세요.');
   process.exit(1);
 }
 
 // documentation 폴더 정리
+//
+// 삭제가 아니라 .build 아래로 옮겨 둔다. 변환이 실패하거나 결과물이 없으면
+// 그대로 되돌려서, 아카이브가 불완전할 때 문서만 사라지는 일이 없게 한다.
 const documentationDir = path.join(repoRoot, 'documentation');
-if (fs.existsSync(documentationDir)) {
-  console.log('🗑️  기존 documentation 폴더 삭제 중...');
-  fs.rmSync(documentationDir, { recursive: true, force: true });
-  console.log('✓ 삭제 완료\n');
+const backupDir = path.join(repoRoot, '.build/documentation-backup');
+let previousMarkdownCount = 0;
+let backedUp = false;
+
+function countMarkdownFiles(dir) {
+  let count = 0;
+  const stack = [dir];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    let entries;
+    try {
+      entries = fs.readdirSync(current, { withFileTypes: true });
+    } catch (error) {
+      continue;
+    }
+    for (const entry of entries) {
+      if (entry.isDirectory()) stack.push(path.join(current, entry.name));
+      else if (entry.name.endsWith('.md')) count += 1;
+    }
+  }
+
+  return count;
 }
 
-console.log('📂 Swift 타입-파일 매핑 시작...');
-walkSwiftFiles(montageSrcRoot);
-console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
+function abortAndRestore(reason, details = []) {
+  console.error('\n' + '='.repeat(50));
+  console.error(`❌ ${reason}`);
+  details.forEach((line) => console.error(`   ${line}`));
+  if (backedUp) {
+    fs.rmSync(documentationDir, { recursive: true, force: true });
+    fs.renameSync(backupDir, documentationDir);
+    console.error('   기존 documentation 폴더를 복원했습니다.');
+  }
+  console.error('='.repeat(50));
+  process.exit(1);
+}
 
-console.log('🔎 Extended Module 인덱싱 시작...');
-collectExtendedModuleMarkdown(dataRoot);
-console.log(`✓ 인덱싱 완료 (확장 심볼 ${Object.keys(extensionMdMap).length}개)\n`);
+if (fs.existsSync(documentationDir)) {
+  console.log('🗂️  기존 documentation 폴더 임시 보관 중...');
+  previousMarkdownCount = countMarkdownFiles(documentationDir);
+  fs.rmSync(backupDir, { recursive: true, force: true });
+  fs.mkdirSync(path.dirname(backupDir), { recursive: true });
+  fs.renameSync(documentationDir, backupDir);
+  backedUp = true;
+  console.log(`✓ 보관 완료 (md ${previousMarkdownCount}개)\n`);
+}
 
-console.log('🔄 JSON → Markdown 변환 시작...');
-walk(doccRoot);
+try {
+  console.log('📂 Swift 타입-파일 매핑 시작...');
+  walkSwiftFiles(montageSrcRoot);
+  console.log(`✓ Swift 타입-파일 매핑 완료 (${Object.keys(swiftFileMap).length}개 타입)\n`);
+
+  console.log('🔎 Extended Module 인덱싱 시작...');
+  collectExtendedModuleMarkdown(dataRoot);
+  console.log(`✓ 인덱싱 완료 (확장 심볼 ${Object.keys(extensionMdMap).length}개)\n`);
+
+  console.log('🔄 JSON → Markdown 변환 시작...');
+  walk(doccRoot);
+} catch (error) {
+  abortAndRestore('변환 중 오류가 발생해 중단했습니다.', [error.message]);
+}
+
+if (conversionFailures.length > 0) {
+  abortAndRestore(
+    `${conversionFailures.length}개 파일 변환에 실패했습니다.`,
+    conversionFailures.slice(0, 10).map(({ jsonPath, message }) => `${jsonPath}: ${message}`)
+  );
+}
+
+if (conversionSuccessCount === 0) {
+  abortAndRestore('변환된 문서가 없습니다.', ['아카이브에 변환 대상 심볼이 없습니다.']);
+}
+
+// 문서 급감 감지
+//
+// 파싱 가능한 JSON이 있고 실패도 없더라도 아카이브가 반쪽일 수 있다. 이때는 삭제만
+// 정상 완료된 것처럼 보이므로, 직전 문서 수 대비 절반 미만이면 중단한다.
+// 컴포넌트를 실제로 대량 정리한 경우에는 MONTAGE_ALLOW_DOC_SHRINK=1로 통과시킨다.
+const currentMarkdownCount = countMarkdownFiles(documentationDir);
+if (
+  previousMarkdownCount > 0 &&
+  currentMarkdownCount * 2 < previousMarkdownCount &&
+  process.env.MONTAGE_ALLOW_DOC_SHRINK !== '1'
+) {
+  abortAndRestore('생성된 문서 수가 직전보다 크게 줄었습니다.', [
+    `이전: ${previousMarkdownCount}개 → 현재: ${currentMarkdownCount}개`,
+    '아카이브가 불완전할 가능성이 높습니다. `make docc`를 다시 실행하세요.',
+    '의도한 대량 삭제라면 MONTAGE_ALLOW_DOC_SHRINK=1 을 지정하세요.',
+  ]);
+}
+
+if (backedUp) {
+  fs.rmSync(backupDir, { recursive: true, force: true });
+}
 
 Object.values(convertedSwiftFileMap).forEach((item) => {
   if (!item.isConverted) {
@@ -1001,5 +1141,5 @@ Object.values(convertedSwiftFileMap).forEach((item) => {
 });
 
 console.log('\n' + '='.repeat(50));
-console.log('✅ 모든 변환 작업 완료!');
+console.log(`✅ 모든 변환 작업 완료! (md ${currentMarkdownCount}개)`);
 console.log('='.repeat(50));
