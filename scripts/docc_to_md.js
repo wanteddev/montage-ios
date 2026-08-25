@@ -1064,11 +1064,17 @@ function abortAndRestore(reason, details = []) {
   console.error('\n' + '='.repeat(50));
   console.error(`❌ ${reason}`);
   details.forEach((line) => console.error(`   ${line}`));
+
+  // 중단 시점까지 만들어진 문서는 반쪽이므로 언제나 걷어낸다. 이걸 남겨 두면
+  // 백업이 없는 첫 실행에서 부분 결과가 그대로 커밋될 수 있다.
+  fs.rmSync(documentationDir, { recursive: true, force: true });
   if (backedUp) {
-    fs.rmSync(documentationDir, { recursive: true, force: true });
     fs.renameSync(backupDir, documentationDir);
     console.error('   기존 documentation 폴더를 복원했습니다.');
+  } else {
+    console.error('   생성 중이던 documentation 폴더를 삭제했습니다.');
   }
+
   console.error('='.repeat(50));
   process.exit(1);
 }

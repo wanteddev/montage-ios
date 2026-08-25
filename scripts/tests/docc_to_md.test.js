@@ -206,6 +206,25 @@ test('정상 아카이브는 문서를 새로 생성하고 백업을 남기지 �
   assert.equal(fs.existsSync(path.join(repoRoot, '.build/documentation-backup')), false);
 });
 
+test('백업이 없는 상태에서 변환이 실패하면 부분 생성물을 남기지 않는다', () => {
+  const repoRoot = trackRepo(makeRepo({
+    archiveFiles: {
+      'toast.json': VALID_SYMBOL_JSON,
+      'bad.json': JSON.stringify({ metadata: { roleHeading: 'Structure' } }),
+    },
+    existingDocs: false,
+  }));
+  const { status, output } = run(repoRoot);
+
+  assert.equal(status, 1);
+  assert.match(output, /1개 파일 변환에 실패했습니다/);
+  assert.match(output, /생성 중이던 documentation 폴더를 삭제했습니다/);
+  // toast.json 은 변환에 성공했지만 그 결과물이 남아 있으면 안 된다
+  assert.equal(countMarkdown(path.join(repoRoot, 'documentation')), 0);
+  assert.equal(fs.existsSync(path.join(repoRoot, 'documentation')), false);
+  assert.equal(fs.existsSync(path.join(repoRoot, '.build/documentation-backup')), false);
+});
+
 test('기존 documentation 폴더가 없어도 정상 변환한다', () => {
   const repoRoot = trackRepo(makeRepo({
     archiveFiles: { 'toast.json': VALID_SYMBOL_JSON },
