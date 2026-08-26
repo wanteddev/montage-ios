@@ -19,7 +19,7 @@ let padding = CGFloat.spacing16
 let custom = CGFloat.primitive18
 ```
 
->  **Note**
+> **Note**
 >
 > 실제 값은 `CGFloat.primitive{N}` 정적 프로퍼티로 노출됩니다. 이 타입은 문서 그룹핑 용도의 빈 네임스페이스입니다.
 

@@ -36,7 +36,7 @@ FormControlGroup {
 FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64로 고정
 ```
 
->  **Note**
+> **Note**
 >
 > [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치 FormControl에는 영향을 주지 않습니다. 특정 행 하나만 다른 폭으로 두려면 그 FormControl에 [labelWidth(_:)](/documentation/montage/formcontrol/labelwidth(_:).md)를 사용하세요 (per-control 값이 컨테이너 폭보다 우선합니다).
 
@@ -52,11 +52,13 @@ FormControlGroup(labelWidth: .dimension64) { … }   // 전 행 라벨 폭을 64
 컨테이너를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `labelWidth` | 라벨 열 폭을 고정할 값. 생략(`nil`)하면 내부 라벨 최댓값으로 **자동 측정**한다. |
   | `spacing` | FormControl 사이의 세로 간격. 생략하면 기본값으로 `.spacing16` 적용 |
   | `content` | 세로로 쌓을 [FormControl](/documentation/montage/formcontrol.md) 목록 |
+
 </details>
 
 ### Instance Properties

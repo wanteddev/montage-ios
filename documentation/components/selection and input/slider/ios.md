@@ -32,7 +32,7 @@ Slider()
     .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -48,6 +48,7 @@ Slider()
 슬라이더를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isRangeSlider` | 슬라이더의 변형, 생략하면 기본값으로 `false` 적용 (단일 값 슬라이더) |
@@ -55,6 +56,7 @@ Slider()
   | `maxValue` | 슬라이더의 최대값, 생략하면 기본값으로 `1` 적용 |
   | `labelFormatter` | 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저, 생략하면 기본값으로 `nil` 적용 (소수점 한 자리) |
   | `onChanged` | 슬라이더 값이 변경될 때 호출되는 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -64,12 +66,14 @@ Slider()
 슬라이더를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isRangeSlider` | 슬라이더의 변형, 생략하면 기본값으로 `false` 적용 (단일 값 슬라이더) |
   | `valueRange` | 슬라이더가 표현하는 값의 범위, 생략하면 기본값으로 `0...1` 적용 |
   | `labelFormatter` | 슬라이더 노브에 표시될 레이블 형식을 지정하는 클로저, 생략하면 기본값으로 `nil` 적용 (소수점 한 자리) |
   | `onChanged` | 슬라이더 값이 변경될 때 호출되는 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -92,9 +96,11 @@ Slider()
 슬라이더 상단에 제목을 표시할지 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `heading` | 제목 표시 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 슬라이더 인스턴스
@@ -107,9 +113,11 @@ Slider()
 슬라이더 노브에 값 레이블을 표시할지 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `label` | 레이블 표시 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 슬라이더 인스턴스

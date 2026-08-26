@@ -70,32 +70,6 @@ struct PopupPreview: View {
         .popup(
             isPresented: $show,
             resize: resize,
-            actionAreaModel: actionArea
-                ? .init(
-                    variant: actionAreaVariant,
-                    caption: caption ? "caption" : nil,
-                    extra: {
-                        if extra {
-                            Rectangle().fill(
-                                SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08)
-                            )
-                            .frame(height: 50)
-                        }
-                    },
-                    extraDivider: extraDivider
-                )
-                : nil,
-            {
-                VStack {
-                    ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
-                        HStack {
-                            Text("Item \(index)")
-                            TextField(text: .constant(""))
-                        }
-                    }
-                }
-                .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
-            },
             navigation: navigation
                 ? {
                     ModalNavigation()
@@ -131,8 +105,35 @@ struct PopupPreview: View {
                             ]
                         )
                 }
-                : nil
+                : nil,
+            actionArea: actionArea ? actionAreaSlot : nil,
+            {
+                VStack {
+                    ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
+                        HStack {
+                            Text("Item \(index)")
+                            TextField(text: .constant(""))
+                        }
+                    }
+                }
+                .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            }
         )
+    }
+
+    private var actionAreaSlot: () -> ActionArea {
+        {
+            ActionArea(variant: actionAreaVariant)
+                .caption(caption ? "caption" : nil)
+                .extra({
+                    if extra {
+                        Rectangle().fill(
+                            SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08)
+                        )
+                        .frame(height: 50)
+                    }
+                }, divider: extraDivider)
+        }
     }
 
     private var actionAreaVariant: ActionArea.Variant {

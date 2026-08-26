@@ -66,10 +66,12 @@ var body: some View {
 Toast 모델을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 토스트 메시지의 스타일, 생략하면 기본값으로 `.normal()` 적용 |
   | `message` | 토스트에 표시할 메시지 텍스트 |
+
 </details>
 
 </details>
@@ -126,9 +128,11 @@ Toast 모델을 초기화합니다.
 화면 하단에 토스트 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `offset` | 하단에서의 오프셋 값, 생략하면 기본값으로 `.zero` 적용 |
+
 </details>
 <details>
 
@@ -138,9 +142,11 @@ Toast 모델을 초기화합니다.
 화면 상단에 토스트 표시
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `offset` | 상단에서의 오프셋 값, 생략하면 기본값으로 `.zero` 적용 |
+
 </details>
 
 </details>
@@ -174,10 +180,12 @@ Toast 모델을 초기화합니다.
 기본 스타일의 토스트 (선택적으로 아이콘과 색상 지정 가능)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `tint` | 아이콘의 색상, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -203,11 +211,13 @@ Toast 모델을 초기화합니다.
 현재 뷰에 Toast 메시지를 표시하는 modifier를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `model` | Toast 모델을 바인딩합니다. nil이 아닌 값이 설정되면 Toast가 표시됩니다. |
   | `location` | Toast가 표시될 위치, 생략하면 기본값으로 `.bottom(offset: 0)` 적용 |
   | `duration` | Toast가 표시될 시간, 생략하면 기본값으로 `.short` 적용 |
+
 - **Return Value**
 
   Toast가 적용된 뷰

@@ -37,7 +37,7 @@ SearchField(text: $keyword)
    .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -53,9 +53,11 @@ SearchField(text: $keyword)
 검색 필드를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 검색어의 값을 바인딩 |
+
 </details>
 
 ### Instance Properties
@@ -78,9 +80,11 @@ SearchField(text: $keyword)
 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -98,9 +102,11 @@ SearchField(text: $keyword)
 검색 필드의 포커스 상태를 외부 바인딩과 연결합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `focused` | 포커스 상태 바인딩 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -116,9 +122,11 @@ SearchField(text: $keyword)
 포커스 상태가 변경될 때 호출할 클로저를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `handler` | 변경된 포커스 상태를 전달받는 클로저 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -131,9 +139,11 @@ SearchField(text: $keyword)
 검색어 제출 시 호출할 클로저를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `handler` | 검색어 제출 시 실행할 클로저 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -149,9 +159,11 @@ SearchField(text: $keyword)
 검색어가 변경될 때마다 호출할 클로저를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `handler` | 변경된 검색어를 전달받는 클로저 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -164,9 +176,11 @@ SearchField(text: $keyword)
 검색어가 없을 때 표시할 플레이스홀더를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 표시할 플레이스홀더 텍스트 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -179,9 +193,11 @@ SearchField(text: $keyword)
 검색 필드의 사이즈를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 검색 필드의 사이즈 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스
@@ -194,9 +210,11 @@ SearchField(text: $keyword)
 검색 필드의 스타일을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 검색 필드의 스타일 |
+
 - **Return Value**
 
   수정된 검색 필드 인스턴스

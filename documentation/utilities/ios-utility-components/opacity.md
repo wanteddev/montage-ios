@@ -22,11 +22,11 @@ myView.opacity(.opacity88)
 UIColor.black.withAlphaComponent(.opacity43)
 ```
 
->  **Note**
+> **Note**
 >
 > `opacity0`은 완전 투명(0.0), `opacity100`은 완전 불투명(1.0)입니다.
 
->  **Note**
+> **Note**
 >
 > UIKit의 `UIColor.withAlphaComponent(_:)`는 `CGFloat`를 받습니다. 토큰을 그대로 넘길 수 있도록 Montage가 `Double`을 받는 오버로드를 함께 제공합니다.
 

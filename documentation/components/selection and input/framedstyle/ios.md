@@ -59,22 +59,24 @@ enum FramedStyle
 현재 뷰에 프레임 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `status` | 프레임 상태, 생략하면 기본값으로 `.normal` 적용 |
   | `borderRadius` | 테두리 반경, 생략하면 기본값으로 `0` 적용 |
   | `shadowLevel` | 그림자 레벨, 생략하면 기본값으로 `.xsmall` 적용 |
+
 - **Return Value**
 
   프레임 스타일이 적용된 뷰
 - **Discussion**
 
   테두리, 배경, 그림자가 있는 프레임을 뷰에 적용하여 일관된 디자인을 제공합니다. 다양한 크기와 상태를 설정할 수 있어 다양한 UI 요소에 활용할 수 있습니다.
-  >  **Note**
+  > **Note**
   >
   > 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.
 
-  >  **Note**
+  > **Note**
   >
   > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 

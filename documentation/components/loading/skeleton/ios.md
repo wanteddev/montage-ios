@@ -100,9 +100,11 @@ contentView
 사각형 모양의 스켈레톤을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `cornerRadius` | 모서리 둥글기, 생략하면 기본값으로 `3` 적용 |
+
 - **Return Value**
 
   사각형 스켈레톤 Kind
@@ -115,11 +117,13 @@ contentView
 텍스트 줄을 나타내는 스켈레톤을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트의 타이포그래피 변형. `lineHeight`를 기준으로 줄 수를 자동 계산합니다 |
   | `alignment` | 텍스트 정렬 방식, 생략하면 기본값으로 `.leading` 적용 |
   | `cornerRadius` | 모서리 둥글기, 생략하면 기본값으로 `3` 적용 |
+
 - **Return Value**
 
   텍스트 스켈레톤 Kind
@@ -161,9 +165,11 @@ contentView
 스켈레톤 뷰를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `kind` | 표시할 스켈레톤의 종류 |
+
 </details>
 
 #### Instance Properties
@@ -186,9 +192,11 @@ contentView
 스켈레톤 뷰의 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 색상 |
+
 - **Return Value**
 
   수정된 SkeletonView 인스턴스
@@ -201,9 +209,11 @@ contentView
 스켈레톤 뷰의 투명도를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `opacity` | 적용할 투명도 (0.0 ~ 1.0) |
+
 - **Return Value**
 
   수정된 SkeletonView 인스턴스
@@ -267,10 +277,12 @@ contentView
 현재 뷰에 커스텀 스켈레톤 로딩 UI를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
   | `skeletonView` | 커스텀 스켈레톤 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   스켈레톤 기능이 적용된 뷰
@@ -284,6 +296,7 @@ contentView
 현재 뷰에 미리 정의된 스켈레톤 로딩 UI를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isPresented` | 스켈레톤 표시 여부를 제어하는 불리언 값 |
@@ -291,6 +304,7 @@ contentView
   | `color` | 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.surfaceNeutralSecondary) 사용) |
   | `opacity` | 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용 |
   | `size` | 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용 |
+
 - **Return Value**
 
   스켈레톤 기능이 적용된 뷰

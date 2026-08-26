@@ -46,7 +46,7 @@ TextField(text: $inputText)
    .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 트레일링 버튼만 따로 비활성화하려면 [TextField.TrailingButtonInfo](/documentation/montage/textfield/trailingbuttoninfo.md)의 `disable`을 사용합니다.
 
@@ -81,6 +81,7 @@ TextField(text: $inputText)
 자동완성 데이터 소스를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `numberOfSections` | 섹션 수, 생략하면 기본값으로 `1` 적용 |
@@ -90,6 +91,7 @@ TextField(text: $inputText)
   | `headerView` | 헤더 뷰 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `footerView` | 푸터 뷰 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `maxHeight` | 자동완성 목록의 최대 높이, 생략하면 기본값으로 `400` 적용 |
+
 </details>
 
 #### Instance Properties
@@ -122,11 +124,13 @@ TextField(text: $inputText)
 트레일링 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 버튼에 표시할 텍스트 |
   | `disable` | 트레일링 버튼만 비활성화할지 여부, 생략하면 기본값으로 `false` 적용 |
   | `handler` | 버튼 클릭 시 실행할 핸들러 |
+
 </details>
 
 </details>
@@ -141,10 +145,12 @@ TextField(text: $inputText)
 텍스트 필드를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 텍스트 필드의 값을 바인딩 |
   | `autoCompletionDataSource` | 자동완성 데이터 소스를 바인딩, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -167,9 +173,11 @@ TextField(text: $inputText)
 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `disable` | 비활성화 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -187,9 +195,11 @@ TextField(text: $inputText)
 텍스트 필드의 배경색을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 설정할 배경색 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -202,9 +212,11 @@ TextField(text: $inputText)
 텍스트 필드 왼쪽에 표시할 아이콘을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -217,9 +229,11 @@ TextField(text: $inputText)
 입력 가능한 최대 글자 수를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `limit` | 최대 글자 수. `nil`이면 제한 없음 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -235,9 +249,11 @@ TextField(text: $inputText)
 텍스트가 변경될 때마다 호출할 클로저를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `handler` | 변경된 텍스트를 전달받는 클로저 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -253,9 +269,11 @@ TextField(text: $inputText)
 텍스트 필드에 입력된 텍스트가 없을 때 표시할 플레이스홀더를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 표시할 플레이스홀더 텍스트 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -268,16 +286,18 @@ TextField(text: $inputText)
 입력한 내용을 가릴지 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `secured` | 입력 내용을 가릴지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
 - **Discussion**
 
   비밀번호처럼 노출되면 안 되는 값을 입력받을 때 사용합니다.
-  >  **Note**
+  > **Note**
   >
   > 자동완성은 가려진 입력에서 동작하지 않습니다.
 
@@ -290,9 +310,11 @@ TextField(text: $inputText)
 텍스트 필드의 사이즈를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 텍스트 필드의 사이즈 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -305,9 +327,11 @@ TextField(text: $inputText)
 텍스트 필드의 상태를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `status` | 텍스트 필드의 상태 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -320,9 +344,11 @@ TextField(text: $inputText)
 텍스트 필드 오른쪽에 표시할 버튼을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `trailingButton` | 표시할 버튼의 속성 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스
@@ -335,9 +361,11 @@ TextField(text: $inputText)
 텍스트 필드 오른쪽에 표시할 커스텀 콘텐츠를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `trailingContent` | 표시할 커스텀 콘텐츠를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 텍스트 필드 인스턴스

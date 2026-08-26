@@ -44,7 +44,7 @@ import Montage
 ///
 /// // 상단 고정 바 + 하단 옵션 패널 + 헤더 닫기 버튼 (TopNavigation)
 /// PreviewLayout(mode: .pinnedTop) {
-///     content.topNavigation(variant: variant, title: title)
+///     ScreenScaffold(navigation: { TopNavigation().variant(variant).title(title) }) { content }
 /// } options: {
 ///     SegmentedIndexRow("variant", index: $variantIndex, labels: labels)
 /// } accessory: {
@@ -70,7 +70,9 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
         /// launcher(옵션 + "Show Preview" 버튼)를 보여주고, 버튼을 누르면 미리보기를 push한다.
         ///
         /// 이 모드에서 `preview` 클로저는 **push되는 대상 화면**이다. 컨테이너가 NavigationView와
-        /// push 버튼을 제공하고, push된 미리보기에 체커까지 직접 적용한다(호출부에서 체커 처리 불필요).
+        /// push 버튼을 제공하고 체커 상태를 push 대상에 주입하되, 체커 자체는 호출부가 스크롤
+        /// 콘텐츠에 ``previewCheckered()``로 건다. 체커가 콘텐츠와 함께 스크롤돼야 콘텐츠 범위가
+        /// 드러나기 때문이다.
         /// 화면 상단에 바가 붙고 콘텐츠 전체를 보여줘야 하는 TopNavigation·ModalNavigation 같은
         /// 컴포넌트에 적합하다.
         case navigation
@@ -99,6 +101,23 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
 
     /// `options` 클로저가 `EmptyView`이면 옵션 섹션(과 "Options" 헤더)을 그리지 않는다.
     private var hasOptions: Bool { Options.self != EmptyView.self }
+
+    // MARK: - Modifiers
+
+    private var backgroundColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
+
+    /// 컨테이너 전체(미리보기 + 옵션 영역)의 바탕색을 바꾼다.
+    ///
+    /// 배경색을 옵션으로 바꿔 보는 미리보기(예: ActionArea)에서, 화면 바탕까지 같이 칠해
+    /// 실제 화면과 같은 조건으로 확인하기 위한 것이다. 생략하면 기본 배경색을 쓴다.
+    ///
+    /// - Parameter color: 컨테이너 바탕색
+    /// - Returns: 수정된 컨테이너
+    func backgroundColor(_ color: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.backgroundColor = color
+        return zelf
+    }
 
     var body: some View {
         modeBody
@@ -180,8 +199,9 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
 
     private var navigationBody: some View {
         // launcher(옵션 + push 버튼)를 보여주고, 버튼을 누르면 `preview`(= push 대상)를 push한다.
-        // push되는 미리보기는 컨테이너가 `checkered(...)`로 감싸 체커를 직접 적용한다.
-        // (environment는 push 경계를 넘지 못하므로, 컨테이너가 대상을 직접 감싸 책임진다)
+        // 체커는 컨테이너가 화면 전체에 깔지 않고 호출부가 스크롤 콘텐츠에 ``previewCheckered()``로
+        // 직접 건다. 화면에 고정된 체커는 스크롤해도 제자리라 콘텐츠가 어디까지인지 드러내지 못한다.
+        // (environment는 push 경계를 넘지 못하므로 컨테이너가 push 대상에 직접 주입한다)
         NavigationView {
             SwiftUI.ScrollView {
                 VStack(alignment: .leading) {
@@ -189,7 +209,13 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                     // 드래그 가능한 floating 바로 옮긴다).
                     header("Preview", showControls: false)
                     NavigationLink {
-                        checkered(preview)
+                        preview
+                            // 체커를 콘텐츠가 쥐므로 배경만 컨테이너가 깐다(체커보다 뒤).
+                            .background(backgroundColor.ignoresSafeArea())
+                            .environment(
+                                \.previewChecker,
+                                PreviewCheckerConfig(isPresented: showChecker, checkerSize: checkerSize)
+                            )
                             .navigationBarHidden(true)
                             // 체커 토글·슬라이더·accessory를 미리보기 위에 드래그 가능한 floating 바로 띄운다.
                             // 핸들로만 드래그하므로 안쪽 컨트롤(버튼·슬라이더)은 정상 동작한다. 처음엔 상단 중앙.
@@ -215,7 +241,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 }
                 .padding(.horizontal)
             }
-            .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            .background(backgroundColor)
         }
         .navigationViewStyle(.stack)
     }
@@ -231,7 +257,8 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 checkerSize: checkerSize,
                 checkerColor: .red
             )
-            .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            // 상태 바·홈 인디케이터 영역까지 같은 색으로 이어지도록 배경만 safe area 밖으로 넓힌다.
+            .background(backgroundColor.ignoresSafeArea())
     }
 
     /// 섹션 헤더: 제목 + (옵션) 추가 버튼 + 체커 토글, 그리고 체커 ON 시 크기 조절 슬라이더.

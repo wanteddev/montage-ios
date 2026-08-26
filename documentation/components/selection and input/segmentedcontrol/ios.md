@@ -65,10 +65,12 @@ SegmentedControl(
 세그먼트 항목을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `leadingIcon` | 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `title` | 표시할 텍스트. `iconOnly` 모드에서는 텍스트가 숨겨지는 대신 이 값이 세그먼트의 VoiceOver 접근성 라벨로 사용됩니다. |
+
 </details>
 
 </details>
@@ -83,11 +85,13 @@ SegmentedControl(
 항목 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
   | `items` | 표시할 항목 배열 |
   | `onSelect` | 항목 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -97,11 +101,13 @@ SegmentedControl(
 텍스트 배열을 이용해 세그먼트 컨트롤을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectedIndex` | 현재 선택된 항목의 인덱스 바인딩 |
   | `labels` | 표시할 텍스트 배열 |
   | `onSelect` | 항목 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -124,9 +130,11 @@ SegmentedControl(
 각 세그먼트를 아이콘만 표시하도록 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `iconOnly` | 아이콘만 표시할지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 세그먼트 컨트롤 인스턴스
@@ -142,9 +150,11 @@ SegmentedControl(
 세그먼트 컨트롤의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 적용할 크기 |
+
 - **Return Value**
 
   수정된 세그먼트 컨트롤 인스턴스

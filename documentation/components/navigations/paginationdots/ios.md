@@ -31,10 +31,12 @@ PaginationDots(selectedPage: $currentPage, totalPages: 10)
 점 형태의 페이지네이션을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selectedPage` | 현재 선택된 페이지 번호 (1부터 시작) |
   | `totalPages` | 전체 페이지 수 |
+
 </details>
 
 ### Instance Properties
@@ -57,9 +59,11 @@ PaginationDots(selectedPage: $currentPage, totalPages: 10)
 점 페이지네이션의 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 적용할 점 크기 |
+
 - **Return Value**
 
   수정된 Dot 인스턴스
@@ -72,9 +76,11 @@ PaginationDots(selectedPage: $currentPage, totalPages: 10)
 점 페이지네이션의 색상 변형을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 적용할 색상 변형 |
+
 - **Return Value**
 
   수정된 Dot 인스턴스

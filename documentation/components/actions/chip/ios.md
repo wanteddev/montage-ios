@@ -49,7 +49,7 @@ Chip(text: "김티드")
     }
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다. 슬롯 뷰에는 색을 강제하지 않으므로, 비활성 상태의 색 변화가 필요하면 사용처에서 처리합니다.
 
@@ -65,12 +65,14 @@ Chip(text: "김티드")
 칩을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 칩의 외관 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `size` | 칩의 크기, 생략하면 기본값으로 `.medium` 적용 |
   | `text` | 칩에 표시할 텍스트 |
   | `handler` | 칩 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -93,9 +95,11 @@ Chip(text: "김티드")
 칩의 선택 상태를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `active` | 선택 상태 여부 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -108,9 +112,11 @@ Chip(text: "김티드")
 칩의 활성화 상태 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 활성화 상태일 때의 색상 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -123,9 +129,11 @@ Chip(text: "김티드")
 칩의 배경색을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 배경색 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -138,14 +146,16 @@ Chip(text: "김티드")
 칩의 테두리 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 테두리 색상 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > `outlined` variant에서만 적용됩니다. (`solid`는 테두리를 그리지 않습니다.)
 
@@ -158,9 +168,11 @@ Chip(text: "김티드")
 칩의 텍스트 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 텍스트 색상 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -173,9 +185,11 @@ Chip(text: "김티드")
 텍스트 앞에 표시할 콘텐츠를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -194,7 +208,7 @@ Chip(text: "김티드")
       }
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 4.0.0에서 제거된 `leadingImage(_:)`·`imageColor(_:)`를 대체합니다. `leadingImage(Image.icon(.bell))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
 
@@ -207,9 +221,11 @@ Chip(text: "김티드")
 텍스트 뒤에 표시할 콘텐츠를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 칩 인스턴스
@@ -228,7 +244,7 @@ Chip(text: "김티드")
       }
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 4.0.0에서 제거된 `trailingImage(_:)`·`imageColor(_:)`를 대체합니다. `trailingImage(Image.icon(.closeThick))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
 

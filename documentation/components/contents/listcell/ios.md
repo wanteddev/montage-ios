@@ -74,7 +74,7 @@ ListCell(label: "비활성 셀")
     .disabled(true)
 ```
 
->  **Note**
+> **Note**
 >
 > 콘텐츠 슬롯에는 전경색으로 전달되므로, 슬롯 안에서 색상을 직접 지정한 뷰에는 적용되지 않습니다.
 
@@ -90,10 +90,12 @@ ListCell(label: "비활성 셀")
 셀 컴포넌트를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `label` | 셀에 표시할 제목 텍스트 |
   | `onTap` | 셀을 탭했을 때 실행할 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -116,9 +118,11 @@ ListCell(label: "비활성 셀")
 셀 우측에 화살표(chevron) 아이콘을 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `chevron` | 화살표 표시 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -134,9 +138,11 @@ ListCell(label: "비활성 셀")
 셀에 부가 설명을 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `description` | 표시할 설명 텍스트, 생략하면 기본값으로 `nil` 적용 (nil 설정 시 설명 제거) |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -152,9 +158,11 @@ ListCell(label: "비활성 셀")
 셀 하단에 구분선을 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `divider` | 구분선 표시 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -167,9 +175,11 @@ ListCell(label: "비활성 셀")
 설명 아래에 표시할 요소를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resources` | 표시할 요소 목록 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -195,9 +205,11 @@ ListCell(label: "비활성 셀")
 라벨과 설명의 특정 텍스트를 강조 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 강조할 텍스트 문자열 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -213,9 +225,11 @@ ListCell(label: "비활성 셀")
 라벨 텍스트의 `color` 속성을 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 적용할 텍스트 색상 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -228,9 +242,11 @@ ListCell(label: "비활성 셀")
 라벨 행의 오른쪽 끝에 표시할 요소를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resources` | 표시할 요소 목록 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -243,7 +259,7 @@ ListCell(label: "비활성 셀")
       .labelTrailingResources([.contentBadge(title: "신규")])
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 라벨이 2줄 이상일 때 표시 위치는 [verticalAlign(_:)](/documentation/montage/listcell/verticalalign(_:).md)을 따릅니다.
 
@@ -256,9 +272,11 @@ ListCell(label: "비활성 셀")
 라벨 텍스트의 `variant` 속성을 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 적용할 Typography 변형 스타일 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -271,14 +289,16 @@ ListCell(label: "비활성 셀")
 라벨 텍스트의 `weight` 속성을 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `weight` | 적용할 텍스트 두께 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > `selected`가 `true`인 셀은 이 값과 무관하게 `bold`로 표시됩니다.
 
@@ -291,9 +311,11 @@ ListCell(label: "비활성 셀")
 셀 좌측에 표시할 요소를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resources` | 표시할 요소 목록 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -318,16 +340,18 @@ ListCell(label: "비활성 셀")
 셀을 선택된 상태로 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `selected` | 선택 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
 
   선택된 셀은 라벨 텍스트의 색상이 `surfaceBrandPrimary`로 변경되고, 텍스트 두께가 bold로 설정되며, trailing 영역에 체크 아이콘이 표시됩니다. [chevron(_:)](/documentation/montage/listcell/chevron(_:).md)을 켠 셀에서는 화살표가 체크 아이콘 오른쪽에 그대로 남습니다.
-  >  **Important**
+  > **Important**
   >
   > 체크 아이콘은 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md)와 자리를 공유하므로 둘을 함께 표시할 수 없습니다. trailing 요소가 있으면 그쪽이 표시되고 체크 아이콘은 나타나지 않으며, 이때 선택 상태는 라벨의 색과 굵기로만 드러납니다. 선택 여부를 아이콘으로도 보여야 하면 [leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md)의 체크박스·라디오를 사용하세요.
 
@@ -340,9 +364,11 @@ ListCell(label: "비활성 셀")
 텍스트의 생략 처리 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `textEllipsis` | 텍스트 생략 처리 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -358,9 +384,11 @@ ListCell(label: "비활성 셀")
 셀 우측에 표시할 요소를 지정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `resources` | 표시할 요소 목록 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -373,7 +401,7 @@ ListCell(label: "비활성 셀")
       .trailingResources([.switch(checked: isOn, onSelect: { isOn = $0 })])
   ```
 
-  >  **Note**
+  > **Note**
   >
   > [selected(_:)](/documentation/montage/listcell/selected(_:).md)가 `true`인 셀에서도 이 요소가 우선 표시되며, 선택 상태의 체크 아이콘은 이 슬롯이 비었을 때만 나타납니다.
 
@@ -386,9 +414,11 @@ ListCell(label: "비활성 셀")
 셀의 형태를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 적용할 셀 형태, 생략하면 기본값으로 `.inset` 적용 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -405,7 +435,7 @@ ListCell(label: "비활성 셀")
       .variant(.full)
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 4.0.0에서 제거된 `fillWidth(_:)`·`interactionPadding(_:)`을 대체합니다. `fillWidth(false)`는 [ListCell.Variant.inset](/documentation/montage/listcell/variant/inset.md), `fillWidth(true)`는 [ListCell.Variant.full](/documentation/montage/listcell/variant/full.md)에 대응합니다.
 
@@ -418,9 +448,11 @@ ListCell(label: "비활성 셀")
 셀 내 콘텐츠의 수직 정렬을 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `verticalAlignment` | 적용할 수직 정렬 방식, 생략하면 기본값으로 `.top` 적용 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
@@ -436,16 +468,18 @@ ListCell(label: "비활성 셀")
 상하 여백의 크기를 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `verticalPadding` | 적용할 상하 여백 크기 |
+
 - **Return Value**
 
   수정된 ListCell 인스턴스
 - **Discussion**
 
   정해진 네 단계(`none`·`small`·`medium`·`large`)로 표현할 수 없는 간격은 [ListCell.VerticalPadding.custom(_:)](/documentation/montage/listcell/verticalpadding/custom(_:).md)으로 직접 지정할 수 있습니다.
-  >  **Note**
+  > **Note**
   >
   > 여백이 `0`인 셀은 인터랙션 효과를 표시하지 않습니다.
 
@@ -464,7 +498,7 @@ ListCell(label: "비활성 셀")
   슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다. 예를 들어 [ListCell.Resource.Trailing.switch(checked:onSelect:)](/documentation/montage/listcell/resource/trailing/switch(checked:onselect:).md)는 [trailingResources(_:)](/documentation/montage/listcell/trailingresources(_:).md)에만 넘길 수 있고, [leadingResources(_:)](/documentation/montage/listcell/leadingresources(_:).md)에 넘기면 컴파일되지 않습니다.
 
   미리 정의된 요소는 크기와 정렬이 셀 스펙(행 최소 높이 24)에 맞춰 고정됩니다. 목록에 없는 구성이 필요하면 각 타입의 `slot(_:)` 팩토리를 사용합니다.
-  >  **Important**
+  > **Important**
   >
   > `slot(_:)`으로 넣은 뷰에는 이 크기 제약이 적용되지 않습니다. 행 높이가 밀리지 않게 하려면 사용처에서 `frame(...)`이나 `fixedSize(...)`로 크기를 직접 정해야 합니다.
 
@@ -486,10 +520,12 @@ ListCell(label: "비활성 셀")
 콘텐츠 배지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `title` | 배지 텍스트 |
+
 </details>
 <details>
 
@@ -506,9 +542,11 @@ ListCell(label: "비활성 셀")
 텍스트
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 표시할 텍스트 |
+
 </details>
 
 ##### Type Methods
@@ -521,9 +559,11 @@ ListCell(label: "비활성 셀")
 목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   구성된 요소
@@ -546,10 +586,12 @@ ListCell(label: "비활성 셀")
 콘텐츠 배지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `title` | 배지 텍스트 |
+
 </details>
 <details>
 
@@ -559,10 +601,12 @@ ListCell(label: "비활성 셀")
 아이콘 (22×22)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.surfaceBrandPrimary)` 적용 |
+
 </details>
 <details>
 
@@ -582,9 +626,11 @@ ListCell(label: "비활성 셀")
 목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   구성된 요소
@@ -607,10 +653,12 @@ ListCell(label: "비활성 셀")
 아바타 (40×40)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `imageUrl` | 표시할 이미지의 URL 문자열 |
   | `variant` | 아바타 유형 |
+
 </details>
 <details>
 
@@ -620,10 +668,12 @@ ListCell(label: "비활성 셀")
 체크박스
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `checked` | 선택 여부 |
   | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -633,10 +683,12 @@ ListCell(label: "비활성 셀")
 아이콘 (22×22)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralTertiary)` 적용 |
+
 </details>
 <details>
 
@@ -646,10 +698,12 @@ ListCell(label: "비활성 셀")
 배경이 있는 큰 아이콘 (컨테이너 36×36 / 아이콘 20×20)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용 |
+
 </details>
 <details>
 
@@ -659,10 +713,12 @@ ListCell(label: "비활성 셀")
 라디오
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `checked` | 선택 여부 |
   | `onSelect` | 선택 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -679,9 +735,11 @@ ListCell(label: "비활성 셀")
 썸네일 (56×56 정사각, 둥근 모서리·테두리 적용)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `imageUrl` | 표시할 이미지의 URL 문자열 |
+
 </details>
 
 ##### Type Methods
@@ -694,9 +752,11 @@ ListCell(label: "비활성 셀")
 목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   구성된 요소
@@ -719,11 +779,13 @@ ListCell(label: "비활성 셀")
 버튼 (Solid / Small)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 버튼 텍스트 |
   | `color` | 버튼 색상, 생략하면 기본값으로 `.assistive` 적용 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -733,10 +795,12 @@ ListCell(label: "비활성 셀")
 콘텐츠 배지
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 배지 변형 스타일, 생략하면 기본값으로 `.solid` 적용 |
   | `title` | 배지 텍스트 |
+
 </details>
 <details>
 
@@ -746,10 +810,12 @@ ListCell(label: "비활성 셀")
 아이콘 (22×22)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `tintColor` | 아이콘 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용 |
+
 </details>
 <details>
 
@@ -759,10 +825,12 @@ ListCell(label: "비활성 셀")
 아이콘 버튼 (컨테이너 32×32 / 아이콘 20×20, 배경 없음)
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 버튼 아이콘 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -779,10 +847,12 @@ ListCell(label: "비활성 셀")
 스위치
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `checked` | 켜짐 여부 |
   | `onSelect` | 값 변경 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -792,11 +862,13 @@ ListCell(label: "비활성 셀")
 텍스트 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 버튼 텍스트 |
   | `color` | 버튼 색상, 생략하면 기본값으로 `.assistive` 적용 |
   | `handler` | 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -806,9 +878,11 @@ ListCell(label: "비활성 셀")
 값 텍스트
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 표시할 텍스트 |
+
 </details>
 
 ##### Type Methods
@@ -821,9 +895,11 @@ ListCell(label: "비활성 셀")
 목록에 없는 구성을 직접 배치합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   구성된 요소

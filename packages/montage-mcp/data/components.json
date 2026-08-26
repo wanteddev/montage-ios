@@ -112,27 +112,14 @@
           "kind": "method"
         },
         {
-          "name": "transparentBackground(_:)",
-          "signature": "func transparentBackground(Bool) -> ActionArea",
-          "summary": "배경을 투명하게 설정합니다.",
+          "name": "scrollReachedEnd(_:)",
+          "signature": "func scrollReachedEnd(Bool) -> ActionArea",
+          "summary": "스크롤이 바닥에 닿았는지를 직접 알려줍니다.",
           "kind": "method"
         }
       ],
       "staticMembers": [],
       "nestedTypes": [
-        {
-          "name": "ActionArea.BackgroundTransparencyControl",
-          "kind": "enum",
-          "summary": "ActionArea의 배경 투명도를 제어하는 열거형입니다.",
-          "cases": [
-            "automatic",
-            "manual"
-          ],
-          "caseSignatures": [
-            "automatic",
-            "manual(_:)"
-          ]
-        },
         {
           "name": "ActionArea.ButtonInfo",
           "kind": "struct",
@@ -148,19 +135,6 @@
               "signature": "static func custom<V>(() -> V) -> ActionArea.ButtonInfo",
               "summary": "커스텀 버튼 뷰를 사용하는 버튼 정보를 생성합니다.",
               "kind": "method"
-            }
-          ]
-        },
-        {
-          "name": "ActionArea.Model",
-          "kind": "struct",
-          "summary": "ActionArea를 구성하기 위한 모델 구조체입니다.",
-          "initializers": [
-            {
-              "signature": "init(variant:backgroundTransparencyControl:caption:captionIcon:backgroundColor:)"
-            },
-            {
-              "signature": "init(variant:backgroundTransparencyControl:caption:captionIcon:extra:extraDivider:backgroundColor:)"
             }
           ]
         },
@@ -320,7 +294,7 @@
         },
         {
           "name": "modalActionArea(_:)",
-          "signature": "func modalActionArea(ActionArea.Model?) -> BottomSheet",
+          "signature": "func modalActionArea((() -> ActionArea)?) -> BottomSheet",
           "summary": "바텀 시트 하단에 액션 영역을 설정합니다.",
           "kind": "method"
         },
@@ -1961,7 +1935,7 @@
         },
         {
           "name": "modalActionArea(_:)",
-          "signature": "func modalActionArea(ActionArea.Model?) -> Popup",
+          "signature": "func modalActionArea((() -> ActionArea)?) -> Popup",
           "summary": "팝업 모달 하단에 액션 영역을 설정합니다.",
           "kind": "method"
         },
@@ -2207,6 +2181,39 @@
       ]
     },
     {
+      "slug": "screenscaffold",
+      "name": "ScreenScaffold",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct ScreenScaffold",
+      "summary": "화면의 골격을 잡는 컨테이너입니다.",
+      "initializers": [
+        {
+          "signature": "init(scrollContainer:navigation:actionArea:_:)"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color?) -> ScreenScaffold<Content>",
+          "summary": "화면 전체의 바탕색을 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "ScreenScaffold.ScrollContainer",
+          "kind": "enum",
+          "summary": "스크롤 컨테이너를 누가 두는지 정합니다.",
+          "cases": [
+            "builtIn",
+            "custom"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "scrollview",
       "name": "ScrollView",
       "category": "utilities",
@@ -2269,15 +2276,15 @@
               "kind": "property"
             },
             {
-              "name": "scrollViewSize",
-              "signature": "var scrollViewSize: CGSize",
-              "summary": "스크롤 뷰 크기",
+              "name": "reachedEnd",
+              "signature": "var reachedEnd: Bool",
+              "summary": "스크롤이 끝(세로는 바닥, 가로는 오른쪽 끝)에 도달했는지 여부입니다.",
               "kind": "property"
             },
             {
-              "name": "scrolledToMax",
-              "signature": "var scrolledToMax: Bool",
-              "summary": "스크롤이 최대 위치에 도달했는지 여부입니다.",
+              "name": "scrollViewSize",
+              "signature": "var scrollViewSize: CGSize",
+              "summary": "스크롤 뷰 크기",
               "kind": "property"
             }
           ]
@@ -3433,10 +3440,16 @@
       "summary": "상단에 표시되는 내비게이션 바 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(scrollOffset:backgroundColor:)"
+          "signature": "init(scrollOffset:)"
         }
       ],
       "modifiers": [
+        {
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color) -> TopNavigation",
+          "summary": "내비게이션 바의 배경색을 설정합니다.",
+          "kind": "method"
+        },
         {
           "name": "leadingContent(_:)",
           "signature": "func leadingContent<V>(() -> V) -> TopNavigation",

@@ -45,8 +45,8 @@ struct ActionAreaPreview: View {
     @State private var caption = false
     @State private var extra = false
     @State private var extraDivider = true
-    @State private var gradientIndex = 0
-    @State private var transparency = false
+    @State private var scrollSignalIndex = 0
+    @State private var manualScrollReachedEnd = false
     @State private var customBackgroundColor = false
     @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceAccentVioletOpaque)
     @State private var captionIcon = false
@@ -132,41 +132,46 @@ struct ActionAreaPreview: View {
         }
     }
 
-    @State private var scrollStatus: Montage.ScrollView.ScrollStatus = .init()
-
     /// `PreviewLayout`이 미리보기 영역에 주는 좌우 여백(`.padding(.horizontal)` 기본값).
     private let previewInset: CGFloat = 16
 
+    /// ActionArea 버튼의 좌우 여백. 목록 항목을 버튼과 같은 선에 맞춘다.
+    private let contentInset: CGFloat = 20
+
+    /// ActionArea 뒤에 깔리는 페이지 바탕색.
+    private var previewBackground: SwiftUI.Color {
+        customBackgroundColor ? backgroundColor : .semantic(.backgroundNeutralPrimary)
+    }
+
     var body: some View {
         PreviewLayout(mode: .upsideDown) {
-            ScrollView(scrollStatus: $scrollStatus) {
+            Montage.ScrollView {
                 LazyVStack {
                     ForEach(0..<30, id: \.self) {
                         TextField(text: .constant("Item \($0)"))
                     }
                 }
-                // 아래에서 미리보기 전체를 화면 폭까지 넓히므로, 항목 자체의 좌우 여백은 여기서 되돌린다.
+                // 아래에서 미리보기 전체를 화면 폭까지 넓히므로, 항목 자체의 좌우 여백은 여기서 준다.
+                // ActionArea 버튼과 같은 선에 맞아야 실제 화면처럼 보이므로 버튼 여백을 그대로 쓴다.
                 // 하단 20은 ActionArea 그래디언트가 자기 경계 위로 덮는 만큼(offset -20)을 비워 준다.
-                .padding(.horizontal, previewInset)
+                .padding(.horizontal, contentInset)
                 .padding(.bottom, 20)
             }
-            .actionArea(
-                variant: currentVariant,
-                backgroundTransparency: gradientIndex == 0 ? scrollStatus.scrolledToMax : transparency,
-                caption: caption ? "caption" : nil,
-                captionIcon: captionIcon ? .circleInfo : nil,
-                extra: {
-                    if extra {
-                        Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
-                            .frame(height: 50)
-                    }
-                },
-                extraDivider: extraDivider,
-                backgroundColor: customBackgroundColor ? backgroundColor : nil
-            )
+            .actionArea(scrollReachedEnd: scrollSignalIndex == 0 ? nil : manualScrollReachedEnd) {
+                ActionArea(variant: currentVariant)
+                    .caption(caption ? "caption" : nil, icon: captionIcon ? .circleInfo : nil)
+                    .extra({
+                        if extra {
+                            Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
+                                .frame(height: 50)
+                        }
+                    }, divider: extraDivider)
+                    .backgroundColor(customBackgroundColor ? backgroundColor : nil)
+            }
             // PreviewLayout이 미리보기에 좌우 여백을 주는데, ActionArea의 배경·그래디언트는 화면 폭을
             // 꽉 채워야 하므로 그만큼 되돌린다. (공용 컨테이너를 고치지 않고 이 프리뷰에서만 처리)
             .padding(.horizontal, -previewInset)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } options: {
             MenuOptionRow("Variant: ", menuLabel: VariantKind.allCases[variantIndex].selectableTitle) {
                 ForEach(VariantKind.allCases.indices, id: \.self) { v in
@@ -194,15 +199,20 @@ struct ActionAreaPreview: View {
                 }
                 Spacer(minLength: 0)
             }
-            SegmentedIndexRow("background Transparency", index: $gradientIndex, labels: ["Scroll-synced", "Manually-controlled"])
-            if gradientIndex == 1 {
-                ToggleOptionRow("transparency", isOn: $transparency)
+            // Auto는 인자를 넘기지 않는 경로다. Montage.ScrollView가 하단 도달 여부를 스스로 올려 준다.
+            SegmentedIndexRow("scroll signal", index: $scrollSignalIndex, labels: ["Auto", "Manual"])
+            if scrollSignalIndex == 1 {
+                ToggleOptionRow("scrollReachedEnd", isOn: $manualScrollReachedEnd)
             }
             ToggleOptionRow("backgroundColor", isOn: $customBackgroundColor)
             if customBackgroundColor {
                 ColorPickerOptionRow("color", selection: $backgroundColor)
             }
         }
+        // backgroundColor를 바꾸면 화면 바탕도 같이 칠한다. 그래디언트는 ActionArea 색에서 페이지
+        // 색으로 넘어가는 구간이라, 바탕이 기본색이면 커스텀 색을 넣었을 때 경계만 도드라져
+        // 실제 화면과 다르게 보인다.
+        .backgroundColor(previewBackground)
         .toast($mainToastModel)
         .toast($subToastModel)
         .toast($alternativeToastModel)

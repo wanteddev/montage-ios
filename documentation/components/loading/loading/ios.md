@@ -36,10 +36,12 @@ someView
 Loading 컴포넌트를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `kind` | 로딩 애니메이션의 종류 (.wanted 또는 .circular) |
   | `size` | 로딩 애니메이션의 크기 생략하면 기본값으로 `nil` 적용 (기본 크기 사용) |
+
 </details>
 
 ### Instance Properties
@@ -82,9 +84,11 @@ Loading 컴포넌트를 초기화합니다.
 원형 회전 로딩 애니메이션
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 애니메이션의 색상을 지정합니다. 생략하면 기본값으로 `nil` 적용 (기본 색상 사용) |
+
 </details>
 <details>
 
@@ -110,11 +114,13 @@ Wanted 브랜드 스타일의 로딩 애니메이션
 현재 뷰에 로딩 인디케이터와 함께 로딩 오버레이를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `isLoading` | 로딩 상태를 제어하는 바인딩 불리언 값 |
   | `type` | 로딩 애니메이션 종류 (.wanted 또는 .circular) |
   | `dimmedColor` | 오버레이 배경색, 생략하면 기본값으로 `.clear` 적용 |
+
 - **Return Value**
 
   로딩 기능이 적용된 뷰

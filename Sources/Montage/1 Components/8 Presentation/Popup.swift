@@ -10,41 +10,29 @@ import SwiftUI
 /// 화면 중앙에 표시되는 팝업 모달 컴포넌트입니다.
 ///
 /// 배경을 어둡게 처리하고 화면 중앙에 콘텐츠를 표시하는 형태의 모달입니다.
-/// 내비게이션 바와 액션 영역을 설정할 수 있으며, 애니메이션과 함께 표시됩니다.
+/// 내비게이션 바와 액션 영역을 설정할 수 있습니다.
+///
+/// 대개는 ``SwiftUI/View/popup(isPresented:resize:ignoresEdgeInsets:navigation:actionArea:_:)``
+/// 수정자를 씁니다. 딤 처리와 표시 애니메이션까지 함께 해 줍니다. SwiftUI 표준 모달 옵션을
+/// 함께 얹어야 할 때만 이 타입을 직접 만들어 `.fullScreenCover` 안에 넣습니다.
 ///
 /// ```swift
 /// @State private var showPopup = false
 ///
-/// Button("팝업 열기") {
-///     showPopup = true
-/// }
-/// .fullScreenCover(isPresented: $showPopup) {
-///     Popup {
-///         VStack(spacing: 16) {
-///             Text("알림")
-///                 .font(.headline)
-///             Text("중요한 메시지입니다.")
-///
-///             Button("확인") {
-///                 showPopup = false
-///             }
-///         }
-///         .padding()
-///     }
-/// }
-/// .transaction { transaction in
-///     transaction.disablesAnimations = true
-/// }
-/// ```
-///
-/// 모디파이어를 사용하면 더 간편하게 구현할 수 있으며, 애니메이션이 자동으로 처리됩니다:
-/// ```swift
 /// YourView()
 ///     .popup(
-///         isPresented: $showPopup
-///     ) {
-///         Text("팝업 내용")
-///     }
+///         isPresented: $showPopup,
+///         navigation: {
+///             ModalNavigation()
+///                 .title("알림")
+///         },
+///         actionArea: {
+///             ActionArea(variant: .strong(main: .init(text: "확인", action: confirm)))
+///         },
+///         {
+///             Text("중요한 메시지입니다.")
+///         }
+///     )
 /// ```
 public struct Popup: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
@@ -105,12 +93,14 @@ public struct Popup: View {
                     navigationView
                 }
 
-                if let actionAreaModel {
-                    actionAreaModel.makeActionArea(
-                        transparentBackground: actionAreaModel.resolvedTransparentBackground(
-                            automatic: scrolledToBottom
+                if let actionArea {
+                    actionArea()
+                        // 스크롤이 없는 팝업은 가려진 콘텐츠도 없으므로 바닥에 닿은 것으로 본다.
+                        // (`nil`은 "신호 없음"이라 ActionArea가 그라데이션을 그린다)
+                        .environment(
+                            \.actionAreaScrollReachedEnd,
+                            scrollable ? scrolledToBottom : true
                         )
-                    )
                         .padding(.bottom, 20)
                         .onGeometryChange(
                             for: CGFloat.self, of: { $0.size.height },
@@ -151,7 +141,7 @@ public struct Popup: View {
     private var resize: Resize = .hug
     private var ignoresEdgeInsets = false
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionArea.Model?
+    private var actionArea: (() -> ActionArea)?
 
     /// 팝업 모달의 크기를 설정합니다.
     ///
@@ -185,11 +175,11 @@ public struct Popup: View {
 
     /// 팝업 모달 하단에 액션 영역을 설정합니다.
     ///
-    /// - Parameter actionAreaModel: 액션 영역 모델
+    /// - Parameter actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
     /// - Returns: 수정된 팝업 모달 뷰
-    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
+    public func modalActionArea(_ actionArea: (() -> ActionArea)?) -> Self {
         var zelf = self
-        zelf.actionAreaModel = actionAreaModel
+        zelf.actionArea = actionArea
         return zelf
     }
 
@@ -250,6 +240,7 @@ public struct Popup: View {
     private var scrollable: Bool {
         popupContentHeight > viewportHeight
     }
+
 }
 
 struct PopupModifier: ViewModifier {
@@ -258,7 +249,7 @@ struct PopupModifier: ViewModifier {
     private let ignoresEdgeInsets: Bool
     private let popupContent: () -> AnyView
     private let navigation: (() -> ModalNavigation)?
-    private let actionAreaModel: ActionArea.Model?
+    private let actionArea: (() -> ActionArea)?
 
     init<V: View>(
         isPresented: Binding<Bool>,
@@ -266,14 +257,14 @@ struct PopupModifier: ViewModifier {
         ignoresEdgeInsets: Bool = false,
         @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil,
-        actionAreaModel: ActionArea.Model? = nil
+        actionArea: (() -> ActionArea)? = nil
     ) {
         _isPresented = isPresented
         self.resize = resize
         self.ignoresEdgeInsets = ignoresEdgeInsets
         popupContent = { AnyView(content()) }
         self.navigation = navigation
-        self.actionAreaModel = actionAreaModel
+        self.actionArea = actionArea
     }
 
     @State private var opacity: CGFloat = 0
@@ -288,7 +279,7 @@ struct PopupModifier: ViewModifier {
                 .resize(resize)
                 .ignoresEdgeInsets(ignoresEdgeInsets)
                 .modalNavigation(navigation)
-                .modalActionArea(actionAreaModel)
+                .modalActionArea(actionArea)
                 .opacity(opacity)
             }
             .transaction { transaction in
@@ -350,17 +341,17 @@ extension View {
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
     ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - content: 모달에 표시할 콘텐츠 클로저
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - content: 모달에 표시할 콘텐츠 클로저
     /// - Returns: 팝업 모달이 적용된 뷰
     public func popup<V: View>(
         isPresented: Binding<Bool>,
         resize: Popup.Resize = .hug,
         ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
-        @ViewBuilder _ content: @escaping () -> V,
-        navigation: (() -> ModalNavigation)? = nil
+        navigation: (() -> ModalNavigation)? = nil,
+        actionArea: (() -> ActionArea)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
     ) -> some View {
         modifier(
             PopupModifier(
@@ -369,7 +360,7 @@ extension View {
                 ignoresEdgeInsets: ignoresEdgeInsets,
                 content,
                 navigation: navigation,
-                actionAreaModel: actionAreaModel
+                actionArea: actionArea
             )
         )
     }

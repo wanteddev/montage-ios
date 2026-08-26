@@ -60,6 +60,7 @@
 		4DF7C5122CE340F0002B241B /* TextAreaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AA2CE340F0002B241B /* TextAreaPreview.swift */; };
 		4DF7C5182CE340F0002B241B /* ActionAreaPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4992CE340F0002B241B /* ActionAreaPreview.swift */; };
 		4DF7C51C2CE340F0002B241B /* TopNavigationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */; };
+		828486F08E1F4693A7F22BC5 /* ScreenScaffoldPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F0EDA2DBCA48CF92E8A3B8 /* ScreenScaffoldPreview.swift */; };
 		4DF7C5362CE340F0002B241B /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4772CE340F0002B241B /* Collection+.swift */; };
 		4DF7C5392CE340F0002B241B /* SnackBarPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4A82CE340F0002B241B /* SnackBarPreview.swift */; };
 		4DF7C5482CE340F0002B241B /* ToastPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */; };
@@ -134,6 +135,7 @@
 		4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastPreview.swift; sourceTree = "<group>"; };
 		4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TooltipPreview.swift; sourceTree = "<group>"; };
 		4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationPreview.swift; sourceTree = "<group>"; };
+		D9F0EDA2DBCA48CF92E8A3B8 /* ScreenScaffoldPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenScaffoldPreview.swift; sourceTree = "<group>"; };
 		4DF7C4BA2CE340F0002B241B /* ButtonPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonPreview.swift; sourceTree = "<group>"; };
 		4DF7C56A2CE342EA002B241B /* Blueprint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Blueprint-Info.plist"; sourceTree = "<group>"; };
 		4DFA5A522E572464003BED22 /* ShadowPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowPreview.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				4DF7C4AD2CE340F0002B241B /* ToastPreview.swift */,
 				4DF7C4AF2CE340F0002B241B /* TooltipPreview.swift */,
 				4DF7C4B82CE340F0002B241B /* TopNavigationPreview.swift */,
+				D9F0EDA2DBCA48CF92E8A3B8 /* ScreenScaffoldPreview.swift */,
 				4DCAEA7A2E4D822A007C24BF /* TypographyPreview.swift */,
 				4D55974B2D19A36500CFBCA5 /* VerticalProgressTrackerPreview.swift */,
 			);
@@ -381,6 +384,7 @@
 				4DF7C5182CE340F0002B241B /* ActionAreaPreview.swift in Sources */,
 				4D55974E2D1E402C00CFBCA5 /* DateTimePickerPreview.swift in Sources */,
 				4DF7C51C2CE340F0002B241B /* TopNavigationPreview.swift in Sources */,
+				828486F08E1F4693A7F22BC5 /* ScreenScaffoldPreview.swift in Sources */,
 				4D5597522D1E7EC000CFBCA5 /* PaginationDotsPreview.swift in Sources */,
 				4D0D251E2DB763FE00608CE5 /* ThumbnailPreview.swift in Sources */,
 				4D81005A2EA8760B004CAD92 /* PopoverPreview.swift in Sources */,
@@ -561,7 +565,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20260821001;
+				CURRENT_PROJECT_VERSION = 20260824001;
 				DEVELOPMENT_TEAM = YEX9K6G97T;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -591,7 +595,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20260821001;
+				CURRENT_PROJECT_VERSION = 20260824001;
 				DEVELOPMENT_TEAM = YEX9K6G97T;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;

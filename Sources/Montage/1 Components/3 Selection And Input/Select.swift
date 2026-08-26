@@ -223,7 +223,11 @@ public struct Select: View {
     public var body: some View {
         // spacing 0: 요소 사이 간격은 각 요소의 명시적 패딩으로만 준다.
         // (HStack spacing을 두면 leading→content 간격에 불필요하게 더해진다)
-        HStack(alignment: .top, spacing: 0) {
+        // 정렬은 overflow일 때만 top이다. overflow는 칩·텍스트가 여러 줄로 흐르므로
+        // leading·chevron이 첫 줄에 붙어야 한다. 그 외에는 한 줄이라 중앙정렬이 맞는데,
+        // Dynamic Type을 키우면 텍스트 높이가 leading·chevron(24)을 넘어서기 때문에
+        // top으로 두면 아이콘만 위로 치우친다.
+        HStack(alignment: isOverflow ? .top : .center, spacing: 0) {
             Group {
                 switch leadingContent {
                 case .icon(let icon):
@@ -370,25 +374,28 @@ public struct Select: View {
             $0.bottomSheet(
                 isPresented: $defaultMenuPresented,
                 resize: menuResize,
-                actionAreaModel: actionAreaButtonTitle.map {
-                    .init(
-                        variant: .neutral(
-                            main: .init(
-                                text: $0,
-                                action: {
-                                    defaultMenuPresented.toggle()
-                                }),
-                            sub: .custom {
-                                Button(
-                                    variant: .outlined,
-                                    color: .assistive,
-                                    size: .large,
-                                    icon: .refresh
-                                ) {
-                                    deselectAll()
+                actionArea: actionAreaButtonTitle.map { title in
+                    {
+                        ActionArea(
+                            variant: .neutral(
+                                main: .init(
+                                    text: title,
+                                    action: {
+                                        defaultMenuPresented.toggle()
+                                    }),
+                                sub: .custom {
+                                    Button(
+                                        variant: .outlined,
+                                        color: .assistive,
+                                        size: .large,
+                                        icon: .refresh
+                                    ) {
+                                        deselectAll()
+                                    }
                                 }
-                            }
-                        ))
+                            )
+                        )
+                    }
                 }
             ) {
                 menu
@@ -437,6 +444,9 @@ public struct Select: View {
                         }
                         onTapItem?(items[index])
                     }
+                    // ListCell 기본값은 top이라 Dynamic Type을 키우면 라벨이
+                    // 라디오·체크박스보다 높아지면서 선택 표시만 위로 붙는다.
+                    .verticalAlign(.center)
 
                     switch variant {
                     case .single(let selectionType, _):

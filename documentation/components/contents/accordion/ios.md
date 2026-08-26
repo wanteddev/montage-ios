@@ -51,10 +51,12 @@ Accordion(title: "커스텀 스타일")
 아코디언을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 아코디언의 제목 |
   | `description` | 확장 시 표시될 설명 텍스트, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -64,11 +66,13 @@ Accordion(title: "커스텀 스타일")
 아코디언을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `title` | 아코디언의 제목 |
   | `description` | 확장 시 표시될 설명 텍스트, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 확장 시 표시될 커스텀 컨텐츠 뷰 |
+
 </details>
 
 ### Instance Properties
@@ -91,11 +95,13 @@ Accordion(title: "커스텀 스타일")
 설명 텍스트의 타이포그래피 속성을 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형, 생략하면 기본값으로 `.label1` 적용 |
   | `weight` | 텍스트 굵기, 생략하면 기본값으로 `.regular` 적용 |
   | `color` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용 |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -108,9 +114,11 @@ Accordion(title: "커스텀 스타일")
 아코디언이 부모 컨테이너의 너비를 채우도록 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fillWidth` | 너비를 채울지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -126,9 +134,11 @@ Accordion(title: "커스텀 스타일")
 아코디언 하단의 구분선을 숨깁니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `hideDivider` | 구분선을 숨길지 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -141,9 +151,11 @@ Accordion(title: "커스텀 스타일")
 아코디언 제목 앞에 커스텀 컨텐츠를 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `leadingContent` | 표시할 커스텀 컨텐츠 뷰 |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -159,10 +171,12 @@ Accordion(title: "커스텀 스타일")
 아코디언 제목 앞에 아이콘을 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `leadingIcon` | 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `color` | 아이콘 색상, 생략하면 기본값으로 `nil` 적용 (기본 색상 사용) |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -178,11 +192,13 @@ Accordion(title: "커스텀 스타일")
 타이틀 텍스트의 타이포그래피 속성을 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형, 생략하면 기본값으로 `.body2` 적용 |
   | `weight` | 텍스트 굵기, 생략하면 기본값으로 `.bold` 적용 |
   | `color` | 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -195,9 +211,11 @@ Accordion(title: "커스텀 스타일")
 아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `trailingContent` | 표시할 컨텐츠를 생성하는 클로저 (아코디언이 펼쳐진 상태를 파라미터로 받음) |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스
@@ -213,9 +231,11 @@ Accordion(title: "커스텀 스타일")
 아코디언 헤더의 상하 여백 크기를 조정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `verticalPadding` | 상하 여백 크기, 생략하면 기본값으로 `.large` 적용 |
+
 - **Return Value**
 
   수정된 아코디언 인스턴스

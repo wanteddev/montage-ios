@@ -20,7 +20,7 @@ TextButton(text: "저장")
     .disabled(isFormInvalid)
 ```
 
->  **Note**
+> **Note**
 >
 > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다. 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 
@@ -36,6 +36,7 @@ TextButton(text: "저장")
 Text 스타일의 버튼을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `color` | 버튼의 스타일, 생략하면 기본값으로 `.primary` 적용 |
@@ -44,6 +45,7 @@ Text 스타일의 버튼을 생성합니다.
   | `leadingIcon` | 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `trailingIcon` | 텍스트 뒤에 표시할 아이콘, 생략하면 기본값으로 `nil` 적용 |
   | `handler` | 버튼 탭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -66,9 +68,11 @@ Text 스타일의 버튼을 생성합니다.
 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contentColor` | 설정할 색상 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -88,10 +92,12 @@ Text 스타일의 버튼을 생성합니다.
 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fillHorizontal` | 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용 |
   | `fillVertical` | 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -118,9 +124,11 @@ Text 스타일의 버튼을 생성합니다.
 버튼 텍스트의 폰트 변형을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fontVariant` | 설정할 폰트 변형 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -142,9 +150,11 @@ Text 스타일의 버튼을 생성합니다.
 버튼 텍스트의 폰트 두께를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `fontWeight` | 설정할 폰트 두께 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스
@@ -166,9 +176,11 @@ Text 스타일의 버튼을 생성합니다.
 버튼을 로딩 상태로 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `loading` | 로딩 상태 여부, 생략하면 기본값으로 `true` 적용 |
+
 - **Return Value**
 
   수정된 버튼 인스턴스

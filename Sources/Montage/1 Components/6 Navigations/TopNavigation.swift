@@ -13,11 +13,9 @@ import SwiftUI
 /// 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 ///
 /// ```swift
-/// TopNavigation(
-///     scrollOffset: 0,
-///     backgroundColor: .white
-/// )
+/// TopNavigation(scrollOffset: 0)
 /// .variant(.normal)
+/// .backgroundColor(.white)
 /// .title("제목")
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -26,11 +24,9 @@ import SwiftUI
 /// )
 /// ```
 /// ```swift
-/// TopNavigation(
-///     scrollOffset: 0,
-///     backgroundColor: .white
-/// )
+/// TopNavigation(scrollOffset: 0)
 /// .variant(.floating)
+/// .backgroundColor(.white)
 /// .titleView { /* 제목 컴포넌트 */ }
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -66,25 +62,23 @@ public struct TopNavigation: View {
     
     // MARK: - Initializers
     
-    private let scrollOffset: CGFloat
-    private let backgroundColor: SwiftUI.Color?
+    private let explicitScrollOffset: CGFloat?
 
     /// TopNavigation을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - scrollOffset: 스크롤 오프셋 값
-    ///   - backgroundColor: 배경색
+    ///   - scrollOffset: 스크롤 오프셋 값. 생략하면 ``ScreenScaffold``가 내려 주는 값을 씁니다.
+    ///     스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다
     public init(
-        scrollOffset: CGFloat = .zero,
-        backgroundColor: SwiftUI.Color? = nil
+        scrollOffset: CGFloat? = nil
     ) {
-        self.scrollOffset = scrollOffset
-        self.backgroundColor = backgroundColor
+        explicitScrollOffset = scrollOffset
     }
     
     // MARK: - Modifiers
     
     private var variant: Variant = .normal
+    private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNeutralPrimary)
     private var titleText: String?
     private var titleView: () -> AnyView  = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView  = { AnyView(EmptyView()) }
@@ -106,6 +100,16 @@ public struct TopNavigation: View {
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
         zelf.variant = variant
+        return zelf
+    }
+    
+    /// 내비게이션 바의 배경색을 설정합니다.
+    ///
+    /// - Parameter backgroundColor: 배경색
+    /// - Returns: 수정된 내비게이션 바 인스턴스
+    public func backgroundColor(_ backgroundColor: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.backgroundColor = backgroundColor
         return zelf
     }
     
@@ -225,7 +229,7 @@ public struct TopNavigation: View {
             .background {
                 MaterialBackground(
                     materialOpacity: backgroundOpacity,
-                    tint: backgroundView.opacity(backgroundOpacity * 0.7)
+                    tint: backgroundColor.opacity(backgroundOpacity * 0.88)
                 )
                 .if(variant == .floating) {
                     $0.mask {
@@ -242,12 +246,15 @@ public struct TopNavigation: View {
     }
     
     // MARK: - Computed properties
-    
-    private var backgroundView: SwiftUI.Color {
-        backgroundColor ?? .clear
-    }
-    
+
     @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
+
+    /// ``ScreenScaffold``가 내려 주는 스크롤 오프셋. 스캐폴드 밖에서는 최상단(`0`)이다.
+    @Environment(\.topNavigationScrollOffset) private var inheritedScrollOffset: CGFloat
+
+    private var scrollOffset: CGFloat {
+        explicitScrollOffset ?? inheritedScrollOffset
+    }
 
     private var backgroundOpacity: CGFloat {
         if variant.isFloating {
@@ -717,206 +724,17 @@ extension TopNavigation.Variant {
     }
 }
 
-struct TopNavigationModifier: ViewModifier {
-    private let variant: TopNavigation.Variant
-    private let titleView: (() -> any View)?
-    private let backgroundColor: SwiftUI.Color?
-    private let leadingContent: (() -> any View)?
-    private let trailingContents: [() -> any View]
-    private let actionAreaModel: ActionArea.Model?
-    private let searchPlaceholder: String?
-    private let externalSearchTerm: Binding<String>?
-    private let externalFocused: Binding<Bool>?
-    private let onSubmit: (() -> Void)?
-    
-    init(
-        variant: TopNavigation.Variant,
-        titleView: (() -> any View)?,
-        backgroundColor: SwiftUI.Color?,
-        leadingContent: (() -> any View)?,
-        trailingContents: [() -> any View],
-        actionAreaModel: ActionArea.Model?,
-        searchPlaceholder: String?,
-        searchTerm: Binding<String>?,
-        searchFocused: Binding<Bool>?,
-        onSearch: (() -> Void)?
-    ) {
-        self.variant = variant
-        self.titleView = titleView
-        self.backgroundColor = backgroundColor
-        self.leadingContent = leadingContent
-        self.trailingContents = trailingContents
-        self.actionAreaModel = actionAreaModel
-        self.searchPlaceholder = searchPlaceholder
-        self.externalSearchTerm = searchTerm
-        self.externalFocused = searchFocused
-        self.onSubmit = onSearch
-    }
-    
-    // MARK: - Body
-    
-    @State private var scrollStatus: ScrollView.ScrollStatus = .init()
-    @State private var navigationHeight: CGFloat = .zero
-    @State private var internalSearchTerm = ""
-    @State private var internalFocused = false
-    
-    private var searchTerm: Binding<String> {
-        externalSearchTerm ?? $internalSearchTerm
-    }
-    
-    private var focused: Binding<Bool> {
-        externalFocused ?? $internalFocused
-    }
-    
-    func body(content: Content) -> some View {
-        VStack(spacing: 0) {
-            ZStack {
-                ScrollView(scrollStatus: $scrollStatus) {
-                    content
-                        .padding(.top, navigationHeight)
-                }
-                .background(
-                    background
-                )
-                
-                VStack(alignment: .leading, spacing: .zero) {
-                    TopNavigation(
-                        scrollOffset: scrollStatus.contentOffset.y,
-                        backgroundColor: backgroundColor
-                    )
-                    .variant(variant)
-                    .searchField(
-                        placeholder: searchPlaceholder,
-                        searchTerm: searchTerm,
-                        focused: focused,
-                        onSubmit: onSubmit
-                    )
-                    .modifying {
-                        var mutated = $0
-                        if let titleView {
-                            mutated = mutated.titleView {
-                                AnyView(titleView())
-                            }
-                        }
-                        if let leadingContent {
-                            mutated = mutated.leadingContent {
-                                AnyView(leadingContent())
-                            }
-                        }
-                        if trailingContents.isNotEmpty {
-                            mutated = mutated.trailingContents(trailingContents)
-                        }
-                        return mutated
-                    }
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { navigationHeight = $0.height }
-                    )
-                    Spacer()
-                }
-            }
-            
-            if let actionAreaModel {
-                actionAreaModel.makeActionArea(
-                    transparentBackground: actionAreaModel.resolvedTransparentBackground(
-                        automatic: scrollStatus.scrolledToMax
-                    )
-                )
-            }
-        }
-    }
-    
-    private var background: SwiftUI.Color {
-        backgroundColor ?? .clear
-    }
+// MARK: - Environment
+
+struct TopNavigationScrollOffsetKey: EnvironmentKey {
+    /// 스캐폴드 밖에서는 스크롤이 없는 것으로 보고 최상단으로 둔다.
+    static let defaultValue: CGFloat = 0
 }
 
-// MARK: - View Extension
-
-extension View {
-    /// 현재 뷰에 TopNavigation 바를 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용
-    ///   - titleView: 표시할 제목 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
-    ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
-    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - onSearch: 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
-    /// - Returns: TopNavigation이 적용된 뷰
-    public func topNavigation(
-        variant: TopNavigation.Variant = .normal,
-        titleView: (() -> any View)? = nil,
-        backgroundColor: SwiftUI.Color? = nil,
-        leadingContent: (() -> any View)? = nil,
-        trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil,
-        searchPlaceholder: String? = nil,
-        searchTerm: Binding<String>? = nil,
-        searchFocused: Binding<Bool>? = nil,
-        onSearch: (() -> Void)? = nil
-    ) -> some View {
-        modifier(
-            TopNavigationModifier(
-                variant: variant,
-                titleView: titleView.map { v in { AnyView(v()) } },
-                backgroundColor: backgroundColor,
-                leadingContent: leadingContent.map { v in { AnyView(v()) } },
-                trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model,
-                searchPlaceholder: searchPlaceholder,
-                searchTerm: searchTerm,
-                searchFocused: searchFocused,
-                onSearch: onSearch
-            )
-        )
-    }
-
-    /// 현재 뷰에 TopNavigation 바를 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용
-    ///   - title: 표시할 텍스트 타이틀
-    ///   - backgroundColor: 배경색, 생략하면 기본값으로 `nil` 적용
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
-    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - onSearch: 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
-    /// - Returns: TopNavigation이 적용된 뷰
-    public func topNavigation(
-        variant: TopNavigation.Variant = .normal,
-        title: String,
-        backgroundColor: SwiftUI.Color? = nil,
-        leadingContent: (() -> any View)? = nil,
-        trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil,
-        searchPlaceholder: String? = nil,
-        searchTerm: Binding<String>? = nil,
-        searchFocused: Binding<Bool>? = nil,
-        onSearch: (() -> Void)? = nil
-    ) -> some View {
-        modifier(
-            TopNavigationModifier(
-                variant: variant,
-                titleView: { AnyView(TopNavigation.TitleView(variant: variant, title: title)) },
-                backgroundColor: backgroundColor,
-                leadingContent: leadingContent.map { v in { AnyView(v()) } },
-                trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model,
-                searchPlaceholder: searchPlaceholder,
-                searchTerm: searchTerm,
-                searchFocused: searchFocused,
-                onSearch: onSearch
-            )
-        )
+extension EnvironmentValues {
+    var topNavigationScrollOffset: CGFloat {
+        get { self[TopNavigationScrollOffsetKey.self] }
+        set { self[TopNavigationScrollOffsetKey.self] = newValue }
     }
 }
 

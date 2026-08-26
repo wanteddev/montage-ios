@@ -12,11 +12,9 @@ description: 상단에 표시되는 내비게이션 바 컴포넌트입니다.
 제목, 뒤로가기, 추가 액션 버튼 등을 포함할 수 있으며, 다양한 외관 스타일을 지원합니다. 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 
 ```swift
-TopNavigation(
-    scrollOffset: 0,
-    backgroundColor: .white
-)
+TopNavigation(scrollOffset: 0)
 .variant(.normal)
+.backgroundColor(.white)
 .title("제목")
 .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 .trailingContents(
@@ -26,11 +24,9 @@ TopNavigation(
 ```
 
 ```swift
-TopNavigation(
-    scrollOffset: 0,
-    backgroundColor: .white
-)
+TopNavigation(scrollOffset: 0)
 .variant(.floating)
+.backgroundColor(.white)
 .titleView { /* 제목 컴포넌트 */ }
 .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 .trailingContents(
@@ -71,9 +67,11 @@ TopNavigation(
 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `action` | 버튼 액션 |
+
 </details>
 
 #### Instance Properties
@@ -107,7 +105,7 @@ TopNavigation(
   .disabled(true)
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 
@@ -121,11 +119,13 @@ TopNavigation(
 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 아이콘 버튼의 아이콘 |
   | `showPushBadge` | PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 아이콘 버튼 클릭시 동작할 액션 |
+
 </details>
 
 #### Instance Properties
@@ -154,7 +154,7 @@ TopNavigation(
   .disabled(isFormInvalid)
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
 
@@ -168,10 +168,12 @@ TopNavigation(
 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 버튼 액션 |
+
 </details>
 
 #### Instance Properties
@@ -190,16 +192,17 @@ TopNavigation(
 
 <details>
 
-<summary>``init(scrollOffset: CGFloat, backgroundColor: SwiftUI.Color?)``</summary>
+<summary>``init(scrollOffset: CGFloat?)``</summary>
 
 
 TopNavigation을 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
-  | `scrollOffset` | 스크롤 오프셋 값 |
-  | `backgroundColor` | 배경색 |
+  | `scrollOffset` | 스크롤 오프셋 값. 생략하면 [ScreenScaffold](/documentation/montage/screenscaffold.md)가 내려 주는 값을 씁니다. 스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다 |
+
 </details>
 
 ### Instance Properties
@@ -216,15 +219,34 @@ TopNavigation을 초기화합니다.
 
 <details>
 
+<summary>``func backgroundColor(SwiftUI.Color) -> TopNavigation``</summary>
+
+
+내비게이션 바의 배경색을 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `backgroundColor` | 배경색 |
+
+- **Return Value**
+
+  수정된 내비게이션 바 인스턴스
+</details>
+<details>
+
 <summary>``func leadingContent<V>(() -> V) -> TopNavigation``</summary>
 
 
 내비게이션 영역의 왼쪽(leadingContent) 영역에 표시할 뷰를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | leadingContent 영역에 표시할 뷰를 반환하는 클로저 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -240,6 +262,7 @@ TopNavigation을 초기화합니다.
 검색 필드의 속성과 동작을 설정합니다. variant가 `.search`일 때만 적용됩니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placeholder` | 검색 필드에 표시할 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
@@ -248,6 +271,7 @@ TopNavigation을 초기화합니다.
   | `onSubmit` | 검색어 제출 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onTextChange` | 검색어 텍스트 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `onFocusChange` | 검색 필드 포커스 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -260,14 +284,16 @@ TopNavigation을 초기화합니다.
 텍스트 기반 타이틀을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 타이틀에 표시할 문자열 |
+
 - **Return Value**
 
   수정된 내비게이션 바 인스턴스
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > titleView(_:)와 함께 사용될 경우 이 메서드로 설정된 텍스트만 표시됩니다.
 
@@ -280,16 +306,18 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 타이틀 뷰를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `content` | 표시할 타이틀 뷰를 반환하는 클로저 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
 - **Discussion**
 
   타이틀에는 텍스트 또는 커스텀 뷰를 사용할 수 있으며, ViewBuilder를 통해 정의됩니다.
-  >  **Note**
+  > **Note**
   >
   > Title(*:)와 함께 사용될 경우 title(*:) 메서드로 설정된 텍스트만 표시됩니다.
 
@@ -302,9 +330,11 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contents` | Trailing 영역에 표시할 뷰들을 반환하는 클로저들 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -320,9 +350,11 @@ TopNavigation을 초기화합니다.
 내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contents` | Trailing 영역에 표시할 뷰들을 반환하는 클로저 배열 |
+
 - **Return Value**
 
   수정된 인스턴스를 반환합니다.
@@ -338,9 +370,11 @@ TopNavigation을 초기화합니다.
 내비게이션 바의 스타일(Variant)을 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 적용할 내비게이션 스타일 |
+
 - **Return Value**
 
   수정된 내비게이션 바 인스턴스
@@ -388,9 +422,11 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 뒤로가기 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `action` | 뒤로가기 버튼 클릭시 동작할 액션 |
+
 </details>
 <details>
 
@@ -400,10 +436,12 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 아이콘 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
   | `action` | 아이콘 버튼 클릭시 동작할 액션 |
+
 </details>
 <details>
 
@@ -413,10 +451,12 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 텍스트 버튼
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 버튼에 표시할 텍스트 |
   | `action` | 텍스트 버튼 클릭시 동작할 액션 |
+
 </details>
 
 </details>
@@ -448,10 +488,12 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 두 개의 Trailing 인스턴스를 비교합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `lhs` | 비교할 첫 번째 Trailing 인스턴스 |
   | `rhs` | 비교할 두 번째 Trailing 인스턴스 |
+
 - **Return Value**
 
   두 인스턴스가 같은지 여부
@@ -467,12 +509,14 @@ TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
 icon 형태의 Action입니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `icon` | 아이콘 버튼의 아이콘 |
   | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `showPushBadge` | PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 아이콘 클릭시 동작할 액션 |
+
 </details>
 <details>
 
@@ -482,11 +526,13 @@ icon 형태의 Action입니다.
 text 형태의 Action입니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 텍스트 버튼의 텍스트 |
   | `disable` | 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용 |
   | `action` | 텍스트 클릭시 동작할 액션 |
+
 </details>
 
 ##### Instance Methods
@@ -499,9 +545,11 @@ text 형태의 Action입니다.
 해시 값을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `hasher` | 해시 값을 생성할 해시 값 |
+
 </details>
 
 </details>
@@ -553,65 +601,6 @@ TopNavigation의 외관을 결정하는 열거형입니다.
 
 검색 내비게이션 바 스타일
 </details>
-
-</details>
-
-### Associated Extensions
-
-<details>
-
-<summary>``extension View``</summary>
-
-<details>
-
-<summary>``func topNavigation(variant: TopNavigation.Variant, titleView: (() -> any View)?, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
-
-
-현재 뷰에 TopNavigation 바를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용 |
-  | `titleView` | 표시할 제목 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `backgroundColor` | TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용 |
-  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `model` | 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용 |
-  | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `onSearch` | 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  TopNavigation이 적용된 뷰
-</details>
-
-<details>
-
-<summary>``func topNavigation(variant: TopNavigation.Variant, title: String, backgroundColor: SwiftUI.Color?, leadingContent: (() -> any View)?, trailingContents: [() -> any View], withBottom: ActionArea.Model?, searchPlaceholder: String?, searchTerm: Binding<String>?, searchFocused: Binding<Bool>?, onSearch: (() -> Void)?) -> some View``</summary>
-
-
-현재 뷰에 TopNavigation 바를 적용합니다.
-
-- **Parameters**
-  | Parameter | Description |
-  | --- | --- |
-  | `variant` | 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용 |
-  | `title` | 표시할 텍스트 타이틀 |
-  | `backgroundColor` | 배경색, 생략하면 기본값으로 `nil` 적용 |
-  | `leadingContent` | 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용 |
-  | `trailingContents` | 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용 |
-  | `model` | 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용 |
-  | `searchPlaceholder` | 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
-  | `searchTerm` | 검색어 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `searchFocused` | 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용 |
-  | `onSearch` | 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
-- **Return Value**
-
-  TopNavigation이 적용된 뷰
-</details>
-
 
 </details>
 

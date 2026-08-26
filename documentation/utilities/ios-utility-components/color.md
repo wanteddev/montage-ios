@@ -23,11 +23,11 @@ let uiColor = UIColor.semantic(.surfaceBrandPrimary)
 let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 ```
 
->  **Note**
+> **Note**
 >
 > UI 구성요소를 개발할 때는 직접 Atomic 색상을 사용하기보다 Semantic 색상을 사용하는 것이 권장됩니다. 이는 다크 모드와 같은 다양한 환경에서 일관된 디자인을 유지하는 데 도움이 됩니다.
 
->  **Warning**
+> **Warning**
 >
 > **`Color` 네임스페이스 충돌**
 >
@@ -68,7 +68,7 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
       .foregroundColor(.atomic(.red60))
   ```
 
-  >  **Note**
+  > **Note**
   >
   > 숫자가 높을수록 밝은 색상을 나타내며, 100에 가까울수록 흰색에 가깝고 0에 가까울수록 검은색에 가깝습니다.
 
@@ -1437,9 +1437,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `traitCollection` | 색상을 해석할 UITraitCollection |
+
 - **Return Value**
 
   해석된 UIColor 인스턴스
@@ -2012,9 +2014,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 주어진 UITraitCollection에 따라 UIColor를 반환합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `traitCollection` | 색상을 해석할 UITraitCollection |
+
 - **Return Value**
 
   해석된 UIColor 인스턴스
@@ -2036,9 +2040,11 @@ let swiftUIColor = SwiftUI.Color.semantic(.surfaceBrandPrimary)
 Atomic 색상 타입에 해당하는 UIColor를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Atomic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 UIColor 인스턴스
@@ -2052,9 +2058,11 @@ Atomic 색상 타입에 해당하는 UIColor를 생성합니다.
 Semantic 색상 타입에 해당하는 UIColor를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Semantic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 UIColor 인스턴스
@@ -2076,9 +2084,11 @@ Semantic 색상 타입에 해당하는 UIColor를 생성합니다.
 Atomic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Atomic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 SwiftUI.Color 인스턴스
@@ -2092,9 +2102,11 @@ Atomic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 Semantic 색상 타입에 해당하는 SwiftUI.Color를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `type` | 생성할 Semantic 색상 타입 |
+
 - **Return Value**
 
   동적으로 생성된 SwiftUI.Color 인스턴스

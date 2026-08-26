@@ -75,26 +75,25 @@ struct TopNavigationPreview: View {
         }
     }
     
-    private var actionAreaModel: ActionArea.Model? {
-        if actionArea {
-            .init(
+    private var actionAreaSlot: (() -> ActionArea)? {
+        guard actionArea else { return nil }
+
+        return {
+            ActionArea(
                 variant: .strong(
                     main: .init(text: "메인", action: {}),
                     sub: actionAreaSub ? .init(text: "서브", action: {}) : nil,
                     alternative: actionAreaAlt ? .init(text: "대체", action: {}) : nil
-                ),
-                caption: actionAreaCaption ? "캡션" : nil,
-                extra: {
-                    if actionAreaExtra {
-                        Rectangle()
-                            .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
-                            .frame(height: 100)
-                    }
-                },
-                extraDivider: true
+                )
             )
-        } else {
-            nil
+            .caption(actionAreaCaption ? "캡션" : nil)
+            .extra({
+                if actionAreaExtra {
+                    Rectangle()
+                        .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
+                        .frame(height: 100)
+                }
+            })
         }
     }
     
@@ -147,34 +146,49 @@ struct TopNavigationPreview: View {
     }
 
     var preview: some View {
-        VStack(alignment: .leading) {
-            ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
-                ZStack {
-                    SwiftUI.Color.semantic(.allCases[index])
-                    Text("Item \(index)")
-                        .padding()
+        ScreenScaffold(
+            navigation: {
+                TopNavigation()
+                    .backgroundColor(backgroundColor)
+                    .variant(currentVariant)
+                    .title(title)
+                    .trailingContents(trailingContents)
+                    .searchField(
+                        placeholder: "검색하세요",
+                        searchTerm: $term,
+                        focused: $focused,
+                        onSubmit: { print("\(term) 검색됨") }
+                    )
+                    .modifying {
+                        var mutated = $0
+                        if leading {
+                            mutated = mutated.leadingContent {
+                                IconButton(icon: .chevronLeft) {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                                .frame(width: 24, height: 24)
+                            }
+                        }
+                        return mutated
+                    }
+            },
+            actionArea: actionAreaSlot,
+            {
+                VStack(alignment: .leading) {
+                    ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
+                        ZStack {
+                            SwiftUI.Color.semantic(.allCases[index])
+                            Text("Item \(index)")
+                                .padding()
+                        }
+                    }
                 }
+                .padding()
+                // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
+                .previewCheckered()
             }
-        }
-        .padding()
-        .topNavigation(
-            variant: currentVariant,
-            title: title,
-            backgroundColor: backgroundColor,
-            leadingContent: leading ? {
-                IconButton(icon: .chevronLeft) {
-                    presentationMode.wrappedValue.dismiss()
-                }
-                .frame(width: 24, height: 24)
-            } : nil,
-            trailingContents: trailingContents,
-            withBottom: actionAreaModel,
-            searchPlaceholder: "검색하세요",
-            searchTerm: $term,
-            searchFocused: $focused
-        ) {
-            print("\(term) 검색됨")
-        }
+        )
+        .backgroundColor(backgroundColor)
         .onChange(of: focused) { newValue in
             if isSearchVariant {
                 withAnimation(.easeInOut(duration: 0.2)) {

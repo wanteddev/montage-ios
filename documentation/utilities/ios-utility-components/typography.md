@@ -21,7 +21,7 @@ Text("Hello, World!")
     .typography(variant: .heading1, weight: .bold, semantic: .foregroundNeutralPrimary)
 ```
 
->  **Note**
+> **Note**
 >
 > 텍스트 스타일을 적용할 때는 일관성을 위해 직접 폰트를 지정하기보다 Typography 시스템을 사용하는 것이 권장됩니다.
 
@@ -301,15 +301,17 @@ Pretendard 폰트 두께 매핑
 Montage 디자인 시스템의 폰트를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 폰트 크기 |
   | `weight` | 폰트 두께 |
+
 - **Return Value**
 
   생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 nil 반환
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 반환 폰트는 `.body` 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
 
@@ -323,15 +325,17 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 Montage 디자인 시스템의 폰트를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
+
 - **Return Value**
 
   생성된 UIFont 인스턴스. 폰트를 찾을 수 없는 경우 시스템 폰트로 대체
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 반환 폰트는 variant별 텍스트 스타일([uiTextStyle](/documentation/montage/typography/variant/uitextstyle.md)) 기준 Dynamic Type 스케일이 적용된다. 실행 중 글자 크기 변경에 반응하려면 사용하는 뷰에서 `adjustsFontForContentSizeCategory = true`를 설정해야 한다.
 
@@ -353,10 +357,12 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 Montage 디자인 시스템의 폰트를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | 폰트 크기 |
   | `weight` | 폰트 두께 |
+
 - **Return Value**
 
   생성된 Font 인스턴스
@@ -370,10 +376,12 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 Montage 디자인 시스템의 폰트를 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
+
 - **Return Value**
 
   생성된 Font 인스턴스
@@ -395,12 +403,14 @@ Montage 디자인 시스템의 폰트를 생성합니다.
 Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `string` | 표시할 문자열 |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `color` | 색상 |
+
 - **Return Value**
 
   생성된 UILabel 인스턴스
@@ -414,12 +424,14 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `string` | 표시할 문자열 |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `semantic` | 시맨틱 색상 |
+
 - **Return Value**
 
   생성된 UILabel 인스턴스
@@ -441,11 +453,13 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 타이포그래피 변형에 따른 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `color` | 색상 |
+
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
@@ -459,11 +473,13 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 타이포그래피 변형에 따른 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `semantic` | 시맨틱 색상 |
+
 - **Return Value**
 
   스타일이 적용된 Text 인스턴스
@@ -477,11 +493,13 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `color` | 색상 |
+
 - **Return Value**
 
   단락 스타일이 적용된 View
@@ -495,11 +513,13 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 타이포그래피 변형에 따른 단락 스타일을 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
   | `weight` | 폰트 두께 |
   | `semantic` | 시맨틱 색상 |
+
 - **Return Value**
 
   단락 스타일이 적용된 View
@@ -521,9 +541,11 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 타이포그래피 변형에 따른 줄 높이를 적용합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `variant` | 텍스트 변형 |
+
 - **Return Value**
 
   줄 높이가 적용된 View
@@ -545,6 +567,7 @@ Montage 디자인 시스템의 스타일을 적용한 UILabel을 생성합니다
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `string` | 변환할 문자열 |
@@ -552,6 +575,7 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
   | `weight` | 폰트 두께, 생략하면 기본값으로 `.regular` 적용 |
   | `color` | 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용 |
   | `lineBreakMode` | 줄바꿈 모드, 생략하면 기본값으로 `.byWordWrapping` 적용 |
+
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString
@@ -565,6 +589,7 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
 Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedString을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `string` | 변환할 문자열 |
@@ -572,6 +597,7 @@ Montage 디자인 시스템의 타이포그래피를 적용한 NSAttributedStrin
   | `weight` | 폰트 두께, 생략하면 기본값으로 `.regular` 적용 |
   | `semantic` | 의미론적 색상 |
   | `lineBreakMode` | 줄바꿈 모드, 생략하면 기본값으로 `.byWordWrapping` 적용 |
+
 - **Return Value**
 
   Montage 스타일이 적용된 NSAttributedString

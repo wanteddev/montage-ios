@@ -86,9 +86,11 @@ FormControl { _ in
 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `input` | 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)를 받아 감쌀 입력 컴포넌트를 반환하는 뷰 빌더 |
+
 - **Discussion**
 
   클로저는 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)(크기·상태)를 전달받으므로, 입력 컴포넌트가 FormControl의 크기·상태를 그대로 반영할 수 있습니다. (예: FormControl에 `.status(.negative)`만 설정하면 내부 입력도 에러 상태로 그릴 수 있음)
@@ -114,9 +116,11 @@ FormControl { _ in
 Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `accessory` | 표시할 액세서리 뷰 빌더 |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트
@@ -132,10 +136,12 @@ Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
 라벨 텍스트와 필수 표시 여부를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다. |
   | `required` | 필수 입력 표시(`*`) 여부. 생략하면 기본값으로 `false` 적용 |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트
@@ -148,9 +154,11 @@ Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
 라벨 위치를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `placement` | 라벨 위치. 생략하면 기본값으로 `.top` 적용 |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트
@@ -163,9 +171,11 @@ Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.
 leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `width` | 라벨 열 폭(pt). |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트
@@ -183,14 +193,16 @@ leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니
 도움말/에러 메시지를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `text` | 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다. |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트
 - **Discussion**
-  >  **Note**
+  > **Note**
   >
   > 메시지 색은 [status(_:)](/documentation/montage/formcontrol/status(_:).md)에 따라 결정됩니다. `.negative`에서만 강조 색으로 표시됩니다.
 
@@ -203,9 +215,11 @@ leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니
 크기를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `size` | FormControl 크기. 생략하면 기본값으로 `.large` 적용 |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트
@@ -218,9 +232,11 @@ leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니
 상태를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `status` | FormControl 상태. 생략하면 기본값으로 `.normal` 적용 |
+
 - **Return Value**
 
   수정된 FormControl 컴포넌트

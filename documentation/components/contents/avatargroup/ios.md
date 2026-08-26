@@ -44,11 +44,13 @@ AvatarGroup(
 URL 문자열 배열로 그룹 아바타를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `imageUrls` | 표시할 이미지의 URL 문자열 배열 (최대 5개) |
   | `size` | 그룹 아바타 크기 |
   | `onTap` | 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 <details>
 
@@ -58,11 +60,13 @@ URL 문자열 배열로 그룹 아바타를 초기화합니다.
 SwiftUI Image 배열로 그룹 아바타를 초기화합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `images` | 표시할 SwiftUI Image 배열 (최대 5개) |
   | `size` | 그룹 아바타 크기 |
   | `onTap` | 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용 |
+
 </details>
 
 ### Instance Properties
@@ -85,9 +89,11 @@ SwiftUI Image 배열로 그룹 아바타를 초기화합니다.
 이미지의 콘텐츠 모드를 설정합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `contentMode` | 콘텐츠 모드, `.fit` 또는 `.fill` |
+
 - **Return Value**
 
   수정된 그룹 아바타 인스턴스
@@ -100,9 +106,11 @@ SwiftUI Image 배열로 그룹 아바타를 초기화합니다.
 그룹 아바타 오른쪽에 추가적인 콘텐츠를 표시합니다.
 
 - **Parameters**
+
   | Parameter | Description |
   | --- | --- |
   | `trailingContent` | 표시할 뷰를 생성하는 클로저 |
+
 - **Return Value**
 
   수정된 그룹 아바타 인스턴스

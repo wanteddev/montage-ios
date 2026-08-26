@@ -81,8 +81,8 @@ struct BottomSheetPreview: View {
             isFullScreenCover: isFullModal,
             needHandle: handle,
             resize: bottomSheetResizes[resizeIndex],
-            actionAreaModel: actionArea ? actionAreaModel : nil,
             navigation: navigation ? { navigationContent } : nil,
+            actionArea: actionArea ? actionAreaSlot : nil,
             { modalContent }
         )
         .onChange(of: isFullModal) { _ in
@@ -149,18 +149,17 @@ struct BottomSheetPreview: View {
         }
     }
 
-    private var actionAreaModel: ActionArea.Model {
-        .init(
-            variant: actionAreaVariant,
-            caption: caption ? "caption" : nil,
-            extra: {
-                if extra {
-                    Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
-                        .frame(height: 50)
-                }
-            },
-            extraDivider: extraDivider
-        )
+    private var actionAreaSlot: () -> ActionArea {
+        {
+            ActionArea(variant: actionAreaVariant)
+                .caption(caption ? "caption" : nil)
+                .extra({
+                    if extra {
+                        Rectangle().fill(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
+                            .frame(height: 50)
+                    }
+                }, divider: extraDivider)
+        }
     }
 
     private var actionAreaVariant: ActionArea.Variant {
