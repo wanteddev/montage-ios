@@ -644,6 +644,19 @@ FilterButton은 radius가 커지고 패딩이 줄어 더 둥글고 작아집니�
 | min-height | - | 증가 (필드가 높아짐) |
 | 테두리 색 | - | 옅어짐 |
 | `heading` · `requiredBadge` | 컴포넌트 내장 | 제거 - `FormControl`로 이관 |
+| 세로 정렬 | 항상 `top` | `overflow`일 때만 `top`, 그 외 `center` |
+
+세로 정렬은 Dynamic Type을 키웠을 때만 눈에 띕니다. 3.x는 항상 `top` 정렬이라 텍스트 높이가 leading 아이콘·chevron(24pt)을 넘어서면 **아이콘만 위로 치우쳐** 보였습니다. 4.0은 여러 줄로 흐르는 `overflow` 상태에서만 `top`을 쓰고 한 줄일 때는 `center`로 맞춥니다. 선택 목록의 `ListCell`도 `verticalAlign(.center)`가 붙어 라디오·체크박스가 라벨 중앙에 옵니다.
+
+#### TopNavigation · ModalNavigation
+
+스크롤 시 깔리는 배경 tint 농도가 올라갔습니다.
+
+| 항목 | 3.x·4.0 초기 | 4.0 |
+|---|---|---|
+| 스크롤 배경 tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
+
+콘텐츠를 스크롤해 내비게이션 배경이 나타나는 구간에서 **배경이 더 진해집니다.** API 변경은 없고 값만 바뀌므로 컴파일 에러가 나지 않습니다. 내비게이션 아래로 콘텐츠가 지나가는 화면을 눈으로 확인해주세요.
 
 #### SegmentedControl
 
@@ -681,7 +694,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 |---|---|
 | **Button** | 높이 제약이 고정에서 최소값으로 바뀌어 **긴 라벨이 말줄임 대신 줄바꿈**됩니다. 버튼이 세로로 커져 주변 레이아웃이 밀립니다. radius도 사이즈별로 +2 |
 | **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
-| **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다 |
+| **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다. Dynamic Type을 키웠을 때 leading 아이콘·chevron이 위로 치우치던 것이 중앙정렬로 정정됐습니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
 | **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 배경이 불투명하게 보이므로 `scrollReachedEnd(_:)`로 직접 넘겨야 합니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 회사 로고가 조금 더 둥글어집니다 |
@@ -693,6 +706,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Toast · SnackBar** | 배경 불투명도 light 50% → 52%, dark 46% → 43% |
 | **BottomSheet** | 배경 불투명도 80% → 88% |
 | **SearchField** | solid 틴트 2겹, 비활성 outlined 배경이 `surfaceNeutralTertiary`로 |
+| **TopNavigation · ModalNavigation** | 스크롤 배경 tint 농도가 `0.7` → `0.88`로 올라가 **스크롤 시 내비게이션 배경이 더 진해집니다** |
 | **Typography `caption2`** | Dynamic Type 스케일 곡선이 `.caption2` → `.caption`. 기본 크기는 동일하고, 확대 단계에서 `caption2`가 `caption1`보다 커지던 위계 역전이 해소됩니다 |
 | **Avatar · Thumbnail** | 비활성 시 `opacity43` 적용 |
 | **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
