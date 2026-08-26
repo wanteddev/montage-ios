@@ -387,18 +387,20 @@ jobs:
           #              diff 범위 밖이라 Claude 가 번역하지 않고, skip 모드에선
           #              Claude 가 아예 실행되지 않아 boilerplate 가 그대로 커밋된다.
           #  결과적으로 템플릿/스키마 갱신은 full 실행으로만 반영된다 — 의도된 규칙.
-          #  AGENTS.md 는 state=human 일 때 예외다. Snapshot 이 원본을 $HUMAN 에
-          #  보관하고 파일을 치웠으므로, 여기서 되살리면 Reduce 가 사람 원본을 시드로
-          #  집어 Claude 에게 넘긴다 → 재조립 때 사람 문서가 마커 블록 안에 한 번 더
-          #  들어간다. skip 모드는 재조립의 선행 사본 제거가 잡아내지만(pipe 가 원본과
-          #  완전히 같아 diff 가 일치한다), diff 모드는 Claude 가 시드를 고쳐 놓아
-          #  일치하지 않으므로 중복이 그대로 커밋된다.
+          #  AGENTS.md 는 'diff 모드 + state=human' 조합만 예외다. Snapshot 이 원본을
+          #  $HUMAN 에 보관하고 파일을 치웠으므로, 여기서 되살리면 Reduce 가 사람 원본을
+          #  시드로 집어 Claude 에게 넘긴다 → 재조립 때 사람 문서가 마커 블록 안에 한 번
+          #  더 들어간다(재조립의 선행 사본 제거는 Claude 가 시드를 고쳐 놓으면 일치하지
+          #  않아 걸러내지 못한다).
+          #  skip 모드는 반대로 반드시 되살려야 한다. Claude 도 Reassemble 도 돌지 않아
+          #  사람 문서를 복원할 주체가 없고, 여기서 안 되살리면 스캐폴더 템플릿이 그대로
+          #  커밋돼 사람 문서를 덮어쓴다.
           if [ "$MODE" != "full" ]; then
             git checkout -- "$DOCS_ROOT" 2>/dev/null || true
-            if [ "${AGENTS_STATE:-}" != "human" ]; then
+            if [ "$MODE" = "skip" ] || [ "${AGENTS_STATE:-}" != "human" ]; then
               git checkout -- AGENTS.md  2>/dev/null || true
             else
-              echo "state=human — AGENTS.md 는 원복하지 않습니다(스캐폴더 템플릿을 시드로 쓰고 재조립에서 원본을 복원)"
+              echo "diff + state=human — AGENTS.md 는 원복하지 않습니다(스캐폴더 템플릿을 시드로 쓰고 재조립에서 원본을 복원)"
             fi
             git clean -fdq "$DOCS_ROOT"  2>/dev/null || true
           fi
@@ -451,7 +453,16 @@ jobs:
       # 영역을 볼 일이 없고, 재조립 단계에서 사람 영역이 정확히 한 번만 붙는다.
       # (마커가 없으면 = 파이프라인이 처음 쓰는 경우이거나 legacy 실행 결과이므로
       #  파일 전체를 파이프라인 영역으로 취급한다)
+      #
+      # skip 모드에서는 실행하지 않는다. 이 스텝은 Claude 에게 넘길 시드를 만드는
+      # 것이고, 그 되돌림(사람 영역 재부착·심링크 복원)은 Reassemble 이 하는데
+      # Reassemble 은 skip 모드에서 돌지 않는다. 그래서 skip 모드에서 이 스텝이
+      # AGENTS.md 를 건드리면 아무도 되돌려 놓지 않고, Commit 이 그 결과를 그대로
+      # 스테이징한다 — state=marker 는 사람 영역과 마커가 잘려 나가고(`cp SEED`),
+      # 심링크 repo 는 링크가 빈 실파일로 대체된다. skip 모드는 정의상 AGENTS.md 를
+      # 바꾸지 않아야 한다(도구 자산 변경만 PR 로 나간다).
       - name: Reduce AGENTS.md to pipeline region
+        if: steps.scope.outputs.mode != 'skip'
         env:
           AGENTS_FILE: ${{ steps.snapshot.outputs.agents_file }}
           AGENTS_HUMAN: ${{ steps.snapshot.outputs.agents_human }}
@@ -751,10 +762,11 @@ jobs:
           sed -e '/<!-- BEGIN: llm-wiki/d' -e '/<!-- END: llm-wiki/d' AGENTS.md > "$RUNNER_TEMP/AGENTS.pipe.md"
 
           # 사람 영역 중복 방지. 아래에서 HUMAN 을 파이프 앞에 붙이므로, 파이프 쪽에
-          # 이미 같은 내용이 들어 있으면 두 번 나온다. Claude 가 도는 경로에서는
-          # 라우팅만 새로 쓰므로 생기지 않지만, Claude 가 skip 되는 mode=skip 에서는
-          # Reduce 가 HEAD 의 AGENTS.md(사람 영역 포함)를 그대로 넘겨 중복이 된다.
-          # (Reduce/Reassemble 은 무조건 실행이고 Claude 만 skip 되기 때문이다)
+          # 이미 같은 내용이 들어 있으면 두 번 나온다. 정상 경로에서는 Reduce 가
+          # 사람 원본을 시드로 넘기지 않으므로 걸릴 일이 없고, 걸리더라도 Claude 가
+          # 시드를 고쳐 놓으면 diff 가 일치하지 않아 이 가드는 통과한다. 즉 이건
+          # 최후 방어선이지 중복 방지의 본체가 아니다 — 본체는 시드 선택 쪽이다
+          # (Scaffold 의 'diff + state=human 은 원복하지 않는다' 규칙).
           if [ -s "$HUMAN" ] && head -n "$(awk 'END{print NR}' "$HUMAN")" "$RUNNER_TEMP/AGENTS.pipe.md" \
                | diff -q - "$HUMAN" >/dev/null 2>&1; then
             tail -n +"$(( $(awk 'END{print NR}' "$HUMAN") + 1 ))" "$RUNNER_TEMP/AGENTS.pipe.md" \
