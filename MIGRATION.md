@@ -370,7 +370,23 @@ Montage.TextField(text: $email)
 
 `Montage.ScrollView`를 쓰면 스크롤 바닥 도달이 자동 전달되므로 아무것도 넘기지 않아도 3.x의 `.automatic`과 동등합니다. `SwiftUI.ScrollView`/`List`처럼 신호를 올려주지 않는 컨테이너를 쓸 때만 `actionArea(scrollReachedEnd:)`로 직접 넘기세요.
 
-**`.manual`로 배경을 직접 투명하게 만들던 자리는 대체 수단이 없습니다.** 스크롤과 무관하게 투명 배경이 필요했다면 `backgroundColor(.clear)`로 명시하거나, 정말 그 표현이 필요한지 디자이너와 다시 확인해주세요.
+**`.manual`로 배경을 직접 투명하게 만들던 자리는 하단 도달 신호를 직접 넘기면 됩니다.** 스크롤 컨테이너가 아예 없는 화면(팝업·시트 안의 고정 높이 콘텐츠)은 신호가 올라올 데가 없어서 ActionArea가 "아래에 가려진 콘텐츠가 있다"고 보고 그라데이션과 배경을 그립니다. `true`를 넘기면 그라데이션이 숨겨지고 배경이 비칩니다.
+
+넘기는 자리가 두 군데입니다.
+
+```swift
+// 뷰에 모디파이어로 붙이는 경우
+content
+    .actionArea(scrollReachedEnd: true) { ActionArea(variant: …) }
+
+// BottomSheet·Popup 처럼 actionArea: 인자로 넘기는 경우 - ActionArea 에 직접 체인한다
+.popup(isPresented: $isPresented, actionArea: {
+    ActionArea(variant: …)
+        .scrollReachedEnd(true)
+})
+```
+
+배경색 자체를 바꿔야 한다면 `backgroundColor(_:)`를 씁니다. 두 방법 중 어느 것도 맞지 않으면 그 표현이 정말 필요한지 디자이너와 다시 확인해주세요.
 
 4.0에서 ActionArea 스펙도 함께 조정됐습니다.
 
@@ -667,7 +683,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
 | **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
-| **ActionArea** | 투명 배경 API 제거 → **배경이 항상 불투명**해집니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
+| **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 배경이 불투명하게 보이므로 `scrollReachedEnd(_:)`로 직접 넘겨야 합니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 회사 로고가 조금 더 둥글어집니다 |
 | **FallbackView** | 상하 최소 여백 160 내장. 밖의 여백·고정 높이를 정리하지 않으면 이중 적용. 설명 타이포가 `body2` → `body2Reading`으로 행간이 늘어납니다 |
 | **입력 컴포넌트** | 라벨이 필드 위로, 에러가 필드 아래로, 카운터가 필드 아래 우측으로 나옵니다. 필드 높이와 폼 전체 높이가 달라집니다 |
@@ -696,7 +712,8 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 - [ ] `.actionArea {}` 슬롯 안에 `if`문이 없는지
 - [ ] Chip 슬롯 아이콘의 크기·색을 사용처에서 지정했는지
 - [ ] 긴 라벨을 쓰는 버튼이 줄바꿈되어 레이아웃을 밀지 않는지
-- [ ] `transparentBackground`를 `.manual`로 쓰던 자리를 어떻게 처리할지 결정했는지
+- [ ] `transparentBackground`를 `.manual`로 쓰던 자리에 `scrollReachedEnd(_:)`를 넘겼는지
+- [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경이 의도대로 보이는지
 - [ ] [컴포넌트 스펙 리프레시](#8-컴포넌트-스펙-리프레시)·[시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경) 목록의 화면을 실기기/시뮬레이터에서 확인
 
 > 스펙 변경은 Blueprint를 두 버전으로 빌드해 대조하면 가장 빠르게 확인됩니다.
