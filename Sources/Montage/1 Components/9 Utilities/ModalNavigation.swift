@@ -104,7 +104,7 @@ public struct ModalNavigation: View {
                 } else {
                     MaterialBackground(
                         materialOpacity: backgroundOpacity,
-                        tint: backgroundColor.opacity(backgroundOpacity * 0.7)
+                        tint: backgroundColor.opacity(backgroundOpacity * 0.88)
                     )
                 }
             }
