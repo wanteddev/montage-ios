@@ -348,6 +348,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MODE: ${{ steps.scope.outputs.mode }}
           AGENTS_FILE: ${{ steps.snapshot.outputs.agents_file }}
+          AGENTS_STATE: ${{ steps.snapshot.outputs.agents_state }}
         run: |
           set -euo pipefail
           npx "@wanteddev/create-llm-wiki@${CREATE_LLM_WIKI_VERSION}" . --yes
@@ -386,9 +387,19 @@ jobs:
           #              diff 범위 밖이라 Claude 가 번역하지 않고, skip 모드에선
           #              Claude 가 아예 실행되지 않아 boilerplate 가 그대로 커밋된다.
           #  결과적으로 템플릿/스키마 갱신은 full 실행으로만 반영된다 — 의도된 규칙.
+          #  AGENTS.md 는 state=human 일 때 예외다. Snapshot 이 원본을 $HUMAN 에
+          #  보관하고 파일을 치웠으므로, 여기서 되살리면 Reduce 가 사람 원본을 시드로
+          #  집어 Claude 에게 넘긴다 → 재조립 때 사람 문서가 마커 블록 안에 한 번 더
+          #  들어간다. skip 모드는 재조립의 선행 사본 제거가 잡아내지만(pipe 가 원본과
+          #  완전히 같아 diff 가 일치한다), diff 모드는 Claude 가 시드를 고쳐 놓아
+          #  일치하지 않으므로 중복이 그대로 커밋된다.
           if [ "$MODE" != "full" ]; then
             git checkout -- "$DOCS_ROOT" 2>/dev/null || true
-            git checkout -- AGENTS.md    2>/dev/null || true
+            if [ "${AGENTS_STATE:-}" != "human" ]; then
+              git checkout -- AGENTS.md  2>/dev/null || true
+            else
+              echo "state=human — AGENTS.md 는 원복하지 않습니다(스캐폴더 템플릿을 시드로 쓰고 재조립에서 원본을 복원)"
+            fi
             git clean -fdq "$DOCS_ROOT"  2>/dev/null || true
           fi
 
