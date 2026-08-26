@@ -429,6 +429,17 @@ jobs:
             exit 0
           fi
 
+          # .agents 가 ignore 대상이면 이동하지 않는다. git mv 는 목적지가 ignore 여도
+          # 경고 없이 성공하며(실측: exit 0) rename 을 곧바로 인덱스에 올린다. Commit 의
+          # `git check-ignore -q .agents` 는 그 뒤의 `git add` 만 건너뛰므로 이미 staged 된
+          # rename 은 인덱스에 남고, `git diff --cached --quiet` 를 통과해 그대로 커밋된다.
+          # 그러면 ignore 경로를 거슬러 커밋하지 않는다는 Commit 의 정책이 깨지고,
+          # 추적되던 스킬이 ignore 경로로 옮겨져 버전 관리에서 사라진다.
+          if git check-ignore -q .agents; then
+            echo "::warning::.agents 가 .gitignore 대상이라 마이그레이션을 건너뜁니다 — .gemini/skills 를 그대로 둡니다. 이동이 필요하면 repo 의 ignore 규칙을 먼저 조정하세요."
+            exit 0
+          fi
+
           mkdir -p .agents
           # 추적 중이면 git mv 로 이력을 보존하고(양쪽 변경이 곧바로 staged 된다),
           # untracked 면 일반 mv 를 쓴다.
