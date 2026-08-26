@@ -229,7 +229,7 @@ public struct TopNavigation: View {
             .background {
                 MaterialBackground(
                     materialOpacity: backgroundOpacity,
-                    tint: backgroundColor.opacity(backgroundOpacity * 0.7)
+                    tint: backgroundColor.opacity(backgroundOpacity * 0.88)
                 )
                 .if(variant == .floating) {
                     $0.mask {
