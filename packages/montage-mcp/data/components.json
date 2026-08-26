@@ -375,12 +375,6 @@
           "kind": "method"
         },
         {
-          "name": "fill(horizontal:vertical:)",
-          "signature": "func fill(horizontal: Bool, vertical: Bool) -> Button",
-          "summary": "버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "fillWidth(_:)",
           "signature": "func fillWidth(Bool) -> Button",
           "summary": "버튼이 수평으로 공간을 채우도록 설정합니다.",
@@ -3139,9 +3133,9 @@
           "kind": "method"
         },
         {
-          "name": "fill(horizontal:vertical:)",
-          "signature": "func fill(horizontal: Bool, vertical: Bool) -> TextButton",
-          "summary": "버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.",
+          "name": "fillWidth(_:)",
+          "signature": "func fillWidth(Bool) -> TextButton",
+          "summary": "버튼이 수평으로 공간을 채우도록 설정합니다.",
           "kind": "method"
         },
         {
