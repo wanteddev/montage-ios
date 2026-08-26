@@ -232,7 +232,7 @@ extension ActionArea {
         ///
         /// - Parameter custom: 커스텀 버튼 뷰를 생성하는 클로저
         /// - Returns: 커스텀 뷰가 포함된 ButtonInfo 인스턴스
-        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
+        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 `fillWidth(_:)` 모디파이어를 사용하세요.
         public static func custom<V: View>(@ViewBuilder _ custom: @escaping () -> V) -> Self {
             var zelf = self.init(text: "", action: {})
             zelf.custom = { AnyView(custom()) }
@@ -352,7 +352,7 @@ extension ActionArea {
             VStack(spacing: 8) {
                 primarySolidButton(main)
                 if let alternative {
-                    secondaryOutlinedButton(alternative)
+                    assistiveOutlinedButton(alternative)
                 }
                 if let sub {
                     assistiveTextButton(sub)
@@ -371,7 +371,7 @@ extension ActionArea {
                     assistiveOutlinedButton(sub, fillWidth: false)
                 }
                 if let alternative {
-                    secondaryOutlinedButton(alternative)
+                    assistiveOutlinedButton(alternative)
                 }
                 primarySolidButton(main)
             }
@@ -381,7 +381,7 @@ extension ActionArea {
         private func cancel(
             _ main: ButtonInfo
         ) -> some View {
-            assistiveOutlinedButton(main)
+            assistiveSolidButton(main)
         }
 
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
@@ -392,20 +392,19 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .fill(horizontal: true, vertical: false)
+                .fillWidth()
             }
         }
 
-        @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
+        @ViewBuilder private func assistiveSolidButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 Button(
-                    variant: .outlined,
-                    color: .primary,
+                    color: .assistive,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .fill(horizontal: true, vertical: false)
+                .fillWidth()
             }
         }
 
@@ -418,9 +417,7 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .if(fillWidth) {
-                    $0.fill(horizontal: true, vertical: false)
-                }
+                .fillWidth(fillWidth)
             }
         }
 
