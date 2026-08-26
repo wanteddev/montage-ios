@@ -71,6 +71,33 @@ make
 > - The `verify-docs` workflow runs only when Swift files are modified. If it fails, run `make` locally and include the generated outputs.
 > - The `./generate_docc.sh` script executed by `make` produces different results depending on the Xcode version, so the Xcode version specified by `XCODE_VERSION` in the Makefile must be used to generate docc documentation. The `make` script may install that version accordingly.
 
+## Breaking Changes
+
+Montage follows [Semantic Versioning](https://semver.org/). Breaking changes land only in major releases. Outside a major release cycle, mark the old API with `@available(*, deprecated)` and remove it when the next major release is prepared.
+
+A change is breaking when it does any of the following:
+
+- Removes, renames, or changes the signature of a `public` declaration (parameters, argument labels, return type)
+- Removes an `@available(*, deprecated)` declaration
+- Removes an `enum` case or a component option such as a variant or size
+- Changes the rendered result while the API stays the same - radius, typography, padding, icon size, or color token values. These produce no compile error, so they are the easiest for adopters to miss
+
+Changing only a default value still counts as breaking if the rendered result changes.
+
+### Updating MIGRATION.md
+
+A pull request that introduces a breaking change **must update [MIGRATION.md](./MIGRATION.md) in the same pull request**. Add an entry under the section for the target major version (`## X.0`) and cover:
+
+| Field | What to write |
+|---|---|
+| Kind | One of: mechanical replacement, structural rewrite, visual check |
+| Old to new | A before/after code block. Use a table for token or name replacements |
+| Visual change | If the rendering changes, add a row to the visual-changes section describing what looks different |
+
+In the checklist section, add a `grep` pattern adopters can run to find leftover call sites, or name the screen they need to verify by eye.
+
+If a removed API or token has no replacement, say so explicitly instead of suggesting the closest match. An approximate mapping hides the fact that the result changed.
+
 ## Code Style
 
 - Follow the Swift style guide.
