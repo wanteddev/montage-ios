@@ -122,10 +122,102 @@ Select 컴포넌트 초기화
 
 
 뷰의 내용과 동작을 정의합니다.
+- **Discussion**
+
+  항상 [FormControl](/documentation/montage/formcontrol.md)로 감싼다. 라벨·메시지 유무로 분기하면 값이 런타임에 바뀔 때 뷰 identity가 갈려 메뉴 표시 상태가 초기화되므로, 설정이 비어 있어도 래퍼를 유지한다.
 </details>
 
 ### Instance Methods
 
+<details>
+
+<summary>``func accessory<Accessory>(() -> Accessory) -> Select``</summary>
+
+
+메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `accessory` | 표시할 액세서리 뷰 빌더 |
+
+- **Return Value**
+
+  수정된 Select 인스턴스
+- **Discussion**
+
+  스타일(타이포그래피·색)은 호출부에서 지정합니다.
+</details>
+<details>
+
+<summary>``func label(String?, required: Bool) -> Select``</summary>
+
+
+제목(라벨)을 붙이고 필수 표시(`*`) 여부를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다. |
+  | `required` | 필수 입력 표시(`*`) 여부, 생략하면 기본값으로 `false` 적용 |
+
+- **Return Value**
+
+  수정된 Select 인스턴스
+- **Discussion**
+
+  이 모디파이어를 쓰면 Select가 [FormControl](/documentation/montage/formcontrol.md)로 감싸져 라벨·메시지·액세서리가 함께 배치됩니다.
+
+  ```swift
+  Select(variant: .single(), items: $regions)
+      .placeholder("지역을 선택하세요")
+      .label("근무 지역", required: true)
+  ```
+
+  > **Note**
+  >
+  > Select는 자신의 접근성 라벨을 placeholder로 정의하므로, 라벨을 붙이면 그 값이 우선합니다.
+
+</details>
+<details>
+
+<summary>``func labelPlacement(FormControl.LabelPlacement) -> Select``</summary>
+
+
+라벨 위치를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `placement` | 라벨 위치, 생략하면 기본값으로 `.top` 적용 |
+
+- **Return Value**
+
+  수정된 Select 인스턴스
+</details>
+<details>
+
+<summary>``func labelWidth(CGFloat) -> Select``</summary>
+
+
+leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `width` | 라벨 열 폭(pt) |
+
+- **Return Value**
+
+  수정된 Select 인스턴스
+- **Discussion**
+
+  여러 입력의 라벨 열을 한꺼번에 맞추려면 각 입력에 반복하지 말고 [FormControlGroup](/documentation/montage/formcontrolgroup.md)을 사용하세요. [FormControl.LabelPlacement.top](/documentation/montage/formcontrol/labelplacement/top.md) 배치에는 영향이 없습니다.
+</details>
 <details>
 
 <summary>``func leadingContent(LeadingContent?) -> Select``</summary>
@@ -159,6 +251,26 @@ Select 컴포넌트 초기화
 - **Return Value**
 
   수정된 Select 인스턴스
+</details>
+<details>
+
+<summary>``func message(String?) -> Select``</summary>
+
+
+입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다. |
+
+- **Return Value**
+
+  수정된 Select 인스턴스
+- **Discussion**
+
+  메시지 색은 [negative(_:)](/documentation/montage/select/negative(_:).md)에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
 </details>
 <details>
 

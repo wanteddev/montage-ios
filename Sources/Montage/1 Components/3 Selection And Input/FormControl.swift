@@ -14,22 +14,21 @@ import SwiftUI
 /// 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·액세서리(글자 수 카운트 등)를
 /// 일관된 레이아웃으로 감싸 줍니다.
 ///
-/// 슬롯 클로저는 현재 ``Context``(크기·상태)를 전달받습니다. 입력 컴포넌트가 이를 반영하면
-/// FormControl의 `.size(_:)`·`.status(_:)` 한 번 설정만으로 내부 입력까지 일관되게 그려집니다.
+/// FormControl의 `.size(_:)`·`.status(_:)`는 슬롯 안의 Montage 입력 컴포넌트(``TextField``·``TextArea``·
+/// ``Select``)에 자동으로 전파됩니다. 입력 쪽에서 값을 명시하면 그 값이 우선하므로, 보통은 FormControl에
+/// 한 번만 설정하면 됩니다.
 ///
 /// ```swift
-/// FormControl { context in
+/// FormControl {
 ///     TextField(text: $email)
-///         .size(context.size == .medium ? .medium : .large)
-///         .status(context.status.textFieldStatus)
 ///         .placeholder("이메일을 입력하세요")
 /// }
 /// .label("이메일", required: true)
 /// .message("회사 이메일을 입력해 주세요.")
 ///
 /// // 에러 상태 — FormControl에만 .status(.negative)를 주면 메시지 색과 입력 상태가 함께 바뀐다.
-/// FormControl { context in
-///     TextField(text: $email).status(context.status.textFieldStatus)
+/// FormControl {
+///     TextField(text: $email)
 /// }
 /// .size(.medium)
 /// .status(.negative)
@@ -41,12 +40,17 @@ import SwiftUI
 /// }
 ///
 /// // 라벨을 입력 왼쪽에 배치
-/// FormControl { _ in
+/// FormControl {
 ///     TextField(text: $name)
 /// }
 /// .labelPlacement(.leading)
 /// .label("이름")
 /// ```
+///
+/// - Note: Montage 입력 컴포넌트는 ``TextField/label(_:required:)`` 등 같은 이름의 모디파이어를 직접
+///   제공합니다. 단일 입력을 감쌀 때는 FormControl을 명시하지 않고 입력에 바로 붙이는 쪽이 간결하지만,
+///   위 예제처럼 FormControl로 직접 감싸는 구성도 그대로 지원됩니다. 앱에서 만든 커스텀 입력을 감쌀 때나
+///   입력 종류가 런타임에 바뀌어 래퍼 설정을 한곳에 모아 두고 싶을 때는 FormControl을 직접 쓰세요.
 public struct FormControl: View {
     /// FormControl의 크기입니다. 라벨 타이포그래피를 결정합니다.
     public enum Size {
@@ -111,9 +115,28 @@ public struct FormControl: View {
 
     /// 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
     ///
-    /// 클로저는 현재 ``Context``(크기·상태)를 전달받으므로, 입력 컴포넌트가 FormControl의
-    /// 크기·상태를 그대로 반영할 수 있습니다. (예: FormControl에 `.status(.negative)`만
-    /// 설정하면 내부 입력도 에러 상태로 그릴 수 있음)
+    /// FormControl의 ``size(_:)``·``status(_:)``는 슬롯 안의 Montage 입력 컴포넌트에 자동으로
+    /// 전파되므로 호출부에서 다시 넘길 필요가 없습니다.
+    ///
+    /// - Parameter input: 감쌀 입력 컴포넌트를 반환하는 뷰 빌더
+    public init<Input: View>(@ViewBuilder input: @escaping () -> Input) {
+        self.input = { _ in AnyView(input()) }
+    }
+
+    /// 현재 ``Context``를 전달받는 슬롯으로 FormControl을 생성합니다.
+    ///
+    /// 크기·상태 전파는 Montage 입력 컴포넌트에만 자동 적용됩니다. 앱에서 만든 **커스텀 입력**이
+    /// FormControl의 크기·상태를 반영해야 할 때 이 초기화를 사용하세요.
+    ///
+    /// ```swift
+    /// FormControl { context in
+    ///     MyCustomPicker(selection: $region)
+    ///         .compact(context.size == .medium)
+    ///         .invalid(context.status == .negative)
+    /// }
+    /// .status(.negative)
+    /// .label("지역", required: true)
+    /// ```
     ///
     /// - Parameter input: 현재 ``Context``를 받아 감쌀 입력 컴포넌트를 반환하는 뷰 빌더
     public init<Input: View>(@ViewBuilder input: @escaping (Context) -> Input) {
@@ -338,14 +361,21 @@ private extension FormControl {
         .padding(.horizontal, .spacing2)
     }
 
-    /// 라벨·메시지를 접근성으로 연결한 입력 슬롯. 현재 크기·상태를 슬롯 클로저에 전달한다.
+    /// 라벨·메시지를 접근성으로 연결한 입력 슬롯.
+    ///
+    /// 현재 크기·상태를 슬롯 클로저(``Context``)와 환경값(``EnvironmentValues/formControlSize``·
+    /// ``EnvironmentValues/formControlStatus``) 양쪽으로 전달한다. Montage 입력 컴포넌트는 환경값을
+    /// 읽어 자동으로 따라오고, 커스텀 입력은 `Context`로 직접 받는다.
     var accessibleInput: some View {
-        input(Context(size: size, status: status)).modifier(
-            FormControlAccessibility(
-                label: hasLabel ? accessibilityLabelText : nil,
-                hint: (messageText?.isEmpty == false) ? messageText : nil
+        input(Context(size: size, status: status))
+            .modifier(
+                FormControlAccessibility(
+                    label: hasLabel ? accessibilityLabelText : nil,
+                    hint: (messageText?.isEmpty == false) ? messageText : nil
+                )
             )
-        )
+            .environment(\.formControlSize, size)
+            .environment(\.formControlStatus, status)
     }
 }
 
@@ -448,19 +478,107 @@ private struct FormLabelColumnWidthKey: EnvironmentKey {
     static let defaultValue: CGFloat? = nil
 }
 
-// MARK: - Status 편의 변환
+// MARK: - 크기·상태 매핑
+
+extension FormControl.Size {
+    /// 같은 의미의 ``TextField`` 사이즈 값.
+    var textFieldSize: TextField.Size {
+        switch self {
+        case .large: .large
+        case .medium: .medium
+        }
+    }
+
+    /// 같은 의미의 ``TextArea`` 사이즈 값.
+    var textAreaSize: TextArea.Size {
+        switch self {
+        case .large: .large
+        case .medium: .medium
+        }
+    }
+
+    /// 같은 의미의 ``Select`` 사이즈 값.
+    var selectSize: Select.Size {
+        switch self {
+        case .large: .large
+        case .medium: .medium
+        }
+    }
+}
 
 extension FormControl.Status {
-    /// 같은 의미의 TextField 상태 값으로 변환합니다.
-    ///
-    /// 슬롯에 ``TextField``를 둘 때 ``FormControl/Context/status``를 그대로 전달하기 위한 편의 변환입니다.
-    public var textFieldStatus: TextField.Status {
+    /// 같은 의미의 ``TextField`` 상태 값.
+    var textFieldStatus: TextField.Status {
         switch self {
         case .normal: .normal
         case .positive: .positive
         case .negative: .negative
         }
     }
+
+    /// 오류 상태 여부. `Status`를 두지 않고 `negative` 불리언만 받는 입력(``TextArea``·``Select``)에 쓴다.
+    var isNegative: Bool {
+        self == .negative
+    }
+}
+
+// MARK: - 입력 컴포넌트용 래핑 지원
+
+extension FormControl {
+    /// 입력 컴포넌트가 자신을 FormControl로 감쌀 때 쓰는 래퍼 설정 묶음.
+    ///
+    /// ``TextField``·``TextArea``·``Select``는 `label`·`message` 같은 모디파이어로 이 값만 채우고,
+    /// 실제 렌더링은 ``FormControl/applying(_:)``이 담당한다. 래퍼 설정이 한 곳에 모여 있어
+    /// FormControl에 기능이 추가돼도 각 컴포넌트는 모디파이어 시그니처만 늘리면 된다.
+    struct Attributes {
+        var labelText: String?
+        var isRequired: Bool = false
+        var messageText: String?
+        var accessoryView: AnyView?
+        var labelPlacement: LabelPlacement = .top
+        var explicitLabelWidth: CGFloat?
+    }
+
+    /// ``Attributes``에 모인 래퍼 설정을 한 번에 적용한다.
+    func applying(_ attributes: Attributes) -> Self {
+        modifying {
+            $0.labelText = attributes.labelText
+            $0.isRequired = attributes.isRequired
+            $0.messageText = attributes.messageText
+            $0.accessoryView = attributes.accessoryView
+            $0.labelPlacement = attributes.labelPlacement
+            $0.explicitLabelWidth = attributes.explicitLabelWidth
+        }
+    }
+}
+
+// MARK: - 크기·상태 환경 전파
+
+extension EnvironmentValues {
+    /// ``FormControl``이 입력 슬롯에 전파하는 크기.
+    ///
+    /// Montage 입력 컴포넌트는 자신의 `size(_:)`가 지정되지 않았을 때 이 값을 따른다.
+    /// FormControl 밖(단독 사용)에서는 `nil`이며, 이때는 컴포넌트 자체 기본값을 쓴다.
+    var formControlSize: FormControl.Size? {
+        get { self[FormControlSizeKey.self] }
+        set { self[FormControlSizeKey.self] = newValue }
+    }
+
+    /// ``FormControl``이 입력 슬롯에 전파하는 상태.
+    ///
+    /// Montage 입력 컴포넌트는 자신의 상태 모디파이어가 지정되지 않았을 때 이 값을 따른다.
+    var formControlStatus: FormControl.Status? {
+        get { self[FormControlStatusKey.self] }
+        set { self[FormControlStatusKey.self] = newValue }
+    }
+}
+
+private struct FormControlSizeKey: EnvironmentKey {
+    static let defaultValue: FormControl.Size? = nil
+}
+
+private struct FormControlStatusKey: EnvironmentKey {
+    static let defaultValue: FormControl.Status? = nil
 }
 
 /// 입력 슬롯에 접근성 라벨/힌트를 선택적으로 연결하는 모디파이어.

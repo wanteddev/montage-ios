@@ -11,21 +11,19 @@ description: 입력 컨트롤에 제목(Label)과 도움말(Message)을 붙여 �
 
 FormControl은 단독으로 값을 입력받지 않습니다. 내부 슬롯(`input`)에 실제 입력 컴포넌트를 조합해 사용하며, 라벨·필수 표시(`*`)·도움말/에러 메시지·액세서리(글자 수 카운트 등)를 일관된 레이아웃으로 감싸 줍니다.
 
-슬롯 클로저는 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)(크기·상태)를 전달받습니다. 입력 컴포넌트가 이를 반영하면 FormControl의 `.size(_:)`·`.status(_:)` 한 번 설정만으로 내부 입력까지 일관되게 그려집니다.
+FormControl의 `.size(_:)`·`.status(_:)`는 슬롯 안의 Montage 입력 컴포넌트([TextField](/documentation/montage/textfield.md)·[TextArea](/documentation/montage/textarea.md)· [Select](/documentation/montage/select.md))에 자동으로 전파됩니다. 입력 쪽에서 값을 명시하면 그 값이 우선하므로, 보통은 FormControl에 한 번만 설정하면 됩니다.
 
 ```swift
-FormControl { context in
+FormControl {
     TextField(text: $email)
-        .size(context.size == .medium ? .medium : .large)
-        .status(context.status.textFieldStatus)
         .placeholder("이메일을 입력하세요")
 }
 .label("이메일", required: true)
 .message("회사 이메일을 입력해 주세요.")
 
 // 에러 상태 — FormControl에만 .status(.negative)를 주면 메시지 색과 입력 상태가 함께 바뀐다.
-FormControl { context in
-    TextField(text: $email).status(context.status.textFieldStatus)
+FormControl {
+    TextField(text: $email)
 }
 .size(.medium)
 .status(.negative)
@@ -37,12 +35,16 @@ FormControl { context in
 }
 
 // 라벨을 입력 왼쪽에 배치
-FormControl { _ in
+FormControl {
     TextField(text: $name)
 }
 .labelPlacement(.leading)
 .label("이름")
 ```
+
+> **Note**
+>
+> Montage 입력 컴포넌트는 [label(_:required:)](/documentation/montage/textfield/label(_:required:).md) 등 같은 이름의 모디파이어를 직접 제공합니다. 단일 입력을 감쌀 때는 FormControl을 명시하지 않고 입력에 바로 붙이는 쪽이 간결하지만, 위 예제처럼 FormControl로 직접 감싸는 구성도 그대로 지원됩니다. 앱에서 만든 커스텀 입력을 감쌀 때나 입력 종류가 런타임에 바뀌어 래퍼 설정을 한곳에 모아 두고 싶을 때는 FormControl을 직접 쓰세요.
 
 ## Topics
 
@@ -80,10 +82,27 @@ FormControl { _ in
 
 <details>
 
-<summary>``init<Input>(input: (Context) -> Input)``</summary>
+<summary>``init<Input>(input: () -> Input)``</summary>
 
 
 입력 컴포넌트를 슬롯으로 받아 FormControl을 생성합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `input` | 감쌀 입력 컴포넌트를 반환하는 뷰 빌더 |
+
+- **Discussion**
+
+  FormControl의 [size(_:)](/documentation/montage/formcontrol/size(_:).md)·[status(_:)](/documentation/montage/formcontrol/status(_:).md)는 슬롯 안의 Montage 입력 컴포넌트에 자동으로 전파되므로 호출부에서 다시 넘길 필요가 없습니다.
+</details>
+<details>
+
+<summary>``init<Input>(input: (Context) -> Input)``</summary>
+
+
+현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)를 전달받는 슬롯으로 FormControl을 생성합니다.
 
 - **Parameters**
 
@@ -93,7 +112,18 @@ FormControl { _ in
 
 - **Discussion**
 
-  클로저는 현재 [FormControl.Context](/documentation/montage/formcontrol/context.md)(크기·상태)를 전달받으므로, 입력 컴포넌트가 FormControl의 크기·상태를 그대로 반영할 수 있습니다. (예: FormControl에 `.status(.negative)`만 설정하면 내부 입력도 에러 상태로 그릴 수 있음)
+  크기·상태 전파는 Montage 입력 컴포넌트에만 자동 적용됩니다. 앱에서 만든 **커스텀 입력**이 FormControl의 크기·상태를 반영해야 할 때 이 초기화를 사용하세요.
+
+  ```swift
+  FormControl { context in
+      MyCustomPicker(selection: $region)
+          .compact(context.size == .medium)
+          .invalid(context.status == .negative)
+  }
+  .status(.negative)
+  .label("지역", required: true)
+  ```
+
 </details>
 
 ### Instance Properties
@@ -320,19 +350,6 @@ FormControl의 상태입니다. 메시지의 색을 결정합니다.
 
 
 성공 상태. 메시지는 기본 도움말과 동일한 색(`foregroundNeutralTertiary`)으로 표시됩니다.
-</details>
-
-#### Instance Properties
-
-<details>
-
-<summary>``var textFieldStatus: TextField.Status``</summary>
-
-
-같은 의미의 TextField 상태 값으로 변환합니다.
-- **Discussion**
-
-  슬롯에 [TextField](/documentation/montage/textfield.md)를 둘 때 [status](/documentation/montage/formcontrol/context/status.md)를 그대로 전달하기 위한 편의 변환입니다.
 </details>
 
 </details>
