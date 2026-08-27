@@ -232,7 +232,7 @@ extension ActionArea {
         ///
         /// - Parameter custom: 커스텀 버튼 뷰를 생성하는 클로저
         /// - Returns: 커스텀 뷰가 포함된 ButtonInfo 인스턴스
-        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
+        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fillWidth(_:) 모디파이어를 사용하세요.
         public static func custom<V: View>(@ViewBuilder _ custom: @escaping () -> V) -> Self {
             var zelf = self.init(text: "", action: {})
             zelf.custom = { AnyView(custom()) }
@@ -392,7 +392,7 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .fill(horizontal: true, vertical: false)
+                .fillWidth(true)
             }
         }
 
@@ -405,7 +405,7 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .fill(horizontal: true, vertical: false)
+                .fillWidth(true)
             }
         }
 
@@ -419,7 +419,7 @@ extension ActionArea {
                     handler: buttonInfo.action
                 )
                 .if(fillWidth) {
-                    $0.fill(horizontal: true, vertical: false)
+                    $0.fillWidth(true)
                 }
             }
         }
