@@ -352,7 +352,7 @@ extension ActionArea {
             VStack(spacing: 8) {
                 primarySolidButton(main)
                 if let alternative {
-                    secondaryOutlinedButton(alternative)
+                    assistiveOutlinedButton(alternative)
                 }
                 if let sub {
                     assistiveTextButton(sub)
@@ -371,7 +371,7 @@ extension ActionArea {
                     assistiveOutlinedButton(sub, fillWidth: false)
                 }
                 if let alternative {
-                    secondaryOutlinedButton(alternative)
+                    assistiveOutlinedButton(alternative)
                 }
                 primarySolidButton(main)
             }
@@ -381,7 +381,7 @@ extension ActionArea {
         private func cancel(
             _ main: ButtonInfo
         ) -> some View {
-            assistiveOutlinedButton(main)
+            assistiveSolidButton(main)
         }
 
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
@@ -396,11 +396,10 @@ extension ActionArea {
             }
         }
 
-        @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
+        @ViewBuilder private func assistiveSolidButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 Button(
-                    variant: .outlined,
-                    color: .primary,
+                    color: .assistive,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
@@ -418,9 +417,7 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .if(fillWidth) {
-                    $0.fillWidth(true)
-                }
+                .fillWidth(fillWidth)
             }
         }
 

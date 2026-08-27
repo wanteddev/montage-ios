@@ -407,8 +407,12 @@ content
 | `extra` 구분선 색 | `lineNeutralSecondary` | `lineNeutralTertiary` (옅어짐) |
 | 캡션 타이포 | `label2` | `label2` + `weight: .medium` (굵어짐) |
 | 캡션 아이콘 | 없음 | `.caption(_:icon:)` 16pt 슬롯 신설 |
+| 대체(`alternative`) 액션 버튼 | `outlined` / `primary` | `outlined` / **`assistive`** |
+| `cancel` 메인 액션 버튼 | `outlined` / `assistive` | **`solid`** / `assistive` |
 
 메인 버튼 행의 좌우 여백 20은 그대로입니다.
+
+버튼 색상은 API가 그대로라 컴파일 에러가 나지 않습니다. 대체 액션은 라벨이 파란색에서 검정으로 바뀌어 주 액션과의 대비가 커지고, `cancel` variant의 메인 버튼은 테두리형에서 회색 채움으로 바뀝니다. 보조(`sub`) 액션은 변경이 없습니다.
 
 #### ScreenScaffold
 
@@ -736,7 +740,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
 | **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다. Dynamic Type을 키웠을 때 leading 아이콘·chevron이 위로 치우치던 것이 중앙정렬로 정정됐습니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
-| **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 그라데이션과 불투명 배경이 그대로 남으므로 `scrollReachedEnd(true)`를 직접 넘겨야 합니다. 배경이 투명해지는 건 `extra` 슬롯이 비어 있을 때뿐입니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
+| **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 그라데이션과 불투명 배경이 그대로 남으므로 `scrollReachedEnd(true)`를 직접 넘겨야 합니다. 배경이 투명해지는 건 `extra` 슬롯이 비어 있을 때뿐입니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐. **대체 액션 버튼 라벨이 파란색에서 검정으로, `cancel` 메인 버튼이 테두리형에서 회색 채움으로 바뀝니다** |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 회사 로고가 조금 더 둥글어집니다 |
 | **FallbackView** | 상하 최소 여백 160 내장. 밖의 여백·고정 높이를 정리하지 않으면 이중 적용. 설명 타이포가 `body2` → `body2Reading`으로 행간이 늘어납니다 |
 | **입력 컴포넌트** | 라벨이 필드 위로, 에러가 필드 아래로, 카운터가 필드 아래 우측으로 나옵니다. 필드 높이와 폼 전체 높이가 달라집니다 |
@@ -768,6 +772,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 - [ ] 긴 라벨을 쓰는 버튼이 줄바꿈되면서 높아진 만큼 주변 레이아웃이 밀려도 괜찮은지
 - [ ] `transparentBackground`를 `.manual`로 쓰던 자리에 `scrollReachedEnd(_:)`를 넘겼는지
 - [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경이 의도대로 보이는지
+- [ ] `alternative` 액션과 `.cancel` variant를 쓰는 ActionArea의 버튼 색이 의도대로 보이는지
 - [ ] [컴포넌트 스펙 리프레시](#8-컴포넌트-스펙-리프레시)·[시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경) 목록의 화면을 실기기/시뮬레이터에서 확인
 
 > 스펙 변경은 Blueprint를 두 버전으로 빌드해 대조하면 가장 빠르게 확인됩니다.

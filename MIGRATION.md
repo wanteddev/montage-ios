@@ -407,8 +407,12 @@ The ActionArea spec was retuned in 4.0 as well.
 | `extra` divider color | `lineNeutralSecondary` | `lineNeutralTertiary` (lighter) |
 | Caption typography | `label2` | `label2` + `weight: .medium` (heavier) |
 | Caption icon | None | New 16pt slot via `.caption(_:icon:)` |
+| Alternative (`alternative`) action button | `outlined` / `primary` | `outlined` / **`assistive`** |
+| `cancel` main action button | `outlined` / `assistive` | **`solid`** / `assistive` |
 
 The horizontal padding of 20 on the main button row is unchanged.
+
+The button colors compile fine, since the API is unchanged. The alternative action's label goes from blue to black, widening the contrast against the primary action, and the `cancel` variant's main button goes from outlined to a grey fill. The `sub` action is unchanged.
 
 #### ScreenScaffold
 
@@ -736,7 +740,7 @@ These compile fine but change the screen. **After migrating, please look at the 
 | **Chip · FilterButton** | Typography drops one step and padding shrinks, so they **get smaller.** Wrap points change for chips and filter bars laid out horizontally |
 | **Select** | min-height went up, so **the field gets taller.** The border also gets lighter. At larger Dynamic Type sizes, the leading icon and chevron that used to sit high are now centered |
 | **SegmentedControl** | The `outlined` variant was removed. Places that used outlined become solid |
-| **ActionArea** | The transparent background is now **tied to the scroll-reached-bottom signal.** In containers that do not raise it (`SwiftUI.ScrollView`, `List`, a popup with no scrolling), the gradient and the opaque background stay put, so you have to pass `scrollReachedEnd(true)` yourself. The background only goes transparent when the `extra` slot is empty. The `extra` slot's horizontal padding went 20→24 and bottom 24→20, the divider got lighter, and the caption is heavier at `medium` weight |
+| **ActionArea** | The transparent background is now **tied to the scroll-reached-bottom signal.** In containers that do not raise it (`SwiftUI.ScrollView`, `List`, a popup with no scrolling), the gradient and the opaque background stay put, so you have to pass `scrollReachedEnd(true)` yourself. The background only goes transparent when the `extra` slot is empty. The `extra` slot's horizontal padding went 20→24 and bottom 24→20, the divider got lighter, and the caption is heavier at `medium` weight. **The alternative action button's label goes from blue to black, and the `cancel` main button goes from outlined to a grey fill** |
 | **Avatar · AvatarGroup** | company and academy cornerRadius +2 at every size. Company logos get slightly rounder |
 | **FallbackView** | A minimum vertical padding of 160 is built in. Not clearing the outer padding and fixed height double-applies them. The description typography goes from `body2` to `body2Reading`, increasing line spacing |
 | **Input components** | The label moves above the field, errors below it, and the counter below and trailing. Field height and overall form height change |
@@ -768,6 +772,7 @@ These compile fine but change the screen. **After migrating, please look at the 
 - [ ] Buttons with long labels now wrap - check that the taller button and the layout it pushes are acceptable
 - [ ] Wherever `transparentBackground` was used with `.manual`, `scrollReachedEnd(_:)` is passed
 - [ ] The ActionArea background looks as intended in popups and sheets with no scroll container
+- [ ] The button colors look as intended in every ActionArea that uses an `alternative` action or the `.cancel` variant
 - [ ] Check the screens listed in [Component spec refresh](#8-component-spec-refresh) and [Changes that alter what you see](#changes-that-alter-what-you-see) on a device or simulator
 
 > The fastest way to verify spec changes is to build Blueprint at both versions and compare.
