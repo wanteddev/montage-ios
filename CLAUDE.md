@@ -129,9 +129,11 @@ Swift 소스 파일(`Sources/Montage/`)을 수정한 후에는 반드시 `make`�
 
 기본값만 바꾸는 것도 렌더 결과가 달라지면 breaking change로 취급한다.
 
-### MIGRATION.md 갱신 (필수)
+### 마이그레이션 가이드 갱신 (필수)
 
-Breaking change가 들어가는 PR은 [MIGRATION.md](./MIGRATION.md)를 **같은 PR에서** 함께 갱신한다. 나중에 몰아서 쓰면 무엇이 왜 바뀌었는지가 남지 않는다.
+Breaking change가 들어가는 PR은 마이그레이션 가이드를 **같은 PR에서** 함께 갱신한다. 나중에 몰아서 쓰면 무엇이 왜 바뀌었는지가 남지 않는다.
+
+가이드는 영문 [MIGRATION.md](./MIGRATION.md)와 한국어 [MIGRATION.ko.md](./MIGRATION.ko.md) 두 벌이고 **둘 다 갱신한다.** 한쪽만 고치면 두 문서가 조용히 어긋난다.
 
 대상 메이저 버전 절(`## X.0`)에 항목을 추가하고 다음 세 가지를 채운다.
 

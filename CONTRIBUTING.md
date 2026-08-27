@@ -84,9 +84,9 @@ A change is breaking when it does any of the following:
 
 Changing only a default value still counts as breaking if the rendered result changes.
 
-### Updating MIGRATION.md
+### Updating the migration guide
 
-A pull request that introduces a breaking change **must update [MIGRATION.md](./MIGRATION.md) in the same pull request**. Add an entry under the section for the target major version (`## X.0`) and cover:
+A pull request that introduces a breaking change **must update the migration guide in the same pull request**. The guide ships in two languages and **both have to be updated together**: [MIGRATION.md](./MIGRATION.md) (English) and [MIGRATION.ko.md](./MIGRATION.ko.md) (Korean). Add an entry under the section for the target major version (`## X.0`) and cover:
 
 | Field | What to write |
 |---|---|
