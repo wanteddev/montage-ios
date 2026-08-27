@@ -23,6 +23,7 @@ struct TextButtonPreview: View {
     @State private var fontVariant = false
     @State private var fontWeight = false
     @State private var loading = false
+    @State private var fillWidth = false
 
     private let colors: [TextButton.Color] = [.primary, .assistive]
     private let sizes: [TextButton.Size] = [.small, .medium]
@@ -44,6 +45,7 @@ struct TextButtonPreview: View {
             .fontVariant(fontVariant ? .heading1 : nil)
             .fontWeight(fontWeight ? .regular : nil)
             .loading(loading)
+            .fillWidth(fillWidth)
             .padding(.vertical, 4)
             .disabled(disable)
         } options: {
@@ -52,6 +54,7 @@ struct TextButtonPreview: View {
             HStack {
                 ToggleOption("disable", isOn: $disable)
                 ToggleOption("loading", isOn: $loading)
+                ToggleOption("fillWidth", isOn: $fillWidth)
             }
             HStack {
                 ToggleOption("leadingIcon", isOn: $leadingIcon)

@@ -519,6 +519,20 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 
 ### 6. 단순 API 치환
 
+#### Button · TextButton
+
+`fill(horizontal:vertical:)`이 **제거**되고 `fillWidth(_:)`로 대체됐습니다. 유예 없이 4.0에서 바로 빠지니 호출부를 모두 옮기세요.
+
+| 3.x | 4.0 |
+|---|---|
+| `.fill(horizontal: true)` | `.fillWidth(true)` |
+| `.fill(horizontal: true, vertical: false)` | `.fillWidth(true)` |
+| `.fill(horizontal: true, vertical: true)` | `.fillWidth(true)` |
+
+`vertical`은 3.x에서도 이미 아무 동작을 하지 않았습니다. 시그니처에만 있고 함수 본문에서 쓰이지 않아, `vertical: true`로 부르던 곳도 세로 채움이 일어난 적이 없습니다. 세 경우 모두 렌더링이 그대로라 기계적으로 치환해도 됩니다.
+
+`TextButton`은 3.x에 `fillWidth(_:)`가 없었습니다. 4.0에서 `Button`과 같은 모양으로 새로 생겼습니다.
+
 #### IconButton
 
 `normal` variant의 사이즈가 `Int`에서 `NormalSize` 열거형으로 바뀌었습니다.
