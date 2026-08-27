@@ -2,172 +2,184 @@
 
 [English](./MIGRATION.md) | [한국어](./MIGRATION.ko.md)
 
-Changes required when upgrading across a major version. The newest version comes first.
+Changes required to move between major versions. Newest first.
 
-Every item is marked as one of three kinds: **a mechanical replacement**, **something you have to restructure**, or **something that changes what you see**. Some items are easy to miss if you only clear the compile errors and never look at the screen, so please read the final [Changes that alter what you see](#changes-that-alter-what-you-see) section.
+**This document covers breaking changes only.** New components and modifiers are listed by name under [Added APIs](#added-apis); see the [release notes](https://github.com/wanteddev/montage-ios/releases) for details.
+
+Each major section is written against the **last release tag of the previous major**. APIs that appeared and disappeared during development are not listed, since nobody upgrading from the previous release ever saw them.
 
 ---
 
 ## 4.0
 
-> **In progress.** This document is updated as items land on `release/4.0.0`.
+**Baseline: v3.15.2 → 4.0.0**
 
-4.0 brings breaking changes along four axes.
+Breaking changes fall into four groups. Working top to bottom clears compile errors fastest.
 
-1. **Color semantic tokens reorganized** - token names now follow a `usage + role + variant` rule. Most values stay the same; only the names change.
-2. **Slot-based APIs** - instead of fixed parameters (`leadingImage:`) and `Model` structs, the call site passes views directly.
-3. **Input components split apart** - labels, status messages, and character counts moved out of `TextField`/`TextArea` and into `FormControl` slots.
-4. **Component spec refresh** - radius, typography, padding, and icon sizes were retuned to match the design spec. **This is the only axis where the API is unchanged, so nothing fails to compile.**
-
-### Order of work
-
-| Step | Task | Kind | Visual change |
+| Order | Section | Kind | What you do |
 |---|---|---|---|
-| 1 | [Color semantic tokens](#1-color-semantic-tokens) | Mechanical | None |
-| 2 | [Spacing and Opacity tokens](#2-spacing-and-opacity-tokens) | Mechanical | None |
-| 3 | [Global modifiers](#3-global-modifiers) | Mechanical | None |
-| 4 | [Input components to FormControl](#4-input-components-to-formcontrol) | Restructure | **Yes** |
-| 5 | [Slot-based APIs](#5-slot-based-apis) | Restructure | Mostly none |
-| 6 | [Straight API replacements](#6-straight-api-replacements) | Mechanical | Some |
-| 7 | [Removed UIKit wrappers](#7-removed-uikit-wrappers) | Restructure | None |
-| 8 | [Component spec refresh](#8-component-spec-refresh) | Check the screen | **Yes** |
-| 9 | [Review changes that alter what you see](#changes-that-alter-what-you-see) | Check the screen | **Yes** |
+| 1 | [Renamed](#1-renamed) | Mechanical | `sed` handles it |
+| 2 | [Removed, needs rework](#2-removed-needs-rework) | Restructure | Move to the replacement API |
+| 3 | [No replacement](#3-no-replacement) | Judgement call | You have to choose |
+| 4 | [Visual changes](#4-visual-changes) | Eyeball it | **No compile errors** |
 
-**Do not skip step 8.** Those items keep the same API and only change values, so nothing fails to compile. A green build after the replacements does not mean the migration is done.
-
-Finishing the token replacements (1 through 3) first removes most of the compile errors and makes the rest of the work easier to see.
+**Do not skip section 4.** Those entries keep the same API and change only values, so the build passes while the screen changes. A clean build does not mean the migration is done.
 
 ---
 
-### 1. Color semantic tokens
+## 1. Renamed
 
-Every token name passed to `Color.semantic(_:)` / `UIColor.semantic(_:)` changes. **Except for two RedOrange entries**, the mappings below keep the same value, so rendering does not change. RedOrange has no 4.0 counterpart, so you have to pick one yourself and the color will change.
+### 1.1 Semantic color tokens
 
-#### The new naming rule
+Every token name passed to `Color.semantic(_:)` / `UIColor.semantic(_:)` changes. Most are pure renames, but **14 also change the rendered color.** Check [Tokens whose value also changes](#tokens-whose-value-also-changes).
+
+#### Naming rule
 
 ```
-usage + role + variant
+purpose + role + variant
 
-usage    foreground  text and icons
-         background  the page beneath everything
-         surface     surfaces that sit on the page (cards, fields, buttons)
+purpose  foreground  text and icons
+         background  page background
+         surface     backgrounds of elements on the page (cards, fields, buttons)
          line        borders and dividers
-         effect      dimming and transparent layers
+         effect      dim and translucent layers
 
 role     Neutral  Brand  Positive  Cautionary  Negative  Disable  Inactive  Accent{Color}
 
 variant  Primary → Secondary → Tertiary → Quaternary  (decreasing contrast)
          Strong / Heavy   darker
          Subtle           lighter
-         Inverse          for use on an inverted background
+         Inverse          for use on inverted backgrounds
          Focus            focus ring
-         Opaque           the opaque version (the suffix-less one is translucent)
+         Opaque           opaque version (the suffix-less one is translucent)
 ```
 
-The `Solid` suffix from 3.x is inverted to `Opaque` in 4.0. The only thing to watch is that the suffix moves from the front to the back, as in **`lineSolidNormal` → `lineNeutralPrimaryOpaque`**.
+The 3.x `Solid` prefix became the `Opaque` suffix in 4.0. The only thing to watch is that the marker moves from front to back: **`lineSolidNormal` → `lineNeutralPrimaryOpaque`**.
 
 #### Foreground - text and icons
 
-| 3.x | 4.0 |
-|---|---|
-| `.labelNormal` | `.foregroundNeutralPrimary` |
-| `.labelStrong` | `.foregroundNeutralStrong` |
-| `.labelNeutral` | `.foregroundNeutralSecondary` |
-| `.labelAlternative` | `.foregroundNeutralTertiary` |
-| `.labelAssistive` | `.foregroundNeutralQuaternary` |
-| `.inverseLabel` | `.foregroundNeutralInverse` |
-| `.labelDisable` | `.foregroundDisablePrimary` |
-| `.interactionInactive` | `.foregroundInactivePrimary` |
-| `.inversePrimary` | `.foregroundBrandInverse` |
-| `.statusPositive` | `.foregroundPositivePrimary` |
-| `.statusCautionary` | `.foregroundCautionaryPrimary` |
-| `.statusNegative` | `.foregroundNegativePrimary` |
-| `.accentForegroundBlue` | `.foregroundBrandPrimary` |
-| `.accentForegroundGreen` | `.foregroundPositivePrimary` |
-| `.accentForegroundOrange` | `.foregroundCautionaryPrimary` |
-| `.accentForegroundRed` | `.foregroundNegativeStrong` |
-| `.accentForegroundRedOrange` | **No counterpart** (see below) |
-| `.accentForegroundLime` | `.foregroundAccentLime` |
-| `.accentForegroundCyan` | `.foregroundAccentCyan` |
-| `.accentForegroundLightBlue` | `.foregroundAccentLightBlue` |
-| `.accentForegroundViolet` | `.foregroundAccentViolet` |
-| `.accentForegroundPurple` | `.foregroundAccentPurple` |
-| `.accentForegroundPink` | `.foregroundAccentPink` |
+| 3.x | 4.0 | Value |
+|---|---|---|
+| `.labelNormal` | `.foregroundNeutralPrimary` | same |
+| `.labelStrong` | `.foregroundNeutralStrong` | same |
+| `.labelNeutral` | `.foregroundNeutralSecondary` | same |
+| `.labelAlternative` | `.foregroundNeutralTertiary` | same |
+| `.labelAssistive` | `.foregroundNeutralQuaternary` | same |
+| `.inverseLabel` | `.foregroundNeutralInverse` | **slightly different** |
+| `.labelDisable` | `.foregroundDisablePrimary` | same |
+| `.interactionInactive` | `.foregroundInactivePrimary` | same |
+| `.inversePrimary` | `.foregroundBrandInverse` | same |
+| `.statusPositive` | `.foregroundPositivePrimary` | same |
+| `.statusCautionary` | `.foregroundCautionaryPrimary` | same |
+| `.statusNegative` | `.foregroundNegativePrimary` | same |
+| `.accentForegroundBlue` | `.foregroundBrandPrimary` | **changed** |
+| `.accentForegroundGreen` | `.foregroundPositivePrimary` | **changed** |
+| `.accentForegroundOrange` | `.foregroundCautionaryPrimary` | **changed** |
+| `.accentForegroundRed` | `.foregroundNegativeStrong` | **dark changed** |
+| `.accentForegroundLime` | `.foregroundAccentLime` | **dark changed** |
+| `.accentForegroundCyan` | `.foregroundAccentCyan` | **dark changed** |
+| `.accentForegroundLightBlue` | `.foregroundAccentLightBlue` | **dark changed** |
+| `.accentForegroundViolet` | `.foregroundAccentViolet` | **dark changed** |
+| `.accentForegroundPurple` | `.foregroundAccentPurple` | **dark changed** |
+| `.accentForegroundPink` | `.foregroundAccentPink` | **dark changed** |
+| `.accentForegroundRedOrange` | none | see [3.1](#31-redorange-tokens) |
 
-> Among `accentForeground{Color}`, Blue, Green, Orange, and Red were **promoted from the accent family to semantic colors** (brand/positive/cautionary/negative). Do not just rename them; check that the spot really calls for a semantic color.
+> Among `accentForeground{Color}`, Blue, Green, Orange, and Red **changed role from `Accent{Color}` to `Brand`, `Positive`, `Cautionary`, and `Negative`.** Do not just swap the name - confirm the spot really carries that role.
 
-#### Background and Surface
+#### Background · Surface - page and element backgrounds
 
-| 3.x | 4.0 |
-|---|---|
-| `.backgroundNormal` | `.backgroundNeutralPrimary` |
-| `.backgroundNormalAlternative` | `.backgroundNeutralSecondary` |
-| `.backgroundElevated` | `.surfaceElevatedPrimary` |
-| `.backgroundElevatedAlternative` | `.surfaceElevatedSecondary` |
-| `.fillNormal` | `.surfaceNeutralSecondary` |
-| `.fillAlternative` | `.surfaceNeutralTertiary` |
-| `.fillStrong` | `.surfaceNeutralStrong` |
-| `.fillPrimary` | `.surfaceBrandSubtle` |
-| `.fillNegative` | `.surfaceNegativeStrong` |
-| `.backgroundStatusPositive` | `.surfacePositivePrimary` |
-| `.backgroundStatusCautionary` | `.surfaceCautionaryPrimary` |
-| `.backgroundStatusNegative` | `.surfaceNegativePrimary` |
-| `.inverseBackground` | `.surfaceNeutralInverse` |
-| `.primaryNormal` | `.surfaceBrandPrimary` |
-| `.primaryStrong` | `.surfaceBrandStrong` |
-| `.primaryHeavy` | `.surfaceBrandHeavy` |
-| `.interactionDisable` | `.surfaceDisablePrimary` |
-| `.accentBackgroundLime` | `.surfaceAccentLimeOpaque` |
-| `.accentBackgroundCyan` | `.surfaceAccentCyanOpaque` |
-| `.accentBackgroundLightBlue` | `.surfaceAccentLightBlueOpaque` |
-| `.accentBackgroundViolet` | `.surfaceAccentVioletOpaque` |
-| `.accentBackgroundPink` | `.surfaceAccentPinkOpaque` |
-| `.accentBackgroundRedOrange` | **No counterpart** (see below) |
+| 3.x | 4.0 | Value |
+|---|---|---|
+| `.backgroundNormal` | `.backgroundNeutralPrimary` | same |
+| `.backgroundNormalAlternative` | `.backgroundNeutralSecondary` | same |
+| `.backgroundElevated` | `.surfaceElevatedPrimary` | same |
+| `.backgroundElevatedAlternative` | `.surfaceElevatedSecondary` | same |
+| `.fillNormal` | `.surfaceNeutralSecondary` | same |
+| `.fillAlternative` | `.surfaceNeutralTertiary` | same |
+| `.fillStrong` | `.surfaceNeutralStrong` | same |
+| `.backgroundStatusPositive` | `.surfacePositivePrimary` | same |
+| `.backgroundStatusCautionary` | `.surfaceCautionaryPrimary` | same |
+| `.backgroundStatusNegative` | `.surfaceNegativePrimary` | same |
+| `.inverseBackground` | `.surfaceNeutralInverse` | same |
+| `.primaryNormal` | `.surfaceBrandPrimary` | same |
+| `.primaryStrong` | `.surfaceBrandStrong` | same |
+| `.primaryHeavy` | `.surfaceBrandHeavy` | same |
+| `.interactionDisable` | `.surfaceDisablePrimary` | same |
+| `.accentBackgroundLime` | `.surfaceAccentLimeOpaque` | same |
+| `.accentBackgroundCyan` | `.surfaceAccentCyanOpaque` | same |
+| `.accentBackgroundLightBlue` | `.surfaceAccentLightBlueOpaque` | same |
+| `.accentBackgroundViolet` | `.surfaceAccentVioletOpaque` | same |
+| `.accentBackgroundPurple` | `.surfaceAccentPurpleOpaque` | same |
+| `.accentBackgroundPink` | `.surfaceAccentPinkOpaque` | same |
+| `.accentBackgroundRedOrange` | none | see [3.1](#31-redorange-tokens) |
 
-> Only two `background` tokens remain, for the page itself (Primary and Secondary). Everything else split off: surfaces became `surface`, and the transparent layers `backgroundTransparent*` became `effect` (`backgroundTransparent` → `effectTransparentPrimary`, `backgroundTransparentAlternative` → `effectTransparentSecondary`). The values are unchanged.
+> Only two `background` tokens remain (Primary and Secondary) for the page background. The rest moved to `surface`, and the translucent `backgroundTransparent*` pair moved to `effect`.
 >
-> `accentBackground{Color}` maps to the **opaque** (`Opaque`) token by default. If the spot was layering a translucent color over something, use the suffix-less `.surfaceAccent{Color}`.
->
-> **The RedOrange family is gone from the 4.0 semantics.** There is no 4.0 token matching `accentForegroundRedOrange` or `accentBackgroundRedOrange` (the primitive `redOrange*` tokens are still there). A 1:1 replacement is not possible, so look at what the spot was for and choose deliberately - and whatever you choose, **the color will change.** In the Wanted app all three usages were text or icon colors, so they moved to `.foregroundNegativePrimary`, which turned `redOrange50/60` into `red50/60`. If the spot was a surface color, `.surfaceNegativePrimary` or a direct primitive `redOrange*` will be closer to the original value.
+> `accentBackground{Color}` maps to the **opaque** variant by default. If you were layering it over something translucent, use the suffix-less `.surfaceAccent{Color}` (8% alpha).
 
 #### Line - borders and dividers
 
-| 3.x | 4.0 |
-|---|---|
-| `.lineNormal` | `.lineNeutralPrimary` |
-| `.lineNeutral` | `.lineNeutralSecondary` |
-| `.lineAlternative` | `.lineNeutralTertiary` |
-| `.lineSolidNormal` | `.lineNeutralPrimaryOpaque` |
-| `.lineSolidNeutral` | `.lineNeutralSecondaryOpaque` |
-| `.lineSolidAlternative` | `.lineNeutralTertiaryOpaque` |
-| `.linePrimaryStrong` | `.lineBrandStrong` |
-| `.lineStatusPositiveNormal` | `.linePositivePrimary` |
-| `.lineStatusCautionaryNormal` | `.lineCautionaryPrimary` |
-| `.lineStatusNegativeStrong` | `.lineNegativeStrong` |
+| 3.x | 4.0 | Value |
+|---|---|---|
+| `.lineNormal` | `.lineNeutralPrimary` | same |
+| `.lineNeutral` | `.lineNeutralSecondary` | same |
+| `.lineAlternative` | `.lineNeutralTertiary` | same |
+| `.lineSolidNormal` | `.lineNeutralPrimaryOpaque` | same |
+| `.lineSolidNeutral` | `.lineNeutralSecondaryOpaque` | same |
+| `.lineSolidAlternative` | `.lineNeutralTertiaryOpaque` | same |
+| `.linePrimaryNormal` | `.lineBrandPrimary` | same |
+| `.linePrimaryStrong` | `.lineBrandStrong` | same |
+| `.lineStatusPositiveNormal` | `.linePositivePrimary` | same |
+| `.lineStatusCautionaryNormal` | `.lineCautionaryPrimary` | same |
+| `.lineStatusNegativeNormal` | `.lineNegativePrimary` | same |
+| `.lineStatusNegativeStrong` | `.lineNegativeStrong` | same |
 
-#### Effect - dimming and transparent layers
+#### Effect - dim and translucent layers
 
-| 3.x | 4.0 |
-|---|---|
-| `.materialDimmer` | `.effectDimmerPrimary` |
-| `.backgroundTransparent` | `.effectTransparentPrimary` |
-| `.backgroundTransparentAlternative` | `.effectTransparentSecondary` |
+| 3.x | 4.0 | Value |
+|---|---|---|
+| `.materialDimmer` | `.effectDimmerPrimary` | **dark changed** |
+| `.backgroundTransparent` | `.effectTransparentPrimary` | same |
+| `.backgroundTransparentAlternative` | `.effectTransparentSecondary` | same |
 
-#### Tokens not in the tables above
+#### Tokens whose value also changes
 
-For tokens introduced in 4.0 (`lineBrandFocus`, `lineNegativeFocus`, `foregroundAccent*`, and so on) and for primitive tokens (`neutral*`, `blue*`, `coolNeutral*`, …), check `Color.Semantic` directly. Primitive names did not change.
+Renaming these **changes the color.** Look at these spots after the substitution.
 
-If you cannot find a 3.x token in the tables, look at the doc comment on each `Color.Semantic` case. Renamed tokens carry their 3.x name after `구` ("former"), as in `/// 기본 전경 색상 (구 labelNormal)`.
+| 3.x → 4.0 | Light | Dark |
+|---|---|---|
+| `accentForegroundBlue` → `foregroundBrandPrimary` | `blue45` `#005EEB` → `blue50` `#0066FF` | `blue45` → `blue60` `#3385FF` |
+| `accentForegroundGreen` → `foregroundPositivePrimary` | `green40` `#009632` → `green50` `#00BF40` | `green40` → `green60` `#1ED45A` |
+| `accentForegroundOrange` → `foregroundCautionaryPrimary` | `orange39` `#D17600` → `orange50` `#FF9200` | `orange39` → `orange60` `#FFA938` |
+| `accentForegroundRed` → `foregroundNegativeStrong` | same (`red40`) | `red40` `#E52222` → `red60` `#FF6363` |
+| `accentForegroundLime` → `foregroundAccentLime` | same (`lime37`) | `lime37` `#429E00` → `lime50` `#58CF04` |
+| `accentForegroundCyan` → `foregroundAccentCyan` | same (`cyan40`) | `cyan40` `#0098B2` → `cyan50` `#00BDDE` |
+| `accentForegroundLightBlue` → `foregroundAccentLightBlue` | same (`lightBlue40`) | `lightBlue40` `#008DCF` → `lightBlue50` `#00AEFF` |
+| `accentForegroundViolet` → `foregroundAccentViolet` | same (`violet45`) | `violet45` `#5B37ED` → `violet70` `#9E86FC` |
+| `accentForegroundPurple` → `foregroundAccentPurple` | same (`purple40`) | `purple40` `#AD36E3` → `purple60` `#D478FF` |
+| `accentForegroundPink` → `foregroundAccentPink` | same (`pink46`) | `pink46` `#E846CD` → `pink60` `#FA73E3` |
+| `materialDimmer` → `effectDimmerPrimary` | same | `coolNeutral5` `#0F0F10` → `coolNeutral10` `#171719` (dim gets slightly lighter) |
+| `inverseLabel` → `foregroundNeutralInverse` | `neutral99` `#F7F7F7` → `coolNeutral99` `#F7F7F8` | `neutral10` `#171717` → `coolNeutral10` `#171719` |
 
-#### Bulk replacement
+`accentForegroundBlue`, `Green`, and `Orange` **change in light mode too.** The other accent tokens move one step brighter in dark mode, and `inverseLabel` shifts by about 1/255, which is invisible in practice.
 
-No 3.x token name survives into 4.0, so a word-boundary replacement is safe.
+#### Tokens not in the tables
+
+Primitive tokens (`neutral*`, `blue*`, `coolNeutral*`, …) keep both their names and their values.
+
+Tokens introduced in 4.0 (`lineBrandFocus`, `lineNegativeFocus`, `surfaceBrandSubtle`, `surfaceNegativeStrong`, `foregroundAccent*`, …) have no 3.x counterpart, so they are absent from these tables. Look them up in `Color.Semantic`.
+
+> The doc comments on `Color.Semantic` carry the old name as `(구 …)`, but a few of those names only ever existed during 4.0 development (`fillPrimary`, `fillNegative`, `interactionFocus`, `interactionNegative`). **If you are coming from 3.x, trust the tables in this document.**
+
+#### Bulk substitution
+
+No 3.x token name survives into 4.0, so anchoring on `\b` is enough to keep the substitution from hitting anything it shouldn't.
 
 ```bash
 # check first
 grep -rn "\.labelNormal\b" --include="*.swift" .
 
-# replace
+# substitute
 find . -name "*.swift" -exec sed -i '' \
   -e 's/\.labelNormal\b/.foregroundNeutralPrimary/g' \
   -e 's/\.labelAlternative\b/.foregroundNeutralTertiary/g' \
@@ -177,9 +189,9 @@ find . -name "*.swift" -exec sed -i '' \
 
 ---
 
-### 2. Spacing and Opacity tokens
+### 1.2 Spacing and Opacity tokens
 
-These were flattened so the value appears directly in the name. The mapping is 1:1, so rendering is identical.
+The enum plus lookup function collapsed into a single static property, and the value now appears directly in the name.
 
 ```swift
 // 3.x
@@ -193,7 +205,30 @@ These were flattened so the value appears directly in the name. The mapping is 1
 
 | 3.x | 4.0 |
 |---|---|
-| `.spacing(.pt02)` … `.spacing(.pt72)` | `.spacing2` … `.spacing72` |
+| `.spacing(.pt01)` | `.spacing1` |
+| `.spacing(.pt02)` | `.spacing2` |
+| `.spacing(.pt04)` | `.spacing4` |
+| `.spacing(.pt08)` | `.spacing8` |
+| `.spacing(.pt12)` | `.spacing12` |
+| `.spacing(.pt16)` | `.spacing16` |
+| `.spacing(.pt20)` | `.spacing20` |
+| `.spacing(.pt24)` | `.spacing24` |
+| `.spacing(.pt28)` | **none** (see [3.2](#32-spacing-pt28-and-pt36)) |
+| `.spacing(.pt32)` | `.spacing32` |
+| `.spacing(.pt36)` | **none** (see [3.2](#32-spacing-pt28-and-pt36)) |
+| `.spacing(.pt40)` | `.spacing40` |
+| `.spacing(.pt48)` | `.spacing48` |
+| `.spacing(.pt56)` | `.spacing56` |
+| `.spacing(.pt64)` | `.spacing64` |
+| `.spacing(.pt72)` | `.spacing72` |
+| `.spacing(.pt80)` | `.spacing80` |
+
+Note that **the leading zero disappears**: `pt08` becomes `spacing8`, not `spacing08`.
+
+All 16 opacity tokens map one to one with identical values.
+
+| 3.x | 4.0 |
+|---|---|
 | `.opacity(.p000)` | `.opacity0` |
 | `.opacity(.p005)` | `.opacity5` |
 | `.opacity(.p008)` | `.opacity8` |
@@ -211,37 +246,204 @@ These were flattened so the value appears directly in the name. The mapping is 1
 | `.opacity(.p097)` | `.opacity97` |
 | `.opacity(.p100)` | `.opacity100` |
 
-**The zero padding disappears**, as in `pt08` → `spacing8`. It is not `spacing08`.
+Opacity tokens are now `Double`. Spots that used raw literals like `withAlphaComponent(0)` can be tidied to `withAlphaComponent(.opacity0)`.
 
-Opacity tokens moved to `Double`. Spots that used a raw literal like `withAlphaComponent(0)` can be tidied up to `withAlphaComponent(.opacity0)`.
-
----
-
-### 3. Global modifiers
-
-| 3.x | 4.0 | Notes |
-|---|---|---|
-| `.disable(_:)` | `.disabled(_:)` | Absorbed into the standard SwiftUI modifier. Components read the `isEnabled` environment value |
-| `scrollStatus.scrolledToMax` | `scrollStatus.reachedEnd` | A `ScrollStatus` property on `Montage.ScrollView` |
-
-`disable()` → `disabled()` is more than a rename. In 3.x the component applied its own `opacity`; in 4.0 it follows SwiftUI's `isEnabled` and expresses the state through color tokens (`foregroundDisablePrimary` and friends). See [Changes that alter what you see](#changes-that-alter-what-you-see).
-
-Input components gained `autocorrectionDisabled(_:)` (an addition, not a breaking change).
+The `Color.spacing(_:)` and `Color.opacity(_:)` static functions were removed.
 
 ---
 
-### 4. Input components to FormControl
+### 1.3 Global modifiers
 
-This is the change that takes the most work. `TextField`/`TextArea` now handle **only the input itself**, and `FormControl` places the label, status message, and character counter outside the field.
-
-| 3.x (inside the field) | 4.0 (FormControl slot) | Position |
+| 3.x | 4.0 | Note |
 |---|---|---|
-| `.heading("Email")` | `.label("Email")` | **Above** the field |
-| `.status(.negative(description: msg))` | `.status(.negative)` + `.message(msg)` | **Below** the field |
-| `.bottomResources(trailing: [.characterCount(limit:)])` | `.accessory { … }` | Below the field, **trailing** |
-| `.disable(_:)` | `.disabled(_:)` | - |
+| `.disable(_:)` | `.disabled(_:)` | Absorbed into the standard SwiftUI modifier; components read the `isEnabled` environment value |
+| `scrollStatus.scrolledToMax` | `scrollStatus.reachedEnd` | `ScrollStatus` property on `Montage.ScrollView` |
+
+`disable()` → `disabled()` is more than a rename. In 3.x components dimmed the whole view by lowering its opacity; in 4.0 they read SwiftUI's `isEnabled` and swap in color tokens such as `foregroundDisablePrimary`. See [4. Visual changes](#4-visual-changes).
+
+`Chip` and `FilterButton` already spelled it `disabled(_:)` in 3.x, but that was their own modifier returning `Self`. In 4.0 it is gone and the standard modifier takes over, which returns `some View`. **Chaining a component-specific modifier after `.disabled()` no longer compiles, so move `.disabled()` to the end of the chain.**
+
+```swift
+// 3.x
+Chip(variant: variant, size: size, text: text)
+    .disabled(disable)
+    .active(active)
+
+// 4.0 - .disabled() returns some View, not Chip
+Chip(variant: variant, size: size, text: text)
+    .active(active)
+    .disabled(disable)
+```
+
+A `.disabled(true)` set on an ancestor view now changes the colors of both components too. In 3.x they picked colors from their own property, so an inherited `.disabled()` blocked touches but left the colors alone.
+
+---
+
+### 1.4 Component renames
+
+#### ListCell
+
+| 3.x | 4.0 |
+|---|---|
+| `ListCell(title:)` | `ListCell(label:)` |
+| `.titleVariant(_:)` | `.labelVariant(_:)` |
+| `.titleWeight(_:)` | `.labelWeight(_:)` |
+| `.titleColor(_:)` | `.labelColor(_:)` |
+| `.caption(_:)` | `.description(_:)` |
+| `.fillWidth(false)` | `.variant(.inset)` (default) |
+| `.fillWidth(true)` | `.variant(.full)` |
+
+`inset` extends only the interaction background by 12 on each side with a corner radius of 16; `full` gives the cell its own horizontal padding of 20. These are the same values 3.x used for `fillWidth(false)` and `fillWidth(true)`, so renaming alone leaves the screen unchanged.
+
+Slot changes are in [2.5 ListCell slots](#25-listcell-slots).
+
+#### TopNavigation slot presets
+
+Preset namespaces were unified to `Component.Resource.SlotName`.
+
+| 3.x | 4.0 |
+|---|---|
+| `TopNavigation.Resource.LeadingButtonInfo` | `TopNavigation.Resource.Leading` |
+| `TopNavigation.Resource.TrailingButtonInfo` | `TopNavigation.Resource.Trailing` |
+
+```swift
+// 3.x
+TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action: { dismiss() }))
+
+// 4.0
+TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
+```
+
+#### Input components
+
+| 3.x | 4.0 | Applies to |
+|---|---|---|
+| `.heading(_:)` | `.label(_:required:)` | `TextField`, `TextArea`, `Select` |
+| `.requiredBadge(_:)` | the `required` argument of `.label(_:required:)` | `TextField`, `TextArea`, `Select` |
+| `.description(_:)` | `.message(_:)` | `TextArea`, `Select` |
+| `.inputCharacterLimit(_:)` | `.maxLength(_:)` | `TextArea` |
+| `.status(.negative(description:))` | `.status(.negative)` + `.message(_:)` | `TextField` |
 
 `TextField.Status` lost its associated values: `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
+
+The structural part of this change is in [2.1 Input labels, messages, and counters](#21-input-labels-messages-and-counters).
+
+#### Button and TextButton
+
+`fill(horizontal:vertical:)` was removed in favour of `fillWidth(_:)`.
+
+| 3.x | 4.0 |
+|---|---|
+| `.fill(horizontal: true)` | `.fillWidth(true)` |
+| `.fill(horizontal: true, vertical: false)` | `.fillWidth(true)` |
+| `.fill(horizontal: true, vertical: true)` | `.fillWidth(true)` |
+
+`vertical` never did anything in 3.x either. The function took the parameter and threw it away, so even `vertical: true` call sites never got a taller button. All three cases render identically, so the substitution is purely mechanical.
+
+#### IconButton
+
+The size of the `normal` variant moved from `Int` to the `NormalSize` enum.
+
+| 3.x | 4.0 | Icon glyph | Container |
+|---|---|---|---|
+| `.normal(size: 16)` | `.normal(size: .small)` | 16 | 24 |
+| `.normal(size: 18)` | `.normal(size: .medium)` | 18 | 28 |
+| `.normal(size: 20)` | `.normal(size: .large)` | 20 | 32 |
+| `.normal(size: 24)` | `.normal(size: .xlarge)` | 24 | 36 |
+
+The glyph stays the same size and **only the touch container grows.** Since this variant has no background or border, the visible effect is a trailing icon shifting by about 6pt or a row growing by about 8pt.
+
+For any other size, see [3.3 IconButton non-standard sizes](#33-iconbutton-non-standard-sizes).
+
+#### PushBadge
+
+| 3.x | 4.0 |
+|---|---|
+| `.new` | `.text("N")` |
+| `.number(count)` | `.maxCount(count, max: 99)` |
+
+Instead of a minimum width plus padding for a single character, the badge is now a `badgeSize` square (xsmall 16 / small 20 / medium 24). Narrow glyphs like `N` are pixel-identical, and a single wide character (CJK, `M`, `W`) no longer squashes the badge.
+
+There is also a scaling cap. In 3.x the badge kept growing all the way into the accessibility text sizes; 4.0 stops it at `xxxLarge`. The icon or avatar underneath does not scale with Dynamic Type, so a badge that kept growing would cover it.
+
+#### SegmentedControl
+
+| 3.x | 4.0 |
+|---|---|
+| `Item(image:title:)` | `Item(leadingIcon:title:)` |
+| `icon` toggle | `.iconOnly(_:)` |
+
+For the removal of `variant(_:)`, see [3.4](#34-segmentedcontrol-outlined-variant).
+
+#### Accordion
+
+The no-argument `trailingContent` overload is gone; only the one taking the expanded flag (`Bool`) remains.
+
+```swift
+// 3.x
+.trailingContent { Chevron() }
+
+// 4.0
+.trailingContent { _ in Chevron() }
+```
+
+#### Parameters dropped from init
+
+Disabled state and background color moved out of `init` into modifiers.
+
+| 3.x | 4.0 |
+|---|---|
+| `TopNavigation(scrollOffset:backgroundColor:)` | `TopNavigation(scrollOffset:)` + `.backgroundColor(_:)` |
+| `TopNavigation.TrailingIconButton(icon:disable:showPushBadge:action:)` | `(icon:showPushBadge:action:)` + `.disabled(_:)` |
+| `TopNavigation.TrailingTextButton(text:disable:action:)` | `(text:action:)` + `.disabled(_:)` |
+| `framedStyle(status:borderRadius:shadowLevel:disabled:)` | `framedStyle(status:borderRadius:shadowLevel:)` + `.disabled(_:)` |
+
+Anywhere you passed `disable:`, use the standard SwiftUI `.disabled(_:)` the same way as in [1.3 Global modifiers](#13-global-modifiers).
+
+#### Skeleton
+
+It now takes a typography variant instead of an array of widths, deriving line height and line count from the variant.
+
+```swift
+// 3.x
+Skeleton.SkeletonView(.text(lengths: [._25, ._50, ._75]))
+
+// 4.0
+Skeleton.SkeletonView(.text(variant: .body1))
+```
+
+Placeholder bar widths change from variable (25/50/75/100%) to uniform. To mimic multiple lines, place several `SkeletonView`s.
+
+#### Avatar
+
+The default for `border(color:)` changed from `.lineAlternative` to `.lineNeutralTertiary`. That is the new name for the same color, so nothing renders differently.
+
+---
+
+## 2. Removed, needs rework
+
+### 2.1 Input labels, messages, and counters
+
+In 3.x the `TextField` drew its own label and error message. In 4.0 `TextField`, `TextArea`, and `Select` draw just the input field, and attaching `label`, `message`, or `accessory` **wraps it in a `FormControl` that places the label and message instead.**
+
+```swift
+// what .label() / .message() build for you in 4.0
+FormControl {
+    TextField(text: $email)   // draws the input only
+}
+.label("Email")               // label goes above the field
+.message(errorMessage)        // message goes below it
+```
+
+The wrapping is automatic, so call sites only swap modifiers. But **the view hierarchy changes, so field height and overall form height change with it.** This is not a rename-and-done substitution.
+
+| 3.x (inside the field) | 4.0 | Position |
+|---|---|---|
+| `.heading("Email")` | `.label("Email")` | **above** the field |
+| `.requiredBadge(true)` | `.label("Email", required: true)` | next to the label |
+| `.status(.negative(description: msg))` | `.status(.negative)` + `.message(msg)` | **below** the field |
+| `.bottomResources(trailing: [.characterCount(limit:)])` | `.accessory { … }` | below the field, **trailing** |
+| `.disable(_:)` | `.disabled(_:)` | - |
 
 #### TextField
 
@@ -254,6 +456,54 @@ Montage.TextField(text: $email)
     .disable(isDisabled)
 
 // 4.0
+Montage.TextField(text: $email)
+    .label(String(localized: "Email"))
+    .placeholder(String(localized: "Enter your email."))
+    .status(isInvalidated ? .negative : .normal)
+    .message(isInvalidated ? errorMessage : nil)
+    .disabled(isDisabled)
+```
+
+The label becomes the input's accessibility label and the message its accessibility hint.
+
+#### TextArea with a character counter
+
+```swift
+// 3.x
+TextArea(text: $feedback, focus: $focus)
+    .resize(.fixed(min: 116, max: 116))
+    .placeholder("Tell us what worked and what didn't.")
+    .bottomResources(trailing: [.characterCount(limit: 1000)])
+
+// 4.0
+TextArea(text: $feedback, focus: $focus)
+    .maxLength(1000)
+    .resize(.fixed(min: 116, max: 116))
+    .placeholder(String(localized: "Tell us what worked and what didn't."))
+    .accessory {
+        Text(verbatim: "\(feedback.count)/1000")
+            .typography(variant: .label2, weight: .medium, semantic: .foregroundNeutralTertiary)
+    }
+```
+
+The `.characterCount` resource was removed - the call site now draws the counter. Two things to watch:
+
+- **Set the input limit on the field with `maxLength(_:)`.** Displaying the counter and enforcing the limit are now separate.
+- **Use `Text(verbatim:)`.** `Text("\(count)/\(limit)")` goes through `LocalizedStringKey` interpolation, which adds a locale thousands separator once the limit reaches 1000 (`5,000`). With `verbatim:` you get `5000`.
+
+All three share the same five modifiers:
+
+`.label(_:required:)` · `.message(_:)` · `.labelPlacement(_:)` · `.labelWidth(_:)` · `.accessory { }`
+
+#### When to wrap in FormControl
+
+Using any one of those modifiers wraps the input in a `FormControl` internally, so most screens never need to write one. Reach for it directly in three cases:
+
+- wrapping an input component you built yourself
+- which input component goes in changes at runtime and you want the wrapper settings in one place
+- aligning label widths across several fields with `FormControlGroup`
+
+```swift
 FormControl { context in
     Montage.TextField(text: $email)
         .status(context.status.textFieldStatus)
@@ -262,71 +512,61 @@ FormControl { context in
 .label(String(localized: "Email"))
 .status(isInvalidated ? .negative : .normal)
 .message(isInvalidated ? errorMessage : nil)
-.disabled(isDisabled)
 ```
 
-**`FormControl` owns the status** and passes it down to the field through `context.status.textFieldStatus`. If you set the status on the field directly, the label and message colors will drift out of sync.
+`size` and `status` resolve in this order: **value set on the component → value propagated from `FormControl` → default** (`.large` / `.normal`). They propagate into the slot, so setting them once on the `FormControl` is usually enough. Setting the status separately on the component can leave the label and message colors out of sync, so pass it down through `context.status` as shown above.
 
-#### TextArea and the character counter
-
-```swift
-// 3.x
-TextArea(text: $feedback, focus: $focus)
-    .resize(.fixed(min: 116, max: 116))
-    .placeholder("Tell us what you liked or what fell short.")
-    .bottomResources(trailing: [.characterCount(limit: 1000)])
-
-// 4.0
-FormControl { _ in
-    TextArea(text: $feedback, focus: $focus)
-        .maxLength(1000)
-        .resize(.fixed(min: 116, max: 116))
-        .placeholder(String(localized: "Tell us what you liked or what fell short."))
-}
-.accessory {
-    Text(verbatim: "\(feedback.count)/1000")
-        .typography(variant: .label2, weight: .medium, semantic: .foregroundNeutralTertiary)
-}
-```
-
-The `.characterCount` resource was removed from `bottomResources`. The call site now draws the counter itself (`bottomResources` itself is still there). Two things to keep in mind.
-
-- **The input limit goes on the field via `maxLength(_:)`.** Displaying the count and enforcing the limit are now separate.
-- **Use `Text(verbatim:)`.** `Text("\(count)/\(limit)")` goes through `LocalizedStringKey` interpolation, which adds a locale thousands separator once the limit reaches 1000 (`5,000`). With `verbatim:` you get `5000`.
-
-The remaining `FormControl` modifiers: `size(.large/.medium)`, `labelPlacement(.top/.leading)`, `labelWidth(_:)`, `label(_:required:)`. To align several fields together, use `FormControlGroup`.
-
-#### Attaching directly to the input
-
-You can also skip the `FormControl` wrapper and put the modifiers straight on `TextField`, `TextArea`, or `Select`. All three have the same five.
-
-`.label(_:required:)` · `.message(_:)` · `.labelPlacement(_:)` · `.labelWidth(_:)` · `.accessory { }`
-
-```swift
-Montage.TextField(text: $email)
-    .placeholder(String(localized: "Enter your email."))
-    .label(String(localized: "Email"), required: true)
-    .message(isInvalidated ? errorMessage : nil)
-    .status(isInvalidated ? .negative : .normal)
-```
-
-Using any one of them wraps the input in a `FormControl` internally, so the result is the same as the `FormControl { … }` form above. The label is wired up as the input's accessibility label and the message as its accessibility hint.
-
-`size` and `status` resolve in this order: **the value set at the call site, then the value propagated from `FormControl`, then the default** (`.large` / `.normal`). For the common case of one input with just a label and a message, this form is shorter; when you need `FormControlGroup` or have to compose several inputs, reach for `FormControl` directly.
-
----
+The remaining `FormControl` modifiers: `size(.large/.medium)`, `labelPlacement(.top/.leading)`, `labelWidth(_:)`, `label(_:required:)`.
 
 #### If you have your own input wrapper
 
-For a wrapper that contains a `TextField` internally, such as `AutoCompleteTextInput`, it is better to **wrap the wrapper itself in a `FormControl`** and expose the status and message as parameters on the wrapper's interface. Putting `FormControl` inside the wrapper makes it hard to supply the label from outside.
+For a wrapper like `AutoCompleteTextInput` that hides a `TextField` inside, **wrap the wrapper in a `FormControl`** and expose status and message through the wrapper's own interface. Putting `FormControl` inside the wrapper makes it hard to supply the label from outside.
 
 ---
 
-### 5. Slot-based APIs
+### 2.2 TextArea bottom resources
 
-`Model` structs and fixed image parameters are gone; the call site passes views directly.
+Both the signature and the resource types of `bottomResources` changed.
 
-#### ActionArea
+```swift
+// 3.x - one Resource type for both slots
+public func bottomResources(
+    leading leadingResources: [Resource] = [],
+    trailing trailingResources: [Resource] = [],
+    leadingResourceSpacing: CGFloat = 4,
+    trailingResourceSpacing: CGFloat = 4
+) -> Self
+
+// 4.0 - the type differs per slot
+public func bottomResources(
+    leading: [Resource.Leading] = [],
+    trailing: [Resource.Trailing] = [],
+    leadingResourceSpacing: CGFloat? = nil,
+    trailingResourceSpacing: CGFloat? = nil
+) -> Self
+```
+
+- The argument label changed from `leading leadingResources:` to `leading:`.
+- The default spacing between resources moved from a fixed `4` to **a size-dependent default (large 8 / medium 6)**. If you never passed it explicitly, the gap widens.
+
+Preset mapping:
+
+| 3.x `Resource` | 4.0 |
+|---|---|
+| `.icon` | `Resource.Leading.icon` / `Resource.Trailing.icon` |
+| `.iconButton` | `Resource.Leading.iconButton` / `Resource.Trailing.iconButton` |
+| `.characterCount` | removed - use `accessory` from [2.1](#21-input-labels-messages-and-counters) |
+| `.textButton`, `.chip`, `.filterButton`, `.badge` | **no replacement** (see [3.6](#36-textarea-bottom-resource-presets)) |
+| - | `.contentBadge` and `.segmentedControl` added; `.button` and `.primaryIconButton` added for trailing only |
+| no `.slot` | `Resource.Leading.slot { }` / `Resource.Trailing.slot { }` |
+
+Anything without a preset goes through `slot(_:)`.
+
+---
+
+### 2.3 ActionArea
+
+The `Model` struct and the fixed parameters are gone; the call site supplies the view.
 
 ```swift
 // 3.x
@@ -350,113 +590,115 @@ For a wrapper that contains a `TextField` internally, such as `AutoCompleteTextI
 )
 ```
 
-The `actionArea` slot closure is **not** annotated with `@ViewBuilder`. An `if` statement turns it into `_ConditionalContent`, which breaks the `ActionArea` type constraint. Handle branching with a ternary or a modifier chain.
+`modalActionArea(_:)` on `BottomSheet` and `Popup` also changed from `ActionArea.Model?` to `(() -> ActionArea)?`.
+
+The `actionArea` slot closure is **not** `@ViewBuilder`. An `if` statement produces `_ConditionalContent` and breaks the `ActionArea` type constraint. Use a ternary or a modifier chain instead.
 
 ```swift
 // does not work
 .actionArea { if isEditing { ActionArea(variant: a) } else { ActionArea(variant: b) } }
 
-// do this instead
+// do this
 .actionArea { ActionArea(variant: isEditing ? a : b) }
 ```
 
-The API for controlling background transparency directly is gone. In 4.0 the background and the top gradient are both driven by a single signal - whether the scroll has reached the bottom (`scrollReachedEnd`).
+#### Transparent background control
 
-| `scrollReachedEnd` | `extra` slot | Top gradient | Background |
-|---|---|---|---|
-| not passed, or `false` | either | shown | opaque |
-| `true` | empty | hidden | **transparent** |
-| `true` | filled | hidden | opaque |
-
-The gradient means "there is content hidden below", and it fades in and out over 0.5 seconds.
+The API for driving the transparent background directly is gone. In 4.0 the background and the top gradient are both derived from one signal: whether the scroll view reached its end (`scrollReachedEnd`).
 
 | 3.x | 4.0 |
 |---|---|
-| `.transparentBackground(_:)` | Removed |
-| `ActionArea.BackgroundTransparencyControl` (`.automatic` / `.manual`) | Removed |
-| `actionArea(backgroundTransparency:)` | Removed |
-| `.gradientColor(_:)` | `.backgroundColor(_:)` (applies to both the background and the gradient's start color) |
-| - | `.scrollReachedEnd(_:)` added |
+| `.transparentBackground(_:)` | removed |
+| `ActionArea.BackgroundTransparencyControl` (`.automatic` / `.manual`) | removed |
+| `actionArea(backgroundTransparency:)` | removed - use `actionArea(scrollReachedEnd:)` |
 
-With `Montage.ScrollView`, reaching the bottom is reported automatically, so passing nothing is equivalent to 3.x's `.automatic`. Only when you use a container that does not report it, such as `SwiftUI.ScrollView` or `List`, do you need to pass it yourself via `actionArea(scrollReachedEnd:)`.
+| `scrollReachedEnd` | `extra` slot | Top gradient | Background |
+|---|---|---|---|
+| not passed, or `false` | any | shown | opaque |
+| `true` | empty | hidden | **transparent** |
+| `true` | non-empty | hidden | opaque |
 
-**Wherever you used `.manual` to force a transparent background, pass the bottom-reached signal instead.** A screen with no scroll container at all (fixed-height content inside a popup or sheet) has nothing to raise the signal, so ActionArea assumes there is hidden content below and draws the gradient and background. Passing `true` hides the gradient and lets the background show through.
+The gradient signals "there is content hidden below" and fades in and out over 0.5 seconds.
+
+With `Montage.ScrollView` the reached-end signal propagates automatically, so passing nothing is equivalent to 3.x's `.automatic`. Pass it yourself only for containers that do not report it, such as `SwiftUI.ScrollView` or `List`.
+
+**Where you used `.manual` to force a transparent background, pass the reached-end signal directly.** A screen with no scroll container at all (fixed-height content inside a popup or sheet) has nothing to report, so the ActionArea assumes content is hidden below and draws the gradient and background. Passing `true` hides the gradient and lets the background show through.
 
 There are two places to pass it.
 
 ```swift
-// as a modifier on a view
+// as a view modifier
 content
     .actionArea(scrollReachedEnd: true) { ActionArea(variant: …) }
 
-// when passing through an actionArea: argument, as with BottomSheet and Popup - chain it on ActionArea itself
+// via an actionArea: argument, as on BottomSheet and Popup - chain it on the ActionArea itself
 .popup(isPresented: $isPresented, actionArea: {
     ActionArea(variant: …)
         .scrollReachedEnd(true)
 })
 ```
 
-To change the background color itself, use `backgroundColor(_:)`. If neither approach fits, check with your designer whether that treatment is really needed.
+To change the background color itself, use `backgroundColor(_:)` (it applies to both the background and the gradient's start color). If neither approach covers your screen, [open an issue](https://github.com/wanteddev/montage-ios/issues).
 
-The ActionArea spec was retuned in 4.0 as well.
+Spec changes are in [4. Visual changes](#4-visual-changes).
 
-| Item | 3.x | 4.0 |
-|---|---|---|
-| `extra` slot horizontal padding | 20 | **24** |
-| `extra` slot bottom padding | 24 | **20** |
-| `extra` divider color | `lineNeutralSecondary` | `lineNeutralTertiary` (lighter) |
-| Caption typography | `label2` | `label2` + `weight: .medium` (heavier) |
-| Caption icon | None | New 16pt slot via `.caption(_:icon:)` |
-| Alternative (`alternative`) action button | `outlined` / `primary` | `outlined` / **`assistive`** |
-| `cancel` main action button | `outlined` / `assistive` | **`solid`** / `assistive` |
+---
 
-The horizontal padding of 20 on the main button row is unchanged.
+### 2.4 View.topNavigation(...) removed
 
-The button colors compile fine, since the API is unchanged. The alternative action's label goes from blue to black, widening the contrast against the primary action, and the `cancel` variant's main button goes from outlined to a grey fill. The `sub` action is unchanged.
-
-#### ScreenScaffold
-
-A new container assembles `TopNavigation`, the body, and `ActionArea` into one screen. The scroll-offset plumbing and bottom-inset math you used to hand-tune per screen are handled by the scaffold.
+Both `View.topNavigation(...)` modifiers were removed. Place the `TopNavigation` component yourself, or assemble the screen with the new `ScreenScaffold`.
 
 ```swift
+// 3.x
+content
+    .topNavigation(
+        title: "Settings",
+        leadingContent: { TopNavigation.LeadingButton(.back(action: { dismiss() })) },
+        withBottom: .init(variant: .neutral(main: .init(text: "Save", action: save)))
+    )
+
+// 4.0
 ScreenScaffold(
-    navigation: { TopNavigation(title: title) },
-    actionArea: { ActionArea(variant: .neutral(main: .init(text: "OK", action: submit))) }
+    navigation: {
+        TopNavigation(title: "Settings")
+            .leadingContent { TopNavigation.LeadingButton(.back(action: { dismiss() })) }
+    },
+    actionArea: {
+        ActionArea(variant: .neutral(main: .init(text: "Save", action: save)))
+    }
 ) {
     content
 }
 .backgroundColor(.semantic(.backgroundNeutralPrimary))
 ```
 
-`ActionArea` goes in through `safeAreaInset(edge: .bottom)`, so the scroll container reserves that much content inset. **Remove the padding you used to add by hand to keep the last element from hiding under the button when scrolled to the bottom.**
+`ScreenScaffold` assembles `TopNavigation` + content + `ActionArea` into one screen and takes over the scroll-offset plumbing and bottom-inset math you used to wire up per screen.
+
+It inserts the `ActionArea` with `safeAreaInset(edge: .bottom)`, so the scroll container reserves that much content inset. **Remove any manual bottom padding you added so the last row would clear the buttons.**
 
 | `scrollContainer` | When |
 |---|---|
 | `.builtIn` (default) | The scaffold lays down a `Montage.ScrollView` and measures scroll state itself |
-| `.custom` | When you cannot swap the container, as with `List`. The content has to raise signals via `reportsScrollOffset(_:)` and `reportsScrollReachedEnd(_:)` |
+| `.custom` | When the container cannot be swapped, e.g. `List`. The content must report through `reportsScrollOffset(_:)` and `reportsScrollReachedEnd(_:)` |
 
-The `navigation` and `actionArea` slot closures are **also not annotated with `@ViewBuilder`.** An `if` statement turns them into `_ConditionalContent` and breaks the type constraint, so to include one conditionally, branch on the closure itself, as in `actionArea: isEditing ? slot : nil`.
+The `navigation` and `actionArea` slot closures are **not `@ViewBuilder` either.** To include one conditionally, split the closure itself: `actionArea: isEditing ? slot : nil`.
 
-Do not put it inside `BottomSheet` or `Popup`. Those two do the same job and use the `ActionArea` height in their own height calculation, so pass it to their `actionArea:` argument instead. A full-screen cover or a pushed destination is a screen rather than a sheet, so it does not fall under this.
+Do not put it inside `BottomSheet` or `Popup`. Those do the same job and use the `ActionArea` height in their own height calculation, so pass it through their `actionArea:` argument instead. A full-screen cover or a pushed destination is a screen, not a sheet, so this does not apply there.
 
-With `List`, you have to clear **both** the row background and the scroll background. Clearing only one hides the color you set with `backgroundColor(_:)`, and the seam shows when `ActionArea` goes transparent at the bottom.
+With `List`, strip **both** the row background and the scroll background. Handling only one hides the color set via `backgroundColor(_:)`, and the seam shows once the `ActionArea` turns transparent at the bottom.
 
 ---
 
-#### ListCell
+### 2.5 ListCell slots
 
-The `title*` family became `label*`, `fillWidth()` became `variant(_:)`, and `leadingContent {}` became `leadingResources([…])`.
+`leadingContent {}` and `trailingContent {}` were replaced by four slot modifiers taking preset arrays.
 
 | 3.x | 4.0 |
 |---|---|
-| `ListCell(title:)` | `ListCell(label:)` |
-| `.titleVariant(_:)` / `.titleWeight(_:)` / `.titleColor(_:)` | `.labelVariant(_:)` / `.labelWeight(_:)` / `.labelColor(_:)` |
-| `.caption(_:)` | `.description(_:)` |
-| `.fillWidth(false)` | `.variant(.inset)` (default) |
-| `.fillWidth(true)` | `.variant(.full)` |
 | `.leadingContent { … }` | `.leadingResources([.slot { … }])` |
-| `.interactionPadding(_:)` | Removed - folded into `variant` |
-| `.verticalAlign(.bottom)` | Removed - only `.top` and `.center` remain |
+| `.trailingContent { _ in … }` | `.trailingResources([.slot { … }])` |
+| `.interactionPadding(_:)` | removed - folded into `variant(_:)` |
+| `.verticalAlign(_:)` taking `VerticalAlignment` | `ListCell.VerticalAlign` |
 
 ```swift
 // 3.x
@@ -474,8 +716,6 @@ ListCell(label: option.title) { onSelect() }
     }])
 ```
 
-`inset` extends only the interaction background by 12 on each side with a corner radius of 16; `full` gives the cell its own horizontal padding of 20. The values line up with the old `fillWidth(false/true)`.
-
 There are now four slots: `leadingResources`, `labelTrailingResources`, `trailingResources`, and `extraResources`. Common combinations ship as presets.
 
 ```swift
@@ -483,27 +723,29 @@ There are now four slots: `leadingResources`, `labelTrailingResources`, `trailin
 .leadingResources([.radio(checked: isSelected)])
 .leadingResources([.avatar(url, variant: .company)])
 .leadingResources([.thumbnail(url)])
-.leadingResources([.slot { AnyCustomView() }])   // use slot when there is no preset
+.leadingResources([.slot { AnyCustomView() }])   // slot when no preset fits
 ```
 
-`verticalPadding` gained `.custom(CGFloat)`.
+For `.verticalAlign(.bottom)`, see [3.5](#35-listcell-verticalalignbottom).
 
-#### Chip
+---
 
-The image parameters became content slots.
+### 2.6 Chip image slots
+
+Image parameters became content slots.
 
 | 3.x | 4.0 |
 |---|---|
 | `leadingImage:` / `trailingImage:` | `.leadingContent { … }` / `.trailingContent { … }` |
-| `.imageColor(_:)` | Set it inside the slot |
-| `.iconOnly(_:)` | Removed - just fill `leadingContent` |
+| `.imageColor(_:)` | set it inside the slot |
+| `.iconOnly(_:)` | removed - just fill `leadingContent` |
 
-The component no longer decides the icon size and color, so **the call site has to supply them.** Here is what 3.x used per size.
+The component no longer decides the icon size and color, so **the call site has to supply them.** These are the values 3.x applied per size.
 
 | Chip size | Icon size |
 |---|---|
 | `.large` | 16 |
-| `.medium` · `.small` | 14 |
+| `.medium`, `.small` | 14 |
 | `.xsmall` | 12 |
 
 ```swift
@@ -517,93 +759,19 @@ Chip(text: skill.name, variant: .outlined, size: .medium)
     }
 ```
 
-#### Slot preset names
-
-Presets now follow a consistent `Component.Resource.SlotName` pattern.
-
-```swift
-// 3.x
-TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action: { dismiss() }))
-
-// 4.0
-TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
-```
-
 ---
 
-### 6. Straight API replacements
+### 2.7 FallbackView padding
 
-#### Button · TextButton
-
-`fill(horizontal:vertical:)` was **removed** and replaced by `fillWidth(_:)`. There is no deprecation period; it is gone in 4.0, so move every call site.
+`image:` and `button:` were dropped from `init`.
 
 | 3.x | 4.0 |
 |---|---|
-| `.fill(horizontal: true)` | `.fillWidth(true)` |
-| `.fill(horizontal: true, vertical: false)` | `.fillWidth(true)` |
-| `.fill(horizontal: true, vertical: true)` | `.fillWidth(true)` |
+| `FallbackView(image:title:description:button:)` | `FallbackView(title:description:)` |
+| the `button:` slot | `buttonActionArea(_:)` |
+| the `image:` slot | **no replacement** ([3.7](#37-fallbackview-image-slot)) |
 
-`vertical` already did nothing in 3.x. It existed only in the signature and was never used in the function body, so even the spots calling it with `vertical: true` never filled vertically. All three cases render the same, so a mechanical replacement is safe.
-
-`TextButton` had no `fillWidth(_:)` in 3.x. It was added in 4.0, matching `Button`.
-
-#### IconButton
-
-The size of the `normal` variant changed from `Int` to a `NormalSize` enum.
-
-| 3.x | 4.0 | Icon glyph | Container |
-|---|---|---|---|
-| `.normal(size: 16)` | `.normal(size: .small)` | 16 | 24 |
-| `.normal(size: 18)` | `.normal(size: .medium)` | 18 | 28 |
-| `.normal(size: 20)` | `.normal(size: .large)` | 20 | 32 |
-| `.normal(size: 24)` | `.normal(size: .xlarge)` | 24 | 36 |
-
-The glyph size is unchanged and **only the touch container grows**. Since this variant has no background or border, the effect is roughly a trailing icon shifting about 6px or a row growing about 8px taller.
-
-For any size other than those four, use `NormalSize.custom(size:)` - but **what `size` means changed from the icon to the container.** In 3.x, `.normal(size: n)` made the container the same `n` as the icon. In 4.0, `.custom(size: n)` takes `n` as one side of the container and derives the icon from it: the dimension token nearest to two thirds of the container. The container is clamped to `[24, 64]`.
-
-```swift
-// 3.x - n is the icon size
-IconButton(variant: .normal(size: 22), icon: .search)
-
-// 4.0 - n is the container size, and the icon is derived from it
-IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // icon 20
-```
-
-Passing the 3.x value straight through shrinks the icon: `.custom(size: 22)` clamps the container to 24 and gives you a 16 icon. **Outside the four standard sizes there is no mechanical replacement** - pick the container that yields the icon size you want.
-
-| Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
-|---|---|---|---|---|---|---|---|---|
-| Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
-
-#### Skeleton
-
-It takes a typography variant instead of an array of variable widths. Line height and line count are derived from the variant.
-
-```swift
-// 3.x
-Skeleton.SkeletonView(.text(lengths: [._25, ._50, ._75]))
-
-// 4.0
-Skeleton.SkeletonView(.text(variant: .body1))
-```
-
-Placeholder bar widths go from variable (25/50/75/100%) to uniform. To suggest multiple lines, place several `SkeletonView`s.
-
-#### PushBadge
-
-The variants were consolidated.
-
-| 3.x | 4.0 |
-|---|---|
-| `.new` | `.text("N")` |
-| `.number(count)` | `.maxCount(count, max: 99)` |
-
-Instead of a minimum width plus padding for a single character, it is now a fixed `badgeSize` square (xsmall 16 / small 20 / medium 24). Narrow glyphs like `N` are pixel-identical, and a single CJK character or an `M`/`W` now keeps the circle round. Dynamic Type stops at `xxxLarge`.
-
-#### FallbackView
-
-It gained a padding interface, and **the minimum vertical padding is now built into the component.**
+A `Padding` enum was also added, and **the minimum vertical padding is now built into the component.**
 
 ```swift
 public enum Padding {
@@ -613,30 +781,30 @@ public enum Padding {
 ```
 
 ```swift
-// 3.x - the padding came from outside
+// 3.x - padding came from outside
 FallbackView(…)
     .padding(.vertical, 80)
 
-// 4.0 - leave it to the component
+// 4.0 - the component owns it
 FallbackView(…)
     .padding(.compact)
 ```
 
-**Be sure to clear the padding and fixed heights you were applying from outside.** Leaving them in place double-applies them. In particular, `frame(height:)` overflows because the content does not fit within the minimum padding of 160 (or 80).
+**Remove the outer padding and any fixed height.** Leaving them in place doubles the padding. A `frame(height:)` in particular will overflow, since the content no longer fits inside the built-in 160 (or 80) minimum.
 
 | 3.x | 4.0 |
 |---|---|
-| `.padding(.vertical, 160)` | Remove (the default `.normal` is 160) |
-| `.padding(.vertical, 120)` | Remove |
+| `.padding(.vertical, 160)` | remove (default `.normal` = 160) |
+| `.padding(.vertical, 120)` | remove |
 | `.padding(.vertical, 80)` | `.padding(.compact)` |
 | `.padding(.vertical, 48)` | `.padding(.compact)` |
-| `.frame(height: 200)` | `.padding(.compact)` and remove the fixed height |
+| `.frame(height: 200)` | `.padding(.compact)` and drop the fixed height |
 
 The button area goes through `buttonActionArea(_:)` (`.single` / `.horizontal` / `.vertical`).
 
 ---
 
-### 7. Removed UIKit wrappers
+### 2.8 Removed UIKit wrappers
 
 The deprecated UIKit wrappers were removed. Bridge the SwiftUI components with `UIHostingController`.
 
@@ -645,31 +813,113 @@ The deprecated UIKit wrappers were removed. Bridge the SwiftUI components with `
 | `Montage.Button.SolidUIButton` | `Montage.Button(variant: .solid, …)` |
 | `Montage.Button.OutlinedUIButton` | `Montage.Button(variant: .outlined, …)` |
 | `ContentBadgeUIView` | `ContentBadge(…)` |
+| `InteractionUIView` | the `Interaction` modifier |
 
-The specs are identical, so there is no difference in what gets rendered.
+The specs are identical, so nothing renders differently.
 
 ---
 
-### 8. Component spec refresh
+## 3. No replacement
 
-This is the section that is easy to miss because nothing fails to compile. **The API is unchanged and only the values moved**, so it only shows up when you look at the screen after the replacements are done.
+There is no mechanical equivalent for these, so **you have to choose.** Substituting something that looks close will hide the fact that the result changed.
+
+### 3.1 RedOrange tokens
+
+There is no 4.0 token for `accentForegroundRedOrange` or `accentBackgroundRedOrange`. The `redOrange*` primitives are still there.
+
+A one-to-one substitution is impossible, so look at what the spot meant and pick deliberately - and **whatever you pick, the color changes.**
+
+In the Wanted app all three usages were text or icon colors, so they moved to `.foregroundNegativePrimary`, turning `redOrange50/60` into `red50/60`. If you used it as a surface color, `.surfaceNegativePrimary` or the `redOrange*` primitive directly stays closer to the original value.
+
+### 3.2 Spacing pt28 and pt36
+
+The 4.0 spacing scale has no `28` or `36`. The new scale is `0, 1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 32, 40, 48, 56, 64, 72, 80`.
+
+Anywhere you used `.spacing(.pt28)` or `.spacing(.pt36)` you have to pick between `spacing24`, `spacing32`, and `spacing40`, and **the layout shifts by 4pt.** If you truly need an off-scale value, use a literal. But literals piling up across a screen is a sign its spacing needs another look.
+
+```bash
+grep -rn "spacing(\.pt28\|spacing(\.pt36" --include="*.swift" .
+```
+
+### 3.3 IconButton non-standard sizes
+
+Sizes other than the four standard ones (16, 18, 20, 24) move to `NormalSize.custom(size:)`, where **`size` changes meaning from icon size to container size.**
+
+In 3.x `.normal(size: n)` made the container the same `n` as the icon. In 4.0 `.custom(size: n)` treats `n` as the container edge and derives the icon from the dimension token nearest to two thirds of it. The container is clamped to `[24, 64]`.
+
+```swift
+// 3.x - n is the icon size
+IconButton(variant: .normal(size: 22), icon: .search)
+
+// 4.0 - n is the container size and the icon is derived from it
+IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // icon 20
+```
+
+Reusing the 3.x number shrinks the icon: `.custom(size: 22)` clamps the container to 24, giving a 16pt icon. Pick the container value that yields the icon size you want.
+
+| Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
+|---|---|---|---|---|---|---|---|---|
+| Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
+
+### 3.4 SegmentedControl outlined variant
+
+The `Variant` enum and the `variant(_:)` modifier were removed entirely. Everything collapses to `solid`, so **the outlined appearance is gone.**
+
+### 3.5 ListCell verticalAlign(.bottom)
+
+Only `.top` and `.center` remain. Anywhere that needed bottom alignment has to be restructured or settle for `.top`.
+
+### 3.6 TextArea bottom resource presets
+
+`Resource.textButton`, `.chip`, `.filterButton`, and `.badge` were removed. Draw them yourself with `Resource.Leading.slot { }` / `Resource.Trailing.slot { }`, or check whether the new `.button` and `.contentBadge` (trailing) match your intent.
+
+### 3.7 FallbackView image slot
+
+3.x let you pass an illustration through `image:`, but 4.0's `FallbackView` has no image API at all. Only the title, description, and button area remain.
+
+If you need the illustration, assemble the empty state yourself instead of using `FallbackView`. Leave it as is and **the illustration disappears from those screens.**
+
+### 3.8 AvatarGroup variant
+
+`variant:` was dropped from `AvatarGroup(_:variant:size:onTap:)`, which is now fixed to `.person`. Anywhere 3.x grouped company or academy logos with `company` / `academy`, 4.0 renders **circles instead of rounded rectangles.**
+
+You will delete the argument to fix the compile error - check what that spot renders while you are there.
+
+### 3.9 TextField trailing button color
+
+`variant: Button.Color` was dropped from `TextField.TrailingButtonInfo(variant:title:disable:handler:)`. 4.0 fixes the button to outlined, so a verification button you had emphasised with `primary` changes color.
+
+### 3.10 Other removals
+
+| Removed | Note |
+|---|---|
+| `ModalNavigation.Variant.extended` | no replacement |
+| `ModalNavigation.Variant.floating(alternative:background:)` | only the argument-less `.floating` remains |
+| `Select.shadowBackgroundColor(_:)` | no replacement |
+| `Skeleton.Length` (`_25`/`_50`/`_75`/`_100`) | widths are now uniform |
+
+---
+
+## 4. Visual changes
+
+**These compile cleanly but change the screen.** The API is unchanged, so they only surface once you look at the result of the migration.
+
+### 4.1 Component specs
 
 #### Button
 
 | Item | 3.x | 4.0 |
 |---|---|---|
 | radius | large 12 / medium 10 / small 8 | large **14** / medium **12** / small **10** / xsmall 8 |
-| Height constraint | fixed `.frame(height:)` | `.frame(minHeight:)` |
-| Icon size | large 24 / medium 24·22 / small 20·18 | large 22 / medium 22·20 / small 20·16 / xsmall 16 |
-| Sizes | large · medium · small | **+ xsmall** |
-| color | primary · assistive | **+ negative** |
-| Typography | one step up per size | adjusted one step down per size |
+| height constraint | fixed `.frame(height:)` | `.frame(minHeight:)` |
+| icon size | large 24 / medium 24·22 / small 20·18 | large 22 / medium 22·20 / small 20·16 / xsmall 16 |
+| typography | one step up per size | adjusted one step down per size |
 
-**The height constraint going from fixed to a minimum has the widest impact.** In 3.x a long label was truncated onto one line (`Text...`); in 4.0 it **wraps and the button grows taller.** If you have buttons with long labels, the surrounding layout will shift.
+**The height constraint moving from fixed to minimum has the widest blast radius.** 3.x truncated a long label to one line (`Some text...`); 4.0 **wraps it and the button grows taller.** Any button with a long label will push the surrounding layout.
 
-#### Chip · FilterButton
+#### Chip and FilterButton
 
-Typography drops one step per size and padding was reduced, so **chips get smaller overall.**
+Typography drops one step per size and padding shrinks, so **chips get smaller overall.**
 
 | Chip size | 3.x typography | 4.0 typography |
 |---|---|---|
@@ -678,38 +928,42 @@ Typography drops one step per size and padding was reduced, so **chips get small
 | `small` | `label1` | `caption1` |
 | `xsmall` | `caption1` | `caption2` |
 
-FilterButton gets a larger radius and less padding, so it ends up rounder and smaller.
+FilterButton gets a larger radius and less padding, making it rounder and smaller.
 
 #### Select
 
 | Item | 3.x | 4.0 |
 |---|---|---|
-| Sizes | None | New `size(.large / .medium)` |
-| min-height | - | Increased (the field gets taller) |
-| Border color | - | Lighter |
-| `heading` · `requiredBadge` | Built into the component | Removed - moved to `FormControl` |
-| Vertical alignment | Always `top` | `top` only on `overflow`, `center` otherwise |
+| min-height | - | increased (the field gets taller) |
+| border color | - | lighter |
+| vertical alignment | always `top` | `top` only on `overflow`, `center` otherwise |
 
-The alignment change is only noticeable at larger Dynamic Type sizes. Because 3.x always aligned to `top`, once the text grew taller than the leading icon and chevron (24pt), **only the icons appeared pushed up.** 4.0 uses `top` only in the `overflow` state where text wraps onto multiple lines, and centers it on a single line. The `ListCell` in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered against the label.
+The alignment change is only visible at larger Dynamic Type sizes. 3.x always aligned to the top, so once the text grew past the leading icon and chevron (24pt), **the icons looked stuck to the top.** 4.0 uses `top` only when the text overflows onto multiple lines and centers it otherwise. The `ListCell`s in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered on the label.
 
-#### TopNavigation · ModalNavigation
-
-The background tint that appears while scrolling got denser.
-
-| Item | 3.x and early 4.0 | 4.0 |
-|---|---|---|
-| Scroll background tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
-
-**The background gets darker** in the range where scrolling brings the navigation background in. There is no API change, only a value change, so nothing fails to compile. Please eyeball the screens where content passes under the navigation.
-
-#### SegmentedControl
+#### ActionArea
 
 | Item | 3.x | 4.0 |
 |---|---|---|
-| variant | `solid` · `outlined` | **`outlined` removed** |
-| Icon | `icon` toggle | `leadingIcon` + `iconOnly` |
+| `extra` slot horizontal padding | 20 | **24** |
+| `extra` slot bottom padding | 24 | **20** |
+| `extra` divider color | `lineNeutral` (= `lineNeutralSecondary`) | `lineNeutralTertiary` (lighter) |
+| caption typography | `label2` | `label2` with `weight: .medium` (bolder) |
+| `alternative` action button | `outlined` / `primary` | `outlined` / **`assistive`** |
+| `cancel` main action button | `outlined` / `assistive` | **`solid`** / `assistive` |
 
-#### Avatar · AvatarGroup
+The main button row keeps its horizontal padding of 20.
+
+The button colors are an API-compatible change, so nothing fails to compile. The alternative action's label goes from blue to black, increasing contrast against the primary action, and the `cancel` variant's main button goes from outlined to a grey fill. The `sub` action is unchanged.
+
+#### TopNavigation and ModalNavigation
+
+| Item | 3.x | 4.0 |
+|---|---|---|
+| scroll background tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
+
+**The navigation background gets darker** in the range where scrolling reveals it.
+
+#### Avatar and AvatarGroup
 
 The cornerRadius of the company and academy variants goes up by **2** at every size.
 
@@ -722,70 +976,172 @@ The cornerRadius of the company and academy variants goes up by **2** at every s
 | `xlarge` | 14 | 16 |
 | `custom(v)` | `ceil(v * 0.25 / 2) * 2` | `ceil(v * 0.25 / 2) * 2 + 2` |
 
-The default border color moved from `lineAlternative` to `lineNeutralTertiary`, and the push-badge inset was retuned per size.
+The placeholder drawn when there is no image also changed from a dedicated illustration to an icon glyph (`personFill` / `companyFill` / `graduationFill`). Push badge insets were adjusted per size as well.
 
 #### Everything else
 
-The `Shadow`, `Typography`, `Opacity`, and `Spacing` definitions were adjusted, as were `Toast`, `SnackBar`, `Popup`, `Popover`, `Tooltip`, `Thumbnail`, `Accordion`, `Category`, and `ProgressTracker`. The new `Radius`, `Dimension`, `Primitive`, and `MaterialBackground` are additions.
+`Shadow`, `Typography`, `Opacity`, and `Spacing` definitions were adjusted, as were `Toast`, `SnackBar`, `Popup`, `Popover`, `Tooltip`, `Thumbnail`, `Accordion`, `Category`, and `ProgressTracker`.
 
----
+### 4.2 Full list
 
-## Changes that alter what you see
-
-These compile fine but change the screen. **After migrating, please look at the screens in this list.**
+**Walk through these screens after migrating.**
 
 | Target | What changes |
 |---|---|
-| **Button** | The height constraint went from fixed to a minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius is also +2 per size |
-| **Chip · FilterButton** | Typography drops one step and padding shrinks, so they **get smaller.** Wrap points change for chips and filter bars laid out horizontally |
-| **Select** | min-height went up, so **the field gets taller.** The border also gets lighter. At larger Dynamic Type sizes, the leading icon and chevron that used to sit high are now centered |
-| **SegmentedControl** | The `outlined` variant was removed. Places that used outlined become solid |
-| **ActionArea** | The transparent background is now **tied to the scroll-reached-bottom signal.** In containers that do not raise it (`SwiftUI.ScrollView`, `List`, a popup with no scrolling), the gradient and the opaque background stay put, so you have to pass `scrollReachedEnd(true)` yourself. The background only goes transparent when the `extra` slot is empty. The `extra` slot's horizontal padding went 20→24 and bottom 24→20, the divider got lighter, and the caption is heavier at `medium` weight. **The alternative action button's label goes from blue to black, and the `cancel` main button goes from outlined to a grey fill** |
-| **Avatar · AvatarGroup** | company and academy cornerRadius +2 at every size. Company logos get slightly rounder |
-| **FallbackView** | A minimum vertical padding of 160 is built in. Not clearing the outer padding and fixed height double-applies them. The description typography goes from `body2` to `body2Reading`, increasing line spacing |
-| **Input components** | The label moves above the field, errors below it, and the counter below and trailing. Field height and overall form height change |
-| **Character counter** | `Text("...")` interpolation adds a thousands separator at limits of 1000 and up (`5,000`). Use `Text(verbatim:)` |
-| **disabled appearance** | The component's own `opacity` gave way to `isEnabled`-based color tokens. The double-applied opacity is gone, so it **looks less faded**. Custom views placed in ListCell slots (company logos and the like) no longer fade |
-| **PlayBadge** | A 28% `coolNeutral40` tint was added to the background. The badge stays visible on bright thumbnails |
-| **Toast · SnackBar** | Background opacity light 50% → 52%, dark 46% → 43% |
+| **Color tokens** | `accentForegroundBlue`, `Green`, and `Orange` change in both light and dark; the other `accentForeground*` tokens and `materialDimmer` change in dark. See [Tokens whose value also changes](#tokens-whose-value-also-changes) |
+| **RedOrange tokens** | No matching token, so **the color changes whatever you pick.** Find every usage |
+| **Spacing pt28 / pt36** | No matching value, so you pick from 24/32/40 and the layout shifts by 4pt |
+| **Button** | The height constraint moved from fixed to minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius also +2 per size |
+| **Chip / FilterButton** | Typography drops a step and padding shrinks, so **they get smaller.** Wrap points change in horizontal chip and filter rows |
+| **Select** | min-height goes up, so **the field gets taller.** The border also gets lighter. At large Dynamic Type sizes the leading icon and chevron no longer stick to the top |
+| **SegmentedControl** | `outlined` variant removed; those spots fall back to solid |
+| **ActionArea** | The transparent background is now **tied to the scroll reached-end signal.** Containers that do not report it (`SwiftUI.ScrollView`, `List`, non-scrolling popups) keep the gradient and the opaque background, so pass `scrollReachedEnd(true)` yourself. The background only turns transparent when the `extra` slot is empty. `extra` slot horizontal padding 20→24, bottom 24→20, lighter divider, caption bolder at `medium` weight. **The alternative action's label goes from blue to black and the `cancel` main button from outlined to a grey fill** |
+| **AvatarGroup variant** | `variant:` is fixed to `.person`, so groups that used company or academy render **as circles instead of rounded rectangles** |
+| **Avatar / AvatarGroup** | company and academy cornerRadius +2 at every size. The no-image placeholder changed from an illustration to an icon glyph. `opacity43` when disabled |
+| **FallbackView** | The `image:` slot is gone, so **the illustration disappears.** 160 minimum vertical padding is built in; outer padding and fixed heights double up if you leave them. The description typography moved from `body2` to `body2Reading`, increasing line spacing |
+| **TextField trailing button** | `variant:` is gone and the button is fixed to outlined, changing the color of buttons you had emphasised with `primary` |
+| **Input components** | The label moves above the field, the error below it, and the counter below and to the right. Field height and overall form height change |
+| **TextArea bottom resources** | The default gap between resources moves from a fixed 4 to size-dependent values (large 8 / medium 6) |
+| **Character counter** | `Text("...")` interpolation adds a thousands separator at limits of 1000 or more (`5,000`). Use `Text(verbatim:)` |
+| **Disabled state** | Instead of each component lowering its own opacity, colors now come from `isEnabled`-driven tokens. Opacity no longer stacks, so things **look less faded.** Custom views placed in `ListCell` slots (company logos and so on) are no longer dimmed. **A `.disabled(true)` on an ancestor now changes `Chip` and `FilterButton` colors too** (in 3.x it only blocked touches) |
+| **PushBadge** | A single-character badge is now a fixed `badgeSize` square. It also stops scaling at `xxxLarge`, so it comes out smaller than 3.x at accessibility text sizes |
+| **PlayBadge** | A `coolNeutral40` 28% tint was added to the background and the play icon is now `staticWhite` at 88%. The badge stays visible on bright thumbnails |
+| **Toast / SnackBar** | Background opacity light 50% → 52%, dark 46% → 43% |
 | **BottomSheet** | Background opacity 80% → 88% |
-| **SearchField** | Two layers of solid tint; the inactive outlined background becomes `surfaceNeutralTertiary` |
-| **TopNavigation · ModalNavigation** | The scroll background tint went from `0.7` to `0.88`, so **the navigation background gets darker while scrolling** |
-| **Typography `caption2`** | The Dynamic Type scale curve moved from `.caption2` to `.caption`. The base size is unchanged, and the inversion where `caption2` grew larger than `caption1` at bigger sizes is resolved |
-| **Avatar · Thumbnail** | `opacity43` is applied when disabled |
-| **Skeleton** | Text placeholder bar widths go from variable to uniform (only while loading) |
-| **IconButton** | Same glyph, larger touch container (about 6\~8px of layout shift) |
-| **RedOrange tokens** | There is no counterpart for `accentForegroundRedOrange` and `accentBackgroundRedOrange`, so **the color changes** no matter what you move to. Find and check every spot that used them |
+| **TopNavigation / ModalNavigation** | The scroll background tint goes from `0.7` to `0.88`, so **the navigation background gets darker while scrolling** |
+| **Typography `caption2`** | The Dynamic Type scale curve moved from `.caption2` to `.caption`. The base size is unchanged, and `caption2` no longer overtakes `caption1` at larger sizes |
+| **Thumbnail** | `opacity43` when disabled |
+| **Skeleton** | Text placeholder bar widths go from variable to uniform (while loading only) |
+| **IconButton** | Same glyph, larger touch container (roughly 6\~8pt of layout shift) |
+
+---
+
+## Added APIs
+
+**Not needed for the migration.** These are new in 4.0 and listed here for reference only. See the [DocC documentation](./documentation) and the Blueprint sample app for usage.
+
+### New components
+
+#### ScreenScaffold
+
+Assembles `TopNavigation` + content + `ActionArea` into one screen, taking over the scroll-offset plumbing and bottom-inset math you used to wire up per screen. It is also the replacement for the removed `View.topNavigation(...)`, so it shows up during the migration too ([2.4](#24-viewtopnavigation-removed)).
+
+```swift
+ScreenScaffold(
+    navigation: { TopNavigation(title: "Settings") },
+    actionArea: { ActionArea(variant: .neutral(main: .init(text: "Save", action: save))) }
+) {
+    content
+}
+.backgroundColor(.semantic(.backgroundNeutralPrimary))
+```
+
+#### SearchField
+
+A search input. It pairs a leading search icon with a single-line input, and a clear button appears on the right once there is text. Sizing follows the same system as `TextField`. `TopNavigation`'s search mode uses this component too.
+
+```swift
+SearchField(text: $keyword)
+    .placeholder("Search")
+    .onSubmit { search(keyword) }
+
+// outlined, medium
+SearchField(text: $keyword)
+    .variant(.outlined)
+    .size(.medium)
+```
+
+#### FormControl · FormControlGroup
+
+`FormControl` places the label, message, and accessory around an input component. Attaching those modifiers to the component wraps one automatically, so you rarely write it yourself ([2.1](#21-input-labels-messages-and-counters)).
+
+`FormControlGroup` aligns the label column across stacked inputs that put their label on the leading side, sizing it to the longest label. No fixed width in the call site, and it re-measures when Dynamic Type or localization changes the label lengths.
+
+```swift
+FormControlGroup {
+    TextField(text: $name)
+        .labelPlacement(.leading)
+        .label("Name")
+
+    TextField(text: $email)
+        .labelPlacement(.leading)
+        .label("Email address")
+}
+// the label column settles on the width of "Email address" and both inputs line up
+```
+
+### New token groups
+
+`Radius`, `Dimension`, `Primitive`, and `MaterialBackground`. Each is exposed as a `CGFloat` extension and provides `allValues`, `min`, and `max`.
+
+New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surfaceBrandSubtle`, `surfaceNegativeStrong`, `foregroundAccent*`, `lineAccent*`, and `surfaceAccent*` (translucent 8%).
+
+### Per-component additions
+
+| Component | Added |
+|---|---|
+| `Button` | `xsmall` size, `negative` color |
+| `TextButton` | `fillWidth(_:)` |
+| `IconButton` | `disableInteraction(_:)`, `interactionColor(_:)` |
+| `ActionArea` | the icon slot (16pt) on `caption(_:icon:)`, `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
+| `TopNavigation` | `backgroundColor(_:)` |
+| `Chip` | `borderColor(_:)` |
+| `Category` | `itemDisabled(_:)` |
+| `PushBadge` | `outlineBorder(_:color:)` |
+| `ListCell` | `verticalPadding(.custom(_:))`, four slots (`leading`, `labelTrailing`, `trailing`, `extra`) |
+| `Select` | `size(.large/.medium)` |
+| `TextField`, `TextArea` | `autocorrectionDisabled(_:)`, `onTextChange(_:)`, `size(_:)` |
+| `Shadow` | `shadow(_:) -> some ShapeStyle` |
+| `UIColor` | Montage token extensions |
 
 ---
 
 ## Checklist
 
-- [ ] After replacing color semantic tokens, check for leftovers with `grep -rn "\.label\(Normal\|Alternative\|Assistive\|Strong\|Neutral\|Disable\)\b"`
-- [ ] Check for leftover `spacing(.pt` and `opacity(.p`
-- [ ] Check for leftover `.disable(` (`.disabled(` is the correct one)
-- [ ] Every `TextField`/`TextArea` is wrapped in a `FormControl`
-- [ ] Character counters use `Text(verbatim:)` - prioritize spots with a limit of 1000 or more
-- [ ] Outer `padding(.vertical,)` and `frame(height:)` removed wherever `FallbackView` is used
-- [ ] No `if` statements inside `.actionArea {}` slots
-- [ ] Chip slot icons have their size and color set at the call site
-- [ ] Buttons with long labels now wrap - check that the taller button and the layout it pushes are acceptable
-- [ ] Wherever `transparentBackground` was used with `.manual`, `scrollReachedEnd(_:)` is passed
-- [ ] The ActionArea background looks as intended in popups and sheets with no scroll container
-- [ ] The button colors look as intended in every ActionArea that uses an `alternative` action or the `.cancel` variant
-- [ ] Check the screens listed in [Component spec refresh](#8-component-spec-refresh) and [Changes that alter what you see](#changes-that-alter-what-you-see) on a device or simulator
+### Substitution
 
-> The fastest way to verify spec changes is to build Blueprint at both versions and compare.
->
-> ```bash
-> git worktree add --detach ../baseline v3.15.2   # the version you are coming from
-> xcodebuild -workspace ../baseline/Montage.xcworkspace -scheme Blueprint \
->   -configuration Debug -destination 'id=<simulator udid>' \
->   -derivedDataPath /tmp/dd-before build
-> ```
+- [ ] After substituting semantic color tokens, check for leftovers with `grep -rn "\.label\(Normal\|Alternative\|Assistive\|Strong\|Neutral\|Disable\)\b"`
+- [ ] Check for leftover `spacing(.pt` and `opacity(.p`
+- [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - values with no replacement
+- [ ] Check for leftover `.disable(` (it should be `.disabled(`)
+- [ ] No component-specific modifier chained after `.disabled()` on `Chip` or `FilterButton`
+- [ ] Check for leftover `.topNavigation(`
+- [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`
+- [ ] Audit `FallbackView(image:`, `variant:` on `AvatarGroup(`, and `TrailingButtonInfo(variant:`
+
+### Restructuring
+
+- [ ] 3.x `heading`, `requiredBadge`, and `description` moved to `label` and `message`
+- [ ] Character counters use `Text(verbatim:)` - prioritise limits of 1000 or more
+- [ ] Outer `padding(.vertical,)` and `frame(height:)` removed from `FallbackView` call sites
+- [ ] No `if` statements inside `.actionArea {}` or `ScreenScaffold` slots
+- [ ] Icon size and color set at the call site for Chip slots
+- [ ] `scrollReachedEnd(_:)` passed wherever `transparentBackground` was used with `.manual`
+
+### Visual review
+
+- [ ] Screens using `accentForeground{Blue,Green,Orange}`, in both light and dark
+- [ ] The remaining `accentForeground*` and `materialDimmer`, in dark mode
+- [ ] Buttons with long labels - confirm the surrounding layout can absorb the extra height
+- [ ] ActionArea background in popups and sheets with no scroll container
+- [ ] Button colors in ActionAreas using the `alternative` action or the `.cancel` variant
+- [ ] Avatar placeholders where no image is provided
+- [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
+- [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator
+
+The fastest way to review spec changes is to build Blueprint at both versions and compare. Set `UDID` to a value from `xcrun simctl list devices`.
+
+```bash
+UDID=... # xcrun simctl list devices
+
+git worktree add --detach ../baseline v3.15.2
+xcodebuild -workspace ../baseline/Montage.xcworkspace -scheme Blueprint \
+  -configuration Debug -destination "id=$UDID" \
+  -derivedDataPath /tmp/dd-before build
+```
 
 ---
 
 ## 3.0
 
-If you are coming from a version older than 3.0, see the [release notes](https://github.com/wanteddev/montage-ios/releases).
+If you are upgrading from a version older than 3.0, see the [release notes](https://github.com/wanteddev/montage-ios/releases).
