@@ -1,70 +1,72 @@
-# 마이그레이션 가이드
+# Migration Guide
 
-메이저 버전 업그레이드에 필요한 변경 사항을 정리합니다. 최신 버전이 위에 옵니다.
+[English](./MIGRATION.md) | [한국어](./MIGRATION.ko.md)
 
-각 항목은 **기계적 치환으로 끝나는 것**과 **구조를 다시 짜야 하는 것**, **시각 결과가 달라지는 것**으로 나눠 표시했습니다. 컴파일 에러만 없앤 뒤 화면을 확인하지 않으면 놓치는 항목이 있어서, 마지막 [시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경) 절을 반드시 읽어주세요.
+Changes required when upgrading across a major version. The newest version comes first.
+
+Every item is marked as one of three kinds: **a mechanical replacement**, **something you have to restructure**, or **something that changes what you see**. Some items are easy to miss if you only clear the compile errors and never look at the screen, so please read the final [Changes that alter what you see](#changes-that-alter-what-you-see) section.
 
 ---
 
 ## 4.0
 
-> **진행 중**입니다. `release/4.0.0`에 항목이 추가되면 이 문서를 갱신합니다.
+> **In progress.** This document is updated as items land on `release/4.0.0`.
 
-4.0은 네 축으로 브레이킹 체인지가 들어갑니다.
+4.0 brings breaking changes along four axes.
 
-1. **컬러 시맨틱 토큰 재편** - 토큰 이름이 `용도 + 역할 + 변형` 규칙으로 통일됐습니다. 값은 대부분 그대로고 이름만 바뀝니다.
-2. **슬롯 기반 API 전환** - 고정 파라미터(`leadingImage:`)와 `Model` 구조체 대신 호출부가 뷰를 직접 넣습니다.
-3. **입력 컴포넌트 구조 분리** - 라벨·상태 메시지·글자수가 `TextField`/`TextArea` 안쪽에서 `FormControl` 슬롯으로 나왔습니다.
-4. **컴포넌트 스펙 리프레시** - radius·타이포·패딩·아이콘 크기가 디자인 스펙에 맞춰 재조정됐습니다. **API가 그대로여서 컴파일 에러가 나지 않는 유일한 축입니다.**
+1. **Color semantic tokens reorganized** - token names now follow a `usage + role + variant` rule. Most values stay the same; only the names change.
+2. **Slot-based APIs** - instead of fixed parameters (`leadingImage:`) and `Model` structs, the call site passes views directly.
+3. **Input components split apart** - labels, status messages, and character counts moved out of `TextField`/`TextArea` and into `FormControl` slots.
+4. **Component spec refresh** - radius, typography, padding, and icon sizes were retuned to match the design spec. **This is the only axis where the API is unchanged, so nothing fails to compile.**
 
-### 작업 순서
+### Order of work
 
-| 순서 | 작업 | 성격 | 시각 변화 |
+| Step | Task | Kind | Visual change |
 |---|---|---|---|
-| 1 | [컬러 시맨틱 토큰](#1-컬러-시맨틱-토큰) | 기계적 치환 | 없음 |
-| 2 | [Spacing · Opacity 토큰](#2-spacing--opacity-토큰) | 기계적 치환 | 없음 |
-| 3 | [전역 모디파이어](#3-전역-모디파이어) | 기계적 치환 | 없음 |
-| 4 | [입력 컴포넌트 → FormControl](#4-입력-컴포넌트--formcontrol) | 구조 재작성 | **있음** |
-| 5 | [슬롯 API 전환](#5-슬롯-api-전환) | 구조 재작성 | 대부분 없음 |
-| 6 | [단순 API 치환](#6-단순-api-치환) | 기계적 치환 | 일부 있음 |
-| 7 | [제거된 UIKit 래퍼](#7-제거된-uikit-래퍼) | 구조 재작성 | 없음 |
-| 8 | [컴포넌트 스펙 리프레시](#8-컴포넌트-스펙-리프레시) | 화면 확인 | **있음** |
-| 9 | [시각 결과가 달라지는 변경 점검](#시각-결과가-달라지는-변경) | 화면 확인 | **있음** |
+| 1 | [Color semantic tokens](#1-color-semantic-tokens) | Mechanical | None |
+| 2 | [Spacing and Opacity tokens](#2-spacing-and-opacity-tokens) | Mechanical | None |
+| 3 | [Global modifiers](#3-global-modifiers) | Mechanical | None |
+| 4 | [Input components to FormControl](#4-input-components-to-formcontrol) | Restructure | **Yes** |
+| 5 | [Slot-based APIs](#5-slot-based-apis) | Restructure | Mostly none |
+| 6 | [Straight API replacements](#6-straight-api-replacements) | Mechanical | Some |
+| 7 | [Removed UIKit wrappers](#7-removed-uikit-wrappers) | Restructure | None |
+| 8 | [Component spec refresh](#8-component-spec-refresh) | Check the screen | **Yes** |
+| 9 | [Review changes that alter what you see](#changes-that-alter-what-you-see) | Check the screen | **Yes** |
 
-**8번을 건너뛰지 마세요.** API가 그대로인데 값만 바뀐 항목이라 컴파일 에러가 나지 않습니다. 치환 작업이 끝나고 빌드가 통과했다고 마이그레이션이 끝난 게 아닙니다.
+**Do not skip step 8.** Those items keep the same API and only change values, so nothing fails to compile. A green build after the replacements does not mean the migration is done.
 
-토큰 치환(1~3)을 먼저 끝내면 컴파일 에러가 크게 줄어 나머지 작업을 보기 쉬워집니다.
+Finishing the token replacements (1 through 3) first removes most of the compile errors and makes the rest of the work easier to see.
 
 ---
 
-### 1. 컬러 시맨틱 토큰
+### 1. Color semantic tokens
 
-`Color.semantic(_:)` / `UIColor.semantic(_:)`에 넘기는 토큰 이름이 전부 바뀝니다. 아래 표의 대응은 **RedOrange 계열 2건을 빼면 값이 같아서** 렌더 결과가 달라지지 않습니다. RedOrange는 4.0에 대응 토큰이 없어 직접 골라야 하고 색이 바뀝니다.
+Every token name passed to `Color.semantic(_:)` / `UIColor.semantic(_:)` changes. **Except for two RedOrange entries**, the mappings below keep the same value, so rendering does not change. RedOrange has no 4.0 counterpart, so you have to pick one yourself and the color will change.
 
-#### 새 이름 규칙
+#### The new naming rule
 
 ```
-용도 + 역할 + 변형
+usage + role + variant
 
-용도   foreground  텍스트·아이콘
-       background  화면 바탕
-       surface     화면 위에 올라가는 면(카드·필드·버튼)
-       line        테두리·구분선
-       effect      딤·투명 레이어
+usage    foreground  text and icons
+         background  the page beneath everything
+         surface     surfaces that sit on the page (cards, fields, buttons)
+         line        borders and dividers
+         effect      dimming and transparent layers
 
-역할   Neutral  Brand  Positive  Cautionary  Negative  Disable  Inactive  Accent{색}
+role     Neutral  Brand  Positive  Cautionary  Negative  Disable  Inactive  Accent{Color}
 
-변형   Primary → Secondary → Tertiary → Quaternary  (대비가 낮아지는 순서)
-       Strong / Heavy   더 진함
-       Subtle           더 옅음
-       Inverse          반전 배경 위에서 쓰는 색
-       Focus            포커스 링
-       Opaque           불투명 버전 (접미사 없는 쪽이 반투명)
+variant  Primary → Secondary → Tertiary → Quaternary  (decreasing contrast)
+         Strong / Heavy   darker
+         Subtle           lighter
+         Inverse          for use on an inverted background
+         Focus            focus ring
+         Opaque           the opaque version (the suffix-less one is translucent)
 ```
 
-3.x의 `Solid` 접미사가 4.0에서 `Opaque`로 뒤집혔습니다. **`lineSolidNormal` → `lineNeutralPrimaryOpaque`**처럼 접미사 위치가 앞에서 뒤로 옮겨간다는 점만 주의하면 됩니다.
+The `Solid` suffix from 3.x is inverted to `Opaque` in 4.0. The only thing to watch is that the suffix moves from the front to the back, as in **`lineSolidNormal` → `lineNeutralPrimaryOpaque`**.
 
-#### Foreground - 텍스트·아이콘
+#### Foreground - text and icons
 
 | 3.x | 4.0 |
 |---|---|
@@ -84,7 +86,7 @@
 | `.accentForegroundGreen` | `.foregroundPositivePrimary` |
 | `.accentForegroundOrange` | `.foregroundCautionaryPrimary` |
 | `.accentForegroundRed` | `.foregroundNegativeStrong` |
-| `.accentForegroundRedOrange` | **대응 없음** (아래 참고) |
+| `.accentForegroundRedOrange` | **No counterpart** (see below) |
 | `.accentForegroundLime` | `.foregroundAccentLime` |
 | `.accentForegroundCyan` | `.foregroundAccentCyan` |
 | `.accentForegroundLightBlue` | `.foregroundAccentLightBlue` |
@@ -92,9 +94,9 @@
 | `.accentForegroundPurple` | `.foregroundAccentPurple` |
 | `.accentForegroundPink` | `.foregroundAccentPink` |
 
-> `accentForeground{색}` 중 Blue·Green·Orange·Red는 액센트 계열에서 **의미 색(brand/positive/cautionary/negative)으로 승격**됐습니다. 이름만 옮기지 말고 그 자리가 정말 의미 색인지 확인해주세요.
+> Among `accentForeground{Color}`, Blue, Green, Orange, and Red were **promoted from the accent family to semantic colors** (brand/positive/cautionary/negative). Do not just rename them; check that the spot really calls for a semantic color.
 
-#### Background · Surface - 면
+#### Background and Surface
 
 | 3.x | 4.0 |
 |---|---|
@@ -120,15 +122,15 @@
 | `.accentBackgroundLightBlue` | `.surfaceAccentLightBlueOpaque` |
 | `.accentBackgroundViolet` | `.surfaceAccentVioletOpaque` |
 | `.accentBackgroundPink` | `.surfaceAccentPinkOpaque` |
-| `.accentBackgroundRedOrange` | **대응 없음** (아래 참고) |
+| `.accentBackgroundRedOrange` | **No counterpart** (see below) |
 
-> `background`는 화면 바탕(Primary·Secondary) 두 종만 남았습니다. 나머지는 면 토큰이면 `surface`로, 투명 레이어인 `backgroundTransparent*`는 `effect`로 갈라졌습니다 (`backgroundTransparent` → `effectTransparentPrimary`, `backgroundTransparentAlternative` → `effectTransparentSecondary`). 값은 그대로입니다.
+> Only two `background` tokens remain, for the page itself (Primary and Secondary). Everything else split off: surfaces became `surface`, and the transparent layers `backgroundTransparent*` became `effect` (`backgroundTransparent` → `effectTransparentPrimary`, `backgroundTransparentAlternative` → `effectTransparentSecondary`). The values are unchanged.
 >
-> `accentBackground{색}`은 기본이 **불투명(`Opaque`)** 대응입니다. 반투명 위에 겹쳐 쓰던 자리라면 접미사 없는 `.surfaceAccent{색}`을 쓰세요.
+> `accentBackground{Color}` maps to the **opaque** (`Opaque`) token by default. If the spot was layering a translucent color over something, use the suffix-less `.surfaceAccent{Color}`.
 >
-> **RedOrange 계열은 4.0 시맨틱에서 없어졌습니다.** `accentForegroundRedOrange`와 `accentBackgroundRedOrange`에 대응하는 4.0 토큰이 없습니다(프리미티브 `redOrange*`는 그대로 남아 있습니다). 1:1 치환이 불가능하니 그 자리의 의도를 보고 직접 골라야 하고, 무엇을 고르든 **색이 바뀝니다.** 원티드 앱은 이 토큰을 쓰던 세 곳이 모두 텍스트·아이콘 색이어서 `.foregroundNegativePrimary`로 옮겼는데, 그 결과 `redOrange50/60`이 `red50/60`으로 바뀌었습니다. 면 색으로 쓰던 자리라면 `.surfaceNegativePrimary`나 프리미티브 `redOrange*` 직접 지정이 원래 값에 더 가깝습니다.
+> **The RedOrange family is gone from the 4.0 semantics.** There is no 4.0 token matching `accentForegroundRedOrange` or `accentBackgroundRedOrange` (the primitive `redOrange*` tokens are still there). A 1:1 replacement is not possible, so look at what the spot was for and choose deliberately - and whatever you choose, **the color will change.** In the Wanted app all three usages were text or icon colors, so they moved to `.foregroundNegativePrimary`, which turned `redOrange50/60` into `red50/60`. If the spot was a surface color, `.surfaceNegativePrimary` or a direct primitive `redOrange*` will be closer to the original value.
 
-#### Line - 테두리·구분선
+#### Line - borders and dividers
 
 | 3.x | 4.0 |
 |---|---|
@@ -143,7 +145,7 @@
 | `.lineStatusCautionaryNormal` | `.lineCautionaryPrimary` |
 | `.lineStatusNegativeStrong` | `.lineNegativeStrong` |
 
-#### Effect - 딤·투명 레이어
+#### Effect - dimming and transparent layers
 
 | 3.x | 4.0 |
 |---|---|
@@ -151,21 +153,21 @@
 | `.backgroundTransparent` | `.effectTransparentPrimary` |
 | `.backgroundTransparentAlternative` | `.effectTransparentSecondary` |
 
-#### 위 표에 없는 토큰
+#### Tokens not in the tables above
 
-4.0에서 새로 생긴 토큰(`lineBrandFocus`, `lineNegativeFocus`, `foregroundAccent*` 등)과 프리미티브 토큰(`neutral*`, `blue*`, `coolNeutral*` …)은 `Color.Semantic`에서 직접 확인해주세요. 프리미티브 이름은 변경되지 않았습니다.
+For tokens introduced in 4.0 (`lineBrandFocus`, `lineNegativeFocus`, `foregroundAccent*`, and so on) and for primitive tokens (`neutral*`, `blue*`, `coolNeutral*`, …), check `Color.Semantic` directly. Primitive names did not change.
 
-위 표에서 못 찾은 3.x 토큰은 `Color.Semantic` 각 케이스의 doc 주석을 보면 됩니다. 리네임된 토큰에는 `/// … (구 labelNormal)`처럼 3.x 이름이 적혀 있습니다.
+If you cannot find a 3.x token in the tables, look at the doc comment on each `Color.Semantic` case. Renamed tokens carry their 3.x name after `구` ("former"), as in `/// 기본 전경 색상 (구 labelNormal)`.
 
-#### 일괄 치환
+#### Bulk replacement
 
-3.x 토큰 이름이 4.0에 남아 있는 게 없으므로 단어 경계 치환으로 안전하게 처리됩니다.
+No 3.x token name survives into 4.0, so a word-boundary replacement is safe.
 
 ```bash
-# 확인 먼저
+# check first
 grep -rn "\.labelNormal\b" --include="*.swift" .
 
-# 치환
+# replace
 find . -name "*.swift" -exec sed -i '' \
   -e 's/\.labelNormal\b/.foregroundNeutralPrimary/g' \
   -e 's/\.labelAlternative\b/.foregroundNeutralTertiary/g' \
@@ -175,9 +177,9 @@ find . -name "*.swift" -exec sed -i '' \
 
 ---
 
-### 2. Spacing · Opacity 토큰
+### 2. Spacing and Opacity tokens
 
-값이 이름에 그대로 들어가는 방식으로 평탄화됐습니다. 값 대응은 1:1이라 렌더 결과가 같습니다.
+These were flattened so the value appears directly in the name. The mapping is 1:1, so rendering is identical.
 
 ```swift
 // 3.x
@@ -209,45 +211,45 @@ find . -name "*.swift" -exec sed -i '' \
 | `.opacity(.p097)` | `.opacity97` |
 | `.opacity(.p100)` | `.opacity100` |
 
-`pt08` → `spacing8`처럼 **0 패딩이 사라집니다**. `spacing08`이 아닙니다.
+**The zero padding disappears**, as in `pt08` → `spacing8`. It is not `spacing08`.
 
-Opacity 토큰은 `Double`로 이관됐습니다. `withAlphaComponent(0)`처럼 원시 리터럴을 쓰던 자리도 `withAlphaComponent(.opacity0)`으로 정리할 수 있습니다.
-
----
-
-### 3. 전역 모디파이어
-
-| 3.x | 4.0 | 비고 |
-|---|---|---|
-| `.disable(_:)` | `.disabled(_:)` | SwiftUI 표준 모디파이어로 흡수. 컴포넌트가 `isEnabled` 환경값을 읽습니다 |
-| `scrollStatus.scrolledToMax` | `scrollStatus.reachedEnd` | `Montage.ScrollView`의 `ScrollStatus` 프로퍼티 |
-
-`disable()` → `disabled()`는 이름만 바뀌는 게 아닙니다. 3.x는 컴포넌트가 스스로 `opacity`를 깔았고, 4.0은 SwiftUI `isEnabled`를 타고 색 토큰(`foregroundDisablePrimary` 등)으로 표현합니다. [시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경)을 확인해주세요.
-
-입력 컴포넌트에는 `autocorrectionDisabled(_:)`가 새로 생겼습니다(추가 API, 브레이킹 아님).
+Opacity tokens moved to `Double`. Spots that used a raw literal like `withAlphaComponent(0)` can be tidied up to `withAlphaComponent(.opacity0)`.
 
 ---
 
-### 4. 입력 컴포넌트 → FormControl
+### 3. Global modifiers
 
-가장 손이 많이 가는 변경입니다. `TextField`/`TextArea`가 **입력 그 자체만** 담당하고, 라벨·상태 메시지·글자수 카운터는 `FormControl`이 필드 밖에서 배치합니다.
-
-| 3.x (필드 내부) | 4.0 (FormControl 슬롯) | 위치 |
+| 3.x | 4.0 | Notes |
 |---|---|---|
-| `.heading("이메일")` | `.label("이메일")` | 필드 **위** |
-| `.status(.negative(description: msg))` | `.status(.negative)` + `.message(msg)` | 필드 **아래** |
-| `.bottomResources(trailing: [.characterCount(limit:)])` | `.accessory { … }` | 필드 아래 **우측** |
+| `.disable(_:)` | `.disabled(_:)` | Absorbed into the standard SwiftUI modifier. Components read the `isEnabled` environment value |
+| `scrollStatus.scrolledToMax` | `scrollStatus.reachedEnd` | A `ScrollStatus` property on `Montage.ScrollView` |
+
+`disable()` → `disabled()` is more than a rename. In 3.x the component applied its own `opacity`; in 4.0 it follows SwiftUI's `isEnabled` and expresses the state through color tokens (`foregroundDisablePrimary` and friends). See [Changes that alter what you see](#changes-that-alter-what-you-see).
+
+Input components gained `autocorrectionDisabled(_:)` (an addition, not a breaking change).
+
+---
+
+### 4. Input components to FormControl
+
+This is the change that takes the most work. `TextField`/`TextArea` now handle **only the input itself**, and `FormControl` places the label, status message, and character counter outside the field.
+
+| 3.x (inside the field) | 4.0 (FormControl slot) | Position |
+|---|---|---|
+| `.heading("Email")` | `.label("Email")` | **Above** the field |
+| `.status(.negative(description: msg))` | `.status(.negative)` + `.message(msg)` | **Below** the field |
+| `.bottomResources(trailing: [.characterCount(limit:)])` | `.accessory { … }` | Below the field, **trailing** |
 | `.disable(_:)` | `.disabled(_:)` | - |
 
-`TextField.Status`에서 연관값이 빠졌습니다. `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
+`TextField.Status` lost its associated values: `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
 
 #### TextField
 
 ```swift
 // 3.x
 Montage.TextField(text: $email)
-    .heading(String(localized: "이메일"))
-    .placeholder(String(localized: "이메일을 입력해주세요."))
+    .heading(String(localized: "Email"))
+    .placeholder(String(localized: "Enter your email."))
     .status(isInvalidated ? .negative(description: errorMessage) : .normal())
     .disable(isDisabled)
 
@@ -255,23 +257,23 @@ Montage.TextField(text: $email)
 FormControl { context in
     Montage.TextField(text: $email)
         .status(context.status.textFieldStatus)
-        .placeholder(String(localized: "이메일을 입력해주세요."))
+        .placeholder(String(localized: "Enter your email."))
 }
-.label(String(localized: "이메일"))
+.label(String(localized: "Email"))
 .status(isInvalidated ? .negative : .normal)
 .message(isInvalidated ? errorMessage : nil)
 .disabled(isDisabled)
 ```
 
-상태는 **`FormControl`이 소유**하고 `context.status.textFieldStatus`로 필드에 내려갑니다. 필드에 상태를 직접 주면 라벨·메시지 색이 따로 놀게 됩니다.
+**`FormControl` owns the status** and passes it down to the field through `context.status.textFieldStatus`. If you set the status on the field directly, the label and message colors will drift out of sync.
 
-#### TextArea + 글자수 카운터
+#### TextArea and the character counter
 
 ```swift
 // 3.x
 TextArea(text: $feedback, focus: $focus)
     .resize(.fixed(min: 116, max: 116))
-    .placeholder("좋았던 점이나 아쉬운 점을 적어주세요.")
+    .placeholder("Tell us what you liked or what fell short.")
     .bottomResources(trailing: [.characterCount(limit: 1000)])
 
 // 4.0
@@ -279,7 +281,7 @@ FormControl { _ in
     TextArea(text: $feedback, focus: $focus)
         .maxLength(1000)
         .resize(.fixed(min: 116, max: 116))
-        .placeholder(String(localized: "좋았던 점이나 아쉬운 점을 적어주세요."))
+        .placeholder(String(localized: "Tell us what you liked or what fell short."))
 }
 .accessory {
     Text(verbatim: "\(feedback.count)/1000")
@@ -287,60 +289,60 @@ FormControl { _ in
 }
 ```
 
-`bottomResources`의 `.characterCount` 리소스가 제거됐습니다. 카운터는 이제 호출부가 직접 그립니다(`bottomResources` 자체는 남아 있습니다). 두 가지를 챙겨주세요.
+The `.characterCount` resource was removed from `bottomResources`. The call site now draws the counter itself (`bottomResources` itself is still there). Two things to keep in mind.
 
-- **입력 상한은 `maxLength(_:)`로 필드에 줍니다.** 카운터 표시와 입력 제한이 분리됐습니다.
-- **`Text(verbatim:)`을 쓰세요.** `Text("\(count)/\(limit)")`는 `LocalizedStringKey` 보간을 타서 상한이 1000 이상일 때 로케일 천단위 구분자가 붙습니다(`5,000`). `verbatim:`이면 `5000`으로 나옵니다.
+- **The input limit goes on the field via `maxLength(_:)`.** Displaying the count and enforcing the limit are now separate.
+- **Use `Text(verbatim:)`.** `Text("\(count)/\(limit)")` goes through `LocalizedStringKey` interpolation, which adds a locale thousands separator once the limit reaches 1000 (`5,000`). With `verbatim:` you get `5000`.
 
-`FormControl`의 나머지 모디파이어: `size(.large/.medium)`, `labelPlacement(.top/.leading)`, `labelWidth(_:)`, `label(_:required:)`. 여러 필드를 묶어 정렬하려면 `FormControlGroup`을 씁니다.
+The remaining `FormControl` modifiers: `size(.large/.medium)`, `labelPlacement(.top/.leading)`, `labelWidth(_:)`, `label(_:required:)`. To align several fields together, use `FormControlGroup`.
 
-#### 입력에 직접 붙이는 방식
+#### Attaching directly to the input
 
-`FormControl`로 감싸지 않고 `TextField`·`TextArea`·`Select`에 모디파이어를 바로 붙일 수도 있습니다. 세 컴포넌트가 같은 다섯 개를 갖습니다.
+You can also skip the `FormControl` wrapper and put the modifiers straight on `TextField`, `TextArea`, or `Select`. All three have the same five.
 
 `.label(_:required:)` · `.message(_:)` · `.labelPlacement(_:)` · `.labelWidth(_:)` · `.accessory { }`
 
 ```swift
 Montage.TextField(text: $email)
-    .placeholder(String(localized: "이메일을 입력해주세요."))
-    .label(String(localized: "이메일"), required: true)
+    .placeholder(String(localized: "Enter your email."))
+    .label(String(localized: "Email"), required: true)
     .message(isInvalidated ? errorMessage : nil)
     .status(isInvalidated ? .negative : .normal)
 ```
 
-하나라도 붙이면 내부에서 `FormControl`로 감싸지므로 결과는 위의 `FormControl { … }` 조합과 같습니다. 라벨은 입력의 접근성 라벨로, 메시지는 접근성 힌트로 연결됩니다.
+Using any one of them wraps the input in a `FormControl` internally, so the result is the same as the `FormControl { … }` form above. The label is wired up as the input's accessibility label and the message as its accessibility hint.
 
-`size`·`status`는 **호출부 지정값 → `FormControl` 전파값 → 기본값**(`.large` / `.normal`) 순으로 결정됩니다. 입력 하나에 라벨·메시지만 붙이는 흔한 경우는 이 방식이 짧고, `FormControlGroup`으로 묶거나 입력을 조합해야 하면 `FormControl`을 직접 쓰는 편이 낫습니다.
-
----
-
-#### 자체 입력 래퍼가 있다면
-
-`AutoCompleteTextInput`처럼 내부에 `TextField`를 감싼 래퍼는 **래퍼 자체를 `FormControl`로 감싸고**, 상태·메시지 파라미터를 래퍼 인터페이스로 노출하는 편이 낫습니다. 래퍼 안에서 `FormControl`을 쓰면 라벨을 밖에서 주기 어려워집니다.
+`size` and `status` resolve in this order: **the value set at the call site, then the value propagated from `FormControl`, then the default** (`.large` / `.normal`). For the common case of one input with just a label and a message, this form is shorter; when you need `FormControlGroup` or have to compose several inputs, reach for `FormControl` directly.
 
 ---
 
-### 5. 슬롯 API 전환
+#### If you have your own input wrapper
 
-`Model` 구조체와 고정 이미지 파라미터가 사라지고 호출부가 뷰를 직접 넣습니다.
+For a wrapper that contains a `TextField` internally, such as `AutoCompleteTextInput`, it is better to **wrap the wrapper itself in a `FormControl`** and expose the status and message as parameters on the wrapper's interface. Putting `FormControl` inside the wrapper makes it hard to supply the label from outside.
+
+---
+
+### 5. Slot-based APIs
+
+`Model` structs and fixed image parameters are gone; the call site passes views directly.
 
 #### ActionArea
 
 ```swift
 // 3.x
 .actionArea(
-    variant: .neutral(main: .init(text: "확인", action: { … }))
+    variant: .neutral(main: .init(text: "OK", action: { … }))
 )
-// 또는
+// or
 .bottomSheet(isPresented: $isPresented, actionAreaModel: .init(variant: …)) {
     Content()
 }
 
 // 4.0
 .actionArea {
-    ActionArea(variant: .neutral(main: .init(text: "확인", action: { … })))
+    ActionArea(variant: .neutral(main: .init(text: "OK", action: { … })))
 }
-// 또는
+// or
 .bottomSheet(
     isPresented: $isPresented,
     actionArea: { ActionArea(variant: …) },
@@ -348,105 +350,113 @@ Montage.TextField(text: $email)
 )
 ```
 
-`actionArea` 슬롯 클로저에는 `@ViewBuilder`가 **붙지 않습니다**. `if`문을 쓰면 `_ConditionalContent`가 되어 `ActionArea` 타입 제약이 깨집니다. 조건 분기는 삼항 연산자나 모디파이어 체인으로 처리하세요.
+The `actionArea` slot closure is **not** annotated with `@ViewBuilder`. An `if` statement turns it into `_ConditionalContent`, which breaks the `ActionArea` type constraint. Handle branching with a ternary or a modifier chain.
 
 ```swift
-// 안 됩니다
+// does not work
 .actionArea { if isEditing { ActionArea(variant: a) } else { ActionArea(variant: b) } }
 
-// 이렇게
+// do this instead
 .actionArea { ActionArea(variant: isEditing ? a : b) }
 ```
 
-투명 배경 API가 없어졌습니다. 배경은 항상 불투명하고, **상단 그라데이션만** "아래에 가려진 콘텐츠가 있다"는 신호로 켜졌다 꺼집니다(0.5초 페이드).
+The API for controlling background transparency directly is gone. In 4.0 the background and the top gradient are both driven by a single signal - whether the scroll has reached the bottom (`scrollReachedEnd`).
+
+| `scrollReachedEnd` | `extra` slot | Top gradient | Background |
+|---|---|---|---|
+| not passed, or `false` | either | shown | opaque |
+| `true` | empty | hidden | **transparent** |
+| `true` | filled | hidden | opaque |
+
+The gradient means "there is content hidden below", and it fades in and out over 0.5 seconds.
 
 | 3.x | 4.0 |
 |---|---|
-| `.transparentBackground(_:)` | 제거 |
-| `ActionArea.BackgroundTransparencyControl` (`.automatic` / `.manual`) | 제거 |
-| `actionArea(backgroundTransparency:)` | 제거 |
-| `.gradientColor(_:)` | `.backgroundColor(_:)` (배경과 그라데이션 시작색에 함께 적용) |
-| - | `.scrollReachedEnd(_:)` 신설 |
+| `.transparentBackground(_:)` | Removed |
+| `ActionArea.BackgroundTransparencyControl` (`.automatic` / `.manual`) | Removed |
+| `actionArea(backgroundTransparency:)` | Removed |
+| `.gradientColor(_:)` | `.backgroundColor(_:)` (applies to both the background and the gradient's start color) |
+| - | `.scrollReachedEnd(_:)` added |
 
-`Montage.ScrollView`를 쓰면 스크롤 바닥 도달이 자동 전달되므로 아무것도 넘기지 않아도 3.x의 `.automatic`과 동등합니다. `SwiftUI.ScrollView`/`List`처럼 신호를 올려주지 않는 컨테이너를 쓸 때만 `actionArea(scrollReachedEnd:)`로 직접 넘기세요.
+With `Montage.ScrollView`, reaching the bottom is reported automatically, so passing nothing is equivalent to 3.x's `.automatic`. Only when you use a container that does not report it, such as `SwiftUI.ScrollView` or `List`, do you need to pass it yourself via `actionArea(scrollReachedEnd:)`.
 
-**`.manual`로 배경을 직접 투명하게 만들던 자리는 하단 도달 신호를 직접 넘기면 됩니다.** 스크롤 컨테이너가 아예 없는 화면(팝업·시트 안의 고정 높이 콘텐츠)은 신호가 올라올 데가 없어서 ActionArea가 "아래에 가려진 콘텐츠가 있다"고 보고 그라데이션과 배경을 그립니다. `true`를 넘기면 그라데이션이 숨겨지고 배경이 비칩니다.
+**Wherever you used `.manual` to force a transparent background, pass the bottom-reached signal instead.** A screen with no scroll container at all (fixed-height content inside a popup or sheet) has nothing to raise the signal, so ActionArea assumes there is hidden content below and draws the gradient and background. Passing `true` hides the gradient and lets the background show through.
 
-넘기는 자리가 두 군데입니다.
+There are two places to pass it.
 
 ```swift
-// 뷰에 모디파이어로 붙이는 경우
+// as a modifier on a view
 content
     .actionArea(scrollReachedEnd: true) { ActionArea(variant: …) }
 
-// BottomSheet·Popup 처럼 actionArea: 인자로 넘기는 경우 - ActionArea 에 직접 체인한다
+// when passing through an actionArea: argument, as with BottomSheet and Popup - chain it on ActionArea itself
 .popup(isPresented: $isPresented, actionArea: {
     ActionArea(variant: …)
         .scrollReachedEnd(true)
 })
 ```
 
-배경색 자체를 바꿔야 한다면 `backgroundColor(_:)`를 씁니다. 두 방법 중 어느 것도 맞지 않으면 그 표현이 정말 필요한지 디자이너와 다시 확인해주세요.
+To change the background color itself, use `backgroundColor(_:)`. If neither approach fits, check with your designer whether that treatment is really needed.
 
-4.0에서 ActionArea 스펙도 함께 조정됐습니다.
+The ActionArea spec was retuned in 4.0 as well.
 
-| 항목 | 3.x | 4.0 |
+| Item | 3.x | 4.0 |
 |---|---|---|
-| `extra` 슬롯 좌우 여백 | 20 | **24** |
-| `extra` 슬롯 하단 여백 | 24 | **20** |
-| `extra` 구분선 색 | `lineNeutralSecondary` | `lineNeutralTertiary` (옅어짐) |
-| 캡션 타이포 | `label2` | `label2` + `weight: .medium` (굵어짐) |
-| 캡션 아이콘 | 없음 | `.caption(_:icon:)` 16pt 슬롯 신설 |
-| 대체(`alternative`) 액션 버튼 | `outlined` / `primary` | `outlined` / **`assistive`** |
-| `cancel` 메인 액션 버튼 | `outlined` / `assistive` | **`solid`** / `assistive` |
+| `extra` slot horizontal padding | 20 | **24** |
+| `extra` slot bottom padding | 24 | **20** |
+| `extra` divider color | `lineNeutralSecondary` | `lineNeutralTertiary` (lighter) |
+| Caption typography | `label2` | `label2` + `weight: .medium` (heavier) |
+| Caption icon | None | New 16pt slot via `.caption(_:icon:)` |
+| Alternative (`alternative`) action button | `outlined` / `primary` | `outlined` / **`assistive`** |
+| `cancel` main action button | `outlined` / `assistive` | **`solid`** / `assistive` |
 
-메인 버튼 행의 좌우 여백 20은 그대로입니다.
+The horizontal padding of 20 on the main button row is unchanged.
 
-버튼 색상은 API가 그대로라 컴파일 에러가 나지 않습니다. 대체 액션은 라벨이 파란색에서 검정으로 바뀌어 주 액션과의 대비가 커지고, `cancel` variant의 메인 버튼은 테두리형에서 회색 채움으로 바뀝니다. 보조(`sub`) 액션은 변경이 없습니다.
+The button colors compile fine, since the API is unchanged. The alternative action's label goes from blue to black, widening the contrast against the primary action, and the `cancel` variant's main button goes from outlined to a grey fill. The `sub` action is unchanged.
 
 #### ScreenScaffold
 
-`TopNavigation` + 본문 + `ActionArea`를 한 화면으로 조립하는 컨테이너가 새로 생겼습니다. 화면마다 손으로 맞추던 스크롤 오프셋 전달과 하단 여백 계산을 스캐폴드가 대신합니다.
+A new container assembles `TopNavigation`, the body, and `ActionArea` into one screen. The scroll-offset plumbing and bottom-inset math you used to hand-tune per screen are handled by the scaffold.
 
 ```swift
 ScreenScaffold(
     navigation: { TopNavigation(title: title) },
-    actionArea: { ActionArea(variant: .neutral(main: .init(text: "확인", action: submit))) }
+    actionArea: { ActionArea(variant: .neutral(main: .init(text: "OK", action: submit))) }
 ) {
     content
 }
 .backgroundColor(.semantic(.backgroundNeutralPrimary))
 ```
 
-`ActionArea`를 `safeAreaInset(edge: .bottom)`으로 넣기 때문에 스크롤 컨테이너가 그만큼 콘텐츠 인셋을 잡습니다. **바닥까지 내렸을 때 마지막 요소가 버튼에 가리지 않도록 호출부가 손으로 비워 주던 여백은 지우세요.**
+`ActionArea` goes in through `safeAreaInset(edge: .bottom)`, so the scroll container reserves that much content inset. **Remove the padding you used to add by hand to keep the last element from hiding under the button when scrolled to the bottom.**
 
-| `scrollContainer` | 언제 |
+| `scrollContainer` | When |
 |---|---|
-| `.builtIn` (기본) | 스캐폴드가 `Montage.ScrollView`를 깔고 스크롤 상태를 직접 잼 |
-| `.custom` | `List`처럼 컨테이너를 바꿀 수 없을 때. 콘텐츠가 `reportsScrollOffset(_:)`·`reportsScrollReachedEnd(_:)`로 신호를 올려야 함 |
+| `.builtIn` (default) | The scaffold lays down a `Montage.ScrollView` and measures scroll state itself |
+| `.custom` | When you cannot swap the container, as with `List`. The content has to raise signals via `reportsScrollOffset(_:)` and `reportsScrollReachedEnd(_:)` |
 
-`navigation`·`actionArea` 슬롯 클로저에도 **`@ViewBuilder`가 붙지 않습니다.** `if`문을 쓰면 `_ConditionalContent`가 되어 타입 제약이 깨지므로, 조건부로 넣을 때는 `actionArea: isEditing ? slot : nil`처럼 클로저 자체를 갈라 주세요.
+The `navigation` and `actionArea` slot closures are **also not annotated with `@ViewBuilder`.** An `if` statement turns them into `_ConditionalContent` and breaks the type constraint, so to include one conditionally, branch on the closure itself, as in `actionArea: isEditing ? slot : nil`.
 
-`BottomSheet`·`Popup` 안에는 넣지 않습니다. 두 컴포넌트가 같은 일을 하고 `ActionArea` 높이를 자기 높이 계산에 쓰므로 그쪽 `actionArea:` 인자로 넘기세요. 전체 화면 커버나 push된 목적지는 시트가 아니라 화면이므로 여기에 해당하지 않습니다.
+Do not put it inside `BottomSheet` or `Popup`. Those two do the same job and use the `ActionArea` height in their own height calculation, so pass it to their `actionArea:` argument instead. A full-screen cover or a pushed destination is a screen rather than a sheet, so it does not fall under this.
 
-`List`를 쓸 때는 행 배경과 스크롤 배경을 **둘 다** 걷어내야 합니다. 하나만 처리하면 `backgroundColor(_:)`로 지정한 색이 가려지고, `ActionArea`가 바닥에서 투명해질 때 그 경계가 드러납니다.
+With `List`, you have to clear **both** the row background and the scroll background. Clearing only one hides the color you set with `backgroundColor(_:)`, and the seam shows when `ActionArea` goes transparent at the bottom.
 
 ---
 
 #### ListCell
 
-`title*` 계열이 `label*`로, `fillWidth()`가 `variant(_:)`로, `leadingContent {}`가 `leadingResources([…])`로 바뀌었습니다.
+The `title*` family became `label*`, `fillWidth()` became `variant(_:)`, and `leadingContent {}` became `leadingResources([…])`.
 
 | 3.x | 4.0 |
 |---|---|
 | `ListCell(title:)` | `ListCell(label:)` |
 | `.titleVariant(_:)` / `.titleWeight(_:)` / `.titleColor(_:)` | `.labelVariant(_:)` / `.labelWeight(_:)` / `.labelColor(_:)` |
 | `.caption(_:)` | `.description(_:)` |
-| `.fillWidth(false)` | `.variant(.inset)` (기본값) |
+| `.fillWidth(false)` | `.variant(.inset)` (default) |
 | `.fillWidth(true)` | `.variant(.full)` |
 | `.leadingContent { … }` | `.leadingResources([.slot { … }])` |
-| `.interactionPadding(_:)` | 제거 - `variant`에 통합 |
-| `.verticalAlign(.bottom)` | 제거 - `.top` / `.center`만 남음 |
+| `.interactionPadding(_:)` | Removed - folded into `variant` |
+| `.verticalAlign(.bottom)` | Removed - only `.top` and `.center` remain |
 
 ```swift
 // 3.x
@@ -464,33 +474,33 @@ ListCell(label: option.title) { onSelect() }
     }])
 ```
 
-`inset`은 인터랙션 배경만 좌우 12 확장하고 모서리 16, `full`은 셀이 좌우 여백 20을 직접 갖습니다. 기존 `fillWidth(false/true)`와 값까지 대응합니다.
+`inset` extends only the interaction background by 12 on each side with a corner radius of 16; `full` gives the cell its own horizontal padding of 20. The values line up with the old `fillWidth(false/true)`.
 
-슬롯이 네 종으로 늘었습니다: `leadingResources`, `labelTrailingResources`, `trailingResources`, `extraResources`. 자주 쓰는 조합은 프리셋으로 있습니다.
+There are now four slots: `leadingResources`, `labelTrailingResources`, `trailingResources`, and `extraResources`. Common combinations ship as presets.
 
 ```swift
 .leadingResources([.icon(.search), .checkbox(checked: isChecked)])
 .leadingResources([.radio(checked: isSelected)])
 .leadingResources([.avatar(url, variant: .company)])
 .leadingResources([.thumbnail(url)])
-.leadingResources([.slot { AnyCustomView() }])   // 프리셋에 없으면 slot
+.leadingResources([.slot { AnyCustomView() }])   // use slot when there is no preset
 ```
 
-`verticalPadding`에 `.custom(CGFloat)`이 추가됐습니다.
+`verticalPadding` gained `.custom(CGFloat)`.
 
 #### Chip
 
-이미지 파라미터가 콘텐츠 슬롯으로 바뀌었습니다.
+The image parameters became content slots.
 
 | 3.x | 4.0 |
 |---|---|
 | `leadingImage:` / `trailingImage:` | `.leadingContent { … }` / `.trailingContent { … }` |
-| `.imageColor(_:)` | 슬롯 안에서 직접 지정 |
-| `.iconOnly(_:)` | 제거 - `leadingContent`만 채우면 됩니다 |
+| `.imageColor(_:)` | Set it inside the slot |
+| `.iconOnly(_:)` | Removed - just fill `leadingContent` |
 
-아이콘 크기·색을 컴포넌트가 정해주지 않으므로 **사용처가 직접 넣어야 합니다.** 3.x가 size별로 넣던 값은 이렇습니다.
+The component no longer decides the icon size and color, so **the call site has to supply them.** Here is what 3.x used per size.
 
-| Chip size | 아이콘 크기 |
+| Chip size | Icon size |
 |---|---|
 | `.large` | 16 |
 | `.medium` · `.small` | 14 |
@@ -507,9 +517,9 @@ Chip(text: skill.name, variant: .outlined, size: .medium)
     }
 ```
 
-#### 슬롯 프리셋 이름
+#### Slot preset names
 
-프리셋은 `컴포넌트.Resource.슬롯명` 패턴으로 통일됐습니다.
+Presets now follow a consistent `Component.Resource.SlotName` pattern.
 
 ```swift
 // 3.x
@@ -521,11 +531,11 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 
 ---
 
-### 6. 단순 API 치환
+### 6. Straight API replacements
 
 #### Button · TextButton
 
-`fill(horizontal:vertical:)`이 **제거**되고 `fillWidth(_:)`로 대체됐습니다. 유예 없이 4.0에서 바로 빠지니 호출부를 모두 옮기세요.
+`fill(horizontal:vertical:)` was **removed** and replaced by `fillWidth(_:)`. There is no deprecation period; it is gone in 4.0, so move every call site.
 
 | 3.x | 4.0 |
 |---|---|
@@ -533,26 +543,42 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 | `.fill(horizontal: true, vertical: false)` | `.fillWidth(true)` |
 | `.fill(horizontal: true, vertical: true)` | `.fillWidth(true)` |
 
-`vertical`은 3.x에서도 이미 아무 동작을 하지 않았습니다. 시그니처에만 있고 함수 본문에서 쓰이지 않아, `vertical: true`로 부르던 곳도 세로 채움이 일어난 적이 없습니다. 세 경우 모두 렌더링이 그대로라 기계적으로 치환해도 됩니다.
+`vertical` already did nothing in 3.x. It existed only in the signature and was never used in the function body, so even the spots calling it with `vertical: true` never filled vertically. All three cases render the same, so a mechanical replacement is safe.
 
-`TextButton`은 3.x에 `fillWidth(_:)`가 없었습니다. 4.0에서 `Button`과 같은 모양으로 새로 생겼습니다.
+`TextButton` had no `fillWidth(_:)` in 3.x. It was added in 4.0, matching `Button`.
 
 #### IconButton
 
-`normal` variant의 사이즈가 `Int`에서 `NormalSize` 열거형으로 바뀌었습니다.
+The size of the `normal` variant changed from `Int` to a `NormalSize` enum.
 
-| 3.x | 4.0 | 아이콘 글리프 | 컨테이너 |
+| 3.x | 4.0 | Icon glyph | Container |
 |---|---|---|---|
 | `.normal(size: 16)` | `.normal(size: .small)` | 16 | 24 |
 | `.normal(size: 18)` | `.normal(size: .medium)` | 18 | 28 |
 | `.normal(size: 20)` | `.normal(size: .large)` | 20 | 32 |
 | `.normal(size: 24)` | `.normal(size: .xlarge)` | 24 | 36 |
 
-글리프 크기는 그대로고 **터치 컨테이너만 커집니다**. 배경·테두리 없는 variant라 트레일링 아이콘이 약 6px 움직이거나 행 높이가 약 8px 늘어나는 정도입니다.
+The glyph size is unchanged and **only the touch container grows**. Since this variant has no background or border, the effect is roughly a trailing icon shifting about 6px or a row growing about 8px taller.
+
+For any size other than those four, use `NormalSize.custom(size:)` - but **what `size` means changed from the icon to the container.** In 3.x, `.normal(size: n)` made the container the same `n` as the icon. In 4.0, `.custom(size: n)` takes `n` as one side of the container and derives the icon from it: the dimension token nearest to two thirds of the container. The container is clamped to `[24, 64]`.
+
+```swift
+// 3.x - n is the icon size
+IconButton(variant: .normal(size: 22), icon: .search)
+
+// 4.0 - n is the container size, and the icon is derived from it
+IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // icon 20
+```
+
+Passing the 3.x value straight through shrinks the icon: `.custom(size: 22)` clamps the container to 24 and gives you a 16 icon. **Outside the four standard sizes there is no mechanical replacement** - pick the container that yields the icon size you want.
+
+| Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
+|---|---|---|---|---|---|---|---|---|
+| Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
 
 #### Skeleton
 
-가변 폭 배열 대신 타이포그래피 변형을 받습니다. 줄 높이·줄 수를 변형에서 자동 계산합니다.
+It takes a typography variant instead of an array of variable widths. Line height and line count are derived from the variant.
 
 ```swift
 // 3.x
@@ -562,130 +588,130 @@ Skeleton.SkeletonView(.text(lengths: [._25, ._50, ._75]))
 Skeleton.SkeletonView(.text(variant: .body1))
 ```
 
-플레이스홀더 바 폭이 가변(25/50/75/100%)에서 균일로 바뀝니다. 여러 줄을 흉내내려면 `SkeletonView`를 여러 개 놓으세요.
+Placeholder bar widths go from variable (25/50/75/100%) to uniform. To suggest multiple lines, place several `SkeletonView`s.
 
 #### PushBadge
 
-variant가 통합됐습니다.
+The variants were consolidated.
 
 | 3.x | 4.0 |
 |---|---|
 | `.new` | `.text("N")` |
 | `.number(count)` | `.maxCount(count, max: 99)` |
 
-한 글자일 때 최소 너비 + 패딩 대신 `badgeSize` 정사각(xsmall 16 / small 20 / medium 24)으로 고정됩니다. `N`처럼 좁은 글자는 픽셀 차이가 없고, 한글 한 글자나 `M`·`W`에서 정원이 유지됩니다. Dynamic Type은 `xxxLarge`에서 멈춥니다.
+Instead of a minimum width plus padding for a single character, it is now a fixed `badgeSize` square (xsmall 16 / small 20 / medium 24). Narrow glyphs like `N` are pixel-identical, and a single CJK character or an `M`/`W` now keeps the circle round. Dynamic Type stops at `xxxLarge`.
 
 #### FallbackView
 
-여백 인터페이스가 생기고 **상하 최소 여백이 컴포넌트에 내장됐습니다.**
+It gained a padding interface, and **the minimum vertical padding is now built into the component.**
 
 ```swift
 public enum Padding {
-    case normal   // 160 (기본값)
+    case normal   // 160 (default)
     case compact  // 80
 }
 ```
 
 ```swift
-// 3.x - 밖에서 여백을 줬습니다
+// 3.x - the padding came from outside
 FallbackView(…)
     .padding(.vertical, 80)
 
-// 4.0 - 컴포넌트에 맡깁니다
+// 4.0 - leave it to the component
 FallbackView(…)
     .padding(.compact)
 ```
 
-**밖에서 주던 여백과 고정 높이를 반드시 정리하세요.** 그대로 두면 이중 적용됩니다. 특히 `frame(height:)`는 최소 여백 160(또는 80)에 콘텐츠까지 들어가지 않아 넘칩니다.
+**Be sure to clear the padding and fixed heights you were applying from outside.** Leaving them in place double-applies them. In particular, `frame(height:)` overflows because the content does not fit within the minimum padding of 160 (or 80).
 
 | 3.x | 4.0 |
 |---|---|
-| `.padding(.vertical, 160)` | 제거 (기본 `.normal` = 160) |
-| `.padding(.vertical, 120)` | 제거 |
+| `.padding(.vertical, 160)` | Remove (the default `.normal` is 160) |
+| `.padding(.vertical, 120)` | Remove |
 | `.padding(.vertical, 80)` | `.padding(.compact)` |
 | `.padding(.vertical, 48)` | `.padding(.compact)` |
-| `.frame(height: 200)` | `.padding(.compact)` + 고정 높이 제거 |
+| `.frame(height: 200)` | `.padding(.compact)` and remove the fixed height |
 
-버튼 영역은 `buttonActionArea(_:)`로 넘깁니다(`.single` / `.horizontal` / `.vertical`).
+The button area goes through `buttonActionArea(_:)` (`.single` / `.horizontal` / `.vertical`).
 
 ---
 
-### 7. 제거된 UIKit 래퍼
+### 7. Removed UIKit wrappers
 
-deprecated UIKit 래퍼가 제거됐습니다. SwiftUI 컴포넌트를 `UIHostingController`로 브리징하세요.
+The deprecated UIKit wrappers were removed. Bridge the SwiftUI components with `UIHostingController`.
 
-| 제거됨 | 대체 |
+| Removed | Replacement |
 |---|---|
 | `Montage.Button.SolidUIButton` | `Montage.Button(variant: .solid, …)` |
 | `Montage.Button.OutlinedUIButton` | `Montage.Button(variant: .outlined, …)` |
 | `ContentBadgeUIView` | `ContentBadge(…)` |
 
-스펙은 동일하므로 렌더 결과에 차이가 없습니다.
+The specs are identical, so there is no difference in what gets rendered.
 
 ---
 
-### 8. 컴포넌트 스펙 리프레시
+### 8. Component spec refresh
 
-컴파일 에러가 나지 않아 놓치기 쉬운 구간입니다. **API는 그대로인데 값이 바뀐** 항목이라, 치환 작업이 끝난 뒤 화면을 봐야 드러납니다.
+This is the section that is easy to miss because nothing fails to compile. **The API is unchanged and only the values moved**, so it only shows up when you look at the screen after the replacements are done.
 
 #### Button
 
-| 항목 | 3.x | 4.0 |
+| Item | 3.x | 4.0 |
 |---|---|---|
 | radius | large 12 / medium 10 / small 8 | large **14** / medium **12** / small **10** / xsmall 8 |
-| 높이 제약 | `.frame(height:)` 고정 | `.frame(minHeight:)` |
-| 아이콘 크기 | large 24 / medium 24·22 / small 20·18 | large 22 / medium 22·20 / small 20·16 / xsmall 16 |
-| 사이즈 | large · medium · small | **+ xsmall** |
+| Height constraint | fixed `.frame(height:)` | `.frame(minHeight:)` |
+| Icon size | large 24 / medium 24·22 / small 20·18 | large 22 / medium 22·20 / small 20·16 / xsmall 16 |
+| Sizes | large · medium · small | **+ xsmall** |
 | color | primary · assistive | **+ negative** |
-| 타이포 | 사이즈별 한 단계 위 | 사이즈별 한 단계 아래로 조정 |
+| Typography | one step up per size | adjusted one step down per size |
 
-**높이 제약이 고정에서 최소값으로 바뀐 게 파급이 가장 큽니다.** 3.x는 라벨이 길면 한 줄로 말줄임(`텍스트...`)했는데, 4.0은 **줄바꿈해서 버튼이 세로로 커집니다.** 긴 라벨을 쓰는 버튼이 있으면 주변 레이아웃이 밀립니다.
+**The height constraint going from fixed to a minimum has the widest impact.** In 3.x a long label was truncated onto one line (`Text...`); in 4.0 it **wraps and the button grows taller.** If you have buttons with long labels, the surrounding layout will shift.
 
 #### Chip · FilterButton
 
-타이포가 사이즈별로 한 단계 내려가고 패딩이 조정되어 **칩이 전체적으로 작아집니다.**
+Typography drops one step per size and padding was reduced, so **chips get smaller overall.**
 
-| Chip size | 3.x 타이포 | 4.0 타이포 |
+| Chip size | 3.x typography | 4.0 typography |
 |---|---|---|
 | `large` | `body2` | `label1` |
 | `medium` | `label1` | `label2` |
 | `small` | `label1` | `caption1` |
 | `xsmall` | `caption1` | `caption2` |
 
-FilterButton은 radius가 커지고 패딩이 줄어 더 둥글고 작아집니다.
+FilterButton gets a larger radius and less padding, so it ends up rounder and smaller.
 
 #### Select
 
-| 항목 | 3.x | 4.0 |
+| Item | 3.x | 4.0 |
 |---|---|---|
-| 사이즈 | 없음 | `size(.large / .medium)` 신설 |
-| min-height | - | 증가 (필드가 높아짐) |
-| 테두리 색 | - | 옅어짐 |
-| `heading` · `requiredBadge` | 컴포넌트 내장 | 제거 - `FormControl`로 이관 |
-| 세로 정렬 | 항상 `top` | `overflow`일 때만 `top`, 그 외 `center` |
+| Sizes | None | New `size(.large / .medium)` |
+| min-height | - | Increased (the field gets taller) |
+| Border color | - | Lighter |
+| `heading` · `requiredBadge` | Built into the component | Removed - moved to `FormControl` |
+| Vertical alignment | Always `top` | `top` only on `overflow`, `center` otherwise |
 
-세로 정렬은 Dynamic Type을 키웠을 때만 눈에 띕니다. 3.x는 항상 `top` 정렬이라 텍스트 높이가 leading 아이콘·chevron(24pt)을 넘어서면 **아이콘만 위로 치우쳐** 보였습니다. 4.0은 여러 줄로 흐르는 `overflow` 상태에서만 `top`을 쓰고 한 줄일 때는 `center`로 맞춥니다. 선택 목록의 `ListCell`도 `verticalAlign(.center)`가 붙어 라디오·체크박스가 라벨 중앙에 옵니다.
+The alignment change is only noticeable at larger Dynamic Type sizes. Because 3.x always aligned to `top`, once the text grew taller than the leading icon and chevron (24pt), **only the icons appeared pushed up.** 4.0 uses `top` only in the `overflow` state where text wraps onto multiple lines, and centers it on a single line. The `ListCell` in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered against the label.
 
 #### TopNavigation · ModalNavigation
 
-스크롤 시 깔리는 배경 tint 농도가 올라갔습니다.
+The background tint that appears while scrolling got denser.
 
-| 항목 | 3.x·4.0 초기 | 4.0 |
+| Item | 3.x and early 4.0 | 4.0 |
 |---|---|---|
-| 스크롤 배경 tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
+| Scroll background tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
 
-콘텐츠를 스크롤해 내비게이션 배경이 나타나는 구간에서 **배경이 더 진해집니다.** API 변경은 없고 값만 바뀌므로 컴파일 에러가 나지 않습니다. 내비게이션 아래로 콘텐츠가 지나가는 화면을 눈으로 확인해주세요.
+**The background gets darker** in the range where scrolling brings the navigation background in. There is no API change, only a value change, so nothing fails to compile. Please eyeball the screens where content passes under the navigation.
 
 #### SegmentedControl
 
-| 항목 | 3.x | 4.0 |
+| Item | 3.x | 4.0 |
 |---|---|---|
-| variant | `solid` · `outlined` | **`outlined` 제거** |
-| 아이콘 | `icon` 토글 | `leadingIcon` + `iconOnly` |
+| variant | `solid` · `outlined` | **`outlined` removed** |
+| Icon | `icon` toggle | `leadingIcon` + `iconOnly` |
 
 #### Avatar · AvatarGroup
 
-company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다.
+The cornerRadius of the company and academy variants goes up by **2** at every size.
 
 | size | 3.x | 4.0 |
 |---|---|---|
@@ -696,63 +722,63 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | `xlarge` | 14 | 16 |
 | `custom(v)` | `ceil(v * 0.25 / 2) * 2` | `ceil(v * 0.25 / 2) * 2 + 2` |
 
-테두리 기본색이 `lineAlternative`에서 `lineNeutralTertiary`로, 푸시뱃지 inset도 사이즈별로 조정됐습니다.
+The default border color moved from `lineAlternative` to `lineNeutralTertiary`, and the push-badge inset was retuned per size.
 
-#### 그 외
+#### Everything else
 
-`Shadow` · `Typography` · `Opacity` · `Spacing` 정의와 `Toast` · `SnackBar` · `Popup` · `Popover` · `Tooltip` · `Thumbnail` · `Accordion` · `Category` · `ProgressTracker`도 값이 조정됐습니다. 새로 생긴 `Radius` · `Dimension` · `Primitive` · `MaterialBackground`는 추가 API입니다.
+The `Shadow`, `Typography`, `Opacity`, and `Spacing` definitions were adjusted, as were `Toast`, `SnackBar`, `Popup`, `Popover`, `Tooltip`, `Thumbnail`, `Accordion`, `Category`, and `ProgressTracker`. The new `Radius`, `Dimension`, `Primitive`, and `MaterialBackground` are additions.
 
 ---
 
-## 시각 결과가 달라지는 변경
+## Changes that alter what you see
 
-컴파일은 통과하지만 화면이 달라지는 항목입니다. **마이그레이션 후 이 목록의 화면을 눈으로 확인해주세요.**
+These compile fine but change the screen. **After migrating, please look at the screens in this list.**
 
-| 대상 | 무엇이 달라지나 |
+| Target | What changes |
 |---|---|
-| **Button** | 높이 제약이 고정에서 최소값으로 바뀌어 **긴 라벨이 말줄임 대신 줄바꿈**됩니다. 버튼이 세로로 커져 주변 레이아웃이 밀립니다. radius도 사이즈별로 +2 |
-| **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
-| **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다. Dynamic Type을 키웠을 때 leading 아이콘·chevron이 위로 치우치던 것이 중앙정렬로 정정됐습니다 |
-| **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
-| **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 배경이 불투명하게 보이므로 `scrollReachedEnd(_:)`로 직접 넘겨야 합니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐. **대체 액션 버튼 라벨이 파란색에서 검정으로, `cancel` 메인 버튼이 테두리형에서 회색 채움으로 바뀝니다** |
-| **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 회사 로고가 조금 더 둥글어집니다 |
-| **FallbackView** | 상하 최소 여백 160 내장. 밖의 여백·고정 높이를 정리하지 않으면 이중 적용. 설명 타이포가 `body2` → `body2Reading`으로 행간이 늘어납니다 |
-| **입력 컴포넌트** | 라벨이 필드 위로, 에러가 필드 아래로, 카운터가 필드 아래 우측으로 나옵니다. 필드 높이와 폼 전체 높이가 달라집니다 |
-| **글자수 카운터** | `Text("...")` 보간은 상한 1000 이상에서 천단위 구분자가 붙습니다(`5,000`). `Text(verbatim:)`을 쓰세요 |
-| **disabled 표현** | 컴포넌트 자체 `opacity` → `isEnabled` 기반 색 토큰. 불투명도 이중 적용이 없어져 **덜 흐려 보입니다**. ListCell 슬롯에 넣은 커스텀 뷰(회사 로고 등)는 더 이상 흐려지지 않습니다 |
-| **PlayBadge** | 배경에 `coolNeutral40` 28% 틴트 추가. 밝은 썸네일에서 뱃지가 보이게 됩니다 |
-| **Toast · SnackBar** | 배경 불투명도 light 50% → 52%, dark 46% → 43% |
-| **BottomSheet** | 배경 불투명도 80% → 88% |
-| **SearchField** | solid 틴트 2겹, 비활성 outlined 배경이 `surfaceNeutralTertiary`로 |
-| **TopNavigation · ModalNavigation** | 스크롤 배경 tint 농도가 `0.7` → `0.88`로 올라가 **스크롤 시 내비게이션 배경이 더 진해집니다** |
-| **Typography `caption2`** | Dynamic Type 스케일 곡선이 `.caption2` → `.caption`. 기본 크기는 동일하고, 확대 단계에서 `caption2`가 `caption1`보다 커지던 위계 역전이 해소됩니다 |
-| **Avatar · Thumbnail** | 비활성 시 `opacity43` 적용 |
-| **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
-| **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6~8px 레이아웃 이동) |
-| **RedOrange 토큰** | `accentForegroundRedOrange`·`accentBackgroundRedOrange`에 대응 토큰이 없어 무엇으로 옮기든 **색이 바뀝니다.** 이 토큰을 쓰던 자리를 전부 찾아 확인해주세요 |
+| **Button** | The height constraint went from fixed to a minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius is also +2 per size |
+| **Chip · FilterButton** | Typography drops one step and padding shrinks, so they **get smaller.** Wrap points change for chips and filter bars laid out horizontally |
+| **Select** | min-height went up, so **the field gets taller.** The border also gets lighter. At larger Dynamic Type sizes, the leading icon and chevron that used to sit high are now centered |
+| **SegmentedControl** | The `outlined` variant was removed. Places that used outlined become solid |
+| **ActionArea** | The transparent background is now **tied to the scroll-reached-bottom signal.** In containers that do not raise it (`SwiftUI.ScrollView`, `List`, a popup with no scrolling), the gradient and the opaque background stay put, so you have to pass `scrollReachedEnd(true)` yourself. The background only goes transparent when the `extra` slot is empty. The `extra` slot's horizontal padding went 20→24 and bottom 24→20, the divider got lighter, and the caption is heavier at `medium` weight. **The alternative action button's label goes from blue to black, and the `cancel` main button goes from outlined to a grey fill** |
+| **Avatar · AvatarGroup** | company and academy cornerRadius +2 at every size. Company logos get slightly rounder |
+| **FallbackView** | A minimum vertical padding of 160 is built in. Not clearing the outer padding and fixed height double-applies them. The description typography goes from `body2` to `body2Reading`, increasing line spacing |
+| **Input components** | The label moves above the field, errors below it, and the counter below and trailing. Field height and overall form height change |
+| **Character counter** | `Text("...")` interpolation adds a thousands separator at limits of 1000 and up (`5,000`). Use `Text(verbatim:)` |
+| **disabled appearance** | The component's own `opacity` gave way to `isEnabled`-based color tokens. The double-applied opacity is gone, so it **looks less faded**. Custom views placed in ListCell slots (company logos and the like) no longer fade |
+| **PlayBadge** | A 28% `coolNeutral40` tint was added to the background. The badge stays visible on bright thumbnails |
+| **Toast · SnackBar** | Background opacity light 50% → 52%, dark 46% → 43% |
+| **BottomSheet** | Background opacity 80% → 88% |
+| **SearchField** | Two layers of solid tint; the inactive outlined background becomes `surfaceNeutralTertiary` |
+| **TopNavigation · ModalNavigation** | The scroll background tint went from `0.7` to `0.88`, so **the navigation background gets darker while scrolling** |
+| **Typography `caption2`** | The Dynamic Type scale curve moved from `.caption2` to `.caption`. The base size is unchanged, and the inversion where `caption2` grew larger than `caption1` at bigger sizes is resolved |
+| **Avatar · Thumbnail** | `opacity43` is applied when disabled |
+| **Skeleton** | Text placeholder bar widths go from variable to uniform (only while loading) |
+| **IconButton** | Same glyph, larger touch container (about 6\~8px of layout shift) |
+| **RedOrange tokens** | There is no counterpart for `accentForegroundRedOrange` and `accentBackgroundRedOrange`, so **the color changes** no matter what you move to. Find and check every spot that used them |
 
 ---
 
-## 체크리스트
+## Checklist
 
-- [ ] 컬러 시맨틱 토큰 치환 후 `grep -rn "\.label\(Normal\|Alternative\|Assistive\|Strong\|Neutral\|Disable\)\b"`로 잔존 확인
-- [ ] `spacing(.pt` · `opacity(.p` 잔존 확인
-- [ ] `.disable(` 잔존 확인 (`.disabled(`가 맞습니다)
-- [ ] 모든 `TextField`/`TextArea`가 `FormControl`로 감싸졌는지
-- [ ] 글자수 카운터가 `Text(verbatim:)`인지 - 상한 1000 이상 자리 우선
-- [ ] `FallbackView` 사용처의 외부 `padding(.vertical,)` · `frame(height:)` 제거
-- [ ] `.actionArea {}` 슬롯 안에 `if`문이 없는지
-- [ ] Chip 슬롯 아이콘의 크기·색을 사용처에서 지정했는지
-- [ ] 긴 라벨을 쓰는 버튼이 줄바꿈되어 레이아웃을 밀지 않는지
-- [ ] `transparentBackground`를 `.manual`로 쓰던 자리에 `scrollReachedEnd(_:)`를 넘겼는지
-- [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경이 의도대로 보이는지
-- [ ] `alternative` 액션과 `.cancel` variant를 쓰는 ActionArea의 버튼 색이 의도대로 보이는지
-- [ ] [컴포넌트 스펙 리프레시](#8-컴포넌트-스펙-리프레시)·[시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경) 목록의 화면을 실기기/시뮬레이터에서 확인
+- [ ] After replacing color semantic tokens, check for leftovers with `grep -rn "\.label\(Normal\|Alternative\|Assistive\|Strong\|Neutral\|Disable\)\b"`
+- [ ] Check for leftover `spacing(.pt` and `opacity(.p`
+- [ ] Check for leftover `.disable(` (`.disabled(` is the correct one)
+- [ ] Every `TextField`/`TextArea` is wrapped in a `FormControl`
+- [ ] Character counters use `Text(verbatim:)` - prioritize spots with a limit of 1000 or more
+- [ ] Outer `padding(.vertical,)` and `frame(height:)` removed wherever `FallbackView` is used
+- [ ] No `if` statements inside `.actionArea {}` slots
+- [ ] Chip slot icons have their size and color set at the call site
+- [ ] Buttons with long labels now wrap - check that the taller button and the layout it pushes are acceptable
+- [ ] Wherever `transparentBackground` was used with `.manual`, `scrollReachedEnd(_:)` is passed
+- [ ] The ActionArea background looks as intended in popups and sheets with no scroll container
+- [ ] The button colors look as intended in every ActionArea that uses an `alternative` action or the `.cancel` variant
+- [ ] Check the screens listed in [Component spec refresh](#8-component-spec-refresh) and [Changes that alter what you see](#changes-that-alter-what-you-see) on a device or simulator
 
-> 스펙 변경은 Blueprint를 두 버전으로 빌드해 대조하면 가장 빠르게 확인됩니다.
+> The fastest way to verify spec changes is to build Blueprint at both versions and compare.
 >
 > ```bash
-> git worktree add --detach ../baseline v3.15.2   # 올라오기 전 버전
+> git worktree add --detach ../baseline v3.15.2   # the version you are coming from
 > xcodebuild -workspace ../baseline/Montage.xcworkspace -scheme Blueprint \
 >   -configuration Debug -destination 'id=<simulator udid>' \
 >   -derivedDataPath /tmp/dd-before build
@@ -762,4 +788,4 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 
 ## 3.0
 
-3.0 이전 버전에서 올라오는 경우는 [릴리즈 노트](https://github.com/wanteddev/montage-ios/releases)를 참고해주세요.
+If you are coming from a version older than 3.0, see the [release notes](https://github.com/wanteddev/montage-ios/releases).
