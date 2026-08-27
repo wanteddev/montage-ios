@@ -436,20 +436,33 @@ jobs:
           # 그러면 ignore 경로를 거슬러 커밋하지 않는다는 Commit 의 정책이 깨지고,
           # 추적되던 스킬이 ignore 경로로 옮겨져 버전 관리에서 사라진다.
           #
-          # 부모(.agents)만 검사하면 부족하다. 실측한 규칙별 판정은 이렇다.
-          #   .agents        → .agents=ignored  .agents/skills=ignored
-          #   .agents/       → .agents=no       .agents/skills=ignored
-          #   .agents/**     → .agents=no       .agents/skills=ignored
-          #   .agents/skills → .agents=no       .agents/skills=ignored
-          # 4개 중 3개가 부모 검사를 통과하고 목적지만 걸린다. 그래서 실제 목적지까지
-          # 함께 본다(`.agents/` 는 디렉토리 전용 패턴이라, mkdir 전에는 부모 검사가
-          # 디렉토리 여부를 알 수 없어 통과하는 것이기도 하다).
-          for p in .agents .agents/skills; do
-            if git check-ignore -q "$p"; then
-              echo "::warning::${p} 가 .gitignore 대상이라 마이그레이션을 건너뜁니다 — .gemini/skills 를 그대로 둡니다. 이동이 필요하면 repo 의 ignore 규칙을 먼저 조정하세요."
-              exit 0
-            fi
-          done
+          # 디렉토리 경로만 검사하면 부족하다. ignore 규칙은 어느 깊이에서도 걸릴 수
+          # 있어서, 검사할 경로 레벨을 추측하는 방식은 계속 새는 구멍이 남는다.
+          # 실측한 판정(.agents / .agents/skills / .agents/skills/a.md 순):
+          #   .agents          ignored  ignored  ignored
+          #   .agents/         no       ignored  ignored
+          #   .agents/**       no       ignored  ignored
+          #   .agents/skills   no       ignored  ignored
+          #   .agents/skills/* no       no       ignored   ← 디렉토리 검사 2개 다 통과
+          #   .agents/**/*.md  no       no       ignored
+          #   *.md             no       no       ignored   ← 전역 규칙도 마찬가지
+          # 그래서 레벨을 고르지 않고, 실제로 옮겨질 파일의 목적지 경로를 전부 만들어
+          # `git check-ignore --stdin` 에 한 번에 넘긴다. 판정자를 git 자신으로 두면
+          # 규칙 형태가 어떻든 결과가 어긋나지 않는다.
+          DEST_LIST="$RUNNER_TEMP/agents-dest-paths.txt"
+          {
+            printf '%s\n' .agents .agents/skills
+            find .gemini/skills \( -type f -o -type l \) -print \
+              | sed 's#^\.gemini/skills#.agents/skills#'
+          } > "$DEST_LIST"
+          # 매치가 0건이면 exit 1 이라 pipefail + set -e 조합에서 스텝이 죽는다.
+          IGNORED=$(git check-ignore --stdin < "$DEST_LIST" || true)
+          if [ -n "$IGNORED" ]; then
+            N=$(printf '%s\n' "$IGNORED" | awk 'END{print NR}')
+            echo "::warning::목적지 경로 ${N}건이 .gitignore 대상이라 마이그레이션을 건너뜁니다 — .gemini/skills 를 그대로 둡니다. 이동이 필요하면 repo 의 ignore 규칙을 먼저 조정하세요."
+            printf '%s\n' "$IGNORED" | head -5 | sed 's/^/  ignored: /'
+            exit 0
+          fi
 
           mkdir -p .agents
           # 추적 중이면 git mv 로 이력을 보존하고(양쪽 변경이 곧바로 staged 된다),
