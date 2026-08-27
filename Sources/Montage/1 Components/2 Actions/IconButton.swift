@@ -26,6 +26,10 @@ import SwiftUI
 /// // 비활성화
 /// IconButton(icon: .bell)
 ///     .disabled(true)
+///
+/// // 인터랙션 레이어 대신 아이콘 색으로 press 피드백
+/// IconButton(icon: .search)
+///     .interactionEffect(.tint)
 /// ```
 ///
 /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
@@ -52,7 +56,7 @@ public struct IconButton: View {
     ) {
         self.variant = variant
         self.icon = icon
-        self.disableInteraction = false
+        self.interactionEffect = .normal
         self.showPushBadge = false
         self.extraPadding = .zero
         self.iconColor = nil
@@ -64,7 +68,7 @@ public struct IconButton: View {
 
     // MARK: - Modifiers
 
-    private var disableInteraction: Bool
+    private var interactionEffect: IconButton.InteractionEffect
     private var showPushBadge: Bool
     private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
@@ -72,16 +76,26 @@ public struct IconButton: View {
     private var borderColor: SwiftUI.Color?
     private var customInteractionColor: Color.Semantic?
 
-    /// hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
-    /// - Parameter value: 인터랙션 효과 차단 여부
+    /// press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.normal`).
+    ///
+    /// 세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다.
+    ///
+    /// > `.tint`는 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.normal`로 처리됩니다.
+    /// - Parameter effect: 인터랙션 피드백 방식
     /// - Returns: 수정된 IconButton 인스턴스
-    public func disableInteraction(_ value: Bool = true) -> Self {
+    public func interactionEffect(_ effect: IconButton.InteractionEffect) -> Self {
         var copy = self
-        copy.disableInteraction = value
+        copy.interactionEffect = {
+            guard case .tint = effect else { return effect }
+            guard case .normal = self.variant else { return .normal }
+            return .tint
+        }()
         return copy
     }
 
-    /// hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
+    /// press 시 인터랙션 레이어에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
+    ///
+    /// > `interactionEffect(_:)`가 `.normal`일 때만 의미가 있습니다.
     /// - Parameter color: 인터랙션 색상(semantic 토큰)
     /// - Returns: 수정된 IconButton 인스턴스
     public func interactionColor(_ color: Color.Semantic) -> Self {
@@ -159,9 +173,25 @@ public struct IconButton: View {
 
     private var isDisabled: Bool { isEnabled == false }
 
+    /// 아이콘 색으로 press 피드백을 주는 중인지 여부.
+    private var isTinted: Bool {
+        guard case .tint = interactionEffect else { return false }
+        return isPressed && !isDisabled
+    }
+
+    /// 인터랙션 레이어의 상태. `.tint`·`.none`에서는 항상 `.normal`이라 레이어가 보이지 않지만,
+    /// 레이어 자체는 터치 영역을 잡아주므로 걷어내지 않는다.
+    private var interactionState: Interaction.State {
+        guard case .normal = interactionEffect else { return .normal }
+        return (isPressed && !isDisabled) ? .pressed : .normal
+    }
+
     private var _iconColor: SwiftUI.Color {
         if isDisabled {
             SwiftUI.Color(uiColor: variant.disabledIconColor)
+        } else if isTinted {
+            // 아이콘 색을 커스텀해도 press 색은 이 값으로 고정된다.
+            SwiftUI.Color.semantic(.foregroundNeutralQuaternary)
         } else {
             if let iconColor {
                 iconColor
@@ -209,7 +239,7 @@ public struct IconButton: View {
             .padding(totalPadding)
             .background {
                 Interaction(
-                    state: (isPressed && !isDisabled && !disableInteraction) ? .pressed : .normal,
+                    state: interactionState,
                     variant: variant.interactionVariant,
                     color: customInteractionColor ?? variant.interactionColor
                 )
@@ -271,6 +301,20 @@ extension IconButton {
         /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
         /// - Parameter size: 아이콘 크기 (`Size`)
         case solid(size: Size)
+    }
+
+    /// press 피드백 방식을 결정하는 열거형입니다.
+    ///
+    /// 어떤 값을 쓰든 터치 영역은 같습니다. 피드백의 시각 표현만 달라집니다.
+    public enum InteractionEffect {
+        /// 아이콘 뒤에 인터랙션 레이어를 깝니다. 기본값이며 3.x까지의 동작입니다.
+        case normal
+        /// 레이어 대신 아이콘 색을 `foregroundNeutralQuaternary`로 바꿉니다.
+        /// 레이어 형태가 어색한 자리(TopNavigation 등)에 씁니다.
+        /// > `normal` variant에서만 동작합니다. `iconColor(_:)`로 아이콘 색을 지정해도 press 색은 바뀌지 않습니다.
+        case tint
+        /// 피드백이 없습니다. 탭 핸들러는 그대로 동작합니다.
+        case none
     }
 
     /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
