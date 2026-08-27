@@ -455,14 +455,30 @@ jobs:
             find .gemini/skills \( -type f -o -type l \) -print \
               | sed 's#^\.gemini/skills#.agents/skills#'
           } > "$DEST_LIST"
-          # 매치가 0건이면 exit 1 이라 pipefail + set -e 조합에서 스텝이 죽는다.
-          IGNORED=$(git check-ignore --stdin < "$DEST_LIST" || true)
-          if [ -n "$IGNORED" ]; then
-            N=$(printf '%s\n' "$IGNORED" | awk 'END{print NR}')
-            echo "::warning::목적지 경로 ${N}건이 .gitignore 대상이라 마이그레이션을 건너뜁니다 — .gemini/skills 를 그대로 둡니다. 이동이 필요하면 repo 의 ignore 규칙을 먼저 조정하세요."
-            printf '%s\n' "$IGNORED" | head -5 | sed 's/^/  ignored: /'
-            exit 0
+          # 종료 코드를 세 갈래로 구분한다(실측): 0=무시된 경로 있음, 1=없음, 128=치명적
+          # 오류. `|| true` 로 1 과 128 을 함께 삼키면 안 된다 — 128 은 출력이 비어서
+          # '무시된 경로 없음'과 구분되지 않고, 그대로 git mv 가 실행된다. 판정 불가를
+          # '없음'으로 읽는 것이 정확히 이 가드가 막으려던 실패다.
+          # 128 에서 스텝을 죽이는 이유: Commit 의 add 루프도 같은 `git check-ignore` 로
+          # ignore 정책을 집행한다. 이 명령이 고장난 repo 에서는 뒤쪽 판정도 못 믿으므로
+          # 조용히 넘기지 않고 드러낸다.
+          if IGNORED=$(git check-ignore --stdin < "$DEST_LIST"); then
+            RC=0
+          else
+            RC=$?
           fi
+          case "$RC" in
+            0)
+              N=$(printf '%s\n' "$IGNORED" | awk 'END{print NR}')
+              echo "::warning::목적지 경로 ${N}건이 .gitignore 대상이라 마이그레이션을 건너뜁니다 — .gemini/skills 를 그대로 둡니다. 이동이 필요하면 repo 의 ignore 규칙을 먼저 조정하세요."
+              printf '%s\n' "$IGNORED" | head -5 | sed 's/^/  ignored: /'
+              exit 0 ;;
+            1)
+              : ;;   # 무시된 경로 없음 — 이동을 진행한다
+            *)
+              echo "::error::git check-ignore 가 exit ${RC} 로 실패했습니다 — ignore 여부를 판정할 수 없어 중단합니다(Commit 의 ignore 정책도 같은 명령에 의존합니다)."
+              exit 1 ;;
+          esac
 
           mkdir -p .agents
           # 추적 중이면 git mv 로 이력을 보존하고(양쪽 변경이 곧바로 staged 된다),
