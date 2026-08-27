@@ -360,7 +360,15 @@ The `actionArea` slot closure is **not** annotated with `@ViewBuilder`. An `if` 
 .actionArea { ActionArea(variant: isEditing ? a : b) }
 ```
 
-The transparent-background API is gone. The background is always opaque, and only the **top gradient** turns on and off as a signal that there is content hidden below (a 0.5 second fade).
+The API for controlling background transparency directly is gone. In 4.0 the background and the top gradient are both driven by a single signal - whether the scroll has reached the bottom (`scrollReachedEnd`).
+
+| `scrollReachedEnd` | `extra` slot | Top gradient | Background |
+|---|---|---|---|
+| not passed, or `false` | either | shown | opaque |
+| `true` | empty | hidden | **transparent** |
+| `true` | filled | hidden | opaque |
+
+The gradient means "there is content hidden below", and it fades in and out over 0.5 seconds.
 
 | 3.x | 4.0 |
 |---|---|
@@ -548,6 +556,22 @@ The size of the `normal` variant changed from `Int` to a `NormalSize` enum.
 
 The glyph size is unchanged and **only the touch container grows**. Since this variant has no background or border, the effect is roughly a trailing icon shifting about 6px or a row growing about 8px taller.
 
+For any size other than those four, use `NormalSize.custom(size:)` - but **what `size` means changed from the icon to the container.** In 3.x, `.normal(size: n)` made the container the same `n` as the icon. In 4.0, `.custom(size: n)` takes `n` as one side of the container and derives the icon from it: the dimension token nearest to two thirds of the container. The container is clamped to `[24, 64]`.
+
+```swift
+// 3.x - n is the icon size
+IconButton(variant: .normal(size: 22), icon: .search)
+
+// 4.0 - n is the container size, and the icon is derived from it
+IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // icon 20
+```
+
+Passing the 3.x value straight through shrinks the icon: `.custom(size: 22)` clamps the container to 24 and gives you a 16 icon. **Outside the four standard sizes there is no mechanical replacement** - pick the container that yields the icon size you want.
+
+| Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
+|---|---|---|---|---|---|---|---|---|
+| Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
+
 #### Skeleton
 
 It takes a typography variant instead of an array of variable widths. Line height and line count are derived from the variant.
@@ -712,7 +736,7 @@ These compile fine but change the screen. **After migrating, please look at the 
 | **Chip · FilterButton** | Typography drops one step and padding shrinks, so they **get smaller.** Wrap points change for chips and filter bars laid out horizontally |
 | **Select** | min-height went up, so **the field gets taller.** The border also gets lighter. At larger Dynamic Type sizes, the leading icon and chevron that used to sit high are now centered |
 | **SegmentedControl** | The `outlined` variant was removed. Places that used outlined become solid |
-| **ActionArea** | The transparent background is now **tied to the scroll-reached-bottom signal.** In containers that do not raise it (`SwiftUI.ScrollView`, `List`, a popup with no scrolling), the background looks opaque, so you have to pass `scrollReachedEnd(_:)` yourself. The `extra` slot's horizontal padding went 20→24 and bottom 24→20, the divider got lighter, and the caption is heavier at `medium` weight |
+| **ActionArea** | The transparent background is now **tied to the scroll-reached-bottom signal.** In containers that do not raise it (`SwiftUI.ScrollView`, `List`, a popup with no scrolling), the gradient and the opaque background stay put, so you have to pass `scrollReachedEnd(true)` yourself. The background only goes transparent when the `extra` slot is empty. The `extra` slot's horizontal padding went 20→24 and bottom 24→20, the divider got lighter, and the caption is heavier at `medium` weight |
 | **Avatar · AvatarGroup** | company and academy cornerRadius +2 at every size. Company logos get slightly rounder |
 | **FallbackView** | A minimum vertical padding of 160 is built in. Not clearing the outer padding and fixed height double-applies them. The description typography goes from `body2` to `body2Reading`, increasing line spacing |
 | **Input components** | The label moves above the field, errors below it, and the counter below and trailing. Field height and overall form height change |
@@ -741,7 +765,7 @@ These compile fine but change the screen. **After migrating, please look at the 
 - [ ] Outer `padding(.vertical,)` and `frame(height:)` removed wherever `FallbackView` is used
 - [ ] No `if` statements inside `.actionArea {}` slots
 - [ ] Chip slot icons have their size and color set at the call site
-- [ ] Buttons with long labels do not wrap and push the layout
+- [ ] Buttons with long labels now wrap - check that the taller button and the layout it pushes are acceptable
 - [ ] Wherever `transparentBackground` was used with `.manual`, `scrollReachedEnd(_:)` is passed
 - [ ] The ActionArea background looks as intended in popups and sheets with no scroll container
 - [ ] Check the screens listed in [Component spec refresh](#8-component-spec-refresh) and [Changes that alter what you see](#changes-that-alter-what-you-see) on a device or simulator

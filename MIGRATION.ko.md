@@ -360,7 +360,15 @@ Montage.TextField(text: $email)
 .actionArea { ActionArea(variant: isEditing ? a : b) }
 ```
 
-투명 배경 API가 없어졌습니다. 배경은 항상 불투명하고, **상단 그라데이션만** "아래에 가려진 콘텐츠가 있다"는 신호로 켜졌다 꺼집니다(0.5초 페이드).
+투명 배경을 직접 제어하던 API가 없어졌습니다. 4.0에서는 배경과 상단 그라데이션이 스크롤 하단 도달 신호(`scrollReachedEnd`) 하나로 함께 결정됩니다.
+
+| `scrollReachedEnd` | `extra` 슬롯 | 상단 그라데이션 | 배경 |
+|---|---|---|---|
+| 넘기지 않음 또는 `false` | 무관 | 표시 | 불투명 |
+| `true` | 비어 있음 | 숨김 | **투명** |
+| `true` | 있음 | 숨김 | 불투명 |
+
+그라데이션은 "아래에 가려진 콘텐츠가 있다"는 신호이고 0.5초에 걸쳐 켜졌다 꺼집니다.
 
 | 3.x | 4.0 |
 |---|---|
@@ -548,6 +556,22 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 
 글리프 크기는 그대로고 **터치 컨테이너만 커집니다**. 배경·테두리 없는 variant라 트레일링 아이콘이 약 6px 움직이거나 행 높이가 약 8px 늘어나는 정도입니다.
 
+위 네 값 외의 크기를 쓰던 자리는 `NormalSize.custom(size:)`로 옮기는데, **`size`의 의미가 아이콘 크기에서 컨테이너 크기로 바뀝니다.** 3.x의 `.normal(size: n)`은 컨테이너가 아이콘과 같은 `n`이었지만, 4.0의 `.custom(size: n)`은 `n`이 컨테이너 한 변이고 아이콘은 컨테이너의 2/3에 가장 가까운 dimension 토큰으로 도출됩니다. 컨테이너는 `[24, 64]`로 clamp됩니다.
+
+```swift
+// 3.x - n은 아이콘 크기
+IconButton(variant: .normal(size: 22), icon: .search)
+
+// 4.0 - n은 컨테이너 크기, 아이콘은 여기서 도출된다
+IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // 아이콘 20
+```
+
+3.x 값을 그대로 넣으면 아이콘이 작아집니다. `.custom(size: 22)`는 컨테이너가 24로 clamp되어 아이콘이 16이 됩니다. **표준 4개 값 외에는 기계적 대응이 없습니다.** 원하는 아이콘 크기가 나오는 컨테이너 값을 직접 골라야 합니다.
+
+| 컨테이너 | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
+|---|---|---|---|---|---|---|---|---|
+| 아이콘 | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
+
 #### Skeleton
 
 가변 폭 배열 대신 타이포그래피 변형을 받습니다. 줄 높이·줄 수를 변형에서 자동 계산합니다.
@@ -712,7 +736,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
 | **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다. Dynamic Type을 키웠을 때 leading 아이콘·chevron이 위로 치우치던 것이 중앙정렬로 정정됐습니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
-| **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 배경이 불투명하게 보이므로 `scrollReachedEnd(_:)`로 직접 넘겨야 합니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
+| **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 그라데이션과 불투명 배경이 그대로 남으므로 `scrollReachedEnd(true)`를 직접 넘겨야 합니다. 배경이 투명해지는 건 `extra` 슬롯이 비어 있을 때뿐입니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐 |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 회사 로고가 조금 더 둥글어집니다 |
 | **FallbackView** | 상하 최소 여백 160 내장. 밖의 여백·고정 높이를 정리하지 않으면 이중 적용. 설명 타이포가 `body2` → `body2Reading`으로 행간이 늘어납니다 |
 | **입력 컴포넌트** | 라벨이 필드 위로, 에러가 필드 아래로, 카운터가 필드 아래 우측으로 나옵니다. 필드 높이와 폼 전체 높이가 달라집니다 |
@@ -741,7 +765,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 - [ ] `FallbackView` 사용처의 외부 `padding(.vertical,)` · `frame(height:)` 제거
 - [ ] `.actionArea {}` 슬롯 안에 `if`문이 없는지
 - [ ] Chip 슬롯 아이콘의 크기·색을 사용처에서 지정했는지
-- [ ] 긴 라벨을 쓰는 버튼이 줄바꿈되어 레이아웃을 밀지 않는지
+- [ ] 긴 라벨을 쓰는 버튼이 줄바꿈되면서 높아진 만큼 주변 레이아웃이 밀려도 괜찮은지
 - [ ] `transparentBackground`를 `.manual`로 쓰던 자리에 `scrollReachedEnd(_:)`를 넘겼는지
 - [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경이 의도대로 보이는지
 - [ ] [컴포넌트 스펙 리프레시](#8-컴포넌트-스펙-리프레시)·[시각 결과가 달라지는 변경](#시각-결과가-달라지는-변경) 목록의 화면을 실기기/시뮬레이터에서 확인
