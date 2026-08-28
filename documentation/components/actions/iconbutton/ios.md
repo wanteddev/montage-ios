@@ -136,7 +136,7 @@ IconButton(icon: .search)
 <summary>``func interactionColor(Color.Semantic) -> IconButton``</summary>
 
 
-press 시 인터랙션 레이어에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
+press 피드백에 사용할 색상을 설정합니다.
 
 - **Parameters**
 
@@ -148,9 +148,11 @@ press 시 인터랙션 레이어에 사용할 색상을 설정합니다(기본�
 
   수정된 IconButton 인스턴스
 - **Discussion**
-  > **Note**
-  >
-  > `interactionEffect(_:)`가 `.normal`일 때만 의미가 있습니다.
+
+  `interactionEffect(_:)` 값에 따라 적용 대상이 다릅니다.
+  - `.normal`: 아이콘 뒤 인터랙션 레이어에 적용됩니다. 지정하지 않으면 `.foregroundNeutralPrimary`
+  - `.tint`: 아이콘 색에 적용됩니다. 지정하지 않으면 `.foregroundNeutralQuaternary`
+  - `.none`: 피드백이 없어 적용되지 않습니다
 
 </details>
 <details>
@@ -171,7 +173,7 @@ press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.norma
   수정된 IconButton 인스턴스
 - **Discussion**
 
-  세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다.
+  세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다. 피드백 색상은 `.normal`·`.tint` 모두 `interactionColor(_:)`로 바꿀 수 있습니다.
   > **Note**
   >
   > `.tint`는 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.normal`로 처리됩니다.
@@ -258,7 +260,7 @@ press 피드백 방식을 결정하는 열거형입니다.
 - **Discussion**
   > **Note**
   >
-  > `normal` variant에서만 동작합니다. `iconColor(_:)`로 아이콘 색을 지정해도 press 색은 바뀌지 않습니다.
+  > `normal` variant에서만 동작합니다. press 색은 `interactionColor(_:)`로 바꾸며, `iconColor(_:)`로 지정한 색은 press 상태에 영향을 주지 않습니다.
 
 </details>
 
