@@ -79,6 +79,7 @@ public struct IconButton: View {
     /// press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.normal`).
     ///
     /// 세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다.
+    /// 피드백 색상은 `.normal`·`.tint` 모두 `interactionColor(_:)`로 바꿀 수 있습니다.
     ///
     /// > `.tint`는 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.normal`로 처리됩니다.
     /// - Parameter effect: 인터랙션 피드백 방식
@@ -93,9 +94,12 @@ public struct IconButton: View {
         return copy
     }
 
-    /// press 시 인터랙션 레이어에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
+    /// press 피드백에 사용할 색상을 설정합니다.
     ///
-    /// > `interactionEffect(_:)`가 `.normal`일 때만 의미가 있습니다.
+    /// `interactionEffect(_:)` 값에 따라 적용 대상이 다릅니다.
+    /// - `.normal`: 아이콘 뒤 인터랙션 레이어에 적용됩니다. 지정하지 않으면 `.foregroundNeutralPrimary`
+    /// - `.tint`: 아이콘 색에 적용됩니다. 지정하지 않으면 `.foregroundNeutralQuaternary`
+    /// - `.none`: 피드백이 없어 적용되지 않습니다
     /// - Parameter color: 인터랙션 색상(semantic 토큰)
     /// - Returns: 수정된 IconButton 인스턴스
     public func interactionColor(_ color: Color.Semantic) -> Self {
@@ -190,8 +194,8 @@ public struct IconButton: View {
         if isDisabled {
             SwiftUI.Color(uiColor: variant.disabledIconColor)
         } else if isTinted {
-            // 아이콘 색을 커스텀해도 press 색은 이 값으로 고정된다.
-            SwiftUI.Color.semantic(.foregroundNeutralQuaternary)
+            // iconColor(_:)로 지정한 색이 아니라 인터랙션 색을 쓴다.
+            SwiftUI.Color.semantic(customInteractionColor ?? .foregroundNeutralQuaternary)
         } else {
             if let iconColor {
                 iconColor
@@ -311,7 +315,8 @@ extension IconButton {
         case normal
         /// 레이어 대신 아이콘 색을 `foregroundNeutralQuaternary`로 바꿉니다.
         /// 레이어 형태가 어색한 자리(TopNavigation 등)에 씁니다.
-        /// > `normal` variant에서만 동작합니다. `iconColor(_:)`로 아이콘 색을 지정해도 press 색은 바뀌지 않습니다.
+        /// > `normal` variant에서만 동작합니다.
+        /// > press 색은 `interactionColor(_:)`로 바꾸며, `iconColor(_:)`로 지정한 색은 press 상태에 영향을 주지 않습니다.
         case tint
         /// 피드백이 없습니다. 탭 핸들러는 그대로 동작합니다.
         case none
