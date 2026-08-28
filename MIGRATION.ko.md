@@ -18,12 +18,14 @@
 
 | 순서 | 절 | 성격 | 하는 일 |
 |---|---|---|---|
-| 1 | [이름이 바뀐 것](#1-이름이-바뀐-것) | 기계적 치환 | `sed`로 끝납니다 |
+| 1 | [이름이 바뀐 것](#1-이름이-바뀐-것) | 기계적 치환 | 대부분 `sed`로 끝납니다 |
 | 2 | [없어져서 다시 짜야 하는 것](#2-없어져서-다시-짜야-하는-것) | 구조 재작성 | 대체 API로 옮깁니다 |
 | 3 | [대응이 없는 것](#3-대응이-없는-것) | 직접 선택 | 사용처가 판단해야 합니다 |
 | 4 | [화면이 달라지는 것](#4-화면이-달라지는-것) | 화면 확인 | **컴파일 에러가 나지 않습니다** |
 
 **4번을 건너뛰지 마세요.** API는 그대로인데 값만 바뀐 항목이라 빌드가 통과해도 화면이 달라집니다. 치환이 끝났다고 마이그레이션이 끝난 게 아닙니다.
+
+1번도 전부 `sed`로 끝나지는 않습니다. 컬러 토큰 12건은 이름과 함께 색값까지 바뀌고([값이 함께 바뀌는 토큰](#값이-함께-바뀌는-토큰)), `\b` 치환은 Swift 문법을 모르기 때문에 주석이나 문자열 리터럴에 들어간 같은 이름도 함께 바꿉니다. 치환 뒤 diff를 한 번 훑어주세요.
 
 ---
 
@@ -1012,7 +1014,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Typography `caption2`** | Dynamic Type 스케일 곡선이 `.caption2` → `.caption`. 기본 크기는 그대로고, 확대했을 때 `caption2`가 `caption1`보다 커지던 문제가 없어집니다 |
 | **Thumbnail** | 비활성 시 `opacity43` 적용 |
 | **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
-| **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 68pt 레이아웃 이동) |
+| **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6\~8pt 레이아웃 이동) |
 
 ---
 
@@ -1088,7 +1090,7 @@ FormControlGroup {
 | `Chip` | `borderColor(_:)` |
 | `Category` | `itemDisabled(_:)` |
 | `PushBadge` | `outlineBorder(_:color:)` |
-| `ListCell` | `verticalPadding(.custom(_:))`, 슬롯 4개(`leading` · `labelTrailing` · `trailing` · `extra`) |
+| `ListCell` | `verticalPadding(.custom(_:))`, 슬롯 모디파이어 4개(`leadingResources(_:)` · `labelTrailingResources(_:)` · `trailingResources(_:)` · `extraResources(_:)`) |
 | `Select` | `size(.large/.medium)` |
 | `TextField` · `TextArea` | `autocorrectionDisabled(_:)`, `onTextChange(_:)`, `size(_:)` |
 | `Shadow` | `shadow(_:) -> some ShapeStyle` |
@@ -1134,11 +1136,19 @@ FormControlGroup {
 ```bash
 UDID=... # xcrun simctl list devices
 
+# 올라오기 전 버전
 git worktree add --detach ../baseline v3.15.2
 xcodebuild -workspace ../baseline/Montage.xcworkspace -scheme Blueprint \
   -configuration Debug -destination "id=$UDID" \
   -derivedDataPath /tmp/dd-before build
+
+# 올라갈 버전
+xcodebuild -workspace Montage.xcworkspace -scheme Blueprint \
+  -configuration Debug -destination "id=$UDID" \
+  -derivedDataPath /tmp/dd-after build
 ```
+
+두 빌드를 같은 시뮬레이터에 번갈아 설치해 [4. 화면이 달라지는 것](#4-화면이-달라지는-것) 목록의 컴포넌트를 나란히 놓고 봅니다. 목록에 없는데 달라 보이는 게 있으면 문서가 빠뜨린 것이니 알려주세요.
 
 ---
 

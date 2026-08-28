@@ -18,12 +18,14 @@ Breaking changes fall into four groups. Working top to bottom clears compile err
 
 | Order | Section | Kind | What you do |
 |---|---|---|---|
-| 1 | [Renamed](#1-renamed) | Mechanical | `sed` handles it |
+| 1 | [Renamed](#1-renamed) | Mechanical | mostly `sed` |
 | 2 | [Removed, needs rework](#2-removed-needs-rework) | Restructure | Move to the replacement API |
 | 3 | [No replacement](#3-no-replacement) | Judgement call | You have to choose |
 | 4 | [Visual changes](#4-visual-changes) | Eyeball it | **No compile errors** |
 
 **Do not skip section 4.** Those entries keep the same API and change only values, so the build passes while the screen changes. A clean build does not mean the migration is done.
+
+Section 1 is not entirely `sed` either. Twelve color tokens change their value along with their name ([Tokens whose value also changes](#tokens-whose-value-also-changes)), and a `\b` substitution is not Swift-syntax aware, so it also rewrites the same name inside comments and string literals. Skim the diff once you are done substituting.
 
 ---
 
@@ -1088,7 +1090,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 | `Chip` | `borderColor(_:)` |
 | `Category` | `itemDisabled(_:)` |
 | `PushBadge` | `outlineBorder(_:color:)` |
-| `ListCell` | `verticalPadding(.custom(_:))`, four slots (`leading`, `labelTrailing`, `trailing`, `extra`) |
+| `ListCell` | `verticalPadding(.custom(_:))`, four slot modifiers (`leadingResources(_:)`, `labelTrailingResources(_:)`, `trailingResources(_:)`, `extraResources(_:)`) |
 | `Select` | `size(.large/.medium)` |
 | `TextField`, `TextArea` | `autocorrectionDisabled(_:)`, `onTextChange(_:)`, `size(_:)` |
 | `Shadow` | `shadow(_:) -> some ShapeStyle` |
@@ -1134,11 +1136,19 @@ The fastest way to review spec changes is to build Blueprint at both versions an
 ```bash
 UDID=... # xcrun simctl list devices
 
+# the version you are coming from
 git worktree add --detach ../baseline v3.15.2
 xcodebuild -workspace ../baseline/Montage.xcworkspace -scheme Blueprint \
   -configuration Debug -destination "id=$UDID" \
   -derivedDataPath /tmp/dd-before build
+
+# the version you are moving to
+xcodebuild -workspace Montage.xcworkspace -scheme Blueprint \
+  -configuration Debug -destination "id=$UDID" \
+  -derivedDataPath /tmp/dd-after build
 ```
+
+Install both on the same simulator, switch between them, and put the components from [4. Visual changes](#4-visual-changes) side by side. If something looks different that is not on that list, the document missed it - please let us know.
 
 ---
 
