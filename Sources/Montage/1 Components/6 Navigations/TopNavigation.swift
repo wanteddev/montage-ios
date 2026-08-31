@@ -504,6 +504,7 @@ extension TopNavigation {
                         IconButton(icon: i) {
                             action()
                         }
+                        .interactionEffect(.tint)
                         .frame(width: 24, height: 24)
                     case let .text(t, action):
                         TrailingTextButton(
@@ -603,6 +604,7 @@ extension TopNavigation {
             IconButton(icon: icon) {
                 action()
             }
+            .interactionEffect(.tint)
             .showPushBadge(showPushBadge)
             .frame(width: 24, height: 24)
         }
