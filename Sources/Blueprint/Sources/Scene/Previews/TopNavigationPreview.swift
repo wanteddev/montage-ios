@@ -163,10 +163,9 @@ struct TopNavigationPreview: View {
                         var mutated = $0
                         if leading {
                             mutated = mutated.leadingContent {
-                                IconButton(icon: .chevronLeft) {
-                                    presentationMode.wrappedValue.dismiss()
-                                }
-                                .frame(width: 24, height: 24)
+                                TopNavigation.LeadingButton(
+                                    .back(action: { presentationMode.wrappedValue.dismiss() })
+                                )
                             }
                         }
                         return mutated
