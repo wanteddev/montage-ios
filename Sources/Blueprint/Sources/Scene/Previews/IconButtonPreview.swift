@@ -102,8 +102,17 @@ struct IconButtonPreview: View {
         isNormal ? [.normal, .tint, .none] : [.normal, .none]
     }
 
+    /// variant를 바꿔 선택지가 줄면 저장된 인덱스가 범위를 벗어난다.
+    /// 세그먼트가 선택 항목을 못 찾고 인디케이터를 컨트롤 밖에 그리므로 읽을 때 정규화한다.
+    private var interactionEffectSelection: Binding<Int> {
+        Binding(
+            get: { min(interactionEffectIndex, interactionEffects.count - 1) },
+            set: { interactionEffectIndex = $0 }
+        )
+    }
+
     private var resolvedInteractionEffect: IconButton.InteractionEffect {
-        interactionEffects[min(interactionEffectIndex, interactionEffects.count - 1)]
+        interactionEffects[interactionEffectSelection.wrappedValue]
     }
     
     var body: some View {
@@ -168,7 +177,7 @@ struct IconButtonPreview: View {
             ToggleOptionRow("disable", isOn: $disable)
             SegmentedIndexRow(
                 "interactionEffect",
-                index: $interactionEffectIndex,
+                index: interactionEffectSelection,
                 labels: interactionEffects.map(\.description)
             )
             if isNormal {
