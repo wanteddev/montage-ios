@@ -97,9 +97,9 @@ struct IconButtonPreview: View {
         return false
     }
 
-    /// tint는 normal variant에서만 동작하므로 다른 variant에서는 선택지에서 뺀다.
+    /// dim은 normal variant에서만 동작하므로 다른 variant에서는 선택지에서 뺀다.
     private var interactionEffects: [IconButton.InteractionEffect] {
-        isNormal ? [.normal, .tint, .none] : [.normal, .none]
+        isNormal ? [.highlight, .dim, .none] : [.highlight, .none]
     }
 
     /// variant를 바꿔 선택지가 줄면 저장된 인덱스가 범위를 벗어난다.

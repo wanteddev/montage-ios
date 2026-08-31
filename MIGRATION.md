@@ -960,11 +960,11 @@ The button colors are an API-compatible change, so nothing fails to compile. The
 | Item | 3.x | 4.0 |
 |---|---|---|
 | scroll background tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
-| icon button press | A grey rectangular layer behind the icon | Only the icon shifts to `foregroundNeutralQuaternary` |
+| icon button press | A grey rectangular layer behind the icon | The icon drops to 22% opacity |
 
 **The navigation background gets darker** in the range where scrolling reveals it.
 
-The `IconButton` container (36pt) is larger than the navigation bar's `.frame(24)`, so the press layer visibly spilled outside the button. 4.0 gives the feedback through the icon color instead. The touch area is unchanged. This applies to both leading (`back`, `icon`) and trailing icon buttons; text buttons are unaffected.
+The `IconButton` container (36pt) is larger than the navigation bar's `.frame(24)`, so the press layer visibly spilled outside the button. 4.0 fades the icon instead (`interactionEffect(.dim)`). The touch area is unchanged. This applies to both leading (`back`, `icon`) and trailing icon buttons; text buttons are unaffected.
 
 #### Avatar and AvatarGroup
 

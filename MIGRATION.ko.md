@@ -960,11 +960,11 @@ FilterButton은 radius가 커지고 패딩이 줄어 더 둥글고 작아집니�
 | 항목 | 3.x | 4.0 |
 |---|---|---|
 | 스크롤 배경 tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
-| 아이콘 버튼 press | 아이콘 뒤 회색 사각 레이어 | 아이콘 색만 `foregroundNeutralQuaternary`로 |
+| 아이콘 버튼 press | 아이콘 뒤 회색 사각 레이어 | 아이콘 불투명도 22% |
 
 콘텐츠를 스크롤해 내비게이션 배경이 나타나는 구간에서 **배경이 더 진해집니다.**
 
-`IconButton`의 컨테이너(36pt)가 내비게이션 바의 `.frame(24)`보다 커서 press 레이어가 버튼 밖으로 삐져나와 보였습니다. 4.0은 레이어 대신 아이콘 색으로 피드백합니다. 터치 영역은 그대로입니다. leading(`back`·`icon`)과 trailing 아이콘 버튼에 모두 적용되며, 텍스트 버튼은 해당 없습니다.
+`IconButton`의 컨테이너(36pt)가 내비게이션 바의 `.frame(24)`보다 커서 press 레이어가 버튼 밖으로 삐져나와 보였습니다. 4.0은 레이어 대신 아이콘 불투명도를 낮춰(`interactionEffect(.dim)`) 피드백합니다. 터치 영역은 그대로입니다. leading(`back`·`icon`)과 trailing 아이콘 버튼에 모두 적용되며, 텍스트 버튼은 해당 없습니다.
 
 #### Avatar · AvatarGroup
 
@@ -1009,7 +1009,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **비활성 상태** | 컴포넌트가 직접 낮추던 불투명도 대신 `isEnabled` 기반 색 토큰을 씁니다. 불투명도가 겹쳐 적용되지 않아 **덜 흐려 보입니다.** ListCell 슬롯에 넣은 커스텀 뷰(회사 로고 등)는 이제 흐려지지 않습니다. **상위 뷰의 `.disabled(true)`가 `Chip`·`FilterButton` 색까지 바꿉니다**(3.x는 터치만 막혔습니다) |
 | **PushBadge** | 한 글자 뱃지가 `badgeSize` 정사각으로 고정됩니다. 확대 상한이 생겨 접근성 글자 크기에서 3.x보다 작게 나옵니다 |
 | **PlayBadge** | 배경에 `coolNeutral40` 28% 틴트 추가, 재생 아이콘이 `staticWhite` 88%로. 밝은 썸네일에서도 뱃지가 묻히지 않습니다 |
-| **TopNavigation · ModalNavigation** | 스크롤 시 배경이 더 진해집니다. **아이콘 버튼을 눌렀을 때 회색 사각 레이어 대신 아이콘 색만 옅어집니다** |
+| **TopNavigation · ModalNavigation** | 스크롤 시 배경이 더 진해집니다. **아이콘 버튼을 눌렀을 때 회색 사각 레이어 대신 아이콘이 옅어집니다** |
 | **Toast · SnackBar** | 배경 불투명도 light 50% → 52%, dark 46% → 43% |
 | **BottomSheet** | 배경 불투명도 80% → 88% |
 | **TopNavigation · ModalNavigation** | 스크롤 배경 tint 농도가 `0.7` → `0.88`로 올라가 **스크롤 시 내비게이션 배경이 더 진해집니다** |

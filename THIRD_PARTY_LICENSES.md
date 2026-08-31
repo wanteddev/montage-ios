@@ -262,7 +262,7 @@ SOFTWARE.
 
 - Repository: https://github.com/SDWebImage/SDWebImage.git
 - Version: 5.21.0
-- Source: https://raw.githubusercontent.com/SDWebImage/SDWebImage/5.21.0/LICENSE
+- Source: https://raw.githubusercontent.com/SDWebImage/SDWebImage/refs/tags/5.21.0/LICENSE
 - Obligation: Preserve copyright and permission notice
 
 ### Full License Text

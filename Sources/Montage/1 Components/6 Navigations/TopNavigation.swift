@@ -497,14 +497,14 @@ extension TopNavigation {
                         IconButton(icon: .chevronLeft) {
                             action()
                         }
-                        .interactionEffect(.tint)
+                        .interactionEffect(.dim)
                         .accessibilityLabel(String(localized: "뒤로 가기", bundle: .module))
                         .frame(width: 24, height: 24)
                     case let .icon(i, action):
                         IconButton(icon: i) {
                             action()
                         }
-                        .interactionEffect(.tint)
+                        .interactionEffect(.dim)
                         .frame(width: 24, height: 24)
                     case let .text(t, action):
                         TrailingTextButton(
@@ -604,7 +604,7 @@ extension TopNavigation {
             IconButton(icon: icon) {
                 action()
             }
-            .interactionEffect(.tint)
+            .interactionEffect(.dim)
             .showPushBadge(showPushBadge)
             .frame(width: 24, height: 24)
         }

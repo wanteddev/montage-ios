@@ -1191,7 +1191,7 @@
         {
           "name": "interactionEffect(_:)",
           "signature": "func interactionEffect(IconButton.InteractionEffect) -> IconButton",
-          "summary": "press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: .normal).",
+          "summary": "press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: .highlight).",
           "kind": "method"
         },
         {
@@ -1214,9 +1214,9 @@
           "kind": "enum",
           "summary": "press 피드백 방식을 결정하는 열거형입니다.",
           "cases": [
-            "none",
-            "normal",
-            "tint"
+            "dim",
+            "highlight",
+            "none"
           ]
         },
         {
