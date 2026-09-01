@@ -27,6 +27,10 @@ IconButton(
 // 비활성화
 IconButton(icon: .bell)
     .disabled(true)
+
+// 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
+IconButton(icon: .search)
+    .interactionEffect(.dim)
 ```
 
 > **Note**
@@ -112,23 +116,6 @@ IconButton(icon: .bell)
 </details>
 <details>
 
-<summary>``func disableInteraction(Bool) -> IconButton``</summary>
-
-
-hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
-
-- **Parameters**
-
-  | Parameter | Description |
-  | --- | --- |
-  | `value` | 인터랙션 효과 차단 여부 |
-
-- **Return Value**
-
-  수정된 IconButton 인스턴스
-</details>
-<details>
-
 <summary>``func iconColor(SwiftUI.Color) -> IconButton``</summary>
 
 
@@ -149,7 +136,7 @@ hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동
 <summary>``func interactionColor(Color.Semantic) -> IconButton``</summary>
 
 
-hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
+press 피드백에 사용할 색상을 설정합니다.
 
 - **Parameters**
 
@@ -160,6 +147,37 @@ hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기
 - **Return Value**
 
   수정된 IconButton 인스턴스
+- **Discussion**
+
+  `interactionEffect(_:)` 값에 따라 적용 대상이 다릅니다. 두 경우 모두 이 색에 상태별 불투명도를 적용합니다.
+  - `.highlight`: 아이콘 뒤 인터랙션 레이어에 적용됩니다. 지정하지 않으면 `.foregroundNeutralPrimary`
+  - `.dim`: 아이콘 색에 적용됩니다. 지정하지 않으면 평상시 아이콘 색을 그대로 씁니다
+  - `.none`: 피드백이 없어 적용되지 않습니다
+
+</details>
+<details>
+
+<summary>``func interactionEffect(IconButton.InteractionEffect) -> IconButton``</summary>
+
+
+press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.highlight`).
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `effect` | 인터랙션 피드백 방식 |
+
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+
+  세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다. 피드백 색상은 `.highlight`·`.dim` 모두 `interactionColor(_:)`로 바꿀 수 있습니다.
+  > **Note**
+  >
+  > `.dim`은 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.highlight`로 처리됩니다.
+
 </details>
 <details>
 
@@ -208,6 +226,45 @@ hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기
 
 ### Enumerations
 
+<details>
+
+<summary>``enum InteractionEffect``</summary>
+
+
+press 피드백 방식을 결정하는 열거형입니다.
+- **Overview**
+
+  어떤 값을 쓰든 터치 영역은 같습니다. 피드백의 시각 표현만 달라집니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case dim``</summary>
+
+
+레이어 대신 아이콘의 불투명도를 낮춰(22%) 피드백합니다. 레이어 형태가 어색한 자리(TopNavigation 등)에 씁니다.
+- **Discussion**
+  > **Note**
+  >
+  > `normal` variant에서만 동작합니다. 기준 색은 평상시 아이콘 색이며, `interactionColor(_:)`로 따로 지정할 수 있습니다.
+
+</details>
+<details>
+
+<summary>``case highlight``</summary>
+
+
+아이콘 뒤에 인터랙션 레이어를 깝니다. 기본값이며 3.x까지의 동작입니다.
+</details>
+<details>
+
+<summary>``case none``</summary>
+
+
+피드백이 없습니다. 탭 핸들러는 그대로 동작합니다.
+</details>
+
+</details>
 <details>
 
 <summary>``enum NormalSize``</summary>

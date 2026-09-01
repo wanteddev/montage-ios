@@ -962,8 +962,11 @@ The button colors are an API-compatible change, so nothing fails to compile. The
 | Item | 3.x | 4.0 |
 |---|---|---|
 | scroll background tint | `backgroundOpacity * 0.7` | `backgroundOpacity * 0.88` |
+| icon button press | A grey rectangular layer behind the icon | The icon drops to 22% opacity |
 
 **The navigation background gets darker** in the range where scrolling reveals it.
+
+The `IconButton` container (36pt) is larger than the navigation bar's `.frame(24)`, so the press layer visibly spilled outside the button. 4.0 fades the icon instead (`interactionEffect(.dim)`). The touch area is unchanged. This applies to both leading (`back`, `icon`) and trailing icon buttons; text buttons are unaffected.
 
 #### Avatar and AvatarGroup
 
@@ -1008,6 +1011,7 @@ The placeholder drawn when there is no image also changed from a dedicated illus
 | **Disabled state** | Instead of each component lowering its own opacity, colors now come from `isEnabled`-driven tokens. Opacity no longer stacks, so things **look less faded.** Custom views placed in `ListCell` slots (company logos and so on) are no longer dimmed. **A `.disabled(true)` on an ancestor now changes `Chip` and `FilterButton` colors too** (in 3.x it only blocked touches) |
 | **PushBadge** | A single-character badge is now a fixed `badgeSize` square. It also stops scaling at `xxxLarge`, so it comes out smaller than 3.x at accessibility text sizes |
 | **PlayBadge** | A `coolNeutral40` 28% tint was added to the background and the play icon is now `staticWhite` at 88%. The badge stays visible on bright thumbnails |
+| **TopNavigation / ModalNavigation** | The background gets darker while scrolling. **Pressing an icon button fades the icon instead of showing a grey rectangular layer** |
 | **Toast / SnackBar** | Background opacity light 50% → 52%, dark 46% → 43% |
 | **BottomSheet** | Background opacity 80% → 88% |
 | **TopNavigation / ModalNavigation** | The scroll background tint goes from `0.7` to `0.88`, so **the navigation background gets darker while scrolling** |
@@ -1084,7 +1088,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 |---|---|
 | `Button` | `xsmall` size, `negative` color |
 | `TextButton` | `fillWidth(_:)` |
-| `IconButton` | `disableInteraction(_:)`, `interactionColor(_:)` |
+| `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)` |
 | `ActionArea` | the icon slot (16pt) on `caption(_:icon:)`, `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
 | `Chip` | `borderColor(_:)` |

@@ -26,6 +26,10 @@ import SwiftUI
 /// // 비활성화
 /// IconButton(icon: .bell)
 ///     .disabled(true)
+///
+/// // 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
+/// IconButton(icon: .search)
+///     .interactionEffect(.dim)
 /// ```
 ///
 /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
@@ -52,7 +56,7 @@ public struct IconButton: View {
     ) {
         self.variant = variant
         self.icon = icon
-        self.disableInteraction = false
+        self.interactionEffect = .highlight
         self.showPushBadge = false
         self.extraPadding = .zero
         self.iconColor = nil
@@ -64,7 +68,7 @@ public struct IconButton: View {
 
     // MARK: - Modifiers
 
-    private var disableInteraction: Bool
+    private var interactionEffect: IconButton.InteractionEffect
     private var showPushBadge: Bool
     private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
@@ -72,16 +76,30 @@ public struct IconButton: View {
     private var borderColor: SwiftUI.Color?
     private var customInteractionColor: Color.Semantic?
 
-    /// hover / press 인터랙션 효과만 차단합니다(탭 핸들러는 계속 동작).
-    /// - Parameter value: 인터랙션 효과 차단 여부
+    /// press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.highlight`).
+    ///
+    /// 세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다.
+    /// 피드백 색상은 `.highlight`·`.dim` 모두 `interactionColor(_:)`로 바꿀 수 있습니다.
+    ///
+    /// > `.dim`은 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.highlight`로 처리됩니다.
+    /// - Parameter effect: 인터랙션 피드백 방식
     /// - Returns: 수정된 IconButton 인스턴스
-    public func disableInteraction(_ value: Bool = true) -> Self {
+    public func interactionEffect(_ effect: IconButton.InteractionEffect) -> Self {
         var copy = self
-        copy.disableInteraction = value
+        copy.interactionEffect = {
+            guard case .dim = effect else { return effect }
+            guard case .normal = self.variant else { return .highlight }
+            return .dim
+        }()
         return copy
     }
 
-    /// hover / press 시 인터랙션 영역에 사용할 색상을 설정합니다(기본값: `.foregroundNeutralPrimary`).
+    /// press 피드백에 사용할 색상을 설정합니다.
+    ///
+    /// `interactionEffect(_:)` 값에 따라 적용 대상이 다릅니다. 두 경우 모두 이 색에 상태별 불투명도를 적용합니다.
+    /// - `.highlight`: 아이콘 뒤 인터랙션 레이어에 적용됩니다. 지정하지 않으면 `.foregroundNeutralPrimary`
+    /// - `.dim`: 아이콘 색에 적용됩니다. 지정하지 않으면 평상시 아이콘 색을 그대로 씁니다
+    /// - `.none`: 피드백이 없어 적용되지 않습니다
     /// - Parameter color: 인터랙션 색상(semantic 토큰)
     /// - Returns: 수정된 IconButton 인스턴스
     public func interactionColor(_ color: Color.Semantic) -> Self {
@@ -159,15 +177,43 @@ public struct IconButton: View {
 
     private var isDisabled: Bool { isEnabled == false }
 
+    /// 아이콘을 흐리게 해서 press 피드백을 주는 중인지 여부.
+    private var isDimmed: Bool {
+        guard case .dim = interactionEffect else { return false }
+        return isPressed && !isDisabled
+    }
+
+    /// 인터랙션 레이어의 상태. `.dim`·`.none`에서는 항상 `.normal`이라 레이어가 보이지 않지만,
+    /// 레이어 자체는 터치 영역을 잡아주므로 걷어내지 않는다.
+    private var interactionState: Interaction.State {
+        guard case .highlight = interactionEffect else { return .normal }
+        return (isPressed && !isDisabled) ? .pressed : .normal
+    }
+
+    /// dim press 색의 기준. `interactionColor(_:)`를 주면 그 색, 없으면 평상시 아이콘 색을 그대로 쓴다.
+    private var dimBaseColor: SwiftUI.Color {
+        if let customInteractionColor {
+            SwiftUI.Color.semantic(customInteractionColor)
+        } else if let iconColor {
+            iconColor
+        } else {
+            SwiftUI.Color(uiColor: variant.activeColor)
+        }
+    }
+
     private var _iconColor: SwiftUI.Color {
         if isDisabled {
             SwiftUI.Color(uiColor: variant.disabledIconColor)
+        } else if isDimmed {
+            // 색을 갈아끼우지 않고 기준 색의 불투명도만 낮춘다.
+            // `.highlight`가 하나의 색에 상태별 불투명도를 주는 것과 같은 방식이라,
+            // 아이콘 색을 커스텀해도 press 색이 그 색을 따라간다.
+            // 값은 Figma 스펙의 Pressed(22%). hover가 없는 플랫폼이라 Hovered(52%)는 쓰지 않는다.
+            dimBaseColor.opacity(.opacity22)
+        } else if let iconColor {
+            iconColor
         } else {
-            if let iconColor {
-                iconColor
-            } else {
-                SwiftUI.Color(uiColor: variant.activeColor)
-            }
+            SwiftUI.Color(uiColor: variant.activeColor)
         }
     }
 
@@ -209,7 +255,7 @@ public struct IconButton: View {
             .padding(totalPadding)
             .background {
                 Interaction(
-                    state: (isPressed && !isDisabled && !disableInteraction) ? .pressed : .normal,
+                    state: interactionState,
                     variant: variant.interactionVariant,
                     color: customInteractionColor ?? variant.interactionColor
                 )
@@ -271,6 +317,21 @@ extension IconButton {
         /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
         /// - Parameter size: 아이콘 크기 (`Size`)
         case solid(size: Size)
+    }
+
+    /// press 피드백 방식을 결정하는 열거형입니다.
+    ///
+    /// 어떤 값을 쓰든 터치 영역은 같습니다. 피드백의 시각 표현만 달라집니다.
+    public enum InteractionEffect {
+        /// 아이콘 뒤에 인터랙션 레이어를 깝니다. 기본값이며 3.x까지의 동작입니다.
+        case highlight
+        /// 레이어 대신 아이콘의 불투명도를 낮춰(22%) 피드백합니다.
+        /// 레이어 형태가 어색한 자리(TopNavigation 등)에 씁니다.
+        /// > `normal` variant에서만 동작합니다.
+        /// > 기준 색은 평상시 아이콘 색이며, `interactionColor(_:)`로 따로 지정할 수 있습니다.
+        case dim
+        /// 피드백이 없습니다. 탭 핸들러는 그대로 동작합니다.
+        case none
     }
 
     /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.

@@ -15,7 +15,7 @@ struct IconButtonPreview: View {
     @State private var normalSizeIndex = 3 // 기본값 .xlarge
     @State private var alternative = false
     @State private var disable = false
-    @State private var disableInteraction = false
+    @State private var interactionEffectIndex = 0
     @State private var showPushBadge = false
     @State private var padding: CGFloat = 0
     @State private var iconColor: SwiftUI.Color?
@@ -40,6 +40,7 @@ struct IconButtonPreview: View {
 
     private let normalSizes: [IconButton.NormalSize] = [.small, .medium, .large, .xlarge]
     private let normalSizeLabels: [String] = ["small", "medium", "large", "xlarge", "custom"]
+
     
     private var isCustomSize: Bool {
         switch variantIndex {
@@ -95,6 +96,24 @@ struct IconButtonPreview: View {
         if case .normal = currentVariant { return true }
         return false
     }
+
+    /// dim은 normal variant에서만 동작하므로 다른 variant에서는 선택지에서 뺀다.
+    private var interactionEffects: [IconButton.InteractionEffect] {
+        isNormal ? [.highlight, .dim, .none] : [.highlight, .none]
+    }
+
+    /// variant를 바꿔 선택지가 줄면 저장된 인덱스가 범위를 벗어난다.
+    /// 세그먼트가 선택 항목을 못 찾고 인디케이터를 컨트롤 밖에 그리므로 읽을 때 정규화한다.
+    private var interactionEffectSelection: Binding<Int> {
+        Binding(
+            get: { min(interactionEffectIndex, interactionEffects.count - 1) },
+            set: { interactionEffectIndex = $0 }
+        )
+    }
+
+    private var resolvedInteractionEffect: IconButton.InteractionEffect {
+        interactionEffects[interactionEffectSelection.wrappedValue]
+    }
     
     var body: some View {
         PreviewLayout {
@@ -105,7 +124,7 @@ struct IconButtonPreview: View {
                     print("tapped")
                 }
             )
-            .disableInteraction(disableInteraction)
+            .interactionEffect(resolvedInteractionEffect)
             .showPushBadge(isNormal ? showPushBadge : false)
             .padding(isOutlinedOrSolid ? padding : 0)
             .modifying {
@@ -156,7 +175,11 @@ struct IconButtonPreview: View {
                 ToggleOptionRow("alternative", isOn: $alternative)
             }
             ToggleOptionRow("disable", isOn: $disable)
-            ToggleOptionRow("disableInteraction", isOn: $disableInteraction)
+            SegmentedIndexRow(
+                "interactionEffect",
+                index: interactionEffectSelection,
+                labels: interactionEffects.map(\.description)
+            )
             if isNormal {
                 ToggleOptionRow("pushBadge", isOn: $showPushBadge)
             }
@@ -186,6 +209,7 @@ struct IconButtonPreview: View {
 }
 
 extension IconButton.Variant: CaseDescribable {}
+extension IconButton.InteractionEffect: CaseDescribable {}
 extension IconButton.NormalSize: CaseDescribable {}
 extension IconButton.Size: CaseDescribable {}
 
