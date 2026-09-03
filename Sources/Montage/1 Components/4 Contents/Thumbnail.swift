@@ -205,8 +205,10 @@ public struct Thumbnail: View {
         .if (thumbnailWidth > 0) {
             $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
         }
-        .onAppear { loadIfNeeded() }
-        .onChange(of: urlString) { _ in loadIfNeeded() }
+        .onAppear { loadIfNeeded(urlString) }
+        // onChange 핸들러는 값이 바뀌기 전 뷰 인스턴스에 캡처되므로 self.urlString은 이전 값을 가리킨다.
+        // 전달받은 새 값을 그대로 넘겨야 URL 교체가 로드로 이어진다.
+        .onChange(of: urlString) { newValue in loadIfNeeded(newValue) }
         .onDisappear {
             // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
             // loadedURL을 함께 비워, 같은 셀이 동일 URL로 재진입했을 때 loadIfNeeded()가 재요청을 수행하게 한다.
@@ -231,7 +233,7 @@ public struct Thumbnail: View {
         }
     }
 
-    private func loadIfNeeded() {
+    private func loadIfNeeded(_ urlString: String) {
         let url = URL(string: urlString)
         guard loadedURL != url else { return }
         loadedURL = url
