@@ -57,9 +57,15 @@ echo "▶ simulator: $UDID"
 # --- Build & install ----------------------------------------------------------
 if [[ $SKIP_BUILD -eq 0 ]]; then
   echo "▶ building Blueprint..."
-  xcodebuild -workspace "$ROOT/Montage.xcworkspace" -scheme Blueprint \
+  # 빌드 실패는 그대로 종료한다. 무시하면 이전 DerivedData의 낡은 Blueprint.app으로 E2E가 통과할 수 있다.
+  if ! xcodebuild -workspace "$ROOT/Montage.xcworkspace" -scheme Blueprint \
     -destination "id=$UDID" -derivedDataPath "$DERIVED" -configuration Debug build \
-    2>&1 | grep -E "error:|BUILD (SUCCEEDED|FAILED)" || true
+    >"$WORK/build.log" 2>&1; then
+    grep -E "error:|BUILD (SUCCEEDED|FAILED)" "$WORK/build.log" || true
+    echo "✗ Blueprint 빌드 실패 (로그: $WORK/build.log)" >&2
+    exit 1
+  fi
+  grep -E "BUILD SUCCEEDED" "$WORK/build.log" || true
 fi
 APP="$(find "$DERIVED/Build/Products" -maxdepth 2 -name Blueprint.app | head -1 || true)"
 [[ -n "$APP" ]] || { echo "Blueprint.app을 찾을 수 없습니다 (빌드 실패 또는 --skip-build 전 빌드 필요)" >&2; exit 2; }
