@@ -54,6 +54,11 @@ struct TextAreaPreview: View {
         ]
     }
     
+    /// fixed 리사이즈 최대 높이(200)를 충분히 넘는 길이의 샘플 텍스트. 줄 번호로 스크롤 위치를 식별한다.
+    static let longSampleText = (1...18)
+        .map { String(format: "L%02d lorem ipsum dolor sit amet consectetur adipiscing", $0) }
+        .joined(separator: " ")
+
     @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
     @State private var resize: Resize = .normal
@@ -200,6 +205,19 @@ struct TextAreaPreview: View {
                             Button("reset") {
                                 trailingResources.removeAll()
                             }
+                        }
+                    }
+                    .font(.font(variant: .label1))
+                    // 서버 데이터처럼 코드로 텍스트를 주입하는 시나리오 재현용 (E2E: Tests/E2E/textarea-scroll)
+                    HStack {
+                        Text("Text :")
+                            .typography(variant: .headline2, weight: .medium)
+                        Spacer()
+                        Button("inject") {
+                            text = Self.longSampleText
+                        }
+                        Button("clear") {
+                            text = ""
                         }
                     }
                     .font(.font(variant: .label1))

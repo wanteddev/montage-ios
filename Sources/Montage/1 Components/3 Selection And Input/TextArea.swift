@@ -642,16 +642,16 @@ public struct TextArea: View {
             _text = text
         }
         
-        func makeUIView(context: Context) -> UITextView {
-            let textView = UITextView()
+        func makeUIView(context: Context) -> CustomTextView {
+            let textView = CustomTextView()
             textView.font = UIFont.systemFont(ofSize: 16)
             textView.isScrollEnabled = false
             textView.backgroundColor = .clear
             textView.delegate = context.coordinator
             return textView
         }
-        
-        func updateUIView(_ uiView: UITextView, context: Context) {
+
+        func updateUIView(_ uiView: CustomTextView, context: Context) {
             if uiView.text != text {
                 // 외부(코드)에서 텍스트가 교체되는 경우. 직접 대입은 UITextView의 UndoManager와
                 // 동기화되지 않아 stale operation이 남고, 이후 Undo 시 저장된 range가 현재 길이를
@@ -670,8 +670,11 @@ public struct TextArea: View {
             context.coordinator.parent.overflow = overflow
             context.coordinator.parent.inputLimit = inputLimit
             context.coordinator.parent.inputTransform = inputTransform
-            context.coordinator.minHeight = minHeight
-            context.coordinator.maxHeight = maxHeight
+            // 코드로 주입된 텍스트는 textViewDidChange를 거치지 않으므로 여기서도 스크롤 여부를
+            // 갱신한다. 아직 폭이 확정되지 않았다면 CustomTextView.layoutSubviews가 이어받는다.
+            // (WRP-2846: fixed 리사이즈에서 주입 텍스트가 스크롤되지 않고 바깥 ScrollView가 스크롤되던 문제)
+            uiView.maxHeight = maxHeight
+            uiView.updateScrollEnabled()
         }
         
         func makeCoordinator() -> Coordinator {
@@ -680,10 +683,7 @@ public struct TextArea: View {
         
         class Coordinator: NSObject, UITextViewDelegate {
             var parent: UITextViewWrapper
-            var minHeight: CGFloat?
-            var maxHeight: CGFloat?
-            private var heightConstraint: NSLayoutConstraint?
-            
+
             init(_ parent: UITextViewWrapper) {
                 self.parent = parent
             }
@@ -736,11 +736,8 @@ public struct TextArea: View {
                 }
                 // sizeThatFits 반환 높이가 maxHeight에서 포화되면 SwiftUI가 sizeThatFits를
                 // 재호출하지 않아 스크롤 토글 기회가 사라진다. 매 입력마다 호출되는 이 시점에서
-                // 무제한 높이로 측정한 콘텐츠 높이로 스크롤 여부를 직접 갱신한다.
-                let fit = textView.sizeThatFits(
-                    CGSize(width: textView.bounds.width, height: .greatestFiniteMagnitude)
-                ).height
-                textView.isScrollEnabled = fit > (maxHeight ?? .greatestFiniteMagnitude)
+                // 실제 폭 기준으로 스크롤 여부를 다시 계산한다.
+                (textView as? CustomTextView)?.updateScrollEnabled()
             }
         }
         
@@ -755,8 +752,8 @@ public struct TextArea: View {
 
             // isScrollEnabled는 여기서 설정하지 않는다. SwiftUI는 레이아웃 협상 과정에서
             // sizeThatFits를 비정상 width(예: 9, .infinity)로도 호출하는데, 그때의 측정값으로
-            // 스크롤을 토글하면 textViewDidChange에서 올바르게 켠 값을 false로 덮어쓴다.
-            // 스크롤 토글은 실제 bounds.width가 보장되는 textViewDidChange에서만 수행한다.
+            // 스크롤을 토글하면 올바르게 켠 값을 false로 덮어쓴다.
+            // 스크롤 토글은 실제 bounds.width가 보장되는 CustomTextView.updateScrollEnabled에서만 수행한다.
             newSize.height = min(max(newSize.height, minHeight ?? 0), maxHeight ?? .greatestFiniteMagnitude)
             return CGSize(
                 width: proposal.width ?? uiView.bounds.width,
@@ -803,9 +800,42 @@ public struct TextArea: View {
         }
     }
     
-    class CustomTextView: UITextView {
-        override var intrinsicContentSize: CGSize {
-            sizeThatFits(CGSize(width: frame.width, height: CGFloat.greatestFiniteMagnitude))
+    /// 콘텐츠 높이가 최대 높이를 넘을 때만 스크롤을 켜는 UITextView입니다.
+    ///
+    /// SwiftUI의 `sizeThatFits`는 비정상 width로도 호출되고, `textViewDidChange`는 사용자 입력에만
+    /// 반응하므로 어느 한 곳에서만 토글하면 누락이 생깁니다. 텍스트 주입(`updateUIView`),
+    /// 레이아웃 폭 확정(`layoutSubviews`), 사용자 입력(`textViewDidChange`) 시점에 모두
+    /// 실제 `bounds.width` 기준으로 재계산합니다.
+    final class CustomTextView: UITextView {
+        /// 스크롤을 켤 기준이 되는 최대 높이. `nil`이면 스크롤을 켜지 않는다.
+        var maxHeight: CGFloat? {
+            didSet {
+                if maxHeight != oldValue {
+                    updateScrollEnabled()
+                }
+            }
+        }
+
+        private var lastLayoutWidth: CGFloat = 0
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            // 폭이 처음 확정되거나 바뀔 때(회전 등)만 재계산한다. isScrollEnabled 변경이 다시
+            // layoutSubviews를 유발해도 폭이 같으면 건너뛰므로 재귀하지 않는다.
+            if bounds.width != lastLayoutWidth {
+                lastLayoutWidth = bounds.width
+                updateScrollEnabled()
+            }
+        }
+
+        /// 실제 폭 기준으로 콘텐츠 높이를 측정해 스크롤 여부를 갱신한다. 폭이 확정되지 않았으면 건너뛴다.
+        func updateScrollEnabled() {
+            guard bounds.width > 0 else { return }
+            let fit = sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude)).height
+            let shouldScroll = fit > (maxHeight ?? .greatestFiniteMagnitude)
+            if isScrollEnabled != shouldScroll {
+                isScrollEnabled = shouldScroll
+            }
         }
     }
 }
