@@ -290,8 +290,6 @@ public struct Select: View {
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.colorScheme) private var colorScheme
     @State private var defaultMenuPresented = false
-    @State private var bottomSheetContentHeight: CGFloat = .zero
-    @State private var pureBottomSheetHeight: CGFloat = .zero
 
     private var isDisabled: Bool { isEnabled == false }
 
@@ -525,14 +523,6 @@ public struct Select: View {
 
     private var menuPresented: Binding<Bool> {
         customMenuPresented ?? $defaultMenuPresented
-    }
-
-    private var bottomSheetMaxHeight: CGFloat {
-        pureBottomSheetHeight + bottomSheetContentHeight
-    }
-
-    private var maxDetentValue: CGFloat {
-        (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10
     }
 
     private var menu: some View {

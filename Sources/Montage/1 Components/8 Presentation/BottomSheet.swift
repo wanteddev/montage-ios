@@ -263,15 +263,19 @@ public struct BottomSheet: View {
         )
     }
     
+    /// detent가 가질 수 있는 최대 높이입니다.
+    ///
+    /// 기준값은 키 윈도우에서 세이프 에어리어 상하를 제외한 높이라, 시트가 화면 최상단까지
+    /// 올라가지는 않는다. 상태 표시줄·홈 인디케이터 영역만큼 아래에서 시작한다.
     private var maxDetentHeight: CGFloat {
+        let safeAreaHeight = UIApplication.keyWindow?.safeAreaSize.height ?? 0
         if #available(iOS 26, *) {
-            // iOS 26 부터는 stacked sheet로 자동 변경되지 않으므로 보정값 제거
-            // 단, 스크린 높이 - 10.2 보다 커지면 자동으로 불투명해지고 edge가 스크린 끝에 붙음
-            (UIApplication.keyWindow?.safeAreaSize.height ?? 0)
+            // iOS 26부터는 최대 높이에 도달해도 stacked sheet로 자동 전환되지 않으므로 보정하지 않는다.
+            return safeAreaHeight
         } else {
-            // 최대 높이에 도달할 경우 자동으로 stacked sheet로 변경되는 것을 막기 위한 보정값 10.2 추가
+            // 최대 높이에 도달하면 stacked sheet로 자동 전환되므로, 10.2pt 낮춰 전환을 막는다.
             // https://wantedx.slack.com/archives/C04TTGN5F1C/p1761040362320469?thread_ts=1761035208.156399&cid=C04TTGN5F1C
-            (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10.2
+            return safeAreaHeight - 10.2
         }
     }
     
