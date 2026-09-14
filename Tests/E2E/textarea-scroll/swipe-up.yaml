@@ -1,0 +1,8 @@
+# 포커스가 없는 TextArea 내부(화면 세로 24~38% 구간)를 위로 스와이프한다.
+# 정상: TextArea 내부 텍스트만 스크롤. 결함: 바깥 ScrollView가 스크롤되고 내부는 고정.
+appId: com.wantedlab.Blueprint
+---
+- swipe:
+    start: "50%,38%"
+    end: "50%,24%"
+    duration: 800

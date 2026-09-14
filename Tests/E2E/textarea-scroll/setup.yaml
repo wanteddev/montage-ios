@@ -1,0 +1,20 @@
+# Blueprint > TextArea 프리뷰로 이동해 Resize=Fixed, 긴 텍스트 주입 상태를 만든다.
+appId: com.wantedlab.Blueprint
+---
+- launchApp:
+    stopApp: true
+- tapOn: "Search"
+- inputText: "TextArea"
+# index 0은 검색 필드의 입력 텍스트에 매칭되므로 리스트 행은 index 1
+- tapOn:
+    text: "TextArea"
+    index: 1
+- extendedWaitUntil:
+    visible: "Options"
+    timeout: 5000
+# resize는 SegmentedControl이라 세 값이 함께 보인다. 메뉴를 여는 탭 없이 바로 선택한다.
+- tapOn: "Fixed"
+- tapOn: "inject"
+- extendedWaitUntil:
+    visible: "Options"
+    timeout: 3000

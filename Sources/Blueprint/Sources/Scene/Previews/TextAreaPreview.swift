@@ -101,6 +101,11 @@ struct TextAreaPreview: View {
         ]
     }
 
+    /// fixed 리사이즈 최대 높이(200)를 충분히 넘는 길이의 샘플 텍스트. 줄 번호로 스크롤 위치를 식별한다.
+    static let longSampleText = (1...18)
+        .map { String(format: "L%02d lorem ipsum dolor sit amet consectetur adipiscing", $0) }
+        .joined(separator: " ")
+
     @State private var text: String = ""
     @State private var size: Size = .large
     @State private var resize: Resize = .normal
@@ -184,6 +189,14 @@ struct TextAreaPreview: View {
                     .layoutPriority(1)
                 SwiftUI.Slider(value: $maxLength, in: 0...200, step: 10)
                 Text(maxLength > 0 ? "\(characterCount)/\(Int(maxLength))" : "off")
+            }
+            // 서버 데이터처럼 코드로 텍스트를 주입하는 시나리오 재현용 (E2E: Tests/E2E/textarea-scroll)
+            HStack {
+                Text("text")
+                    .layoutPriority(1)
+                Spacer()
+                Button("inject") { text = Self.longSampleText }
+                Button("clear") { text = "" }
             }
         }
         .onChange(of: focusState) {
