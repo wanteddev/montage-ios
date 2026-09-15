@@ -16,6 +16,7 @@ struct IconButtonPreview: View {
     @State private var alternative = false
     @State private var disable = false
     @State private var interactionEffectIndex = 0
+    @State private var useLegacyInteractionLayer = false
     @State private var showPushBadge = false
     @State private var padding: CGFloat = 0
     @State private var iconColor: SwiftUI.Color?
@@ -114,6 +115,11 @@ struct IconButtonPreview: View {
     private var resolvedInteractionEffect: IconButton.InteractionEffect {
         interactionEffects[interactionEffectSelection.wrappedValue]
     }
+
+    /// 레거시 레이아웃에서는 숫자가 컨테이너가 아니라 아이콘 크기라서 24 아래도 유효하다.
+    private var customSizeRange: ClosedRange<CGFloat> {
+        isNormal && useLegacyInteractionLayer ? 12...64 : 24...64
+    }
     
     var body: some View {
         PreviewLayout {
@@ -125,6 +131,7 @@ struct IconButtonPreview: View {
                 }
             )
             .interactionEffect(resolvedInteractionEffect)
+            .useLegacyInteractionLayer(useLegacyInteractionLayer)
             .showPushBadge(isNormal ? showPushBadge : false)
             .padding(isOutlinedOrSolid ? padding : 0)
             .modifying {
@@ -161,7 +168,7 @@ struct IconButtonPreview: View {
             if variantIndex == 0 {
                 SegmentedIndexRow("size", index: $normalSizeIndex, labels: normalSizeLabels)
                 if isCustomSize {
-                    SliderOptionRow("custom", value: $customSize, in: 24...64)
+                    SliderOptionRow("custom", value: $customSize, in: customSizeRange)
                 }
             } else if variantIndex == 1 {
                 SliderOptionRow("size", value: $customSize, in: 24...64)
@@ -181,6 +188,7 @@ struct IconButtonPreview: View {
                 labels: interactionEffects.map(\.description)
             )
             if isNormal {
+                ToggleOptionRow("legacyLayer", isOn: $useLegacyInteractionLayer)
                 ToggleOptionRow("pushBadge", isOn: $showPushBadge)
             }
             if isOutlinedOrSolid {

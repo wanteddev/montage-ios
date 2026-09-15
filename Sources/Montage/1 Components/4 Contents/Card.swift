@@ -300,6 +300,7 @@ extension Card {
                                     ) {
                                         onTapButton?()
                                     }
+                                    .useLegacyInteractionLayer()
                                     .iconColor(buttonColor)
                                 }
                             }

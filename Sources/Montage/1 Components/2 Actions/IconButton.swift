@@ -15,7 +15,7 @@ import SwiftUI
 /// - 외곽선형(outlined): 테두리로 둘러싸인 아이콘
 /// - 솔리드형(solid): 배경색이 채워진 아이콘
 ///
-/// 모든 variant의 컨테이너(터치 영역 포함)는 24~64pt 사이에서 커스텀 사이즈로 지정할 수 있습니다.
+/// 모든 variant의 컨테이너(터치 영역 포함)는 24\~64pt 사이에서 커스텀 사이즈로 지정할 수 있습니다.
 ///
 /// ```swift
 /// IconButton(
@@ -30,6 +30,10 @@ import SwiftUI
 /// // 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
 /// IconButton(icon: .search)
 ///     .interactionEffect(.dim)
+///
+/// // 3.x처럼 컨테이너를 아이콘 크기까지 줄이고 인터랙션 레이어만 밖으로 넓히기
+/// IconButton(icon: .close)
+///     .useLegacyInteractionLayer()
 /// ```
 ///
 /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
@@ -58,6 +62,7 @@ public struct IconButton: View {
         self.icon = icon
         self.interactionEffect = .highlight
         self.showPushBadge = false
+        self.useLegacyInteractionLayer = false
         self.extraPadding = .zero
         self.iconColor = nil
         self.backgroundColor = nil
@@ -70,6 +75,7 @@ public struct IconButton: View {
 
     private var interactionEffect: IconButton.InteractionEffect
     private var showPushBadge: Bool
+    private var useLegacyInteractionLayer: Bool
     private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
     private var backgroundColor: SwiftUI.Color?
@@ -115,6 +121,33 @@ public struct IconButton: View {
     public func showPushBadge(_ value: Bool = true) -> Self {
         var copy = self
         copy.showPushBadge = {
+            guard case .normal = self.variant else { return false }
+            return value
+        }()
+        return copy
+    }
+
+    /// 3.x의 레이아웃 규칙을 되살립니다(기본값: 꺼짐).
+    ///
+    /// 4.x는 컨테이너가 아이콘보다 커서 버튼이 차지하는 자리도 그만큼 넓습니다.
+    /// 3.x는 반대로 컨테이너가 아이콘과 같은 크기였고, press 피드백 레이어만 그 밖으로 번졌습니다.
+    /// 이 모디파이어를 켜면 후자로 돌아가, 이미 3.x 간격에 맞춰 짜인 화면에 그대로 얹을 수 있습니다.
+    ///
+    /// 켰을 때 달라지는 것은 다음과 같습니다.
+    /// - 컨테이너·아이콘: `size`가 곧 아이콘 크기이자 버튼이 차지하는 자리가 됩니다.
+    ///   named size는 4.x의 아이콘 크기를 그대로 씁니다(small 16 / medium 18 / large 20 / xlarge 24).
+    ///   `custom(size:)`은 `[12, 64]` 범위로 클램프됩니다.
+    /// - 인터랙션 레이어: `max(24, size, size ÷ (2/3)를 dimension 토큰에 스냅한 값)`.
+    ///   레이아웃 밖으로 번지므로 주변 간격을 밀지 않습니다.
+    /// - Radius: 인터랙션 레이어 크기 × 0.3을 radius 토큰에 스냅한 값
+    /// - 푸시 뱃지: 아이콘을 기준으로 붙으므로 함께 안쪽으로 당겨집니다
+    ///
+    /// > normal variant에서만 동작합니다. 다른 variant에 걸면 무시됩니다.
+    /// - Parameter value: 레거시 레이아웃 사용 여부
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func useLegacyInteractionLayer(_ value: Bool = true) -> Self {
+        var copy = self
+        copy.useLegacyInteractionLayer = {
             guard case .normal = self.variant else { return false }
             return value
         }()
@@ -239,9 +272,10 @@ public struct IconButton: View {
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        let m = variant.metrics
+        let m = useLegacyInteractionLayer ? variant.legacyMetrics : variant.metrics
         let containerSize = m.container + 2 * extraPadding
         let totalPadding = m.padding + extraPadding
+        let interactionSize = m.interaction + 2 * extraPadding
 
         Image.icon(icon)
             .resizable()
@@ -260,6 +294,9 @@ public struct IconButton: View {
                     color: customInteractionColor ?? variant.interactionColor
                 )
                 .clipShape(RoundedRectangle(cornerRadius: m.radius))
+                // 레거시 모드에서는 컨테이너보다 크다. background 안에서 크기를 잡으므로
+                // 바깥으로 번지기만 하고 버튼이 차지하는 자리는 밀지 않는다.
+                .frame(width: interactionSize, height: interactionSize)
             }
             .background {
                 backgroundLayer(metrics: m)
@@ -362,12 +399,16 @@ extension IconButton {
 }
 
 extension IconButton.Variant {
-    /// 아이콘 버튼의 레이아웃 메트릭(컨테이너/패딩/라운드 반경/아이콘 크기).
+    /// 아이콘 버튼의 레이아웃 메트릭(컨테이너/패딩/라운드 반경/아이콘 크기/인터랙션 레이어 크기).
+    ///
+    /// `interaction`은 기본적으로 `container`와 같다. 레거시 레이아웃에서만 컨테이너보다 커져,
+    /// 버튼이 차지하는 자리를 넓히지 않고 press 피드백만 밖으로 번지게 한다.
     struct Metrics {
         var container: CGFloat
         var padding: CGFloat
         var radius: CGFloat
         var icon: CGFloat
+        var interaction: CGFloat
     }
 
     var metrics: Metrics {
@@ -403,6 +444,36 @@ extension IconButton.Variant {
         }
     }
 
+    /// 3.x 레이아웃 규칙으로 계산한 메트릭. `useLegacyInteractionLayer()`를 켰을 때만 쓴다.
+    ///
+    /// 4.x가 컨테이너를 먼저 정하고 아이콘을 그 안에 넣는 반면, 여기서는 아이콘이 곧 컨테이너다.
+    /// 그만큼 좁아진 터치 영역은 컨테이너 밖으로 번지는 인터랙션 레이어가 메운다.
+    /// normal 외의 variant는 레거시 대응 대상이 아니라 4.x 메트릭을 그대로 돌려준다.
+    var legacyMetrics: Metrics {
+        guard case .normal(let size) = self else { return metrics }
+        let base = Self.legacyBase(size)
+        // 인터랙션 레이어는 최소 24pt를 보장하고, 그보다 크면 아이콘의 1.5배(= 4.x의 컨테이너 비율)를 따라간다.
+        let interaction = max(
+            CGFloat.dimension24,
+            base,
+            Self.nearestToken(base / (2.0 / 3.0), in: Dimension.allValues, tieBreak: .up)
+        )
+        let radius = Self.nearestToken(interaction * 0.3, in: Radius.allValues, tieBreak: .down)
+        return Self.makeMetrics(container: base, icon: base, radius: radius, interaction: interaction)
+    }
+
+    /// 레거시 레이아웃에서 아이콘 겸 컨테이너가 되는 크기.
+    /// named size는 4.x의 아이콘 크기를 그대로 쓰고, 커스텀 값은 dimension 토큰 범위로 클램프한다.
+    private static func legacyBase(_ size: IconButton.NormalSize) -> CGFloat {
+        switch size {
+        case .small:  return .dimension16
+        case .medium: return .dimension18
+        case .large:  return .dimension20
+        case .xlarge: return .dimension24
+        case .custom(let n): return min(Dimension.max, max(Dimension.min, CGFloat(n)))
+        }
+    }
+
     /// 컨테이너 한 변의 크기는 `[24, dimension 최대 토큰]`으로 클램프된다.
     /// 상한은 디자인 시스템 토큰에서 동적으로 도출되어, 토큰이 변경되면 자동으로 따라간다.
     private static func clampedContainer(_ n: Int) -> CGFloat {
@@ -410,12 +481,19 @@ extension IconButton.Variant {
     }
 
     /// 컨테이너/아이콘 크기로부터 패딩을 도출해 Metrics 를 구성한다. 아이콘은 컨테이너 중앙에 배치된다.
-    private static func makeMetrics(container: CGFloat, icon: CGFloat, radius: CGFloat) -> Metrics {
+    /// `interaction`을 생략하면 인터랙션 레이어가 컨테이너를 그대로 채운다.
+    private static func makeMetrics(
+        container: CGFloat,
+        icon: CGFloat,
+        radius: CGFloat,
+        interaction: CGFloat? = nil
+    ) -> Metrics {
         Metrics(
             container: container,
             padding: (container - icon) / 2,
             radius: radius,
-            icon: icon
+            icon: icon,
+            interaction: interaction ?? container
         )
     }
 

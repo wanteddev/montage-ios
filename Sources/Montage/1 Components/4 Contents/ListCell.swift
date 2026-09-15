@@ -982,6 +982,7 @@ extension ListCell.Resource.Trailing {
             ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.iconSize)
         case let .iconButton(icon, handler):
             IconButton(variant: .normal(size: .large), icon: icon, handler: handler)
+                .useLegacyInteractionLayer()
         case let .textButton(title, color, handler):
             TextButton(color: color, size: .small, text: title, handler: handler)
         case let .button(title, color, handler):

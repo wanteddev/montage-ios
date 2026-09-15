@@ -175,6 +175,7 @@ public struct Tab: View {
                             IconButton(variant: .normal(size: .custom(size: iconSize)), icon: icon) {
                                 iconButtonAction()
                             }
+                            .useLegacyInteractionLayer()
                             .padding(.trailing, horizontalPadding ? 16 : 0)
                         }
                     }

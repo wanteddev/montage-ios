@@ -632,6 +632,7 @@ private extension TextField {
                     fixAutocorrection = true
                     Task { fixAutocorrection = false }
                 }
+                .useLegacyInteractionLayer()
                 .iconColor(.semantic(.foregroundNeutralQuaternary))
             } else if !text.isEmpty, let statusMark, let statusMarkColor {
                 Image

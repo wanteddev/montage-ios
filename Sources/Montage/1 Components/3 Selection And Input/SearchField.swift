@@ -317,6 +317,7 @@ private extension SearchField {
                 fixAutocorrection = true
                 Task { fixAutocorrection = false }
             }
+            .useLegacyInteractionLayer()
             .iconColor(.semantic(.foregroundNeutralQuaternary))
             .accessibilityLabel(Text("검색어 지우기", bundle: .module))
         }

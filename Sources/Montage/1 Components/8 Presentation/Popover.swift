@@ -108,6 +108,7 @@ public enum Popover {
                         IconButton(variant: .normal(size: .small), icon: .close) {
                             isPresented = false
                         }
+                        .useLegacyInteractionLayer()
                         .padding(.all, 3)
                     }
                 }

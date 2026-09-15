@@ -992,7 +992,9 @@ extension TextArea.Resource {
     /// 배경 없는 아이콘 버튼.
     ///
     /// 아이콘 계열 요소는 사이즈별 정렬 래퍼(`Size.resourceWrapperSize`)로 감싸 Bottom Content
-    /// 정렬 기준을 통일한다. 요소가 래퍼보다 크면(예: 아이콘 버튼 large 32) 래퍼를 넘어 중앙 정렬로 렌더된다.
+    /// 정렬 기준을 통일한다. 요소가 래퍼보다 크면 래퍼를 넘어 중앙 정렬로 렌더된다.
+    /// 아이콘 버튼은 `useLegacyInteractionLayer()`로 컨테이너가 아이콘 크기(large 20, medium 18)까지
+    /// 줄어들어 래퍼 안에 들어가고, press 피드백 레이어만 래퍼 밖으로 번진다.
     fileprivate static func iconButtonView(
         _ icon: Icon,
         tintColor: SwiftUI.Color,
@@ -1004,6 +1006,7 @@ extension TextArea.Resource {
             icon: icon,
             handler: handler
         )
+        .useLegacyInteractionLayer()
         .iconColor(tintColor)
         .frame(width: size.resourceWrapperSize.width, height: size.resourceWrapperSize.height)
     }
