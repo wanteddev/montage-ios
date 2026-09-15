@@ -31,6 +31,10 @@ IconButton(icon: .bell)
 // 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
 IconButton(icon: .search)
     .interactionEffect(.dim)
+
+// 3.x처럼 컨테이너를 아이콘 크기까지 줄이고 인터랙션 레이어만 밖으로 넓히기
+IconButton(icon: .close)
+    .useLegacyInteractionLayer()
 ```
 
 > **Note**
@@ -221,6 +225,37 @@ press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.highl
   > **Note**
   >
   > Normal variant에서만 사용 가능합니다.
+
+</details>
+<details>
+
+<summary>``func useLegacyInteractionLayer(Bool) -> IconButton``</summary>
+
+
+3.x의 레이아웃 규칙을 되살립니다(기본값: 꺼짐).
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 레거시 레이아웃 사용 여부 |
+
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+
+  4.x는 컨테이너가 아이콘보다 커서 버튼이 차지하는 자리도 그만큼 넓습니다. 3.x는 반대로 컨테이너가 아이콘과 같은 크기였고, press 피드백 레이어만 그 밖으로 번졌습니다. 이 모디파이어를 켜면 후자로 돌아가, 이미 3.x 간격에 맞춰 짜인 화면에 그대로 얹을 수 있습니다.
+
+  켰을 때 달라지는 것은 다음과 같습니다.
+  - 컨테이너·아이콘: `size`가 곧 아이콘 크기이자 버튼이 차지하는 자리가 됩니다. named size는 4.x의 아이콘 크기를 그대로 씁니다(small 16 / medium 18 / large 20 / xlarge 24). `custom(size:)`은 `[12, 64]` 범위로 클램프됩니다.
+  - 인터랙션 레이어: `max(24, size, size ÷ (2/3)를 dimension 토큰에 스냅한 값)`. 레이아웃 밖으로 번지므로 주변 간격을 밀지 않습니다.
+  - Radius: 인터랙션 레이어 크기 × 0.3을 radius 토큰에 스냅한 값
+  - 푸시 뱃지: 아이콘을 기준으로 붙으므로 함께 안쪽으로 당겨집니다
+
+  > **Note**
+  >
+  > Normal variant에서만 동작합니다. 다른 variant에 걸면 무시됩니다.
 
 </details>
 

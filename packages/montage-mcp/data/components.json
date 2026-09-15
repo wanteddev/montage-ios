@@ -1205,6 +1205,12 @@
           "signature": "func showPushBadge(Bool) -> IconButton",
           "summary": "푸시 뱃지 표시 여부를 설정합니다.",
           "kind": "method"
+        },
+        {
+          "name": "useLegacyInteractionLayer(_:)",
+          "signature": "func useLegacyInteractionLayer(Bool) -> IconButton",
+          "summary": "3.x의 레이아웃 규칙을 되살립니다(기본값: 꺼짐).",
+          "kind": "method"
         }
       ],
       "staticMembers": [],
