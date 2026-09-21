@@ -14,6 +14,8 @@ import Montage
 /// 모든 Preview 화면이 반복 구현하던 다음 요소를 한곳에서 담당한다.
 /// - "Preview" / "Options" 섹션 헤더
 /// - 투명도 체커보드 토글 버튼 + 체커 크기 조절 슬라이더 및 ``transparentChecking`` 모디파이어
+/// - 치수 표시 토글 버튼(점선 사각 아이콘) 및 ``previewDimensioned()`` 모디파이어
+///   (``previewDimensioned()``를 건 미리보기에서만 버튼이 나타난다)
 /// - 배경색, 폰트, 패딩 등 공통 스타일
 ///
 /// 세 가지 레이아웃 모드를 지원한다.
@@ -86,6 +88,10 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
     @State private var showChecker: Bool = false
     // 체커 크기는 헤더 슬라이더로 실시간 조절한다.
     @State private var checkerSize: CGFloat = 50
+    // 치수 표시(외곽선 + 크기 라벨). ``previewDimensioned()``를 건 뷰에만 나타난다.
+    @State private var showDimensioning: Bool = false
+    // 미리보기 안에 ``previewDimensioned()``가 있는지. 없으면 토글 버튼도 띄우지 않는다.
+    @State private var hasDimensioned: Bool = false
 
     init(
         mode: Mode = .stacked,
@@ -127,6 +133,8 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 \.previewChecker,
                 PreviewCheckerConfig(isPresented: showChecker, checkerSize: checkerSize)
             )
+            .environment(\.previewDimensioning, showDimensioning)
+            .onPreferenceChange(PreviewDimensionAvailabilityKey.self) { hasDimensioned = $0 }
     }
 
     @ViewBuilder
@@ -216,6 +224,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                                 \.previewChecker,
                                 PreviewCheckerConfig(isPresented: showChecker, checkerSize: checkerSize)
                             )
+                            .environment(\.previewDimensioning, showDimensioning)
                             .navigationBarHidden(true)
                             // 체커 토글·슬라이더·accessory를 미리보기 위에 드래그 가능한 floating 바로 띄운다.
                             // 핸들로만 드래그하므로 안쪽 컨트롤(버튼·슬라이더)은 정상 동작한다. 처음엔 상단 중앙.
@@ -223,6 +232,8 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                                 NavigationFloatingControls(
                                     showChecker: $showChecker,
                                     checkerSize: $checkerSize,
+                                    showDimensioning: $showDimensioning,
+                                    hasDimensioned: hasDimensioned,
                                     accessory: accessory
                                 )
                                 .padding()
@@ -269,7 +280,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
             Spacer()
             if showControls {
                 accessory
-                
+
                 if showChecker {
                     HStack(spacing: 8) {
                         Text("checker")
@@ -279,6 +290,9 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                             .monospacedDigit()
                     }
                     .font(.caption)
+                }
+                if hasDimensioned {
+                    DimensioningToggle(isOn: $showDimensioning)
                 }
                 Button {
                     showChecker.toggle()
@@ -334,6 +348,107 @@ private struct PreviewCheckeredModifier: ViewModifier {
     }
 }
 
+// MARK: - Dimensioning (외곽선 + 크기 라벨)
+
+private struct PreviewDimensioningKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    /// ``PreviewLayout``이 하위 뷰에 전달하는 치수 표시 상태.
+    var previewDimensioning: Bool {
+        get { self[PreviewDimensioningKey.self] }
+        set { self[PreviewDimensioningKey.self] = newValue }
+    }
+}
+
+extension View {
+    /// ``PreviewLayout``의 치수 표시가 켜져 있으면 이 뷰의 외곽선과 크기를 덧그린다.
+    ///
+    /// 컨테이너가 미리보기 전체에 자동으로 걸지 않는다. 미리보기 콘텐츠를 통째로 감싸면 컴포넌트가
+    /// 아니라 정렬용 여백까지 포함한 상자가 그려져, 정작 궁금한 컴포넌트의 크기가 드러나지 않는다.
+    /// 그래서 호출부가 치수를 보고 싶은 컴포넌트에 직접 건다.
+    ///
+    /// 외곽선은 **레이아웃 경계**다. ``IconButton``의 `interactionOverflow`처럼 컨테이너가 레이아웃
+    /// 밖으로 넘치는 경우, 넘친 부분은 외곽선 밖에 그려진다(그 차이를 보는 것이 이 도구의 쓸모다).
+    ///
+    /// ```swift
+    /// IconButton(variant: currentVariant, icon: .apps)
+    ///     .interactionOverflow(interactionOverflow)
+    ///     .previewDimensioned()
+    /// ```
+    ///
+    /// - Returns: 치수 표시가 덧붙은 뷰
+    func previewDimensioned() -> some View {
+        modifier(PreviewDimensionedModifier())
+    }
+}
+
+private struct PreviewDimensionedModifier: ViewModifier {
+    @Environment(\.previewDimensioning) private var isOn
+
+    func body(content: Content) -> some View {
+        dimensioned(content)
+            // 컨테이너가 토글 버튼을 띄울지 판단할 근거. 치수를 볼 대상이 없는 미리보기에까지
+            // 아무 일도 하지 않는 버튼이 노출되는 것을 막는다.
+            .preference(key: PreviewDimensionAvailabilityKey.self, value: true)
+    }
+
+    private func dimensioned(_ content: Content) -> some View {
+        content.overlay {
+            if isOn {
+                // overlay 안의 GeometryReader는 대상 뷰 크기를 그대로 받으므로 PreferenceKey 없이
+                // 크기를 읽는다. 표시 전용이라 히트 테스트에서 빼 미리보기 조작을 막지 않는다.
+                GeometryReader { geometry in
+                    Rectangle()
+                        .strokeBorder(
+                            SwiftUI.Color.blue,
+                            style: StrokeStyle(lineWidth: 1, dash: [3, 2])
+                        )
+                        .overlay(alignment: .topLeading) {
+                            Text("\(Int(geometry.size.width))×\(Int(geometry.size.height))")
+                                .font(.system(size: 9, weight: .semibold).monospacedDigit())
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 3)
+                                .padding(.vertical, 1)
+                                .background(SwiftUI.Color.blue, in: RoundedRectangle(cornerRadius: 3))
+                                // 24pt 남짓한 컴포넌트에서도 라벨이 겹치지 않도록 상자 위로 뺀다.
+                                .fixedSize()
+                                .offset(y: -14)
+                        }
+                }
+                .allowsHitTesting(false)
+            }
+        }
+    }
+}
+
+/// 치수 표시 토글. 체커 토글과 달리 켜졌는지 알려주는 슬라이더가 없어 버튼 자체에 상태를 표시한다.
+private struct DimensioningToggle: View {
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Button {
+            isOn.toggle()
+        } label: {
+            Image(systemName: "rectangle.dashed")
+                .foregroundStyle(isOn ? SwiftUI.Color.blue : .accentColor)
+        }
+    }
+}
+
+/// ``previewDimensioned()``가 미리보기 안에 있는지 컨테이너에 알리는 신호.
+///
+/// 이 값은 토글 상태(environment)와 무관하게 "모디파이어가 걸려 있다"만 전한다. environment가
+/// 내려가고 preference가 올라오지만 서로를 참조하지 않으므로 갱신이 되먹임되지 않는다.
+private struct PreviewDimensionAvailabilityKey: PreferenceKey {
+    static let defaultValue = false
+
+    static func reduce(value: inout Bool, nextValue: () -> Bool) {
+        value = value || nextValue()
+    }
+}
+
 // 헤더에 추가 버튼이 필요 없는 일반적인 경우를 위한 편의 이니셜라이저.
 extension PreviewLayout where Accessory == EmptyView {
     init(
@@ -353,13 +468,15 @@ extension PreviewLayout where Accessory == EmptyView {
 // MARK: - Navigation 모드 floating 컨트롤 바
 
 /// ``PreviewLayout/Mode/navigation``의 push된 미리보기 위에 띄우는 드래그 가능한 컨트롤 바.
-/// accessory + 체커 토글 + (체커 ON 시) 크기 슬라이더를 담는다.
+/// accessory + 치수 토글 + 체커 토글 + (체커 ON 시) 크기 슬라이더를 담는다.
 ///
 /// 드래그는 **핸들에만** 걸어, 안쪽 버튼/슬라이더의 탭·드래그가 컨트롤 바 이동 제스처나 밑의
 /// ScrollView 스크롤과 충돌하지 않도록 한다.
 private struct NavigationFloatingControls<Accessory: View>: View {
     @Binding var showChecker: Bool
     @Binding var checkerSize: CGFloat
+    @Binding var showDimensioning: Bool
+    let hasDimensioned: Bool
     let accessory: Accessory
 
     // push를 pop하려면 destination의 dismiss가 필요하다. (호출부 accessory의 presentationMode로는
@@ -398,6 +515,10 @@ private struct NavigationFloatingControls<Accessory: View>: View {
             }
 
             accessory
+
+            if hasDimensioned {
+                DimensioningToggle(isOn: $showDimensioning)
+            }
 
             Button {
                 showChecker.toggle()

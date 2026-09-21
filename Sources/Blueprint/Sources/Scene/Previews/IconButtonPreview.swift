@@ -159,6 +159,9 @@ struct IconButtonPreview: View {
                 }
             }
             .disabled(disable)
+            // 헤더의 자 버튼을 켜면 버튼이 차지하는 자리를 외곽선으로 보여준다.
+            // interactionOverflow를 켜면 인터랙션 영역이 이 외곽선 밖으로 번진다.
+            .previewDimensioned()
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if variantIndex == 0 {
