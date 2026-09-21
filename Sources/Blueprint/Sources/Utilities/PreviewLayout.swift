@@ -299,6 +299,9 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                 } label: {
                     Image(systemName: "checkerboard.rectangle")
                 }
+                .accessibilityLabel("투명도 체커")
+                .accessibilityValue(showChecker ? "켬" : "끔")
+                .accessibilityHint("투명한 영역이 드러나도록 체커보드 배경을 깝니다")
             }
         }
         .frame(height: 20)
@@ -434,6 +437,9 @@ private struct DimensioningToggle: View {
             Image(systemName: "rectangle.dashed")
                 .foregroundStyle(isOn ? SwiftUI.Color.blue : .accentColor)
         }
+        .accessibilityLabel("치수 표시")
+        .accessibilityValue(isOn ? "켬" : "끔")
+        .accessibilityHint("컴포넌트의 외곽선과 크기를 표시합니다")
     }
 }
 
@@ -525,6 +531,9 @@ private struct NavigationFloatingControls<Accessory: View>: View {
             } label: {
                 Image(systemName: "checkerboard.rectangle")
             }
+            .accessibilityLabel("투명도 체커")
+            .accessibilityValue(showChecker ? "켬" : "끔")
+            .accessibilityHint("투명한 영역이 드러나도록 체커보드 배경을 깝니다")
 
             if showChecker {
                 SwiftUI.Slider(value: $checkerSize, in: 10...200, step: 1)

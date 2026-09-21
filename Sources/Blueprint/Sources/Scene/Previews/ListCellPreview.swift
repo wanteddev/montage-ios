@@ -166,7 +166,10 @@ struct ListCellPreview: View {
         PreviewLayout {
             VStack(alignment: .leading, spacing: 8) {
                 caption("Single")
+                // 낱개 셀에만 치수를 건다. 리스트 예시까지 걸면 셀마다 상자와 라벨이 붙어
+                // 정작 보려던 셀 높이가 묻힌다.
                 cell(divider: divider)
+                    .previewDimensioned()
 
                 caption("In List")
                 listSample
