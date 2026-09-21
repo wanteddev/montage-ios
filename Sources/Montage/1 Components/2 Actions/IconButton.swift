@@ -280,6 +280,8 @@ public struct IconButton: View {
         // overflow를 켜면 버튼이 차지하는 자리만 아이콘 크기로 줄고, 컨테이너는 그대로 남아 밖으로 번진다.
         let layoutSize = interactionOverflow ? m.icon : containerSize
         let totalPadding = interactionOverflow ? .zero : m.padding + extraPadding
+        // 컨테이너가 레이아웃 밖으로 넘친 만큼. 터치 영역을 그만큼 되돌려 놓는 데 쓴다.
+        let overflowInset = (containerSize - layoutSize) / 2
 
         Image.icon(icon)
             .resizable()
@@ -306,6 +308,9 @@ public struct IconButton: View {
                 backgroundLayer(metrics: m)
             }
             .frame(width: layoutSize, height: layoutSize)
+            // 터치 영역은 레이아웃이 아니라 컨테이너를 따른다. 눌리는 자리와 눌린 티가 나는 자리가
+            // 어긋나지 않아야 한다. overflow가 꺼져 있으면 inset이 0이라 프레임 그대로다.
+            .contentShape(Rectangle().inset(by: -overflowInset))
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")
