@@ -804,7 +804,7 @@ extension ListCell {
                 tintColor: SwiftUI.Color = .semantic(.foregroundNeutralSecondary)
             )
 
-            /// 아이콘 버튼 (컨테이너 32×32 / 아이콘 20×20, 배경 없음)
+            /// 아이콘 버튼 (차지하는 자리 20×20 / 인터랙션 영역 32×32, 배경 없음)
             /// - Parameters:
             ///   - icon: 버튼 아이콘
             ///   - handler: 버튼 클릭 핸들러, 생략하면 기본값으로 `nil` 적용
@@ -982,6 +982,7 @@ extension ListCell.Resource.Trailing {
             ListCell.Resource.iconView(icon, tintColor: tintColor, size: ListCell.Resource.iconSize)
         case let .iconButton(icon, handler):
             IconButton(variant: .normal(size: .large), icon: icon, handler: handler)
+                .interactionOverflow()
         case let .textButton(title, color, handler):
             TextButton(color: color, size: .small, text: title, handler: handler)
         case let .button(title, color, handler):

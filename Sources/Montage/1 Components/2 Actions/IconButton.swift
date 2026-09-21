@@ -15,7 +15,7 @@ import SwiftUI
 /// - 외곽선형(outlined): 테두리로 둘러싸인 아이콘
 /// - 솔리드형(solid): 배경색이 채워진 아이콘
 ///
-/// 모든 variant의 컨테이너(터치 영역 포함)는 24~64pt 사이에서 커스텀 사이즈로 지정할 수 있습니다.
+/// 모든 variant의 컨테이너(터치 영역 포함)는 24\~64pt 사이에서 커스텀 사이즈로 지정할 수 있습니다.
 ///
 /// ```swift
 /// IconButton(
@@ -30,6 +30,10 @@ import SwiftUI
 /// // 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
 /// IconButton(icon: .search)
 ///     .interactionEffect(.dim)
+///
+/// // 버튼이 차지하는 자리는 아이콘 크기로, 터치 영역은 컨테이너 크기 그대로
+/// IconButton(icon: .close)
+///     .interactionOverflow()
 /// ```
 ///
 /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
@@ -58,6 +62,7 @@ public struct IconButton: View {
         self.icon = icon
         self.interactionEffect = .highlight
         self.showPushBadge = false
+        self.interactionOverflow = false
         self.extraPadding = .zero
         self.iconColor = nil
         self.backgroundColor = nil
@@ -70,6 +75,7 @@ public struct IconButton: View {
 
     private var interactionEffect: IconButton.InteractionEffect
     private var showPushBadge: Bool
+    private var interactionOverflow: Bool
     private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
     private var backgroundColor: SwiftUI.Color?
@@ -115,6 +121,36 @@ public struct IconButton: View {
     public func showPushBadge(_ value: Bool = true) -> Self {
         var copy = self
         copy.showPushBadge = {
+            guard case .normal = self.variant else { return false }
+            return value
+        }()
+        return copy
+    }
+
+    /// 인터랙션 영역이 레이아웃 밖으로 넘치게 합니다(기본값: 꺼짐).
+    ///
+    /// 버튼이 차지하는 자리를 아이콘 크기까지 줄이고, 인터랙션 영역은 컨테이너 크기 그대로 둡니다.
+    /// 그만큼 컨테이너가 상하좌우로 `(컨테이너 - 아이콘) / 2`씩 넘치지만 주변 간격은 밀지 않습니다.
+    ///
+    /// 아이콘 간격을 촘촘하게 잡아둔 자리에 씁니다. 컨테이너가 아이콘보다 큰 4.0 레이아웃을 그대로 쓰면
+    /// 간격이 그만큼 벌어지는데, 이 모디파이어를 켜면 간격은 아이콘 기준으로 유지하면서 터치 영역은
+    /// 컨테이너 크기를 지킵니다.
+    ///
+    /// 사이즈별 값은 다음과 같습니다(레이아웃 / 넘침 / radius).
+    /// - `.small` - 16 / 4 / 8
+    /// - `.medium` - 18 / 5 / 8
+    /// - `.large` - 20 / 6 / 10
+    /// - `.xlarge` - 24 / 6 / 10
+    ///
+    /// 아이콘·컨테이너·radius 값 자체는 달라지지 않으므로 `custom(size:)`도 같은 규칙을 따릅니다.
+    /// `interactionEffect(_:)`·`disabled(_:)`와 함께 쓸 수 있고, 푸시 뱃지는 켜든 끄든 아이콘 우상단에 붙습니다.
+    ///
+    /// > normal variant에서만 동작합니다. 다른 variant에 걸면 무시됩니다.
+    /// - Parameter value: 인터랙션 영역을 넘치게 할지 여부
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func interactionOverflow(_ value: Bool = true) -> Self {
+        var copy = self
+        copy.interactionOverflow = {
             guard case .normal = self.variant else { return false }
             return value
         }()
@@ -241,7 +277,9 @@ public struct IconButton: View {
     public var body: some View {
         let m = variant.metrics
         let containerSize = m.container + 2 * extraPadding
-        let totalPadding = m.padding + extraPadding
+        // overflow를 켜면 버튼이 차지하는 자리만 아이콘 크기로 줄고, 컨테이너는 그대로 남아 밖으로 번진다.
+        let layoutSize = interactionOverflow ? m.icon : containerSize
+        let totalPadding = interactionOverflow ? .zero : m.padding + extraPadding
 
         Image.icon(icon)
             .resizable()
@@ -260,11 +298,14 @@ public struct IconButton: View {
                     color: customInteractionColor ?? variant.interactionColor
                 )
                 .clipShape(RoundedRectangle(cornerRadius: m.radius))
+                // background 안에서 크기를 잡으므로 레이아웃보다 커도 바깥으로 번지기만 하고
+                // 버튼이 차지하는 자리는 밀지 않는다.
+                .frame(width: containerSize, height: containerSize)
             }
             .background {
                 backgroundLayer(metrics: m)
             }
-            .frame(width: containerSize, height: containerSize)
+            .frame(width: layoutSize, height: layoutSize)
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")

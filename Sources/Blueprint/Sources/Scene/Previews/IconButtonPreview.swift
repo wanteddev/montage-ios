@@ -16,6 +16,7 @@ struct IconButtonPreview: View {
     @State private var alternative = false
     @State private var disable = false
     @State private var interactionEffectIndex = 0
+    @State private var interactionOverflow = false
     @State private var showPushBadge = false
     @State private var padding: CGFloat = 0
     @State private var iconColor: SwiftUI.Color?
@@ -114,6 +115,7 @@ struct IconButtonPreview: View {
     private var resolvedInteractionEffect: IconButton.InteractionEffect {
         interactionEffects[interactionEffectSelection.wrappedValue]
     }
+
     
     var body: some View {
         PreviewLayout {
@@ -125,6 +127,7 @@ struct IconButtonPreview: View {
                 }
             )
             .interactionEffect(resolvedInteractionEffect)
+            .interactionOverflow(interactionOverflow)
             .showPushBadge(isNormal ? showPushBadge : false)
             .padding(isOutlinedOrSolid ? padding : 0)
             .modifying {
@@ -181,6 +184,7 @@ struct IconButtonPreview: View {
                 labels: interactionEffects.map(\.description)
             )
             if isNormal {
+                ToggleOptionRow("interactionOverflow", isOn: $interactionOverflow)
                 ToggleOptionRow("pushBadge", isOn: $showPushBadge)
             }
             if isOutlinedOrSolid {
