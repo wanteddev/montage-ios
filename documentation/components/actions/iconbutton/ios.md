@@ -31,6 +31,10 @@ IconButton(icon: .bell)
 // 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
 IconButton(icon: .search)
     .interactionEffect(.dim)
+
+// 버튼이 차지하는 자리는 아이콘 크기로, 터치 영역은 컨테이너 크기 그대로
+IconButton(icon: .close)
+    .interactionOverflow()
 ```
 
 > **Note**
@@ -177,6 +181,41 @@ press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.highl
   > **Note**
   >
   > `.dim`은 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.highlight`로 처리됩니다.
+
+</details>
+<details>
+
+<summary>``func interactionOverflow(Bool) -> IconButton``</summary>
+
+
+인터랙션 영역이 레이아웃 밖으로 넘치게 합니다(기본값: 꺼짐).
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `value` | 인터랙션 영역을 넘치게 할지 여부 |
+
+- **Return Value**
+
+  수정된 IconButton 인스턴스
+- **Discussion**
+
+  버튼이 차지하는 자리를 아이콘 크기까지 줄이고, 인터랙션 영역은 컨테이너 크기 그대로 둡니다. 그만큼 컨테이너가 상하좌우로 `(컨테이너 - 아이콘) / 2`씩 넘치지만 주변 간격은 밀지 않습니다.
+
+  아이콘 간격을 촘촘하게 잡아둔 자리에 씁니다. 컨테이너가 아이콘보다 큰 4.0 레이아웃을 그대로 쓰면 간격이 그만큼 벌어지는데, 이 모디파이어를 켜면 간격은 아이콘 기준으로 유지하면서 터치 영역은 컨테이너 크기를 지킵니다.
+
+  사이즈별 값은 다음과 같습니다(레이아웃 / 넘침 / radius).
+  - `.small` - 16 / 4 / 8
+  - `.medium` - 18 / 5 / 8
+  - `.large` - 20 / 6 / 10
+  - `.xlarge` - 24 / 6 / 10
+
+
+  아이콘·컨테이너·radius 값 자체는 달라지지 않으므로 `custom(size:)`도 같은 규칙을 따릅니다. `interactionEffect(_:)`·`disabled(_:)`와 함께 쓸 수 있고, 푸시 뱃지는 켜든 끄든 아이콘 우상단에 붙습니다.
+  > **Note**
+  >
+  > Normal variant에서만 동작합니다. 다른 variant에 걸면 무시됩니다.
 
 </details>
 <details>
