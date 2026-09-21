@@ -7,6 +7,8 @@
 /*.xcodeproj
 xcuserdata/
 Derived
+# Xcode의 Build Location을 Custom(워크스페이스 상대)으로 두면 빌드 산출물이 여기 쌓인다
+Build/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 package-lock.json
 # montage-mcp 컨테이너 빌드에서 `npm ci` 재현성을 위해 lockfile은 추적한다
