@@ -158,7 +158,20 @@ public struct BottomSheet: View {
         .modifying { originalView in
             Group {
                 if #available(iOS 16.4, *) {
-                    originalView.presentationCornerRadius(Self.cornerRadius)
+                    // presentationCornerRadius는 시트 네 모서리에 같은 값을 적용해서, 아래쪽이
+                    // 기기 화면 모서리(약 55)보다 작은 곡률로 깎이며 그 틈으로 딤이 비친다.
+                    // 그래서 배경을 직접 그려 위쪽만 둥글게 한다. 아래쪽은 직사각으로 두어도
+                    // 화면 밖으로 이어지므로 기기 모서리 마스크에 맞춰 잘린다.
+                    //
+                    // 바탕은 시스템 시트와 같은 색으로 두고, 그 위에 덮는 88%는 위의
+                    // `background(_:)`가 그대로 담당한다(WRP-2410에서 디자이너가 정한 값).
+                    originalView.presentationBackground {
+                        UnevenRoundedRectangle(
+                            topLeadingRadius: Self.cornerRadius,
+                            topTrailingRadius: Self.cornerRadius
+                        )
+                        .fill(SwiftUI.Color(uiColor: .systemBackground))
+                    }
                 } else {
                     originalView
                 }
@@ -288,10 +301,10 @@ public struct BottomSheet: View {
             )
     }
     
-    /// 바텀 시트의 모서리 반경.
+    /// 바텀 시트 위쪽 모서리의 반경.
     ///
-    /// 시트 하단은 화면 밖으로 이어지지만, `.fill`처럼 화면을 다 채우지 않는 detent에서도
-    /// 같은 값이 보이도록 상하 구분 없이 적용한다.
+    /// 아래쪽에는 적용하지 않는다. 시트 아래쪽은 화면 밖으로 이어져 기기 화면 모서리에
+    /// 맞춰 잘리므로, 여기에 값을 주면 오히려 기기 곡률과 어긋난다.
     private static let cornerRadius: CGFloat = 32
 
     /// ``ActionArea`` 상하 여백.

@@ -1086,7 +1086,7 @@ Corner radii and padding changed across the modals. **The API is unchanged, so t
 | Item | 3.x | 4.0 |
 |---|---|---|
 | Popup radius | 12 | **24** |
-| BottomSheet radius | system default (~10) | **32** |
+| BottomSheet radius (top) | system default (~10) | **32** |
 | Content horizontal padding | 20 | **28** |
 | Content vertical padding | 20 (top only, and only without navigation) | **0** (24 when turned on via `contentPadding`) |
 | `ModalNavigation` `.emphasized` vertical | 20 | **24** |

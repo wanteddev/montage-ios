@@ -1086,7 +1086,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | 항목 | 3.x | 4.0 |
 |---|---|---|
 | Popup radius | 12 | **24** |
-| BottomSheet radius | 시스템 기본 (약 10) | **32** |
+| BottomSheet radius (위쪽) | 시스템 기본 (약 10) | **32** |
 | 콘텐츠 좌우 여백 | 20 | **28** |
 | 콘텐츠 상하 여백 | 20 (내비게이션 없을 때만 위쪽) | **0** (`contentPadding`으로 켜면 24) |
 | `ModalNavigation` `.emphasized` 상하 | 20 | **24** |
