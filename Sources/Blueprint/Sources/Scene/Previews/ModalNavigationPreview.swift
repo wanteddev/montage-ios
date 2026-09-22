@@ -15,6 +15,7 @@ struct ModalNavigationPreview: View {
     @State private var leadingButtonTypeIndex = 0
     @State private var trailingButtonCount = 1
     @State private var noMaterialBackground = false
+    @State private var iconButtonBackground = false
     @State private var useFixedOpacity = false
     @State private var fixedOpacity: CGFloat = 0.5
     @Environment(\.presentationMode) var presentationMode
@@ -29,6 +30,9 @@ struct ModalNavigationPreview: View {
             SegmentedIndexRow("leadingButton", index: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0?.description ?? "none")" })
             SegmentedIndexRow("trailingButton", index: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
             ToggleOptionRow("noMaterialBackground", isOn: $noMaterialBackground)
+            if variants[variantIndex] == .floating {
+                ToggleOptionRow("iconButtonBackground", isOn: $iconButtonBackground)
+            }
             HStack {
                 Text("fixedBackgroundOpacity")
                 SwiftUI.Slider(value: $fixedOpacity, in: 0...1)
@@ -83,46 +87,19 @@ struct ModalNavigationPreview: View {
                             $0
                         }
                     }
-                    .leadingContent {
-                        Group {
-                            TopNavigation.LeadingButton.init(
-                                leadingButtons[leadingButtonTypeIndex]
-                            )
-                        }
-                    }
-                    .trailingContents(
-                        Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
-                            switch kind {
-                            case let .icon(i, d, s, a):
-                                {
-                                    AnyView(TopNavigation.TrailingIconButton(
-                                        icon: i,
-                                        showPushBadge: s,
-                                        action: a
-                                    )
-                                    .disabled(d))
-                                }
-                            case let .text(t, d, a):
-                                {
-                                    AnyView(TopNavigation.TrailingTextButton(
-                                        text: t,
-                                        action: a
-                                    )
-                                    .disabled(d))
-                                }
-                            }
-                        }
-                    )
+                    .leading(leadingButtons[leadingButtonTypeIndex])
+                    .trailings(Array(actions.prefix(trailingButtonCount)))
+                    .iconButtonBackground(iconButtonBackground)
             }
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
         }
     }
 
     private var variants: [ModalNavigation.Variant] {
-        [.normal, .display, .emphasized, .floating]
+        [.normal, .emphasized, .floating]
     }
 
-    private var leadingButtons: [TopNavigation.Resource.Leading?] {
+    private var leadingButtons: [ModalNavigation.Resource.Leading?] {
         [
             nil,
             .back(action: {
@@ -137,18 +114,19 @@ struct ModalNavigationPreview: View {
         ]
     }
 
-    private let actions: [TopNavigation.Resource.Trailing] = {
+    // 닫기 버튼은 가장 오른쪽에 와야 하므로 배열 마지막에 둔다.
+    private let actions: [ModalNavigation.Resource.Trailing] = {
         [
-            .icon(.close, action: {}),
-            .icon(.download, showPushBadge: true, action: {}),
-            .text("알림", action: {})
+            .icon(.download, action: {}),
+            .text("알림", action: {}),
+            .close(action: {})
         ]
     }()
 }
 
 extension ModalNavigation.Variant: CaseDescribable {}
-extension TopNavigation.Resource.Leading: CaseDescribable {}
-extension TopNavigation.Resource.Trailing: CaseDescribable {}
+extension ModalNavigation.Resource.Leading: CaseDescribable {}
+extension ModalNavigation.Resource.Trailing: CaseDescribable {}
 
 #Preview {
     ModalNavigationPreview()
