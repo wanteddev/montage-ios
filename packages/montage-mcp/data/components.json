@@ -1195,6 +1195,12 @@
           "kind": "method"
         },
         {
+          "name": "interactionOverflow(_:)",
+          "signature": "func interactionOverflow(Bool) -> IconButton",
+          "summary": "인터랙션 영역이 레이아웃 밖으로 넘치게 합니다(기본값: 꺼짐).",
+          "kind": "method"
+        },
+        {
           "name": "padding(_:)",
           "signature": "func padding(CGFloat) -> IconButton",
           "summary": "버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).",

@@ -9,7 +9,6 @@ import SwiftUI
 import Montage
 
 struct CategoryPreview: View {
-    @State private var showGuideLine: Bool = false
     @State private var selectedIndex: Int = 0
     @State private var items: [Select.Item] = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"].map { Select.Item(text: $0) }
     @State private var isAlternative: Bool = false
@@ -34,11 +33,10 @@ struct CategoryPreview: View {
             .if(icon) {
                 $0.iconButton(.apps, action: { alertPresented.toggle() })
             }
-            .border(showGuideLine ? .blue : .clear)
+            .previewDimensioned()
             .alert("icon Button Pressed", isPresented: $alertPresented) {}
         } options: {
             HStack {
-                ToggleOption("guideLine", isOn: $showGuideLine)
                 ToggleOption("alternative", isOn: $isAlternative)
                 ToggleOption("icon", isOn: $icon)
             }

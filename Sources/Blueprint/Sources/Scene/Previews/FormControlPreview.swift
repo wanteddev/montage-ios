@@ -20,7 +20,6 @@ struct FormControlPreview: View {
     @State private var showAccessory: Bool = false
     @State private var autoLabelWidth: Bool = true
     @State private var labelWidth: CGFloat = 64
-    @State private var guideLine: Bool = false
     @State private var inputIndex = 0
     @State private var selectItems: [Select.Item] = [
         Select.Item(text: "옵션 1"),
@@ -74,10 +73,6 @@ struct FormControlPreview: View {
             ToggleOptionRow("required", isOn: $required)
             TextFieldOptionRow("message", text: $message)
             ToggleOptionRow("accessory", isOn: $showAccessory)
-        } accessory: {
-            SwiftUI.Button(action: { guideLine.toggle() }) {
-                Image(systemName: "rectangle.dashed")
-            }
         }
         // 입력 타입이 바뀌면 status 선택을 normal로 초기화한다(positive는 TextField 전용이라 인덱스 어긋남 방지).
         .onChange(of: inputIndex) { _ in
@@ -119,7 +114,7 @@ struct FormControlPreview: View {
                     .typography(variant: .caption1, weight: .regular, semantic: .foregroundNeutralTertiary)
             }
         }
-        return control.border(guideLine ? Color.blue : Color.clear)
+        return control.previewDimensioned()
     }
 }
 
