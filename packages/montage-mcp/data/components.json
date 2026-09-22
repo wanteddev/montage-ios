@@ -287,6 +287,12 @@
       ],
       "modifiers": [
         {
+          "name": "contentPadding(vertical:horizontal:)",
+          "signature": "func contentPadding(vertical: ModalContentPadding.Vertical, horizontal: ModalContentPadding.Horizontal) -> BottomSheet",
+          "summary": "콘텐츠 영역의 여백을 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "ignoresEdgeInsets(_:)",
           "signature": "func ignoresEdgeInsets(Bool) -> BottomSheet",
           "summary": "컨텐츠의 기본 여백을 무시할지 설정합니다.",
@@ -1660,6 +1666,39 @@
       ]
     },
     {
+      "slug": "modalcontentpadding",
+      "name": "ModalContentPadding",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct ModalContentPadding",
+      "summary": "모달 콘텐츠 영역의 여백 적용 방식입니다.",
+      "initializers": [],
+      "modifiers": [],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "ModalContentPadding.Horizontal",
+          "kind": "enum",
+          "summary": "콘텐츠 좌우 여백의 적용 여부입니다.",
+          "cases": [
+            "default",
+            "none"
+          ]
+        },
+        {
+          "name": "ModalContentPadding.Vertical",
+          "kind": "enum",
+          "summary": "콘텐츠 상하 여백의 적용 범위입니다.",
+          "cases": [
+            "both",
+            "bottom",
+            "none",
+            "top"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "modalnavigation",
       "name": "ModalNavigation",
       "category": "utilities",
@@ -1685,9 +1724,15 @@
           "kind": "method"
         },
         {
-          "name": "leadingContent(_:)",
-          "signature": "func leadingContent<V>(() -> V) -> ModalNavigation",
-          "summary": "내비게이션 바의 왼쪽 버튼 영역을 설정합니다.",
+          "name": "iconButtonBackground(_:)",
+          "signature": "func iconButtonBackground(Bool) -> ModalNavigation",
+          "summary": "아이콘 버튼에 원형 배경을 넣을지 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "leading(_:)",
+          "signature": "func leading(Resource.Leading?) -> ModalNavigation",
+          "summary": "내비게이션 바 왼쪽에 놓을 요소를 설정합니다.",
           "kind": "method"
         },
         {
@@ -1721,15 +1766,15 @@
           "kind": "method"
         },
         {
-          "name": "trailingContents(_:)",
-          "signature": "func trailingContents((() -> any View)...) -> ModalNavigation",
-          "summary": "내비게이션 바의 오른쪽 버튼 영역을 설정합니다.",
+          "name": "trailings(_:)",
+          "signature": "func trailings(Resource.Trailing...) -> ModalNavigation",
+          "summary": "내비게이션 바 오른쪽에 놓을 요소들을 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "trailingContents(_:)",
-          "signature": "func trailingContents([() -> any View]) -> ModalNavigation",
-          "summary": "내비게이션 바의 오른쪽 버튼 영역을 설정합니다.",
+          "name": "trailings(_:)",
+          "signature": "func trailings([Resource.Trailing]) -> ModalNavigation",
+          "summary": "내비게이션 바 오른쪽에 놓을 요소들을 설정합니다.",
           "kind": "method"
         },
         {
@@ -1742,20 +1787,69 @@
       "staticMembers": [],
       "nestedTypes": [
         {
+          "name": "ModalNavigation.Resource",
+          "kind": "enum",
+          "summary": "내비게이션 바 좌우에 놓을 수 있는 요소의 프리셋입니다."
+        },
+        {
+          "name": "ModalNavigation.Resource.Leading",
+          "kind": "enum",
+          "summary": "내비게이션 바 왼쪽에 놓는 요소입니다.",
+          "cases": [
+            "back",
+            "icon",
+            "slotView",
+            "text"
+          ],
+          "caseSignatures": [
+            "back(action:)",
+            "icon(_:action:)",
+            "slotView(_:)",
+            "text(_:action:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ModalNavigation.Resource.Trailing",
+          "kind": "enum",
+          "summary": "내비게이션 바 오른쪽에 놓는 요소입니다.",
+          "cases": [
+            "close",
+            "icon",
+            "slotView",
+            "text"
+          ],
+          "caseSignatures": [
+            "close(action:)",
+            "icon(_:action:)",
+            "slotView(_:)",
+            "text(_:action:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Trailing",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
           "name": "ModalNavigation.Variant",
           "kind": "struct",
           "summary": "내비게이션 바의 외관을 정의하는 구조체입니다.",
           "staticProperties": [
             {
-              "name": "display",
-              "signature": "static let display: ModalNavigation.Variant",
-              "summary": "제목이 별도 줄에 표시되는 확장된 스타일",
-              "kind": "property"
-            },
-            {
               "name": "emphasized",
               "signature": "static let emphasized: ModalNavigation.Variant",
-              "summary": "강조된 큰 제목 스타일",
+              "summary": "제목을 왼쪽에 두는 스타일. Popup·BottomSheet의 기본값입니다.",
               "kind": "property"
             },
             {
@@ -1767,7 +1861,7 @@
             {
               "name": "normal",
               "signature": "static let normal: ModalNavigation.Variant",
-              "summary": "기본 스타일의 내비게이션 바",
+              "summary": "제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.",
               "kind": "property"
             }
           ]
@@ -1926,6 +2020,12 @@
         }
       ],
       "modifiers": [
+        {
+          "name": "contentPadding(vertical:horizontal:)",
+          "signature": "func contentPadding(vertical: ModalContentPadding.Vertical, horizontal: ModalContentPadding.Horizontal) -> Popup",
+          "summary": "콘텐츠 영역의 여백을 설정합니다.",
+          "kind": "method"
+        },
         {
           "name": "ignoresEdgeInsets(_:)",
           "signature": "func ignoresEdgeInsets(Bool) -> Popup",

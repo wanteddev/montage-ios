@@ -11,7 +11,7 @@ description: 화면 중앙에 표시되는 팝업 모달 컴포넌트입니다.
 
 배경을 어둡게 처리하고 화면 중앙에 콘텐츠를 표시하는 형태의 모달입니다. 내비게이션 바와 액션 영역을 설정할 수 있습니다.
 
-대개는 `SwiftUI/View/popup(isPresented:resize:ignoresEdgeInsets:navigation:actionArea:_:)` 수정자를 씁니다. 딤 처리와 표시 애니메이션까지 함께 해 줍니다. SwiftUI 표준 모달 옵션을 함께 얹어야 할 때만 이 타입을 직접 만들어 `.fullScreenCover` 안에 넣습니다.
+대개는 `SwiftUI/View/popup(isPresented:resize:contentVerticalPadding:contentHorizontalPadding:navigation:actionArea:_:)` 수정자를 씁니다. 딤 처리와 표시 애니메이션까지 함께 해 줍니다. SwiftUI 표준 모달 옵션을 함께 얹어야 할 때만 이 타입을 직접 만들어 `.fullScreenCover` 안에 넣습니다.
 
 ```swift
 @State private var showPopup = false
@@ -65,10 +65,35 @@ YourView()
 
 <details>
 
-<summary>``func ignoresEdgeInsets(Bool) -> Popup``</summary>
+<summary>``func contentPadding(vertical: ModalContentPadding.Vertical, horizontal: ModalContentPadding.Horizontal) -> Popup``</summary>
+
+
+콘텐츠 영역의 여백을 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `vertical` | 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용 |
+  | `horizontal` | 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용 |
+
+- **Return Value**
+
+  수정된 팝업 모달 뷰
+- **Discussion**
+
+  좌우 28, 상하 24를 각각 켜고 끕니다. 기본값은 좌우만 적용하는 구성입니다.
+</details>
+<details>
+
+<summary>~~``func ignoresEdgeInsets(Bool) -> Popup``~~</summary>
 
 
 컨텐츠의 기본 여백을 무시할지 설정합니다.
+> **Deprecated**
+>
+> contentPadding(vertical:horizontal:)을 쓰세요. ignoresEdgeInsets(true)는 contentPadding(vertical: .none, horizontal: .none)과 같습니다.
+
 
 - **Parameters**
 
@@ -174,7 +199,7 @@ YourView()
 
 <details>
 
-<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``</summary>
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, contentVerticalPadding: ModalContentPadding.Vertical, contentHorizontalPadding: ModalContentPadding.Horizontal, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``</summary>
 
 
 팝업 모달을 표시합니다.
@@ -185,7 +210,8 @@ YourView()
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
-  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용 |
+  | `contentVerticalPadding` | 콘텐츠 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용 |
+  | `contentHorizontalPadding` | 콘텐츠 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
@@ -196,6 +222,33 @@ YourView()
 - **Discussion**
 
   화면 중앙에 표시되는 팝업 형태의 모달을 표시합니다.
+</details>
+
+<details>
+
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``</summary>
+
+
+팝업 모달을 표시합니다.
+> **Deprecated**
+>
+> contentHorizontalPadding을 쓰세요. ignoresEdgeInsets: true는 contentHorizontalPadding: .none과 같습니다.
+
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
+  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+
+- **Return Value**
+
+  팝업 모달이 적용된 뷰
 </details>
 
 

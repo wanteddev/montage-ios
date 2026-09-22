@@ -112,10 +112,43 @@ View를 UIImage로 변환합니다.
 </details>
 <details>
 
-<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
+<summary>``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, contentVerticalPadding: ModalContentPadding.Vertical, contentHorizontalPadding: ModalContentPadding.Horizontal, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, onDismiss: (() -> Void)?, () -> V) -> some View``</summary>
 
 
 바텀 시트 모달을 표시합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `isFullScreenCover` | 전체 화면 모달로 표시할지 여부, 생략하면 기본값으로 `false` 적용 |
+  | `needHandle` | 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용 |
+  | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
+  | `contentVerticalPadding` | 콘텐츠 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용 |
+  | `contentHorizontalPadding` | 콘텐츠 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `onDismiss` | 모달이 닫힐때 호출될 클로저 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+
+- **Return Value**
+
+  바텀 시트 모달이 적용된 뷰
+- **Discussion**
+
+  화면 하단에서 올라오는 바텀 시트 형태의 모달을 표시합니다.
+</details>
+<details>
+
+<summary>~~``func bottomSheet<V>(isPresented: Binding<Bool>, isFullScreenCover: Bool, needHandle: Bool, resize: BottomSheet.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, onDismiss: (() -> Void)?, () -> V) -> some View``~~</summary>
+
+
+바텀 시트 모달을 표시합니다.
+> **Deprecated**
+>
+> contentHorizontalPadding을 쓰세요. ignoresEdgeInsets: true는 contentHorizontalPadding: .none과 같습니다.
+
 
 - **Parameters**
 
@@ -134,9 +167,6 @@ View를 UIImage로 변환합니다.
 - **Return Value**
 
   바텀 시트 모달이 적용된 뷰
-- **Discussion**
-
-  화면 하단에서 올라오는 바텀 시트 형태의 모달을 표시합니다.
 </details>
 <details>
 
@@ -443,7 +473,7 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 </details>
 <details>
 
-<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``</summary>
+<summary>``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, contentVerticalPadding: ModalContentPadding.Vertical, contentHorizontalPadding: ModalContentPadding.Horizontal, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``</summary>
 
 
 팝업 모달을 표시합니다.
@@ -454,7 +484,8 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
   | --- | --- |
   | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
   | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
-  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용 |
+  | `contentVerticalPadding` | 콘텐츠 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용 |
+  | `contentHorizontalPadding` | 콘텐츠 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용 |
   | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
   | `content` | 모달에 표시할 콘텐츠 클로저 |
@@ -465,6 +496,32 @@ View의 지오메트리 변경정보를 디바운스시켜서 받습니다.
 - **Discussion**
 
   화면 중앙에 표시되는 팝업 형태의 모달을 표시합니다.
+</details>
+<details>
+
+<summary>~~``func popup<V>(isPresented: Binding<Bool>, resize: Popup.Resize, ignoresEdgeInsets: Bool, navigation: (() -> ModalNavigation)?, actionArea: (() -> ActionArea)?, () -> V) -> some View``~~</summary>
+
+
+팝업 모달을 표시합니다.
+> **Deprecated**
+>
+> contentHorizontalPadding을 쓰세요. ignoresEdgeInsets: true는 contentHorizontalPadding: .none과 같습니다.
+
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `isPresented` | 모달 표시 여부를 제어하는 바인딩 |
+  | `resize` | 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용 |
+  | `ignoresEdgeInsets` | 모달 내용이 Edge 인셋을 무시할지 여부 |
+  | `navigation` | 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `actionArea` | 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `content` | 모달에 표시할 콘텐츠 클로저 |
+
+- **Return Value**
+
+  팝업 모달이 적용된 뷰
 </details>
 <details>
 

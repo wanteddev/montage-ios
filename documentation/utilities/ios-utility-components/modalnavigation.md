@@ -11,19 +11,24 @@ description: 모달 내에서 사용하는 내비게이션 바 컴포넌트입�
 
 모달 상단에 제목, 뒤로가기 버튼, 추가 버튼 등을 포함하는 내비게이션 바를 제공합니다. 스크롤에 따라 배경 불투명도가 자동으로 조절되며 다양한 스타일을 지원합니다.
 
+좌우에 놓는 요소는 [ModalNavigation.Resource.Leading](/documentation/montage/modalnavigation/resource/leading.md)·[ModalNavigation.Resource.Trailing](/documentation/montage/modalnavigation/resource/trailing.md) 프리셋에서 고릅니다. 오른쪽은 왼쪽부터 순서대로 배치하므로 닫기 버튼을 마지막에 둡니다.
+
 ```swift
 ModalNavigation()
-    .variant(.normal)
-    .titleView {
-        Text("제목").bold()
-    }
-    .leadingContent {
-        // 뒤로가기 동작 컴포넌트
-    }
-    .trailingContents(
-        { /* 컴포넌트1 */ },
-        { /* 컴포넌트2 */ }
+    .variant(.emphasized)
+    .title("제목")
+    .leading(.back(action: goBack))
+    .trailings(
+        .icon(.share, action: share),
+        .close(action: dismiss)
     )
+```
+
+프리셋에 없는 구성은 `slot(_:)`으로 직접 그립니다.
+
+```swift
+ModalNavigation()
+    .leading(.slot { Avatar(url: profileURL) })
 ```
 
 ## Topics
@@ -48,17 +53,10 @@ ModalNavigation()
 
 <details>
 
-<summary>``static let display: ModalNavigation.Variant``</summary>
-
-
-제목이 별도 줄에 표시되는 확장된 스타일
-</details>
-<details>
-
 <summary>``static let emphasized: ModalNavigation.Variant``</summary>
 
 
-강조된 큰 제목 스타일
+제목을 왼쪽에 두는 스타일. [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)의 기본값입니다.
 </details>
 <details>
 
@@ -72,7 +70,7 @@ ModalNavigation()
 <summary>``static let normal: ModalNavigation.Variant``</summary>
 
 
-기본 스타일의 내비게이션 바
+제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.
 </details>
 
 </details>
@@ -142,16 +140,36 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>``func leadingContent<V>(() -> V) -> ModalNavigation``</summary>
+<summary>``func iconButtonBackground(Bool) -> ModalNavigation``</summary>
 
 
-내비게이션 바의 왼쪽 버튼 영역을 설정합니다.
+아이콘 버튼에 원형 배경을 넣을지 설정합니다.
 
 - **Parameters**
 
   | Parameter | Description |
   | --- | --- |
-  | `content` | 왼쪽에 노출될 컨텐츠 |
+  | `hasBackground` | 원형 배경 사용 여부 |
+
+- **Return Value**
+
+  수정된 내비게이션 바 뷰
+- **Discussion**
+
+  상단에 이미지를 깔아 버튼이 묻히는 자리에 씁니다. `floating` variant에서만 동작하고, 텍스트 버튼에는 적용되지 않습니다.
+</details>
+<details>
+
+<summary>``func leading(Resource.Leading?) -> ModalNavigation``</summary>
+
+
+내비게이션 바 왼쪽에 놓을 요소를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `leading` | 왼쪽에 놓을 [ModalNavigation.Resource.Leading](/documentation/montage/modalnavigation/resource/leading.md). `nil`이면 비워 둡니다 |
 
 - **Return Value**
 
@@ -247,43 +265,43 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>``func trailingContents((() -> any View)...) -> ModalNavigation``</summary>
+<summary>``func trailings(Resource.Trailing...) -> ModalNavigation``</summary>
 
 
-내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
+내비게이션 바 오른쪽에 놓을 요소들을 설정합니다.
 
 - **Parameters**
 
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 오른쪽에 노출될 컨텐츠 클로저들 (최대 3개까지 표시) |
+  | `trailings` | 오른쪽에 놓을 [ModalNavigation.Resource.Trailing](/documentation/montage/modalnavigation/resource/trailing.md) 목록 (최대 3개까지 표시) |
 
 - **Return Value**
 
   수정된 내비게이션 바 뷰
 - **Discussion**
 
-  이 메서드는 배열 버전(`trailingContents(_:)`)에 대한 편의 오버로딩입니다.
+  배열 버전 [trailings(_:)](/documentation/montage/modalnavigation/trailings(_:)-38gw.md)에 대한 편의 오버로딩입니다.
 </details>
 <details>
 
-<summary>``func trailingContents([() -> any View]) -> ModalNavigation``</summary>
+<summary>``func trailings([Resource.Trailing]) -> ModalNavigation``</summary>
 
 
-내비게이션 바의 오른쪽 버튼 영역을 설정합니다.
+내비게이션 바 오른쪽에 놓을 요소들을 설정합니다.
 
 - **Parameters**
 
   | Parameter | Description |
   | --- | --- |
-  | `contents` | 오른쪽에 노출될 컨텐츠 배열 (최대 3개까지 표시) |
+  | `trailings` | 오른쪽에 놓을 [ModalNavigation.Resource.Trailing](/documentation/montage/modalnavigation/resource/trailing.md) 목록 (최대 3개까지 표시) |
 
 - **Return Value**
 
   수정된 내비게이션 바 뷰
 - **Discussion**
 
-  최대 3개까지의 뷰를 클로저 배열로 전달할 수 있으며, 각 클로저는 다양한 타입의 View를 반환할 수 있습니다 (`any View`). 내부적으로는 모든 View를 `AnyView`로 타입을 지운 후 렌더링합니다.
+  왼쪽부터 순서대로 배치하므로 닫기 버튼은 배열의 마지막에 둡니다.
 </details>
 <details>
 
@@ -301,6 +319,181 @@ ModalNavigation()
 - **Return Value**
 
   수정된 내비게이션 바 뷰
+</details>
+
+### Enumerations
+
+<details>
+
+<summary>``enum Resource``</summary>
+
+
+내비게이션 바 좌우에 놓을 수 있는 요소의 프리셋입니다.
+#### Enumerations
+
+<details>
+
+<summary>``enum Leading``</summary>
+
+
+내비게이션 바 왼쪽에 놓는 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case back(action: () -> Void)``</summary>
+
+
+뒤로 가기 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `action` | 탭했을 때 실행할 동작 |
+
+</details>
+<details>
+
+<summary>``case icon(Icon, action: () -> Void)``</summary>
+
+
+아이콘을 직접 지정하는 아이콘 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `action` | 탭했을 때 실행할 동작 |
+
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+프리셋에 없는 구성을 직접 그릴 때 씁니다. [slot(_:)](/documentation/montage/modalnavigation/resource/leading/slot(_:).md)으로 만듭니다.
+</details>
+<details>
+
+<summary>``case text(String, action: () -> Void)``</summary>
+
+
+텍스트 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 표시할 텍스트 |
+  | `action` | 탭했을 때 실행할 동작 |
+
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Leading``</summary>
+
+
+프리셋에 없는 구성을 직접 그립니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 왼쪽에 놓을 콘텐츠 |
+
+- **Return Value**
+
+  해당 콘텐츠를 그리는 [ModalNavigation.Resource.Leading](/documentation/montage/modalnavigation/resource/leading.md)
+</details>
+
+</details>
+<details>
+
+<summary>``enum Trailing``</summary>
+
+
+내비게이션 바 오른쪽에 놓는 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case close(action: () -> Void)``</summary>
+
+
+모달을 닫는 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `action` | 탭했을 때 실행할 동작 |
+
+</details>
+<details>
+
+<summary>``case icon(Icon, action: () -> Void)``</summary>
+
+
+아이콘을 직접 지정하는 아이콘 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+  | `action` | 탭했을 때 실행할 동작 |
+
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+프리셋에 없는 구성을 직접 그릴 때 씁니다. [slot(_:)](/documentation/montage/modalnavigation/resource/trailing/slot(_:).md)으로 만듭니다.
+</details>
+<details>
+
+<summary>``case text(String, action: () -> Void)``</summary>
+
+
+텍스트 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `text` | 표시할 텍스트 |
+  | `action` | 탭했을 때 실행할 동작 |
+
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Trailing``</summary>
+
+
+프리셋에 없는 구성을 직접 그립니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 오른쪽에 놓을 콘텐츠 |
+
+- **Return Value**
+
+  해당 콘텐츠를 그리는 [ModalNavigation.Resource.Trailing](/documentation/montage/modalnavigation/resource/trailing.md)
+</details>
+
+</details>
+
 </details>
 
 ## Relationships
