@@ -42,12 +42,12 @@ struct BottomSheetPreview: View {
                 ToggleOptionRow("fullModal", isOn: $isFullModal)
                 SegmentedIndexRow("resize", index: $resizeIndex, labels: bottomSheetResizes.map(\.description))
                 SegmentedIndexRow(
-                    "content vertical",
+                    "content-v-padding",
                     index: $contentVerticalIndex,
                     labels: contentVerticalPaddings.map(\.label)
                 )
                 SegmentedIndexRow(
-                    "content horizontal",
+                    "content-h-padding",
                     index: $contentHorizontalIndex,
                     labels: contentHorizontalPaddings.map(\.label)
                 )

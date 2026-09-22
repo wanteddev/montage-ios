@@ -43,12 +43,12 @@ struct PopupPreview: View {
             ), labels: ["hug", "fixed(300)"])
 
             SegmentedIndexRow(
-                "content vertical",
+                "content-v-padding",
                 index: $contentVerticalIndex,
                 labels: contentVerticalPaddings.map(\.label)
             )
             SegmentedIndexRow(
-                "content horizontal",
+                "content-h-padding",
                 index: $contentHorizontalIndex,
                 labels: contentHorizontalPaddings.map(\.label)
             )
