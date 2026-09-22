@@ -420,6 +420,38 @@ Placeholder bar widths change from variable (25/50/75/100%) to uniform. To mimic
 
 The default for `border(color:)` changed from `.lineAlternative` to `.lineNeutralTertiary`. That is the new name for the same color, so nothing renders differently.
 
+#### Popup · BottomSheet content padding
+
+`ignoresEdgeInsets(_:)` becomes `contentPadding(vertical:horizontal:)`, which turns the vertical and horizontal insets on and off separately.
+
+| 3.x | 4.0 |
+|---|---|
+| `.ignoresEdgeInsets()` | `.contentPadding(horizontal: .none)` |
+| `.ignoresEdgeInsets(true)` | `.contentPadding(horizontal: .none)` |
+| `.ignoresEdgeInsets(false)` | `.contentPadding()` (can be omitted) |
+
+The `ignoresEdgeInsets:` argument on the `popup(...)` and `bottomSheet(...)` modifiers maps the same way.
+
+```swift
+// 3.x
+.bottomSheet(isPresented: $isPresented, ignoresEdgeInsets: true) { ... }
+
+// 4.0
+.bottomSheet(isPresented: $isPresented, contentHorizontalPadding: .none) { ... }
+```
+
+**The vertical default changed.** 3.x added a top inset of 20 whenever there was no navigation bar; 4.0 adds nothing. Set `vertical:` explicitly where you presented a modal without navigation.
+
+```swift
+// 3.x popup without navigation - the top inset of 20 was implicit
+.popup(isPresented: $isPresented) { Text("Message") }
+
+// 4.0 - turn the vertical padding on to keep the same look
+.popup(isPresented: $isPresented, contentVerticalPadding: .both) { Text("Message") }
+```
+
+`vertical:` takes `.none` (default), `.top`, `.bottom` or `.both`; `horizontal:` takes `.none` or `.default` (default).
+
 ---
 
 ## 2. Removed, needs rework
@@ -819,6 +851,65 @@ The deprecated UIKit wrappers were removed. Bridge the SwiftUI components with `
 
 The specs are identical, so nothing renders differently.
 
+### 2.9 ModalNavigation leading and trailing slots
+
+`ModalNavigation` was separated from `TopNavigation`, and its leading/trailing slots moved from ViewBuilders to presets. `leadingContent(_:)` and `trailingContents(_:)` are gone; `leading(_:)` and `trailings(_:)` take their place.
+
+Any code that put `TopNavigation.LeadingButton`, `TrailingIconButton` or `TrailingTextButton` into a `ModalNavigation` will fail to compile.
+
+```swift
+// 3.x
+ModalNavigation()
+    .title("Title")
+    .leadingContent {
+        TopNavigation.LeadingButton(.back(action: { dismiss() }))
+    }
+    .trailingContents(
+        { TopNavigation.TrailingIconButton(icon: .share, action: share) },
+        { TopNavigation.TrailingIconButton(icon: .close, action: { dismiss() }) }
+    )
+
+// 4.0
+ModalNavigation()
+    .title("Title")
+    .leading(.back(action: dismiss))
+    .trailings(
+        .icon(.share, action: share),
+        .close(action: dismiss)
+    )
+```
+
+The presets map as follows.
+
+| 3.x | 4.0 |
+|---|---|
+| `TopNavigation.LeadingButton(.back(action:))` | `.leading(.back(action:))` |
+| `TopNavigation.LeadingButton(.icon(_:action:))` | `.leading(.icon(_:action:))` |
+| `TopNavigation.LeadingButton(.text(_:action:))` | `.leading(.text(_:action:))` |
+| `TopNavigation.TrailingIconButton(icon: .close, …)` | `.close(action:)` |
+| `TopNavigation.TrailingIconButton(icon:action:)` | `.icon(_:action:)` |
+| `TopNavigation.TrailingTextButton(text:action:)` | `.text(_:action:)` |
+
+**Put the close button last in the array.** Items are laid out left to right, so a leading `.close` ends up on the left.
+
+Anything the presets do not cover goes through `slot(_:)`.
+
+```swift
+ModalNavigation()
+    .leading(.slot { Avatar(url: profileURL) })
+```
+
+Where a `floating` navigation sits over a top image and the buttons get lost in it, turn on the circular background with `iconButtonBackground()`. It does not apply to text buttons.
+
+```swift
+ModalNavigation()
+    .variant(.floating)
+    .leading(.back(action: dismiss))
+    .iconButtonBackground()
+```
+
+`showPushBadge` and `disabled` are not part of the presets. If you need either, pass an `IconButton` through `slot(_:)`.
+
 ---
 
 ## 3. No replacement
@@ -896,6 +987,7 @@ You will delete the argument to fix the compile error - check what that spot ren
 | Removed | Note |
 |---|---|
 | `ModalNavigation.Variant.extended` | no replacement |
+| `ModalNavigation.Variant.display` | no replacement. It put the title on its own line, so moving to either `.emphasized` or `.normal` changes the title size and line layout |
 | `ModalNavigation.Variant.floating(alternative:background:)` | only the argument-less `.floating` remains |
 | `Select.shadowBackgroundColor(_:)` | no replacement |
 | `Skeleton.Length` (`_25`/`_50`/`_75`/`_100`) | widths are now uniform |
@@ -987,6 +1079,26 @@ The placeholder drawn when there is no image also changed from a dedicated illus
 
 `Shadow`, `Typography`, `Opacity`, and `Spacing` definitions were adjusted, as were `Toast`, `SnackBar`, `Popup`, `Popover`, `Tooltip`, `Thumbnail`, `Accordion`, `Category`, and `ProgressTracker`.
 
+#### Popup · BottomSheet · ModalNavigation
+
+Corner radii and padding changed across the modals. **The API is unchanged, so the build will not surface any of this.**
+
+| Item | 3.x | 4.0 |
+|---|---|---|
+| Popup radius | 12 | **24** |
+| BottomSheet radius (top) | system default (~10) | **32** |
+| Content horizontal padding | 20 | **28** |
+| Content vertical padding | 20 (top only, and only without navigation) | **0** (24 when turned on via `contentPadding`) |
+| `ModalNavigation` `.emphasized` vertical | 20 | **24** |
+| `ModalNavigation` `.emphasized` horizontal | 16 | **24** |
+| `ModalNavigation` `.normal` vertical | 10 | **20** |
+| `ActionArea` horizontal (inside a modal) | 20 | **24** |
+| Popup's `ActionArea` bottom inset | 40 (20 inside + 20 from the popup) | **24** |
+
+The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An `ActionArea` placed directly on a screen or in a `ScreenScaffold` stays at 20.
+
+**The content vertical default going from 20 to 0 has the widest reach.** Modals presented without a navigation bar now have their content flush against the top corners. See [Popup · BottomSheet content padding](#popup--bottomsheet-content-padding) for setting `contentVerticalPadding`.
+
 ### 4.2 Full list
 
 **Walk through these screens after migrating.**
@@ -1000,6 +1112,8 @@ The placeholder drawn when there is no image also changed from a dedicated illus
 | **Chip / FilterButton** | Typography drops a step and padding shrinks, so **they get smaller.** Wrap points change in horizontal chip and filter rows |
 | **Select** | min-height goes up, so **the field gets taller.** The border also gets lighter. At large Dynamic Type sizes the leading icon and chevron no longer stick to the top |
 | **SegmentedControl** | `outlined` variant removed; those spots fall back to solid |
+| **Popup · BottomSheet** | Corners go from 12 to **24** and from the system default to **32**. Content horizontal padding 20→28, and **vertical padding now defaults to 0**, so modals presented without navigation have their content flush against the top corners |
+| **ModalNavigation** | `.display` removed. `.emphasized` padding goes 20→24 vertical and 16→24 horizontal, `.normal` 10→20 vertical, so **the navigation bar gets taller**. The gap between leading and title goes 20→16, and trailing buttons are spaced 16 apart. Leading/trailing buttons now use `IconButton`'s xlarge (36 container / 24 icon), so **the icons get bigger**, and the press feedback changes from a background highlight to dimming the icon (`dim`) |
 | **ActionArea** | The transparent background is now **tied to the scroll reached-end signal.** Containers that do not report it (`SwiftUI.ScrollView`, `List`, non-scrolling popups) keep the gradient and the opaque background, so pass `scrollReachedEnd(true)` yourself. The background only turns transparent when the `extra` slot is empty. `extra` slot horizontal padding 20→24, bottom 24→20, lighter divider, caption bolder at `medium` weight. **The alternative action's label goes from blue to black and the `cancel` main button from outlined to a grey fill** |
 | **AvatarGroup variant** | `variant:` is fixed to `.person`, so groups that used company or academy render **as circles instead of rounded rectangles** |
 | **Avatar / AvatarGroup** | company and academy cornerRadius +2 at every size. The no-image placeholder changed from an illustration to an icon glyph. `opacity43` when disabled |
@@ -1112,6 +1226,10 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Check for leftover `.disable(` (it should be `.disabled(`)
 - [ ] No component-specific modifier chained after `.disabled()` on `Chip` or `FilterButton`
 - [ ] Check for leftover `.topNavigation(`
+- [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
+- [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - variant with no replacement
+- [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"`, for the ones on `ModalNavigation` - moved to `leading(_:)` and `trailings(_:)`
+- [ ] `.close` is last in every `trailings(_:)` array - putting it first pins the close button to the left
 - [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`
 - [ ] Audit `FallbackView(image:`, `variant:` on `AvatarGroup(`, and `TrailingButtonInfo(variant:`
 
@@ -1131,6 +1249,8 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Buttons with long labels - confirm the surrounding layout can absorb the extra height
 - [ ] ActionArea background in popups and sheets with no scroll container
 - [ ] Button colors in ActionAreas using the `alternative` action or the `.cancel` variant
+- [ ] Popups and bottom sheets presented without navigation - content should not sit flush against the top corners
+- [ ] Content that reaches the modal corners (images, full-width lists) is not clipped by the larger radii
 - [ ] Avatar placeholders where no image is provided
 - [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
 - [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator

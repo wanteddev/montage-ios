@@ -17,9 +17,12 @@ struct BottomSheetPreview: View {
     @State private var fixedRatio: CGFloat = 0.6
     @State private var fixedHeight: CGFloat = 200
     @State private var handle = false
+    @State private var contentVerticalIndex = 0
+    @State private var contentHorizontalIndex = 1
 
     @State private var navigation = false
     @State private var navVariantIndex = 0
+    @State private var iconButtonBackground = false
 
     @State private var actionArea = false
     @State private var buttonsIndex = 0
@@ -38,6 +41,16 @@ struct BottomSheetPreview: View {
             VStack(alignment: .leading) {
                 ToggleOptionRow("fullModal", isOn: $isFullModal)
                 SegmentedIndexRow("resize", index: $resizeIndex, labels: bottomSheetResizes.map(\.description))
+                SegmentedIndexRow(
+                    "content-v-padding",
+                    index: $contentVerticalIndex,
+                    labels: contentVerticalPaddings.map(\.label)
+                )
+                SegmentedIndexRow(
+                    "content-h-padding",
+                    index: $contentHorizontalIndex,
+                    labels: contentHorizontalPaddings.map(\.label)
+                )
                 SegmentedIndexRow("item count", index : $itemCountsIndex, labels: itemCounts.map(\.description))
                 switch bottomSheetResizes[resizeIndex] {
                 case .fixedRatio:
@@ -53,6 +66,9 @@ struct BottomSheetPreview: View {
                     if navigation {
                         SegmentedIndexRow(index: $navVariantIndex, labels: navigationVariants.map(\.description))
                     }
+                }
+                if navigation, navigationVariants[navVariantIndex] == .floating {
+                    ToggleOptionRow("icon button background", isOn: $iconButtonBackground)
                 }
                 
                 HStack {
@@ -81,6 +97,8 @@ struct BottomSheetPreview: View {
             isFullScreenCover: isFullModal,
             needHandle: handle,
             resize: bottomSheetResizes[resizeIndex],
+            contentVerticalPadding: contentVerticalPaddings[contentVerticalIndex].value,
+            contentHorizontalPadding: contentHorizontalPaddings[contentHorizontalIndex].value,
             navigation: navigation ? { navigationContent } : nil,
             actionArea: actionArea ? actionAreaSlot : nil,
             { modalContent }
@@ -98,31 +116,13 @@ struct BottomSheetPreview: View {
         ModalNavigation()
             .variant(navigationVariants[navVariantIndex])
             .title("제목")
-            .leadingContent {
-                TopNavigation.LeadingButton(.back(action: {}))
-            }
-            .trailingContents(
-                {
-                    TopNavigation.TrailingIconButton(
-                        icon: .plus,
-                        action: {}
-                    )
-                },
-                {
-                    TopNavigation.TrailingIconButton(
-                        icon: .minus,
-                        action: {}
-                    )
-                },
-                {
-                    TopNavigation.TrailingIconButton(
-                        icon: .close,
-                        action: {
-                            show = false
-                        }
-                    )
-                }
+            .leading(.back(action: {}))
+            .trailings(
+                .icon(.plus, action: {}),
+                .icon(.minus, action: {}),
+                .close(action: { show = false })
             )
+            .iconButtonBackground(iconButtonBackground)
     }
 
     private var modalContent: some View {
@@ -206,11 +206,22 @@ struct BottomSheetPreview: View {
         }
     }
 
+    // Bottom Sheet는 emphasized(기본)와 floating만 쓴다. normal(가운데 정렬)은 전체 화면 모달 전용이다.
     private let navigationVariants: [ModalNavigation.Variant] = [
-        .normal,
-        .display,
         .emphasized,
         .floating,
+    ]
+
+    private let contentVerticalPaddings: [(label: String, value: ModalContentPadding.Vertical)] = [
+        ("none", .none),
+        ("top", .top),
+        ("bottom", .bottom),
+        ("both", .both),
+    ]
+
+    private let contentHorizontalPaddings: [(label: String, value: ModalContentPadding.Horizontal)] = [
+        ("none", .none),
+        ("default", .default),
     ]
 
     private var bottomSheetResizes: [BottomSheet.Resize] {

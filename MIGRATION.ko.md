@@ -420,6 +420,38 @@ Skeleton.SkeletonView(.text(variant: .body1))
 
 `border(color:)`의 기본값이 `.lineAlternative`에서 `.lineNeutralTertiary`로 바뀌었습니다. 같은 색을 가리키는 새 이름이라 렌더 결과는 같습니다.
 
+#### Popup · BottomSheet 콘텐츠 여백
+
+`ignoresEdgeInsets(_:)`가 `contentPadding(vertical:horizontal:)`로 바뀝니다. 상하와 좌우를 따로 켜고 끕니다.
+
+| 3.x | 4.0 |
+|---|---|
+| `.ignoresEdgeInsets()` | `.contentPadding(horizontal: .none)` |
+| `.ignoresEdgeInsets(true)` | `.contentPadding(horizontal: .none)` |
+| `.ignoresEdgeInsets(false)` | `.contentPadding()` (생략 가능) |
+
+`popup(...)` · `bottomSheet(...)` 수정자의 `ignoresEdgeInsets:` 인자도 같습니다.
+
+```swift
+// 3.x
+.bottomSheet(isPresented: $isPresented, ignoresEdgeInsets: true) { ... }
+
+// 4.0
+.bottomSheet(isPresented: $isPresented, contentHorizontalPadding: .none) { ... }
+```
+
+**상하 여백은 기본값이 달라졌습니다.** 3.x는 내비게이션이 없으면 위쪽 20을 자동으로 넣었는데, 4.0은 넣지 않습니다. 내비게이션 없이 쓰던 자리는 `vertical:`을 직접 지정해주세요.
+
+```swift
+// 3.x에서 내비게이션 없이 쓰던 팝업 - 위쪽 20이 자동으로 들어갔다
+.popup(isPresented: $isPresented) { Text("메시지") }
+
+// 4.0 - 같은 모양을 내려면 상하 여백을 직접 켠다
+.popup(isPresented: $isPresented, contentVerticalPadding: .both) { Text("메시지") }
+```
+
+`vertical:`은 `.none`(기본) · `.top` · `.bottom` · `.both`, `horizontal:`은 `.none` · `.default`(기본)입니다.
+
 ---
 
 ## 2. 없어져서 다시 짜야 하는 것
@@ -819,6 +851,65 @@ deprecated UIKit 래퍼가 제거됐습니다. SwiftUI 컴포넌트를 `UIHostin
 
 스펙은 동일하므로 렌더 결과에 차이가 없습니다.
 
+### 2.9 ModalNavigation 좌우 슬롯
+
+`ModalNavigation`이 `TopNavigation`과 분리되면서 좌우에 넣는 방식이 ViewBuilder 슬롯에서 프리셋으로 바뀌었습니다. `leadingContent(_:)`와 `trailingContents(_:)`가 제거되고 `leading(_:)`·`trailings(_:)`가 그 자리를 대신합니다.
+
+`TopNavigation.LeadingButton`·`TrailingIconButton`·`TrailingTextButton`을 `ModalNavigation`에 넣던 코드는 전부 컴파일 에러가 납니다.
+
+```swift
+// 3.x
+ModalNavigation()
+    .title("제목")
+    .leadingContent {
+        TopNavigation.LeadingButton(.back(action: { dismiss() }))
+    }
+    .trailingContents(
+        { TopNavigation.TrailingIconButton(icon: .share, action: share) },
+        { TopNavigation.TrailingIconButton(icon: .close, action: { dismiss() }) }
+    )
+
+// 4.0
+ModalNavigation()
+    .title("제목")
+    .leading(.back(action: dismiss))
+    .trailings(
+        .icon(.share, action: share),
+        .close(action: dismiss)
+    )
+```
+
+프리셋 대응은 이렇습니다.
+
+| 3.x | 4.0 |
+|---|---|
+| `TopNavigation.LeadingButton(.back(action:))` | `.leading(.back(action:))` |
+| `TopNavigation.LeadingButton(.icon(_:action:))` | `.leading(.icon(_:action:))` |
+| `TopNavigation.LeadingButton(.text(_:action:))` | `.leading(.text(_:action:))` |
+| `TopNavigation.TrailingIconButton(icon: .close, …)` | `.close(action:)` |
+| `TopNavigation.TrailingIconButton(icon:action:)` | `.icon(_:action:)` |
+| `TopNavigation.TrailingTextButton(text:action:)` | `.text(_:action:)` |
+
+**닫기 버튼은 배열 마지막에 둡니다.** 왼쪽부터 순서대로 배치하므로 `.close`가 앞에 오면 닫기 버튼이 왼쪽에 놓입니다.
+
+프리셋에 없는 구성은 `slot(_:)`으로 엽니다.
+
+```swift
+ModalNavigation()
+    .leading(.slot { Avatar(url: profileURL) })
+```
+
+`floating`에서 상단 이미지 위에 버튼이 묻히는 자리는 `iconButtonBackground()`로 원형 배경을 켭니다. 텍스트 버튼에는 적용되지 않습니다.
+
+```swift
+ModalNavigation()
+    .variant(.floating)
+    .leading(.back(action: dismiss))
+    .iconButtonBackground()
+```
+
+`showPushBadge`와 `disabled`는 프리셋에서 빠졌습니다. 두 기능이 필요하면 `slot(_:)`으로 `IconButton`을 직접 넣으세요.
+
 ---
 
 ## 3. 대응이 없는 것
@@ -896,6 +987,7 @@ IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // 아이�
 | 제거됨 | 비고 |
 |---|---|
 | `ModalNavigation.Variant.extended` | 대응 없음 |
+| `ModalNavigation.Variant.display` | 대응 없음. 제목이 별도 줄에 나오던 스타일이라 `.emphasized`·`.normal` 어느 쪽으로 옮겨도 제목 크기와 줄 구성이 달라집니다 |
 | `ModalNavigation.Variant.floating(alternative:background:)` | 인자 없는 `.floating`만 남음 |
 | `Select.shadowBackgroundColor(_:)` | 대응 없음 |
 | `Skeleton.Length` (`_25`/`_50`/`_75`/`_100`) | 폭이 균일로 고정 |
@@ -987,6 +1079,26 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 
 `Shadow` · `Typography` · `Opacity` · `Spacing` 정의와 `Toast` · `SnackBar` · `Popup` · `Popover` · `Tooltip` · `Thumbnail` · `Accordion` · `Category` · `ProgressTracker`도 값이 조정됐습니다.
 
+#### Popup · BottomSheet · ModalNavigation
+
+모달 전반의 모서리와 여백이 조정됐습니다. **API가 그대로라 빌드로는 드러나지 않습니다.**
+
+| 항목 | 3.x | 4.0 |
+|---|---|---|
+| Popup radius | 12 | **24** |
+| BottomSheet radius (위쪽) | 시스템 기본 (약 10) | **32** |
+| 콘텐츠 좌우 여백 | 20 | **28** |
+| 콘텐츠 상하 여백 | 20 (내비게이션 없을 때만 위쪽) | **0** (`contentPadding`으로 켜면 24) |
+| `ModalNavigation` `.emphasized` 상하 | 20 | **24** |
+| `ModalNavigation` `.emphasized` 좌우 | 16 | **24** |
+| `ModalNavigation` `.normal` 상하 | 10 | **20** |
+| `ActionArea` 좌우 (모달 안) | 20 | **24** |
+| Popup의 `ActionArea` 아래 여백 | 40 (내부 20 + 팝업이 준 20) | **24** |
+
+`ActionArea` 좌우 24는 `Popup`·`BottomSheet` 안에서만 적용됩니다. 화면에 직접 놓거나 `ScreenScaffold`에 넣은 `ActionArea`는 20 그대로입니다.
+
+**콘텐츠 상하 여백 기본값이 20에서 0으로 바뀐 게 파급이 가장 큽니다.** 내비게이션 없이 쓰던 모달은 콘텐츠가 모달 위쪽 모서리에 붙습니다. [Popup · BottomSheet 콘텐츠 여백](#popup--bottomsheet-콘텐츠-여백)의 `contentVerticalPadding` 지정을 참고해주세요.
+
 ### 4.2 전체 목록
 
 **마이그레이션 후 이 목록의 화면을 눈으로 확인해주세요.**
@@ -1000,6 +1112,8 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Chip · FilterButton** | 타이포가 한 단계 내려가고 패딩이 줄어 **작아집니다.** 가로로 나열되는 칩·필터 바의 줄바꿈 지점이 달라집니다 |
 | **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다. Dynamic Type을 키웠을 때 leading 아이콘·chevron이 위로 치우치던 것이 중앙정렬로 정정됐습니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
+| **Popup · BottomSheet** | 모서리가 각각 12→**24**, 시스템 기본→**32**로 둥글어집니다. 콘텐츠 좌우 여백 20→28, **상하 여백은 기본 0**이라 내비게이션 없이 쓰던 모달은 콘텐츠가 위쪽 모서리에 붙습니다 |
+| **ModalNavigation** | `.display` 제거. `.emphasized` 여백이 상하 20→24·좌우 16→24, `.normal` 상하 10→20으로 커져 **내비게이션 바가 높아집니다**. leading과 제목 사이 간격 20→16, trailing 버튼 사이 간격도 16으로 통일. 좌우 버튼이 `IconButton`의 xlarge(컨테이너 36 / 아이콘 24)로 바뀌어 **아이콘이 커지고**, 누름 피드백이 배경 하이라이트에서 아이콘 흐려짐(`dim`)으로 바뀝니다 |
 | **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 그라데이션과 불투명 배경이 그대로 남으므로 `scrollReachedEnd(true)`를 직접 넘겨야 합니다. 배경이 투명해지는 건 `extra` 슬롯이 비어 있을 때뿐입니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐. **대체 액션 버튼 라벨이 파란색에서 검정으로, `cancel` 메인 버튼이 테두리형에서 회색 채움으로 바뀝니다** |
 | **AvatarGroup variant** | `variant:`가 `.person` 고정이라 company·academy로 묶던 그룹이 **둥근 사각형에서 원형으로** 바뀝니다 |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 이미지 없을 때 플레이스홀더가 일러스트에서 아이콘 글리프로 교체. 비활성 시 `opacity43` 적용 |
@@ -1112,6 +1226,10 @@ FormControlGroup {
 - [ ] `.disable(` 남은 곳 확인 (`.disabled(`가 맞습니다)
 - [ ] `Chip`·`FilterButton`의 `.disabled()` 뒤에 컴포넌트 전용 모디파이어를 체이닝한 자리가 없는지
 - [ ] `.topNavigation(` 남은 곳 확인
+- [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
+- [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - 대응 없는 variant
+- [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"` 중 `ModalNavigation`에 건 것 - `leading(_:)`·`trailings(_:)`로 옮겼는지
+- [ ] `trailings(_:)`에서 `.close`가 배열 마지막인지 - 앞에 두면 닫기 버튼이 왼쪽에 붙습니다
 - [ ] `accentForegroundRedOrange` · `accentBackgroundRedOrange` 사용처 전수 확인
 - [ ] `FallbackView(image:` · `AvatarGroup(` 의 `variant:` · `TrailingButtonInfo(variant:` 사용처 확인
 
@@ -1131,6 +1249,8 @@ FormControlGroup {
 - [ ] 긴 라벨을 쓰는 버튼이 줄바꿈되면서 높아진 만큼 주변 레이아웃이 밀려도 괜찮은지
 - [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경
 - [ ] `alternative` 액션과 `.cancel` variant를 쓰는 ActionArea의 버튼 색
+- [ ] 내비게이션 없이 쓰던 팝업·바텀 시트 - 콘텐츠가 위쪽 모서리에 붙지 않는지
+- [ ] 모서리가 둥글어진 만큼 모달 네 귀퉁이에 닿는 콘텐츠(이미지·전체폭 리스트)가 잘리지 않는지
 - [ ] 이미지 없는 Avatar의 플레이스홀더
 - [ ] 삽화를 쓰던 `FallbackView` 화면과 company·academy `AvatarGroup`
 - [ ] [4. 화면이 달라지는 것](#4-화면이-달라지는-것) 목록의 화면을 실기기/시뮬레이터에서 확인
