@@ -54,7 +54,7 @@ struct TopNavigationPreview: View {
     }
     
     private var trailingContents: [() -> any View] {
-        return trailing.map {
+        var contents: [() -> any View] = trailing.map {
             switch $0 {
             case .icon: {
                 TopNavigation.TrailingIconButton(
@@ -64,15 +64,25 @@ struct TopNavigationPreview: View {
             }
             case .text: {
                 TopNavigation.TrailingTextButton(
-                    text: isSearchVariant ? "취소" : "알림",
-                    action: {
-                        closure()
-                        focused = false
-                    }
+                    text: "알림",
+                    action: { closure() }
                 )
             }
             }
         }
+        // search variant는 검색 필드가 포커스일 때만 취소 버튼을 검색 필드 바로 옆(맨 앞)에 붙인다.
+        // 옵션에서 추가한 trailing과 따로 두어야 포커스가 바뀔 때 옵션 값이 지워지지 않는다.
+        // TopNavigation은 trailing을 3개까지만 받으므로, 취소 자리를 비우려고 옵션은 앞 2개만 쓴다.
+        if isSearchVariant && focused {
+            contents = Array(contents.prefix(2))
+            contents.insert({
+                TopNavigation.TrailingTextButton(
+                    text: "취소",
+                    action: { focused = false }
+                )
+            }, at: 0)
+        }
+        return contents
     }
     
     private var actionAreaSlot: (() -> ActionArea)? {
@@ -188,13 +198,7 @@ struct TopNavigationPreview: View {
             }
         )
         .backgroundColor(backgroundColor)
-        .onChange(of: focused) { newValue in
-            if isSearchVariant {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    trailing = newValue ? [.text] : []
-                }
-            }
-        }
+        .animation(.easeInOut(duration: 0.2), value: focused)
     }
 }
 
