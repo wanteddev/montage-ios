@@ -355,7 +355,7 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>``case icon(Icon, action: () -> Void)``</summary>
+<summary>``case icon(Icon, accessibilityLabel: String?, action: () -> Void)``</summary>
 
 
 아이콘을 직접 지정하는 아이콘 버튼입니다.
@@ -365,8 +365,12 @@ ModalNavigation()
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
+  | `accessibilityLabel` | VoiceOver가 읽을 동작 이름, 생략하면 기본값으로 `nil` 적용 |
   | `action` | 탭했을 때 실행할 동작 |
 
+- **Discussion**
+
+  아이콘만으로는 동작을 알 수 없으므로 `accessibilityLabel`을 채워 주세요. 생략하면 VoiceOver가 아이콘 이름만 읽습니다.
 </details>
 <details>
 
@@ -436,7 +440,7 @@ ModalNavigation()
 </details>
 <details>
 
-<summary>``case icon(Icon, action: () -> Void)``</summary>
+<summary>``case icon(Icon, accessibilityLabel: String?, action: () -> Void)``</summary>
 
 
 아이콘을 직접 지정하는 아이콘 버튼입니다.
@@ -446,8 +450,12 @@ ModalNavigation()
   | Parameter | Description |
   | --- | --- |
   | `icon` | 표시할 아이콘 |
+  | `accessibilityLabel` | VoiceOver가 읽을 동작 이름, 생략하면 기본값으로 `nil` 적용 |
   | `action` | 탭했을 때 실행할 동작 |
 
+- **Discussion**
+
+  아이콘만으로는 동작을 알 수 없으므로 `accessibilityLabel`을 채워 주세요. 생략하면 VoiceOver가 아이콘 이름만 읽습니다.
 </details>
 <details>
 

@@ -13,10 +13,21 @@ import SwiftUI
 ///
 /// ```swift
 /// YourView()
-///     .bottomSheet(isPresented: $isPresented) {
+///     .bottomSheet(
+///         isPresented: $isPresented,
 ///         // 이미지를 가장자리까지 붙이고 위쪽 여백만 남긴다
+///         contentVerticalPadding: .top,
+///         contentHorizontalPadding: .none
+///     ) {
 ///         RemoteImage(url: url)
 ///     }
+/// ```
+///
+/// `BottomSheet`·`Popup`을 직접 만들어 `.sheet`에 넣을 때는 `contentPadding(vertical:horizontal:)`
+/// 수정자를 씁니다.
+///
+/// ```swift
+/// BottomSheet { RemoteImage(url: url) }
 ///     .contentPadding(vertical: .top, horizontal: .none)
 /// ```
 public struct ModalContentPadding {

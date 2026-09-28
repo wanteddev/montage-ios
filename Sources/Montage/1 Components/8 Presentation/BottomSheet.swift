@@ -147,7 +147,7 @@ public struct BottomSheet: View {
                 }
             }
         }
-        .environment(\.modalKind, .bottomSheet)
+        .environment(\.modalKind, modalKind)
         .opacity(isContentMeasured ? 1 : 0)
         .background(
             SwiftUI.Color.semantic(.backgroundNeutralPrimary)
@@ -190,6 +190,19 @@ public struct BottomSheet: View {
     private var actionArea: (() -> ActionArea)?
     private var contentVerticalPadding: ModalContentPadding.Vertical = .none
     private var contentHorizontalPadding: ModalContentPadding.Horizontal = .default
+
+    /// 이 시트가 어떤 모달로 표시되는지.
+    ///
+    /// 같은 타입이 `sheet`과 `fullScreenCover` 양쪽에 쓰이는데 하위 컴포넌트의 여백은
+    /// 둘이 다르다. 표시 방식을 아는 쪽(수정자)이 정해서 내려 주고, 직접 만들어
+    /// `.sheet`에 넣는 경우를 위해 기본값은 `.bottomSheet`로 둔다.
+    private var modalKind: ModalKind = .bottomSheet
+
+    func modalKind(_ modalKind: ModalKind) -> Self {
+        var zelf = self
+        zelf.modalKind = modalKind
+        return zelf
+    }
     
     /// 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
     ///
@@ -311,8 +324,8 @@ public struct BottomSheet: View {
     private static let actionAreaVerticalPadding: CGFloat = 20
 
     private var contentEdgeInsets: EdgeInsets {
-        let horizontal = contentHorizontalPadding.applies ? ModalKind.bottomSheet.contentHorizontalPadding : 0
-        let vertical = ModalKind.bottomSheet.contentVerticalPadding
+        let horizontal = contentHorizontalPadding.applies ? modalKind.contentHorizontalPadding : 0
+        let vertical = modalKind.contentVerticalPadding
         return .init(
             top: contentVerticalPadding.appliesTop ? vertical : 0,
             leading: horizontal,
@@ -419,6 +432,7 @@ struct BottomSheetModifier: ViewModifier {
                         }
                         .needHandle(false)
                         .resize(.fill)
+                        .modalKind(.full)
                         .contentPadding(
                             vertical: contentVerticalPadding,
                             horizontal: contentHorizontalPadding

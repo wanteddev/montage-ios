@@ -470,8 +470,8 @@ Skeleton.SkeletonView(.text(variant: .body1))
 // 3.x에서 내비게이션 없이 쓰던 팝업 - 위쪽 20이 자동으로 들어갔다
 .popup(isPresented: $isPresented) { Text("메시지") }
 
-// 4.0 - 같은 모양을 내려면 상하 여백을 직접 켠다
-.popup(isPresented: $isPresented, contentVerticalPadding: .both) { Text("메시지") }
+// 4.0 - 같은 모양을 내려면 위쪽 여백을 직접 켠다
+.popup(isPresented: $isPresented, contentVerticalPadding: .top) { Text("메시지") }
 ```
 
 `vertical:`은 `.none`(기본) · `.top` · `.bottom` · `.both`, `horizontal:`은 `.none` · `.default`(기본)입니다.

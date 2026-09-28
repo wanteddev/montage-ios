@@ -1674,7 +1674,7 @@
     {
       "slug": "modalcontentpadding",
       "name": "ModalContentPadding",
-      "category": "uncategorized",
+      "category": "utilities",
       "kind": "struct",
       "declaration": "struct ModalContentPadding",
       "summary": "모달 콘텐츠 영역의 여백 적용 방식입니다.",
@@ -1809,7 +1809,7 @@
           ],
           "caseSignatures": [
             "back(action:)",
-            "icon(_:action:)",
+            "icon(_:accessibilityLabel:action:)",
             "slotView(_:)",
             "text(_:action:)"
           ],
@@ -1834,7 +1834,7 @@
           ],
           "caseSignatures": [
             "close(action:)",
-            "icon(_:action:)",
+            "icon(_:accessibilityLabel:action:)",
             "slotView(_:)",
             "text(_:action:)"
           ],

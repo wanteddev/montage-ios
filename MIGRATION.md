@@ -470,8 +470,8 @@ The `ignoresEdgeInsets:` argument on the `popup(...)` and `bottomSheet(...)` mod
 // 3.x popup without navigation - the top inset of 20 was implicit
 .popup(isPresented: $isPresented) { Text("Message") }
 
-// 4.0 - turn the vertical padding on to keep the same look
-.popup(isPresented: $isPresented, contentVerticalPadding: .both) { Text("Message") }
+// 4.0 - turn the top padding on to keep the same look
+.popup(isPresented: $isPresented, contentVerticalPadding: .top) { Text("Message") }
 ```
 
 `vertical:` takes `.none` (default), `.top`, `.bottom` or `.both`; `horizontal:` takes `.none` or `.default` (default).

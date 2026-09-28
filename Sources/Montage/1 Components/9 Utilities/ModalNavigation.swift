@@ -459,10 +459,15 @@ extension ModalNavigation {
             /// - Parameter action: 탭했을 때 실행할 동작
             case back(action: () -> Void)
             /// 아이콘을 직접 지정하는 아이콘 버튼입니다.
+            ///
+            /// 아이콘만으로는 동작을 알 수 없으므로 `accessibilityLabel`을 채워 주세요.
+            /// 생략하면 VoiceOver가 아이콘 이름만 읽습니다.
+            ///
             /// - Parameters:
             ///   - icon: 표시할 아이콘
+            ///   - accessibilityLabel: VoiceOver가 읽을 동작 이름, 생략하면 기본값으로 `nil` 적용
             ///   - action: 탭했을 때 실행할 동작
-            case icon(_ icon: Icon, action: () -> Void)
+            case icon(_ icon: Icon, accessibilityLabel: String? = nil, action: () -> Void)
             /// 텍스트 버튼입니다.
             /// - Parameters:
             ///   - text: 표시할 텍스트
@@ -486,10 +491,15 @@ extension ModalNavigation {
             /// - Parameter action: 탭했을 때 실행할 동작
             case close(action: () -> Void)
             /// 아이콘을 직접 지정하는 아이콘 버튼입니다.
+            ///
+            /// 아이콘만으로는 동작을 알 수 없으므로 `accessibilityLabel`을 채워 주세요.
+            /// 생략하면 VoiceOver가 아이콘 이름만 읽습니다.
+            ///
             /// - Parameters:
             ///   - icon: 표시할 아이콘
+            ///   - accessibilityLabel: VoiceOver가 읽을 동작 이름, 생략하면 기본값으로 `nil` 적용
             ///   - action: 탭했을 때 실행할 동작
-            case icon(_ icon: Icon, action: () -> Void)
+            case icon(_ icon: Icon, accessibilityLabel: String? = nil, action: () -> Void)
             /// 텍스트 버튼입니다.
             /// - Parameters:
             ///   - text: 표시할 텍스트
@@ -516,8 +526,10 @@ extension ModalNavigation.Resource.Leading {
         case .back(let action):
             ModalNavigation.Resource.iconButton(.chevronLeft, hasBackground: hasBackground, action: action)
                 .accessibilityLabel(String(localized: "뒤로 가기", bundle: .module))
-        case let .icon(icon, action):
-            ModalNavigation.Resource.iconButton(icon, hasBackground: hasBackground, action: action)
+        case let .icon(icon, label, action):
+            ModalNavigation.Resource.iconButton(
+                icon, hasBackground: hasBackground, accessibilityLabel: label, action: action
+            )
         case let .text(text, action):
             ModalNavigation.Resource.textButton(text, action: action)
         case .slotView(let content):
@@ -533,8 +545,10 @@ extension ModalNavigation.Resource.Trailing {
         case .close(let action):
             ModalNavigation.Resource.iconButton(.close, hasBackground: hasBackground, action: action)
                 .accessibilityLabel(String(localized: "닫기", bundle: .module))
-        case let .icon(icon, action):
-            ModalNavigation.Resource.iconButton(icon, hasBackground: hasBackground, action: action)
+        case let .icon(icon, label, action):
+            ModalNavigation.Resource.iconButton(
+                icon, hasBackground: hasBackground, accessibilityLabel: label, action: action
+            )
         case let .text(text, action):
             ModalNavigation.Resource.textButton(text, action: action)
         case .slotView(let content):
@@ -552,6 +566,26 @@ extension ModalNavigation.Resource {
 
     @ViewBuilder
     fileprivate static func iconButton(
+        _ icon: Icon,
+        hasBackground: Bool,
+        accessibilityLabel: String? = nil,
+        action: @escaping () -> Void
+    ) -> some View {
+        iconButtonBody(icon, hasBackground: hasBackground, action: action)
+            // 레이블을 주지 않으면 IconButton이 붙인 "{아이콘 이름} 아이콘"이 그대로 읽힌다.
+            .modifying { view in
+                Group {
+                    if let accessibilityLabel {
+                        view.accessibilityLabel(accessibilityLabel)
+                    } else {
+                        view
+                    }
+                }
+            }
+    }
+
+    @ViewBuilder
+    private static func iconButtonBody(
         _ icon: Icon,
         hasBackground: Bool,
         action: @escaping () -> Void
