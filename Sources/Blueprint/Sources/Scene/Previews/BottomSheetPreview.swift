@@ -147,6 +147,21 @@ struct BottomSheetPreview: View {
             }
             .border(.black)
         }
+        // fullModal은 fullScreenCover라 옵션 패널이 가려진다. navigation·actionArea를 모두 끄면
+        // 시트를 닫을 수단이 없으므로, .navigation 모드와 같은 floating 컨트롤 바를 띄운다.
+        //
+        // 콘텐츠가 짧으면 VStack도 그만큼만 차지해 컨트롤 바가 제목 위로 겹친다. fullModal은
+        // 어차피 화면을 다 채우므로 콘텐츠 영역을 끝까지 늘려 컨트롤 바를 아래로 내린다.
+        .frame(maxHeight: isFullModal ? .infinity : nil, alignment: .top)
+        .overlay(alignment: .bottom) {
+            if isFullModal {
+                PreviewFloatingControls(
+                    onDismiss: { show = false },
+                    accessory: EmptyView()
+                )
+                .padding()
+            }
+        }
     }
 
     private var actionAreaSlot: () -> ActionArea {
