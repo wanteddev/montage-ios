@@ -56,6 +56,7 @@ public struct ActionArea: View, KeyboardReadable {
     @State private var isExtraEmpty = true
 
     @Environment(\.actionAreaScrollReachedEnd) private var inheritedScrollReachedEnd
+    @Environment(\.modalKind) private var modalKind
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -97,7 +98,7 @@ public struct ActionArea: View, KeyboardReadable {
 
                 Buttons(variant)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, modalKind.actionAreaHorizontalPadding)
             .padding(.bottom, isKeyboardVisible ? 20 : 0)
             .background(backgroundColor)
             .animation(.easeInOut(duration: 0.5), value: hidesBackground)

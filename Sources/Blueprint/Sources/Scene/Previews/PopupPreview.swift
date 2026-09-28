@@ -14,8 +14,11 @@ struct PopupPreview: View {
     @State private var itemCountsIndex: Int = 0
 
     @State private var resize: Popup.Resize = .hug
+    @State private var contentVerticalIndex = 0
+    @State private var contentHorizontalIndex = 1
     @State private var navigation = true
     @State private var navVariantIndex = 0
+    @State private var iconButtonBackground = false
 
     @State private var actionArea = true
     @State private var buttonsIndex = 0
@@ -38,11 +41,26 @@ struct PopupPreview: View {
                 get: { if case .hug = resize { 0 } else { 1 } },
                 set: { resize = $0 == 0 ? .hug : .fixed(300) }
             ), labels: ["hug", "fixed(300)"])
+
+            SegmentedIndexRow(
+                "content-v-padding",
+                index: $contentVerticalIndex,
+                labels: contentVerticalPaddings.map(\.label)
+            )
+            SegmentedIndexRow(
+                "content-h-padding",
+                index: $contentHorizontalIndex,
+                labels: contentHorizontalPaddings.map(\.label)
+            )
+
             HStack {
                 ToggleOption("navigation", isOn: $navigation)
                 if navigation {
                     SegmentedIndexRow(index: $navVariantIndex, labels: navigationVariants.map(\.description))
                 }
+            }
+            if navigation, navigationVariants[navVariantIndex] == .floating {
+                ToggleOption("icon button background", isOn: $iconButtonBackground)
             }
 
             HStack {
@@ -70,40 +88,20 @@ struct PopupPreview: View {
         .popup(
             isPresented: $show,
             resize: resize,
+            contentVerticalPadding: contentVerticalPaddings[contentVerticalIndex].value,
+            contentHorizontalPadding: contentHorizontalPaddings[contentHorizontalIndex].value,
             navigation: navigation
                 ? {
                     ModalNavigation()
                         .variant(navigationVariants[navVariantIndex])
                         .title("제목")
-                        .leadingContent {
-                            TopNavigation.LeadingButton(
-                                .back(action: {})
-                            )
-                        }
-                        .trailingContents(
-                            [
-                                {
-                                    TopNavigation.TrailingIconButton(
-                                        icon: .plus,
-                                        action: {}
-                                    )
-                                },
-                                {
-                                    TopNavigation.TrailingIconButton(
-                                        icon: .minus,
-                                        action: {}
-                                    )
-                                },
-                                {
-                                    TopNavigation.TrailingIconButton(
-                                        icon: .close,
-                                        action: {
-                                            show = false
-                                        }
-                                    )
-                                },
-                            ]
+                        .leading(.back(action: {}))
+                        .trailings(
+                            .icon(.plus, action: {}),
+                            .icon(.minus, action: {}),
+                            .close(action: { show = false })
                         )
+                        .iconButtonBackground(iconButtonBackground)
                 }
                 : nil,
             actionArea: actionArea ? actionAreaSlot : nil,
@@ -180,11 +178,22 @@ struct PopupPreview: View {
         }
     }
 
+    // Popup은 emphasized(기본)와 floating만 쓴다. normal(가운데 정렬)은 전체 화면 모달 전용이다.
     private let navigationVariants: [ModalNavigation.Variant] = [
-        .normal,
-        .display,
         .emphasized,
         .floating,
+    ]
+
+    private let contentVerticalPaddings: [(label: String, value: ModalContentPadding.Vertical)] = [
+        ("none", .none),
+        ("top", .top),
+        ("bottom", .bottom),
+        ("both", .both),
+    ]
+
+    private let contentHorizontalPaddings: [(label: String, value: ModalContentPadding.Horizontal)] = [
+        ("none", .none),
+        ("default", .default),
     ]
 
     private var itemCounts = [1, 5, 20]

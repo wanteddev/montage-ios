@@ -17,9 +17,12 @@ struct BottomSheetPreview: View {
     @State private var fixedRatio: CGFloat = 0.6
     @State private var fixedHeight: CGFloat = 200
     @State private var handle = false
+    @State private var contentVerticalIndex = 0
+    @State private var contentHorizontalIndex = 1
 
     @State private var navigation = false
     @State private var navVariantIndex = 0
+    @State private var iconButtonBackground = false
 
     @State private var actionArea = false
     @State private var buttonsIndex = 0
@@ -38,6 +41,16 @@ struct BottomSheetPreview: View {
             VStack(alignment: .leading) {
                 ToggleOptionRow("fullModal", isOn: $isFullModal)
                 SegmentedIndexRow("resize", index: $resizeIndex, labels: bottomSheetResizes.map(\.description))
+                SegmentedIndexRow(
+                    "content-v-padding",
+                    index: $contentVerticalIndex,
+                    labels: contentVerticalPaddings.map(\.label)
+                )
+                SegmentedIndexRow(
+                    "content-h-padding",
+                    index: $contentHorizontalIndex,
+                    labels: contentHorizontalPaddings.map(\.label)
+                )
                 SegmentedIndexRow("item count", index : $itemCountsIndex, labels: itemCounts.map(\.description))
                 switch bottomSheetResizes[resizeIndex] {
                 case .fixedRatio:
@@ -53,6 +66,9 @@ struct BottomSheetPreview: View {
                     if navigation {
                         SegmentedIndexRow(index: $navVariantIndex, labels: navigationVariants.map(\.description))
                     }
+                }
+                if navigation, navigationVariants[navVariantIndex] == .floating {
+                    ToggleOptionRow("icon button background", isOn: $iconButtonBackground)
                 }
                 
                 HStack {
@@ -81,6 +97,8 @@ struct BottomSheetPreview: View {
             isFullScreenCover: isFullModal,
             needHandle: handle,
             resize: bottomSheetResizes[resizeIndex],
+            contentVerticalPadding: contentVerticalPaddings[contentVerticalIndex].value,
+            contentHorizontalPadding: contentHorizontalPaddings[contentHorizontalIndex].value,
             navigation: navigation ? { navigationContent } : nil,
             actionArea: actionArea ? actionAreaSlot : nil,
             { modalContent }
@@ -98,31 +116,13 @@ struct BottomSheetPreview: View {
         ModalNavigation()
             .variant(navigationVariants[navVariantIndex])
             .title("제목")
-            .leadingContent {
-                TopNavigation.LeadingButton(.back(action: {}))
-            }
-            .trailingContents(
-                {
-                    TopNavigation.TrailingIconButton(
-                        icon: .plus,
-                        action: {}
-                    )
-                },
-                {
-                    TopNavigation.TrailingIconButton(
-                        icon: .minus,
-                        action: {}
-                    )
-                },
-                {
-                    TopNavigation.TrailingIconButton(
-                        icon: .close,
-                        action: {
-                            show = false
-                        }
-                    )
-                }
+            .leading(.back(action: {}))
+            .trailings(
+                .icon(.plus, action: {}),
+                .icon(.minus, action: {}),
+                .close(action: { show = false })
             )
+            .iconButtonBackground(iconButtonBackground)
     }
 
     private var modalContent: some View {
@@ -146,6 +146,21 @@ struct BottomSheetPreview: View {
                 .frame(height: 48)
             }
             .border(.black)
+        }
+        // fullModal은 fullScreenCover라 옵션 패널이 가려진다. navigation·actionArea를 모두 끄면
+        // 시트를 닫을 수단이 없으므로, .navigation 모드와 같은 floating 컨트롤 바를 띄운다.
+        //
+        // 콘텐츠가 짧으면 VStack도 그만큼만 차지해 컨트롤 바가 제목 위로 겹친다. fullModal은
+        // 어차피 화면을 다 채우므로 콘텐츠 영역을 끝까지 늘려 컨트롤 바를 아래로 내린다.
+        .frame(maxHeight: isFullModal ? .infinity : nil, alignment: .top)
+        .overlay(alignment: .bottom) {
+            if isFullModal {
+                PreviewFloatingControls(
+                    onDismiss: { show = false },
+                    accessory: EmptyView()
+                )
+                .padding()
+            }
         }
     }
 
@@ -206,11 +221,22 @@ struct BottomSheetPreview: View {
         }
     }
 
+    // Bottom Sheet는 emphasized(기본)와 floating만 쓴다. normal(가운데 정렬)은 전체 화면 모달 전용이다.
     private let navigationVariants: [ModalNavigation.Variant] = [
-        .normal,
-        .display,
         .emphasized,
         .floating,
+    ]
+
+    private let contentVerticalPaddings: [(label: String, value: ModalContentPadding.Vertical)] = [
+        ("none", .none),
+        ("top", .top),
+        ("bottom", .bottom),
+        ("both", .both),
+    ]
+
+    private let contentHorizontalPaddings: [(label: String, value: ModalContentPadding.Horizontal)] = [
+        ("none", .none),
+        ("default", .default),
     ]
 
     private var bottomSheetResizes: [BottomSheet.Resize] {
