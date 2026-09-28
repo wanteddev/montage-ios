@@ -437,6 +437,7 @@ public struct Select: View {
             ) {
                 menuPresented.wrappedValue.toggle()
             }
+            .interactionOverflow()
             // 비활성 색상(foreground/disable/primary)은 IconButton이 `\.isEnabled`를 읽어 직접 적용한다.
             .iconColor(.semantic(.foregroundNeutralTertiary))
             .padding(.horizontal, 4)

@@ -16,6 +16,7 @@ struct IconButtonPreview: View {
     @State private var alternative = false
     @State private var disable = false
     @State private var interactionEffectIndex = 0
+    @State private var interactionOverflow = false
     @State private var showPushBadge = false
     @State private var padding: CGFloat = 0
     @State private var iconColor: SwiftUI.Color?
@@ -114,6 +115,7 @@ struct IconButtonPreview: View {
     private var resolvedInteractionEffect: IconButton.InteractionEffect {
         interactionEffects[interactionEffectSelection.wrappedValue]
     }
+
     
     var body: some View {
         PreviewLayout {
@@ -125,6 +127,7 @@ struct IconButtonPreview: View {
                 }
             )
             .interactionEffect(resolvedInteractionEffect)
+            .interactionOverflow(interactionOverflow)
             .showPushBadge(isNormal ? showPushBadge : false)
             .padding(isOutlinedOrSolid ? padding : 0)
             .modifying {
@@ -156,6 +159,9 @@ struct IconButtonPreview: View {
                 }
             }
             .disabled(disable)
+            // 헤더의 자 버튼을 켜면 버튼이 차지하는 자리를 외곽선으로 보여준다.
+            // interactionOverflow를 켜면 인터랙션 영역이 이 외곽선 밖으로 번진다.
+            .previewDimensioned()
         } options: {
             SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
             if variantIndex == 0 {
@@ -181,6 +187,7 @@ struct IconButtonPreview: View {
                 labels: interactionEffects.map(\.description)
             )
             if isNormal {
+                ToggleOptionRow("interactionOverflow", isOn: $interactionOverflow)
                 ToggleOptionRow("pushBadge", isOn: $showPushBadge)
             }
             if isOutlinedOrSolid {

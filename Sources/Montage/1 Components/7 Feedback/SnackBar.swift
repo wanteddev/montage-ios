@@ -226,6 +226,7 @@ public struct SnackBar: View {
                         IconButton(variant: .normal(size: .large), icon: .close) {
                             dismiss()
                         }
+                        .interactionOverflow()
                         .iconColor(.semantic(.staticWhite).opacity(.opacity61))
                         .padding(.horizontal, 2)
                     }

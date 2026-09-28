@@ -108,6 +108,7 @@ public enum Popover {
                         IconButton(variant: .normal(size: .small), icon: .close) {
                             isPresented = false
                         }
+                        .interactionOverflow()
                         .padding(.all, 3)
                     }
                 }

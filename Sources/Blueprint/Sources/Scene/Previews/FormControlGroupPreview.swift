@@ -23,7 +23,6 @@ struct FormControlGroupPreview: View {
     @State private var grouped = true
     @State private var autoLabelWidth = true
     @State private var labelWidth: CGFloat = 64
-    @State private var guideLine = false
 
     var body: some View {
         PreviewLayout {
@@ -38,16 +37,12 @@ struct FormControlGroupPreview: View {
                     }
                 }
             }
-            .border(guideLine ? SwiftUI.Color.blue : SwiftUI.Color.clear)
+            .previewDimensioned()
         } options: {
             ToggleOptionRow("grouped", isOn: $grouped)
             ToggleOptionRow("자동 labelWidth", isOn: $autoLabelWidth)
             SliderOptionRow("labelWidth", value: $labelWidth, in: 40...160, step: 4, format: { "\(Int($0))" })
                 .if(!autoLabelWidth)
-        } accessory: {
-            SwiftUI.Button(action: { guideLine.toggle() }) {
-                Image(systemName: "rectangle.dashed")
-            }
         }
     }
 

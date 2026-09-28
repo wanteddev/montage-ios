@@ -822,7 +822,7 @@ ListCell(label: "비활성 셀")
 <summary>``case iconButton(Icon, handler: (() -> Void)?)``</summary>
 
 
-아이콘 버튼 (컨테이너 32×32 / 아이콘 20×20, 배경 없음)
+아이콘 버튼 (차지하는 자리 20×20 / 인터랙션 영역 32×32, 배경 없음)
 
 - **Parameters**
 

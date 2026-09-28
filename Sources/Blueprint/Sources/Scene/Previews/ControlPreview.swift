@@ -23,7 +23,6 @@ struct ControlPreview: View {
     @State private var label: String = ""
     @State private var bold: Bool = false
     @State private var customTypography = false
-    @State private var guideLine: Bool = false
 
     private let sizeLabels: [String] = ["small", "medium"]
     private let states: [Checkbox.State] = [.unchecked, .checked, .indeterminate]
@@ -45,8 +44,8 @@ struct ControlPreview: View {
                     .if(customTypography) {
                         $0.labelTypography(.heading2, weight: .medium, color: .semantic(.foregroundAccentPink))
                     }
-                    .border(guideLine ? Color.blue : Color.clear)
                     .disabled(disabled)
+                    .previewDimensioned()
                     Spacer()
                 }
                 HStack {
@@ -63,8 +62,8 @@ struct ControlPreview: View {
                     .if(customTypography) {
                         $0.labelTypography(.heading2, weight: .bold, color: .semantic(.foregroundAccentPink))
                     }
-                    .border(guideLine ? Color.blue : Color.clear)
                     .disabled(disabled)
+                    .previewDimensioned()
                     Spacer()
                 }
                 HStack {
@@ -81,8 +80,8 @@ struct ControlPreview: View {
                     .if(customTypography) {
                         $0.labelTypography(.heading2, weight: .bold, color: .semantic(.foregroundAccentPink))
                     }
-                    .border(guideLine ? Color.blue : Color.clear)
                     .disabled(disabled)
+                    .previewDimensioned()
                     Spacer()
                 }
                 Switch(
@@ -92,7 +91,7 @@ struct ControlPreview: View {
                     switched = $0
                 }
                 .disabled(disabled)
-                .border(guideLine ? Color.blue : Color.clear)
+                .previewDimensioned()
             }
         } options: {
             SegmentedIndexRow("state", index: $stateIndex, labels: states.map(\.description)) {
@@ -112,10 +111,6 @@ struct ControlPreview: View {
             }
             TextFieldOptionRow("label", text: $label)
             ToggleOptionRow("custom label typography", isOn: $customTypography)
-        } accessory: {
-            SwiftUI.Button(action: { guideLine.toggle() }) {
-                Image(systemName: "rectangle.dashed")
-            }
         }
     }
 }

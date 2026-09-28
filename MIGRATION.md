@@ -355,7 +355,31 @@ The size of the `normal` variant moved from `Int` to the `NormalSize` enum.
 
 The glyph stays the same size and **only the touch container grows.** Since this variant has no background or border, the visible effect is a trailing icon shifting by about 6pt or a row growing by about 8pt.
 
-For any other size, see [3.3 IconButton non-standard sizes](#33-iconbutton-non-standard-sizes).
+Sizes other than the four standard ones (16, 18, 20, 24) move to `.custom(size:)`, where **the number is the container, not the icon.** Reusing the 3.x number shrinks the icon: `.custom(size: 22)` clamps the container to 24 (the range is `[24, 64]`), giving a 16pt icon. Pick the container value that yields the icon size you want.
+
+| Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
+|---|---|---|---|---|---|---|---|---|
+| Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
+
+**To keep 3.x spacing,** turn on `interactionOverflow()`. The space the button occupies shrinks to the icon size while the container stays put and spills over on all four sides, so the touch area keeps its 4.0 size and only the spacing goes back to 3.x.
+
+```swift
+// 3.x - the number was the icon size, and the container matched it
+IconButton(variant: .normal(size: 20), icon: .search)
+
+// 4.0 - touch area 32, occupied space 20 as in 3.x
+IconButton(variant: .normal(size: .large), icon: .search)
+    .interactionOverflow()
+```
+
+Occupied space and overflow per size:
+
+- `.small` - 16 occupied, 4 of overflow on each side
+- `.medium` - 18, 5
+- `.large` - 20, 6
+- `.xlarge` - 24, 6
+
+The icon, container, and radius values themselves do not change, so `.custom(size:)` follows the same rule. Other variants ignore the modifier.
 
 #### PushBadge
 
@@ -375,7 +399,7 @@ There is also a scaling cap. In 3.x the badge kept growing all the way into the 
 | `Item(image:title:)` | `Item(leadingIcon:title:)` |
 | `icon` toggle | `.iconOnly(_:)` |
 
-For the removal of `variant(_:)`, see [3.4](#34-segmentedcontrol-outlined-variant).
+For the removal of `variant(_:)`, see [3.3](#33-segmentedcontrol-outlined-variant).
 
 #### Accordion
 
@@ -558,7 +582,7 @@ Preset mapping:
 | `.icon` | `Resource.Leading.icon` / `Resource.Trailing.icon` |
 | `.iconButton` | `Resource.Leading.iconButton` / `Resource.Trailing.iconButton` |
 | `.characterCount` | removed - use `accessory` from [2.1](#21-input-labels-messages-and-counters) |
-| `.textButton`, `.chip`, `.filterButton`, `.badge` | **no replacement** (see [3.6](#36-textarea-bottom-resource-presets)) |
+| `.textButton`, `.chip`, `.filterButton`, `.badge` | **no replacement** (see [3.5](#35-textarea-bottom-resource-presets)) |
 | - | `.contentBadge` and `.segmentedControl` added; `.button` and `.primaryIconButton` added for trailing only |
 | no `.slot` | `Resource.Leading.slot { }` / `Resource.Trailing.slot { }` |
 
@@ -728,7 +752,7 @@ There are now four slots: `leadingResources`, `labelTrailingResources`, `trailin
 .leadingResources([.slot { AnyCustomView() }])   // slot when no preset fits
 ```
 
-For `.verticalAlign(.bottom)`, see [3.5](#35-listcell-verticalalignbottom).
+For `.verticalAlign(.bottom)`, see [3.4](#34-listcell-verticalalignbottom).
 
 ---
 
@@ -771,7 +795,7 @@ Chip(text: skill.name, variant: .outlined, size: .medium)
 |---|---|
 | `FallbackView(image:title:description:button:)` | `FallbackView(title:description:)` |
 | the `button:` slot | `buttonActionArea(_:)` |
-| the `image:` slot | **no replacement** ([3.7](#37-fallbackview-image-slot)) |
+| the `image:` slot | **no replacement** ([3.6](#36-fallbackview-image-slot)) |
 
 A `Padding` enum was also added, and **the minimum vertical padding is now built into the component.**
 
@@ -843,55 +867,35 @@ Anywhere you used `.spacing(.pt28)` or `.spacing(.pt36)` you have to pick betwee
 grep -rn "spacing(\.pt28\|spacing(\.pt36" --include="*.swift" .
 ```
 
-### 3.3 IconButton non-standard sizes
-
-Sizes other than the four standard ones (16, 18, 20, 24) move to `NormalSize.custom(size:)`, where **`size` changes meaning from icon size to container size.**
-
-In 3.x `.normal(size: n)` made the container the same `n` as the icon. In 4.0 `.custom(size: n)` treats `n` as the container edge and derives the icon from the dimension token nearest to two thirds of it. The container is clamped to `[24, 64]`.
-
-```swift
-// 3.x - n is the icon size
-IconButton(variant: .normal(size: 22), icon: .search)
-
-// 4.0 - n is the container size and the icon is derived from it
-IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // icon 20
-```
-
-Reusing the 3.x number shrinks the icon: `.custom(size: 22)` clamps the container to 24, giving a 16pt icon. Pick the container value that yields the icon size you want.
-
-| Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
-|---|---|---|---|---|---|---|---|---|
-| Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
-
-### 3.4 SegmentedControl outlined variant
+### 3.3 SegmentedControl outlined variant
 
 The `Variant` enum and the `variant(_:)` modifier were removed entirely. Everything collapses to `solid`, so **the outlined appearance is gone.**
 
-### 3.5 ListCell verticalAlign(.bottom)
+### 3.4 ListCell verticalAlign(.bottom)
 
 Only `.top` and `.center` remain. Anywhere that needed bottom alignment has to be restructured or settle for `.top`.
 
-### 3.6 TextArea bottom resource presets
+### 3.5 TextArea bottom resource presets
 
 `Resource.textButton`, `.chip`, `.filterButton`, and `.badge` were removed. Draw them yourself with `Resource.Leading.slot { }` / `Resource.Trailing.slot { }`, or check whether the new `.button` and `.contentBadge` (trailing) match your intent.
 
-### 3.7 FallbackView image slot
+### 3.6 FallbackView image slot
 
 3.x let you pass an illustration through `image:`, but 4.0's `FallbackView` has no image API at all. Only the title, description, and button area remain.
 
 If you need the illustration, assemble the empty state yourself instead of using `FallbackView`. Leave it as is and **the illustration disappears from those screens.**
 
-### 3.8 AvatarGroup variant
+### 3.7 AvatarGroup variant
 
 `variant:` was dropped from `AvatarGroup(_:variant:size:onTap:)`, which is now fixed to `.person`. Anywhere 3.x grouped company or academy logos with `company` / `academy`, 4.0 renders **circles instead of rounded rectangles.**
 
 You will delete the argument to fix the compile error - check what that spot renders while you are there.
 
-### 3.9 TextField trailing button color
+### 3.8 TextField trailing button color
 
 `variant: Button.Color` was dropped from `TextField.TrailingButtonInfo(variant:title:disable:handler:)`. 4.0 fixes the button to outlined, so a verification button you had emphasised with `primary` changes color.
 
-### 3.10 Other removals
+### 3.9 Other removals
 
 | Removed | Note |
 |---|---|
@@ -966,7 +970,9 @@ The button colors are an API-compatible change, so nothing fails to compile. The
 
 **The navigation background gets darker** in the range where scrolling reveals it.
 
-The `IconButton` container (36pt) is larger than the navigation bar's `.frame(24)`, so the press layer visibly spilled outside the button. 4.0 fades the icon instead (`interactionEffect(.dim)`). The touch area is unchanged. This applies to both leading (`back`, `icon`) and trailing icon buttons; text buttons are unaffected.
+3.x drew a grey rectangular layer behind the icon, which visibly spilled outside the button wherever icons sit close together, as they do in a navigation bar. 4.0 fades the icon instead (`interactionEffect(.dim)`). This applies to both leading (`back`, `icon`) and trailing icon buttons; text buttons are unaffected.
+
+The icon size (24) and the space each button occupies stay as they were in 3.x, via `interactionOverflow()`. The bar's horizontal padding and the gaps between icons do not change.
 
 #### Avatar and AvatarGroup
 
@@ -1088,7 +1094,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 |---|---|
 | `Button` | `xsmall` size, `negative` color |
 | `TextButton` | `fillWidth(_:)` |
-| `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)` |
+| `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)`, `interactionOverflow(_:)` |
 | `ActionArea` | the icon slot (16pt) on `caption(_:icon:)`, `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
 | `Chip` | `borderColor(_:)` |
@@ -1110,6 +1116,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Check for leftover `spacing(.pt` and `opacity(.p`
 - [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - values with no replacement
 - [ ] Check for leftover `.disable(` (it should be `.disabled(`)
+- [ ] `grep -rn "normal(size: \.custom("` - if a 3.x icon size was carried over verbatim, switch it to a container value
 - [ ] No component-specific modifier chained after `.disabled()` on `Chip` or `FilterButton`
 - [ ] Check for leftover `.topNavigation(`
 - [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`
@@ -1132,6 +1139,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] ActionArea background in popups and sheets with no scroll container
 - [ ] Button colors in ActionAreas using the `alternative` action or the `.cancel` variant
 - [ ] Avatar placeholders where no image is provided
+- [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`
 - [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
 - [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator
 

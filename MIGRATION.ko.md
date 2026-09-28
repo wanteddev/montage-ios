@@ -355,7 +355,31 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 
 글리프 크기는 그대로고 **터치 컨테이너만 커집니다.** 배경·테두리 없는 variant라 트레일링 아이콘이 약 6pt 움직이거나 행 높이가 약 8pt 늘어나는 정도입니다.
 
-위 네 값 외의 크기는 [3.3 IconButton 비표준 크기](#33-iconbutton-비표준-크기)를 보세요.
+표준 4개(16·18·20·24) 외의 크기는 `.custom(size:)`로 옮기는데, 여기서도 **숫자는 아이콘이 아니라 컨테이너입니다.** 3.x 값을 그대로 넣으면 아이콘이 작아집니다. `.custom(size: 22)`는 컨테이너가 `[24, 64]`로 clamp되어 24가 되고 아이콘은 16이 됩니다. 원하는 아이콘 크기가 나오는 컨테이너 값을 골라야 합니다.
+
+| 컨테이너 | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
+|---|---|---|---|---|---|---|---|---|
+| 아이콘 | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
+
+**3.x처럼 간격을 유지하려면** `interactionOverflow()`를 켭니다. 버튼이 차지하는 자리가 아이콘 크기로 줄고 컨테이너는 그대로 남아 상하좌우로 넘치므로, 터치 영역은 4.0 크기를 지키면서 간격만 3.x로 돌아옵니다.
+
+```swift
+// 3.x - 숫자가 아이콘 크기이고 컨테이너도 같았다
+IconButton(variant: .normal(size: 20), icon: .search)
+
+// 4.0 - 터치 영역은 32, 차지하는 자리는 3.x와 같은 20
+IconButton(variant: .normal(size: .large), icon: .search)
+    .interactionOverflow()
+```
+
+사이즈별로 차지하는 자리와 넘치는 양은 다음과 같습니다.
+
+- `.small` - 자리 16, 상하좌우 4씩 넘침
+- `.medium` - 18, 5
+- `.large` - 20, 6
+- `.xlarge` - 24, 6
+
+아이콘·컨테이너·radius 값 자체는 달라지지 않으므로 `.custom(size:)`도 같은 규칙을 따릅니다. `normal` 외의 variant에서는 무시됩니다.
 
 #### PushBadge
 
@@ -375,7 +399,7 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 | `Item(image:title:)` | `Item(leadingIcon:title:)` |
 | `icon` 토글 | `.iconOnly(_:)` |
 
-`variant(_:)` 모디파이어 제거는 [3.4](#34-segmentedcontrol-outlined-variant)를 보세요.
+`variant(_:)` 모디파이어 제거는 [3.3](#33-segmentedcontrol-outlined-variant)를 보세요.
 
 #### Accordion
 
@@ -558,7 +582,7 @@ public func bottomResources(
 | `.icon` | `Resource.Leading.icon` / `Resource.Trailing.icon` |
 | `.iconButton` | `Resource.Leading.iconButton` / `Resource.Trailing.iconButton` |
 | `.characterCount` | 제거 - [2.1](#21-입력-컴포넌트의-라벨메시지카운터)의 `accessory` |
-| `.textButton` · `.chip` · `.filterButton` · `.badge` | **대응 없음** ([3.6](#36-textarea-하단-리소스-프리셋)) |
+| `.textButton` · `.chip` · `.filterButton` · `.badge` | **대응 없음** ([3.5](#35-textarea-하단-리소스-프리셋)) |
 | - | `.contentBadge` · `.segmentedControl` 신설, trailing 전용 `.button` · `.primaryIconButton` 신설 |
 | `.slot` 없음 | `Resource.Leading.slot { }` / `Resource.Trailing.slot { }` |
 
@@ -728,7 +752,7 @@ ListCell(label: option.title) { onSelect() }
 .leadingResources([.slot { AnyCustomView() }])   // 프리셋에 없으면 slot
 ```
 
-`.verticalAlign(.bottom)`은 [3.5](#35-listcell-verticalalignbottom)를 보세요.
+`.verticalAlign(.bottom)`은 [3.4](#34-listcell-verticalalignbottom)를 보세요.
 
 ---
 
@@ -771,7 +795,7 @@ Chip(text: skill.name, variant: .outlined, size: .medium)
 |---|---|
 | `FallbackView(image:title:description:button:)` | `FallbackView(title:description:)` |
 | `button:` 슬롯 | `buttonActionArea(_:)` |
-| `image:` 슬롯 | **대응 없음** ([3.7](#37-fallbackview-이미지-슬롯)) |
+| `image:` 슬롯 | **대응 없음** ([3.6](#36-fallbackview-이미지-슬롯)) |
 
 여백을 지정하는 `Padding` 열거형도 생기고 **상하 최소 여백이 컴포넌트에 내장됐습니다.**
 
@@ -843,55 +867,35 @@ deprecated UIKit 래퍼가 제거됐습니다. SwiftUI 컴포넌트를 `UIHostin
 grep -rn "spacing(\.pt28\|spacing(\.pt36" --include="*.swift" .
 ```
 
-### 3.3 IconButton 비표준 크기
-
-표준 4개(16·18·20·24) 외의 크기를 쓰던 자리는 `NormalSize.custom(size:)`로 옮기는데, **`size`의 의미가 아이콘 크기에서 컨테이너 크기로 바뀝니다.**
-
-3.x의 `.normal(size: n)`은 컨테이너가 아이콘과 같은 `n`이었지만, 4.0의 `.custom(size: n)`은 `n`이 컨테이너 한 변이고 아이콘은 컨테이너의 2/3에 가장 가까운 dimension 토큰으로 정해집니다. 컨테이너는 `[24, 64]`로 clamp됩니다.
-
-```swift
-// 3.x - n은 아이콘 크기
-IconButton(variant: .normal(size: 22), icon: .search)
-
-// 4.0 - n은 컨테이너 크기, 아이콘은 여기서 도출된다
-IconButton(variant: .normal(size: .custom(size: 32)), icon: .search)  // 아이콘 20
-```
-
-3.x 값을 그대로 넣으면 아이콘이 작아집니다. `.custom(size: 22)`는 컨테이너가 24로 clamp되어 아이콘이 16이 됩니다. 원하는 아이콘 크기가 나오는 컨테이너 값을 직접 골라야 합니다.
-
-| 컨테이너 | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
-|---|---|---|---|---|---|---|---|---|
-| 아이콘 | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
-
-### 3.4 SegmentedControl outlined variant
+### 3.3 SegmentedControl outlined variant
 
 `Variant` 열거형과 `variant(_:)` 모디파이어가 통째로 제거됐습니다. `outlined`를 쓰던 자리는 `solid` 하나로 통합되고 **테두리형이 사라집니다.**
 
-### 3.5 ListCell verticalAlign(.bottom)
+### 3.4 ListCell verticalAlign(.bottom)
 
 `.top` / `.center`만 남았습니다. 하단 정렬이 필요하던 자리는 슬롯 구성을 다시 짜거나 `.top`으로 맞춰야 합니다.
 
-### 3.6 TextArea 하단 리소스 프리셋
+### 3.5 TextArea 하단 리소스 프리셋
 
 `Resource.textButton` · `.chip` · `.filterButton` · `.badge`가 제거됐습니다. `Resource.Leading.slot { }` / `Resource.Trailing.slot { }`으로 직접 그리거나, trailing이라면 새로 생긴 `.button` · `.contentBadge`가 의도에 맞는지 확인해주세요.
 
-### 3.7 FallbackView 이미지 슬롯
+### 3.6 FallbackView 이미지 슬롯
 
 3.x는 `image:`로 삽화를 넣을 수 있었지만 4.0 `FallbackView`에는 이미지 관련 API가 없습니다. 제목과 설명, 버튼 영역만 남았습니다.
 
 삽화가 꼭 필요하면 `FallbackView`를 쓰지 않고 호출부에서 직접 조립해야 합니다. 그대로 두면 **빈 화면에서 삽화가 사라집니다.**
 
-### 3.8 AvatarGroup variant
+### 3.7 AvatarGroup variant
 
 `AvatarGroup(_:variant:size:onTap:)`에서 `variant:`가 빠지고 `.person`으로 고정됐습니다. 3.x에서 `company`·`academy`로 회사·학원 로고를 묶어 보여주던 자리는 4.0에서 **모서리가 둥근 사각형이 아니라 원형으로 바뀝니다.**
 
 컴파일 에러가 나므로 인자를 지우게 되는데, 그 자리의 렌더 결과가 달라진다는 걸 같이 확인해주세요.
 
-### 3.9 TextField 트레일링 버튼 색
+### 3.8 TextField 트레일링 버튼 색
 
 `TextField.TrailingButtonInfo(variant:title:disable:handler:)`에서 `variant: Button.Color`가 빠졌습니다. 4.0은 outlined 한 가지로 고정됩니다. `primary`로 강조하던 인증 버튼 등은 색이 바뀝니다.
 
-### 3.10 그 밖의 제거된 API
+### 3.9 그 밖의 제거된 API
 
 | 제거됨 | 비고 |
 |---|---|
@@ -966,7 +970,9 @@ FilterButton은 radius가 커지고 패딩이 줄어 더 둥글고 작아집니�
 
 콘텐츠를 스크롤해 내비게이션 배경이 나타나는 구간에서 **배경이 더 진해집니다.**
 
-`IconButton`의 컨테이너(36pt)가 내비게이션 바의 `.frame(24)`보다 커서 press 레이어가 버튼 밖으로 삐져나와 보였습니다. 4.0은 레이어 대신 아이콘 불투명도를 낮춰(`interactionEffect(.dim)`) 피드백합니다. 터치 영역은 그대로입니다. leading(`back`·`icon`)과 trailing 아이콘 버튼에 모두 적용되며, 텍스트 버튼은 해당 없습니다.
+3.x는 아이콘 뒤에 회색 사각 레이어를 깔았는데, 내비게이션 바처럼 아이콘이 촘촘한 자리에서는 레이어가 버튼 밖으로 삐져나와 보였습니다. 4.0은 레이어 대신 아이콘 불투명도를 낮춰(`interactionEffect(.dim)`) 피드백합니다. leading(`back`·`icon`)과 trailing 아이콘 버튼에 모두 적용되며, 텍스트 버튼은 해당 없습니다.
+
+아이콘 크기(24)와 버튼이 차지하는 자리는 `interactionOverflow()`로 3.x와 같게 유지됩니다. 내비게이션 바의 좌우 여백과 아이콘 간격은 달라지지 않습니다.
 
 #### Avatar · AvatarGroup
 
@@ -1088,7 +1094,7 @@ FormControlGroup {
 |---|---|
 | `Button` | 사이즈 `xsmall`, color `negative` |
 | `TextButton` | `fillWidth(_:)` |
-| `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)` |
+| `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)`, `interactionOverflow(_:)` |
 | `ActionArea` | `caption(_:icon:)`의 아이콘 슬롯(16pt), `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
 | `Chip` | `borderColor(_:)` |
@@ -1110,6 +1116,7 @@ FormControlGroup {
 - [ ] `spacing(.pt` · `opacity(.p` 남은 곳 확인
 - [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - 대응 없는 값
 - [ ] `.disable(` 남은 곳 확인 (`.disabled(`가 맞습니다)
+- [ ] `grep -rn "normal(size: \.custom("` - 3.x의 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지
 - [ ] `Chip`·`FilterButton`의 `.disabled()` 뒤에 컴포넌트 전용 모디파이어를 체이닝한 자리가 없는지
 - [ ] `.topNavigation(` 남은 곳 확인
 - [ ] `accentForegroundRedOrange` · `accentBackgroundRedOrange` 사용처 전수 확인
@@ -1132,6 +1139,7 @@ FormControlGroup {
 - [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경
 - [ ] `alternative` 액션과 `.cancel` variant를 쓰는 ActionArea의 버튼 색
 - [ ] 이미지 없는 Avatar의 플레이스홀더
+- [ ] IconButton을 직접 쓰던 화면의 아이콘 간격 - 컨테이너가 커진 만큼 벌어졌다면 `interactionOverflow()`
 - [ ] 삽화를 쓰던 `FallbackView` 화면과 company·academy `AvatarGroup`
 - [ ] [4. 화면이 달라지는 것](#4-화면이-달라지는-것) 목록의 화면을 실기기/시뮬레이터에서 확인
 
