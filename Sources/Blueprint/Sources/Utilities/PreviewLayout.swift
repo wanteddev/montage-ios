@@ -229,7 +229,7 @@ struct PreviewLayout<Preview: View, Options: View, Accessory: View>: View {
                             // 체커 토글·슬라이더·accessory를 미리보기 위에 드래그 가능한 floating 바로 띄운다.
                             // 핸들로만 드래그하므로 안쪽 컨트롤(버튼·슬라이더)은 정상 동작한다. 처음엔 상단 중앙.
                             .overlay(alignment: .top) {
-                                NavigationFloatingControls(
+                                PreviewFloatingControls(
                                     showChecker: $showChecker,
                                     checkerSize: $checkerSize,
                                     showDimensioning: $showDimensioning,
@@ -478,11 +478,19 @@ extension PreviewLayout where Accessory == EmptyView {
 ///
 /// 드래그는 **핸들에만** 걸어, 안쪽 버튼/슬라이더의 탭·드래그가 컨트롤 바 이동 제스처나 밑의
 /// ScrollView 스크롤과 충돌하지 않도록 한다.
-private struct NavigationFloatingControls<Accessory: View>: View {
-    @Binding var showChecker: Bool
-    @Binding var checkerSize: CGFloat
-    @Binding var showDimensioning: Bool
-    let hasDimensioned: Bool
+///
+/// 미리보기가 화면을 다 덮어 옵션 패널이 가려지는 자리라면 어디든 쓸 수 있다.
+/// `fullScreenCover`처럼 pop이 아닌 방식으로 닫아야 하면 `onDismiss`로 동작을 넘기고,
+/// 체커·치수 토글이 필요 없으면 해당 바인딩을 생략한다.
+struct PreviewFloatingControls<Accessory: View>: View {
+    /// 닫기 동작. `nil`이면 ``SwiftUI/EnvironmentValues/dismiss``로 push를 pop한다.
+    var onDismiss: (() -> Void)?
+    /// 체커 토글 상태. `nil`이면 체커 컨트롤을 빼고 그린다.
+    var showChecker: Binding<Bool>?
+    var checkerSize: Binding<CGFloat>?
+    /// 치수 표시 토글 상태. `nil`이면 치수 토글을 빼고 그린다.
+    var showDimensioning: Binding<Bool>?
+    var hasDimensioned: Bool = false
     let accessory: Accessory
 
     // push를 pop하려면 destination의 dismiss가 필요하다. (호출부 accessory의 presentationMode로는
@@ -514,7 +522,7 @@ private struct NavigationFloatingControls<Accessory: View>: View {
                 )
 
             Button {
-                dismiss()
+                if let onDismiss { onDismiss() } else { dismiss() }
             } label: {
                 Image(systemName: "chevron.backward")
                     .foregroundColor(.semantic(.surfaceBrandPrimary))
@@ -522,22 +530,24 @@ private struct NavigationFloatingControls<Accessory: View>: View {
 
             accessory
 
-            if hasDimensioned {
-                DimensioningToggle(isOn: $showDimensioning)
+            if hasDimensioned, let showDimensioning {
+                DimensioningToggle(isOn: showDimensioning)
             }
 
-            Button {
-                showChecker.toggle()
-            } label: {
-                Image(systemName: "checkerboard.rectangle")
-            }
-            .accessibilityLabel("투명도 체커")
-            .accessibilityValue(showChecker ? "켬" : "끔")
-            .accessibilityHint("투명한 영역이 드러나도록 체커보드 배경을 깝니다")
+            if let showChecker {
+                Button {
+                    showChecker.wrappedValue.toggle()
+                } label: {
+                    Image(systemName: "checkerboard.rectangle")
+                }
+                .accessibilityLabel("투명도 체커")
+                .accessibilityValue(showChecker.wrappedValue ? "켬" : "끔")
+                .accessibilityHint("투명한 영역이 드러나도록 체커보드 배경을 깝니다")
 
-            if showChecker {
-                SwiftUI.Slider(value: $checkerSize, in: 10...200, step: 1)
-                    .frame(width: 100)
+                if showChecker.wrappedValue, let checkerSize {
+                    SwiftUI.Slider(value: checkerSize, in: 10...200, step: 1)
+                        .frame(width: 100)
+                }
             }
         }
         .padding(.horizontal, 12)
