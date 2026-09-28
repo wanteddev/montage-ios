@@ -1025,6 +1025,7 @@ The placeholder drawn when there is no image also changed from a dedicated illus
 | **Thumbnail** | `opacity43` when disabled |
 | **Skeleton** | Text placeholder bar widths go from variable to uniform (while loading only) |
 | **IconButton** | Same glyph, larger touch container (roughly 6\~8pt of layout shift) |
+| **Tab · Category icon button** | The medium icon goes from 22 to 20. IconButton has no size for 22, so it uses `.large` (20). Other sizes, the occupied space, and spacing match 3.x |
 
 ---
 

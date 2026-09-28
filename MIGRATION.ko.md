@@ -1025,6 +1025,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Thumbnail** | 비활성 시 `opacity43` 적용 |
 | **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
 | **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6\~8pt 레이아웃 이동) |
+| **Tab · Category 아이콘 버튼** | medium의 아이콘이 22 → 20. 22에 해당하는 IconButton 사이즈가 없어 `.large`(20)를 씁니다. 다른 사이즈와 차지하는 자리·간격은 3.x와 같습니다 |
 
 ---
 

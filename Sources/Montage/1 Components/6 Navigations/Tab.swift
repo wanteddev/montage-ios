@@ -172,7 +172,7 @@ public struct Tab: View {
                         }
                     
                         if resize == .hug, let icon, let iconButtonAction {
-                            IconButton(variant: .normal(size: .custom(size: iconSize)), icon: icon) {
+                            IconButton(variant: .normal(size: iconButtonSize), icon: icon) {
                                 iconButtonAction()
                             }
                             .interactionOverflow()
@@ -276,11 +276,12 @@ private extension Tab {
         }
     }
     
-    var iconSize: Int {
+    /// 3.x 아이콘 크기(20·22·24)에 맞춘 IconButton 사이즈.
+    /// medium은 3.x에서 22였지만 22에 해당하는 사이즈가 없어 20(`.large`)을 쓴다.
+    var iconButtonSize: IconButton.NormalSize {
         switch size {
-        case .small: 20
-        case .medium: 22
-        default: 24
+        case .small, .medium: .large
+        case .large: .xlarge
         }
     }
 }
