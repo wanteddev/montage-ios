@@ -77,7 +77,7 @@ public enum Popover {
                                             of: { $0.size.height },
                                             action: { headingHeight = $0 }
                                         )
-                                    Spacer(minLength: closeButton ? 22 + 7 : 0)
+                                    Spacer(minLength: closeButton ? 22 + 4 : 0)
                                 }
                             }
                         }
@@ -99,7 +99,7 @@ public enum Popover {
                                             of: { $0.size.height },
                                             action: { textHeight = $0 }
                                         )
-                                    Spacer(minLength: closeButton ? 22 + 7 : 0)
+                                    Spacer(minLength: closeButton ? 22 + 4 : 0)
                                 }
                             }
                         }
