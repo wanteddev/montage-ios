@@ -15,7 +15,9 @@ import SwiftUI
 /// - 외곽선형(outlined): 테두리로 둘러싸인 아이콘
 /// - 솔리드형(solid): 배경색이 채워진 아이콘
 ///
-/// 모든 variant의 컨테이너(터치 영역 포함)는 24\~64pt 사이에서 커스텀 사이즈로 지정할 수 있습니다.
+/// 모든 variant는 컨테이너를 24\~64pt 사이에서 커스텀 사이즈로 지정할 수 있고, 인터랙션 영역도 컨테이너와 같습니다.
+/// 단 `normal` variant에 `interactionOverflow()`를 켜면 커스텀 사이즈의 숫자는 아이콘 크기가 되고,
+/// 컨테이너도 아이콘 크기로 줄어듭니다. 인터랙션 영역은 아이콘에서 계산해 컨테이너 밖으로 넘칩니다.
 ///
 /// ```swift
 /// IconButton(
@@ -31,7 +33,7 @@ import SwiftUI
 /// IconButton(icon: .search)
 ///     .interactionEffect(.dim)
 ///
-/// // 버튼이 차지하는 자리는 아이콘 크기로, 터치 영역은 컨테이너 크기 그대로
+/// // 컨테이너는 아이콘 크기로 줄고, 인터랙션 영역은 그대로 남아 밖으로 넘친다
 /// IconButton(icon: .close)
 ///     .interactionOverflow()
 /// ```
@@ -127,22 +129,31 @@ public struct IconButton: View {
         return copy
     }
 
-    /// 인터랙션 영역이 레이아웃 밖으로 넘치게 합니다(기본값: 꺼짐).
+    /// 인터랙션 영역이 레이아웃 밖으로 넘치게 합니다.
     ///
-    /// 버튼이 차지하는 자리를 아이콘 크기까지 줄이고, 인터랙션 영역은 컨테이너 크기 그대로 둡니다.
-    /// 그만큼 컨테이너가 상하좌우로 `(컨테이너 - 아이콘) / 2`씩 넘치지만 주변 간격은 밀지 않습니다.
+    /// 버튼이 레이아웃에서 차지하는 컨테이너를 아이콘 크기까지 줄이고, 인터랙션 영역은 크기를 그대로 둡니다.
+    /// 그만큼 인터랙션 영역이 상하좌우로 `(인터랙션 영역 - 아이콘) / 2`씩 넘치지만 주변 간격은 밀지 않습니다.
     ///
-    /// 아이콘 간격을 촘촘하게 잡아둔 자리에 씁니다. 컨테이너가 아이콘보다 큰 4.0 레이아웃을 그대로 쓰면
-    /// 간격이 그만큼 벌어지는데, 이 모디파이어를 켜면 간격은 아이콘 기준으로 유지하면서 터치 영역은
-    /// 컨테이너 크기를 지킵니다.
+    /// 3.x에 맞춰 잡아둔 레이아웃이 틀어지지 않게 하기 위해 사용합니다. 4.0은 인터랙션 영역이 아이콘보다 커서
+    /// 컨테이너를 그대로 두면 간격이 그만큼 벌어지는데, 이 모디파이어를 켜면 간격은 아이콘 기준으로 유지합니다.
     ///
-    /// 사이즈별 값은 다음과 같습니다(레이아웃 / 넘침 / radius).
+    /// 사이즈별 값은 다음과 같습니다(레이아웃 / 인터랙션 overflow / radius).
     /// - `.small` - 16 / 4 / 8
     /// - `.medium` - 18 / 5 / 8
     /// - `.large` - 20 / 6 / 10
     /// - `.xlarge` - 24 / 6 / 10
     ///
-    /// 아이콘·컨테이너·radius 값 자체는 달라지지 않으므로 `custom(size:)`도 같은 규칙을 따릅니다.
+    /// 프리셋 사이즈의 아이콘·인터랙션 영역·radius 값은 켜든 끄든 같습니다.
+    ///
+    /// `custom(size:)`는 켜면 숫자의 뜻이 컨테이너에서 아이콘 크기로 바뀝니다.
+    /// 3.x의 `.normal(size:)`처럼 아이콘 크기를 그대로 넘기면 되고, 인터랙션 영역은 아이콘에서 계산합니다.
+    /// - 인터랙션 영역 = `max(24, ceil(아이콘 × 1.5 ÷ 4) × 4)` - 아이콘의 1.5배를 4의 배수로 올림
+    /// - radius = 인터랙션 영역 × 0.3에 가장 가까운 radius 토큰(가운데 값이면 작은 쪽)
+    /// - 예: 아이콘 22 → 인터랙션 영역 36, 아이콘 28 → 44, 아이콘 32 → 48
+    /// - 아이콘 크기에는 제한이 없습니다. 최소 24는 인터랙션 영역에만 적용됩니다.
+    ///
+    /// 네 프리셋의 아이콘 크기(16·18·20·24)를 넣으면 프리셋과 같은 인터랙션 영역(24·28·32·36)이 나옵니다.
+    ///
     /// `interactionEffect(_:)`·`disabled(_:)`와 함께 쓸 수 있고, 푸시 뱃지는 켜든 끄든 아이콘 우상단에 붙습니다.
     ///
     /// > normal variant에서만 동작합니다. 다른 variant에 걸면 무시됩니다.
@@ -275,13 +286,13 @@ public struct IconButton: View {
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        let m = variant.metrics
-        let containerSize = m.container + 2 * extraPadding
-        // overflow를 켜면 버튼이 차지하는 자리만 아이콘 크기로 줄고, 컨테이너는 그대로 남아 밖으로 번진다.
-        let layoutSize = interactionOverflow ? m.icon : containerSize
+        let m = variant.metrics(interactionOverflow: interactionOverflow)
+        let interactionAreaSize = m.interactionArea + 2 * extraPadding
+        // overflow를 켜면 버튼이 차지하는 컨테이너만 아이콘 크기로 줄고, 인터랙션 영역은 그대로 남아 밖으로 번진다.
+        let containerSize = interactionOverflow ? m.icon : interactionAreaSize
         let totalPadding = interactionOverflow ? .zero : m.padding + extraPadding
-        // 컨테이너가 레이아웃 밖으로 넘친 만큼. 터치 영역을 그만큼 되돌려 놓는 데 쓴다.
-        let overflowInset = (containerSize - layoutSize) / 2
+        // 인터랙션 영역이 컨테이너 밖으로 넘친 만큼. 터치 영역을 그만큼 되돌려 놓는 데 쓴다.
+        let overflowInset = (interactionAreaSize - containerSize) / 2
 
         Image.icon(icon)
             .resizable()
@@ -302,13 +313,13 @@ public struct IconButton: View {
                 .clipShape(RoundedRectangle(cornerRadius: m.radius))
                 // background 안에서 크기를 잡으므로 레이아웃보다 커도 바깥으로 번지기만 하고
                 // 버튼이 차지하는 자리는 밀지 않는다.
-                .frame(width: containerSize, height: containerSize)
+                .frame(width: interactionAreaSize, height: interactionAreaSize)
             }
             .background {
                 backgroundLayer(metrics: m)
             }
-            .frame(width: layoutSize, height: layoutSize)
-            // 터치 영역은 레이아웃이 아니라 컨테이너를 따른다. 눌리는 자리와 눌린 티가 나는 자리가
+            .frame(width: containerSize, height: containerSize)
+            // 터치 영역은 컨테이너가 아니라 인터랙션 영역을 따른다. 눌리는 자리와 눌린 티가 나는 자리가
             // 어긋나지 않아야 한다. overflow가 꺼져 있으면 inset이 0이라 프레임 그대로다.
             .contentShape(Rectangle().inset(by: -overflowInset))
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
@@ -382,16 +393,19 @@ extension IconButton {
 
     /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
     public enum NormalSize {
-        /// 작은 크기 (컨테이너 24pt / 아이콘 16pt / radius 8)
+        /// 작은 크기 (인터랙션 영역 24pt / 아이콘 16pt / radius 8)
         case small
-        /// 중간 크기 (컨테이너 28pt / 아이콘 18pt / radius 8)
+        /// 중간 크기 (인터랙션 영역 28pt / 아이콘 18pt / radius 8)
         case medium
-        /// 큰 크기 (컨테이너 32pt / 아이콘 20pt / radius 10)
+        /// 큰 크기 (인터랙션 영역 32pt / 아이콘 20pt / radius 10)
         case large
-        /// 가장 큰 크기 (컨테이너 36pt / 아이콘 24pt / radius 10)
+        /// 가장 큰 크기 (인터랙션 영역 36pt / 아이콘 24pt / radius 10)
         case xlarge
         /// 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
-        /// - Parameter size: 컨테이너 한 변의 크기(포인트)
+        ///
+        /// `interactionOverflow()`를 켜면 숫자는 아이콘 크기가 되고, 인터랙션 영역은 아이콘에서 계산한다.
+        /// 계산식은 `interactionOverflow(_:)`를 참고한다.
+        /// - Parameter size: 컨테이너 한 변의 크기(포인트). `interactionOverflow()`를 켜면 아이콘 한 변의 크기
         case custom(size: Int)
     }
 
@@ -408,43 +422,51 @@ extension IconButton {
 }
 
 extension IconButton.Variant {
-    /// 아이콘 버튼의 레이아웃 메트릭(컨테이너/패딩/라운드 반경/아이콘 크기).
+    /// 아이콘 버튼의 레이아웃 메트릭(인터랙션 영역/패딩/라운드 반경/아이콘 크기).
+    ///
+    /// `interactionOverflow`가 꺼져 있으면 컨테이너는 인터랙션 영역과 같고, 켜져 있으면 아이콘 크기로 줄어든다.
     struct Metrics {
-        var container: CGFloat
+        var interactionArea: CGFloat
         var padding: CGFloat
         var radius: CGFloat
         var icon: CGFloat
     }
 
-    var metrics: Metrics {
+    /// - Parameter interactionOverflow: 켜져 있으면 `normal`의 `custom(size:)` 숫자를 아이콘 크기로 해석한다.
+    func metrics(interactionOverflow: Bool) -> Metrics {
         switch self {
         case .normal(let size):
             switch size {
-            case .small:  return Self.makeMetrics(container: .dimension24, icon: .dimension16, radius: .radius8)
-            case .medium: return Self.makeMetrics(container: .dimension28, icon: .dimension18, radius: .radius8)
-            case .large:  return Self.makeMetrics(container: .dimension32, icon: .dimension20, radius: .radius10)
-            case .xlarge: return Self.makeMetrics(container: .dimension36, icon: .dimension24, radius: .radius10)
+            case .small:  return Self.makeMetrics(interactionArea: .dimension24, icon: .dimension16, radius: .radius8)
+            case .medium: return Self.makeMetrics(interactionArea: .dimension28, icon: .dimension18, radius: .radius8)
+            case .large:  return Self.makeMetrics(interactionArea: .dimension32, icon: .dimension20, radius: .radius10)
+            case .xlarge: return Self.makeMetrics(interactionArea: .dimension36, icon: .dimension24, radius: .radius10)
+            case .custom(let n) where interactionOverflow:
+                let icon = CGFloat(max(0, n))
+                let interactionArea = Self.overflowInteractionArea(icon: icon)
+                let radius = Self.nearestToken(interactionArea * 0.3, in: Radius.allValues, tieBreak: .down)
+                return Self.makeMetrics(interactionArea: interactionArea, icon: icon, radius: radius)
             case .custom(let n):
                 let container = Self.clampedContainer(n)
                 let icon = Self.nearestToken(container * (2.0 / 3.0), in: Dimension.allValues, tieBreak: .down)
                 let radius = Self.nearestToken(container * 0.3, in: Radius.allValues, tieBreak: .down)
-                return Self.makeMetrics(container: container, icon: icon, radius: radius)
+                return Self.makeMetrics(interactionArea: container, icon: icon, radius: radius)
             }
         case .background(let size, _):
             if CGFloat(size) == .dimension32 {
-                return Self.makeMetrics(container: .dimension32, icon: .dimension20, radius: .primitiveInfinity)
+                return Self.makeMetrics(interactionArea: .dimension32, icon: .dimension20, radius: .primitiveInfinity)
             }
             let container = Self.clampedContainer(size)
             let icon = Self.nearestToken(container * (2.0 / 3.0), in: Dimension.allValues, tieBreak: .down)
-            return Self.makeMetrics(container: container, icon: icon, radius: .primitiveInfinity)
+            return Self.makeMetrics(interactionArea: container, icon: icon, radius: .primitiveInfinity)
         case .outlined(let size), .solid(let size):
             switch size {
-            case .small:  return Self.makeMetrics(container: .dimension32, icon: .dimension16, radius: .primitiveInfinity)
-            case .medium: return Self.makeMetrics(container: .dimension40, icon: .dimension18, radius: .primitiveInfinity)
+            case .small:  return Self.makeMetrics(interactionArea: .dimension32, icon: .dimension16, radius: .primitiveInfinity)
+            case .medium: return Self.makeMetrics(interactionArea: .dimension40, icon: .dimension18, radius: .primitiveInfinity)
             case .custom(let n):
                 let container = Self.clampedContainer(n)
                 let icon = Self.nearestToken(container * 0.47, in: Dimension.allValues, tieBreak: .down)
-                return Self.makeMetrics(container: container, icon: icon, radius: .primitiveInfinity)
+                return Self.makeMetrics(interactionArea: container, icon: icon, radius: .primitiveInfinity)
             }
         }
     }
@@ -455,11 +477,18 @@ extension IconButton.Variant {
         min(Dimension.max, max(24, CGFloat(n)))
     }
 
-    /// 컨테이너/아이콘 크기로부터 패딩을 도출해 Metrics 를 구성한다. 아이콘은 컨테이너 중앙에 배치된다.
-    private static func makeMetrics(container: CGFloat, icon: CGFloat, radius: CGFloat) -> Metrics {
+    /// `interactionOverflow`에서 아이콘 크기로부터 인터랙션 영역을 구한다.
+    /// 아이콘의 1.5배를 4의 배수로 올림하고, 24 미만으로는 줄이지 않는다(WCAG 2.2 SC 2.5.8).
+    /// 올림이라 아이콘이 커질수록 인터랙션 영역이 줄어드는 구간이 없고, 네 프리셋(16·18·20·24 → 24·28·32·36)과도 값이 맞는다.
+    private static func overflowInteractionArea(icon: CGFloat) -> CGFloat {
+        max(24, (icon * 1.5 / 4).rounded(.up) * 4)
+    }
+
+    /// 인터랙션 영역/아이콘 크기로부터 패딩을 도출해 Metrics 를 구성한다. 아이콘은 인터랙션 영역 중앙에 배치된다.
+    private static func makeMetrics(interactionArea: CGFloat, icon: CGFloat, radius: CGFloat) -> Metrics {
         Metrics(
-            container: container,
-            padding: (container - icon) / 2,
+            interactionArea: interactionArea,
+            padding: (interactionArea - icon) / 2,
             radius: radius,
             icon: icon
         )
