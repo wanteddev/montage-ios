@@ -1197,7 +1197,7 @@
         {
           "name": "interactionOverflow(_:)",
           "signature": "func interactionOverflow(Bool) -> IconButton",
-          "summary": "인터랙션 영역이 레이아웃 밖으로 넘치게 합니다(기본값: 꺼짐).",
+          "summary": "인터랙션 영역이 레이아웃 밖으로 넘치게 합니다.",
           "kind": "method"
         },
         {

@@ -167,7 +167,12 @@ struct IconButtonPreview: View {
             if variantIndex == 0 {
                 SegmentedIndexRow("size", index: $normalSizeIndex, labels: normalSizeLabels)
                 if isCustomSize {
-                    SliderOptionRow("custom", value: $customSize, in: 24...64)
+                    // interactionOverflow를 켜면 custom 숫자가 컨테이너가 아니라 아이콘 크기가 된다.
+                    if interactionOverflow {
+                        SliderOptionRow("custom (icon)", value: $customSize, in: 12...64)
+                    } else {
+                        SliderOptionRow("custom", value: $customSize, in: 24...64)
+                    }
                 }
             } else if variantIndex == 1 {
                 SliderOptionRow("size", value: $customSize, in: 24...64)
