@@ -44,9 +44,9 @@ const CATEGORY_MAP = {
     'switch', 'textarea', 'textfield',
   ],
   utilities: [
-    'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
-    'opacity', 'primitive', 'pulltorefresh', 'radius', 'screenscaffold', 'scrollview', 'shadow',
-    'spacing', 'typography',
+    'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalcontentpadding',
+    'modalnavigation', 'opacity', 'primitive', 'pulltorefresh', 'radius', 'screenscaffold',
+    'scrollview', 'shadow', 'spacing', 'typography',
   ],
 };
 
