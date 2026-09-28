@@ -315,6 +315,20 @@ title: CoreFoundation
 </details>
 <details>
 
+<summary>``static let radius28: CGFloat``</summary>
+
+
+28pt의 모서리 반경
+</details>
+<details>
+
+<summary>``static let radius32: CGFloat``</summary>
+
+
+32pt의 모서리 반경
+</details>
+<details>
+
 <summary>``static let radius4: CGFloat``</summary>
 
 
