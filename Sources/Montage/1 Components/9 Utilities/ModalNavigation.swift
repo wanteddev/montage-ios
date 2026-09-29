@@ -47,6 +47,10 @@ public struct ModalNavigation: View {
         /// 제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.
         public static let normal = Variant(kind: .normal)
         /// 플로팅 스타일 (그라디언트, Progressive Blur 적용)
+        ///
+        /// ``Popup``·``BottomSheet``에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다.
+        /// 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다.
+        /// 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
         public static let floating = Variant(kind: .floating)
         /// 제목을 왼쪽에 두는 스타일. ``Popup``·``BottomSheet``의 기본값입니다.
         public static let emphasized = Variant(kind: .emphasized)
@@ -383,14 +387,20 @@ extension ModalNavigation {
     }
 }
 
+extension ModalNavigation {
+    /// 콘텐츠 위에 떠 있어 레이아웃 높이를 차지하지 않는지 여부.
+    ///
+    /// Figma의 `floating`은 높이가 0이라 콘텐츠가 모달 위쪽 끝에서 시작한다.
+    /// ``Popup``·``BottomSheet``는 이 값을 보고 내비게이션 자리를 비워 두지 않는다.
+    var overlaysContent: Bool { variant.isFloating }
+}
+
 private extension ModalNavigation {
+    /// 스크롤에 따른 배경 불투명도. 스크롤 오프셋이 0(스크롤이 최상단)이면 배경이 없고 32pt 스크롤하면 불투명해진다.
+    /// `floating`도 같다. 콘텐츠 위에 떠 있어 스크롤 오프셋이 0일 때 배경이 있으면 아래 이미지를 가린다.
     var backgroundOpacity: CGFloat {
-        if variant.isFloating {
-            return 1
-        } else {
-            let ratio = (scrollOffset / -32)
-            return fixedBackgroundOpacity ?? max(0, min(1, ratio))
-        }
+        let ratio = (scrollOffset / -32)
+        return fixedBackgroundOpacity ?? max(0, min(1, ratio))
     }
     
     var gradientMaskColors: [SwiftUI.Color] {
@@ -402,33 +412,21 @@ private extension ModalNavigation.Variant {
     /// 내비게이션 상하 여백.
     ///
     /// `normal`은 전체 화면 모달에서만 쓰므로 화면 여백과 같은 20, `emphasized`는
-    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 콘텐츠 위에 떠 있어 별도 값을 쓴다.
+    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 어느 모달에 얹히든 Figma 스펙인 24를 쓴다.
     var contentTopPadding: CGFloat {
         switch kind {
         case .normal: ModalKind.full.navigationPadding
-        case .emphasized: ModalKind.popup.navigationPadding
-        case .floating: 20
+        case .emphasized, .floating: ModalKind.popup.navigationPadding
         }
     }
 
     var contentBottomPadding: CGFloat {
-        switch kind {
-        case .normal: ModalKind.full.navigationPadding
-        case .emphasized: ModalKind.popup.navigationPadding
-        case .floating: 28
-        }
+        contentTopPadding
     }
 
-    /// 내비게이션 좌우 여백.
-    ///
-    /// `normal`은 전체 화면 모달에서만 쓰므로 화면 여백과 같은 20, `emphasized`는
-    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 어느 모달에나 얹히므로
-    /// 좁은 쪽인 20에 맞춘다.
+    /// 내비게이션 좌우 여백. 상하 여백과 같은 값을 쓴다.
     var contentHorizontalPadding: CGFloat {
-        switch kind {
-        case .normal, .floating: ModalKind.full.navigationPadding
-        case .emphasized: ModalKind.popup.navigationPadding
-        }
+        contentTopPadding
     }
 
     var typoVariant: Typography.Variant {
@@ -562,7 +560,7 @@ extension ModalNavigation.Resource {
     fileprivate static let iconButtonLayoutSize: CGFloat = 24
 
     /// 원형 배경의 지름.
-    fileprivate static let iconButtonBackgroundSize: CGFloat = 36
+    private static let iconButtonBackgroundSize: CGFloat = 36
 
     @ViewBuilder
     fileprivate static func iconButton(
@@ -591,21 +589,8 @@ extension ModalNavigation.Resource {
         action: @escaping () -> Void
     ) -> some View {
         if hasBackground {
-            IconButton(variant: .normal(size: .xlarge), icon: icon, handler: action)
-                .iconColor(SwiftUI.Color.atomic(.coolNeutral50).opacity(.opacity61))
-                .background {
-                    // Static/White 35%에 Static/Black 5%를 겹쳐 밝은 배경에서도 버튼이 묻히지 않게 한다.
-                    Circle()
-                        .fill(SwiftUI.Color.semantic(.staticWhite).opacity(0.35))
-                        .overlay {
-                            Circle()
-                                .fill(SwiftUI.Color.semantic(.staticBlack).opacity(0.05))
-                        }
-                        .frame(
-                            width: iconButtonBackgroundSize,
-                            height: iconButtonBackgroundSize
-                        )
-                }
+            // 원형 배경은 IconButton `background` variant와 같은 스펙이다(지름 36 / 아이콘 24).
+            IconButton(variant: .background(size: Int(iconButtonBackgroundSize)), icon: icon, handler: action)
                 .frame(width: iconButtonLayoutSize, height: iconButtonLayoutSize)
         } else {
             IconButton(variant: .normal(size: .xlarge), icon: icon, handler: action)

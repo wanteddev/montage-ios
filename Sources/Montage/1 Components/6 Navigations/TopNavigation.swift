@@ -53,6 +53,8 @@ public struct TopNavigation: View {
         /// 검색 내비게이션 바 스타일
         case search
         /// 플로팅 내비게이션 바 스타일
+        ///
+        /// 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
         case floating
         
         fileprivate var isFloating: Bool {
@@ -256,14 +258,22 @@ public struct TopNavigation: View {
         explicitScrollOffset ?? inheritedScrollOffset
     }
 
+    /// 스크롤에 따른 배경 불투명도. 스크롤 오프셋이 0(스크롤이 최상단)이면 배경이 없고 스크롤하면 나타난다.
+    /// `floating`도 같다. 콘텐츠 위에 떠 있어 스크롤 오프셋이 0일 때 배경이 있으면 아래 이미지를 가린다.
+    ///
+    /// 불투명해지는 스크롤 거리는 상단 safe area 높이다. `floating`은 safe area가 0인 자리(시트 안 등)에서도
+    /// 스크롤하면 배경이 나와야 하므로 그때는 ``ModalNavigation``과 같은 32를 쓴다.
     private var backgroundOpacity: CGFloat {
-        if variant.isFloating {
-            return 1
+        let threshold: CGFloat
+        if safeAreaInsets.top > 0 {
+            threshold = safeAreaInsets.top
+        } else if variant.isFloating {
+            threshold = 32
         } else {
-            guard safeAreaInsets.top > 0 else { return 0 }
-            let ratio = (scrollOffset / -safeAreaInsets.top)
-            return max(0, min(1, ratio))
+            return 0
         }
+        let ratio = (scrollOffset / -threshold)
+        return max(0, min(1, ratio))
     }
     
     private var gradientMaskColors = [0, 0.7, 1].map { SwiftUI.Color.black.opacity($0) }

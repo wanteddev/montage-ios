@@ -72,7 +72,7 @@ public struct Popup: View {
                         content: {
                             VStack(spacing: 0) {
                                 SwiftUI.Color.clear
-                                    .frame(height: navigationHeight)
+                                    .frame(height: reservedNavigationHeight)
                                 HStack(spacing: 0) {
                                     Spacer(minLength: 0)
                                     content()
@@ -244,8 +244,20 @@ public struct Popup: View {
         )
     }
 
+    /// 콘텐츠 위에 비워 둘 내비게이션 높이. `floating`은 콘텐츠 위에 떠 있으므로 0이다.
+    private var reservedNavigationHeight: CGFloat {
+        navigation?().overlaysContent == true ? 0 : navigationHeight
+    }
+
+    /// 내비게이션과 콘텐츠가 차지하는 높이. `floating`은 콘텐츠와 겹치므로 둘 중 큰 쪽이다.
+    private var navigationAndContentHeight: CGFloat {
+        navigation?().overlaysContent == true
+            ? max(navigationHeight, contentHeight)
+            : navigationHeight + contentHeight
+    }
+
     private var popupContentHeight: CGFloat {
-        navigationHeight + contentHeight + actionAreaHeight
+        navigationAndContentHeight + actionAreaHeight
     }
 
     /// 콘텐츠가 실제로 보이는 영역의 높이.
@@ -285,9 +297,12 @@ struct PopupModifier: ViewModifier {
     private let resize: Popup.Resize
     private let contentVerticalPadding: ModalContentPadding.Vertical
     private let contentHorizontalPadding: ModalContentPadding.Horizontal
-    private let popupContent: () -> AnyView
-    private let navigation: (() -> ModalNavigation)?
-    private let actionArea: (() -> ActionArea)?
+    // 클로저를 init에서 바로 실행해 값으로 들고 있는다. 클로저로 들고 있으면 클로저가 읽는 상태
+    // (내비게이션 variant·제목 등)만 바뀌었을 때 SwiftUI가 modifier를 같은 값으로 보고 모달 내용을
+    // 다시 만들지 않아, 바뀐 값이 모달에 반영되지 않는다.
+    private let popupContent: AnyView
+    private let navigation: ModalNavigation?
+    private let actionArea: ActionArea?
 
     init<V: View>(
         isPresented: Binding<Bool>,
@@ -302,9 +317,9 @@ struct PopupModifier: ViewModifier {
         self.resize = resize
         self.contentVerticalPadding = contentVerticalPadding
         self.contentHorizontalPadding = contentHorizontalPadding
-        popupContent = { AnyView(content()) }
-        self.navigation = navigation
-        self.actionArea = actionArea
+        popupContent = AnyView(content())
+        self.navigation = navigation?()
+        self.actionArea = actionArea?()
     }
 
     @State private var opacity: CGFloat = 0
@@ -314,15 +329,15 @@ struct PopupModifier: ViewModifier {
         content
             .fullScreenCover(isPresented: $fullScreenCoverPresented) {
                 Popup {
-                    popupContent()
+                    popupContent
                 }
                 .resize(resize)
                 .contentPadding(
                     vertical: contentVerticalPadding,
                     horizontal: contentHorizontalPadding
                 )
-                .modalNavigation(navigation)
-                .modalActionArea(actionArea)
+                .modalNavigation(navigation.map { navigation in { navigation } })
+                .modalActionArea(actionArea.map { actionArea in { actionArea } })
                 .opacity(opacity)
             }
             .transaction { transaction in
