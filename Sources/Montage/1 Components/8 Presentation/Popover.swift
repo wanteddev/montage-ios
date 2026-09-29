@@ -112,6 +112,7 @@ public enum Popover {
                             isPresented = false
                         }
                         .interactionOverflow()
+                        .iconColor(.semantic(.foregroundNeutralPrimary).opacity(.opacity61))
                         .padding(.all, 3)
                     }
                 }
