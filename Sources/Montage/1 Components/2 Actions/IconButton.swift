@@ -298,6 +298,10 @@ public struct IconButton: View {
             .resizable()
             .frame(width: m.icon, height: m.icon)
             .foregroundStyle(_iconColor)
+            // 밝아진 배경에서 값을 빼는 합성이라, 다크 모드에서도 아이콘이 배경에 묻히지 않는다.
+            .if(variant.isPlusBlendedBackground) {
+                $0.blendMode(.plusDarker)
+            }
             .if(showPushBadge) {
                 $0.pushBadge()
             } else: {
@@ -338,7 +342,16 @@ public struct IconButton: View {
             if alternative {
                 shape.fill(_backgroundColor)
             } else {
-                MaterialBackground(in: shape, tint: _backgroundColor)
+                // 뒤를 흐리고, Static/White 35%를 plusLighter로 더한 뒤 Static/Black 5%를 얹는다.
+                // plusLighter는 아래 색에 값을 더하므로 어두운 배경에서도 버튼이 묻히지 않는다.
+                ZStack {
+                    MaterialBackground(in: shape, tint: _backgroundColor)
+                    shape
+                        .fill(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity35))
+                        .blendMode(.plusLighter)
+                    shape
+                        .fill(SwiftUI.Color.semantic(.staticBlack).opacity(.opacity5))
+                }
             }
         case .outlined:
             ZStack {
@@ -521,6 +534,11 @@ extension IconButton.Variant {
         return best
     }
 
+    /// 배경을 plusLighter로, 아이콘을 plusDarker로 합성하는 variant인지 여부. alternative가 아닌 `background`다.
+    var isPlusBlendedBackground: Bool {
+        if case .background(_, false) = self { true } else { false }
+    }
+
     var activeBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
@@ -555,7 +573,7 @@ extension IconButton.Variant {
             if isAlternative {
                 .semantic(.staticWhite).withAlphaComponent(.opacity88)
             } else {
-                .atomic(.coolNeutral50).withAlphaComponent(.opacity74)
+                .atomic(.coolNeutral50).withAlphaComponent(.opacity61)
             }
         case .solid: .semantic(.staticWhite)
         }

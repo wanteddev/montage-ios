@@ -1165,6 +1165,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Thumbnail** | 비활성 시 `opacity43` 적용 |
 | **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
 | **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6\~8pt 레이아웃 이동) |
+| **IconButton `.background`** | alternative가 아닌 `background`의 배경이 흐림 위에 Static/White 35%(Plus lighter)와 Static/Black 5%를 쌓는 구조로 바뀌어 **어두운 배경에서도 원이 밝게 보입니다.** 아이콘은 `coolNeutral50` 74% → **61%**에 Plus darker 합성 |
 | **Tab · Category 아이콘 버튼** | medium의 아이콘이 22 → 20. 22에 해당하는 IconButton 사이즈가 없어 `.large`(20)를 씁니다. 다른 사이즈와 차지하는 자리·간격은 3.x와 같습니다 |
 
 ---
@@ -1289,6 +1290,7 @@ FormControlGroup {
 - [ ] 모서리가 둥글어진 만큼 모달 네 귀퉁이에 닿는 콘텐츠(이미지·전체폭 리스트)가 잘리지 않는지
 - [ ] 이미지 없는 Avatar의 플레이스홀더
 - [ ] IconButton을 직접 쓰던 화면의 아이콘 간격 - 컨테이너가 커진 만큼 벌어졌다면 `interactionOverflow()`
+- [ ] `grep -rn "variant: .background("` - 다크 모드와 어두운 이미지 위에서 원형 배경과 아이콘 대비
 - [ ] 삽화를 쓰던 `FallbackView` 화면과 company·academy `AvatarGroup`
 - [ ] [4. 화면이 달라지는 것](#4-화면이-달라지는-것) 목록의 화면을 실기기/시뮬레이터에서 확인
 

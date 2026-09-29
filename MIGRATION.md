@@ -1165,6 +1165,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **Thumbnail** | `opacity43` when disabled |
 | **Skeleton** | Text placeholder bar widths go from variable to uniform (while loading only) |
 | **IconButton** | Same glyph, larger touch container (roughly 6\~8pt of layout shift) |
+| **IconButton `.background`** | The non-alternative `background` now stacks Static/White 35% (Plus lighter) and Static/Black 5% over the blur, so **the circle stays bright on dark backgrounds.** The icon goes from `coolNeutral50` 74% to **61%**, composited with Plus darker |
 | **Tab · Category icon button** | The medium icon goes from 22 to 20. IconButton has no size for 22, so it uses `.large` (20). Other sizes, the occupied space, and spacing match 3.x |
 
 ---
@@ -1289,6 +1290,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Content that reaches the modal corners (images, full-width lists) is not clipped by the larger radii
 - [ ] Avatar placeholders where no image is provided
 - [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`
+- [ ] `grep -rn "variant: .background("` - circle and icon contrast in dark mode and over dark images
 - [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
 - [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator
 

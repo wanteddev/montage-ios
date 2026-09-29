@@ -560,7 +560,7 @@ extension ModalNavigation.Resource {
     fileprivate static let iconButtonLayoutSize: CGFloat = 24
 
     /// 원형 배경의 지름.
-    fileprivate static let iconButtonBackgroundSize: CGFloat = 36
+    private static let iconButtonBackgroundSize: CGFloat = 36
 
     @ViewBuilder
     fileprivate static func iconButton(
@@ -589,31 +589,8 @@ extension ModalNavigation.Resource {
         action: @escaping () -> Void
     ) -> some View {
         if hasBackground {
-            IconButton(variant: .normal(size: .xlarge), icon: icon, handler: action)
-                .iconColor(SwiftUI.Color.atomic(.coolNeutral50).opacity(.opacity61))
-                // 밝아진 원형 배경에서 값을 빼는 합성이라, 다크 모드에서도 아이콘이 배경에 묻히지 않는다.
-                .blendMode(.plusDarker)
-                // 인터랙션 레이어는 radius 10 사각형이라 원형 배경 밖으로 모서리가 튀어나온다.
-                // 배경과 같은 원으로 잘라 눌림 효과가 원 안에만 보이게 한다.
-                .clipShape(Circle())
-                // 배경은 clipShape 바깥에 둔다. 잘림 그룹 안에 두면 plusLighter가 뒤 콘텐츠가 아니라
-                // 그룹 안의 빈 영역과 합성돼 일반 합성과 같아진다.
-                .background {
-                    // 뒤를 흐리고, Static/White 35%를 plusLighter로 더한 뒤 Static/Black 5%를 얹는다.
-                    // plusLighter는 아래 색에 값을 더하므로 어두운 배경에서도 버튼이 묻히지 않는다.
-                    ZStack {
-                        MaterialBackground(in: Circle())
-                        Circle()
-                            .fill(SwiftUI.Color.semantic(.staticWhite).opacity(0.35))
-                            .blendMode(.plusLighter)
-                        Circle()
-                            .fill(SwiftUI.Color.semantic(.staticBlack).opacity(0.05))
-                    }
-                    .frame(
-                        width: iconButtonBackgroundSize,
-                        height: iconButtonBackgroundSize
-                    )
-                }
+            // 원형 배경은 IconButton `background` variant와 같은 스펙이다(지름 36 / 아이콘 24).
+            IconButton(variant: .background(size: Int(iconButtonBackgroundSize)), icon: icon, handler: action)
                 .frame(width: iconButtonLayoutSize, height: iconButtonLayoutSize)
         } else {
             IconButton(variant: .normal(size: .xlarge), icon: icon, handler: action)
