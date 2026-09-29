@@ -27,7 +27,7 @@ public enum Radius {
     /// 토큰이 추가/삭제되면 이 배열만 갱신하면 사용처가 자동으로 반영된다.
     public static let allValues: [CGFloat] = [
         .radius0, .radius4, .radius8, .radius10, .radius12, .radius14,
-        .radius16, .radius20, .radius24, .radiusFull
+        .radius16, .radius20, .radius24, .radius28, .radius32, .radiusFull
     ]
 
     /// 정의된 radius 토큰 중 최소값.
@@ -56,6 +56,10 @@ public extension CGFloat {
     static let radius20: CGFloat = .primitive20
     /// 24pt의 모서리 반경
     static let radius24: CGFloat = .primitive24
+    /// 28pt의 모서리 반경
+    static let radius28: CGFloat = .primitive28
+    /// 32pt의 모서리 반경
+    static let radius32: CGFloat = .primitive32
     /// 모서리를 완전히 둥글게 만드는 모서리 반경
     static let radiusFull: CGFloat = .primitiveInfinity
 }

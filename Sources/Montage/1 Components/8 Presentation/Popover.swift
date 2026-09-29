@@ -9,6 +9,9 @@
 import SwiftUI
 
 public enum Popover {
+    /// 팝오버 모서리 반경.
+    static let cornerRadius: CGFloat = .radius12
+
     struct NormalModifier: ViewModifier {
         @Binding private var isPresented: Bool
         private let heading: String
@@ -77,7 +80,7 @@ public enum Popover {
                                             of: { $0.size.height },
                                             action: { headingHeight = $0 }
                                         )
-                                    Spacer(minLength: closeButton ? 22 + 7 : 0)
+                                    Spacer(minLength: closeButton ? 22 + 4 : 0)
                                 }
                             }
                         }
@@ -99,7 +102,7 @@ public enum Popover {
                                             of: { $0.size.height },
                                             action: { textHeight = $0 }
                                         )
-                                    Spacer(minLength: closeButton ? 22 + 7 : 0)
+                                    Spacer(minLength: closeButton ? 22 + 4 : 0)
                                 }
                             }
                         }
@@ -109,6 +112,7 @@ public enum Popover {
                             isPresented = false
                         }
                         .interactionOverflow()
+                        .iconColor(.semantic(.foregroundNeutralPrimary).opacity(.opacity61))
                         .padding(.all, 3)
                     }
                 }
@@ -139,10 +143,10 @@ public enum Popover {
             .frame(minWidth: 140, maxWidth: 360)
             .fixedSize(horizontal: true, vertical: true)
             .materialBackground(
-                in: RoundedRectangle(cornerRadius: 12),
+                in: RoundedRectangle(cornerRadius: Popover.cornerRadius),
                 tint: .semantic(.surfaceElevatedPrimary).opacity(.opacity88)
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: Popover.cornerRadius))
         }
     }
 
@@ -276,6 +280,11 @@ public enum Popover {
         override func layoutSubviews() {
             super.layoutSubviews()
             layer.shadowOpacity = 0
+            // iOS 26부터 시스템 팝오버 컨테이너가 자체 radius(34)로 콘텐츠를 자른다.
+            // 콘텐츠를 자르는 뷰는 컨테이너 radius를 따라가므로 컨테이너 쪽을 스펙 값으로 덮어쓴다.
+            if #available(iOS 26.0, *) {
+                superview?.cornerConfiguration = .uniformCorners(radius: .fixed(Popover.cornerRadius))
+            }
         }
     }
 }

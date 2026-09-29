@@ -355,13 +355,33 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 
 글리프 크기는 그대로고 **터치 컨테이너만 커집니다.** 배경·테두리 없는 variant라 트레일링 아이콘이 약 6pt 움직이거나 행 높이가 약 8pt 늘어나는 정도입니다.
 
-표준 4개(16·18·20·24) 외의 크기는 `.custom(size:)`로 옮기는데, 여기서도 **숫자는 아이콘이 아니라 컨테이너입니다.** 3.x 값을 그대로 넣으면 아이콘이 작아집니다. `.custom(size: 22)`는 컨테이너가 `[24, 64]`로 clamp되어 24가 되고 아이콘은 16이 됩니다. 원하는 아이콘 크기가 나오는 컨테이너 값을 골라야 합니다.
+표준 4개(16·18·20·24) 외의 크기는 `.custom(size:)`로 옮깁니다. 숫자의 뜻은 `interactionOverflow()`를 켰는지에 따라 달라집니다.
+
+- **켜면 숫자는 아이콘 크기입니다.** 3.x 값을 그대로 넣으면 됩니다. 인터랙션 영역은 `max(24, ceil(아이콘 × 1.5 ÷ 4) × 4)`, 즉 아이콘의 1.5배를 4의 배수로 올림한 값입니다. 웹과 같은 규칙입니다.
+- **끄면 숫자는 컨테이너입니다.** 3.x 값을 그대로 넣으면 아이콘이 작아집니다. `.custom(size: 22)`는 컨테이너가 `[24, 64]`로 clamp되어 24가 되고 아이콘은 16이 됩니다.
+
+```swift
+// 3.x
+IconButton(variant: .normal(size: 22), icon: .search)
+
+// 4.0 - 아이콘 22 그대로, 인터랙션 영역 36
+IconButton(variant: .normal(size: .custom(size: 22)), icon: .search)
+    .interactionOverflow()
+```
+
+`interactionOverflow()`를 켰을 때 아이콘별 인터랙션 영역은 다음과 같습니다.
+
+| 아이콘 | 12 | 22 | 28 | 32 | 40 | 48 | 64 |
+|---|---|---|---|---|---|---|---|
+| 인터랙션 영역 | 24 | 36 | 44 | 48 | 60 | 72 | 96 |
+
+끈 상태에서는 원하는 아이콘 크기가 나오는 컨테이너 값을 골라야 합니다.
 
 | 컨테이너 | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
 |---|---|---|---|---|---|---|---|---|
 | 아이콘 | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
 
-**3.x처럼 간격을 유지하려면** `interactionOverflow()`를 켭니다. 버튼이 차지하는 자리가 아이콘 크기로 줄고 컨테이너는 그대로 남아 상하좌우로 넘치므로, 터치 영역은 4.0 크기를 지키면서 간격만 3.x로 돌아옵니다.
+**3.x처럼 간격을 유지하려면** `interactionOverflow()`를 켭니다. 버튼이 차지하는 컨테이너가 아이콘 크기로 줄고 인터랙션 영역은 그대로 남아 상하좌우로 넘치므로, 터치 영역은 4.0 크기를 지키면서 간격만 3.x로 돌아옵니다.
 
 ```swift
 // 3.x - 숫자가 아이콘 크기이고 컨테이너도 같았다
@@ -379,7 +399,7 @@ IconButton(variant: .normal(size: .large), icon: .search)
 - `.large` - 20, 6
 - `.xlarge` - 24, 6
 
-아이콘·컨테이너·radius 값 자체는 달라지지 않으므로 `.custom(size:)`도 같은 규칙을 따릅니다. `normal` 외의 variant에서는 무시됩니다.
+프리셋의 아이콘·인터랙션 영역·radius 값은 켜든 끄든 같습니다. `.custom(size:)`는 켜면 위 계산식을 따르고, 컨테이너는 아이콘 크기, 넘침은 `(인터랙션 영역 - 아이콘) ÷ 2`입니다. `normal` 외의 variant에서는 무시됩니다.
 
 #### PushBadge
 
@@ -1139,6 +1159,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Thumbnail** | 비활성 시 `opacity43` 적용 |
 | **Skeleton** | 텍스트 플레이스홀더 바 폭이 가변 → 균일 (로딩 중 한정) |
 | **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6\~8pt 레이아웃 이동) |
+| **Tab · Category 아이콘 버튼** | medium의 아이콘이 22 → 20. 22에 해당하는 IconButton 사이즈가 없어 `.large`(20)를 씁니다. 다른 사이즈와 차지하는 자리·간격은 3.x와 같습니다 |
 
 ---
 
@@ -1230,7 +1251,7 @@ FormControlGroup {
 - [ ] `spacing(.pt` · `opacity(.p` 남은 곳 확인
 - [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - 대응 없는 값
 - [ ] `.disable(` 남은 곳 확인 (`.disabled(`가 맞습니다)
-- [ ] `grep -rn "normal(size: \.custom("` - 3.x의 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지
+- [ ] `grep -rn "normal(size: \.custom("` - `interactionOverflow()`를 끈 곳에 3.x 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지. 켠 곳은 숫자가 아이콘 크기라 3.x 값 그대로 둡니다
 - [ ] `Chip`·`FilterButton`의 `.disabled()` 뒤에 컴포넌트 전용 모디파이어를 체이닝한 자리가 없는지
 - [ ] `.topNavigation(` 남은 곳 확인
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지

@@ -355,13 +355,33 @@ The size of the `normal` variant moved from `Int` to the `NormalSize` enum.
 
 The glyph stays the same size and **only the touch container grows.** Since this variant has no background or border, the visible effect is a trailing icon shifting by about 6pt or a row growing by about 8pt.
 
-Sizes other than the four standard ones (16, 18, 20, 24) move to `.custom(size:)`, where **the number is the container, not the icon.** Reusing the 3.x number shrinks the icon: `.custom(size: 22)` clamps the container to 24 (the range is `[24, 64]`), giving a 16pt icon. Pick the container value that yields the icon size you want.
+Sizes other than the four standard ones (16, 18, 20, 24) move to `.custom(size:)`. What the number means depends on whether `interactionOverflow()` is on.
+
+- **On: the number is the icon size.** Reuse the 3.x number as is. The interaction area is `max(24, ceil(icon × 1.5 ÷ 4) × 4)`, that is, 1.5 times the icon rounded up to a multiple of 4. This matches the web.
+- **Off: the number is the container.** Reusing the 3.x number shrinks the icon: `.custom(size: 22)` clamps the container to 24 (the range is `[24, 64]`), giving a 16pt icon.
+
+```swift
+// 3.x
+IconButton(variant: .normal(size: 22), icon: .search)
+
+// 4.0 - icon stays 22, interaction area 36
+IconButton(variant: .normal(size: .custom(size: 22)), icon: .search)
+    .interactionOverflow()
+```
+
+Interaction area per icon size with `interactionOverflow()` on:
+
+| Icon | 12 | 22 | 28 | 32 | 40 | 48 | 64 |
+|---|---|---|---|---|---|---|---|
+| Interaction area | 24 | 36 | 44 | 48 | 60 | 72 | 96 |
+
+With it off, pick the container value that yields the icon size you want.
 
 | Container | 24 | 28 | 32 | 36 | 40 | 48 | 56 | 64 |
 |---|---|---|---|---|---|---|---|---|
 | Icon | 16 | 18 | 20 | 24 | 28 | 32 | 36 | 40 |
 
-**To keep 3.x spacing,** turn on `interactionOverflow()`. The space the button occupies shrinks to the icon size while the container stays put and spills over on all four sides, so the touch area keeps its 4.0 size and only the spacing goes back to 3.x.
+**To keep 3.x spacing,** turn on `interactionOverflow()`. The container the button occupies shrinks to the icon size while the interaction area stays put and spills over on all four sides, so the touch area keeps its 4.0 size and only the spacing goes back to 3.x.
 
 ```swift
 // 3.x - the number was the icon size, and the container matched it
@@ -379,7 +399,7 @@ Occupied space and overflow per size:
 - `.large` - 20, 6
 - `.xlarge` - 24, 6
 
-The icon, container, and radius values themselves do not change, so `.custom(size:)` follows the same rule. Other variants ignore the modifier.
+The presets keep the same icon, interaction area, and radius values either way. `.custom(size:)` with the modifier on follows the formula above: the container is the icon size and the overflow is `(interaction area - icon) ÷ 2`. Other variants ignore the modifier.
 
 #### PushBadge
 
@@ -1139,6 +1159,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **Thumbnail** | `opacity43` when disabled |
 | **Skeleton** | Text placeholder bar widths go from variable to uniform (while loading only) |
 | **IconButton** | Same glyph, larger touch container (roughly 6\~8pt of layout shift) |
+| **Tab · Category icon button** | The medium icon goes from 22 to 20. IconButton has no size for 22, so it uses `.large` (20). Other sizes, the occupied space, and spacing match 3.x |
 
 ---
 
@@ -1230,7 +1251,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Check for leftover `spacing(.pt` and `opacity(.p`
 - [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - values with no replacement
 - [ ] Check for leftover `.disable(` (it should be `.disabled(`)
-- [ ] `grep -rn "normal(size: \.custom("` - if a 3.x icon size was carried over verbatim, switch it to a container value
+- [ ] `grep -rn "normal(size: \.custom("` - where `interactionOverflow()` is off, switch a 3.x icon size carried over verbatim to a container value. Where it is on, the number is the icon size, so keep the 3.x value
 - [ ] No component-specific modifier chained after `.disabled()` on `Chip` or `FilterButton`
 - [ ] Check for leftover `.topNavigation(`
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
