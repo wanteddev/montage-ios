@@ -1250,7 +1250,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Check for leftover `spacing(.pt` and `opacity(.p`
 - [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - values with no replacement
 - [ ] Check for leftover `.disable(` (it should be `.disabled(`)
-- [ ] `grep -rn "normal(size: \.custom("` - if a 3.x icon size was carried over verbatim, switch it to a container value
+- [ ] `grep -rn "normal(size: \.custom("` - where `interactionOverflow()` is off, switch a 3.x icon size carried over verbatim to a container value. Where it is on, the number is the icon size, so keep the 3.x value
 - [ ] No component-specific modifier chained after `.disabled()` on `Chip` or `FilterButton`
 - [ ] Check for leftover `.topNavigation(`
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
@@ -1280,7 +1280,6 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Content that reaches the modal corners (images, full-width lists) is not clipped by the larger radii
 - [ ] Avatar placeholders where no image is provided
 - [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`
-- [ ] `grep -rn "\.custom(size:" --include=*.swift` - for `IconButton`'s `normal`, the number is the icon size where `interactionOverflow()` is on and the container where it is off
 - [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
 - [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator
 

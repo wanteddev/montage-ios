@@ -1250,7 +1250,7 @@ FormControlGroup {
 - [ ] `spacing(.pt` · `opacity(.p` 남은 곳 확인
 - [ ] `grep -rn "spacing(\.pt28\|spacing(\.pt36"` - 대응 없는 값
 - [ ] `.disable(` 남은 곳 확인 (`.disabled(`가 맞습니다)
-- [ ] `grep -rn "normal(size: \.custom("` - 3.x의 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지
+- [ ] `grep -rn "normal(size: \.custom("` - `interactionOverflow()`를 끈 곳에 3.x 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지. 켠 곳은 숫자가 아이콘 크기라 3.x 값 그대로 둡니다
 - [ ] `Chip`·`FilterButton`의 `.disabled()` 뒤에 컴포넌트 전용 모디파이어를 체이닝한 자리가 없는지
 - [ ] `.topNavigation(` 남은 곳 확인
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
@@ -1280,7 +1280,6 @@ FormControlGroup {
 - [ ] 모서리가 둥글어진 만큼 모달 네 귀퉁이에 닿는 콘텐츠(이미지·전체폭 리스트)가 잘리지 않는지
 - [ ] 이미지 없는 Avatar의 플레이스홀더
 - [ ] IconButton을 직접 쓰던 화면의 아이콘 간격 - 컨테이너가 커진 만큼 벌어졌다면 `interactionOverflow()`
-- [ ] `grep -rn "\.custom(size:" --include=*.swift` - `IconButton`의 `normal`에서 `interactionOverflow()`를 켠 곳은 숫자가 아이콘 크기, 끈 곳은 컨테이너인지
 - [ ] 삽화를 쓰던 `FallbackView` 화면과 company·academy `AvatarGroup`
 - [ ] [4. 화면이 달라지는 것](#4-화면이-달라지는-것) 목록의 화면을 실기기/시뮬레이터에서 확인
 
