@@ -66,7 +66,7 @@ ModalNavigation()
 플로팅 스타일 (그라디언트, Progressive Blur 적용)
 - **Discussion**
 
-  [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다. 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다. 최상단에서는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
+  [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다. 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다. 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
 </details>
 <details>
 

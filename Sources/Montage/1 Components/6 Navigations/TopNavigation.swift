@@ -54,7 +54,7 @@ public struct TopNavigation: View {
         case search
         /// 플로팅 내비게이션 바 스타일
         ///
-        /// 최상단에서는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
+        /// 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
         case floating
         
         fileprivate var isFloating: Bool {
@@ -258,8 +258,8 @@ public struct TopNavigation: View {
         explicitScrollOffset ?? inheritedScrollOffset
     }
 
-    /// 스크롤에 따른 배경 불투명도. 최상단에서는 배경이 없고 스크롤하면 나타난다.
-    /// `floating`도 같다. 콘텐츠 위에 떠 있어 최상단에서 배경이 있으면 아래 이미지를 가린다.
+    /// 스크롤에 따른 배경 불투명도. 스크롤 오프셋이 0(스크롤이 최상단)이면 배경이 없고 스크롤하면 나타난다.
+    /// `floating`도 같다. 콘텐츠 위에 떠 있어 스크롤 오프셋이 0일 때 배경이 있으면 아래 이미지를 가린다.
     private var backgroundOpacity: CGFloat {
         guard safeAreaInsets.top > 0 else { return 0 }
         let ratio = (scrollOffset / -safeAreaInsets.top)
