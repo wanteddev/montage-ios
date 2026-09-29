@@ -1118,10 +1118,15 @@ Corner radii and padding changed across the modals. **The API is unchanged, so t
 | `ModalNavigation` `.emphasized` vertical | 20 | **24** |
 | `ModalNavigation` `.emphasized` horizontal | 16 | **24** |
 | `ModalNavigation` `.normal` vertical | 10 | **20** |
+| `ModalNavigation` `.floating` vertical | 4 top / 8 bottom | **24** |
+| `ModalNavigation` `.floating` horizontal | 16 | **24** |
+| Height taken by `ModalNavigation` `.floating` | the navigation bar's height | **0** (floats over content) |
 | `ActionArea` horizontal (inside a modal) | 20 | **24** |
 | Popup's `ActionArea` bottom inset | 40 (20 inside + 20 from the popup) | **24** |
 
 The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An `ActionArea` placed directly on a screen or in a `ScreenScaffold` stays at 20.
+
+`.floating` no longer takes up layout height and floats over the content. Content now starts at the very top of the modal, so an image can fill up to the top edge, but content that assumed it starts below the navigation bar as in 3.x will have its top covered by the buttons.
 
 **The content vertical default going from 20 to 0 has the widest reach.** Modals presented without a navigation bar now have their content flush against the top corners. See [Popup · BottomSheet content padding](#popup--bottomsheet-content-padding) for setting `contentVerticalPadding`.
 
@@ -1139,7 +1144,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **Select** | min-height goes up, so **the field gets taller.** The border also gets lighter. At large Dynamic Type sizes the leading icon and chevron no longer stick to the top |
 | **SegmentedControl** | `outlined` variant removed; those spots fall back to solid |
 | **Popup · BottomSheet** | Corners go from 12 to **24** and from the system default to **32**. Content horizontal padding 20→28, and **vertical padding now defaults to 0**, so modals presented without navigation have their content flush against the top corners |
-| **ModalNavigation** | `.display` removed. `.emphasized` padding goes 20→24 vertical and 16→24 horizontal, `.normal` 10→20 vertical, so **the navigation bar gets taller**. The gap between leading and title goes 20→16, and trailing buttons are spaced 16 apart. Leading/trailing buttons now use `IconButton`'s xlarge (36 container / 24 icon), so **the icons get bigger**, and the press feedback changes from a background highlight to dimming the icon (`dim`) |
+| **ModalNavigation** | `.display` removed. `.emphasized` padding goes 20→24 vertical and 16→24 horizontal, `.normal` 10→20 vertical, so **the navigation bar gets taller**. The gap between leading and title goes 20→16, and trailing buttons are spaced 16 apart. Leading/trailing buttons now use `IconButton`'s xlarge (36 container / 24 icon), so **the icons get bigger**, and the press feedback changes from a background highlight to dimming the icon (`dim`). **`.floating` no longer takes up height, so content starts at the top of the modal**, and its padding becomes 24 on all sides |
 | **ActionArea** | The transparent background is now **tied to the scroll reached-end signal.** Containers that do not report it (`SwiftUI.ScrollView`, `List`, non-scrolling popups) keep the gradient and the opaque background, so pass `scrollReachedEnd(true)` yourself. The background only turns transparent when the `extra` slot is empty. `extra` slot horizontal padding 20→24, bottom 24→20, lighter divider, caption bolder at `medium` weight. **The alternative action's label goes from blue to black and the `cancel` main button from outlined to a grey fill** |
 | **AvatarGroup variant** | `variant:` is fixed to `.person`, so groups that used company or academy render **as circles instead of rounded rectangles** |
 | **Avatar / AvatarGroup** | company and academy cornerRadius +2 at every size. The no-image placeholder changed from an illustration to an icon glyph. `opacity43` when disabled |
@@ -1278,6 +1283,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] ActionArea background in popups and sheets with no scroll container
 - [ ] Button colors in ActionAreas using the `alternative` action or the `.cancel` variant
 - [ ] Popups and bottom sheets presented without navigation - content should not sit flush against the top corners
+- [ ] Popups and bottom sheets using `ModalNavigation` `.floating` - the top of the content should not be hidden behind the buttons
 - [ ] Content that reaches the modal corners (images, full-width lists) is not clipped by the larger radii
 - [ ] Avatar placeholders where no image is provided
 - [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`

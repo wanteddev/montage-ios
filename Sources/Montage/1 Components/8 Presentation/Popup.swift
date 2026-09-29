@@ -72,7 +72,7 @@ public struct Popup: View {
                         content: {
                             VStack(spacing: 0) {
                                 SwiftUI.Color.clear
-                                    .frame(height: navigationHeight)
+                                    .frame(height: reservedNavigationHeight)
                                 HStack(spacing: 0) {
                                     Spacer(minLength: 0)
                                     content()
@@ -244,8 +244,20 @@ public struct Popup: View {
         )
     }
 
+    /// 콘텐츠 위에 비워 둘 내비게이션 높이. `floating`은 콘텐츠 위에 떠 있으므로 0이다.
+    private var reservedNavigationHeight: CGFloat {
+        navigation?().overlaysContent == true ? 0 : navigationHeight
+    }
+
+    /// 내비게이션과 콘텐츠가 차지하는 높이. `floating`은 콘텐츠와 겹치므로 둘 중 큰 쪽이다.
+    private var navigationAndContentHeight: CGFloat {
+        navigation?().overlaysContent == true
+            ? max(navigationHeight, contentHeight)
+            : navigationHeight + contentHeight
+    }
+
     private var popupContentHeight: CGFloat {
-        navigationHeight + contentHeight + actionAreaHeight
+        navigationAndContentHeight + actionAreaHeight
     }
 
     /// 콘텐츠가 실제로 보이는 영역의 높이.

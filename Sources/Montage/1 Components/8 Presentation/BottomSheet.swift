@@ -115,7 +115,7 @@ public struct BottomSheet: View {
                         ScrollView(scrollStatus: $scrollStatus) {
                             VStack(spacing: 0) {
                                 SwiftUI.Color.clear
-                                    .frame(height: navigationHeight)
+                                    .frame(height: reservedNavigationHeight)
                                 HStack(spacing: 0) {
                                     Spacer(minLength: 0)
                                     contentContainer()
@@ -127,12 +127,17 @@ public struct BottomSheet: View {
                         navigationView
                     }
                 } else {
-                    VStack(spacing: 0) {
-                        navigationView
-                        contentContainer()
-                        if bottomSheetContentHeight <= bottomSheetMaxHeight {
-                            Spacer(minLength: 0)
+                    ZStack(alignment: .top) {
+                        VStack(spacing: 0) {
+                            SwiftUI.Color.clear
+                                .frame(height: reservedNavigationHeight)
+                            contentContainer()
+                            if bottomSheetContentHeight <= bottomSheetMaxHeight {
+                                Spacer(minLength: 0)
+                            }
                         }
+
+                        navigationView
                     }
                 }
                 
@@ -364,7 +369,19 @@ public struct BottomSheet: View {
     }
     
     private var bottomSheetContentHeight: CGFloat {
-        (needHandle && navigation == nil ? 12 : 0) + navigationHeight + contentHeight + actionAreaHeight
+        (needHandle && navigation == nil ? 12 : 0) + navigationAndContentHeight + actionAreaHeight
+    }
+
+    /// 내비게이션과 콘텐츠가 차지하는 높이. `floating`은 콘텐츠와 겹치므로 둘 중 큰 쪽이다.
+    private var navigationAndContentHeight: CGFloat {
+        navigation?().overlaysContent == true
+            ? max(navigationHeight, contentHeight)
+            : navigationHeight + contentHeight
+    }
+
+    /// 콘텐츠 위에 비워 둘 내비게이션 높이. `floating`은 콘텐츠 위에 떠 있으므로 0이다.
+    private var reservedNavigationHeight: CGFloat {
+        navigation?().overlaysContent == true ? 0 : navigationHeight
     }
     
     private var detents: Set<PresentationDetent> {

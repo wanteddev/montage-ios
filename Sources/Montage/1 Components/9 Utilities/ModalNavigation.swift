@@ -47,6 +47,9 @@ public struct ModalNavigation: View {
         /// 제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.
         public static let normal = Variant(kind: .normal)
         /// 플로팅 스타일 (그라디언트, Progressive Blur 적용)
+        ///
+        /// ``Popup``·``BottomSheet``에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다.
+        /// 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다.
         public static let floating = Variant(kind: .floating)
         /// 제목을 왼쪽에 두는 스타일. ``Popup``·``BottomSheet``의 기본값입니다.
         public static let emphasized = Variant(kind: .emphasized)
@@ -383,6 +386,14 @@ extension ModalNavigation {
     }
 }
 
+extension ModalNavigation {
+    /// 콘텐츠 위에 떠 있어 레이아웃 높이를 차지하지 않는지 여부.
+    ///
+    /// Figma의 `floating`은 높이가 0이라 콘텐츠가 모달 위쪽 끝에서 시작한다.
+    /// ``Popup``·``BottomSheet``는 이 값을 보고 내비게이션 자리를 비워 두지 않는다.
+    var overlaysContent: Bool { variant.isFloating }
+}
+
 private extension ModalNavigation {
     var backgroundOpacity: CGFloat {
         if variant.isFloating {
@@ -402,33 +413,21 @@ private extension ModalNavigation.Variant {
     /// 내비게이션 상하 여백.
     ///
     /// `normal`은 전체 화면 모달에서만 쓰므로 화면 여백과 같은 20, `emphasized`는
-    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 콘텐츠 위에 떠 있어 별도 값을 쓴다.
+    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 어느 모달에 얹히든 Figma 스펙인 24를 쓴다.
     var contentTopPadding: CGFloat {
         switch kind {
         case .normal: ModalKind.full.navigationPadding
-        case .emphasized: ModalKind.popup.navigationPadding
-        case .floating: 20
+        case .emphasized, .floating: ModalKind.popup.navigationPadding
         }
     }
 
     var contentBottomPadding: CGFloat {
-        switch kind {
-        case .normal: ModalKind.full.navigationPadding
-        case .emphasized: ModalKind.popup.navigationPadding
-        case .floating: 28
-        }
+        contentTopPadding
     }
 
-    /// 내비게이션 좌우 여백.
-    ///
-    /// `normal`은 전체 화면 모달에서만 쓰므로 화면 여백과 같은 20, `emphasized`는
-    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 어느 모달에나 얹히므로
-    /// 좁은 쪽인 20에 맞춘다.
+    /// 내비게이션 좌우 여백. 상하 여백과 같은 값을 쓴다.
     var contentHorizontalPadding: CGFloat {
-        switch kind {
-        case .normal, .floating: ModalKind.full.navigationPadding
-        case .emphasized: ModalKind.popup.navigationPadding
-        }
+        contentTopPadding
     }
 
     var typoVariant: Typography.Variant {
@@ -606,6 +605,9 @@ extension ModalNavigation.Resource {
                             height: iconButtonBackgroundSize
                         )
                 }
+                // 인터랙션 레이어는 radius 10 사각형이라 원형 배경 밖으로 모서리가 튀어나온다.
+                // 배경과 같은 원으로 잘라 눌림 효과가 원 안에만 보이게 한다.
+                .clipShape(Circle())
                 .frame(width: iconButtonLayoutSize, height: iconButtonLayoutSize)
         } else {
             IconButton(variant: .normal(size: .xlarge), icon: icon, handler: action)

@@ -1118,10 +1118,15 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | `ModalNavigation` `.emphasized` 상하 | 20 | **24** |
 | `ModalNavigation` `.emphasized` 좌우 | 16 | **24** |
 | `ModalNavigation` `.normal` 상하 | 10 | **20** |
+| `ModalNavigation` `.floating` 상하 | 위 4 / 아래 8 | **24** |
+| `ModalNavigation` `.floating` 좌우 | 16 | **24** |
+| `ModalNavigation` `.floating`이 차지하는 높이 | 내비게이션 높이만큼 | **0** (콘텐츠 위에 뜸) |
 | `ActionArea` 좌우 (모달 안) | 20 | **24** |
 | Popup의 `ActionArea` 아래 여백 | 40 (내부 20 + 팝업이 준 20) | **24** |
 
 `ActionArea` 좌우 24는 `Popup`·`BottomSheet` 안에서만 적용됩니다. 화면에 직접 놓거나 `ScreenScaffold`에 넣은 `ActionArea`는 20 그대로입니다.
+
+`.floating`은 이제 레이아웃 높이를 차지하지 않고 콘텐츠 위에 뜹니다. 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 모달 상단까지 채울 수 있지만, 3.x처럼 내비게이션 아래에서 시작한다고 가정한 콘텐츠는 윗부분이 버튼에 가려집니다.
 
 **콘텐츠 상하 여백 기본값이 20에서 0으로 바뀐 게 파급이 가장 큽니다.** 내비게이션 없이 쓰던 모달은 콘텐츠가 모달 위쪽 모서리에 붙습니다. [Popup · BottomSheet 콘텐츠 여백](#popup--bottomsheet-콘텐츠-여백)의 `contentVerticalPadding` 지정을 참고해주세요.
 
@@ -1139,7 +1144,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Select** | min-height가 올라가 **선택 필드가 높아집니다.** 테두리 색도 옅어집니다. Dynamic Type을 키웠을 때 leading 아이콘·chevron이 위로 치우치던 것이 중앙정렬로 정정됐습니다 |
 | **SegmentedControl** | `outlined` variant 제거. outlined를 쓰던 자리는 solid로 바뀝니다 |
 | **Popup · BottomSheet** | 모서리가 각각 12→**24**, 시스템 기본→**32**로 둥글어집니다. 콘텐츠 좌우 여백 20→28, **상하 여백은 기본 0**이라 내비게이션 없이 쓰던 모달은 콘텐츠가 위쪽 모서리에 붙습니다 |
-| **ModalNavigation** | `.display` 제거. `.emphasized` 여백이 상하 20→24·좌우 16→24, `.normal` 상하 10→20으로 커져 **내비게이션 바가 높아집니다**. leading과 제목 사이 간격 20→16, trailing 버튼 사이 간격도 16으로 통일. 좌우 버튼이 `IconButton`의 xlarge(컨테이너 36 / 아이콘 24)로 바뀌어 **아이콘이 커지고**, 누름 피드백이 배경 하이라이트에서 아이콘 흐려짐(`dim`)으로 바뀝니다 |
+| **ModalNavigation** | `.display` 제거. `.emphasized` 여백이 상하 20→24·좌우 16→24, `.normal` 상하 10→20으로 커져 **내비게이션 바가 높아집니다**. leading과 제목 사이 간격 20→16, trailing 버튼 사이 간격도 16으로 통일. 좌우 버튼이 `IconButton`의 xlarge(컨테이너 36 / 아이콘 24)로 바뀌어 **아이콘이 커지고**, 누름 피드백이 배경 하이라이트에서 아이콘 흐려짐(`dim`)으로 바뀝니다. **`.floating`은 높이를 차지하지 않아 콘텐츠가 모달 위쪽 끝에서 시작하고**, 여백이 상하좌우 24로 바뀝니다 |
 | **ActionArea** | 투명 배경이 **스크롤 하단 도달 신호에 묶입니다.** 신호를 올려주지 않는 컨테이너(`SwiftUI.ScrollView`·`List`·스크롤 없는 팝업)에서는 그라데이션과 불투명 배경이 그대로 남으므로 `scrollReachedEnd(true)`를 직접 넘겨야 합니다. 배경이 투명해지는 건 `extra` 슬롯이 비어 있을 때뿐입니다. `extra` 슬롯 좌우 여백 20→24·하단 24→20, 구분선 옅어짐, 캡션이 `medium` weight로 굵어짐. **대체 액션 버튼 라벨이 파란색에서 검정으로, `cancel` 메인 버튼이 테두리형에서 회색 채움으로 바뀝니다** |
 | **AvatarGroup variant** | `variant:`가 `.person` 고정이라 company·academy로 묶던 그룹이 **둥근 사각형에서 원형으로** 바뀝니다 |
 | **Avatar · AvatarGroup** | company·academy cornerRadius 전 사이즈 +2. 이미지 없을 때 플레이스홀더가 일러스트에서 아이콘 글리프로 교체. 비활성 시 `opacity43` 적용 |
@@ -1278,6 +1283,7 @@ FormControlGroup {
 - [ ] 스크롤 컨테이너가 없는 팝업·시트의 ActionArea 배경
 - [ ] `alternative` 액션과 `.cancel` variant를 쓰는 ActionArea의 버튼 색
 - [ ] 내비게이션 없이 쓰던 팝업·바텀 시트 - 콘텐츠가 위쪽 모서리에 붙지 않는지
+- [ ] `ModalNavigation`을 `.floating`으로 쓰는 팝업·바텀 시트 - 콘텐츠 윗부분이 버튼에 가려지지 않는지
 - [ ] 모서리가 둥글어진 만큼 모달 네 귀퉁이에 닿는 콘텐츠(이미지·전체폭 리스트)가 잘리지 않는지
 - [ ] 이미지 없는 Avatar의 플레이스홀더
 - [ ] IconButton을 직접 쓰던 화면의 아이콘 간격 - 컨테이너가 커진 만큼 벌어졌다면 `interactionOverflow()`
