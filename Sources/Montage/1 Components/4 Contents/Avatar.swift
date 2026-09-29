@@ -298,7 +298,7 @@ private extension Avatar {
         Image.icon(variant.placeholderIcon)
             .resizable()
             .frame(width: placeholderIconSize, height: placeholderIconSize)
-            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity28))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(SwiftUI.Color.semantic(.surfaceNeutralStrong))
             .background(SwiftUI.Color.semantic(.surfaceNeutralPrimary))

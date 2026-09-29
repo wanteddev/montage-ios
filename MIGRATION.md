@@ -1099,7 +1099,7 @@ The cornerRadius of the company and academy variants goes up by **2** at every s
 | `xlarge` | 14 | 16 |
 | `custom(v)` | `ceil(v * 0.25 / 2) * 2` | `ceil(v * 0.25 / 2) * 2 + 2` |
 
-The placeholder drawn when there is no image also changed from a dedicated illustration to an icon glyph (`personFill` / `companyFill` / `graduationFill`). Push badge insets were adjusted per size as well.
+The placeholder drawn when there is no image also changed from a dedicated illustration to an icon glyph (`personFill` / `companyFill` / `graduationFill`), drawn in `staticWhite` at 28% (`opacity28`) in both light and dark mode. Push badge insets were adjusted per size as well.
 
 #### Everything else
 
