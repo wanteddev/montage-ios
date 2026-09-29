@@ -50,6 +50,7 @@ public struct ModalNavigation: View {
         ///
         /// ``Popup``·``BottomSheet``에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다.
         /// 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다.
+        /// 최상단에서는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
         public static let floating = Variant(kind: .floating)
         /// 제목을 왼쪽에 두는 스타일. ``Popup``·``BottomSheet``의 기본값입니다.
         public static let emphasized = Variant(kind: .emphasized)
@@ -395,13 +396,11 @@ extension ModalNavigation {
 }
 
 private extension ModalNavigation {
+    /// 스크롤에 따른 배경 불투명도. 최상단에서는 배경이 없고 32pt 스크롤하면 불투명해진다.
+    /// `floating`도 같다. 콘텐츠 위에 떠 있어 최상단에서 배경이 있으면 아래 이미지를 가린다.
     var backgroundOpacity: CGFloat {
-        if variant.isFloating {
-            return 1
-        } else {
-            let ratio = (scrollOffset / -32)
-            return fixedBackgroundOpacity ?? max(0, min(1, ratio))
-        }
+        let ratio = (scrollOffset / -32)
+        return fixedBackgroundOpacity ?? max(0, min(1, ratio))
     }
     
     var gradientMaskColors: [SwiftUI.Color] {

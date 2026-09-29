@@ -1157,6 +1157,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **PushBadge** | A single-character badge is now a fixed `badgeSize` square. It also stops scaling at `xxxLarge`, so it comes out smaller than 3.x at accessibility text sizes |
 | **PlayBadge** | A `coolNeutral40` 28% tint was added to the background and the play icon is now `staticWhite` at 88%. The badge stays visible on bright thumbnails |
 | **TopNavigation / ModalNavigation** | The background gets darker while scrolling. **Pressing an icon button fades the icon instead of showing a grey rectangular layer** |
+| **TopNavigation / ModalNavigation `.floating`** | The gradient blur background used to be drawn at all times. **It is now absent at the top and appears as you scroll.** Where no scroll offset is passed, the background stays hidden |
 | **Toast / SnackBar** | Background opacity light 50% → 52%, dark 46% → 43% |
 | **BottomSheet** | Background opacity 80% → 88% |
 | **TopNavigation / ModalNavigation** | The scroll background tint goes from `0.7` to `0.88`, so **the navigation background gets darker while scrolling** |
@@ -1284,6 +1285,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Button colors in ActionAreas using the `alternative` action or the `.cancel` variant
 - [ ] Popups and bottom sheets presented without navigation - content should not sit flush against the top corners
 - [ ] Popups and bottom sheets using `ModalNavigation` `.floating` - the top of the content should not be hidden behind the buttons
+- [ ] `.floating` `TopNavigation` and `ModalNavigation` - buttons stay visible with no background at the top, and the background appears on scroll
 - [ ] Content that reaches the modal corners (images, full-width lists) is not clipped by the larger radii
 - [ ] Avatar placeholders where no image is provided
 - [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`

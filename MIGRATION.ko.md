@@ -1157,6 +1157,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **PushBadge** | 한 글자 뱃지가 `badgeSize` 정사각으로 고정됩니다. 확대 상한이 생겨 접근성 글자 크기에서 3.x보다 작게 나옵니다 |
 | **PlayBadge** | 배경에 `coolNeutral40` 28% 틴트 추가, 재생 아이콘이 `staticWhite` 88%로. 밝은 썸네일에서도 뱃지가 묻히지 않습니다 |
 | **TopNavigation · ModalNavigation** | 스크롤 시 배경이 더 진해집니다. **아이콘 버튼을 눌렀을 때 회색 사각 레이어 대신 아이콘이 옅어집니다** |
+| **TopNavigation · ModalNavigation `.floating`** | 그라디언트 블러 배경이 항상 그려지던 것에서 **최상단에서는 배경이 없고 스크롤하면 나타나도록** 바뀝니다. 스크롤 오프셋을 넘기지 않는 자리에서는 배경이 계속 보이지 않습니다 |
 | **Toast · SnackBar** | 배경 불투명도 light 50% → 52%, dark 46% → 43% |
 | **BottomSheet** | 배경 불투명도 80% → 88% |
 | **TopNavigation · ModalNavigation** | 스크롤 배경 tint 농도가 `0.7` → `0.88`로 올라가 **스크롤 시 내비게이션 배경이 더 진해집니다** |
@@ -1284,6 +1285,7 @@ FormControlGroup {
 - [ ] `alternative` 액션과 `.cancel` variant를 쓰는 ActionArea의 버튼 색
 - [ ] 내비게이션 없이 쓰던 팝업·바텀 시트 - 콘텐츠가 위쪽 모서리에 붙지 않는지
 - [ ] `ModalNavigation`을 `.floating`으로 쓰는 팝업·바텀 시트 - 콘텐츠 윗부분이 버튼에 가려지지 않는지
+- [ ] `.floating` `TopNavigation`·`ModalNavigation` - 최상단에서 배경 없이도 버튼이 보이는지, 스크롤하면 배경이 나타나는지
 - [ ] 모서리가 둥글어진 만큼 모달 네 귀퉁이에 닿는 콘텐츠(이미지·전체폭 리스트)가 잘리지 않는지
 - [ ] 이미지 없는 Avatar의 플레이스홀더
 - [ ] IconButton을 직접 쓰던 화면의 아이콘 간격 - 컨테이너가 커진 만큼 벌어졌다면 `interactionOverflow()`
