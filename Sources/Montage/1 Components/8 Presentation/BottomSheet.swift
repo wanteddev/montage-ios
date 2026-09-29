@@ -407,10 +407,13 @@ struct BottomSheetModifier: ViewModifier {
     private let resize: BottomSheet.Resize
     private let contentVerticalPadding: ModalContentPadding.Vertical
     private let contentHorizontalPadding: ModalContentPadding.Horizontal
-    private let actionArea: (() -> ActionArea)?
-    private let navigation: (() -> ModalNavigation)?
+    // 클로저를 init에서 바로 실행해 값으로 들고 있는다. 클로저로 들고 있으면 클로저가 읽는 상태
+    // (내비게이션 variant·제목 등)만 바뀌었을 때 SwiftUI가 modifier를 같은 값으로 보고 모달 내용을
+    // 다시 만들지 않아, 바뀐 값이 모달에 반영되지 않는다.
+    private let actionArea: ActionArea?
+    private let navigation: ModalNavigation?
     private let onDismiss: (() -> Void)?
-    private let bottomSheetContent: () -> AnyView
+    private let bottomSheetContent: AnyView
 
     init<V: View>(
         isPresented: Binding<Bool>,
@@ -430,10 +433,10 @@ struct BottomSheetModifier: ViewModifier {
         self.resize = resize
         self.contentVerticalPadding = contentVerticalPadding
         self.contentHorizontalPadding = contentHorizontalPadding
-        self.actionArea = actionArea
-        self.navigation = navigation
+        self.actionArea = actionArea?()
+        self.navigation = navigation?()
         self.onDismiss = onDismiss
-        bottomSheetContent = { AnyView(content()) }
+        bottomSheetContent = AnyView(content())
     }
     
     func body(content: Content) -> some View {
@@ -445,7 +448,7 @@ struct BottomSheetModifier: ViewModifier {
                         onDismiss: onDismiss
                     ) {
                         BottomSheet {
-                            bottomSheetContent()
+                            bottomSheetContent
                         }
                         .needHandle(false)
                         .resize(.fill)
@@ -454,8 +457,8 @@ struct BottomSheetModifier: ViewModifier {
                             vertical: contentVerticalPadding,
                             horizontal: contentHorizontalPadding
                         )
-                        .modalNavigation(navigation)
-                        .modalActionArea(actionArea)
+                        .modalNavigation(navigation.map { navigation in { navigation } })
+                        .modalActionArea(actionArea.map { actionArea in { actionArea } })
                     }
                 } else {
                     $0.sheet(
@@ -463,7 +466,7 @@ struct BottomSheetModifier: ViewModifier {
                         onDismiss: onDismiss
                     ) {
                         BottomSheet {
-                            bottomSheetContent()
+                            bottomSheetContent
                         }
                         .needHandle(needHandle)
                         .resize(resize)
@@ -471,8 +474,8 @@ struct BottomSheetModifier: ViewModifier {
                             vertical: contentVerticalPadding,
                             horizontal: contentHorizontalPadding
                         )
-                        .modalNavigation(navigation)
-                        .modalActionArea(actionArea)
+                        .modalNavigation(navigation.map { navigation in { navigation } })
+                        .modalActionArea(actionArea.map { actionArea in { actionArea } })
                     }
                 }
             }
