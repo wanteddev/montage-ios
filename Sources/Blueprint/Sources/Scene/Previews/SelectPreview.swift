@@ -81,7 +81,7 @@ struct SelectPreview: View {
                 print($0.text)
             }
             .size(sizes[sizeIndex])
-            .negative(negative)
+            .status(negative ? .negative : .normal)
             .placeholder("선택해 주세요.")
             .leading(leadings[leadingIndex])
             .menuResize(bottomSheetResizes[menuResizeIndex])

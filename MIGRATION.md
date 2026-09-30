@@ -349,6 +349,7 @@ Select(variant: .single(), items: $items)
 | `.description(_:)` | `.message(_:)` | `TextArea`, `Select` |
 | `.inputCharacterLimit(_:)` | `.maxLength(_:)` | `TextArea` |
 | `.status(.negative(description:))` | `.status(.negative)` + `.message(_:)` | `TextField` |
+| `.negative(_:)` | `.status(_:)` (`true` → `.negative`, `false` → `.normal`) | `Select` |
 
 `TextField.Status` lost its associated values: `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
 
@@ -1288,6 +1289,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - variant with no replacement
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"`, for the ones on `ModalNavigation` - moved to `leading(_:)` and `trailings(_:)`
+- [ ] `.negative(` chained on `Select` - moved to `.status(.negative)`, including argument-less `.negative()` calls
 - [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"`, for the ones on `Select` - moved to `leading(_:)`, with `.custom` changed to `.slot`
 - [ ] `.close` is last in every `trailings(_:)` array - putting it first pins the close button to the left
 - [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`

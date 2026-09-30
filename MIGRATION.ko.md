@@ -349,6 +349,7 @@ Select(variant: .single(), items: $items)
 | `.description(_:)` | `.message(_:)` | `TextArea` · `Select` |
 | `.inputCharacterLimit(_:)` | `.maxLength(_:)` | `TextArea` |
 | `.status(.negative(description:))` | `.status(.negative)` + `.message(_:)` | `TextField` |
+| `.negative(_:)` | `.status(_:)` (`true` → `.negative`, `false` → `.normal`) | `Select` |
 
 `TextField.Status`에서 연관값이 빠졌습니다. `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
 
@@ -1288,6 +1289,7 @@ FormControlGroup {
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - 대응 없는 variant
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"` 중 `ModalNavigation`에 건 것 - `leading(_:)`·`trailings(_:)`로 옮겼는지
+- [ ] `Select` 체이닝의 `.negative(` - `.status(.negative)`로 옮겼는지. `.negative()`처럼 인자 없이 쓴 자리도 포함
 - [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"` 중 `Select`에 건 것 - `leading(_:)`으로, `.custom`은 `.slot`으로 옮겼는지
 - [ ] `trailings(_:)`에서 `.close`가 배열 마지막인지 - 앞에 두면 닫기 버튼이 왼쪽에 붙습니다
 - [ ] `accentForegroundRedOrange` · `accentBackgroundRedOrange` 사용처 전수 확인

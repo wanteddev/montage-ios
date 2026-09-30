@@ -106,6 +106,14 @@ public struct Select: View {
         case chip
     }
 
+    /// Select 컴포넌트의 상태를 정의합니다.
+    public enum Status {
+        /// 기본 상태
+        case normal
+        /// 오류 상태
+        case negative
+    }
+
     /// Select 컴포넌트의 사이즈를 정의합니다.
     ///
     /// 사이즈에 따라 컨테이너 패딩, 모서리 반경, 최소 높이, 입력 타이포그래피,
@@ -144,8 +152,8 @@ public struct Select: View {
 
     // MARK: - Modifiers
 
-    /// 호출부가 ``negative(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파 상태를 따른다.
-    private var explicitNegative: Bool?
+    /// 호출부가 ``status(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파 상태를 따른다.
+    private var explicitStatus: Status?
     private var render: Render = .text
     private var placeholder = ""
     private var leading: Resource.Leading?
@@ -164,12 +172,12 @@ public struct Select: View {
         return zelf
     }
 
-    /// negative 상태 여부를 조정합니다.
-    /// - Parameter negative: 부정적 상태 여부, 생략하면 기본값으로 `true` 적용
+    /// Select 컴포넌트의 상태를 설정합니다.
+    /// - Parameter status: 적용할 상태
     /// - Returns: 수정된 Select 인스턴스
-    public func negative(_ negative: Bool = true) -> Self {
+    public func status(_ status: Status) -> Self {
         var zelf = self
-        zelf.explicitNegative = negative
+        zelf.explicitStatus = status
         return zelf
     }
 
@@ -232,7 +240,7 @@ public struct Select: View {
 
     /// 입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
     ///
-    /// 메시지 색은 ``negative(_:)``에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
+    /// 메시지 색은 ``status(_:)``에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
     ///
     /// - Parameter text: 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다.
     /// - Returns: 수정된 Select 인스턴스
@@ -296,10 +304,12 @@ public struct Select: View {
         explicitSize ?? inheritedSize?.selectSize ?? .large
     }
 
-    /// 실제로 적용할 오류 상태. 명시값 > ``FormControl`` 전파값 > 기본값(`false`) 순.
-    private var negative: Bool {
-        explicitNegative ?? inheritedStatus?.isNegative ?? false
+    /// 실제로 적용할 상태. 명시값 > ``FormControl`` 전파값 > 기본값(`.normal`) 순.
+    private var status: Status {
+        explicitStatus ?? inheritedStatus?.selectStatus ?? .normal
     }
+
+    private var negative: Bool { status == .negative }
 
     /// 뷰의 내용과 동작을 정의합니다.
     ///
@@ -308,7 +318,7 @@ public struct Select: View {
     public var body: some View {
         FormControl { content }
             .size(formControlSize)
-            .status(negative ? .negative : .normal)
+            .status(formControlStatus)
             .applying(formControlAttributes)
     }
 
@@ -317,6 +327,14 @@ public struct Select: View {
         switch size {
         case .large: .large
         case .medium: .medium
+        }
+    }
+
+    /// 자신의 상태를 ``FormControl`` 래퍼 값으로 매핑한다. (메시지 색 결정)
+    private var formControlStatus: FormControl.Status {
+        switch status {
+        case .normal: .normal
+        case .negative: .negative
         }
     }
 
@@ -407,18 +425,14 @@ public struct Select: View {
             .padding(.trailing, size.textHorizontalPadding)
             .contentShape(Rectangle())
 
-            IconButton(
-                variant: .normal(size: .small),
-                icon: .chevronDownThickSmall
-            ) {
-                menuPresented.wrappedValue.toggle()
-            }
-            .interactionOverflow()
-            // 비활성 색상(foreground/disable/primary)은 IconButton이 `\.isEnabled`를 읽어 직접 적용한다.
-            .iconColor(.semantic(.foregroundNeutralTertiary))
-            .padding(.horizontal, 4)
-            .frame(height: size.contentMinHeight)
-            .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
+            // 탭은 필드 전체의 onTapGesture가 받으므로 chevron은 표시만 한다.
+            // 아이콘 16×16을 사이즈와 무관하게 24×24 영역에 담는다.
+            Image.icon(.chevronDownThickSmall)
+                .resizable()
+                .frame(width: .dimension16, height: .dimension16)
+                .foregroundStyle(chevronColor)
+                .frame(width: .dimension24, height: .dimension24)
+                .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
         }
         .padding(.horizontal, size.containerPadding)
         // overflow일 때 상하단 간격(large 12, medium 8)을 컨테이너 세로 패딩으로 준다.
@@ -569,6 +583,10 @@ public struct Select: View {
             menuPresented.wrappedValue
                 ? .semantic(.lineBrandStrong) : .semantic(.lineNeutralSecondary)
         }
+    }
+
+    private var chevronColor: SwiftUI.Color {
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
 
     private var focusRingColor: SwiftUI.Color {

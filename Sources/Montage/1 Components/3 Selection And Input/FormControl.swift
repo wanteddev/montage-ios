@@ -516,7 +516,15 @@ extension FormControl.Status {
         }
     }
 
-    /// 오류 상태 여부. `Status`를 두지 않고 `negative` 불리언만 받는 입력(``TextArea``·``Select``)에 쓴다.
+    /// 같은 의미의 ``Select`` 상태 값. `Select`는 성공 상태가 없어 `positive`를 `normal`로 본다.
+    var selectStatus: Select.Status {
+        switch self {
+        case .normal, .positive: .normal
+        case .negative: .negative
+        }
+    }
+
+    /// 오류 상태 여부. `Status`를 두지 않고 `negative` 불리언만 받는 입력(``TextArea``)에 쓴다.
     var isNegative: Bool {
         self == .negative
     }
