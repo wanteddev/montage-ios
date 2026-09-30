@@ -295,7 +295,7 @@ extension Card {
 
                                 if let buttonIcon {
                                     Montage.IconButton(
-                                        variant: .normal(size: .xlarge),
+                                        variant: .normal(size: .large),
                                         icon: buttonIcon
                                     ) {
                                         onTapButton?()
