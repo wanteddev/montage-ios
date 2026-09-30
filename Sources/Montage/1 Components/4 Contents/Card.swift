@@ -295,11 +295,12 @@ extension Card {
 
                                 if let buttonIcon {
                                     Montage.IconButton(
-                                        variant: .normal(size: .large),
+                                        variant: .normal(size: .xlarge),
                                         icon: buttonIcon
                                     ) {
                                         onTapButton?()
                                     }
+                                    .interactionEffect(.none)
                                     .interactionOverflow()
                                     .iconColor(buttonColor)
                                 }
