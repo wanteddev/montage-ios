@@ -316,6 +316,30 @@ TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action
 TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
 ```
 
+#### Select 선행 요소
+
+선행 요소 프리셋도 `컴포넌트.Resource.슬롯명` 패턴으로 옮겼습니다. 모디파이어는 `ModalNavigation`처럼 `leading(_:)`입니다. 렌더 결과는 같습니다.
+
+| 3.x | 4.0 |
+|---|---|
+| `Select.LeadingContent` | `Select.Resource.Leading` |
+| `.leadingContent(_:)` | `.leading(_:)` |
+| `.custom { … }` | `.slot { … }` |
+
+```swift
+// 3.x
+Select(variant: .single(), items: $items)
+    .leadingContent(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leadingContent(.custom { Text("이력서") })
+
+// 4.0
+Select(variant: .single(), items: $items)
+    .leading(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leading(.slot { Text("이력서") })
+```
+
 #### 입력 컴포넌트
 
 | 3.x | 4.0 | 대상 |
@@ -1264,6 +1288,7 @@ FormControlGroup {
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - 대응 없는 variant
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"` 중 `ModalNavigation`에 건 것 - `leading(_:)`·`trailings(_:)`로 옮겼는지
+- [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"` 중 `Select`에 건 것 - `leading(_:)`으로, `.custom`은 `.slot`으로 옮겼는지
 - [ ] `trailings(_:)`에서 `.close`가 배열 마지막인지 - 앞에 두면 닫기 버튼이 왼쪽에 붙습니다
 - [ ] `accentForegroundRedOrange` · `accentBackgroundRedOrange` 사용처 전수 확인
 - [ ] `FallbackView(image:` · `AvatarGroup(` 의 `variant:` · `TrailingButtonInfo(variant:` 사용처 확인

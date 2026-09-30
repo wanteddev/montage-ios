@@ -20,7 +20,7 @@ struct SelectPreview: View {
     @State private var renderIndex: Int = 0
     @State private var overflow: Bool = false
     @State private var disable: Bool = false
-    @State private var leadingContentIndex: Int = 0
+    @State private var leadingIndex: Int = 0
     @State private var customMenu: Bool = false
     @State private var menuResizeIndex = 0
     @State private var itemCountClassIndex: Int = 0
@@ -37,15 +37,15 @@ struct SelectPreview: View {
         ]
     }
 
-    private var leadingContents: [Select.LeadingContent?] {
+    private var leadings: [Select.Resource.Leading?] {
         [
             .none,
             .icon(.send),
             // leading 아이콘 버튼은 Select 사이즈에 맞춰 large/medium을 사용한다.
             .iconButton(.init(variant: .normal(size: sizes[sizeIndex] == .large ? .large : .medium), icon: .send)),
-            .custom({
+            .slot {
                 Text("이력서")
-            }),
+            },
         ]
     }
 
@@ -83,7 +83,7 @@ struct SelectPreview: View {
             .size(sizes[sizeIndex])
             .negative(negative)
             .placeholder("선택해 주세요.")
-            .leadingContent(leadingContents[leadingContentIndex])
+            .leading(leadings[leadingIndex])
             .menuResize(bottomSheetResizes[menuResizeIndex])
             .disabled(disable)
             .bottomSheet(isPresented: $showSheet) {
@@ -132,7 +132,7 @@ struct SelectPreview: View {
                 ToggleOption("negative", isOn: $negative)
                 ToggleOption("disable", isOn: $disable)
             }
-            SegmentedIndexRow("leadingContent", index: $leadingContentIndex, labels: leadingContents.map { $0?.description ?? "none" })
+            SegmentedIndexRow("leading", index: $leadingIndex, labels: leadings.map { $0?.description ?? "none" })
             ToggleOptionRow("custom menu", isOn: $customMenu)
                 // 커스텀 메뉴를 끄면 항상 살아 있는 bottomSheet가 남지 않도록 함께 닫는다.
                 .onChange(of: customMenu) { enabled in
@@ -193,7 +193,7 @@ extension Select.Variant: CaseDescribable {}
 extension Select.Size: CaseDescribable {}
 extension Select.SingleSelectionType: CaseDescribable {}
 extension Select.Render: CaseDescribable {}
-extension Select.LeadingContent: CaseDescribable {}
+extension Select.Resource.Leading: CaseDescribable {}
 
 #Preview {
     SelectPreview()

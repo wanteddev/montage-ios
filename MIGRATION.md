@@ -316,6 +316,30 @@ TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action
 TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
 ```
 
+#### Select leading element
+
+The leading presets also moved to the `Component.Resource.SlotName` pattern. The modifier is `leading(_:)`, same as `ModalNavigation`. Rendering is unchanged.
+
+| 3.x | 4.0 |
+|---|---|
+| `Select.LeadingContent` | `Select.Resource.Leading` |
+| `.leadingContent(_:)` | `.leading(_:)` |
+| `.custom { … }` | `.slot { … }` |
+
+```swift
+// 3.x
+Select(variant: .single(), items: $items)
+    .leadingContent(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leadingContent(.custom { Text("Resume") })
+
+// 4.0
+Select(variant: .single(), items: $items)
+    .leading(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leading(.slot { Text("Resume") })
+```
+
 #### Input components
 
 | 3.x | 4.0 | Applies to |
@@ -1264,6 +1288,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - variant with no replacement
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"`, for the ones on `ModalNavigation` - moved to `leading(_:)` and `trailings(_:)`
+- [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"`, for the ones on `Select` - moved to `leading(_:)`, with `.custom` changed to `.slot`
 - [ ] `.close` is last in every `trailings(_:)` array - putting it first pins the close button to the left
 - [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`
 - [ ] Audit `FallbackView(image:`, `variant:` on `AvatarGroup(`, and `TrailingButtonInfo(variant:`
