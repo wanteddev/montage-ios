@@ -637,6 +637,7 @@ private extension TextField {
                 // Leading 아이콘과 같은 규칙으로 Clear 버튼이 놓이는 영역을 아이콘보다 넓힌다. 터치 영역은 버튼 안에서 정해지므로 줄지 않는다.
                 // IconButton.padding(_:)은 normal variant에서 무시되므로 edge를 명시해 SwiftUI 패딩을 건다.
                 .padding(.all, size.iconPadding)
+                .accessibilityLabel(Text("텍스트 지우기", bundle: .module))
             } else if !text.isEmpty, let statusMark, let statusMarkColor {
                 Image
                     .icon(statusMark)
