@@ -1167,6 +1167,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **IconButton** | Same glyph, larger touch container (roughly 6\~8pt of layout shift) |
 | **IconButton `.background`** | The non-alternative `background` now stacks Static/White 35% (Plus lighter) and Static/Black 5% over the blur, so **the circle stays bright on dark backgrounds.** The icon goes from `coolNeutral50` 74% to **61%**, composited with Plus darker |
 | **Tab · Category icon button** | The medium icon goes from 22 to 20. IconButton has no size for 22, so it uses `.large` (20). Other sizes, the occupied space, and spacing match 3.x |
+| **Category `normal` selected chip** | The selected background changes from `inverseBackground` to `foregroundNeutralStrong`, so it is a slightly deeper black in light mode. Dark mode is unchanged |
 
 ---
 
@@ -1292,6 +1293,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`
 - [ ] `grep -rn "variant: .background("` - circle and icon contrast in dark mode and over dark images
 - [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
+- [ ] `Category` `normal` selected chip background (light mode)
 - [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator
 
 The fastest way to review spec changes is to build Blueprint at both versions and compare. Set `UDID` to a value from `xcrun simctl list devices`.

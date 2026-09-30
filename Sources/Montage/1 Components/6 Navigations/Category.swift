@@ -85,20 +85,11 @@ public struct Category: View {
                 HStack(spacing: 0) {
                     HStack(spacing: itemSpacing) {
                         ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                            Chip(
-                                variant: chipVariant(index == selectedIndex),
-                                size: chipSize,
-                                text: item
-                            ) {
-                                withAnimation(animation) {
-                                    selectedIndex = index
-                                }
-                                actions(index)
-                            }
-                            .active(index == selectedIndex)
+                            chip(index: index, text: item)
                             .modifying {
                                 itemModifier(index, $0)
                             }
+                            .accessibilityAddTraits(selectedTraits(index))
                             .contentShape(Rectangle())
                             .disabled(itemDisabled(index))
                         }
@@ -250,6 +241,39 @@ private extension Category {
         }
     }
       
+    /// 항목 칩을 만든다.
+    ///
+    /// `normal`의 선택 칩은 Chip의 active 스타일(옅은 브랜드 톤) 대신 커스텀 색으로 진한 배경을 입힌다.
+    func chip(index: Int, text: String) -> Chip {
+        let isSelected = index == selectedIndex
+        let chip = Chip(
+            variant: chipVariant(isSelected),
+            size: chipSize,
+            text: text
+        ) {
+            withAnimation(animation) {
+                selectedIndex = index
+            }
+            actions(index)
+        }
+
+        switch variant {
+        case .normal:
+            return isSelected
+                ? chip
+                    .backgroundColor(.semantic(.foregroundNeutralStrong))
+                    .fontColor(.semantic(.foregroundNeutralInverse))
+                : chip
+        case .alternative:
+            return chip.active(isSelected)
+        }
+    }
+
+    /// `normal`의 선택 칩은 active를 쓰지 않아 Chip이 선택 상태를 알리지 않으므로 트레이트로 보완한다.
+    func selectedTraits(_ index: Int) -> AccessibilityTraits {
+        variant == .normal && index == selectedIndex ? .isSelected : []
+    }
+
     func chipVariant(_ isSelected: Bool) -> Chip.Variant {
         if variant == .normal && isSelected {
             .solid
