@@ -220,20 +220,27 @@ leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
 </details>
 <details>
 
-<summary>``func leadingContent(LeadingContent?) -> Select``</summary>
+<summary>``func leading(Resource.Leading?) -> Select``</summary>
 
 
-왼쪽 컨텐츠를 추가합니다.
+필드 왼쪽에 표시할 요소를 지정합니다.
 
 - **Parameters**
 
   | Parameter | Description |
   | --- | --- |
-  | `content` | 표시할 선행 콘텐츠 |
+  | `leading` | 표시할 요소, `nil`이면 표시하지 않음 |
 
 - **Return Value**
 
   수정된 Select 인스턴스
+- **Discussion**
+
+  ```swift
+  Select(variant: .single(), items: $items)
+      .leading(.icon(.search))
+  ```
+
 </details>
 <details>
 
@@ -270,24 +277,7 @@ leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
   수정된 Select 인스턴스
 - **Discussion**
 
-  메시지 색은 [negative(_:)](/documentation/montage/select/negative(_:).md)에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
-</details>
-<details>
-
-<summary>``func negative(Bool) -> Select``</summary>
-
-
-negative 상태 여부를 조정합니다.
-
-- **Parameters**
-
-  | Parameter | Description |
-  | --- | --- |
-  | `negative` | 부정적 상태 여부, 생략하면 기본값으로 `true` 적용 |
-
-- **Return Value**
-
-  수정된 Select 인스턴스
+  메시지 색은 [status(_:)](/documentation/montage/select/status(_:).md)에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
 </details>
 <details>
 
@@ -323,61 +313,26 @@ Select 컴포넌트의 사이즈를 설정합니다.
 
   수정된 Select 인스턴스
 </details>
+<details>
+
+<summary>``func status(Status) -> Select``</summary>
+
+
+Select 컴포넌트의 상태를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `status` | 적용할 상태 |
+
+- **Return Value**
+
+  수정된 Select 인스턴스
+</details>
 
 ### Enumerations
 
-<details>
-
-<summary>``enum LeadingContent``</summary>
-
-
-왼쪽에 표시될 컨텐트 타입입니다.
-#### Enumeration Cases
-
-<details>
-
-<summary>``case custom(() -> any View)``</summary>
-
-
-사용자 정의 뷰 표시
-
-- **Parameters**
-
-  | Parameter | Description |
-  | --- | --- |
-  | `content` | 사용자 정의 뷰를 반환하는 클로저 |
-
-</details>
-<details>
-
-<summary>``case icon(Icon)``</summary>
-
-
-아이콘 표시
-
-- **Parameters**
-
-  | Parameter | Description |
-  | --- | --- |
-  | `icon` | 표시할 아이콘 |
-
-</details>
-<details>
-
-<summary>``case iconButton(IconButton)``</summary>
-
-
-아이콘 버튼 표시
-
-- **Parameters**
-
-  | Parameter | Description |
-  | --- | --- |
-  | `iconButton` | 표시할 아이콘 버튼 |
-
-</details>
-
-</details>
 <details>
 
 <summary>``enum Render``</summary>
@@ -399,6 +354,81 @@ variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정�
 
 
 선택된 항목 텍스트만 표시
+</details>
+
+</details>
+<details>
+
+<summary>``enum Resource``</summary>
+
+
+필드 안에 놓을 수 있는 요소의 프리셋입니다.
+#### Enumerations
+
+<details>
+
+<summary>``enum Leading``</summary>
+
+
+필드 왼쪽([leading(_:)](/documentation/montage/select/leading(_:).md))에 놓는 요소입니다.
+##### Enumeration Cases
+
+<details>
+
+<summary>``case icon(Icon)``</summary>
+
+
+아이콘입니다. 크기와 색은 [Select.Size](/documentation/montage/select/size.md)에 맞춰 고정됩니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `icon` | 표시할 아이콘 |
+
+</details>
+<details>
+
+<summary>``case iconButton(IconButton)``</summary>
+
+
+아이콘 버튼입니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `iconButton` | 표시할 아이콘 버튼 |
+
+</details>
+<details>
+
+<summary>``case slotView(() -> AnyView)``</summary>
+
+
+프리셋에 없는 구성을 직접 그릴 때 씁니다. [slot(_:)](/documentation/montage/select/resource/leading/slot(_:).md)으로 만듭니다.
+</details>
+
+##### Type Methods
+
+<details>
+
+<summary>``static func slot<V>(() -> V) -> Leading``</summary>
+
+
+프리셋에 없는 구성을 직접 그립니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 왼쪽에 놓을 콘텐츠 |
+
+- **Return Value**
+
+  해당 콘텐츠를 그리는 [Select.Resource.Leading](/documentation/montage/select/resource/leading.md)
+</details>
+
 </details>
 
 </details>
@@ -450,6 +480,30 @@ Select 컴포넌트의 사이즈를 정의합니다.
 
 
 중간 사이즈 (최소 높이 40)
+</details>
+
+</details>
+<details>
+
+<summary>``enum Status``</summary>
+
+
+Select 컴포넌트의 상태를 정의합니다.
+#### Enumeration Cases
+
+<details>
+
+<summary>``case negative``</summary>
+
+
+오류 상태
+</details>
+<details>
+
+<summary>``case normal``</summary>
+
+
+기본 상태
 </details>
 
 </details>
