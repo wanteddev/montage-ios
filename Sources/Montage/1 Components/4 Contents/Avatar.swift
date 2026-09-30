@@ -292,16 +292,28 @@ private extension Avatar {
 
     /// 이미지를 불러오지 못했을 때 표시하는 아이콘 기반 fallback입니다.
     ///
-    /// 반투명한 `surfaceNeutralStrong` 위에 아이콘을 올리므로,
-    /// 아래에 불투명한 `surfaceNeutralPrimary` 배경 레이어를 함께 깔아 줍니다.
+    /// 반투명한 `surfaceNeutralStrong` 면에서 아이콘 모양을 도려내고,
+    /// 그 자리에 `staticWhite` 28%를 불투명한 `backgroundNeutralPrimary` 위로 바로 올립니다.
+    /// 면과 아이콘이 겹치면 라이트에서 아이콘이 회색으로 탁해집니다.
     var placeholderContent: some View {
+        ZStack {
+            SwiftUI.Color.semantic(.surfaceNeutralStrong)
+                .overlay {
+                    placeholderIconImage
+                        .blendMode(.destinationOut)
+                }
+                // 도려내기를 면 레이어 안으로 한정합니다. 없으면 아래 배경까지 뚫립니다.
+                .compositingGroup()
+            placeholderIconImage
+                .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity28))
+        }
+        .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+    }
+
+    var placeholderIconImage: some View {
         Image.icon(variant.placeholderIcon)
             .resizable()
             .frame(width: placeholderIconSize, height: placeholderIconSize)
-            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity28))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(SwiftUI.Color.semantic(.surfaceNeutralStrong))
-            .background(SwiftUI.Color.semantic(.surfaceNeutralPrimary))
     }
 
     var placeholderIconSize: CGFloat {

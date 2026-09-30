@@ -1099,7 +1099,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | `xlarge` | 14 | 16 |
 | `custom(v)` | `ceil(v * 0.25 / 2) * 2` | `ceil(v * 0.25 / 2) * 2 + 2` |
 
-이미지가 없을 때 그리는 플레이스홀더도 전용 일러스트에서 아이콘 글리프(`personFill` / `companyFill` / `graduationFill`)로 바뀌었습니다. 아이콘 색은 `staticWhite` 28%(`opacity28`)라 라이트·다크 모두 흰색이 반투명하게 올라갑니다. 푸시뱃지 inset도 사이즈별로 조정됐습니다.
+이미지가 없을 때 그리는 플레이스홀더도 전용 일러스트에서 아이콘 글리프(`personFill` / `companyFill` / `graduationFill`)로 바뀌었습니다. 아이콘 자리는 `surfaceNeutralStrong` 면을 도려내고 `staticWhite` 28%(`opacity28`)를 배경 위에 바로 올립니다. 라이트에서는 아이콘이 흰색, 다크에서는 배경보다 약간 밝은 회색으로 보입니다. 푸시뱃지 inset도 사이즈별로 조정됐습니다.
 
 #### 그 외
 
