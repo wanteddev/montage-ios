@@ -1080,6 +1080,8 @@ FilterButton gets a larger radius and less padding, making it rounder and smalle
 | min-height | - | increased (the field gets taller) |
 | border color | - | lighter |
 | vertical alignment | always `top` | `top` only on `overflow`, `center` otherwise |
+| leading icon size | 22 | large **20** / medium **18** (the 24×24 area is unchanged) |
+| chevron | `IconButton` that highlights on press | plain icon. **No press feedback** (the whole field takes the tap) |
 
 The alignment change is only visible at larger Dynamic Type sizes. 3.x always aligned to the top, so once the text grew past the leading icon and chevron (24pt), **the icons looked stuck to the top.** 4.0 uses `top` only when the text overflows onto multiple lines and centers it otherwise. The `ListCell`s in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered on the label.
 

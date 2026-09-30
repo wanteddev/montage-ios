@@ -1080,6 +1080,8 @@ FilterButton은 radius가 커지고 패딩이 줄어 더 둥글고 작아집니�
 | min-height | - | 증가 (필드가 높아짐) |
 | 테두리 색 | - | 옅어짐 |
 | 세로 정렬 | 항상 `top` | `overflow`일 때만 `top`, 그 외 `center` |
+| leading 아이콘 크기 | 22 | large **20** / medium **18** (영역은 24×24 그대로) |
+| chevron | 누르면 하이라이트되는 `IconButton` | 아이콘. **누름 피드백이 없습니다** (탭은 필드 전체가 받음) |
 
 세로 정렬은 Dynamic Type을 키웠을 때만 눈에 띕니다. 3.x는 항상 `top` 정렬이라 텍스트 높이가 leading 아이콘·chevron(24pt)을 넘어서면 **아이콘만 위로 치우쳐** 보였습니다. 4.0은 여러 줄로 흐르는 `overflow` 상태에서만 `top`을 쓰고 한 줄일 때는 `center`로 맞춥니다. 선택 목록의 `ListCell`도 `verticalAlign(.center)`가 붙어 라디오·체크박스가 라벨 중앙에 옵니다.
 
