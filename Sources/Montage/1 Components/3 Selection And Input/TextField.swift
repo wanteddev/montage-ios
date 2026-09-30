@@ -644,6 +644,8 @@ private extension TextField {
                     .resizable()
                     .frame(width: size.iconSize, height: size.iconSize)
                     .foregroundStyle(statusMarkColor)
+                    // 같은 자리에 번갈아 나오는 Clear 버튼과 차지하는 영역을 맞춘다.
+                    .padding(size.iconPadding)
                     // positive 상태는 hint로 읽히지 않으므로 이 아이콘이 유일한 신호다. 아이콘 이름 대신 의미를 읽게 한다.
                     .accessibilityLabel(Text("확인됨", bundle: .module))
             }
