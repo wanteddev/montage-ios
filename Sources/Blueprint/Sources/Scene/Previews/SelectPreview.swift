@@ -12,7 +12,7 @@ import Montage
 
 struct SelectPreview: View {
     @State private var showSheet: Bool = false
-    @State private var negative: Bool = false
+    @State private var statusIndex: Int = 0
     @State private var variantIndex: Int = 0
     @State private var selectionTypeIndex: Int = 0
     @State private var menuActionArea: Bool = false
@@ -29,6 +29,7 @@ struct SelectPreview: View {
     private let selectionTypes: [Select.SingleSelectionType] = [.checkmark, .radio]
     private let renders: [Select.Render] = [.text, .chip]
     private let sizes: [Select.Size] = [.large, .medium]
+    private let statuses: [Select.Status] = [.normal, .negative]
 
     private var variants: [Select.Variant] {
         [
@@ -81,7 +82,7 @@ struct SelectPreview: View {
                 print($0.text)
             }
             .size(sizes[sizeIndex])
-            .status(negative ? .negative : .normal)
+            .status(statuses[statusIndex])
             .placeholder("선택해 주세요.")
             .leading(leadings[leadingIndex])
             .menuResize(bottomSheetResizes[menuResizeIndex])
@@ -128,10 +129,8 @@ struct SelectPreview: View {
             @unknown default:
                 EmptyView()
             }
-            HStack {
-                ToggleOption("negative", isOn: $negative)
-                ToggleOption("disable", isOn: $disable)
-            }
+            SegmentedIndexRow("status", index: $statusIndex, labels: statuses.map(\.description))
+            ToggleOptionRow("disable", isOn: $disable)
             SegmentedIndexRow("leading", index: $leadingIndex, labels: leadings.map { $0?.description ?? "none" })
             ToggleOptionRow("custom menu", isOn: $customMenu)
                 // 커스텀 메뉴를 끄면 항상 살아 있는 bottomSheet가 남지 않도록 함께 닫는다.
@@ -191,6 +190,7 @@ struct SelectPreview: View {
 
 extension Select.Variant: CaseDescribable {}
 extension Select.Size: CaseDescribable {}
+extension Select.Status: CaseDescribable {}
 extension Select.SingleSelectionType: CaseDescribable {}
 extension Select.Render: CaseDescribable {}
 extension Select.Resource.Leading: CaseDescribable {}
