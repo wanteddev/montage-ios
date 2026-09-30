@@ -1168,7 +1168,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **IconButton `.background`** | The non-alternative `background` now stacks Static/White 35% (Plus lighter) and Static/Black 5% over the blur, so **the circle stays bright on dark backgrounds.** The icon goes from `coolNeutral50` 74% to **61%**, composited with Plus darker |
 | **Tab · Category icon button** | The medium icon goes from 22 to 20. IconButton has no size for 22, so it uses `.large` (20). Other sizes, the occupied space, and spacing match 3.x |
 | **Card overlay button** | The background highlight shown when pressing the `overlay(caption:buttonIcon:…)` button is removed. The icon size (20) and the space it occupies match 3.x |
-| **TextField clear button** | The icon changes from 22 to large 20 / medium 18 by size, and the button sits in a large 24 / medium 20 area. The touch area is 32 / 28 |
+| **TextField clear button · positive check icon** | The icon changes from 22 to large 20 / medium 18 by size, and it sits in a large 24 / medium 20 area. The clear button's touch area is 32 / 28 |
 
 ---
 
