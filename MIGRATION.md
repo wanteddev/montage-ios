@@ -316,6 +316,30 @@ TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action
 TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
 ```
 
+#### Select leading element
+
+The leading presets also moved to the `Component.Resource.SlotName` pattern. The modifier is `leading(_:)`, same as `ModalNavigation`. Rendering is unchanged.
+
+| 3.x | 4.0 |
+|---|---|
+| `Select.LeadingContent` | `Select.Resource.Leading` |
+| `.leadingContent(_:)` | `.leading(_:)` |
+| `.custom { … }` | `.slot { … }` |
+
+```swift
+// 3.x
+Select(variant: .single(), items: $items)
+    .leadingContent(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leadingContent(.custom { Text("Resume") })
+
+// 4.0
+Select(variant: .single(), items: $items)
+    .leading(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leading(.slot { Text("Resume") })
+```
+
 #### Input components
 
 | 3.x | 4.0 | Applies to |
@@ -325,6 +349,7 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 | `.description(_:)` | `.message(_:)` | `TextArea`, `Select` |
 | `.inputCharacterLimit(_:)` | `.maxLength(_:)` | `TextArea` |
 | `.status(.negative(description:))` | `.status(.negative)` + `.message(_:)` | `TextField` |
+| `.negative(_:)` | `.status(_:)` (`true` → `.negative`, `false` → `.normal`) | `Select` |
 
 `TextField.Status` lost its associated values: `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
 
@@ -1055,6 +1080,8 @@ FilterButton gets a larger radius and less padding, making it rounder and smalle
 | min-height | - | increased (the field gets taller) |
 | border color | - | lighter |
 | vertical alignment | always `top` | `top` only on `overflow`, `center` otherwise |
+| leading icon size | 22 | large **20** / medium **18** (the 24×24 area is unchanged) |
+| chevron | `IconButton` that highlights on press | plain icon. **No press feedback** (the whole field takes the tap) |
 
 The alignment change is only visible at larger Dynamic Type sizes. 3.x always aligned to the top, so once the text grew past the leading icon and chevron (24pt), **the icons looked stuck to the top.** 4.0 uses `top` only when the text overflows onto multiple lines and centers it otherwise. The `ListCell`s in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered on the label.
 
@@ -1264,6 +1291,8 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - variant with no replacement
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"`, for the ones on `ModalNavigation` - moved to `leading(_:)` and `trailings(_:)`
+- [ ] `.negative(` chained on `Select` - moved to `.status(.negative)`, including argument-less `.negative()` calls
+- [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"`, for the ones on `Select` - moved to `leading(_:)`, with `.custom` changed to `.slot`
 - [ ] `.close` is last in every `trailings(_:)` array - putting it first pins the close button to the left
 - [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`
 - [ ] Audit `FallbackView(image:`, `variant:` on `AvatarGroup(`, and `TrailingButtonInfo(variant:`
