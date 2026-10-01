@@ -106,17 +106,12 @@ public struct Select: View {
         case chip
     }
 
-    /// 왼쪽에 표시될 컨텐트 타입입니다.
-    public enum LeadingContent {
-        /// 아이콘 표시
-        /// - Parameter icon: 표시할 아이콘
-        case icon(_ icon: Icon)
-        /// 아이콘 버튼 표시
-        /// - Parameter iconButton: 표시할 아이콘 버튼
-        case iconButton(_ iconButton: IconButton)
-        /// 사용자 정의 뷰 표시
-        /// - Parameter content: 사용자 정의 뷰를 반환하는 클로저
-        case custom(_ content: () -> any View)
+    /// Select 컴포넌트의 상태를 정의합니다.
+    public enum Status {
+        /// 기본 상태
+        case normal
+        /// 오류 상태
+        case negative
     }
 
     /// Select 컴포넌트의 사이즈를 정의합니다.
@@ -157,11 +152,11 @@ public struct Select: View {
 
     // MARK: - Modifiers
 
-    /// 호출부가 ``negative(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파 상태를 따른다.
-    private var explicitNegative: Bool?
+    /// 호출부가 ``status(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파 상태를 따른다.
+    private var explicitStatus: Status?
     private var render: Render = .text
     private var placeholder = ""
-    private var leadingContent: LeadingContent?
+    private var leading: Resource.Leading?
     private var menuResize: BottomSheet.Resize = .hug
     /// 호출부가 ``size(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파값 → 기본값(`.large`) 순으로 결정된다.
     private var explicitSize: Size?
@@ -177,12 +172,12 @@ public struct Select: View {
         return zelf
     }
 
-    /// negative 상태 여부를 조정합니다.
-    /// - Parameter negative: 부정적 상태 여부, 생략하면 기본값으로 `true` 적용
+    /// Select 컴포넌트의 상태를 설정합니다.
+    /// - Parameter status: 적용할 상태
     /// - Returns: 수정된 Select 인스턴스
-    public func negative(_ negative: Bool = true) -> Self {
+    public func status(_ status: Status) -> Self {
         var zelf = self
-        zelf.explicitNegative = negative
+        zelf.explicitStatus = status
         return zelf
     }
 
@@ -195,12 +190,18 @@ public struct Select: View {
         return zelf
     }
 
-    /// 왼쪽 컨텐츠를 추가합니다.
-    /// - Parameter content: 표시할 선행 콘텐츠
+    /// 필드 왼쪽에 표시할 요소를 지정합니다.
+    ///
+    /// ```swift
+    /// Select(variant: .single(), items: $items)
+    ///     .leading(.icon(.search))
+    /// ```
+    ///
+    /// - Parameter leading: 표시할 요소, `nil`이면 표시하지 않음
     /// - Returns: 수정된 Select 인스턴스
-    public func leadingContent(_ content: LeadingContent?) -> Self {
+    public func leading(_ leading: Resource.Leading?) -> Self {
         var zelf = self
-        zelf.leadingContent = content
+        zelf.leading = leading
         return zelf
     }
 
@@ -239,7 +240,7 @@ public struct Select: View {
 
     /// 입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
     ///
-    /// 메시지 색은 ``negative(_:)``에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
+    /// 메시지 색은 ``status(_:)``에 따라 결정되며 오류 상태에서만 강조 색으로 표시됩니다.
     ///
     /// - Parameter text: 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다.
     /// - Returns: 수정된 Select 인스턴스
@@ -303,10 +304,12 @@ public struct Select: View {
         explicitSize ?? inheritedSize?.selectSize ?? .large
     }
 
-    /// 실제로 적용할 오류 상태. 명시값 > ``FormControl`` 전파값 > 기본값(`false`) 순.
-    private var negative: Bool {
-        explicitNegative ?? inheritedStatus?.isNegative ?? false
+    /// 실제로 적용할 상태. 명시값 > ``FormControl`` 전파값 > 기본값(`.normal`) 순.
+    private var status: Status {
+        explicitStatus ?? inheritedStatus?.selectStatus ?? .normal
     }
+
+    private var negative: Bool { status == .negative }
 
     /// 뷰의 내용과 동작을 정의합니다.
     ///
@@ -315,7 +318,7 @@ public struct Select: View {
     public var body: some View {
         FormControl { content }
             .size(formControlSize)
-            .status(negative ? .negative : .normal)
+            .status(formControlStatus)
             .applying(formControlAttributes)
     }
 
@@ -324,6 +327,14 @@ public struct Select: View {
         switch size {
         case .large: .large
         case .medium: .medium
+        }
+    }
+
+    /// 자신의 상태를 ``FormControl`` 래퍼 값으로 매핑한다. (메시지 색 결정)
+    private var formControlStatus: FormControl.Status {
+        switch status {
+        case .normal: .normal
+        case .negative: .negative
         }
     }
 
@@ -336,28 +347,13 @@ public struct Select: View {
         // Dynamic Type을 키우면 텍스트 높이가 leading·chevron(24)을 넘어서기 때문에
         // top으로 두면 아이콘만 위로 치우친다.
         HStack(alignment: isOverflow ? .top : .center, spacing: 0) {
-            Group {
-                switch leadingContent {
-                case .icon(let icon):
-                    Image.icon(icon)
-                        .resizable()
-                        .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
-                        .padding(size.leadingIconPadding)
-                        .frame(width: size.contentMinHeight, height: size.contentMinHeight)
-                case .iconButton(let iconButton):
-                    // leading 아이콘 버튼은 인터랙션 영역이 슬롯보다 크므로(large 32, medium 28),
-                    // 슬롯(large 24×24, medium 20×24)에 담고 넘치는 인터랙션 영역은 밖으로 흘린다.
-                    iconButton
-                        .frame(width: size.contentMinHeight, height: .dimension24)
-                case .custom(let content):
-                    AnyView(content())
-                        .frame(minHeight: size.contentMinHeight)
-                default:
-                    EmptyView()
-                }
+            if let leading {
+                leading.view(size: size)
+                    // leading 영역은 컨테이너 패딩 안쪽으로 4를 더 띄운다(외곽선에서 large 12 / medium 10).
+                    .padding(.leading, .spacing4)
+                    // 선행 요소와 content 영역 사이 간격. chip 목록이면 chipLeadingSpacing, 그 외 textSpacing.
+                    .padding(.trailing, showsChips ? size.chipLeadingSpacing : size.textSpacing)
             }
-            // 선행 콘텐츠와 content 영역 사이 간격. render=chip일 때 large 4/medium 3, 그 외 leading은 textHorizontalPadding.
-            .padding(.trailing, leadingContent == nil ? 0 : (isRenderChip ? size.chipLeadingTrailingPadding : size.textHorizontalPadding))
 
             HStack {
                 if selectedItems.isEmpty {
@@ -408,11 +404,11 @@ public struct Select: View {
                                     }
                                 )
                                 if overflow {
-                                    FlowLayout(spacing: 4, lineSpacing: 4) {
+                                    FlowLayout(spacing: size.chipSpacing, lineSpacing: size.chipSpacing) {
                                         chips
                                     }
                                 } else {
-                                    HStack(spacing: 4) {
+                                    HStack(spacing: size.chipSpacing) {
                                         chips
                                     }
                                     .modifier(
@@ -426,23 +422,22 @@ public struct Select: View {
             }
             .frame(minHeight: size.contentMinHeight)
             // content 왼쪽 패딩은 leading이 없을 때만 준다(있으면 leading의 trailing 패딩이 간격을 담당).
-            // 오른쪽 패딩은 chevron과의 간격으로 항상 유지. 이로써 leading 없을 때 텍스트-외곽선 large 16/medium 14.
-            .padding(.leading, leadingContent == nil ? size.textHorizontalPadding : 0)
-            .padding(.trailing, size.textHorizontalPadding)
+            // 텍스트는 안쪽 패딩 4가 있어 외곽선에서 large 16/medium 14, chip 목록은 안쪽 패딩이 없어 large 12/medium 10.
+            .padding(.leading, leading == nil ? (showsChips ? .spacing4 : size.textHorizontalPadding) : 0)
+            // 오른쪽 패딩은 chevron과의 간격. 텍스트는 안쪽 4 + 요소 간격 2, chip 목록은 요소 간격 2만 둔다.
+            .padding(.trailing, showsChips ? .spacing2 : size.textSpacing)
             .contentShape(Rectangle())
 
-            IconButton(
-                variant: .normal(size: .small),
-                icon: .chevronDownThickSmall
-            ) {
-                menuPresented.wrappedValue.toggle()
-            }
-            .interactionOverflow()
-            // 비활성 색상(foreground/disable/primary)은 IconButton이 `\.isEnabled`를 읽어 직접 적용한다.
-            .iconColor(.semantic(.foregroundNeutralTertiary))
-            .padding(.horizontal, 4)
-            .frame(height: size.contentMinHeight)
-            .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
+            // 탭은 필드 전체의 onTapGesture가 받으므로 chevron은 표시만 한다.
+            // 아이콘 16×16을 사이즈와 무관하게 24×24 영역에 담고, 영역은 컨테이너 패딩 안쪽으로 4를 더 띄운다.
+            // 회전 중심이 영역 가운데에 오도록 패딩은 rotationEffect 뒤에 준다.
+            Image.icon(.chevronDownThickSmall)
+                .resizable()
+                .frame(width: .dimension16, height: .dimension16)
+                .foregroundStyle(chevronColor)
+                .frame(width: .dimension24, height: .dimension24)
+                .rotationEffect(.degrees(menuPresented.wrappedValue ? 180 : 0))
+                .padding(.trailing, .spacing4)
         }
         .padding(.horizontal, size.containerPadding)
         // overflow일 때 상하단 간격(large 12, medium 8)을 컨테이너 세로 패딩으로 준다.
@@ -595,6 +590,10 @@ public struct Select: View {
         }
     }
 
+    private var chevronColor: SwiftUI.Color {
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
+    }
+
     private var focusRingColor: SwiftUI.Color {
         negative ? .semantic(.lineNegativeFocus) : .semantic(.lineBrandFocus)
     }
@@ -613,6 +612,11 @@ public struct Select: View {
             return render == .chip
         }
         return false
+    }
+
+    /// chip 목록을 그리는 중인지 여부. 선택 항목이 없으면 chip 대신 placeholder 텍스트를 그리므로 텍스트 간격을 쓴다.
+    private var showsChips: Bool {
+        isRenderChip && selectedItems.isEmpty == false
     }
 
     private var isOverflow: Bool {
@@ -709,6 +713,56 @@ public struct Select: View {
     }
 }
 
+// MARK: - Resource
+
+extension Select {
+    /// 필드 안에 놓을 수 있는 요소의 프리셋입니다.
+    public enum Resource {
+        /// 필드 왼쪽(``Select/leading(_:)``)에 놓는 요소입니다.
+        public enum Leading {
+            /// 아이콘입니다. 크기와 색은 ``Select/Size``에 맞춰 고정됩니다.
+            /// - Parameter icon: 표시할 아이콘
+            case icon(_ icon: Icon)
+            /// 아이콘 버튼입니다.
+            /// - Parameter iconButton: 표시할 아이콘 버튼
+            case iconButton(_ iconButton: IconButton)
+            /// 프리셋에 없는 구성을 직접 그릴 때 씁니다. ``slot(_:)``으로 만듭니다.
+            case slotView(() -> AnyView)
+
+            /// 프리셋에 없는 구성을 직접 그립니다.
+            ///
+            /// - Parameter content: 왼쪽에 놓을 콘텐츠
+            /// - Returns: 해당 콘텐츠를 그리는 ``Leading``
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Leading {
+                .slotView { AnyView(content()) }
+            }
+        }
+    }
+}
+
+extension Select.Resource.Leading {
+    @ViewBuilder
+    fileprivate func view(size: Select.Size) -> some View {
+        switch self {
+        case .icon(let icon):
+            // 영역은 사이즈와 무관하게 24×24, 아이콘은 사이즈별 크기(large 20, medium 18)로 가운데에 둔다.
+            Image.icon(icon)
+                .resizable()
+                .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
+                .frame(width: size.leadingIconSize, height: size.leadingIconSize)
+                .frame(width: .dimension24, height: .dimension24)
+        case .iconButton(let iconButton):
+            // leading 아이콘 버튼은 인터랙션 영역이 슬롯보다 크므로(large 32, medium 28),
+            // 24×24 슬롯에 담고 넘치는 인터랙션 영역은 밖으로 흘린다.
+            iconButton
+                .frame(width: .dimension24, height: .dimension24)
+        case .slotView(let content):
+            content()
+                .frame(minHeight: size.contentMinHeight)
+        }
+    }
+}
+
 // MARK: - Size Tokens
 private extension Select.Size {
     /// Container 내부 패딩
@@ -735,7 +789,7 @@ private extension Select.Size {
         }
     }
 
-    /// Content 영역 최소 높이 (선행/후행 아이콘 묶음 크기와 공유)
+    /// Content 영역 최소 높이
     var contentMinHeight: CGFloat {
         switch self {
         case .large: .dimension24
@@ -751,19 +805,27 @@ private extension Select.Size {
         }
     }
 
-    /// 선행 아이콘 묶음 내부 패딩 (아이콘 실제 크기 = contentMinHeight - 2 * leadingIconPadding)
-    var leadingIconPadding: CGFloat {
+    /// 선행 아이콘 크기. 24×24 영역 가운데에 놓인다.
+    var leadingIconSize: CGFloat {
         switch self {
-        case .large: .spacing2
-        case .medium: .spacing1
+        case .large: .dimension20
+        case .medium: .dimension18
         }
     }
 
-    /// 텍스트 영역 좌우 패딩. containerPadding과 합해 텍스트-외곽선 간격을 large 16, medium 14로 만든다.
+    /// leading이 없을 때 텍스트 왼쪽 패딩. containerPadding과 합해 텍스트-외곽선 간격을 large 16, medium 14로 만든다.
     var textHorizontalPadding: CGFloat {
         switch self {
         case .large: .spacing8
         case .medium: .spacing8
+        }
+    }
+
+    /// 텍스트와 leading·chevron 사이 간격. 텍스트 안쪽 패딩 4와 요소 간격 2를 합한 값이다.
+    var textSpacing: CGFloat {
+        switch self {
+        case .large: .spacing6
+        case .medium: .spacing6
         }
     }
 
@@ -775,12 +837,21 @@ private extension Select.Size {
         }
     }
 
-    /// render=chip일 때 선행 콘텐츠 우측에 더하는 패딩(large 4, medium 3).
-    /// spacing 스케일에 3이 없어 medium은 리터럴을 사용한다.
-    var chipLeadingTrailingPadding: CGFloat {
+    /// chip 목록일 때 선행 요소와 chip 사이 간격(large 6, medium 5).
+    /// Figma의 leading 슬롯 여백(large 4, medium 3)과 요소 간격 2를 합한 값이다.
+    /// spacing 스케일에 5가 없어 medium은 리터럴을 사용한다.
+    var chipLeadingSpacing: CGFloat {
         switch self {
-        case .large: .spacing4
-        case .medium: 3
+        case .large: .spacing6
+        case .medium: 5
+        }
+    }
+
+    /// chip 사이 가로 간격과 overflow일 때 줄 간격.
+    var chipSpacing: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing6
         }
     }
 }

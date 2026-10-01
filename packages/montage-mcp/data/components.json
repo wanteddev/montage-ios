@@ -2624,9 +2624,9 @@
           "kind": "method"
         },
         {
-          "name": "leadingContent(_:)",
-          "signature": "func leadingContent(LeadingContent?) -> Select",
-          "summary": "왼쪽 컨텐츠를 추가합니다.",
+          "name": "leading(_:)",
+          "signature": "func leading(Resource.Leading?) -> Select",
+          "summary": "필드 왼쪽에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -2642,12 +2642,6 @@
           "kind": "method"
         },
         {
-          "name": "negative(_:)",
-          "signature": "func negative(Bool) -> Select",
-          "summary": "negative 상태 여부를 조정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "placeholder(_:)",
           "signature": "func placeholder(String) -> Select",
           "summary": "선택된 항목들이 없는 경우 placeholder를 표시합니다.",
@@ -2657,6 +2651,12 @@
           "name": "size(_:)",
           "signature": "func size(Size) -> Select",
           "summary": "Select 컴포넌트의 사이즈를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "status(_:)",
+          "signature": "func status(Status) -> Select",
+          "summary": "Select 컴포넌트의 상태를 설정합니다.",
           "kind": "method"
         }
       ],
@@ -2699,27 +2699,40 @@
           ]
         },
         {
-          "name": "Select.LeadingContent",
-          "kind": "enum",
-          "summary": "왼쪽에 표시될 컨텐트 타입입니다.",
-          "cases": [
-            "custom",
-            "icon",
-            "iconButton"
-          ],
-          "caseSignatures": [
-            "custom(_:)",
-            "icon(_:)",
-            "iconButton(_:)"
-          ]
-        },
-        {
           "name": "Select.Render",
           "kind": "enum",
           "summary": "variant가 multiple일 때 컴포넌트에 표시될 내용의 형태를 결정하는 열거형입니다.",
           "cases": [
             "chip",
             "text"
+          ]
+        },
+        {
+          "name": "Select.Resource",
+          "kind": "enum",
+          "summary": "필드 안에 놓을 수 있는 요소의 프리셋입니다."
+        },
+        {
+          "name": "Select.Resource.Leading",
+          "kind": "enum",
+          "summary": "필드 왼쪽(leading(_:))에 놓는 요소입니다.",
+          "cases": [
+            "icon",
+            "iconButton",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "icon(_:)",
+            "iconButton(_:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
           ]
         },
         {
@@ -2738,6 +2751,15 @@
           "cases": [
             "large",
             "medium"
+          ]
+        },
+        {
+          "name": "Select.Status",
+          "kind": "enum",
+          "summary": "Select 컴포넌트의 상태를 정의합니다.",
+          "cases": [
+            "negative",
+            "normal"
           ]
         },
         {

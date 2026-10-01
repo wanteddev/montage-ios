@@ -316,6 +316,30 @@ TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action
 TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
 ```
 
+#### Select leading element
+
+The leading presets also moved to the `Component.Resource.SlotName` pattern. The modifier is `leading(_:)`, same as `ModalNavigation`. Rendering is unchanged.
+
+| 3.x | 4.0 |
+|---|---|
+| `Select.LeadingContent` | `Select.Resource.Leading` |
+| `.leadingContent(_:)` | `.leading(_:)` |
+| `.custom { … }` | `.slot { … }` |
+
+```swift
+// 3.x
+Select(variant: .single(), items: $items)
+    .leadingContent(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leadingContent(.custom { Text("Resume") })
+
+// 4.0
+Select(variant: .single(), items: $items)
+    .leading(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leading(.slot { Text("Resume") })
+```
+
 #### Input components
 
 | 3.x | 4.0 | Applies to |
@@ -325,6 +349,7 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 | `.description(_:)` | `.message(_:)` | `TextArea`, `Select` |
 | `.inputCharacterLimit(_:)` | `.maxLength(_:)` | `TextArea` |
 | `.status(.negative(description:))` | `.status(.negative)` + `.message(_:)` | `TextField` |
+| `.negative(_:)` | `.status(_:)` (`true` → `.negative`, `false` → `.normal`) | `Select` |
 
 `TextField.Status` lost its associated values: `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
 
@@ -1055,6 +1080,8 @@ FilterButton gets a larger radius and less padding, making it rounder and smalle
 | min-height | - | increased (the field gets taller) |
 | border color | - | lighter |
 | vertical alignment | always `top` | `top` only on `overflow`, `center` otherwise |
+| leading icon size | 22 | large **20** / medium **18** (the 24×24 area is unchanged) |
+| chevron | `IconButton` that highlights on press | plain icon. **No press feedback** (the whole field takes the tap) |
 
 The alignment change is only visible at larger Dynamic Type sizes. 3.x always aligned to the top, so once the text grew past the leading icon and chevron (24pt), **the icons looked stuck to the top.** 4.0 uses `top` only when the text overflows onto multiple lines and centers it otherwise. The `ListCell`s in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered on the label.
 
@@ -1099,7 +1126,7 @@ The cornerRadius of the company and academy variants goes up by **2** at every s
 | `xlarge` | 14 | 16 |
 | `custom(v)` | `ceil(v * 0.25 / 2) * 2` | `ceil(v * 0.25 / 2) * 2 + 2` |
 
-The placeholder drawn when there is no image also changed from a dedicated illustration to an icon glyph (`personFill` / `companyFill` / `graduationFill`). Push badge insets were adjusted per size as well.
+The placeholder drawn when there is no image also changed from a dedicated illustration to an icon glyph (`personFill` / `companyFill` / `graduationFill`). The icon area is cut out of the `surfaceNeutralStrong` fill and `staticWhite` at 28% (`opacity28`) sits directly on the background, so the icon reads as white in light mode and a slightly lighter gray than the background in dark mode. Push badge insets were adjusted per size as well.
 
 #### Everything else
 
@@ -1169,6 +1196,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **Tab · Category icon button** | The medium icon goes from 22 to 20. IconButton has no size for 22, so it uses `.large` (20). Other sizes, the occupied space, and spacing match 3.x |
 | **Card overlay button** | The background highlight shown when pressing the `overlay(caption:buttonIcon:…)` button is removed. The icon size (20) and the space it occupies match 3.x |
 | **TextField clear button · positive check icon** | The icon changes from 22 to large 20 / medium 18 by size, and it sits in a large 24 / medium 20 area. The clear button's touch area is 32 / 28 |
+| **Category `normal` selected chip** | The selected background changes from `inverseBackground` to `foregroundNeutralStrong`, so it is a slightly deeper black in light mode. Dark mode is unchanged |
 
 ---
 
@@ -1266,6 +1294,8 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - variant with no replacement
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"`, for the ones on `ModalNavigation` - moved to `leading(_:)` and `trailings(_:)`
+- [ ] `.negative(` chained on `Select` - moved to `.status(.negative)`, including argument-less `.negative()` calls
+- [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"`, for the ones on `Select` - moved to `leading(_:)`, with `.custom` changed to `.slot`
 - [ ] `.close` is last in every `trailings(_:)` array - putting it first pins the close button to the left
 - [ ] Audit every use of `accentForegroundRedOrange` and `accentBackgroundRedOrange`
 - [ ] Audit `FallbackView(image:`, `variant:` on `AvatarGroup(`, and `TrailingButtonInfo(variant:`
@@ -1294,6 +1324,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Icon spacing on screens that use `IconButton` directly - if the larger container pushed them apart, turn on `interactionOverflow()`
 - [ ] `grep -rn "variant: .background("` - circle and icon contrast in dark mode and over dark images
 - [ ] `FallbackView` screens that had an illustration, and company/academy `AvatarGroup`s
+- [ ] `Category` `normal` selected chip background (light mode)
 - [ ] Every screen in [4. Visual changes](#4-visual-changes), on device or in the simulator
 
 The fastest way to review spec changes is to build Blueprint at both versions and compare. Set `UDID` to a value from `xcrun simctl list devices`.

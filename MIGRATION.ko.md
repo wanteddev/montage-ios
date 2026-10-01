@@ -316,6 +316,30 @@ TopNavigation.LeadingButton(TopNavigation.Resource.LeadingButtonInfo.back(action
 TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismiss() }))
 ```
 
+#### Select 선행 요소
+
+선행 요소 프리셋도 `컴포넌트.Resource.슬롯명` 패턴으로 옮겼습니다. 모디파이어는 `ModalNavigation`처럼 `leading(_:)`입니다. 렌더 결과는 같습니다.
+
+| 3.x | 4.0 |
+|---|---|
+| `Select.LeadingContent` | `Select.Resource.Leading` |
+| `.leadingContent(_:)` | `.leading(_:)` |
+| `.custom { … }` | `.slot { … }` |
+
+```swift
+// 3.x
+Select(variant: .single(), items: $items)
+    .leadingContent(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leadingContent(.custom { Text("이력서") })
+
+// 4.0
+Select(variant: .single(), items: $items)
+    .leading(.icon(.search))
+Select(variant: .single(), items: $items)
+    .leading(.slot { Text("이력서") })
+```
+
 #### 입력 컴포넌트
 
 | 3.x | 4.0 | 대상 |
@@ -325,6 +349,7 @@ TopNavigation.LeadingButton(TopNavigation.Resource.Leading.back(action: { dismis
 | `.description(_:)` | `.message(_:)` | `TextArea` · `Select` |
 | `.inputCharacterLimit(_:)` | `.maxLength(_:)` | `TextArea` |
 | `.status(.negative(description:))` | `.status(.negative)` + `.message(_:)` | `TextField` |
+| `.negative(_:)` | `.status(_:)` (`true` → `.negative`, `false` → `.normal`) | `Select` |
 
 `TextField.Status`에서 연관값이 빠졌습니다. `.normal()` → `.normal`, `.negative(description:)` → `.negative`.
 
@@ -1055,6 +1080,8 @@ FilterButton은 radius가 커지고 패딩이 줄어 더 둥글고 작아집니�
 | min-height | - | 증가 (필드가 높아짐) |
 | 테두리 색 | - | 옅어짐 |
 | 세로 정렬 | 항상 `top` | `overflow`일 때만 `top`, 그 외 `center` |
+| leading 아이콘 크기 | 22 | large **20** / medium **18** (영역은 24×24 그대로) |
+| chevron | 누르면 하이라이트되는 `IconButton` | 아이콘. **누름 피드백이 없습니다** (탭은 필드 전체가 받음) |
 
 세로 정렬은 Dynamic Type을 키웠을 때만 눈에 띕니다. 3.x는 항상 `top` 정렬이라 텍스트 높이가 leading 아이콘·chevron(24pt)을 넘어서면 **아이콘만 위로 치우쳐** 보였습니다. 4.0은 여러 줄로 흐르는 `overflow` 상태에서만 `top`을 쓰고 한 줄일 때는 `center`로 맞춥니다. 선택 목록의 `ListCell`도 `verticalAlign(.center)`가 붙어 라디오·체크박스가 라벨 중앙에 옵니다.
 
@@ -1099,7 +1126,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | `xlarge` | 14 | 16 |
 | `custom(v)` | `ceil(v * 0.25 / 2) * 2` | `ceil(v * 0.25 / 2) * 2 + 2` |
 
-이미지가 없을 때 그리는 플레이스홀더도 전용 일러스트에서 아이콘 글리프(`personFill` / `companyFill` / `graduationFill`)로 바뀌었습니다. 푸시뱃지 inset도 사이즈별로 조정됐습니다.
+이미지가 없을 때 그리는 플레이스홀더도 전용 일러스트에서 아이콘 글리프(`personFill` / `companyFill` / `graduationFill`)로 바뀌었습니다. 아이콘 자리는 `surfaceNeutralStrong` 면을 도려내고 `staticWhite` 28%(`opacity28`)를 배경 위에 바로 올립니다. 라이트에서는 아이콘이 흰색, 다크에서는 배경보다 약간 밝은 회색으로 보입니다. 푸시뱃지 inset도 사이즈별로 조정됐습니다.
 
 #### 그 외
 
@@ -1169,6 +1196,7 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **Tab · Category 아이콘 버튼** | medium의 아이콘이 22 → 20. 22에 해당하는 IconButton 사이즈가 없어 `.large`(20)를 씁니다. 다른 사이즈와 차지하는 자리·간격은 3.x와 같습니다 |
 | **Card 오버레이 버튼** | `overlay(caption:buttonIcon:…)`의 버튼을 눌렀을 때 나오던 배경 하이라이트가 없어집니다. 아이콘 크기(20)와 차지하는 자리는 3.x와 같습니다 |
 | **TextField Clear 버튼 · positive 체크 아이콘** | 아이콘이 22에서 사이즈별 large 20 / medium 18로 바뀌고, 놓이는 자리는 large 24 / medium 20입니다. Clear 버튼의 터치 영역은 32 / 28 |
+| **Category `normal` 선택 칩** | 선택 배경이 `inverseBackground`에서 `foregroundNeutralStrong`으로 바뀌어 라이트 모드에서 조금 더 진한 검정이 됩니다. 다크 모드는 같습니다 |
 
 ---
 
@@ -1266,6 +1294,8 @@ FormControlGroup {
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - 대응 없는 variant
 - [ ] `grep -rn "leadingContent\|trailingContents" --include="*.swift"` 중 `ModalNavigation`에 건 것 - `leading(_:)`·`trailings(_:)`로 옮겼는지
+- [ ] `Select` 체이닝의 `.negative(` - `.status(.negative)`로 옮겼는지. `.negative()`처럼 인자 없이 쓴 자리도 포함
+- [ ] `grep -rn "Select.LeadingContent\|\.leadingContent(" --include="*.swift"` 중 `Select`에 건 것 - `leading(_:)`으로, `.custom`은 `.slot`으로 옮겼는지
 - [ ] `trailings(_:)`에서 `.close`가 배열 마지막인지 - 앞에 두면 닫기 버튼이 왼쪽에 붙습니다
 - [ ] `accentForegroundRedOrange` · `accentBackgroundRedOrange` 사용처 전수 확인
 - [ ] `FallbackView(image:` · `AvatarGroup(` 의 `variant:` · `TrailingButtonInfo(variant:` 사용처 확인
@@ -1294,6 +1324,7 @@ FormControlGroup {
 - [ ] IconButton을 직접 쓰던 화면의 아이콘 간격 - 컨테이너가 커진 만큼 벌어졌다면 `interactionOverflow()`
 - [ ] `grep -rn "variant: .background("` - 다크 모드와 어두운 이미지 위에서 원형 배경과 아이콘 대비
 - [ ] 삽화를 쓰던 `FallbackView` 화면과 company·academy `AvatarGroup`
+- [ ] `Category` `normal` 선택 칩의 배경색 (라이트 모드)
 - [ ] [4. 화면이 달라지는 것](#4-화면이-달라지는-것) 목록의 화면을 실기기/시뮬레이터에서 확인
 
 스펙 변경은 Blueprint를 두 버전으로 빌드해 대조하는 게 가장 빠릅니다. `UDID`에는 `xcrun simctl list devices`로 확인한 값을 넣습니다.
