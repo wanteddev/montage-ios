@@ -300,6 +300,7 @@ extension Card {
                                     ) {
                                         onTapButton?()
                                     }
+                                    .interactionEffect(.none)
                                     .interactionOverflow()
                                     .iconColor(buttonColor)
                                 }

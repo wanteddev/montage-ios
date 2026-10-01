@@ -634,12 +634,20 @@ private extension TextField {
                 }
                 .interactionOverflow()
                 .iconColor(.semantic(.foregroundNeutralQuaternary))
+                // Leading 아이콘과 같은 규칙으로 Clear 버튼이 놓이는 영역을 아이콘보다 넓힌다. 터치 영역은 버튼 안에서 정해지므로 줄지 않는다.
+                // IconButton.padding(_:)은 normal variant에서 무시되므로 edge를 명시해 SwiftUI 패딩을 건다.
+                .padding(.all, size.iconPadding)
+                .accessibilityLabel(Text("텍스트 지우기", bundle: .module))
             } else if !text.isEmpty, let statusMark, let statusMarkColor {
                 Image
                     .icon(statusMark)
                     .resizable()
                     .frame(width: size.iconSize, height: size.iconSize)
                     .foregroundStyle(statusMarkColor)
+                    // 같은 자리에 번갈아 나오는 Clear 버튼과 차지하는 영역을 맞춘다.
+                    .padding(size.iconPadding)
+                    // positive 상태는 hint로 읽히지 않으므로 이 아이콘이 유일한 신호다. 아이콘 이름 대신 의미를 읽게 한다.
+                    .accessibilityLabel(Text("확인됨", bundle: .module))
             }
 
             trailingContent()

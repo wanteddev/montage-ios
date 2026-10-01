@@ -1194,6 +1194,8 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | **IconButton** | 글리프 동일, 터치 컨테이너만 확대 (약 6\~8pt 레이아웃 이동) |
 | **IconButton `.background`** | alternative가 아닌 `background`의 배경이 흐림 위에 Static/White 35%(Plus lighter)와 Static/Black 5%를 쌓는 구조로 바뀌어 **어두운 배경에서도 원이 밝게 보입니다.** 아이콘은 `coolNeutral50` 74% → **61%**에 Plus darker 합성 |
 | **Tab · Category 아이콘 버튼** | medium의 아이콘이 22 → 20. 22에 해당하는 IconButton 사이즈가 없어 `.large`(20)를 씁니다. 다른 사이즈와 차지하는 자리·간격은 3.x와 같습니다 |
+| **Card 오버레이 버튼** | `overlay(caption:buttonIcon:…)`의 버튼을 눌렀을 때 나오던 배경 하이라이트가 없어집니다. 아이콘 크기(20)와 차지하는 자리는 3.x와 같습니다 |
+| **TextField Clear 버튼 · positive 체크 아이콘** | 아이콘이 22에서 사이즈별 large 20 / medium 18로 바뀌고, 놓이는 자리는 large 24 / medium 20입니다. Clear 버튼의 터치 영역은 32 / 28 |
 | **Category `normal` 선택 칩** | 선택 배경이 `inverseBackground`에서 `foregroundNeutralStrong`으로 바뀌어 라이트 모드에서 조금 더 진한 검정이 됩니다. 다크 모드는 같습니다 |
 
 ---
