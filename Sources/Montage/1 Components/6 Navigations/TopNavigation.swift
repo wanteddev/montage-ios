@@ -91,7 +91,8 @@ public struct TopNavigation: View {
     private var onSearch: (() -> Void)?
     private var onSearchTextChange: ((String) -> Void)?
     private var onSearchFocusChange: ((Bool) -> Void)?
-    
+    private var toolbar: (() -> AnyView)?
+
     /// 내비게이션 바의 스타일(Variant)을 설정합니다.
     ///
     /// `.normal`, `.display`, `.search`, `.floating` 중 하나의 스타일을 지정할 수 있으며,
@@ -207,7 +208,38 @@ public struct TopNavigation: View {
         zelf.onSearchFocusChange = onFocusChange
         return zelf
     }
-    
+
+    /// 내비게이션 바 아래에 붙는 툴바 영역에 표시할 뷰를 설정합니다.
+    ///
+    /// 탭·세그먼트 컨트롤·칩 목록처럼 내비게이션 바에 이어 붙는 요소를 넣습니다.
+    /// 툴바는 내비게이션 바와 배경을 함께 쓰므로, 스크롤하면 흐림 배경이 두 영역에 끊김 없이 이어집니다.
+    /// 콘텐츠가 폭을 넘으면 가로로 스크롤되고, 폭보다 좁으면 왼쪽부터 놓입니다.
+    ///
+    /// 툴바는 여백을 두지 않으므로 좌우 여백은 콘텐츠 쪽에서 줍니다. 그래야 가로 스크롤할 때 콘텐츠가
+    /// 화면 끝까지 흘러갑니다.
+    ///
+    /// ```swift
+    /// TopNavigation()
+    ///     .title("제목")
+    ///     .toolbar {
+    ///         HStack(spacing: 8) {
+    ///             ForEach(filters) { FilterButton(text: $0.name) }
+    ///         }
+    ///         .padding(.horizontal, 20)
+    ///         .padding(.vertical, 12)
+    ///     }
+    /// ```
+    ///
+    /// - Parameter content: 툴바 영역에 표시할 뷰를 반환하는 클로저
+    /// - Returns: 수정된 인스턴스를 반환합니다.
+    ///
+    /// - Note: variant가 `.floating`이면 툴바를 그리지 않습니다.
+    public func toolbar<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
+        var zelf = self
+        zelf.toolbar = { AnyView(content()) }
+        return zelf
+    }
+
     // MARK: - Body
     
     @State private var defaultSearchTerm: String = ""
@@ -215,19 +247,26 @@ public struct TopNavigation: View {
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
-            Contents(
-                variant: variant,
-                titleText: titleText,
-                titleView: titleView,
-                leadingContent: leadingContent,
-                trailingContents: trailingContents,
-                searchPlaceholder: searchFieldPlaceholder,
-                searchTerm: searchTerm ?? $defaultSearchTerm,
-                focused: searchFieldFocused,
-                onSubmit: onSearch,
-                onSearchTextChange: onSearchTextChange,
-                onSearchFocusChange: onSearchFocusChange
-            )
+            // 툴바를 바와 한 VStack에 두고 배경을 VStack 전체에 깐다. 툴바가 배경을 따로 가지면
+            // 두 흐림 레이어가 각자 뒤를 흐려 밝기가 어긋나고, 그 사이에 경계선이 보인다.
+            VStack(spacing: 0) {
+                Contents(
+                    variant: variant,
+                    titleText: titleText,
+                    titleView: titleView,
+                    leadingContent: leadingContent,
+                    trailingContents: trailingContents,
+                    searchPlaceholder: searchFieldPlaceholder,
+                    searchTerm: searchTerm ?? $defaultSearchTerm,
+                    focused: searchFieldFocused,
+                    onSubmit: onSearch,
+                    onSearchTextChange: onSearchTextChange,
+                    onSearchFocusChange: onSearchFocusChange
+                )
+                if let toolbar, !variant.isFloating {
+                    Toolbar(content: toolbar)
+                }
+            }
             .background {
                 MaterialBackground(
                     materialOpacity: backgroundOpacity,
@@ -468,6 +507,30 @@ public struct TopNavigation: View {
                         .contentShape(Rectangle().inset(by: -10)) // 터치영역 확장 (고정 패딩)
                 }
             }
+        }
+    }
+
+    struct Toolbar: View {
+        let content: () -> AnyView
+
+        @State private var width: CGFloat = .zero
+
+        var body: some View {
+            SwiftUI.ScrollView(.horizontal, showsIndicators: false) {
+                content()
+                    // 가로 스크롤 안에서는 폭 제안이 없어 콘텐츠가 제 크기로 줄어든다.
+                    // 최소 폭을 툴바 폭에 맞춰야 세그먼트 컨트롤처럼 폭을 채우는 콘텐츠가 그대로 펼쳐진다.
+                    .frame(minWidth: width, alignment: .leading)
+            }
+            .modifying {
+                if #available(iOS 16.4, *) {
+                    // 폭 안에 들어오는 콘텐츠는 끌어도 움직이지 않게 한다.
+                    $0.scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                } else {
+                    $0
+                }
+            }
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { width = $0 })
         }
     }
 }
