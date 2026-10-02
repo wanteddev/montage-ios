@@ -33,13 +33,23 @@ import SwiftUI
 /// ModalNavigation()
 ///     .leading(.slot { Avatar(url: profileURL) })
 /// ```
+///
+/// 검색 입력을 받을 때는 ``Variant/search``를 쓰고 ``searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)``로
+/// 검색 필드를 설정합니다.
+///
+/// ```swift
+/// ModalNavigation()
+///     .variant(.search)
+///     .searchField(placeholder: "검색어를 입력해 주세요.", searchTerm: $keyword)
+///     .trailings(.text("취소", action: dismiss))
+/// ```
 public struct ModalNavigation: View {
     // MARK: - Types
     
     /// 내비게이션 바의 외관을 정의하는 구조체입니다.
     public struct Variant: Equatable, CustomStringConvertible {
         fileprivate enum Kind: Equatable {
-            case normal, floating, emphasized
+            case normal, floating, emphasized, search
         }
 
         fileprivate let kind: Kind
@@ -51,9 +61,21 @@ public struct ModalNavigation: View {
         /// ``Popup``·``BottomSheet``에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다.
         /// 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다.
         /// 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
+        /// 여백은 ``search``와 같이 올라온 모달을 따릅니다.
         public static let floating = Variant(kind: .floating)
         /// 제목을 왼쪽에 두는 스타일. ``Popup``·``BottomSheet``의 기본값입니다.
+        ///
+        /// 여백은 ``search``와 같이 올라온 모달을 따릅니다.
         public static let emphasized = Variant(kind: .emphasized)
+        /// 제목 대신 검색 필드를 두는 스타일.
+        ///
+        /// ``Popup``·``BottomSheet``·전체 화면 모달 어디서나 씁니다. 검색 필드는
+        /// ``ModalNavigation/searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)``로 설정하고,
+        /// ``ModalNavigation/title(_:)``·``ModalNavigation/titleView(_:)``는 무시합니다.
+        ///
+        /// 여백은 올라온 모달을 따릅니다. ``Popup``·``BottomSheet``·모달 밖은 24, ``BottomSheet``의
+        /// 전체 화면 모드는 20입니다. `fullScreenCover`에 직접 넣으면 모달 밖으로 보고 24가 됩니다.
+        public static let search = Variant(kind: .search)
 
         fileprivate var isFloating: Bool { kind == .floating }
 
@@ -62,6 +84,7 @@ public struct ModalNavigation: View {
             case .normal: "normal"
             case .floating: "floating"
             case .emphasized: "emphasized"
+            case .search: "search"
             }
         }
     }
@@ -69,6 +92,7 @@ public struct ModalNavigation: View {
     // MARK: - Initialisers
     
     @Binding private var scrollOffset: CGFloat
+    @Environment(\.modalKind) private var modalKind
     
     /// 내비게이션 바를 초기화합니다.
     ///
@@ -99,10 +123,12 @@ public struct ModalNavigation: View {
                 titleView: titleView,
                 leading: leading,
                 trailings: trailings,
-                hasIconButtonBackground: hasIconButtonBackground
+                hasIconButtonBackground: hasIconButtonBackground,
+                horizontalPadding: variant.contentHorizontalPadding(in: modalKind),
+                searchField: searchFieldConfiguration
             )
-            .padding(.top, variant.contentTopPadding)
-            .padding(.bottom, variant.contentBottomPadding)
+            .padding(.top, variant.contentTopPadding(in: modalKind))
+            .padding(.bottom, variant.contentBottomPadding(in: modalKind))
         }
         .background {
             Group {
@@ -141,6 +167,7 @@ public struct ModalNavigation: View {
     private var leading: Resource.Leading?
     private var trailings: [Resource.Trailing] = []
     private var hasIconButtonBackground = false
+    private var searchFieldConfiguration = SearchFieldConfiguration()
     
     /// 내비게이션 바의 스타일을 설정합니다.
     ///
@@ -270,6 +297,45 @@ public struct ModalNavigation: View {
         return zelf
     }
 
+    /// 검색 필드의 속성과 동작을 설정합니다. variant가 ``Variant/search``일 때만 적용됩니다.
+    ///
+    /// - Parameters:
+    ///   - placeholder: 검색 필드에 표시할 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
+    ///   - searchTerm: 검색어 바인딩 변수
+    ///   - focused: 검색 필드의 포커스 상태 바인딩 변수, 생략하면 기본값으로 `nil` 적용
+    ///   - onSubmit: 검색어 제출 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - onTextChange: 검색어 텍스트 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - onFocusChange: 검색 필드 포커스 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+    /// - Returns: 수정된 내비게이션 바 뷰
+    public func searchField(
+        placeholder: String? = nil,
+        searchTerm: Binding<String>,
+        focused: Binding<Bool>? = nil,
+        onSubmit: (() -> Void)? = nil,
+        onTextChange: ((String) -> Void)? = nil,
+        onFocusChange: ((Bool) -> Void)? = nil
+    ) -> Self {
+        var zelf = self
+        zelf.searchFieldConfiguration = SearchFieldConfiguration(
+            placeholder: placeholder,
+            searchTerm: searchTerm,
+            focused: focused,
+            onSubmit: onSubmit,
+            onTextChange: onTextChange,
+            onFocusChange: onFocusChange
+        )
+        return zelf
+    }
+
+    private struct SearchFieldConfiguration {
+        var placeholder: String?
+        var searchTerm: Binding<String>?
+        var focused: Binding<Bool>?
+        var onSubmit: (() -> Void)?
+        var onTextChange: ((String) -> Void)?
+        var onFocusChange: ((Bool) -> Void)?
+    }
+
     private struct Contents: View {
         var variant: Variant
         var titleText: String?
@@ -277,6 +343,8 @@ public struct ModalNavigation: View {
         var leading: Resource.Leading?
         var trailings: [Resource.Trailing]
         var hasIconButtonBackground: Bool
+        var horizontalPadding: CGFloat
+        var searchField: SearchFieldConfiguration
 
         /// 아이콘 버튼이 차지하는 레이아웃 영역.
         ///
@@ -284,11 +352,19 @@ public struct ModalNavigation: View {
         /// 넘치는 만큼까지 자리를 잡으면 제목과의 간격이 스펙보다 벌어진다.
         private static let actionItemSize: CGFloat = 24
 
+        /// search를 뺀 variant의 콘텐츠 최소 높이. Figma는 24짜리 요소 위아래에 2씩 둬 28이다.
+        private static let contentMinHeight: CGFloat = 28
+
         /// leading과 제목 사이, trailing 버튼 사이의 간격.
         private static let itemSpacing: CGFloat = 16
 
+        /// search에서 검색 필드와 좌우 요소 사이의 간격. TopNavigation의 search와 같다.
+        private static let searchItemSpacing: CGFloat = 12
+
         @State private var leadingWidth: CGFloat = 0
         @State private var trailingsWidth: CGFloat = 0
+        @State private var internalSearchTerm = ""
+        @State private var internalFocused = false
 
         var body: some View {
             Group {
@@ -313,10 +389,31 @@ public struct ModalNavigation: View {
                     }
                 case .floating:
                     actionItems
+                case .search:
+                    HStack(spacing: Self.searchItemSpacing) {
+                        leadingView
+                        searchFieldView
+                        if !trailings.isEmpty {
+                            trailingsView
+                        }
+                    }
                 }
             }
-            .frame(minHeight: Self.actionItemSize)
-            .padding(.horizontal, variant.contentHorizontalPadding)
+            .frame(minHeight: variant.kind == .search ? Self.actionItemSize : Self.contentMinHeight)
+            .padding(.horizontal, horizontalPadding)
+        }
+
+        private var searchFieldView: some View {
+            SearchField(text: searchField.searchTerm ?? $internalSearchTerm)
+                .size(.medium)
+                .placeholder(searchField.placeholder)
+                // 내비게이션이 이미 머티리얼 배경을 깔기 때문에 검색 필드까지 머티리얼을 쌓으면
+                // 흐림은 더해지지 않고 틴트만 중복돼 표면이 밝아진다.
+                .disableMaterial()
+                .focused(searchField.focused ?? $internalFocused)
+                .onSubmit { searchField.onSubmit?() }
+                .onTextChange { searchField.onTextChange?($0) }
+                .onFocusChange { searchField.onFocusChange?($0) }
         }
 
         private var actionItems: some View {
@@ -411,22 +508,22 @@ private extension ModalNavigation {
 private extension ModalNavigation.Variant {
     /// 내비게이션 상하 여백.
     ///
-    /// `normal`은 전체 화면 모달에서만 쓰므로 화면 여백과 같은 20, `emphasized`는
-    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 어느 모달에 얹히든 Figma 스펙인 24를 쓴다.
-    var contentTopPadding: CGFloat {
+    /// `normal`은 전체 화면 모달에서만 쓰므로 항상 전체 화면 모달 여백(20)을 쓴다.
+    /// 나머지는 여러 모달에서 쓰므로 올라온 모달 종류로 고른다(``Popup``·``BottomSheet``·모달 밖 24, 전체 화면 20).
+    func contentTopPadding(in modalKind: ModalKind) -> CGFloat {
         switch kind {
         case .normal: ModalKind.full.navigationPadding
-        case .emphasized, .floating: ModalKind.popup.navigationPadding
+        case .emphasized, .floating, .search: modalKind.navigationPadding
         }
     }
 
-    var contentBottomPadding: CGFloat {
-        contentTopPadding
+    func contentBottomPadding(in modalKind: ModalKind) -> CGFloat {
+        contentTopPadding(in: modalKind)
     }
 
     /// 내비게이션 좌우 여백. 상하 여백과 같은 값을 쓴다.
-    var contentHorizontalPadding: CGFloat {
-        contentTopPadding
+    func contentHorizontalPadding(in modalKind: ModalKind) -> CGFloat {
+        contentTopPadding(in: modalKind)
     }
 
     var typoVariant: Typography.Variant {
@@ -434,6 +531,7 @@ private extension ModalNavigation.Variant {
         case .normal: .headline2
         case .floating: .headline2
         case .emphasized: .heading2
+        case .search: .headline2
         }
     }
 
@@ -442,6 +540,7 @@ private extension ModalNavigation.Variant {
         case .normal: .bold
         case .floating: .bold
         case .emphasized: .bold
+        case .search: .bold
         }
     }
 }
@@ -599,10 +698,16 @@ extension ModalNavigation.Resource {
         }
     }
 
+    /// 텍스트 버튼. TopNavigation의 텍스트 버튼과 같은 스펙(Headline 2 Regular, Label/Normal)이다.
+    /// 아이콘 버튼과 같은 24만 차지해 텍스트 버튼이 들어가도 바 높이가 달라지지 않는다.
     fileprivate static func textButton(
         _ text: String,
         action: @escaping () -> Void
     ) -> some View {
-        TextButton(color: .assistive, size: .medium, text: text, handler: action)
+        TextButton(text: text, handler: action)
+            .contentColor(.semantic(.foregroundNeutralPrimary))
+            .fontVariant(.headline2)
+            .fontWeight(.regular)
+            .frame(height: iconButtonLayoutSize)
     }
 }

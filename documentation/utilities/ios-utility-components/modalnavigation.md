@@ -31,6 +31,15 @@ ModalNavigation()
     .leading(.slot { Avatar(url: profileURL) })
 ```
 
+검색 입력을 받을 때는 [search](/documentation/montage/modalnavigation/variant/search.md)를 쓰고 [searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)](/documentation/montage/modalnavigation/searchfield(placeholder:searchterm:focused:onsubmit:ontextchange:onfocuschange:).md)로 검색 필드를 설정합니다.
+
+```swift
+ModalNavigation()
+    .variant(.search)
+    .searchField(placeholder: "검색어를 입력해 주세요.", searchTerm: $keyword)
+    .trailings(.text("취소", action: dismiss))
+```
+
 ## Topics
 
 ### Structures
@@ -57,6 +66,9 @@ ModalNavigation()
 
 
 제목을 왼쪽에 두는 스타일. [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)의 기본값입니다.
+- **Discussion**
+
+  여백은 [search](/documentation/montage/modalnavigation/variant/search.md)와 같이 올라온 모달을 따릅니다.
 </details>
 <details>
 
@@ -66,7 +78,7 @@ ModalNavigation()
 플로팅 스타일 (그라디언트, Progressive Blur 적용)
 - **Discussion**
 
-  [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다. 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다. 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
+  [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다. 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다. 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다. 여백은 [search](/documentation/montage/modalnavigation/variant/search.md)와 같이 올라온 모달을 따릅니다.
 </details>
 <details>
 
@@ -74,6 +86,18 @@ ModalNavigation()
 
 
 제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.
+</details>
+<details>
+
+<summary>``static let search: ModalNavigation.Variant``</summary>
+
+
+제목 대신 검색 필드를 두는 스타일.
+- **Discussion**
+
+  [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)·전체 화면 모달 어디서나 씁니다. 검색 필드는 [searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)](/documentation/montage/modalnavigation/searchfield(placeholder:searchterm:focused:onsubmit:ontextchange:onfocuschange:).md)로 설정하고, [title(_:)](/documentation/montage/modalnavigation/title(_:).md)·[titleView(_:)](/documentation/montage/modalnavigation/titleview(_:).md)는 무시합니다.
+
+  여백은 올라온 모달을 따릅니다. [Popup](/documentation/montage/popup.md)·[BottomSheet](/documentation/montage/bottomsheet.md)·모달 밖은 24, [BottomSheet](/documentation/montage/bottomsheet.md)의 전체 화면 모드는 20입니다. `fullScreenCover`에 직접 넣으면 모달 밖으로 보고 24가 됩니다.
 </details>
 
 </details>
@@ -222,6 +246,28 @@ ModalNavigation()
   | Parameter | Description |
   | --- | --- |
   | `scrollOffset` | 스크롤 오프셋에 대한 바인딩 |
+
+- **Return Value**
+
+  수정된 내비게이션 바 뷰
+</details>
+<details>
+
+<summary>``func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> ModalNavigation``</summary>
+
+
+검색 필드의 속성과 동작을 설정합니다. variant가 [search](/documentation/montage/modalnavigation/variant/search.md)일 때만 적용됩니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `placeholder` | 검색 필드에 표시할 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용 |
+  | `searchTerm` | 검색어 바인딩 변수 |
+  | `focused` | 검색 필드의 포커스 상태 바인딩 변수, 생략하면 기본값으로 `nil` 적용 |
+  | `onSubmit` | 검색어 제출 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `onTextChange` | 검색어 텍스트 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
+  | `onFocusChange` | 검색 필드 포커스 변경 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용 |
 
 - **Return Value**
 
