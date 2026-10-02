@@ -67,7 +67,7 @@ make docc
 
 ## Documentation Generation
 
-Generated documentation is committed to your PR by CI using the build machine's Xcode, so you don't need to commit it yourself. To preview the output locally with your currently selected Xcode, run:
+Generated documentation is committed to your PR by CI using the build machine's Xcode, so you don't need to commit it yourself. CI cannot push to PRs from forks or Dependabot, so for those the documentation is updated in a follow-up PR after merge. To preview the output locally with your currently selected Xcode, run:
 
 ```bash
 make
