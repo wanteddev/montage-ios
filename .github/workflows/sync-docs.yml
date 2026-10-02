@@ -15,6 +15,7 @@ on:
     paths:
       - "**.swift"
       - "Sources/Montage/Asset/Icon.xcassets/**"
+      - "GETTINGSTARTED.md"
       - "scripts/generate_docc.sh"
       - "scripts/docc_to_md.js"
       - "scripts/build_mcp_data.js"
