@@ -53,23 +53,16 @@ git checkout -b feature/your-feature
 ```
 
 2. Make your changes and commit following the commit convention above.
-3. Run the documentation/license update script:
-
-```bash
-make
-```
-
-4. If there are changes in the `documentation/` folder or `THIRD_PARTY_LICENSES.md`, include them in your commit.
-5. Push your branch and open a Pull Request against `main`.
-6. Fill out the PR template and ensure all checks pass.
-7. A maintainer will review your PR and may request changes.
+3. Push your branch and open a Pull Request against `main`.
+4. Fill out the PR template and ensure all checks pass.
+5. A maintainer will review your PR and may request changes.
 
 > **Please check before submitting a PR**
 >
 > - Contributions that deviate from the design specifications defined by the Wanted Design System team may be rejected.
 > - PRs that modify workflow yml files may be rejected.
-> - The `verify-docs` workflow runs only when Swift files are modified. If it fails, run `make` locally and include the generated outputs.
-> - The `./generate_docc.sh` script executed by `make` produces different results depending on the Xcode version, so the Xcode version specified by `XCODE_VERSION` in the Makefile must be used to generate docc documentation. The `make` script may install that version accordingly.
+> - Generated outputs (`documentation/`, `packages/montage-mcp/data/`, `THIRD_PARTY_LICENSES.md`) are produced by CI with the build machine's Xcode, because the DocC output differs by Xcode version. You don't need to run `make` and commit them yourself.
+> - For PRs from forks, CI cannot push to your branch. After the PR is merged, the `sync-docs` workflow opens a follow-up PR that updates the generated outputs.
 
 ## Code Style
 

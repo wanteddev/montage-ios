@@ -1,0 +1,157 @@
+name: apply-docs
+
+# 문서 자동 커밋 2단계: verify-docs가 올린 patch를 PR 브랜치에 커밋한다.
+#
+# workflow_run은 기본 브랜치의 워크플로 정의로 실행되므로 PR이 이 파일을 바꿀 수 없다.
+# 이 job은 쓰기 권한을 가지므로 PR 코드(make, npm, 스크립트 등)를 절대 실행하지 않는다.
+# patch와 브랜치명은 신뢰할 수 없는 데이터로 다루고, 쉘에는 env로만 넘긴다.
+
+on:
+  workflow_run:
+    workflows: [verify-docs]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: apply-docs-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    # 같은 레포의 작업 브랜치 PR만 처리한다.
+    # - 포크 브랜치에는 push할 수 없다.
+    # - 보호 브랜치(main, develop, release/*)가 head인 PR에는 직접 커밋하지 않는다.
+    # - Dependabot이 트리거한 run에는 Actions 시크릿이 주어지지 않는다.
+    # 처리하지 않은 PR은 머지 후 sync-docs가 따라잡는다.
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.actor.login != 'dependabot[bot]' &&
+      github.event.workflow_run.head_branch != 'main' &&
+      github.event.workflow_run.head_branch != 'develop' &&
+      !startsWith(github.event.workflow_run.head_branch, 'release/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download documentation patch
+        id: download
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: docs-patch
+          path: ${{ runner.temp }}/docs-patch
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Check patch
+        id: check
+        env:
+          PATCH: ${{ runner.temp }}/docs-patch/docs.patch
+          DOWNLOAD_OUTCOME: ${{ steps.download.outcome }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # verify-docs는 문서 변경이 있을 때만 artifact를 올린다.
+          # 다운로드가 실패했는데 artifact가 있다면 변경 없음으로 넘기지 않고 실패시킨다.
+          if [ "$DOWNLOAD_OUTCOME" = "failure" ]; then
+            COUNT=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts" --jq '[.artifacts[] | select(.name == "docs-patch")] | length')
+            if [ "$COUNT" != "0" ]; then
+              echo "::error::docs-patch artifact를 내려받지 못했습니다."
+              exit 1
+            fi
+          fi
+
+          if [ ! -s "$PATCH" ]; then
+            echo "문서 변경이 없습니다."
+            echo "apply=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # 크기 제한 (50MB)
+          if [ "$(wc -c < "$PATCH")" -gt 52428800 ]; then
+            echo "::error::patch가 너무 큽니다."
+            exit 1
+          fi
+
+          # git apply가 실제로 건드릴 경로를 기준으로 검사한다. 생성물 경로 밖이면 거부한다.
+          ALLOWED='^(documentation/|packages/montage-mcp/data/|THIRD_PARTY_LICENSES\.md$)'
+          git apply --numstat -z "$PATCH" | tr '\0' '\n' | cut -f3- > "$RUNNER_TEMP/paths.txt"
+          if [ ! -s "$RUNNER_TEMP/paths.txt" ]; then
+            echo "::error::patch를 해석할 수 없습니다."
+            exit 1
+          fi
+          if grep -Ev "$ALLOWED" "$RUNNER_TEMP/paths.txt" || grep -F '..' "$RUNNER_TEMP/paths.txt"; then
+            echo "::error::허용되지 않은 경로가 patch에 있습니다."
+            exit 1
+          fi
+
+          # 일반 파일(100644) 생성/삭제만 허용한다. symlink, 실행 권한, submodule, rename/copy는 거부한다.
+          # --summary는 내용만 바뀐 파일은 출력하지 않는다.
+          git apply --summary "$PATCH" > "$RUNNER_TEMP/summary.txt"
+          if grep -Ev '^ (create|delete) mode 100644 ' "$RUNNER_TEMP/summary.txt"; then
+            echo "::error::patch에 허용되지 않은 파일 모드나 rename/copy가 있습니다."
+            exit 1
+          fi
+
+          echo "apply=true" >> "$GITHUB_OUTPUT"
+
+      - name: Generate GitHub App token
+        if: steps.check.outputs.apply == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+
+      - name: Checkout PR branch
+        if: steps.check.outputs.apply == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 1
+
+      - name: Commit and push
+        if: steps.check.outputs.apply == 'true'
+        env:
+          PATCH: ${{ runner.temp }}/docs-patch/docs.patch
+          XCODE_VERSION_FILE: ${{ runner.temp }}/docs-patch/xcode-version.txt
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # patch를 만든 뒤 브랜치에 새 커밋이 올라왔으면 건너뛴다. 새 커밋의 verify-docs가 다시 처리한다.
+          if [ "$(git rev-parse HEAD)" != "$HEAD_SHA" ]; then
+            echo "브랜치가 $HEAD_SHA 이후로 바뀌어 건너뜁니다."
+            exit 0
+          fi
+
+          BOT_USER="${APP_SLUG}[bot]"
+
+          # 봇 문서 커밋 위에서 다시 생성했는데도 diff가 나면 생성 결과가 매번 달라진다는 뜻이다.
+          # 계속 커밋하면 무한 반복되므로 멈추고 알린다.
+          if [ "$(git log -1 --format=%an)" = "$BOT_USER" ]; then
+            echo "::error::봇 문서 커밋 이후에도 문서 diff가 생깁니다. 문서 생성 결과가 실행마다 달라지는지 확인하세요."
+            exit 1
+          fi
+
+          BOT_ID=$(gh api "/users/${BOT_USER}" --jq .id)
+          git config user.name "$BOT_USER"
+          git config user.email "${BOT_ID}+${BOT_USER}@users.noreply.github.com"
+
+          git apply --index "$PATCH"
+          if git diff --cached --quiet; then
+            echo "적용할 변경이 없습니다."
+            exit 0
+          fi
+
+          XCODE_VERSION=$(head -1 "$XCODE_VERSION_FILE" 2>/dev/null || echo "unknown")
+          git commit -m "docs: 문서 업데이트" -m "verify-docs가 ${XCODE_VERSION}로 생성한 문서를 커밋합니다."
+          git push origin "HEAD:refs/heads/${HEAD_BRANCH}"

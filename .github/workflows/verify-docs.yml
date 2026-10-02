@@ -1,5 +1,11 @@
 name: verify-docs
 
+# 문서 자동 커밋 1단계: PR 코드로 문서를 생성해 patch를 artifact로 올린다.
+#
+# PR 코드를 실행하는 job이라 쓰기 권한과 시크릿을 주지 않는다.
+# patch를 PR 브랜치에 커밋하는 건 2단계(apply-docs.yml, workflow_run)가 맡는다.
+# 포크 PR은 브랜치에 push할 수 없으므로 머지 후 sync-docs.yml이 따라잡는다.
+
 on:
   pull_request:
     branches:
@@ -9,50 +15,77 @@ on:
     paths:
       - "**.swift"
       - "Sources/Montage/Asset/Icon.xcassets/**"
+      - "GETTINGSTARTED.md"
+      - "scripts/generate_docc.sh"
+      - "scripts/docc_to_md.js"
       - "scripts/build_mcp_data.js"
+      - "scripts/generate_third_party_licenses.mjs"
+      - "Makefile"
       - "Package.swift"
       - "Package.resolved"
 
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-docs-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
-  verify:
+  generate:
     runs-on: self-hosted
 
     steps:
+      # 기본값인 merge commit이 아니라 PR head를 체크아웃한다.
+      # apply-docs가 이 patch를 PR head 브랜치에 적용하기 때문이다.
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install xcodes CLI
+      - name: Generate documentation
         run: |
-          if ! command -v xcodes >/dev/null 2>&1; then
-            brew install robotsandpencils/made/xcodes
+          xcodebuild -version
+          make generate
+
+      - name: Create documentation patch
+        id: patch
+        run: |
+          # 생성물 경로만 patch에 담는다. 2단계에서도 같은 목록으로 다시 검증한다.
+          git add -A -- documentation packages/montage-mcp/data THIRD_PARTY_LICENSES.md
+          mkdir -p "$RUNNER_TEMP/docs-patch"
+          git diff --cached --binary --no-renames > "$RUNNER_TEMP/docs-patch/docs.patch"
+          xcodebuild -version | head -1 > "$RUNNER_TEMP/docs-patch/xcode-version.txt"
+
+          if [ -s "$RUNNER_TEMP/docs-patch/docs.patch" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --cached --stat
           else
-            echo "xcodes CLI already installed: $(xcodes --version)"
-          fi
-
-      - name: Run generate_docc.sh
-        run: ./scripts/generate_docc.sh
-
-      - name: Run docc_to_md.js
-        run: node scripts/docc_to_md.js
-
-      - name: Run build_mcp_data.js (Montage MCP slim indexes)
-        run: node scripts/build_mcp_data.js
-
-      - name: Fail when documentation artifacts changed
-        run: |
-          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Documentation artifacts are up to date."
-          else
-            echo "ERROR: Documentation scripts produced changes."
-            echo " - Run \`make\` (or individually \`./scripts/generate_docc.sh && node scripts/docc_to_md.js && node scripts/build_mcp_data.js\`) locally and commit the results."
-            echo " - ⚠️ This workflow is running on Xcode version `xcodes installed | grep Selected | cut -d ' ' -f1`."
-            git status -sb
-            git --no-pager diff
-            exit 1
           fi
 
+      - name: Upload documentation patch
+        if: steps.patch.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-patch
+          path: ${{ runner.temp }}/docs-patch/
+          retention-days: 3
+
+      - name: Report
+        if: steps.patch.outputs.changed == 'true'
+        env:
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          if [ "$HEAD_REPO" = "$GITHUB_REPOSITORY" ] && [ "$GITHUB_ACTOR" != "dependabot[bot]" ]; then
+            echo "::notice::문서 변경이 있습니다. apply-docs 워크플로가 이 PR 브랜치에 문서 커밋을 추가합니다."
+          else
+            echo "::notice::포크 PR이나 Dependabot PR은 문서를 자동 커밋하지 않습니다. 머지 후 sync-docs 워크플로가 문서 업데이트 PR을 만듭니다."
+          fi
