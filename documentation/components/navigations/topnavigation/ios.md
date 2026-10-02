@@ -324,6 +324,45 @@ TopNavigation을 초기화합니다.
 </details>
 <details>
 
+<summary>``func toolbar<V>(() -> V) -> TopNavigation``</summary>
+
+
+내비게이션 바 아래에 붙는 툴바 영역에 표시할 뷰를 설정합니다.
+
+- **Parameters**
+
+  | Parameter | Description |
+  | --- | --- |
+  | `content` | 툴바 영역에 표시할 뷰를 반환하는 클로저 |
+
+- **Return Value**
+
+  수정된 인스턴스를 반환합니다.
+- **Discussion**
+
+  탭·세그먼트 컨트롤·칩 목록처럼 내비게이션 바에 이어 붙는 요소를 넣습니다. 툴바는 내비게이션 바와 배경을 함께 쓰므로, 스크롤하면 흐림 배경이 두 영역에 끊김 없이 이어집니다. 콘텐츠가 폭을 넘으면 가로로 스크롤되고, 폭보다 좁으면 왼쪽부터 놓입니다.
+
+  툴바는 여백을 두지 않으므로 좌우 여백은 콘텐츠 쪽에서 줍니다. 그래야 가로 스크롤할 때 콘텐츠가 화면 끝까지 흘러갑니다.
+
+  ```swift
+  TopNavigation()
+      .title("제목")
+      .toolbar {
+          HStack(spacing: 8) {
+              ForEach(filters) { FilterButton(text: $0.name) }
+          }
+          .padding(.horizontal, 20)
+          .padding(.vertical, 12)
+      }
+  ```
+
+  > **Note**
+  >
+  > variant가 `.floating`이면 툴바를 그리지 않습니다.
+
+</details>
+<details>
+
 <summary>``func trailingContents((() -> any View)...) -> TopNavigation``</summary>
 
 

@@ -3692,6 +3692,12 @@
           "kind": "method"
         },
         {
+          "name": "toolbar(_:)",
+          "signature": "func toolbar<V>(() -> V) -> TopNavigation",
+          "summary": "내비게이션 바 아래에 붙는 툴바 영역에 표시할 뷰를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "trailingContents(_:)",
           "signature": "func trailingContents((() -> any View)...) -> TopNavigation",
           "summary": "내비게이션 영역의 오른쪽(trailing) 영역에 표시할 뷰들을 설정합니다.",
