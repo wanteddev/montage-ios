@@ -1269,6 +1269,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 | `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)`, `interactionOverflow(_:)` |
 | `ActionArea` | the icon slot (16pt) on `caption(_:icon:)`, `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
+| `ModalNavigation` | variant `search`, `searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)` |
 | `Chip` | `borderColor(_:)` |
 | `Category` | `itemDisabled(_:)` |
 | `PushBadge` | `outlineBorder(_:color:)` |

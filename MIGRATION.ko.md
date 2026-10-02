@@ -1269,6 +1269,7 @@ FormControlGroup {
 | `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)`, `interactionOverflow(_:)` |
 | `ActionArea` | `caption(_:icon:)`의 아이콘 슬롯(16pt), `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
+| `ModalNavigation` | variant `search`, `searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)` |
 | `Chip` | `borderColor(_:)` |
 | `Category` | `itemDisabled(_:)` |
 | `PushBadge` | `outlineBorder(_:color:)` |

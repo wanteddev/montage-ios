@@ -18,6 +18,7 @@ struct ModalNavigationPreview: View {
     @State private var iconButtonBackground = false
     @State private var useFixedOpacity = false
     @State private var fixedOpacity: CGFloat = 0.5
+    @State private var searchTerm = ""
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -73,6 +74,7 @@ struct ModalNavigationPreview: View {
                 ModalNavigation(scrollOffset: $contentOffset)
                     .variant(variants[variantIndex])
                     .title("제목")
+                    .searchField(placeholder: "검색어를 입력해 주세요.", searchTerm: $searchTerm)
                     .modifying {
                         if noMaterialBackground {
                             $0.noMaterialBackground()
@@ -96,7 +98,7 @@ struct ModalNavigationPreview: View {
     }
 
     private var variants: [ModalNavigation.Variant] {
-        [.normal, .emphasized, .floating]
+        [.normal, .emphasized, .floating, .search]
     }
 
     private var leadingButtons: [ModalNavigation.Resource.Leading?] {
