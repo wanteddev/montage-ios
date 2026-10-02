@@ -70,7 +70,7 @@ make docc
 Generated documentation is committed to your PR by CI using the build machine's Xcode, so you don't need to commit it yourself. CI cannot push to PRs from forks or Dependabot, so for those the documentation is updated in a follow-up PR after merge. To preview the output locally with your currently selected Xcode, run:
 
 ```bash
-make
+make generate
 ```
 
 This runs the following steps in order:
@@ -79,6 +79,5 @@ This runs the following steps in order:
 2. **Markdown** - Converts DocC output to Markdown
 3. **License** - Generates third-party license documentation
 4. **MCP data** - Updates the Montage MCP indexes
-5. **Check** - Shows whether the generated outputs changed
 
 For guidelines on writing documentation comments in source code, please refer to the [Documentation Guidelines](./DOCUMENTATION_GUIDELINES.md).
