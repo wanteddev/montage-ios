@@ -1,0 +1,178 @@
+name: sync-docs
+
+# 머지 후 안전망: 브랜치에 push된 코드로 문서를 다시 생성하고, 변경이 있으면 문서 업데이트 PR을 만든다.
+#
+# 포크 PR이나 Dependabot PR처럼 apply-docs가 PR 브랜치에 커밋하지 못한 경우를 받아준다.
+# self-hosted 러너는 포크 PR 코드도 실행하므로 App 키는 거기서 쓰지 않는다.
+# 생성은 self-hosted(시크릿 없음), 커밋과 PR 생성은 hosted 러너에서 나눠 한다.
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - 'release/*'
+    paths:
+      - "**.swift"
+      - "Sources/Montage/Asset/Icon.xcassets/**"
+      - "GETTINGSTARTED.md"
+      - "scripts/generate_docc.sh"
+      - "scripts/docc_to_md.js"
+      - "scripts/build_mcp_data.js"
+      - "scripts/generate_third_party_licenses.mjs"
+      - "Makefile"
+      - "Package.swift"
+      - "Package.resolved"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: self-hosted
+    outputs:
+      changed: ${{ steps.patch.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate documentation
+        run: |
+          xcodebuild -version
+          make generate
+
+      - name: Create documentation patch
+        id: patch
+        run: |
+          git add -A -- documentation packages/montage-mcp/data THIRD_PARTY_LICENSES.md
+          mkdir -p "$RUNNER_TEMP/docs-patch"
+          git diff --cached --binary --no-renames > "$RUNNER_TEMP/docs-patch/docs.patch"
+          xcodebuild -version | head -1 > "$RUNNER_TEMP/docs-patch/xcode-version.txt"
+
+          if [ -s "$RUNNER_TEMP/docs-patch/docs.patch" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --cached --stat
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Documentation artifacts are up to date."
+          fi
+
+      - name: Upload documentation patch
+        if: steps.patch.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-patch
+          path: ${{ runner.temp }}/docs-patch/
+          retention-days: 3
+
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download documentation patch
+        if: needs.generate.outputs.changed == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-patch
+          path: ${{ runner.temp }}/docs-patch
+
+      - name: Check patch
+        if: needs.generate.outputs.changed == 'true'
+        env:
+          PATCH: ${{ runner.temp }}/docs-patch/docs.patch
+        run: |
+          # apply-docs와 같은 검증. self-hosted 러너가 오염됐을 경우를 대비한다.
+          if [ "$(wc -c < "$PATCH")" -gt 52428800 ]; then
+            echo "::error::patch가 너무 큽니다."
+            exit 1
+          fi
+
+          ALLOWED='^(documentation/|packages/montage-mcp/data/|THIRD_PARTY_LICENSES\.md$)'
+          git apply --numstat -z "$PATCH" | tr '\0' '\n' | cut -f3- > "$RUNNER_TEMP/paths.txt"
+          if [ ! -s "$RUNNER_TEMP/paths.txt" ]; then
+            echo "::error::patch를 해석할 수 없습니다."
+            exit 1
+          fi
+          if grep -Ev "$ALLOWED" "$RUNNER_TEMP/paths.txt" || grep -F '..' "$RUNNER_TEMP/paths.txt"; then
+            echo "::error::허용되지 않은 경로가 patch에 있습니다."
+            exit 1
+          fi
+
+          git apply --summary "$PATCH" > "$RUNNER_TEMP/summary.txt"
+          if grep -Ev '^ (create|delete) mode 100644 ' "$RUNNER_TEMP/summary.txt"; then
+            echo "::error::patch에 허용되지 않은 파일 모드나 rename/copy가 있습니다."
+            exit 1
+          fi
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 1
+
+      - name: Commit and open PR
+        env:
+          CHANGED: ${{ needs.generate.outputs.changed }}
+          PATCH: ${{ runner.temp }}/docs-patch/docs.patch
+          XCODE_VERSION_FILE: ${{ runner.temp }}/docs-patch/xcode-version.txt
+          BASE_BRANCH: ${{ github.ref_name }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # 대상 브랜치마다 봇 브랜치 하나를 두고, 매번 최신 커밋 기준으로 덮어쓴다.
+          SYNC_BRANCH="docs/sync-${BASE_BRANCH}"
+          EXISTING_PR=$(gh pr list --head "$SYNC_BRANCH" --base "$BASE_BRANCH" --state open --json number --jq '.[0].number // ""')
+
+          # 문서가 최신이면 예전 sync PR은 더 이상 필요 없으므로 닫는다.
+          if [ "$CHANGED" != "true" ]; then
+            if [ -n "$EXISTING_PR" ]; then
+              gh pr close "$EXISTING_PR" --delete-branch --comment "${GITHUB_SHA::7} 기준으로 문서가 최신이라 닫습니다."
+            fi
+            exit 0
+          fi
+
+          BOT_USER="${APP_SLUG}[bot]"
+          BOT_ID=$(gh api "/users/${BOT_USER}" --jq .id)
+          git config user.name "$BOT_USER"
+          git config user.email "${BOT_ID}+${BOT_USER}@users.noreply.github.com"
+
+          git checkout -B "$SYNC_BRANCH"
+          git apply --index "$PATCH"
+          XCODE_VERSION=$(head -1 "$XCODE_VERSION_FILE" 2>/dev/null || echo "unknown")
+          git commit -m "docs: 문서 업데이트" -m "sync-docs가 ${XCODE_VERSION}로 ${GITHUB_SHA::7} 기준 문서를 다시 생성했습니다."
+          git push --force origin "HEAD:refs/heads/${SYNC_BRANCH}"
+
+          if [ -n "$EXISTING_PR" ]; then
+            echo "기존 PR #${EXISTING_PR}을 갱신했습니다."
+          else
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$SYNC_BRANCH" \
+              --title "docs: 문서 업데이트 (${BASE_BRANCH})" \
+              --body "머지된 코드 기준으로 문서가 최신이 아니어서 sync-docs가 다시 생성했습니다. 포크 PR이나 Dependabot PR처럼 PR 단계에서 문서를 커밋하지 못한 경우에 만들어집니다."
+          fi

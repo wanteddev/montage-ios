@@ -12,8 +12,8 @@ Montage는 Wanted Lab의 iOS 디자인 시스템으로, SwiftUI 기반의 SPM(Sw
 # Xcode workspace 열기
 open Montage.xcworkspace
 
-# 문서 생성 (DocC -> Markdown -> 라이선스, Xcode 버전 확인 포함)
-make
+# 문서 생성 미리보기 (DocC -> Markdown -> 라이선스 -> MCP 데이터, 현재 선택된 Xcode 사용)
+make generate
 
 # DocC 문서만 생성
 make docc
@@ -102,9 +102,13 @@ DocC는 docstring을 Markdown으로 파싱하며 **단일 `~`도 취소선으로
 
 ## Documentation Workflow
 
-Swift 소스 파일(`Sources/Montage/`)을 수정한 후에는 반드시 `make`를 실행하여 `documentation/` 폴더와 `THIRD_PARTY_LICENSES.md`를 갱신해야 한다. CI의 `verify-docs` 워크플로우가 이를 검증한다.
+`documentation/`, `packages/montage-mcp/data/`, `THIRD_PARTY_LICENSES.md`는 CI가 빌드머신 Xcode로 생성해 커밋한다. 로컬에서 `make`를 돌려 커밋할 필요는 없다(미리보기 용도로만 사용).
 
-`make` 실행 시 `Makefile`의 `XCODE_VERSION` 변수에 지정된 Xcode 버전이 필요하다 (현재 26.2).
+- `verify-docs`: PR 코드로 문서를 생성해 patch를 artifact로 올린다(읽기 권한만).
+- `apply-docs`: 같은 레포 브랜치 PR이면 patch를 검증한 뒤 PR 브랜치에 `docs: 문서 업데이트` 커밋을 추가한다.
+- `sync-docs`: 머지 후 문서가 최신이 아니면(포크 PR 등) `docs/sync-<브랜치>` 문서 업데이트 PR을 만든다.
+
+Xcode 버전에 따라 생성 결과가 달라지므로 로컬 `make` 결과를 커밋하면 봇이 빌드머신 기준으로 다시 덮어쓸 수 있다.
 
 ## Commit Convention
 
@@ -150,5 +154,5 @@ Breaking change가 들어가는 PR은 마이그레이션 가이드를 **같은 P
 ## Git Workflow
 
 - 브랜치: `main`에서 분기하여 `main`으로 PR, 두 개 이상의 버전을 한 번에 작업할 때는 `release/x.x.x`에서 분기하여 `release/x.x.x`로 PR
-- PR 제출 전 `make` 실행하여 문서 변경사항 포함
+- 문서 생성물은 CI가 PR에 자동으로 커밋한다
 - GitHub Actions 워크플로우 yml 파일 수정 PR은 거부될 수 있음

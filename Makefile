@@ -1,9 +1,5 @@
 .PHONY: all generate docc server md license mcp-data check-changes clean
 
-# 문서 생성시 사용해야 하는 Xcode 버전
-# 빌드머신의 Xcode 버전과 동일하게 설정해야 합니다.
-XCODE_VERSION=26.3
-
 # 기본 타겟(로컬용): 문서 생성 후 변경사항 가드 실행
 # check-changes를 prerequisite가 아닌 recipe에서 호출해야 make -j 병렬 실행 시
 # generate가 완료된 뒤 순차적으로 검사된다.
@@ -19,37 +15,21 @@ md: docc
 mcp-data: docc
 
 # DocC API 문서 생성
+# 현재 선택된 Xcode로 생성한다. Xcode 버전에 따라 결과가 달라질 수 있어서,
+# PR에 들어가는 최종 문서는 CI(verify-docs → apply-docs)가 빌드머신 Xcode로 다시 생성해 커밋한다.
 docc:
 	@echo ""; \
 	echo "================================================="; \
-	echo "Xcode 버전 확인 중..."; \
-	echo "================================================="; \
-	command -v xcodes >/dev/null 2>&1 || brew install robotsandpencils/made/xcodes; \
-	INSTALLED_XCODES=$$(xcodes installed | awk '{print $$1}'); \
-	if ! echo "$$INSTALLED_XCODES" | grep -q "^${XCODE_VERSION}$$"; then \
-		echo "Xcode ${XCODE_VERSION}이 설치되어 있지 않습니다. 설치를 시작합니다..."; \
-		echo "문서 생성에 필요한 Xcode 버전이 변경되었다면 Makefile의 XCODE_VERSION 변수를 업데이트해주세요."; \
-		xcodes install ${XCODE_VERSION}; \
-	fi; \
-	CURRENT_XCODE_VERSION=$$(xcodes installed | grep Selected | awk '{print $$1}'); \
-	if [ "$$CURRENT_XCODE_VERSION" != "${XCODE_VERSION}" ]; then \
-		echo "Xcode 버전을 ${XCODE_VERSION}로 변경합니다."; \
-		xcodes select ${XCODE_VERSION}; \
-	fi; \
-	echo ""; \
-	echo "================================================="; \
-	echo "API 문서 생성 중..."; \
+	echo "API 문서 생성 중... (Xcode: $$(xcodebuild -version | head -1))"; \
 	echo "================================================="; \
 	set -o pipefail; \
 	if ! ./scripts/generate_docc.sh 2>&1 | tee build_docs.log; then \
-		echo "[docc] generate_docc.sh 실행 실패 — Xcode 버전을 $$CURRENT_XCODE_VERSION로 재설정합니다."; \
-		xcodes select $$CURRENT_XCODE_VERSION; \
+		echo "[docc] generate_docc.sh 실행 실패"; \
 		grep -A 20 'error:' build_docs.log; \
 		rm build_docs.log; \
 		exit 1; \
 	fi; \
-	rm build_docs.log; \
-	xcodes select $$CURRENT_XCODE_VERSION
+	rm build_docs.log
 
 # DocC 문서 서버 애플리케이션 실행
 server:
