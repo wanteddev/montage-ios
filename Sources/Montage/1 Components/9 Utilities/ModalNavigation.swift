@@ -61,8 +61,11 @@ public struct ModalNavigation: View {
         /// ``Popup``·``BottomSheet``에서 높이를 차지하지 않고 콘텐츠 위에 뜹니다.
         /// 콘텐츠가 모달 위쪽 끝에서 시작하므로 이미지를 상단까지 채울 때 씁니다.
         /// 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
+        /// 여백은 ``search``와 같이 올라온 모달을 따릅니다.
         public static let floating = Variant(kind: .floating)
         /// 제목을 왼쪽에 두는 스타일. ``Popup``·``BottomSheet``의 기본값입니다.
+        ///
+        /// 여백은 ``search``와 같이 올라온 모달을 따릅니다.
         public static let emphasized = Variant(kind: .emphasized)
         /// 제목 대신 검색 필드를 두는 스타일.
         ///
@@ -349,6 +352,9 @@ public struct ModalNavigation: View {
         /// 넘치는 만큼까지 자리를 잡으면 제목과의 간격이 스펙보다 벌어진다.
         private static let actionItemSize: CGFloat = 24
 
+        /// search를 뺀 variant의 콘텐츠 최소 높이. Figma는 24짜리 요소 위아래에 2씩 둬 28이다.
+        private static let contentMinHeight: CGFloat = 28
+
         /// leading과 제목 사이, trailing 버튼 사이의 간격.
         private static let itemSpacing: CGFloat = 16
 
@@ -393,7 +399,7 @@ public struct ModalNavigation: View {
                     }
                 }
             }
-            .frame(minHeight: Self.actionItemSize)
+            .frame(minHeight: variant.kind == .search ? Self.actionItemSize : Self.contentMinHeight)
             .padding(.horizontal, horizontalPadding)
         }
 
@@ -502,14 +508,12 @@ private extension ModalNavigation {
 private extension ModalNavigation.Variant {
     /// 내비게이션 상하 여백.
     ///
-    /// `normal`은 전체 화면 모달에서만 쓰므로 화면 여백과 같은 20, `emphasized`는
-    /// ``Popup``·``BottomSheet`` 안이라 24다. `floating`은 어느 모달에 얹히든 Figma 스펙인 24를 쓴다.
-    /// `search`는 모든 모달에서 쓰므로 variant가 아니라 올라온 모달 종류로 고른다.
+    /// `normal`은 전체 화면 모달에서만 쓰므로 항상 전체 화면 모달 여백(20)을 쓴다.
+    /// 나머지는 여러 모달에서 쓰므로 올라온 모달 종류로 고른다(``Popup``·``BottomSheet``·모달 밖 24, 전체 화면 20).
     func contentTopPadding(in modalKind: ModalKind) -> CGFloat {
         switch kind {
         case .normal: ModalKind.full.navigationPadding
-        case .emphasized, .floating: ModalKind.popup.navigationPadding
-        case .search: modalKind.navigationPadding
+        case .emphasized, .floating, .search: modalKind.navigationPadding
         }
     }
 
