@@ -122,8 +122,18 @@ struct PopoverPreview: View {
             .padding(20)
         }
         .frame(width: 300)
-        .background(.ultraThinMaterial)
-        .background(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
+        // 머티리얼이 아래, 틴트 컬러가 위. `.background`는 나중에 붙인 것이 뒤로 깔리므로
+        // 순서를 뒤집으면 머티리얼의 틴트 필름이 컬러를 덮어 다크 모드에서 배경이 밝게 뜬다.
+        // 이 샘플은 그대로 복사돼 쓰이므로 순서를 바꾸지 말 것.
+        //
+        // MERGE-4.0.0: 4.0.0 은 `materialBackground(in:tint:)` 로 같은 순서를 타입에 고정한다.
+        // 충돌 시 **4.0.0 쪽을 채택**한다.
+        .background {
+            ZStack {
+                Rectangle().fill(.bar)
+                Rectangle().fill(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
+            }
+        }
     }
 
     private var optionSheet: some View {
