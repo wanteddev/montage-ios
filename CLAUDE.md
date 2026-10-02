@@ -12,8 +12,8 @@ Montage는 Wanted Lab의 iOS 디자인 시스템으로, SwiftUI 기반의 SPM(Sw
 # Xcode workspace 열기
 open Montage.xcworkspace
 
-# 문서 생성 (DocC -> Markdown -> 라이선스 -> MCP 데이터, 현재 선택된 Xcode 사용)
-make
+# 문서 생성 미리보기 (DocC -> Markdown -> 라이선스 -> MCP 데이터, 현재 선택된 Xcode 사용)
+make generate
 
 # DocC 문서만 생성
 make docc
