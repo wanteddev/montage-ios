@@ -30,6 +30,13 @@ struct TopNavigationPreview: View {
         }
     }
     
+    enum ToolbarKind: String, CaseIterable {
+        case none
+        case tab
+        case segmented
+        case chips
+    }
+
     @Environment(\.presentationMode) var presentationMode
 
     @State private var title = "제목"
@@ -43,6 +50,8 @@ struct TopNavigationPreview: View {
     @State private var actionAreaAlt = false
     @State private var actionAreaCaption = false
     @State private var actionAreaExtra = false
+    @State private var toolbarKindIndex = 0
+    @State private var toolbarSelectedIndex = 0
     
     private var currentVariant: TopNavigation.Variant {
         let cases = TopNavigation.Variant.allCases
@@ -107,6 +116,37 @@ struct TopNavigationPreview: View {
         }
     }
     
+    private var toolbarKind: ToolbarKind {
+        ToolbarKind.allCases[toolbarKindIndex]
+    }
+
+    @ViewBuilder
+    private var toolbarContent: some View {
+        switch toolbarKind {
+        case .none:
+            EmptyView()
+        case .tab:
+            Montage.Tab(selectedIndex: $toolbarSelectedIndex, items: ["텍스트", "텍스트", "텍스트"])
+                .horizontalPadding(true)
+        case .segmented:
+            SegmentedControl(selectedIndex: $toolbarSelectedIndex, labels: ["텍스트", "텍스트", "텍스트"])
+                .padding(.horizontal, 20)
+                .padding(.vertical, 8)
+        case .chips:
+            // 폭을 넘는 칩 목록은 툴바가 가로로 스크롤한다.
+            HStack(spacing: 8) {
+                ForEach(0..<10, id: \.self) { index in
+                    Chip(variant: .outlined, size: .small, text: "텍스트 \(index + 1)") {
+                        toolbarSelectedIndex = index
+                    }
+                    .active(index == toolbarSelectedIndex)
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 8)
+        }
+    }
+
     private var closure: () -> Void {
         {
             toast = .init(message: "알림센터로 갑시다")
@@ -141,6 +181,11 @@ struct TopNavigationPreview: View {
                         trailing = []
                     }
                 }
+                SegmentedIndexRow(
+                    "toolbar",
+                    index: $toolbarKindIndex,
+                    labels: ToolbarKind.allCases.map(\.rawValue)
+                )
                 ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
                 ToggleOptionRow("actionArea", isOn: $actionArea)
                 if actionArea {
@@ -171,6 +216,9 @@ struct TopNavigationPreview: View {
                     )
                     .modifying {
                         var mutated = $0
+                        if toolbarKind != .none {
+                            mutated = mutated.toolbar { toolbarContent }
+                        }
                         if leading {
                             mutated = mutated.leadingContent {
                                 TopNavigation.LeadingButton(
