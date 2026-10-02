@@ -67,7 +67,7 @@ make docc
 
 ## Documentation Generation
 
-When modifying Swift files under `Sources/Montage`, you need to regenerate the documentation before committing:
+Generated documentation is committed to your PR by CI using the build machine's Xcode, so you don't need to commit it yourself. To preview the output locally with your currently selected Xcode, run:
 
 ```bash
 make
@@ -78,8 +78,7 @@ This runs the following steps in order:
 1. **DocC** - Generates API documentation from source code
 2. **Markdown** - Converts DocC output to Markdown
 3. **License** - Generates third-party license documentation
-4. **Check** - Verifies documentation is up to date
-
-If there are changes in the `documentation/` folder or `THIRD_PARTY_LICENSES.md`, include them in your commit.
+4. **MCP data** - Updates the Montage MCP indexes
+5. **Check** - Shows whether the generated outputs changed
 
 For guidelines on writing documentation comments in source code, please refer to the [Documentation Guidelines](./DOCUMENTATION_GUIDELINES.md).
