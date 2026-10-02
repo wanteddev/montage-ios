@@ -599,10 +599,16 @@ extension ModalNavigation.Resource {
         }
     }
 
+    /// 텍스트 버튼. TopNavigation의 텍스트 버튼과 같은 스펙(Headline 2 Regular, Label/Normal)이다.
+    /// 아이콘 버튼과 같은 24만 차지해 텍스트 버튼이 들어가도 바 높이가 달라지지 않는다.
     fileprivate static func textButton(
         _ text: String,
         action: @escaping () -> Void
     ) -> some View {
-        TextButton(color: .assistive, size: .medium, text: text, handler: action)
+        TextButton(text: text, handler: action)
+            .contentColor(.semantic(.foregroundNeutralPrimary))
+            .fontVariant(.headline2)
+            .fontWeight(.regular)
+            .frame(height: iconButtonLayoutSize)
     }
 }
