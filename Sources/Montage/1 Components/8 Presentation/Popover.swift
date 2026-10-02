@@ -291,9 +291,16 @@ public enum Popover {
             layer.shadowOpacity = 0
             // iOS 26부터 시스템 팝오버 컨테이너가 자체 radius(34)로 콘텐츠를 자른다.
             // 콘텐츠를 자르는 뷰는 컨테이너 radius를 따라가므로 컨테이너 쪽을 스펙 값으로 덮어쓴다.
+            //
+            // `cornerConfiguration`은 iOS 26 SDK에만 있는 심볼이라 `#available` 런타임 검사만으로는
+            // Xcode 16.2(CONTRIBUTING.md 지원 하한)에서 컴파일이 깨진다. 컴파일 시점에도 걸러낸다.
+            //
+            // MERGE-4.0.0: 4.0.0에는 이 `#if`가 없다(같은 문제가 남아 있다). 충돌하면 **이쪽**을 채택한다.
+            #if compiler(>=6.2)
             if #available(iOS 26.0, *) {
                 superview?.cornerConfiguration = .uniformCorners(radius: .fixed(Popover.cornerRadius))
             }
+            #endif
         }
     }
 }
