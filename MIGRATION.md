@@ -1142,11 +1142,11 @@ Corner radii and padding changed across the modals. **The API is unchanged, so t
 | BottomSheet radius (top) | system default (~10) | **32** |
 | Content horizontal padding | 20 | **28** |
 | Content vertical padding | 20 (top only, and only without navigation) | **0** (24 when turned on via `contentPadding`) |
-| `ModalNavigation` `.emphasized` vertical | 20 | **24** |
-| `ModalNavigation` `.emphasized` horizontal | 16 | **24** |
+| `ModalNavigation` `.emphasized` vertical | 20 | **24** (20 in full-screen modals) |
+| `ModalNavigation` `.emphasized` horizontal | 16 | **24** (20 in full-screen modals) |
 | `ModalNavigation` `.normal` vertical | 10 | **20** |
-| `ModalNavigation` `.floating` vertical | 4 top / 8 bottom | **24** |
-| `ModalNavigation` `.floating` horizontal | 16 | **24** |
+| `ModalNavigation` `.floating` vertical | 4 top / 8 bottom | **24** (20 in full-screen modals) |
+| `ModalNavigation` `.floating` horizontal | 16 | **24** (20 in full-screen modals) |
 | Height taken by `ModalNavigation` `.floating` | the navigation bar's height | **0** (floats over content) |
 | `ActionArea` horizontal (inside a modal) | 20 | **24** |
 | Popup's `ActionArea` bottom inset | 40 (20 inside + 20 from the popup) | **24** |
@@ -1269,6 +1269,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 | `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)`, `interactionOverflow(_:)` |
 | `ActionArea` | the icon slot (16pt) on `caption(_:icon:)`, `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
+| `ModalNavigation` | variant `search`, `searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)` |
 | `Chip` | `borderColor(_:)` |
 | `Category` | `itemDisabled(_:)` |
 | `PushBadge` | `outlineBorder(_:color:)` |

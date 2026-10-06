@@ -23,6 +23,7 @@ struct BottomSheetPreview: View {
     @State private var navigation = false
     @State private var navVariantIndex = 0
     @State private var iconButtonBackground = false
+    @State private var searchTerm = ""
 
     @State private var actionArea = false
     @State private var buttonsIndex = 0
@@ -116,12 +117,9 @@ struct BottomSheetPreview: View {
         ModalNavigation()
             .variant(navigationVariants[navVariantIndex])
             .title("제목")
+            .searchField(placeholder: "검색어를 입력해 주세요.", searchTerm: $searchTerm)
             .leading(.back(action: {}))
-            .trailings(
-                .icon(.plus, action: {}),
-                .icon(.minus, action: {}),
-                .close(action: { show = false })
-            )
+            .trailings(navigationTrailings)
             .iconButtonBackground(iconButtonBackground)
     }
 
@@ -221,11 +219,26 @@ struct BottomSheetPreview: View {
         }
     }
 
-    // Bottom Sheet는 emphasized(기본)와 floating만 쓴다. normal(가운데 정렬)은 전체 화면 모달 전용이다.
+    // Bottom Sheet는 emphasized(기본)·floating·search를 쓴다. normal(가운데 정렬)은 전체 화면 모달 전용이다.
+    // search는 전체 화면 모달에서도 쓰므로 fullModal 토글로 여백(24 → 20)을 비교할 수 있다.
     private let navigationVariants: [ModalNavigation.Variant] = [
         .emphasized,
         .floating,
+        .search,
     ]
+
+    // search는 제목 자리에 검색 필드가 들어가 폭이 좁으므로 Figma 예시대로 취소 버튼 하나만 둔다.
+    private var navigationTrailings: [ModalNavigation.Resource.Trailing] {
+        if navigationVariants[navVariantIndex] == .search {
+            [.text("취소", action: { show = false })]
+        } else {
+            [
+                .icon(.plus, action: {}),
+                .icon(.minus, action: {}),
+                .close(action: { show = false }),
+            ]
+        }
+    }
 
     private let contentVerticalPaddings: [(label: String, value: ModalContentPadding.Vertical)] = [
         ("none", .none),

@@ -1760,6 +1760,12 @@
           "kind": "method"
         },
         {
+          "name": "searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)",
+          "signature": "func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> ModalNavigation",
+          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 search일 때만 적용됩니다.",
+          "kind": "method"
+        },
+        {
           "name": "title(_:)",
           "signature": "func title(String) -> ModalNavigation",
           "summary": "내비게이션 바의 타이틀을 설정합니다.",
@@ -1868,6 +1874,12 @@
               "name": "normal",
               "signature": "static let normal: ModalNavigation.Variant",
               "summary": "제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.",
+              "kind": "property"
+            },
+            {
+              "name": "search",
+              "signature": "static let search: ModalNavigation.Variant",
+              "summary": "제목 대신 검색 필드를 두는 스타일.",
               "kind": "property"
             }
           ]

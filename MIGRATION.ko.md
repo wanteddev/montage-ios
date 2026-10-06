@@ -1142,11 +1142,11 @@ company·academy variant의 cornerRadius가 전 사이즈에서 **+2** 됩니다
 | BottomSheet radius (위쪽) | 시스템 기본 (약 10) | **32** |
 | 콘텐츠 좌우 여백 | 20 | **28** |
 | 콘텐츠 상하 여백 | 20 (내비게이션 없을 때만 위쪽) | **0** (`contentPadding`으로 켜면 24) |
-| `ModalNavigation` `.emphasized` 상하 | 20 | **24** |
-| `ModalNavigation` `.emphasized` 좌우 | 16 | **24** |
+| `ModalNavigation` `.emphasized` 상하 | 20 | **24** (전체 화면 모달은 20) |
+| `ModalNavigation` `.emphasized` 좌우 | 16 | **24** (전체 화면 모달은 20) |
 | `ModalNavigation` `.normal` 상하 | 10 | **20** |
-| `ModalNavigation` `.floating` 상하 | 위 4 / 아래 8 | **24** |
-| `ModalNavigation` `.floating` 좌우 | 16 | **24** |
+| `ModalNavigation` `.floating` 상하 | 위 4 / 아래 8 | **24** (전체 화면 모달은 20) |
+| `ModalNavigation` `.floating` 좌우 | 16 | **24** (전체 화면 모달은 20) |
 | `ModalNavigation` `.floating`이 차지하는 높이 | 내비게이션 높이만큼 | **0** (콘텐츠 위에 뜸) |
 | `ActionArea` 좌우 (모달 안) | 20 | **24** |
 | Popup의 `ActionArea` 아래 여백 | 40 (내부 20 + 팝업이 준 20) | **24** |
@@ -1269,6 +1269,7 @@ FormControlGroup {
 | `IconButton` | `interactionEffect(_:)`, `interactionColor(_:)`, `interactionOverflow(_:)` |
 | `ActionArea` | `caption(_:icon:)`의 아이콘 슬롯(16pt), `scrollReachedEnd(_:)`, `backgroundColor(_:)` |
 | `TopNavigation` | `backgroundColor(_:)` |
+| `ModalNavigation` | variant `search`, `searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)` |
 | `Chip` | `borderColor(_:)` |
 | `Category` | `itemDisabled(_:)` |
 | `PushBadge` | `outlineBorder(_:color:)` |
