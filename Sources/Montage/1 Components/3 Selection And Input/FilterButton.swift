@@ -16,15 +16,15 @@ import SwiftUI
 /// FilterButton(
 ///     variant: .solid,
 ///     size: .medium,
-///     text: "카테고리",
-///     state: $state
+///     text: "카테고리"
 /// )
+/// .expanded(isExpanded)
 /// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
 /// .active(true, label: "최신순")
 ///
 /// // 비활성화
-/// FilterButton(text: "카테고리", state: $state)
+/// FilterButton(text: "카테고리")
 ///     .disabled(true)
 /// ```
 ///
@@ -53,20 +53,11 @@ public struct FilterButton: View {
         case large
     }
     
-    /// 버튼의 확장 상태를 정의합니다.
-    public enum State {
-        /// 기본 상태
-        case normal
-        /// 확장된 상태 (드롭다운 표시)
-        case expand
-    }
-    
     // MARK: - Initializer
     
     private let variant: Variant
     private let size: Size
     private let text: String
-    private let state: Binding<State>
     private let handler: (() -> Void)?
     
     /// 필터 버튼을 초기화합니다.
@@ -75,26 +66,23 @@ public struct FilterButton: View {
     ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.solid` 적용
     ///   - size: 버튼의 크기, 생략하면 기본값으로 `.medium` 적용
     ///   - text: 버튼에 표시할 텍스트
-    ///   - state: 버튼의 확장 상태 바인딩, 생략하면 기본값으로 `.constant(.normal)` 적용
     ///   - handler: 버튼 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용
     public init(
         variant: Variant = .solid,
         size: Size = .medium,
         text: String,
-        state: Binding<State> = .constant(.normal),
         handler: (() -> Void)? = nil
     ) {
         self.variant = variant
         self.size = size
         self.text = text
-        self.state = state
         self.handler = handler
     }
     
     // MARK: - Body
     
     @Environment(\.isEnabled) private var isEnabled
-    @SwiftUI.State private var isPressed = false
+    @State private var isPressed = false
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -103,7 +91,7 @@ public struct FilterButton: View {
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
 
-            Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)
+            Image.icon(expanded ? .caretUp : .caretDown)
                 .resizable()
                 .foregroundStyle(iconColor)
                 .frame(width: imageSize, height: imageSize)
@@ -137,6 +125,7 @@ public struct FilterButton: View {
     
     // MARK: - Modifiers
     
+    private var expanded = false
     private var active = false
     private var activeLabel: String?
     private var customBackgroundColor: SwiftUI.Color?
@@ -145,6 +134,18 @@ public struct FilterButton: View {
     private var customIconColor: SwiftUI.Color?
     private var fillHorizontal = false
     private var fillVertical = false
+    /// 드롭다운이 펼쳐진 상태를 설정합니다.
+    ///
+    /// 펼쳐진 상태에서는 화살표 아이콘이 위쪽을 향합니다.
+    ///
+    /// - Parameter expanded: 펼침 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 버튼 인스턴스
+    public func expanded(_ expanded: Bool = true) -> Self {
+        var view = self
+        view.expanded = expanded
+        return view
+    }
+
     /// 버튼의 활성화 상태와 레이블을 설정합니다.
     ///
     /// - Parameters:

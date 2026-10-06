@@ -5,7 +5,7 @@ struct FilterButtonPreview: View {
     @State private var variant: FilterButton.Variant = .solid
     @State private var size: FilterButton.Size = .medium
     @State private var text = "텍스트"
-    @State private var state: FilterButton.State = .normal
+    @State private var expanded = false
     @State private var active = false
     @State private var activeLabel: String? = nil
     @State private var disable = false
@@ -17,9 +17,9 @@ struct FilterButtonPreview: View {
             FilterButton(
                 variant: variant,
                 size: size,
-                text: text,
-                state: $state
+                text: text
             )
+            .expanded(expanded)
             .active(active, label: activeLabel)
             .modifying {
                 if fontColor == .clear {
@@ -61,11 +61,8 @@ struct FilterButtonPreview: View {
                 }
             ), labels: ["XSmall", "Small", "Medium", "Large"])
             TextFieldOptionRow("Text", text: $text)
-            SegmentedIndexRow("State", index: Binding(
-                get: { state == .normal ? 0 : 1 },
-                set: { state = $0 == 0 ? .normal : .expand }
-            ), labels: ["Normal", "Expand"])
             HStack {
+                ToggleOption("Expanded", isOn: $expanded)
                 ToggleOption("Active", isOn: $active)
                 ToggleOption("Disable", isOn: $disable)
             }
