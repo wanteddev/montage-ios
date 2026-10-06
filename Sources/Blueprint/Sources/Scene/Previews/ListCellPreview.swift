@@ -166,8 +166,6 @@ struct ListCellPreview: View {
         PreviewLayout {
             VStack(alignment: .leading, spacing: 8) {
                 caption("Single")
-                // 낱개 셀에만 치수를 건다. 리스트 예시까지 걸면 셀마다 상자와 라벨이 붙어
-                // 정작 보려던 셀 높이가 묻힌다.
                 cell(divider: divider)
                     .previewDimensioned()
 
@@ -241,6 +239,9 @@ struct ListCellPreview: View {
             ForEach(0..<Self.listSampleCount, id: \.self) { index in
                 // 마지막 셀 아래 구분선은 리스트 테두리와 겹치므로 그리지 않는다.
                 cell(divider: divider && index < Self.listSampleCount - 1)
+                    // variant에 따라 셀 경계가 리스트 여백을 포함하는지가 달라지므로 리스트에서도 치수를 건다.
+                    // 셀마다 걸면 상자와 라벨이 겹치므로 첫 셀에만 건다.
+                    .if(index == 0) { $0.previewDimensioned() }
             }
         }
         // inset은 리스트가 좌우 여백을 주고, full은 셀이 직접 갖는다.
