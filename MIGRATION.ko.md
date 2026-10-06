@@ -458,6 +458,29 @@ IconButton(variant: .normal(size: .large), icon: .search)
 .trailingContent { _ in Chevron() }
 ```
 
+#### FilterButton
+
+펼침 상태를 `init`의 `state: Binding<FilterButton.State>` 대신 `.expanded(_:)` 모디파이어(`Bool`)로 받습니다. 웹·Android와 같은 이름과 타입입니다. 컴포넌트가 이 값을 바꾸지 않아 바인딩이 아닌 값으로 받습니다.
+
+| 3.x | 4.0 |
+|---|---|
+| `state: .constant(.normal)` | 생략 |
+| `state: .constant(.expand)` | `.expanded()` |
+| `state: $state` (`FilterButton.State`) | `.expanded(isExpanded)` (`Bool`) |
+
+```swift
+// 3.x
+@State private var state: FilterButton.State = .normal
+FilterButton(text: "카테고리", state: $state)
+
+// 4.0
+@State private var isExpanded = false
+FilterButton(text: "카테고리")
+    .expanded(isExpanded)
+```
+
+`FilterButton.State` 타입은 없어집니다. 상태 변수 타입까지 `Bool`로 바꿔주세요.
+
 #### init에서 빠진 파라미터
 
 비활성 여부와 배경색이 `init` 파라미터에서 모디파이어로 옮겨갔습니다.
@@ -1291,6 +1314,7 @@ FormControlGroup {
 - [ ] `.disable(` 남은 곳 확인 (`.disabled(`가 맞습니다)
 - [ ] `grep -rn "normal(size: \.custom("` - `interactionOverflow()`를 끈 곳에 3.x 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지. 켠 곳은 숫자가 아이콘 크기라 3.x 값 그대로 둡니다
 - [ ] `Chip`·`FilterButton`의 `.disabled()` 뒤에 컴포넌트 전용 모디파이어를 체이닝한 자리가 없는지
+- [ ] `grep -rn "FilterButton.State" --include="*.swift"`, `grep -rn "FilterButton(" -A6 --include="*.swift" | grep "state:"` - `FilterButton`의 `state:`를 `.expanded(_:)`로 옮겼는지
 - [ ] `.topNavigation(` 남은 곳 확인
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - 대응 없는 variant

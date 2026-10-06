@@ -458,6 +458,29 @@ The no-argument `trailingContent` overload is gone; only the one taking the expa
 .trailingContent { _ in Chevron() }
 ```
 
+#### FilterButton
+
+The expanded state moves from the `state: Binding<FilterButton.State>` init parameter to the `.expanded(_:)` modifier (`Bool`), matching the name and type on web and Android. The component never writes to it, so it takes a plain value instead of a binding.
+
+| 3.x | 4.0 |
+|---|---|
+| `state: .constant(.normal)` | omit |
+| `state: .constant(.expand)` | `.expanded()` |
+| `state: $state` (`FilterButton.State`) | `.expanded(isExpanded)` (`Bool`) |
+
+```swift
+// 3.x
+@State private var state: FilterButton.State = .normal
+FilterButton(text: "Category", state: $state)
+
+// 4.0
+@State private var isExpanded = false
+FilterButton(text: "Category")
+    .expanded(isExpanded)
+```
+
+The `FilterButton.State` type is removed, so change the state variable's type to `Bool` as well.
+
 #### Parameters dropped from init
 
 Disabled state and background color moved out of `init` into modifiers.
@@ -1291,6 +1314,7 @@ New semantic tokens were added too: `lineBrandFocus`, `lineNegativeFocus`, `surf
 - [ ] Check for leftover `.disable(` (it should be `.disabled(`)
 - [ ] `grep -rn "normal(size: \.custom("` - where `interactionOverflow()` is off, switch a 3.x icon size carried over verbatim to a container value. Where it is on, the number is the icon size, so keep the 3.x value
 - [ ] No component-specific modifier chained after `.disabled()` on `Chip` or `FilterButton`
+- [ ] `grep -rn "FilterButton.State" --include="*.swift"`, `grep -rn "FilterButton(" -A6 --include="*.swift" | grep "state:"` - `FilterButton` `state:` moved to `.expanded(_:)`
 - [ ] Check for leftover `.topNavigation(`
 - [ ] `grep -rn "ignoresEdgeInsets"` - moved to `contentPadding`
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - variant with no replacement
