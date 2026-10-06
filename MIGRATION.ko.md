@@ -1314,7 +1314,7 @@ FormControlGroup {
 - [ ] `.disable(` 남은 곳 확인 (`.disabled(`가 맞습니다)
 - [ ] `grep -rn "normal(size: \.custom("` - `interactionOverflow()`를 끈 곳에 3.x 아이콘 크기를 그대로 옮겼다면 컨테이너 값으로 바꿨는지. 켠 곳은 숫자가 아이콘 크기라 3.x 값 그대로 둡니다
 - [ ] `Chip`·`FilterButton`의 `.disabled()` 뒤에 컴포넌트 전용 모디파이어를 체이닝한 자리가 없는지
-- [ ] `grep -rn "FilterButton.State\|\.expand\b" --include="*.swift"` - `FilterButton`의 `state:`를 `.expanded(_:)`로 옮겼는지
+- [ ] `grep -rn "FilterButton.State" --include="*.swift"`, `grep -rn "FilterButton(" -A6 --include="*.swift" | grep "state:"` - `FilterButton`의 `state:`를 `.expanded(_:)`로 옮겼는지
 - [ ] `.topNavigation(` 남은 곳 확인
 - [ ] `grep -rn "ignoresEdgeInsets"` - `contentPadding`으로 옮겼는지
 - [ ] `grep -rn "ModalNavigation" -A3 | grep "\.display"` - 대응 없는 variant
