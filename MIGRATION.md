@@ -448,6 +448,13 @@ For the removal of `variant(_:)`, see [3.3](#33-segmentedcontrol-outlined-varian
 
 #### Accordion
 
+| 3.x | 4.0 |
+|---|---|
+| `.fillWidth(false)` | `.variant(.inset)` (default) |
+| `.fillWidth(true)` | `.variant(.full)` |
+
+Renamed to match ListCell. `inset` extends only the interaction background by 12 on each side with a corner radius of 12; `full` gives the accordion its own horizontal padding of 20. These are the same values 3.x used, so renaming alone leaves the screen unchanged.
+
 The no-argument `trailingContent` overload is gone; only the one taking the expanded flag (`Bool`) remains.
 
 ```swift

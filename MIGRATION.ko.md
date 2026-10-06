@@ -448,6 +448,13 @@ IconButton(variant: .normal(size: .large), icon: .search)
 
 #### Accordion
 
+| 3.x | 4.0 |
+|---|---|
+| `.fillWidth(false)` | `.variant(.inset)` (기본값) |
+| `.fillWidth(true)` | `.variant(.full)` |
+
+ListCell과 같은 이름으로 맞췄습니다. `inset`은 인터랙션 배경만 좌우 12 확장하고 모서리 12, `full`은 아코디언이 좌우 여백 20을 직접 갖습니다. 3.x 값 그대로라 이름만 바꾸면 화면은 달라지지 않습니다.
+
 `trailingContent`에서 인자 없는 오버로드가 빠지고 펼침 여부(`Bool`)를 받는 오버로드만 남았습니다.
 
 ```swift
