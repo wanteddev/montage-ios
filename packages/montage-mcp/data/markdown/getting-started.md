@@ -24,7 +24,7 @@ Or add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/wanteddev/montage-ios.git", from: "3.0.0")
+    .package(url: "https://github.com/wanteddev/montage-ios.git", from: "4.0.0")
 ]
 ```
 
