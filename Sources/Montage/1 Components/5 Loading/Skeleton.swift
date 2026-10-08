@@ -28,7 +28,7 @@ import SwiftUI
 /// contentView
 ///     .skeleton(isPresented: isLoading) {
 ///         Skeleton.SkeletonView(.rectangle(cornerRadius: 8))
-///             .color(.semantic(.fillNormal))
+///             .color(.semantic(.surfaceNeutralSecondary))
 ///             .opacity(0.7)
 ///     }
 /// ```
@@ -73,24 +73,6 @@ public enum Skeleton {
         }
     }
     
-    /// 스켈레톤 요소의 길이 비율을 지정하는 열거형입니다.
-    ///
-    /// 텍스트 스켈레톤에서 각 라인의 길이를 상대적으로 지정하는 데 사용됩니다.
-    ///
-    /// ```swift
-    /// Skeleton.Kind.text(lengths: [._100, ._75, ._50], lineNumber: 3)
-    /// ```
-    public enum Length: CGFloat {
-        /// 100% 길이 (전체 너비)
-        case _100 = 1
-        /// 75% 길이
-        case _75 = 0.75
-        /// 50% 길이
-        case _50 = 0.5
-        /// 25% 길이
-        case _25 = 0.25
-    }
-    
     /// 스켈레톤 요소의 종류를 지정하는 구조체입니다.
     ///
     /// 다양한 콘텐츠 유형에 맞게 적절한 스켈레톤 형태를 선택할 수 있습니다.
@@ -114,11 +96,12 @@ public enum Skeleton {
 
         let category: Category
         let alignment: Align
-        let lengths: [Length]
         let cornerRadius: CGFloat
         let lineHeight: CGFloat
         let lineSpacing: CGFloat
         let lineNumber: Int
+        /// 텍스트 스켈레톤일 때 Dynamic Type 스케일 기준 텍스트 스타일. 비-텍스트는 nil.
+        let textStyle: Font.TextStyle?
 
         /// 텍스트 종류인지 여부
         public var isText: Bool { category == .text }
@@ -147,39 +130,11 @@ public enum Skeleton {
             Kind(
                 category: .text,
                 alignment: alignment,
-                lengths: [],
                 cornerRadius: cornerRadius,
                 lineHeight: variant.lineHeight,
                 lineSpacing: variant.lineSpacing,
-                lineNumber: 0
-            )
-        }
-
-        // MARK: - Deprecated API
-
-        /// 텍스트 줄을 나타내는 스켈레톤을 생성합니다.
-        ///
-        /// - Parameters:
-        ///   - alignment: 텍스트 정렬 방식
-        ///   - lengths: 각 줄의 상대적 길이
-        ///   - cornerRadius: 모서리 둥글기
-        ///   - lineNumber: 텍스트 줄 수. `0`이면 자동 계산
-        /// - Returns: 텍스트 스켈레톤 Kind
-        @available(*, deprecated, message: "text(variant:alignment:cornerRadius:)를 사용하세요")
-        public static func text(
-            alignment: Align = .leading,
-            lengths: [Length] = [],
-            cornerRadius: CGFloat = 3,
-            lineNumber: Int = 0
-        ) -> Kind {
-            Kind(
-                category: .text,
-                alignment: alignment,
-                lengths: lengths,
-                cornerRadius: cornerRadius,
-                lineHeight: SkeletonView.textReferenceLineHeight,
-                lineSpacing: SkeletonView.textLineSpacing,
-                lineNumber: lineNumber
+                lineNumber: 0,
+                textStyle: variant.textStyle
             )
         }
 
@@ -191,11 +146,11 @@ public enum Skeleton {
             Kind(
                 category: .rectangle,
                 alignment: .leading,
-                lengths: [],
                 cornerRadius: cornerRadius,
                 lineHeight: 0,
                 lineSpacing: 0,
-                lineNumber: 0
+                lineNumber: 0,
+                textStyle: nil
             )
         }
 
@@ -204,11 +159,11 @@ public enum Skeleton {
             Kind(
                 category: .circle,
                 alignment: .leading,
-                lengths: [],
                 cornerRadius: 0,
                 lineHeight: 0,
                 lineSpacing: 0,
-                lineNumber: 0
+                lineNumber: 0,
+                textStyle: nil
             )
         }
     }
@@ -221,7 +176,7 @@ public enum Skeleton {
     ///
     /// 텍스트 스켈레톤의 자동 계산:
     /// - `variant.lineHeight`를 기준으로 뷰 높이를 나누어 최적의 줄 수를 계산합니다.
-    /// - 첫 줄 100%, 중간 줄 65~90%, 마지막 줄 40~55% 비율로 자동 생성합니다.
+    /// - 첫 줄 100%, 중간 줄 65\~90%, 마지막 줄 40\~55% 비율로 자동 생성합니다.
     ///
     /// ```swift
     /// // variant 기반 자동 모드
@@ -240,13 +195,20 @@ public enum Skeleton {
 
         // MARK: - Initializer
         private let kind: Kind
-        
+        /// 텍스트 스켈레톤의 줄 높이를 Dynamic Type에 맞춰 스케일한 값. 폰트와 동일한 곡선
+        /// (`variant.textStyle`)을 따르므로 큰 글자에서도 실제 텍스트 높이와 일치한다.
+        @ScaledMetric private var scaledLineHeight: CGFloat
+        @ScaledMetric private var scaledLineSpacing: CGFloat
+
         /// 스켈레톤 뷰를 초기화합니다.
         ///
         /// - Parameters:
         ///   - kind: 표시할 스켈레톤의 종류
         public init(_ kind: Kind) {
             self.kind = kind
+            let style = kind.textStyle ?? .body
+            _scaledLineHeight = ScaledMetric(wrappedValue: kind.lineHeight, relativeTo: style)
+            _scaledLineSpacing = ScaledMetric(wrappedValue: kind.lineSpacing, relativeTo: style)
         }
         
         // MARK: - Body
@@ -257,18 +219,15 @@ public enum Skeleton {
                 switch kind.category {
                 case .text:
                     GeometryReader { proxy in
-                        let spacing = kind.lineSpacing
+                        let spacing = scaledLineSpacing
                         let effectiveLineCount = kind.lineNumber > 0
                             ? kind.lineNumber
-                            : max(1, Int(round(proxy.size.height / kind.lineHeight)))
-                        let barHeight = max(0, kind.lineHeight - spacing)
+                            : max(1, Int(round(proxy.size.height / scaledLineHeight)))
+                        let barHeight = max(0, scaledLineHeight - spacing)
 
                         VStack(alignment: kind.alignment.horizontalAlignment, spacing: 0) {
                             ForEach(0 ..< effectiveLineCount, id: \.self) { index in
-                                let ratio = kind.lengths[safe: index]?.rawValue
-                                    ?? Self.autoLengthRatio(
-                                        for: index, in: effectiveLineCount
-                                    )
+                                let ratio = Self.autoLengthRatio(for: index, in: effectiveLineCount)
                                 RoundedRectangle(cornerRadius: kind.cornerRadius)
                                     .frame(
                                         width: proxy.size.width * ratio,
@@ -306,7 +265,7 @@ public enum Skeleton {
 
         // MARK: - Modifiers
 
-        private var color: SwiftUI.Color = .semantic(.fillNormal)
+        private var color: SwiftUI.Color = .semantic(.surfaceNeutralSecondary)
         private var opacity: CGFloat = 1
         
         /// 스켈레톤 뷰의 색상을 설정합니다.
@@ -349,7 +308,7 @@ public enum Skeleton {
         ) {
             self.isPresented = isPresented
             self.kind = kind
-            self.color = color ?? .semantic(.fillNormal)
+            self.color = color ?? .semantic(.surfaceNeutralSecondary)
             self.opacity = opacity ?? 1
             self.size = (size?.isNegativeOrNonfinite ?? false) ? nil : size
         }
@@ -387,7 +346,7 @@ public enum Skeleton {
             self.skeletonView = skeletonView
         }
         
-        @State private var animationOpacity: CGFloat = 1
+        @State private var animationOpacity: Double = 1
         
         func body(content: Content) -> some View {
             ZStack {
@@ -398,7 +357,7 @@ public enum Skeleton {
                         .onAppear {
                             withAnimation(.timingCurve(0.42, 0, 0.58, 1, duration: 1)
                                 .repeatForever(autoreverses: true)) {
-                                    animationOpacity = 0.5
+                                    animationOpacity = .opacity52
                                 }
                         }
                         .onDisappear {
@@ -431,7 +390,7 @@ extension View {
     /// - Parameters:
     ///   - isPresented: 스켈레톤 표시 여부를 제어하는 불리언 값
     ///   - kind: 스켈레톤 종류 (텍스트, 사각형, 원형 등)
-    ///   - color: 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.fillNormal) 사용)
+    ///   - color: 스켈레톤 색상, 생략하면 기본값으로 `nil` 적용 (.semantic(.surfaceNeutralSecondary) 사용)
     ///   - opacity: 스켈레톤 투명도, 생략하면 기본값으로 `nil` 적용
     ///   - size: 스켈레톤 크기 (지정하지 않으면 원본 뷰 크기를 사용), 생략하면 기본값으로 `nil` 적용
     /// - Returns: 스켈레톤 기능이 적용된 뷰

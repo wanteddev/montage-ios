@@ -56,19 +56,18 @@ public struct PlayBadge: View {
         Image.icon(.play)
             .resizable()
             .renderingMode(.template)
-            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite))
+            .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity88))
             .frame(width: playIconSize.width, height: playIconSize.height)
             .background {
                 Group {
                     if alternative {
                         Circle()
-                            .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(0.61))
+                            .fill(SwiftUI.Color.atomic(.coolNeutral30).opacity(.opacity61))
                     } else {
-                        ZStack {
-                            Circle()
-                                .fill(.ultraThinMaterial)
-                                .clipShape(Circle())
-                        }
+                        MaterialBackground(
+                            in: Circle(),
+                            tint: .atomic(.coolNeutral40).opacity(.opacity28)
+                        )
                     }
                 }
                 .frame(width: circleDiameter, height: circleDiameter)

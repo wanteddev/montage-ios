@@ -15,6 +15,8 @@ Wanted Lab iOS 디자인 시스템
 
 [https://montage.wanted.co.kr](https://montage.wanted.co.kr)에서 문서를 확인할 수 있습니다.
 
+메이저 버전을 올릴 때는 [마이그레이션 가이드](./MIGRATION.ko.md)를 참고해 주세요.
+
 ## 설치
 
 ### Swift Package Manager
@@ -29,7 +31,7 @@ https://github.com/wanteddev/montage-ios.git
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/wanteddev/montage-ios.git", from: "3.0.0")
+    .package(url: "https://github.com/wanteddev/montage-ios.git", from: "4.0.0")
 ]
 ```
 

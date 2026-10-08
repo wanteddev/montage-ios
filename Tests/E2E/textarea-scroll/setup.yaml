@@ -10,9 +10,9 @@ appId: com.wantedlab.Blueprint
     text: "TextArea"
     index: 1
 - extendedWaitUntil:
-    visible: "Resize :"
+    visible: "Options"
     timeout: 5000
-- tapOn: "Normal"
+# resize는 SegmentedControl이라 세 값이 함께 보인다. 메뉴를 여는 탭 없이 바로 선택한다.
 - tapOn: "Fixed"
 - tapOn: "inject"
 - extendedWaitUntil:

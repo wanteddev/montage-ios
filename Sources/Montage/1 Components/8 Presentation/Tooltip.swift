@@ -219,9 +219,9 @@ public enum Tooltip {
 }
 
 struct TooltipView: View {
-    private let lowerLayerColor: SwiftUI.Color = .semantic(.primaryNormal).opacity(0.05)
-    private let upperLayerColor: SwiftUI.Color = .semantic(.inverseBackground).opacity(0.74)
-    private let contentColor: SwiftUI.Color = .semantic(.inverseLabel)
+    private let lowerLayerColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary).opacity(.opacity5)
+    private let upperLayerColor: SwiftUI.Color = .semantic(.surfaceNeutralInverse).opacity(.opacity74)
+    private let contentColor: SwiftUI.Color = .semantic(.foregroundNeutralInverse)
     
     // MARK: - Initializer
     
@@ -263,24 +263,18 @@ struct TooltipView: View {
             .padding(arrowPadding)
             .onGeometryChange(for: CGSize.self, of: { $0.size }, action: { tooltipSize = $0 })
             .background {
-                Rectangle()
-                    .fill(lowerLayerColor)
-                    .overlay(
-                        Rectangle()
-                            .fill(upperLayerColor)
-                    )
-                    .background(.ultraThinMaterial)
-                    .clipShape(
-                        TooltipBubbleShape(
-                            cornerRadius: cornerRadius,
-                            position: position,
-                            arrowWidth: arrowWidth,
-                            arrowHeight: arrowHeight,
-                            arrowEdgeHPadding: arrowEdgeHPadding,
-                            arrowTipRadius: size == .small ? 1.5 : 2,
-                            arrowBaseRadius: 4
-                        )
-                    )
+                MaterialBackground(
+                    in: TooltipBubbleShape(
+                        cornerRadius: cornerRadius,
+                        position: position,
+                        arrowWidth: arrowWidth,
+                        arrowHeight: arrowHeight,
+                        arrowEdgeHPadding: arrowEdgeHPadding,
+                        arrowTipRadius: size == .small ? 1.5 : 2,
+                        arrowBaseRadius: 4
+                    ),
+                    tint: [lowerLayerColor, upperLayerColor]
+                )
             }
             .frame(maxWidth: 280)
             .fixedSize(horizontal: true, vertical: false)

@@ -15,6 +15,8 @@ Wanted Lab Design System for iOS
 
 Visit [https://montage.wanted.co.kr](https://montage.wanted.co.kr) to view the documentation.
 
+When upgrading across a major version, see the [Migration Guide](./MIGRATION.md).
+
 ## Getting Started
 
 Please refer to the [Getting Started Guide](./GETTINGSTARTED.md) for development environment setup and local documentation hosting.

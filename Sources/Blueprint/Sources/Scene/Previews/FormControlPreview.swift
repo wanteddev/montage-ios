@@ -1,0 +1,123 @@
+//
+//  FormControlPreview.swift
+//  Blueprint
+//
+//  Created by 김삼열 on 6/30/26.
+//  Copyright © 2026 WantedLab Inc. All rights reserved.
+//
+
+import SwiftUI
+import Montage
+
+struct FormControlPreview: View {
+    @State private var text: String = ""
+    @State private var sizeIndex = 0
+    @State private var statusIndex = 0
+    @State private var placementIndex = 0
+    @State private var label: String = "이메일"
+    @State private var required: Bool = true
+    @State private var message: String = "회사 이메일을 입력해 주세요."
+    @State private var showAccessory: Bool = false
+    @State private var autoLabelWidth: Bool = true
+    @State private var labelWidth: CGFloat = 64
+    @State private var inputIndex = 0
+    @State private var selectItems: [Select.Item] = [
+        Select.Item(text: "옵션 1"),
+        Select.Item(text: "옵션 2"),
+        Select.Item(text: "옵션 3"),
+    ]
+
+    private let sizeLabels = ["large", "medium"]
+    private let placementLabels = ["top", "leading"]
+    private let inputLabels = ["TextField", "TextArea", "Select"]
+
+    private let limit = 100
+
+    // positive는 TextField에서만 지원하므로, 입력 타입에 따라 status 옵션을 다르게 노출한다.
+    private var statusLabels: [String] {
+        inputIndex == 0 ? ["normal", "positive", "negative"] : ["normal", "negative"]
+    }
+
+    private var size: FormControl.Size {
+        sizeIndex == 0 ? .large : .medium
+    }
+
+    private var status: FormControl.Status {
+        // 인덱스가 아니라 선택된 라벨 이름으로 매핑한다(입력 타입에 따라 옵션 구성이 달라지므로).
+        switch statusIndex < statusLabels.count ? statusLabels[statusIndex] : "normal" {
+        case "positive": return .positive
+        case "negative": return .negative
+        default: return .normal
+        }
+    }
+
+    private var placement: FormControl.LabelPlacement {
+        placementIndex == 0 ? .top : .leading
+    }
+
+    var body: some View {
+        PreviewLayout {
+            configuredControl
+        } options: {
+            SegmentedIndexRow("input", index: $inputIndex, labels: inputLabels)
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizeLabels)
+            SegmentedIndexRow("status", index: $statusIndex, labels: statusLabels)
+            TextFieldOptionRow("label", text: $label)
+            SegmentedIndexRow("placement", index: $placementIndex, labels: placementLabels)
+            // labelWidth는 leading 배치에서만 의미가 있으므로 그때만 노출한다.
+            if placement == .leading {
+                ToggleOptionRow("자동 labelWidth", isOn: $autoLabelWidth)
+                SliderOptionRow("labelWidth", value: $labelWidth, in: 40...160, step: 4, format: { "\(Int($0))" })
+                    .if(!autoLabelWidth)
+            }
+            ToggleOptionRow("required", isOn: $required)
+            TextFieldOptionRow("message", text: $message)
+            ToggleOptionRow("accessory", isOn: $showAccessory)
+        }
+        // 입력 타입이 바뀌면 status 선택을 normal로 초기화한다(positive는 TextField 전용이라 인덱스 어긋남 방지).
+        .onChange(of: inputIndex) { _ in
+            statusIndex = 0
+        }
+    }
+
+    /// 옵션 상태를 반영해 구성한 FormControl. `labelWidth`는 leading 배치 + 토글 ON일 때만 적용한다.
+    private var configuredControl: some View {
+        // FormControl에만 size·status를 설정하면 내부 입력 컴포넌트까지 자동으로 전파된다.
+        // (입력 타입이 런타임에 바뀌는 화면이라 입력별 모디파이어 대신 FormControl을 직접 조합한다)
+        var control = FormControl {
+            switch inputIndex {
+            case 1:
+                TextArea(text: $text)
+                    .maxLength(showAccessory ? limit : nil)
+                    .placeholder("내용을 입력하세요")
+            case 2:
+                Select(variant: .single(), items: $selectItems)
+                    .placeholder("선택하세요")
+            default:
+                Montage.TextField(text: $text)
+                    .maxLength(showAccessory ? limit : nil)
+                    .placeholder("이메일을 입력하세요")
+            }
+        }
+        .size(size)
+        .status(status)
+        .labelPlacement(placement)
+        .label(label, required: required)
+        .message(message)
+
+        if placement == .leading && !autoLabelWidth {
+            control = control.labelWidth(labelWidth)
+        }
+        if showAccessory {
+            control = control.accessory {
+                Text("\(text.count)/\(limit)")
+                    .typography(variant: .caption1, weight: .regular, semantic: .foregroundNeutralTertiary)
+            }
+        }
+        return control.previewDimensioned()
+    }
+}
+
+#Preview {
+    FormControlPreview()
+}

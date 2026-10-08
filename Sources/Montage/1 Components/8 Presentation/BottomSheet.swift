@@ -9,41 +9,45 @@ import SwiftUI
 
 /// 화면 하단에서 위로 올라오는 바텀 시트 모달 컴포넌트입니다.
 ///
-/// SwiftUI의 .sheet 수정자와 함께 사용하여 다양한 크기와 동작을 지원하는 바텀 시트를 구현합니다.
-/// 내비게이션 바, 액션 영역, 핸들 등의 요소를 설정할 수 있습니다.
+/// 다양한 크기와 동작을 지원하며, 내비게이션 바·액션 영역·핸들을 설정할 수 있습니다.
+///
+/// 띄우는 방법은 두 가지입니다. 대개는
+/// ``SwiftUI/View/bottomSheet(isPresented:isFullScreenCover:needHandle:resize:contentVerticalPadding:contentHorizontalPadding:navigation:actionArea:onDismiss:_:)``
+/// 수정자를 씁니다. 표시 애니메이션과 딤 처리까지 함께 해 줍니다.
 ///
 /// ```swift
 /// @State private var showBottomSheet = false
 ///
-/// Button("바텀 시트 열기") {
-///     showBottomSheet = true
-/// }
-/// .sheet(isPresented: $showBottomSheet) {
-///     BottomSheet {
-///         VStack(spacing: 16) {
-///             Text("바텀 시트 내용")
-///             Button("닫기") {
-///                 showBottomSheet = false
-///             }
-///         }
-///     }
-///     .resize(.flexible)
-///     .modalNavigation {
-///         ModalNavigation()
-///             .title("제목")
-///     }
-/// }
-/// ```
-///
-/// 모디파이어를 사용하면 더 간편하게 구현할 수 있습니다:
-/// ```swift
 /// YourView()
 ///     .bottomSheet(
 ///         isPresented: $showBottomSheet,
-///         resize: .hug
-///     ) {
+///         resize: .flexible,
+///         navigation: {
+///             ModalNavigation()
+///                 .title("제목")
+///         },
+///         actionArea: {
+///             ActionArea(variant: .strong(main: .init(text: "확인", action: confirm)))
+///         },
+///         {
+///             Text("바텀 시트 내용")
+///         }
+///     )
+/// ```
+///
+/// `presentationDetents`·`interactiveDismissDisabled`처럼 SwiftUI 표준 시트 옵션을 함께
+/// 얹어야 할 때는 이 타입을 직접 만들어 `.sheet` 안에 넣습니다. 수정자는 표시까지 맡으므로
+/// 그 옵션을 끼워 넣을 자리가 없습니다.
+///
+/// ```swift
+/// .sheet(isPresented: $showBottomSheet) {
+///     BottomSheet {
 ///         Text("바텀 시트 내용")
 ///     }
+///     .needHandle(false)
+///     .presentationDetents([.large])
+///     .interactiveDismissDisabled()
+/// }
 /// ```
 public struct BottomSheet: View {
     // MARK: - Types
@@ -102,17 +106,16 @@ public struct BottomSheet: View {
                         SwiftUI.Color.clear
                             .frame(height: 12)
                         RoundedRectangle(cornerRadius: 1000)
-                            .foregroundStyle(SwiftUI.Color.semantic(.fillStrong))
+                            .foregroundStyle(SwiftUI.Color.semantic(.surfaceNeutralStrong))
                             .frame(width: 40, height: 5)
                     }
                 }
-                if bottomSheetContentHeight > bottomSheetMaxHeight ||
-                    (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2) {
+                if isContentScrollable {
                     ZStack(alignment: .top) {
                         ScrollView(scrollStatus: $scrollStatus) {
                             VStack(spacing: 0) {
                                 SwiftUI.Color.clear
-                                    .frame(height: navigationHeight)
+                                    .frame(height: reservedNavigationHeight)
                                 HStack(spacing: 0) {
                                     Spacer(minLength: 0)
                                     contentContainer()
@@ -124,33 +127,61 @@ public struct BottomSheet: View {
                         navigationView
                     }
                 } else {
-                    VStack(spacing: 0) {
-                        navigationView
-                        contentContainer()
-                        if bottomSheetContentHeight <= bottomSheetMaxHeight {
-                            Spacer(minLength: 0)
+                    ZStack(alignment: .top) {
+                        VStack(spacing: 0) {
+                            SwiftUI.Color.clear
+                                .frame(height: reservedNavigationHeight)
+                            contentContainer()
+                            if bottomSheetContentHeight <= bottomSheetMaxHeight {
+                                Spacer(minLength: 0)
+                            }
                         }
+
+                        navigationView
                     }
                 }
                 
-                if let actionAreaModel {
-                    ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(scrollStatus.scrolledToMax)
-                        .caption(actionAreaModel.caption)
-                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
+                if let actionArea {
+                    actionArea()
+                        .environment(\.actionAreaScrollReachedEnd, contentScrollReachedEnd)
+                        .padding(.top, Self.actionAreaVerticalPadding)
+                        .padding(.bottom, Self.actionAreaVerticalPadding)
                         .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: {
                             actionAreaHeight = $0
                         })
                 }
             }
         }
+        .environment(\.modalKind, modalKind)
         .opacity(isContentMeasured ? 1 : 0)
         .background(
-            SwiftUI.Color.semantic(.backgroundNormal)
-                .opacity(0.8)
+            SwiftUI.Color.semantic(.backgroundNeutralPrimary)
+                .opacity(.opacity88)
         )
         .presentationDetents(detents)
         .presentationDragIndicator(.hidden)
+        .modifying { originalView in
+            Group {
+                if #available(iOS 16.4, *) {
+                    // presentationCornerRadius는 시트 네 모서리에 같은 값을 적용해서, 아래쪽이
+                    // 기기 화면 모서리(약 55)보다 작은 곡률로 깎이며 그 틈으로 딤이 비친다.
+                    // 그래서 배경을 직접 그려 위쪽만 둥글게 한다. 아래쪽은 직사각으로 두어도
+                    // 화면 밖으로 이어지므로 기기 모서리 마스크에 맞춰 잘린다.
+                    //
+                    // 바탕은 시스템 시트와 같은 색으로 두고, 그 위에 덮는 88%는 위의
+                    // `background(_:)`가 그대로 담당한다(WRP-2410에서 디자이너가 정한 값).
+                    originalView.presentationBackground {
+                        UnevenRoundedRectangle(
+                            topLeadingRadius: Self.cornerRadius,
+                            topTrailingRadius: Self.cornerRadius
+                        )
+                        .fill(SwiftUI.Color(uiColor: .systemBackground))
+                    }
+                } else {
+                    originalView
+                }
+            }
+        }
         .onChange(of: contentHeight) { newValue in
             if newValue > 0 { isContentMeasured = true }
         }
@@ -161,8 +192,22 @@ public struct BottomSheet: View {
     private var needHandle = true
     private var resize: Resize = .hug
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionArea.Model?
-    private var ignoresEdgeInsets = false
+    private var actionArea: (() -> ActionArea)?
+    private var contentVerticalPadding: ModalContentPadding.Vertical = .none
+    private var contentHorizontalPadding: ModalContentPadding.Horizontal = .default
+
+    /// 이 시트가 어떤 모달로 표시되는지.
+    ///
+    /// 같은 타입이 `sheet`과 `fullScreenCover` 양쪽에 쓰이는데 하위 컴포넌트의 여백은
+    /// 둘이 다르다. 표시 방식을 아는 쪽(수정자)이 정해서 내려 주고, 직접 만들어
+    /// `.sheet`에 넣는 경우를 위해 기본값은 `.bottomSheet`로 둔다.
+    private var modalKind: ModalKind = .bottomSheet
+
+    func modalKind(_ modalKind: ModalKind) -> Self {
+        var zelf = self
+        zelf.modalKind = modalKind
+        return zelf
+    }
     
     /// 바텀 시트 상단의 핸들 표시 여부를 설정합니다.
     ///
@@ -196,26 +241,61 @@ public struct BottomSheet: View {
     
     /// 바텀 시트 하단에 액션 영역을 설정합니다.
     ///
-    /// - Parameter actionAreaModel: 액션 영역 모델
+    /// - Parameter actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
     /// - Returns: 수정된 바텀 시트 뷰
-    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
+    public func modalActionArea(_ actionArea: (() -> ActionArea)?) -> Self {
         var zelf = self
-        zelf.actionAreaModel = actionAreaModel
+        zelf.actionArea = actionArea
         return zelf
     }
     
+    /// 콘텐츠 영역의 여백을 설정합니다.
+    ///
+    /// 좌우 28, 상하 24를 각각 켜고 끕니다. 기본값은 좌우만 적용하는 구성입니다.
+    ///
+    /// - Parameters:
+    ///   - vertical: 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용
+    ///   - horizontal: 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용
+    /// - Returns: 수정된 바텀 시트 뷰
+    public func contentPadding(
+        vertical: ModalContentPadding.Vertical = .none,
+        horizontal: ModalContentPadding.Horizontal = .default
+    ) -> Self {
+        var zelf = self
+        zelf.contentVerticalPadding = vertical
+        zelf.contentHorizontalPadding = horizontal
+        return zelf
+    }
+
     /// 컨텐츠의 기본 여백을 무시할지 설정합니다.
     ///
     /// - Parameter ignoresEdgeInsets: 여백 무시 여부
     /// - Returns: 수정된 바텀 시트 뷰
+    @available(
+        *, deprecated,
+        message: "contentPadding(vertical:horizontal:)을 쓰세요. ignoresEdgeInsets(true)는 contentPadding(vertical: .none, horizontal: .none)과 같습니다."
+    )
     public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
-        var zelf = self
-        zelf.ignoresEdgeInsets = ignoresEdgeInsets
-        return zelf
+        contentPadding(
+            vertical: .none,
+            horizontal: ignoresEdgeInsets ? .none : .default
+        )
     }
     
     // MARK: - Private
     
+    /// 콘텐츠가 시트 높이를 넘겨 스크롤이 생기는지 여부.
+    private var isContentScrollable: Bool {
+        bottomSheetContentHeight > bottomSheetMaxHeight ||
+            (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2)
+    }
+
+    /// 스크롤이 없는 시트는 가려진 콘텐츠도 없으므로 바닥에 닿은 것으로 본다.
+    /// (`nil`을 내리면 "신호 없음"이 되어 ``ActionArea``가 그라데이션을 그린다)
+    private var contentScrollReachedEnd: Bool {
+        isContentScrollable ? scrollStatus.reachedEnd : true
+    }
+
     @ViewBuilder
     private var navigationView: some View {
         Group {
@@ -239,26 +319,39 @@ public struct BottomSheet: View {
             )
     }
     
+    /// 바텀 시트 위쪽 모서리의 반경.
+    ///
+    /// 아래쪽에는 적용하지 않는다. 시트 아래쪽은 화면 밖으로 이어져 기기 화면 모서리에
+    /// 맞춰 잘리므로, 여기에 값을 주면 오히려 기기 곡률과 어긋난다.
+    private static let cornerRadius: CGFloat = 32
+
+    /// ``ActionArea`` 상하 여백.
+    private static let actionAreaVerticalPadding: CGFloat = 20
+
     private var contentEdgeInsets: EdgeInsets {
-        ignoresEdgeInsets
-        ? .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-        : .init(
-            top: navigation == nil ? 20 : 0,
-            leading: 20,
-            bottom: actionAreaModel == nil ? 0 : 20,
-            trailing: 20
+        let horizontal = contentHorizontalPadding.applies ? modalKind.contentHorizontalPadding : 0
+        let vertical = modalKind.contentVerticalPadding
+        return .init(
+            top: contentVerticalPadding.appliesTop ? vertical : 0,
+            leading: horizontal,
+            bottom: contentVerticalPadding.appliesBottom ? vertical : 0,
+            trailing: horizontal
         )
     }
     
+    /// detent가 가질 수 있는 최대 높이입니다.
+    ///
+    /// 기준값은 키 윈도우에서 세이프 에어리어 상하를 제외한 높이라, 시트가 화면 최상단까지
+    /// 올라가지는 않는다. 상태 표시줄·홈 인디케이터 영역만큼 아래에서 시작한다.
     private var maxDetentHeight: CGFloat {
+        let safeAreaHeight = UIApplication.keyWindow?.safeAreaSize.height ?? 0
         if #available(iOS 26, *) {
-            // iOS 26 부터는 stacked sheet로 자동 변경되지 않으므로 보정값 제거
-            // 단, 스크린 높이 - 10.2 보다 커지면 자동으로 불투명해지고 edge가 스크린 끝에 붙음
-            (UIApplication.keyWindow?.safeAreaSize.height ?? 0)
+            // iOS 26부터는 최대 높이에 도달해도 stacked sheet로 자동 전환되지 않으므로 보정하지 않는다.
+            return safeAreaHeight
         } else {
-            // 최대 높이에 도달할 경우 자동으로 stacked sheet로 변경되는 것을 막기 위한 보정값 10.2 추가
+            // 최대 높이에 도달하면 stacked sheet로 자동 전환되므로, 10.2pt 낮춰 전환을 막는다.
             // https://wantedx.slack.com/archives/C04TTGN5F1C/p1761040362320469?thread_ts=1761035208.156399&cid=C04TTGN5F1C
-            (UIApplication.keyWindow?.safeAreaSize.height ?? 0) - 10.2
+            return safeAreaHeight - 10.2
         }
     }
     
@@ -276,7 +369,19 @@ public struct BottomSheet: View {
     }
     
     private var bottomSheetContentHeight: CGFloat {
-        (needHandle && navigation == nil ? 12 : 0) + navigationHeight + contentHeight + actionAreaHeight
+        (needHandle && navigation == nil ? 12 : 0) + navigationAndContentHeight + actionAreaHeight
+    }
+
+    /// 내비게이션과 콘텐츠가 차지하는 높이. `floating`은 콘텐츠와 겹치므로 둘 중 큰 쪽이다.
+    private var navigationAndContentHeight: CGFloat {
+        navigation?().overlaysContent == true
+            ? max(navigationHeight, contentHeight)
+            : navigationHeight + contentHeight
+    }
+
+    /// 콘텐츠 위에 비워 둘 내비게이션 높이. `floating`은 콘텐츠 위에 떠 있으므로 0이다.
+    private var reservedNavigationHeight: CGFloat {
+        navigation?().overlaysContent == true ? 0 : navigationHeight
     }
     
     private var detents: Set<PresentationDetent> {
@@ -300,19 +405,24 @@ struct BottomSheetModifier: ViewModifier {
     private let isFullScreenCover: Bool
     private let needHandle: Bool
     private let resize: BottomSheet.Resize
-    private let ignoresEdgeInsets: Bool
-    private let actionAreaModel: ActionArea.Model?
-    private let navigation: (() -> ModalNavigation)?
+    private let contentVerticalPadding: ModalContentPadding.Vertical
+    private let contentHorizontalPadding: ModalContentPadding.Horizontal
+    // 클로저를 init에서 바로 실행해 값으로 들고 있는다. 클로저로 들고 있으면 클로저가 읽는 상태
+    // (내비게이션 variant·제목 등)만 바뀌었을 때 SwiftUI가 modifier를 같은 값으로 보고 모달 내용을
+    // 다시 만들지 않아, 바뀐 값이 모달에 반영되지 않는다.
+    private let actionArea: ActionArea?
+    private let navigation: ModalNavigation?
     private let onDismiss: (() -> Void)?
-    private let bottomSheetContent: () -> AnyView
-    
+    private let bottomSheetContent: AnyView
+
     init<V: View>(
         isPresented: Binding<Bool>,
         isFullScreenCover: Bool = false,
         needHandle: Bool = true,
         resize: BottomSheet.Resize = .hug,
-        ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
+        contentVerticalPadding: ModalContentPadding.Vertical = .none,
+        contentHorizontalPadding: ModalContentPadding.Horizontal = .default,
+        actionArea: (() -> ActionArea)? = nil,
         navigation: (() -> ModalNavigation)? = nil,
         onDismiss: (() -> Void)? = nil,
         @ViewBuilder _ content: @escaping () -> V
@@ -321,11 +431,12 @@ struct BottomSheetModifier: ViewModifier {
         self.isFullScreenCover = isFullScreenCover
         self.needHandle = needHandle
         self.resize = resize
-        self.ignoresEdgeInsets = ignoresEdgeInsets
-        self.actionAreaModel = actionAreaModel
-        self.navigation = navigation
+        self.contentVerticalPadding = contentVerticalPadding
+        self.contentHorizontalPadding = contentHorizontalPadding
+        self.actionArea = actionArea?()
+        self.navigation = navigation?()
         self.onDismiss = onDismiss
-        bottomSheetContent = { AnyView(content()) }
+        bottomSheetContent = AnyView(content())
     }
     
     func body(content: Content) -> some View {
@@ -337,13 +448,17 @@ struct BottomSheetModifier: ViewModifier {
                         onDismiss: onDismiss
                     ) {
                         BottomSheet {
-                            bottomSheetContent()
+                            bottomSheetContent
                         }
                         .needHandle(false)
                         .resize(.fill)
-                        .ignoresEdgeInsets(ignoresEdgeInsets)
-                        .modalNavigation(navigation)
-                        .modalActionArea(actionAreaModel)
+                        .modalKind(.full)
+                        .contentPadding(
+                            vertical: contentVerticalPadding,
+                            horizontal: contentHorizontalPadding
+                        )
+                        .modalNavigation(navigation.map { navigation in { navigation } })
+                        .modalActionArea(actionArea.map { actionArea in { actionArea } })
                     }
                 } else {
                     $0.sheet(
@@ -351,13 +466,16 @@ struct BottomSheetModifier: ViewModifier {
                         onDismiss: onDismiss
                     ) {
                         BottomSheet {
-                            bottomSheetContent()
+                            bottomSheetContent
                         }
                         .needHandle(needHandle)
                         .resize(resize)
-                        .ignoresEdgeInsets(ignoresEdgeInsets)
-                        .modalNavigation(navigation)
-                        .modalActionArea(actionAreaModel)
+                        .contentPadding(
+                            vertical: contentVerticalPadding,
+                            horizontal: contentHorizontalPadding
+                        )
+                        .modalNavigation(navigation.map { navigation in { navigation } })
+                        .modalActionArea(actionArea.map { actionArea in { actionArea } })
                     }
                 }
             }
@@ -376,9 +494,10 @@ extension View {
     ///   - isFullScreenCover: 전체 화면 모달로 표시할지 여부, 생략하면 기본값으로 `false` 적용
     ///   - needHandle: 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
-    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
+    ///   - contentVerticalPadding: 콘텐츠 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용
+    ///   - contentHorizontalPadding: 콘텐츠 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
     ///   - onDismiss: 모달이 닫힐때 호출될 클로저
     ///   - content: 모달에 표시할 콘텐츠 클로저
     /// - Returns: 바텀 시트 모달이 적용된 뷰
@@ -387,9 +506,10 @@ extension View {
         isFullScreenCover: Bool = false,
         needHandle: Bool = true,
         resize: BottomSheet.Resize = .hug,
-        ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
+        contentVerticalPadding: ModalContentPadding.Vertical = .none,
+        contentHorizontalPadding: ModalContentPadding.Horizontal = .default,
         navigation: (() -> ModalNavigation)? = nil,
+        actionArea: (() -> ActionArea)? = nil,
         onDismiss: (() -> Void)? = nil,
         @ViewBuilder _ content: @escaping () -> V
     ) -> some View {
@@ -399,12 +519,55 @@ extension View {
                 isFullScreenCover: isFullScreenCover,
                 needHandle: needHandle,
                 resize: resize,
-                ignoresEdgeInsets: ignoresEdgeInsets,
-                actionAreaModel: actionAreaModel,
+                contentVerticalPadding: contentVerticalPadding,
+                contentHorizontalPadding: contentHorizontalPadding,
+                actionArea: actionArea,
                 navigation: navigation,
                 onDismiss: onDismiss,
                 content
             )
+        )
+    }
+
+    /// 바텀 시트 모달을 표시합니다.
+    ///
+    /// - Parameters:
+    ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
+    ///   - isFullScreenCover: 전체 화면 모달로 표시할지 여부, 생략하면 기본값으로 `false` 적용
+    ///   - needHandle: 상단 핸들 표시 여부, 생략하면 기본값으로 `true` 적용
+    ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
+    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - onDismiss: 모달이 닫힐때 호출될 클로저
+    ///   - content: 모달에 표시할 콘텐츠 클로저
+    /// - Returns: 바텀 시트 모달이 적용된 뷰
+    @available(
+        *, deprecated,
+        message: "contentHorizontalPadding을 쓰세요. ignoresEdgeInsets: true는 contentHorizontalPadding: .none과 같습니다."
+    )
+    public func bottomSheet<V: View>(
+        isPresented: Binding<Bool>,
+        isFullScreenCover: Bool = false,
+        needHandle: Bool = true,
+        resize: BottomSheet.Resize = .hug,
+        ignoresEdgeInsets: Bool,
+        navigation: (() -> ModalNavigation)? = nil,
+        actionArea: (() -> ActionArea)? = nil,
+        onDismiss: (() -> Void)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
+    ) -> some View {
+        bottomSheet(
+            isPresented: isPresented,
+            isFullScreenCover: isFullScreenCover,
+            needHandle: needHandle,
+            resize: resize,
+            contentVerticalPadding: .none,
+            contentHorizontalPadding: ignoresEdgeInsets ? .none : .default,
+            navigation: navigation,
+            actionArea: actionArea,
+            onDismiss: onDismiss,
+            content
         )
     }
 }

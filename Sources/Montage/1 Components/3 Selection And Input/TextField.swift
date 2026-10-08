@@ -17,47 +17,66 @@ import SwiftUI
 ///
 /// // 기본 텍스트 필드
 /// TextField(text: $inputText)
-///    .heading("이메일")
 ///    .placeholder("이메일을 입력하세요")
 ///
-/// // 아이콘이 있는 필수 입력 필드
+/// // 아이콘과 오류 상태를 가진 필드
 /// TextField(text: $inputText)
-///    .heading("아이디")
-///    .requiredBadge(true)
 ///    .icon(.person)
-///    .status(.negative(description: "올바른 아이디를 입력해주세요"))
+///    .status(.negative)
 ///
 /// // 오른쪽 버튼이 있는 텍스트 필드
 /// TextField(text: $inputText)
 ///    .trailingButton(
 ///        .init(
-///            variant: .primary,
 ///            title: "인증",
 ///            handler: { verifyCode() }
 ///        )
 ///    )
+///
+/// // 사이즈를 지정한 텍스트 필드
+/// TextField(text: $inputText)
+///    .size(.medium)
+///
+/// // 자동수정·맞춤법 검사를 끈 이메일 입력 필드
+/// TextField(text: $inputText)
+///    .placeholder("이메일을 입력하세요")
+///    .autocorrectionDisabled()
+///
+/// // 비활성화
+/// TextField(text: $inputText)
+///    .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 트레일링 버튼만 따로 비활성화하려면 ``TrailingButtonInfo``의 `disable`을 사용합니다.
 public struct TextField: View {
     // MARK: - Types
-    
+
+    /// 텍스트 필드의 사이즈를 정의합니다.
+    ///
+    /// 사이즈에 따라 패딩, 모서리 반경, 최소 높이, 입력 타이포그래피, 아이콘 크기가 함께 결정됩니다.
+    public enum Size {
+        /// 큰 사이즈 (최소 높이 48)
+        case large
+        /// 중간 사이즈 (최소 높이 40)
+        case medium
+    }
+
     /// 텍스트 필드의 상태를 정의합니다.
     public enum Status {
-        /// 기본 상태, 선택적으로 설명 텍스트 포함 가능
-        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
-        case normal(description: String = "")
-        /// 유효한 입력 상태, 선택적으로 설명 텍스트 포함 가능
-        /// - Parameter description: 설명 텍스트, 생략하면 기본값으로 `""` 적용
-        case positive(description: String = "")
-        /// 오류 상태, 선택적으로 오류 설명 텍스트 포함 가능
-        /// - Parameter description: 오류 설명 텍스트, 생략하면 기본값으로 `""` 적용
-        case negative(description: String = "")
+        /// 기본 상태
+        case normal
+        /// 유효한 입력 상태
+        case positive
+        /// 오류 상태
+        case negative
     }
-    
+
     /// 텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.
     ///
-    /// 이 구조체를 사용하여 오른쪽에 표시될 버튼의 스타일, 텍스트, 동작을 정의할 수 있습니다.
+    /// 이 구조체를 사용하여 필드 내부 오른쪽에 표시될 버튼(Outlined 형태)의 텍스트와 동작을 정의할 수 있습니다.
     public struct TrailingButtonInfo {
-        fileprivate let variant: Button.Color
         fileprivate let title: String
         fileprivate let disable: Bool
         fileprivate let handler: (() -> Void)?
@@ -65,18 +84,15 @@ public struct TextField: View {
         /// 트레일링 버튼을 초기화합니다.
         ///
         /// - Parameters:
-        ///   - variant: 버튼의 변형 스타일
         ///   - title: 버튼에 표시할 텍스트
         ///   - disable: 트레일링 버튼만 비활성화할지 여부, 생략하면 기본값으로 `false` 적용
         ///   - handler: 버튼 클릭 시 실행할 핸들러
         /// - Returns: 구성된 트레일링 버튼 인스턴스
         public init(
-            variant: Button.Color,
             title: String,
             disable: Bool = false,
             handler: (() -> Void)? = nil
         ) {
-            self.variant = variant
             self.title = title
             self.disable = disable
             self.handler = handler
@@ -155,56 +171,41 @@ public struct TextField: View {
     }
     
     // MARK: - Modifiers
-    
-    private var status: Status = .normal()
-    private var disable = false
-    private var heading: String? = nil
-    private var requiredBadge = false
+
+    /// 호출부가 ``size(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파값 → 기본값(`.large`) 순으로 결정된다.
+    private var explicitSize: Size?
+    /// 호출부가 ``status(_:)``로 지정한 값. `nil`이면 ``FormControl`` 전파값 → 기본값(`.normal`) 순으로 결정된다.
+    private var explicitStatus: Status?
+    /// ``FormControl`` 래퍼 설정. ``label(_:required:)`` 등이 채우고, ``body``가 감쌀 때 적용한다.
+    private var formControlAttributes = FormControl.Attributes()
     private var placeholder: String? = nil
     private var icon: Icon? = nil
     private var trailingButton: TrailingButtonInfo? = nil
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var suggestions: Binding<[String]> = .constant([])
     private var customBackgroundColor: SwiftUI.Color?
+    private var maxLength: Int?
+    private var onTextChange: ((String) -> Void)?
+    private var autocorrectionDisabled = false
     private var secured = false
+
+    /// 텍스트 필드의 사이즈를 설정합니다.
+    ///
+    /// - Parameter size: 텍스트 필드의 사이즈
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func size(_ size: Size) -> Self {
+        var zelf = self
+        zelf.explicitSize = size
+        return zelf
+    }
+
     /// 텍스트 필드의 상태를 설정합니다.
     ///
     /// - Parameter status: 텍스트 필드의 상태
     /// - Returns: 수정된 텍스트 필드 인스턴스
     public func status(_ status: Status) -> Self {
         var zelf = self
-        zelf.status = status
-        return zelf
-    }
-    
-    /// 텍스트 필드의 활성화 상태를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, `true`이면 비활성화
-    /// - Returns: 수정된 텍스트 필드 인스턴스
-    public func disable(_ disable: Bool) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
-    
-    /// 텍스트 필드 위에 표시할 제목을 설정합니다.
-    ///
-    /// - Parameter heading: 표시할 제목, nil이면 제목 표시 안함
-    /// - Returns: 수정된 텍스트 필드 인스턴스
-    public func heading(_ heading: String?) -> Self {
-        var zelf = self
-        zelf.heading = heading
-        return zelf
-    }
-    
-    /// 제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.
-    ///
-    /// - Parameter requiredBadge: 필수 입력 뱃지 표시 여부
-    /// - Returns: 수정된 텍스트 필드 인스턴스
-    /// - Note: 제목이 설정되지 않은 경우 뱃지가 표시되지 않습니다.
-    public func requiredBadge(_ requiredBadge: Bool) -> Self {
-        var zelf = self
-        zelf.requiredBadge = requiredBadge
+        zelf.explicitStatus = status
         return zelf
     }
     
@@ -258,6 +259,50 @@ public struct TextField: View {
         return zelf
     }
 
+    /// 입력 가능한 최대 글자 수를 설정합니다.
+    ///
+    /// 입력/붙여넣기로 텍스트가 제한을 초과하면 앞에서부터 `limit` 글자만 남기고 잘립니다.
+    /// 글자 수는 문자(grapheme cluster) 단위로 계산됩니다. `nil`이면 길이를 제한하지 않습니다.
+    ///
+    /// - Parameter limit: 최대 글자 수. `nil`이면 제한 없음
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func maxLength(_ limit: Int?) -> Self {
+        var zelf = self
+        // 음수가 들어오면 String.prefix(_:)가 런타임 트랩을 일으키므로 진입점에서 0 이상으로 정규화한다.
+        zelf.maxLength = limit.map { max(0, $0) }
+        return zelf
+    }
+
+    /// 텍스트가 변경될 때마다 호출할 클로저를 설정합니다.
+    ///
+    /// 변경된 전체 텍스트를 전달하므로 글자 수 계산(`text.count`), 유효성 검사 등 다양한 후처리에
+    /// 사용할 수 있습니다. ``maxLength(_:)``으로 잘린 경우 잘린 뒤의 최종 텍스트가 전달됩니다.
+    ///
+    /// - Parameter handler: 변경된 텍스트를 전달받는 클로저
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func onTextChange(_ handler: @escaping (String) -> Void) -> Self {
+        var zelf = self
+        zelf.onTextChange = handler
+        return zelf
+    }
+
+    /// 자동수정과 맞춤법 검사를 비활성화할지 설정합니다.
+    ///
+    /// 이메일·아이디·인증 코드처럼 자동수정이 오히려 방해가 되는 입력에서 사용합니다.
+    /// `true`이면 입력 중 자동수정이 적용되지 않고, 맞춤법 검사 밑줄도 표시되지 않습니다.
+    ///
+    /// 텍스트 필드가 내부에서 SwiftUI의 `autocorrectionDisabled(_:)`를 직접 적용하므로,
+    /// 호출부에서 인스턴스 바깥에 같은 모디파이어를 붙이면 내부 설정에 덮어써집니다.
+    /// 반드시 이 모디파이어로 설정해 주세요.
+    ///
+    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func autocorrectionDisabled(_ disable: Bool = true) -> Self {
+        var zelf = self
+        zelf.autocorrectionDisabled = disable
+        return zelf
+    }
+
     /// 입력한 내용을 가릴지 설정합니다.
     ///
     /// 비밀번호처럼 노출되면 안 되는 값을 입력받을 때 사용합니다.
@@ -270,45 +315,132 @@ public struct TextField: View {
         zelf.secured = secured
         return zelf
     }
-    
+
+    // MARK: - FormControl Modifiers
+
+    /// 제목(라벨)을 붙이고 필수 표시(`*`) 여부를 설정합니다.
+    ///
+    /// 이 모디파이어를 쓰면 텍스트 필드가 ``FormControl``로 감싸져 라벨·메시지·액세서리가 함께 배치되고,
+    /// 라벨이 입력의 접근성 라벨로 연결됩니다. ``FormControl``을 직접 조합하는 것과 결과가 같습니다.
+    ///
+    /// ```swift
+    /// TextField(text: $email)
+    ///     .placeholder("이메일을 입력하세요")
+    ///     .label("이메일", required: true)
+    ///     .message("회사 이메일을 입력해 주세요.")
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - text: 라벨 텍스트. `nil`이거나 비어 있으면 라벨을 표시하지 않습니다.
+    ///   - required: 필수 입력 표시(`*`) 여부, 생략하면 기본값으로 `false` 적용
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func label(_ text: String?, required: Bool = false) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.labelText = text
+        zelf.formControlAttributes.isRequired = required
+        return zelf
+    }
+
+    /// 입력 아래에 표시할 도움말/에러 메시지를 설정합니다.
+    ///
+    /// 메시지 색은 ``status(_:)``에 따라 결정되며 `.negative`에서만 강조 색으로 표시됩니다.
+    /// 메시지는 입력의 접근성 힌트로도 연결됩니다.
+    ///
+    /// - Parameter text: 메시지 텍스트. `nil`이거나 비어 있으면 메시지를 표시하지 않습니다.
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func message(_ text: String?) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.messageText = text
+        return zelf
+    }
+
+    /// 라벨 위치를 설정합니다.
+    ///
+    /// - Parameter placement: 라벨 위치, 생략하면 기본값으로 `.top` 적용
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func labelPlacement(_ placement: FormControl.LabelPlacement) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.labelPlacement = placement
+        return zelf
+    }
+
+    /// leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.
+    ///
+    /// 여러 입력의 라벨 열을 한꺼번에 맞추려면 각 입력에 반복하지 말고 ``FormControlGroup``을 사용하세요.
+    /// ``FormControl/LabelPlacement/top`` 배치에는 영향이 없습니다.
+    ///
+    /// - Parameter width: 라벨 열 폭(pt)
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func labelWidth(_ width: CGFloat) -> Self {
+        var zelf = self
+        zelf.formControlAttributes.explicitLabelWidth = width
+        return zelf
+    }
+
+    /// 메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.
+    ///
+    /// 글자 수 카운트, 타이머 등 입력 아래에 붙는 보조 요소를 자유롭게 구성할 수 있습니다.
+    /// 스타일(타이포그래피·색)은 호출부에서 지정합니다.
+    ///
+    /// - Parameter accessory: 표시할 액세서리 뷰 빌더
+    /// - Returns: 수정된 텍스트 필드 인스턴스
+    public func accessory<Accessory: View>(@ViewBuilder _ accessory: () -> Accessory) -> Self {
+        let view = AnyView(accessory())
+        var zelf = self
+        zelf.formControlAttributes.accessoryView = view
+        return zelf
+    }
+
     // MARK: - Body
     
+    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.colorScheme) private var colorScheme
-    @State private var textFieldSize: CGSize = .zero
     @State private var textFieldGlobalFrame: CGRect = .zero
     @FocusState private var textFieldFocusState: Bool
     @State private var autoCompletionContentHeight: CGFloat = .zero
     @State private var fixAutocorrection = false
 
+    /// ``FormControl``이 전파한 크기. 슬롯 밖에서는 `nil`이다.
+    @Environment(\.formControlSize) private var inheritedSize
+    /// ``FormControl``이 전파한 상태. 슬롯 밖에서는 `nil`이다.
+    @Environment(\.formControlStatus) private var inheritedStatus
+
+    /// 실제로 적용할 사이즈. 명시값 > ``FormControl`` 전파값 > 기본값(`.large`) 순.
+    private var size: Size {
+        explicitSize ?? inheritedSize?.textFieldSize ?? .large
+    }
+
+    /// 실제로 적용할 상태. 명시값 > ``FormControl`` 전파값 > 기본값(`.normal`) 순.
+    private var status: Status {
+        explicitStatus ?? inheritedStatus?.textFieldStatus ?? .normal
+    }
+
     /// 뷰의 내용과 동작을 정의합니다.
+    ///
+    /// 항상 ``FormControl``로 감싼다. 라벨·메시지 유무로 분기하면 값이 런타임에 바뀔 때
+    /// 뷰 identity가 갈려 입력 중 포커스가 풀리므로, 설정이 비어 있어도 래퍼를 유지한다.
     public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if let heading {
-                HStack(spacing: 4) {
-                    Text(heading)
-                        .paragraph(variant: .label1, weight: .bold, semantic: .labelNeutral)
-                    if requiredBadge {
-                        Text("*")
-                            .typography(variant: .label1, weight: .medium, semantic: .statusNegative)
-                    }
-                }
-            }
-            
-            inputField
-            
-            Group {
-                switch status {
-                case .positive(let caption), .negative(let caption), .normal(let caption):
-                    if caption.isEmpty == false {
-                        Text(caption)
-                            .paragraph(
-                                variant: .caption1,
-                                color: captionTextColor
-                            )
-                    }
-                }
-            }
+        FormControl { inputField }
+            .size(formControlSize)
+            .status(formControlStatus)
+            .applying(formControlAttributes)
+    }
+
+    /// 자신의 사이즈를 ``FormControl`` 래퍼 값으로 매핑한다. (라벨 타이포그래피 결정)
+    private var formControlSize: FormControl.Size {
+        switch size {
+        case .large: .large
+        case .medium: .medium
+        }
+    }
+
+    /// 자신의 상태를 ``FormControl`` 래퍼 값으로 매핑한다. (메시지 색 결정)
+    private var formControlStatus: FormControl.Status {
+        switch status {
+        case .normal: .normal
+        case .positive: .positive
+        case .negative: .negative
         }
     }
 }
@@ -316,112 +448,36 @@ public struct TextField: View {
 // MARK: - Private
 
 private extension TextField {
+    var isDisabled: Bool { isEnabled == false }
+
     /// 가려진 입력 여부에 따라 `SecureField`와 `TextField`를 분기한다.
     ///
     /// `secured`는 화면이 살아 있는 동안 바뀌지 않는 설정이므로, 이 분기로 입력 중 포커스를 잃지 않는다.
     @ViewBuilder
     var textInput: some View {
         if secured {
-            SwiftUI.SecureField("", text: $text, prompt: promptText)
+            SwiftUI.SecureField("", text: $text)
         } else {
-            SwiftUI.TextField("", text: $text, prompt: promptText)
+            SwiftUI.TextField("", text: $text)
         }
-    }
-
-    var promptText: Text? {
-        guard let placeholder else { return nil }
-
-        return Text(placeholder)
-            .typography(
-                variant: .body1,
-                weight: .regular,
-                color: placeholderTextColor
-            )
     }
 
     var inputField: some View {
-        HStack(spacing: -1) {
-            ZStack {
-                HStack(spacing: 9) {
-                    if let icon {
-                        Image.icon(icon)
-                            .resizable()
-                            .frame(width: 22, height: 22)
-                            .foregroundStyle(SwiftUI.Color.semantic(.labelAlternative))
-                    }
-                    textInput
-                    .autocorrectionDisabled(fixAutocorrection)
-                    .font(.font(variant: .body1, weight: .regular))
-                    .foregroundStyle(fieldTextColor)
-                    .focused($textFieldFocusState)
-                    .frame(minHeight: 24)
-                    .padding(.horizontal, 4)
-                    .accessibilityLabel(heading ?? "")
-                    .accessibilityValue(accessibilityStatusDescription)
-                    
-                    if !text.isEmpty, textFieldFocusState {
-                        IconButton(
-                            variant: .normal(size: 22),
-                            icon: .circleCloseFill
-                        ) {
-                            text = ""
-                            fixAutocorrection = true
-                            Task { fixAutocorrection = false }
-                        }
-                        .iconColor(.semantic(.labelAssistive))
-                    } else {
-                        if let trailingIcon, let trailingIconColor {
-                            Image
-                                .icon(trailingIcon)
-                                .resizable()
-                                .frame(width: 22, height: 22)
-                                .foregroundStyle(trailingIconColor)
-                        }
-                    }
-                    
-                    trailingContent()
-                }
-                .padding(.all, 12)
-                .overlay {
-                    if trailingButton == nil {
-                        RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                    } else {
-                        UnevenRoundedRectangle(cornerRadii: .init(topLeading: 12, bottomLeading: 12))
-                            .strokeBorder(fieldStrokeColor, lineWidth: textFieldFocusState ? 2 : 1)
-                    }
-                }
-            }
-            .contentShape(RoundedRectangle(cornerRadius: 12))
-            .onTapGesture {
-                textFieldFocusState = true
-            }
-            
+        HStack(spacing: .spacing4) {
+            contentRow
+                .frame(minHeight: size.contentMinHeight)
+
             if let trailingButton {
-                ZStack {
-                    TrailingButton(
-                        variant: trailingButton.variant,
-                        title: trailingButton.title,
-                        disable: disable || trailingButton.disable,
-                        handler: trailingButton.handler
-                    )
-                    UnevenRoundedRectangle(cornerRadii: .init(bottomTrailing: 12, topTrailing: 12))
-                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutral), lineWidth: 1)
-                        .clipShape(
-                            Rectangle()
-                                .offset(x: 1, y: .zero)
-                        )
-                        .frame(height: textFieldSize.height)
-                }
-                .fixedSize(horizontal: true, vertical: false)
+                TrailingButton(
+                    size: size,
+                    title: trailingButton.title,
+                    disable: trailingButton.disable,
+                    handler: trailingButton.handler
+                )
             }
         }
-        .frame(minHeight: 48)
-        .onGeometryChange(
-            for: CGSize.self,
-            of: { $0.size },
-            action: { textFieldSize = $0 }
-        )
+        .padding(.all, size.containerPadding)
+        .frame(minHeight: size.minHeight)
         .onGeometryChange(
             for: CGRect.self,
             of: { proxy in
@@ -430,23 +486,16 @@ private extension TextField {
             },
             action: { textFieldGlobalFrame = $0 }
         )
-        .background {
-            if disable {
-                SwiftUI.Color.semantic(.fillAlternative)
-            } else {
-                if colorScheme == .light {
-                    SwiftUI.Color.atomic(.common100)
-                        .opacity(0.8)
-                        .background(.ultraThinMaterial)
-                } else {
-                    SwiftUI.Color.atomic(.coolNeutral17).opacity(0.61)
-                        .background(.ultraThinMaterial)
-                }
-            }
+        .background { fieldBackground }
+        .overlay {
+            RoundedRectangle(cornerRadius: size.cornerRadius)
+                .strokeBorder(fieldStrokeColor, lineWidth: 1)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: .black.opacity(0.03), radius: 1, x: 0, y: 1)
-        .allowsHitTesting(disable == false)
+        .background { focusRing }
+        .contentShape(RoundedRectangle(cornerRadius: size.cornerRadius))
+        .onTapGesture {
+            textFieldFocusState = true
+        }
         .overlay {
             autoCompletionContent.opacity(0)
                 .onGeometryChange(
@@ -484,11 +533,11 @@ private extension TextField {
                         width: textFieldGlobalFrame.width,
                         height: min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0)
                     )
-                    .background(SwiftUI.Color.semantic(.backgroundNormal))
+                    .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay {
                         RoundedRectangle(cornerRadius: 12)
-                            .strokeBorder(SwiftUI.Color.semantic(.lineAlternative))
+                            .strokeBorder(SwiftUI.Color.semantic(.lineNeutralTertiary))
                     }
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .accessibilityIdentifier("autocomplete_container")
@@ -503,27 +552,144 @@ private extension TextField {
             )
         )
     }
-    
-    var accessibilityStatusDescription: String {
-        switch status {
-        case .negative(let description):
-            description.isEmpty ? String(localized: "오류", bundle: .module) : description
-        case .positive(let description):
-            description.isEmpty ? "" : description
-        case .normal(let description):
-            description
+
+    @ViewBuilder
+    var contentRow: some View {
+        HStack(spacing: .spacing2) {
+            if let icon {
+                Image.icon(icon)
+                    .resizable()
+                    .frame(width: size.iconSize, height: size.iconSize)
+                    .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
+                    .padding(size.iconPadding)
+            }
+
+            textInput
+            // fixAutocorrection은 clear 버튼의 자동완성 잔상을 지우려고 한 프레임만 켜는 내부 트릭이므로,
+            // 호출부 설정(autocorrectionDisabled)과 OR로 합성해 외부 설정을 덮어쓰지 않게 한다.
+            .autocorrectionDisabled(autocorrectionDisabled || fixAutocorrection)
+            .font(.font(variant: size.inputVariant, weight: .regular))
+            .foregroundStyle(fieldTextColor)
+            .focused($textFieldFocusState)
+            // placeholder를 prompt로 전달하면 폭이 부족할 때 시스템이 폰트를 자동 축소(shrink-to-fit)하므로,
+            // 레이아웃에 참여하지 않는 overlay로 직접 그려 폰트 크기를 유지한 채 말줄임 처리한다.
+            .overlay(alignment: .leading) { placeholderOverlay }
+            .padding(.horizontal, .spacing4)
+            // 실제 입력 텍스트가 보조 기술에 그대로 노출되도록 value는 덮어쓰지 않는다.
+            // 필드의 용도는 placeholder로 라벨링하고, 상태 메시지(오류 등)는 hint로 전달한다.
+            .accessibilityLabel(placeholder.map(Text.init) ?? Text(""))
+            .accessibilityHint(accessibilityStatusDescription)
+            .onChange(of: text) { newValue in
+                // 제한 초과 시 앞에서부터 maxLength 글자만 남긴다(문자 단위). text를 다시 쓰면
+                // onChange가 잘린 값으로 재호출되므로, onTextChange는 그때 최종 값으로 한 번만 불린다.
+                if let maxLength, newValue.count > maxLength {
+                    text = String(newValue.prefix(maxLength))
+                    return
+                }
+                onTextChange?(newValue)
+            }
+            // text가 바뀌지 않아도 maxLength가 더 작아지면 기존 텍스트를 즉시 잘라낸다.
+            // 최초 등장 시에도 이미 제한을 넘는 초기 텍스트를 정리한다.
+            .onChange(of: maxLength) { _ in clampTextToMaxLength() }
+            .onAppear { clampTextToMaxLength() }
+
+            trailingArea
+        }
+        .padding(.horizontal, .spacing4)
+    }
+
+    /// 현재 `text`가 `maxLength`를 초과하면 앞에서부터 제한 글자 수만 남긴다.
+    func clampTextToMaxLength() {
+        guard let maxLength, text.count > maxLength else { return }
+        text = String(text.prefix(maxLength))
+    }
+
+    @ViewBuilder
+    var placeholderOverlay: some View {
+        if text.isEmpty, let placeholder {
+            Text(placeholder)
+                .typography(
+                    variant: size.inputVariant,
+                    weight: .regular,
+                    color: placeholderTextColor
+                )
+                .lineLimit(1)
+                .allowsHitTesting(false)
+                // 필드의 accessibilityLabel이 이미 placeholder를 노출하므로 중복 낭독을 막는다.
+                .accessibilityHidden(true)
         }
     }
 
-    var captionTextColor: SwiftUI.Color {
-        switch status {
-        case .negative:
-            .semantic(.statusNegative)
-        default:
-            .semantic(.labelAlternative)
+    @ViewBuilder
+    var trailingArea: some View {
+        HStack(spacing: .spacing8) {
+            if !text.isEmpty, textFieldFocusState {
+                IconButton(
+                    variant: .normal(size: size.clearButtonSize),
+                    icon: .circleCloseFill
+                ) {
+                    text = ""
+                    fixAutocorrection = true
+                    Task { fixAutocorrection = false }
+                }
+                .interactionOverflow()
+                .iconColor(.semantic(.foregroundNeutralQuaternary))
+                // Leading 아이콘과 같은 규칙으로 Clear 버튼이 놓이는 영역을 아이콘보다 넓힌다. 터치 영역은 버튼 안에서 정해지므로 줄지 않는다.
+                // IconButton.padding(_:)은 normal variant에서 무시되므로 edge를 명시해 SwiftUI 패딩을 건다.
+                .padding(.all, size.iconPadding)
+                .accessibilityLabel(Text("텍스트 지우기", bundle: .module))
+            } else if !text.isEmpty, let statusMark, let statusMarkColor {
+                Image
+                    .icon(statusMark)
+                    .resizable()
+                    .frame(width: size.iconSize, height: size.iconSize)
+                    .foregroundStyle(statusMarkColor)
+                    // 같은 자리에 번갈아 나오는 Clear 버튼과 차지하는 영역을 맞춘다.
+                    .padding(size.iconPadding)
+                    // positive 상태는 hint로 읽히지 않으므로 이 아이콘이 유일한 신호다. 아이콘 이름 대신 의미를 읽게 한다.
+                    .accessibilityLabel(Text("확인됨", bundle: .module))
+            }
+
+            trailingContent()
         }
     }
-    
+
+    @ViewBuilder
+    var fieldBackground: some View {
+        // 둥근 표면을 배경 Shape로 직접 그려 `clipShape`의 오프스크린 마스킹을 제거한다.
+        // 외형(둥근 모서리·머티리얼)은 동일하게 유지한다. (drop shadow 제거)
+        let surface = RoundedRectangle(cornerRadius: size.cornerRadius)
+        if isDisabled {
+            surface
+                .fill(SwiftUI.Color.semantic(.surfaceNeutralTertiary))
+        } else {
+            MaterialBackground(
+                in: surface,
+                tint: colorScheme == .light
+                    ? SwiftUI.Color.atomic(.common100).opacity(.opacity74)
+                    : SwiftUI.Color.atomic(.coolNeutral17).opacity(.opacity61)
+            )
+        }
+    }
+
+    @ViewBuilder
+    var focusRing: some View {
+        if textFieldFocusState, isDisabled == false {
+            RoundedRectangle(cornerRadius: size.cornerRadius + .spacing4)
+                .strokeBorder(focusRingColor, lineWidth: 4)
+                .padding(-.spacing4)
+        }
+    }
+
+    var accessibilityStatusDescription: String {
+        switch status {
+        case .negative:
+            String(localized: "오류", bundle: .module)
+        case .positive, .normal:
+            ""
+        }
+    }
+
     var autoCompletionContent: some View {
         Group {
             if let autoCompletionDataSource {
@@ -544,13 +710,13 @@ private extension TextField {
                                                     .paragraph(
                                                         variant: .caption1,
                                                         weight: .bold,
-                                                        semantic: .labelAlternative
+                                                        semantic: .foregroundNeutralTertiary
                                                     )
                                                 Spacer()
                                             }
                                             .padding(.horizontal, 1)
                                             .padding(.vertical, 4)
-                                            .background(SwiftUI.Color.semantic(.backgroundElevated))
+                                            .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary))
                                         }
                                     }
                                     Section(header: header) {
@@ -577,104 +743,201 @@ private extension TextField {
     }
     
     var fieldStrokeColor: SwiftUI.Color {
-        if textFieldFocusState {
+        // 비활성 상태에서는 status와 무관하게 normal과 동일한 border 색상을 사용한다. (negative 포함)
+        if isDisabled {
+            .semantic(.lineNeutralSecondary)
+        } else if textFieldFocusState {
             switch status {
             case .normal, .positive:
-                .semantic(.primaryNormal).opacity(0.43)
+                .semantic(.lineBrandStrong)
             case .negative:
-                .semantic(.statusNegative).opacity(0.43)
+                .semantic(.lineNegativeStrong)
             }
         } else {
             switch status {
             case .normal, .positive:
-                .semantic(.lineNeutral)
+                .semantic(.lineNeutralSecondary)
             case .negative:
-                .semantic(.statusNegative).opacity(0.43)
+                .semantic(.lineNegativePrimary)
             }
         }
     }
-    
-    var trailingIcon: Icon? {
+
+    var focusRingColor: SwiftUI.Color {
+        switch status {
+        case .negative:
+            .semantic(.lineNegativeFocus)
+        case .normal, .positive:
+            .semantic(.lineBrandFocus)
+        }
+    }
+
+    var statusMark: Icon? {
         switch status {
         case .positive:
             .circleCheckFill
-        case .negative:
-            .circleExclamationFill
         default:
             nil
         }
     }
-    
-    var trailingIconColor: SwiftUI.Color? {
+
+    var statusMarkColor: SwiftUI.Color? {
         switch status {
         case .positive:
-            .semantic(.primaryNormal)
-        case .negative:
-            .semantic(.statusNegative)
+            .semantic(.foregroundPositivePrimary)
         default:
             nil
         }
     }
-    
+
     var placeholderTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelDisable) : .semantic(.labelAssistive)
+        isDisabled ? .semantic(.foregroundDisablePrimary) : .semantic(.foregroundNeutralTertiary)
     }
     
     var fieldTextColor: SwiftUI.Color {
-        disable ? .semantic(.labelAlternative) : .semantic(.labelNormal)
+        .semantic(.foregroundNeutralPrimary)
+    }
+}
+
+// MARK: - Size Tokens
+private extension TextField.Size {
+    /// Container 내부 패딩
+    var containerPadding: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing6
+        }
+    }
+
+    /// 모서리 반경
+    var cornerRadius: CGFloat {
+        switch self {
+        case .large: .radius14
+        case .medium: .radius12
+        }
+    }
+
+    /// Container 최소 높이
+    var minHeight: CGFloat {
+        switch self {
+        case .large: .dimension48
+        case .medium: .dimension40
+        }
+    }
+
+    /// Content 영역 최소 높이
+    var contentMinHeight: CGFloat {
+        switch self {
+        case .large: .dimension24
+        case .medium: .dimension20
+        }
+    }
+
+    // clear button 크기
+    var clearButtonSize: IconButton.NormalSize {
+        switch self {
+        case .large: .large
+        case .medium: .medium
+        }
+    }
+    
+    /// 아이콘 크기
+    var iconSize: CGFloat {
+        switch self {
+        case .large: .dimension20
+        case .medium: .dimension18
+        }
+    }
+
+    /// 아이콘 묶음 내부 패딩
+    var iconPadding: CGFloat {
+        switch self {
+        case .large: .spacing2
+        case .medium: .spacing1
+        }
+    }
+
+    /// 입력 타이포그래피 변형
+    var inputVariant: Typography.Variant {
+        switch self {
+        case .large: .body2
+        case .medium: .label1
+        }
+    }
+
+    /// 트레일링 버튼 좌우 패딩
+    var trailingButtonPaddingHorizontal: CGFloat {
+        switch self {
+        case .large: .spacing12
+        case .medium: .spacing10
+        }
+    }
+
+    /// 트레일링 버튼 상하 패딩
+    var trailingButtonPaddingVertical: CGFloat {
+        switch self {
+        case .large: .spacing8
+        case .medium: .spacing6
+        }
+    }
+
+    /// 트레일링 버튼 모서리 반경
+    var trailingButtonRadius: CGFloat {
+        switch self {
+        case .large: .radius10
+        case .medium: .radius8
+        }
     }
 }
 
 // MARK: - Inner Views
 private extension TextField {
     struct TrailingButton: View {
-        private let variant: Button.Color
+        private let size: Size
         private let title: String
         private let disable: Bool
         private let handler: (() -> Void)?
 
-        init(variant: Button.Color, title: String, disable: Bool, handler: (() -> Void)?) {
-            self.variant = variant
+        init(size: Size, title: String, disable: Bool, handler: (() -> Void)?) {
+            self.size = size
             self.title = title
             self.disable = disable
             self.handler = handler
         }
 
+        @Environment(\.isEnabled) private var isEnabled
         @State private var isPressed = false
+
+        /// 필드 전체가 비활성이거나(`isEnabled == false`) 트레일링 버튼만 따로 비활성인 경우를 함께 다룬다.
+        private var isDisabled: Bool { isEnabled == false || disable }
 
         var body: some View {
             Text(title)
-                .paragraph(variant: .body1, weight: typoWeight, semantic: textColor)
-                .padding(.horizontal, 19)
-                .padding(.vertical, 12)
+                .paragraph(variant: .caption1, weight: .bold, semantic: textColor)
+                .padding(.horizontal, size.trailingButtonPaddingHorizontal)
+                .padding(.vertical, size.trailingButtonPaddingVertical)
                 .background(
                     Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .light,
-                        color: .labelNormal
+                        color: .foregroundNeutralPrimary
                     )
                 )
-                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: disable ? nil : handler))
-                .allowsHitTesting(disable == false)
+                .clipShape(RoundedRectangle(cornerRadius: size.trailingButtonRadius))
+                .overlay {
+                    RoundedRectangle(cornerRadius: size.trailingButtonRadius)
+                        .strokeBorder(SwiftUI.Color.semantic(.lineNeutralSecondary), lineWidth: 1)
+                }
+                .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: isDisabled ? nil : handler))
+                .allowsHitTesting(isDisabled == false)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(title)
+                .accessibilityAddTraits(.isButton)
+                .accessibilityRespondsToUserInteraction(isDisabled == false)
         }
 
         var textColor: Color.Semantic {
-            if disable {
-                return .labelDisable
-            }
-            switch variant {
-            case .primary:
-                return .primaryNormal
-            case .assistive:
-                return .labelNormal
-            }
-        }
-        
-        var typoWeight: Typography.Weight {
-            switch variant {
-            case .primary: .bold
-            case .assistive: .medium
-            }
+            isDisabled ? .foregroundDisablePrimary : .foregroundNeutralPrimary
         }
     }
 }

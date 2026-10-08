@@ -39,16 +39,18 @@ const CATEGORY_MAP = {
   ],
   presentation: ['bottomsheet', 'popover', 'popup', 'tooltip'],
   'selection-input': [
-    'checkbox', 'checkmark', 'filterbutton', 'framedstyle', 'radio',
-    'segmentedcontrol', 'select', 'slider', 'switch', 'textarea', 'textfield',
+    'checkbox', 'checkmark', 'filterbutton', 'formcontrol', 'formcontrolgroup',
+    'framedstyle', 'radio', 'searchfield', 'segmentedcontrol', 'select', 'slider',
+    'switch', 'textarea', 'textfield',
   ],
   utilities: [
-    'color', 'flowlayout', 'icon', 'interaction', 'modalnavigation',
-    'opacity', 'pulltorefresh', 'scrollview', 'shadow', 'spacing', 'typography',
+    'color', 'dimension', 'flowlayout', 'icon', 'interaction', 'modalcontentpadding',
+    'modalnavigation', 'opacity', 'primitive', 'pulltorefresh', 'radius', 'screenscaffold',
+    'scrollview', 'shadow', 'spacing', 'typography',
   ],
 };
 
-const TOKEN_NAMES = ['color', 'typography', 'spacing', 'shadow', 'opacity'];
+const TOKEN_NAMES = ['color', 'typography', 'spacing', 'shadow', 'opacity', 'radius', 'dimension', 'primitive'];
 
 const SKIP_NAMES = new Set([
   'corefoundation', 'foundation', 'swift', 'swiftui',
@@ -66,9 +68,38 @@ function readJson(p) {
   return JSON.parse(fs.readFileSync(p, 'utf-8'));
 }
 
+/**
+ * DocC 인라인 콘텐츠 세그먼트를 텍스트로 변환한다.
+ * `text` 외에 `codeVoice`(\`...\`)의 코드, 심볼/링크 `reference`의 제목, 강조(`emphasis`/`strong`)의
+ * 중첩 내용까지 포함해야 "스낵바가 표시되는 시간(초). `.infinity`인 경우 ..."처럼 placeholder가
+ * 빠진 깨진 문장이 생기지 않는다.
+ */
+function inlineText(seg, refs) {
+  if (typeof seg.text === 'string') return seg.text;
+  if (typeof seg.code === 'string') return seg.code;
+  if (seg.type === 'reference' && seg.identifier) {
+    const ref = refs && refs[seg.identifier];
+    return (ref && ref.title) || tail(seg.identifier);
+  }
+  if (Array.isArray(seg.inlineContent)) {
+    return seg.inlineContent.map((s) => inlineText(s, refs)).join('');
+  }
+  return '';
+}
+
 function abstractText(json) {
   if (!Array.isArray(json.abstract)) return '';
-  return json.abstract.map((seg) => seg.text ?? '').join('').trim();
+  const refs = json.references || {};
+  return json.abstract.map((seg) => inlineText(seg, refs)).join('').trim();
+}
+
+/**
+ * 프로토콜 등에서 상속된 멤버인지 판별한다. DocC는 상속 멤버의 abstract를
+ * `[{text:"Inherited from "}, {codeVoice:"Type.member"}, {text:"."}]` 형태로 자동 생성한다.
+ */
+function isInheritedMember(json) {
+  const first = Array.isArray(json.abstract) ? json.abstract[0] : null;
+  return !!first && typeof first.text === 'string' && first.text.startsWith('Inherited from');
 }
 
 function fragmentSignature(fragments) {
@@ -114,6 +145,9 @@ function extractMembers(json, componentDir, sectionTitle) {
     if (!fs.existsSync(memberPath)) continue;
     let mj;
     try { mj = readJson(memberPath); } catch { continue; }
+    // 프로토콜 등에서 상속된 멤버는 현재 타입이 직접 제공하는 API가 아니므로 제외한다.
+    // DocC는 이런 멤버의 abstract를 "Inherited from `Type`." 형태로 자동 생성한다.
+    if (isInheritedMember(mj)) continue;
     const meta = mj.metadata || {};
     const sig = fragmentSignature(meta.fragments);
     if (!sig) continue;
@@ -132,6 +166,15 @@ function extractMembers(json, componentDir, sectionTitle) {
   return out;
 }
 
+/**
+ * 중첩 타입으로 수집할 심볼 종류.
+ *
+ * DocC는 자식을 가진 심볼에만 디렉토리를 만들기 때문에 대부분은 타입이지만,
+ * associated value를 가진 enum case처럼 자식이 생기는 멤버도 있을 수 있다.
+ * 타입이 아닌 멤버가 `nestedTypes`에 섞이지 않도록 종류로 걸러낸다.
+ */
+const NESTED_TYPE_KINDS = new Set(['struct', 'enum', 'class', 'protocol', 'actor', 'typealias']);
+
 function extractNestedTypes(componentDir, componentName) {
   if (!fs.existsSync(componentDir)) return [];
   const entries = fs.readdirSync(componentDir, { withFileTypes: true });
@@ -149,6 +192,13 @@ function extractNestedTypes(componentDir, componentName) {
     }
     const symbolKind = typeJson?.metadata?.symbolKind;
     if (!symbolKind) continue;
+    const nestedDir = path.join(componentDir, slug);
+    // 타입이 아닌 심볼(enum case 등)은 nestedTypes에 넣지 않되, 그 하위에 있는
+    // 실제 타입은 놓치지 않도록 재귀는 그대로 수행한다.
+    if (!NESTED_TYPE_KINDS.has(symbolKind)) {
+      types.push(...extractNestedTypes(nestedDir, componentName));
+      continue;
+    }
     const title = typeJson?.metadata?.title || slug;
     const record = {
       name: title,
@@ -158,24 +208,41 @@ function extractNestedTypes(componentDir, componentName) {
     if (symbolKind === 'enum') {
       const casesSec = findSection(typeJson, (t) => t === 'Enumeration Cases' || t === 'Cases');
       if (casesSec) {
-        record.cases = (casesSec.identifiers || []).map((id) => {
-          const t = tail(id);
-          return t.replace(/\(.*\)$/, '');
-        });
+        const caseTails = (casesSec.identifiers || []).map((id) => tail(id));
+        record.cases = caseTails.map((t) => t.replace(/\(.*\)$/, ''));
+        // associated value가 있는 case는 이름만으로는 호출 형태를 알 수 없으므로
+        // 파라미터 라벨이 남은 전체 시그니처를 함께 노출한다.
+        // (`cases`는 기존 소비자 호환을 위해 이름만 유지)
+        if (caseTails.some((t) => t.includes('('))) {
+          record.caseSignatures = caseTails;
+        }
       }
     }
+    // 중첩 타입의 이니셜라이저는 그 타입을 만드는 유일한 계약이므로 함께 노출한다.
+    // (예: `FallbackView.ButtonActionArea.ButtonInfo.init(text:action:)`)
+    //
+    // 단, raw value를 가진 enum에 컴파일러가 합성하는 `init(rawValue:)`는 제외한다.
+    // 소비자가 알아야 할 API가 아니면서 색인 전반에 반복돼 노이즈만 늘리고,
+    // enum이 `String` 기반이라는 사실은 case 목록으로 이미 드러난다.
+    const inits = extractInitializers(typeJson).filter(
+      (i) => !(symbolKind === 'enum' && i.signature === 'init(rawValue:)'),
+    );
+    if (inits.length > 0) record.initializers = inits;
     // Static factories like `TopNavigation.LeadingButton.back(action:)` live as
     // "Type Methods" / "Type Properties" inside the nested-type subdir.
-    const nestedDir = path.join(componentDir, slug);
     if (fs.existsSync(nestedDir)) {
       const staticMethods = extractMembers(typeJson, nestedDir, 'Type Methods');
       const staticProps = extractMembers(typeJson, nestedDir, 'Type Properties');
       const modifiers = extractMembers(typeJson, nestedDir, 'Instance Methods');
+      const instanceProps = extractMembers(typeJson, nestedDir, 'Instance Properties');
       if (staticMethods.length > 0) record.staticMethods = staticMethods;
       if (staticProps.length > 0) record.staticProperties = staticProps;
       if (modifiers.length > 0) record.modifiers = modifiers;
+      if (instanceProps.length > 0) record.instanceProperties = instanceProps;
     }
     types.push(record);
+    // 2단 이상 중첩된 타입(예: `ButtonActionArea` 안의 `ButtonInfo`)도 수집한다.
+    types.push(...extractNestedTypes(nestedDir, componentName));
   }
   return types;
 }
@@ -297,7 +364,10 @@ function ensureFigmaMapping() {
     description:
       'Manual Figma component/token → Montage Swift mapping. Convention-based matching is the fallback; entries here override.',
     components: {},
-    tokens: { color: {}, typography: {}, spacing: {}, shadow: {}, opacity: {} },
+    tokens: {
+      color: {}, typography: {}, spacing: {}, shadow: {}, opacity: {},
+      radius: {}, dimension: {}, primitive: {},
+    },
   };
   fs.writeFileSync(target, JSON.stringify(seed, null, 2) + '\n');
   console.log('[mcp-data] seeded figma-mapping.json');

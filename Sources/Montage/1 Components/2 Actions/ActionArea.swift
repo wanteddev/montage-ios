@@ -53,29 +53,32 @@ public struct ActionArea: View, KeyboardReadable {
 
     @State private var isKeyboardVisible = false
     @State private var height: CGFloat = .zero
-    @State private var backgroundOpacity: CGFloat = 1
-    @State private var gradientOpacity: CGFloat = 1
     @State private var isExtraEmpty = true
+
+    @Environment(\.actionAreaScrollReachedEnd) private var inheritedScrollReachedEnd
+    @Environment(\.modalKind) private var modalKind
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
                 extra()
-                    .padding([.top, .horizontal], 20)
-                    .padding(.bottom, 24)
+                    .padding(.top, 20)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 20)
                     .background(backgroundColor)
+                    .animation(.easeInOut(duration: 0.5), value: hidesBackground)
                     .ifEmptyView { isExtraEmpty = $0 }
 
                 if !isExtraEmpty && extraDivider {
                     Rectangle()
-                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutral))
+                        .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralTertiary))
                         .frame(height: 1)
                 }
             }
 
             if isExtraEmpty {
-                SwiftUI.Color.semantic(.backgroundElevated)
+                SwiftUI.Color.semantic(.surfaceElevatedPrimary)
                     .frame(height: 0)
                     .overlay {
                         LinearGradient(
@@ -86,7 +89,8 @@ public struct ActionArea: View, KeyboardReadable {
                         .frame(height: 40)
                         .offset(y: -20)
                     }
-                    .opacity(gradientOpacity)
+                    .opacity(showsGradient ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.5), value: showsGradient)
             }
 
             VStack(spacing: 16) {
@@ -94,48 +98,59 @@ public struct ActionArea: View, KeyboardReadable {
 
                 Buttons(variant)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, modalKind.actionAreaHorizontalPadding)
             .padding(.bottom, isKeyboardVisible ? 20 : 0)
             .background(backgroundColor)
+            .animation(.easeInOut(duration: 0.5), value: hidesBackground)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
-        .onAppear {
-            applyTransparentBackground(transparentBackground, animated: false)
-        }
-        .onChange(of: transparentBackground) { newValue in
-            applyTransparentBackground(newValue, animated: true)
-        }
-        .onChange(of: isExtraEmpty) { _ in
-            applyTransparentBackground(transparentBackground, animated: true)
-        }
     }
 
     // MARK: - Modifiers
     
-    private var transparentBackground = false
+    private var explicitScrollReachedEnd: Bool?
     private var caption: String?
+    private var captionIcon: Icon?
     private var extra: () -> AnyView = { AnyView(EmptyView()) }
     private var extraDivider = true
+    private var customBackgroundColor: SwiftUI.Color?
 
-    /// 배경을 투명하게 설정합니다.
+    /// 스크롤이 바닥에 닿았는지를 직접 알려줍니다.
     ///
-    /// 이 수정자를 사용하면 그라데이션 배경이 숨겨지고 투명한 배경이 표시됩니다.
+    /// ``ActionArea``는 상단 그라데이션으로 "아래에 가려진 콘텐츠가 있다"를 표현합니다.
+    /// ``Montage/ScrollView``를 쓰면 이 값이 자동으로 전달되므로 이 수정자는 필요 없습니다.
+    /// `SwiftUI.ScrollView`·`List`처럼 신호를 올려주지 않는 컨테이너를 쓸 때만 사용합니다.
     ///
-    /// - Parameter transparentBackground: 배경 투명 여부, 생략하면 기본값으로 `true` 적용
+    /// ```swift
+    /// ActionArea(variant: .strong(main: .init(text: "확인", action: {})))
+    ///     .scrollReachedEnd(scrollProxy.isAtBottom)
+    /// ```
+    ///
+    /// - Parameter reachedEnd: 스크롤이 끝에 닿았는지 여부. `true`면 그라데이션을 숨깁니다.
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func transparentBackground(_ transparentBackground: Bool = true) -> Self {
+    public func scrollReachedEnd(_ reachedEnd: Bool) -> Self {
         var zelf = self
-        zelf.transparentBackground = transparentBackground
+        zelf.explicitScrollReachedEnd = reachedEnd
         return zelf
     }
 
     /// 버튼 위에 표시할 캡션 텍스트를 설정합니다.
     ///
-    /// - Parameter caption: 표시할 캡션 텍스트
+    /// `icon`을 지정하면 캡션 텍스트 앞에 16pt 아이콘을 함께 표시합니다. 아이콘 색은 캡션 텍스트와 같습니다.
+    ///
+    /// ```swift
+    /// .caption("변경 사항을 저장하시겠습니까?")                      // 텍스트만
+    /// .caption("변경 사항을 저장하시겠습니까?", icon: .circleInfo)   // 아이콘 + 텍스트
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - caption: 표시할 캡션 텍스트
+    ///   - icon: 캡션 텍스트 앞에 표시할 아이콘, 생략하면 기본값으로 `nil`을 적용하여 아이콘을 표시하지 않습니다.
     /// - Returns: 수정된 ActionArea 인스턴스
-    public func caption(_ caption: String?) -> Self {
+    public func caption(_ caption: String?, icon: Icon? = nil) -> Self {
         var zelf = self
         zelf.caption = caption
+        zelf.captionIcon = icon
         return zelf
     }
 
@@ -149,6 +164,19 @@ public struct ActionArea: View, KeyboardReadable {
         var zelf = self
         zelf.extra = { AnyView(content()) }
         zelf.extraDivider = divider
+        return zelf
+    }
+
+    /// 배경 색상을 설정합니다.
+    ///
+    /// 지정한 색은 배경뿐 아니라 상단 sticky 그라데이션의 시작색으로도 함께 적용됩니다.
+    /// 두 색이 어긋나면 경계가 보이므로 값을 분리하지 않습니다.
+    ///
+    /// - Parameter backgroundColor: 설정할 색상. `nil`을 전달하면 기본 배경색을 사용합니다.
+    /// - Returns: 수정된 ActionArea 인스턴스
+    public func backgroundColor(_ backgroundColor: SwiftUI.Color?) -> Self {
+        var zelf = self
+        zelf.customBackgroundColor = backgroundColor
         return zelf
     }
 }
@@ -205,81 +233,29 @@ extension ActionArea {
         ///
         /// - Parameter custom: 커스텀 버튼 뷰를 생성하는 클로저
         /// - Returns: 커스텀 뷰가 포함된 ButtonInfo 인스턴스
-        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fill(horizontal:vertical:) 모디파이어를 사용하세요.
+        /// - Note: 버튼 크기가 가능한 한 최대 크기가 되도록 하려면 fillWidth(_:) 모디파이어를 사용하세요.
         public static func custom<V: View>(@ViewBuilder _ custom: @escaping () -> V) -> Self {
             var zelf = self.init(text: "", action: {})
             zelf.custom = { AnyView(custom()) }
             return zelf
         }
     }
+}
 
-    /// ActionArea를 구성하기 위한 모델 구조체입니다.
-    ///
-    /// 이 구조체는 ActionArea의 모든 구성 정보를 담아 ActionAreaModifier에 전달합니다.
-    /// 버튼 레이아웃, 배경 투명도, 캡션 텍스트, 추가 콘텐츠 등을 구성할 수 있습니다.
-    public struct Model {
-        let variant: ActionArea.Variant
-        let backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl
-        let caption: String?
-        let extra: () -> AnyView
-        let extraDivider: Bool
+// MARK: - Scroll Signal
 
-        /// ActionArea 모델을 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
-        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-        public init(
-            variant: ActionArea.Variant,
-            backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
-            caption: String? = nil
-        ) {
-            self.variant = variant
-            self.backgroundTransparencyControl = backgroundTransparencyControl
-            self.caption = caption
-            self.extra = { AnyView(EmptyView()) }
-            self.extraDivider = true
-        }
+/// ``ActionArea``에게 "아래 스크롤이 바닥에 닿았는지"를 내려보내는 환경 값입니다.
+///
+/// `nil`은 스크롤 컨테이너가 없다는 뜻이며, 이때 그라데이션은 그리지 않습니다.
+/// ``ActionArea/scrollReachedEnd(_:)``로 직접 지정한 값이 있으면 그쪽이 우선합니다.
+struct ActionAreaScrollReachedEndKey: EnvironmentKey {
+    static let defaultValue: Bool? = nil
+}
 
-        /// ActionArea 모델을 초기화합니다.
-        ///
-        /// - Parameters:
-        ///   - variant: 버튼 레이아웃 변형
-        ///   - backgroundTransparencyControl: 배경 투명도 제어 방식, 생략하면 기본값으로 `.automatic` 적용
-        ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-        ///   - extra: 추가 콘텐츠를 생성하는 클로저
-        ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
-        public init<V: View>(
-            variant: ActionArea.Variant,
-            backgroundTransparencyControl: ActionArea.BackgroundTransparencyControl = .automatic,
-            caption: String? = nil,
-            @ViewBuilder extra: @escaping () -> V,
-            extraDivider: Bool = true
-        ) {
-            self.variant = variant
-            self.backgroundTransparencyControl = backgroundTransparencyControl
-            self.caption = caption
-            self.extra = { AnyView(extra()) }
-            self.extraDivider = extraDivider
-        }
-    }
-    
-    /// ActionArea의 배경 투명도를 제어하는 열거형입니다.
-    public enum BackgroundTransparencyControl {
-        /// 자동으로 배경 투명도를 결정합니다. 기본적으로 스크롤 위치나 콘텐츠에 따라 투명도가 자동 처리됩니다.
-        case automatic
-        /// 수동으로 배경 투명도를 설정합니다. true면 배경이 투명해지고, false면 배경이 표시됩니다.
-        case manual(_ transparency: Bool)
-        
-        var isManual: Bool {
-            switch self {
-            case .automatic:
-                false
-            case .manual:
-                true
-            }
-        }
+extension EnvironmentValues {
+    var actionAreaScrollReachedEnd: Bool? {
+        get { self[ActionAreaScrollReachedEndKey.self] }
+        set { self[ActionAreaScrollReachedEndKey.self] = newValue }
     }
 }
 
@@ -288,37 +264,61 @@ extension ActionArea {
     private var captionView: some View {
         Group {
             if let caption = caption, variant.isCaptionAvailable {
-                Text(caption)
-                    .paragraph(variant: .label2, semantic: .labelAlternative)
+                HStack(spacing: 4) {
+                    if let captionIcon {
+                        Image.icon(captionIcon)
+                            .resizable()
+                            .renderingMode(.template)
+                            .frame(width: 16, height: 16)
+                            .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralTertiary))
+                    }
+
+                    Text(caption)
+                        .paragraph(variant: .label2, weight: .medium, semantic: .foregroundNeutralTertiary)
+                }
             }
         }
+    }
+
+    /// 그라데이션을 끌 때는 배경도 함께 걷어 페이지 배경이 그대로 비치게 한다.
+    ///
+    /// 다크 모드에서는 ActionArea 배경(`surfaceElevatedPrimary`)과 페이지 배경이 다른 색이라,
+    /// 그라데이션만 끄고 배경을 남기면 경계가 선처럼 드러난다. 라이트 모드에서는 두 색이 사실상
+    /// 같아 티가 나지 않을 뿐이다. extra 슬롯이 있으면 그 영역은 배경이 있어야 하므로 유지한다.
+    private var hidesBackground: Bool {
+        !showsGradient && isExtraEmpty
+    }
+
+    /// 실제로 칠하는 배경색. 바닥에 닿으면 투명해진다.
+    private var backgroundColor: SwiftUI.Color {
+        baseColor.opacity(hidesBackground ? 0 : 1)
+    }
+
+    private var baseColor: SwiftUI.Color {
+        customBackgroundColor ?? .semantic(.surfaceElevatedPrimary)
     }
 
     private var gradient: [SwiftUI.Color] {
         [0, 0.14, 0.27, 0.38, 0.48, 0.57, 0.65, 0.71, 0.77, 0.82, 0.86, 0.9, 0.93, 0.96, 0.98, 1]
             .map {
-                .semantic(.backgroundElevated).opacity($0)
+                baseColor.opacity($0)
             }
     }
 
-    private var backgroundColor: SwiftUI.Color {
-        .semantic(.backgroundElevated).opacity(backgroundOpacity)
+    /// 직접 지정한 값이 있으면 그 값을, 없으면 스크롤 컨테이너가 내려준 값을 쓴다.
+    private var scrollReachedEnd: Bool? {
+        explicitScrollReachedEnd ?? inheritedScrollReachedEnd
+    }
+
+    /// 그라데이션은 "아래에 가려진 콘텐츠가 있다"는 표시이면서, ActionArea 배경에서 페이지 배경으로
+    /// 넘어가는 경계를 부드럽게 잇는 역할도 한다. 그래서 끄는 쪽이 예외다.
+    ///
+    /// 바닥에 닿았다는 신호(`true`)를 받았을 때만 끄고, 신호가 없으면(`nil`) 가려진 콘텐츠가
+    /// 있는지 알 수 없으므로 그린다.
+    private var showsGradient: Bool {
+        scrollReachedEnd != true
     }
     
-    private func applyTransparentBackground(_ transparentBackground: Bool, animated: Bool) {
-        let update = {
-            backgroundOpacity = (transparentBackground && isExtraEmpty) ? 0 : 1
-            gradientOpacity = transparentBackground ? 0 : 1
-        }
-
-        if animated {
-            withAnimation(.easeInOut(duration: 0.5)) {
-                update()
-            }
-        } else {
-            update()
-        }
-    }
 }
 
 // MARK: - Inner Views
@@ -353,7 +353,7 @@ extension ActionArea {
             VStack(spacing: 8) {
                 primarySolidButton(main)
                 if let alternative {
-                    secondaryOutlinedButton(alternative)
+                    assistiveOutlinedButton(alternative)
                 }
                 if let sub {
                     assistiveTextButton(sub)
@@ -372,7 +372,7 @@ extension ActionArea {
                     assistiveOutlinedButton(sub, fillWidth: false)
                 }
                 if let alternative {
-                    secondaryOutlinedButton(alternative)
+                    assistiveOutlinedButton(alternative)
                 }
                 primarySolidButton(main)
             }
@@ -382,7 +382,7 @@ extension ActionArea {
         private func cancel(
             _ main: ButtonInfo
         ) -> some View {
-            assistiveOutlinedButton(main)
+            assistiveSolidButton(main)
         }
 
         @ViewBuilder private func primarySolidButton(_ buttonInfo: ButtonInfo) -> some View {
@@ -393,20 +393,19 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .fill(horizontal: true, vertical: false)
+                .fillWidth(true)
             }
         }
 
-        @ViewBuilder private func secondaryOutlinedButton(_ buttonInfo: ButtonInfo) -> some View {
+        @ViewBuilder private func assistiveSolidButton(_ buttonInfo: ButtonInfo) -> some View {
             CustomOrFallback(custom: buttonInfo.custom) {
                 Button(
-                    variant: .outlined,
-                    color: .primary,
+                    color: .assistive,
                     size: .large,
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .fill(horizontal: true, vertical: false)
+                .fillWidth(true)
             }
         }
 
@@ -419,9 +418,7 @@ extension ActionArea {
                     text: buttonInfo.text,
                     handler: buttonInfo.action
                 )
-                .if(fillWidth) {
-                    $0.fill(horizontal: true, vertical: false)
-                }
+                .fillWidth(fillWidth)
             }
         }
 
@@ -457,28 +454,31 @@ extension ActionArea {
 
 struct ActionAreaModifier: ViewModifier {
     // MARK: - Initializer
-    private let model: ActionArea.Model
-    init(model: ActionArea.Model) {
-        self.model = model
+    private let actionArea: () -> ActionArea
+    private let explicitScrollReachedEnd: Bool?
+
+    init(scrollReachedEnd: Bool? = nil, actionArea: @escaping () -> ActionArea) {
+        self.actionArea = actionArea
+        explicitScrollReachedEnd = scrollReachedEnd
     }
 
     // MARK: - Body
+
+    /// 콘텐츠 안의 ``Montage/ScrollView``가 올려준 하단 도달 신호.
+    @State private var inheritedScrollReachedEnd: Bool?
 
     func body(content: Content) -> some View {
         VStack(spacing: 0) {
             content
 
-            ActionArea(variant: model.variant)
-                .caption(model.caption)
-                .extra(model.extra, divider: model.extraDivider)
-                .modifying {
-                    if case .manual(let transparency) = model.backgroundTransparencyControl {
-                        $0.transparentBackground(transparency)
-                    } else {
-                        $0
-                    }
-                }
+            actionArea()
         }
+        // 스크롤 컨테이너는 콘텐츠 쪽에 있으므로 preference로 받아 environment로 되돌려 준다.
+        .onPreferenceChange(ScrollReachedEndPreferenceKey.self) { inheritedScrollReachedEnd = $0 }
+        .environment(
+            \.actionAreaScrollReachedEnd,
+            explicitScrollReachedEnd ?? inheritedScrollReachedEnd
+        )
     }
 }
 
@@ -487,80 +487,34 @@ struct ActionAreaModifier: ViewModifier {
 extension View {
     /// 현재 뷰에 하단 ActionArea를 적용합니다.
     ///
-    /// - Parameters:
-    ///   - variant: ActionArea의 버튼 레이아웃 변형
-    ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `false` 적용
-    ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-    /// - Returns: ActionArea가 적용된 뷰
+    /// 구성은 ``ActionArea``의 모디파이어 체인으로 하고, 완성된 인스턴스를 이 슬롯에 넘깁니다.
     ///
     /// ```swift
     /// contentView
-    ///     .actionArea(
-    ///         variant: .strong(
+    ///     .actionArea {
+    ///         ActionArea(variant: .strong(
     ///             main: .init(text: "확인", action: { confirmAction() }),
     ///             sub: .init(text: "취소", action: { cancelAction() })
-    ///         ),
-    ///         caption: "변경 사항을 저장하시겠습니까?"
-    ///     )
+    ///         ))
+    ///         .caption("변경 사항을 저장하시겠습니까?")
+    ///     }
     /// ```
+    ///
+    /// - Parameters:
+    ///   - scrollReachedEnd: 콘텐츠 스크롤이 바닥에 닿았는지 여부. ``Montage/ScrollView``를 쓰면 자동으로
+    ///     전달되므로 생략하고, `SwiftUI.ScrollView`·`List`를 쓸 때만 직접 넘깁니다.
+    ///   - actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
+    /// - Returns: ActionArea가 적용된 뷰
+    ///
+    /// - Note: 슬롯 클로저에 `@ViewBuilder`를 붙이지 않았습니다. 붙이면 `if`문이 `_ConditionalContent`를
+    ///   만들어 ``ActionArea`` 타입 제약이 깨집니다. 공개 모디파이어가 모두 `Self`를 돌려주므로
+    ///   체인과 삼항 연산자는 그대로 쓸 수 있습니다.
     public func actionArea(
-        variant: ActionArea.Variant,
-        backgroundTransparency: Bool = false,
-        caption: String? = nil
+        scrollReachedEnd: Bool? = nil,
+        _ actionArea: @escaping () -> ActionArea
     ) -> some View {
         modifier(
-            ActionAreaModifier(
-                model: .init(
-                    variant: variant,
-                    backgroundTransparencyControl: .manual(backgroundTransparency),
-                    caption: caption
-                )
-            )
-        )
-    }
-    
-    /// 현재 뷰에 하단 ActionArea를 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: ActionArea의 버튼 레이아웃 변형
-    ///   - backgroundTransparency: 배경 투명도 설정, 생략하면 기본값으로 `true` 적용
-    ///   - caption: 캡션 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - extra: 추가 콘텐츠를 생성하는 클로저
-    ///   - extraDivider: 추가 콘텐츠 위에 구분선 표시 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: ActionArea가 적용된 뷰
-    ///
-    /// ```swift
-    /// contentView
-    ///     .actionArea(
-    ///         variant: .strong(
-    ///             main: .init(text: "확인", action: { confirmAction() }),
-    ///             sub: .init(text: "취소", action: { cancelAction() })
-    ///         ),
-    ///         caption: "변경 사항을 저장하시겠습니까?",
-    ///         extra: {
-    ///             Text("추가 정보")
-    ///                 .typography(variant: .label2)
-    ///         },
-    ///         extraDivider: true
-    ///     )
-    /// ```
-    public func actionArea<V: View>(
-        variant: ActionArea.Variant,
-        backgroundTransparency: Bool = true,
-        caption: String? = nil,
-        @ViewBuilder extra: @escaping () -> V,
-        extraDivider: Bool = true
-    ) -> some View {
-        modifier(
-            ActionAreaModifier(
-                model: .init(
-                    variant: variant,
-                    backgroundTransparencyControl: .manual(backgroundTransparency),
-                    caption: caption,
-                    extra: extra,
-                    extraDivider: extraDivider
-                )
-            )
+            ActionAreaModifier(scrollReachedEnd: scrollReachedEnd, actionArea: actionArea)
         )
     }
 }

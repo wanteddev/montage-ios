@@ -27,16 +27,16 @@ Montage는 `public enum Color`를 정의하고 동시에 `extension SwiftUI.Colo
 ```swift
 // ✅ 올바름
 private var backgroundColor: SwiftUI.Color {
-    isSelected ? Color.semantic(.primaryNormal).opacity(0.02)
-               : Color.semantic(.backgroundElevatedAlternative)
+    isSelected ? Color.semantic(.surfaceBrandPrimary).opacity(0.02)
+               : Color.semantic(.surfaceElevatedSecondary)
 }
 
 private func tint(for state: State) -> SwiftUI.Color { ... }
 
-@State private var fillColor: SwiftUI.Color = .semantic(.fillNormal)
+@State private var fillColor: SwiftUI.Color = .semantic(.surfaceNeutralSecondary)
 
 // ❌ 잘못됨 — `Color`가 Montage.Color (enum)로 해석되어 빌드 실패
-private var backgroundColor: Color { Color.semantic(.primaryNormal) }
+private var backgroundColor: Color { Color.semantic(.surfaceBrandPrimary) }
 ```
 
 표현식 내부에서는 그냥 `Color.semantic(...)`을 써도 된다 — 충돌은 **타입 위치**에서만 발생한다. 모호한 표현식이 있으면 `SwiftUI.Color.semantic(...)`로 한정한다.
@@ -86,7 +86,7 @@ Button(
 ## 6. 접근성
 
 - 모든 인터랙티브 컴포넌트는 의미 있는 라벨/힌트를 제공한다.
-- Dynamic Type을 깨지 않게, 폰트 크기를 직접 픽셀로 고정하지 않는다 (Typography 토큰 사용).
+- Dynamic Type을 깨지 않게, 폰트 크기를 직접 포인트로 고정하지 않는다 (Typography 토큰 사용).
 - VoiceOver 그룹핑이 필요하면 `.accessibilityElement(children: .combine)`.
 
 ## 7. 미지원 케이스 처리

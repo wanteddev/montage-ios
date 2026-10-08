@@ -15,7 +15,14 @@ import SwiftUI
 /// ```swift
 /// TextButton(text: "더 보기", handler: { showMore() })
 /// TextButton(color: .assistive, text: "상세보기", trailingIcon: .chevronRight)
+///
+/// // 비활성화
+/// TextButton(text: "저장")
+///     .disabled(isFormInvalid)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct TextButton: View {
     private let base: Button
 
@@ -80,21 +87,6 @@ public struct TextButton: View {
         self.base = base
     }
 
-    /// 버튼을 비활성화 상태로 설정합니다.
-    ///
-    /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
-    ///
-    /// ```swift
-    /// TextButton(text: "저장")
-    ///     .disable(isFormInvalid)
-    /// ```
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        .init(base: base.disable(disable))
-    }
-
     /// 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
     ///
     /// ```swift
@@ -154,28 +146,21 @@ public struct TextButton: View {
         .init(base: base.loading(loading))
     }
 
-    /// 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
+    /// 버튼이 수평으로 공간을 채우도록 설정합니다.
     ///
     /// 버튼의 크기를 조절하여 컨테이너 뷰의 공간을 효율적으로 활용할 때 사용합니다.
     ///
     /// ```swift
     /// // 부모 뷰의 가로 너비를 모두 채우는 버튼
     /// TextButton(text: "전체 확인")
-    ///     .fill(horizontal: true)
-    ///
-    /// // 가로, 세로 모두 채우는 버튼
-    /// TextButton(text: "영역 전체 채우기")
-    ///     .fill(horizontal: true, vertical: true)
+    ///     .fillWidth(true)
     /// ```
     ///
     /// - Parameters:
-    ///   - fillHorizontal: 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
-    ///   - fillVertical: 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
+    ///   - fillWidth: 채우기 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 버튼 인스턴스
-    public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false)
-        -> Self
-    {
-        .init(base: base.fill(horizontal: fillHorizontal, vertical: fillVertical))
+    public func fillWidth(_ fillWidth: Bool = true) -> Self {
+        .init(base: base.fillWidth(fillWidth))
     }
 
     /// 뷰의 내용과 동작을 정의합니다.

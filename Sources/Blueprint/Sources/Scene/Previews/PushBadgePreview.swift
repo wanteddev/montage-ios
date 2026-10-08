@@ -10,113 +10,76 @@ import Montage
 
 struct PushBadgePreview: View {
     var variants: [PushBadge.Variant] {
-        [.dot, .new, .number(Int(number))]
+        [.dot, .text(text), .maxCount(Int(number))]
     }
-    
+
     var positionYs: [PushBadge.Position] {
         let horizontalPosition = horizontalPositions[positionXIndex]
         return [.top(horizontalPosition), .center(horizontalPosition), .bottom(horizontalPosition)]
     }
-    
+
     private let sizes: [PushBadge.Size] = [
         .xsmall, .small, .medium
     ]
-    
+
     private let horizontalPositions: [PushBadge.Position.HorizontalPosition] = [
         .leading, .center, .trailing
     ]
-    
-    @State private var showTransparentChecker: Bool = false
-    @State var variantIndex = 0
-    @State var number = 1.0
-    @State var sizeIndex = 0
-    @State var positionXIndex = 2
-    @State var positionYIndex = 0
-    @State var fontColor: SwiftUI.Color = .semantic(.staticWhite)
-    @State var backgroundColor: SwiftUI.Color = .semantic(.primaryNormal)
-    @State var inset = false
-    
+
+    @State private var variantIndex = 0
+    @State private var text = "N"
+    @State private var number = 1.0
+    @State private var sizeIndex = 0
+    @State private var positionXIndex = 2
+    @State private var positionYIndex = 0
+    @State private var fontColor: SwiftUI.Color = .semantic(.staticWhite)
+    @State private var backgroundColor: SwiftUI.Color = .semantic(.surfaceBrandPrimary)
+    @State private var outlineBorder = false
+    @State private var outlineBorderColor: SwiftUI.Color = .semantic(.backgroundNeutralPrimary)
+    @State private var insetX: CGFloat = 0
+    @State private var insetY: CGFloat = 0
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                HStack {
-                    Spacer()
-                    Rectangle()
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet))
-                        .opacity(0.3)
-                        .pushBadge(
-                            variant: variants[variantIndex],
-                            size: sizes[sizeIndex],
-                            fontColor: fontColor,
-                            backgroundColor: backgroundColor,
-                            position: positionYs[positionYIndex],
-                            inset: inset ? .init(width: 20, height: 20) : .zero
-                        )
-                    Spacer()
-                }
-                Text("Options").bold()
-                HStack {
-                    Text("variant")
-                    SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
-                        .size(.small)
-                }
-                if case .number = variants[variantIndex] {
-                    Text("number")
-                    SwiftUI.Slider(value: $number, in: 1...1000) { isEditing in
-                        if !isEditing {
-                            number = Double(Int(number))
-                        }
-                    }
-                }
-                HStack {
-                    Text("size")
-                    SegmentedControl(
-                        selectedIndex: $sizeIndex,
-                        labels: sizes.map(\.description)
-                    )
-                    .size(.small)
-                }
-                SwiftUI.ColorPicker("fontColor", selection: $fontColor)
-                SwiftUI.ColorPicker("backgroundColor", selection: $backgroundColor)
-                Divider()
-                Text("position")
-                HStack {
-                    Text("horizontal")
-                    SegmentedControl(
-                        selectedIndex: $positionXIndex,
-                        labels: horizontalPositions.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("vertical")
-                    SegmentedControl(
-                        selectedIndex: $positionYIndex,
-                        labels: positionYs.map(\.description)
-                    )
-                    .size(.small)
-                }
-                Divider()
-                HStack {
-                    Text("inset(20,20)")
-                    Switch(checked: inset) { inset = $0 }
-                }
+        PreviewLayout {
+            Rectangle()
+                .frame(width: 50, height: 50)
+                .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque))
+                .opacity(0.3)
+                .pushBadge(
+                    variant: variants[variantIndex],
+                    size: sizes[sizeIndex],
+                    fontColor: fontColor,
+                    backgroundColor: backgroundColor,
+                    outlineBorder: outlineBorder,
+                    outlineBorderColor: outlineBorderColor,
+                    position: positionYs[positionYIndex],
+                    inset: .init(width: insetX, height: insetY)
+                )
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            if case .text = variants[variantIndex] {
+                TextFieldOptionRow("text", text: $text, placeholder: "표시할 문자열")
             }
-            .padding()
+            if case .maxCount = variants[variantIndex] {
+                SliderOptionRow("count", value: $number, in: 1...110, step: 1)
+            }
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            ColorPickerOptionRow("fontColor", selection: $fontColor)
+            ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
+            Divider()
+            ToggleOptionRow("outlineBorder", isOn: $outlineBorder)
+            if outlineBorder {
+                ColorPickerOptionRow("outlineBorderColor", selection: $outlineBorderColor)
+            }
+            Divider()
+            Text("position")
+            SegmentedIndexRow("horizontal", index: $positionXIndex, labels: horizontalPositions.map(\.description))
+            SegmentedIndexRow("vertical", index: $positionYIndex, labels: positionYs.map(\.description))
+            Divider()
+            Text("inset")
+            SliderOptionRow("inset x", value: $insetX, in: 0...20, step: 1)
+            SliderOptionRow("inset y", value: $insetY, in: 0...20, step: 1)
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 

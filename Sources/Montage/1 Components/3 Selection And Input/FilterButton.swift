@@ -16,14 +16,20 @@ import SwiftUI
 /// FilterButton(
 ///     variant: .solid,
 ///     size: .medium,
-///     text: "카테고리",
-///     state: $state
+///     text: "카테고리"
 /// )
-/// .backgroundColor(.semantic(.primaryNormal))
+/// .expanded(isExpanded)
+/// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
 /// .active(true, label: "최신순")
+///
+/// // 비활성화
+/// FilterButton(text: "카테고리")
+///     .disabled(true)
 /// ```
 ///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct FilterButton: View {
     // MARK: - Types
 
@@ -47,20 +53,11 @@ public struct FilterButton: View {
         case large
     }
     
-    /// 버튼의 확장 상태를 정의합니다.
-    public enum State {
-        /// 기본 상태
-        case normal
-        /// 확장된 상태 (드롭다운 표시)
-        case expand
-    }
-    
     // MARK: - Initializer
     
     private let variant: Variant
     private let size: Size
     private let text: String
-    private let state: Binding<State>
     private let handler: (() -> Void)?
     
     /// 필터 버튼을 초기화합니다.
@@ -69,34 +66,32 @@ public struct FilterButton: View {
     ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.solid` 적용
     ///   - size: 버튼의 크기, 생략하면 기본값으로 `.medium` 적용
     ///   - text: 버튼에 표시할 텍스트
-    ///   - state: 버튼의 확장 상태 바인딩, 생략하면 기본값으로 `.constant(.normal)` 적용
     ///   - handler: 버튼 클릭 시 실행할 핸들러, 생략하면 기본값으로 `nil` 적용
     public init(
         variant: Variant = .solid,
         size: Size = .medium,
         text: String,
-        state: Binding<State> = .constant(.normal),
         handler: (() -> Void)? = nil
     ) {
         self.variant = variant
         self.size = size
         self.text = text
-        self.state = state
         self.handler = handler
     }
     
     // MARK: - Body
     
-    @SwiftUI.State private var isPressed = false
+    @Environment(\.isEnabled) private var isEnabled
+    @State private var isPressed = false
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        HStack(spacing: contentSpacing) {
+        HStack(spacing: 0) {
             Text(active ? (activeLabel ?? text) : text)
                 .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
                 .padding(.horizontal, textPadding)
-            
-            Image.icon(state.wrappedValue == .normal ? .caretDown : .caretUp)
+
+            Image.icon(expanded ? .caretUp : .caretDown)
                 .resizable()
                 .foregroundStyle(iconColor)
                 .frame(width: imageSize, height: imageSize)
@@ -117,12 +112,11 @@ public struct FilterButton: View {
             Interaction(
                 state: isPressed ? .pressed : .normal,
                 variant: .light,
-                color: .labelNormal
+                color: .foregroundNeutralPrimary
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
-        .disabled(disable)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(text)
         .accessibilityAddTraits(.isButton)
@@ -131,15 +125,27 @@ public struct FilterButton: View {
     
     // MARK: - Modifiers
     
+    private var expanded = false
     private var active = false
     private var activeLabel: String?
-    private var disable = false
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
     private var customIconColor: SwiftUI.Color?
     private var fillHorizontal = false
     private var fillVertical = false
+    /// 드롭다운이 펼쳐진 상태를 설정합니다.
+    ///
+    /// 펼쳐진 상태에서는 화살표 아이콘이 위쪽을 향합니다.
+    ///
+    /// - Parameter expanded: 펼침 여부, 생략하면 기본값으로 `true` 적용
+    /// - Returns: 수정된 버튼 인스턴스
+    public func expanded(_ expanded: Bool = true) -> Self {
+        var view = self
+        view.expanded = expanded
+        return view
+    }
+
     /// 버튼의 활성화 상태와 레이블을 설정합니다.
     ///
     /// - Parameters:
@@ -150,16 +156,6 @@ public struct FilterButton: View {
         var view = self
         view.active = active
         view.activeLabel = label
-        return view
-    }
-    
-    /// 버튼의 비활성화 여부를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    public func disabled(_ disable: Bool = true) -> Self {
-        var view = self
-        view.disable = disable
         return view
     }
     
@@ -208,7 +204,7 @@ extension FilterButton.Variant {
     var backgroundColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.fillAlternative)
+            .semantic(.surfaceNeutralTertiary)
         case .outlined:
             .clear
         }
@@ -226,7 +222,7 @@ extension FilterButton.Variant {
     var disableBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.interactionDisable)
+            .semantic(.surfaceDisablePrimary)
         case .outlined:
             .clear
         }
@@ -235,51 +231,48 @@ extension FilterButton.Variant {
     var activeBackgroundColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.inverseBackground)
+            .semantic(.surfaceNeutralInverse)
         case .outlined:
-            .semantic(.primaryNormal).withAlphaComponent(0.05)
+            .semantic(.surfaceBrandPrimary).withAlphaComponent(.opacity5)
         }
     }
     
     var activeTextUIColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.inverseLabel)
+            .semantic(.foregroundNeutralInverse)
         case .outlined:
-            .semantic(.primaryNormal)
+            .semantic(.surfaceBrandPrimary)
         }
     }
     
     var activeArrowColor: UIColor {
         switch self {
         case .solid:
-            .semantic(.inverseLabel)
+            .semantic(.foregroundNeutralInverse)
         case .outlined:
-            .semantic(.labelNormal)
+            .semantic(.foregroundNeutralPrimary)
         }
     }
 }
 
 private extension FilterButton {
+    var isDisabled: Bool { isEnabled == false }
+
     var backgroundColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             switch variant {
             case .solid:
-                return .semantic(.interactionDisable)
+                return .semantic(.surfaceDisablePrimary)
             case .outlined:
                 return .clear
             }
         } else if active {
-            switch variant {
-            case .solid:
-                return customActiveColor ?? .semantic(.inverseBackground)
-            case .outlined:
-                return .semantic(.primaryNormal).opacity(0.05)
-            }
+            return .semantic(.surfaceBrandSubtle)
         } else {
             switch variant {
             case .solid:
-                return customBackgroundColor ?? .semantic(.fillAlternative)
+                return customBackgroundColor ?? .semantic(.surfaceNeutralTertiary)
             case .outlined:
                 return .clear
             }
@@ -287,42 +280,44 @@ private extension FilterButton {
     }
     
     var fontColor: SwiftUI.Color {
-        if disable {
-            return .semantic(.labelDisable)
+        if isDisabled {
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.labelAlternative)
+            return customFontColor ?? .semantic(.foregroundNeutralPrimary)
         }
     }
     
     var iconColor: SwiftUI.Color {
-        if disable {
-            return .semantic(.labelDisable)
+        if isDisabled {
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
+        } else if let customIconColor {
+            return customIconColor
         } else {
-            return customIconColor ?? .semantic(.labelAlternative)
+            switch variant {
+            case .solid:
+                return .semantic(.foregroundNeutralPrimary)
+            case .outlined:
+                return .semantic(.foregroundNeutralTertiary)
+            }
         }
     }
     
     var activeContentColor: SwiftUI.Color {
-        switch variant {
-        case .solid:
-            return .semantic(.inverseLabel)
-        case .outlined:
-            return customActiveColor ?? .semantic(.primaryNormal)
-        }
+        customActiveColor ?? .semantic(.surfaceBrandPrimary)
     }
     
     var borderColor: SwiftUI.Color {
         guard variant == .outlined else { return .clear }
-        if disable {
-            return .semantic(.lineNeutral)
+        if isDisabled {
+            return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.primaryNormal)).opacity(0.43)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(.opacity28)
         } else {
-            return .semantic(.lineNeutral)
+            return .semantic(.lineNeutralSecondary)
         }
     }
     
@@ -342,45 +337,29 @@ private extension FilterButton {
     var typoVariant: Typography.Variant {
         switch size {
         case .large: return .body2
-        case .medium: return .body2
-        case .small: return .label1
-        case .xsmall: return .caption1
+        case .medium: return .label2
+        case .small: return .caption1
+        case .xsmall: return .caption2
         }
     }
-    
+
     var contentPadding: EdgeInsets {
         switch size {
-        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12)
-        case .medium: return EdgeInsets(top: 7, leading: 11, bottom: 7, trailing: 11)
-        case .small: return EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8)
-        case .xsmall: return EdgeInsets(top: 4, leading: 7, bottom: 4, trailing: 7)
+        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 10)
+        case .medium: return EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 8)
+        case .small: return EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 6)
+        case .xsmall: return EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 4)
         }
     }
-    
-    var contentSpacing: CGFloat {
-        switch size {
-        case .large: return 2
-        case .medium: return 2
-        case .small: return 1
-        case .xsmall: return 1
-        }
-    }
-    
-    var textPadding: CGFloat {
-        switch size {
-        case .large: return 2.0
-        case .medium: return 2.0
-        case .small: return 2.0
-        case .xsmall: return 1.0
-        }
-    }
-    
+
+    var textPadding: CGFloat { 2 }
+
     var cornerRadius: CGFloat {
         switch size {
-        case .large: return 10.0
+        case .large: return 12.0
         case .medium: return 10.0
-        case .small: return 8.0
-        case .xsmall: return 6.0
+        case .small: return 10.0
+        case .xsmall: return 8.0
         }
     }
 }

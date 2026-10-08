@@ -11,31 +11,42 @@ import SwiftUI
 import Montage
 
 struct TextAreaPreview: View {
+    enum Size: String, CaseIterable {
+        case large
+        case medium
+
+        var description: String {
+            self.rawValue.capitalized
+        }
+
+        var s: TextArea.Size {
+            switch self {
+            case .large: .large
+            case .medium: .medium
+            }
+        }
+    }
+
     enum Resize: String, CaseIterable {
         case normal
         case limit
         case fixed
-        
+
         var description: String {
             self.rawValue.capitalized
         }
-        
+
         var r: TextArea.Resize {
             switch self {
             case .normal: .normal
             case .limit: .limit
-            case .fixed: .fixed(min: 100, max: 200)
+            case .fixed: .fixed(min: 116, max: 200)
             }
         }
     }
-    
-    var resources: [TextArea.Resource?] {
+
+    var leadingPresets: [TextArea.Resource.Leading] {
         [
-            .characterCount(limit: Int(limit), overflow: overflow),
-            .textButton(
-                title: "Text",
-                handler: {}
-            ),
             .iconButton(
                 icon: .send,
                 handler: {}
@@ -43,225 +54,159 @@ struct TextAreaPreview: View {
             .icon(
                 .chevronDown
             ),
-            .chip(
-                title: "Action",
-                handler: {}
+            .contentBadge(
+                title: "Badge"
             ),
-            .filterButton(
-                title: "Filter",
-                handler: {}
-            )
+            .segmentedControl(
+                selectedIndex: $segmentIndex,
+                icons: [.send, .chevronDown],
+                accessibilityLabels: ["전송", "더 보기"]
+            ),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+            }
         ]
     }
-    
+
+    var trailingPresets: [TextArea.Resource.Trailing] {
+        [
+            .button(
+                title: "Text",
+                handler: {}
+            ),
+            .iconButton(
+                icon: .send,
+                handler: {}
+            ),
+            .primaryIconButton(
+                icon: .send,
+                handler: {}
+            ),
+            .icon(
+                .chevronDown
+            ),
+            .contentBadge(
+                title: "Badge"
+            ),
+            .segmentedControl(
+                selectedIndex: $segmentIndex,
+                icons: [.send, .chevronDown],
+                accessibilityLabels: ["전송", "더 보기"]
+            ),
+            .slot {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.semantic(.foregroundBrandPrimary))
+            }
+        ]
+    }
+
     /// fixed 리사이즈 최대 높이(200)를 충분히 넘는 길이의 샘플 텍스트. 줄 번호로 스크롤 위치를 식별한다.
     static let longSampleText = (1...18)
         .map { String(format: "L%02d lorem ipsum dolor sit amet consectetur adipiscing", $0) }
         .joined(separator: " ")
 
-    @State private var showTransparentChecker: Bool = false
     @State private var text: String = ""
+    @State private var size: Size = .large
     @State private var resize: Resize = .normal
     @State private var negative: Bool = false
     @State private var focus: Bool = false
     @FocusState private var focusState: Bool
     @State private var disable: Bool = false
-    @State private var heading: Bool = false
-    @State private var requiredBadge: Bool = false
-    @State private var description: Bool = false
     @State private var placeholder: Bool = true
-    @State private var leadingResources = [TextArea.Resource]()
-    @State private var trailingResources = [TextArea.Resource]()
-    @State private var limit: CGFloat = 10
-    @State private var overflow: Bool = false
-    
+    @State private var leadingResources = [TextArea.Resource.Leading]()
+    @State private var trailingResources = [TextArea.Resource.Trailing]()
+    @State private var maxLength: CGFloat = 0
+    @State private var characterCount: Int = 0
+    @State private var segmentIndex: Int = 0
+    @State private var autocorrectionDisabled: Bool = false
+
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(spacing: 12) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                TextArea(text: $text, focus: $focusState)
-                    .resize(resize.r)
-                    .negative(negative)
-                    .disable(disable)
-                    .heading(heading ? "제목" : nil)
-                    .requiredBadge(requiredBadge)
-                    .bottomResources(
-                        leading: leadingResources,
-                        trailing: trailingResources
-                    )
-                    .description(description ? "메세지에 마침표를 찍어요." : nil)
-                    .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Options").bold()
-                    HStack {
-                        HStack {
-                            Text("Resize :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Menu(resize.description) {
-                                ForEach(Resize.allCases, id: \.self) { r in
-                                    Button {
-                                        resize = r
-                                    } label: {
-                                        Text(r.description)
-                                    }
-                                }
-                            }
-                        }
-                        HStack {
-                            Text("Placeholder :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: placeholder) { placeholder = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Focus :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: focus) {
-                                focusState = $0
-                            }
-                        }
-                        HStack {
-                            Text("Disable :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: disable) { disable = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Heading :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: heading) { heading = $0 }
-                        }
-                        HStack {
-                            Text("RequiredBadge :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: requiredBadge) { requiredBadge = $0 }
-                        }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Description :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Switch(checked: description) { description = $0 }
-                        }
-                        Text("Negative :")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Switch(checked: negative) { negative = $0 }
-                    }
-                    HStack {
-                        HStack {
-                            Text("Leading :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Menu("add") {
-                                ForEach(resources.indices, id: \.self) { index in
-                                    Button {
-                                        if let resource = resources[index] {
-                                            leadingResources.append(resource)
-                                        }
-                                    } label: {
-                                        Text(resources[index]?.description ?? "none")
-                                    }
-                                }
-                            }
-                            Button("reset") {
-                                leadingResources.removeAll()
-                            }
-                        }
-                        HStack {
-                            Text("Trailing :")
-                                .typography(variant: .headline2, weight: .medium)
-                            Spacer()
-                            Menu("add") {
-                                ForEach(resources.indices, id: \.self) { index in
-                                    Button {
-                                        if let resource = resources[index] {
-                                            trailingResources.append(resource)
-                                        }
-                                    } label: {
-                                        Text(resources[index]?.description ?? "none")
-                                    }
-                                }
-                            }
-                            Button("reset") {
-                                trailingResources.removeAll()
-                            }
-                        }
-                    }
-                    .font(.font(variant: .label1))
-                    // 서버 데이터처럼 코드로 텍스트를 주입하는 시나리오 재현용 (E2E: Tests/E2E/textarea-scroll)
-                    HStack {
-                        Text("Text :")
-                            .typography(variant: .headline2, weight: .medium)
-                        Spacer()
-                        Button("inject") {
-                            text = Self.longSampleText
-                        }
-                        Button("clear") {
-                            text = ""
-                        }
-                    }
-                    .font(.font(variant: .label1))
-                    if leadingResources.contains(where: { $0.isCharacterCount }) ||
-                        trailingResources.contains(where: { $0.isCharacterCount })
-                    {
-                        HStack {
-                            Text("characterCount")
-                                .layoutPriority(1)
-                            Text("limit")
-                            SwiftUI.Slider(value: $limit, in: 10...1000, step: 10)
-                            Text("overflow")
-                            Switch(checked: overflow) { overflow = $0 }
-                        }
-                    }
-                }
+        PreviewLayout {
+            TextArea(text: $text, focus: $focusState)
+                .size(size.s)
+                .resize(resize.r)
+                .negative(negative)
+                .bottomResources(
+                    leading: leadingResources,
+                    trailing: trailingResources
+                )
+                .maxLength(maxLength > 0 ? Int(maxLength) : nil)
+                .autocorrectionDisabled(autocorrectionDisabled)
+                .onTextChange { characterCount = $0.count }
+                .placeholder(placeholder ? "텍스트를 입력해주세요" : nil)
+                // resize 변경 시 뷰 아이덴티티를 리셋해 높이를 재계산한다.
+                // text를 건드리면 placeholder 조건(text.isEmpty)이 깨지므로 .id로 처리한다.
+                .id(resize)
+                .disabled(disable)
+        } options: {
+            SegmentedIndexRow("size", index: Binding(
+                get: { Size.allCases.firstIndex(of: size) ?? 0 },
+                set: { size = Size.allCases[$0] }
+            ), labels: Size.allCases.map(\.description))
+            SegmentedIndexRow("resize", index: Binding(
+                get: { Resize.allCases.firstIndex(of: resize) ?? 0 },
+                set: { resize = Resize.allCases[$0] }
+            ), labels: Resize.allCases.map(\.description))
+            HStack {
+                ToggleOption("placeholder", isOn: $placeholder)
+                ToggleOption("focus", isOn: Binding(
+                    get: { focus },
+                    set: { focusState = $0 }
+                ))
             }
-            .padding()
+            HStack {
+                ToggleOption("disable", isOn: $disable)
+                ToggleOption("negative", isOn: $negative)
+            }
+            ToggleOption("autocorrectionDisabled", isOn: $autocorrectionDisabled)
+            MenuOptionRow("leading", menuLabel: "add") {
+                ForEach(leadingPresets.indices, id: \.self) { index in
+                    Button {
+                        leadingResources.append(leadingPresets[index])
+                        leadingResources = Array(leadingResources.prefix(3))
+                    } label: {
+                        Text(leadingPresets[index].description)
+                    }
+                }
+            } accessory: {
+                Button("reset") { leadingResources.removeAll() }
+            }
+            MenuOptionRow("trailing", menuLabel: "add") {
+                ForEach(trailingPresets.indices, id: \.self) { index in
+                    Button {
+                        trailingResources.append(trailingPresets[index])
+                        trailingResources = Array(trailingResources.prefix(3))
+                    } label: {
+                        Text(trailingPresets[index].description)
+                    }
+                }
+            } accessory: {
+                Button("reset") { trailingResources.removeAll() }
+            }
+            HStack {
+                Text("maxLength")
+                    .layoutPriority(1)
+                SwiftUI.Slider(value: $maxLength, in: 0...200, step: 10)
+                Text(maxLength > 0 ? "\(characterCount)/\(Int(maxLength))" : "off")
+            }
+            // 서버 데이터처럼 코드로 텍스트를 주입하는 시나리오 재현용 (E2E: Tests/E2E/textarea-scroll)
+            HStack {
+                Text("text")
+                    .layoutPriority(1)
+                Spacer()
+                Button("inject") { text = Self.longSampleText }
+                Button("clear") { text = "" }
+            }
         }
         .onChange(of: focusState) {
             focus = $0
         }
-        .onChange(of: resize) { _ in
-            // resize 값이 바뀔 때 프리뷰에서 높이가 제대로 갱신되지 않아서 꼼수로 처리
-            text = " "
-            Task {
-                text = ""
-            }
-        }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
     }
 }
 
-extension TextArea.Resource {
-    var isCharacterCount: Bool {
-        if case .characterCount = self {
-            return true
-        } else {
-            return false
-        }
-    }
-}
-
-extension TextArea.Resource: CaseDescribable {}
+extension TextArea.Resource.Leading: CaseDescribable {}
+extension TextArea.Resource.Trailing: CaseDescribable {}
 
 #Preview {
     TextAreaPreview()

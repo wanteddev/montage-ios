@@ -30,7 +30,16 @@ import SwiftUI
 /// Thumbnail(urlString: imageURL, ratio: .r1x1)
 ///    .width(50)
 ///    .border(true)
+///
+/// // 비활성화
+/// Thumbnail(urlString: imageURL, ratio: .r1x1)
+///    .width(100)
+///    .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 이미지는 색 토큰으로 비활성을 표현할 수 없어 불투명도 `Opacity/43`을 적용합니다.
 public struct Thumbnail: View {
 
     // MARK: - Ratio Enum
@@ -91,7 +100,7 @@ public struct Thumbnail: View {
 
         /// 비율에 해당하는 크기를 반환합니다.
         ///
-        /// - Note: 이 값은 상대적 비율을 나타내며 실제 픽셀 크기가 아닙니다.
+        /// - Note: 이 값은 상대적 비율을 나타내며 실제 포인트 크기가 아닙니다.
         var size: CGSize {
             switch self {
             // 가로가 긴 비율
@@ -178,10 +187,11 @@ public struct Thumbnail: View {
     // MARK: - Body
 
     @State private var proposedWidth: CGFloat = .zero
-    // SDWebImageSwiftUI 3.x의 WebImage는 onDisappear에서 error가 nil인 in-flight 요청을
-    // 취소하지 않는 한계가 있어 ImageManager를 직접 소유해 명시적으로 load/cancel을 제어한다.
-    @StateObject private var imageManager = ImageManager()
-    @State private var loadedURL: URL?
+
+    // 이미지 계열은 색 토큰으로 비활성을 표현할 수 없어 불투명도를 낮춘다.
+    ///
+    /// 이미지 계열은 색 토큰으로 비활성을 표현할 수 없어 불투명도를 낮춘다.
+    @Environment(\.isEnabled) private var isEnabled
 
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -189,7 +199,10 @@ public struct Thumbnail: View {
             SwiftUI.Color.clear
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { proposedWidth = $0 })
 
-            content
+            // 이미지 로더는 URL로 식별(identity)한다. urlString이 바뀌면 로더(및 내부 ImageManager)가
+            // 새로 생성돼, 이전 URL의 이미지/에러 상태가 남지 않고 항상 처음부터 다시 로드한다.
+            ThumbnailImageLoader(urlString: urlString)
+                .id(urlString)
                 .if (thumbnailWidth > 0) {
                     $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
                 }
@@ -198,23 +211,42 @@ public struct Thumbnail: View {
                 .overlay {
                     if border {
                         RoundedRectangle(cornerRadius: radius ? 12 : 0)
-                            .strokeBorder(SwiftUI.Color.semantic(.lineNormal), lineWidth: 1)
+                            .strokeBorder(SwiftUI.Color.semantic(.lineNeutralPrimary), lineWidth: 1)
                     }
                 }
         }
         .if (thumbnailWidth > 0) {
             $0.frame(width: thumbnailWidth, height: thumbnailWidth * ratio.rawValue)
         }
-        .onAppear { loadIfNeeded(urlString) }
-        // onChange 핸들러는 값이 바뀌기 전 뷰 인스턴스에 캡처되므로 self.urlString은 이전 값을 가리킨다.
-        // 전달받은 새 값을 그대로 넘겨야 URL 교체가 로드로 이어진다.
-        .onChange(of: urlString) { newValue in loadIfNeeded(newValue) }
-        .onDisappear {
-            // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
-            // loadedURL을 함께 비워, 같은 셀이 동일 URL로 재진입했을 때 loadIfNeeded()가 재요청을 수행하게 한다.
-            imageManager.cancel()
-            loadedURL = nil
-        }
+        .opacity(isEnabled ? 1 : .opacity43)
+    }
+
+    private var thumbnailWidth: CGFloat {
+        width ?? proposedWidth
+    }
+}
+
+/// URL 단위로 이미지를 로드해 표시하는 내부 뷰.
+///
+/// `ImageManager`를 직접 소유해 화면에서 사라질 때 in-flight 다운로드를 명시적으로 취소한다.
+/// (SDWebImageSwiftUI 3.x의 `WebImage`는 error가 nil인 in-flight 요청을 onDisappear에서 취소하지 않는다.)
+/// URL이 바뀌면 ``Thumbnail``이 `.id(urlString)`로 이 뷰를 새로 만들어, 직전 URL의 이미지/에러
+/// 상태가 남지 않은 깨끗한 상태에서 다시 로드한다.
+private struct ThumbnailImageLoader: View {
+    let urlString: String
+
+    @StateObject private var imageManager = ImageManager()
+
+    var body: some View {
+        content
+            .onAppear {
+                guard let url = URL(string: urlString) else { return }
+                imageManager.load(url: url)
+            }
+            .onDisappear {
+                // 화면에서 사라지면 진행 중인 다운로드를 즉시 취소해 네트워크 슬롯이 점유되지 않도록 한다.
+                imageManager.cancel()
+            }
     }
 
     @ViewBuilder
@@ -229,21 +261,7 @@ public struct Thumbnail: View {
                 .scaledToFill()
                 .onAppear { print(error) }
         } else {
-            SwiftUI.Color.semantic(.fillAlternative)
+            SwiftUI.Color.semantic(.surfaceNeutralTertiary)
         }
-    }
-
-    private func loadIfNeeded(_ urlString: String) {
-        let url = URL(string: urlString)
-        guard loadedURL != url else { return }
-        loadedURL = url
-        imageManager.cancel()
-        if let url {
-            imageManager.load(url: url)
-        }
-    }
-
-    private var thumbnailWidth: CGFloat {
-        width ?? proposedWidth
     }
 }

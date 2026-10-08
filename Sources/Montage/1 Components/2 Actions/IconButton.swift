@@ -15,64 +15,107 @@ import SwiftUI
 /// - 외곽선형(outlined): 테두리로 둘러싸인 아이콘
 /// - 솔리드형(solid): 배경색이 채워진 아이콘
 ///
+/// 모든 variant는 컨테이너를 24\~64pt 사이에서 커스텀 사이즈로 지정할 수 있고, 인터랙션 영역도 컨테이너와 같습니다.
+/// 단 `normal` variant에 `interactionOverflow()`를 켜면 커스텀 사이즈의 숫자는 아이콘 크기가 되고,
+/// 컨테이너도 아이콘 크기로 줄어듭니다. 인터랙션 영역은 아이콘에서 계산해 컨테이너 밖으로 넘칩니다.
+///
 /// ```swift
 /// IconButton(
 ///     icon: .arrowLeft,
 ///     handler: { print("뒤로 가기 버튼 탭됨") }
 /// )
+///
+/// // 비활성화
+/// IconButton(icon: .bell)
+///     .disabled(true)
+///
+/// // 인터랙션 레이어 대신 아이콘을 흐리게 해서 press 피드백
+/// IconButton(icon: .search)
+///     .interactionEffect(.dim)
+///
+/// // 컨테이너는 아이콘 크기로 줄고, 인터랙션 영역은 그대로 남아 밖으로 넘친다
+/// IconButton(icon: .close)
+///     .interactionOverflow()
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct IconButton: View {
+    @Environment(\.isEnabled) private var isEnabled
     @State private var isPressed = false
-    
+
     private let variant: IconButton.Variant
     private let icon: Icon
     private let handler: (() -> Void)?
-    
+
     /// 아이콘 버튼을 생성합니다.
     ///
     /// - Parameters:
-    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: 24)` 적용
+    ///   - variant: 버튼의 외관 스타일, 생략하면 기본값으로 `.normal(size: .xlarge)` 적용
     ///   - icon: 표시할 아이콘
     ///   - handler: 버튼 탭 시 실행할 핸들러
     /// - Returns: 구성된 아이콘 버튼 뷰
     public init(
-        variant: IconButton.Variant = .normal(size: 24),
+        variant: IconButton.Variant = .normal(size: .xlarge),
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
         self.variant = variant
         self.icon = icon
-        self.disable = false
+        self.interactionEffect = .highlight
         self.showPushBadge = false
-        self.padding = {
-            switch variant {
-            case .normal, .background: .zero
-            case .outlined, .solid: .zero
-            }
-        }()
+        self.interactionOverflow = false
+        self.extraPadding = .zero
         self.iconColor = nil
         self.backgroundColor = nil
         self.borderColor = nil
+        self.customInteractionColor = nil
         self.handler = handler
     }
-    
+
     // MARK: - Modifiers
-    
-    private var disable: Bool
+
+    private var interactionEffect: IconButton.InteractionEffect
     private var showPushBadge: Bool
-    private var padding: CGFloat
+    private var interactionOverflow: Bool
+    private var extraPadding: CGFloat
     private var iconColor: SwiftUI.Color?
     private var backgroundColor: SwiftUI.Color?
     private var borderColor: SwiftUI.Color?
-    /// 버튼의 비활성화 여부를 설정합니다.
-    /// - Parameter value: 비활성화 여부, true이면 버튼이 비활성화됩니다.
+    private var customInteractionColor: Color.Semantic?
+
+    /// press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: `.highlight`).
+    ///
+    /// 세 값 모두 터치 영역은 같습니다. 레이어는 시각만 감추고 히트 영역은 그대로 유지합니다.
+    /// 피드백 색상은 `.highlight`·`.dim` 모두 `interactionColor(_:)`로 바꿀 수 있습니다.
+    ///
+    /// > `.dim`은 `normal` variant에서만 동작합니다. 다른 variant에 넘기면 `.highlight`로 처리됩니다.
+    /// - Parameter effect: 인터랙션 피드백 방식
     /// - Returns: 수정된 IconButton 인스턴스
-    public func disable(_ value: Bool = true) -> Self {
+    public func interactionEffect(_ effect: IconButton.InteractionEffect) -> Self {
         var copy = self
-        copy.disable = value
+        copy.interactionEffect = {
+            guard case .dim = effect else { return effect }
+            guard case .normal = self.variant else { return .highlight }
+            return .dim
+        }()
         return copy
     }
-    
+
+    /// press 피드백에 사용할 색상을 설정합니다.
+    ///
+    /// `interactionEffect(_:)` 값에 따라 적용 대상이 다릅니다. 두 경우 모두 이 색에 상태별 불투명도를 적용합니다.
+    /// - `.highlight`: 아이콘 뒤 인터랙션 레이어에 적용됩니다. 지정하지 않으면 `.foregroundNeutralPrimary`
+    /// - `.dim`: 아이콘 색에 적용됩니다. 지정하지 않으면 평상시 아이콘 색을 그대로 씁니다
+    /// - `.none`: 피드백이 없어 적용되지 않습니다
+    /// - Parameter color: 인터랙션 색상(semantic 토큰)
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func interactionColor(_ color: Color.Semantic) -> Self {
+        var copy = self
+        copy.customInteractionColor = color
+        return copy
+    }
+
     /// 푸시 뱃지 표시 여부를 설정합니다.
     /// > normal variant에서만 사용 가능합니다.
     /// - Parameter value: 푸시 뱃지 표시 여부
@@ -80,19 +123,58 @@ public struct IconButton: View {
     public func showPushBadge(_ value: Bool = true) -> Self {
         var copy = self
         copy.showPushBadge = {
-            guard case .normal(_) = self.variant else { return false }
+            guard case .normal = self.variant else { return false }
             return value
         }()
         return copy
     }
-    
-    /// 버튼의 패딩을 설정합니다.
-    /// > outlined, soild variant에서만 사용 가능합니다.
+
+    /// 인터랙션 영역이 레이아웃 밖으로 넘치게 합니다.
+    ///
+    /// 버튼이 레이아웃에서 차지하는 컨테이너를 아이콘 크기까지 줄이고, 인터랙션 영역은 크기를 그대로 둡니다.
+    /// 그만큼 인터랙션 영역이 상하좌우로 `(인터랙션 영역 - 아이콘) / 2`씩 넘치지만 주변 간격은 밀지 않습니다.
+    ///
+    /// 3.x에 맞춰 잡아둔 레이아웃이 틀어지지 않게 하기 위해 사용합니다. 4.0은 인터랙션 영역이 아이콘보다 커서
+    /// 컨테이너를 그대로 두면 간격이 그만큼 벌어지는데, 이 모디파이어를 켜면 간격은 아이콘 기준으로 유지합니다.
+    ///
+    /// 사이즈별 값은 다음과 같습니다(레이아웃 / 인터랙션 overflow / radius).
+    /// - `.small` - 16 / 4 / 8
+    /// - `.medium` - 18 / 5 / 8
+    /// - `.large` - 20 / 6 / 10
+    /// - `.xlarge` - 24 / 6 / 10
+    ///
+    /// 프리셋 사이즈의 아이콘·인터랙션 영역·radius 값은 켜든 끄든 같습니다.
+    ///
+    /// `custom(size:)`는 켜면 숫자의 뜻이 컨테이너에서 아이콘 크기로 바뀝니다.
+    /// 3.x의 `.normal(size:)`처럼 아이콘 크기를 그대로 넘기면 되고, 인터랙션 영역은 아이콘에서 계산합니다.
+    /// - 인터랙션 영역 = `max(24, ceil(아이콘 × 1.5 ÷ 4) × 4)` - 아이콘의 1.5배를 4의 배수로 올림
+    /// - radius = 인터랙션 영역 × 0.3에 가장 가까운 radius 토큰(가운데 값이면 작은 쪽)
+    /// - 예: 아이콘 22 → 인터랙션 영역 36, 아이콘 28 → 44, 아이콘 32 → 48
+    /// - 아이콘 크기에는 제한이 없습니다. 최소 24는 인터랙션 영역에만 적용됩니다.
+    ///
+    /// 네 프리셋의 아이콘 크기(16·18·20·24)를 넣으면 프리셋과 같은 인터랙션 영역(24·28·32·36)이 나옵니다.
+    ///
+    /// `interactionEffect(_:)`·`disabled(_:)`와 함께 쓸 수 있고, 푸시 뱃지는 켜든 끄든 아이콘 우상단에 붙습니다.
+    ///
+    /// > normal variant에서만 동작합니다. 다른 variant에 걸면 무시됩니다.
+    /// - Parameter value: 인터랙션 영역을 넘치게 할지 여부
+    /// - Returns: 수정된 IconButton 인스턴스
+    public func interactionOverflow(_ value: Bool = true) -> Self {
+        var copy = self
+        copy.interactionOverflow = {
+            guard case .normal = self.variant else { return false }
+            return value
+        }()
+        return copy
+    }
+
+    /// 버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).
+    /// > outlined, solid variant에서만 사용 가능합니다.
     /// - Parameter value: 패딩 값
     /// - Returns: 수정된 IconButton 인스턴스
     public func padding(_ value: CGFloat) -> Self {
         var copy = self
-        copy.padding = {
+        copy.extraPadding = {
             switch self.variant {
             case .normal, .background: .zero
             case .outlined, .solid: value
@@ -100,7 +182,7 @@ public struct IconButton: View {
         }()
         return copy
     }
-    
+
     /// 아이콘 색상을 설정합니다.
     /// - Parameter color: 설정할 색상
     /// - Returns: 수정된 IconButton 인스턴스
@@ -109,9 +191,9 @@ public struct IconButton: View {
         copy.iconColor = color
         return copy
     }
-    
+
     /// 배경 색상을 설정합니다.
-    /// > outlined, soild variant에서만 사용 가능합니다.
+    /// > outlined, solid variant에서만 사용 가능합니다.
     /// - Parameter color: 설정할 색상
     /// - Returns: 수정된 IconButton 인스턴스
     public func backgroundColor(_ color: SwiftUI.Color) -> Self {
@@ -124,7 +206,7 @@ public struct IconButton: View {
         }()
         return copy
     }
-    
+
     /// 테두리 색상을 설정합니다.
     /// > outlined 에서만 사용 가능합니다.
     /// - Parameter color: 설정할 색상
@@ -132,37 +214,67 @@ public struct IconButton: View {
     public func borderColor(_ color: SwiftUI.Color) -> Self {
         var copy = self
         copy.borderColor = {
-            guard case .outlined(_) = self.variant else { return nil }
+            guard case .outlined = self.variant else { return nil }
             return color
         }()
         return copy
     }
-    
+
     // MARK: Private Computed Property
-    
-    private var _iconColor: SwiftUI.Color {
-        if disable {
-            SwiftUI.Color(uiColor: variant.inactiveColor)
+
+    private var isDisabled: Bool { isEnabled == false }
+
+    /// 아이콘을 흐리게 해서 press 피드백을 주는 중인지 여부.
+    private var isDimmed: Bool {
+        guard case .dim = interactionEffect else { return false }
+        return isPressed && !isDisabled
+    }
+
+    /// 인터랙션 레이어의 상태. `.dim`·`.none`에서는 항상 `.normal`이라 레이어가 보이지 않지만,
+    /// 레이어 자체는 터치 영역을 잡아주므로 걷어내지 않는다.
+    private var interactionState: Interaction.State {
+        guard case .highlight = interactionEffect else { return .normal }
+        return (isPressed && !isDisabled) ? .pressed : .normal
+    }
+
+    /// dim press 색의 기준. `interactionColor(_:)`를 주면 그 색, 없으면 평상시 아이콘 색을 그대로 쓴다.
+    private var dimBaseColor: SwiftUI.Color {
+        if let customInteractionColor {
+            SwiftUI.Color.semantic(customInteractionColor)
+        } else if let iconColor {
+            iconColor
         } else {
-            if let iconColor {
-                iconColor
-            } else {
-                SwiftUI.Color(uiColor: variant.activeColor)
-            }
+            SwiftUI.Color(uiColor: variant.activeColor)
         }
     }
-    
+
+    private var _iconColor: SwiftUI.Color {
+        if isDisabled {
+            SwiftUI.Color(uiColor: variant.disabledIconColor)
+        } else if isDimmed {
+            // 색을 갈아끼우지 않고 기준 색의 불투명도만 낮춘다.
+            // `.highlight`가 하나의 색에 상태별 불투명도를 주는 것과 같은 방식이라,
+            // 아이콘 색을 커스텀해도 press 색이 그 색을 따라간다.
+            // 값은 Figma 스펙의 Pressed(22%). hover가 없는 플랫폼이라 Hovered(52%)는 쓰지 않는다.
+            dimBaseColor.opacity(.opacity22)
+        } else if let iconColor {
+            iconColor
+        } else {
+            SwiftUI.Color(uiColor: variant.activeColor)
+        }
+    }
+
     private var _strokeColor: SwiftUI.Color {
-        if case .outlined(_) = variant, let borderColor {
+        if case .outlined = variant, let borderColor {
             borderColor
         } else {
             SwiftUI.Color(uiColor: variant.borderColor)
         }
     }
-    
+
     private var _backgroundColor: SwiftUI.Color {
-        if disable {
-            SwiftUI.Color(uiColor: variant.inactiveBackgroundColor)
+        if isDisabled {
+            SwiftUI.Color(uiColor: variant.disabledBackgroundColor)
         } else {
             if let backgroundColor {
                 backgroundColor
@@ -171,60 +283,84 @@ public struct IconButton: View {
             }
         }
     }
-    
-    private var interactionOffset: CGFloat {
-        variant.interactionOffset + padding
-    }
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
+        let m = variant.metrics(interactionOverflow: interactionOverflow)
+        let interactionAreaSize = m.interactionArea + 2 * extraPadding
+        // overflow를 켜면 버튼이 차지하는 컨테이너만 아이콘 크기로 줄고, 인터랙션 영역은 그대로 남아 밖으로 번진다.
+        let containerSize = interactionOverflow ? m.icon : interactionAreaSize
+        let totalPadding = interactionOverflow ? .zero : m.padding + extraPadding
+        // 인터랙션 영역이 컨테이너 밖으로 넘친 만큼. 터치 영역을 그만큼 되돌려 놓는 데 쓴다.
+        let overflowInset = (interactionAreaSize - containerSize) / 2
+
         Image.icon(icon)
             .resizable()
-            .if(variant.isBackground) {
-                $0.padding(2)
+            .frame(width: m.icon, height: m.icon)
+            .foregroundStyle(_iconColor)
+            // 밝아진 배경에서 값을 빼는 합성이라, 다크 모드에서도 아이콘이 배경에 묻히지 않는다.
+            .if(variant.isPlusBlendedBackground) {
+                $0.blendMode(.plusDarker)
+            }
+            .if(showPushBadge) {
+                $0.pushBadge()
             } else: {
                 $0
             }
-            .frame(
-                width: variant.iconSize.width,
-                height: variant.iconSize.height
-            )
-            .foregroundStyle(_iconColor)
-            .if(showPushBadge) {
-                $0.pushBadge()
-            }
+            .padding(totalPadding)
             .background {
                 Interaction(
-                    state: isPressed ? .pressed : .normal,
+                    state: interactionState,
                     variant: variant.interactionVariant,
-                    color: variant.interactionColor
+                    color: customInteractionColor ?? variant.interactionColor
                 )
-                .clipShape(Circle())
-                .padding(.vertical, -interactionOffset)
-                .padding(.horizontal, -interactionOffset)
+                .clipShape(RoundedRectangle(cornerRadius: m.radius))
+                // background 안에서 크기를 잡으므로 레이아웃보다 커도 바깥으로 번지기만 하고
+                // 버튼이 차지하는 자리는 밀지 않는다.
+                .frame(width: interactionAreaSize, height: interactionAreaSize)
             }
-            .padding(.all, variant.backgroundOffset + padding)
-            .background(
-                ZStack {
-                    Circle()
-                        .fill(_backgroundColor)
-                    if case let .background(_, alternative) = variant, alternative == false {
-                        Circle()
-                            .fill(.regularMaterial)
-                    }
-                    Circle()
-                        .stroke(_strokeColor, lineWidth: variant.borderWidth)
-                }
-            )
-            .frame(
-                width: variant.iconSize.width + variant.backgroundOffset + padding,
-                height: variant.iconSize.height + variant.backgroundOffset + padding
-            )
-            .allowsHitTesting(disable == false)
+            .background {
+                backgroundLayer(metrics: m)
+            }
+            .frame(width: containerSize, height: containerSize)
+            // 터치 영역은 컨테이너가 아니라 인터랙션 영역을 따른다. 눌리는 자리와 눌린 티가 나는 자리가
+            // 어긋나지 않아야 한다. overflow가 꺼져 있으면 inset이 0이라 프레임 그대로다.
+            .contentShape(Rectangle().inset(by: -overflowInset))
             .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("\(icon.rawValue) \(String(localized: "아이콘", bundle: .module))")
             .accessibilityAddTraits(.isButton)
+    }
+
+    @ViewBuilder
+    private func backgroundLayer(metrics m: IconButton.Variant.Metrics) -> some View {
+        let shape = RoundedRectangle(cornerRadius: m.radius)
+        switch variant {
+        case .normal:
+            EmptyView()
+        case .background(_, let alternative):
+            if alternative {
+                shape.fill(_backgroundColor)
+            } else {
+                // 뒤를 흐리고, Static/White 35%를 plusLighter로 더한 뒤 Static/Black 5%를 얹는다.
+                // plusLighter는 아래 색에 값을 더하므로 어두운 배경에서도 버튼이 묻히지 않는다.
+                ZStack {
+                    MaterialBackground(in: shape, tint: _backgroundColor)
+                    shape
+                        .fill(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity35))
+                        .blendMode(.plusLighter)
+                    shape
+                        .fill(SwiftUI.Color.semantic(.staticBlack).opacity(.opacity5))
+                }
+            }
+        case .outlined:
+            ZStack {
+                shape.fill(_backgroundColor)
+                shape.stroke(_strokeColor, lineWidth: 1)
+            }
+        case .solid:
+            MaterialBackground(in: shape, tint: _backgroundColor)
+        }
     }
 }
 
@@ -234,153 +370,240 @@ extension IconButton {
     /// 아이콘 버튼의 다양한 스타일과 크기를 정의합니다.
     public enum Variant {
         /// 기본형 아이콘 버튼 - 배경 없이 아이콘만 표시
-        /// - Parameter size: 아이콘 크기 (픽셀)
-        case normal(size: Int)
-        
-        /// 배경형 아이콘 버튼 - 반투명 배경을 가진 아이콘
+        /// - Parameter size: 아이콘 크기 (`NormalSize`)
+        case normal(size: NormalSize)
+
+        /// 배경형 아이콘 버튼 - 반투명 배경을 가진 원형 아이콘
         /// - Parameters:
-        ///   - size: 아이콘 크기 (픽셀)
+        ///   - size: 컨테이너 한 변의 크기(포인트). 생략하면 기본값 `32`(컨테이너 32 / 아이콘 20).
+        ///     `[24, 64]` 범위로 클램프되며, `32`가 아닌 값은 커스텀 사이즈 규칙으로 계산된다.
         ///   - isAlternative: 대체 스타일 사용 여부, 생략하면 기본값으로 `false` 적용
-        case background(size: Int, isAlternative: Bool = false)
-        
+        case background(size: Int = 32, isAlternative: Bool = false)
+
         /// 외곽선형 아이콘 버튼 - 테두리로 둘러싸인 아이콘
-        /// - Parameter size: 아이콘 크기 (Size 열거형)
+        /// - Parameter size: 아이콘 크기 (`Size`)
         case outlined(size: Size)
-        
+
         /// 솔리드형 아이콘 버튼 - 배경색이 채워진 아이콘
-        /// - Parameter size: 아이콘 크기 (Size 열거형)
+        /// - Parameter size: 아이콘 크기 (`Size`)
         case solid(size: Size)
-        
-        fileprivate var isBackground: Bool {
-            switch self {
-            case .background: true
-            default: false
-            }
-        }
     }
-    
+
+    /// press 피드백 방식을 결정하는 열거형입니다.
+    ///
+    /// 어떤 값을 쓰든 터치 영역은 같습니다. 피드백의 시각 표현만 달라집니다.
+    public enum InteractionEffect {
+        /// 아이콘 뒤에 인터랙션 레이어를 깝니다. 기본값이며 3.x까지의 동작입니다.
+        case highlight
+        /// 레이어 대신 아이콘의 불투명도를 낮춰(22%) 피드백합니다.
+        /// 레이어 형태가 어색한 자리(TopNavigation 등)에 씁니다.
+        /// > `normal` variant에서만 동작합니다.
+        /// > 기준 색은 평상시 아이콘 색이며, `interactionColor(_:)`로 따로 지정할 수 있습니다.
+        case dim
+        /// 피드백이 없습니다. 탭 핸들러는 그대로 동작합니다.
+        case none
+    }
+
+    /// Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.
+    public enum NormalSize {
+        /// 작은 크기 (인터랙션 영역 24pt / 아이콘 16pt / radius 8)
+        case small
+        /// 중간 크기 (인터랙션 영역 28pt / 아이콘 18pt / radius 8)
+        case medium
+        /// 큰 크기 (인터랙션 영역 32pt / 아이콘 20pt / radius 10)
+        case large
+        /// 가장 큰 크기 (인터랙션 영역 36pt / 아이콘 24pt / radius 10)
+        case xlarge
+        /// 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
+        ///
+        /// `interactionOverflow()`를 켜면 숫자는 아이콘 크기가 되고, 인터랙션 영역은 아이콘에서 계산한다.
+        /// 계산식은 `interactionOverflow(_:)`를 참고한다.
+        /// - Parameter size: 컨테이너 한 변의 크기(포인트). `interactionOverflow()`를 켜면 아이콘 한 변의 크기
+        case custom(size: Int)
+    }
+
     /// 버튼 사이즈를 결정하는 열거형입니다.
     public enum Size {
-        /// 작은 크기
+        /// 작은 크기 (컨테이너 32pt / 아이콘 16pt / 원형)
         case small
-        /// 중간 크기
+        /// 중간 크기 (컨테이너 40pt / 아이콘 18pt / 원형)
         case medium
-        /// 사용자 지정 크기
-        /// - Parameter size: 아이콘 크기 (픽셀)
+        /// 사용자 지정 크기. 컨테이너는 `[24, 64]` 범위로 클램프된다.
+        /// - Parameter size: 컨테이너 한 변의 크기(포인트)
         case custom(size: Int)
     }
 }
 
 extension IconButton.Variant {
+    /// 아이콘 버튼의 레이아웃 메트릭(인터랙션 영역/패딩/라운드 반경/아이콘 크기).
+    ///
+    /// `interactionOverflow`가 꺼져 있으면 컨테이너는 인터랙션 영역과 같고, 켜져 있으면 아이콘 크기로 줄어든다.
+    struct Metrics {
+        var interactionArea: CGFloat
+        var padding: CGFloat
+        var radius: CGFloat
+        var icon: CGFloat
+    }
+
+    /// - Parameter interactionOverflow: 켜져 있으면 `normal`의 `custom(size:)` 숫자를 아이콘 크기로 해석한다.
+    func metrics(interactionOverflow: Bool) -> Metrics {
+        switch self {
+        case .normal(let size):
+            switch size {
+            case .small:  return Self.makeMetrics(interactionArea: .dimension24, icon: .dimension16, radius: .radius8)
+            case .medium: return Self.makeMetrics(interactionArea: .dimension28, icon: .dimension18, radius: .radius8)
+            case .large:  return Self.makeMetrics(interactionArea: .dimension32, icon: .dimension20, radius: .radius10)
+            case .xlarge: return Self.makeMetrics(interactionArea: .dimension36, icon: .dimension24, radius: .radius10)
+            case .custom(let n) where interactionOverflow:
+                let icon = CGFloat(max(0, n))
+                let interactionArea = Self.overflowInteractionArea(icon: icon)
+                let radius = Self.nearestToken(interactionArea * 0.3, in: Radius.allValues, tieBreak: .down)
+                return Self.makeMetrics(interactionArea: interactionArea, icon: icon, radius: radius)
+            case .custom(let n):
+                let container = Self.clampedContainer(n)
+                let icon = Self.nearestToken(container * (2.0 / 3.0), in: Dimension.allValues, tieBreak: .down)
+                let radius = Self.nearestToken(container * 0.3, in: Radius.allValues, tieBreak: .down)
+                return Self.makeMetrics(interactionArea: container, icon: icon, radius: radius)
+            }
+        case .background(let size, _):
+            if CGFloat(size) == .dimension32 {
+                return Self.makeMetrics(interactionArea: .dimension32, icon: .dimension20, radius: .primitiveInfinity)
+            }
+            let container = Self.clampedContainer(size)
+            let icon = Self.nearestToken(container * (2.0 / 3.0), in: Dimension.allValues, tieBreak: .down)
+            return Self.makeMetrics(interactionArea: container, icon: icon, radius: .primitiveInfinity)
+        case .outlined(let size), .solid(let size):
+            switch size {
+            case .small:  return Self.makeMetrics(interactionArea: .dimension32, icon: .dimension16, radius: .primitiveInfinity)
+            case .medium: return Self.makeMetrics(interactionArea: .dimension40, icon: .dimension18, radius: .primitiveInfinity)
+            case .custom(let n):
+                let container = Self.clampedContainer(n)
+                let icon = Self.nearestToken(container * 0.47, in: Dimension.allValues, tieBreak: .down)
+                return Self.makeMetrics(interactionArea: container, icon: icon, radius: .primitiveInfinity)
+            }
+        }
+    }
+
+    /// 컨테이너 한 변의 크기는 `[24, dimension 최대 토큰]`으로 클램프된다.
+    /// 상한은 디자인 시스템 토큰에서 동적으로 도출되어, 토큰이 변경되면 자동으로 따라간다.
+    private static func clampedContainer(_ n: Int) -> CGFloat {
+        min(Dimension.max, max(24, CGFloat(n)))
+    }
+
+    /// `interactionOverflow`에서 아이콘 크기로부터 인터랙션 영역을 구한다.
+    /// 아이콘의 1.5배를 4의 배수로 올림하고, 24 미만으로는 줄이지 않는다(WCAG 2.2 SC 2.5.8).
+    /// 올림이라 아이콘이 커질수록 인터랙션 영역이 줄어드는 구간이 없고, 네 프리셋(16·18·20·24 → 24·28·32·36)과도 값이 맞는다.
+    private static func overflowInteractionArea(icon: CGFloat) -> CGFloat {
+        max(24, (icon * 1.5 / 4).rounded(.up) * 4)
+    }
+
+    /// 인터랙션 영역/아이콘 크기로부터 패딩을 도출해 Metrics 를 구성한다. 아이콘은 인터랙션 영역 중앙에 배치된다.
+    private static func makeMetrics(interactionArea: CGFloat, icon: CGFloat, radius: CGFloat) -> Metrics {
+        Metrics(
+            interactionArea: interactionArea,
+            padding: (interactionArea - icon) / 2,
+            radius: radius,
+            icon: icon
+        )
+    }
+
+    private enum TieBreak {
+        case up
+        case down
+    }
+
+    private static func nearestToken(
+        _ value: CGFloat,
+        in tokens: [CGFloat],
+        tieBreak: TieBreak
+    ) -> CGFloat {
+        guard var best = tokens.first else { return 0 }
+        var bestDist = abs(value - best)
+        for token in tokens.dropFirst() {
+            let d = abs(value - token)
+            if d < bestDist {
+                best = token
+                bestDist = d
+            } else if d == bestDist {
+                switch tieBreak {
+                case .up:   if token > best { best = token }
+                case .down: if token < best { best = token }
+                }
+            }
+        }
+        return best
+    }
+
+    /// 배경을 plusLighter로, 아이콘을 plusDarker로 합성하는 variant인지 여부. alternative가 아닌 `background`다.
+    var isPlusBlendedBackground: Bool {
+        if case .background(_, false) = self { true } else { false }
+    }
+
     var activeBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
-                .clear
+            .clear
         case .background(_, let isAlternative):
             if isAlternative {
-                .atomic(.coolNeutral30).withAlphaComponent(0.61)
+                .atomic(.coolNeutral30).withAlphaComponent(.opacity61)
             } else {
                 // material이 적용되어 있기 때문에 값에 무관
                 .clear
             }
         case .solid:
-                .semantic(.primaryNormal)
+            .semantic(.surfaceBrandPrimary)
         }
     }
-    
-    var inactiveBackgroundColor: UIColor {
+
+    var disabledBackgroundColor: UIColor {
         switch self {
         case .normal, .outlined:
-                .clear
+            .clear
         case .background:
-                .semantic(.fillAlternative).withAlphaComponent(0.05)
+            .semantic(.surfaceNeutralTertiary).withAlphaComponent(.opacity5)
         case .solid:
-                .semantic(.fillNormal).withAlphaComponent(0.08)
+            .semantic(.surfaceNeutralSecondary)
         }
     }
-    
+
     var activeColor: UIColor {
         switch self {
-        case .normal, .outlined: .semantic(.labelNormal)
+        case .normal, .outlined: .semantic(.foregroundNeutralPrimary)
         case .background(_, let isAlternative):
             if isAlternative {
-                .semantic(.staticWhite).withAlphaComponent(0.88)
+                .semantic(.staticWhite).withAlphaComponent(.opacity88)
             } else {
-                .atomic(.coolNeutral50).withAlphaComponent(0.74)
+                .atomic(.coolNeutral50).withAlphaComponent(.opacity61)
             }
         case .solid: .semantic(.staticWhite)
         }
     }
-    
-    var inactiveColor: UIColor {
+
+    var disabledIconColor: UIColor {
         switch self {
         case .normal, .outlined, .solid:
-                .semantic(.labelDisable).withAlphaComponent(0.16)
+            .semantic(.foregroundDisablePrimary)
         case .background:
-                .atomic(.coolNeutral50).withAlphaComponent(0.22)
+            .atomic(.coolNeutral50).withAlphaComponent(.opacity22)
         }
     }
-    
-    var borderWidth: CGFloat {
-        switch self {
-        case .outlined: 1
-        default: .zero
-        }
-    }
-    
+
     var borderColor: UIColor {
         switch self {
-        case .outlined: .semantic(.lineNeutral)
+        case .outlined: .semantic(.lineNeutralSecondary).withAlphaComponent(.opacity16)
         default: .clear
         }
     }
-    
+
     var interactionColor: Color.Semantic {
-        .labelNormal
+        .foregroundNeutralPrimary
     }
-    
+
     var interactionVariant: Interaction.Variant {
         switch self {
         case .normal, .outlined: .light
-        case .background(_, let isAlternative):
-            isAlternative ? .normal : .light
+        case .background(_, let isAlternative): isAlternative ? .normal : .light
         case .solid: .strong
-        }
-    }
-    
-    var backgroundOffset: CGFloat {
-        switch self {
-        case .normal: .zero
-        case .background(_, _): 6
-        case let .outlined(size), let .solid(size):
-            switch size {
-            case .small: 7
-            case .medium: 10
-            case .custom(_): 6
-            }
-        }
-    }
-    
-    var interactionOffset: CGFloat {
-        switch self {
-        case .normal: 8
-        case .background(_, _), .outlined(_), .solid(_): backgroundOffset
-        }
-    }
-    
-    var iconSize: CGSize {
-        switch self {
-        case .normal(let size): .init(width: size, height: size)
-        case .background(let size, _): .init(width: size, height: size)
-        case .outlined(let variant), .solid(let variant):
-            switch variant {
-            case .small:
-                    .init(width: 18, height: 18)
-            case .medium:
-                    .init(width: 20, height: 20)
-            case .custom(let size):
-                    .init(width: size, height: size)
-            }
         }
     }
 }

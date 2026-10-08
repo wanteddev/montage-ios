@@ -20,7 +20,7 @@ import SwiftUI
 /// Interaction(
 ///     state: .pressed,
 ///     variant: .strong,
-///     color: .primaryNormal
+///     color: .surfaceBrandPrimary
 /// )
 /// ```
 public struct Interaction: View {
@@ -55,12 +55,12 @@ public struct Interaction: View {
     /// - Parameters:
     ///   - state: 상호작용 상태, 생략하면 기본값으로 `.normal` 적용
     ///   - variant: 상호작용 효과 강도, 생략하면 기본값으로 `.normal` 적용
-    ///   - color: 적용할 색상, 생략하면 기본값으로 `.labelNormal` 적용
+    ///   - color: 적용할 색상, 생략하면 기본값으로 `.foregroundNeutralPrimary` 적용
     /// - Returns: 구성된 상호작용 장식 인스턴스
     public init(
         state: State = .normal,
         variant: Variant = .normal,
-        color: Color.Semantic = .labelNormal
+        color: Color.Semantic = .foregroundNeutralPrimary
     ) {
         self.state = state
         self.variant = variant
@@ -76,22 +76,24 @@ public struct Interaction: View {
 }
 
 extension Interaction.State {
-    var alpha: CGFloat {
+    /// 상태별 기본 불투명도. 값은 모두 Opacity 토큰과 일치한다.
+    var alpha: Double {
         switch self {
         case .normal:
-            0
+            .opacity0
         case .hovered:
-            0.05
+            .opacity5
         case .focused:
-            0.08
+            .opacity8
         case .pressed:
-            0.12
+            .opacity12
         }
     }
 }
 
 extension Interaction.Variant {
-    var weight: CGFloat {
+    /// ``Interaction/State/alpha``에 곱해지는 강도 배율. 불투명도 자체가 아니므로 토큰을 쓰지 않는다.
+    var weight: Double {
         switch self {
         case .normal:
             1

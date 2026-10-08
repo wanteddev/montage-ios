@@ -11,9 +11,8 @@ import SwiftUI
 import Montage
 
 struct SelectPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var showSheet: Bool = false
-    @State private var negative: Bool = false
+    @State private var statusIndex: Int = 0
     @State private var variantIndex: Int = 0
     @State private var selectionTypeIndex: Int = 0
     @State private var menuActionArea: Bool = false
@@ -21,32 +20,33 @@ struct SelectPreview: View {
     @State private var renderIndex: Int = 0
     @State private var overflow: Bool = false
     @State private var disable: Bool = false
-    @State private var description: Bool = false
-    @State private var heading: Bool = false
-    @State private var requiredBadge: Bool = false
-    @State private var leadingContentIndex: Int = 0
+    @State private var leadingIndex: Int = 0
     @State private var customMenu: Bool = false
     @State private var menuResizeIndex = 0
     @State private var itemCountClassIndex: Int = 0
+    @State private var sizeIndex: Int = 0
 
     private let selectionTypes: [Select.SingleSelectionType] = [.checkmark, .radio]
     private let renders: [Select.Render] = [.text, .chip]
-    
+    private let sizes: [Select.Size] = [.large, .medium]
+    private let statuses: [Select.Status] = [.normal, .negative]
+
     private var variants: [Select.Variant] {
         [
             .single(selectionType: selectionTypes[selectionTypeIndex], menuPrimaryButtonTitle: menuActionArea ? menuButtonTitle : nil),
             .multiple(render: renders[renderIndex], overflow: overflow, menuPrimaryButtonTitle: menuButtonTitle)
         ]
     }
-    
-    private var leadingContents: [Select.LeadingContent?] {
+
+    private var leadings: [Select.Resource.Leading?] {
         [
             .none,
             .icon(.send),
-            .iconButton(.init(icon: .send)),
-            .custom({
+            // leading 아이콘 버튼은 Select 사이즈에 맞춰 large/medium을 사용한다.
+            .iconButton(.init(variant: .normal(size: sizes[sizeIndex] == .large ? .large : .medium), icon: .send)),
+            .slot {
                 Text("이력서")
-            }),
+            },
         ]
     }
 
@@ -57,167 +57,92 @@ struct SelectPreview: View {
         .flexible,
         .fill
     ]
-    
+
     private enum ItemCountClass: String, CaseIterable {
         case few, medium, many
-        
+
         var description: String {
             self.rawValue
         }
     }
-    
+
     @State private var items: [Select.Item] = [
         .init(text: "값1"),
         .init(text: "값2(icon)", icon: .apps),
         .init(text: "값3(negative)", isNegative: true)
     ]
-    
+
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                Select(
-                    menuPresented: customMenu ? $showSheet : nil,
-                    variant: variants[variantIndex],
-                    items: $items
-                ) {
-                    print($0.text)
-                }
-                .negative(negative)
-                .placeholder("선택해 주세요.")
-                .disable(disable)
-                .description(description ? "설명을 적습니다." : "")
-                .heading(heading ? "제목" : "")
-                .requiredBadge(requiredBadge)
-                .leadingContent(leadingContents[leadingContentIndex])
-                .menuResize(bottomSheetResizes[menuResizeIndex])
-                .bottomSheet(isPresented: $showSheet) {
-                    VStack {
-                        ForEach(items.indices, id: \.self) { index in
-                            ListCell(title: items[index].text) {
-                                switch variants[variantIndex] {
-                                case .single:
-                                    items = items.map {
-                                        var mutated = $0
-                                        mutated.isSelected = false
-                                        return mutated
-                                    }
-                                    fallthrough
-                                case .multiple:
-                                    items[index].isSelected.toggle()
-                                @unknown default:
-                                    break
+        PreviewLayout {
+            Select(
+                menuPresented: customMenu ? $showSheet : nil,
+                variant: variants[variantIndex],
+                items: $items
+            ) {
+                print($0.text)
+            }
+            .size(sizes[sizeIndex])
+            .status(statuses[statusIndex])
+            .placeholder("선택해 주세요.")
+            .leading(leadings[leadingIndex])
+            .menuResize(bottomSheetResizes[menuResizeIndex])
+            .disabled(disable)
+            .bottomSheet(isPresented: $showSheet) {
+                VStack {
+                    ForEach(items.indices, id: \.self) { index in
+                        ListCell(label: items[index].text) {
+                            switch variants[variantIndex] {
+                            case .single:
+                                items = items.map {
+                                    var mutated = $0
+                                    mutated.isSelected = false
+                                    return mutated
                                 }
-                            }
-                            .selected(items[index].isSelected)
-                            .trailingContent { active in
-                                Checkmark(checked: active)
+                                fallthrough
+                            case .multiple:
+                                items[index].isSelected.toggle()
+                            @unknown default:
+                                break
                             }
                         }
+                        // selected 상태의 체크 아이콘은 ListCell이 직접 그린다.
+                        .selected(items[index].isSelected)
                     }
                 }
             }
-            .padding(.horizontal)
-
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-
+        } options: {
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            switch variants[variantIndex] {
+            case .single:
+                SegmentedIndexRow("selectionType", index: $selectionTypeIndex, labels: selectionTypes.map(\.description))
+                ToggleOptionRow("menuActionArea", isOn: $menuActionArea)
+                if menuActionArea {
+                    TextFieldOptionRow("menuButtonTitle", text: $menuButtonTitle)
+                }
+            case .multiple:
                 HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
-                    )
-                    .size(.small)
+                    SegmentedIndexRow("render", index: $renderIndex, labels: renders.map(\.description))
+                    ToggleOption("overflow", isOn: $overflow)
                 }
-                switch variants[variantIndex] {
-                case .single:
-                    HStack {
-                        Text("selectionType")
-                        SegmentedControl(
-                            selectedIndex: $selectionTypeIndex,
-                            labels: selectionTypes.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("menuActionArea")
-                        Switch(checked: menuActionArea) { menuActionArea = $0 }
-                    }
-                    if menuActionArea {
-                        HStack {
-                            Text("menuButtonTitle")
-                            TextField(text: $menuButtonTitle)
-                        }
-                    }
-                case .multiple:
-                    HStack {
-                        Text("render")
-                        SegmentedControl(
-                            selectedIndex: $renderIndex,
-                            labels: renders.map(\.description)
-                        )
-                        .size(.small)
-                        Text("overflow")
-                        Switch(checked: overflow) { overflow = $0 }
-                    }
-                    HStack {
-                        Text("menuButtonTitle")
-                        TextField(text: $menuButtonTitle)
-                    }
-                @unknown default:
-                    EmptyView()
-                }
-                HStack {
-                    Text("heading")
-                    Switch(checked: heading) { heading = $0 }
-                    Text("requiredBadge")
-                    Switch(checked: requiredBadge) { requiredBadge = $0 }
-                }
-                HStack {
-                    Text("negative")
-                    Switch(checked: negative) { negative = $0 }
-                    Text("disable")
-                    Switch(checked: disable) { disable = $0 }
-                    Text("description")
-                    Switch(checked: description) { description = $0 }
-                }
-                HStack {
-                    Text("leadingContent")
-                    SegmentedControl(
-                        selectedIndex: $leadingContentIndex,
-                        labels: leadingContents.map { $0?.description ?? "none" }
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("custom menu")
-                    Switch(checked: customMenu) { customMenu = $0 }
-                }
-                HStack {
-                    Text("menuResize")
-                    SegmentedControl(selectedIndex: $menuResizeIndex, labels: bottomSheetResizes.map(\.description))
-                        .size(.small)
-                }
-                HStack {
-                    SegmentedControl(selectedIndex: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))
-                        .size(.small)
-                    Text("items")
-                }
+                TextFieldOptionRow("menuButtonTitle", text: $menuButtonTitle)
+            @unknown default:
+                EmptyView()
             }
-            .padding(.horizontal)
+            SegmentedIndexRow("status", index: $statusIndex, labels: statuses.map(\.description))
+            ToggleOptionRow("disable", isOn: $disable)
+            SegmentedIndexRow("leading", index: $leadingIndex, labels: leadings.map { $0?.description ?? "none" })
+            ToggleOptionRow("custom menu", isOn: $customMenu)
+                // 커스텀 메뉴를 끄면 항상 살아 있는 bottomSheet가 남지 않도록 함께 닫는다.
+                .onChange(of: customMenu) { enabled in
+                    if !enabled { showSheet = false }
+                }
+            SegmentedIndexRow("menuResize", index: $menuResizeIndex, labels: bottomSheetResizes.map(\.description))
+            HStack {
+                SegmentedIndexRow(index: $itemCountClassIndex, labels: ItemCountClass.allCases.map(\.rawValue))
+                Text("items")
+            }
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .navigationTitle("Select/Multiple")
         .onChange(of: itemCountClassIndex) { _ in
             switch ItemCountClass.allCases[itemCountClassIndex] {
             case .few:
@@ -264,9 +189,11 @@ struct SelectPreview: View {
 }
 
 extension Select.Variant: CaseDescribable {}
+extension Select.Size: CaseDescribable {}
+extension Select.Status: CaseDescribable {}
 extension Select.SingleSelectionType: CaseDescribable {}
 extension Select.Render: CaseDescribable {}
-extension Select.LeadingContent: CaseDescribable {}
+extension Select.Resource.Leading: CaseDescribable {}
 
 #Preview {
     SelectPreview()

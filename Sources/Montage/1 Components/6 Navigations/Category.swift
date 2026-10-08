@@ -85,21 +85,13 @@ public struct Category: View {
                 HStack(spacing: 0) {
                     HStack(spacing: itemSpacing) {
                         ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                            Chip(
-                                variant: chipVariant(index == selectedIndex),
-                                size: chipSize,
-                                text: item
-                            ) {
-                                withAnimation(animation) {
-                                    selectedIndex = index
-                                }
-                                actions(index)
-                            }
-                            .active(index == selectedIndex)
+                            chip(index: index, text: item)
                             .modifying {
                                 itemModifier(index, $0)
                             }
+                            .accessibilityAddTraits(selectedTraits(index))
                             .contentShape(Rectangle())
+                            .disabled(itemDisabled(index))
                         }
                     }
                     Spacer(minLength: 0)
@@ -121,9 +113,10 @@ public struct Category: View {
                 )
                 
                 if let icon, let iconButtonAction {
-                    IconButton(variant: .normal(size: iconSize), icon: icon) {
+                    IconButton(variant: .normal(size: iconButtonSize), icon: icon) {
                         iconButtonAction()
                     }
+                    .interactionOverflow()
                     .padding(.trailing, horizontalPadding ? 16 : 0)
                 }
             }
@@ -146,7 +139,27 @@ public struct Category: View {
     private var verticalPadding = false
     private var icon: Icon? = nil
     private var iconButtonAction: (() -> Void)?
-    
+    private var itemDisabled: (Int) -> Bool = { _ in false }
+
+    /// 개별 카테고리 항목의 비활성 여부를 설정합니다.
+    ///
+    /// `itemModifier`는 `Chip`을 반환해야 하므로 SwiftUI 표준 `disabled(_:)`를 그 안에서 쓸 수 없습니다.
+    /// 항목별로 비활성 상태를 지정할 때 이 모디파이어를 사용합니다.
+    /// 카테고리 전체를 비활성화할 때는 `disabled(_:)`를 그대로 사용하면 됩니다.
+    ///
+    /// ```swift
+    /// Category(selectedIndex: $index, items: titles)
+    ///     .itemDisabled { soldOutIndices.contains($0) }
+    /// ```
+    ///
+    /// - Parameter predicate: 항목 인덱스를 받아 비활성 여부를 반환하는 클로저
+    /// - Returns: 수정된 카테고리 인스턴스
+    public func itemDisabled(_ predicate: @escaping (Int) -> Bool) -> Self {
+        var zelf = self
+        zelf.itemDisabled = predicate
+        return zelf
+    }
+
     /// 카테고리 아이템 스타일을 설정합니다.
     ///
     /// - Parameter variant: 아이템 스타일 (.normal 또는 .alternative)
@@ -219,14 +232,48 @@ private extension Category {
         }
     }
     
-    var iconSize: Int {
+    /// 3.x 아이콘 크기(20·22·24·24)에 맞춘 IconButton 사이즈.
+    /// medium은 3.x에서 22였지만 22에 해당하는 사이즈가 없어 20(`.large`)을 쓴다.
+    var iconButtonSize: IconButton.NormalSize {
         switch size {
-        case .small: 20
-        case .medium: 22
-        default: 24
+        case .small, .medium: .large
+        case .large, .xlarge: .xlarge
         }
     }
       
+    /// 항목 칩을 만든다.
+    ///
+    /// `normal`의 선택 칩은 Chip의 active 스타일(옅은 브랜드 톤) 대신 커스텀 색으로 진한 배경을 입힌다.
+    func chip(index: Int, text: String) -> Chip {
+        let isSelected = index == selectedIndex
+        let chip = Chip(
+            variant: chipVariant(isSelected),
+            size: chipSize,
+            text: text
+        ) {
+            withAnimation(animation) {
+                selectedIndex = index
+            }
+            actions(index)
+        }
+
+        switch variant {
+        case .normal:
+            return isSelected
+                ? chip
+                    .backgroundColor(.semantic(.foregroundNeutralStrong))
+                    .fontColor(.semantic(.foregroundNeutralInverse))
+                : chip
+        case .alternative:
+            return chip.active(isSelected)
+        }
+    }
+
+    /// `normal`의 선택 칩은 active를 쓰지 않아 Chip이 선택 상태를 알리지 않으므로 트레이트로 보완한다.
+    func selectedTraits(_ index: Int) -> AccessibilityTraits {
+        variant == .normal && index == selectedIndex ? .isSelected : []
+    }
+
     func chipVariant(_ isSelected: Bool) -> Chip.Variant {
         if variant == .normal && isSelected {
             .solid

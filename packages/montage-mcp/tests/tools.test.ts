@@ -80,6 +80,41 @@ describe("get_component", () => {
     expect(r.content[0]!.text).toMatch(/^# Button/);
   });
 
+  it("renders enum cases with their associated value labels", async () => {
+    // `.bottom`만 노출하면 offset을 넘길 수 있다는 사실을 알 수 없다.
+    const snackBar = await get("get_component").handler({ componentName: "SnackBar" });
+    expect(snackBar.content[0]!.text).toMatch(/`\.bottom\(offset:\)`/);
+    expect(snackBar.content[0]!.text).toMatch(/`\.top\(offset:\)`/);
+
+    const popup = await get("get_component").handler({ componentName: "Popup" });
+    expect(popup.content[0]!.text).toMatch(/`\.fixed\(_:\)`/);
+    // associated value가 없는 case는 이름 그대로 유지된다.
+    expect(popup.content[0]!.text).toMatch(/`\.hug`/);
+  });
+
+  it("keeps bare case names for enums without associated values", async () => {
+    const r = await get("get_component").handler({ componentName: "Button" });
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/`\.solid`/);
+    expect(text).not.toMatch(/`\.solid\(/);
+  });
+
+  it("renders initializers of nested types", async () => {
+    const r = await get("get_component").handler({ componentName: "ActionArea" });
+    const text = r.content[0]!.text;
+    expect(text).toMatch(/ActionArea\.ButtonInfo\.init\(text:action:\)/);
+  });
+
+  it("omits the synthesized init(rawValue:) of raw-value enums", async () => {
+    // `Button.Variant`·`Button.Size` 등은 String raw value를 가지므로 컴파일러가
+    // `init(rawValue:)`를 합성한다. 소비자가 알아야 할 API가 아니라 노이즈이므로
+    // 생성기 단계에서 제외되고, 따라서 응답에도 나타나지 않아야 한다.
+    for (const componentName of ["Button", "Chip", "TextButton"]) {
+      const r = await get("get_component").handler({ componentName });
+      expect(r.content[0]!.text).not.toMatch(/init\(rawValue:\)/);
+    }
+  });
+
   it("returns error for unknown component", async () => {
     const r = await get("get_component").handler({ componentName: "Nope" });
     expect(r.isError).toBe(true);

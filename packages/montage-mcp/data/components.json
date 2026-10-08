@@ -24,12 +24,6 @@
           "kind": "method"
         },
         {
-          "name": "fillWidth(_:)",
-          "signature": "func fillWidth(Bool) -> Accordion",
-          "summary": "아코디언이 부모 컨테이너의 너비를 채우도록 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "hideDivider(_:)",
           "signature": "func hideDivider(Bool) -> Accordion",
           "summary": "아코디언 하단의 구분선을 숨깁니다.",
@@ -55,14 +49,14 @@
         },
         {
           "name": "trailingContent(_:)",
-          "signature": "func trailingContent<V>(() -> V) -> Accordion",
+          "signature": "func trailingContent<V>((Bool) -> V) -> Accordion",
           "summary": "아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.",
           "kind": "method"
         },
         {
-          "name": "trailingContent(_:)",
-          "signature": "func trailingContent<V>((Bool) -> V) -> Accordion",
-          "summary": "아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.",
+          "name": "variant(_:)",
+          "signature": "func variant(Variant) -> Accordion",
+          "summary": "아코디언의 형태를 설정합니다.",
           "kind": "method"
         },
         {
@@ -74,6 +68,15 @@
       ],
       "staticMembers": [],
       "nestedTypes": [
+        {
+          "name": "Accordion.Variant",
+          "kind": "enum",
+          "summary": "아코디언이 놓이는 리스트(컨테이너)의 가장자리를 기준으로 한 아코디언의 형태입니다.",
+          "cases": [
+            "full",
+            "inset"
+          ]
+        },
         {
           "name": "Accordion.VerticalPadding",
           "kind": "enum",
@@ -100,8 +103,14 @@
       ],
       "modifiers": [
         {
-          "name": "caption(_:)",
-          "signature": "func caption(String?) -> ActionArea",
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color?) -> ActionArea",
+          "summary": "배경 색상을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "caption(_:icon:)",
+          "signature": "func caption(String?, icon: Icon?) -> ActionArea",
           "summary": "버튼 위에 표시할 캡션 텍스트를 설정합니다.",
           "kind": "method"
         },
@@ -112,27 +121,23 @@
           "kind": "method"
         },
         {
-          "name": "transparentBackground(_:)",
-          "signature": "func transparentBackground(Bool) -> ActionArea",
-          "summary": "배경을 투명하게 설정합니다.",
+          "name": "scrollReachedEnd(_:)",
+          "signature": "func scrollReachedEnd(Bool) -> ActionArea",
+          "summary": "스크롤이 바닥에 닿았는지를 직접 알려줍니다.",
           "kind": "method"
         }
       ],
       "staticMembers": [],
       "nestedTypes": [
         {
-          "name": "ActionArea.BackgroundTransparencyControl",
-          "kind": "enum",
-          "summary": "ActionArea의 배경 투명도를 제어하는 열거형입니다.",
-          "cases": [
-            "automatic",
-            "manual"
-          ]
-        },
-        {
           "name": "ActionArea.ButtonInfo",
           "kind": "struct",
           "summary": "ActionArea에 표시될 버튼 정보를 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(text:action:)"
+            }
+          ],
           "staticMethods": [
             {
               "name": "custom(_:)",
@@ -143,11 +148,6 @@
           ]
         },
         {
-          "name": "ActionArea.Model",
-          "kind": "struct",
-          "summary": "ActionArea를 구성하기 위한 모델 구조체입니다."
-        },
-        {
           "name": "ActionArea.Variant",
           "kind": "enum",
           "summary": "ActionArea의 버튼 레이아웃 변형을 정의합니다.",
@@ -155,6 +155,11 @@
             "cancel",
             "neutral",
             "strong"
+          ],
+          "caseSignatures": [
+            "cancel(main:)",
+            "neutral(main:sub:alternative:)",
+            "strong(main:sub:alternative:)"
           ]
         }
       ]
@@ -213,6 +218,14 @@
             "small",
             "xlarge",
             "xsmall"
+          ],
+          "caseSignatures": [
+            "custom(_:)",
+            "large",
+            "medium",
+            "small",
+            "xlarge",
+            "xsmall"
           ]
         },
         {
@@ -233,13 +246,13 @@
       "category": "contents",
       "kind": "struct",
       "declaration": "struct AvatarGroup",
-      "summary": "여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.",
+      "summary": "여러 사용자 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(_:variant:size:onTap:)-bx0i"
+          "signature": "init(_:size:onTap:)-8wtxu"
         },
         {
-          "signature": "init(_:variant:size:onTap:)-p3k7"
+          "signature": "init(_:size:onTap:)-9g241"
         }
       ],
       "modifiers": [
@@ -283,6 +296,12 @@
       ],
       "modifiers": [
         {
+          "name": "contentPadding(vertical:horizontal:)",
+          "signature": "func contentPadding(vertical: ModalContentPadding.Vertical, horizontal: ModalContentPadding.Horizontal) -> BottomSheet",
+          "summary": "콘텐츠 영역의 여백을 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "ignoresEdgeInsets(_:)",
           "signature": "func ignoresEdgeInsets(Bool) -> BottomSheet",
           "summary": "컨텐츠의 기본 여백을 무시할지 설정합니다.",
@@ -290,7 +309,7 @@
         },
         {
           "name": "modalActionArea(_:)",
-          "signature": "func modalActionArea(ActionArea.Model?) -> BottomSheet",
+          "signature": "func modalActionArea((() -> ActionArea)?) -> BottomSheet",
           "summary": "바텀 시트 하단에 액션 영역을 설정합니다.",
           "kind": "method"
         },
@@ -323,6 +342,13 @@
             "fill",
             "fixedHeight",
             "fixedRatio",
+            "flexible",
+            "hug"
+          ],
+          "caseSignatures": [
+            "fill",
+            "fixedHeight(_:)",
+            "fixedRatio(_:)",
             "flexible",
             "hug"
           ]
@@ -364,18 +390,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Button",
-          "summary": "버튼을 비활성화 상태로 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "fill(horizontal:vertical:)",
-          "signature": "func fill(horizontal: Bool, vertical: Bool) -> Button",
-          "summary": "버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "fillWidth(_:)",
           "signature": "func fillWidth(Bool) -> Button",
           "summary": "버튼이 수평으로 공간을 채우도록 설정합니다.",
@@ -408,26 +422,8 @@
           "summary": "버튼의 색상 스타일을 정의합니다.",
           "cases": [
             "assistive",
+            "negative",
             "primary"
-          ]
-        },
-        {
-          "name": "Button.OutlinedUIButton",
-          "kind": "class",
-          "summary": "외곽선으로 둘러 싸인 곡선 모서리 버튼입니다.",
-          "modifiers": [
-            {
-              "name": "layoutSubviews()",
-              "signature": "func layoutSubviews()",
-              "summary": "",
-              "kind": "method"
-            },
-            {
-              "name": "traitCollectionDidChange(_:)",
-              "signature": "func traitCollectionDidChange(UITraitCollection?)",
-              "summary": "",
-              "kind": "method"
-            }
           ]
         },
         {
@@ -437,26 +433,8 @@
           "cases": [
             "large",
             "medium",
-            "small"
-          ]
-        },
-        {
-          "name": "Button.SolidUIButton",
-          "kind": "class",
-          "summary": "배경으로 둘러 싸인 곡선 모서리 버튼입니다.",
-          "modifiers": [
-            {
-              "name": "layoutSubviews()",
-              "signature": "func layoutSubviews()",
-              "summary": "",
-              "kind": "method"
-            },
-            {
-              "name": "traitCollectionDidChange(_:)",
-              "signature": "func traitCollectionDidChange(UITraitCollection?)",
-              "summary": "",
-              "kind": "method"
-            }
+            "small",
+            "xsmall"
           ]
         },
         {
@@ -549,6 +527,12 @@
           "kind": "method"
         },
         {
+          "name": "itemDisabled(_:)",
+          "signature": "func itemDisabled((Int) -> Bool) -> Category",
+          "summary": "개별 카테고리 항목의 비활성 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "size(_:)",
           "signature": "func size(Size) -> Category",
           "summary": "카테고리 아이템 크기를 설정합니다.",
@@ -614,12 +598,6 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Checkbox",
-          "summary": "컨트롤을 비활성화합니다.",
-          "kind": "method"
-        },
-        {
           "name": "label(_:fillWidth:)",
           "signature": "func label(String, fillWidth: Bool) -> Checkbox",
           "summary": "레이블 텍스트를 설정합니다.",
@@ -678,12 +656,6 @@
           "name": "bold(_:)",
           "signature": "func bold(Bool) -> Checkmark",
           "summary": "레이블을 볼드체로 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Checkmark",
-          "summary": "컨트롤을 비활성화합니다.",
           "kind": "method"
         },
         {
@@ -750,9 +722,9 @@
           "kind": "method"
         },
         {
-          "name": "disabled(_:)",
-          "signature": "func disabled(Bool) -> Chip",
-          "summary": "칩의 비활성화 여부를 설정합니다.",
+          "name": "borderColor(_:)",
+          "signature": "func borderColor(SwiftUI.Color) -> Chip",
+          "summary": "칩의 테두리 색상을 설정합니다.",
           "kind": "method"
         },
         {
@@ -762,21 +734,15 @@
           "kind": "method"
         },
         {
-          "name": "imageColor(_:)",
-          "signature": "func imageColor(SwiftUI.Color) -> Chip",
-          "summary": "이미지의 색상을 설정합니다.",
+          "name": "leadingContent(_:)",
+          "signature": "func leadingContent<V>(() -> V) -> Chip",
+          "summary": "텍스트 앞에 표시할 콘텐츠를 지정합니다.",
           "kind": "method"
         },
         {
-          "name": "leadingImage(_:)",
-          "signature": "func leadingImage(Image) -> Chip",
-          "summary": "칩의 좌측에 이미지를 추가합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "trailingImage(_:)",
-          "signature": "func trailingImage(Image) -> Chip",
-          "summary": "칩의 우측에 이미지를 추가합니다.",
+          "name": "trailingContent(_:)",
+          "signature": "func trailingContent<V>(() -> V) -> Chip",
+          "summary": "텍스트 뒤에 표시할 콘텐츠를 지정합니다.",
           "kind": "method"
         }
       ],
@@ -851,6 +817,10 @@
           "cases": [
             "accent",
             "neutral"
+          ],
+          "caseSignatures": [
+            "accent(_:background:)",
+            "neutral(_:)"
           ]
         },
         {
@@ -883,12 +853,60 @@
       "summary": "콘텐츠가 비어있거나 에러/접근 불가 등의 상황에서 대체(Fallback) 화면을 제공하는 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(image:title:description:button:)"
+          "signature": "init(title:description:)"
         }
       ],
-      "modifiers": [],
+      "modifiers": [
+        {
+          "name": "buttonActionArea(_:)",
+          "signature": "func buttonActionArea(ButtonActionArea?) -> FallbackView",
+          "summary": "하단 버튼 영역의 구성을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "padding(_:)",
+          "signature": "func padding(Padding) -> FallbackView",
+          "summary": "콘텐츠 영역의 상하 여백 크기를 설정합니다.",
+          "kind": "method"
+        }
+      ],
       "staticMembers": [],
-      "nestedTypes": []
+      "nestedTypes": [
+        {
+          "name": "FallbackView.ButtonActionArea",
+          "kind": "enum",
+          "summary": "하단 버튼 영역의 버튼 구성과 배치를 정의합니다.",
+          "cases": [
+            "horizontal",
+            "single",
+            "vertical"
+          ],
+          "caseSignatures": [
+            "horizontal(main:alternative:)",
+            "single(_:)",
+            "vertical(main:alternative:)"
+          ]
+        },
+        {
+          "name": "FallbackView.ButtonActionArea.ButtonInfo",
+          "kind": "struct",
+          "summary": "버튼에 표시할 텍스트와 탭 시 실행할 액션을 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(text:action:)"
+            }
+          ]
+        },
+        {
+          "name": "FallbackView.Padding",
+          "kind": "enum",
+          "summary": "콘텐츠 영역의 상하 여백 크기를 정의합니다.",
+          "cases": [
+            "compact",
+            "normal"
+          ]
+        }
+      ]
     },
     {
       "slug": "filterbutton",
@@ -899,7 +917,7 @@
       "summary": "필터링 기능을 제공하는 버튼 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(variant:size:text:state:handler:)"
+          "signature": "init(variant:size:text:handler:)"
         }
       ],
       "modifiers": [
@@ -922,9 +940,9 @@
           "kind": "method"
         },
         {
-          "name": "disabled(_:)",
-          "signature": "func disabled(Bool) -> FilterButton",
-          "summary": "버튼의 비활성화 여부를 설정합니다.",
+          "name": "expanded(_:)",
+          "signature": "func expanded(Bool) -> FilterButton",
+          "summary": "드롭다운이 펼쳐진 상태를 설정합니다.",
           "kind": "method"
         },
         {
@@ -954,15 +972,6 @@
           ]
         },
         {
-          "name": "FilterButton.State",
-          "kind": "enum",
-          "summary": "버튼의 확장 상태를 정의합니다.",
-          "cases": [
-            "expand",
-            "normal"
-          ]
-        },
-        {
           "name": "FilterButton.Variant",
           "kind": "enum",
           "summary": "버튼의 외관을 결정하는 열거형입니다.",
@@ -983,6 +992,132 @@
       "initializers": [
         {
           "signature": "init(spacing:lineSpacing:)"
+        }
+      ],
+      "modifiers": [],
+      "staticMembers": [],
+      "nestedTypes": []
+    },
+    {
+      "slug": "formcontrol",
+      "name": "FormControl",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct FormControl",
+      "summary": "입력 컨트롤에 제목(Label)과 도움말(Message)을 붙여 주고, 라벨 ↔ 입력 ↔ 메시지의 접근성 연결을 자동으로 처리하는 래퍼(wrapper) 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(input:)-3ehja"
+        },
+        {
+          "signature": "init(input:)-46h7o"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "accessory(_:)",
+          "signature": "func accessory<Accessory>(() -> Accessory) -> FormControl",
+          "summary": "Footer 우측(trailing)에 표시할 액세서리 뷰를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "label(_:required:)",
+          "signature": "func label(String?, required: Bool) -> FormControl",
+          "summary": "라벨 텍스트와 필수 표시 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelPlacement(_:)",
+          "signature": "func labelPlacement(LabelPlacement) -> FormControl",
+          "summary": "라벨 위치를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelWidth(_:)",
+          "signature": "func labelWidth(CGFloat) -> FormControl",
+          "summary": "leading 배치에서 이 컨트롤의 라벨 폭을 명시적으로 고정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "message(_:)",
+          "signature": "func message(String?) -> FormControl",
+          "summary": "도움말/에러 메시지를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> FormControl",
+          "summary": "크기를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "status(_:)",
+          "signature": "func status(Status) -> FormControl",
+          "summary": "상태를 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "FormControl.Context",
+          "kind": "struct",
+          "summary": "입력 슬롯 클로저에 전달되는 FormControl의 현재 상태 컨텍스트입니다.",
+          "instanceProperties": [
+            {
+              "name": "size",
+              "signature": "let size: Size",
+              "summary": "현재 FormControl 크기.",
+              "kind": "property"
+            },
+            {
+              "name": "status",
+              "signature": "let status: Status",
+              "summary": "현재 FormControl 상태.",
+              "kind": "property"
+            }
+          ]
+        },
+        {
+          "name": "FormControl.LabelPlacement",
+          "kind": "enum",
+          "summary": "라벨의 위치입니다.",
+          "cases": [
+            "leading",
+            "top"
+          ]
+        },
+        {
+          "name": "FormControl.Size",
+          "kind": "enum",
+          "summary": "FormControl의 크기입니다. 라벨 타이포그래피를 결정합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
+        },
+        {
+          "name": "FormControl.Status",
+          "kind": "enum",
+          "summary": "FormControl의 상태입니다. 메시지의 색을 결정합니다.",
+          "cases": [
+            "negative",
+            "normal",
+            "positive"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "formcontrolgroup",
+      "name": "FormControlGroup",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct FormControlGroup",
+      "summary": "라벨이 붙은 입력을 세로로 쌓을 때 라벨 열 폭을 통일해 입력의 시작 위치를 정렬하는 컨테이너입니다.",
+      "initializers": [
+        {
+          "signature": "init(labelWidth:spacing:content:)"
         }
       ],
       "modifiers": [],
@@ -1054,21 +1189,33 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> IconButton",
-          "summary": "버튼의 비활성화 여부를 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "iconColor(_:)",
           "signature": "func iconColor(SwiftUI.Color) -> IconButton",
           "summary": "아이콘 색상을 설정합니다.",
           "kind": "method"
         },
         {
+          "name": "interactionColor(_:)",
+          "signature": "func interactionColor(Color.Semantic) -> IconButton",
+          "summary": "press 피드백에 사용할 색상을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "interactionEffect(_:)",
+          "signature": "func interactionEffect(IconButton.InteractionEffect) -> IconButton",
+          "summary": "press 피드백을 어떤 방식으로 줄지 설정합니다(기본값: .highlight).",
+          "kind": "method"
+        },
+        {
+          "name": "interactionOverflow(_:)",
+          "signature": "func interactionOverflow(Bool) -> IconButton",
+          "summary": "인터랙션 영역이 레이아웃 밖으로 넘치게 합니다.",
+          "kind": "method"
+        },
+        {
           "name": "padding(_:)",
           "signature": "func padding(CGFloat) -> IconButton",
-          "summary": "버튼의 패딩을 설정합니다.",
+          "summary": "버튼의 추가 패딩을 설정합니다(컨테이너 외곽을 그만큼 확장).",
           "kind": "method"
         },
         {
@@ -1081,11 +1228,45 @@
       "staticMembers": [],
       "nestedTypes": [
         {
+          "name": "IconButton.InteractionEffect",
+          "kind": "enum",
+          "summary": "press 피드백 방식을 결정하는 열거형입니다.",
+          "cases": [
+            "dim",
+            "highlight",
+            "none"
+          ]
+        },
+        {
+          "name": "IconButton.NormalSize",
+          "kind": "enum",
+          "summary": "Normal variant의 아이콘 사이즈를 결정하는 열거형입니다.",
+          "cases": [
+            "custom",
+            "large",
+            "medium",
+            "small",
+            "xlarge"
+          ],
+          "caseSignatures": [
+            "custom(size:)",
+            "large",
+            "medium",
+            "small",
+            "xlarge"
+          ]
+        },
+        {
           "name": "IconButton.Size",
           "kind": "enum",
           "summary": "버튼 사이즈를 결정하는 열거형입니다.",
           "cases": [
             "custom",
+            "medium",
+            "small"
+          ],
+          "caseSignatures": [
+            "custom(size:)",
             "medium",
             "small"
           ]
@@ -1099,6 +1280,12 @@
             "normal",
             "outlined",
             "solid"
+          ],
+          "caseSignatures": [
+            "background(size:isAlternative:)",
+            "normal(size:)",
+            "outlined(size:)",
+            "solid(size:)"
           ]
         }
       ]
@@ -1203,16 +1390,10 @@
       "summary": "텍스트와 콘텐츠를 포함하는 리스트 아이템 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(title:onTap:)"
+          "signature": "init(label:onTap:)"
         }
       ],
       "modifiers": [
-        {
-          "name": "caption(_:)",
-          "signature": "func caption(String?) -> ListCell",
-          "summary": "셀에 부가 설명(캡션)을 추가합니다.",
-          "kind": "method"
-        },
         {
           "name": "chevron(_:)",
           "signature": "func chevron(Bool) -> ListCell",
@@ -1220,9 +1401,9 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> ListCell",
-          "summary": "셀의 비활성화 상태를 설정합니다.",
+          "name": "description(_:)",
+          "signature": "func description(String?) -> ListCell",
+          "summary": "셀에 부가 설명을 추가합니다.",
           "kind": "method"
         },
         {
@@ -1232,27 +1413,45 @@
           "kind": "method"
         },
         {
-          "name": "fillWidth(_:)",
-          "signature": "func fillWidth(Bool) -> ListCell",
-          "summary": "셀의 좌우 여백 사용 여부를 설정합니다.",
+          "name": "extraResources(_:)",
+          "signature": "func extraResources([Resource.Extra]) -> ListCell",
+          "summary": "설명 아래에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
           "name": "highlight(_:)",
           "signature": "func highlight(String) -> ListCell",
-          "summary": "타이틀의 특정 텍스트를 강조 표시합니다.",
+          "summary": "라벨과 설명의 특정 텍스트를 강조 표시합니다.",
           "kind": "method"
         },
         {
-          "name": "interactionPadding(_:)",
-          "signature": "func interactionPadding(CGFloat) -> ListCell",
-          "summary": "셀의 인터랙션 효과 영역의 좌우 패딩을 조정합니다.",
+          "name": "labelColor(_:)",
+          "signature": "func labelColor(Color.Semantic) -> ListCell",
+          "summary": "라벨 텍스트의 color 속성을 조정합니다.",
           "kind": "method"
         },
         {
-          "name": "leadingContent(_:)",
-          "signature": "func leadingContent<V>(() -> V) -> ListCell",
-          "summary": "셀 좌측에 추가 콘텐츠를 표시합니다.",
+          "name": "labelTrailingResources(_:)",
+          "signature": "func labelTrailingResources([Resource.LabelTrailing]) -> ListCell",
+          "summary": "라벨 행의 오른쪽 끝에 표시할 요소를 지정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelVariant(_:)",
+          "signature": "func labelVariant(Typography.Variant) -> ListCell",
+          "summary": "라벨 텍스트의 variant 속성을 조정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelWeight(_:)",
+          "signature": "func labelWeight(Typography.Weight) -> ListCell",
+          "summary": "라벨 텍스트의 weight 속성을 조정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "leadingResources(_:)",
+          "signature": "func leadingResources([Resource.Leading]) -> ListCell",
+          "summary": "셀 좌측에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -1264,36 +1463,24 @@
         {
           "name": "textEllipsis(_:)",
           "signature": "func textEllipsis(Bool) -> ListCell",
-          "summary": "타이틀 텍스트의 생략 처리 여부를 설정합니다.",
+          "summary": "텍스트의 생략 처리 여부를 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "titleColor(_:)",
-          "signature": "func titleColor(Color.Semantic) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
+          "name": "trailingResources(_:)",
+          "signature": "func trailingResources([Resource.Trailing]) -> ListCell",
+          "summary": "셀 우측에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
-          "name": "titleVariant(_:)",
-          "signature": "func titleVariant(Typography.Variant) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "titleWeight(_:)",
-          "signature": "func titleWeight(Typography.Weight) -> ListCell",
-          "summary": "타이틀 텍스트의  속성을 조정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "trailingContent(_:)",
-          "signature": "func trailingContent<V>((Bool) -> V) -> ListCell",
-          "summary": "셀 우측에 추가 콘텐츠를 표시합니다.",
+          "name": "variant(_:)",
+          "signature": "func variant(Variant) -> ListCell",
+          "summary": "셀의 형태를 설정합니다.",
           "kind": "method"
         },
         {
           "name": "verticalAlign(_:)",
-          "signature": "func verticalAlign(VerticalAlignment) -> ListCell",
+          "signature": "func verticalAlign(VerticalAlign) -> ListCell",
           "summary": "셀 내 콘텐츠의 수직 정렬을 조정합니다.",
           "kind": "method"
         },
@@ -1307,10 +1494,151 @@
       "staticMembers": [],
       "nestedTypes": [
         {
+          "name": "ListCell.Resource",
+          "kind": "enum",
+          "summary": "ListCell의 각 슬롯에 표시할 요소들의 Namespace입니다."
+        },
+        {
+          "name": "ListCell.Resource.Extra",
+          "kind": "enum",
+          "summary": "설명 아래(extraResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "contentBadge",
+            "slotView",
+            "text"
+          ],
+          "caseSignatures": [
+            "contentBadge(_:title:)",
+            "slotView(_:)",
+            "text(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Extra",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Resource.LabelTrailing",
+          "kind": "enum",
+          "summary": "라벨 행 오른쪽 끝(labelTrailingResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "contentBadge",
+            "icon",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> LabelTrailing",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Resource.Leading",
+          "kind": "enum",
+          "summary": "셀 좌측(leadingResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "avatar",
+            "checkbox",
+            "icon",
+            "largeIcon",
+            "radio",
+            "slotView",
+            "thumbnail"
+          ],
+          "caseSignatures": [
+            "avatar(_:variant:)",
+            "checkbox(checked:onSelect:)",
+            "icon(_:tintColor:)",
+            "largeIcon(_:tintColor:)",
+            "radio(checked:onSelect:)",
+            "slotView(_:)",
+            "thumbnail(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Resource.Trailing",
+          "kind": "enum",
+          "summary": "셀 우측(trailingResources(_:))에 표시할 요소입니다.",
+          "cases": [
+            "button",
+            "contentBadge",
+            "icon",
+            "iconButton",
+            "slotView",
+            "switch",
+            "textButton",
+            "value"
+          ],
+          "caseSignatures": [
+            "button(title:color:handler:)",
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "iconButton(_:handler:)",
+            "slotView(_:)",
+            "switch(checked:onSelect:)",
+            "textButton(title:color:handler:)",
+            "value(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Trailing",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ListCell.Variant",
+          "kind": "enum",
+          "summary": "셀이 놓이는 리스트(컨테이너)의 가장자리를 기준으로 한 셀의 형태입니다.",
+          "cases": [
+            "full",
+            "inset"
+          ]
+        },
+        {
+          "name": "ListCell.VerticalAlign",
+          "kind": "enum",
+          "summary": "셀 내 콘텐츠의 수직 정렬을 나타내는 열거형입니다.",
+          "cases": [
+            "center",
+            "top"
+          ]
+        },
+        {
           "name": "ListCell.VerticalPadding",
           "kind": "enum",
           "summary": "상하 여백을 나타내는 열거형입니다.",
           "cases": [
+            "custom",
+            "large",
+            "medium",
+            "none",
+            "small"
+          ],
+          "caseSignatures": [
+            "custom(_:)",
             "large",
             "medium",
             "none",
@@ -1341,6 +1669,43 @@
           "cases": [
             "circular",
             "wanted"
+          ],
+          "caseSignatures": [
+            "circular(color:)",
+            "wanted"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "modalcontentpadding",
+      "name": "ModalContentPadding",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct ModalContentPadding",
+      "summary": "모달 콘텐츠 영역의 여백 적용 방식입니다.",
+      "initializers": [],
+      "modifiers": [],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "ModalContentPadding.Horizontal",
+          "kind": "enum",
+          "summary": "콘텐츠 좌우 여백의 적용 여부입니다.",
+          "cases": [
+            "default",
+            "none"
+          ]
+        },
+        {
+          "name": "ModalContentPadding.Vertical",
+          "kind": "enum",
+          "summary": "콘텐츠 상하 여백의 적용 범위입니다.",
+          "cases": [
+            "both",
+            "bottom",
+            "none",
+            "top"
           ]
         }
       ]
@@ -1371,9 +1736,15 @@
           "kind": "method"
         },
         {
-          "name": "leadingContent(_:)",
-          "signature": "func leadingContent<V>(() -> V) -> ModalNavigation",
-          "summary": "내비게이션 바의 왼쪽 버튼 영역을 설정합니다.",
+          "name": "iconButtonBackground(_:)",
+          "signature": "func iconButtonBackground(Bool) -> ModalNavigation",
+          "summary": "아이콘 버튼에 원형 배경을 넣을지 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "leading(_:)",
+          "signature": "func leading(Resource.Leading?) -> ModalNavigation",
+          "summary": "내비게이션 바 왼쪽에 놓을 요소를 설정합니다.",
           "kind": "method"
         },
         {
@@ -1395,6 +1766,12 @@
           "kind": "method"
         },
         {
+          "name": "searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)",
+          "signature": "func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> ModalNavigation",
+          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 search일 때만 적용됩니다.",
+          "kind": "method"
+        },
+        {
           "name": "title(_:)",
           "signature": "func title(String) -> ModalNavigation",
           "summary": "내비게이션 바의 타이틀을 설정합니다.",
@@ -1407,15 +1784,15 @@
           "kind": "method"
         },
         {
-          "name": "trailingContents(_:)",
-          "signature": "func trailingContents((() -> any View)...) -> ModalNavigation",
-          "summary": "내비게이션 바의 오른쪽 버튼 영역을 설정합니다.",
+          "name": "trailings(_:)",
+          "signature": "func trailings(Resource.Trailing...) -> ModalNavigation",
+          "summary": "내비게이션 바 오른쪽에 놓을 요소들을 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "trailingContents(_:)",
-          "signature": "func trailingContents([() -> any View]) -> ModalNavigation",
-          "summary": "내비게이션 바의 오른쪽 버튼 영역을 설정합니다.",
+          "name": "trailings(_:)",
+          "signature": "func trailings([Resource.Trailing]) -> ModalNavigation",
+          "summary": "내비게이션 바 오른쪽에 놓을 요소들을 설정합니다.",
           "kind": "method"
         },
         {
@@ -1428,34 +1805,69 @@
       "staticMembers": [],
       "nestedTypes": [
         {
+          "name": "ModalNavigation.Resource",
+          "kind": "enum",
+          "summary": "내비게이션 바 좌우에 놓을 수 있는 요소의 프리셋입니다."
+        },
+        {
+          "name": "ModalNavigation.Resource.Leading",
+          "kind": "enum",
+          "summary": "내비게이션 바 왼쪽에 놓는 요소입니다.",
+          "cases": [
+            "back",
+            "icon",
+            "slotView",
+            "text"
+          ],
+          "caseSignatures": [
+            "back(action:)",
+            "icon(_:accessibilityLabel:action:)",
+            "slotView(_:)",
+            "text(_:action:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "ModalNavigation.Resource.Trailing",
+          "kind": "enum",
+          "summary": "내비게이션 바 오른쪽에 놓는 요소입니다.",
+          "cases": [
+            "close",
+            "icon",
+            "slotView",
+            "text"
+          ],
+          "caseSignatures": [
+            "close(action:)",
+            "icon(_:accessibilityLabel:action:)",
+            "slotView(_:)",
+            "text(_:action:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Trailing",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
           "name": "ModalNavigation.Variant",
           "kind": "struct",
           "summary": "내비게이션 바의 외관을 정의하는 구조체입니다.",
-          "staticMethods": [
-            {
-              "name": "floating(alternative:background:)",
-              "signature": "static func floating(alternative: Bool, background: Bool) -> Variant",
-              "summary": "플로팅 스타일",
-              "kind": "method"
-            }
-          ],
           "staticProperties": [
-            {
-              "name": "display",
-              "signature": "static let display: ModalNavigation.Variant",
-              "summary": "제목이 별도 줄에 표시되는 확장된 스타일",
-              "kind": "property"
-            },
             {
               "name": "emphasized",
               "signature": "static let emphasized: ModalNavigation.Variant",
-              "summary": "강조된 큰 제목 스타일",
-              "kind": "property"
-            },
-            {
-              "name": "extended",
-              "signature": "static let extended: ModalNavigation.Variant",
-              "summary": "제목이 별도 줄에 표시되는 확장된 스타일",
+              "summary": "제목을 왼쪽에 두는 스타일. Popup·BottomSheet의 기본값입니다.",
               "kind": "property"
             },
             {
@@ -1467,7 +1879,13 @@
             {
               "name": "normal",
               "signature": "static let normal: ModalNavigation.Variant",
-              "summary": "기본 스타일의 내비게이션 바",
+              "summary": "제목을 가운데 두는 스타일. 전체 화면 모달에서만 씁니다.",
+              "kind": "property"
+            },
+            {
+              "name": "search",
+              "signature": "static let search: ModalNavigation.Variant",
+              "summary": "제목 대신 검색 필드를 두는 스타일.",
               "kind": "property"
             }
           ]
@@ -1627,6 +2045,12 @@
       ],
       "modifiers": [
         {
+          "name": "contentPadding(vertical:horizontal:)",
+          "signature": "func contentPadding(vertical: ModalContentPadding.Vertical, horizontal: ModalContentPadding.Horizontal) -> Popup",
+          "summary": "콘텐츠 영역의 여백을 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "ignoresEdgeInsets(_:)",
           "signature": "func ignoresEdgeInsets(Bool) -> Popup",
           "summary": "컨텐츠의 기본 여백을 무시할지 설정합니다.",
@@ -1634,7 +2058,7 @@
         },
         {
           "name": "modalActionArea(_:)",
-          "signature": "func modalActionArea(ActionArea.Model?) -> Popup",
+          "signature": "func modalActionArea((() -> ActionArea)?) -> Popup",
           "summary": "팝업 모달 하단에 액션 영역을 설정합니다.",
           "kind": "method"
         },
@@ -1659,6 +2083,10 @@
           "summary": "팝업의 크기를 정의하는 열거형입니다.",
           "cases": [
             "fixed",
+            "hug"
+          ],
+          "caseSignatures": [
+            "fixed(_:)",
             "hug"
           ]
         }
@@ -1702,12 +2130,21 @@
           "cases": [
             "horizontal",
             "vertical"
+          ],
+          "caseSignatures": [
+            "horizontal(labels:)",
+            "vertical(stepContents:)"
           ]
         },
         {
           "name": "ProgressTracker.VerticalStepContent",
           "kind": "struct",
-          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다."
+          "summary": "수직 진행 추적기에서 각 단계에 표시되는 콘텐츠를 표현하는 공개 타입입니다.",
+          "initializers": [
+            {
+              "signature": "init(label:labelAccessoryView:contentView:)"
+            }
+          ]
         }
       ]
     },
@@ -1749,6 +2186,12 @@
           "kind": "method"
         },
         {
+          "name": "outlineBorder(_:color:)",
+          "signature": "func outlineBorder(Bool, color: SwiftUI.Color) -> PushBadge",
+          "summary": "배경과 뱃지를 분리하는 아웃라인 보더를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "size(_:)",
           "signature": "func size(Size) -> PushBadge",
           "summary": "뱃지의 크기를 설정합니다.",
@@ -1765,6 +2208,21 @@
             "bottom",
             "center",
             "top"
+          ],
+          "caseSignatures": [
+            "bottom(_:)",
+            "center(_:)",
+            "top(_:)"
+          ]
+        },
+        {
+          "name": "PushBadge.Position.HorizontalPosition",
+          "kind": "enum",
+          "summary": "수평 위치를 정의하는 열거형입니다.",
+          "cases": [
+            "center",
+            "leading",
+            "trailing"
           ]
         },
         {
@@ -1783,8 +2241,13 @@
           "summary": "뱃지의 표시 형태를 정의하는 열거형입니다.",
           "cases": [
             "dot",
-            "new",
-            "number"
+            "maxCount",
+            "text"
+          ],
+          "caseSignatures": [
+            "dot",
+            "maxCount(_:max:)",
+            "text(_:)"
           ]
         }
       ]
@@ -1806,12 +2269,6 @@
           "name": "bold(_:)",
           "signature": "func bold(Bool) -> Radio",
           "summary": "레이블을 볼드체로 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Radio",
-          "summary": "컨트롤을 비활성화합니다.",
           "kind": "method"
         },
         {
@@ -1842,6 +2299,39 @@
           "cases": [
             "medium",
             "small"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "screenscaffold",
+      "name": "ScreenScaffold",
+      "category": "utilities",
+      "kind": "struct",
+      "declaration": "struct ScreenScaffold",
+      "summary": "화면의 골격을 잡는 컨테이너입니다.",
+      "initializers": [
+        {
+          "signature": "init(scrollContainer:navigation:actionArea:_:)"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color?) -> ScreenScaffold<Content>",
+          "summary": "화면 전체의 바탕색을 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "ScreenScaffold.ScrollContainer",
+          "kind": "enum",
+          "summary": "스크롤 컨테이너를 누가 두는지 정합니다.",
+          "cases": [
+            "builtIn",
+            "custom"
           ]
         }
       ]
@@ -1883,7 +2373,128 @@
         {
           "name": "ScrollView.ScrollStatus",
           "kind": "struct",
-          "summary": "스크롤 뷰의 상태를 추적하는 구조체입니다."
+          "summary": "스크롤 뷰의 상태를 추적하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(axis:scrollViewSize:contentSize:contentOffset:)"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "axis",
+              "signature": "var axis: Axis",
+              "summary": "스크롤 방향",
+              "kind": "property"
+            },
+            {
+              "name": "contentOffset",
+              "signature": "var contentOffset: CGPoint",
+              "summary": "콘텐츠 오프셋",
+              "kind": "property"
+            },
+            {
+              "name": "contentSize",
+              "signature": "var contentSize: CGSize",
+              "summary": "콘텐츠 크기",
+              "kind": "property"
+            },
+            {
+              "name": "reachedEnd",
+              "signature": "var reachedEnd: Bool",
+              "summary": "스크롤이 끝(세로는 바닥, 가로는 오른쪽 끝)에 도달했는지 여부입니다.",
+              "kind": "property"
+            },
+            {
+              "name": "scrollViewSize",
+              "signature": "var scrollViewSize: CGSize",
+              "summary": "스크롤 뷰 크기",
+              "kind": "property"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "searchfield",
+      "name": "SearchField",
+      "category": "selection-input",
+      "kind": "struct",
+      "declaration": "struct SearchField",
+      "summary": "검색어 입력을 위한 컴포넌트입니다.",
+      "initializers": [
+        {
+          "signature": "init(text:)"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "autocorrectionDisabled(_:)",
+          "signature": "func autocorrectionDisabled(Bool) -> SearchField",
+          "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "focused(_:)",
+          "signature": "func focused(Binding<Bool>) -> SearchField",
+          "summary": "검색 필드의 포커스 상태를 외부 바인딩과 연결합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onFocusChange(_:)",
+          "signature": "func onFocusChange((Bool) -> Void) -> SearchField",
+          "summary": "포커스 상태가 변경될 때 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onSubmit(_:)",
+          "signature": "func onSubmit(() -> Void) -> SearchField",
+          "summary": "검색어 제출 시 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onTextChange(_:)",
+          "signature": "func onTextChange((String) -> Void) -> SearchField",
+          "summary": "검색어가 변경될 때마다 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "placeholder(_:)",
+          "signature": "func placeholder(String?) -> SearchField",
+          "summary": "검색어가 없을 때 표시할 플레이스홀더를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> SearchField",
+          "summary": "검색 필드의 사이즈를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "variant(_:)",
+          "signature": "func variant(Variant) -> SearchField",
+          "summary": "검색 필드의 스타일을 설정합니다.",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": [
+        {
+          "name": "SearchField.Size",
+          "kind": "enum",
+          "summary": "검색 필드의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
+        },
+        {
+          "name": "SearchField.Variant",
+          "kind": "enum",
+          "summary": "검색 필드의 스타일을 정의합니다.",
+          "cases": [
+            "outlined",
+            "solid"
+          ]
         }
       ]
     },
@@ -1957,15 +2568,15 @@
       ],
       "modifiers": [
         {
-          "name": "size(_:)",
-          "signature": "func size(Size) -> SegmentedControl",
-          "summary": "세그먼트 컨트롤의 크기를 설정합니다.",
+          "name": "iconOnly(_:)",
+          "signature": "func iconOnly(Bool) -> SegmentedControl",
+          "summary": "각 세그먼트를 아이콘만 표시하도록 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "variant(_:)",
-          "signature": "func variant(Variant) -> SegmentedControl",
-          "summary": "세그먼트 컨트롤의 시각적 스타일을 설정합니다.",
+          "name": "size(_:)",
+          "signature": "func size(Size) -> SegmentedControl",
+          "summary": "세그먼트 컨트롤의 크기를 설정합니다.",
           "kind": "method"
         }
       ],
@@ -1974,7 +2585,12 @@
         {
           "name": "SegmentedControl.Item",
           "kind": "struct",
-          "summary": "세그먼트 컨트롤의 항목을 나타내는 구조체입니다."
+          "summary": "세그먼트 컨트롤의 항목을 나타내는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(leadingIcon:title:)"
+            }
+          ]
         },
         {
           "name": "SegmentedControl.Size",
@@ -1985,15 +2601,6 @@
             "medium",
             "small"
           ]
-        },
-        {
-          "name": "SegmentedControl.Variant",
-          "kind": "enum",
-          "summary": "세그먼트 컨트롤의 시각적 스타일을 정의하는 열거형입니다.",
-          "cases": [
-            "outlined",
-            "solid"
-          ]
         }
       ]
     },
@@ -2003,7 +2610,7 @@
       "category": "selection-input",
       "kind": "struct",
       "declaration": "struct Select",
-      "summary": "컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
+      "summary": "Select 컴포넌트는 사용자가 드롭다운 메뉴에서 하나 또는 여러 항목을 선택할 수 있는 UI 요소입니다. 단일 선택 또는 다중 선택 모드를 지원하며, 여러 시각적 변형과 맞춤 설정 옵션을 제공합니다.",
       "initializers": [
         {
           "signature": "init(menuPresented:variant:items:onTapItem:)"
@@ -2011,27 +2618,33 @@
       ],
       "modifiers": [
         {
-          "name": "description(_:)",
-          "signature": "func description(String) -> Select",
-          "summary": "설명을 추가합니다.",
+          "name": "accessory(_:)",
+          "signature": "func accessory<Accessory>(() -> Accessory) -> Select",
+          "summary": "메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Select",
-          "summary": "활성화 여부를 조정합니다.",
+          "name": "label(_:required:)",
+          "signature": "func label(String?, required: Bool) -> Select",
+          "summary": "제목(라벨)을 붙이고 필수 표시(*) 여부를 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "heading(_:)",
-          "signature": "func heading(String) -> Select",
-          "summary": "제목을 추가합니다.",
+          "name": "labelPlacement(_:)",
+          "signature": "func labelPlacement(FormControl.LabelPlacement) -> Select",
+          "summary": "라벨 위치를 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "leadingContent(_:)",
-          "signature": "func leadingContent(LeadingContent?) -> Select",
-          "summary": "왼쪽 컨텐츠를 추가합니다.",
+          "name": "labelWidth(_:)",
+          "signature": "func labelWidth(CGFloat) -> Select",
+          "summary": "leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "leading(_:)",
+          "signature": "func leading(Resource.Leading?) -> Select",
+          "summary": "필드 왼쪽에 표시할 요소를 지정합니다.",
           "kind": "method"
         },
         {
@@ -2041,9 +2654,9 @@
           "kind": "method"
         },
         {
-          "name": "negative(_:)",
-          "signature": "func negative(Bool) -> Select",
-          "summary": "negative 상태 여부를 조정합니다.",
+          "name": "message(_:)",
+          "signature": "func message(String?) -> Select",
+          "summary": "입력 아래에 표시할 도움말/에러 메시지를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2053,15 +2666,15 @@
           "kind": "method"
         },
         {
-          "name": "requiredBadge(_:)",
-          "signature": "func requiredBadge(Bool) -> Select",
-          "summary": "필수 표시 노출 여부를 조정합니다.",
+          "name": "size(_:)",
+          "signature": "func size(Size) -> Select",
+          "summary": "Select 컴포넌트의 사이즈를 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "shadowBackgroundColor(_:)",
-          "signature": "func shadowBackgroundColor(SwiftUI.Color) -> Select",
-          "summary": "shadow 배경색을 조정합니다.",
+          "name": "status(_:)",
+          "signature": "func status(Status) -> Select",
+          "summary": "Select 컴포넌트의 상태를 설정합니다.",
           "kind": "method"
         }
       ],
@@ -2070,16 +2683,37 @@
         {
           "name": "Select.Item",
           "kind": "struct",
-          "summary": "Select 컴포넌트에서 사용하는 항목 모델을 정의합니다."
-        },
-        {
-          "name": "Select.LeadingContent",
-          "kind": "enum",
-          "summary": "왼쪽에 표시될 컨텐트 타입입니다.",
-          "cases": [
-            "custom",
-            "icon",
-            "iconButton"
+          "summary": "Select 컴포넌트에서 사용하는 항목 모델을 정의합니다.",
+          "initializers": [
+            {
+              "signature": "init(text:icon:isNegative:isSelected:)"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "icon",
+              "signature": "let icon: Icon?",
+              "summary": "아이템의 아이콘",
+              "kind": "property"
+            },
+            {
+              "name": "isNegative",
+              "signature": "let isNegative: Bool",
+              "summary": "부정적 상태 여부 (오류나 경고를 나타낼 때 사용)",
+              "kind": "property"
+            },
+            {
+              "name": "isSelected",
+              "signature": "var isSelected: Bool",
+              "summary": "항목의 선택 여부",
+              "kind": "property"
+            },
+            {
+              "name": "text",
+              "signature": "let text: String",
+              "summary": "아이템 텍스트 내용",
+              "kind": "property"
+            }
           ]
         },
         {
@@ -2092,6 +2726,34 @@
           ]
         },
         {
+          "name": "Select.Resource",
+          "kind": "enum",
+          "summary": "필드 안에 놓을 수 있는 요소의 프리셋입니다."
+        },
+        {
+          "name": "Select.Resource.Leading",
+          "kind": "enum",
+          "summary": "필드 왼쪽(leading(_:))에 놓는 요소입니다.",
+          "cases": [
+            "icon",
+            "iconButton",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "icon(_:)",
+            "iconButton(_:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
           "name": "Select.SingleSelectionType",
           "kind": "enum",
           "summary": "variant가 single일 때 아이템 선택 창에 아이템이 표시되는 방식을 결정하는 열거형입니다.",
@@ -2101,12 +2763,34 @@
           ]
         },
         {
+          "name": "Select.Size",
+          "kind": "enum",
+          "summary": "Select 컴포넌트의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
+        },
+        {
+          "name": "Select.Status",
+          "kind": "enum",
+          "summary": "Select 컴포넌트의 상태를 정의합니다.",
+          "cases": [
+            "negative",
+            "normal"
+          ]
+        },
+        {
           "name": "Select.Variant",
           "kind": "enum",
           "summary": "선택 모드를 나타내는 열거형입니다.",
           "cases": [
             "multiple",
             "single"
+          ],
+          "caseSignatures": [
+            "multiple(render:overflow:menuPrimaryButtonTitle:)",
+            "single(selectionType:menuPrimaryButtonTitle:)"
           ]
         }
       ]
@@ -2144,12 +2828,6 @@
               "kind": "method"
             },
             {
-              "name": "text(alignment:lengths:cornerRadius:lineNumber:)",
-              "signature": "static func text(alignment: Align, lengths: [Length], cornerRadius: CGFloat, lineNumber: Int) -> Kind",
-              "summary": "텍스트 줄을 나타내는 스켈레톤을 생성합니다.",
-              "kind": "method"
-            },
-            {
               "name": "text(variant:alignment:cornerRadius:)",
               "signature": "static func text(variant: Typography.Variant, alignment: Align, cornerRadius: CGFloat) -> Kind",
               "summary": "텍스트 줄을 나타내는 스켈레톤을 생성합니다.",
@@ -2163,17 +2841,37 @@
               "summary": "원형 스켈레톤",
               "kind": "property"
             }
+          ],
+          "instanceProperties": [
+            {
+              "name": "isCircle",
+              "signature": "var isCircle: Bool",
+              "summary": "원형 종류인지 여부",
+              "kind": "property"
+            },
+            {
+              "name": "isRectangle",
+              "signature": "var isRectangle: Bool",
+              "summary": "사각형 종류인지 여부",
+              "kind": "property"
+            },
+            {
+              "name": "isText",
+              "signature": "var isText: Bool",
+              "summary": "텍스트 종류인지 여부",
+              "kind": "property"
+            }
           ]
-        },
-        {
-          "name": "Skeleton.Length",
-          "kind": "enum",
-          "summary": "스켈레톤 요소의 길이 비율을 지정하는 열거형입니다."
         },
         {
           "name": "Skeleton.SkeletonView",
           "kind": "struct",
           "summary": "스켈레톤 로딩 UI를 표시하는 뷰입니다.",
+          "initializers": [
+            {
+              "signature": "init(_:)"
+            }
+          ],
           "modifiers": [
             {
               "name": "color(_:)",
@@ -2186,6 +2884,14 @@
               "signature": "func opacity(CGFloat) -> Skeleton.SkeletonView",
               "summary": "스켈레톤 뷰의 투명도를 설정합니다.",
               "kind": "method"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
             }
           ]
         }
@@ -2207,12 +2913,6 @@
         }
       ],
       "modifiers": [
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Slider",
-          "summary": "슬라이더의 활성화 상태를 설정합니다.",
-          "kind": "method"
-        },
         {
           "name": "heading(_:)",
           "signature": "func heading(Bool) -> Slider",
@@ -2255,6 +2955,14 @@
             "infinity",
             "long",
             "short"
+          ],
+          "instanceProperties": [
+            {
+              "name": "rawValue",
+              "signature": "var rawValue: Double",
+              "summary": "스낵바가 표시되는 시간(초). .infinity인 경우 Double.infinity를 반환합니다.",
+              "kind": "property"
+            }
           ]
         },
         {
@@ -2264,12 +2972,24 @@
           "cases": [
             "bottom",
             "top"
+          ],
+          "caseSignatures": [
+            "bottom(offset:)",
+            "top(offset:)"
           ]
         },
         {
           "name": "SnackBar.Model",
           "kind": "struct",
-          "summary": "SnackBar의 데이터 모델을 정의하는 구조체입니다."
+          "summary": "SnackBar의 데이터 모델을 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(duration:heading:description:action:)"
+            },
+            {
+              "signature": "init(duration:heading:description:extraContents:action:)"
+            }
+          ]
         }
       ]
     },
@@ -2285,14 +3005,7 @@
           "signature": "init(checked:size:onSelect:)"
         }
       ],
-      "modifiers": [
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> Switch",
-          "summary": "컨트롤을 비활성화합니다.",
-          "kind": "method"
-        }
-      ],
+      "modifiers": [],
       "staticMembers": [],
       "nestedTypes": [
         {
@@ -2381,33 +3094,21 @@
       ],
       "modifiers": [
         {
+          "name": "accessory(_:)",
+          "signature": "func accessory<Accessory>(() -> Accessory) -> TextArea",
+          "summary": "메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "autocorrectionDisabled(_:)",
+          "signature": "func autocorrectionDisabled(Bool) -> TextArea",
+          "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "bottomResources(leading:trailing:leadingResourceSpacing:trailingResourceSpacing:)",
-          "signature": "func bottomResources(leading: [Resource], trailing: [Resource], leadingResourceSpacing: CGFloat, trailingResourceSpacing: CGFloat) -> TextArea",
+          "signature": "func bottomResources(leading: [Resource.Leading], trailing: [Resource.Trailing], leadingResourceSpacing: CGFloat?, trailingResourceSpacing: CGFloat?) -> TextArea",
           "summary": "텍스트 영역 하단에 표시할 UI 요소를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "description(_:)",
-          "signature": "func description(String?) -> TextArea",
-          "summary": "텍스트 영역 하단에 표시할 설명 텍스트를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> TextArea",
-          "summary": "텍스트 영역의 활성화 상태를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "heading(_:)",
-          "signature": "func heading(String?) -> TextArea",
-          "summary": "텍스트 영역 위에 표시할 제목을 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "inputCharacterLimit(_:)",
-          "signature": "func inputCharacterLimit(Int?) -> TextArea",
-          "summary": "입력 시점에 적용할 최대 글자 수를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2417,9 +3118,45 @@
           "kind": "method"
         },
         {
+          "name": "label(_:required:)",
+          "signature": "func label(String?, required: Bool) -> TextArea",
+          "summary": "제목(라벨)을 붙이고 필수 표시(*) 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelPlacement(_:)",
+          "signature": "func labelPlacement(FormControl.LabelPlacement) -> TextArea",
+          "summary": "라벨 위치를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelWidth(_:)",
+          "signature": "func labelWidth(CGFloat) -> TextArea",
+          "summary": "leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "maxLength(_:)",
+          "signature": "func maxLength(Int?) -> TextArea",
+          "summary": "최대 글자 수를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "message(_:)",
+          "signature": "func message(String?) -> TextArea",
+          "summary": "입력 아래에 표시할 도움말/에러 메시지를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "negative(_:)",
           "signature": "func negative(Bool) -> TextArea",
           "summary": "텍스트 영역의 오류 상태를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onTextChange(_:)",
+          "signature": "func onTextChange((String) -> Void) -> TextArea",
+          "summary": "텍스트가 변경될 때마다 호출할 클로저를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2429,15 +3166,15 @@
           "kind": "method"
         },
         {
-          "name": "requiredBadge(_:)",
-          "signature": "func requiredBadge(Bool) -> TextArea",
-          "summary": "제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "resize(_:)",
           "signature": "func resize(Resize) -> TextArea",
           "summary": "텍스트 영역의 크기 조절 방식을 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> TextArea",
+          "summary": "텍스트 영역의 사이즈를 설정합니다.",
           "kind": "method"
         }
       ],
@@ -2451,20 +3188,83 @@
             "fixed",
             "limit",
             "normal"
+          ],
+          "caseSignatures": [
+            "fixed(min:max:)",
+            "limit",
+            "normal"
           ]
         },
         {
           "name": "TextArea.Resource",
           "kind": "enum",
-          "summary": "텍스트 영역 하단에 표시할 수 있는 UI 요소를 정의합니다.",
+          "summary": "텍스트 영역 하단(Bottom Content)에 표시할 요소들의 Namespace입니다."
+        },
+        {
+          "name": "TextArea.Resource.Leading",
+          "kind": "enum",
+          "summary": "Bottom Content 왼쪽에 표시할 요소입니다.",
           "cases": [
-            "badge",
-            "characterCount",
-            "chip",
-            "filterButton",
+            "contentBadge",
             "icon",
             "iconButton",
-            "textButton"
+            "segmentedControl",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "iconButton(icon:tintColor:handler:)",
+            "segmentedControl(selectedIndex:icons:accessibilityLabels:onSelect:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Leading",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "TextArea.Resource.Trailing",
+          "kind": "enum",
+          "summary": "Bottom Content 오른쪽에 표시할 요소입니다.",
+          "cases": [
+            "button",
+            "contentBadge",
+            "icon",
+            "iconButton",
+            "primaryIconButton",
+            "segmentedControl",
+            "slotView"
+          ],
+          "caseSignatures": [
+            "button(color:title:handler:)",
+            "contentBadge(_:title:)",
+            "icon(_:tintColor:)",
+            "iconButton(icon:tintColor:handler:)",
+            "primaryIconButton(icon:handler:)",
+            "segmentedControl(selectedIndex:icons:accessibilityLabels:onSelect:)",
+            "slotView(_:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Trailing",
+              "summary": "목록에 없는 구성을 직접 배치합니다.",
+              "kind": "method"
+            }
+          ]
+        },
+        {
+          "name": "TextArea.Size",
+          "kind": "enum",
+          "summary": "텍스트 영역의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
           ]
         }
       ]
@@ -2489,15 +3289,9 @@
           "kind": "method"
         },
         {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> TextButton",
-          "summary": "버튼을 비활성화 상태로 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "fill(horizontal:vertical:)",
-          "signature": "func fill(horizontal: Bool, vertical: Bool) -> TextButton",
-          "summary": "버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.",
+          "name": "fillWidth(_:)",
+          "signature": "func fillWidth(Bool) -> TextButton",
+          "summary": "버튼이 수평으로 공간을 채우도록 설정합니다.",
           "kind": "method"
         },
         {
@@ -2555,21 +3349,21 @@
       ],
       "modifiers": [
         {
+          "name": "accessory(_:)",
+          "signature": "func accessory<Accessory>(() -> Accessory) -> TextField",
+          "summary": "메시지 행의 오른쪽에 표시할 액세서리 뷰를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "autocorrectionDisabled(_:)",
+          "signature": "func autocorrectionDisabled(Bool) -> TextField",
+          "summary": "자동수정과 맞춤법 검사를 비활성화할지 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "backgroundColor(_:)",
           "signature": "func backgroundColor(SwiftUI.Color?) -> TextField",
           "summary": "텍스트 필드의 배경색을 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "disable(_:)",
-          "signature": "func disable(Bool) -> TextField",
-          "summary": "텍스트 필드의 활성화 상태를 설정합니다.",
-          "kind": "method"
-        },
-        {
-          "name": "heading(_:)",
-          "signature": "func heading(String?) -> TextField",
-          "summary": "텍스트 필드 위에 표시할 제목을 설정합니다.",
           "kind": "method"
         },
         {
@@ -2579,21 +3373,57 @@
           "kind": "method"
         },
         {
+          "name": "label(_:required:)",
+          "signature": "func label(String?, required: Bool) -> TextField",
+          "summary": "제목(라벨)을 붙이고 필수 표시(*) 여부를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelPlacement(_:)",
+          "signature": "func labelPlacement(FormControl.LabelPlacement) -> TextField",
+          "summary": "라벨 위치를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "labelWidth(_:)",
+          "signature": "func labelWidth(CGFloat) -> TextField",
+          "summary": "leading 배치에서 라벨 열의 폭을 명시적으로 고정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "maxLength(_:)",
+          "signature": "func maxLength(Int?) -> TextField",
+          "summary": "입력 가능한 최대 글자 수를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "message(_:)",
+          "signature": "func message(String?) -> TextField",
+          "summary": "입력 아래에 표시할 도움말/에러 메시지를 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "onTextChange(_:)",
+          "signature": "func onTextChange((String) -> Void) -> TextField",
+          "summary": "텍스트가 변경될 때마다 호출할 클로저를 설정합니다.",
+          "kind": "method"
+        },
+        {
           "name": "placeholder(_:)",
           "signature": "func placeholder(String?) -> TextField",
           "summary": "텍스트 필드에 입력된 텍스트가 없을 때 표시할 플레이스홀더를 설정합니다.",
           "kind": "method"
         },
         {
-          "name": "requiredBadge(_:)",
-          "signature": "func requiredBadge(Bool) -> TextField",
-          "summary": "제목 옆에 필수 입력을 나타내는 뱃지를 표시할지 설정합니다.",
-          "kind": "method"
-        },
-        {
           "name": "secured(_:)",
           "signature": "func secured(Bool) -> TextField",
           "summary": "입력한 내용을 가릴지 설정합니다.",
+          "kind": "method"
+        },
+        {
+          "name": "size(_:)",
+          "signature": "func size(Size) -> TextField",
+          "summary": "텍스트 필드의 사이즈를 설정합니다.",
           "kind": "method"
         },
         {
@@ -2620,7 +3450,29 @@
         {
           "name": "TextField.AutoCompletionDataSource",
           "kind": "struct",
-          "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다."
+          "summary": "텍스트 필드의 자동완성 기능을 위한 데이터 소스를 정의합니다.",
+          "initializers": [
+            {
+              "signature": "init(numberOfSections:sectionTitleAt:numberOfItemsInSection:cellForItemAt:headerView:footerView:maxHeight:)"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "totalNumberOfItems",
+              "signature": "var totalNumberOfItems: Int",
+              "summary": "전체 항목 수를 반환합니다.",
+              "kind": "property"
+            }
+          ]
+        },
+        {
+          "name": "TextField.Size",
+          "kind": "enum",
+          "summary": "텍스트 필드의 사이즈를 정의합니다.",
+          "cases": [
+            "large",
+            "medium"
+          ]
         },
         {
           "name": "TextField.Status",
@@ -2635,7 +3487,12 @@
         {
           "name": "TextField.TrailingButtonInfo",
           "kind": "struct",
-          "summary": "텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다."
+          "summary": "텍스트 필드의 오른쪽에 표시할 버튼의 속성을 정의합니다.",
+          "initializers": [
+            {
+              "signature": "init(title:disable:handler:)"
+            }
+          ]
         }
       ]
     },
@@ -2726,12 +3583,21 @@
           "cases": [
             "bottom",
             "top"
+          ],
+          "caseSignatures": [
+            "bottom(offset:)",
+            "top(offset:)"
           ]
         },
         {
           "name": "Toast.Model",
           "kind": "struct",
-          "summary": "토스트 메시지의 데이터 모델을 정의하는 구조체입니다."
+          "summary": "토스트 메시지의 데이터 모델을 정의하는 구조체입니다.",
+          "initializers": [
+            {
+              "signature": "init(_:message:)"
+            }
+          ]
         },
         {
           "name": "Toast.Variant",
@@ -2741,6 +3607,12 @@
             "cautionary",
             "negative",
             "normal",
+            "positive"
+          ],
+          "caseSignatures": [
+            "cautionary",
+            "negative",
+            "normal(_:tint:)",
             "positive"
           ]
         }
@@ -2775,6 +3647,12 @@
             "leading",
             "top",
             "trailing"
+          ],
+          "caseSignatures": [
+            "bottom(arrowPosition:)",
+            "leading(arrowPosition:)",
+            "top(arrowPosition:)",
+            "trailing(arrowPosition:)"
           ]
         },
         {
@@ -2797,10 +3675,16 @@
       "summary": "상단에 표시되는 내비게이션 바 컴포넌트입니다.",
       "initializers": [
         {
-          "signature": "init(scrollOffset:backgroundColor:)"
+          "signature": "init(scrollOffset:)"
         }
       ],
       "modifiers": [
+        {
+          "name": "backgroundColor(_:)",
+          "signature": "func backgroundColor(SwiftUI.Color) -> TopNavigation",
+          "summary": "내비게이션 바의 배경색을 설정합니다.",
+          "kind": "method"
+        },
         {
           "name": "leadingContent(_:)",
           "signature": "func leadingContent<V>(() -> V) -> TopNavigation",
@@ -2810,7 +3694,7 @@
         {
           "name": "searchField(placeholder:searchTerm:focused:onSubmit:onTextChange:onFocusChange:)",
           "signature": "func searchField(placeholder: String?, searchTerm: Binding<String>, focused: Binding<Bool>?, onSubmit: (() -> Void)?, onTextChange: ((String) -> Void)?, onFocusChange: ((Bool) -> Void)?) -> TopNavigation",
-          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 일 때만 적용됩니다.",
+          "summary": "검색 필드의 속성과 동작을 설정합니다. variant가 .search일 때만 적용됩니다.",
           "kind": "method"
         },
         {
@@ -2849,22 +3733,97 @@
         {
           "name": "TopNavigation.LeadingButton",
           "kind": "struct",
-          "summary": "내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다."
+          "summary": "내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼입니다.",
+          "initializers": [
+            {
+              "signature": "init(_:)"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TopNavigation.Resource",
           "kind": "enum",
-          "summary": "TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다."
+          "summary": "TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다."
+        },
+        {
+          "name": "TopNavigation.Resource.Leading",
+          "kind": "enum",
+          "summary": "내비게이션 바 좌측(leading)에 표시할 요소입니다.",
+          "cases": [
+            "back",
+            "icon",
+            "text"
+          ],
+          "caseSignatures": [
+            "back(action:)",
+            "icon(_:action:)",
+            "text(_:action:)"
+          ]
+        },
+        {
+          "name": "TopNavigation.Resource.Trailing",
+          "kind": "enum",
+          "summary": "내비게이션 바 우측(trailing)에 표시할 요소입니다.",
+          "cases": [
+            "icon",
+            "text"
+          ],
+          "caseSignatures": [
+            "icon(_:disable:showPushBadge:action:)",
+            "text(_:disable:action:)"
+          ],
+          "modifiers": [
+            {
+              "name": "hash(into:)",
+              "signature": "func hash(into: inout Hasher)",
+              "summary": "해시 값을 생성합니다.",
+              "kind": "method"
+            }
+          ]
         },
         {
           "name": "TopNavigation.TrailingIconButton",
           "kind": "struct",
-          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다."
+          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.",
+          "initializers": [
+            {
+              "signature": "init(icon:showPushBadge:action:)"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TopNavigation.TrailingTextButton",
           "kind": "struct",
-          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다."
+          "summary": "내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.",
+          "initializers": [
+            {
+              "signature": "init(text:action:)"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "body",
+              "signature": "var body: some View",
+              "summary": "뷰의 내용과 동작을 정의합니다.",
+              "kind": "property"
+            }
+          ]
         },
         {
           "name": "TopNavigation.Variant",

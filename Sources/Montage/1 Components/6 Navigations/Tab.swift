@@ -172,9 +172,10 @@ public struct Tab: View {
                         }
                     
                         if resize == .hug, let icon, let iconButtonAction {
-                            IconButton(variant: .normal(size: iconSize), icon: icon) {
+                            IconButton(variant: .normal(size: iconButtonSize), icon: icon) {
                                 iconButtonAction()
                             }
+                            .interactionOverflow()
                             .padding(.trailing, horizontalPadding ? 16 : 0)
                         }
                     }
@@ -182,7 +183,7 @@ public struct Tab: View {
             }
             
             Rectangle()
-                .fill(SwiftUI.Color.semantic(.lineAlternative))
+                .fill(SwiftUI.Color.semantic(.lineNeutralTertiary))
                 .frame(height: 1)
         }
     }
@@ -254,16 +255,16 @@ private extension Tab {
     }
     
     func activeItemBarColor(_ index: Int) -> SwiftUI.Color {
-        .semantic(itemDisabled(index) ? .fillAlternative : .labelStrong)
+        .semantic(itemDisabled(index) ? .surfaceNeutralTertiary : .foregroundNeutralStrong)
     }
     
     func itemTextColor(_ index: Int) -> SwiftUI.Color {
         if itemDisabled(index) {
-            .semantic(.labelDisable)
+            .semantic(.foregroundDisablePrimary)
         } else if index == selectedIndex {
-            .semantic(.labelStrong)
+            .semantic(.foregroundNeutralStrong)
         } else {
-            .semantic(.labelAssistive)
+            .semantic(.foregroundNeutralQuaternary)
         }
     }
     
@@ -275,11 +276,12 @@ private extension Tab {
         }
     }
     
-    var iconSize: Int {
+    /// 3.x 아이콘 크기(20·22·24)에 맞춘 IconButton 사이즈.
+    /// medium은 3.x에서 22였지만 22에 해당하는 사이즈가 없어 20(`.large`)을 쓴다.
+    var iconButtonSize: IconButton.NormalSize {
         switch size {
-        case .small: 20
-        case .medium: 22
-        default: 24
+        case .small, .medium: .large
+        case .large: .xlarge
         }
     }
 }

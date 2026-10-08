@@ -7,29 +7,29 @@
 
 import SwiftUI
 
-/// 여러 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.
+/// 여러 사용자 아바타를 겹쳐서 표시하는 그룹 아바타 컴포넌트입니다.
 ///
-/// 최대 5개의 아바타를 부분적으로 겹쳐 표시하며, 각 아바타에 개별 탭 동작을 지정할 수 있습니다.
+/// 최대 5개의 사용자(.person) 아바타를 부분적으로 겹쳐 표시하며, 각 아바타에 개별 탭 동작을 지정할 수 있습니다.
+/// 겹치는 아바타 사이에는 1.5pt 두께의 분리 여백이 적용됩니다.
 ///
 /// ```swift
 /// // 기본 그룹 아바타
 /// AvatarGroup(
 ///     ["https://example.com/user1.jpg", "https://example.com/user2.jpg"],
-///     variant: .person,
 ///     size: .small
 /// )
 ///
 /// // 탭 동작과 후행 콘텐츠가 있는 그룹 아바타
 /// AvatarGroup(
 ///     imageUrls,
-///     variant: .person,
 ///     size: .small,
 ///     onTap: { index in
 ///         print("탭한 아바타 인덱스: \(index)")
 ///     }
 /// )
 /// .trailingContent {
-///     Text("+3").typography(variant: .body2)
+///     Text("외 3명")
+///         .typography(variant: .label1, weight: .medium, semantic: .foregroundNeutralSecondary)
 /// }
 /// ```
 public struct AvatarGroup: View {
@@ -53,7 +53,6 @@ public struct AvatarGroup: View {
     // MARK: - Initializer
 
     private let imageSources: [Avatar.ImageSource]
-    private let variant: Avatar.Variant
     private let size: Size
     private let onTap: ((_ index: Int) -> Void)?
 
@@ -61,17 +60,14 @@ public struct AvatarGroup: View {
     ///
     /// - Parameters:
     ///   - imageUrls: 표시할 이미지의 URL 문자열 배열 (최대 5개)
-    ///   - variant: 아바타 유형
     ///   - size: 그룹 아바타 크기
     ///   - onTap: 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용
     public init(
         _ imageUrls: [String],
-        variant: Avatar.Variant,
         size: Size,
         onTap: ((_ index: Int) -> Void)? = nil
     ) {
-        self.imageSources = Array(imageUrls.prefix(5)).map { .url($0) }
-        self.variant = variant
+        self.imageSources = Array(imageUrls.prefix(Self.maxDisplayCount)).map { .url($0) }
         self.size = size
         self.onTap = onTap
     }
@@ -80,17 +76,14 @@ public struct AvatarGroup: View {
     ///
     /// - Parameters:
     ///   - images: 표시할 SwiftUI Image 배열 (최대 5개)
-    ///   - variant: 아바타 유형
     ///   - size: 그룹 아바타 크기
     ///   - onTap: 각 아바타 탭 시 실행할 액션 (인덱스가 전달됨), 생략하면 기본값으로 `nil` 적용
     public init(
         _ images: [Image],
-        variant: Avatar.Variant,
         size: Size,
         onTap: ((_ index: Int) -> Void)? = nil
     ) {
-        self.imageSources = Array(images.prefix(5)).map { .image($0) }
-        self.variant = variant
+        self.imageSources = Array(images.prefix(Self.maxDisplayCount)).map { .image($0) }
         self.size = size
         self.onTap = onTap
     }
@@ -110,8 +103,13 @@ public struct AvatarGroup: View {
                                 .interactionDisabled()
 
                             if index < count - 1 {
-                                RoundedRectangle(cornerRadius: variant.cornerRadius(size: avatartSize))
-                                    .scaleEffect(1.1)
+                                // 겹치는 다음 아바타와 1.5pt 두께로 분리되도록,
+                                // 아바타보다 상하좌우 1.5pt씩 큰 원형 마스크로 배경을 뚫는다.
+                                Circle()
+                                    .frame(
+                                        width: avatartSize.containerSize.width + Self.overlapBorderWidth * 2,
+                                        height: avatartSize.containerSize.height + Self.overlapBorderWidth * 2
+                                    )
                                     .offset(x: avatartSize.containerSize.width - size.space)
                                     .blendMode(.destinationOut)
                             }
@@ -142,7 +140,7 @@ public struct AvatarGroup: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(
-            "\(variant.accessibilityDescription) \(imageSources.count)"
+            "\(Avatar.Variant.person.accessibilityDescription) \(imageSources.count)"
         )
     }
 
@@ -178,6 +176,12 @@ public struct AvatarGroup: View {
 
 /// `AvatarGroup`의 내부 구현을 위한 확장입니다.
 extension AvatarGroup {
+    /// 겹쳐서 표시할 수 있는 최대 아바타 수.
+    fileprivate static let maxDisplayCount = 5
+
+    /// 겹치는 아바타 사이의 분리 여백(테두리) 두께.
+    fileprivate static let overlapBorderWidth: CGFloat = 1.5
+
     /// 그룹 아바타 크기에 맞는 개별 아바타 크기를 반환합니다.
     fileprivate var avatartSize: Avatar.Size {
         size == .xsmall ? .xsmall : .small
@@ -186,9 +190,9 @@ extension AvatarGroup {
     fileprivate func avatarView(for source: Avatar.ImageSource, index: Int) -> Avatar {
         switch source {
         case .url(let imageUrl):
-            Avatar(imageUrl, variant: variant, size: avatartSize) { onTap?(index) }
+            Avatar(imageUrl, variant: .person, size: avatartSize) { onTap?(index) }
         case .image(let image):
-            Avatar(image, variant: variant, size: avatartSize) { onTap?(index) }
+            Avatar(image, variant: .person, size: avatartSize) { onTap?(index) }
         }
     }
 }

@@ -9,185 +9,126 @@ import SwiftUI
 import Montage
 
 struct ModalNavigationPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var contentOffset: CGFloat = 0
     @State private var scrollViewTopPadding: CGFloat = 0
     @State private var variantIndex = 0
-    @State private var leadingButton = true
     @State private var leadingButtonTypeIndex = 0
     @State private var trailingButtonCount = 1
     @State private var noMaterialBackground = false
+    @State private var iconButtonBackground = false
     @State private var useFixedOpacity = false
     @State private var fixedOpacity: CGFloat = 0.5
+    @State private var searchTerm = ""
     @Environment(\.presentationMode) var presentationMode
-    @State private var showPreview = true
-    
-    var body: some View {
-        SwiftUI.Button("TopNavigation Preview") {
-            showPreview = true
-        }
-        .fullScreenCover(isPresented: $showPreview) {
-            VStack(spacing: 0) {
-                ZStack(alignment: .top) {
-                    ScrollView(
-                        onOffsetChanged: { offset in
-                            contentOffset = offset.y
-                        },
-                        content: {
-                            SwiftUI.Color.clear
-                                .frame(height: scrollViewTopPadding)
-                            
-                            LazyVStack(spacing: 0) {
-                                ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
-                                    ZStack {
-                                        SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
-                                        Text("Item \(index)")
-                                            .padding()
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                    )
-                    .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-                    
-                    VStack {
-                        ModalNavigation(scrollOffset: $contentOffset)
-                            .variant(variants[variantIndex])
-                            .title("제목")
-                            .modifying {
-                                if noMaterialBackground {
-                                    $0.noMaterialBackground()
-                                } else {
-                                    $0
-                                }
-                            }
-                            .modifying {
-                                if useFixedOpacity {
-                                    $0.fixedBackgroundOpacity(fixedOpacity)
-                                } else {
-                                    $0
-                                }
-                            }
-                            .leadingContent {
-                                Group {
-                                    if leadingButton {
-                                        TopNavigation.LeadingButton.init(
-                                            leadingButtons[leadingButtonTypeIndex]
-                                        )
-                                    }
-                                }
-                            }
-                            .trailingContents(
-                                Array(actions.prefix(trailingButtonCount)).map { kind -> (() -> AnyView) in
-                                    switch kind {
-                                    case let .icon(i, d, s, a):
-                                        {
-                                            AnyView(TopNavigation.TrailingIconButton(
-                                                icon: i,
-                                                disable: d,
-                                                showPushBadge: s,
-                                                action: a
-                                            ))
-                                        }
-                                    case let .text(t, d, a):
-                                        {
-                                            AnyView(TopNavigation.TrailingTextButton(
-                                                text: t,
-                                                disable: d,
-                                                action: a
-                                            ))
-                                        }
-                                    }
-                                }
-                            )
-                    }
-                    .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
-                }
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Options").bold()
-                        Spacer()
-                        Button(action: {
-                            showPreview = false
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                        }
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
-                    }
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(selectedIndex: $variantIndex, labels: variants.map(\.description))
-                            .size(.small)
-                    }
-                    HStack {
-                        Text("leadingButton")
-                        SegmentedControl(selectedIndex: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0.description)" })
-                            .size(.small)
-                        Switch(checked: leadingButton) { leadingButton = $0 }
-                    }
-                    HStack {
-                        Text("trailingButton")
-                        SegmentedControl(selectedIndex: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
-                            .size(.small)
 
-                    }
-                    HStack {
-                        Text("noMaterialBackground")
-                        Spacer()
-                        Switch(checked: noMaterialBackground) { noMaterialBackground = $0 }
-                    }
-                    HStack {
-                        Text("fixedBackgroundOpacity")
-                        SwiftUI.Slider(value: $fixedOpacity, in: 0...1)
-                            .disabled(!useFixedOpacity)
-                        Text(String(format: "%.2f", fixedOpacity))
-                            .monospacedDigit()
-                        Switch(checked: useFixedOpacity) { useFixedOpacity = $0 }
-                    }
-                }
-                .padding()
-                .background(.regularMaterial)
+    var body: some View {
+        // .navigation 모드: PreviewLayout이 NavigationView·push 버튼·체커 적용까지 담당한다.
+        // preview 클로저는 push되는 미리보기 화면이다.
+        PreviewLayout(mode: .navigation) {
+            preview
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            SegmentedIndexRow("leadingButton", index: $leadingButtonTypeIndex, labels: leadingButtons.map { "\($0?.description ?? "none")" })
+            SegmentedIndexRow("trailingButton", index: $trailingButtonCount, labels: Array(0...3).map { "\($0)" })
+            ToggleOptionRow("noMaterialBackground", isOn: $noMaterialBackground)
+            if variants[variantIndex] == .floating {
+                ToggleOptionRow("iconButtonBackground", isOn: $iconButtonBackground)
             }
-            .background(Color.semantic(.backgroundNormal))
+            HStack {
+                Text("fixedBackgroundOpacity")
+                SwiftUI.Slider(value: $fixedOpacity, in: 0...1)
+                    .disabled(!useFixedOpacity)
+                Text(String(format: "%.2f", fixedOpacity))
+                    .monospacedDigit()
+                Switch(checked: useFixedOpacity) { useFixedOpacity = $0 }
+            }
         }
     }
-    
-    private var variants: [ModalNavigation.Variant] {
-        [.normal, .display, .emphasized, .floating]
+
+    var preview: some View {
+        ZStack(alignment: .top) {
+            ScrollView(
+                onOffsetChanged: { offset in
+                    contentOffset = offset.y
+                },
+                content: {
+                    SwiftUI.Color.clear
+                        .frame(height: scrollViewTopPadding)
+
+                    LazyVStack(spacing: 0) {
+                        ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
+                            ZStack {
+                                SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                                Text("Item \(index)")
+                                    .padding()
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
+                    .previewCheckered()
+                }
+            )
+
+            VStack {
+                ModalNavigation(scrollOffset: $contentOffset)
+                    .variant(variants[variantIndex])
+                    .title("제목")
+                    .searchField(placeholder: "검색어를 입력해 주세요.", searchTerm: $searchTerm)
+                    .modifying {
+                        if noMaterialBackground {
+                            $0.noMaterialBackground()
+                        } else {
+                            $0
+                        }
+                    }
+                    .modifying {
+                        if useFixedOpacity {
+                            $0.fixedBackgroundOpacity(fixedOpacity)
+                        } else {
+                            $0
+                        }
+                    }
+                    .leading(leadingButtons[leadingButtonTypeIndex])
+                    .trailings(Array(actions.prefix(trailingButtonCount)))
+                    .iconButtonBackground(iconButtonBackground)
+            }
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }, action: { scrollViewTopPadding = $0 })
+        }
     }
-    
-    private var leadingButtons: [TopNavigation.Resource.LeadingButtonInfo] {
+
+    private var variants: [ModalNavigation.Variant] {
+        [.normal, .emphasized, .floating, .search]
+    }
+
+    private var leadingButtons: [ModalNavigation.Resource.Leading?] {
         [
+            nil,
             .back(action: {
                 presentationMode.wrappedValue.dismiss()
-            }), .icon(.flipBackward, action: {
+            }),
+            .icon(.flipBackward, action: {
                 presentationMode.wrappedValue.dismiss()
-            }), .text("뒤로", action: {
+            }),
+            .text("뒤로", action: {
                 presentationMode.wrappedValue.dismiss()
             })
         ]
     }
-    
-    private let actions: [TopNavigation.Resource.TrailingButtonInfo] = {
+
+    // 닫기 버튼은 가장 오른쪽에 와야 하므로 배열 마지막에 둔다.
+    private let actions: [ModalNavigation.Resource.Trailing] = {
         [
-            .icon(.close, action: {}),
-            .icon(.download, showPushBadge: true, action: {}),
-            .text("알림", action: {})
+            .icon(.download, action: {}),
+            .text("알림", action: {}),
+            .close(action: {})
         ]
     }()
 }
 
 extension ModalNavigation.Variant: CaseDescribable {}
-extension TopNavigation.Resource.LeadingButtonInfo: CaseDescribable {}
-extension TopNavigation.Resource.TrailingButtonInfo: CaseDescribable {}
+extension ModalNavigation.Resource.Leading: CaseDescribable {}
+extension ModalNavigation.Resource.Trailing: CaseDescribable {}
 
 #Preview {
     ModalNavigationPreview()

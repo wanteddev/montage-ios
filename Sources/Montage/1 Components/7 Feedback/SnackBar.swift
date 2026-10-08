@@ -223,10 +223,11 @@ public struct SnackBar: View {
                     
                     if closeButton {
                         Spacer().frame(width: 12)
-                        IconButton(variant: .normal(size: 20), icon: .close) {
+                        IconButton(variant: .normal(size: .large), icon: .close) {
                             dismiss()
                         }
-                        .iconColor(.semantic(.staticWhite).opacity(0.61))
+                        .interactionOverflow()
+                        .iconColor(.semantic(.staticWhite).opacity(.opacity61))
                         .padding(.horizontal, 2)
                     }
                 }
@@ -278,14 +279,10 @@ public struct SnackBar: View {
         @Environment(\.colorScheme) private var colorScheme
 
         var body: some View {
-            ZStack {
-                SwiftUI.Color.semantic(.inverseBackground).opacity(
-                    colorScheme == .light ? 0.5 : 0.46)
-                SwiftUI.Color.semantic(.primaryNormal).opacity(0.05)
-            }
-            .background(
-                .ultraThinMaterial
-            )
+            MaterialBackground(tint: [
+                .semantic(.surfaceNeutralInverse).opacity(colorScheme == .light ? .opacity52 : .opacity43),
+                .semantic(.surfaceBrandPrimary).opacity(.opacity5),
+            ])
         }
     }
 

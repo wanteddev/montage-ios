@@ -38,10 +38,50 @@ import SwiftUI
 ///     .title(.headline, weight: .semibold, color: .red)
 ///     .verticalPadding(.small)
 ///     .leadingIcon(.info)
-///     .fillWidth()
+///     .variant(.full)
 /// ```
 public struct Accordion: View {
     // MARK: - Types
+    
+    /// 아코디언이 놓이는 리스트(컨테이너)의 가장자리를 기준으로 한 아코디언의 형태입니다.
+    ///
+    /// 좌우 여백과 인터랙션 배경의 확장 폭·모서리 둥글기를 하나로 묶은 값으로, 세 값을 따로 지정할 수는 없습니다.
+    /// 두 형태 모두 콘텐츠는 리스트 기준 같은 자리에 놓이고, 인터랙션 배경이 리스트 좌우 끝까지 닿는지만 달라집니다.
+    public enum Variant: Equatable {
+        /// 인터랙션 배경이 리스트 좌우 끝에 닿지 않고 안쪽에 둥글게 그려지는 형태입니다.
+        ///
+        /// 아코디언은 콘텐츠 폭을 그대로 쓰고 좌우 여백은 리스트가 줍니다.
+        /// 인터랙션 배경만 헤더보다 좌우로 12 넓어지고 모서리가 12 둥글게 처리됩니다.
+        case inset
+        /// 인터랙션 배경이 리스트 좌우 끝까지 각지게 채우는 형태입니다.
+        ///
+        /// 아코디언이 리스트 폭을 채우고 좌우 여백 20을 직접 가지며, 인터랙션 배경은 헤더와 같은 크기로 그려집니다.
+        case full
+
+        /// 헤더와 펼친 콘텐츠의 좌우 여백.
+        var horizontalPadding: CGFloat {
+            switch self {
+            case .inset: 0
+            case .full: 20
+            }
+        }
+
+        /// 인터랙션 배경이 헤더 경계 바깥으로 확장되는 좌우 크기.
+        var interactionOutset: CGFloat {
+            switch self {
+            case .inset: 12
+            case .full: 0
+            }
+        }
+
+        /// 인터랙션 배경의 모서리 반경.
+        var interactionRadius: CGFloat {
+            switch self {
+            case .inset: 12
+            case .full: 0
+            }
+        }
+    }
     
     /// 아코디언의 상하 여백을 나타내는 열거형입니다.
     ///
@@ -105,14 +145,14 @@ public struct Accordion: View {
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (.body2, .bold, .semantic(.labelNormal))
+    ) = (.body2, .bold, .semantic(.foregroundNeutralPrimary))
     private var descriptionTypography: (
         variant: Typography.Variant,
         weight: Typography.Weight,
         color: SwiftUI.Color
-    ) = (.label1, .regular, .semantic(.labelNeutral))
+    ) = (.label1, .regular, .semantic(.foregroundNeutralSecondary))
     private var verticalPadding: VerticalPadding = .large
-    private var fillWidth = false
+    private var variant: Variant = .inset
     private var hideDivider = false
     private var leadingContent: (() -> AnyView)? = nil
     private var trailingContent: (Bool) -> AnyView = { _ in AnyView(EmptyView()) }
@@ -122,12 +162,12 @@ public struct Accordion: View {
     /// - Parameters:
     ///   - variant: 텍스트 변형, 생략하면 기본값으로 `.body2` 적용
     ///   - weight: 텍스트 굵기, 생략하면 기본값으로 `.bold` 적용
-    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.labelNormal)` 적용
+    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralPrimary)` 적용
     /// - Returns: 수정된 아코디언 인스턴스
     public func title(
         _ variant: Typography.Variant = .body2,
         weight: Typography.Weight = .bold,
-        color: SwiftUI.Color = .semantic(.labelNormal)
+        color: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
     ) -> Self {
         var zelf = self
         zelf.titleTypography.variant = variant
@@ -141,12 +181,12 @@ public struct Accordion: View {
     /// - Parameters:
     ///   - variant: 텍스트 변형, 생략하면 기본값으로 `.label1` 적용
     ///   - weight: 텍스트 굵기, 생략하면 기본값으로 `.regular` 적용
-    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.labelNeutral)` 적용
+    ///   - color: 텍스트 색상, 생략하면 기본값으로 `.semantic(.foregroundNeutralSecondary)` 적용
     /// - Returns: 수정된 아코디언 인스턴스
     public func description(
         _ variant: Typography.Variant = .label1,
         weight: Typography.Weight = .regular,
-        color: SwiftUI.Color = .semantic(.labelNeutral)
+        color: SwiftUI.Color = .semantic(.foregroundNeutralSecondary)
     ) -> Self {
         var zelf = self
         zelf.descriptionTypography.variant = variant
@@ -165,15 +205,28 @@ public struct Accordion: View {
         return zelf
     }
     
-    /// 아코디언이 부모 컨테이너의 너비를 채우도록 설정합니다.
+    /// 아코디언의 형태를 설정합니다.
     ///
-    /// 이 수정자를 적용하면 좌우 20pt의 여백이 추가됩니다.
+    /// 아코디언의 좌우 여백과 인터랙션 효과(pressed 배경)의 확장 폭·모서리 둥글기가 함께 정해집니다.
+    /// 두 형태의 차이는 ``Variant``를 참고하세요.
     ///
-    /// - Parameter fillWidth: 너비를 채울지 여부, 생략하면 기본값으로 `true` 적용
+    /// ```swift
+    /// // 리스트가 좌우 여백을 주는 경우 (기본값)
+    /// Accordion(title: "아코디언 제목")
+    ///
+    /// // 아코디언이 리스트 폭을 채우는 경우
+    /// Accordion(title: "아코디언 제목")
+    ///     .variant(.full)
+    /// ```
+    ///
+    /// - Parameter variant: 적용할 아코디언 형태, 생략하면 기본값으로 `.inset` 적용
     /// - Returns: 수정된 아코디언 인스턴스
-    public func fillWidth(_ fillWidth: Bool = true) -> Self {
+    ///
+    /// - Note: 4.0.0에서 제거된 `fillWidth(_:)`를 대체합니다.
+    ///   `fillWidth(false)`는 ``Variant/inset``, `fillWidth(true)`는 ``Variant/full``에 대응합니다.
+    public func variant(_ variant: Variant = .inset) -> Self {
         var zelf = self
-        zelf.fillWidth = fillWidth
+        zelf.variant = variant
         return zelf
     }
     
@@ -229,19 +282,6 @@ public struct Accordion: View {
     ///
     /// 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
     ///
-    /// - Parameter trailingContent: 표시할 커스텀 컨텐츠 뷰
-    /// - Returns: 수정된 아코디언 인스턴스
-    @available(*, deprecated, message: "확장 상태를 인자로 받는 오버로드를 사용하세요: `trailingContent { isExpanded in ... }`")
-    public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping () -> V) -> Self {
-        var zelf = self
-        zelf.trailingContent = { _ in AnyView(trailingContent()) }
-        return zelf
-    }
-    
-    /// 아코디언 헤더 우측에 커스텀 컨텐츠를 추가합니다.
-    ///
-    /// 이 수정자를 사용하면 기본 화살표 아이콘이 대체됩니다.
-    ///
     /// - Parameter trailingContent: 표시할 컨텐츠를 생성하는 클로저 (아코디언이 펼쳐진 상태를 파라미터로 받음)
     /// - Returns: 수정된 아코디언 인스턴스
     public func trailingContent<V: View>(@ViewBuilder _ trailingContent: @escaping (Bool) -> V) -> Self {
@@ -288,11 +328,11 @@ public struct Accordion: View {
                 .frame(minHeight: 24)
                 .padding(.vertical, verticalPadding.length)
                 .contentShape(Rectangle())
-                .padding(.horizontal, fillWidth ? 20 : 0)
+                .padding(.horizontal, variant.horizontalPadding)
                 .modifier(ListCellInteractionModifier(
                     pressed: $isPressed,
-                    fillWidth: fillWidth,
-                    interactionPadding: 12
+                    outset: variant.interactionOutset,
+                    radius: variant.interactionRadius
                 ))
                 .modifier(PressActionDetectingModifier(isPressed: $isPressed) {
                     withAnimation(.timingCurve(0.25, 0.1, 0.25, 1, duration: 0.3)) {
@@ -319,13 +359,13 @@ public struct Accordion: View {
                             .ifEmptyView { isContentEmpty = $0 }
                     }
                     .padding(.bottom, description.isNilOrEmpty && isContentEmpty ? 0 : 16)
-                    .padding(.horizontal, fillWidth ? 20 : 0)
+                    .padding(.horizontal, variant.horizontalPadding)
                 }
             }
             
             Rectangle()
                 .frame(height: 1)
-                .foregroundStyle(SwiftUI.Color.semantic(.lineAlternative))
+                .foregroundStyle(SwiftUI.Color.semantic(.lineNeutralTertiary))
                 .background()
                 .if(!hideDivider)
         }

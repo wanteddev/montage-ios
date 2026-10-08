@@ -94,14 +94,14 @@ public struct SectionHeader: View {
     // MARK: - Modifiers
     
     private var size: Size = .medium
-    private var titleColor: SwiftUI.Color = .semantic(.labelStrong)
+    private var titleColor: SwiftUI.Color = .semantic(.foregroundNeutralStrong)
     private var headingContent: () -> AnyView = { AnyView(EmptyView()) }
     private var trailingContent: () -> AnyView = { AnyView(EmptyView()) }
     
     /// 섹션 헤더의 크기를 설정합니다.
     ///
     /// 크기에 따라 폰트 크기와 높이가 자동으로 조정됩니다.
-    /// `xsmall` 크기를 선택하면 타이틀 색상이 `.labelAlternative`로 변경됩니다.
+    /// `xsmall` 크기를 선택하면 타이틀 색상이 `.foregroundNeutralTertiary`로 변경됩니다.
     ///
     /// - Parameters:
     ///   - size: 적용할 헤더 크기
@@ -110,7 +110,7 @@ public struct SectionHeader: View {
         var zelf = self
         zelf.size = size
         if size == .xsmall {
-            zelf.titleColor = .semantic(.labelAlternative)
+            zelf.titleColor = .semantic(.foregroundNeutralTertiary)
         }
         return zelf
     }

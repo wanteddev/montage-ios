@@ -24,13 +24,14 @@ enum ComponentCategory: String, CaseIterable, Hashable {
 enum Component: String, CaseIterable, Hashable, Identifiable {
     var id: String { rawValue }
     case actionArea, chip, button, iconButton, textButton
-    case control, filterButton, segmentedControl, select, slider, textArea, textField, dateTimePicker, framedStyle
+    case control, filterButton, formControl, formControlGroup, searchField, segmentedControl, select, slider, textArea, textField, dateTimePicker, framedStyle
     case accordion, avatar, avatarGroup, card, contentBadge, listCard, listCell, playBadge, sectionHeader, thumbnail
     case loading, pullToRefresh, skeleton
-    case category, pagination, progressIndicator, progressTracker, tab, topNavigation
+    case category, progressIndicator, tab, topNavigation
+    case horizontalProgressTracker, verticalProgressTracker, paginationDots, pageCounter
     case fallbackView, pushBadge, snackbar, toast
     case bottomSheet, popup, popover, tooltip
-    case color, flowLayout, icon, modalNavigation, shadow, typography
+    case color, flowLayout, icon, modalNavigation, screenScaffold, shadow, typography
     
     var state: ComponentState {
         .completed
@@ -40,19 +41,20 @@ enum Component: String, CaseIterable, Hashable, Identifiable {
         switch self {
         case .actionArea, .chip, .button, .iconButton, .textButton:
             return .actions
-        case .control, .filterButton, .segmentedControl, .select, .slider, .textArea, .textField, .dateTimePicker, .framedStyle:
+        case .control, .filterButton, .formControl, .formControlGroup, .searchField, .segmentedControl, .select, .slider, .textArea, .textField, .dateTimePicker, .framedStyle:
             return .selectionAndInput
         case .accordion, .avatar, .avatarGroup, .card, .contentBadge, .listCard, .listCell, .playBadge, .sectionHeader, .thumbnail:
             return .contents
         case .loading, .pullToRefresh, .skeleton:
             return .loading
-        case .category, .pagination, .progressIndicator, .progressTracker, .tab, .topNavigation:
+        case .category, .progressIndicator, .tab, .topNavigation,
+             .horizontalProgressTracker, .verticalProgressTracker, .paginationDots, .pageCounter:
             return .navigations
         case .fallbackView, .pushBadge, .snackbar, .toast:
             return .feedback
         case .bottomSheet, .popup, .popover, .tooltip:
             return .presentation
-        case .color, .flowLayout, .icon, .modalNavigation, .shadow, .typography:
+        case .color, .flowLayout, .icon, .modalNavigation, .screenScaffold, .shadow, .typography:
             return .utilities
         }
     }

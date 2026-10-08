@@ -2,7 +2,6 @@ import SwiftUI
 import Montage
 
 struct ChipPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var variant: Chip.Variant = .solid
     @State private var size: Chip.Size = .medium
     @State private var text = "텍스트"
@@ -11,151 +10,121 @@ struct ChipPreview: View {
     @State private var backgroundColor: SwiftUI.Color = .clear
     @State private var fontColor: SwiftUI.Color = .clear
     @State private var activeColor: SwiftUI.Color = .clear
-    @State private var leadingImage = false
-    @State private var trailingImage = false
-    @State private var imageColor: SwiftUI.Color = .clear
-    
-    var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
-                }
-                
-                HStack {
-                    Spacer()
-                    Chip(
-                        variant: variant,
-                        size: size,
-                        text: text
-                    )
-                    .active(active)
-                    .disabled(disable)
-                    .modifying {
-                        if backgroundColor == .clear {
-                            $0
-                        } else {
-                            $0.backgroundColor(backgroundColor)
-                        }
-                    }
-                    .modifying {
-                        if fontColor == .clear {
-                            $0
-                        } else {
-                            $0.fontColor(fontColor)
-                        }
-                    }
-                    .modifying {
-                        if activeColor == .clear {
-                            $0
-                        } else {
-                            $0.activeColor(activeColor)
-                        }
-                    }
-                    .modifying {
-                        if imageColor == .clear {
-                            $0
-                        } else {
-                            $0.imageColor(imageColor)
-                        }
-                    }
-                    .modifying {
-                        if leadingImage {
-                            $0.leadingImage(Image.icon(.bell))
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if trailingImage {
-                            $0.trailingImage(Image.icon(.bell))
-                        } else {
-                            $0
-                        }
-                    }
-                    Spacer()
-                }
-                
-                Text("Options").bold()
-                
-                HStack {
-                    Text("Variant")
-                    SegmentedControl(
-                        selectedIndex: Binding(
-                            get: { variant == .solid ? 0 : 1 },
-                            set: { variant = $0 == 0 ? .solid : .outlined }
-                        ),
-                        labels: ["Solid", "Outlined"]
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Size")
-                    SegmentedControl(
-                        selectedIndex: Binding(
-                            get: { 
-                                switch size {
-                                case .xsmall: return 0
-                                case .small: return 1
-                                case .medium: return 2
-                                case .large: return 3
-                                }
-                            },
-                            set: { 
-                                switch $0 {
-                                case 0: size = .xsmall
-                                case 1: size = .small
-                                case 2: size = .medium
-                                case 3: size = .large
-                                default: break
-                                }
-                            }
-                        ),
-                        labels: ["XSmall", "Small", "Medium", "Large"]
-                    )
-                    .size(.small)
-                }
-                
-                HStack {
-                    Text("Text")
-                    TextField(text: $text)
-                        .placeholder("텍스트를 입력하세요")
-                }
-                
-                HStack {
-                    Text("Disable")
-                    Switch(checked: disable) { disable = $0 }
-                    Text("Active")
-                    Switch(checked: active) { active = $0 }
-                }
-                
-                HStack {
-                    Text("Leading Image")
-                    Switch(checked: leadingImage) { leadingImage = $0 }
-                    Text("Trailing Image")
-                    Switch(checked: trailingImage) { trailingImage = $0 }
-                }
-                
-                SwiftUI.ColorPicker("Background Color", selection: $backgroundColor)
-                SwiftUI.ColorPicker("Font Color", selection: $fontColor)
-                SwiftUI.ColorPicker("Active Color", selection: $activeColor)
-                SwiftUI.ColorPicker("Image Color", selection: $imageColor)
-                
-                Spacer(minLength: 0)
-            }
-            .font(.caption)
-            .padding()
+    @State private var borderColor: SwiftUI.Color = .clear
+    @State private var leadingContent = false
+    @State private var trailingContent = false
+    @State private var iconColor: SwiftUI.Color = .semantic(.foregroundNeutralPrimary)
+
+    /// 칩 사이즈별 시안 권장 슬롯 크기.
+    ///
+    /// `Chip`은 슬롯 뷰에 크기를 강제하지 않으므로 사용처인 프리뷰가 직접 지정한다.
+    private var slotIconSize: CGFloat {
+        switch size {
+        case .large: return 16
+        case .medium, .small: return 14
+        case .xsmall: return 12
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
+    }
+
+    private func slotIcon(_ icon: Icon) -> some View {
+        Image.icon(icon)
+            .resizable()
+            .renderingMode(.template)
+            .scaledToFit()
+            .frame(width: slotIconSize, height: slotIconSize)
+            .foregroundStyle(iconColor)
+    }
+
+    var body: some View {
+        PreviewLayout {
+            Chip(
+                variant: variant,
+                size: size,
+                text: text
+            )
+            .active(active)
+            .modifying {
+                if backgroundColor == .clear {
+                    $0
+                } else {
+                    $0.backgroundColor(backgroundColor)
+                }
+            }
+            .modifying {
+                if fontColor == .clear {
+                    $0
+                } else {
+                    $0.fontColor(fontColor)
+                }
+            }
+            .modifying {
+                if activeColor == .clear {
+                    $0
+                } else {
+                    $0.activeColor(activeColor)
+                }
+            }
+            .modifying {
+                if borderColor == .clear {
+                    $0
+                } else {
+                    $0.borderColor(borderColor)
+                }
+            }
+            .modifying {
+                if leadingContent {
+                    $0.leadingContent { slotIcon(.bell) }
+                } else {
+                    $0
+                }
+            }
+            .modifying {
+                if trailingContent {
+                    $0.trailingContent { slotIcon(.closeThick) }
+                } else {
+                    $0
+                }
+            }
+            .disabled(disable)
+        } options: {
+            SegmentedIndexRow("Variant", index: Binding(
+                get: { variant == .solid ? 0 : 1 },
+                set: { variant = $0 == 0 ? .solid : .outlined }
+            ), labels: ["Solid", "Outlined"])
+            SegmentedIndexRow("Size", index: Binding(
+                get: {
+                    switch size {
+                    case .xsmall: return 0
+                    case .small: return 1
+                    case .medium: return 2
+                    case .large: return 3
+                    }
+                },
+                set: {
+                    switch $0 {
+                    case 0: size = .xsmall
+                    case 1: size = .small
+                    case 2: size = .medium
+                    case 3: size = .large
+                    default: break
+                    }
+                }
+            ), labels: ["XSmall", "Small", "Medium", "Large"])
+            TextFieldOptionRow("Text", text: $text)
+            HStack {
+                ToggleOption("Disable", isOn: $disable)
+                ToggleOption("Active", isOn: $active)
+            }
+            HStack {
+                ToggleOption("Leading Content", isOn: $leadingContent)
+                ToggleOption("Trailing Content", isOn: $trailingContent)
+            }
+            ColorPickerOptionRow("Background Color", selection: $backgroundColor)
+            ColorPickerOptionRow("Font Color", selection: $fontColor)
+            ColorPickerOptionRow("Active Color", selection: $activeColor)
+            ColorPickerOptionRow("Slot Icon Color", selection: $iconColor)
+            ColorPickerOptionRow("Border Color", selection: $borderColor)
+        }
     }
 }
 

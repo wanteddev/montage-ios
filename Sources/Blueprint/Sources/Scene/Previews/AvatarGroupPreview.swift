@@ -17,7 +17,6 @@ struct AvatarGroupPreview: View {
         "https://image.wanted.co.kr/optimize?src=https%3A%2F%2Fstatic.wanted.co.kr%2Fimages%2Fschool%2FPNG_195.png&w=120&q=90",
     ]
 
-    @State private var variantIndex: Int = 0
     @State private var sizeIndex: Int = 0
     @State private var contentModeIndex: Int = 0
     @State private var alertLabel = ""
@@ -29,82 +28,36 @@ struct AvatarGroupPreview: View {
 
     let contentModes: [ContentMode] = [.fit, .fill]
 
-    let variants: [Avatar.Variant] = [.person, .company, .academy]
     let sizes: [AvatarGroup.Size] = [.xsmall, .small]
 
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text("Preview").bold()
-                    HStack {
-                        Spacer()
-                        avatarGroup
-                            .contentMode(contentModes[contentModeIndex])
-                            .if(trailingContent) {
-                                $0.trailingContent {
-                                    TextButton(
-                                        color: .assistive, size: .small,
-                                        text: "외 30명이 좋아합니다"
-                                    ) {
-                                        alertLabel = "TextButton pressed"
-                                        alertPresented.toggle()
-                                    }
-                                }
-                            }
-                            .alert(alertLabel, isPresented: $alertPresented) {
-                                SwiftUI.Button("OK") {
-                                    alertLabel = ""
-                                }
-                            }
-                        Spacer()
-                    }
-
-                    Text("Options").bold()
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(
-                            selectedIndex: $variantIndex, labels: variants.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("size")
-                        SegmentedControl(
-                            selectedIndex: $sizeIndex, labels: sizes.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("contentMode")
-                        SegmentedControl(
-                            selectedIndex: $contentModeIndex, labels: ["fit", "fill"]
-                        )
-                        .size(.small)
-                    }
-                    HStack {
-                        Text("local image")
-                        Switch(checked: useLocalImage) { useLocalImage = $0 }
-                    }
-                    if !useLocalImage {
-                        HStack {
-                            Text("random invalid image url")
-                            Switch(checked: invalidUrl) { invalidUrl = $0 }
-                        }
-                    }
-                    HStack {
-                        Text("item count \(Int(itemCount))")
-                        SwiftUI.Slider(value: $itemCount, in: 1...10)
-                        Text("trailing content")
-                        Switch(checked: trailingContent) { trailingContent = $0 }
+        PreviewLayout {
+            avatarGroup
+                .contentMode(contentModes[contentModeIndex])
+                .if(trailingContent) {
+                    $0.trailingContent {
+                        Text("외 30명")
+                            .typography(
+                                variant: .label1, weight: .medium,
+                                semantic: .foregroundNeutralSecondary
+                            )
                     }
                 }
-                .font(.caption)
-                .padding(.horizontal)
+                .alert(alertLabel, isPresented: $alertPresented) {
+                    SwiftUI.Button("OK") {
+                        alertLabel = ""
+                    }
+                }
+        } options: {
+            SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
+            SegmentedIndexRow("contentMode", index: $contentModeIndex, labels: ["fit", "fill"])
+            ToggleOptionRow("local image", isOn: $useLocalImage)
+            if !useLocalImage {
+                ToggleOptionRow("random invalid image url", isOn: $invalidUrl)
             }
-            .hidesIndicators()
+            SliderOptionRow("item count", value: $itemCount, in: 1...10, step: 1)
+            ToggleOptionRow("trailing content", isOn: $trailingContent)
         }
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 
     private var avatarGroup: AvatarGroup {
@@ -116,13 +69,9 @@ struct AvatarGroupPreview: View {
             let images = Array(
                 repeating: Image("portrait", bundle: .main), count: Int(itemCount)
             )
-            return AvatarGroup(
-                images, variant: variants[variantIndex], size: sizes[sizeIndex], onTap: onTap
-            )
+            return AvatarGroup(images, size: sizes[sizeIndex], onTap: onTap)
         } else {
-            return AvatarGroup(
-                imageUrls, variant: variants[variantIndex], size: sizes[sizeIndex], onTap: onTap
-            )
+            return AvatarGroup(imageUrls, size: sizes[sizeIndex], onTap: onTap)
         }
     }
 

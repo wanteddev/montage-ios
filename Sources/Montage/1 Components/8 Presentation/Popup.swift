@@ -10,41 +10,29 @@ import SwiftUI
 /// 화면 중앙에 표시되는 팝업 모달 컴포넌트입니다.
 ///
 /// 배경을 어둡게 처리하고 화면 중앙에 콘텐츠를 표시하는 형태의 모달입니다.
-/// 내비게이션 바와 액션 영역을 설정할 수 있으며, 애니메이션과 함께 표시됩니다.
+/// 내비게이션 바와 액션 영역을 설정할 수 있습니다.
+///
+/// 대개는 ``SwiftUI/View/popup(isPresented:resize:contentVerticalPadding:contentHorizontalPadding:navigation:actionArea:_:)``
+/// 수정자를 씁니다. 딤 처리와 표시 애니메이션까지 함께 해 줍니다. SwiftUI 표준 모달 옵션을
+/// 함께 얹어야 할 때만 이 타입을 직접 만들어 `.fullScreenCover` 안에 넣습니다.
 ///
 /// ```swift
 /// @State private var showPopup = false
 ///
-/// Button("팝업 열기") {
-///     showPopup = true
-/// }
-/// .fullScreenCover(isPresented: $showPopup) {
-///     Popup {
-///         VStack(spacing: 16) {
-///             Text("알림")
-///                 .font(.headline)
-///             Text("중요한 메시지입니다.")
-///
-///             Button("확인") {
-///                 showPopup = false
-///             }
-///         }
-///         .padding()
-///     }
-/// }
-/// .transaction { transaction in
-///     transaction.disablesAnimations = true
-/// }
-/// ```
-///
-/// 모디파이어를 사용하면 더 간편하게 구현할 수 있으며, 애니메이션이 자동으로 처리됩니다:
-/// ```swift
 /// YourView()
 ///     .popup(
-///         isPresented: $showPopup
-///     ) {
-///         Text("팝업 내용")
-///     }
+///         isPresented: $showPopup,
+///         navigation: {
+///             ModalNavigation()
+///                 .title("알림")
+///         },
+///         actionArea: {
+///             ActionArea(variant: .strong(main: .init(text: "확인", action: confirm)))
+///         },
+///         {
+///             Text("중요한 메시지입니다.")
+///         }
+///     )
 /// ```
 public struct Popup: View {
     /// 팝업의 크기를 정의하는 열거형입니다.
@@ -84,7 +72,7 @@ public struct Popup: View {
                         content: {
                             VStack(spacing: 0) {
                                 SwiftUI.Color.clear
-                                    .frame(height: navigationHeight)
+                                    .frame(height: reservedNavigationHeight)
                                 HStack(spacing: 0) {
                                     Spacer(minLength: 0)
                                     content()
@@ -105,14 +93,16 @@ public struct Popup: View {
                     navigationView
                 }
 
-                if let actionAreaModel {
-                    ActionArea(variant: actionAreaModel.variant)
-                        .transparentBackground(
-                            backgroundTransparency(for: actionAreaModel.backgroundTransparencyControl)
+                if let actionArea {
+                    actionArea()
+                        // 스크롤이 없는 팝업은 가려진 콘텐츠도 없으므로 바닥에 닿은 것으로 본다.
+                        // (`nil`은 "신호 없음"이라 ActionArea가 그라데이션을 그린다)
+                        .environment(
+                            \.actionAreaScrollReachedEnd,
+                            scrollable ? scrolledToBottom : true
                         )
-                        .caption(actionAreaModel.caption)
-                        .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
-                        .padding(.bottom, 20)
+                        .padding(.top, Self.actionAreaTopPadding)
+                        .padding(.bottom, Self.actionAreaBottomPadding)
                         .onGeometryChange(
                             for: CGFloat.self, of: { $0.size.height },
                             action: {
@@ -121,11 +111,12 @@ public struct Popup: View {
                 }
             }
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(SwiftUI.Color.semantic(.backgroundNormal))
+                RoundedRectangle(cornerRadius: Self.cornerRadius)
+                    .foregroundColor(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
             )
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: Self.cornerRadius))
         }
+        .environment(\.modalKind, .popup)
         .padding(.horizontal, 20)
         .modifying {
             if case .fixed(let height) = resize {
@@ -138,7 +129,7 @@ public struct Popup: View {
             Group {
                 if #available(iOS 16.4, *) {
                     originalView.presentationBackground(
-                        SwiftUI.Color.semantic(.materialDimmer)
+                        SwiftUI.Color.semantic(.effectDimmerPrimary)
                     )
                 } else {
                     originalView.dimmerBackground()
@@ -150,9 +141,10 @@ public struct Popup: View {
     // MARK: - Modifiers
 
     private var resize: Resize = .hug
-    private var ignoresEdgeInsets = false
+    private var contentVerticalPadding: ModalContentPadding.Vertical = .none
+    private var contentHorizontalPadding: ModalContentPadding.Horizontal = .default
     private var navigation: (() -> Montage.ModalNavigation)?
-    private var actionAreaModel: ActionArea.Model?
+    private var actionArea: (() -> ActionArea)?
 
     /// 팝업 모달의 크기를 설정합니다.
     ///
@@ -164,14 +156,37 @@ public struct Popup: View {
         return zelf
     }
 
+    /// 콘텐츠 영역의 여백을 설정합니다.
+    ///
+    /// 좌우 28, 상하 24를 각각 켜고 끕니다. 기본값은 좌우만 적용하는 구성입니다.
+    ///
+    /// - Parameters:
+    ///   - vertical: 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용
+    ///   - horizontal: 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용
+    /// - Returns: 수정된 팝업 모달 뷰
+    public func contentPadding(
+        vertical: ModalContentPadding.Vertical = .none,
+        horizontal: ModalContentPadding.Horizontal = .default
+    ) -> Self {
+        var zelf = self
+        zelf.contentVerticalPadding = vertical
+        zelf.contentHorizontalPadding = horizontal
+        return zelf
+    }
+
     /// 컨텐츠의 기본 여백을 무시할지 설정합니다.
     ///
     /// - Parameter ignoresEdgeInsets: 여백 무시 여부
     /// - Returns: 수정된 팝업 모달 뷰
+    @available(
+        *, deprecated,
+        message: "contentPadding(vertical:horizontal:)을 쓰세요. ignoresEdgeInsets(true)는 contentPadding(vertical: .none, horizontal: .none)과 같습니다."
+    )
     public func ignoresEdgeInsets(_ ignoresEdgeInsets: Bool = true) -> Self {
-        var zelf = self
-        zelf.ignoresEdgeInsets = ignoresEdgeInsets
-        return zelf
+        contentPadding(
+            vertical: .none,
+            horizontal: ignoresEdgeInsets ? .none : .default
+        )
     }
 
     /// 팝업 모달 상단에 내비게이션 바를 설정합니다.
@@ -186,11 +201,11 @@ public struct Popup: View {
 
     /// 팝업 모달 하단에 액션 영역을 설정합니다.
     ///
-    /// - Parameter actionAreaModel: 액션 영역 모델
+    /// - Parameter actionArea: 하단에 배치할 ``ActionArea``를 만드는 클로저
     /// - Returns: 수정된 팝업 모달 뷰
-    public func modalActionArea(_ actionAreaModel: ActionArea.Model?) -> Self {
+    public func modalActionArea(_ actionArea: (() -> ActionArea)?) -> Self {
         var zelf = self
-        zelf.actionAreaModel = actionAreaModel
+        zelf.actionArea = actionArea
         return zelf
     }
 
@@ -207,19 +222,42 @@ public struct Popup: View {
             for: CGFloat.self, of: { $0.size.height }, action: { navigationHeight = $0 })
     }
 
+    /// 팝업의 모서리 반경.
+    private static let cornerRadius: CGFloat = 24
+
+    /// ``ActionArea`` 위쪽 여백.
+    private static let actionAreaTopPadding: CGFloat = 20
+
+    /// ``ActionArea`` 아래쪽 여백.
+    ///
+    /// ``ActionArea``가 좌우 24를 쓰므로 아래도 24로 맞춰 세 방향 여백이 같아 보이게 한다.
+    private static let actionAreaBottomPadding: CGFloat = 24
+
     private var contentEdgeInsets: EdgeInsets {
-        ignoresEdgeInsets
-            ? .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-            : .init(
-                top: navigation == nil ? 20 : 0,
-                leading: 20,
-                bottom: 20,
-                trailing: 20
-            )
+        let horizontal = contentHorizontalPadding.applies ? ModalKind.popup.contentHorizontalPadding : 0
+        let vertical = ModalKind.popup.contentVerticalPadding
+        return .init(
+            top: contentVerticalPadding.appliesTop ? vertical : 0,
+            leading: horizontal,
+            bottom: contentVerticalPadding.appliesBottom ? vertical : 0,
+            trailing: horizontal
+        )
+    }
+
+    /// 콘텐츠 위에 비워 둘 내비게이션 높이. `floating`은 콘텐츠 위에 떠 있으므로 0이다.
+    private var reservedNavigationHeight: CGFloat {
+        navigation?().overlaysContent == true ? 0 : navigationHeight
+    }
+
+    /// 내비게이션과 콘텐츠가 차지하는 높이. `floating`은 콘텐츠와 겹치므로 둘 중 큰 쪽이다.
+    private var navigationAndContentHeight: CGFloat {
+        navigation?().overlaysContent == true
+            ? max(navigationHeight, contentHeight)
+            : navigationHeight + contentHeight
     }
 
     private var popupContentHeight: CGFloat {
-        navigationHeight + contentHeight + actionAreaHeight
+        navigationAndContentHeight + actionAreaHeight
     }
 
     /// 콘텐츠가 실제로 보이는 영역의 높이.
@@ -252,42 +290,36 @@ public struct Popup: View {
         popupContentHeight > viewportHeight
     }
 
-    /// ActionArea의 배경 투명도.
-    ///
-    /// 모델이 `.manual`로 값을 지정하면 그 값을 존중하고, `.automatic`이면 스크롤이 끝에 닿았는지로 판단한다.
-    private func backgroundTransparency(
-        for control: ActionArea.BackgroundTransparencyControl
-    ) -> Bool {
-        if case .manual(let transparency) = control {
-            transparency
-        } else {
-            scrolledToBottom
-        }
-    }
 }
 
 struct PopupModifier: ViewModifier {
     @Binding private var isPresented: Bool
     private let resize: Popup.Resize
-    private let ignoresEdgeInsets: Bool
-    private let popupContent: () -> AnyView
-    private let navigation: (() -> ModalNavigation)?
-    private let actionAreaModel: ActionArea.Model?
+    private let contentVerticalPadding: ModalContentPadding.Vertical
+    private let contentHorizontalPadding: ModalContentPadding.Horizontal
+    // 클로저를 init에서 바로 실행해 값으로 들고 있는다. 클로저로 들고 있으면 클로저가 읽는 상태
+    // (내비게이션 variant·제목 등)만 바뀌었을 때 SwiftUI가 modifier를 같은 값으로 보고 모달 내용을
+    // 다시 만들지 않아, 바뀐 값이 모달에 반영되지 않는다.
+    private let popupContent: AnyView
+    private let navigation: ModalNavigation?
+    private let actionArea: ActionArea?
 
     init<V: View>(
         isPresented: Binding<Bool>,
         resize: Popup.Resize = .hug,
-        ignoresEdgeInsets: Bool = false,
+        contentVerticalPadding: ModalContentPadding.Vertical = .none,
+        contentHorizontalPadding: ModalContentPadding.Horizontal = .default,
         @ViewBuilder _ content: @escaping () -> V,
         navigation: (() -> ModalNavigation)? = nil,
-        actionAreaModel: ActionArea.Model? = nil
+        actionArea: (() -> ActionArea)? = nil
     ) {
         _isPresented = isPresented
         self.resize = resize
-        self.ignoresEdgeInsets = ignoresEdgeInsets
-        popupContent = { AnyView(content()) }
-        self.navigation = navigation
-        self.actionAreaModel = actionAreaModel
+        self.contentVerticalPadding = contentVerticalPadding
+        self.contentHorizontalPadding = contentHorizontalPadding
+        popupContent = AnyView(content())
+        self.navigation = navigation?()
+        self.actionArea = actionArea?()
     }
 
     @State private var opacity: CGFloat = 0
@@ -297,12 +329,15 @@ struct PopupModifier: ViewModifier {
         content
             .fullScreenCover(isPresented: $fullScreenCoverPresented) {
                 Popup {
-                    popupContent()
+                    popupContent
                 }
                 .resize(resize)
-                .ignoresEdgeInsets(ignoresEdgeInsets)
-                .modalNavigation(navigation)
-                .modalActionArea(actionAreaModel)
+                .contentPadding(
+                    vertical: contentVerticalPadding,
+                    horizontal: contentHorizontalPadding
+                )
+                .modalNavigation(navigation.map { navigation in { navigation } })
+                .modalActionArea(actionArea.map { actionArea in { actionArea } })
                 .opacity(opacity)
             }
             .transaction { transaction in
@@ -332,7 +367,7 @@ private struct DimmerBackgroundView: UIViewRepresentable {
     func makeUIView(context _: Context) -> some UIView {
         let view = UIView()
         DispatchQueue.main.async {
-            view.superview?.superview?.backgroundColor = .semantic(.materialDimmer)
+            view.superview?.superview?.backgroundColor = .semantic(.effectDimmerPrimary)
         }
         return view
     }
@@ -363,28 +398,64 @@ extension View {
     /// - Parameters:
     ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
     ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
-    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부, 생략하면 기본값으로 `false` 적용
-    ///   - actionAreaModel: 모달 하단에 표시할 액션 영역 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - content: 모달에 표시할 콘텐츠 클로저
+    ///   - contentVerticalPadding: 콘텐츠 상하 여백의 적용 범위, 생략하면 기본값으로 `.none` 적용
+    ///   - contentHorizontalPadding: 콘텐츠 좌우 여백의 적용 여부, 생략하면 기본값으로 `.default` 적용
     ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - content: 모달에 표시할 콘텐츠 클로저
     /// - Returns: 팝업 모달이 적용된 뷰
     public func popup<V: View>(
         isPresented: Binding<Bool>,
         resize: Popup.Resize = .hug,
-        ignoresEdgeInsets: Bool = false,
-        actionAreaModel: ActionArea.Model? = nil,
-        @ViewBuilder _ content: @escaping () -> V,
-        navigation: (() -> ModalNavigation)? = nil
+        contentVerticalPadding: ModalContentPadding.Vertical = .none,
+        contentHorizontalPadding: ModalContentPadding.Horizontal = .default,
+        navigation: (() -> ModalNavigation)? = nil,
+        actionArea: (() -> ActionArea)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
     ) -> some View {
         modifier(
             PopupModifier(
                 isPresented: isPresented,
                 resize: resize,
-                ignoresEdgeInsets: ignoresEdgeInsets,
+                contentVerticalPadding: contentVerticalPadding,
+                contentHorizontalPadding: contentHorizontalPadding,
                 content,
                 navigation: navigation,
-                actionAreaModel: actionAreaModel
+                actionArea: actionArea
             )
+        )
+    }
+
+    /// 팝업 모달을 표시합니다.
+    ///
+    /// - Parameters:
+    ///   - isPresented: 모달 표시 여부를 제어하는 바인딩
+    ///   - resize: 모달 크기 조절 방식, 생략하면 기본값으로 `.hug` 적용
+    ///   - ignoresEdgeInsets: 모달 내용이 Edge 인셋을 무시할지 여부
+    ///   - navigation: 모달 상단에 표시할 네비게이션 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - actionArea: 모달 하단에 배치할 ActionArea를 만드는 클로저, 생략하면 기본값으로 `nil` 적용
+    ///   - content: 모달에 표시할 콘텐츠 클로저
+    /// - Returns: 팝업 모달이 적용된 뷰
+    @available(
+        *, deprecated,
+        message: "contentHorizontalPadding을 쓰세요. ignoresEdgeInsets: true는 contentHorizontalPadding: .none과 같습니다."
+    )
+    public func popup<V: View>(
+        isPresented: Binding<Bool>,
+        resize: Popup.Resize = .hug,
+        ignoresEdgeInsets: Bool,
+        navigation: (() -> ModalNavigation)? = nil,
+        actionArea: (() -> ActionArea)? = nil,
+        @ViewBuilder _ content: @escaping () -> V
+    ) -> some View {
+        popup(
+            isPresented: isPresented,
+            resize: resize,
+            contentVerticalPadding: .none,
+            contentHorizontalPadding: ignoresEdgeInsets ? .none : .default,
+            navigation: navigation,
+            actionArea: actionArea,
+            content
         )
     }
 }

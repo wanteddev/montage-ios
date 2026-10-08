@@ -26,7 +26,14 @@ import SwiftUI
 /// // 로딩 상태 설정
 /// Button(text: "저장")
 ///     .loading(true)
+///
+/// // 비활성화
+/// Button(text: "저장")
+///     .disabled(isFormInvalid)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
 public struct Button: View {
     
     // MARK: - Types
@@ -49,10 +56,17 @@ public struct Button: View {
         case primary
         /// 보조 스타일 - 덜 중요한 액션에 사용
         case assistive
+        /// 부정적·위험 액션 스타일 - 삭제, 경고 등에 사용
+        ///
+        /// > Important: `variant`가 `.outlined`인 경우 `.negative`는 지원되지 않습니다.
+        /// > 해당 조합으로 버튼을 생성하면 color가 `.primary`로 폴백됩니다.
+        case negative
     }
-    
+
     /// 버튼의 크기를 정의합니다.
     public enum Size: String {
+        /// 가장 작은 크기
+        case xsmall
         /// 작은 크기
         case small
         /// 중간 크기
@@ -96,9 +110,11 @@ public struct Button: View {
         trailingIcon: Icon? = nil,
         handler: (() -> Void)? = nil
     ) {
+        let resolvedColor = Self.resolveColor(variant: variant, color: color)
+        let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
-            InternalVariant(rawValue: variant.rawValue) ?? .solid,
-            color: color,
+            resolvedVariant,
+            color: resolvedColor,
             size: size,
             text: text,
             leadingIcon: leadingIcon,
@@ -128,9 +144,11 @@ public struct Button: View {
         icon: Icon,
         handler: (() -> Void)? = nil
     ) {
+        let resolvedColor = Self.resolveColor(variant: variant, color: color)
+        let resolvedVariant = InternalVariant(rawValue: variant.rawValue) ?? .solid
         self.init(
-            InternalVariant(rawValue: variant.rawValue) ?? .solid,
-            color: color,
+            resolvedVariant,
+            color: resolvedColor,
             size: size,
             leadingIcon: icon,
             handler: handler
@@ -157,7 +175,6 @@ public struct Button: View {
     
     // MARK: - Modifiers
     
-    private var disable: Bool = false
     private var contentColor: SwiftUI.Color? = nil
     private var customBackgroundColor: SwiftUI.Color? = nil
     private var customBorderColor: SwiftUI.Color? = nil
@@ -165,24 +182,7 @@ public struct Button: View {
     private var fontWeight: Typography.Weight? = nil
     private var loading = false
     private var fillWidth = false
-    
-    /// 버튼을 비활성화 상태로 설정합니다.
-    ///
-    /// 비활성화된 버튼은 시각적으로 흐리게 표시되며 사용자 상호작용에 반응하지 않습니다.
-    ///
-    /// ```swift
-    /// Button(text: "저장")
-    ///     .disable(isFormInvalid)
-    /// ```
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    public func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
-        return zelf
-    }
-    
+
     /// 버튼 콘텐츠(텍스트와 아이콘)의 색상을 설정합니다.
     ///
     /// ```swift
@@ -284,32 +284,9 @@ public struct Button: View {
         return zelf
     }
     
-    /// 버튼이 수평 또는 수직 방향으로 공간을 채우도록 설정합니다.
+    /// 버튼이 수평으로 공간을 채우도록 설정합니다.
     ///
     /// 버튼의 크기를 조절하여 컨테이너 뷰의 공간을 효율적으로 활용할 때 사용합니다.
-    ///
-    /// ```swift
-    /// // 부모 뷰의 가로 너비를 모두 채우는 버튼
-    /// Button(text: "전체 확인")
-    ///     .fill(horizontal: true)
-    ///
-    /// // 가로, 세로 모두 채우는 버튼
-    /// Button(variant: .outlined, text: "영역 전체 채우기")
-    ///     .fill(horizontal: true, vertical: true)
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - fillHorizontal: 수평 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
-    ///   - fillVertical: 수직 방향 채우기 여부, 생략하면 기본값으로 `false` 적용
-    /// - Returns: 수정된 버튼 인스턴스
-    @available(*, deprecated, message: "`fillWidth(_:Bool)`을 사용하세요. 참고: `vertical` 파라미터는 더 이상 지원되지 않습니다.")
-    public func fill(horizontal fillHorizontal: Bool = false, vertical fillVertical: Bool = false) -> Self {
-        var zelf = self
-        zelf.fillWidth = fillHorizontal
-        return zelf
-    }
-    
-    /// 버튼이 수평으로 공간을 채우도록 설정합니다.
     ///
     /// ```swift
     /// // 부모 뷰의 가로 너비를 모두 채우는 버튼
@@ -327,16 +304,17 @@ public struct Button: View {
     }
     
     // MARK: - Body
-    
+
+    @Environment(\.isEnabled) private var isEnabled
     @State private var isPressed = false
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack {
             SwiftUI.Color.clear
                 .frame(width: fillWidth ? nil : 0, height: 0)
             
-            HStack(alignment: .center, spacing: 4) {
+            HStack(alignment: .center, spacing: gap) {
                 if let leadingIcon {
                     icon(leadingIcon)
                 }
@@ -356,11 +334,16 @@ public struct Button: View {
             
             if loading {
                 Loading(kind: .circular(), size: loadingSize)
-                    .foregroundColor(loadingColor)
+                    .overlay {
+                        if let loadingColor {
+                            loadingColor.blendMode(.sourceAtop)
+                        }
+                    }
+                    .compositingGroup()
             }
         }
         .contentShape(Rectangle())
-        .frame(height: contentHeight)
+        .frame(minHeight: contentHeight)
         .padding(edgeInsets)
         .background {
             RoundedRectangle(cornerRadius: cornerRadius)
@@ -381,7 +364,7 @@ public struct Button: View {
             .padding(.horizontal, -interactionHorizontalOffset)
         }
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
-        .allowsHitTesting(!disable && !loading)
+        .allowsHitTesting(!loading)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(text ?? leadingIcon?.rawValue ?? "")
         .accessibilityAddTraits(.isButton)
@@ -390,23 +373,36 @@ public struct Button: View {
 }
 
 private extension Button {
+    var isDisabled: Bool { isEnabled == false }
+
+    static func resolveColor(variant: Variant, color: Color) -> Color {
+        if variant == .outlined && color == .negative {
+            #if DEBUG
+            print("[Montage] Button: variant `.outlined` does not support color `.negative`. Falling back to color `.primary`.")
+            #endif
+            return .primary
+        }
+        return color
+    }
+    
     var backgroundColor: SwiftUI.Color {
         switch variant {
         case .solid:
-            if disable {
-                .semantic(.interactionDisable)
+            if isDisabled {
+                .semantic(.surfaceDisablePrimary)
             } else {
                 if let customBackgroundColor {
                     customBackgroundColor
                 } else {
                     switch color {
-                    case .primary: .semantic(.primaryNormal)
-                    case .assistive: .semantic(.fillNormal)
+                    case .primary: .semantic(.surfaceBrandPrimary)
+                    case .assistive: .semantic(.surfaceNeutralSecondary)
+                    case .negative: .semantic(.foregroundNegativePrimary).opacity(.opacity12)
                     }
                 }
             }
         case .outlined:
-            if !disable, let customBackgroundColor {
+            if !isDisabled, let customBackgroundColor {
                 customBackgroundColor
             } else {
                 .clear
@@ -417,13 +413,13 @@ private extension Button {
     
     var borderColor: SwiftUI.Color {
         if variant == .outlined {
-            if disable {
-                .semantic(.lineNormal)
+            if isDisabled {
+                .semantic(.lineNeutralSecondary)
             } else {
                 if let customBorderColor {
                     customBorderColor
                 } else {
-                    .semantic(.lineNeutral)
+                    .semantic(.lineNeutralSecondary)
                 }
             }
         } else {
@@ -434,25 +430,27 @@ private extension Button {
     var foregroundColor: SwiftUI.Color {
         switch variant {
         case .solid:
-            if disable {
-                .semantic(.labelAssistive)
+            if isDisabled {
+                .semantic(.foregroundDisablePrimary)
             } else if let contentColor {
                 contentColor
             } else {
                 switch color {
                 case .primary: .semantic(.staticWhite)
-                case .assistive: .semantic(.labelNeutral)
+                case .assistive: .semantic(.foregroundNeutralSecondary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             }
         case .outlined, .text:
-            if disable {
-                .semantic(.labelDisable)
+            if isDisabled {
+                .semantic(.foregroundDisablePrimary)
             } else if let contentColor {
                 contentColor
             } else {
                 switch color {
-                case .primary: .semantic(.primaryNormal)
-                case .assistive: .semantic(variant == .outlined ? .labelNormal : .labelAlternative)
+                case .primary: .semantic(.surfaceBrandPrimary)
+                case .assistive: .semantic(variant == .outlined ? .foregroundNeutralPrimary : .foregroundNeutralTertiary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             }
         }
@@ -466,12 +464,14 @@ private extension Button {
             case .solid:
                 switch color {
                 case .primary: .semantic(.staticWhite)
-                case .assistive: .semantic(.labelAssistive)
+                case .assistive: .semantic(.foregroundNeutralQuaternary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             default:
                 switch color {
-                case .primary: .semantic(.primaryNormal)
-                case .assistive: .semantic(.labelAssistive)
+                case .primary: .semantic(.surfaceBrandPrimary)
+                case .assistive: .semantic(.foregroundNeutralQuaternary)
+                case .negative: .semantic(.foregroundNegativeStrong)
                 }
             }
         }
@@ -489,71 +489,88 @@ private extension Button {
     
     var iconSize: CGSize {
         switch size {
+        case .xsmall:
+            .init(width: 14, height: 14)
         case .small:
             .init(width: 16, height: 16)
         case .medium:
-                .init(width: variant == .text ? 20 : 18, height: variant == .text ? 20 : 18)
+            .init(width: 18, height: 18)
         case .large:
             .init(width: 20, height: 20)
         }
     }
-    
+
     var typoVariant: Typography.Variant {
         switch size {
+        case .xsmall:
+            variant == .text ? .label2 : .caption1
         case .small:
-            variant == .text ? .label1 : .label2
+            variant == .text ? .label1 : .caption1
         case .medium:
-            variant == .text ? .body1 : .body2
+            variant == .text ? .body2 : .label1
         case .large:
-            .body1
+            variant == .text ? .body1 : .body2
         }
     }
     
     var typoWeight: Typography.Weight {
-        switch color {
-        case .primary: .bold
-        case .assistive: variant == .text ? .bold : .medium
-        }
+        .bold
     }
     
     var cornerRadius: CGFloat {
         if variant == .text {
-            6.0
+            switch size {
+            case .xsmall, .small: 8.0
+            case .medium, .large: 10.0
+            }
         } else {
             switch size {
-            case .large: 12.0
-            case .medium: 10.0
-            case .small: 8.0
+            case .xsmall: 8.0
+            case .small: 10.0
+            case .medium: 12.0
+            case .large: 14.0
             }
         }
     }
-    
+
     var contentHeight: CGFloat {
         switch size {
-        case .small: variant == .text ? 20 : 18
-        case .medium: variant == .text ? 24 : 22
-        case .large: 24
+        case .xsmall: 16
+        case .small: variant == .text ? 20 : 16
+        case .medium: variant == .text ? 22 : 20
+        case .large: 22
         }
     }
-    
+
     var edgeInsets: EdgeInsets {
         if variant == .text {
             .init()
         } else {
             switch size {
-            case .small:
+            case .xsmall:
                 text == nil && leadingIcon != nil
                 ? .init(top: 7, leading: 7, bottom: 7, trailing: 7)
-                : .init(top: 7, leading: 14, bottom: 7, trailing: 14)
+                : .init(top: 6, leading: 10, bottom: 6, trailing: 10)
+            case .small:
+                text == nil && leadingIcon != nil
+                ? .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+                : .init(top: 8, leading: 12, bottom: 8, trailing: 12)
             case .medium:
                 text == nil && leadingIcon != nil
                 ? .init(top: 10, leading: 10, bottom: 10, trailing: 10)
-                : .init(top: 9, leading: 20, bottom: 9, trailing: 20)
+                : .init(top: 10, leading: 16, bottom: 10, trailing: 16)
             case .large:
                 text == nil && leadingIcon != nil
-                ? .init(top: 12, leading: 12, bottom: 12, trailing: 12)
-                : .init(top: 12, leading: 28, bottom: 12, trailing: 28)
+                ? .init(top: 14, leading: 14, bottom: 14, trailing: 14)
+                : .init(top: 13, leading: 20, bottom: 13, trailing: 20)
             }
+        }
+    }
+
+    var gap: CGFloat {
+        switch size {
+        case .xsmall, .small, .medium: 4
+        case .large: 6
         }
     }
     
@@ -561,21 +578,34 @@ private extension Button {
         switch color {
         case .primary: variant == .solid ? .strong : .normal
         case .assistive: variant == .solid ? .normal : .light
+        case .negative: .strong
         }
     }
-    
+
     var interactionColor: Montage.Color.Semantic {
         switch color {
-        case .primary: variant == .solid ? .labelNormal : .primaryNormal
-        case .assistive: .labelNormal
+        case .primary: variant == .solid ? .foregroundNeutralPrimary : .surfaceBrandPrimary
+        case .assistive: .foregroundNeutralPrimary
+        case .negative: .foregroundNeutralPrimary
         }
     }
 
     var interactionVerticalOffset: CGFloat { variant == .text ? 4 : 0 }
-    var interactionHorizontalOffset: CGFloat { variant == .text ? 7 : 0 }
+    var interactionHorizontalOffset: CGFloat {
+        guard variant == .text else { return 0 }
+        return switch size {
+        case .xsmall, .small: 6
+        case .medium, .large: 8
+        }
+    }
     
     var loadingSize: CGSize {
-        let textHeight = (fontVariant ?? typoVariant).fontHeight
-        return .init(width: textHeight, height: textHeight)
+        let dimension: CGFloat
+        switch size {
+        case .xsmall, .small: dimension = 12
+        case .medium: dimension = 14
+        case .large: dimension = 16
+        }
+        return .init(width: dimension, height: dimension)
     }
 }

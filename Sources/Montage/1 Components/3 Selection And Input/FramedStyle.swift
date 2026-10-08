@@ -24,21 +24,20 @@ public enum FramedStyle {
     // MARK: - ViewModifier
 
     struct Modifier: ViewModifier {
+        @Environment(\.isEnabled) private var isEnabled
+
         private let status: FramedStyle.Status
         private let borderRadius: CGFloat
         private let shadowLevel: Shadow.Level
-        private let disabled: Bool
 
         init(
             status: FramedStyle.Status = .normal,
             borderRadius: CGFloat = 0,
-            shadowLevel: Shadow.Level = .xsmall,
-            disabled: Bool = false
+            shadowLevel: Shadow.Level = .xsmall
         ) {
             self.status = status
             self.borderRadius = borderRadius
             self.shadowLevel = shadowLevel
-            self.disabled = disabled
         }
 
         func body(content: Content) -> some View {
@@ -46,11 +45,15 @@ public enum FramedStyle {
                 .overlay {
                     RoundedRectangle(cornerRadius: borderRadius)
                         .strokeBorder(borderColor, lineWidth: borderWidth)
-                        .opacity(disabled ? 0.43 : 1)
+                        .opacity(isEnabled ? 1 : .opacity43)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: borderRadius))
-                .shadow(shadowLevel)
-                .disabled(disabled)
+                // 그림자를 배경 Shape의 fill에 analytic(`ShapeStyle.shadow`)으로 적용해 오프스크린
+                // 패스를 피한다. 프레임 실루엣(둥근 사각형) 기준으로 그림자가 그려진다.
+                .background(
+                    RoundedRectangle(cornerRadius: borderRadius)
+                        .fill(SwiftUI.Color.semantic(.backgroundNeutralPrimary).shadow(shadowLevel))
+                )
         }
 
         private var borderWidth: CGFloat {
@@ -60,11 +63,11 @@ public enum FramedStyle {
         private var borderColor: SwiftUI.Color {
             switch status {
             case .normal:
-                .semantic(.lineNeutral)
+                .semantic(.lineNeutralSecondary)
             case .selected:
-                .semantic(.primaryNormal).opacity(0.43)
+                .semantic(.surfaceBrandPrimary).opacity(.opacity43)
             case .negative:
-                .semantic(.statusNegative).opacity(0.28)
+                .semantic(.foregroundNegativePrimary).opacity(.opacity28)
             }
         }
     }
@@ -82,10 +85,12 @@ extension View {
     ///   - status: 프레임 상태, 생략하면 기본값으로 `.normal` 적용
     ///   - borderRadius: 테두리 반경, 생략하면 기본값으로 `0` 적용
     ///   - shadowLevel: 그림자 레벨, 생략하면 기본값으로 `.xsmall` 적용
-    ///   - disabled: 비활성화 상태 여부, 생략하면 기본값으로 `false` 적용
     /// - Returns: 프레임 스타일이 적용된 뷰
     ///
     /// - Note: 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.
+    ///
+    /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+    /// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
     ///
     /// ```swift
     /// // 기본 사용법
@@ -103,7 +108,8 @@ extension View {
     ///
     /// // 비활성화된 프레임
     /// Text("비활성화된 텍스트")
-    ///     .framedStyle(disabled: true)
+    ///     .framedStyle()
+    ///     .disabled(true)
     ///
     /// // 부정적 상태의 프레임 (오류 표시)
     /// Text("오류 메시지")
@@ -116,15 +122,13 @@ extension View {
     public func framedStyle(
         status: FramedStyle.Status = .normal,
         borderRadius: CGFloat = 0,
-        shadowLevel: Shadow.Level = .xsmall,
-        disabled: Bool = false
+        shadowLevel: Shadow.Level = .xsmall
     ) -> some View {
         modifier(
             FramedStyle.Modifier(
                 status: status,
                 borderRadius: borderRadius,
-                shadowLevel: shadowLevel,
-                disabled: disabled
+                shadowLevel: shadowLevel
             ))
     }
 }

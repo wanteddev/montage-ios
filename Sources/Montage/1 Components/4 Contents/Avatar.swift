@@ -11,7 +11,7 @@ import SwiftUI
 /// 사용자, 회사, 학원의 프로필 이미지를 표시하는 아바타 컴포넌트입니다.
 ///
 /// 원형 또는 둥근 모서리 사각형 형태로 프로필 이미지를 표시합니다.
-/// 이미지 URL이 유효하지 않을 경우 각 유형별 기본 이미지를 표시합니다.
+/// 이미지 URL이 유효하지 않을 경우 각 유형별 기본 아이콘을 표시합니다.
 ///
 /// ```swift
 /// // 기본 사용자 아바타
@@ -24,7 +24,15 @@ import SwiftUI
 /// // 푸시 알림 표시가 있는 아바타
 /// Avatar("https://example.com/profile.jpg", variant: .person)
 ///     .pushBadge()
+///
+/// // 비활성화
+/// Avatar("https://example.com/profile.jpg", variant: .person)
+///     .disabled(true)
 /// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 이미지는 색 토큰으로 비활성을 표현할 수 없어 불투명도 `Opacity/43`을 적용합니다.
 public struct Avatar: View {
     // MARK: - Types
     
@@ -45,14 +53,14 @@ public struct Avatar: View {
             }
         }
 
-        fileprivate var placeholderImageName: String {
+        fileprivate var placeholderIcon: Icon {
             switch self {
             case .person:
-                "avatarPlaceholderPerson"
+                .personFill
             case .company:
-                "avatarPlaceholderCompany"
+                .companyFill
             case .academy:
-                "avatarPlaceholderAcademy"
+                .graduationFill
             }
         }
         
@@ -61,12 +69,12 @@ public struct Avatar: View {
             case .person: 1000
             default:
                 switch size {
-                case .xsmall: 6
-                case .small: 8
-                case .medium: 10
-                case .large: 12
-                case .xlarge: 14
-                case .custom(let value): ceil(value * 0.25 / 2) * 2
+                case .xsmall: 8
+                case .small: 10
+                case .medium: 12
+                case .large: 14
+                case .xlarge: 16
+                case .custom(let value): ceil(value * 0.25 / 2) * 2 + 2
                 }
             }
         }
@@ -95,7 +103,7 @@ public struct Avatar: View {
         ///
         /// 커스텀 크기 사용 시 다음 규칙이 자동 적용됩니다:
         /// - pushBadge size: 36pt 이하 `.xsmall`, 37~52pt `.small`, 53pt 이상 `.medium`
-        /// - cornerRadius (company/academy): 크기의 25% (짝수로 올림 보정)
+        /// - cornerRadius (company/academy): 크기의 25%에 +2 (짝수로 올림 보정)
         ///
         /// ``Avatar/cornerRadius(_:)``로 cornerRadius를 직접 지정하거나,
         /// ``Avatar/pushBadge(_:size:)``의 `size` 파라미터로 뱃지 크기를 직접 지정할 수 있습니다.
@@ -160,6 +168,9 @@ public struct Avatar: View {
     // MARK: - Body
     
     @State private var isPressed = false
+
+    // 이미지 계열은 색 토큰으로 비활성을 표현할 수 없어 불투명도를 낮춘다.
+    @Environment(\.isEnabled) private var isEnabled
     
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
@@ -170,13 +181,20 @@ public struct Avatar: View {
                     .strokeBorder(borderColor, lineWidth: borderWidth)
             }
             .clipShape(RoundedRectangle(cornerRadius: resolvedCornerRadius))
-            .if(pushBadge && variant == .person) { $0.pushBadge(variant: .dot, size: pushBadgeSize) }
+            .if(pushBadge) {
+                $0.pushBadge(
+                    variant: .dot,
+                    size: pushBadgeSize,
+                    outlineBorder: true,
+                    inset: pushBadgeInset
+                )
+            }
             .background {
                 if !interactionDisabled {
                     Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .normal,
-                        color: .labelNormal
+                        color: .foregroundNeutralPrimary
                     )
                     .frame(width: size.interactionSize.width, height: size.interactionSize.height)
                     .clipShape(RoundedRectangle(cornerRadius: resolvedInteractionCornerRadius))
@@ -186,18 +204,20 @@ public struct Avatar: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(variant.accessibilityDescription)
             .if(onTap != nil) { $0.accessibilityAddTraits(.isButton) }
+            .opacity(isEnabled ? 1 : .opacity43)
     }
 
     private var pushBadge = false
     private var pushBadgeSizeOverride: PushBadge.Size?
     private var customCornerRadius: CGFloat?
     private var contentMode: ContentMode = .fit
-    private var borderColor: SwiftUI.Color = .semantic(.lineAlternative)
+    private var borderColor: SwiftUI.Color = .semantic(.lineNeutralTertiary)
     private var borderWidth: CGFloat = 1
     private var interactionDisabled = false
     /// 푸시 알림 표시 뱃지를 아바타에 추가합니다.
     ///
-    /// 푸시 뱃지는 사용자(.person) 아바타에만 적용 가능합니다.
+    /// 모든 유형(.person, .company, .academy)의 아바타에 적용할 수 있습니다.
+    /// 뱃지는 배경과 분리되도록 아웃라인 보더(outlineBorder)가 기본 적용되며, 유형·크기에 따라 부착 위치가 안쪽으로 보정됩니다.
     ///
     /// - Parameters:
     ///   - pushBadge: 뱃지 표시 여부, 생략하면 기본값으로 `true` 적용
@@ -235,10 +255,10 @@ public struct Avatar: View {
     /// 아바타에 테두리를 추가합니다.
     ///
     /// - Parameters:
-    ///   - color: 테두리 색상, 생략하면 기본값으로 `.semantic(.lineAlternative)` 적용
+    ///   - color: 테두리 색상, 생략하면 기본값으로 `.semantic(.lineNeutralTertiary)` 적용
     ///   - width: 테두리 두께, 생략하면 기본값으로 `1` 적용
     /// - Returns: 수정된 아바타 인스턴스
-    public func border(color: SwiftUI.Color = .semantic(.lineAlternative), width: CGFloat = 1) -> Self {
+    public func border(color: SwiftUI.Color = .semantic(.lineNeutralTertiary), width: CGFloat = 1) -> Self {
         var zelf = self
         zelf.borderColor = color
         zelf.borderWidth = width
@@ -262,16 +282,42 @@ private extension Avatar {
                     .aspectRatio(contentMode: contentMode)
                     .background(SwiftUI.Color.semantic(.staticWhite))
             } placeholder: {
-                Image(variant.placeholderImageName, bundle: .module)
-                    .resizable()
-                    .background(
-                        SwiftUI.Color.semantic(.backgroundNormal)
-                    )
+                placeholderContent
             }
         case .image(let image):
             image.resizable()
                 .aspectRatio(contentMode: contentMode)
         }
+    }
+
+    /// 이미지를 불러오지 못했을 때 표시하는 아이콘 기반 fallback입니다.
+    ///
+    /// 반투명한 `surfaceNeutralStrong` 면에서 아이콘 모양을 도려내고,
+    /// 그 자리에 `staticWhite` 28%를 불투명한 `backgroundNeutralPrimary` 위로 바로 올립니다.
+    /// 면과 아이콘이 겹치면 라이트에서 아이콘이 회색으로 탁해집니다.
+    var placeholderContent: some View {
+        ZStack {
+            SwiftUI.Color.semantic(.surfaceNeutralStrong)
+                .overlay {
+                    placeholderIconImage
+                        .blendMode(.destinationOut)
+                }
+                // 도려내기를 면 레이어 안으로 한정합니다. 없으면 아래 배경까지 뚫립니다.
+                .compositingGroup()
+            placeholderIconImage
+                .foregroundStyle(SwiftUI.Color.semantic(.staticWhite).opacity(.opacity28))
+        }
+        .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+    }
+
+    var placeholderIconImage: some View {
+        Image.icon(variant.placeholderIcon)
+            .resizable()
+            .frame(width: placeholderIconSize, height: placeholderIconSize)
+    }
+
+    var placeholderIconSize: CGFloat {
+        size.containerSize.width / 1.5
     }
 
     var resolvedCornerRadius: CGFloat {
@@ -305,5 +351,35 @@ private extension Avatar {
                 return .medium
             }
         }
+    }
+
+    /// 뱃지를 아바타 바운딩 박스 코너에서 안쪽으로 들이는 여백(상단·우측 padding).
+    ///
+    /// - person(원형): 원형 45° 접점 기준(≈ 0.29 × 반지름). 24/32/40/48/56 → 4/5/6/7/8.
+    /// - company·academy(둥근 사각): 24/32/40/48/56 → 2/3/4/4/5.
+    /// 커스텀 크기는 각 유형의 비율로 산정한다.
+    var pushBadgeInset: CGSize {
+        let inset: CGFloat
+        switch variant {
+        case .person:
+            switch size {
+            case .xsmall: inset = 4
+            case .small: inset = 5
+            case .medium: inset = 6
+            case .large: inset = 7
+            case .xlarge: inset = 8
+            case .custom(let value): inset = (value * 0.15).rounded()
+            }
+        case .company, .academy:
+            switch size {
+            case .xsmall: inset = 2
+            case .small: inset = 3
+            case .medium: inset = 4
+            case .large: inset = 4
+            case .xlarge: inset = 5
+            case .custom(let value): inset = (value * 0.09).rounded()
+            }
+        }
+        return .init(width: inset, height: inset)
     }
 }

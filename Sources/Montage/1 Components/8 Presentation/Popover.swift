@@ -10,10 +10,7 @@ import SwiftUI
 
 public enum Popover {
     /// 팝오버 모서리 반경.
-    ///
-    /// MERGE-4.0.0: 4.0.0 은 같은 값을 `.radius12` 토큰으로 쓴다(해당 토큰은 4.0.0 에서 도입).
-    /// 충돌 시 **4.0.0 쪽을 채택**한다.
-    static let cornerRadius: CGFloat = 12
+    static let cornerRadius: CGFloat = .radius12
 
     struct NormalModifier: ViewModifier {
         @Binding private var isPresented: Bool
@@ -74,7 +71,7 @@ public enum Popover {
                                     Text(heading)
                                         .paragraph(
                                             variant: .body2, weight: .bold,
-                                            color: .semantic(.labelNormal)
+                                            color: .semantic(.foregroundNeutralPrimary)
                                         )
                                         .lineLimit(2)
                                         .multilineTextAlignment(.leading)
@@ -83,7 +80,7 @@ public enum Popover {
                                             of: { $0.size.height },
                                             action: { headingHeight = $0 }
                                         )
-                                    Spacer(minLength: closeButton ? 22 + 7 : 0)
+                                    Spacer(minLength: closeButton ? 22 + 4 : 0)
                                 }
                             }
                         }
@@ -95,7 +92,7 @@ public enum Popover {
                                     Text(text)
                                         .paragraph(
                                             variant: .label2, weight: .medium,
-                                            color: .semantic(.labelNeutral)
+                                            color: .semantic(.foregroundNeutralSecondary)
                                         )
                                         .lineLimit(nil)
                                         .multilineTextAlignment(.leading)
@@ -105,15 +102,17 @@ public enum Popover {
                                             of: { $0.size.height },
                                             action: { textHeight = $0 }
                                         )
-                                    Spacer(minLength: closeButton ? 22 + 7 : 0)
+                                    Spacer(minLength: closeButton ? 22 + 4 : 0)
                                 }
                             }
                         }
                     }
                     if closeButton {
-                        IconButton(variant: .normal(size: 16), icon: .close) {
+                        IconButton(variant: .normal(size: .small), icon: .close) {
                             isPresented = false
                         }
+                        .interactionOverflow()
+                        .iconColor(.semantic(.foregroundNeutralPrimary).opacity(.opacity61))
                         .padding(.all, 3)
                     }
                 }
@@ -143,18 +142,10 @@ public enum Popover {
             }
             .frame(minWidth: 140, maxWidth: 360)
             .fixedSize(horizontal: true, vertical: true)
-            // 머티리얼이 아래, 틴트 컬러가 위. 순서가 뒤집히면 머티리얼의 틴트 필름이
-            // 컬러를 덮어 다크 모드에서 배경이 밝게 뜬다.
-            //
-            // MERGE-4.0.0: 이 블록은 release/4.0.0 의 `MaterialBackground`(PR #576) 를
-            // 3.15.x 에 인라인으로 백포트한 것이다. 4.0.0 머지 시 충돌하면 **4.0.0 쪽을 채택**한다.
-            // (`materialBackground(in:tint:)` 가 같은 순서를 타입으로 고정하고 clipShape 도 불필요하다)
-            .background {
-                ZStack {
-                    Rectangle().fill(.bar)
-                    Rectangle().fill(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
-                }
-            }
+            .materialBackground(
+                in: RoundedRectangle(cornerRadius: Popover.cornerRadius),
+                tint: .semantic(.surfaceElevatedPrimary).opacity(.opacity88)
+            )
             .clipShape(RoundedRectangle(cornerRadius: Popover.cornerRadius))
         }
     }
@@ -294,8 +285,6 @@ public enum Popover {
             //
             // `cornerConfiguration`은 iOS 26 SDK에만 있는 심볼이라 `#available` 런타임 검사만으로는
             // Xcode 16.2(CONTRIBUTING.md 지원 하한)에서 컴파일이 깨진다. 컴파일 시점에도 걸러낸다.
-            //
-            // MERGE-4.0.0: 4.0.0에는 이 `#if`가 없다(같은 문제가 남아 있다). 충돌하면 **이쪽**을 채택한다.
             #if compiler(>=6.2)
             if #available(iOS 26.0, *) {
                 superview?.cornerConfiguration = .uniformCorners(radius: .fixed(Popover.cornerRadius))

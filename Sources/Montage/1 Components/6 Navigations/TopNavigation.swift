@@ -13,11 +13,9 @@ import SwiftUI
 /// 스크롤 시 배경색과 구분선의 불투명도가 자동으로 조절됩니다.
 ///
 /// ```swift
-/// TopNavigation(
-///     scrollOffset: 0,
-///     backgroundColor: .white
-/// )
+/// TopNavigation(scrollOffset: 0)
 /// .variant(.normal)
+/// .backgroundColor(.white)
 /// .title("제목")
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -26,11 +24,9 @@ import SwiftUI
 /// )
 /// ```
 /// ```swift
-/// TopNavigation(
-///     scrollOffset: 0,
-///     backgroundColor: .white
-/// )
+/// TopNavigation(scrollOffset: 0)
 /// .variant(.floating)
+/// .backgroundColor(.white)
 /// .titleView { /* 제목 컴포넌트 */ }
 /// .leadingContent { /* 왼쪽 영역 컴포넌트 */ }
 /// .trailingContents(
@@ -57,6 +53,8 @@ public struct TopNavigation: View {
         /// 검색 내비게이션 바 스타일
         case search
         /// 플로팅 내비게이션 바 스타일
+        ///
+        /// 스크롤 오프셋이 0(스크롤이 최상단)일 때는 배경이 없고, 스크롤하면 그라디언트 블러 배경이 나타납니다.
         case floating
         
         fileprivate var isFloating: Bool {
@@ -66,25 +64,23 @@ public struct TopNavigation: View {
     
     // MARK: - Initializers
     
-    private let scrollOffset: CGFloat
-    private let backgroundColor: SwiftUI.Color?
+    private let explicitScrollOffset: CGFloat?
 
     /// TopNavigation을 초기화합니다.
     ///
     /// - Parameters:
-    ///   - scrollOffset: 스크롤 오프셋 값
-    ///   - backgroundColor: 배경색
+    ///   - scrollOffset: 스크롤 오프셋 값. 생략하면 ``ScreenScaffold``가 내려 주는 값을 씁니다.
+    ///     스캐폴드 밖에서 생략하면 최상단(`0`)으로 봅니다
     public init(
-        scrollOffset: CGFloat = .zero,
-        backgroundColor: SwiftUI.Color? = nil
+        scrollOffset: CGFloat? = nil
     ) {
-        self.scrollOffset = scrollOffset
-        self.backgroundColor = backgroundColor
+        explicitScrollOffset = scrollOffset
     }
     
     // MARK: - Modifiers
     
     private var variant: Variant = .normal
+    private var backgroundColor: SwiftUI.Color = SwiftUI.Color.semantic(.backgroundNeutralPrimary)
     private var titleText: String?
     private var titleView: () -> AnyView  = { AnyView(EmptyView()) }
     private var leadingContent: () -> AnyView  = { AnyView(EmptyView()) }
@@ -106,6 +102,16 @@ public struct TopNavigation: View {
     public func variant(_ variant: Variant) -> Self {
         var zelf = self
         zelf.variant = variant
+        return zelf
+    }
+    
+    /// 내비게이션 바의 배경색을 설정합니다.
+    ///
+    /// - Parameter backgroundColor: 배경색
+    /// - Returns: 수정된 내비게이션 바 인스턴스
+    public func backgroundColor(_ backgroundColor: SwiftUI.Color) -> Self {
+        var zelf = self
+        zelf.backgroundColor = backgroundColor
         return zelf
     }
     
@@ -223,12 +229,10 @@ public struct TopNavigation: View {
                 onSearchFocusChange: onSearchFocusChange
             )
             .background {
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                        .opacity(backgroundOpacity)
-                    backgroundView
-                        .opacity(backgroundOpacity * 0.7)
-                }
+                MaterialBackground(
+                    materialOpacity: backgroundOpacity,
+                    tint: backgroundColor.opacity(backgroundOpacity * 0.88)
+                )
                 .if(variant == .floating) {
                     $0.mask {
                         LinearGradient(
@@ -244,21 +248,32 @@ public struct TopNavigation: View {
     }
     
     // MARK: - Computed properties
-    
-    private var backgroundView: SwiftUI.Color {
-        backgroundColor ?? SwiftUI.Color.semantic(.backgroundNormal)
-    }
-    
+
     @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
 
+    /// ``ScreenScaffold``가 내려 주는 스크롤 오프셋. 스캐폴드 밖에서는 최상단(`0`)이다.
+    @Environment(\.topNavigationScrollOffset) private var inheritedScrollOffset: CGFloat
+
+    private var scrollOffset: CGFloat {
+        explicitScrollOffset ?? inheritedScrollOffset
+    }
+
+    /// 스크롤에 따른 배경 불투명도. 스크롤 오프셋이 0(스크롤이 최상단)이면 배경이 없고 스크롤하면 나타난다.
+    /// `floating`도 같다. 콘텐츠 위에 떠 있어 스크롤 오프셋이 0일 때 배경이 있으면 아래 이미지를 가린다.
+    ///
+    /// 불투명해지는 스크롤 거리는 상단 safe area 높이다. `floating`은 safe area가 0인 자리(시트 안 등)에서도
+    /// 스크롤하면 배경이 나와야 하므로 그때는 ``ModalNavigation``과 같은 32를 쓴다.
     private var backgroundOpacity: CGFloat {
-        if variant.isFloating {
-            return 1
+        let threshold: CGFloat
+        if safeAreaInsets.top > 0 {
+            threshold = safeAreaInsets.top
+        } else if variant.isFloating {
+            threshold = 32
         } else {
-            guard safeAreaInsets.top > 0 else { return 0 }
-            let ratio = (scrollOffset / -safeAreaInsets.top)
-            return max(0, min(1, ratio))
+            return 0
         }
+        let ratio = (scrollOffset / -threshold)
+        return max(0, min(1, ratio))
     }
     
     private var gradientMaskColors = [0, 0.7, 1].map { SwiftUI.Color.black.opacity($0) }
@@ -313,8 +328,7 @@ public struct TopNavigation: View {
         @State private var totalSizeOfTrailings: CGSize = .zero
         @State private var internalSearchTerm = ""
         @State private var internalFocused = false
-        @FocusState private var focusState: Bool
-        
+
         private var searchTerm: Binding<String> {
             externalSearchTerm ?? $internalSearchTerm
         }
@@ -404,68 +418,16 @@ public struct TopNavigation: View {
 
         @ViewBuilder
         private var searchField: some View {
-            HStack(alignment: .center, spacing: 4) {
-                Image.icon(.search)
-                    .resizable()
-                    .foregroundStyle(SwiftUI.Color.semantic( .labelAssistive))
-                    .frame(width: 20, height: 20)
-                    .padding(.horizontal, 2)
-                
-                HStack(alignment: .center, spacing: 8) {
-                    SwiftUI.TextField(
-                        "",
-                        text: searchTerm,
-                        prompt: {
-                            if let searchPlaceholder {
-                                Text(searchPlaceholder)
-                                    .typography(variant: .body1, weight: .regular, semantic: .labelAssistive)
-                            } else {
-                                nil
-                            }
-                        }()
-                    )
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-                    .submitLabel(.search)
-                    .onSubmit(onSubmit ?? {})
-                    .font(.font(variant: .body1, weight: .regular))
-                    .foregroundStyle(SwiftUI.Color.semantic( .labelNormal))
-                    .frame(height: 24)
-                    .frame(maxWidth: .infinity)
-                    .focused($focusState)
-                    .onChange(of: focused.wrappedValue) {
-                        if focusState != $0 {
-                            focusState = $0
-                        }
-                    }
-                    .onChange(of: $focusState.wrappedValue) {
-                        if focused.wrappedValue != $0 {
-                            focused.wrappedValue = $0
-                            onSearchFocusChange?($0)
-                        }
-                    }
-                    .onChange(of: searchTerm.wrappedValue) {
-                        onSearchTextChange?($0)
-                    }
-                    
-                    if searchTerm.wrappedValue.isNotEmpty {
-                        SwiftUI.Button {
-                            searchTerm.wrappedValue = ""
-                        } label: {
-                            Image.icon(.circleCloseFill)
-                                .resizable()
-                                .foregroundStyle(SwiftUI.Color.semantic(.labelAssistive))
-                                .frame(width: 20, height: 20)
-                        }
-                    }
-                }
-            }
-            .padding(8)
-            .background {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(SwiftUI.Color.semantic(.fillNormal))
-            }
-            .padding(.vertical, 8)
+            SearchField(text: searchTerm)
+                .placeholder(searchPlaceholder)
+                // TopNavigation이 이미 머티리얼 배경을 깔기 때문에 검색 필드까지 머티리얼을 쌓으면
+                // 흐림은 더해지지 않고 틴트만 중복돼 표면이 밝아진다.
+                .disableMaterial()
+                .focused(focused)
+                .onSubmit { onSubmit?() }
+                .onTextChange { onSearchTextChange?($0) }
+                .onFocusChange { onSearchFocusChange?($0) }
+                .padding(.vertical, 8)
         }
     }
     
@@ -486,7 +448,7 @@ public struct TopNavigation: View {
                 .paragraph(
                     variant: variant.typoVariant,
                     weight: variant.typoWeight,
-                    semantic: .labelStrong
+                    semantic: .foregroundNeutralStrong
                 )
                 .lineLimit(1)
         }
@@ -525,14 +487,14 @@ extension TopNavigation {
     ///
     /// 버튼이 없을 경우에는 투명한 공간을 차지하여 레이아웃이 유지됩니다.
     public struct LeadingButton: View {
-        let action: Resource.LeadingButtonInfo?
+        let action: Resource.Leading?
         
         /// 내비게이션 바의 왼쪽(leading) 영역에 위치하는 기본 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - action: 버튼 액션
         /// - Returns: LeadingButton 인스턴스
-        public init(_ action: Resource.LeadingButtonInfo?) {
+        public init(_ action: Resource.Leading?) {
             self.action = action
         }
         
@@ -545,13 +507,15 @@ extension TopNavigation {
                         IconButton(icon: .chevronLeft) {
                             action()
                         }
+                        .interactionEffect(.dim)
+                        .interactionOverflow()
                         .accessibilityLabel(String(localized: "뒤로 가기", bundle: .module))
-                        .frame(width: 24, height: 24)
                     case let .icon(i, action):
                         IconButton(icon: i) {
                             action()
                         }
-                        .frame(width: 24, height: 24)
+                        .interactionEffect(.dim)
+                        .interactionOverflow()
                     case let .text(t, action):
                         TrailingTextButton(
                             text: t,
@@ -571,32 +535,28 @@ extension TopNavigation {
     /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼입니다.
     ///
     /// ```swift
-    /// TrailingTextButton(
-    ///     text: "확인",
-    ///     disable: false
-    /// ) {
+    /// TrailingTextButton(text: "확인") {
     ///     // 버튼 액션
     /// }
+    /// .disabled(isFormInvalid)
     /// ```
+    ///
+    /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
     public struct TrailingTextButton: View {
         private let text: String
-        private let disable: Bool
         private let action: () -> Void
-        
+
         /// 내비게이션 바의 오른쪽(trailing)에 위치하는 텍스트 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - text: 버튼에 표시할 텍스트
-        ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
         ///   - action: 버튼 액션
         /// - Returns: TrailingTextButton 인스턴스
         public init(
             text: String,
-            disable: Bool = false,
             action: @escaping () -> Void
         ) {
             self.text = text
-            self.disable = disable
             self.action = action
         }
 
@@ -605,8 +565,7 @@ extension TopNavigation {
             TextButton(text: text) {
                 action()
             }
-            .disable(disable)
-            .contentColor(.semantic(.labelNormal))
+            .contentColor(.semantic(.foregroundNeutralPrimary))
             .fontVariant(.headline2)
             .fontWeight(.regular)
             .frame(height: 24)
@@ -615,7 +574,7 @@ extension TopNavigation {
     
     /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼입니다.
     ///
-    /// 비활성화(disable), 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
+    /// 푸시 뱃지 등을 옵션으로 설정할 수 있습니다.
     ///
     /// ```swift
     /// TrailingIconButton(
@@ -624,49 +583,50 @@ extension TopNavigation {
     /// ) {
     ///     // 버튼 액션
     /// }
+    /// .disabled(true)
     /// ```
+    ///
+    /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
     public struct TrailingIconButton: View {
         private let icon: Icon
-        private let disable: Bool
         private let showPushBadge: Bool
         private let action: () -> Void
-        
+
         /// 내비게이션 바의 오른쪽(trailing)에 위치하는 아이콘 버튼을 초기화합니다.
         ///
         /// - Parameters:
         ///   - icon: 아이콘 버튼의 아이콘
-        ///   - disable: 버튼 비활성화 여부, 생략하면 기본값으로 `false` 적용
         ///   - showPushBadge: PushBadge의 노출 여부, 생략하면 기본값으로 `false` 적용
         ///   - action: 아이콘 버튼 클릭시 동작할 액션
         /// - Returns: TrailingIconButton 인스턴스
         public init(
             icon: Icon,
-            disable: Bool = false,
             showPushBadge: Bool = false,
             action: @escaping () -> Void
         ) {
             self.icon = icon
-            self.disable = disable
             self.showPushBadge = showPushBadge
             self.action = action
         }
-        
+
         /// 뷰의 내용과 동작을 정의합니다.
         public var body: some View {
             IconButton(icon: icon) {
                 action()
             }
-            .disable(disable)
+            .interactionEffect(.dim)
             .showPushBadge(showPushBadge)
-            .frame(width: 24, height: 24)
+            .interactionOverflow()
         }
     }
 }
 
 extension TopNavigation {
-    /// TopNavigation의 좌/우에 표시될 Resource들의 Namespace입니다.
+    /// TopNavigation의 좌/우에 표시될 요소들의 Namespace입니다.
+    ///
+    /// 슬롯마다 쓸 수 있는 요소가 다르므로 슬롯별로 타입을 나눠 두었습니다.
     public enum Resource {
-        /// TopNavigation의 좌측에 표시될 내용들의 열거형입니다.
+        /// 내비게이션 바 좌측(leading)에 표시할 요소입니다.
         ///
         /// 뒤로가기 버튼, 아이콘 버튼, 텍스트 버튼을 지원합니다.
         ///
@@ -675,7 +635,7 @@ extension TopNavigation {
         ///     .leadingContent { /* ... */ }
         ///
         /// ```
-        public enum LeadingButtonInfo {
+        public enum Leading {
             /// 뒤로가기 버튼
             /// - Parameter action: 뒤로가기 버튼 클릭시 동작할 액션
             case back(action: () -> Void)
@@ -691,7 +651,7 @@ extension TopNavigation {
             case text(_ text: String, action: () -> Void)
         }
         
-        /// TopNavigation의 우측에 표시될 내용들의 열거형입니다.
+        /// 내비게이션 바 우측(trailing)에 표시할 요소입니다.
         ///
         /// 아이콘 버튼과 텍스트 버튼을 지원합니다.
         ///
@@ -702,7 +662,7 @@ extension TopNavigation {
         ///         { TopNavigation.TrailingTextButton(text: "완료") { /* ... */ } }
         ///     )
         /// ```
-        public enum TrailingButtonInfo: Hashable {
+        public enum Trailing: Hashable {
             /// icon 형태의 Action입니다.
             /// - Parameters:
             ///   - icon: 아이콘 버튼의 아이콘
@@ -732,15 +692,15 @@ extension TopNavigation {
                 }
             }
             
-            /// 두 개의 TrailingButtonInfo 인스턴스를 비교합니다.
+            /// 두 개의 Trailing 인스턴스를 비교합니다.
             ///
             /// - Parameters:
-            ///   - lhs: 비교할 첫 번째 TrailingButtonInfo 인스턴스
-            ///   - rhs: 비교할 두 번째 TrailingButtonInfo 인스턴스
+            ///   - lhs: 비교할 첫 번째 Trailing 인스턴스
+            ///   - rhs: 비교할 두 번째 Trailing 인스턴스
             /// - Returns: 두 인스턴스가 같은지 여부
             public static func == (
-                lhs: TopNavigation.Resource.TrailingButtonInfo,
-                rhs: TopNavigation.Resource.TrailingButtonInfo
+                lhs: TopNavigation.Resource.Trailing,
+                rhs: TopNavigation.Resource.Trailing
             ) -> Bool {
                 switch (lhs, rhs) {
                 case let (.icon(li, ld, ls, _), .icon(ri, rd, rs, _)):
@@ -777,273 +737,17 @@ extension TopNavigation.Variant {
     }
 }
 
-struct TopNavigationModifier: ViewModifier {
-    private let variant: TopNavigation.Variant
-    private let titleView: (() -> any View)?
-    private let backgroundColor: SwiftUI.Color?
-    private let leadingContent: (() -> any View)?
-    private let trailingContents: [() -> any View]
-    private let actionAreaModel: ActionArea.Model?
-    private let searchPlaceholder: String?
-    private let externalSearchTerm: Binding<String>?
-    private let externalFocused: Binding<Bool>?
-    private let onSubmit: (() -> Void)?
-    
-    init(
-        variant: TopNavigation.Variant,
-        titleView: (() -> any View)?,
-        backgroundColor: SwiftUI.Color?,
-        leadingContent: (() -> any View)?,
-        trailingContents: [() -> any View],
-        actionAreaModel: ActionArea.Model?,
-        searchPlaceholder: String?,
-        searchTerm: Binding<String>?,
-        searchFocused: Binding<Bool>?,
-        onSearch: (() -> Void)?
-    ) {
-        self.variant = variant
-        self.titleView = titleView
-        self.backgroundColor = backgroundColor
-        self.leadingContent = leadingContent
-        self.trailingContents = trailingContents
-        self.actionAreaModel = actionAreaModel
-        self.searchPlaceholder = searchPlaceholder
-        self.externalSearchTerm = searchTerm
-        self.externalFocused = searchFocused
-        self.onSubmit = onSearch
-    }
-    
-    // MARK: - Body
-    
-    @State private var scrollStatus: ScrollView.ScrollStatus = .init()
-    @State private var navigationHeight: CGFloat = .zero
-    @State private var internalSearchTerm = ""
-    @State private var internalFocused = false
-    
-    private var searchTerm: Binding<String> {
-        externalSearchTerm ?? $internalSearchTerm
-    }
-    
-    private var focused: Binding<Bool> {
-        externalFocused ?? $internalFocused
-    }
-    
-    func body(content: Content) -> some View {
-        VStack(spacing: 0) {
-            ZStack {
-                ScrollView(scrollStatus: $scrollStatus) {
-                    content
-                        .padding(.top, navigationHeight)
-                }
-                .background(
-                    background
-                )
-                
-                VStack(alignment: .leading, spacing: .zero) {
-                    TopNavigation(
-                        scrollOffset: scrollStatus.contentOffset.y,
-                        backgroundColor: backgroundColor
-                    )
-                    .variant(variant)
-                    .searchField(
-                        placeholder: searchPlaceholder,
-                        searchTerm: searchTerm,
-                        focused: focused,
-                        onSubmit: onSubmit
-                    )
-                    .modifying {
-                        var mutated = $0
-                        if let titleView {
-                            mutated = mutated.titleView {
-                                AnyView(titleView())
-                            }
-                        }
-                        if let leadingContent {
-                            mutated = mutated.leadingContent {
-                                AnyView(leadingContent())
-                            }
-                        }
-                        if trailingContents.isNotEmpty {
-                            mutated = mutated.trailingContents(trailingContents)
-                        }
-                        return mutated
-                    }
-                    .onGeometryChange(
-                        for: CGSize.self,
-                        of: { $0.size },
-                        action: { navigationHeight = $0.height }
-                    )
-                    Spacer()
-                }
-            }
-            
-            if let actionAreaModel {
-                ActionArea(variant: actionAreaModel.variant)
-                    .caption(actionAreaModel.caption)
-                    .extra(actionAreaModel.extra, divider: actionAreaModel.extraDivider)
-                    .modifying {
-                        if case .manual(let transparency) = actionAreaModel.backgroundTransparencyControl {
-                            $0.transparentBackground(transparency)
-                        } else {
-                            $0.transparentBackground(scrollStatus.scrolledToMax)
-                        }
-                    }
-            }
-        }
-    }
-    
-    private var background: SwiftUI.Color {
-        backgroundColor ?? .clear
-    }
+// MARK: - Environment
+
+struct TopNavigationScrollOffsetKey: EnvironmentKey {
+    /// 스캐폴드 밖에서는 스크롤이 없는 것으로 보고 최상단으로 둔다.
+    static let defaultValue: CGFloat = 0
 }
 
-// MARK: - View Extension
-
-extension View {
-    /// 현재 뷰에 TopNavigation 바를 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용
-    ///   - titleView: 표시할 제목 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
-    ///   - backgroundColor: TopNavigation이 적용된 전체 뷰의 배경색, 생략하면 기본값으로 `nil` 적용
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
-    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - onSearch: 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
-    /// - Returns: TopNavigation이 적용된 뷰
-    public func topNavigation(
-        variant: TopNavigation.Variant = .normal,
-        titleView: (() -> any View)? = nil,
-        backgroundColor: SwiftUI.Color? = nil,
-        leadingContent: (() -> any View)? = nil,
-        trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil,
-        searchPlaceholder: String? = nil,
-        searchTerm: Binding<String>? = nil,
-        searchFocused: Binding<Bool>? = nil,
-        onSearch: (() -> Void)? = nil
-    ) -> some View {
-        modifier(
-            TopNavigationModifier(
-                variant: variant,
-                titleView: titleView.map { v in { AnyView(v()) } },
-                backgroundColor: backgroundColor,
-                leadingContent: leadingContent.map { v in { AnyView(v()) } },
-                trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model,
-                searchPlaceholder: searchPlaceholder,
-                searchTerm: searchTerm,
-                searchFocused: searchFocused,
-                onSearch: onSearch
-            )
-        )
-    }
-
-    /// 현재 뷰에 TopNavigation 바를 적용합니다.
-    ///
-    /// - Parameters:
-    ///   - variant: 내비게이션 바의 외관 스타일, 생략하면 기본값으로 `.normal` 적용
-    ///   - title: 표시할 텍스트 타이틀
-    ///   - backgroundColor: 배경색, 생략하면 기본값으로 `nil` 적용
-    ///   - leadingContent: 좌측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `nil` 적용
-    ///   - trailingContents: 우측에 표시할 컴포넌트 클로저, 생략하면 기본값으로 `[]` 적용
-    ///   - model: 하단 액션 영역에 대한 모델, 생략하면 기본값으로 `nil` 적용
-    ///   - searchPlaceholder: 검색 필드의 플레이스홀더 텍스트, 생략하면 기본값으로 `nil` 적용
-    ///   - searchTerm: 검색어 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - searchFocused: 검색 필드 포커스 상태 바인딩, 생략하면 기본값으로 `nil` 적용
-    ///   - onSearch: 검색 실행 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
-    /// - Returns: TopNavigation이 적용된 뷰
-    public func topNavigation(
-        variant: TopNavigation.Variant = .normal,
-        title: String,
-        backgroundColor: SwiftUI.Color? = nil,
-        leadingContent: (() -> any View)? = nil,
-        trailingContents: [() -> any View] = [],
-        withBottom model: ActionArea.Model? = nil,
-        searchPlaceholder: String? = nil,
-        searchTerm: Binding<String>? = nil,
-        searchFocused: Binding<Bool>? = nil,
-        onSearch: (() -> Void)? = nil
-    ) -> some View {
-        modifier(
-            TopNavigationModifier(
-                variant: variant,
-                titleView: { AnyView(TopNavigation.TitleView(variant: variant, title: title)) },
-                backgroundColor: backgroundColor,
-                leadingContent: leadingContent.map { v in { AnyView(v()) } },
-                trailingContents: trailingContents.prefix(3).map { v in { AnyView(v()) } },
-                actionAreaModel: model,
-                searchPlaceholder: searchPlaceholder,
-                searchTerm: searchTerm,
-                searchFocused: searchFocused,
-                onSearch: onSearch
-            )
-        )
-    }
-}
-
-fileprivate extension UIApplication {
-    class func topViewController(
-        base: UIViewController? = UIApplication.keyWindow?.rootViewController
-    ) -> UIViewController? {
-        if let nav = base as? UINavigationController {
-            return topViewController(base: nav.visibleViewController)
-        }
-        if let tab = base as? UITabBarController {
-            if let selected = tab.selectedViewController {
-                return topViewController(base: selected)
-            }
-        }
-        if let presented = base?.presentedViewController {
-            return topViewController(base: presented)
-        }
-        return base
-    }
-}
-
-fileprivate extension UIViewController {
-    /*
-     기존 navigationBar의 shadowImage와 backgroundImage를 제어하는 방식은
-     iOS 12 이전 버전에서 사용하는 방식이라 iOS 13에서 뒤로가기 시 네비게이션 바의 색상이 깨지는 현상이 발생
-     iOS 13에서 UINavigationBarAppearance가 추가되어 네비게이션의 속성을 정의할 수 있음
-     
-     standardAppearance : 기본 네비게이션
-     scrollEdgeAppearance : Large Title 형태의 네비게이션
-     compactAppearance : 가로모드 일 때 타이틀만 있는 네비게이션
-     */
-    
-    func setNavigationBar(
-        type: NavigationType,
-        backgroundColor: UIColor = .semantic(.backgroundNormal),
-        tintColor: UIColor = .semantic(.labelStrong)
-    ) {
-        let navigationAppearance = UINavigationBarAppearance()
-        
-        switch type {
-        case .default:
-            // 불투명 네비게이션 바
-            navigationAppearance.configureWithOpaqueBackground()
-            navigationController?.navigationBar.barTintColor = tintColor
-            navigationAppearance.backgroundColor = backgroundColor
-        case .transparent:
-            // 투명 네비게이션 바
-            navigationAppearance.configureWithTransparentBackground()
-            navigationController?.navigationBar.barTintColor = .clear
-        case .hideShadow:
-            // 하단 라인 제거
-            navigationAppearance.configureWithTransparentBackground()
-            navigationController?.navigationBar.barTintColor = tintColor
-            navigationAppearance.backgroundColor = backgroundColor
-        }
-        
-        navigationAppearance.titleTextAttributes = [.foregroundColor: tintColor]
-        navigationController?.navigationBar.standardAppearance = navigationAppearance
-        
-        // iOS 15에서 standardAppearance만 설정한 경우 barTintColor 적용이 안되는 이슈가 있다고 하여 함께 설정함
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationAppearance
+extension EnvironmentValues {
+    var topNavigationScrollOffset: CGFloat {
+        get { self[TopNavigationScrollOffsetKey.self] }
+        set { self[TopNavigationScrollOffsetKey.self] = newValue }
     }
 }
 

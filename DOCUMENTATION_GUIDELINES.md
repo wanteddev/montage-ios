@@ -561,6 +561,36 @@ However, enums and structs defined at the top level are generated as standalone 
     }
 ```
 
+## 9. Markdown Inline Formatting in Docstrings
+
+DocC parses docstrings as Markdown (GFM). `**bold**`, `*italic*`, symbol links (` ``TypeName`` `), and strikethrough are preserved in the generated md. Using them intentionally is fine, but watch out for characters that get **interpreted as formatting unintentionally**.
+
+### Important: `~` (tilde) Is Parsed as Strikethrough — Escape It in Ranges
+
+The DocC parser treats **even a single `~` as strikethrough**. If a paragraph contains two `~`, they pair up and strike through the text between them, corrupting the output. The most common trap is using `~` as a **numeric range separator**.
+
+```swift
+// ❌ Broken — two ~ on one line, so "90%, last line 40" gets struck through
+/// Middle lines 65~90%, last line 40~55% are generated automatically.
+
+// ✅ Escape the tilde with a backslash (DocC treats it as a literal ~)
+/// Middle lines 65\~90%, last line 40\~55% are generated automatically.
+
+// ✅ Or use a hyphen / en-dash
+/// Middle lines 65-90%, last line 40-55% are generated automatically.
+```
+
+- **Always escape `~` in ranges as `\~`.** Even if a line has only one `~` today (e.g. `24\~64pt`), adding another range to the same paragraph later would break it, so escape without exception.
+- Unless strikethrough is intended, make sure `~`/`~~` does not remain literally in the docstring.
+
+### Backstop: The Converter Warns on Strikethrough
+
+`scripts/docc_to_md.js` prints a warning whenever it encounters a strikethrough node. Montage does not use strikethrough intentionally, so if you see the warning below in the `make` log, escape the `~` in that docstring.
+
+```
+⚠️ strikethrough(취소선) 감지: "..." — docstring에서 범위 구분자 '~'를 '\~'로 이스케이프했는지 확인하세요
+```
+
 ## Summary: Troubleshooting
 
 If documentation is not generated correctly:
@@ -570,4 +600,5 @@ If documentation is not generated correctly:
 3. Check if associated extensions are in the `1 Components` directory
 4. Verify functions/properties inside associated extensions are declared as `public`
 5. Check if the type is not UIKit-related
-6. Check the script execution log for error messages
+6. Check that `~` range separators in docstrings are escaped as `\~` (avoids strikethrough mis-parsing)
+7. Check the script execution log for error/warning messages

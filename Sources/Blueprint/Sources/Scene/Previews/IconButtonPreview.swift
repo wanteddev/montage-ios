@@ -9,32 +9,66 @@ import SwiftUI
 import Montage
 
 struct IconButtonPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var variantIndex = 0
-    @State private var customSize: CGFloat = 24
-    @State private var sizeIndex = 0
+    @State private var customSize: CGFloat = 36
+    @State private var sizeIndex = 1 // 기본값 .medium
+    @State private var normalSizeIndex = 3 // 기본값 .xlarge
     @State private var alternative = false
     @State private var disable = false
+    @State private var interactionEffectIndex = 0
+    @State private var interactionOverflow = false
     @State private var showPushBadge = false
     @State private var padding: CGFloat = 0
     @State private var iconColor: SwiftUI.Color?
     @State private var backgroundColor: SwiftUI.Color?
     @State private var borderColor: SwiftUI.Color?
-    
+    @State private var interactionColor: Montage.Color.Semantic?
+
     private var variants: [IconButton.Variant] {
         [
-            .normal(size: Int(customSize)),
+            .normal(size: resolvedNormalSize),
             .background(size: Int(customSize), isAlternative: alternative),
-            .outlined(size: sizes[sizeIndex]),
-            .solid(size: sizes[sizeIndex])
+            .outlined(size: resolvedSize),
+            .solid(size: resolvedSize)
         ]
     }
-    
+
     private let sizes: [IconButton.Size] = [
         .small,
-        .medium,
-        .custom(size: 8)
+        .medium
     ]
+    private let sizeLabels: [String] = ["small", "medium", "custom"]
+
+    private let normalSizes: [IconButton.NormalSize] = [.small, .medium, .large, .xlarge]
+    private let normalSizeLabels: [String] = ["small", "medium", "large", "xlarge", "custom"]
+
+    
+    private var isCustomSize: Bool {
+        switch variantIndex {
+        case 0:
+            normalSizeIndex == normalSizes.count
+        case 1:
+            true
+        default:
+            sizeIndex == sizes.count
+        }
+    }
+
+    private var resolvedNormalSize: IconButton.NormalSize {
+        if normalSizeIndex >= normalSizes.count {
+            .custom(size: Int(customSize))
+        } else {
+            normalSizes[normalSizeIndex]
+        }
+    }
+
+    private var resolvedSize: IconButton.Size {
+        if sizeIndex >= sizes.count {
+            .custom(size: Int(customSize))
+        } else {
+            sizes[sizeIndex]
+        }
+    }
     
     private var currentVariant: IconButton.Variant {
         variants[variantIndex]
@@ -46,9 +80,12 @@ struct IconButtonPreview: View {
     }
     
     private var isOutlinedOrSolid: Bool {
-        if case .outlined = currentVariant { return true }
-        if case .solid = currentVariant { return true }
-        return false
+        switch currentVariant {
+        case .normal, .background:
+            false
+        case .outlined, .solid:
+            true
+        }
     }
     
     private var isOutlined: Bool {
@@ -60,132 +97,132 @@ struct IconButtonPreview: View {
         if case .normal = currentVariant { return true }
         return false
     }
+
+    /// dim은 normal variant에서만 동작하므로 다른 variant에서는 선택지에서 뺀다.
+    private var interactionEffects: [IconButton.InteractionEffect] {
+        isNormal ? [.highlight, .dim, .none] : [.highlight, .none]
+    }
+
+    /// variant를 바꿔 선택지가 줄면 저장된 인덱스가 범위를 벗어난다.
+    /// 세그먼트가 선택 항목을 못 찾고 인디케이터를 컨트롤 밖에 그리므로 읽을 때 정규화한다.
+    private var interactionEffectSelection: Binding<Int> {
+        Binding(
+            get: { min(interactionEffectIndex, interactionEffects.count - 1) },
+            set: { interactionEffectIndex = $0 }
+        )
+    }
+
+    private var resolvedInteractionEffect: IconButton.InteractionEffect {
+        interactionEffects[interactionEffectSelection.wrappedValue]
+    }
+
     
     var body: some View {
-        SwiftUI.ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
+        PreviewLayout {
+            IconButton(
+                variant: currentVariant,
+                icon: .apps,
+                handler: {
+                    print("tapped")
                 }
-                
-                HStack {
-                    Spacer(minLength: 0)
-                    
-                    IconButton(
-                        variant: currentVariant,
-                        icon: .apps,
-                        handler: {
-                            print("tapped")
-                        }
-                    )
-                    .disable(disable)
-                    .showPushBadge(isNormal ? showPushBadge : false)
-                    .padding(isOutlinedOrSolid ? padding : 0)
-                    .modifying {
-                        if iconColor != nil {
-                            $0.iconColor(iconColor!)
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if isOutlinedOrSolid && backgroundColor != nil {
-                            $0.backgroundColor(backgroundColor!)
-                        } else {
-                            $0
-                        }
-                    }
-                    .modifying {
-                        if isOutlined && borderColor != nil {
-                            $0.borderColor(borderColor!)
-                        } else {
-                            $0
-                        }
-                    }
-                    
-                    Spacer(minLength: 0)
-                }
-                
-                Text("Options").bold()
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants.map(\.description)
-                    )
-                    .size(.small)
-                }
-                HStack {
-                    Text("size")
-                    if variantIndex == 0 || variantIndex == 1 {
-                        SwiftUI.Slider(value: $customSize, in: 10...128, step: 1)
-                    } else {
-                        SegmentedControl(
-                            selectedIndex: $sizeIndex,
-                            labels: sizes.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                }
-                if isBackground {
-                    HStack {
-                        Text("alternative")
-                        Switch(checked: alternative) { alternative = $0 }
-                    }
-                }
-                HStack {
-                    Text("disable")
-                    Switch(checked: disable) { disable = $0 }
-                }
-                if isNormal {
-                    HStack {
-                        Text("pushBadge")
-                        Switch(checked: showPushBadge) { showPushBadge = $0 }
-                    }
-                }
-                if isOutlinedOrSolid {
-                    HStack {
-                        Text("padding")
-                        Slider(value: $padding, in: 0...24, step: 1)
-                    }
-                    HStack {
-                        Text("backgroundColor")
-                        Switch(checked: backgroundColor != nil) {
-                            backgroundColor = $0 ? .semantic(.accentBackgroundCyan) : nil
-                        }
-                    }
-                }
-                if isOutlined {
-                    HStack {
-                        Text("borderColor")
-                        Switch(checked: borderColor != nil) {
-                            borderColor = $0 ? .semantic(.accentBackgroundPurple) : nil
-                        }
-                    }
-                }
-                HStack {
-                    Text("iconColor")
-                    Switch(checked: iconColor != nil) {
-                        iconColor = $0 ? .semantic(.accentForegroundCyan) : nil
-                    }
+            )
+            .interactionEffect(resolvedInteractionEffect)
+            .interactionOverflow(interactionOverflow)
+            .showPushBadge(isNormal ? showPushBadge : false)
+            .padding(isOutlinedOrSolid ? padding : 0)
+            .modifying {
+                if let interactionColor {
+                    $0.interactionColor(interactionColor)
+                } else {
+                    $0
                 }
             }
-            .font(.caption)
-            .padding()
+            .modifying {
+                if iconColor != nil {
+                    $0.iconColor(iconColor!)
+                } else {
+                    $0
+                }
+            }
+            .modifying {
+                if isOutlinedOrSolid && backgroundColor != nil {
+                    $0.backgroundColor(backgroundColor!)
+                } else {
+                    $0
+                }
+            }
+            .modifying {
+                if isOutlined && borderColor != nil {
+                    $0.borderColor(borderColor!)
+                } else {
+                    $0
+                }
+            }
+            .disabled(disable)
+            // 헤더의 자 버튼을 켜면 버튼이 차지하는 자리를 외곽선으로 보여준다.
+            // interactionOverflow를 켜면 인터랙션 영역이 이 외곽선 밖으로 번진다.
+            .previewDimensioned()
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants.map(\.description))
+            if variantIndex == 0 {
+                SegmentedIndexRow("size", index: $normalSizeIndex, labels: normalSizeLabels)
+                if isCustomSize {
+                    // interactionOverflow를 켜면 custom 숫자가 컨테이너가 아니라 아이콘 크기가 된다.
+                    if interactionOverflow {
+                        SliderOptionRow("custom (icon)", value: $customSize, in: 12...64)
+                    } else {
+                        SliderOptionRow("custom", value: $customSize, in: 24...64)
+                    }
+                }
+            } else if variantIndex == 1 {
+                SliderOptionRow("size", value: $customSize, in: 24...64)
+            } else {
+                SegmentedIndexRow("size", index: $sizeIndex, labels: sizeLabels)
+                if isCustomSize {
+                    SliderOptionRow("custom", value: $customSize, in: 24...64)
+                }
+            }
+            if isBackground {
+                ToggleOptionRow("alternative", isOn: $alternative)
+            }
+            ToggleOptionRow("disable", isOn: $disable)
+            SegmentedIndexRow(
+                "interactionEffect",
+                index: interactionEffectSelection,
+                labels: interactionEffects.map(\.description)
+            )
+            if isNormal {
+                ToggleOptionRow("interactionOverflow", isOn: $interactionOverflow)
+                ToggleOptionRow("pushBadge", isOn: $showPushBadge)
+            }
+            if isOutlinedOrSolid {
+                SliderOptionRow("padding", value: $padding, in: 0...24)
+                ToggleOptionRow("backgroundColor", isOn: Binding(
+                    get: { backgroundColor != nil },
+                    set: { backgroundColor = $0 ? .semantic(.surfaceAccentCyanOpaque) : nil }
+                ))
+            }
+            if isOutlined {
+                ToggleOptionRow("borderColor", isOn: Binding(
+                    get: { borderColor != nil },
+                    set: { borderColor = $0 ? .semantic(.surfaceAccentPurpleOpaque) : nil }
+                ))
+            }
+            ToggleOptionRow("iconColor", isOn: Binding(
+                get: { iconColor != nil },
+                set: { iconColor = $0 ? .semantic(.foregroundAccentCyan) : nil }
+            ))
+            ToggleOptionRow("interactionColor", isOn: Binding(
+                get: { interactionColor != nil },
+                set: { interactionColor = $0 ? .foregroundNegativeStrong : nil }
+            ))
         }
-        .transparentChecking(isPresented: showTransparentChecker, checkerSize: 51, checkerColor: .red)
-        .background(SwiftUI.Color.semantic(.backgroundNormal))
     }
 }
 
 extension IconButton.Variant: CaseDescribable {}
+extension IconButton.InteractionEffect: CaseDescribable {}
+extension IconButton.NormalSize: CaseDescribable {}
 extension IconButton.Size: CaseDescribable {}
 
 #Preview {

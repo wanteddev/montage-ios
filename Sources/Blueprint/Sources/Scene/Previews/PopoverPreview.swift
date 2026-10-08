@@ -9,7 +9,6 @@ import Montage
 import SwiftUI
 
 struct PopoverPreview: View {
-    @State private var showTransparentChecker: Bool = false
     @State private var isPresented: Bool = false
     @State private var variantIndex: Int = 0
     @State private var text: String = "메시지에 마침표를 찍어요."
@@ -27,63 +26,58 @@ struct PopoverPreview: View {
     ]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Preview").bold()
-                    Spacer()
-                    Button(action: {
-                        showTransparentChecker.toggle()
-                    }) {
-                        Image(systemName: "checkerboard.rectangle")
-                            .foregroundColor(.semantic(.primaryNormal))
-                    }
+        PreviewLayout {
+            VStack(spacing: 24) {
+                Button(variant: .outlined, text: "Show Preview") {
+                    isPresented = true
                 }
-                .padding(.horizontal)
-
-                VStack(spacing: 24) {
-                    Button(color: .primary, size: .medium, text: "Show") {
-                        isPresented = true
-                    }
-                    .modifying {
-                        if variantIndex == 0 {
-                            $0.popoverNormal(
-                                isPresented: $isPresented,
-                                heading: heading,
-                                text: text,
-                                closeButton: closeButton,
-                                action: action
-                                    ? (
-                                        title: "행동",
-                                        action: {
-                                            print("Action tapped")
-                                            isPresented = false
-                                        }
-                                    ) : nil,
-                                subAction: subAction
-                                    ? (
-                                        title: "보조행동",
-                                        action: {
-                                            print("SubAction tapped")
-                                            isPresented = false
-                                        }
-                                    ) : nil
-                            )
-                        } else {
-                            $0.popoverCustom(isPresented: $isPresented) {
-                                popoverContent
-                            }
+                .modifying {
+                    if variantIndex == 0 {
+                        $0.popoverNormal(
+                            isPresented: $isPresented,
+                            heading: heading,
+                            text: text,
+                            closeButton: closeButton,
+                            action: action
+                                ? (
+                                    title: "행동",
+                                    action: {
+                                        print("Action tapped")
+                                        isPresented = false
+                                    }
+                                ) : nil,
+                            subAction: subAction
+                                ? (
+                                    title: "보조행동",
+                                    action: {
+                                        print("SubAction tapped")
+                                        isPresented = false
+                                    }
+                                ) : nil
+                        )
+                    } else {
+                        $0.popoverCustom(isPresented: $isPresented) {
+                            popoverContent
                         }
                     }
                 }
-                .frame(maxWidth: .infinity)
-
-                optionSheet
-                    .padding(.horizontal)
+            }
+            .frame(maxWidth: .infinity)
+        } options: {
+            SegmentedIndexRow("variant", index: $variantIndex, labels: variants)
+            if variantIndex == 0 {
+                TextFieldOptionRow("heading", text: $heading)
+                HStack {
+                    Text("text")
+                    TextArea(text: $text)
+                }
+                HStack {
+                    ToggleOption("closeButton", isOn: $closeButton)
+                    ToggleOption("action", isOn: $action)
+                    ToggleOption("subAction", isOn: $subAction)
+                }
             }
         }
-        .transparentChecking(
-            isPresented: showTransparentChecker, checkerSize: 201, checkerColor: .red)
     }
 
     @ViewBuilder
@@ -103,9 +97,9 @@ struct PopoverPreview: View {
             VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("인재의 추가 정보를 확인하세요.")
-                        .paragraph(variant: .headline2, weight: .bold, semantic: .labelNormal)
+                        .paragraph(variant: .headline2, weight: .bold, semantic: .foregroundNeutralPrimary)
                     Text("적극적으로 구직 중인, 다른 회사가 주목하는, 우리 회사에 관심있는 인재를 알 수 있어요.")
-                        .paragraph(variant: .body2Reading, weight: .medium, semantic: .labelNeutral)
+                        .paragraph(variant: .body2Reading, weight: .medium, semantic: .foregroundNeutralSecondary)
                         .lineLimit(nil)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -122,56 +116,10 @@ struct PopoverPreview: View {
             .padding(20)
         }
         .frame(width: 300)
-        // 머티리얼이 아래, 틴트 컬러가 위. `.background`는 나중에 붙인 것이 뒤로 깔리므로
-        // 순서를 뒤집으면 머티리얼의 틴트 필름이 컬러를 덮어 다크 모드에서 배경이 밝게 뜬다.
-        // 이 샘플은 그대로 복사돼 쓰이므로 순서를 바꾸지 말 것.
-        //
-        // MERGE-4.0.0: 4.0.0 은 `materialBackground(in:tint:)` 로 같은 순서를 타입에 고정한다.
-        // 충돌 시 **4.0.0 쪽을 채택**한다.
-        .background {
-            ZStack {
-                Rectangle().fill(.bar)
-                Rectangle().fill(SwiftUI.Color.semantic(.backgroundElevated).opacity(0.88))
-            }
-        }
-    }
-
-    private var optionSheet: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Options").bold()
-
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("variant")
-                    SegmentedControl(
-                        selectedIndex: $variantIndex,
-                        labels: variants
-                    )
-                    .size(.small)
-                }
-                if variantIndex == 0 {
-                    HStack {
-                        Text("heading")
-                        TextField(text: $heading)
-                    }
-
-                    HStack {
-                        Text("text")
-                        TextArea(text: $text)
-                    }
-
-                    HStack {
-                        Text("closeButton")
-                        Switch(checked: closeButton) { closeButton = $0 }
-                        Text("action")
-                        Switch(checked: action) { action = $0 }
-                        Text("subAction")
-                        Switch(checked: subAction) { subAction = $0 }
-                    }
-                }
-            }
-            .font(.caption)
-        }
+        // 머티리얼은 틴트 컬러보다 아래에 깔아야 한다. 순서가 뒤집히면 머티리얼의 틴트 필름이
+        // 컬러를 덮어 다크 모드에서 배경이 밝게 뜬다.
+        .background(SwiftUI.Color.semantic(.surfaceElevatedPrimary).opacity(0.88))
+        .background(.bar)
     }
 }
 

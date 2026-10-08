@@ -9,7 +9,7 @@ import SwiftUI
 
 /// 칩 컴포넌트입니다.
 ///
-/// 텍스트와 이미지를 포함하는 칩 형태의 버튼입니다.
+/// 텍스트와 콘텐츠를 포함하는 칩 형태의 버튼입니다.
 /// 다양한 크기와 스타일을 지원하며, 탭 이벤트를 처리할 수 있습니다.
 ///
 /// ```swift
@@ -18,10 +18,42 @@ import SwiftUI
 ///     size: .medium,
 ///     text: "액션"
 /// )
-/// .backgroundColor(.semantic(.primaryNormal))
+/// .backgroundColor(.semantic(.surfaceBrandPrimary))
 /// .fontColor(.semantic(.staticWhite))
-/// .leadingImage(Image(systemName: "heart"))
+/// .leadingContent {
+///     Image.icon(.heart)
+///         .resizable()
+///         .renderingMode(.template)
+///         .frame(width: 14, height: 14)
+///         .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+/// }
+///
+/// // 비활성화
+/// Chip(text: "필터")
+///     .disabled(true)
 /// ```
+///
+/// ## 콘텐츠 슬롯
+///
+/// 텍스트 앞뒤에 임의의 뷰를 하나씩 넣을 수 있는 슬롯입니다.
+///
+/// - ``leadingContent(_:)``: 텍스트 앞
+/// - ``trailingContent(_:)``: 텍스트 뒤
+///
+/// 슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다.
+/// 시안상 슬롯은 정사각 아이콘 자리이며 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+///
+/// ```swift
+/// Chip(text: "김티드")
+///     .leadingContent {
+///         Thumbnail(urlString: profileImageURL, ratio: .r1x1)
+///             .width(14)
+///     }
+/// ```
+///
+/// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
+/// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.
+/// 슬롯 뷰에는 색을 강제하지 않으므로, 비활성 상태의 색 변화가 필요하면 사용처에서 처리합니다.
 public struct Chip: View {
     /// 칩의 외관을 결정하는 열거형입니다.
     public enum Variant {
@@ -73,38 +105,14 @@ public struct Chip: View {
     }
     
     // MARK: - Body
-    
+
+    @Environment(\.isEnabled) private var isEnabled
     @State private var isPressed = false
-    
+
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
-        HStack(spacing: contentSpacing) {
-            if let leadingImage = leadingImage {
-                leadingImage
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
-                    .foregroundStyle(imageColor)
-            }
-            
-            Text(text)
-                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
-                .lineLimit(1)
-                .truncationMode(.tail)
-                .padding(.horizontal, textPadding)
-            
-            if let trailingImage = trailingImage {
-                trailingImage
-                    .resizable()
-                    .renderingMode(.template)
-                    .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
-                    .foregroundStyle(imageColor)
-            }
-        }
-        .padding(contentPadding)
-        .frame(
+        content
+            .frame(
             maxWidth: fillHorizontal ? .infinity : nil,
             maxHeight: fillVertical ? .infinity : nil
         )
@@ -119,41 +127,49 @@ public struct Chip: View {
         .background(
             Interaction(
                 state: isPressed ? .pressed : .normal,
-                variant: .light,
-                color: .labelNormal
+                variant: interactionVariant,
+                color: interactionColor
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         )
         .modifier(PressActionDetectingModifier(isPressed: $isPressed, action: handler))
-        .disabled(disable)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(text)
         .accessibilityAddTraits(.isButton)
         .accessibilityValue(active ? String(localized: "선택됨", bundle: .module) : "")
     }
-    
+
+    /// 칩의 내용 영역입니다(텍스트 + 선택적 슬롯 콘텐츠).
+    private var content: some View {
+        HStack(spacing: contentSpacing) {
+            if let leadingContent {
+                leadingContent()
+            }
+
+            Text(text)
+                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .padding(.horizontal, textPadding)
+
+            if let trailingContent {
+                trailingContent()
+            }
+        }
+        .padding(contentPadding)
+    }
+
     // MARK: - Modifiers
-    
-    private var disable = false
+
     private var active = false
     private var customBackgroundColor: SwiftUI.Color?
     private var customFontColor: SwiftUI.Color?
     private var customActiveColor: SwiftUI.Color?
-    private var customImageColor: SwiftUI.Color?
-    private var leadingImage: Image?
-    private var trailingImage: Image?
+    private var customBorderColor: SwiftUI.Color?
+    private var leadingContent: (() -> AnyView)?
+    private var trailingContent: (() -> AnyView)?
     private var fillHorizontal = false
     private var fillVertical = false
-    
-    /// 칩의 비활성화 여부를 설정합니다.
-    ///
-    /// - Parameter disable: 비활성화 여부
-    /// - Returns: 수정된 칩 인스턴스
-    public func disabled(_ disable: Bool = true) -> Self {
-        var view = self
-        view.disable = disable
-        return view
-    }
     
     /// 칩의 선택 상태를 설정합니다.
     ///
@@ -164,7 +180,7 @@ public struct Chip: View {
         view.active = active
         return view
     }
-    
+
     /// 칩의 배경색을 설정합니다.
     ///
     /// - Parameter color: 적용할 배경색
@@ -195,57 +211,90 @@ public struct Chip: View {
         return view
     }
     
-    /// 이미지의 색상을 설정합니다.
+    /// 칩의 테두리 색상을 설정합니다.
     ///
-    /// - Parameter color: 이미지에 적용할 색상
+    /// > `outlined` variant에서만 적용됩니다. (`solid`는 테두리를 그리지 않습니다.)
+    ///
+    /// - Parameter color: 적용할 테두리 색상
     /// - Returns: 수정된 칩 인스턴스
-    public func imageColor(_ color: SwiftUI.Color) -> Self {
+    public func borderColor(_ color: SwiftUI.Color) -> Self {
         var view = self
-        view.customImageColor = color
+        view.customBorderColor = color
         return view
     }
-    
-    /// 칩의 좌측에 이미지를 추가합니다.
+
+    /// 텍스트 앞에 표시할 콘텐츠를 지정합니다.
     ///
-    /// - Parameter image: 표시할 이미지
+    /// 슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다.
+    /// 시안상 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+    ///
+    /// ```swift
+    /// Chip(text: "김티드")
+    ///     .leadingContent {
+    ///         Image.icon(.bell)
+    ///             .resizable()
+    ///             .renderingMode(.template)
+    ///             .frame(width: 14, height: 14)
+    ///             .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+    ///     }
+    /// ```
+    ///
+    /// - Parameter content: 표시할 뷰를 생성하는 클로저
     /// - Returns: 수정된 칩 인스턴스
-    public func leadingImage(_ image: Image) -> Self {
+    ///
+    /// - Note: 4.0.0에서 제거된 `leadingImage(_:)`·`imageColor(_:)`를 대체합니다.
+    ///   `leadingImage(Image.icon(.bell))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
+    public func leadingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var view = self
-        view.leadingImage = image
+        view.leadingContent = { AnyView(content()) }
         return view
     }
-    
-    /// 칩의 우측에 이미지를 추가합니다.
+
+    /// 텍스트 뒤에 표시할 콘텐츠를 지정합니다.
     ///
-    /// - Parameter image: 표시할 이미지
+    /// 슬롯 뷰는 가공 없이 그대로 배치되므로 크기와 색상은 사용처에서 정합니다.
+    /// 시안상 권장 크기는 `large` 16, `medium`·`small` 14, `xsmall` 12입니다.
+    ///
+    /// ```swift
+    /// Chip(text: "김티드")
+    ///     .trailingContent {
+    ///         Image.icon(.closeThick)
+    ///             .resizable()
+    ///             .renderingMode(.template)
+    ///             .frame(width: 14, height: 14)
+    ///             .foregroundStyle(SwiftUI.Color.semantic(.foregroundNeutralPrimary))
+    ///     }
+    /// ```
+    ///
+    /// - Parameter content: 표시할 뷰를 생성하는 클로저
     /// - Returns: 수정된 칩 인스턴스
-    public func trailingImage(_ image: Image) -> Self {
+    ///
+    /// - Note: 4.0.0에서 제거된 `trailingImage(_:)`·`imageColor(_:)`를 대체합니다.
+    ///   `trailingImage(Image.icon(.closeThick))`은 이 슬롯에서 아이콘을 직접 구성하는 형태로 옮겨집니다.
+    public func trailingContent<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Self {
         var view = self
-        view.trailingImage = image
+        view.trailingContent = { AnyView(content()) }
         return view
     }
 }
 
 private extension Chip {
+    var isDisabled: Bool { isEnabled == false }
+
     var backgroundColor: SwiftUI.Color {
-        if disable {
+        if isDisabled {
             switch variant {
             case .solid:
-                return .semantic(.interactionDisable)
+                return .semantic(.surfaceDisablePrimary)
             case .outlined:
                 return .clear
             }
         } else if active {
-            switch variant {
-            case .solid:
-                return customActiveColor ?? .semantic(.inverseBackground)
-            case .outlined:
-                return .semantic(.primaryNormal).opacity(0.05)
-            }
+            return .semantic(.surfaceBrandSubtle)
         } else {
             switch variant {
             case .solid:
-                return customBackgroundColor ?? .semantic(.fillAlternative)
+                return customBackgroundColor ?? .semantic(.surfaceNeutralTertiary)
             case .outlined:
                 return .clear
             }
@@ -253,100 +302,82 @@ private extension Chip {
     }
     
     var fontColor: SwiftUI.Color {
-        if disable {
-            return .semantic(.labelDisable)
+        if isDisabled {
+            return .semantic(.foregroundDisablePrimary)
         } else if active {
             return activeContentColor
         } else {
-            return customFontColor ?? .semantic(.labelNormal)
-        }
-    }
-    
-    var imageColor: SwiftUI.Color {
-        if disable {
-            return .semantic(.labelDisable)
-        } else if active {
-            return activeContentColor
-        } else {
-            return customImageColor ?? .semantic(.labelAlternative)
+            return customFontColor ?? .semantic(.foregroundNeutralPrimary)
         }
     }
     
     var activeContentColor: SwiftUI.Color {
-        switch variant {
-        case .solid:
-            return .semantic(.inverseLabel)
-        case .outlined:
-            return customActiveColor ?? .semantic(.primaryNormal)
-        }
+        customActiveColor ?? .semantic(.surfaceBrandPrimary)
     }
         
     var borderColor: SwiftUI.Color {
         guard variant == .outlined else { return .clear }
-        if disable {
-            return .semantic(.lineNeutral)
+        if isDisabled {
+            return .semantic(.lineNeutralSecondary)
         } else if active {
-            return (customActiveColor ?? .semantic(.primaryNormal)).opacity(0.43)
+            return (customActiveColor ?? .semantic(.surfaceBrandPrimary)).opacity(.opacity28)
         } else {
-            return .semantic(.lineNeutral)
+            return customBorderColor ?? .semantic(.lineNeutralSecondary)
         }
     }
     
     var currentBorderWidth: CGFloat {
         variant == .outlined ? 1 : 0
     }
+
+    /// 눌림 상태에 적용할 상호작용 강도입니다.
+    ///
+    /// `solid` 칩의 선택(active) 상태는 기본 강도(`.normal`), 그 외에는 약한 강도(`.light`)를 사용합니다.
+    var interactionVariant: Interaction.Variant {
+        variant == .solid && active ? .normal : .light
+    }
     
-    var imageSize: CGFloat {
-        switch size {
-        case .large: return 16
-        case .medium: return 14
-        case .small: return 14
-        case .xsmall: return 12
-        }
+    var interactionColor: Color.Semantic {
+        variant == .solid && active ? .surfaceBrandPrimary : .foregroundNeutralPrimary
     }
     
     var typoVariant: Typography.Variant {
         switch size {
-        case .large: return .body2
-        case .medium: return .label1
-        case .small: return .label1
-        case .xsmall: return .caption1
+        case .large: return .label1
+        case .medium: return .label2
+        case .small: return .caption1
+        case .xsmall: return .caption2
         }
     }
     
     var contentPadding: EdgeInsets {
         switch size {
-        case .large: return EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12)
-        case .medium: return EdgeInsets(top: 7, leading: 11, bottom: 7, trailing: 11)
-        case .small: return EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 8)
-        case .xsmall: return EdgeInsets(top: 4, leading: 7, bottom: 4, trailing: 7)
+        case .large: return EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
+        case .medium: return EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 10)
+        case .small: return EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        case .xsmall: return EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 6)
         }
     }
     
     var contentSpacing: CGFloat {
         switch size {
-        case .large: return 3
-        case .medium: return 3
+        case .large: return 2
+        case .medium: return 2
         case .small: return 2
-        case .xsmall: return 2
+        case .xsmall: return 0
         }
     }
     
     var textPadding: CGFloat {
-        switch size {
-        case .large: return 2.0
-        case .medium: return 2.0
-        case .small: return 2.0
-        case .xsmall: return 1.0
-        }
+        2.0
     }
     
     var cornerRadius: CGFloat {
         switch size {
-        case .large: return 10.0
-        case .medium: return 8.0
-        case .small: return 8.0
-        case .xsmall: return 6.0
+        case .large: return 12.0
+        case .medium: return 10.0
+        case .small: return 10.0
+        case .xsmall: return 8.0
         }
     }
 }

@@ -75,43 +75,63 @@ struct Control: View {
 
     // MARK: - Body
 
+    @Environment(\.isEnabled) private var isEnabled
     @SwiftUI.State private var isPressed = false
-    private var originalToggleSize: CGSize {
-        if #available(iOS 26.0, *) {
-            .init(width: 65, height: 30)
+
+    private var isDisabled: Bool { isEnabled == false }
+
+    @ViewBuilder private var switchThumb: some View {
+        let thumbInset: CGFloat = 2
+        let thumbHeight = boxSize.height - thumbInset * 2
+        if #available(iOS 26, *) {
+            let thumbWidth = thumbHeight * 1.4
+            let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
+            Capsule()
+                .fill(SwiftUI.Color.semantic(.staticWhite))
+                .shadow(color: SwiftUI.Color.black.opacity(.opacity12), radius: 2, x: 0, y: 1)
+                .frame(width: thumbWidth, height: thumbHeight)
+                .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
         } else {
-            .init(width: 51, height: 31)
+            let thumbWidth = thumbHeight
+            let thumbTravel = boxSize.width - thumbWidth - thumbInset * 2
+            Circle()
+                .fill(SwiftUI.Color.semantic(.staticWhite))
+                .shadow(color: SwiftUI.Color.black.opacity(.opacity12), radius: 2, x: 0, y: 1)
+                .frame(width: thumbWidth, height: thumbHeight)
+                .offset(x: state.isUnchecked ? -thumbTravel / 2 : thumbTravel / 2)
         }
     }
 
     var body: some View {
         switch variant {
         case .switch:
-            Toggle(
-                "",
-                isOn: Binding(
-                    get: {
-                        !state.isUnchecked
-                    },
-                    set: {
-                        onSelect?($0 ? .checked : .unchecked)
-                    })
-            )
-            .labelsHidden()
-            .disabled(disable)
-            .tint(backgroundColor)
-            .transformEffect(
-                CGAffineTransform(
-                    scaleX: boxSize.width / originalToggleSize.width,
-                    y: boxSize.height / originalToggleSize.height
-                )
-            )
+            // 네이티브 `Toggle`과 `UISwitch`는 `tintColor`를 커스텀 색으로 바꾸는 순간 iOS 26
+            // Liquid Glass 최적화 경로를 벗어나 on/off 애니메이션 프레임 드랍이 일어나서 커스텀으로 구현했다.
+            // (색을 `.tint`로 주든 `onTintColor`로 주든 동일).
+            ZStack {
+                Capsule()
+                    .fill(SwiftUI.Color.semantic(.lineNeutralPrimary).opacity(isDisabled ? .opacity43 : 1))
+                Capsule()
+                    .fill(backgroundColor)
+            }
             .frame(width: boxSize.width, height: boxSize.height)
-            .offset(
-                CGSize(
-                    width: (originalToggleSize.width - boxSize.width) / 2 - 1,
-                    height: (originalToggleSize.height - boxSize.height) / 2
-                ))
+            .overlay {
+                switchThumb
+            }
+            .animation(.easeOut(duration: 0.2), value: state.isUnchecked)
+            .contentShape(Capsule())
+            .onTapGesture {
+                onSelect?(state.isUnchecked ? .checked : .unchecked)
+            }
+            .accessibilityRepresentation {
+                Toggle(
+                    "",
+                    isOn: Binding(
+                        get: { !state.isUnchecked },
+                        set: { onSelect?($0 ? .checked : .unchecked) })
+                )
+                .labelsHidden()
+            }
         default:
             HStack(alignment: .top, spacing: spacing) {
                 Group {
@@ -137,7 +157,7 @@ struct Control: View {
                     Interaction(
                         state: isPressed ? .pressed : .normal,
                         variant: .normal,
-                        color: .labelNormal
+                        color: .foregroundNeutralPrimary
                     )
                     .clipShape(Circle())
                     .frame(width: interactionSize.width, height: interactionSize.height)
@@ -152,7 +172,6 @@ struct Control: View {
                             }
                     )
                 )
-                .disabled(disable)
 
                 if label.isNotEmpty {
                     Text(label)
@@ -166,7 +185,6 @@ struct Control: View {
                         .padding(.vertical, size == .medium ? 1 : 0)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            guard disable == false else { return }
                             onSelect?(state.isUnchecked ? .checked : .unchecked)
                         }
                 }
@@ -187,7 +205,6 @@ struct Control: View {
     private var labelColor: SwiftUI.Color?
     private var isBold = false
     private var tight = false
-    private var disable = false
 
     /// 레이블 텍스트를 설정합니다.
     ///
@@ -241,8 +258,8 @@ struct Control: View {
     /// 컨트롤을 더 조밀한 레이아웃으로 표시합니다.
     ///
     /// 이 수정자를 적용하면 컨트롤의 가로 너비가 줄어듭니다.
-    /// - medium: 24px → 20px
-    /// - small: 20px → 16px
+    /// - medium: 24pt → 20pt
+    /// - small: 20pt → 16pt
     ///
     /// - Parameter tight: 조밀한 레이아웃 적용 여부, 생략하면 기본값으로 `true` 적용
     /// - Returns: 수정된 컨트롤 인스턴스
@@ -251,18 +268,6 @@ struct Control: View {
     func tight(_ tight: Bool = true) -> Self {
         var zelf = self
         zelf.tight = tight
-        return zelf
-    }
-
-    /// 컨트롤을 비활성화합니다.
-    ///
-    /// 비활성화된 컨트롤은 사용자 상호작용이 불가능하며, 시각적으로도 흐리게 표시됩니다.
-    ///
-    /// - Parameter disable: 비활성화 여부, 생략하면 기본값으로 `true` 적용
-    /// - Returns: 수정된 컨트롤 인스턴스
-    func disable(_ disable: Bool = true) -> Self {
-        var zelf = self
-        zelf.disable = disable
         return zelf
     }
 }
@@ -285,8 +290,8 @@ extension Control {
     fileprivate var iconColor: SwiftUI.Color {
         switch variant {
         case .checkmark:
-            .semantic(state.isUnchecked ? .labelAssistive : .primaryNormal)
-                .opacity(disable ? 0.43 : 1)
+            .semantic(state.isUnchecked ? .foregroundNeutralQuaternary : .surfaceBrandPrimary)
+                .opacity(isDisabled ? .opacity43 : 1)
         case .checkbox, .radio:
             .semantic(.staticWhite)
         case .switch:
@@ -319,14 +324,14 @@ extension Control {
         switch variant {
         case .switch:
             if state.isUnchecked {
-                disable ? .clear : .semantic(.fillStrong)
+                isDisabled ? .clear : .semantic(.surfaceNeutralStrong)
             } else {
-                .semantic(.primaryNormal).opacity(disable ? 0.43 : 1)
+                .semantic(.surfaceBrandPrimary).opacity(isDisabled ? .opacity43 : 1)
             }
         case .checkmark:
             .clear
         case .checkbox, .radio:
-            state.isUnchecked ? .clear : .semantic(.primaryNormal).opacity(disable ? 0.43 : 1)
+            state.isUnchecked ? .clear : .semantic(.surfaceBrandPrimary).opacity(isDisabled ? .opacity43 : 1)
         }
     }
 
@@ -334,7 +339,7 @@ extension Control {
         switch variant {
         case .checkmark, .switch: .clear
         case .checkbox, .radio:
-            .semantic(state.isUnchecked ? .lineNormal : .primaryNormal).opacity(disable ? 0.43 : 1)
+            .semantic(state.isUnchecked ? .lineNeutralPrimary : .surfaceBrandPrimary).opacity(isDisabled ? .opacity43 : 1)
         }
     }
 
@@ -424,7 +429,7 @@ extension Control {
         (
             variant: labelVariant ?? (size == .small ? .label1 : .body2),
             weight: labelWeight ?? .regular,
-            color: disable ? .semantic(.labelDisable) : labelColor ?? .semantic(.labelNormal)
+            color: isDisabled ? .semantic(.foregroundDisablePrimary) : labelColor ?? .semantic(.foregroundNeutralPrimary)
         )
     }
 

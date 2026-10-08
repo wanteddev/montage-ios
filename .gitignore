@@ -4,6 +4,7 @@
 # Allow lowercase `packages/` (npm monorepo) — `/Packages` above matches case-insensitively on macOS
 !/packages
 !/packages/**
+packages/.DS_Store
 /*.xcodeproj
 xcuserdata/
 Derived
@@ -16,3 +17,4 @@ package-lock.json
 node_modules
 docc/
 Sources/Blueprint/Blueprint.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+build_docs.log

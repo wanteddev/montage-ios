@@ -31,19 +31,18 @@ struct TopNavigationPreview: View {
     }
     
     @Environment(\.presentationMode) var presentationMode
-    
-    @State private var showTransparentChecker: Bool = false
+
     @State private var title = "제목"
-    @State var variantIndex: Int = 0
-    @State var leading = false
-    @State var trailing: [TrailingButton] = []
-    @State var toast: Toast.Model?
-    @State var backgroundColor: SwiftUI.Color = .semantic(.backgroundNormal)
-    @State var actionArea = false
-    @State var actionAreaSub = false
-    @State var actionAreaAlt = false
-    @State var actionAreaCaption = false
-    @State var actionAreaExtra = false
+    @State private var variantIndex: Int = 0
+    @State private var leading = false
+    @State private var trailing: [TrailingButton] = []
+    @State private var toast: Toast.Model?
+    @State private var backgroundColor: SwiftUI.Color = .clear
+    @State private var actionArea = false
+    @State private var actionAreaSub = false
+    @State private var actionAreaAlt = false
+    @State private var actionAreaCaption = false
+    @State private var actionAreaExtra = false
     
     private var currentVariant: TopNavigation.Variant {
         let cases = TopNavigation.Variant.allCases
@@ -55,7 +54,7 @@ struct TopNavigationPreview: View {
     }
     
     private var trailingContents: [() -> any View] {
-        return trailing.map {
+        var contents: [() -> any View] = trailing.map {
             switch $0 {
             case .icon: {
                 TopNavigation.TrailingIconButton(
@@ -65,37 +64,46 @@ struct TopNavigationPreview: View {
             }
             case .text: {
                 TopNavigation.TrailingTextButton(
-                    text: isSearchVariant ? "취소" : "알림",
-                    action: {
-                        closure()
-                        focused = false
-                    }
+                    text: "알림",
+                    action: { closure() }
                 )
             }
             }
         }
+        // search variant는 검색 필드가 포커스일 때만 취소 버튼을 검색 필드 바로 옆(맨 앞)에 붙인다.
+        // 옵션에서 추가한 trailing과 따로 두어야 포커스가 바뀔 때 옵션 값이 지워지지 않는다.
+        // TopNavigation은 trailing을 3개까지만 받으므로, 취소 자리를 비우려고 옵션은 앞 2개만 쓴다.
+        if isSearchVariant && focused {
+            contents = Array(contents.prefix(2))
+            contents.insert({
+                TopNavigation.TrailingTextButton(
+                    text: "취소",
+                    action: { focused = false }
+                )
+            }, at: 0)
+        }
+        return contents
     }
     
-    private var actionAreaModel: ActionArea.Model? {
-        if actionArea {
-            .init(
+    private var actionAreaSlot: (() -> ActionArea)? {
+        guard actionArea else { return nil }
+
+        return {
+            ActionArea(
                 variant: .strong(
                     main: .init(text: "메인", action: {}),
                     sub: actionAreaSub ? .init(text: "서브", action: {}) : nil,
                     alternative: actionAreaAlt ? .init(text: "대체", action: {}) : nil
-                ),
-                caption: actionAreaCaption ? "캡션" : nil,
-                extra: {
-                    if actionAreaExtra {
-                        Rectangle()
-                            .foregroundStyle(SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08))
-                            .frame(height: 100)
-                    }
-                },
-                extraDivider: true
+                )
             )
-        } else {
-            nil
+            .caption(actionAreaCaption ? "캡션" : nil)
+            .extra({
+                if actionAreaExtra {
+                    Rectangle()
+                        .foregroundStyle(SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08))
+                        .frame(height: 100)
+                }
+            })
         }
     }
     
@@ -107,125 +115,90 @@ struct TopNavigationPreview: View {
     
     @State private var term = ""
     @State private var focused = false
-    @State private var showPreview = true
-    
+
     var body: some View {
-        SwiftUI.Button("TopNavigation Preview") {
-            showPreview = true
-        }
-        .fullScreenCover(isPresented: $showPreview) {
-            VStack(spacing: 0) {
+        // .navigation 모드: PreviewLayout이 NavigationView·push 버튼·체커 적용까지 담당한다.
+        // preview 클로저는 push되는 미리보기 화면이다.
+        PreviewLayout(mode: .navigation) {
+            preview
+        } options: {
+                SegmentedIndexRow(
+                    "variant",
+                    index: $variantIndex,
+                    labels: TopNavigation.Variant.allCases.map(\.description)
+                )
+                TextFieldOptionRow("title", text: $title)
+                ToggleOptionRow("leadingContent", isOn: $leading)
+                HStack {
+                    Text("trailingContents")
+                    Button(variant: .outlined, size: .small, text: "TextButton") {
+                        trailing.append(.text)
+                    }
+                    Button(variant: .outlined, size: .small, text: "IconButton") {
+                        trailing.append(.icon)
+                    }
+                    IconButton(variant: .outlined(size: .small), icon: .reset) {
+                        trailing = []
+                    }
+                }
+                ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
+                ToggleOptionRow("actionArea", isOn: $actionArea)
+                if actionArea {
+                    HStack {
+                        ToggleOption("sub", isOn: $actionAreaSub)
+                        ToggleOption("alt", isOn: $actionAreaAlt)
+                        ToggleOption("caption", isOn: $actionAreaCaption)
+                        ToggleOption("extra", isOn: $actionAreaExtra)
+                    }
+                }
+            }
+            .toast($toast)
+    }
+
+    var preview: some View {
+        ScreenScaffold(
+            navigation: {
+                TopNavigation()
+                    .backgroundColor(backgroundColor)
+                    .variant(currentVariant)
+                    .title(title)
+                    .trailingContents(trailingContents)
+                    .searchField(
+                        placeholder: "검색하세요",
+                        searchTerm: $term,
+                        focused: $focused,
+                        onSubmit: { print("\(term) 검색됨") }
+                    )
+                    .modifying {
+                        var mutated = $0
+                        if leading {
+                            mutated = mutated.leadingContent {
+                                TopNavigation.LeadingButton(
+                                    .back(action: { presentationMode.wrappedValue.dismiss() })
+                                )
+                            }
+                        }
+                        return mutated
+                    }
+            },
+            actionArea: actionAreaSlot,
+            {
                 VStack(alignment: .leading) {
                     ForEach(0..<Color.Semantic.allCases.count, id: \.self) { index in
                         ZStack {
-                            SwiftUI.Color.semantic(.allCases[index]).opacity(0.3)
+                            SwiftUI.Color.semantic(.allCases[index])
                             Text("Item \(index)")
                                 .padding()
                         }
                     }
                 }
-                .padding(.horizontal)
-                .transparentChecking(
-                    isPresented: showTransparentChecker,
-                    checkerSize: 202,
-                    checkerColor: .red
-                )
-                .topNavigation(
-                    variant: currentVariant,
-                    title: title,
-                    backgroundColor: backgroundColor,
-                    leadingContent: leading ? {
-                        IconButton(icon: .chevronLeft) {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                        .frame(width: 24, height: 24)
-                    } : nil,
-                    trailingContents: trailingContents,
-                    withBottom: actionAreaModel,
-                    searchPlaceholder: "검색하세요",
-                    searchTerm: $term,
-                    searchFocused: $focused
-                ) {
-                    print("\(term) 검색됨")
-                }
-                .onChange(of: focused) { newValue in
-                    if isSearchVariant {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            trailing = newValue ? [.text] : []
-                        }
-                    }
-                }
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Options").bold()
-                        Spacer()
-                        Button(action: {
-                            showPreview = false
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            Image.icon(.flipBackward).foregroundColor(.semantic(.primaryNormal))
-                        }
-                        Button(action: {
-                            showTransparentChecker.toggle()
-                        }) {
-                            Image(systemName: "checkerboard.rectangle")
-                                .foregroundColor(.semantic(.primaryNormal))
-                        }
-                    }
-                    HStack {
-                        Text("variant")
-                        SegmentedControl(selectedIndex: $variantIndex, labels: TopNavigation.Variant.allCases.map(\.description))
-                            .size(.small)
-                    }
-                    HStack {
-                        Text("title")
-                        TextField(text: $title)
-                    }
-                    HStack {
-                        Text("leadingContent")
-                        Switch(checked: leading) { leading = $0 }
-                    }
-                    HStack {
-                        Text("trailingContents")
-                        Button(variant: .outlined, size: .small, text: "TextButton") {
-                            trailing.append(.text)
-                        }
-                        Button(variant: .outlined, size: .small, text: "IconButton") {
-                            trailing.append(.icon)
-                        }
-                        IconButton(variant: .outlined(size: .small), icon: .reset) {
-                            trailing = []
-                        }
-                    }
-                    HStack {
-                        ColorPicker(
-                            "backgroundColor",
-                            selection: $backgroundColor
-                        )
-                    }
-                    HStack {
-                        Text("actionArea")
-                        Switch(checked: actionArea) { actionArea = $0 }
-                    }
-                    if actionArea {
-                        HStack {
-                            Text("sub")
-                            Switch(checked: actionAreaSub) { actionAreaSub = $0 }
-                            Text("alt")
-                            Switch(checked: actionAreaAlt) { actionAreaAlt = $0 }
-                            Text("caption")
-                            Switch(checked: actionAreaCaption) { actionAreaCaption = $0 }
-                            Text("extra")
-                            Switch(checked: actionAreaExtra) { actionAreaExtra = $0 }
-                        }
-                    }
-                }
                 .padding()
-                .background(.regularMaterial)
+                // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
+                .previewCheckered()
             }
-            .toast($toast)
-        }
+        )
+        .backgroundColor(backgroundColor)
+        .animation(.easeInOut(duration: 0.2), value: focused)
     }
 }
 

@@ -7,12 +7,17 @@
 //
 
 import SwiftUI
+
 import Montage
 
 struct ComponentListView: View {
     @StateObject private var coordinator = ComponentListNavigationCoordinator()
     @State var searchText: String = ""
-    
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// 세로 방향 size class. iPhone에서 portrait=`.regular`, landscape=`.compact`로 회전 시 토글되며,
+    /// 측정 지오메트리가 아니라 UIKit trait이라 회전 직후에도 stale되지 않고 갱신된다.
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     var categoryItemSections: [ComponentSection] {
         ComponentCategory.allCases
             .map { category in
@@ -32,37 +37,44 @@ struct ComponentListView: View {
             }
     }
     
-    @FocusState private var searchFocused
-    
     var body: some View {
         NavigationStack(path: $coordinator.path) {
-            ZStack(alignment: .bottom) {
-                if #available(iOS 18.0, *) {
-                    list.searchFocused($searchFocused)
-                } else {
-                    list
-                }
-                (Text("powered by the Wanted Design System, ") + Text("Montage™").bold())
-                    .typography(variant: .caption2, weight: .regular)
-                    .padding(12)
-                    .background {
-                        Capsule()
-                            .foregroundStyle(.ultraThinMaterial)
+            VStack {
+                TopNavigation()
+                    .variant(.display)
+                    .titleView {
+                        HStack {
+                            Text(Bundle.main.appName)
+                                .font(.largeTitle)
+                                .bold()
+                            VStack(alignment: .leading) {
+                                (Text("powered by ") + Text("Montage™").bold())
+                                    .font(.caption2)
+                                    .italic()
+                                Text("version " + Bundle.main.versionString)
+                                    .font(.caption2)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .padding(8)
+                TopNavigation()
+                    .variant(.search)
+                    .searchField(
+                        placeholder: "컴포넌트 검색",
+                        searchTerm: $searchText
+                    )
+                list
             }
-            .navigationTitle("Blueprint")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarHidden(true)
             .navigationDestination(for: Component.self) { componentType in
                 coordinator.destinationView(for: componentType)
                     .navigationTitle(componentType.displayName)
-                    .navigationBarTitleDisplayMode(.inline)
-            }
-            .onAppear {
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                    searchFocused = true
-                }
+                    // Dynamic Type 변경이나 기기 회전(landscape↔portrait)을 런타임에 수행하면,
+                    // SwiftUI가 커스텀 폰트 화면의 컨테이너 레이아웃(줄바꿈·너비 배분)을 다시 계산하지
+                    // 않고 이전 캐시를 재사용해, 옛 너비 구조에 폰트만 커지거나 옛 너비가 유지되어
+                    // 콘텐츠가 화면 밖으로 넘치는 경우가 있다. 레이아웃과 무관한 trait(Dynamic Type
+                    // 크기·세로 size class)이 바뀌면 식별자를 갱신해 강제로 재레이아웃한다.
+                    .id("\(dynamicTypeSize)-\(verticalSizeClass == .compact ? "c" : "r")")
             }
         }
     }
@@ -79,7 +91,7 @@ struct ComponentListView: View {
                                 ComponentItemRow(componentType: componentType)
                             }
                             .listRowInsets(EdgeInsets())
-                            .listRowBackground(Color.semantic(.backgroundNormal))
+                            .listRowBackground(Color.semantic(.backgroundNeutralPrimary))
                         }
                     } header: {
                         Text(categorySet.category.displayName)
@@ -89,9 +101,9 @@ struct ComponentListView: View {
             }
         }
         .listStyle(.plain)
-        .background(Color.semantic(.backgroundNormal))
+        .listRowSpacing(0)
+        .background(Color.semantic(.backgroundNeutralPrimary))
         .scrollContentBackground(.hidden)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
     }
 }
 
@@ -107,7 +119,7 @@ extension ComponentListView {
                 .foregroundStyle(componentType.state.color)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)
-                .background(Color.semantic(.backgroundNormal))
+                .background(Color.semantic(.backgroundNeutralPrimary))
         }
     }
 }
@@ -137,11 +149,11 @@ extension ComponentState: Comparable {
     var color: SwiftUI.Color {
         switch self {
         case .pending:
-            return SwiftUI.Color.semantic(.labelDisable)
+            return SwiftUI.Color.semantic(.foregroundDisablePrimary)
         case .previewNotReady:
-            return SwiftUI.Color.semantic(.statusCautionary)
+            return SwiftUI.Color.semantic(.foregroundCautionaryPrimary)
         case .completed:
-            return SwiftUI.Color.semantic(.statusPositive)
+            return SwiftUI.Color.semantic(.foregroundPositivePrimary)
         }
     }
     
@@ -154,6 +166,26 @@ extension ComponentState: Comparable {
         case .completed:
             return .font(variant: .body1, weight: .bold)
         }
+    }
+}
+
+extension Bundle {
+    var appName: String {
+        infoDictionary?["CFBundleDisplayName"] as? String
+        ?? infoDictionary?["CFBundleName"] as? String
+        ?? "—"
+    }
+    
+    var appVersion: String {
+        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
+    
+    var buildNumber: String {
+        infoDictionary?["CFBundleVersion"] as? String ?? "—"
+    }
+    
+    var versionString: String {
+        "\(appVersion)(\(buildNumber))"
     }
 }
 

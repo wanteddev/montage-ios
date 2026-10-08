@@ -14,8 +14,12 @@ struct PopupPreview: View {
     @State private var itemCountsIndex: Int = 0
 
     @State private var resize: Popup.Resize = .hug
+    @State private var contentVerticalIndex = 0
+    @State private var contentHorizontalIndex = 1
     @State private var navigation = true
     @State private var navVariantIndex = 0
+    @State private var iconButtonBackground = false
+    @State private var searchTerm = ""
 
     @State private var actionArea = true
     @State private var buttonsIndex = 0
@@ -23,108 +27,82 @@ struct PopupPreview: View {
     @State private var extra = false
     @State private var extraDivider = true
 
-    @State private var refreshTask: Task<(), Never>?
-
     var body: some View {
-        SwiftUI.ScrollView {
-            SwiftUI.Button("PUSH") {
-                show = true
+        PreviewLayout {
+            Button(variant: .outlined, text: "Show Preview") {
+                show.toggle()
             }
-            VStack(alignment: .leading) {
-                Text("Options").bold()
-                HStack {
-                    SegmentedControl(
-                        selectedIndex: $itemCountsIndex, labels: itemCounts.map { "\($0)" }
-                    )
-                    .size(.small)
-                    Text("items")
-                }
+        } options: {
+            HStack {
+                SegmentedIndexRow(index: $itemCountsIndex, labels: itemCounts.map { "\($0)" })
+                Text("items")
+            }
 
-                HStack {
-                    Text("resize")
-                    Picker("resize", selection: $resize) {
-                        Text("hug").tag(Popup.Resize.hug)
-                        Text("fixed(300)").tag(Popup.Resize.fixed(300))
-                    }
-                    .pickerStyle(.segmented)
-                }
-                HStack {
-                    Text("navigation")
-                    Switch(checked: navigation) { navigation = $0 }
-                    if navigation {
-                        SegmentedControl(
-                            selectedIndex: $navVariantIndex,
-                            labels: navigationVariants.map(\.description)
-                        )
-                        .size(.small)
-                    }
-                }
+            SegmentedIndexRow("resize", index: Binding(
+                get: { if case .hug = resize { 0 } else { 1 } },
+                set: { resize = $0 == 0 ? .hug : .fixed(300) }
+            ), labels: ["hug", "fixed(300)"])
 
-                HStack {
-                    VStack(alignment: .trailing) {
+            SegmentedIndexRow(
+                "content-v-padding",
+                index: $contentVerticalIndex,
+                labels: contentVerticalPaddings.map(\.label)
+            )
+            SegmentedIndexRow(
+                "content-h-padding",
+                index: $contentHorizontalIndex,
+                labels: contentHorizontalPaddings.map(\.label)
+            )
+
+            HStack {
+                ToggleOption("navigation", isOn: $navigation)
+                if navigation {
+                    SegmentedIndexRow(index: $navVariantIndex, labels: navigationVariants.map(\.description))
+                }
+            }
+            if navigation, navigationVariants[navVariantIndex] == .floating {
+                ToggleOption("icon button background", isOn: $iconButtonBackground)
+            }
+
+            HStack {
+                VStack(alignment: .trailing) {
+                    HStack {
+                        ToggleOption("actionArea", isOn: $actionArea)
+                        Spacer()
+                    }
+                    if actionArea {
+                        SegmentedIndexRow(index: $buttonsIndex, labels: ActionAreaButtons.allCases.map(\.rawValue))
                         HStack {
-                            Text("actionArea")
-                            Switch(checked: actionArea) { actionArea = $0 }
-                            Spacer()
-                        }
-                        if actionArea {
-                            SegmentedControl(
-                                selectedIndex: $buttonsIndex,
-                                labels: ActionAreaButtons.allCases.map(\.rawValue)
-                            )
-                            .size(.small)
-                            HStack {
-                                Text("caption")
-                                Switch(checked: caption) { caption = $0 }
-                                Text("extra")
-                                Switch(checked: extra) { extra = $0 }
-                                if extra {
-                                    Text("divider")
-                                    Switch(checked: extraDivider) { extraDivider = $0 }
-                                }
+                            ToggleOption("caption", isOn: $caption)
+                            ToggleOption("extra", isOn: $extra)
+                            if extra {
+                                ToggleOption("divider", isOn: $extraDivider)
                             }
                         }
                     }
                 }
             }
-            .padding(.horizontal)
-            .onChange(
-                of:
-                    "\(resize)\(navigation)\(navVariantIndex)\(actionArea)\(buttonsIndex)\(caption)\(extra)\(extraDivider)\(itemCountsIndex)"
-            ) { _ in
-                refreshTask?.cancel()
-                refreshTask = Task {
-                    do {
-                        try await Task.sleep(for: .seconds(1))
-                        try Task.checkCancellation()
-                        show = true
-                    } catch {
-                    }
-                }
-            }
-            .onAppear {
-                show = true
-            }
-            .font(.caption)
+        }
+        .onAppear {
+            show = true
         }
         .popup(
             isPresented: $show,
             resize: resize,
-            actionAreaModel: actionArea
-                ? .init(
-                    variant: actionAreaVariant,
-                    caption: caption ? "caption" : nil,
-                    extra: {
-                        if extra {
-                            Rectangle().fill(
-                                SwiftUI.Color.semantic(.accentBackgroundViolet).opacity(0.08)
-                            )
-                            .frame(height: 50)
-                        }
-                    },
-                    extraDivider: extraDivider
-                )
+            contentVerticalPadding: contentVerticalPaddings[contentVerticalIndex].value,
+            contentHorizontalPadding: contentHorizontalPaddings[contentHorizontalIndex].value,
+            navigation: navigation
+                ? {
+                    ModalNavigation()
+                        .variant(navigationVariants[navVariantIndex])
+                        .title("제목")
+                        .searchField(placeholder: "검색어를 입력해 주세요.", searchTerm: $searchTerm)
+                        .leading(.back(action: {}))
+                        .trailings(navigationTrailings)
+                        .iconButtonBackground(iconButtonBackground)
+                }
                 : nil,
+            actionArea: actionArea ? actionAreaSlot : nil,
             {
                 VStack {
                     ForEach(0..<itemCounts[itemCountsIndex], id: \.self) { index in
@@ -134,45 +112,24 @@ struct PopupPreview: View {
                         }
                     }
                 }
-                .background(SwiftUI.Color.semantic(.backgroundNormal))
-            },
-            navigation: navigation
-                ? {
-                    ModalNavigation()
-                        .variant(navigationVariants[navVariantIndex])
-                        .title("제목")
-                        .leadingContent {
-                            TopNavigation.LeadingButton(
-                                .back(action: {})
-                            )
-                        }
-                        .trailingContents(
-                            [
-                                {
-                                    TopNavigation.TrailingIconButton(
-                                        icon: .plus,
-                                        action: {}
-                                    )
-                                },
-                                {
-                                    TopNavigation.TrailingIconButton(
-                                        icon: .minus,
-                                        action: {}
-                                    )
-                                },
-                                {
-                                    TopNavigation.TrailingIconButton(
-                                        icon: .close,
-                                        action: {
-                                            show = false
-                                        }
-                                    )
-                                },
-                            ]
-                        )
-                }
-                : nil
+                .background(SwiftUI.Color.semantic(.backgroundNeutralPrimary))
+            }
         )
+    }
+
+    private var actionAreaSlot: () -> ActionArea {
+        {
+            ActionArea(variant: actionAreaVariant)
+                .caption(caption ? "caption" : nil)
+                .extra({
+                    if extra {
+                        Rectangle().fill(
+                            SwiftUI.Color.semantic(.surfaceAccentVioletOpaque).opacity(0.08)
+                        )
+                        .frame(height: 50)
+                    }
+                }, divider: extraDivider)
+        }
     }
 
     private var actionAreaVariant: ActionArea.Variant {
@@ -219,11 +176,36 @@ struct PopupPreview: View {
         }
     }
 
+    // Popup은 emphasized(기본)·floating·search를 쓴다. normal(가운데 정렬)은 전체 화면 모달 전용이다.
     private let navigationVariants: [ModalNavigation.Variant] = [
-        .normal,
-        .display,
         .emphasized,
         .floating,
+        .search,
+    ]
+
+    // search는 제목 자리에 검색 필드가 들어가 폭이 좁으므로 Figma 예시대로 취소 버튼 하나만 둔다.
+    private var navigationTrailings: [ModalNavigation.Resource.Trailing] {
+        if navigationVariants[navVariantIndex] == .search {
+            [.text("취소", action: { show = false })]
+        } else {
+            [
+                .icon(.plus, action: {}),
+                .icon(.minus, action: {}),
+                .close(action: { show = false }),
+            ]
+        }
+    }
+
+    private let contentVerticalPaddings: [(label: String, value: ModalContentPadding.Vertical)] = [
+        ("none", .none),
+        ("top", .top),
+        ("bottom", .bottom),
+        ("both", .both),
+    ]
+
+    private let contentHorizontalPaddings: [(label: String, value: ModalContentPadding.Horizontal)] = [
+        ("none", .none),
+        ("default", .default),
     ]
 
     private var itemCounts = [1, 5, 20]
