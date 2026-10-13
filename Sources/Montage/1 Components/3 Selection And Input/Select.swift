@@ -478,6 +478,7 @@ public struct Select: View {
             $0.bottomSheet(
                 isPresented: $defaultMenuPresented,
                 resize: menuResize,
+                contentVerticalPadding: .top,
                 actionArea: actionAreaButtonTitle.map { title in
                     {
                         ActionArea(
