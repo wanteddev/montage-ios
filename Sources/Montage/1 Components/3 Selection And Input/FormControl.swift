@@ -591,7 +591,11 @@ private struct FormControlStatusKey: EnvironmentKey {
 
 /// 입력 슬롯에 접근성 라벨/힌트를 선택적으로 연결하는 모디파이어.
 ///
-/// 값이 `nil`인 항목은 슬롯 입력 컴포넌트가 스스로 정의한 접근성 정보를 덮어쓰지 않도록 적용하지 않는다.
+/// 라벨이 `nil`이면 슬롯 입력 컴포넌트가 스스로 정의한 접근성 라벨을 덮어쓰지 않도록 적용하지 않는다.
+///
+/// 힌트(메시지)는 입력 중에 생기고 사라지므로 값이 없어도 빈 힌트로 항상 적용한다.
+/// 있을 때만 `AnyView`로 한 번 더 감싸면 감싼 타입이 바뀌면서 입력 뷰가 새로 만들어져,
+/// 메시지가 나타나거나 사라지는 순간 입력 포커스가 풀린다.
 private struct FormControlAccessibility: ViewModifier {
     let label: String?
     let hint: String?
@@ -601,9 +605,6 @@ private struct FormControlAccessibility: ViewModifier {
         if let label {
             result = AnyView(result.accessibilityLabel(Text(label)))
         }
-        if let hint {
-            result = AnyView(result.accessibilityHint(Text(hint)))
-        }
-        return result
+        return result.accessibilityHint(Text(hint ?? ""))
     }
 }
