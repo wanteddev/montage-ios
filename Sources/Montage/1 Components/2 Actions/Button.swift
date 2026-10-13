@@ -560,8 +560,9 @@ private extension Button {
                 ? .init(top: 10, leading: 10, bottom: 10, trailing: 10)
                 : .init(top: 10, leading: 16, bottom: 10, trailing: 16)
             case .large:
+                // 콘텐츠 높이(22)가 아이콘(20)보다 커서 상하는 13으로 줄여야 48×48 정사각형이 되고 텍스트 버튼 높이(48)와도 맞는다.
                 text == nil && leadingIcon != nil
-                ? .init(top: 14, leading: 14, bottom: 14, trailing: 14)
+                ? .init(top: 13, leading: 14, bottom: 13, trailing: 14)
                 : .init(top: 13, leading: 20, bottom: 13, trailing: 20)
             }
         }
