@@ -385,6 +385,7 @@ public enum Icon: String, CaseIterable {
     case verifiedStar
     case verifiedStarFill
     case video
+    case videoFill
     case webinar
     case wholeWord
     case write
