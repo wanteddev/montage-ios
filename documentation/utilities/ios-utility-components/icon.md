@@ -247,11 +247,6 @@ Button(action: {}) {
 </details>
 <details>
 
-<summary>``case calendarFill``</summary>
-
-</details>
-<details>
-
 <summary>``case calendarPerson``</summary>
 
 </details>
@@ -1793,6 +1788,11 @@ Button(action: {}) {
 <details>
 
 <summary>``case video``</summary>
+
+</details>
+<details>
+
+<summary>``case videoFill``</summary>
 
 </details>
 <details>
