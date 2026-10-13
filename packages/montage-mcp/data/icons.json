@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 357,
+  "count": 358,
   "icons": [
     "agent",
     "agentColor",
@@ -354,6 +354,7 @@
     "verifiedStar",
     "verifiedStarFill",
     "video",
+    "videoFill",
     "webinar",
     "wholeWord",
     "write",
