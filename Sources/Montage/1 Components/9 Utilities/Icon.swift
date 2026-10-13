@@ -75,7 +75,6 @@ public enum Icon: String, CaseIterable {
     case businessBag
     case businessBagFill
     case calendar
-    case calendarFill
     case calendarPerson
     case camera
     case cameraFill
@@ -385,6 +384,7 @@ public enum Icon: String, CaseIterable {
     case verifiedStar
     case verifiedStarFill
     case video
+    case videoFill
     case webinar
     case wholeWord
     case write
