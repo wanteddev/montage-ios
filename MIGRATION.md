@@ -1087,6 +1087,7 @@ You will delete the argument to fix the compile error - check what that spot ren
 | height constraint | fixed `.frame(height:)` | `.frame(minHeight:)` |
 | icon size | large 24 / medium 24·22 / small 20·18 | large 22 / medium 22·20 / small 20·16 / xsmall 16 |
 | typography | one step up per size | adjusted one step down per size |
+| icon-only size (large / medium / small / xsmall) | 48×50 / 38×40 / 32×32 / 28×30 | **48×48 / 40×40 / 32×32 / 28×28** (square, padding equal on all sides) |
 
 **The height constraint moving from fixed to minimum has the widest blast radius.** 3.x truncated a long label to one line (`Some text...`); 4.0 **wraps it and the button grows taller.** Any button with a long label will push the surrounding layout.
 
@@ -1112,6 +1113,7 @@ FilterButton gets a larger radius and less padding, making it rounder and smalle
 | vertical alignment | always `top` | `top` only on `overflow`, `center` otherwise |
 | leading icon size | 22 | large **20** / medium **18** (the 24×24 area is unchanged) |
 | chevron | `IconButton` that highlights on press | plain icon. **No press feedback** (the whole field takes the tap) |
+| menu sheet top padding | - | **24** (the list starts 24 below the sheet handle) |
 
 The alignment change is only visible at larger Dynamic Type sizes. 3.x always aligned to the top, so once the text grew past the leading icon and chevron (24pt), **the icons looked stuck to the top.** 4.0 uses `top` only when the text overflows onto multiple lines and centers it otherwise. The `ListCell`s in the option list also got `verticalAlign(.center)`, so radios and checkboxes sit centered on the label.
 
@@ -1196,9 +1198,9 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **Color tokens** | `accentForegroundBlue`, `Green`, and `Orange` change in both light and dark; the other `accentForeground*` tokens and `materialDimmer` change in dark. See [Tokens whose value also changes](#tokens-whose-value-also-changes) |
 | **RedOrange tokens** | No matching token, so **the color changes whatever you pick.** Find every usage |
 | **Spacing pt28 / pt36** | No matching value, so you pick from 24/32/40 and the layout shifts by 4pt |
-| **Button** | The height constraint moved from fixed to minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius also +2 per size |
+| **Button** | The height constraint moved from fixed to minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius also +2 per size. Icon-only buttons are square: large 48×48, medium 40×40, xsmall 28×28 |
 | **Chip / FilterButton** | Typography drops a step and padding shrinks, so **they get smaller.** Wrap points change in horizontal chip and filter rows |
-| **Select** | min-height goes up, so **the field gets taller.** The border also gets lighter. At large Dynamic Type sizes the leading icon and chevron no longer stick to the top |
+| **Select** | min-height goes up, so **the field gets taller.** The border also gets lighter. At large Dynamic Type sizes the leading icon and chevron no longer stick to the top. The default menu sheet gets 24 of top content padding, so **the sheet grows by up to 24** (less or not at all once it hits its maximum height) |
 | **SegmentedControl** | `outlined` variant removed; those spots fall back to solid |
 | **Popup · BottomSheet** | Corners go from 12 to **24** and from the system default to **32**. Content horizontal padding 20→28, and **vertical padding now defaults to 0**, so modals presented without navigation have their content flush against the top corners |
 | **ModalNavigation** | `.display` removed. `.emphasized` padding goes 20→24 vertical and 16→24 horizontal, `.normal` 10→20 vertical, so **the navigation bar gets taller**. The gap between leading and title goes 20→16, and trailing buttons are spaced 16 apart. Leading/trailing buttons now use `IconButton`'s xlarge (36 container / 24 icon), so **the icons get bigger**, and the press feedback changes from a background highlight to dimming the icon (`dim`). **`.floating` no longer takes up height, so content starts at the top of the modal**, and its padding becomes 24 on all sides |

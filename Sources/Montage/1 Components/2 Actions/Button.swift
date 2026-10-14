@@ -534,12 +534,18 @@ private extension Button {
     }
 
     var contentHeight: CGFloat {
-        switch size {
+        // 아이콘 전용은 텍스트 줄 높이 대신 아이콘 높이를 써야 상하좌우 패딩이 같아 정사각형이 된다.
+        if isIconOnly && variant != .text { return iconSize.height }
+        return switch size {
         case .xsmall: 16
         case .small: variant == .text ? 20 : 16
         case .medium: variant == .text ? 22 : 20
         case .large: 22
         }
+    }
+
+    private var isIconOnly: Bool {
+        text == nil && leadingIcon != nil
     }
 
     var edgeInsets: EdgeInsets {
@@ -548,19 +554,19 @@ private extension Button {
         } else {
             switch size {
             case .xsmall:
-                text == nil && leadingIcon != nil
+                isIconOnly
                 ? .init(top: 7, leading: 7, bottom: 7, trailing: 7)
                 : .init(top: 6, leading: 10, bottom: 6, trailing: 10)
             case .small:
-                text == nil && leadingIcon != nil
+                isIconOnly
                 ? .init(top: 8, leading: 8, bottom: 8, trailing: 8)
                 : .init(top: 8, leading: 12, bottom: 8, trailing: 12)
             case .medium:
-                text == nil && leadingIcon != nil
-                ? .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+                isIconOnly
+                ? .init(top: 11, leading: 11, bottom: 11, trailing: 11)
                 : .init(top: 10, leading: 16, bottom: 10, trailing: 16)
             case .large:
-                text == nil && leadingIcon != nil
+                isIconOnly
                 ? .init(top: 14, leading: 14, bottom: 14, trailing: 14)
                 : .init(top: 13, leading: 20, bottom: 13, trailing: 20)
             }
