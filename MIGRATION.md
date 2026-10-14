@@ -1087,7 +1087,7 @@ You will delete the argument to fix the compile error - check what that spot ren
 | height constraint | fixed `.frame(height:)` | `.frame(minHeight:)` |
 | icon size | large 24 / medium 24·22 / small 20·18 | large 22 / medium 22·20 / small 20·16 / xsmall 16 |
 | typography | one step up per size | adjusted one step down per size |
-| icon-only large size | - | **48×48** (same 48 height as a text large button) |
+| icon-only size (large / medium / small / xsmall) | 48×50 / 38×40 / 32×32 / 28×30 | **48×48 / 40×40 / 32×32 / 28×28** (square, padding equal on all sides) |
 
 **The height constraint moving from fixed to minimum has the widest blast radius.** 3.x truncated a long label to one line (`Some text...`); 4.0 **wraps it and the button grows taller.** Any button with a long label will push the surrounding layout.
 
@@ -1198,7 +1198,7 @@ The `ActionArea` horizontal 24 applies only inside `Popup` and `BottomSheet`. An
 | **Color tokens** | `accentForegroundBlue`, `Green`, and `Orange` change in both light and dark; the other `accentForeground*` tokens and `materialDimmer` change in dark. See [Tokens whose value also changes](#tokens-whose-value-also-changes) |
 | **RedOrange tokens** | No matching token, so **the color changes whatever you pick.** Find every usage |
 | **Spacing pt28 / pt36** | No matching value, so you pick from 24/32/40 and the layout shifts by 4pt |
-| **Button** | The height constraint moved from fixed to minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius also +2 per size. Icon-only large is 48×48, the same height as a text button |
+| **Button** | The height constraint moved from fixed to minimum, so **long labels wrap instead of truncating.** The button grows taller and pushes the surrounding layout. radius also +2 per size. Icon-only buttons are square: large 48×48, medium 40×40, xsmall 28×28 |
 | **Chip / FilterButton** | Typography drops a step and padding shrinks, so **they get smaller.** Wrap points change in horizontal chip and filter rows |
 | **Select** | min-height goes up, so **the field gets taller.** The border also gets lighter. At large Dynamic Type sizes the leading icon and chevron no longer stick to the top. The default menu sheet gets 24 of top content padding, so **the sheet grows 24 taller** |
 | **SegmentedControl** | `outlined` variant removed; those spots fall back to solid |
