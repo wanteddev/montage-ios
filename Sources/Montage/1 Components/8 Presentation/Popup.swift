@@ -89,6 +89,13 @@ public struct Popup: View {
                     )
                     .hidesIndicators()
                     .scrollDisabled(!scrollable)
+                    // 스크롤하지 않을 때는 콘텐츠가 움직이지 않으므로, 상하 여백 없이 붙은 입력 필드의 포커스 링이 잘리지 않게 한다.
+                    .modifying { view in
+                        if #available(iOS 17.0, *) {
+                            return view.scrollClipDisabled(!scrollable)
+                        }
+                        return view
+                    }
 
                     navigationView
                 }

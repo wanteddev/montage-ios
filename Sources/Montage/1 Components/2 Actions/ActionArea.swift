@@ -99,11 +99,16 @@ public struct ActionArea: View, KeyboardReadable {
                 Buttons(variant)
             }
             .padding(.horizontal, modalKind.actionAreaHorizontalPadding)
-            .padding(.bottom, isKeyboardVisible ? 20 : 0)
+            .padding(.bottom, keyboardBottomPadding)
             .background(backgroundColor)
             .animation(.easeInOut(duration: 0.5), value: hidesBackground)
         }
         .onReceive(keyboardPublisher) { isKeyboardVisible = $0 }
+    }
+
+    /// 키보드 위에 붙을 때 버튼 아래 여백. 팝업은 키보드와 떨어져 떠 있고 아래 여백을 스스로 주므로 더하지 않는다.
+    private var keyboardBottomPadding: CGFloat {
+        isKeyboardVisible && modalKind != .popup ? 20 : 0
     }
 
     // MARK: - Modifiers
