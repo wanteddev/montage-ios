@@ -21,10 +21,9 @@ inheritance: false
 reviews:
   # CodeRabbit이 남긴 지적이 모두 해결되면 자동으로 Approve한다
   request_changes_workflow: true
-  # 워크스루 안에 변경 요약을 함께 넣는다
+  # 변경 요약을 PR 본문이 아니라 워크스루 댓글에 넣는다. 사람이 쓴 PR 본문을 CodeRabbit이 고치지 않게 하기 위함
+  # 워크스루는 기본값(collapse_walkthrough: true)대로 접혀 있어서 요약도 함께 접힌다
   high_level_summary_in_walkthrough: true
-  # 워크스루 댓글을 접지 않고 펼쳐 둔다
-  collapse_walkthrough: false
   # 리뷰 진행 중 표시되는 운세 문구를 끈다
   in_progress_fortune: false
   # 리뷰가 오류(타임아웃·서버 오류)로 중단되면 PR 체크를 실패로 표시한다. 리뷰 누락을 알아채기 위함
