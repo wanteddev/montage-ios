@@ -78,6 +78,9 @@ knowledge_base:
     filePatterns:
       - files: "CONTRIBUTING.md,DOCUMENTATION_GUIDELINES.ko.md"
         applyTo: "Sources/**/*.swift"
+  # Linear는 쓰지 않는다. chat.integrations.linear와 별개라 리뷰 맥락에서도 따로 꺼야 한다
+  linear:
+    usage: disabled
   # PR 제목·브랜치에서 이 프로젝트의 Jira 키를 찾아 티켓을 연결한다
   jira:
     project_keys:
