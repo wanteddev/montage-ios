@@ -28,6 +28,8 @@ reviews:
   in_progress_fortune: false
   # 리뷰가 오류(타임아웃·서버 오류)로 중단되면 PR 체크를 실패로 표시한다. 리뷰 누락을 알아채기 위함
   fail_commit_status: true
+  # PR 제목에 "@coderabbitai"를 넣으면 이 지침으로 제목을 생성한다
+  auto_title_instructions: Swift/iOS 프로젝트의 변경사항을 명확하고 간결하게 표현하는 제목을 한국어로 생성한다.
   auto_review:
     # Draft PR도 리뷰한다. Ready 전환 전에 지적을 미리 받기 위함
     drafts: true
@@ -52,10 +54,6 @@ reviews:
     - "!documentation/**"
     - "!packages/montage-mcp/data/**"
     - "!THIRD_PARTY_LICENSES.md"
-  tools:
-    # 개인정보 탐지 도구. 기존 웹 UI 설정에서 꺼져 있던 값을 유지한다
-    presidio:
-      enabled: false
 
 chat:
   # 채팅 답글에 ASCII 아트를 넣지 않는다
