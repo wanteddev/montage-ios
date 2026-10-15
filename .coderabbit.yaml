@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://www.coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit 설정. 기본값과 다른 값만 적는다.
+# - 리뷰 기준은 CLAUDE.md(기본으로 읽힘)와 아래 code_guidelines 문서가 SSOT다.
+#   규칙을 바꿀 때는 이 파일이 아니라 해당 문서를 고친다.
+# - 전체 옵션과 기본값: https://docs.coderabbit.ai/reference/configuration
+
+# 리뷰·채팅 언어
+language: ko-KR
+# 리뷰 말투. 최대 250자
+tone_instructions: >-
+  시니어 iOS 개발자 동료로서 챕터 개발자가 더 나은 코드를 쓰도록 돕는다.
+  문제의 원인과 개선 방향을 클린코드 관점에서 구체적으로 설명하고, 관련 개념과 공식 문서를 함께 추천한다.
+  비판보다 "이런 방법은 어떨까요?"처럼 제안하고, 잘한 부분은 짧고 위트 있게 칭찬한다.
+# 정식 출시 전 기능을 먼저 받는다
+early_access: true
+# 웹 UI(org·repo) 설정을 상속하지 않는다. 이 파일이 유일한 설정이다
+inheritance: false
+
+reviews:
+  # CodeRabbit이 남긴 지적이 모두 해결되면 자동으로 Approve한다
+  request_changes_workflow: true
+  # 워크스루 안에 변경 요약을 함께 넣는다
+  high_level_summary_in_walkthrough: true
+  # 워크스루 댓글을 접지 않고 펼쳐 둔다
+  collapse_walkthrough: false
+  # 리뷰 진행 중 표시되는 운세 문구를 끈다
+  in_progress_fortune: false
+  # 리뷰가 오류(타임아웃·서버 오류)로 중단되면 PR 체크를 실패로 표시한다. 리뷰 누락을 알아채기 위함
+  fail_commit_status: true
+  auto_review:
+    # Draft PR도 리뷰한다. Ready 전환 전에 지적을 미리 받기 위함
+    drafts: true
+    # WIP 레이블이 달린 PR은 자동 리뷰하지 않는다
+    labels:
+      - "!WIP"
+    # main 외에 release/x.x.x 등 다른 브랜치를 base로 한 PR도 리뷰한다
+    base_branches:
+      - ".*"
+  # 리뷰에서 제외할 경로
+  path_filters:
+    # 빌드 산출물
+    - "!**/.build/**"
+    - "!**/xcuserdata/**"
+    - "!**/DerivedData/**"
+    - "!**/*.xcodeproj/project.xcworkspace/**"
+    # CI가 빌드머신 Xcode로 생성해 커밋하는 문서 산출물(CLAUDE.md "Documentation Workflow")
+    - "!documentation/**"
+    - "!packages/montage-mcp/data/**"
+    - "!THIRD_PARTY_LICENSES.md"
+  tools:
+    # 개인정보 탐지 도구. 기존 웹 UI 설정에서 꺼져 있던 값을 유지한다
+    presidio:
+      enabled: false
+
+chat:
+  # 채팅 답글에 ASCII 아트를 넣지 않는다
+  art: false
+  integrations:
+    # PR에 연결된 Jira 티켓 내용을 리뷰 맥락으로 쓴다
+    jira:
+      usage: enabled
+    # Linear는 쓰지 않는다
+    linear:
+      usage: disabled
+
+knowledge_base:
+  # learnings: PR 답글로 CodeRabbit에 가르친 규칙. CodeRabbit 서버에 저장된다
+  # global = 원티드 org 전체 레포가 공유한다
+  # 반복해서 쓰이는 learning은 CLAUDE.md 등 문서로 옮겨 git에 남긴다
+  learnings:
+    scope: global
+  # 리뷰 기준 문서. CLAUDE.md는 기본으로 읽히고, 여기 적은 패턴이 추가된다
+  # files의 문서를 applyTo 경로의 파일을 리뷰할 때 기준으로 쓴다
+  code_guidelines:
+    filePatterns:
+      - files: "CONTRIBUTING.md,DOCUMENTATION_GUIDELINES.ko.md"
+        applyTo: "Sources/**/*.swift"
+  # PR 제목·브랜치에서 이 프로젝트의 Jira 키를 찾아 티켓을 연결한다
+  jira:
+    project_keys:
+      - PI
+      - WRP
+      - LIVE
+
+# "@coderabbitai generate docstrings" 실행 시 쓰는 지침
+code_generation:
+  docstrings:
+    # 기존 docstring이 한국어라 맞춘다(웹 UI 설정은 en-US였음)
+    language: ko-KR
+    path_instructions:
+      - path: "Sources/Montage/**/*.swift"
+        instructions: DOCUMENTATION_GUIDELINES.ko.md를 따른다.
