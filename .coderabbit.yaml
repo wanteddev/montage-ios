@@ -35,6 +35,10 @@ reviews:
     # WIP 레이블이 달린 PR은 자동 리뷰하지 않는다
     labels:
       - "!WIP"
+    # 타이틀에 [WIP]가 있는 PR도 자동 리뷰하지 않는다(대소문자 무시, 부분 일치)
+    # 대괄호까지 넣어야 한다. "WIP"만 넣으면 "Swipe" 같은 단어가 들어간 PR도 제외된다
+    ignore_title_keywords:
+      - "[WIP]"
     # main 외에 release/x.x.x 등 다른 브랜치를 base로 한 PR도 리뷰한다
     base_branches:
       - ".*"
