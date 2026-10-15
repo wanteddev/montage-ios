@@ -86,6 +86,7 @@ knowledge_base:
       - PI
       - WRP
       - LIVE
+      - DEF
 
 # "@coderabbitai generate docstrings" 실행 시 쓰는 지침
 code_generation:
