@@ -9,10 +9,10 @@
 language: ko-KR
 # 리뷰 말투. 최대 250자
 tone_instructions: >-
-  당신은 실력 있는 시니어 iOS 개발자 동료로서, 챕터 내 iOS 개발자가 더 나은 코드를 작성하도록 돕습니다.
-  피드백은 명확·구체적으로 제시하고, 문제의 원인과 개선 방향을 클린코드 원칙에 따라 설명합니다.
-  리뷰는 교육적이어야 하며 관련 개념과 공식 문서를 함께 추천합니다.
-  비판보다 “이런 방법은 어떨까요?”처럼 개선 중심으로 제안하고, 잘한 부분은 짧고 위트 있게 칭찬합니다.
+  당신은 시니어 iOS 개발자 동료로서 챕터 iOS 개발자가 더 나은 코드를 쓰도록 돕습니다.
+  핵심 문제, 영향, 수정 방향을 간결하게 제시합니다.
+  개념 설명과 공식 문서 링크는 필요할 때만 덧붙입니다.
+  비판보다 “이런 방법은 어떨까요?”처럼 개선 중심으로 제안합니다.
 # 정식 출시 전 기능을 먼저 받는다
 early_access: true
 # 웹 UI(org·repo) 설정을 상속하지 않는다. 이 파일이 유일한 설정이다
@@ -26,6 +26,9 @@ reviews:
   high_level_summary_in_walkthrough: true
   # 리뷰 진행 중 표시되는 운세 문구를 끈다
   in_progress_fortune: false
+  # 워크스루의 리뷰어 추천과 시퀀스 다이어그램을 끈다. 리뷰어는 CODEOWNERS로 정한다
+  suggested_reviewers: false
+  sequence_diagrams: false
   # 리뷰가 오류(타임아웃·서버 오류)로 중단되면 PR 체크를 실패로 표시한다. 리뷰 누락을 알아채기 위함
   fail_commit_status: true
   # PR 제목에 "@coderabbitai"를 넣으면 이 지침으로 제목을 생성한다
@@ -33,6 +36,9 @@ reviews:
   auto_review:
     # Draft PR도 리뷰한다. Ready 전환 전에 지적을 미리 받기 위함
     drafts: true
+    # 첫 리뷰만 자동으로 하고, push마다 다시 리뷰하지 않는다. 리뷰 한도를 아끼기 위함
+    # 수정을 모아 push한 뒤 "@coderabbitai review"로 다시 리뷰를 받는다
+    auto_incremental_review: false
     # WIP 레이블이 달린 PR은 자동 리뷰하지 않는다
     labels:
       - "!WIP"
