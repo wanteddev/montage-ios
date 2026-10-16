@@ -156,4 +156,4 @@ Breaking change가 들어가는 PR은 마이그레이션 가이드를 **같은 P
 - 브랜치: `main`에서 분기하여 `main`으로 PR, 두 개 이상의 버전을 한 번에 작업할 때는 `release/x.x.x`에서 분기하여 `release/x.x.x`로 PR
 - 문서 생성물은 CI가 PR에 자동으로 커밋한다
 - GitHub Actions 워크플로우 yml 파일 수정 PR은 거부될 수 있음
-- `.coderabbit.yaml`을 수정했으면 푸시 후 `/idw:coderabbit-board`를 실행해 챕터 CodeRabbit 설정 현황 페이지를 갱신한다
+- `.coderabbit.yaml`을 수정했으면 푸시 후 `/idw:coderabbit-board`를 실행해 챕터 CodeRabbit 설정 현황 페이지를 갱신한다 (원티드 사내 `ios-dev-workflow` 플러그인 필요. 외부 기여자는 건너뛴다)
