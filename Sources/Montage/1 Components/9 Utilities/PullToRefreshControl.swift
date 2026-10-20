@@ -44,7 +44,11 @@ public final class PullToRefreshControl: UIRefreshControl {
         logoView.backgroundBehavior = .pauseAndRestore
         addSubview(logoView)
         loadAnimation()
-        addAction(UIAction { [weak self] _ in self?.startRefreshingAnimation() }, for: .valueChanged)
+        // 사용자가 당겨 갱신할 때만 햅틱을 낸다. UIRefreshControl은 자체 햅틱이 없다.
+        addAction(UIAction { [weak self] _ in
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            self?.startRefreshingAnimation()
+        }, for: .valueChanged)
         if #available(iOS 17, *) {
             registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _) in
                 self.reloadForStyleChange()
@@ -144,7 +148,12 @@ public final class PullToRefreshControl: UIRefreshControl {
     }
 
     private func reloadForStyleChange() {
+        // 애니메이션을 교체하면 진행도가 0으로 돌아간다. 당기는 중이면 그 위치를 유지한다.
+        let progress = logoView.currentProgress
         loadAnimation()
+        if phase == .pulling {
+            logoView.currentProgress = progress
+        }
         // 갱신 중 다크 모드가 바뀌면 애니메이션 교체로 재생이 멈춘다. 확대 모션이 끝난 뒤라면 다시 돌린다.
         if phase == .refreshing, logoView.transform == .identity {
             logoView.play(fromProgress: 0, toProgress: 1, loopMode: .loop)
