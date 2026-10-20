@@ -56,7 +56,10 @@ public struct Popup: View {
     @State private var navigationHeight: CGFloat = 0
     @State private var contentHeight: CGFloat = 0
     @State private var actionAreaHeight: CGFloat = 0
-    @State private var contentOffset: CGFloat = 0
+    /// ``ModalNavigation`` 배경 농도에 쓰는 스크롤 오프셋. 농도가 바뀌는 구간만 받는다.
+    @State private var navigationScrollOffset: CGFloat = 0
+    /// 오프셋이 `.zero`일 때 콘텐츠를 아직 재지 않았으면 끝에 닿은 것으로 판정되므로 `true`에서 시작한다.
+    @State private var scrolledToBottom = true
 
     private let popupMaxHeight: CGFloat = min(760, UIScreen.main.bounds.height - 40)
 
@@ -65,29 +68,34 @@ public struct Popup: View {
         ZStack(alignment: .top) {
             VStack(spacing: 0) {
                 ZStack(alignment: .top) {
-                    ScrollView(
-                        onOffsetChanged: {
-                            contentOffset = $0.y
-                        },
-                        content: {
-                            VStack(spacing: 0) {
-                                SwiftUI.Color.clear
-                                    .frame(height: reservedNavigationHeight)
-                                HStack(spacing: 0) {
-                                    Spacer(minLength: 0)
-                                    content()
-                                        .padding(contentEdgeInsets)
-                                        .onGeometryChange(
-                                            for: CGFloat.self,
-                                            of: { $0.size.height },
-                                            action: { contentHeight = $0 }
-                                        )
-                                    Spacer(minLength: 0)
-                                }
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            SwiftUI.Color.clear
+                                .frame(height: reservedNavigationHeight)
+                            HStack(spacing: 0) {
+                                Spacer(minLength: 0)
+                                content()
+                                    .padding(contentEdgeInsets)
+                                    .onGeometryChange(
+                                        for: CGFloat.self,
+                                        of: { $0.size.height },
+                                        action: { contentHeight = $0 }
+                                    )
+                                Spacer(minLength: 0)
                             }
                         }
-                    )
+                    }
                     .hidesIndicators()
+                    .onScrollOffsetChange(for: CGFloat.self) { offset in
+                        ModalNavigation.clampedScrollOffset(offset.y)
+                    } action: { _, newValue in
+                        navigationScrollOffset = newValue
+                    }
+                    .onScrollOffsetChange(for: Bool.self) { offset in
+                        isScrolledToBottom(offset: offset.y)
+                    } action: { _, newValue in
+                        scrolledToBottom = newValue
+                    }
                     .scrollDisabled(!scrollable)
                     // 스크롤하지 않을 때는 콘텐츠가 움직이지 않으므로, 상하 여백 없이 붙은 입력 필드의 포커스 링이 잘리지 않게 한다.
                     .modifying { view in
@@ -222,7 +230,7 @@ public struct Popup: View {
         Group {
             if let navigation {
                 navigation()
-                    .scrollOffset($contentOffset)
+                    .scrollOffset($navigationScrollOffset)
             }
         }
         .onGeometryChange(
@@ -284,13 +292,13 @@ public struct Popup: View {
     /// @2x·@3x 화면에서 1pt는 2~3픽셀이므로, 1픽셀에도 못 미치는 레이아웃 오차로 판정이 뒤집히지 않도록 둔다.
     private static let bottomOffsetTolerance: CGFloat = 0.5
 
-    /// `contentOffset`은 최상단에서 0이고 아래로 스크롤할수록 음수가 되므로,
+    /// `offset`은 최상단에서 0이고 아래로 스크롤할수록 음수가 되므로,
     /// 스크롤 끝 오프셋은 `viewportHeight - popupContentHeight`가 된다.
     ///
     /// 비교는 `CGFloat`로 직접 한다. `Int` 변환은 세 값의 소수부를 각각 버리기 때문에
     /// 실제로 끝에 닿은 상황에서도 판정이 최대 1pt 어긋날 수 있다.
-    private var scrolledToBottom: Bool {
-        contentOffset <= viewportHeight - popupContentHeight + Self.bottomOffsetTolerance
+    private func isScrolledToBottom(offset: CGFloat) -> Bool {
+        offset <= viewportHeight - popupContentHeight + Self.bottomOffsetTolerance
     }
 
     private var scrollable: Bool {

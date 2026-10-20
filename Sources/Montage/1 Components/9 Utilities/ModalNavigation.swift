@@ -492,11 +492,23 @@ extension ModalNavigation {
     var overlaysContent: Bool { variant.isFloating }
 }
 
+extension ModalNavigation {
+    /// 배경이 완전히 불투명해지는 스크롤 거리.
+    static let opaqueScrollDistance: CGFloat = 32
+
+    /// 배경 농도가 바뀌는 구간(0 \~ -32)만 남긴 스크롤 오프셋.
+    ///
+    /// ``Popup``·``BottomSheet``는 이 값만 상태로 들고 있어, 그 밖에서 스크롤할 때는 다시 그려지지 않는다.
+    static func clampedScrollOffset(_ offset: CGFloat) -> CGFloat {
+        min(0, max(-opaqueScrollDistance, offset))
+    }
+}
+
 private extension ModalNavigation {
     /// 스크롤에 따른 배경 불투명도. 스크롤 오프셋이 0(스크롤이 최상단)이면 배경이 없고 32pt 스크롤하면 불투명해진다.
     /// `floating`도 같다. 콘텐츠 위에 떠 있어 스크롤 오프셋이 0일 때 배경이 있으면 아래 이미지를 가린다.
     var backgroundOpacity: CGFloat {
-        let ratio = (scrollOffset / -32)
+        let ratio = (scrollOffset / -ModalNavigation.opaqueScrollDistance)
         return fixedBackgroundOpacity ?? max(0, min(1, ratio))
     }
     

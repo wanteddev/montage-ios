@@ -108,9 +108,8 @@ public struct ScreenScaffold<Content: View>: View {
 
     @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
 
-    /// ``ScrollContainer/builtIn``에서 스캐폴드가 직접 재는 스크롤 상태.
-    @State private var scrollStatus = ScrollView.ScrollStatus()
-    /// ``ScrollContainer/custom``에서 콘텐츠가 preference로 올려 준 값.
+    /// 스크롤 컨테이너가 preference로 올려 준 값. ``ScrollContainer/builtIn``은 스캐폴드의
+    /// ``ScrollView``가, ``ScrollContainer/custom``은 콘텐츠가 올린다.
     @State private var reportedScrollOffset: CGFloat?
     @State private var reportedScrollReachedEnd: Bool?
     /// ``TopNavigation``이 차지하는 높이. 콘텐츠 상단 여백이 이 값을 따른다.
@@ -156,7 +155,7 @@ private extension ScreenScaffold {
     var contentLayer: some View {
         switch scrollContainer {
         case .builtIn:
-            ScrollView(scrollStatus: $scrollStatus) {
+            ScrollView {
                 content()
             }
             .background(backgroundColor ?? .clear)
@@ -203,18 +202,13 @@ private extension ScreenScaffold {
     var effectiveScrollOffset: CGFloat {
         switch scrollContainer {
         case .builtIn:
-            scrollStatus.contentOffset.y
+            reportedScrollOffset ?? 0
         case .custom:
             reportedScrollOffset ?? -safeAreaInsets.top
         }
     }
 
     var effectiveScrollReachedEnd: Bool? {
-        switch scrollContainer {
-        case .builtIn:
-            scrollStatus.reachedEnd
-        case .custom:
-            reportedScrollReachedEnd
-        }
+        reportedScrollReachedEnd
     }
 }

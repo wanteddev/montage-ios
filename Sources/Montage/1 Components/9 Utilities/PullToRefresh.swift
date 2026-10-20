@@ -288,13 +288,22 @@ extension View {
     /// - Returns: 풀-투-리프레시 기능이, 추가된 뷰
     ///
     /// - Note: iOS 18 이상에서 사용 가능합니다.
-    /// ```swift
-    /// @State private var scrollStatus = ScrollView.ScrollStatus()
     ///
-    /// ScrollView(scrollStatus: $scrollStatus) {
+    /// ``ScrollView``는 ``ScrollView/onRefresh(_:)``가 이 수정자를 대신 붙여 주므로,
+    /// 직접 붙이는 건 `SwiftUI.ScrollView`처럼 오프셋을 따로 재야 하는 경우입니다.
+    ///
+    /// ```swift
+    /// @State private var scrollYOffset: CGFloat = 0
+    ///
+    /// SwiftUI.ScrollView {
     ///     content
     /// }
-    /// .pullToRefresh(scrollYOffset: $scrollStatus.contentOffset.y) {
+    /// .onScrollGeometryChange(for: CGFloat.self) { geometry in
+    ///     -(geometry.contentOffset.y + geometry.contentInsets.top)
+    /// } action: { _, newValue in
+    ///     scrollYOffset = newValue
+    /// }
+    /// .pullToRefresh(scrollYOffset: $scrollYOffset) {
     ///     await loadData()
     /// }
     /// ```

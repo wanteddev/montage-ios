@@ -94,7 +94,9 @@ public struct BottomSheet: View {
     @State private var navigationHeight: CGFloat = 0
     @State private var contentHeight: CGFloat = 0
     @State private var actionAreaHeight: CGFloat = 0
-    @State private var scrollStatus: ScrollView.ScrollStatus = .init()
+    /// ``ModalNavigation`` 배경 농도에 쓰는 스크롤 오프셋. 농도가 바뀌는 구간만 받는다.
+    @State private var navigationScrollOffset: CGFloat = 0
+    @State private var scrollReachedEnd = true
     @State private var isContentMeasured = false
     
     /// 뷰의 내용과 동작을 정의합니다.
@@ -112,7 +114,7 @@ public struct BottomSheet: View {
                 }
                 if isContentScrollable {
                     ZStack(alignment: .top) {
-                        ScrollView(scrollStatus: $scrollStatus) {
+                        ScrollView {
                             VStack(spacing: 0) {
                                 SwiftUI.Color.clear
                                     .frame(height: reservedNavigationHeight)
@@ -122,6 +124,14 @@ public struct BottomSheet: View {
                                     Spacer(minLength: 0)
                                 }
                             }
+                        }
+                        .onScrollOffsetChange(for: CGFloat.self) { offset in
+                            ModalNavigation.clampedScrollOffset(offset.y)
+                        } action: { _, newValue in
+                            navigationScrollOffset = newValue
+                        }
+                        .onPreferenceChange(ScrollReachedEndPreferenceKey.self) {
+                            scrollReachedEnd = $0 ?? true
                         }
                         
                         navigationView
@@ -293,7 +303,7 @@ public struct BottomSheet: View {
     /// 스크롤이 없는 시트는 가려진 콘텐츠도 없으므로 바닥에 닿은 것으로 본다.
     /// (`nil`을 내리면 "신호 없음"이 되어 ``ActionArea``가 그라데이션을 그린다)
     private var contentScrollReachedEnd: Bool {
-        isContentScrollable ? scrollStatus.reachedEnd : true
+        isContentScrollable ? scrollReachedEnd : true
     }
 
     @ViewBuilder
@@ -301,7 +311,7 @@ public struct BottomSheet: View {
         Group {
             if let navigation {
                 navigation()
-                    .scrollOffset($scrollStatus.contentOffset.y)
+                    .scrollOffset($navigationScrollOffset)
                     .needHandleArea(needHandle)
             }
         }
