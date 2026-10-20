@@ -2161,6 +2161,53 @@
       "nestedTypes": []
     },
     {
+      "slug": "pulltorefreshcontrol",
+      "name": "PullToRefreshControl",
+      "category": "uncategorized",
+      "kind": "class",
+      "declaration": "class PullToRefreshControl",
+      "summary": "PullToRefresh의 로고 모션을 입힌 UIKit용 UIRefreshControl입니다.",
+      "initializers": [
+        {
+          "signature": "init()"
+        }
+      ],
+      "modifiers": [
+        {
+          "name": "beginRefreshing()",
+          "signature": "func beginRefreshing()",
+          "summary": "",
+          "kind": "method"
+        },
+        {
+          "name": "didMoveToSuperview()",
+          "signature": "func didMoveToSuperview()",
+          "summary": "",
+          "kind": "method"
+        },
+        {
+          "name": "endRefreshing()",
+          "signature": "func endRefreshing()",
+          "summary": "",
+          "kind": "method"
+        },
+        {
+          "name": "layoutSubviews()",
+          "signature": "func layoutSubviews()",
+          "summary": "",
+          "kind": "method"
+        },
+        {
+          "name": "traitCollectionDidChange(_:)",
+          "signature": "func traitCollectionDidChange(UITraitCollection?)",
+          "summary": "",
+          "kind": "method"
+        }
+      ],
+      "staticMembers": [],
+      "nestedTypes": []
+    },
+    {
       "slug": "pushbadge",
       "name": "PushBadge",
       "category": "feedback",
