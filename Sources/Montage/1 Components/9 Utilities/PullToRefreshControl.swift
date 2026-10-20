@@ -25,8 +25,9 @@ import UIKit
 /// - Note: `tintColor`는 시스템 스피너를 숨기는 데 쓰므로 바꾸지 않습니다.
 public final class PullToRefreshControl: UIRefreshControl {
     private enum Phase {
-        // settling: 당긴 채로 갱신이 끝나 로고가 사라진 상태. 스크롤이 제자리로 돌아올 때까지 다시 그리지 않는다.
-        case pulling, refreshing, ending, settling
+        // waitingToEnd: 손가락을 대고 있는 동안 갱신이 끝난 상태. 놓을 때까지 로고를 유지한다(PullToRefresh와 같은 동작).
+        // settling: 로고가 사라진 뒤에도 아직 당겨져 있는 상태. 스크롤이 제자리로 돌아올 때까지 다시 그리지 않는다.
+        case pulling, refreshing, waitingToEnd, ending, settling
     }
 
     private static let logoSize = CGSize(width: 48, height: 36)
@@ -37,6 +38,7 @@ public final class PullToRefreshControl: UIRefreshControl {
     private let logoView = LottieAnimationView()
     private var phase = Phase.pulling
     private var offsetObservation: NSKeyValueObservation?
+    private weak var observedScrollView: UIScrollView?
 
     override public init() {
         super.init()
@@ -75,12 +77,23 @@ public final class PullToRefreshControl: UIRefreshControl {
 
     override public func didMoveToSuperview() {
         super.didMoveToSuperview()
-        offsetObservation = (superview as? UIScrollView)?
+        observedScrollView?.panGestureRecognizer.removeTarget(self, action: #selector(handlePan(_:)))
+        let scrollView = superview as? UIScrollView
+        observedScrollView = scrollView
+        scrollView?.panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
+        offsetObservation = scrollView?
             .observe(\.contentOffset) { [weak self] scrollView, _ in
                 MainActor.assumeIsolated {
                     self?.updatePullProgress(in: scrollView)
                 }
             }
+    }
+
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        guard phase == .waitingToEnd,
+              gesture.state == .ended || gesture.state == .cancelled || gesture.state == .failed
+        else { return }
+        finishRefreshing()
     }
 
     override public func layoutSubviews() {
@@ -96,8 +109,17 @@ public final class PullToRefreshControl: UIRefreshControl {
     }
 
     override public func endRefreshing() {
+        // 손가락을 대고 있으면 놓을 때 끝낸다. 지금 끝내면 놓기 전에 로고가 사라진다.
+        if phase == .refreshing || phase == .waitingToEnd, observedScrollView?.isTracking == true {
+            phase = .waitingToEnd
+            return
+        }
+        finishRefreshing()
+    }
+
+    private func finishRefreshing() {
         super.endRefreshing()
-        guard phase == .refreshing else { return }
+        guard phase == .refreshing || phase == .waitingToEnd else { return }
         phase = .ending
         UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut]) {
             self.logoView.alpha = 0
@@ -140,7 +162,7 @@ public final class PullToRefreshControl: UIRefreshControl {
             UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut]) {
                 self.logoView.transform = .identity
             } completion: { _ in
-                guard self.phase == .refreshing else { return }
+                guard self.phase == .refreshing || self.phase == .waitingToEnd else { return }
                 self.logoView.play(fromProgress: 0, toProgress: 1, loopMode: .loop)
             }
         }
@@ -168,7 +190,7 @@ public final class PullToRefreshControl: UIRefreshControl {
             logoView.currentProgress = progress
         }
         // 갱신 중 다크 모드가 바뀌면 애니메이션 교체로 재생이 멈춘다. 확대 모션이 끝난 뒤라면 다시 돌린다.
-        if phase == .refreshing, logoView.transform == .identity {
+        if phase == .refreshing || phase == .waitingToEnd, logoView.transform == .identity {
             logoView.play(fromProgress: 0, toProgress: 1, loopMode: .loop)
         }
     }
