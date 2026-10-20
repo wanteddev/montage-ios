@@ -25,7 +25,8 @@ import UIKit
 /// - Note: `tintColor`는 시스템 스피너를 숨기는 데 쓰므로 바꾸지 않습니다.
 public final class PullToRefreshControl: UIRefreshControl {
     private enum Phase {
-        case pulling, refreshing, ending
+        // settling: 당긴 채로 갱신이 끝나 로고가 사라진 상태. 스크롤이 제자리로 돌아올 때까지 다시 그리지 않는다.
+        case pulling, refreshing, ending, settling
     }
 
     private static let logoSize = CGSize(width: 48, height: 36)
@@ -103,13 +104,25 @@ public final class PullToRefreshControl: UIRefreshControl {
         } completion: { _ in
             // 사라지는 도중 다시 당겨 갱신이 시작됐으면 그쪽 상태를 덮어쓰지 않는다.
             guard self.phase == .ending else { return }
-            self.resetToPulling()
+            // 아직 당긴 상태면 바로 당김 모션으로 돌아가지 않는다. 남은 거리만큼 로고가 다시 그려졌다가 지워지기 때문이다.
+            if let scrollView = self.superview as? UIScrollView, Self.pulledDistance(in: scrollView) > 0 {
+                self.phase = .settling
+            } else {
+                self.resetToPulling()
+            }
         }
     }
 
+    private static func pulledDistance(in scrollView: UIScrollView) -> CGFloat {
+        -(scrollView.contentOffset.y + scrollView.adjustedContentInset.top)
+    }
+
     private func updatePullProgress(in scrollView: UIScrollView) {
+        let pulled = Self.pulledDistance(in: scrollView)
+        if phase == .settling, pulled <= 0 {
+            resetToPulling()
+        }
         guard phase == .pulling else { return }
-        let pulled = -(scrollView.contentOffset.y + scrollView.adjustedContentInset.top)
         let ratio = (pulled - Self.animationStart) / (Self.animationEnd - Self.animationStart)
         logoView.currentProgress = min(max(ratio, 0), 1)
     }
