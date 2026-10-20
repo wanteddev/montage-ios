@@ -47,28 +47,28 @@ struct ModalNavigationPreview: View {
 
     var preview: some View {
         ZStack(alignment: .top) {
-            ScrollView(
-                onOffsetChanged: { offset in
-                    contentOffset = offset.y
-                },
-                content: {
-                    SwiftUI.Color.clear
-                        .frame(height: scrollViewTopPadding)
+            ScrollView {
+                SwiftUI.Color.clear
+                    .frame(height: scrollViewTopPadding)
 
-                    LazyVStack(spacing: 0) {
-                        ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
-                            ZStack {
-                                SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
-                                Text("Item \(index)")
-                                    .padding()
-                            }
+                LazyVStack(spacing: 0) {
+                    ForEach(0..<Color.Semantic.allCases.count*2, id: \.self) { index in
+                        ZStack {
+                            SwiftUI.Color.semantic(.allCases[index % Color.Semantic.allCases.count]).opacity(0.3)
+                            Text("Item \(index)")
+                                .padding()
                         }
                     }
-                    .padding(.horizontal)
-                    // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
-                    .previewCheckered()
                 }
-            )
+                .padding(.horizontal)
+                // 체커를 스크롤 콘텐츠에 붙여 함께 움직이게 한다(콘텐츠 범위가 드러난다).
+                .previewCheckered()
+            }
+            .onScrollOffsetChange(for: CGFloat.self) { offset in
+                offset.y
+            } action: { _, newValue in
+                contentOffset = newValue
+            }
 
             VStack {
                 ModalNavigation(scrollOffset: $contentOffset)

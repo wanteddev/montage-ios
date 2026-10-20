@@ -11,14 +11,11 @@ import Montage
 struct PullToRefreshPreview: View {
     @State private var data: [Int] = Array(0...100)
     @State private var seconds: String = "3"
-    @State private var scrollYOffset: CGFloat = 0
     @FocusState private var inputFieldFocused: Bool
 
     var body: some View {
         PreviewLayout(mode: .floating) {
-            ScrollView(onOffsetChanged: { offset in
-                scrollYOffset = offset.y
-            }) {
+            ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible())]) {
                     ForEach(data, id: \.self) { index in
                         HStack {
