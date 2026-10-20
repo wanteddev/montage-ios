@@ -47,7 +47,7 @@ public final class PullToRefreshControl: UIRefreshControl {
         addAction(UIAction { [weak self] _ in self?.startRefreshingAnimation() }, for: .valueChanged)
         if #available(iOS 17, *) {
             registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _) in
-                self.loadAnimation()
+                self.reloadForStyleChange()
             }
         }
     }
@@ -64,7 +64,7 @@ public final class PullToRefreshControl: UIRefreshControl {
         if #unavailable(iOS 17),
            traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle
         {
-            loadAnimation()
+            reloadForStyleChange()
         }
     }
 
@@ -82,6 +82,12 @@ public final class PullToRefreshControl: UIRefreshControl {
         super.layoutSubviews()
         logoView.bounds = CGRect(origin: .zero, size: Self.logoSize)
         logoView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+    }
+
+    // 코드로 시작한 갱신은 .valueChanged가 오지 않으므로 여기서 로고를 돌린다.
+    override public func beginRefreshing() {
+        super.beginRefreshing()
+        startRefreshingAnimation()
     }
 
     override public func endRefreshing() {
@@ -135,6 +141,10 @@ public final class PullToRefreshControl: UIRefreshControl {
         let motion = phase == .pulling ? "pull" : "pulse"
         let style = traitCollection.userInterfaceStyle == .dark ? "dark" : "light"
         logoView.animation = .named("pullToRefresh-\(motion)-\(style)", bundle: .module)
+    }
+
+    private func reloadForStyleChange() {
+        loadAnimation()
         // 갱신 중 다크 모드가 바뀌면 애니메이션 교체로 재생이 멈춘다. 확대 모션이 끝난 뒤라면 다시 돌린다.
         if phase == .refreshing, logoView.transform == .identity {
             logoView.play(fromProgress: 0, toProgress: 1, loopMode: .loop)
