@@ -2345,6 +2345,18 @@
       "summary": "스크롤 상태 추적과 오프셋 감지가 가능한 커스텀 스크롤 뷰입니다.",
       "initializers": [
         {
+          "signature": "init(content:)-2nozf"
+        },
+        {
+          "signature": "init(content:)-3sc7c"
+        },
+        {
+          "signature": "init(geometry:content:)"
+        },
+        {
+          "signature": "init(onOffsetChanged:content:)"
+        },
+        {
           "signature": "init(scrollStatus:onOffsetChanged:content:)"
         }
       ],
@@ -2366,10 +2378,58 @@
           "signature": "func onRefresh(() async -> Void) -> ScrollView",
           "summary": "당겨서 새로고침 동작을 설정합니다.",
           "kind": "method"
+        },
+        {
+          "name": "onScrollOffsetChange(for:transform:action:)",
+          "signature": "func onScrollOffsetChange<T>(for: T.Type, transform: (_ offset: CGPoint) -> T, action: (_ oldValue: T, _ newValue: T) -> Void) -> ScrollView",
+          "summary": "스크롤 오프셋에서 뽑은 값이 바뀔 때 동작을 실행합니다.",
+          "kind": "method"
         }
       ],
       "staticMembers": [],
       "nestedTypes": [
+        {
+          "name": "ScrollView.Geometry",
+          "kind": "class",
+          "summary": "스크롤 뷰의 상태를 담는 관찰 가능한 객체입니다.",
+          "initializers": [
+            {
+              "signature": "init()"
+            }
+          ],
+          "instanceProperties": [
+            {
+              "name": "axis",
+              "signature": "var axis: Axis",
+              "summary": "스크롤 방향",
+              "kind": "property"
+            },
+            {
+              "name": "contentOffset",
+              "signature": "var contentOffset: CGPoint",
+              "summary": "콘텐츠 오프셋. 최상단에서 0이고 스크롤할수록 음수가 됩니다",
+              "kind": "property"
+            },
+            {
+              "name": "contentSize",
+              "signature": "var contentSize: CGSize",
+              "summary": "콘텐츠 크기",
+              "kind": "property"
+            },
+            {
+              "name": "reachedEnd",
+              "signature": "var reachedEnd: Bool",
+              "summary": "스크롤이 끝(세로는 바닥, 가로는 오른쪽 끝)에 도달했는지 여부입니다.",
+              "kind": "property"
+            },
+            {
+              "name": "scrollViewSize",
+              "signature": "var scrollViewSize: CGSize",
+              "summary": "스크롤 뷰 크기",
+              "kind": "property"
+            }
+          ]
+        },
         {
           "name": "ScrollView.ScrollStatus",
           "kind": "struct",
