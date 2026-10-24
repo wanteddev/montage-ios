@@ -39,3 +39,12 @@ export function readMarkdown(name: string): string {
   fileCache.set(name, content);
   return content;
 }
+
+export function replaceMarkdown(name: string, content: string): void {
+  fileCache.set(name, content);
+}
+
+/** Test helper — drops replaced entries so the next read re-reads the bundled files. */
+export function _resetMarkdownForTests(): void {
+  fileCache.clear();
+}

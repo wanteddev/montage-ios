@@ -1,5 +1,7 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { logWarn } from "./logger.js";
+import { sanitizeUrl } from "./redact.js";
 
 export const PACKAGE_NAME = "@wanteddev/montage-ios-mcp";
 export const PACKAGE_VERSION = "0.3.0";
@@ -13,9 +15,16 @@ export interface RuntimeConfig {
   queuePath: string;
   debug: boolean;
   port: number;
+  /** Base URL serving the `data/` tree (no trailing slash). */
+  dataUrl: string;
+  /** Remote data refresh interval in seconds. `0` disables remote loading (bundled data only). */
+  dataRefreshSec: number;
 }
 
 const DEFAULT_QUEUE_FILENAME = "queue.jsonl";
+export const DEFAULT_DATA_URL =
+  "https://raw.githubusercontent.com/wanteddev/montage-ios/main/packages/montage-mcp/data";
+export const DEFAULT_DATA_REFRESH_SEC = 600;
 
 function defaultQueuePath(): string {
   // Container/server scope can override via MONTAGE_MCP_QUEUE_PATH (e.g. /data/queue.jsonl).
@@ -27,6 +36,35 @@ function parsePort(raw: string | undefined): number {
   const n = Number(raw);
   if (Number.isInteger(n) && n >= 1 && n <= 65535) return n;
   return 3000;
+}
+
+const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1"]);
+
+/** https only; plain http is accepted for loopback hosts (local testing). */
+function parseDataUrl(raw: string | undefined): string {
+  const trimmed = raw?.trim();
+  if (!trimmed) return DEFAULT_DATA_URL;
+  let url: URL;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    logWarn("MONTAGE_MCP_DATA_URL is not a valid URL — using default", { value: sanitizeUrl(trimmed) });
+    return DEFAULT_DATA_URL;
+  }
+  const allowed =
+    url.protocol === "https:" || (url.protocol === "http:" && LOOPBACK_HOSTS.has(url.hostname));
+  if (!allowed) {
+    logWarn("MONTAGE_MCP_DATA_URL must use https — using default", { value: sanitizeUrl(trimmed) });
+    return DEFAULT_DATA_URL;
+  }
+  return trimmed.replace(/\/+$/, "");
+}
+
+function parseRefreshSec(raw: string | undefined): number {
+  if (raw === undefined || raw.trim() === "") return DEFAULT_DATA_REFRESH_SEC;
+  const n = Number(raw);
+  if (Number.isInteger(n) && n >= 0) return n;
+  return DEFAULT_DATA_REFRESH_SEC;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig {
@@ -55,6 +93,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): RuntimeConfig 
     queuePath: env.MONTAGE_MCP_QUEUE_PATH?.trim() || defaultQueuePath(),
     debug: env.MONTAGE_MCP_DEBUG === "1",
     port: parsePort(env.PORT),
+    dataUrl: parseDataUrl(env.MONTAGE_MCP_DATA_URL),
+    dataRefreshSec: parseRefreshSec(env.MONTAGE_MCP_DATA_REFRESH_SEC),
   };
 }
 

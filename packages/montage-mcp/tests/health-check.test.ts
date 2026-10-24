@@ -14,4 +14,12 @@ describe("health_check", () => {
     expect(body.version).toMatch(/^\d+\.\d+\.\d+/);
     expect(body.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
+
+  it("reports the data source", async () => {
+    const tool = healthCheckTool({ config: loadConfig({}), transport: "stdio" });
+    const body = JSON.parse((await tool.handler({})).content[0]!.text);
+    expect(body.data.source).toBe("bundled");
+    expect(body.data).toHaveProperty("baseUrl");
+    expect(body.data).toHaveProperty("lastSuccessAt");
+  });
 });
