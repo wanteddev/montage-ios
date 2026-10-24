@@ -7,6 +7,7 @@
  *   "transport": "http" | "stdio",
  *   "platform": "ios",
  *   "clientId": "...",
+ *   "deviceId": "...",          // authenticated user email (HTTP + Google auth only)
  *   "timestamp": "2026-04-30T10:00:00.000Z",
  *   "params": { ... },          // omitted when the tool call had no params
  *   "metadata": { ... }         // duration_ms, status, error_class, version, etc.
@@ -18,6 +19,7 @@ export interface TrackEvent {
   transport: "stdio" | "http";
   platform: "ios";
   clientId: string;
+  deviceId?: string;
   timestamp: string;
   params?: Record<string, unknown>;
   metadata: {

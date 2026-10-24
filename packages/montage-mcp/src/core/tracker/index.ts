@@ -18,6 +18,7 @@ export interface Tracker {
     durationMs: number;
     ok: boolean;
     errorClass?: string;
+    deviceId?: string;
   }): void;
   start(): void;
   stop(): void;
@@ -67,6 +68,7 @@ class TrackerImpl implements Tracker {
     durationMs: number;
     ok: boolean;
     errorClass?: string;
+    deviceId?: string;
   }): void {
     if (!trackingEnabled(this.cfg)) {
       logDebug("tracker.track skipped — tracking disabled", { toolName: input.tool });
@@ -89,11 +91,13 @@ class TrackerImpl implements Tracker {
       metadata,
     };
     if (params) event.params = params;
+    if (input.deviceId) event.deviceId = input.deviceId;
     logDebug("tracker.track enqueue", {
       toolName: event.toolName,
       transport: event.transport,
       platform: event.platform,
       clientId: maskClientId(event.clientId),
+      deviceIdSet: event.deviceId !== undefined,
       timestamp: event.timestamp,
       params: event.params ? redactObject(event.params) : undefined,
       metadata: event.metadata,

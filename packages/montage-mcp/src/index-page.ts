@@ -3,7 +3,7 @@ import { PACKAGE_NAME, PACKAGE_VERSION } from "./core/config.js";
 const REPO_URL = "https://github.com/wanteddev/montage-ios";
 const PUBLIC_ORIGIN = "https://montage-ios.lab.wntd.co";
 
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
