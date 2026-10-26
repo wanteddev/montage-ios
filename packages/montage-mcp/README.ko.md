@@ -76,7 +76,7 @@ claude mcp add montage-ios -- node /절대경로/montage-ios/packages/montage-mc
 
 ### 인증 (HTTP, 옵트인)
 
-`MONTAGE_MCP_AUTH=google`이면 montage-web MCP와 같은 방식의 Google OAuth를 붙입니다. 이 서버가 MCP OAuth 인가 서버 역할을 하고, 로그인은 Google(`wantedlab.com` 계정만)에 위임하며, 발급한 Firebase ID 토큰을 Bearer 토큰으로 검증합니다. 클라이언트 등록 정보와 refresh token은 Firestore(`clients`, `refreshTokens` 컬렉션)에 저장합니다.
+`MONTAGE_MCP_AUTH=google`이면 montage-web MCP와 같은 방식의 Google OAuth를 붙입니다. 이 서버가 MCP OAuth 인가 서버 역할을 하고, 로그인은 Google(`wantedlab.com` 계정만)에 위임하며, 발급한 Firebase ID 토큰을 Bearer 토큰으로 검증합니다. 클라이언트 등록 정보와 refresh token은 Firestore에 저장합니다. 기본 컬렉션 이름은 `ios_clients`, `ios_refreshTokens`이고, `ios_` 접두사는 `MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX`로 바꿀 수 있습니다.
 
 - 인증 대상: `/mcp`(POST/GET/DELETE), `/sse`, `/messages`. `/`, `/healthz`는 공개.
 - 추가 경로: `/.well-known/oauth-authorization-server`, `/.well-known/oauth-protected-resource`, `/authorize`, `/token`, `/register`, `/oauth/consent`, `/oauth/google/callback`.

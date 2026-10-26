@@ -76,7 +76,7 @@ The server starts from the `data/` bundled with the package, then fetches `compo
 
 ### Authentication (HTTP, opt-in)
 
-With `MONTAGE_MCP_AUTH=google` the server adds Google OAuth the same way the montage-web MCP does. It acts as the MCP OAuth authorization server, delegates login to Google (`wantedlab.com` accounts only), and verifies the issued Firebase ID token as the Bearer token. Client registrations and refresh tokens are stored in Firestore (`clients`, `refreshTokens` collections).
+With `MONTAGE_MCP_AUTH=google` the server adds Google OAuth the same way the montage-web MCP does. It acts as the MCP OAuth authorization server, delegates login to Google (`wantedlab.com` accounts only), and verifies the issued Firebase ID token as the Bearer token. Client registrations and refresh tokens are stored in Firestore (`ios_clients`, `ios_refreshTokens` collections by default; the `ios_` prefix comes from `MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX`).
 
 - Protected: `/mcp` (POST/GET/DELETE), `/sse`, `/messages`. `/` and `/healthz` stay public.
 - Added routes: `/.well-known/oauth-authorization-server`, `/.well-known/oauth-protected-resource`, `/authorize`, `/token`, `/register`, `/oauth/consent`, `/oauth/google/callback`.
