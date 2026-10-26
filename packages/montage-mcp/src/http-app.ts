@@ -3,15 +3,19 @@ import express, {
   type Express,
   type NextFunction,
   type Request,
+  type RequestHandler,
   type Response,
 } from "express";
+import { mcpAuthRouter, getOAuthProtectedResourceMetadataUrl } from "@modelcontextprotocol/sdk/server/auth/router.js";
+import { requireBearerAuth } from "@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { PACKAGE_NAME, PACKAGE_VERSION, type RuntimeConfig } from "./core/config.js";
-import { createServer } from "./core/server.js";
+import { createServer, type ServerContext } from "./core/server.js";
 import { logDebug, logError } from "./core/logger.js";
+import { authenticatedEmail, type HttpAuth } from "./http-auth.js";
 import { renderIndexPage } from "./index-page.js";
 
 /**
@@ -29,19 +33,56 @@ function jsonRpcError(code: number, message: string): Record<string, unknown> {
   return { jsonrpc: "2.0", error: { code, message }, id: null };
 }
 
+/**
+ * A live transport plus the email of the user who opened it. With auth off the
+ * owner is always `undefined`, so ownership checks pass exactly as before.
+ */
+interface Session<T> {
+  transport: T;
+  owner: string | undefined;
+}
+
+/** Resolve a session only for its owner; another user's id behaves like an unknown one. */
+function ownedTransport<T>(
+  sessions: Map<string, Session<T>>,
+  sessionId: string,
+  req: Request,
+): T | undefined {
+  const session = sessions.get(sessionId);
+  if (!session) return undefined;
+  if (session.owner !== authenticatedEmail(req)) {
+    logDebug("session rejected — owned by another user", { sessionId });
+    return undefined;
+  }
+  return session.transport;
+}
+
 function sessionIdOf(req: Request): string | undefined {
   const raw = req.headers["mcp-session-id"];
   return typeof raw === "string" && raw.length > 0 ? raw : undefined;
 }
 
-export function createApp(config: RuntimeConfig): Express {
+export interface CreateAppOptions {
+  /** When set, MCP endpoints require a Bearer token (see `./http-auth.ts`). */
+  auth?: HttpAuth;
+}
+
+export function createApp(config: RuntimeConfig, options: CreateAppOptions = {}): Express {
   const app = express();
+  const { auth } = options;
+
+  // Per-session server context. The authenticated email doubles as the
+  // tracker's deviceId so usage can be attributed per user.
+  const serverContext = (req: Request): ServerContext => {
+    const email = authenticatedEmail(req);
+    return { config, transport: "http", ...(email ? { deviceId: email } : {}) };
+  };
 
   // Note: the legacy SSE transport requires raw POST body delivery via
   // handlePostMessage. express.json() is therefore registered AFTER /messages,
   // and /mcp opts into JSON parsing per-route.
-  const sseTransports = new Map<string, SSEServerTransport>();
-  const streamableTransports = new Map<string, StreamableHTTPServerTransport>();
+  const sseTransports = new Map<string, Session<SSEServerTransport>>();
+  const streamableTransports = new Map<string, Session<StreamableHTTPServerTransport>>();
 
   app.get("/", (req: Request, res: Response) => {
     const forwardedProto = req.headers["x-forwarded-proto"];
@@ -63,12 +104,38 @@ export function createApp(config: RuntimeConfig): Express {
     });
   });
 
+  // --- OAuth (opt-in) ---------------------------------------------------------
+  // `/` and `/healthz` above stay public; every MCP transport route below is
+  // guarded. With auth off, `requireAuth` is empty and routing is unchanged.
+  const requireAuth: RequestHandler[] = [];
+  if (auth) {
+    // The auth router rate-limits per client IP; trust the ingress hops so the
+    // limit keys on X-Forwarded-For instead of the proxy address.
+    app.set("trust proxy", auth.trustProxyHops);
+    // Metadata (/.well-known/*), /authorize, /token, /register.
+    app.use(
+      mcpAuthRouter({
+        provider: auth.provider,
+        issuerUrl: auth.issuerUrl,
+        scopesSupported: ["openid", "email", "profile"],
+      }),
+    );
+    app.get("/oauth/google/callback", auth.handleGoogleCallback);
+    app.post("/oauth/consent", express.urlencoded({ extended: false }), auth.handleConsent);
+    requireAuth.push(
+      requireBearerAuth({
+        verifier: auth.provider,
+        resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(auth.issuerUrl),
+      }),
+    );
+  }
+
   // --- Streamable HTTP (current MCP spec) -----------------------------------
 
-  app.post("/mcp", express.json(), async (req: Request, res: Response) => {
+  app.post("/mcp", ...requireAuth, express.json(), async (req: Request, res: Response) => {
     const sessionId = sessionIdOf(req);
     try {
-      let transport = sessionId ? streamableTransports.get(sessionId) : undefined;
+      let transport = sessionId ? ownedTransport(streamableTransports, sessionId, req) : undefined;
 
       if (!transport) {
         if (sessionId) {
@@ -84,10 +151,11 @@ export function createApp(config: RuntimeConfig): Express {
           return;
         }
 
+        const owner = authenticatedEmail(req);
         const created = new StreamableHTTPServerTransport({
           sessionIdGenerator: () => randomUUID(),
           onsessioninitialized: (sid) => {
-            streamableTransports.set(sid, created);
+            streamableTransports.set(sid, { transport: created, owner });
             logDebug("mcp session opened", { sessionId: sid });
           },
           onsessionclosed: (sid) => {
@@ -103,7 +171,7 @@ export function createApp(config: RuntimeConfig): Express {
           }
         };
 
-        const server = createServer({ config, transport: "http" });
+        const server = createServer(serverContext(req));
         // SDK typing quirk: StreamableHTTPServerTransport exposes `onclose`/`onerror`
         // as accessors returning `T | undefined`, which `exactOptionalPropertyTypes`
         // rejects against Transport's optional members. Runtime shape is compatible.
@@ -129,7 +197,7 @@ export function createApp(config: RuntimeConfig): Express {
       res.status(400).json(jsonRpcError(-32000, "mcp-session-id header required"));
       return;
     }
-    const transport = streamableTransports.get(sessionId);
+    const transport = ownedTransport(streamableTransports, sessionId, req);
     if (!transport) {
       logDebug(`/mcp ${req.method} rejected — session not found`, { sessionId });
       res.status(404).json(jsonRpcError(-32001, "session not found"));
@@ -146,8 +214,8 @@ export function createApp(config: RuntimeConfig): Express {
     }
   };
 
-  app.get("/mcp", handleStreamableSessionRequest);
-  app.delete("/mcp", handleStreamableSessionRequest);
+  app.get("/mcp", ...requireAuth, handleStreamableSessionRequest);
+  app.delete("/mcp", ...requireAuth, handleStreamableSessionRequest);
 
   // express.json() rejects a malformed body before the route handlers run, so their
   // try/catch never sees it and Express would answer with its default HTML error page.
@@ -163,9 +231,9 @@ export function createApp(config: RuntimeConfig): Express {
 
   // --- Legacy HTTP+SSE (deprecated, kept for backward compatibility) --------
 
-  app.get("/sse", async (_req: Request, res: Response) => {
+  app.get("/sse", ...requireAuth, async (req: Request, res: Response) => {
     const transport = new SSEServerTransport("/messages", res);
-    sseTransports.set(transport.sessionId, transport);
+    sseTransports.set(transport.sessionId, { transport, owner: authenticatedEmail(req) });
     const heartbeat = setInterval(() => {
       try {
         res.write(": ping\n\n");
@@ -185,7 +253,7 @@ export function createApp(config: RuntimeConfig): Express {
     });
 
     try {
-      const server = createServer({ config, transport: "http" });
+      const server = createServer(serverContext(req));
       await server.connect(transport);
     } catch (err) {
       clearInterval(heartbeat);
@@ -197,14 +265,14 @@ export function createApp(config: RuntimeConfig): Express {
     }
   });
 
-  app.post("/messages", async (req: Request, res: Response) => {
+  app.post("/messages", ...requireAuth, async (req: Request, res: Response) => {
     const sessionId = req.query.sessionId;
     if (typeof sessionId !== "string") {
       logDebug("/messages rejected — missing sessionId");
       res.status(400).json({ error: "sessionId query parameter required" });
       return;
     }
-    const transport = sseTransports.get(sessionId);
+    const transport = ownedTransport(sseTransports, sessionId, req);
     if (!transport) {
       logDebug("/messages rejected — session not found", { sessionId });
       res.status(404).json({ error: "session not found" });

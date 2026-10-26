@@ -4,6 +4,7 @@ import { PACKAGE_NAME } from "./config.js";
  * Stderr logger gated by `MONTAGE_MCP_DEBUG=1`.
  *
  * - `logDebug` is silent unless debug is enabled (call `configureLogger` once at boot).
+ * - `logInfo` / `logWarn` always emit — reserved for one-off boot facts and misconfiguration.
  * - `logError` always emits, regardless of debug — tracking must surface failures.
  *
  * All writes go to stderr so stdio MCP transport (stdout) stays clean.
@@ -35,6 +36,14 @@ function now(): string {
 export function logDebug(msg: string, meta?: Record<string, unknown>): void {
   if (!debugEnabled) return;
   process.stderr.write(`${now()} [${PACKAGE_NAME}] ${msg}${format(meta)}\n`);
+}
+
+export function logInfo(msg: string, meta?: Record<string, unknown>): void {
+  process.stderr.write(`${now()} [${PACKAGE_NAME}] INFO ${msg}${format(meta)}\n`);
+}
+
+export function logWarn(msg: string, meta?: Record<string, unknown>): void {
+  process.stderr.write(`${now()} [${PACKAGE_NAME}] WARN ${msg}${format(meta)}\n`);
 }
 
 export function logError(msg: string, err?: unknown, meta?: Record<string, unknown>): void {

@@ -12,6 +12,8 @@ import { redactObject } from "./redact.js";
 export interface ServerContext {
   config: RuntimeConfig;
   transport: "stdio" | "http";
+  /** Authenticated user (lowercased email) — set only when HTTP auth is enabled. */
+  deviceId?: string;
 }
 
 export function createServer(ctx: ServerContext): Server {
@@ -89,6 +91,7 @@ export function createServer(ctx: ServerContext): Server {
         durationMs,
         ok,
         ...(errorClass ? { errorClass } : {}),
+        ...(ctx.deviceId ? { deviceId: ctx.deviceId } : {}),
       });
     }
   });

@@ -58,6 +58,46 @@ claude mcp add montage-ios -- node /절대경로/montage-ios/packages/montage-mc
 | `MONTAGE_MCP_TRACK_DISABLE` | (unset) | `1`이면 트래킹 강제 비활성화 |
 | `MONTAGE_MCP_QUEUE_PATH` | scope-default | 트래킹 실패 이벤트 보존용 로컬 WAL 큐 경로 |
 | `MONTAGE_MCP_DEBUG` | (unset) | `1`이면 stderr 디버그 로그 활성화 |
+| `MONTAGE_MCP_DATA_URL` | `https://raw.githubusercontent.com/wanteddev/montage-ios/main/packages/montage-mcp/data` | 런타임에 받아올 `data/` 디렉터리의 base URL. `https`만 허용(테스트용 `http://localhost`, `http://127.0.0.1`은 예외). 그 밖의 값이면 경고 로그를 남기고 기본값 사용 |
+| `MONTAGE_MCP_DATA_REFRESH_SEC` | `600` | 원격 데이터 갱신 주기(초). `0`이면 원격 로딩을 끄고 번들 데이터만 사용. 잘못된 값이면 기본값 사용 |
+| `MONTAGE_MCP_AUTH` | (unset) | `google`이면 HTTP 전송에 Google OAuth 인증 적용. 아래 [인증](#인증-http-옵트인) 참고 |
+
+### 원격 데이터
+
+서버는 패키지에 번들된 `data/`로 시작하고, 기동 직후 1회와 이후 `MONTAGE_MCP_DATA_REFRESH_SEC`마다 `MONTAGE_MCP_DATA_URL`에서 `components.json`, `tokens.json`, `icons.json`, `figma-mapping.json`, `markdown/*.md`를 받아옵니다. 기동은 이 요청을 기다리지 않습니다.
+
+- JSON은 파싱, 최소 스키마 검사, 포맷 버전 검사를 모두 통과해야 교체합니다. 포맷 버전은 `schema` 필드(`figma-mapping.json`은 `version`)이고, 번들된 값과 정확히 같아야 합니다. 다르면 교체하지 않고 파일명과 번들/원격 값을 로그로 남깁니다.
+- JSON 4개는 서로 참조하므로 4개가 모두 통과했을 때만 한꺼번에 교체합니다. 하나라도 실패하면 JSON은 전부 기존 값을 유지합니다. markdown은 파일 단위로 교체하고, 실패한 파일만 기존 값을 유지합니다.
+- 같은 원인의 실패가 이어지면 첫 회만 에러 로그를 남기고 이후는 debug 로그로 내립니다. 해당 파일이 복구되면 다시 처음부터 셉니다.
+- 문서 변경은 재배포 없이 다음 갱신 주기에 반영됩니다. `data/`만 바뀐 커밋으로는 배포 워크플로가 돌지 않습니다.
+- `health_check` 응답의 `data` 필드에서 출처(`bundled`/`remote`), base URL, 마지막 성공 시각(`lastSuccessAt`, 8개 파일 모두 성공한 시각), 직전 시도에서 실패한 파일(`failedFiles`), 검증은 통과했지만 다른 JSON 실패로 교체를 보류한 파일(`heldBackFiles`)을 확인할 수 있습니다.
+
+> **data 포맷을 바꾸면 schema 번호를 올린다.** `scripts/build_mcp_data.js`가 만드는 JSON의 구조(필드 추가·삭제·의미 변경)를 바꾸는 PR은 해당 파일의 `schema`(`figma-mapping.json`은 `version`)를 1 올립니다. 번호가 다르면 이미 배포된 서버는 새 포맷을 받지 않고 번들 데이터를 계속 쓰다가, 새 코드가 배포되면 그때부터 새 포맷을 받습니다. 번호를 올리지 않으면 구버전 서버가 모르는 포맷을 읽게 됩니다.
+
+### 인증 (HTTP, 옵트인)
+
+`MONTAGE_MCP_AUTH=google`이면 montage-web MCP와 같은 방식의 Google OAuth를 붙입니다. 이 서버가 MCP OAuth 인가 서버 역할을 하고, 로그인은 Google(`wantedlab.com` 계정만)에 위임하며, 발급한 Firebase ID 토큰을 Bearer 토큰으로 검증합니다. 클라이언트 등록 정보와 refresh token은 Firestore에 저장합니다. 기본 컬렉션 이름은 `ios_clients`, `ios_refreshTokens`이고, `ios_` 접두사는 `MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX`로 바꿀 수 있습니다.
+
+- 인증 대상: `/mcp`(POST/GET/DELETE), `/sse`, `/messages`. `/`, `/healthz`는 공개.
+- 추가 경로: `/.well-known/oauth-authorization-server`, `/.well-known/oauth-protected-resource`, `/authorize`, `/token`, `/register`, `/oauth/consent`, `/oauth/google/callback`.
+- `/authorize`는 바로 Google로 보내지 않고 클라이언트 이름과 redirect URI(호스트 강조)를 보여주는 동의 페이지를 먼저 띄웁니다. 승인하면 Google 로그인으로 넘어가고, 거부하면 redirect URI로 `error=access_denied`를 돌려줍니다. 승인/거부 POST는 같은 origin(`Origin`/`Referer`, `Sec-Fetch-Site`)에서 와야 하고, 동의 페이지가 브라우저에 심은 `SameSite=Strict` 쿠키(`__Host-mcp_consent`)가 있어야 합니다.
+- 토큰 검증 조건: email이 `@wantedlab.com`, `email_verified`가 true, Google 로그인으로 발급된 토큰. 토큰 교환 시에는 Google ID 토큰의 `hd`가 `wantedlab.com`인지도 확인합니다.
+- MCP 세션(Streamable HTTP, SSE)은 만든 사용자에게 묶입니다. 다른 사용자가 같은 세션 ID로 요청하면 404를 받습니다.
+- 인증된 사용자 email(소문자)을 Track 이벤트의 `deviceId`로 보냅니다.
+- `MONTAGE_MCP_AUTH`를 설정하지 않으면 인증은 꺼집니다. 설정했는데 값이 `google`이 아니거나, `google`인데 필수 변수가 하나라도 없으면 기동 시 에러를 내고 종료합니다.
+- stdio 전송에는 적용되지 않습니다.
+- `firebase-admin`은 `optionalDependencies`입니다. 인증을 켰는데 모듈이 없으면(`npm install --omit=optional` 등) 기동 시 에러를 내고 종료합니다.
+- 기동 시 인증과 원격 데이터 갱신의 on/off를 `MONTAGE_MCP_DEBUG`와 관계없이 stderr에 한 줄(`INFO startup`)로 남깁니다.
+
+| 변수 | 필수 | 설명 |
+|---|---|---|
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | O | Google OAuth 클라이언트. 승인된 리디렉션 URI에 `<MONTAGE_MCP_PUBLIC_URL>/oauth/google/callback` 등록 |
+| `FIREBASE_API_KEY` | O | Google ID 토큰을 Firebase ID 토큰으로 바꿀 때 쓰는 Web API 키 |
+| `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` | O | Firebase Admin 서비스 계정. private key의 `\n`은 줄바꿈으로 변환 |
+| `MONTAGE_MCP_PUBLIC_URL` | O | 서버 공개 URL(예: `https://montage-ios-mcp.example.com`). OAuth issuer와 콜백 URL의 기준. localhost가 아니면 `https` 필수. 사용자가 브라우저로 실제 접속하는 호스트와 같아야 한다(동의 페이지의 CSP와 Origin 검사가 이 값을 기준으로 한다) |
+| `FIREBASE_DATABASE_ID` | - | Firestore 데이터베이스 ID. 기본값 `montage-storage`(montage-web과 공유) |
+| `MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX` | - | 이 서버의 Firestore 컬렉션 이름 접두사. 기본값 `ios_`. montage-web은 접두사 없이 쓰므로 접두사가 없으면 한쪽에서 발급한 refresh token이 다른 쪽에서도 통한다. 영문, 숫자, `_`, `-`만 쓸 수 있다 |
+| `MONTAGE_MCP_TRUST_PROXY` | - | Express `trust proxy` 홉 수. 기본값 `2`(Backyard public: ALB + APISIX). OAuth 엔드포인트의 IP별 rate limit이 실제 클라이언트 IP 기준으로 동작하도록 인그레스 구성에 맞춘다. 0 이상의 정수가 아니면 기동에 실패한다 |
 
 ## Track API 스펙
 
@@ -93,6 +133,7 @@ Content-Type: application/json
 | `transport` | `"stdio"` \| `"http"` | 현재 서버 전송 방식 |
 | `platform` | string | 항상 `"ios"` |
 | `clientId` | string | `MONTAGE_MCP_CLIENT_ID` 값. Track 서버 측 인증 식별자 |
+| `deviceId` | string | 인증된 사용자 email(소문자). `MONTAGE_MCP_AUTH=google`인 HTTP 요청에서만 포함 |
 | `timestamp` | string | ISO 8601 |
 | `params` | object | 호출 인자. `_` prefix 키(예: `_meta`)는 자동 제거 |
 | `metadata.duration_ms` | number | 도구 실행 시간 |
