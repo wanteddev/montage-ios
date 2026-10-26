@@ -95,7 +95,7 @@ With `MONTAGE_MCP_AUTH=google` the server adds Google OAuth the same way the mon
 | `FIREBASE_API_KEY` | Yes | Web API key used to exchange the Google ID token for a Firebase ID token |
 | `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` | Yes | Firebase Admin service account. Literal `\n` in the private key is converted to newlines |
 | `MONTAGE_MCP_PUBLIC_URL` | Yes | Public URL of the server (e.g. `https://montage-ios-mcp.example.com`). Base for the OAuth issuer and callback URL. Must be `https` unless localhost. Must match the host users actually open in the browser (the consent page's CSP and Origin check are based on it) |
-| `FIREBASE_DATABASE_ID` | No | Firestore database ID. Defaults to `montage-storage` |
+| `FIREBASE_DATABASE_ID` | No | Firestore database ID. Defaults to `montage-ios-storage`. Keep it separate from montage-web's `montage-storage`: both servers use the same collection names, so a shared database lets one accept the other's refresh tokens |
 | `MONTAGE_MCP_TRUST_PROXY` | No | Express `trust proxy` hop count. Defaults to `1`. Match your ingress so the per-IP rate limit on OAuth endpoints keys on the real client IP. Startup fails on a non-integer or negative value |
 
 ## Track API Specification

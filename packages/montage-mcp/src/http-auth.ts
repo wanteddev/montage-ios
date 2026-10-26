@@ -41,7 +41,9 @@ import { logDebug } from "./core/logger.js";
 export const ALLOWED_DOMAIN = "wantedlab.com";
 const SCOPES = ["openid", "email", "profile"];
 const FETCH_TIMEOUT_MS = 10_000;
-const DEFAULT_FIRESTORE_DATABASE = "montage-storage";
+// Separate from montage-web (`montage-storage`): both use the same collection names,
+// so a shared database would let one server accept the other's refresh tokens.
+const DEFAULT_FIRESTORE_DATABASE = "montage-ios-storage";
 const DEFAULT_TRUST_PROXY_HOPS = 1;
 const FIREBASE_APP_NAME = "montage-ios-mcp";
 

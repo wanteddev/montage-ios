@@ -267,7 +267,7 @@ describe("loadAuthConfig", () => {
     const cfg = loadAuthConfig(AUTH_ENV)!;
     expect(cfg.publicUrl).toBe("http://localhost");
     expect(cfg.firebasePrivateKey).toContain("\nabc\n");
-    expect(cfg.firestoreDatabaseId).toBe("montage-storage");
+    expect(cfg.firestoreDatabaseId).toBe("montage-ios-storage");
   });
 });
 
