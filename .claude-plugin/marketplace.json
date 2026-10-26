@@ -1,0 +1,15 @@
+{
+  "name": "montage-ios",
+  "owner": {
+    "name": "wanteddev"
+  },
+  "version": "1.0.0",
+  "description": "Wanted Lab Design System for iOS",
+  "plugins": [
+    {
+      "name": "montage-ios-guide",
+      "source": "./.claude-plugin/montage-ios-guide",
+      "description": "Guide to use Wanted Lab Design System for iOS (SwiftUI)"
+    }
+  ]
+}

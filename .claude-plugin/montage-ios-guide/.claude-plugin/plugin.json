@@ -1,0 +1,11 @@
+{
+  "name": "montage-ios-guide",
+  "version": "1.0.0",
+  "description": "Montage (Wanted Design System) MCP server and SwiftUI skill for iOS",
+  "author": {
+    "name": "wanteddev"
+  },
+  "keywords": ["design-system", "wanted", "montage", "ios", "swiftui"],
+  "license": "MIT",
+  "skills": "./skills/"
+}
