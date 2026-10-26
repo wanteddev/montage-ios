@@ -677,6 +677,13 @@ function consentPageCsp(redirectUri: string): string {
   ].join("; ");
 }
 
+/** RFC 8252 loopback redirect: a native app on the user's own machine (e.g. Claude Code). */
+const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
+
+function isLoopbackRedirect(redirect: URL): boolean {
+  return (redirect.protocol === "http:" || redirect.protocol === "https:") && LOOPBACK_HOSTS.has(redirect.hostname);
+}
+
 function renderConsentPage(
   clientName: string,
   redirectUri: string,
@@ -685,6 +692,15 @@ function renderConsentPage(
 ): string {
   const redirect = new URL(redirectUri);
   const host = escapeHtml(redirect.host || redirect.protocol);
+  // Loopback is the normal case for desktop MCP clients, so it gets a neutral look. Warning
+  // on every request trains people to click through, and the external-host warning loses its point.
+  const destination = isLoopbackRedirect(redirect)
+    ? `<p>승인하면 Google 로그인 후 <strong>이 컴퓨터에서 실행 중인 앱</strong>으로 로그인 결과가 전달됩니다.</p>
+  <p class="host local">${host}</p>
+  <p>Claude Code 같은 MCP 클라이언트에서 직접 연결을 시작했다면 승인하세요.</p>`
+    : `<p>승인하면 Google 로그인 후 <strong>외부 서버</strong>로 접근 권한이 전달됩니다.</p>
+  <p class="host external">${host}</p>
+  <p class="warn">모르는 주소이거나 직접 시작한 요청이 아니면 거부하세요.</p>`;
   return `<!doctype html>
 <html lang="ko">
 <head>
@@ -694,8 +710,10 @@ function renderConsentPage(
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 32rem; margin: 3rem auto; padding: 0 1rem; color: #171719; }
   .box { border: 1px solid #e1e2e4; border-radius: 12px; padding: 1.25rem; }
-  .host { font-size: 1.25rem; font-weight: 700; color: #d32f2f; word-break: break-all; }
-  code { word-break: break-all; }
+  .host { font-size: 1.25rem; font-weight: 700; word-break: break-all; }
+  .host.local { color: #171719; }
+  .host.external, .warn { color: #d32f2f; }
+  code { word-break: break-all; color: #5a5c63; }
   .actions { display: flex; gap: .5rem; margin-top: 1.5rem; }
   button { flex: 1; padding: .75rem; border-radius: 8px; border: 1px solid #c2c4c8; background: #fff; font-size: 1rem; cursor: pointer; }
   button[value="approve"] { background: #0066ff; border-color: #0066ff; color: #fff; }
@@ -705,10 +723,8 @@ function renderConsentPage(
 <h1>MCP 클라이언트 접근 승인</h1>
 <div class="box">
   <p><strong>${escapeHtml(clientName)}</strong> 클라이언트가 Montage iOS MCP 서버에 접근하려고 합니다.</p>
-  <p>승인하면 Google 로그인 후 다음 주소로 접근 권한이 전달됩니다.</p>
-  <p class="host">${host}</p>
+  ${destination}
   <p><code>${escapeHtml(redirectUri)}</code></p>
-  <p>직접 시작한 요청이 아니거나 이 주소를 모르면 거부하세요.</p>
   <form method="post" action="${escapeHtml(action)}">
     <input type="hidden" name="consent" value="${escapeHtml(consentToken)}">
     <div class="actions">

@@ -129,12 +129,12 @@ function stubGoogle(): void {
 
 const REDIRECT_URI = "http://localhost:9999/callback";
 
-async function registerClient(clientName?: string): Promise<string> {
+async function registerClient(clientName?: string, redirectUri = REDIRECT_URI): Promise<string> {
   const res = await fetch(`${baseUrl}/register`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      redirect_uris: [REDIRECT_URI],
+      redirect_uris: [redirectUri],
       token_endpoint_auth_method: "none",
       ...(clientName ? { client_name: clientName } : {}),
     }),
@@ -169,8 +169,8 @@ function authorizeUrl(clientId: string, redirectUri = REDIRECT_URI): URL {
 }
 
 /** GET /authorize → consent page. Returns the HTML, its consent token, and the cookie. */
-async function openConsent(clientId: string): Promise<ConsentPage> {
-  const res = await fetch(authorizeUrl(clientId), { redirect: "manual" });
+async function openConsent(clientId: string, redirectUri = REDIRECT_URI): Promise<ConsentPage> {
+  const res = await fetch(authorizeUrl(clientId, redirectUri), { redirect: "manual" });
   const html = await res.text();
   const consent = /name="consent" value="([^"]+)"/.exec(html)?.[1] ?? "";
   const cookie = (res.headers.get("set-cookie") ?? "").split(";")[0] ?? "";
@@ -353,8 +353,18 @@ describe("HTTP with MONTAGE_MCP_AUTH=google", () => {
     expect(res.headers.get("content-security-policy")).toContain("frame-ancestors 'none'");
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;");
-    expect(html).toContain('<p class="host">localhost:9999</p>');
+    expect(html).toContain('<p class="host local">localhost:9999</p>');
+    expect(html).toContain("이 컴퓨터에서 실행 중인 앱");
+    expect(html).not.toContain('class="warn"');
     expect(consent).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
+  it("warns on the consent page when the redirect leaves this machine", async () => {
+    const external = "https://evil.example.com/callback";
+    const { html } = await openConsent(await registerClient("External Client", external), external);
+    expect(html).toContain('<p class="host external">evil.example.com</p>');
+    expect(html).toContain('class="warn"');
+    expect(html).not.toContain("이 컴퓨터에서 실행 중인 앱");
   });
 
   it("redirects with error=access_denied when the user denies", async () => {
