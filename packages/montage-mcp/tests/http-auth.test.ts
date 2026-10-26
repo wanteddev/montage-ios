@@ -260,7 +260,8 @@ describe("loadAuthConfig", () => {
     for (const v of ["abc", "-1", "1.5"]) {
       expect(() => loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_TRUST_PROXY: v })).toThrow(/MONTAGE_MCP_TRUST_PROXY/);
     }
-    expect(loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_TRUST_PROXY: "2" })!.trustProxyHops).toBe(2);
+    expect(loadAuthConfig(AUTH_ENV)!.trustProxyHops).toBe(2);
+    expect(loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_TRUST_PROXY: "1" })!.trustProxyHops).toBe(1);
   });
 
   it("normalizes the public URL and the private key", () => {

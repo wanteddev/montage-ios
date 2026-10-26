@@ -44,7 +44,8 @@ const FETCH_TIMEOUT_MS = 10_000;
 // Separate from montage-web (`montage-storage`): both use the same collection names,
 // so a shared database would let one server accept the other's refresh tokens.
 const DEFAULT_FIRESTORE_DATABASE = "montage-ios-storage";
-const DEFAULT_TRUST_PROXY_HOPS = 1;
+// Backyard public (WAF → ALB → APISIX) and montage-web (CloudFront → ALB) both add two hops.
+const DEFAULT_TRUST_PROXY_HOPS = 2;
 const FIREBASE_APP_NAME = "montage-ios-mcp";
 
 const TTL = {
