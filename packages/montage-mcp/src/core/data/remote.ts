@@ -35,7 +35,20 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-/** `nestedTypes` entries are read as `n.name` / `n.kind` by tools and mapping. */
+function isStringList(value: unknown): boolean {
+  return Array.isArray(value) && value.every((s) => typeof s === "string");
+}
+
+/** `initializers`, `modifiers` and the like are rendered via `m.signature`. */
+function isSignatureList(value: unknown): boolean {
+  return Array.isArray(value) && value.every((m) => isObject(m) && typeof m.signature === "string");
+}
+
+function isOptional(value: unknown, check: (v: unknown) => boolean): boolean {
+  return value === undefined || check(value);
+}
+
+/** `nestedTypes` entries as read by `get_component`, `list_tokens` and the Figma mapping. */
 function isNestedTypeList(value: unknown): boolean {
   return (
     Array.isArray(value) &&
@@ -44,7 +57,12 @@ function isNestedTypeList(value: unknown): boolean {
         isObject(n) &&
         typeof n.name === "string" &&
         typeof n.kind === "string" &&
-        (n.cases === undefined || Array.isArray(n.cases)),
+        isOptional(n.cases, isStringList) &&
+        isOptional(n.caseSignatures, isStringList) &&
+        isOptional(n.initializers, isSignatureList) &&
+        isOptional(n.staticMethods, isSignatureList) &&
+        isOptional(n.staticProperties, isSignatureList) &&
+        isOptional(n.modifiers, isSignatureList),
     )
   );
 }
@@ -54,7 +72,9 @@ function isComponentRecord(c: unknown): boolean {
     isObject(c) &&
     typeof c.slug === "string" &&
     typeof c.name === "string" &&
-    Array.isArray(c.initializers) &&
+    isSignatureList(c.initializers) &&
+    isOptional(c.modifiers, isSignatureList) &&
+    isOptional(c.staticMembers, isSignatureList) &&
     isNestedTypeList(c.nestedTypes)
   );
 }
@@ -67,7 +87,7 @@ function isTokenRecord(rec: unknown): boolean {
     typeof rec.name === "string" &&
     typeof rec.kind === "string" &&
     Array.isArray(rec.sections) &&
-    rec.sections.every((s) => isObject(s) && Array.isArray(s.identifiers)) &&
+    rec.sections.every((s) => isObject(s) && isStringList(s.identifiers)) &&
     isNestedTypeList(rec.nestedTypes)
   );
 }
@@ -90,7 +110,7 @@ const JSON_SPECS: { [K in JsonDataFile]: JsonSpec } = {
   },
   "icons.json": {
     versionField: "schema",
-    validate: (v) => Array.isArray(v.icons) && v.icons.length > 0,
+    validate: (v) => isStringList(v.icons) && (v.icons as unknown[]).length > 0,
   },
   "figma-mapping.json": {
     versionField: "version",

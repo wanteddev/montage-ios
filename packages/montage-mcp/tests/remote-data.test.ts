@@ -182,7 +182,12 @@ describe("refreshRemoteData", () => {
   it("rejects components missing fields that tools read", async () => {
     const bundledComponents = loadComponents();
     const { name: _name, ...noName } = REMOTE_COMPONENT;
-    for (const broken of [noName, { ...REMOTE_COMPONENT, nestedTypes: [{ kind: "enum" }] }]) {
+    for (const broken of [
+      noName,
+      { ...REMOTE_COMPONENT, nestedTypes: [{ kind: "enum" }] },
+      { ...REMOTE_COMPONENT, initializers: [null] },
+      { ...REMOTE_COMPONENT, nestedTypes: [{ name: "X.Size", kind: "enum", caseSignatures: {} }] },
+    ]) {
       const result = await refreshRemoteData(BASE, {
         fetchImpl: fakeFetch({
           ...validPayloads(),
@@ -201,6 +206,15 @@ describe("refreshRemoteData", () => {
     });
     expect(result.failed).toEqual(["tokens.json"]);
     expect(loadTokens()).toBe(bundledTokens);
+  });
+
+  it("rejects icons that are not strings", async () => {
+    const bundledIcons = loadIcons();
+    const result = await refreshRemoteData(BASE, {
+      fetchImpl: fakeFetch({ ...validPayloads(), "icons.json": JSON.stringify({ schema: 1, icons: ["ok", null] }) }),
+    });
+    expect(result.failed).toEqual(["icons.json"]);
+    expect(loadIcons()).toBe(bundledIcons);
   });
 
   it("strips query and fragment from the reported base URL", async () => {
