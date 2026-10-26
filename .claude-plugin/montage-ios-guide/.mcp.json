@@ -1,0 +1,6 @@
+{
+  "montage-ios": {
+    "type": "http",
+    "url": "https://montage-ios.lab.wanted.co.kr/mcp"
+  }
+}
