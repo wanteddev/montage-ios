@@ -84,7 +84,7 @@ With `MONTAGE_MCP_AUTH=google` the server adds Google OAuth the same way the mon
 - Token checks: email ends with `@wantedlab.com`, `email_verified` is true, and the token was issued through Google sign-in. Token exchanges also require the Google ID token's `hd` to be `wantedlab.com`.
 - MCP sessions (Streamable HTTP and SSE) are bound to the user who opened them. Another user presenting the same session id gets 404.
 - The authenticated email (lowercased) is sent as the Track event's `deviceId`.
-- Startup fails with an error when any required variable is missing or `MONTAGE_MCP_AUTH` is anything other than `google`.
+- Leaving `MONTAGE_MCP_AUTH` unset keeps auth off. When it is set, startup fails unless the value is `google`, and with `google` it fails when any required variable is missing.
 - Not applied to the stdio transport.
 - `firebase-admin` is an `optionalDependencies` entry. If auth is on but the module is missing (e.g. `npm install --omit=optional`), startup fails with an error.
 - At startup the server writes one `INFO startup` line to stderr with auth and remote data on/off, regardless of `MONTAGE_MCP_DEBUG`.

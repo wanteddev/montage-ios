@@ -84,7 +84,7 @@ claude mcp add montage-ios -- node /절대경로/montage-ios/packages/montage-mc
 - 토큰 검증 조건: email이 `@wantedlab.com`, `email_verified`가 true, Google 로그인으로 발급된 토큰. 토큰 교환 시에는 Google ID 토큰의 `hd`가 `wantedlab.com`인지도 확인합니다.
 - MCP 세션(Streamable HTTP, SSE)은 만든 사용자에게 묶입니다. 다른 사용자가 같은 세션 ID로 요청하면 404를 받습니다.
 - 인증된 사용자 email(소문자)을 Track 이벤트의 `deviceId`로 보냅니다.
-- 필수 변수가 하나라도 없거나 `MONTAGE_MCP_AUTH`가 `google` 외의 값이면 기동 시 에러를 내고 종료합니다.
+- `MONTAGE_MCP_AUTH`를 설정하지 않으면 인증은 꺼집니다. 설정했는데 값이 `google`이 아니거나, `google`인데 필수 변수가 하나라도 없으면 기동 시 에러를 내고 종료합니다.
 - stdio 전송에는 적용되지 않습니다.
 - `firebase-admin`은 `optionalDependencies`입니다. 인증을 켰는데 모듈이 없으면(`npm install --omit=optional` 등) 기동 시 에러를 내고 종료합니다.
 - 기동 시 인증과 원격 데이터 갱신의 on/off를 `MONTAGE_MCP_DEBUG`와 관계없이 stderr에 한 줄(`INFO startup`)로 남깁니다.
