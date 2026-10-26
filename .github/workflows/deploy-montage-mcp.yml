@@ -59,6 +59,7 @@ jobs:
             --tag "$IMAGE" \
             --load \
             --provenance=false \
+            --pull \
             .
 
       - name: Push (classic v2 manifest, triggers Backyard rollout webhook)
