@@ -108,6 +108,10 @@ export function loadAuthConfig(env: NodeJS.ProcessEnv = process.env): GoogleAuth
 
   const hopsRaw = env.MONTAGE_MCP_TRUST_PROXY?.trim();
   const hops = hopsRaw ? Number(hopsRaw) : DEFAULT_TRUST_PROXY_HOPS;
+  // A silently defaulted hop count keys the OAuth rate limit on the proxy IP.
+  if (!Number.isInteger(hops) || hops < 0) {
+    throw new Error(`MONTAGE_MCP_TRUST_PROXY must be a non-negative integer: ${hopsRaw}`);
+  }
 
   return {
     googleClientId: values.GOOGLE_CLIENT_ID!,
@@ -119,7 +123,7 @@ export function loadAuthConfig(env: NodeJS.ProcessEnv = process.env): GoogleAuth
     firebasePrivateKey: values.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
     firestoreDatabaseId: env.FIREBASE_DATABASE_ID?.trim() || DEFAULT_FIRESTORE_DATABASE,
     publicUrl: publicUrlRaw,
-    trustProxyHops: Number.isInteger(hops) && hops >= 0 ? hops : DEFAULT_TRUST_PROXY_HOPS,
+    trustProxyHops: hops,
   };
 }
 

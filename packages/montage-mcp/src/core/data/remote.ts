@@ -16,6 +16,7 @@
  */
 import type { RuntimeConfig } from "../config.js";
 import { logDebug, logError } from "../logger.js";
+import { sanitizeUrl } from "../redact.js";
 import {
   readBundledJson,
   replaceJsonData,
@@ -34,6 +35,43 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/** `nestedTypes` entries are read as `n.name` / `n.kind` by tools and mapping. */
+function isNestedTypeList(value: unknown): boolean {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (n) =>
+        isObject(n) &&
+        typeof n.name === "string" &&
+        typeof n.kind === "string" &&
+        (n.cases === undefined || Array.isArray(n.cases)),
+    )
+  );
+}
+
+function isComponentRecord(c: unknown): boolean {
+  return (
+    isObject(c) &&
+    typeof c.slug === "string" &&
+    typeof c.name === "string" &&
+    Array.isArray(c.initializers) &&
+    isNestedTypeList(c.nestedTypes)
+  );
+}
+
+/** A token entry may be `null` (category without a source file). */
+function isTokenRecord(rec: unknown): boolean {
+  if (rec === null) return true;
+  return (
+    isObject(rec) &&
+    typeof rec.name === "string" &&
+    typeof rec.kind === "string" &&
+    Array.isArray(rec.sections) &&
+    rec.sections.every((s) => isObject(s) && Array.isArray(s.identifiers)) &&
+    isNestedTypeList(rec.nestedTypes)
+  );
+}
+
 interface JsonSpec {
   /** Field carrying the format version, compared against the bundled copy. */
   versionField: "schema" | "version";
@@ -43,9 +81,13 @@ interface JsonSpec {
 const JSON_SPECS: { [K in JsonDataFile]: JsonSpec } = {
   "components.json": {
     versionField: "schema",
-    validate: (v) => Array.isArray(v.components) && v.components.length > 0,
+    validate: (v) =>
+      Array.isArray(v.components) && v.components.length > 0 && v.components.every(isComponentRecord),
   },
-  "tokens.json": { versionField: "schema", validate: (v) => isObject(v.tokens) },
+  "tokens.json": {
+    versionField: "schema",
+    validate: (v) => isObject(v.tokens) && Object.values(v.tokens).every(isTokenRecord),
+  },
   "icons.json": {
     versionField: "schema",
     validate: (v) => Array.isArray(v.icons) && v.icons.length > 0,
@@ -116,7 +158,13 @@ const bundledVersions = new Map<JsonDataFile, unknown>();
 const lastFailureCause = new Map<string, string>();
 
 export function getRemoteDataStatus(): RemoteDataStatus {
-  return { ...status, failedFiles: [...status.failedFiles], heldBackFiles: [...status.heldBackFiles] };
+  return {
+    ...status,
+    // health_check returns this to clients; drop query/fragment like the startup logs do.
+    baseUrl: sanitizeUrl(status.baseUrl) ?? null,
+    failedFiles: [...status.failedFiles],
+    heldBackFiles: [...status.heldBackFiles],
+  };
 }
 
 function bundledVersionOf(name: JsonDataFile): unknown {

@@ -179,6 +179,35 @@ describe("refreshRemoteData", () => {
     expect(loadComponents()).toBe(bundledComponents);
   });
 
+  it("rejects components missing fields that tools read", async () => {
+    const bundledComponents = loadComponents();
+    const { name: _name, ...noName } = REMOTE_COMPONENT;
+    for (const broken of [noName, { ...REMOTE_COMPONENT, nestedTypes: [{ kind: "enum" }] }]) {
+      const result = await refreshRemoteData(BASE, {
+        fetchImpl: fakeFetch({
+          ...validPayloads(),
+          "components.json": JSON.stringify({ schema: 1, components: [broken] }),
+        }),
+      });
+      expect(result.failed).toEqual(["components.json"]);
+      expect(loadComponents()).toBe(bundledComponents);
+    }
+  });
+
+  it("rejects incomplete token records but accepts null ones", async () => {
+    const bundledTokens = loadTokens();
+    const result = await refreshRemoteData(BASE, {
+      fetchImpl: fakeFetch({ ...validPayloads(), "tokens.json": JSON.stringify({ schema: 1, tokens: { color: {} } }) }),
+    });
+    expect(result.failed).toEqual(["tokens.json"]);
+    expect(loadTokens()).toBe(bundledTokens);
+  });
+
+  it("strips query and fragment from the reported base URL", async () => {
+    await refreshRemoteData(`${BASE}?token=secret#x`, { fetchImpl: fakeFetch(validPayloads()) });
+    expect(getRemoteDataStatus().baseUrl).toBe(BASE);
+  });
+
   it("rejects JSON whose schema/version differs from the bundled copy and logs both values", async () => {
     const bundledComponents = loadComponents();
     const bundledMapping = loadFigmaMapping();

@@ -96,7 +96,7 @@ claude mcp add montage-ios -- node /절대경로/montage-ios/packages/montage-mc
 | `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` | O | Firebase Admin 서비스 계정. private key의 `\n`은 줄바꿈으로 변환 |
 | `MONTAGE_MCP_PUBLIC_URL` | O | 서버 공개 URL(예: `https://montage-ios-mcp.example.com`). OAuth issuer와 콜백 URL의 기준. localhost가 아니면 `https` 필수. 사용자가 브라우저로 실제 접속하는 호스트와 같아야 한다(동의 페이지의 CSP와 Origin 검사가 이 값을 기준으로 한다) |
 | `FIREBASE_DATABASE_ID` | - | Firestore 데이터베이스 ID. 기본값 `montage-storage` |
-| `MONTAGE_MCP_TRUST_PROXY` | - | Express `trust proxy` 홉 수. 기본값 `1`. OAuth 엔드포인트의 IP별 rate limit이 실제 클라이언트 IP 기준으로 동작하도록 인그레스 구성에 맞춘다 |
+| `MONTAGE_MCP_TRUST_PROXY` | - | Express `trust proxy` 홉 수. 기본값 `1`. OAuth 엔드포인트의 IP별 rate limit이 실제 클라이언트 IP 기준으로 동작하도록 인그레스 구성에 맞춘다. 0 이상의 정수가 아니면 기동에 실패한다 |
 
 ## Track API 스펙
 

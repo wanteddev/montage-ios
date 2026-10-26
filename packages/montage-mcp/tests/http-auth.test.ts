@@ -256,6 +256,13 @@ describe("loadAuthConfig", () => {
     expect(() => loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_AUTH: "gogle" })).toThrow(/not supported/);
   });
 
+  it("rejects a non-integer or negative MONTAGE_MCP_TRUST_PROXY", () => {
+    for (const v of ["abc", "-1", "1.5"]) {
+      expect(() => loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_TRUST_PROXY: v })).toThrow(/MONTAGE_MCP_TRUST_PROXY/);
+    }
+    expect(loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_TRUST_PROXY: "2" })!.trustProxyHops).toBe(2);
+  });
+
   it("normalizes the public URL and the private key", () => {
     const cfg = loadAuthConfig(AUTH_ENV)!;
     expect(cfg.publicUrl).toBe("http://localhost");
