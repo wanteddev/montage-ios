@@ -256,6 +256,13 @@ describe("loadAuthConfig", () => {
     expect(() => loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_AUTH: "gogle" })).toThrow(/not supported/);
   });
 
+  it("rejects a collection prefix Firestore can't use as-is", () => {
+    expect(() => loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX: "a/b" })).toThrow(
+      /MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX/,
+    );
+    expect(loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX: "x_" })!.firestoreCollectionPrefix).toBe("x_");
+  });
+
   it("rejects a non-integer or negative MONTAGE_MCP_TRUST_PROXY", () => {
     for (const v of ["abc", "-1", "1.5"]) {
       expect(() => loadAuthConfig({ ...AUTH_ENV, MONTAGE_MCP_TRUST_PROXY: v })).toThrow(/MONTAGE_MCP_TRUST_PROXY/);
@@ -268,7 +275,8 @@ describe("loadAuthConfig", () => {
     const cfg = loadAuthConfig(AUTH_ENV)!;
     expect(cfg.publicUrl).toBe("http://localhost");
     expect(cfg.firebasePrivateKey).toContain("\nabc\n");
-    expect(cfg.firestoreDatabaseId).toBe("montage-ios-storage");
+    expect(cfg.firestoreDatabaseId).toBe("montage-storage");
+    expect(cfg.firestoreCollectionPrefix).toBe("ios_");
   });
 });
 
@@ -443,7 +451,7 @@ describe("HTTP with MONTAGE_MCP_AUTH=google", () => {
       expect(tokens.access_token).toBe("valid-token");
       expect(typeof tokens.refresh_token).toBe("string");
       expect(upstream).toEqual(["google", "firebase"]);
-      expect(firestoreDocs.get(`refreshTokens/${tokens.refresh_token as string}`)).toEqual({
+      expect(firestoreDocs.get(`ios_refreshTokens/${tokens.refresh_token as string}`)).toEqual({
         clientId,
         googleRefreshToken: "g-refresh",
       });

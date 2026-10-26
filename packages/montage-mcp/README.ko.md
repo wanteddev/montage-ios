@@ -95,7 +95,8 @@ claude mcp add montage-ios -- node /절대경로/montage-ios/packages/montage-mc
 | `FIREBASE_API_KEY` | O | Google ID 토큰을 Firebase ID 토큰으로 바꿀 때 쓰는 Web API 키 |
 | `FIREBASE_PROJECT_ID` / `FIREBASE_CLIENT_EMAIL` / `FIREBASE_PRIVATE_KEY` | O | Firebase Admin 서비스 계정. private key의 `\n`은 줄바꿈으로 변환 |
 | `MONTAGE_MCP_PUBLIC_URL` | O | 서버 공개 URL(예: `https://montage-ios-mcp.example.com`). OAuth issuer와 콜백 URL의 기준. localhost가 아니면 `https` 필수. 사용자가 브라우저로 실제 접속하는 호스트와 같아야 한다(동의 페이지의 CSP와 Origin 검사가 이 값을 기준으로 한다) |
-| `FIREBASE_DATABASE_ID` | - | Firestore 데이터베이스 ID. 기본값 `montage-ios-storage`. montage-web의 `montage-storage`와 분리해서 쓴다. 두 서버의 컬렉션 이름이 같아서 DB를 같이 쓰면 한쪽에서 발급한 refresh token이 다른 쪽에서도 통한다 |
+| `FIREBASE_DATABASE_ID` | - | Firestore 데이터베이스 ID. 기본값 `montage-storage`(montage-web과 공유) |
+| `MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX` | - | 이 서버의 Firestore 컬렉션 이름 접두사. 기본값 `ios_`. montage-web은 접두사 없이 쓰므로 접두사가 없으면 한쪽에서 발급한 refresh token이 다른 쪽에서도 통한다. 영문, 숫자, `_`, `-`만 쓸 수 있다 |
 | `MONTAGE_MCP_TRUST_PROXY` | - | Express `trust proxy` 홉 수. 기본값 `2`(Backyard public: ALB + APISIX). OAuth 엔드포인트의 IP별 rate limit이 실제 클라이언트 IP 기준으로 동작하도록 인그레스 구성에 맞춘다. 0 이상의 정수가 아니면 기동에 실패한다 |
 
 ## Track API 스펙

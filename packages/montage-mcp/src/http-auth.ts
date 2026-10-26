@@ -41,9 +41,12 @@ import { logDebug } from "./core/logger.js";
 export const ALLOWED_DOMAIN = "wantedlab.com";
 const SCOPES = ["openid", "email", "profile"];
 const FETCH_TIMEOUT_MS = 10_000;
-// Separate from montage-web (`montage-storage`): both use the same collection names,
-// so a shared database would let one server accept the other's refresh tokens.
-const DEFAULT_FIRESTORE_DATABASE = "montage-ios-storage";
+// Shared with montage-web: the Firebase project is on the Spark plan, which allows one database.
+const DEFAULT_FIRESTORE_DATABASE = "montage-storage";
+// montage-web uses the bare names (`clients`, `refreshTokens`). Without a prefix one server
+// would accept the other's refresh tokens and client registrations.
+const DEFAULT_COLLECTION_PREFIX = "ios_";
+const COLLECTION_PREFIX_RE = /^[A-Za-z0-9_-]+$/;
 // Backyard public (WAF → ALB → APISIX) and montage-web (CloudFront → ALB) both add two hops.
 const DEFAULT_TRUST_PROXY_HOPS = 2;
 const FIREBASE_APP_NAME = "montage-ios-mcp";
@@ -63,6 +66,8 @@ export interface GoogleAuthConfig {
   firebaseClientEmail: string;
   firebasePrivateKey: string;
   firestoreDatabaseId: string;
+  /** Prepended to every Firestore collection name; keeps this server's data apart from montage-web's. */
+  firestoreCollectionPrefix: string;
   /** Public origin of this server (no trailing slash) — OAuth issuer and Google redirect base. */
   publicUrl: string;
   /** Express `trust proxy` hop count, so rate limiting keys on the real client IP. */
@@ -116,6 +121,11 @@ export function loadAuthConfig(env: NodeJS.ProcessEnv = process.env): GoogleAuth
     throw new Error(`MONTAGE_MCP_TRUST_PROXY must be a non-negative integer: ${hopsRaw}`);
   }
 
+  const prefix = env.MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX?.trim() || DEFAULT_COLLECTION_PREFIX;
+  if (!COLLECTION_PREFIX_RE.test(prefix)) {
+    throw new Error(`MONTAGE_MCP_FIRESTORE_COLLECTION_PREFIX may only contain letters, digits, "_" and "-": ${prefix}`);
+  }
+
   return {
     googleClientId: values.GOOGLE_CLIENT_ID!,
     googleClientSecret: values.GOOGLE_CLIENT_SECRET!,
@@ -125,6 +135,7 @@ export function loadAuthConfig(env: NodeJS.ProcessEnv = process.env): GoogleAuth
     // Env files usually carry the PEM with literal "\n" sequences.
     firebasePrivateKey: values.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
     firestoreDatabaseId: env.FIREBASE_DATABASE_ID?.trim() || DEFAULT_FIRESTORE_DATABASE,
+    firestoreCollectionPrefix: prefix,
     publicUrl: publicUrlRaw,
     trustProxyHops: hops,
   };
@@ -291,8 +302,8 @@ export async function createGoogleAuth(cfg: GoogleAuthConfig): Promise<HttpAuth>
 }
 
 function buildGoogleAuth(cfg: GoogleAuthConfig, firebaseAuth: Auth, firestore: Firestore): HttpAuth {
-  const refreshTokensCollection = firestore.collection("refreshTokens");
-  const clientsCollection = firestore.collection("clients");
+  const refreshTokensCollection = firestore.collection(`${cfg.firestoreCollectionPrefix}refreshTokens`);
+  const clientsCollection = firestore.collection(`${cfg.firestoreCollectionPrefix}clients`);
   const consents = new TtlMap<string, PendingConsent>();
   const pendingAuths = new TtlMap<string, PendingAuth>();
   const authCodes = new TtlMap<string, StoredAuthCode>();
