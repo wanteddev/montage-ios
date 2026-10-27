@@ -774,13 +774,9 @@ public struct TextArea: View {
                 uiView.text = effectiveText
                 uiView.undoManager?.removeAllActions()
             }
-            if context.coordinator.parent.text != effectiveText {
-                DispatchQueue.main.async {
-                    context.coordinator.parent.text = effectiveText
-                }
-            }
-            context.coordinator.parent.inputLimit = inputLimit
-            context.coordinator.parent.inputTransform = inputTransform
+            // makeCoordinator 시점의 래퍼를 그대로 두면 오래된 Binding을 읽어 값이 다르다고 판단하고 다시 쓰게 된다.
+            // ObservableObject 바인딩은 같은 값을 써도 변경을 알리므로 렌더 루프로 이어진다(LIVE-1487).
+            context.coordinator.parent = self
             // 코드로 주입된 텍스트는 textViewDidChange를 거치지 않으므로 여기서도 스크롤 여부를
             // 갱신한다. 아직 폭이 확정되지 않았다면 CustomTextView.layoutSubviews가 이어받는다.
             // (WRP-2846: fixed 리사이즈에서 주입 텍스트가 스크롤되지 않고 바깥 ScrollView가 스크롤되던 문제)

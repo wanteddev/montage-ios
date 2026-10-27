@@ -394,7 +394,6 @@ public struct TextField: View {
     // MARK: - Body
     
     @Environment(\.isEnabled) private var isEnabled
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.colorScheme) private var colorScheme
     @State private var textFieldGlobalFrame: CGRect = .zero
     @FocusState private var textFieldFocusState: Bool
@@ -541,9 +540,11 @@ private extension TextField {
                     }
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .accessibilityIdentifier("autocomplete_container")
+                    // safeAreaInsets 환경값은 기본값을 body 평가 중 UIKit에서 읽어 AttributeGraph 순환을 만들므로
+                    // (순환 이후 화면 업데이트가 멈춤, LIVE-1487) 팝업을 띄우는 시점에 직접 읽는다.
                     .position(
                         x: textFieldGlobalFrame.midX,
-                        y: textFieldGlobalFrame.maxY - safeAreaInsets.top
+                        y: textFieldGlobalFrame.maxY - (UIApplication.keyWindow?.safeAreaInsets.top ?? 0)
                     )
                     .offset(
                         y: 8 + min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0) / 2
