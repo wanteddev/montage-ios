@@ -90,7 +90,8 @@ public struct BottomSheet: View {
     
     // MARK: - Body
     
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
+    /// 시트가 놓인 window의 safe area. 받기 전에는 가장 최근에 읽은 window 값이고, 읽은 적이 없으면 `nil`이다.
+    @State private var windowSafeArea: WindowSafeAreaMetrics? = .lastRead
     @State private var navigationHeight: CGFloat = 0
     @State private var contentHeight: CGFloat = 0
     @State private var actionAreaHeight: CGFloat = 0
@@ -163,7 +164,7 @@ public struct BottomSheet: View {
             }
         }
         .environment(\.modalKind, modalKind)
-        .opacity(isContentMeasured ? 1 : 0)
+        .opacity(isContentMeasured && windowSafeArea != nil ? 1 : 0)
         .background(
             SwiftUI.Color.semantic(.backgroundNeutralPrimary)
                 .opacity(.opacity88)
@@ -195,6 +196,7 @@ public struct BottomSheet: View {
         .onChange(of: contentHeight) { newValue in
             if newValue > 0 { isContentMeasured = true }
         }
+        .onWindowSafeAreaChange { windowSafeArea = $0 }
     }
     
     // MARK: - Modifiers
@@ -296,7 +298,9 @@ public struct BottomSheet: View {
     
     /// 콘텐츠가 시트 높이를 넘겨 스크롤이 생기는지 여부.
     private var isContentScrollable: Bool {
-        bottomSheetContentHeight > bottomSheetMaxHeight ||
+        // window 값을 받기 전에는 최대 높이를 모르므로 분기를 바꾸지 않는다. 분기가 바뀌면 콘텐츠 상태가 초기화된다.
+        guard windowSafeArea != nil else { return false }
+        return bottomSheetContentHeight > bottomSheetMaxHeight ||
             (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2)
     }
 
@@ -351,10 +355,10 @@ public struct BottomSheet: View {
     
     /// detent가 가질 수 있는 최대 높이입니다.
     ///
-    /// 기준값은 키 윈도우에서 세이프 에어리어 상하를 제외한 높이라, 시트가 화면 최상단까지
+    /// 기준값은 시트가 놓인 window에서 세이프 에어리어 상하를 제외한 높이라, 시트가 화면 최상단까지
     /// 올라가지는 않는다. 상태 표시줄·홈 인디케이터 영역만큼 아래에서 시작한다.
     private var maxDetentHeight: CGFloat {
-        let safeAreaHeight = UIApplication.keyWindow?.safeAreaSize.height ?? 0
+        let safeAreaHeight = windowSafeArea?.size.height ?? 0
         if #available(iOS 26, *) {
             // iOS 26부터는 최대 높이에 도달해도 stacked sheet로 자동 전환되지 않으므로 보정하지 않는다.
             return safeAreaHeight
@@ -395,13 +399,17 @@ public struct BottomSheet: View {
     }
     
     private var detents: Set<PresentationDetent> {
+        guard let windowSafeArea else {
+            // window 크기를 받기 전에는 최대 높이를 모르므로 시스템 기본 높이로 둔다. 내용은 아직 가려져 있다.
+            return [.large]
+        }
         guard isContentMeasured else {
             return [.height(maxDetentHeight)]
         }
         switch resize {
         case .flexible:
             return [
-                .height(min(bottomSheetContentHeight, maxDetentHeight / 2 + safeAreaInsets.bottom)),
+                .height(min(bottomSheetContentHeight, maxDetentHeight / 2 + windowSafeArea.insets.bottom)),
                 .height(min(bottomSheetContentHeight, maxDetentHeight))
             ]
         default:

@@ -3944,6 +3944,38 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "windowsafearea",
+      "name": "WindowSafeArea",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct WindowSafeArea",
+      "summary": "뷰가 놓인 window의 safe area 인셋을 담는 상태.",
+      "initializers": [
+        {
+          "signature": "init()"
+        }
+      ],
+      "modifiers": [],
+      "staticMembers": [],
+      "nestedTypes": []
+    },
+    {
+      "slug": "windowsafeareametrics",
+      "name": "WindowSafeAreaMetrics",
+      "category": "uncategorized",
+      "kind": "struct",
+      "declaration": "struct WindowSafeAreaMetrics",
+      "summary": "뷰가 놓인 window의 safe area 인셋과 크기.",
+      "initializers": [
+        {
+          "signature": "init(insets:size:)"
+        }
+      ],
+      "modifiers": [],
+      "staticMembers": [],
+      "nestedTypes": []
     }
   ]
 }

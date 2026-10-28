@@ -396,6 +396,7 @@ public struct TextField: View {
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.colorScheme) private var colorScheme
     @State private var textFieldGlobalFrame: CGRect = .zero
+    @WindowSafeArea private var windowSafeAreaInsets
     @FocusState private var textFieldFocusState: Bool
     @State private var autoCompletionContentHeight: CGFloat = .zero
     @State private var fixAutocorrection = false
@@ -485,6 +486,7 @@ private extension TextField {
             },
             action: { textFieldGlobalFrame = $0 }
         )
+        .readsWindowSafeArea($windowSafeAreaInsets)
         .background { fieldBackground }
         .overlay {
             RoundedRectangle(cornerRadius: size.cornerRadius)
@@ -540,11 +542,9 @@ private extension TextField {
                     }
                     .scrollDisabled(autoCompletionContentHeight <= autoCompletionDataSource?.maxHeight ?? 0)
                     .accessibilityIdentifier("autocomplete_container")
-                    // safeAreaInsets 환경값은 기본값을 body 평가 중 UIKit에서 읽어 AttributeGraph 순환을 만들므로
-                    // (순환 이후 화면 업데이트가 멈춤, LIVE-1487) 팝업을 띄우는 시점에 직접 읽는다.
                     .position(
                         x: textFieldGlobalFrame.midX,
-                        y: textFieldGlobalFrame.maxY - (UIApplication.keyWindow?.safeAreaInsets.top ?? 0)
+                        y: textFieldGlobalFrame.maxY - windowSafeAreaInsets.top
                     )
                     .offset(
                         y: 8 + min(autoCompletionContentHeight, autoCompletionDataSource?.maxHeight ?? 0) / 2
