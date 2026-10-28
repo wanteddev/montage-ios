@@ -9,9 +9,20 @@ jobs:
   sync-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate docs
+        uses: wanteddev/montage-web/.github/actions/validate-docs@feature/sh031224/docs-sync-validation
+        with:
+          files: documentation/**/*.{md,mdx}
+          mobile-source: true
+
       - name: Generate GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
@@ -25,6 +36,6 @@ jobs:
           set -euo pipefail
           gh workflow run docs-sync.yml \
             --repo wanteddev/montage-web \
-            --ref "main" \
-            -f platform=mobile \
+            --ref "feature/sh031224/docs-sync-validation" \
+            -f platform=ios \
             -f deploy=true

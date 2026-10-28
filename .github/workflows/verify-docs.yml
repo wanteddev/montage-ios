@@ -11,7 +11,7 @@ on:
     branches:
       - develop
       - main
-      - 'release/*'
+      - "release/*"
     paths:
       - "**.swift"
       - "Sources/Montage/Asset/Icon.xcassets/**"
@@ -53,6 +53,12 @@ jobs:
         run: |
           xcodebuild -version
           make generate
+
+      - name: Validate docs
+        uses: wanteddev/montage-web/.github/actions/validate-docs@feature/sh031224/docs-sync-validation
+        with:
+          files: documentation/**/*.{md,mdx}
+          mobile-source: true
 
       - name: Create documentation patch
         id: patch
