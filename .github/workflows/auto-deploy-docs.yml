@@ -15,7 +15,7 @@ jobs:
           persist-credentials: false
 
       - name: Validate docs
-        uses: wanteddev/montage-web/.github/actions/validate-docs@feature/sh031224/docs-sync-validation
+        uses: wanteddev/montage-web/.github/actions/validate-docs@main
         with:
           files: documentation/**/*.{md,mdx}
           mobile-source: true
@@ -36,6 +36,6 @@ jobs:
           set -euo pipefail
           gh workflow run docs-sync.yml \
             --repo wanteddev/montage-web \
-            --ref "feature/sh031224/docs-sync-validation" \
+            --ref "main" \
             -f platform=ios \
             -f deploy=true
