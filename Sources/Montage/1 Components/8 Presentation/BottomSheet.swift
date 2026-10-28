@@ -90,8 +90,8 @@ public struct BottomSheet: View {
     
     // MARK: - Body
     
-    /// 시트가 놓인 window의 safe area. window에 붙기 전에는 `nil`이다.
-    @State private var windowSafeArea: WindowSafeAreaMetrics?
+    /// 시트가 놓인 window의 safe area. 받기 전에는 가장 최근에 읽은 window 값이고, 읽은 적이 없으면 `nil`이다.
+    @State private var windowSafeArea: WindowSafeAreaMetrics? = .lastRead
     @State private var navigationHeight: CGFloat = 0
     @State private var contentHeight: CGFloat = 0
     @State private var actionAreaHeight: CGFloat = 0
@@ -298,7 +298,9 @@ public struct BottomSheet: View {
     
     /// 콘텐츠가 시트 높이를 넘겨 스크롤이 생기는지 여부.
     private var isContentScrollable: Bool {
-        bottomSheetContentHeight > bottomSheetMaxHeight ||
+        // window 값을 받기 전에는 최대 높이를 모르므로 분기를 바꾸지 않는다. 분기가 바뀌면 콘텐츠 상태가 초기화된다.
+        guard windowSafeArea != nil else { return false }
+        return bottomSheetContentHeight > bottomSheetMaxHeight ||
             (resize.isFlexible && bottomSheetContentHeight > bottomSheetMaxHeight / 2)
     }
 

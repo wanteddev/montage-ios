@@ -23,6 +23,11 @@ public struct WindowSafeAreaMetrics: Equatable {
         self.insets = insets
         self.size = size
     }
+
+    /// 가장 최근에 읽은 window 값. 값을 받기 전 첫 프레임에 쓴다.
+    static var lastRead: WindowSafeAreaMetrics? {
+        WindowSafeAreaReader.lastMetrics
+    }
 }
 
 /// 뷰가 놓인 window의 safe area 인셋을 담는 상태.
@@ -48,7 +53,7 @@ public struct WindowSafeArea: DynamicProperty {
 
     /// 가장 최근에 읽은 window 값으로 시작합니다. 읽은 적이 없으면 0입니다.
     public init() {
-        _insets = State(initialValue: WindowSafeAreaReader.lastMetrics?.insets ?? EdgeInsets())
+        _insets = State(initialValue: WindowSafeAreaMetrics.lastRead?.insets ?? EdgeInsets())
     }
 
     /// window의 safe area 인셋.
@@ -83,7 +88,6 @@ extension View {
 }
 
 private struct WindowSafeAreaReader: UIViewRepresentable {
-    /// 가장 최근에 읽은 window 값. ``WindowSafeArea``가 값을 받기 전 첫 프레임에 쓴다.
     nonisolated(unsafe) static var lastMetrics: WindowSafeAreaMetrics?
 
     let action: (WindowSafeAreaMetrics) -> Void
