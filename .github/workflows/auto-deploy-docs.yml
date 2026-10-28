@@ -5,13 +5,30 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: read
+
 jobs:
   sync-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # montage-web의 generate-mobile-docs는 이 레포의 기본 브랜치를 clone해 배포한다.
+      # release 이벤트의 기본 checkout(릴리스 태그)이 아니라 배포될 기본 브랜치를 검증한다.
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Validate docs
+        uses: wanteddev/montage-web/.github/actions/validate-docs@main
+        with:
+          files: documentation/**/*.{md,mdx}
+          mobile-source: true
+
       - name: Generate GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3.3.0
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
@@ -26,5 +43,5 @@ jobs:
           gh workflow run docs-sync.yml \
             --repo wanteddev/montage-web \
             --ref "main" \
-            -f platform=mobile \
+            -f platform=ios \
             -f deploy=true
