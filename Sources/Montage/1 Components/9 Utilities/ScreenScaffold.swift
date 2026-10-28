@@ -106,8 +106,6 @@ public struct ScreenScaffold<Content: View>: View {
 
     // MARK: - Body
 
-    @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
-
     /// 스크롤 컨테이너가 preference로 올려 준 값. ``ScrollContainer/builtIn``은 스캐폴드의
     /// ``ScrollView``가, ``ScrollContainer/custom``은 콘텐츠가 올린다.
     @State private var reportedScrollOffset: CGFloat?
@@ -198,13 +196,14 @@ private extension ScreenScaffold {
     ///
     /// ``ScrollContainer/custom``인데 콘텐츠가 신호를 올리지 않으면 스크롤 위치를 알 수 없다.
     /// 이때 최상단(`0`)으로 두면 배경이 투명해져 콘텐츠가 내비게이션 글자와 겹치므로,
-    /// 배경이 완전히 짙어지는 값을 넣어 불투명으로 고정한다.
+    /// 배경이 완전히 짙어지는 값을 넣어 불투명으로 고정한다. ``TopNavigation``이 불투명도를 0~1로 자르므로
+    /// 문턱값(safe area 높이)과 무관하게 불투명해지도록 음의 무한대를 쓴다.
     var effectiveScrollOffset: CGFloat {
         switch scrollContainer {
         case .builtIn:
             reportedScrollOffset ?? 0
         case .custom:
-            reportedScrollOffset ?? -safeAreaInsets.top
+            reportedScrollOffset ?? -.infinity
         }
     }
 

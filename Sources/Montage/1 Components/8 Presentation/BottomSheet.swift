@@ -90,7 +90,8 @@ public struct BottomSheet: View {
     
     // MARK: - Body
     
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
+    /// 시트가 놓인 window의 safe area. window에 붙기 전에는 `nil`이다.
+    @State private var windowSafeArea: WindowSafeAreaMetrics?
     @State private var navigationHeight: CGFloat = 0
     @State private var contentHeight: CGFloat = 0
     @State private var actionAreaHeight: CGFloat = 0
@@ -163,7 +164,7 @@ public struct BottomSheet: View {
             }
         }
         .environment(\.modalKind, modalKind)
-        .opacity(isContentMeasured ? 1 : 0)
+        .opacity(isContentMeasured && windowSafeArea != nil ? 1 : 0)
         .background(
             SwiftUI.Color.semantic(.backgroundNeutralPrimary)
                 .opacity(.opacity88)
@@ -195,6 +196,7 @@ public struct BottomSheet: View {
         .onChange(of: contentHeight) { newValue in
             if newValue > 0 { isContentMeasured = true }
         }
+        .onWindowSafeAreaChange { windowSafeArea = $0 }
     }
     
     // MARK: - Modifiers
@@ -351,10 +353,10 @@ public struct BottomSheet: View {
     
     /// detent가 가질 수 있는 최대 높이입니다.
     ///
-    /// 기준값은 키 윈도우에서 세이프 에어리어 상하를 제외한 높이라, 시트가 화면 최상단까지
+    /// 기준값은 시트가 놓인 window에서 세이프 에어리어 상하를 제외한 높이라, 시트가 화면 최상단까지
     /// 올라가지는 않는다. 상태 표시줄·홈 인디케이터 영역만큼 아래에서 시작한다.
     private var maxDetentHeight: CGFloat {
-        let safeAreaHeight = UIApplication.keyWindow?.safeAreaSize.height ?? 0
+        let safeAreaHeight = windowSafeArea?.size.height ?? 0
         if #available(iOS 26, *) {
             // iOS 26부터는 최대 높이에 도달해도 stacked sheet로 자동 전환되지 않으므로 보정하지 않는다.
             return safeAreaHeight
@@ -395,13 +397,17 @@ public struct BottomSheet: View {
     }
     
     private var detents: Set<PresentationDetent> {
+        guard let windowSafeArea else {
+            // window 크기를 받기 전에는 최대 높이를 모르므로 시스템 기본 높이로 둔다. 내용은 아직 가려져 있다.
+            return [.large]
+        }
         guard isContentMeasured else {
             return [.height(maxDetentHeight)]
         }
         switch resize {
         case .flexible:
             return [
-                .height(min(bottomSheetContentHeight, maxDetentHeight / 2 + safeAreaInsets.bottom)),
+                .height(min(bottomSheetContentHeight, maxDetentHeight / 2 + windowSafeArea.insets.bottom)),
                 .height(min(bottomSheetContentHeight, maxDetentHeight))
             ]
         default:

@@ -245,11 +245,12 @@ public struct TopNavigation: View {
                 .ignoresSafeArea(.container, edges: .top)
             }
         }
+        .readsWindowSafeArea($windowSafeAreaInsets)
     }
-    
+
     // MARK: - Computed properties
 
-    @Environment(\.safeAreaInsets) private var safeAreaInsets: EdgeInsets
+    @WindowSafeArea private var windowSafeAreaInsets
 
     /// ``ScreenScaffold``가 내려 주는 스크롤 오프셋. 스캐폴드 밖에서는 최상단(`0`)이다.
     @Environment(\.topNavigationScrollOffset) private var inheritedScrollOffset: CGFloat
@@ -265,8 +266,8 @@ public struct TopNavigation: View {
     /// 스크롤하면 배경이 나와야 하므로 그때는 ``ModalNavigation``과 같은 32를 쓴다.
     private var backgroundOpacity: CGFloat {
         let threshold: CGFloat
-        if safeAreaInsets.top > 0 {
-            threshold = safeAreaInsets.top
+        if windowSafeAreaInsets.top > 0 {
+            threshold = windowSafeAreaInsets.top
         } else if variant.isFloating {
             threshold = 32
         } else {
