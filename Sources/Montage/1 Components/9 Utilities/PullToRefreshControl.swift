@@ -8,11 +8,11 @@
 import Lottie
 import UIKit
 
-/// ``PullToRefresh``의 로고 모션을 입힌 UIKit용 `UIRefreshControl`입니다.
+/// Montage 로고 모션을 입힌 UIKit용 `UIRefreshControl`입니다.
 ///
-/// ``PullToRefresh``는 SwiftUI `ScrollView` 전용이라 `UIScrollView`나 `WKWebView`에는 붙일 수 없습니다.
 /// 트리거와 inset 관리는 `UIRefreshControl`에 그대로 맡기고 시스템 스피너만 로고로 바꿉니다.
-/// 사용법은 `UIRefreshControl`과 같습니다.
+/// 사용법은 `UIRefreshControl`과 같습니다. SwiftUI 스크롤 뷰에는
+/// ``SwiftUI/View/pullToRefresh(refresh:)``가 이 컨트롤을 붙여 줍니다.
 ///
 /// ```swift
 /// let control = PullToRefreshControl()
@@ -25,13 +25,13 @@ import UIKit
 /// - Note: `tintColor`는 시스템 스피너를 숨기는 데 쓰므로 바꾸지 않습니다.
 public final class PullToRefreshControl: UIRefreshControl {
     private enum Phase {
-        // waitingToEnd: 손가락을 대고 있는 동안 갱신이 끝난 상태. 놓을 때까지 로고를 유지한다(PullToRefresh와 같은 동작).
+        // waitingToEnd: 손가락을 대고 있는 동안 갱신이 끝난 상태. 놓을 때까지 로고를 유지한다.
         // settling: 로고가 사라진 뒤에도 아직 당겨져 있는 상태. 스크롤이 제자리로 돌아올 때까지 다시 그리지 않는다.
         case pulling, refreshing, waitingToEnd, ending, settling
     }
 
     private static let logoSize = CGSize(width: 48, height: 36)
-    // PullToRefresh와 같은 비율: 로고 높이의 절반에서 애니메이션을 시작해 4배에서 꽉 찬다.
+    // 로고 높이의 절반에서 애니메이션을 시작해 4배에서 꽉 찬다.
     private static let animationStart = logoSize.height / 2
     private static let animationEnd = logoSize.height * 4
 
