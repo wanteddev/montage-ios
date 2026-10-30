@@ -499,14 +499,8 @@ private struct ScrollTracker: ViewModifier {
                 value: axis == .vertical ? ScrollOffsetPreferenceKey.clamped(metrics.contentOffset.y) : nil
             )
             .if(onRefresh != nil) {
-                if #available(iOS 18, *) {
-                    $0.pullToRefresh(scrollYOffset: $metrics.contentOffset.y) {
-                        await onRefresh?()
-                    }
-                } else {
-                    $0.refreshable {
-                        await onRefresh?()
-                    }
+                $0.pullToRefresh {
+                    await onRefresh?()
                 }
             }
     }

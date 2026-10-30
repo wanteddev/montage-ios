@@ -2,11 +2,46 @@
 
 [English](./MIGRATION.md) | [한국어](./MIGRATION.ko.md)
 
-메이저 버전 업그레이드에 필요한 변경 사항을 정리합니다. 최신 버전이 위에 옵니다.
+메이저 버전 업그레이드에 필요한 변경 사항과, 마이너 버전에서 화면이 달라지는 변경을 정리합니다. 최신 버전이 위에 옵니다.
 
-**이 문서는 브레이킹 체인지만 다룹니다.** 새로 생긴 컴포넌트와 모디파이어는 [추가된 API](#추가된-api)에 이름만 모아뒀고, 자세한 내용은 [릴리즈 노트](https://github.com/wanteddev/montage-ios/releases)에 있습니다.
+**이 문서는 브레이킹 체인지와 화면이 달라지는 변경만 다룹니다.** 마이너 버전 절(`## X.Y`)은 컴파일은 통과하지만 화면이나 동작이 달라지는 항목이라, 업데이트한 뒤 해당 화면을 확인해주세요. 새로 생긴 컴포넌트와 모디파이어는 [추가된 API](#추가된-api)에 이름만 모아뒀고, 자세한 내용은 [릴리즈 노트](https://github.com/wanteddev/montage-ios/releases)에 있습니다.
 
 각 메이저 절의 기준선은 **직전 메이저의 마지막 릴리즈 태그**입니다. 개발 중에 생겼다가 없어진 API는 이전 버전 사용처가 겪을 일이 없으므로 적지 않습니다.
+
+---
+
+## 4.3
+
+**기준선: v4.2.2 → 4.3.0**
+
+### 당겨서 새로고침
+
+**성격: 화면 확인**
+
+SwiftUI 당겨서 새로고침이 UIKit용 `PullToRefreshControl`과 같은 구현으로 바뀝니다. `ScrollView.onRefresh(_:)`는 코드를 고칠 필요가 없습니다.
+
+| 항목 | 4.2 | 4.3 |
+|---|---|---|
+| iOS 16·17 | 시스템 스피너 | **Montage 로고** |
+| 갱신 중 멈추는 높이 | 72pt | **60pt** (UIKit 화면과 같음) |
+| 트리거 거리 | 당긴 거리 144pt | `UIRefreshControl` 시스템 기준 |
+| 갱신 중 다시 올려 취소 | 됨 | **없음.** 갱신이 끝날 때까지 로고가 돕니다 |
+| 시스템 내비게이션 라지 타이틀 아래 | - | 당긴 거리를 타이틀이 먼저 써서 **조금 당겼을 때 로고가 그려지지 않고**, 로고가 타이틀 위에 나옵니다 (`UIRefreshControl` 기본 동작). `.navigationBarTitleDisplayMode(.inline)`이면 다른 화면과 같습니다 |
+
+`pullToRefresh(scrollYOffset:refresh:)`는 `scrollYOffset`을 쓰지 않게 되어 deprecated입니다. `pullToRefresh(refresh:)`로 옮기세요. iOS 16부터 쓸 수 있습니다.
+
+```swift
+// 4.2
+SwiftUI.ScrollView { content }
+    .onScrollGeometryChange(for: CGFloat.self) { -($0.contentOffset.y + $0.contentInsets.top) } action: { scrollYOffset = $1 }
+    .pullToRefresh(scrollYOffset: $scrollYOffset) { await load() }
+
+// 4.3
+SwiftUI.ScrollView { content }
+    .pullToRefresh { await load() }
+```
+
+**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh(" --include=*.swift`로 찾은 화면에서 당겨서 새로고침을 해보세요. 갱신 중 다시 올려 취소하는 흐름에 기대던 화면이 있으면 대응이 없습니다.
 
 ---
 

@@ -2,11 +2,46 @@
 
 [English](./MIGRATION.md) | [한국어](./MIGRATION.ko.md)
 
-Changes required to move between major versions. Newest first.
+Changes required to move between major versions, plus visual changes shipped in minor versions. Newest first.
 
-**This document covers breaking changes only.** New components and modifiers are listed by name under [Added APIs](#added-apis); see the [release notes](https://github.com/wanteddev/montage-ios/releases) for details.
+**This document covers breaking changes and visual changes only.** Minor-version sections (`## X.Y`) compile cleanly but change how a screen looks or behaves, so check the affected screens after updating. New components and modifiers are listed by name under [Added APIs](#added-apis); see the [release notes](https://github.com/wanteddev/montage-ios/releases) for details.
 
 Each major section is written against the **last release tag of the previous major**. APIs that appeared and disappeared during development are not listed, since nobody upgrading from the previous release ever saw them.
+
+---
+
+## 4.3
+
+**Baseline: v4.2.2 → 4.3.0**
+
+### Pull to refresh
+
+**Kind: Visual check**
+
+SwiftUI pull to refresh now uses the same implementation as the UIKit `PullToRefreshControl`. `ScrollView.onRefresh(_:)` needs no code change.
+
+| Item | 4.2 | 4.3 |
+|---|---|---|
+| iOS 16·17 | System spinner | **Montage logo** |
+| Height held while refreshing | 72pt | **60pt** (same as UIKit screens) |
+| Trigger distance | 144pt pulled | `UIRefreshControl` system threshold |
+| Cancel by scrolling back up while refreshing | Yes | **No.** The logo spins until the refresh finishes |
+| Under a system navigation large title | - | The title consumes the pull first, so **a short pull does not draw the logo**, and the logo appears above the title (default `UIRefreshControl` behavior). With `.navigationBarTitleDisplayMode(.inline)` it matches other screens |
+
+`pullToRefresh(scrollYOffset:refresh:)` is deprecated because `scrollYOffset` is no longer used. Move to `pullToRefresh(refresh:)`, available from iOS 16.
+
+```swift
+// 4.2
+SwiftUI.ScrollView { content }
+    .onScrollGeometryChange(for: CGFloat.self) { -($0.contentOffset.y + $0.contentInsets.top) } action: { scrollYOffset = $1 }
+    .pullToRefresh(scrollYOffset: $scrollYOffset) { await load() }
+
+// 4.3
+SwiftUI.ScrollView { content }
+    .pullToRefresh { await load() }
+```
+
+**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh(" --include=*.swift`. If a screen relied on cancelling a refresh by scrolling back up, there is no replacement.
 
 ---
 
@@ -21,7 +56,7 @@ Breaking changes fall into four groups. Working top to bottom clears compile err
 | 1 | [Renamed](#1-renamed) | Mechanical | mostly `sed` |
 | 2 | [Removed, needs rework](#2-removed-needs-rework) | Restructure | Move to the replacement API |
 | 3 | [No replacement](#3-no-replacement) | Judgement call | You have to choose |
-| 4 | [Visual changes](#4-visual-changes) | Eyeball it | **No compile errors** |
+| 4 | [Visual changes](#4-visual-changes) | Visual check | **No compile errors** |
 
 **Do not skip section 4.** Those entries keep the same API and change only values, so the build passes while the screen changes. A clean build does not mean the migration is done.
 

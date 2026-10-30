@@ -12,7 +12,7 @@ import Montage
 
 struct ComponentListView: View {
     @StateObject private var coordinator = ComponentListNavigationCoordinator()
-    @State var searchText: String = ""
+    @State private var searchText: String = ""
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     /// 세로 방향 size class. iPhone에서 portrait=`.regular`, landscape=`.compact`로 회전 시 토글되며,
     /// 측정 지오메트리가 아니라 UIKit trait이라 회전 직후에도 stale되지 않고 갱신된다.
@@ -69,6 +69,9 @@ struct ComponentListView: View {
             .navigationDestination(for: Component.self) { componentType in
                 coordinator.destinationView(for: componentType)
                     .navigationTitle(componentType.displayName)
+                    // 기본값이면 iOS 17에서 라지 타이틀로 나와, 당겨서 새로고침의 당긴 거리를 타이틀이 먼저 써 버린다.
+                    // OS마다 쇼케이스 화면이 달라지지 않게 인라인으로 고정한다.
+                    .navigationBarTitleDisplayMode(.inline)
                     // Dynamic Type 변경이나 기기 회전(landscape↔portrait)을 런타임에 수행하면,
                     // SwiftUI가 커스텀 폰트 화면의 컨테이너 레이아웃(줄바꿈·너비 배분)을 다시 계산하지
                     // 않고 이전 캐시를 재사용해, 옛 너비 구조에 폰트만 커지거나 옛 너비가 유지되어
