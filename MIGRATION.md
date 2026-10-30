@@ -16,7 +16,7 @@ Each major section is written against the **last release tag of the previous maj
 
 ### Pull to refresh
 
-**Kind: Eyeball it**
+**Kind: Visual check**
 
 SwiftUI pull to refresh now uses the same implementation as the UIKit `PullToRefreshControl`. `ScrollView.onRefresh(_:)` needs no code change.
 
@@ -56,7 +56,7 @@ Breaking changes fall into four groups. Working top to bottom clears compile err
 | 1 | [Renamed](#1-renamed) | Mechanical | mostly `sed` |
 | 2 | [Removed, needs rework](#2-removed-needs-rework) | Restructure | Move to the replacement API |
 | 3 | [No replacement](#3-no-replacement) | Judgement call | You have to choose |
-| 4 | [Visual changes](#4-visual-changes) | Eyeball it | **No compile errors** |
+| 4 | [Visual changes](#4-visual-changes) | Visual check | **No compile errors** |
 
 **Do not skip section 4.** Those entries keep the same API and change only values, so the build passes while the screen changes. A clean build does not mean the migration is done.
 
