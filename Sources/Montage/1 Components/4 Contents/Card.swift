@@ -313,7 +313,7 @@ extension Card {
                                 startPoint: .init(x: 0, y: 0),
                                 endPoint: .init(x: 0, y: 1)
                             )
-                            .opacity(.opacity35)
+                            .opacity(Double.opacity35)
                         )
                     }
                 }
