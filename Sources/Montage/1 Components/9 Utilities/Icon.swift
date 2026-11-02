@@ -198,6 +198,8 @@ public enum Icon: String, CaseIterable {
     case fireFill
     case flag
     case flagFill
+    case flask
+    case flaskFill
     case flip
     case flipBackward
     case folder
