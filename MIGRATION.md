@@ -12,7 +12,7 @@ Each major section is written against the **last release tag of the previous maj
 
 ## 4.3
 
-**Baseline: v4.2.2 → 4.3.0**
+**Baseline: v4.2.4 → 4.3.0**
 
 ### Pull to refresh
 
