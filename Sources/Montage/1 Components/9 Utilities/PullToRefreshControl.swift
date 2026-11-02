@@ -37,8 +37,14 @@ public final class PullToRefreshControl: UIRefreshControl {
 
     // 갱신 중 로고와 컨텐츠 사이 간격. 갱신 중 높이는 시스템 기본값(60pt)이라 로고를 가운데 두면 12pt로 좁아진다.
     private static let holdSpacing: CGFloat = 18
+    // 갱신 중 로고 중심에서 컨텐츠까지 거리
+    private static let holdCenterOffset = holdSpacing + logoSize.height / 2
+    // UIRefreshControl이 갱신 중 멈추는 높이(시스템 기본값). 사라질 때 로고 위치를 여백에 비례해 줄이는 기준이다.
+    private static let systemHoldHeight: CGFloat = 60
 
     private let logoView = LottieAnimationView()
+    // 로고를 당긴 여백 안에서만 보이게 자른다. 여백이 줄면 로고 위아래가 잘리고 내비게이션 바와 겹치지 않는다.
+    private let logoClipView = UIView()
     private var phase = Phase.pulling
     private var offsetObservation: NSKeyValueObservation?
     private weak var observedScrollView: UIScrollView?
@@ -48,7 +54,10 @@ public final class PullToRefreshControl: UIRefreshControl {
         tintColor = .clear
         logoView.contentMode = .scaleAspectFill
         logoView.backgroundBehavior = .pauseAndRestore
-        addSubview(logoView)
+        logoClipView.clipsToBounds = true
+        logoClipView.isUserInteractionEnabled = false
+        logoClipView.addSubview(logoView)
+        addSubview(logoClipView)
         loadAnimation()
         // 사용자가 당겨 갱신할 때만 햅틱을 낸다. UIRefreshControl은 자체 햅틱이 없다.
         addAction(UIAction { [weak self] _ in
@@ -109,8 +118,17 @@ public final class PullToRefreshControl: UIRefreshControl {
     // 컨텐츠 위쪽 끝(스크롤 뷰 좌표 0)까지의 여백을 기준으로 놓는다.
     private func layoutLogo() {
         let gap = max(-frame.minY, 0)
-        let held = phase == .refreshing || phase == .waitingToEnd || phase == .ending
-        let fromContent = held ? max(gap / 2, Self.holdSpacing + Self.logoSize.height / 2) : gap / 2
+        let fromContent: CGFloat
+        switch phase {
+        case .refreshing, .waitingToEnd:
+            fromContent = max(gap / 2, Self.holdCenterOffset)
+        case .ending:
+            // 갱신 중 위치에서 출발해 여백과 같은 비율로 줄인다. 바로 가운데로 옮기면 사라지기 시작할 때 로고가 튄다.
+            fromContent = max(gap / 2, min(Self.holdCenterOffset, gap * Self.holdCenterOffset / Self.systemHoldHeight))
+        case .pulling, .settling:
+            fromContent = gap / 2
+        }
+        logoClipView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: gap)
         logoView.center = CGPoint(x: bounds.midX, y: gap - fromContent)
     }
 
