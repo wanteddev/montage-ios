@@ -307,14 +307,14 @@ extension Card {
                             }
                             .padding(.all, 10)
                         }
-                        .background(
+                        .background {
                             LinearGradient(
                                 colors: gradientColors,
                                 startPoint: .init(x: 0, y: 0),
                                 endPoint: .init(x: 0, y: 1)
                             )
-                            .opacity(Double.opacity35)
-                        )
+                            .opacity(.opacity35)
+                        }
                     }
                 }
         }
