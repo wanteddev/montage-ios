@@ -37,6 +37,8 @@ public final class PullToRefreshControl: UIRefreshControl {
 
     // 갱신 중 멈추는 높이(디자인 스펙 72pt). 시스템 기본값은 60pt다.
     private static let holdHeight = logoSize.height * 2
+    // [비교용 임시] Blueprint 옵션에서 고른 갱신 중 높이 방식. 컨트롤을 만들 때 읽는다.
+    private let variant = UserDefaults.standard.string(forKey: "PTR_VARIANT") ?? "72"
 
     private let logoView = LottieAnimationView()
     private var phase = Phase.pulling
@@ -46,7 +48,7 @@ public final class PullToRefreshControl: UIRefreshControl {
     override public init() {
         super.init()
         tintColor = .clear
-        attributedTitle = Self.holdHeightTitle
+        if variant == "72" { attributedTitle = Self.holdHeightTitle }
         logoView.contentMode = .scaleAspectFill
         logoView.backgroundBehavior = .pauseAndRestore
         addSubview(logoView)
@@ -102,8 +104,11 @@ public final class PullToRefreshControl: UIRefreshControl {
 
     override public func layoutSubviews() {
         super.layoutSubviews()
-        logoView.bounds = CGRect(origin: .zero, size: Self.logoSize)
-        logoView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let held = phase == .refreshing || phase == .waitingToEnd || phase == .ending
+        let size = held && variant == "60small" ? CGSize(width: 40, height: 30) : Self.logoSize
+        logoView.bounds = CGRect(origin: .zero, size: size)
+        let y = held && variant == "60up" ? bounds.maxY - 18 - size.height / 2 : bounds.midY
+        logoView.center = CGPoint(x: bounds.midX, y: y)
     }
 
     // 코드로 시작한 갱신은 .valueChanged가 오지 않으므로 여기서 로고를 돌린다.
@@ -160,6 +165,7 @@ public final class PullToRefreshControl: UIRefreshControl {
         // 사라지는 중(.ending)에 다시 당겨도 로고가 보이게 한다.
         guard phase != .refreshing else { return }
         phase = .refreshing
+        setNeedsLayout()
         logoView.layer.removeAllAnimations()
         logoView.alpha = 1
         loadAnimation()
