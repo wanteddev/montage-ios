@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "count": 358,
+  "count": 360,
   "icons": [
     "agent",
     "agentColor",
@@ -167,6 +167,8 @@
     "fireFill",
     "flag",
     "flagFill",
+    "flask",
+    "flaskFill",
     "flip",
     "flipBackward",
     "folder",
