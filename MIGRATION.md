@@ -43,7 +43,7 @@ SwiftUI.ScrollView { content }
     .pullToRefresh { await load() }
 ```
 
-**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh(\|PullToRefreshControl" --include=*.swift`. If a screen relied on cancelling a refresh by scrolling back up, there is no replacement.
+**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`. If a screen relied on cancelling a refresh by scrolling back up, there is no replacement.
 
 ---
 

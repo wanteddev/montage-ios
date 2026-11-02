@@ -43,7 +43,7 @@ SwiftUI.ScrollView { content }
     .pullToRefresh { await load() }
 ```
 
-**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh(\|PullToRefreshControl" --include=*.swift`로 찾은 화면에서 당겨서 새로고침을 해보세요. 갱신 중 다시 올려 취소하는 흐름에 기대던 화면이 있으면 대응이 없습니다.
+**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`로 찾은 화면에서 당겨서 새로고침을 해보세요. 갱신 중 다시 올려 취소하는 흐름에 기대던 화면이 있으면 대응이 없습니다.
 
 ---
 
