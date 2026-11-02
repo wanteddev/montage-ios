@@ -2154,7 +2154,7 @@
       "category": "utilities",
       "kind": "enum",
       "declaration": "enum PullToRefresh",
-      "summary": "",
+      "summary": "SwiftUI 스크롤 뷰에 PullToRefreshControl을 붙이는 당겨서 새로고침입니다.",
       "initializers": [],
       "modifiers": [],
       "staticMembers": [],
@@ -2166,7 +2166,7 @@
       "category": "uncategorized",
       "kind": "class",
       "declaration": "class PullToRefreshControl",
-      "summary": "PullToRefresh의 로고 모션을 입힌 UIKit용 UIRefreshControl입니다.",
+      "summary": "Montage 로고 모션을 입힌 UIKit용 UIRefreshControl입니다.",
       "initializers": [
         {
           "signature": "init()"
