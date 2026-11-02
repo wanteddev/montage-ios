@@ -131,7 +131,7 @@ public final class PullToRefreshControl: UIRefreshControl {
             // 사라지는 도중 다시 당겨 갱신이 시작됐으면 그쪽 상태를 덮어쓰지 않는다.
             guard self.phase == .ending else { return }
             // 아직 당긴 상태면 바로 당김 모션으로 돌아가지 않는다. 남은 거리만큼 로고가 다시 그려졌다가 지워지기 때문이다.
-            if let scrollView = self.superview as? UIScrollView, Self.pulledDistance(in: scrollView) > 0 {
+            if let scrollView = self.superview as? UIScrollView, Self.pulledDistance(in: scrollView) > Self.restTolerance {
                 self.phase = .settling
             } else {
                 self.resetToPulling()
@@ -139,13 +139,16 @@ public final class PullToRefreshControl: UIRefreshControl {
         }
     }
 
+    // 제자리로 돌아와도 inset이 소수(예: 97.666…pt)면 당긴 거리가 0이 아닌 오차로 남는다. 이만큼은 제자리로 본다.
+    private static let restTolerance: CGFloat = 0.5
+
     private static func pulledDistance(in scrollView: UIScrollView) -> CGFloat {
         -(scrollView.contentOffset.y + scrollView.adjustedContentInset.top)
     }
 
     private func updatePullProgress(in scrollView: UIScrollView) {
         let pulled = Self.pulledDistance(in: scrollView)
-        if phase == .settling, pulled <= 0 {
+        if phase == .settling, pulled <= Self.restTolerance {
             resetToPulling()
         }
         guard phase == .pulling else { return }
