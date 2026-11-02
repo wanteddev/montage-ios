@@ -20,10 +20,12 @@
 
 SwiftUI 당겨서 새로고침이 UIKit용 `PullToRefreshControl`과 같은 구현으로 바뀝니다. `ScrollView.onRefresh(_:)`는 코드를 고칠 필요가 없습니다.
 
+`PullToRefreshControl`은 72pt를 유지하려고 `attributedTitle`을 직접 씁니다. 이 컨트롤에 `attributedTitle`을 넣지 마세요. 덮어쓰면 갱신 중 높이가 달라집니다.
+
 | 항목 | 4.2 | 4.3 |
 |---|---|---|
 | iOS 16·17 | 시스템 스피너 | **Montage 로고** |
-| 갱신 중 멈추는 높이 | 72pt | **60pt** (UIKit 화면과 같음) |
+| UIKit `PullToRefreshControl` 갱신 중 멈추는 높이 | 60pt | **72pt** (SwiftUI와 같아짐. SwiftUI는 72pt 그대로) |
 | 트리거 거리 | 당긴 거리 144pt | `UIRefreshControl` 시스템 기준 |
 | 갱신 중 다시 올려 취소 | 됨 | **없음.** 갱신이 끝날 때까지 로고가 돕니다 |
 | 시스템 내비게이션 라지 타이틀 아래 | - | 당긴 거리를 타이틀이 먼저 써서 **조금 당겼을 때 로고가 그려지지 않고**, 로고가 타이틀 위에 나옵니다 (`UIRefreshControl` 기본 동작). `.navigationBarTitleDisplayMode(.inline)`이면 다른 화면과 같습니다 |
@@ -41,7 +43,7 @@ SwiftUI.ScrollView { content }
     .pullToRefresh { await load() }
 ```
 
-**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh(" --include=*.swift`로 찾은 화면에서 당겨서 새로고침을 해보세요. 갱신 중 다시 올려 취소하는 흐름에 기대던 화면이 있으면 대응이 없습니다.
+**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh(\|PullToRefreshControl" --include=*.swift`로 찾은 화면에서 당겨서 새로고침을 해보세요. 갱신 중 다시 올려 취소하는 흐름에 기대던 화면이 있으면 대응이 없습니다.
 
 ---
 

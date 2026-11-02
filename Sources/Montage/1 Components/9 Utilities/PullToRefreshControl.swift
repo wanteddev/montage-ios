@@ -22,7 +22,7 @@ import UIKit
 /// control.endRefreshing()
 /// ```
 ///
-/// - Note: `tintColor`는 시스템 스피너를 숨기는 데 쓰므로 바꾸지 않습니다.
+/// - Note: `tintColor`는 시스템 스피너를 숨기는 데, `attributedTitle`은 갱신 중 높이(72pt)를 맞추는 데 쓰므로 바꾸지 않습니다.
 public final class PullToRefreshControl: UIRefreshControl {
     private enum Phase {
         // waitingToEnd: 손가락을 대고 있는 동안 갱신이 끝난 상태. 놓을 때까지 로고를 유지한다.
@@ -35,6 +35,9 @@ public final class PullToRefreshControl: UIRefreshControl {
     private static let animationStart = logoSize.height / 2
     private static let animationEnd = logoSize.height * 4
 
+    // 갱신 중 멈추는 높이(디자인 스펙 72pt). 시스템 기본값은 60pt다.
+    private static let holdHeight = logoSize.height * 2
+
     private let logoView = LottieAnimationView()
     private var phase = Phase.pulling
     private var offsetObservation: NSKeyValueObservation?
@@ -43,6 +46,7 @@ public final class PullToRefreshControl: UIRefreshControl {
     override public init() {
         super.init()
         tintColor = .clear
+        attributedTitle = Self.holdHeightTitle
         logoView.contentMode = .scaleAspectFill
         logoView.backgroundBehavior = .pauseAndRestore
         addSubview(logoView)
@@ -175,6 +179,20 @@ public final class PullToRefreshControl: UIRefreshControl {
         logoView.currentProgress = 0
         logoView.alpha = 1
     }
+
+    // 갱신 중 높이를 바꾸는 API가 없어 투명한 제목으로 키운다. contentInset을 직접 더하면 SwiftUI 스크롤 뷰가 바로 되돌린다.
+    // 제목이 있으면 높이가 67pt + 줄 높이가 된다(iOS 17.5·18.5·26.5 시뮬레이터 실측).
+    private static let holdHeightTitle: NSAttributedString = {
+        let lineHeight = holdHeight - 67
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.minimumLineHeight = lineHeight
+        paragraph.maximumLineHeight = lineHeight
+        return NSAttributedString(string: " ", attributes: [
+            .font: UIFont.systemFont(ofSize: 1),
+            .foregroundColor: UIColor.clear,
+            .paragraphStyle: paragraph,
+        ])
+    }()
 
     private func loadAnimation() {
         let motion = phase == .pulling ? "pull" : "pulse"

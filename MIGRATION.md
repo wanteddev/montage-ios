@@ -20,10 +20,12 @@ Each major section is written against the **last release tag of the previous maj
 
 SwiftUI pull to refresh now uses the same implementation as the UIKit `PullToRefreshControl`. `ScrollView.onRefresh(_:)` needs no code change.
 
+`PullToRefreshControl` now sets `attributedTitle` itself to hold 72pt. Do not set `attributedTitle` on it; overwriting it changes the held height.
+
 | Item | 4.2 | 4.3 |
 |---|---|---|
 | iOS 16·17 | System spinner | **Montage logo** |
-| Height held while refreshing | 72pt | **60pt** (same as UIKit screens) |
+| UIKit `PullToRefreshControl` height held while refreshing | 60pt | **72pt** (now matches SwiftUI, which stays at 72pt) |
 | Trigger distance | 144pt pulled | `UIRefreshControl` system threshold |
 | Cancel by scrolling back up while refreshing | Yes | **No.** The logo spins until the refresh finishes |
 | Under a system navigation large title | - | The title consumes the pull first, so **a short pull does not draw the logo**, and the logo appears above the title (default `UIRefreshControl` behavior). With `.navigationBarTitleDisplayMode(.inline)` it matches other screens |
@@ -41,7 +43,7 @@ SwiftUI.ScrollView { content }
     .pullToRefresh { await load() }
 ```
 
-**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh(" --include=*.swift`. If a screen relied on cancelling a refresh by scrolling back up, there is no replacement.
+**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh(\|PullToRefreshControl" --include=*.swift`. If a screen relied on cancelling a refresh by scrolling back up, there is no replacement.
 
 ---
 
