@@ -22,7 +22,7 @@ import UIKit
 /// control.endRefreshing()
 /// ```
 ///
-/// - Note: `tintColor`는 시스템 스피너를 숨기는 데, `attributedTitle`은 갱신 중 높이(72pt)를 맞추는 데 쓰므로 바꾸지 않습니다.
+/// - Note: `tintColor`는 시스템 스피너를 숨기는 데 쓰므로 바꾸지 않습니다.
 public final class PullToRefreshControl: UIRefreshControl {
     private enum Phase {
         // waitingToEnd: 손가락을 대고 있는 동안 갱신이 끝난 상태. 놓을 때까지 로고를 유지한다.
@@ -35,8 +35,8 @@ public final class PullToRefreshControl: UIRefreshControl {
     private static let animationStart = logoSize.height / 2
     private static let animationEnd = logoSize.height * 4
 
-    // 갱신 중 멈추는 높이(디자인 스펙 72pt). 시스템 기본값은 60pt다.
-    private static let holdHeight = logoSize.height * 2
+    // 갱신 중 로고와 컨텐츠 사이 간격. 갱신 중 높이는 시스템 기본값(60pt)이라 로고를 가운데 두면 12pt로 좁아진다.
+    private static let holdSpacing: CGFloat = 18
 
     private let logoView = LottieAnimationView()
     private var phase = Phase.pulling
@@ -46,7 +46,6 @@ public final class PullToRefreshControl: UIRefreshControl {
     override public init() {
         super.init()
         tintColor = .clear
-        attributedTitle = Self.holdHeightTitle
         logoView.contentMode = .scaleAspectFill
         logoView.backgroundBehavior = .pauseAndRestore
         addSubview(logoView)
@@ -103,7 +102,16 @@ public final class PullToRefreshControl: UIRefreshControl {
     override public func layoutSubviews() {
         super.layoutSubviews()
         logoView.bounds = CGRect(origin: .zero, size: Self.logoSize)
-        logoView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        layoutLogo()
+    }
+
+    // 컨트롤은 높이가 고정이고 화면 위쪽 끝에 붙어 내려오므로, bounds 가운데에 두면 여백이 커져도 로고가 위에 머문다.
+    // 컨텐츠 위쪽 끝(스크롤 뷰 좌표 0)까지의 여백을 기준으로 놓는다.
+    private func layoutLogo() {
+        let gap = max(-frame.minY, 0)
+        let held = phase == .refreshing || phase == .waitingToEnd || phase == .ending
+        let fromContent = held ? max(gap / 2, Self.holdSpacing + Self.logoSize.height / 2) : gap / 2
+        logoView.center = CGPoint(x: bounds.midX, y: gap - fromContent)
     }
 
     // 코드로 시작한 갱신은 .valueChanged가 오지 않으므로 여기서 로고를 돌린다.
@@ -151,6 +159,7 @@ public final class PullToRefreshControl: UIRefreshControl {
         if phase == .settling, pulled <= Self.restTolerance {
             resetToPulling()
         }
+        layoutLogo()
         guard phase == .pulling else { return }
         let ratio = (pulled - Self.animationStart) / (Self.animationEnd - Self.animationStart)
         logoView.currentProgress = min(max(ratio, 0), 1)
@@ -160,6 +169,7 @@ public final class PullToRefreshControl: UIRefreshControl {
         // 사라지는 중(.ending)에 다시 당겨도 로고가 보이게 한다.
         guard phase != .refreshing else { return }
         phase = .refreshing
+        layoutLogo()
         logoView.layer.removeAllAnimations()
         logoView.alpha = 1
         loadAnimation()
@@ -182,20 +192,6 @@ public final class PullToRefreshControl: UIRefreshControl {
         logoView.currentProgress = 0
         logoView.alpha = 1
     }
-
-    // 갱신 중 높이를 바꾸는 API가 없어 투명한 제목으로 키운다. contentInset을 직접 더하면 SwiftUI 스크롤 뷰가 바로 되돌린다.
-    // 제목이 있으면 높이가 67pt + 줄 높이가 된다(iOS 17.5·18.5·26.5 시뮬레이터 실측).
-    private static let holdHeightTitle: NSAttributedString = {
-        let lineHeight = holdHeight - 67
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.minimumLineHeight = lineHeight
-        paragraph.maximumLineHeight = lineHeight
-        return NSAttributedString(string: " ", attributes: [
-            .font: UIFont.systemFont(ofSize: 1),
-            .foregroundColor: UIColor.clear,
-            .paragraphStyle: paragraph,
-        ])
-    }()
 
     private func loadAnimation() {
         let motion = phase == .pulling ? "pull" : "pulse"
