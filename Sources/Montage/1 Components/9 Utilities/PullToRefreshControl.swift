@@ -49,6 +49,8 @@ public final class PullToRefreshControl: UIRefreshControl {
     // 갱신 중 사용자가 컨텐츠를 원래 자리 위로 밀어 올리면 불린다. 갱신 작업을 쥔 쪽(SwiftUI pullToRefresh)이 취소에 쓴다.
     // UIKit 사용처는 갱신 작업을 Montage가 모르므로 비워 두고 UIRefreshControl 기본 동작(취소 없음)을 따른다.
     var onScrolledAwayWhileRefreshing: (() -> Void)?
+    // 직전 contentOffset 변화 때의 당긴 거리. 취소 경계를 넘는 순간을 가린다.
+    private var lastPulled: CGFloat = 0
     private var offsetObservation: NSKeyValueObservation?
     private weak var observedScrollView: UIScrollView?
 
@@ -194,7 +196,12 @@ public final class PullToRefreshControl: UIRefreshControl {
         }
         layoutLogo()
         // 갱신 중 멈춘 높이(bounds.height)보다 더 올리면 컨텐츠 위쪽 끝이 원래 자리를 넘는다.
-        if phase == .refreshing, scrollView.isDragging || scrollView.isDecelerating, pulled < -bounds.height {
+        // 사용자 스크롤로 그 경계를 위로 넘는 순간에만 취소한다. 코드로 이미 넘겨 둔 상태에서 아래로 끌 때는 취소하지 않는다.
+        let previousPulled = lastPulled
+        lastPulled = pulled
+        if phase == .refreshing, scrollView.isDragging || scrollView.isDecelerating,
+           previousPulled >= -bounds.height, pulled < -bounds.height
+        {
             onScrolledAwayWhileRefreshing?()
         }
         guard phase == .pulling else { return }
