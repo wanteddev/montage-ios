@@ -46,6 +46,9 @@ public final class PullToRefreshControl: UIRefreshControl {
     // 로고를 당긴 여백 안에서만 보이게 자른다. 여백이 줄면 로고 위아래가 잘리고 내비게이션 바와 겹치지 않는다.
     private let logoClipView = UIView()
     private var phase = Phase.pulling
+    // 갱신 중 사용자가 컨텐츠를 원래 자리 위로 밀어 올리면 불린다. 갱신 작업을 쥔 쪽(SwiftUI pullToRefresh)이 취소에 쓴다.
+    // UIKit 사용처는 갱신 작업을 Montage가 모르므로 비워 두고 UIRefreshControl 기본 동작(취소 없음)을 따른다.
+    var onScrolledAwayWhileRefreshing: (() -> Void)?
     private var offsetObservation: NSKeyValueObservation?
     private weak var observedScrollView: UIScrollView?
 
@@ -178,6 +181,10 @@ public final class PullToRefreshControl: UIRefreshControl {
             resetToPulling()
         }
         layoutLogo()
+        // 갱신 중 멈춘 높이(bounds.height)보다 더 올리면 컨텐츠 위쪽 끝이 원래 자리를 넘는다.
+        if phase == .refreshing, scrollView.isDragging || scrollView.isDecelerating, pulled < -bounds.height {
+            onScrolledAwayWhileRefreshing?()
+        }
         guard phase == .pulling else { return }
         let ratio = (pulled - Self.animationStart) / (Self.animationEnd - Self.animationStart)
         logoView.currentProgress = min(max(ratio, 0), 1)
