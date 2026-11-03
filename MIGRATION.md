@@ -28,7 +28,7 @@ In 4.2, `ScrollView.onRefresh(_:)` used the system `.refreshable` on iOS 16·17 
 | SwiftUI height held while refreshing (iOS 18+) | 72pt | **60pt** (system default, same as UIKit screens). The logo keeps 18pt to the content, as before |
 | UIKit `PullToRefreshControl` logo position | Fixed 36pt below the top edge | **Centered in the pulled gap** while pulling, 18pt above the content while refreshing (logo moves up 6pt) |
 | Trigger distance (iOS 18+) | 144pt pulled | `UIRefreshControl` system threshold |
-| Cancel by scrolling back up while refreshing (iOS 18+) | Yes | **No.** The logo spins until the refresh finishes |
+| Cancel by scrolling back up while refreshing | iOS 18+ only | 4.3.0: **No** (the logo spins until the refresh finishes). From 4.3.1, `ScrollView.onRefresh(_:)` and `pullToRefresh(refresh:)` **cancel on every OS**. The refresh `Task` is cancelled, which is new on iOS 16·17. UIKit `PullToRefreshControl` does not cancel |
 | Under a system navigation large title | - | The title consumes the pull first, so **a short pull does not draw the logo**, and the logo appears above the title (default `UIRefreshControl` behavior). With `.navigationBarTitleDisplayMode(.inline)` it matches other screens |
 
 `pullToRefresh(scrollYOffset:refresh:)` is deprecated because `scrollYOffset` is no longer used. Move to `pullToRefresh(refresh:)`, available from iOS 16.
@@ -44,7 +44,7 @@ SwiftUI.ScrollView { content }
     .pullToRefresh { await load() }
 ```
 
-**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`. If a screen relied on cancelling a refresh by scrolling back up, there is no replacement.
+**Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`. 4.3.0 cannot cancel a refresh by scrolling back up, so use 4.3.1 or later. On iOS 16·17, check that screens whose `onRefresh` closure receives a cancellation (`CancellationError`) do not end up in an inconsistent state.
 
 ---
 
