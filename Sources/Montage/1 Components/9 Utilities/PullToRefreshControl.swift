@@ -39,13 +39,18 @@ public final class PullToRefreshControl: UIRefreshControl {
     private static let holdSpacing: CGFloat = 18
     // 갱신 중 로고 중심에서 컨텐츠까지 거리
     private static let holdCenterOffset = holdSpacing + logoSize.height / 2
-    // UIRefreshControl이 갱신 중 멈추는 높이(시스템 기본값). 사라질 때 로고 위치를 여백에 비례해 줄이는 기준이다.
-    private static let systemHoldHeight: CGFloat = 60
 
     private let logoView = LottieAnimationView()
     // 로고를 당긴 여백 안에서만 보이게 자른다. 여백이 줄면 로고 위아래가 잘리고 내비게이션 바와 겹치지 않는다.
     private let logoClipView = UIView()
     private var phase = Phase.pulling
+    // 당기기 전 adjustedContentInset.top. 갱신 중에는 시스템이 inset을 더하므로 보이는 여백을 이 값으로 잰다.
+    private var restingInsetTop: CGFloat = 0
+    // 갱신 중 사용자가 컨텐츠를 원래 자리 위로 밀어 올리면 불린다. 갱신 작업을 쥔 쪽(SwiftUI pullToRefresh)이 취소에 쓴다.
+    // UIKit 사용처는 갱신 작업을 Montage가 모르므로 비워 두고 UIRefreshControl 기본 동작(취소 없음)을 따른다.
+    var onScrolledAwayWhileRefreshing: (() -> Void)?
+    // 직전 contentOffset 변화 때의 당긴 거리. 취소 경계를 넘는 순간을 가린다.
+    private var lastPulled: CGFloat = 0
     private var offsetObservation: NSKeyValueObservation?
     private weak var observedScrollView: UIScrollView?
 
@@ -92,6 +97,7 @@ public final class PullToRefreshControl: UIRefreshControl {
         observedScrollView?.panGestureRecognizer.removeTarget(self, action: #selector(handlePan(_:)))
         let scrollView = superview as? UIScrollView
         observedScrollView = scrollView
+        restingInsetTop = scrollView?.adjustedContentInset.top ?? 0
         scrollView?.panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
         offsetObservation = scrollView?
             .observe(\.contentOffset) { [weak self] scrollView, _ in
@@ -117,18 +123,26 @@ public final class PullToRefreshControl: UIRefreshControl {
     // 컨트롤은 높이가 고정이고 화면 위쪽 끝에 붙어 내려오므로, bounds 가운데에 두면 여백이 커져도 로고가 위에 머문다.
     // 컨텐츠 위쪽 끝(스크롤 뷰 좌표 0)까지의 여백을 기준으로 놓는다.
     private func layoutLogo() {
-        let gap = max(-frame.minY, 0)
+        // 컨텐츠 위쪽 끝(스크롤 뷰 좌표 0)의 컨트롤 좌표
+        let contentTop = -frame.minY
+        // 화면에 보이는 위쪽 끝부터 컨텐츠 위쪽 끝까지. 갱신 중 위로 밀어 올리면 컨트롤은 컨텐츠에 붙어 함께 올라가므로
+        // 컨트롤 frame이 아니라 스크롤 위치로 잰다. 그래야 자동으로 사라질 때와 같이 로고 위아래가 잘린다.
+        let gap: CGFloat
+        if let scrollView = observedScrollView {
+            gap = max(-(scrollView.contentOffset.y + restingInsetTop), 0)
+        } else {
+            gap = max(contentTop, 0)
+        }
         let fromContent: CGFloat
         switch phase {
-        case .refreshing, .waitingToEnd:
-            fromContent = max(gap / 2, Self.holdCenterOffset)
-        case .ending:
-            // 갱신 중 위치에서 출발해 여백과 같은 비율로 줄인다. 바로 가운데로 옮기면 사라지기 시작할 때 로고가 튄다.
-            fromContent = max(gap / 2, min(Self.holdCenterOffset, gap * Self.holdCenterOffset / Self.systemHoldHeight))
+        case .refreshing, .waitingToEnd, .ending:
+            // 여백이 갱신 중 높이(bounds.height)보다 좁아지면 로고 위치도 같은 비율로 줄인다. 바로 가운데로 옮기면 로고가 튄다.
+            let holdHeight = max(bounds.height, 1)
+            fromContent = max(gap / 2, min(Self.holdCenterOffset, gap * Self.holdCenterOffset / holdHeight))
         case .pulling, .settling:
             fromContent = gap / 2
         }
-        logoClipView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: gap)
+        logoClipView.frame = CGRect(x: 0, y: contentTop - gap, width: bounds.width, height: gap)
         logoView.center = CGPoint(x: bounds.midX, y: gap - fromContent)
     }
 
@@ -177,7 +191,19 @@ public final class PullToRefreshControl: UIRefreshControl {
         if phase == .settling, pulled <= Self.restTolerance {
             resetToPulling()
         }
+        if phase == .pulling, !isRefreshing {
+            restingInsetTop = scrollView.adjustedContentInset.top
+        }
         layoutLogo()
+        // 갱신 중 멈춘 높이(bounds.height)보다 더 올리면 컨텐츠 위쪽 끝이 원래 자리를 넘는다.
+        // 사용자 스크롤로 그 경계를 위로 넘는 순간에만 취소한다. 코드로 이미 넘겨 둔 상태에서 아래로 끌 때는 취소하지 않는다.
+        let previousPulled = lastPulled
+        lastPulled = pulled
+        if phase == .refreshing, scrollView.isDragging || scrollView.isDecelerating,
+           previousPulled >= -bounds.height, pulled < -bounds.height
+        {
+            onScrolledAwayWhileRefreshing?()
+        }
         guard phase == .pulling else { return }
         let ratio = (pulled - Self.animationStart) / (Self.animationEnd - Self.animationStart)
         logoView.currentProgress = min(max(ratio, 0), 1)

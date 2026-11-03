@@ -28,7 +28,8 @@ SwiftUI 당겨서 새로고침이 UIKit용 `PullToRefreshControl`과 같은 구�
 | SwiftUI 갱신 중 멈추는 높이 (iOS 18 이상) | 72pt | **60pt** (시스템 기본값, UIKit 화면과 같음). 로고와 컨텐츠 사이 18pt는 그대로입니다 |
 | UIKit `PullToRefreshControl` 로고 위치 | 화면 위쪽 끝에서 36pt 아래 고정 | 당기는 동안 **당긴 여백의 가운데**, 갱신 중에는 컨텐츠 위 18pt (로고가 6pt 올라감) |
 | 트리거 거리 (iOS 18 이상) | 당긴 거리 144pt | `UIRefreshControl` 시스템 기준 |
-| 갱신 중 다시 올려 취소 (iOS 18 이상) | 됨 | **없음.** 갱신이 끝날 때까지 로고가 돕니다 |
+| 갱신 중 다시 올려 취소 | iOS 18 이상만 됨 | 4.3.0은 **없음**(갱신이 끝날 때까지 로고가 돕니다). 4.3.1부터 `ScrollView.onRefresh(_:)`·`pullToRefresh(refresh:)`는 **모든 OS에서 됨**. 갱신 작업 `Task`가 취소되므로 iOS 16·17에서는 새로 생기는 동작입니다. UIKit `PullToRefreshControl`은 취소하지 않습니다 |
+| 갱신 중 위로 밀 때 로고 | - | 4.3.0은 로고 **위쪽만** 잘립니다. 4.3.1부터 갱신이 끝나 사라질 때처럼 보이는 여백에 맞춰 **위아래가 함께** 잘립니다. SwiftUI·UIKit 모두 해당합니다 |
 | 시스템 내비게이션 라지 타이틀 아래 | - | 당긴 거리를 타이틀이 먼저 써서 **조금 당겼을 때 로고가 그려지지 않고**, 로고가 타이틀 위에 나옵니다 (`UIRefreshControl` 기본 동작). `.navigationBarTitleDisplayMode(.inline)`이면 다른 화면과 같습니다 |
 
 `pullToRefresh(scrollYOffset:refresh:)`는 `scrollYOffset`을 쓰지 않게 되어 deprecated입니다. `pullToRefresh(refresh:)`로 옮기세요. iOS 16부터 쓸 수 있습니다.
@@ -44,7 +45,7 @@ SwiftUI.ScrollView { content }
     .pullToRefresh { await load() }
 ```
 
-**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`로 찾은 화면에서 당겨서 새로고침을 해보세요. 갱신 중 다시 올려 취소하는 흐름에 기대던 화면이 있으면 대응이 없습니다.
+**확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`로 찾은 화면에서 당겨서 새로고침을 해보세요. 4.3.0에서는 갱신 중 다시 올려 취소하는 동작이 없으니 4.3.1 이상을 쓰세요. 반대로 iOS 16·17에서 갱신이 취소되면 안 되는 화면은 `onRefresh` 클로저가 취소(`CancellationError`)를 받아도 상태가 어긋나지 않는지 확인하세요. 4.3.1에서는 갱신 중 컨텐츠를 위로 밀어 로고가 위아래로 잘리는지도 보세요.
 
 ---
 

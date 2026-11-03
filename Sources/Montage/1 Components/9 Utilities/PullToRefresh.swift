@@ -78,6 +78,10 @@ public enum PullToRefresh {
             control.addAction(UIAction { [weak self] _ in
                 self?.startRefresh()
             }, for: .valueChanged)
+            // 갱신 중 컨텐츠를 위로 밀어 올리면 갱신을 취소한다. 4.2의 SwiftUI 구현과 같은 동작이다.
+            control.onScrolledAwayWhileRefreshing = { [weak self] in
+                self?.cancelRefresh()
+            }
         }
 
         func attach(from probe: UIView) {
@@ -107,8 +111,16 @@ public enum PullToRefresh {
             task = Task { @MainActor [weak self] in
                 guard let self else { return }
                 await self.refresh()
+                // 취소됐으면 cancelRefresh에서 이미 끝냈다. 뒤늦게 끝나는 작업이 다음 갱신을 끝내지 않게 한다.
+                guard !Task.isCancelled else { return }
                 self.control.endRefreshing()
             }
+        }
+
+        private func cancelRefresh() {
+            guard let task, !task.isCancelled else { return }
+            task.cancel()
+            control.endRefreshing()
         }
 
         /// 수정자는 스크롤 뷰 바깥(배경)에 깔리므로 조상을 거슬러 오르며 그 아래에서 찾는다.
