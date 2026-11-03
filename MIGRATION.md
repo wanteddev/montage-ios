@@ -20,13 +20,15 @@ Each major section is written against the **last release tag of the previous maj
 
 SwiftUI pull to refresh now uses the same implementation as the UIKit `PullToRefreshControl`. `ScrollView.onRefresh(_:)` needs no code change.
 
+In 4.2, `ScrollView.onRefresh(_:)` used the system `.refreshable` on iOS 16·17 and Montage's own implementation on iOS 18 and later. On iOS 16·17 the spinner simply becomes the logo; the behavior changes mostly land on iOS 18 and later.
+
 | Item | 4.2 | 4.3 |
 |---|---|---|
 | iOS 16·17 | System spinner | **Montage logo** |
-| SwiftUI height held while refreshing | 72pt | **60pt** (system default, same as UIKit screens). The logo keeps 18pt to the content, as before |
+| SwiftUI height held while refreshing (iOS 18+) | 72pt | **60pt** (system default, same as UIKit screens). The logo keeps 18pt to the content, as before |
 | UIKit `PullToRefreshControl` logo position | Fixed 36pt below the top edge | **Centered in the pulled gap** while pulling, 18pt above the content while refreshing (logo moves up 6pt) |
-| Trigger distance | 144pt pulled | `UIRefreshControl` system threshold |
-| Cancel by scrolling back up while refreshing | Yes | **No.** The logo spins until the refresh finishes |
+| Trigger distance (iOS 18+) | 144pt pulled | `UIRefreshControl` system threshold |
+| Cancel by scrolling back up while refreshing (iOS 18+) | Yes | **No.** The logo spins until the refresh finishes |
 | Under a system navigation large title | - | The title consumes the pull first, so **a short pull does not draw the logo**, and the logo appears above the title (default `UIRefreshControl` behavior). With `.navigationBarTitleDisplayMode(.inline)` it matches other screens |
 
 `pullToRefresh(scrollYOffset:refresh:)` is deprecated because `scrollYOffset` is no longer used. Move to `pullToRefresh(refresh:)`, available from iOS 16.
