@@ -104,9 +104,11 @@ jobs:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+      # 러너 키체인의 배포 인증서(ASC 3N35U4SY53, match가 관리)의 SHA-1. 인증서를 교체하면 함께 바꾼다.
+      SIGNING_CERT_SHA1: AE40A1C3AD7F965C24F3C53BC80E650DC70EEDB4
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
@@ -193,10 +195,16 @@ jobs:
       - name: Archive
         run: |
           set -o pipefail
+          # 개발 인증서는 쓰지 않고 처음부터 Apple Distribution으로 서명한다. 프로파일은 기존
+          # Xcode 관리 App Store 프로파일을 받아 쓴다.
+          # -allowProvisioningUpdates는 쓸 인증서가 없으면 계정에 새로 만들 수 있으므로, 배포 인증서가
+          # 키체인에 유효하게 있는지 먼저 확인하고 없으면 xcodebuild를 돌리지 않는다.
+          if ! security find-identity -v -p codesigning | grep -F "$SIGNING_CERT_SHA1" | grep -vq CSSMERR; then
+            echo "::error::러너 키체인에 배포 인증서($SIGNING_CERT_SHA1)가 없거나 유효하지 않습니다. 계정에 인증서가 새로 만들어지지 않도록 빌드를 중단합니다."
+            exit 1
+          fi
+
           xcodebuild -version
-          # 러너에는 배포 인증서만 두고 개발 인증서는 쓰지 않는다. API 키 인증에서 Xcode는 개발 인증서를
-          # "이 머신용"으로 따로 관리해, 개인키가 없으면 revoke 후 재발급을 요구하며 멈춘다.
-          # 처음부터 Apple Distribution으로 서명하면 App Store 프로파일만 자동으로 만든다.
           xcodebuild archive \
             -workspace Montage.xcworkspace \
             -scheme Blueprint \
@@ -228,6 +236,8 @@ jobs:
           plutil -insert destination -string upload "$OPTS"
           plutil -insert teamID -string YEX9K6G97T "$OPTS"
           plutil -insert signingStyle -string automatic "$OPTS"
+          # 키체인의 배포 인증서로 서명한다(클라우드 관리 인증서를 쓰거나 새로 만들지 않도록).
+          plutil -insert signingCertificate -string "Apple Distribution" "$OPTS"
 
           xcodebuild -exportArchive \
             -archivePath "$ASC_DIR/Blueprint.xcarchive" \
