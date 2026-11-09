@@ -1,7 +1,7 @@
 import SwiftUI
 import Pretendard
 
-// blueprint-testflight 워크플로 서명 테스트용 변경 (머지하지 않음)
+// blueprint-testflight 워크플로 서명 테스트용 변경 (머지하지 않음, 2차)
 @main
 struct BlueprintApp: App {
     init() {
