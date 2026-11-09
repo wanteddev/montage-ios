@@ -168,6 +168,26 @@ jobs:
             | python3 -c "import sys,json;d=json.load(sys.stdin);print(d['data'][0]['id'] if d.get('data') else '')")
           [ -n "$APP_ID" ] || { echo "::error::App Store Connect에서 com.wantedlab.Blueprint 앱을 찾지 못했습니다."; exit 1; }
 
+          # 서명에 쓸 App Store 프로파일을 받아 둔다(조회만 한다). 러너의 배포 인증서가 들어 있는 ACTIVE 프로파일만 고른다.
+          # 계정에 아무것도 만들지 않도록 export는 이 프로파일로 수동 서명하고 -allowProvisioningUpdates를 쓰지 않는다.
+          curl -sf -H "Authorization: Bearer $TOKEN" \
+            "$ASC/bundleIds?filter%5Bidentifier%5D=com.wantedlab.Blueprint&include=profiles&fields%5Bprofiles%5D=profileType,profileState,profileContent&limit%5Bprofiles%5D=50" \
+            > "$ASC_DIR/profiles.json"
+          PROFILE_UUID=$(ASC_DIR="$ASC_DIR" python3 -c "
+          import json,os,base64,hashlib,plistlib,subprocess,sys
+          d=os.environ['ASC_DIR']; want=os.environ['SIGNING_CERT_SHA1'].upper()
+          for p in json.load(open(d+'/profiles.json')).get('included',[]):
+              a=p.get('attributes') or {}
+              if a.get('profileType')!='IOS_APP_STORE' or a.get('profileState')!='ACTIVE' or not a.get('profileContent'): continue
+              path=d+'/Blueprint.mobileprovision'
+              open(path,'wb').write(base64.b64decode(a['profileContent']))
+              info=plistlib.loads(subprocess.run(['security','cms','-D','-i',path],capture_output=True,check=True).stdout)
+              if any(hashlib.sha1(c).hexdigest().upper()==want for c in info.get('DeveloperCertificates',[])):
+                  print(info['UUID']); sys.exit(0)
+          ")
+          [ -n "$PROFILE_UUID" ] || { echo "::error::러너 배포 인증서($SIGNING_CERT_SHA1)가 들어 있는 com.wantedlab.Blueprint App Store 프로파일이 없습니다."; exit 1; }
+          echo "PROFILE_UUID=$PROFILE_UUID" >> "$GITHUB_ENV"
+
           TODAY=$(TZ=Asia/Seoul date +%Y%m%d)
           ASC_VERSIONS=$(curl -sf -H "Authorization: Bearer $TOKEN" \
             "$ASC/builds?filter%5Bapp%5D=$APP_ID&sort=-uploadedDate&limit=50&fields%5Bbuilds%5D=version" \
@@ -220,27 +240,30 @@ jobs:
 
       - name: Upload to TestFlight
         run: |
-          # -allowProvisioningUpdates는 쓸 인증서가 없으면 계정에 새로 만들 수 있다. 배포 인증서가 키체인에
-          # 유효하게 있을 때만 export를 돌린다. 프로파일은 기존 Xcode 관리 App Store 프로파일을 받아 쓴다.
           if ! security find-identity -v -p codesigning | grep -F "$SIGNING_CERT_SHA1" | grep -vq CSSMERR; then
-            echo "::error::러너 키체인에 배포 인증서($SIGNING_CERT_SHA1)가 없거나 유효하지 않습니다. 계정에 인증서가 새로 만들어지지 않도록 업로드를 중단합니다."
+            echo "::error::러너 키체인에 배포 인증서($SIGNING_CERT_SHA1)가 없거나 유효하지 않습니다."
             exit 1
           fi
 
+          # 앞에서 받은 프로파일을 Xcode가 찾는 위치에 둔다. 같은 UUID면 덮어써도 내용이 같다.
+          PROFILE_DIR="$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+          cp "$ASC_DIR/Blueprint.mobileprovision" "$PROFILE_DIR/$PROFILE_UUID.mobileprovision"
+
+          # 수동 서명이라 Xcode가 인증서·프로파일을 만들거나 바꾸지 않는다. API 키는 업로드 인증에만 쓴다.
           OPTS="$ASC_DIR/ExportOptions.plist"
           plutil -create xml1 "$OPTS"
           plutil -insert method -string app-store-connect "$OPTS"
           plutil -insert destination -string upload "$OPTS"
           plutil -insert teamID -string YEX9K6G97T "$OPTS"
-          plutil -insert signingStyle -string automatic "$OPTS"
-          # 키체인의 배포 인증서로 서명한다(클라우드 관리 인증서를 쓰거나 새로 만들지 않도록).
-          plutil -insert signingCertificate -string "Apple Distribution" "$OPTS"
+          plutil -insert signingStyle -string manual "$OPTS"
+          plutil -insert signingCertificate -string "$SIGNING_CERT_SHA1" "$OPTS"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" -c "Add :provisioningProfiles:com.wantedlab.Blueprint string $PROFILE_UUID" "$OPTS"
 
           xcodebuild -exportArchive \
             -archivePath "$ASC_DIR/Blueprint.xcarchive" \
             -exportOptionsPlist "$OPTS" \
             -exportPath "$ASC_DIR/export" \
-            -allowProvisioningUpdates \
             -authenticationKeyPath "$ASC_KEY_PATH" \
             -authenticationKeyID "$ASC_KEY_ID" \
             -authenticationKeyIssuerID "$ASC_ISSUER_ID"
