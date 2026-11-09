@@ -154,7 +154,7 @@ ContentBadge를 초기화합니다.
 
 - **Discussion**
 
-  배경은 `background`(생략하면 `contentColor`)의 8% 투명도, 테두리는 `contentColor`의 43% 투명도로 그립니다. `contentColor`에 `foregroundAccent{색}`, `background`에 `surfaceAccent{색}Opaque`를 넘기면 배경은 `surfaceAccent{색}`, 테두리는 `lineAccent{색}` 토큰과 같아집니다.
+  `.solid`는 배경을 `background`(생략하면 `contentColor`)의 8% 투명도로, `.outlined`는 배경 없이 테두리만 `contentColor`의 43% 투명도로 그립니다. `contentColor`에 `foregroundAccent{색}`, `background`에 `surfaceAccent{색}Opaque`를 넘기면 `.solid` 배경은 `surfaceAccent{색}`, `.outlined` 테두리는 `lineAccent{색}` 토큰과 같아집니다.
 
   ```swift
   .accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque))
