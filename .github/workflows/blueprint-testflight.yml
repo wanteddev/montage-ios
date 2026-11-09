@@ -104,9 +104,11 @@ jobs:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+      # 러너 키체인의 배포 인증서(ASC 3N35U4SY53, match가 관리)의 SHA-1. 인증서를 교체하면 함께 바꾼다.
+      SIGNING_CERT_SHA1: AE40A1C3AD7F965C24F3C53BC80E650DC70EEDB4
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
@@ -166,6 +168,40 @@ jobs:
             | python3 -c "import sys,json;d=json.load(sys.stdin);print(d['data'][0]['id'] if d.get('data') else '')")
           [ -n "$APP_ID" ] || { echo "::error::App Store Connect에서 com.wantedlab.Blueprint 앱을 찾지 못했습니다."; exit 1; }
 
+          # 서명에 쓸 App Store 프로파일을 준비한다. 러너의 배포 인증서가 들어 있는 ACTIVE 프로파일이 있으면 받아 쓰고,
+          # 없으면(처음 실행, 만료, 인증서 교체) 그 인증서로 하나 만든다. 인증서는 만들거나 바꾸지 않는다.
+          # Xcode 관리 프로파일은 수동 서명에 쓸 수 없고, API 키 인증의 자동 서명은 그 프로파일을 받아 오지 못한다.
+          PROFILE_UUID=$(ASC_DIR="$ASC_DIR" TOKEN="$TOKEN" python3 -c "
+          import json,os,base64,hashlib,plistlib,subprocess,sys,time,urllib.request
+          d=os.environ['ASC_DIR']; want=os.environ['SIGNING_CERT_SHA1'].upper()
+          api='https://api.appstoreconnect.apple.com/v1'
+          def call(path, body=None):
+              req=urllib.request.Request(api+path, data=json.dumps(body).encode() if body else None,
+                  headers={'Authorization':'Bearer '+os.environ['TOKEN'],'Content-Type':'application/json'})
+              return json.load(urllib.request.urlopen(req))
+          def usable(content):
+              path=d+'/Blueprint.mobileprovision'
+              open(path,'wb').write(base64.b64decode(content))
+              info=plistlib.loads(subprocess.run(['security','cms','-D','-i',path],capture_output=True,check=True).stdout)
+              ok=not info.get('IsXcodeManaged') and any(hashlib.sha1(c).hexdigest().upper()==want for c in info.get('DeveloperCertificates',[]))
+              return info['UUID'] if ok else None
+          b=call('/bundleIds?filter%5Bidentifier%5D=com.wantedlab.Blueprint&include=profiles&fields%5Bprofiles%5D=profileType,profileState,profileContent&limit%5Bprofiles%5D=50')
+          for p in b.get('included',[]):
+              a=p.get('attributes') or {}
+              if a.get('profileType')=='IOS_APP_STORE' and a.get('profileState')=='ACTIVE' and a.get('profileContent'):
+                  u=usable(a['profileContent'])
+                  if u: print(u); sys.exit(0)
+          certs=call('/certificates?filter%5BcertificateType%5D=DISTRIBUTION,IOS_DISTRIBUTION&fields%5Bcertificates%5D=certificateContent&limit=200')['data']
+          cert=[c['id'] for c in certs if hashlib.sha1(base64.b64decode(c['attributes']['certificateContent'])).hexdigest().upper()==want]
+          if not b.get('data') or not cert: sys.exit('bundle ID 또는 배포 인증서를 App Store Connect에서 찾지 못했습니다.')
+          print('App Store 프로파일을 새로 만듭니다.', file=sys.stderr)
+          new=call('/profiles', {'data':{'type':'profiles','attributes':{'name':'Blueprint App Store CI '+time.strftime('%Y%m%d'),'profileType':'IOS_APP_STORE'},
+              'relationships':{'bundleId':{'data':{'type':'bundleIds','id':b['data'][0]['id']}},'certificates':{'data':[{'type':'certificates','id':cert[0]}]}}}})
+          print(usable(new['data']['attributes']['profileContent']) or '')
+          ")
+          [ -n "$PROFILE_UUID" ] || { echo "::error::com.wantedlab.Blueprint App Store 프로파일을 준비하지 못했습니다."; exit 1; }
+          echo "PROFILE_UUID=$PROFILE_UUID" >> "$GITHUB_ENV"
+
           TODAY=$(TZ=Asia/Seoul date +%Y%m%d)
           ASC_VERSIONS=$(curl -sf -H "Authorization: Bearer $TOKEN" \
             "$ASC/builds?filter%5Bapp%5D=$APP_ID&sort=-uploadedDate&limit=50&fields%5Bbuilds%5D=version" \
@@ -193,6 +229,9 @@ jobs:
       - name: Archive
         run: |
           set -o pipefail
+          # 러너에는 개발 인증서를 두지 않으므로 서명 없이 archive하고, 서명은 export에서 배포 인증서로 한 번만 한다.
+          # (Blueprint는 자동 서명이라 archive 단계에서 서명하면 개발 인증서를 요구하고, 명령줄로 identity를
+          # 바꾸면 SPM 리소스 번들 타깃까지 적용돼 실패한다.)
           xcodebuild -version
           xcodebuild archive \
             -workspace Montage.xcworkspace \
@@ -200,11 +239,8 @@ jobs:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$ASC_DIR/Blueprint.xcarchive" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$ASC_KEY_PATH" \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
             -quiet \
+            CODE_SIGNING_ALLOWED=NO \
             MARKETING_VERSION="$VERSION" \
             CURRENT_PROJECT_VERSION="$BUILD"
 
@@ -218,18 +254,30 @@ jobs:
 
       - name: Upload to TestFlight
         run: |
+          if ! security find-identity -v -p codesigning | grep -F "$SIGNING_CERT_SHA1" | grep -vq CSSMERR; then
+            echo "::error::러너 키체인에 배포 인증서($SIGNING_CERT_SHA1)가 없거나 유효하지 않습니다."
+            exit 1
+          fi
+
+          # 앞에서 받은 프로파일을 Xcode가 찾는 위치에 둔다. 같은 UUID면 덮어써도 내용이 같다.
+          PROFILE_DIR="$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+          mkdir -p "$PROFILE_DIR"
+          cp "$ASC_DIR/Blueprint.mobileprovision" "$PROFILE_DIR/$PROFILE_UUID.mobileprovision"
+
+          # 수동 서명이라 Xcode가 인증서·프로파일을 만들거나 바꾸지 않는다. API 키는 업로드 인증에만 쓴다.
           OPTS="$ASC_DIR/ExportOptions.plist"
           plutil -create xml1 "$OPTS"
           plutil -insert method -string app-store-connect "$OPTS"
           plutil -insert destination -string upload "$OPTS"
           plutil -insert teamID -string YEX9K6G97T "$OPTS"
-          plutil -insert signingStyle -string automatic "$OPTS"
+          plutil -insert signingStyle -string manual "$OPTS"
+          plutil -insert signingCertificate -string "$SIGNING_CERT_SHA1" "$OPTS"
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" -c "Add :provisioningProfiles:com.wantedlab.Blueprint string $PROFILE_UUID" "$OPTS"
 
           xcodebuild -exportArchive \
             -archivePath "$ASC_DIR/Blueprint.xcarchive" \
             -exportOptionsPlist "$OPTS" \
             -exportPath "$ASC_DIR/export" \
-            -allowProvisioningUpdates \
             -authenticationKeyPath "$ASC_KEY_PATH" \
             -authenticationKeyID "$ASC_KEY_ID" \
             -authenticationKeyIssuerID "$ASC_ISSUER_ID"
