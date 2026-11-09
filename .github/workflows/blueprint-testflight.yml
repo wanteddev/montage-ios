@@ -194,6 +194,9 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild -version
+          # 러너에는 배포 인증서만 두고 개발 인증서는 쓰지 않는다. API 키 인증에서 Xcode는 개발 인증서를
+          # "이 머신용"으로 따로 관리해, 개인키가 없으면 revoke 후 재발급을 요구하며 멈춘다.
+          # 처음부터 Apple Distribution으로 서명하면 App Store 프로파일만 자동으로 만든다.
           xcodebuild archive \
             -workspace Montage.xcworkspace \
             -scheme Blueprint \
@@ -205,6 +208,7 @@ jobs:
             -authenticationKeyID "$ASC_KEY_ID" \
             -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
             -quiet \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
             MARKETING_VERSION="$VERSION" \
             CURRENT_PROJECT_VERSION="$BUILD"
 
