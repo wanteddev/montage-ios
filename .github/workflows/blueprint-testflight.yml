@@ -1,0 +1,340 @@
+name: blueprint-testflight
+
+# PR 코드로 Blueprint를 빌드해 TestFlight에 올리고, 결과 버전(빌드)을 PR 댓글 하나에 갱신한다.
+#
+# - 대상: 같은 레포 브랜치 PR 중 컴포넌트(Sources/Montage, Sources/Blueprint)나 패키지 의존성이 바뀐 PR.
+#   docstring 수정도 Sources/Montage 안이라 여기에 포함된다. documentation/ 등 앱에 안 들어가는 변경은 제외.
+# - `Skip Testflight` 라벨이 붙은 PR은 건너뛴다. 라벨을 떼면 그 시점의 head로 다시 빌드한다.
+# - 버전(MARKETING_VERSION)은 PR milestone, 빌드넘버(CURRENT_PROJECT_VERSION)는 YYYYMMDDnnn.
+#   둘 다 xcodebuild 빌드 설정 override로만 넣고 pbxproj는 커밋하지 않는다(CI 커밋이 워크플로를 다시 돌리지 않도록).
+# - 포크 PR에는 시크릿이 없고, self-hosted 러너에서 외부 코드를 돌리지 않도록 gate에서 거른다.
+
+on:
+  pull_request:
+    # labeled는 받지 않는다. 다른 라벨 변경마다 run이 생기고, Skip 라벨을 단다고 진행 중인 빌드가 멈추지도 않는다.
+    types: [opened, reopened, synchronize, unlabeled, milestoned]
+    branches:
+      - main
+      - "release/*"
+    paths:
+      - "Sources/Montage/**"
+      - "Sources/Blueprint/**"
+      - "Package.swift"
+      - "Package.resolved"
+
+permissions:
+  contents: read
+
+env:
+  SKIP_LABEL: Skip Testflight
+
+jobs:
+  # 실행 여부와 버전만 판정한다. PR 코드를 체크아웃하지 않는다.
+  gate:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+      version: ${{ steps.decide.outputs.version }}
+    steps:
+      - name: Decide
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTION: ${{ github.event.action }}
+          EVENT_LABEL: ${{ github.event.label.name }}
+          HAS_SKIP_LABEL: ${{ contains(github.event.pull_request.labels.*.name, env.SKIP_LABEL) }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+          MILESTONE: ${{ github.event.pull_request.milestone.title }}
+        run: |
+          skip() { echo "::notice::$1"; echo "run=false" >> "$GITHUB_OUTPUT"; exit 0; }
+
+          [ "$HAS_SKIP_LABEL" = "true" ] && skip "'$SKIP_LABEL' 라벨이 있어 건너뜁니다."
+
+          case "$ACTION" in
+            unlabeled)
+              [ "$EVENT_LABEL" = "$SKIP_LABEL" ] || skip "'$SKIP_LABEL' 외 라벨 변경은 무시합니다."
+              ;;
+            synchronize)
+              # paths 필터는 PR 전체 diff 기준이라 문서 봇 커밋(documentation/)도 통과한다.
+              # 이번 push 구간에 앱에 들어가는 변경이 있을 때만 빌드한다.
+              # force-push 등으로 비교할 수 없으면 변경이 있다고 보고 빌드한다.
+              if FILES=$(gh api "repos/${GITHUB_REPOSITORY}/compare/${BEFORE}...${AFTER}" --jq '.files[].filename' 2>/dev/null); then
+                COUNT=$(printf '%s\n' "$FILES" | grep -c . || true)
+                # compare API는 파일을 300개까지만 돌려준다. 잘렸으면 빌드한다.
+                if [ "$COUNT" -lt 300 ] && ! printf '%s\n' "$FILES" | grep -Eq '^(Sources/Montage/|Sources/Blueprint/|Package\.swift$|Package\.resolved$)'; then
+                  skip "이번 push에 앱에 들어가는 변경이 없어 건너뜁니다."
+                fi
+              else
+                echo "push 구간을 비교할 수 없어 빌드합니다. (${BEFORE:0:7}...${AFTER:0:7})"
+              fi
+              ;;
+          esac
+
+          if ! printf '%s' "$MILESTONE" | grep -Eq '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+            echo "::error::PR milestone이 없거나 버전 형식(X.Y.Z)이 아닙니다: '${MILESTONE}'. milestone을 지정하면 다시 실행됩니다."
+            exit 1
+          fi
+
+          echo "run=true" >> "$GITHUB_OUTPUT"
+          echo "version=$MILESTONE" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
+    runs-on: self-hosted
+    # contents: write는 업로드 직후 배포 태그를 만드는 데만 쓴다. 체크아웃에 토큰을 남기지 않고(persist-credentials: false)
+    # 태그 step에만 넘기므로 PR 코드를 실행하는 step(archive 등)은 토큰을 받지 않는다.
+    permissions:
+      contents: write
+    # 같은 PR에 연달아 push하면 마지막 빌드만 남긴다.
+    # 워크플로 단위로 걸면 건너뛸 run(문서 봇 커밋 등)도 진행 중인 빌드를 취소하므로 job 단위로 건다.
+    concurrency:
+      group: blueprint-testflight-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    outputs:
+      version: ${{ steps.number.outputs.version }}
+      build: ${{ steps.number.outputs.build }}
+      sha: ${{ steps.number.outputs.sha }}
+    env:
+      VERSION: ${{ needs.gate.outputs.version }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Prepare App Store Connect API Key
+        env:
+          ASC_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_KEY_CONTENT" ]; then
+            echo "::error::APP_STORE_CONNECT_API_KEY_* 시크릿이 없습니다."
+            exit 1
+          fi
+          ASC_DIR="$RUNNER_TEMP/blueprint-testflight"
+          echo "ASC_DIR=$ASC_DIR" >> "$GITHUB_ENV"
+          rm -rf "$ASC_DIR"
+          mkdir -p "$ASC_DIR"
+          KEY_PATH="$ASC_DIR/AuthKey_${ASC_KEY_ID}.p8"
+          # 시크릿은 PEM(리터럴 \n 포함 가능) 또는 base64로 들어올 수 있다.
+          if printf '%s' "$ASC_KEY_CONTENT" | grep -q 'BEGIN'; then
+            ( umask 077; printf '%b\n' "$ASC_KEY_CONTENT" > "$KEY_PATH" )
+          else
+            ( umask 077; printf '%s' "$ASC_KEY_CONTENT" | base64 -D > "$KEY_PATH" )
+          fi
+          echo "ASC_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
+
+          # 러너 서비스 세션에서 로그인 키체인이 잠겨 있으면 서명이 실패한다.
+          # 직접 연 경우에만 Clean up에서 다시 잠근다(같은 러너의 다른 job이 쓰는 상태를 바꾸지 않도록).
+          KEYCHAIN="$HOME/Library/Keychains/login.keychain-db"
+          if [ -n "$KEYCHAIN_PASSWORD" ] && ! security show-keychain-info "$KEYCHAIN" > /dev/null 2>&1; then
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+            echo "RELOCK_KEYCHAIN=$KEYCHAIN" >> "$GITHUB_ENV"
+          fi
+
+      - name: Determine build number
+        id: number
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          b64url() { python3 -c "import sys,base64;print(base64.urlsafe_b64encode(sys.stdin.buffer.read()).decode().rstrip('='))"; }
+          NOW=$(date +%s)
+          HEADER=$(printf '{"alg":"ES256","kid":"%s","typ":"JWT"}' "$ASC_KEY_ID" | b64url)
+          PAYLOAD=$(printf '{"iss":"%s","iat":%d,"exp":%d,"aud":"appstoreconnect-v1"}' "$ASC_ISSUER_ID" "$NOW" "$((NOW + 1200))" | b64url)
+          # openssl은 DER 서명을 내므로 JWT가 요구하는 r||s(64바이트)로 바꾼다.
+          SIG=$(printf '%s.%s' "$HEADER" "$PAYLOAD" | openssl dgst -sha256 -sign "$ASC_KEY_PATH" -binary | python3 -c "
+          import sys,base64
+          der=sys.stdin.buffer.read()
+          r_len=der[3]; r=der[4:4+r_len]
+          s_off=4+r_len+2; s_len=der[s_off-1]; s=der[s_off:s_off+s_len]
+          print(base64.urlsafe_b64encode(r[-32:].rjust(32,b'\x00')+s[-32:].rjust(32,b'\x00')).decode().rstrip('='))")
+          TOKEN="$HEADER.$PAYLOAD.$SIG"
+
+          ASC=https://api.appstoreconnect.apple.com/v1
+          APP_ID=$(curl -sf -H "Authorization: Bearer $TOKEN" \
+            "$ASC/apps?filter%5BbundleId%5D=com.wantedlab.Blueprint&fields%5Bapps%5D=bundleId" \
+            | python3 -c "import sys,json;d=json.load(sys.stdin);print(d['data'][0]['id'] if d.get('data') else '')")
+          [ -n "$APP_ID" ] || { echo "::error::App Store Connect에서 com.wantedlab.Blueprint 앱을 찾지 못했습니다."; exit 1; }
+
+          TODAY=$(TZ=Asia/Seoul date +%Y%m%d)
+          ASC_VERSIONS=$(curl -sf -H "Authorization: Bearer $TOKEN" \
+            "$ASC/builds?filter%5Bapp%5D=$APP_ID&sort=-uploadedDate&limit=50&fields%5Bbuilds%5D=version" \
+            | python3 -c "import sys,json;[print((b.get('attributes') or {}).get('version') or '') for b in json.load(sys.stdin).get('data',[])]")
+          # 방금 올린 빌드는 처리 중이라 ASC 목록에 늦게 뜬다. 업로드 직후 push하는 배포 태그도 함께 봐서 번호가 겹치지 않게 한다.
+          TAG_BUILDS=$(curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/blueprint/" \
+            | python3 -c "import sys,json;[print(r['ref'].rsplit('/',1)[-1]) for r in json.load(sys.stdin)]")
+          MAXSEQ=$(printf '%s\n%s\n' "$ASC_VERSIONS" "$TAG_BUILDS" | TODAY="$TODAY" python3 -c "
+          import sys,os
+          t=os.environ['TODAY']; mx=0
+          for v in sys.stdin.read().split():
+              if v.startswith(t) and len(v)==11 and v[8:].isdigit(): mx=max(mx,int(v[8:]))
+          print(mx)")
+          BUILD="${TODAY}$(printf '%03d' $((MAXSEQ + 1)))"
+
+          echo "Blueprint $VERSION ($BUILD) · ${HEAD_SHA:0:7}"
+          {
+            echo "version=$VERSION"
+            echo "build=$BUILD"
+            echo "sha=$HEAD_SHA"
+          } >> "$GITHUB_OUTPUT"
+          echo "BUILD=$BUILD" >> "$GITHUB_ENV"
+
+      - name: Archive
+        run: |
+          set -o pipefail
+          xcodebuild -version
+          xcodebuild archive \
+            -workspace Montage.xcworkspace \
+            -scheme Blueprint \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$ASC_DIR/Blueprint.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            -quiet \
+            MARKETING_VERSION="$VERSION" \
+            CURRENT_PROJECT_VERSION="$BUILD"
+
+          PLIST="$ASC_DIR/Blueprint.xcarchive/Info.plist"
+          AV=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleShortVersionString" "$PLIST")
+          AB=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:CFBundleVersion" "$PLIST")
+          if [ "$AV" != "$VERSION" ] || [ "$AB" != "$BUILD" ]; then
+            echo "::error::아카이브 버전이 다릅니다. 기대 $VERSION ($BUILD), 실제 $AV ($AB)"
+            exit 1
+          fi
+
+      - name: Upload to TestFlight
+        run: |
+          OPTS="$ASC_DIR/ExportOptions.plist"
+          plutil -create xml1 "$OPTS"
+          plutil -insert method -string app-store-connect "$OPTS"
+          plutil -insert destination -string upload "$OPTS"
+          plutil -insert teamID -string YEX9K6G97T "$OPTS"
+          plutil -insert signingStyle -string automatic "$OPTS"
+
+          xcodebuild -exportArchive \
+            -archivePath "$ASC_DIR/Blueprint.xcarchive" \
+            -exportOptionsPlist "$OPTS" \
+            -exportPath "$ASC_DIR/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+
+      # 어떤 커밋이 어느 빌드인지 찾는 기록이자, 다음 빌드넘버 계산의 입력이다(ASC 목록은 처리 중 빌드를 늦게 보여 준다).
+      # report job에서 만들면 그 사이 다른 PR 빌드가 러너를 잡아 같은 번호를 받을 수 있어 업로드 직후 여기서 만든다.
+      # 이름 규칙은 로컬 배포 스킬(/montage-blueprint-deploy)과 같다.
+      - name: Push deploy tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          TAG="blueprint/$VERSION/$BUILD"
+          if TAG_SHA=$(gh api "repos/${GITHUB_REPOSITORY}/git/tags" \
+                -f tag="$TAG" -f message="Blueprint $VERSION ($BUILD) TestFlight 배포 (#$PR)" \
+                -f object="$HEAD_SHA" -f type=commit --jq .sha) \
+             && gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/tags/$TAG" -f sha="$TAG_SHA" > /dev/null; then
+            echo "태그 $TAG -> ${HEAD_SHA:0:7}"
+          else
+            echo "::warning::배포 태그 $TAG 를 만들지 못했습니다. 업로드는 완료됐습니다."
+          fi
+
+      - name: Clean up
+        if: always()
+        run: |
+          [ -z "$ASC_DIR" ] || rm -rf "$ASC_DIR"
+          [ -z "$RELOCK_KEYCHAIN" ] || security lock-keychain "$RELOCK_KEYCHAIN"
+
+  # PR 댓글을 남긴다. 쓰기 권한이 있으므로 PR 코드를 체크아웃하거나 실행하지 않는다.
+  report:
+    needs: [gate, build]
+    if: >-
+      always() &&
+      needs.gate.outputs.run == 'true' &&
+      (needs.build.result == 'success' || needs.build.result == 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RESULT: ${{ needs.build.result }}
+      VERSION: ${{ needs.build.outputs.version || needs.gate.outputs.version }}
+      BUILD: ${{ needs.build.outputs.build }}
+      SHA: ${{ needs.build.outputs.sha || github.event.pull_request.head.sha }}
+      PR: ${{ github.event.pull_request.number }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Update PR comment
+        run: |
+          MARKER='<!-- blueprint-testflight -->'
+          COMMENT=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$MARKER\"))) | {id, body}" \
+            | jq -s 'first // empty')
+
+          # 이력은 댓글 안 숨은 주석에 JSON(base64)으로 두고 매번 본문을 다시 그린다.
+          HISTORY='[]'
+          if [ -n "$COMMENT" ]; then
+            ENCODED=$(printf '%s' "$COMMENT" | jq -r .body | sed -n 's/^<!-- blueprint-history:\(.*\) -->$/\1/p')
+            # 디코딩이 깨지면 이력만 버리고 댓글은 계속 갱신한다.
+            if [ -n "$ENCODED" ]; then
+              HISTORY=$(printf '%s' "$ENCODED" | base64 -d 2>/dev/null | jq -c 'arrays' 2>/dev/null) || HISTORY='[]'
+              [ -n "$HISTORY" ] || HISTORY='[]'
+            fi
+          fi
+          NOW=$(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')
+          HISTORY=$(jq -c \
+            --arg result "$RESULT" --arg version "$VERSION" --arg build "$BUILD" \
+            --arg sha "$SHA" --arg run "$RUN_URL" --arg at "$NOW" \
+            '[{result: $result, version: $version, build: $build, sha: $sha, run: $run, at: $at}] + . | .[:20]' \
+            <<< "$HISTORY")
+
+          COMMIT_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit"
+          BODY=$(jq -r --arg marker "$MARKER" --arg commit "$COMMIT_URL" \
+            --arg encoded "$(printf '%s' "$HISTORY" | base64 -w0)" '
+            def commit: "[`\(.sha[:7])`](\($commit)/\(.sha))";
+            def summary:
+              if .result == "success"
+              then "**\(.version) (\(.build))** · \(commit) · 업로드 완료, App Store Connect 처리 중"
+              else "❌ 빌드 실패 · \(commit) · [로그](\(.run))" end;
+            def row:
+              if .result == "success"
+              then "| \(.version) (\(.build)) | \(commit) | \(.at) |"
+              else "| ❌ [실패](\(.run)) | \(commit) | \(.at) |" end;
+            [
+              $marker,
+              "### Blueprint TestFlight",
+              "",
+              (.[0] | summary),
+              "",
+              (if .[0].result == "success"
+               then "처리가 끝나면 TestFlight에서 설치할 수 있습니다(보통 수 분\\~수십 분). 이 PR에 컴포넌트 변경이 push되면 다시 빌드합니다."
+               else "실패 원인은 로그에서 확인하세요. 다시 push하거나 워크플로를 재실행하면 다시 빌드합니다." end),
+              (if length > 1 then
+                "", "<details><summary>이전 빌드</summary>", "",
+                "| 버전(빌드) | 커밋 | 시각(KST) |", "|---|---|---|",
+                (.[1:][] | row),
+                "", "</details>"
+              else empty end),
+              "",
+              "<!-- blueprint-history:\($encoded) -->"
+            ] | join("\n")' <<< "$HISTORY")
+
+          if [ -n "$COMMENT" ]; then
+            ID=$(printf '%s' "$COMMENT" | jq -r .id)
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${ID}" -f body="$BODY" > /dev/null
+          else
+            gh api "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" -f body="$BODY" > /dev/null
+          fi

@@ -110,6 +110,15 @@ DocC는 docstring을 Markdown으로 파싱하며 **단일 `~`도 취소선으로
 
 Xcode 버전에 따라 생성 결과가 달라지므로 로컬 `make` 결과를 커밋하면 봇이 빌드머신 기준으로 다시 덮어쓸 수 있다.
 
+## Blueprint TestFlight (PR)
+
+`blueprint-testflight`는 `Sources/Montage/`·`Sources/Blueprint/`·`Package.*`가 바뀐 같은 레포 브랜치 PR에서 Blueprint를 TestFlight에 올리고, 버전(빌드)을 PR 댓글 하나에 갱신한다.
+
+- 버전은 PR milestone이다. milestone이 없으면 실패하고, 지정하면 다시 돈다.
+- 이후 push는 그 구간에 위 경로 변경이 있을 때만 다시 빌드한다(문서 봇 커밋은 건너뜀).
+- 빌드가 필요 없는 PR에는 `Skip Testflight` 라벨을 단다. 라벨을 떼면 그 시점 head로 빌드한다.
+- 버전·빌드넘버는 빌드 설정 override로만 넣는다. pbxproj의 두 값은 로컬 빌드용이며 커밋하지 않는다.
+
 ## Commit Convention
 
 [Conventional Commits](https://www.conventionalcommits.org/) 사용: `<type>(<scope>): <description>`
