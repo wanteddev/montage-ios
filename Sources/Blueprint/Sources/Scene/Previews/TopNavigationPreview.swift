@@ -34,7 +34,8 @@ struct TopNavigationPreview: View {
         case none
         case tab
         case segmented
-        case chips
+        case category
+        case slot
     }
 
     @Environment(\.presentationMode) var presentationMode
@@ -120,30 +121,24 @@ struct TopNavigationPreview: View {
         ToolbarKind.allCases[toolbarKindIndex]
     }
 
-    @ViewBuilder
-    private var toolbarContent: some View {
+    private var toolbar: TopNavigation.Resource.Toolbar? {
+        let items = ["텍스트", "텍스트", "텍스트"]
         switch toolbarKind {
         case .none:
-            EmptyView()
+            return nil
         case .tab:
-            Montage.Tab(selectedIndex: $toolbarSelectedIndex, items: ["텍스트", "텍스트", "텍스트"])
-                .horizontalPadding(true)
+            return .tab(selectedIndex: $toolbarSelectedIndex, items: items)
         case .segmented:
-            SegmentedControl(selectedIndex: $toolbarSelectedIndex, labels: ["텍스트", "텍스트", "텍스트"])
-                .padding(.horizontal, 20)
-                .padding(.vertical, 8)
-        case .chips:
-            // 폭을 넘는 칩 목록은 툴바가 가로로 스크롤한다.
-            HStack(spacing: 8) {
-                ForEach(0..<10, id: \.self) { index in
-                    Chip(variant: .outlined, size: .small, text: "텍스트 \(index + 1)") {
-                        toolbarSelectedIndex = index
-                    }
-                    .active(index == toolbarSelectedIndex)
+            return .segmentedControl(selectedIndex: $toolbarSelectedIndex, labels: items)
+        case .category:
+            return .category(selectedIndex: $toolbarSelectedIndex, items: (1...8).map { "텍스트 \($0)" })
+        case .slot:
+            // 폭을 넘는 필터 목록은 슬롯이 가로로 스크롤한다.
+            return .slot {
+                ForEach(["직군", "경력", "지역", "연봉", "기업 규모", "근무 형태"], id: \.self) {
+                    FilterButton(size: .small, text: $0)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 8)
         }
     }
 
@@ -216,8 +211,8 @@ struct TopNavigationPreview: View {
                     )
                     .modifying {
                         var mutated = $0
-                        if toolbarKind != .none {
-                            mutated = mutated.toolbar { toolbarContent }
+                        if let toolbar {
+                            mutated = mutated.toolbar(toolbar)
                         }
                         if leading {
                             mutated = mutated.leadingContent {
