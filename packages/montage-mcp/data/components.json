@@ -3818,8 +3818,8 @@
         },
         {
           "name": "toolbar(_:)",
-          "signature": "func toolbar<V>(() -> V) -> TopNavigation",
-          "summary": "내비게이션 바 아래에 붙는 툴바 영역에 표시할 뷰를 설정합니다.",
+          "signature": "func toolbar(Resource.Toolbar) -> TopNavigation",
+          "summary": "내비게이션 바 아래에 붙는 툴바 영역을 설정합니다.",
           "kind": "method"
         },
         {
@@ -3879,6 +3879,31 @@
             "back(action:)",
             "icon(_:action:)",
             "text(_:action:)"
+          ]
+        },
+        {
+          "name": "TopNavigation.Resource.Toolbar",
+          "kind": "enum",
+          "summary": "내비게이션 바 아래 툴바 영역에 표시할 요소입니다.",
+          "cases": [
+            "category",
+            "segmentedControl",
+            "slotView",
+            "tab"
+          ],
+          "caseSignatures": [
+            "category(selectedIndex:items:onSelect:)",
+            "segmentedControl(selectedIndex:labels:onSelect:)",
+            "slotView(_:)",
+            "tab(selectedIndex:items:onSelect:)"
+          ],
+          "staticMethods": [
+            {
+              "name": "slot(_:)",
+              "signature": "static func slot<V>(() -> V) -> Toolbar",
+              "summary": "프리셋에 없는 구성을 직접 그립니다.",
+              "kind": "method"
+            }
           ]
         },
         {
