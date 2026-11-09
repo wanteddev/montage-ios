@@ -121,17 +121,24 @@ struct TopNavigationPreview: View {
         ToolbarKind.allCases[toolbarKindIndex]
     }
 
+    private var toolbarItems: [String] {
+        switch toolbarKind {
+        case .tab, .segmented: ["텍스트", "텍스트", "텍스트"]
+        case .category: (1...8).map { "텍스트 \($0)" }
+        case .none, .slot: []
+        }
+    }
+
     private var toolbar: TopNavigation.Resource.Toolbar? {
-        let items = ["텍스트", "텍스트", "텍스트"]
         switch toolbarKind {
         case .none:
             return nil
         case .tab:
-            return .tab(selectedIndex: $toolbarSelectedIndex, items: items)
+            return .tab(selectedIndex: $toolbarSelectedIndex, items: toolbarItems)
         case .segmented:
-            return .segmentedControl(selectedIndex: $toolbarSelectedIndex, labels: items)
+            return .segmentedControl(selectedIndex: $toolbarSelectedIndex, labels: toolbarItems)
         case .category:
-            return .category(selectedIndex: $toolbarSelectedIndex, items: (1...8).map { "텍스트 \($0)" })
+            return .category(selectedIndex: $toolbarSelectedIndex, items: toolbarItems)
         case .slot:
             // 폭을 넘는 필터 목록은 슬롯이 가로로 스크롤한다.
             return .slot {
@@ -193,6 +200,12 @@ struct TopNavigationPreview: View {
                 }
             }
             .toast($toast)
+            .onChange(of: toolbarKindIndex) { _ in
+                // 항목 수가 다른 프리셋으로 바꾸면 이전 선택이 범위를 벗어날 수 있다.
+                if !toolbarItems.indices.contains(toolbarSelectedIndex) {
+                    toolbarSelectedIndex = 0
+                }
+            }
     }
 
     var preview: some View {
