@@ -86,6 +86,8 @@ jobs:
     needs: gate
     if: needs.gate.outputs.run == 'true'
     runs-on: self-hosted
+    # 러너가 하나라 멈춘 job이 다른 PR 빌드를 막지 않도록 상한을 둔다(평소 3분 안팎, SPM 첫 다운로드 여유 포함).
+    timeout-minutes: 45
     # contents: write는 업로드 직후 배포 태그를 만드는 데만 쓴다. 체크아웃에 토큰을 남기지 않고(persist-credentials: false)
     # 태그 step에만 넘기므로 PR 코드를 실행하는 step(archive 등)은 토큰을 받지 않는다.
     permissions:
@@ -163,7 +165,7 @@ jobs:
           TOKEN="$HEADER.$PAYLOAD.$SIG"
 
           ASC=https://api.appstoreconnect.apple.com/v1
-          APP_ID=$(curl -sf -H "Authorization: Bearer $TOKEN" \
+          APP_ID=$(curl -sf --max-time 60 -H "Authorization: Bearer $TOKEN" \
             "$ASC/apps?filter%5BbundleId%5D=com.wantedlab.Blueprint&fields%5Bapps%5D=bundleId" \
             | python3 -c "import sys,json;d=json.load(sys.stdin);print(d['data'][0]['id'] if d.get('data') else '')")
           [ -n "$APP_ID" ] || { echo "::error::App Store Connect에서 com.wantedlab.Blueprint 앱을 찾지 못했습니다."; exit 1; }
@@ -178,7 +180,7 @@ jobs:
           def call(path, body=None):
               req=urllib.request.Request(api+path, data=json.dumps(body).encode() if body else None,
                   headers={'Authorization':'Bearer '+os.environ['TOKEN'],'Content-Type':'application/json'})
-              return json.load(urllib.request.urlopen(req))
+              return json.load(urllib.request.urlopen(req, timeout=60))
           def usable(content):
               path=d+'/Blueprint.mobileprovision'
               open(path,'wb').write(base64.b64decode(content))
@@ -203,11 +205,11 @@ jobs:
           echo "PROFILE_UUID=$PROFILE_UUID" >> "$GITHUB_ENV"
 
           TODAY=$(TZ=Asia/Seoul date +%Y%m%d)
-          ASC_VERSIONS=$(curl -sf -H "Authorization: Bearer $TOKEN" \
+          ASC_VERSIONS=$(curl -sf --max-time 60 -H "Authorization: Bearer $TOKEN" \
             "$ASC/builds?filter%5Bapp%5D=$APP_ID&sort=-uploadedDate&limit=50&fields%5Bbuilds%5D=version" \
             | python3 -c "import sys,json;[print((b.get('attributes') or {}).get('version') or '') for b in json.load(sys.stdin).get('data',[])]")
           # 방금 올린 빌드는 처리 중이라 ASC 목록에 늦게 뜬다. 업로드 직후 push하는 배포 태그도 함께 봐서 번호가 겹치지 않게 한다.
-          TAG_BUILDS=$(curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+          TAG_BUILDS=$(curl -sf --max-time 60 -H "Authorization: Bearer $GH_TOKEN" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/blueprint/" \
             | python3 -c "import sys,json;[print(r['ref'].rsplit('/',1)[-1]) for r in json.load(sys.stdin)]")
           MAXSEQ=$(printf '%s\n%s\n' "$ASC_VERSIONS" "$TAG_BUILDS" | TODAY="$TODAY" python3 -c "
