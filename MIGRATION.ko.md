@@ -59,10 +59,13 @@ SwiftUI.ScrollView { content }
 | 테두리 (`background` 생략) | `contentColor` × 43% | 변경 없음 |
 | 배경 | `(background ?? contentColor)` × 8% | 변경 없음 |
 
-Figma accent 배지와 같게 하려면 아래 조합을 쓰세요. 배경은 `surfaceAccent{색}`, 테두리는 `lineAccent{색}`이 됩니다.
+Figma accent 배지와 같게 하려면 아래 조합을 쓰세요. `.solid`는 배경이 `surfaceAccent{색}`, `.outlined`는 배경 없이 테두리만 `lineAccent{색}`이 됩니다.
 
 ```swift
-ContentBadge(variant: .outlined, text: "Badge")
+ContentBadge(variant: .solid, text: "Badge")      // 배경 surfaceAccentCyan
+    .colorStyle(.accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque)))
+
+ContentBadge(variant: .outlined, text: "Badge")   // 테두리 lineAccentCyan
     .colorStyle(.accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque)))
 ```
 

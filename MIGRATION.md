@@ -59,10 +59,13 @@ Starting in 4.3.2, the border (`.outlined`) of `ColorStyle.accent(_:background:)
 | Border (`background` omitted) | `contentColor` × 43% | Unchanged |
 | Background | `(background ?? contentColor)` × 8% | Unchanged |
 
-To match the Figma accent badge, use the combination below. The background becomes `surfaceAccent{color}` and the border `lineAccent{color}`.
+To match the Figma accent badge, use the combination below. A `.solid` badge gets a `surfaceAccent{color}` background, and an `.outlined` badge gets only a `lineAccent{color}` border with no background.
 
 ```swift
-ContentBadge(variant: .outlined, text: "Badge")
+ContentBadge(variant: .solid, text: "Badge")      // background surfaceAccentCyan
+    .colorStyle(.accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque)))
+
+ContentBadge(variant: .outlined, text: "Badge")   // border lineAccentCyan
     .colorStyle(.accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque)))
 ```
 
