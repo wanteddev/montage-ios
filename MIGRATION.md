@@ -47,6 +47,27 @@ SwiftUI.ScrollView { content }
 
 **Screens to check**: pull to refresh on every screen found by `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`. 4.3.0 cannot cancel a refresh by scrolling back up, so use 4.3.1 or later. On iOS 16·17, check that screens whose `onRefresh` closure receives a cancellation (`CancellationError`) do not end up in an inconsistent state. On 4.3.1, also push the content up while refreshing and check that the logo is clipped at both top and bottom.
 
+### ContentBadge accent border
+
+**Kind: Visual check**
+
+Starting in 4.3.2, the border (`.outlined`) of `ColorStyle.accent(_:background:)` is derived from `contentColor` instead of `background`. Passing `foregroundAccent{color}` as `contentColor` makes the border match the Figma `lineAccent{color}` token. The background is unchanged.
+
+| Item | 4.3.1 and earlier | 4.3.2 |
+|---|---|---|
+| Border (`background` given) | `background` × 43% | **`contentColor` × 43%** |
+| Border (`background` omitted) | `contentColor` × 43% | Unchanged |
+| Background | `(background ?? contentColor)` × 8% | Unchanged |
+
+To match the Figma accent badge, use the combination below. The background becomes `surfaceAccent{color}` and the border `lineAccent{color}`.
+
+```swift
+ContentBadge(variant: .outlined, text: "Badge")
+    .colorStyle(.accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque)))
+```
+
+**Screens to check**: among the `ContentBadge` call sites found by `grep -rn "\.accent(.*background:" --include='*.swift'`, check the border color of `.outlined` badges. Call sites that omit `background` or use only `.solid` are unaffected.
+
 ---
 
 ## 4.0

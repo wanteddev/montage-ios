@@ -54,6 +54,13 @@ struct ContentBadgePreview: View {
             ToggleOptionRow("solid", isOn: $isSolid)
             SegmentedIndexRow("size", index: $sizeIndex, labels: sizes.map(\.description))
             SegmentedIndexRow("colorStyle", index: $colorStyleIndex, labels: colorStyles.map(\.description))
+            if colorStyleIndex == 1 {
+                MenuOptionRow("accent token", menuLabel: "select") {
+                    ForEach(AccentPreset.allCases, id: \.self) { preset in
+                        Button(preset.title) { apply(preset) }
+                    }
+                }
+            }
             ColorPickerOptionRow("contentColor", selection: $foregroundColor)
             if colorStyleIndex == 1 {
                 ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
@@ -74,8 +81,15 @@ struct ContentBadgePreview: View {
         .onChange(of: colorStyleIndex) { newValue in
             if newValue == 0 {
                 foregroundColor = .semantic(.foregroundNeutralTertiary)
+            } else {
+                apply(.cyan)
             }
         }
+    }
+
+    private func apply(_ preset: AccentPreset) {
+        foregroundColor = preset.foregroundColor
+        backgroundColor = preset.backgroundColor
     }
     
     private var colorStyles: [ContentBadge.ColorStyle] {
@@ -83,6 +97,44 @@ struct ContentBadgePreview: View {
             .neutral(foregroundColor),
             .accent(foregroundColor, background: backgroundColor)
         ]
+    }
+}
+
+/// Figma accent 배지와 같은 색 조합. 배경은 `surfaceAccent{색}`, 테두리는 `lineAccent{색}`이 된다.
+private enum AccentPreset: CaseIterable {
+    case lime, cyan, lightBlue, violet, purple, pink
+
+    var title: String {
+        switch self {
+        case .lime: "Lime"
+        case .cyan: "Cyan"
+        case .lightBlue: "LightBlue"
+        case .violet: "Violet"
+        case .purple: "Purple"
+        case .pink: "Pink"
+        }
+    }
+
+    var foregroundColor: SwiftUI.Color {
+        switch self {
+        case .lime: .semantic(.foregroundAccentLime)
+        case .cyan: .semantic(.foregroundAccentCyan)
+        case .lightBlue: .semantic(.foregroundAccentLightBlue)
+        case .violet: .semantic(.foregroundAccentViolet)
+        case .purple: .semantic(.foregroundAccentPurple)
+        case .pink: .semantic(.foregroundAccentPink)
+        }
+    }
+
+    var backgroundColor: SwiftUI.Color {
+        switch self {
+        case .lime: .semantic(.surfaceAccentLimeOpaque)
+        case .cyan: .semantic(.surfaceAccentCyanOpaque)
+        case .lightBlue: .semantic(.surfaceAccentLightBlueOpaque)
+        case .violet: .semantic(.surfaceAccentVioletOpaque)
+        case .purple: .semantic(.surfaceAccentPurpleOpaque)
+        case .pink: .semantic(.surfaceAccentPinkOpaque)
+        }
     }
 }
 

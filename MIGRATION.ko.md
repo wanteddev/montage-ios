@@ -47,6 +47,27 @@ SwiftUI.ScrollView { content }
 
 **확인할 화면**: `grep -rn "\.onRefresh\|\.pullToRefresh\|PullToRefreshControl" --include='*.swift'`로 찾은 화면에서 당겨서 새로고침을 해보세요. 4.3.0에서는 갱신 중 다시 올려 취소하는 동작이 없으니 4.3.1 이상을 쓰세요. 반대로 iOS 16·17에서 갱신이 취소되면 안 되는 화면은 `onRefresh` 클로저가 취소(`CancellationError`)를 받아도 상태가 어긋나지 않는지 확인하세요. 4.3.1에서는 갱신 중 컨텐츠를 위로 밀어 로고가 위아래로 잘리는지도 보세요.
 
+### ContentBadge accent 테두리
+
+**성격: 화면 확인**
+
+4.3.2부터 `ColorStyle.accent(_:background:)`의 테두리(`.outlined`)를 `background`가 아닌 `contentColor` 기준으로 계산합니다. `contentColor`에 `foregroundAccent{색}`을 넘기면 테두리가 Figma의 `lineAccent{색}` 토큰과 같아집니다. 배경 계산은 그대로입니다.
+
+| 항목 | 4.3.1 이하 | 4.3.2 |
+|---|---|---|
+| 테두리 (`background` 지정) | `background` × 43% | **`contentColor` × 43%** |
+| 테두리 (`background` 생략) | `contentColor` × 43% | 변경 없음 |
+| 배경 | `(background ?? contentColor)` × 8% | 변경 없음 |
+
+Figma accent 배지와 같게 하려면 아래 조합을 쓰세요. 배경은 `surfaceAccent{색}`, 테두리는 `lineAccent{색}`이 됩니다.
+
+```swift
+ContentBadge(variant: .outlined, text: "Badge")
+    .colorStyle(.accent(.semantic(.foregroundAccentCyan), background: .semantic(.surfaceAccentCyanOpaque)))
+```
+
+**확인할 화면**: `grep -rn "\.accent(.*background:" --include='*.swift'`로 찾은 `ContentBadge` 중 `.outlined` 배지의 테두리 색을 확인하세요. `background`를 생략했거나 `.solid`만 쓰는 곳은 달라지지 않습니다.
+
 ---
 
 ## 4.0
