@@ -168,24 +168,38 @@ jobs:
             | python3 -c "import sys,json;d=json.load(sys.stdin);print(d['data'][0]['id'] if d.get('data') else '')")
           [ -n "$APP_ID" ] || { echo "::error::App Store Connect에서 com.wantedlab.Blueprint 앱을 찾지 못했습니다."; exit 1; }
 
-          # 서명에 쓸 App Store 프로파일을 받아 둔다(조회만 한다). 러너의 배포 인증서가 들어 있는 ACTIVE 프로파일만 고른다.
-          # 계정에 아무것도 만들지 않도록 export는 이 프로파일로 수동 서명하고 -allowProvisioningUpdates를 쓰지 않는다.
-          curl -sf -H "Authorization: Bearer $TOKEN" \
-            "$ASC/bundleIds?filter%5Bidentifier%5D=com.wantedlab.Blueprint&include=profiles&fields%5Bprofiles%5D=profileType,profileState,profileContent&limit%5Bprofiles%5D=50" \
-            > "$ASC_DIR/profiles.json"
-          PROFILE_UUID=$(ASC_DIR="$ASC_DIR" python3 -c "
-          import json,os,base64,hashlib,plistlib,subprocess,sys
+          # 서명에 쓸 App Store 프로파일을 준비한다. 러너의 배포 인증서가 들어 있는 ACTIVE 프로파일이 있으면 받아 쓰고,
+          # 없으면(처음 실행, 만료, 인증서 교체) 그 인증서로 하나 만든다. 인증서는 만들거나 바꾸지 않는다.
+          # Xcode 관리 프로파일은 수동 서명에 쓸 수 없고, API 키 인증의 자동 서명은 그 프로파일을 받아 오지 못한다.
+          PROFILE_UUID=$(ASC_DIR="$ASC_DIR" TOKEN="$TOKEN" python3 -c "
+          import json,os,base64,hashlib,plistlib,subprocess,sys,time,urllib.request
           d=os.environ['ASC_DIR']; want=os.environ['SIGNING_CERT_SHA1'].upper()
-          for p in json.load(open(d+'/profiles.json')).get('included',[]):
-              a=p.get('attributes') or {}
-              if a.get('profileType')!='IOS_APP_STORE' or a.get('profileState')!='ACTIVE' or not a.get('profileContent'): continue
+          api='https://api.appstoreconnect.apple.com/v1'
+          def call(path, body=None):
+              req=urllib.request.Request(api+path, data=json.dumps(body).encode() if body else None,
+                  headers={'Authorization':'Bearer '+os.environ['TOKEN'],'Content-Type':'application/json'})
+              return json.load(urllib.request.urlopen(req))
+          def usable(content):
               path=d+'/Blueprint.mobileprovision'
-              open(path,'wb').write(base64.b64decode(a['profileContent']))
+              open(path,'wb').write(base64.b64decode(content))
               info=plistlib.loads(subprocess.run(['security','cms','-D','-i',path],capture_output=True,check=True).stdout)
-              if any(hashlib.sha1(c).hexdigest().upper()==want for c in info.get('DeveloperCertificates',[])):
-                  print(info['UUID']); sys.exit(0)
+              ok=not info.get('IsXcodeManaged') and any(hashlib.sha1(c).hexdigest().upper()==want for c in info.get('DeveloperCertificates',[]))
+              return info['UUID'] if ok else None
+          b=call('/bundleIds?filter%5Bidentifier%5D=com.wantedlab.Blueprint&include=profiles&fields%5Bprofiles%5D=profileType,profileState,profileContent&limit%5Bprofiles%5D=50')
+          for p in b.get('included',[]):
+              a=p.get('attributes') or {}
+              if a.get('profileType')=='IOS_APP_STORE' and a.get('profileState')=='ACTIVE' and a.get('profileContent'):
+                  u=usable(a['profileContent'])
+                  if u: print(u); sys.exit(0)
+          certs=call('/certificates?filter%5BcertificateType%5D=DISTRIBUTION,IOS_DISTRIBUTION&fields%5Bcertificates%5D=certificateContent&limit=200')['data']
+          cert=[c['id'] for c in certs if hashlib.sha1(base64.b64decode(c['attributes']['certificateContent'])).hexdigest().upper()==want]
+          if not b.get('data') or not cert: sys.exit('bundle ID 또는 배포 인증서를 App Store Connect에서 찾지 못했습니다.')
+          print('App Store 프로파일을 새로 만듭니다.', file=sys.stderr)
+          new=call('/profiles', {'data':{'type':'profiles','attributes':{'name':'Blueprint App Store CI '+time.strftime('%Y%m%d'),'profileType':'IOS_APP_STORE'},
+              'relationships':{'bundleId':{'data':{'type':'bundleIds','id':b['data'][0]['id']}},'certificates':{'data':[{'type':'certificates','id':cert[0]}]}}}})
+          print(usable(new['data']['attributes']['profileContent']) or '')
           ")
-          [ -n "$PROFILE_UUID" ] || { echo "::error::러너 배포 인증서($SIGNING_CERT_SHA1)가 들어 있는 com.wantedlab.Blueprint App Store 프로파일이 없습니다."; exit 1; }
+          [ -n "$PROFILE_UUID" ] || { echo "::error::com.wantedlab.Blueprint App Store 프로파일을 준비하지 못했습니다."; exit 1; }
           echo "PROFILE_UUID=$PROFILE_UUID" >> "$GITHUB_ENV"
 
           TODAY=$(TZ=Asia/Seoul date +%Y%m%d)
