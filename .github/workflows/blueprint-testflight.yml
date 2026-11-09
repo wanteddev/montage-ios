@@ -195,15 +195,9 @@ jobs:
       - name: Archive
         run: |
           set -o pipefail
-          # 개발 인증서는 쓰지 않고 처음부터 Apple Distribution으로 서명한다. 프로파일은 기존
-          # Xcode 관리 App Store 프로파일을 받아 쓴다.
-          # -allowProvisioningUpdates는 쓸 인증서가 없으면 계정에 새로 만들 수 있으므로, 배포 인증서가
-          # 키체인에 유효하게 있는지 먼저 확인하고 없으면 xcodebuild를 돌리지 않는다.
-          if ! security find-identity -v -p codesigning | grep -F "$SIGNING_CERT_SHA1" | grep -vq CSSMERR; then
-            echo "::error::러너 키체인에 배포 인증서($SIGNING_CERT_SHA1)가 없거나 유효하지 않습니다. 계정에 인증서가 새로 만들어지지 않도록 빌드를 중단합니다."
-            exit 1
-          fi
-
+          # 러너에는 개발 인증서를 두지 않으므로 서명 없이 archive하고, 서명은 export에서 배포 인증서로 한 번만 한다.
+          # (Blueprint는 자동 서명이라 archive 단계에서 서명하면 개발 인증서를 요구하고, 명령줄로 identity를
+          # 바꾸면 SPM 리소스 번들 타깃까지 적용돼 실패한다.)
           xcodebuild -version
           xcodebuild archive \
             -workspace Montage.xcworkspace \
@@ -211,12 +205,8 @@ jobs:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$ASC_DIR/Blueprint.xcarchive" \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$ASC_KEY_PATH" \
-            -authenticationKeyID "$ASC_KEY_ID" \
-            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
             -quiet \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGNING_ALLOWED=NO \
             MARKETING_VERSION="$VERSION" \
             CURRENT_PROJECT_VERSION="$BUILD"
 
@@ -230,6 +220,13 @@ jobs:
 
       - name: Upload to TestFlight
         run: |
+          # -allowProvisioningUpdates는 쓸 인증서가 없으면 계정에 새로 만들 수 있다. 배포 인증서가 키체인에
+          # 유효하게 있을 때만 export를 돌린다. 프로파일은 기존 Xcode 관리 App Store 프로파일을 받아 쓴다.
+          if ! security find-identity -v -p codesigning | grep -F "$SIGNING_CERT_SHA1" | grep -vq CSSMERR; then
+            echo "::error::러너 키체인에 배포 인증서($SIGNING_CERT_SHA1)가 없거나 유효하지 않습니다. 계정에 인증서가 새로 만들어지지 않도록 업로드를 중단합니다."
+            exit 1
+          fi
+
           OPTS="$ASC_DIR/ExportOptions.plist"
           plutil -create xml1 "$OPTS"
           plutil -insert method -string app-store-connect "$OPTS"
