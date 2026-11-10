@@ -30,6 +30,14 @@ struct TopNavigationPreview: View {
         }
     }
     
+    enum ToolbarKind: String, CaseIterable {
+        case none
+        case tab
+        case segmented
+        case category
+        case slot
+    }
+
     @Environment(\.presentationMode) var presentationMode
 
     @State private var title = "제목"
@@ -43,6 +51,8 @@ struct TopNavigationPreview: View {
     @State private var actionAreaAlt = false
     @State private var actionAreaCaption = false
     @State private var actionAreaExtra = false
+    @State private var toolbarKindIndex = 0
+    @State private var toolbarSelectedIndex = 0
     
     private var currentVariant: TopNavigation.Variant {
         let cases = TopNavigation.Variant.allCases
@@ -107,6 +117,38 @@ struct TopNavigationPreview: View {
         }
     }
     
+    private var toolbarKind: ToolbarKind {
+        ToolbarKind.allCases[toolbarKindIndex]
+    }
+
+    private var toolbarItems: [String] {
+        switch toolbarKind {
+        case .tab, .segmented: ["텍스트", "텍스트", "텍스트"]
+        case .category: (1...8).map { "텍스트 \($0)" }
+        case .none, .slot: []
+        }
+    }
+
+    private var toolbar: TopNavigation.Resource.Toolbar? {
+        switch toolbarKind {
+        case .none:
+            return nil
+        case .tab:
+            return .tab(selectedIndex: $toolbarSelectedIndex, items: toolbarItems)
+        case .segmented:
+            return .segmentedControl(selectedIndex: $toolbarSelectedIndex, labels: toolbarItems)
+        case .category:
+            return .category(selectedIndex: $toolbarSelectedIndex, items: toolbarItems)
+        case .slot:
+            // 폭을 넘는 필터 목록은 슬롯이 가로로 스크롤한다.
+            return .slot {
+                ForEach(["직군", "경력", "지역", "연봉", "기업 규모", "근무 형태"], id: \.self) {
+                    FilterButton(size: .small, text: $0)
+                }
+            }
+        }
+    }
+
     private var closure: () -> Void {
         {
             toast = .init(message: "알림센터로 갑시다")
@@ -141,6 +183,11 @@ struct TopNavigationPreview: View {
                         trailing = []
                     }
                 }
+                SegmentedIndexRow(
+                    "toolbar",
+                    index: $toolbarKindIndex,
+                    labels: ToolbarKind.allCases.map(\.rawValue)
+                )
                 ColorPickerOptionRow("backgroundColor", selection: $backgroundColor)
                 ToggleOptionRow("actionArea", isOn: $actionArea)
                 if actionArea {
@@ -153,6 +200,12 @@ struct TopNavigationPreview: View {
                 }
             }
             .toast($toast)
+            .onChange(of: toolbarKindIndex) { _ in
+                // 항목 수가 다른 프리셋으로 바꾸면 이전 선택이 범위를 벗어날 수 있다.
+                if !toolbarItems.indices.contains(toolbarSelectedIndex) {
+                    toolbarSelectedIndex = 0
+                }
+            }
     }
 
     var preview: some View {
@@ -171,6 +224,9 @@ struct TopNavigationPreview: View {
                     )
                     .modifying {
                         var mutated = $0
+                        if let toolbar {
+                            mutated = mutated.toolbar(toolbar)
+                        }
                         if leading {
                             mutated = mutated.leadingContent {
                                 TopNavigation.LeadingButton(

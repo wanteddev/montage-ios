@@ -91,7 +91,8 @@ public struct TopNavigation: View {
     private var onSearch: (() -> Void)?
     private var onSearchTextChange: ((String) -> Void)?
     private var onSearchFocusChange: ((Bool) -> Void)?
-    
+    private var toolbar: Resource.Toolbar?
+
     /// 내비게이션 바의 스타일(Variant)을 설정합니다.
     ///
     /// `.normal`, `.display`, `.search`, `.floating` 중 하나의 스타일을 지정할 수 있으며,
@@ -207,7 +208,35 @@ public struct TopNavigation: View {
         zelf.onSearchFocusChange = onFocusChange
         return zelf
     }
-    
+
+    /// 내비게이션 바 아래에 붙는 툴바 영역을 설정합니다.
+    ///
+    /// 스크롤해도 내비게이션 바와 함께 상단에 고정돼야 하는 탭·필터를 넣습니다.
+    /// 툴바는 내비게이션 바와 배경을 함께 쓰므로, 스크롤하면 흐림 배경이 두 영역에 끊김 없이 이어집니다.
+    /// 툴바 하단에는 구분선이 그려집니다.
+    ///
+    /// ```swift
+    /// TopNavigation()
+    ///     .title("제목")
+    ///     .toolbar(.tab(selectedIndex: $index, items: ["추천", "최신", "인기"]))
+    ///
+    /// TopNavigation()
+    ///     .title("제목")
+    ///     .toolbar(.slot {
+    ///         ForEach(filters) { FilterButton(text: $0.name) }
+    ///     })
+    /// ```
+    ///
+    /// - Parameter toolbar: 툴바에 표시할 프리셋
+    /// - Returns: 수정된 인스턴스를 반환합니다.
+    ///
+    /// - Note: variant가 `.floating`이면 툴바를 그리지 않습니다.
+    public func toolbar(_ toolbar: Resource.Toolbar) -> Self {
+        var zelf = self
+        zelf.toolbar = toolbar
+        return zelf
+    }
+
     // MARK: - Body
     
     @State private var defaultSearchTerm: String = ""
@@ -215,19 +244,26 @@ public struct TopNavigation: View {
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         ZStack(alignment: .bottom) {
-            Contents(
-                variant: variant,
-                titleText: titleText,
-                titleView: titleView,
-                leadingContent: leadingContent,
-                trailingContents: trailingContents,
-                searchPlaceholder: searchFieldPlaceholder,
-                searchTerm: searchTerm ?? $defaultSearchTerm,
-                focused: searchFieldFocused,
-                onSubmit: onSearch,
-                onSearchTextChange: onSearchTextChange,
-                onSearchFocusChange: onSearchFocusChange
-            )
+            // 툴바를 바와 한 VStack에 두고 배경을 VStack 전체에 깐다. 툴바가 배경을 따로 가지면
+            // 두 흐림 레이어가 각자 뒤를 흐려 밝기가 어긋나고, 그 사이에 경계선이 보인다.
+            VStack(spacing: 0) {
+                Contents(
+                    variant: variant,
+                    titleText: titleText,
+                    titleView: titleView,
+                    leadingContent: leadingContent,
+                    trailingContents: trailingContents,
+                    searchPlaceholder: searchFieldPlaceholder,
+                    searchTerm: searchTerm ?? $defaultSearchTerm,
+                    focused: searchFieldFocused,
+                    onSubmit: onSearch,
+                    onSearchTextChange: onSearchTextChange,
+                    onSearchFocusChange: onSearchFocusChange
+                )
+                if let toolbar, !variant.isFloating {
+                    ToolbarView(toolbar: toolbar)
+                }
+            }
             .background {
                 MaterialBackground(
                     materialOpacity: backgroundOpacity,
@@ -471,6 +507,75 @@ public struct TopNavigation: View {
             }
         }
     }
+
+    struct ToolbarView: View {
+        let toolbar: Resource.Toolbar
+
+        var body: some View {
+            switch toolbar {
+            case let .tab(selectedIndex, items, onSelect):
+                // Tab은 하단 구분선을 직접 그리므로 따로 얹지 않는다.
+                Tab(selectedIndex: selectedIndex, items: items, actions: { onSelect?($0) })
+                    .size(.medium)
+                    .horizontalPadding()
+            case let .segmentedControl(selectedIndex, labels, onSelect):
+                SegmentedControl(selectedIndex: selectedIndex, labels: labels, onSelect: onSelect)
+                    .size(.small)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .modifier(BottomDivider())
+            case let .category(selectedIndex, items, onSelect):
+                Category(selectedIndex: selectedIndex, items: items, actions: { onSelect?($0) })
+                    .variant(.normal)
+                    .size(.medium)
+                    .horizontalPadding()
+                    .verticalPadding()
+                    .modifier(BottomDivider())
+            case let .slotView(content):
+                SlotScrollView(content: content)
+                    .modifier(BottomDivider())
+            }
+        }
+    }
+
+    struct SlotScrollView: View {
+        let content: () -> AnyView
+
+        @State private var width: CGFloat = .zero
+
+        var body: some View {
+            SwiftUI.ScrollView(.horizontal, showsIndicators: false) {
+                // 좌우 여백을 스크롤 안쪽에 둬야 콘텐츠의 처음과 끝에만 붙고, 스크롤 중에는 화면 끝까지 흘러간다.
+                HStack(spacing: 8) {
+                    content()
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 8)
+                // 가로 스크롤 안에서는 폭 제안이 없어 콘텐츠가 제 크기로 줄어든다.
+                // 최소 폭을 툴바 폭에 맞춰야 폭보다 좁은 콘텐츠가 왼쪽부터 놓인다.
+                .frame(minWidth: width, alignment: .leading)
+            }
+            .modifying {
+                if #available(iOS 16.4, *) {
+                    // 폭 안에 들어오는 콘텐츠는 끌어도 움직이지 않게 한다.
+                    $0.scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                } else {
+                    $0
+                }
+            }
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.width }, action: { width = $0 })
+        }
+    }
+
+    struct BottomDivider: ViewModifier {
+        func body(content: Content) -> some View {
+            content.overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(SwiftUI.Color.semantic(.lineNeutralTertiary))
+                    .frame(height: 1)
+            }
+        }
+    }
 }
 
 // MARK: - Resource Views
@@ -711,6 +816,53 @@ extension TopNavigation {
                 default:
                     return false
                 }
+            }
+        }
+
+        /// 내비게이션 바 아래 툴바 영역에 표시할 요소입니다.
+        ///
+        /// 탭, 세그먼트 컨트롤, 카테고리 프리셋과 자유롭게 구성하는 슬롯을 지원합니다.
+        /// 프리셋은 크기와 여백이 정해져 있고, 슬롯은 아이템을 간격 8로 가로 배치하며 폭을 넘으면 가로로 스크롤합니다.
+        ///
+        /// ```swift
+        /// TopNavigation()
+        ///     .toolbar(.segmentedControl(selectedIndex: $index, labels: ["진행 중", "완료"]))
+        ///
+        /// TopNavigation()
+        ///     .toolbar(.slot {
+        ///         ForEach(filters) { FilterButton(text: $0.name) }
+        ///     })
+        /// ```
+        public enum Toolbar {
+            /// 탭
+            /// - Parameters:
+            ///   - selectedIndex: 선택된 탭의 인덱스 바인딩
+            ///   - items: 탭 항목 텍스트 배열
+            ///   - onSelect: 탭 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+            case tab(selectedIndex: Binding<Int>, items: [String], onSelect: ((Int) -> Void)? = nil)
+            /// 세그먼트 컨트롤
+            /// - Parameters:
+            ///   - selectedIndex: 선택된 항목의 인덱스 바인딩
+            ///   - labels: 항목 텍스트 배열
+            ///   - onSelect: 항목 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+            case segmentedControl(selectedIndex: Binding<Int>, labels: [String], onSelect: ((Int) -> Void)? = nil)
+            /// 카테고리
+            /// - Parameters:
+            ///   - selectedIndex: 선택된 항목의 인덱스 바인딩
+            ///   - items: 항목 텍스트 배열
+            ///   - onSelect: 항목 선택 시 호출될 클로저, 생략하면 기본값으로 `nil` 적용
+            case category(selectedIndex: Binding<Int>, items: [String], onSelect: ((Int) -> Void)? = nil)
+            /// 프리셋에 없는 구성을 직접 그릴 때 씁니다. ``slot(_:)``으로 만듭니다.
+            case slotView(() -> AnyView)
+
+            /// 프리셋에 없는 구성을 직접 그립니다.
+            ///
+            /// 아이템을 간격 8로 가로 배치하고 상하 8, 좌우 20 여백을 둡니다. 폭을 넘으면 가로로 스크롤합니다.
+            ///
+            /// - Parameter content: 툴바에 놓을 콘텐츠
+            /// - Returns: 해당 콘텐츠를 그리는 ``Toolbar``
+            public static func slot<V: View>(@ViewBuilder _ content: @escaping () -> V) -> Toolbar {
+                .slotView { AnyView(content()) }
             }
         }
     }
