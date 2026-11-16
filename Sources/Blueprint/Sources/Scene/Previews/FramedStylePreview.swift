@@ -10,6 +10,7 @@ import Montage
 
 struct FramedStylePreview: View {
     @State private var statusIndex: Int = 0
+    @State private var selected: Bool = false
     @State private var borderRadius: CGFloat = 0
     @State private var shadowIndex: Int = 0
     @State private var disabled: Bool = false
@@ -20,7 +21,7 @@ struct FramedStylePreview: View {
             // 전달되는지 함께 확인할 수 있다. (Text는 `disabled(_:)`에 시각적으로 반응하지 않는다)
             ZStack {
                 Rectangle()
-                    .foregroundColor(.semantic(.backgroundNeutralSecondary))
+                    .foregroundColor(.clear)
                     .frame(height: 80)
                 Montage.Button(size: .small, text: "Preview") {
                     print("tapped")
@@ -28,12 +29,14 @@ struct FramedStylePreview: View {
             }
             .framedStyle(
                 status: FramedStyle.Status.allCases[statusIndex],
+                selected: selected,
                 borderRadius: borderRadius,
                 shadowLevel: Shadow.Level.allCases[shadowIndex]
             )
             .disabled(disabled)
         } options: {
             SegmentedIndexRow("status", index: $statusIndex, labels: FramedStyle.Status.allCases.map(\.description))
+            ToggleOptionRow("selected", isOn: $selected)
             SliderOptionRow("borderRadius", value: $borderRadius, in: 0...20, step: 1)
             SegmentedIndexRow("shadow", index: $shadowIndex, labels: Shadow.Level.allCases.map(\.description))
             ToggleOptionRow("disabled", isOn: $disabled)

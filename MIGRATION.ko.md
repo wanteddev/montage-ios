@@ -10,6 +10,44 @@
 
 ---
 
+## 4.5
+
+**기준선: v4.4.0 → 4.5.0**
+
+### FramedStyle 그림자·선택·오류 테두리
+
+**성격: 화면 확인**
+
+`framedStyle`의 그림자 기본값이 없음으로 바뀌고, 선택·오류 테두리가 Figma의 링 방식으로 바뀝니다. 선택 여부는 상태와 별개인 `selected` 파라미터로 받습니다. 그래서 오류 상태에서도 선택을 표시할 수 있습니다.
+
+| 항목 | 4.4 | 4.5 |
+|---|---|---|
+| 그림자 기본값 | `.xsmall` | **`.none`** (`shadowLevel`을 지정할 때만 표시) |
+| 선택 테두리 | `surfaceBrandPrimary` 43% 2pt | 흰 1pt 위에 **`lineBrandStrong` 1pt** + 바깥 4pt 링 `lineBrandFocus` |
+| 오류 테두리 (미선택) | `foregroundNegativePrimary` 28% | **`lineNegativePrimary`** |
+| 오류 테두리 (선택) | 없음 | 흰 1pt 위에 `lineNegativeStrong` 1pt + 바깥 4pt 링 `lineNegativeFocus` |
+| 오류 배경 (미선택) | `backgroundNeutralPrimary` | **`surfaceElevatedPrimary`** (라이트 모드 값 같음) |
+| 비활성 배경 | `backgroundNeutralPrimary` | **`surfaceDisablePrimary`** |
+
+선택 링은 프레임 바깥 4pt에 그려집니다. 프레임 바로 바깥을 자르는 부모(`clipped()` 등)가 있으면 링이 잘립니다.
+
+`FramedStyle.Status.selected`는 deprecated입니다. `selected: true`로 옮기세요. `Status.allCases`에서도 빠집니다.
+
+```swift
+// 4.4
+view.framedStyle(status: .selected, borderRadius: 16)
+view.framedStyle(status: .normal)  // 그림자 xsmall 적용
+
+// 4.5
+view.framedStyle(selected: true, borderRadius: 16)
+view.framedStyle(status: .negative, selected: true)  // 오류 상태에서 선택
+view.framedStyle(shadowLevel: .xsmall)  // 기존 그림자를 유지하려면 명시
+```
+
+**확인할 화면**: `grep -rn "\.framedStyle(" --include='*.swift'`로 찾은 화면에서 그림자가 사라져도 괜찮은지, 선택 링이 잘리지 않는지 확인하세요. 그림자가 필요하면 `shadowLevel: .xsmall`을 넘기세요.
+
+---
+
 ## 4.3
 
 **기준선: v4.2.4 → 4.3.0**
