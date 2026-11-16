@@ -1143,6 +1143,14 @@
             "negative",
             "normal",
             "selected"
+          ],
+          "staticProperties": [
+            {
+              "name": "allCases",
+              "signature": "static var allCases: [Status]",
+              "summary": "deprecated .selected는 제외합니다.",
+              "kind": "property"
+            }
           ]
         }
       ]
