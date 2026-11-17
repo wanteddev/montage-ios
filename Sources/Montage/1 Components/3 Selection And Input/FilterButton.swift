@@ -87,9 +87,15 @@ public struct FilterButton: View {
     /// 뷰의 내용과 동작을 정의합니다.
     public var body: some View {
         HStack(spacing: 0) {
-            Text(active ? (activeLabel ?? text) : text)
-                .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
-                .padding(.horizontal, textPadding)
+            HStack(spacing: labelSpacing) {
+                Text(text)
+                    .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
+                if active, let activeLabel {
+                    Text(activeLabel)
+                        .paragraph(variant: typoVariant, weight: .medium, color: fontColor)
+                }
+            }
+            .padding(.horizontal, textPadding)
 
             Image.icon(expanded ? .caretUp : .caretDown)
                 .resizable()
@@ -150,7 +156,7 @@ public struct FilterButton: View {
     ///
     /// - Parameters:
     ///   - active: 활성화 여부
-    ///   - label: 활성화 상태일 때 표시할 레이블, 생략하면 기본값으로 `nil` 적용
+    ///   - label: 활성화 상태일 때 본문 텍스트 뒤에 덧붙여 표시할 레이블, 생략하면 기본값으로 `nil` 적용
     /// - Returns: 수정된 버튼 인스턴스
     public func active(_ active: Bool, label: String? = nil) -> Self {
         var view = self
@@ -353,6 +359,13 @@ private extension FilterButton {
     }
 
     var textPadding: CGFloat { 2 }
+
+    var labelSpacing: CGFloat {
+        switch size {
+        case .large, .medium: return 4
+        case .small, .xsmall: return 2
+        }
+    }
 
     var cornerRadius: CGFloat {
         switch size {

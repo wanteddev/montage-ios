@@ -45,6 +45,21 @@ view.framedStyle(shadowLevel: .xsmall)  // pass explicitly to keep the old shado
 
 **Screens to check**: For the screens found with `grep -rn "\.framedStyle(" --include='*.swift'`, check that losing the shadow is acceptable, that the content behind now showing through is acceptable, and that the selection ring is not clipped. Pass `shadowLevel: .xsmall` where the shadow is still needed.
 
+### FilterButton active label
+
+**Kind: Visual check**
+
+The `label` of `.active(true, label:)` is now appended after the button text instead of replacing it, matching Figma, Web and Android. The label uses the same typography as the text, with a 4pt gap on Large and Medium and 2pt on Small and XSmall. The label is still shown only while active.
+
+| Item | 4.4 | 4.5 |
+|---|---|---|
+| `FilterButton(text: "Sort").active(true, label: "Latest")` | `Latest` | **`Sort Latest`** |
+| VoiceOver | Label `Sort`, value `Latest` | No change |
+
+The button gets wider by the length of the text, so check layouts where several FilterButtons sit in one row.
+
+**Screens to check**: For the screens found with `grep -rn "\.active(.*label:" --include='*.swift'`, check that the text is not repeated in the label (e.g. `label: "Sort: Latest"`) and that the wider button still fits.
+
 ---
 
 ## 4.3

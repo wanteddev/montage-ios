@@ -45,6 +45,21 @@ view.framedStyle(shadowLevel: .xsmall)  // 기존 그림자를 유지하려면 �
 
 **확인할 화면**: `grep -rn "\.framedStyle(" --include='*.swift'`로 찾은 화면에서 그림자가 사라져도 괜찮은지, 배경이 빠져 뒤 색이 비쳐도 괜찮은지, 선택 링이 잘리지 않는지 확인하세요. 그림자가 필요하면 `shadowLevel: .xsmall`을 넘기세요.
 
+### FilterButton 활성 라벨
+
+**성격: 화면 확인**
+
+`.active(true, label:)`의 `label`이 본문을 대체하지 않고 본문 뒤에 덧붙습니다. Figma·Web·Android와 같은 방식입니다. 라벨은 본문과 같은 타이포를 쓰고, 간격은 Large·Medium 4pt, Small·XSmall 2pt입니다. 라벨은 지금처럼 활성 상태일 때만 보입니다.
+
+| 항목 | 4.4 | 4.5 |
+|---|---|---|
+| `FilterButton(text: "정렬").active(true, label: "최신순")` | `최신순` | **`정렬 최신순`** |
+| VoiceOver | 레이블 `정렬`, 값 `최신순` | 변화 없음 |
+
+본문 길이만큼 버튼이 넓어지므로 FilterButton을 한 줄에 여러 개 놓은 화면은 배치를 확인하세요.
+
+**확인할 화면**: `grep -rn "\.active(.*label:" --include='*.swift'`로 찾은 화면에서 라벨에 본문을 중복해 넣지 않았는지(예: `label: "정렬: 최신순"`), 넓어진 버튼이 자리에 맞는지 확인하세요.
+
 ---
 
 ## 4.3
