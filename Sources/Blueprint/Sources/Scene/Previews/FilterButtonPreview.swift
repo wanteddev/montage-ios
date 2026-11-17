@@ -69,7 +69,7 @@ struct FilterButtonPreview: View {
             TextFieldOptionRow("Active Label", text: Binding(
                 get: { activeLabel ?? "" },
                 set: { activeLabel = $0.isEmpty ? nil : $0 }
-            ), placeholder: "활성화 상태일 때 표시할 텍스트")
+            ), placeholder: "활성화 상태일 때 본문 뒤에 덧붙일 텍스트")
             ColorPickerOptionRow("Icon Color", selection: $iconColor)
             ColorPickerOptionRow("Font Color", selection: $fontColor)
         }

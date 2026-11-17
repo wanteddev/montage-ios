@@ -13,6 +13,7 @@ struct ThumbnailPreview: View {
     @State private var radius: Bool = true
     @State private var border: Bool = true
     @State private var invalidURL: Bool = false
+    @State private var overlay: Bool = false
 
     var imageURL: String {
         if invalidURL {
@@ -32,6 +33,11 @@ struct ThumbnailPreview: View {
             Thumbnail(urlString: imageURL, ratio: selectedRatio)
                 .radius(radius)
                 .border(border)
+                .overlay {
+                    if overlay {
+                        PlayBadge()
+                    }
+                }
         } options: {
             MenuOptionRow("Ratio", menuLabel: selectedRatio.description) {
                 ForEach(ratios, id: \.self) { ratio in
@@ -40,6 +46,7 @@ struct ThumbnailPreview: View {
             }
             ToggleOptionRow("Radius", isOn: $radius)
             ToggleOptionRow("Border", isOn: $border)
+            ToggleOptionRow("Overlay (PlayBadge)", isOn: $overlay)
             ToggleOptionRow("Invalid URL (테스트용)", isOn: $invalidURL)
         }
     }
