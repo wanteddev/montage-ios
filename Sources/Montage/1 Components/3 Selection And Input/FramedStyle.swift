@@ -62,13 +62,19 @@ public enum FramedStyle {
             content
                 .overlay { border }
                 .clipShape(RoundedRectangle(cornerRadius: borderRadius))
-                // 그림자를 배경 Shape의 fill에 analytic(`ShapeStyle.shadow`)으로 적용해 오프스크린
-                // 패스를 피한다. 프레임 실루엣(둥근 사각형) 기준으로 그림자가 그려진다.
-                .background(
-                    RoundedRectangle(cornerRadius: borderRadius)
-                        .fill(backgroundColor.shadow(shadowLevel))
-                )
+                .background { shadowBackground }
                 .background { selectionRing }
+        }
+
+        /// 프레임에는 배경이 없다. 그림자는 칠해진 Shape에만 그려지므로 그림자가 있을 때만 흰 배경을 깐다.
+        /// 그림자를 배경 Shape의 fill에 analytic(`ShapeStyle.shadow`)으로 적용해 오프스크린
+        /// 패스를 피한다. 프레임 실루엣(둥근 사각형) 기준으로 그림자가 그려진다.
+        @ViewBuilder
+        private var shadowBackground: some View {
+            if shadowLevel != .none {
+                RoundedRectangle(cornerRadius: borderRadius)
+                    .fill(SwiftUI.Color.semantic(.backgroundNeutralPrimary).shadow(shadowLevel))
+            }
         }
 
         /// 선택 시에는 흰 테두리 위에 반투명 링 색을 겹쳐 그려, 콘텐츠 색과 섞이지 않게 한다.
@@ -110,16 +116,6 @@ public enum FramedStyle {
         private var ringColor: SwiftUI.Color {
             isNegative ? .semantic(.lineNegativeFocus) : .semantic(.lineBrandFocus)
         }
-
-        private var backgroundColor: SwiftUI.Color {
-            if !isEnabled {
-                .semantic(.surfaceDisablePrimary)
-            } else if isNegative, !selected {
-                .semantic(.surfaceElevatedPrimary)
-            } else {
-                .semantic(.backgroundNeutralPrimary)
-            }
-        }
     }
 }
 
@@ -130,7 +126,8 @@ extension View {
     ///
     /// 선택되면 테두리 바깥에 4pt 링이 표시됩니다. 링 색은 `status`를 따르므로
     /// `.negative`와 함께 쓰면 오류 상태의 선택으로 표시됩니다.
-    /// 그림자는 기본으로 적용되지 않으며, `shadowLevel`을 지정했을 때만 표시됩니다.
+    /// 프레임에는 배경이 없어 뒤의 콘텐츠가 그대로 보입니다.
+    /// 그림자는 기본으로 적용되지 않으며, `shadowLevel`을 지정하면 흰 배경과 함께 표시됩니다.
     ///
     /// - Parameters:
     ///   - status: 프레임 상태, 생략하면 기본값으로 `.normal` 적용
@@ -138,8 +135,6 @@ extension View {
     ///   - borderRadius: 테두리 반경, 생략하면 기본값으로 `0` 적용
     ///   - shadowLevel: 그림자 레벨, 생략하면 기본값으로 `.none` 적용
     /// - Returns: 프레임 스타일이 적용된 뷰
-    ///
-    /// - Note: 그림자에는 원본 View 배경색의 opacity가 동일하게 적용되므로, 원본 View의 opacity가 0.0인 경우 그림자가 표시되지 않습니다.
     ///
     /// - Note: 비활성화는 SwiftUI 표준 `disabled(_:)`를 사용합니다.
     /// 상위 컨테이너에 한 번 걸면 하위 컴포넌트까지 함께 비활성 스타일로 표시됩니다.

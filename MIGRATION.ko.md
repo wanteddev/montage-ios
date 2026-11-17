@@ -26,8 +26,7 @@
 | 선택 테두리 | `surfaceBrandPrimary` 43% 2pt | 흰 1pt 위에 **`lineBrandStrong` 1pt** + 바깥 4pt 링 `lineBrandFocus` |
 | 오류 테두리 (미선택) | `foregroundNegativePrimary` 28% | **`lineNegativePrimary`** |
 | 오류 테두리 (선택) | 없음 | 흰 1pt 위에 `lineNegativeStrong` 1pt + 바깥 4pt 링 `lineNegativeFocus` |
-| 오류 배경 (미선택) | `backgroundNeutralPrimary` | **`surfaceElevatedPrimary`** (라이트 모드 값 같음) |
-| 비활성 배경 | `backgroundNeutralPrimary` | **`surfaceDisablePrimary`** |
+| 배경 | 모든 상태에서 `backgroundNeutralPrimary` | **없음** (`shadowLevel`을 지정할 때만 `backgroundNeutralPrimary`) |
 
 선택 링은 프레임 바깥 4pt에 그려집니다. 프레임 바로 바깥을 자르는 부모(`clipped()` 등)가 있으면 링이 잘립니다.
 
@@ -44,7 +43,7 @@ view.framedStyle(status: .negative, selected: true)  // 오류 상태에서 선�
 view.framedStyle(shadowLevel: .xsmall)  // 기존 그림자를 유지하려면 명시
 ```
 
-**확인할 화면**: `grep -rn "\.framedStyle(" --include='*.swift'`로 찾은 화면에서 그림자가 사라져도 괜찮은지, 선택 링이 잘리지 않는지 확인하세요. 그림자가 필요하면 `shadowLevel: .xsmall`을 넘기세요.
+**확인할 화면**: `grep -rn "\.framedStyle(" --include='*.swift'`로 찾은 화면에서 그림자가 사라져도 괜찮은지, 배경이 빠져 뒤 색이 비쳐도 괜찮은지, 선택 링이 잘리지 않는지 확인하세요. 그림자가 필요하면 `shadowLevel: .xsmall`을 넘기세요.
 
 ---
 

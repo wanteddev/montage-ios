@@ -26,8 +26,7 @@ Each major section is written against the **last release tag of the previous maj
 | Selected border | `surfaceBrandPrimary` 43% 2pt | **`lineBrandStrong` 1pt** over a white 1pt + 4pt outer ring `lineBrandFocus` |
 | Negative border (not selected) | `foregroundNegativePrimary` 28% | **`lineNegativePrimary`** |
 | Negative border (selected) | Not available | `lineNegativeStrong` 1pt over a white 1pt + 4pt outer ring `lineNegativeFocus` |
-| Negative background (not selected) | `backgroundNeutralPrimary` | **`surfaceElevatedPrimary`** (same value in light mode) |
-| Disabled background | `backgroundNeutralPrimary` | **`surfaceDisablePrimary`** |
+| Background | `backgroundNeutralPrimary` in every status | **None** (`backgroundNeutralPrimary` only when `shadowLevel` is set) |
 
 The selection ring is drawn 4pt outside the frame. A parent that clips right at the frame edge (`clipped()` and the like) cuts the ring off.
 
@@ -44,7 +43,7 @@ view.framedStyle(status: .negative, selected: true)  // selected in negative sta
 view.framedStyle(shadowLevel: .xsmall)  // pass explicitly to keep the old shadow
 ```
 
-**Screens to check**: For the screens found with `grep -rn "\.framedStyle(" --include='*.swift'`, check that losing the shadow is acceptable and that the selection ring is not clipped. Pass `shadowLevel: .xsmall` where the shadow is still needed.
+**Screens to check**: For the screens found with `grep -rn "\.framedStyle(" --include='*.swift'`, check that losing the shadow is acceptable, that the content behind now showing through is acceptable, and that the selection ring is not clipped. Pass `shadowLevel: .xsmall` where the shadow is still needed.
 
 ---
 
