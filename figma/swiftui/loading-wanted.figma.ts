@@ -1,0 +1,11 @@
+// url=<FIGMA_LOADING_WANTED>
+// source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/5%20Loading/Loading.swift
+// component=Loading
+
+// [2026-11-16] 근거: Loading.swift L45-51(Kind .wanted / .circular(color:)), L71(init(kind:size:)).
+// Figma 'Animate'는 미리보기용 variant라 코드에 대응값이 없다.
+import figma from 'figma';
+
+const code = 'Montage.Loading(kind: .wanted)';
+
+export default { id: 'Loading', imports: ['import Montage'], example: figma.code`${code}`, metadata: { nestable: true } };
