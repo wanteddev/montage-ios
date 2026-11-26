@@ -20,7 +20,7 @@ Web(React)은 `wanteddev/montage-web`의 `figma/`, Android(Compose)는 `wantedde
 이 폴더에서 실행합니다. Node.js가 필요합니다. CLI는 `package.json`에 고정한 버전을 씁니다. `@latest`는 실행할 때마다 버전이 바뀔 수 있어 parse 결과를 비교하기 어렵습니다.
 
 ```bash
-npm ci
+npm install
 
 # 1. 템플릿 타입 체크
 npm run typecheck
