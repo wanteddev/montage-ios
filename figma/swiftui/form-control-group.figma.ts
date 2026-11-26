@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/FormControlGroup.swift
 // component=FormControlGroup
 
-// [2026-11-16] 근거: FormControlGroup.swift L57 init(labelWidth: CGFloat? = nil, spacing: = .spacing16, content:).
+// [2026-11-16] 근거: FormControlGroup.swift init(labelWidth: CGFloat? = nil, spacing: = .spacing16, content:).
 // Label Width=Longest는 자동 측정(labelWidth 생략), Fixed는 labelWidth 지정(값은 Figma에서 읽지 않아 플레이스홀더).
 // 안의 Form Control은 슬롯('Slot')에 연결된 인스턴스의 템플릿 결과를 그대로 쌓는다.
 import figma from 'figma';

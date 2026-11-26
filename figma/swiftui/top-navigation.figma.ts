@@ -2,9 +2,9 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/TopNavigation.swift
 // component=TopNavigation
 
-// [2026-11-16] 근거: TopNavigation.swift L48-63(Variant), L74(init), L103(variant), L126(title),
-// L152(leadingContent), L180(trailingContents), L194(searchField), L234(toolbar),
-// L595(LeadingButton), L651(TrailingTextButton), L696(TrailingIconButton), L744(Resource.Leading), L836-866(Resource.Toolbar)
+// [2026-11-16] 근거: TopNavigation.swift Variant, init, variant, title,
+// leadingContent, trailingContents, searchField, toolbar,
+// LeadingButton, TrailingTextButton, TrailingIconButton, Resource.Leading, Resource.Toolbar
 // Bar의 제목·leading·trailing·검색·툴바를 읽는다. Background 속성은 iOS에 대응 API가 없다(스크롤로 자동).
 import figma from 'figma';
 

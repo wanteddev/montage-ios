@@ -2,9 +2,9 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ListCell.swift
 // component=ListCell
 
-// [2026-11-16] 근거: ListCell.swift L202-208(init label:onTap:), L246-259(기본값), L296-402(modifier), L415-505(chevron·슬롯 4종), L737-909(Resource).
+// [2026-11-16] 근거: ListCell.swift init(label:onTap:)과 기본값, modifier, chevron(_:)·슬롯 4종(leadingResources(_:)·trailingResources(_:) 등), Resource.
 // 슬롯 4개는 안에 든 하위 파트(List Cell/Resource/*) 템플릿이 넘긴 Resource case를 모아 배열로 넣는다.
-// selected: trailing 요소가 있으면 그 요소만, 없으면 Check(L388-390). Check 파트는 요소로 넣지 않는다.
+// selected: trailing 요소가 있으면 그 요소만, 없으면 Check(selected(_:) docstring). Check 파트는 요소로 넣지 않는다.
 // Interaction=False면 onTap을 넘기지 않는다(탭·인터랙션 배경 없음).
 import figma from 'figma';
 

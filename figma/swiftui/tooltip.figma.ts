@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/8%20Presentation/Tooltip.swift
 // component=Tooltip
 
-// [2026-11-16] 근거: Tooltip.swift L52-57(ActionMode), L60-65(Size), L82-97(Position + arrowPosition),
-// L552-558(View.tooltip(isPresented:mode:position:size:message:)). mode는 필수라 .click으로 둔다.
+// [2026-11-16] 근거: Tooltip.swift ActionMode, Size, Position + arrowPosition,
+// View.tooltip(isPresented:mode:position:size:message:). mode는 필수라 .click으로 둔다.
 // Figma Position(툴팁이 놓이는 쪽) Left·Right → .leading·.trailing, Arrow Align → arrowPosition. Shortcut은 iOS에 없다.
 import figma from 'figma';
 

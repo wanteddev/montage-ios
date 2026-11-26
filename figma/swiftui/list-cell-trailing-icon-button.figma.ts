@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ListCell.swift
 // component=ListCell.Resource.Trailing.iconButton
 
-// [2026-11-16] 근거: ListCell.swift L811(Trailing.iconButton(_ icon:handler:)). handler는 기본 nil이라 생략.
+// [2026-11-16] 근거: ListCell.swift Trailing.iconButton(_ icon:handler:). handler는 기본 nil이라 생략.
 import figma from 'figma';
 
 import { iosPart } from '../shared/d-list-cell';

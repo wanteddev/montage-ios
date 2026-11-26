@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/ProgressIndicator.swift
 // component=ProgressIndicator
 
-// [2026-11-16] ProgressIndicator.swift L30(init percentage: Binding<CGFloat>, 0.0~1.0). 표시 전용이라 .constant로 보여 준다.
+// [2026-11-16] ProgressIndicator.swift init percentage: Binding<CGFloat>(0.0~1.0). 표시 전용이라 .constant로 보여 준다.
 import figma from 'figma';
 
 const I = figma.selectedInstance;

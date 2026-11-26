@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ListCard.swift
 // component=ListCard
 
-// [2026-11-16] 근거: ListCard.swift L43-51(init thumbnail:skeleton:title:), L66-80(caption·extraCaption),
-// L86-120(top/bottom/leading/trailingContent). Platform(Desktop/Mobile)은 iOS API가 없어 반영하지 않는다.
+// [2026-11-16] 근거: ListCard.swift init thumbnail:skeleton:title:, caption·extraCaption,
+// top/bottom/leading/trailingContent. Platform(Desktop/Mobile)은 iOS API가 없어 반영하지 않는다.
 // 'Show \bLeading Content'는 Figma 속성명에 백스페이스 문자(U+0008)가 들어 있다.
 import figma from 'figma';
 

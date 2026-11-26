@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/7%20Feedback/SnackBar.swift
 // component=SnackBar
 
-// [2026-11-16] 근거: SnackBar.swift L116-121·L136-142(Model(heading:description:extraContents:action:)), L417-421(View.snackBar(_:location:closeButtonEnabled:handler:)).
+// [2026-11-16] 근거: SnackBar.swift Model(heading:description:extraContents:action:), View.snackBar(_:location:closeButtonEnabled:handler:).
 // Leading Icon → extraContents, Close Button → closeButtonEnabled, 액션 라벨은 안쪽 'Button'(Text Button) Label.
 import figma from 'figma';
 

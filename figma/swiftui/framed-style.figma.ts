@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/FramedStyle.swift
 // component=framedStyle
 
-// [2026-11-16] 근거: FramedStyle.swift L15(Status normal/selected/negative), L122-126(framedStyle(status:borderRadius:shadowLevel:)),
-// Shadow.swift L16(Level .none/.xsmall…). Figma Frame 반경은 14(변수 바인딩), 코드 기본값은 0이라 .radius14를 넘긴다.
+// [2026-11-16] 근거: FramedStyle.swift Status normal/selected/negative, framedStyle(status:borderRadius:shadowLevel:),
+// Shadow.swift Level .none/.xsmall…. Figma Frame 반경은 14(변수 바인딩), 코드 기본값은 0이라 .radius14를 넘긴다.
 // Figma Shadow(기본 false)=꺼짐 → .none, 켜짐 → 코드 기본 .xsmall(Figma 효과 스타일 Shadow styles/Normal/XSmall)이라 생략.
 import figma from 'figma';
 

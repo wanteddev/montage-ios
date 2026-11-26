@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/Slider.swift
 // component=Slider
 
-// [2026-11-16] Slider.swift L53-58(init isRangeSlider·valueRange·labelFormatter·onChanged), L254(.heading), L264(.label).
+// [2026-11-16] Slider.swift init isRangeSlider·valueRange·labelFormatter·onChanged, .heading, .label.
 // iOS는 제목·노브 라벨을 값에서 만든다(labelFormatter) — Figma 텍스트(┗ Label 등)는 코드에 대응 인자가 없다.
 // 초기 노브 위치(Percent)를 지정하는 공개 API도 없다. 비활성은 SwiftUI .disabled.
 import figma from 'figma';

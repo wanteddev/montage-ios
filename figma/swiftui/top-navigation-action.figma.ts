@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/TopNavigation.swift
 // component=TopNavigation.TrailingIconButton
 
-// [2026-11-16] 근거: TopNavigation.swift L651-667(TrailingTextButton(text:action:)), L696-718(TrailingIconButton(icon:showPushBadge:action:)).
+// [2026-11-16] 근거: TopNavigation.swift TrailingTextButton(text:action:), TrailingIconButton(icon:showPushBadge:action:).
 // Top Navigation/Resource/Action/Normal (Variant = Icon·Text). Icon의 Badge → showPushBadge.
 import figma from 'figma';
 

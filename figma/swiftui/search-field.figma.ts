@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/SearchField.swift
 // component=SearchField
 
-// [2026-11-16] 근거: SearchField.swift L72(init text:), L92 .variant(기본 .solid, L78), L102 .size(기본 .large, L79), L112 .placeholder.
+// [2026-11-16] 근거: SearchField.swift init text:, .variant(기본 .solid), .size(기본 .large), .placeholder.
 import figma from 'figma';
 
 import { on, prop, str, sw } from '../shared/c-input';

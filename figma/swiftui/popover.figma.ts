@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/8%20Presentation/Popover.swift
 // component=Popover
 
-// [2026-11-16] 근거: Popover.swift L308-315(View.popoverNormal(isPresented:heading:text:closeButton:action:subAction:)),
-// L334-336(View.popoverCustom(isPresented:content:)). action은 기본값이 없어 Action=false면 nil로 쓴다.
+// [2026-11-16] 근거: Popover.swift View.popoverNormal(isPresented:heading:text:closeButton:action:subAction:),
+// View.popoverCustom(isPresented:content:). action은 기본값이 없어 Action=false면 nil로 쓴다.
 // iOS 팝오버 위치는 시스템 popover가 정한다(Position 대응 인자 없음).
 import figma from 'figma';
 

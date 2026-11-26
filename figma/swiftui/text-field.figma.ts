@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/TextField.swift
 // component=TextField
 
-// [2026-11-16] 근거: TextField.swift L165(init text:/autoCompletionDataSource:), L196 .size, L206 .status, L216 .placeholder,
-// L226 .icon, L236 .trailingButton(L91 TrailingButtonInfo), L246 .trailingContent. 비활성은 표준 .disabled.
+// [2026-11-16] 근거: TextField.swift init text:/autoCompletionDataSource:, .size, .status, .placeholder,
+// .icon, .trailingButton(TrailingButtonInfo), .trailingContent. 비활성은 표준 .disabled.
 // 본문은 shared/c-input.ts (Form Control 템플릿과 공유)
 import figma from 'figma';
 

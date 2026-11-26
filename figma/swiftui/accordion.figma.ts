@@ -2,9 +2,9 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/Accordion.swift
 // component=Accordion
 
-// [2026-11-16] 근거: Accordion.swift L117-141(init title:description:content:), L202(verticalPadding, 기본 .large),
-// L227(variant, Fill Width=True → .full), L237(hideDivider), L251(leadingIcon), L287(trailingContent { isExpanded in }).
-// 펼침 상태(Expand)는 내부 @State라(L297) 지정할 수 없다. 'Trailing Content'(접힘)/'Trailing Content᠎'(펼침) 교체 속성에
+// [2026-11-16] 근거: Accordion.swift init title:description:content:, verticalPadding(기본 .large),
+// variant(Fill Width=True → .full), hideDivider, leadingIcon, trailingContent { isExpanded in }.
+// 펼침 상태(Expand)는 내부 @State(isExpanded)라 지정할 수 없다. 'Trailing Content'(접힘)/'Trailing Content᠎'(펼침) 교체 속성에
 // 기본 화살표가 아닌 Accordion 파트(Icon Button/Text Button)가 들어 있으면 trailingContent로 넣는다.
 // '┗ Icon'(제목 옆 아이콘)은 iOS API가 없어 반영하지 않는다.
 import figma from 'figma';

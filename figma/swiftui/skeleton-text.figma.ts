@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/5%20Loading/Skeleton.swift
 // component=Skeleton.SkeletonView
 
-// [2026-11-16] 근거: Skeleton.swift L45-50(Align), L125-129(.text(variant:alignment:cornerRadius:)), L276(.color).
+// [2026-11-16] 근거: Skeleton.swift Align, .text(variant:alignment:cornerRadius:), .color.
 // iOS 텍스트 스켈레톤은 뷰 높이와 variant lineHeight로 줄 수·줄 길이를 자동 계산한다(첫 줄 100%).
 // Figma 'Length'(100/75/50/25%)는 지정할 인자가 없어 주석으로만 남긴다. variant는 대체할 텍스트의 타이포로 채운다.
 import figma from 'figma';

@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/Thumbnail.swift
 // component=Thumbnail
 
-// [2026-11-16] 근거: Thumbnail.swift L61-96(Ratio r21x9…r9x21), L143(init(urlString:ratio:)), L159(.radius), L170(.border).
+// [2026-11-16] 근거: Thumbnail.swift Ratio r21x9…r9x21, init(urlString:ratio:), .radius, .border.
 // 비율은 안쪽 'Ratio' 인스턴스의 Aspect Ratio에서 읽는다. iOS Thumbnail에는 overlay API가 없어
 // Overlay=Playtime이면 SwiftUI .overlay로 PlayBadge를 얹는 형태로 쓴다(Custom은 주석만).
 import figma from 'figma';
@@ -11,7 +11,7 @@ import { flag, flagOf, variantOf } from '../shared/a-util';
 
 const I = figma.selectedInstance;
 const safe = <T>(fn: () => T): T | undefined => { try { return fn(); } catch { return undefined; } };
-const ok = (n: unknown) => !!n && (n as { type?: string }).type !== 'ERROR';
+const ok = <T,>(n: T): n is Exclude<T, null | undefined | { type: 'ERROR' }> => !!n && (n as { type?: string }).type !== 'ERROR';
 
 const RATIO: Record<string, string> = {
   '21:9': '.r21x9', '2:1': '.r2x1', '16:9': '.r16x9', '1.618:1': '.r1_618x1', '16:10': '.r16x10',

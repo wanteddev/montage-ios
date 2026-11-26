@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/SectionHeader.swift
 // component=SectionHeader
 
-// [2026-11-16] 근거: SectionHeader.swift L65(init title:), L91(size 기본 .medium), L109(size), L136(headingContent), L149(trailingContent).
+// [2026-11-16] 근거: SectionHeader.swift init title:, size 기본 .medium, size, headingContent, trailingContent.
 // Platform(Mobile/Desktop)은 iOS API가 없어 반영하지 않는다.
 import figma from 'figma';
 

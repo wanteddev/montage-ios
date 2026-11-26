@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/7%20Feedback/Toast.swift
 // component=Toast
 
-// [2026-11-16] 근거: Toast.swift L60-63(Model(_ variant:message:)), L70-84(Variant .normal(Icon?)/.positive/.cautionary/.negative), L321(View.toast).
-// Toast는 모델 바인딩으로 띄운다. Positive·Cautionary·Negative는 아이콘이 항상 표시된다(L207-212).
+// [2026-11-16] 근거: Toast.swift Model(_ variant:message:), Variant .normal(Icon?)/.positive/.cautionary/.negative, View.toast.
+// Toast는 모델 바인딩으로 띄운다. Positive·Cautionary·Negative는 아이콘이 항상 표시된다(body의 badgedIcon).
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';
@@ -19,7 +19,7 @@ let v = '';
 if (variant === 'normal') {
   if (leading) v = `.normal(${iconFromLayer('Icon', (n) => ({ ref: iosIcon(n) }))?.ref ?? '.blank'})`;
 } else {
-  v = variant;
+  v = variant ?? '';
 }
 const note = variant !== 'normal' && !leading
   ? '// 이 상태는 아이콘을 숨길 수 없어 아이콘이 함께 표시됩니다.\n'

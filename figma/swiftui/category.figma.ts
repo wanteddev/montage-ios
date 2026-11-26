@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/Category.swift
 // component=Category
 
-// [2026-11-16] Category.swift L65-70(init selectedIndex·items), L157(.itemDisabled), L167(.variant), L177(.size),
-// L187/L197(.horizontalPadding/.verticalPadding), L209(.iconButton). 좌우 그라디언트는 스크롤 위치로 자동 표시(Gradient 속성 무시).
+// [2026-11-16] Category.swift init selectedIndex·items, .itemDisabled, .variant, .size,
+// .horizontalPadding/.verticalPadding, .iconButton. 좌우 그라디언트는 스크롤 위치로 자동 표시(Gradient 속성 무시).
 import figma from 'figma';
 
 import { readItemsByName, disabledIndices, swiftList } from '../shared/b-items';

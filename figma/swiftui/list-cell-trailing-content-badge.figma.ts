@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ListCell.swift
 // component=ListCell.Resource.Trailing.contentBadge
 
-// [2026-11-16] 근거: ListCell.swift L839(Trailing.contentBadge(_ variant:title:), variant 기본 .solid). 색·크기는 요소가 정한다(Figma Color 미반영).
+// [2026-11-16] 근거: ListCell.swift Trailing.contentBadge(_ variant:title:) (variant 기본 .solid). 색·크기는 요소가 정한다(Figma Color 미반영).
 import figma from 'figma';
 
 import { iosPart } from '../shared/d-list-cell';

@@ -1,0 +1,14 @@
+{
+  "name": "montage-ios-figma-code-connect",
+  "private": true,
+  "description": "Figma Code Connect SwiftUI 템플릿. 앱·라이브러리 빌드와 무관합니다.",
+  "scripts": {
+    "parse": "figma connect parse -c figma.config.json",
+    "publish:dry-run": "figma connect publish -c figma.config.json --dry-run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@figma/code-connect": "2.1.1",
+    "typescript": "7.0.2"
+  }
+}

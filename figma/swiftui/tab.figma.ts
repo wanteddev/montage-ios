@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/Tab.swift
 // component=Tab
 
-// [2026-11-16] Tab.swift L73-78(init selectedIndex·items·itemDisabled), L203(.resize), L214(.size), L225(.horizontalPadding),
-// L239(.iconButton, .hug에서만 표시). 기본값 resize .hug·size .medium. 좌우 그라디언트는 스크롤 위치로 자동 표시(Gradient 속성 무시).
+// [2026-11-16] Tab.swift init selectedIndex·items·itemDisabled, .resize, .size, .horizontalPadding,
+// .iconButton(.hug에서만 표시). 기본값 resize .hug·size .medium. 좌우 그라디언트는 스크롤 위치로 자동 표시(Gradient 속성 무시).
 import figma from 'figma';
 
 import { readItem, disabledIndices, swiftList } from '../shared/b-items';
@@ -29,7 +29,7 @@ if (disabled.length) args.push(`itemDisabled: { [${disabled.join(', ')}].contain
 let code = `Montage.Tab(${args.join(', ')})`;
 if (resize) code += `\n.resize(${resize})`;
 if (size) code += `\n.size(${size})`;
-// horizontalPadding·iconButton은 resize == .hug일 때만 적용된다(Tab.swift:150, :173 — 2026-11-16 김삼열 님 검수). Fill이면 padding은 생략.
+// horizontalPadding·iconButton은 resize == .hug일 때만 적용된다(Tab.swift body의 resize == .hug 분기 — 2026-11-16 김삼열 님 검수). Fill이면 padding은 생략.
 if (!resize && I.getEnum('Horizontal Padding', { True: true, False: false }) === true) code += '\n.horizontalPadding()';
 if (I.getBoolean('Trailing Icon Button') === true) {
   if (resize) code += '\n// iconButton은 .resize(.hug)에서만 표시됩니다.';

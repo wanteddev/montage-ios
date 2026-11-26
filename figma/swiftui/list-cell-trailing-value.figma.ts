@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ListCell.swift
 // component=ListCell.Resource.Trailing.value
 
-// [2026-11-16] 근거: ListCell.swift L796(Trailing.value(_ text:))
+// [2026-11-16] 근거: ListCell.swift Trailing.value(_ text:)
 import figma from 'figma';
 
 import { iosPart } from '../shared/d-list-cell';

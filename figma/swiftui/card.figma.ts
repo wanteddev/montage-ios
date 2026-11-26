@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/Card.swift
 // component=Card
 
-// [2026-11-16] 근거: Card.swift L43-53(init thumbnail:skeleton:title:), L69-89(caption·subCaption·extraCaption),
-// L103-116(overlay caption:buttonIcon:), L121-136(top/bottomContent). Platform(Desktop/Mobile)은 iOS API가 없어 반영하지 않는다.
+// [2026-11-16] 근거: Card.swift init thumbnail:skeleton:title:, caption·subCaption·extraCaption,
+// overlay caption:buttonIcon:, top/bottomContent. Platform(Desktop/Mobile)은 iOS API가 없어 반영하지 않는다.
 // 썸네일은 안쪽 Thumbnail 인스턴스 템플릿을 그대로 쓴다(없으면 기본 표기).
 import figma from 'figma';
 

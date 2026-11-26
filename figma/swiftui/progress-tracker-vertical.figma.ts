@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/ProgressTracker.swift
 // component=ProgressTracker
 
-// [2026-11-16] ProgressTracker.swift L50(.vertical(stepContents:)), L62(init progress 1부터), L85-89(VerticalStepContent label·labelAccessoryView·contentView).
+// [2026-11-16] ProgressTracker.swift .vertical(stepContents:), init progress 1부터, VerticalStepContent label·labelAccessoryView·contentView.
 // Figma 슬롯(Label Content·Content)의 내용은 읽지 않고 Xcode 자리표시로 둔다. 진행 단계는 .constant로 보여 준다.
 import figma from 'figma';
 

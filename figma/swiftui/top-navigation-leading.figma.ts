@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/TopNavigation.swift
 // component=TopNavigation.LeadingButton
 
-// [2026-11-16] 근거: TopNavigation.swift L595-603(LeadingButton(_ action: Resource.Leading?)), L744-761(Resource.Leading back·icon·text).
+// [2026-11-16] 근거: TopNavigation.swift LeadingButton(_ action: Resource.Leading?), Resource.Leading back·icon·text.
 // Top Navigation/Resource/Leading/Normal/iOS (Type = Back·Icon Button·Text Button).
 import figma from 'figma';
 

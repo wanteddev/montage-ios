@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/2%20Actions/IconButton.swift
 // component=IconButton
 
-// [2026-11-16] IconButton.swift L58-62(init), L371(Variant), L95/L162/L123(modifier). normal 전용 modifier만 여기서 붙인다.
+// [2026-11-16] IconButton.swift init, Variant, modifier. normal 전용 modifier만 여기서 붙인다.
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';

@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/FormControl.swift
 // component=FormControl
 
-// [2026-11-16] 근거: FormControl.swift L122(init input:), L150 .size, L158 .status, L166 .labelPlacement, L176 .label(_:required:),
-// L189 .message, L200 .accessory. size·status는 슬롯 안 Montage 입력에 자동 전파(L114-121)되므로 입력 쪽에는 쓰지 않는다.
+// [2026-11-16] 근거: FormControl.swift init input:, .size, .status, .labelPlacement, .label(_:required:),
+// .message, .accessory. size·status는 슬롯 안 Montage 입력에 자동 전파(init(input:) docstring)되므로 입력 쪽에는 쓰지 않는다.
 // 입력은 고정 인스턴스 'Input'(Form Control/Resource/Input)의 Type으로 고른다(shared/c-form-control.ts).
 import figma from 'figma';
 

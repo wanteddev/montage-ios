@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/FilterButton.swift
 // component=FilterButton
 
-// [2026-11-16] FilterButton.swift L70-75(init variant·size·text·handler), L143(.expanded), L155(.active(_:label:)).
-// 비활성은 SwiftUI .disabled. iOS의 활성 라벨은 본문을 대체해 표시한다(L90) — Figma는 본문 뒤에 덧붙임.
+// [2026-11-16] FilterButton.swift init variant·size·text·handler, .expanded, .active(_:label:).
+// 비활성은 SwiftUI .disabled. 활성 라벨은 .active(true, label:)일 때 본문 텍스트 뒤에 덧붙여 표시한다(Figma와 같음).
 import figma from 'figma';
 
 import { swiftStr } from '../shared/b-items';

@@ -28,7 +28,7 @@ export const footerMessage = (fc: Inst | undefined) => {
   const msgOn = prop(footer, 'Message') === 'True';
   const readText = (name: string): string => {
     try {
-      const v = footer.getString(name) as unknown;
+      const v = (footer as { getString(n: string): unknown }).getString(name);
       return typeof v === 'string' ? v : '';
     } catch {
       return '';

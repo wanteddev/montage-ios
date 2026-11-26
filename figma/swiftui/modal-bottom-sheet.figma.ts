@@ -2,9 +2,9 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/8%20Presentation/BottomSheet.swift
 // component=BottomSheet
 
-// [2026-11-16] 근거: BottomSheet.swift L56-69(Resize .hug/.fixedRatio/.fixedHeight/.flexible/.fill),
-// L522-546(View.bottomSheet(isPresented:isFullScreenCover:needHandle:resize:…:navigation:actionArea:onDismiss:_:)),
-// L463-472(isFullScreenCover → fullScreenCover + resize(.fill) + 핸들 없음 + modalKind .full).
+// [2026-11-16] 근거: BottomSheet.swift Resize .hug/.fixedRatio/.fixedHeight/.flexible/.fill,
+// View.bottomSheet(isPresented:isFullScreenCover:needHandle:resize:…:navigation:actionArea:onDismiss:_:),
+// isFullScreenCover → fullScreenCover + resize(.fill) + 핸들 없음 + modalKind .full.
 // Resize=Fill + Platform=iOS는 iOS의 전체 화면 모달(isFullScreenCover)이다(2026-09-28 Modal iOS QA 확인).
 // Navigation은 Contents 슬롯 안에 놓이므로 여기서 읽지 않는다(Modal Navigation 인스턴스의 Code Connect 참고).
 import figma from 'figma';

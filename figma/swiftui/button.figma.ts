@@ -3,7 +3,7 @@
 // component=Button
 
 // [2026-11-16] iOS 검수(김삼열 님) 반영. 아이콘은 Leading/Trailing/Icon 레이어의 실제 아이콘을 읽는다(없으면 .blank).
-// 근거: Button.swift L104-112(텍스트형 init), L140-146(아이콘 전용 init), L281 .loading, L308 .disabled
+// 근거: Button.swift 텍스트형 init, 아이콘 전용 init, .loading, .disabled
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';
@@ -36,7 +36,7 @@ const disabled = figma.selectedInstance.getBoolean('Disable') === true;
 
 // 2026-11-16 김삼열 님 검수: Montage.Button 표기, 클로저는 여러 줄 `// action`,
 // 코드가 지원하지 않는 조합은 실제 렌더 값으로 바꾸고 주석으로 이유를 남긴다.
-// Outlined + Negative → 코드에서 .primary로 렌더(Button.swift L61-62, L378-386)
+// Outlined + Negative → 코드에서 .primary로 렌더(Button.swift Color.negative docstring, resolveColor(variant:color:))
 const outlinedNegative = variant === '.outlined' && color === '.negative';
 const effectiveColor = outlinedNegative ? '.primary' : color;
 

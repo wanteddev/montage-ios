@@ -1,9 +1,9 @@
 // 그룹 e: Popup·Bottom Sheet·Full 공통 조각 (2026-11-16)
 // 근거
-// - iOS  Popup.swift L39-45(Resize), L422-441(View.popup), BottomSheet.swift L56-69(Resize), L522-546(View.bottomSheet)
-// - Android popup/WantedPopup.kt L146-155(topBar/bottomBar 오버로드), WantedPopupContract.kt L18-35(Resize),
-//   bottomsheet/WantedModalBottomSheet.kt L67-78, WantedModalContract.kt L21-87(ModalType),
-//   actions/actionarea/WantedActionArea.kt L232-248(main/onClickMain 오버로드)
+// - iOS  Popup.swift Resize, View.popup, BottomSheet.swift Resize, View.bottomSheet
+// - Android popup/WantedPopup.kt topBar/bottomBar 오버로드, WantedPopupContract.kt Resize,
+//   bottomsheet/WantedModalBottomSheet.kt WantedModalBottomSheet, WantedModalContract.kt ModalType,
+//   actions/actionarea/WantedActionArea.kt main/onClickMain 오버로드
 import { P } from './compose';
 import { call, renderAndroidModalNav, renderIosModalNav, slot } from './e-modal';
 import { bool, find, indent, iosActionAreaPlaceholder, ok, prop, type H } from './e-nav';

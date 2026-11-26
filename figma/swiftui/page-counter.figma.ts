@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/PageCounter.swift
 // component=PageCounter
 
-// [2026-11-16] PageCounter.swift L47(init selectedPage·totalPages, 1부터), L97(.size, 기본 .medium), L110(.alternative).
+// [2026-11-16] PageCounter.swift init selectedPage·totalPages(1부터), .size(기본 .medium), .alternative.
 // 표시 전용이라 Figma 값을 .constant로 보여 준다(실사용은 페이지 상태 바인딩).
 import figma from 'figma';
 

@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/2%20Actions/IconButton.swift
 // component=IconButton
 
-// [2026-11-16] .outlined(size: Size) — Size .small/.medium (IconButton.swift L426).
+// [2026-11-16] .outlined(size: Size) — Size .small/.medium (IconButton.swift IconButton.Size).
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';

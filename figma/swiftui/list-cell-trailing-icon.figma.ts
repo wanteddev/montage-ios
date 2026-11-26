@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ListCell.swift
 // component=ListCell.Resource.Trailing.icon
 
-// [2026-11-16] 근거: ListCell.swift L802-805(Trailing.icon, 기본 색 foregroundNeutralSecondary)
+// [2026-11-16] 근거: ListCell.swift Trailing.icon(기본 색 foregroundNeutralSecondary)
 import figma from 'figma';
 
 import { iosPart } from '../shared/d-list-cell';

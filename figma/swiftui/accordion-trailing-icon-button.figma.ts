@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/Accordion.swift
 // component=Accordion.trailingContent
 
-// [2026-11-16] 근거: Accordion.swift L287(trailingContent { isExpanded in }). 안쪽 Icon Button의 IconButton 템플릿 결과를 그대로 쓴다.
+// [2026-11-16] 근거: Accordion.swift trailingContent { isExpanded in }. 안쪽 Icon Button의 IconButton 템플릿 결과를 그대로 쓴다.
 import figma from 'figma';
 
 import { block, I, run, safe } from '../shared/d-util';

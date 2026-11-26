@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/2%20Actions/TextButton.swift
 // component=TextButton
 
-// [2026-11-16] TextButton.swift L55-62(init), L145(.loading). Button 검수 규칙 적용.
+// [2026-11-16] TextButton.swift init, .loading. Button 검수 규칙 적용.
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';

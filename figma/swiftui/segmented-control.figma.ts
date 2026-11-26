@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/SegmentedControl.swift
 // component=SegmentedControl
 
-// [2026-11-16] SegmentedControl.swift L59(Item init leadingIcon·title), L88(items init), L100(labels init),
-// L186(.size, 기본 .large), L199(.iconOnly — title은 VoiceOver 라벨로 쓰임).
+// [2026-11-16] SegmentedControl.swift Item init leadingIcon·title, items init, labels init,
+// .size(기본 .large), .iconOnly — title은 VoiceOver 라벨로 쓰임.
 import figma from 'figma';
 
 import { readItem, swiftList, swiftStr } from '../shared/b-items';

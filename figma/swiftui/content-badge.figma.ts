@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/4%20Contents/ContentBadge.swift
 // component=ContentBadge
 
-// [2026-11-16] ContentBadge.swift L78(init), L97(.size), L107(.colorStyle), L119/L132(아이콘).
+// [2026-11-16] ContentBadge.swift init, .size, .colorStyle, 아이콘.
 // Accent 색은 Figma 변수 모드라 읽을 수 없어 Xcode 플레이스홀더로 둔다.
 import figma from 'figma';
 

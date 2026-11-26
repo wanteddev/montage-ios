@@ -2,9 +2,9 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/2%20Actions/ActionArea.swift
 // component=ActionArea
 
-// [2026-11-16] 근거: ActionArea.swift L48(init variant:), L192-208(Variant strong/neutral(main:sub:alternative:)·cancel(main:)),
-// L231(ButtonInfo init text:action:), L155(caption(_:icon:), strong·neutral만 표시 L209-214), L168(extra(_:divider:), divider 기본 true).
-// Compact (Web Only)는 iOS case가 없어 strong으로 쓰고 주석. 버튼 비활성·로딩은 ButtonInfo.custom { }(L242)으로 Button을 직접 넣는다(2026-11-16 김삼열 님 검수). main 기본 버튼은 primary solid large + fillWidth(L392-401).
+// [2026-11-16] 근거: ActionArea.swift init variant:, Variant strong/neutral(main:sub:alternative:)·cancel(main:),
+// ButtonInfo init text:action:, caption(_:icon:) (strong·neutral만 표시, Variant.isCaptionAvailable), extra(_:divider:) (divider 기본 true).
+// Compact (Web Only)는 iOS case가 없어 strong으로 쓰고 주석. 버튼 비활성·로딩은 ButtonInfo.custom { }으로 Button을 직접 넣는다(2026-11-16 김삼열 님 검수). main 기본 버튼은 primary solid large + fillWidth(primarySolidButton(_:)).
 import figma from 'figma';
 
 import { readActionArea } from '../shared/d-action-area';

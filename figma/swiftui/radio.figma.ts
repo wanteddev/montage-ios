@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/Radio.swift
 // component=Radio
 
-// [2026-11-16] Radio.swift L41-45(init checked:), L65(.label), L103(.tight). controlled.
+// [2026-11-16] Radio.swift init checked:, .label, .tight. controlled.
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';

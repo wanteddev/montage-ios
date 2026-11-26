@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/Checkmark.swift
 // component=Checkmark
 
-// [2026-11-16] 근거: Checkmark.swift L36-40(init(checked:size:onSelect:)), L60(.label), L98(.tight). controlled. 레이블이 없어도 tight가 적용된다(2026-11-16 김삼열 님 검수).
+// [2026-11-16] 근거: Checkmark.swift init(checked:size:onSelect:), .label, .tight. controlled. 레이블이 없어도 tight가 적용된다(2026-11-16 김삼열 님 검수).
 // Figma Tight·Disable·State는 True/False VARIANT라 flag()로 읽는다.
 import figma from 'figma';
 

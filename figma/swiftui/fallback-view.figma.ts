@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/7%20Feedback/FallbackView.swift
 // component=FallbackView
 
-// [2026-11-16] 근거: FallbackView.swift L111-117(init title:description:), L52-66(ButtonActionArea single·horizontal·vertical),
-// L80-90(Padding normal·compact, 기본 .normal), L175(buttonActionArea), L187(padding). 구 Empty State.
+// [2026-11-16] 근거: FallbackView.swift init title:description:, ButtonActionArea single·horizontal·vertical,
+// Padding normal·compact(기본 .normal), buttonActionArea, padding. 구 Empty State.
 // Platform(Desktop/Mobile)은 iOS API가 없어 반영하지 않는다(버튼 크기는 코드가 정한다).
 import figma from 'figma';
 

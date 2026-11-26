@@ -2,9 +2,9 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/2%20Actions/Chip.swift
 // component=Chip
 
-// [2026-11-16] Chip.swift L95-100(init), L178(.active), L247/L274(leading/trailingContent 슬롯).
-// 슬롯은 크기·색을 지정해 주지 않아 docstring(L233-239)처럼 resizable·template·frame·foregroundStyle을 붙인다(2026-11-16 김삼열 님 검수).
-// 크기는 Figma 실측(XSmall 12·Small 14·Medium 14·Large 16), 색은 fontColor(L304-311)와 같다: 비활성 foregroundDisablePrimary, Active surfaceBrandPrimary, 기본 foregroundNeutralPrimary.
+// [2026-11-16] Chip.swift init, .active, leading/trailingContent 슬롯.
+// 슬롯은 크기·색을 지정해 주지 않아 leadingContent docstring처럼 resizable·template·frame·foregroundStyle을 붙인다(2026-11-16 김삼열 님 검수).
+// 크기는 Figma 실측(XSmall 12·Small 14·Medium 14·Large 16), 색은 fontColor와 같다: 비활성 foregroundDisablePrimary, Active surfaceBrandPrimary, 기본 foregroundNeutralPrimary.
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';

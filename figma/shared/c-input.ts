@@ -141,8 +141,8 @@ const composeText = (text: string, o: Out): string => {
 };
 
 // ───────────────────────── TextField ─────────────────────────
-// iOS: TextField.swift L165(init), L196 size, L206 status, L216 placeholder, L226 icon, L236 trailingButton(L91 TrailingButtonInfo), L246 trailingContent
-// Android: WantedTextField.kt L134-161(본체 오버로드, 비-deprecated), WantedTextFieldDefaults.kt
+// iOS: TextField.swift init, size, status, placeholder, icon, trailingButton(TrailingButtonInfo), trailingContent
+// Android: WantedTextField.kt 본체 오버로드(비-deprecated), WantedTextFieldDefaults.kt
 
 export type InputOpts = {
   /** Form Control 안: iOS는 size·status가 FormControl에서 전파되므로 생략한다. */
@@ -205,7 +205,7 @@ export const composeTextField = (inst: Inst | undefined, opts: InputOpts = {}): 
   const size = opts.size ?? (prop(inst, 'Size') as string | undefined);
   const btn = on(inst, 'Trailing Button') ? child(inst, 'Trailing Button') : undefined;
   const value = on(inst, 'Active') ? kt(str(inst, 'Text')) : '';
-  // 본체 오버로드는 아래 13개가 필수 인자다(기본값 없음). docstring 예시(L80-99)와 같은 순서.
+  // 본체 오버로드는 아래 13개가 필수 인자다(기본값 없음). docstring 예시와 같은 순서.
   const args = [
     `value = TextFieldValue("${value}")`,
     `placeholder = "${kt(str(inst, 'Placeholder'))}"`,
@@ -250,8 +250,8 @@ export const composeTextField = (inst: Inst | undefined, opts: InputOpts = {}): 
 };
 
 // ───────────────────────── TextArea ─────────────────────────
-// iOS: TextArea.swift L59 Resize, L87-226 Resource, L238 init, L270 size, L280 resize, L350 negative, L366 bottomResources, L385 placeholder
-// Android: WantedTextArea.kt L638-662(비-deprecated 오버로드, onValueChange 필수), WantedTextAreaDefaults.kt
+// iOS: TextArea.swift Resize, Resource, init, size, resize, negative, bottomResources, placeholder
+// Android: WantedTextArea.kt 비-deprecated 오버로드(onValueChange 필수), WantedTextAreaDefaults.kt
 
 const taResource = (inst: Inst | undefined, side: 'Leading' | 'Trailing') => {
   if (!on(inst, 'Bottom') || !on(inst, `┗ ${side} Content`)) return undefined;
@@ -369,8 +369,8 @@ export const composeTextArea = (inst: Inst | undefined, opts: InputOpts = {}): C
 };
 
 // ───────────────────────── Select ─────────────────────────
-// iOS: Select.swift L37 Variant, L141 init, L169 size, L178 status, L187 placeholder, L202 leading, L723 Resource.Leading
-// Android: WantedSelect.kt L348(단일·String), L435(다중·String), WantedSelectDefaults.kt
+// iOS: Select.swift Variant, init, size, status, placeholder, leading, Resource.Leading
+// Android: WantedSelect.kt 단일·String, 다중·String, WantedSelectDefaults.kt
 
 /** 슬롯 '┗ Leading Content' 안의 Select/Resource/Leading Content/* 를 종류별로 판별한다. */
 const selectLeading = (inst: Inst | undefined) => {

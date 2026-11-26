@@ -3,7 +3,7 @@
 // component=BottomSheet
 
 // [2026-11-16] iOS에는 전용 Full 모달 타입이 없고, 전체 화면 모달은 bottomSheet(isFullScreenCover: true)다
-// (BottomSheet.swift L463-472: fullScreenCover + resize(.fill) + 핸들 없음 + modalKind .full).
+// (BottomSheet.swift isFullScreenCover: fullScreenCover + resize(.fill) + 핸들 없음 + modalKind .full).
 // Navigation은 Modal/Full/Resource/Navigation 인스턴스에서 읽는다(ModalNavigation.swift: .normal은 전체 화면 모달 전용).
 import figma from 'figma';
 

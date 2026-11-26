@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/6%20Navigations/ProgressTracker.swift
 // component=ProgressTracker
 
-// [2026-11-16] ProgressTracker.swift L46(.horizontal(labels:)), L62(init progress 1부터·variant). 빈 라벨은 그리지 않는다(L203).
+// [2026-11-16] ProgressTracker.swift .horizontal(labels:), init progress 1부터·variant. 빈 라벨은 그리지 않는다(body의 labels[index].isEmpty 분기).
 // 표시 전용이라 진행 단계를 .constant로 보여 준다.
 import figma from 'figma';
 

@@ -1,9 +1,9 @@
 // 그룹 e: Modal Navigation 렌더(iOS ModalNavigation / Android WantedDialog*TopAppBar) (2026-11-16)
 // 근거
-// - iOS  ModalNavigation.swift L46-L88(Variant), L237(title), L259(leading), L271-285(trailings),
-//        L294(iconButtonBackground), L310(searchField), L564-627(Resource.Leading/Trailing)
-// - Android dialogtopbar/WantedDialogTopAppBar.kt L78(WantedDialogTopAppBar), L137(WantedDialogCloseTopAppBar),
-//        L247(WantedDialogSearchTopAppBar), WantedDialogTopAppBarContract.kt L18-55(Variant)
+// - iOS  ModalNavigation.swift Variant, title, leading, trailings,
+//        iconButtonBackground, searchField, Resource.Leading/Trailing
+// - Android dialogtopbar/WantedDialogTopAppBar.kt WantedDialogTopAppBar, WantedDialogCloseTopAppBar,
+//        WantedDialogSearchTopAppBar, WantedDialogTopAppBarContract.kt Variant
 import { androidIcon, iosIcon } from './icon-name';
 import {
   bool,

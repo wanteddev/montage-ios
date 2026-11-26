@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/Checkbox.swift
 // component=Checkbox
 
-// [2026-11-16] Checkbox.swift L57-61(init state:), L124(.label), L152(.bold), L162(.tight). controlled: onSelect로 받은 값을 다시 넣는다.
+// [2026-11-16] Checkbox.swift init state:, .label, .bold, .tight. controlled: onSelect로 받은 값을 다시 넣는다.
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';

@@ -2,8 +2,8 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/7%20Feedback/PushBadge.swift
 // component=PushBadge
 
-// [2026-11-16] 근거: PushBadge.swift L36-47(Variant .dot/.text/.maxCount), L101(init), L156(.size), L192(.outlineBorder).
-// 단독 배지 스니펫. 다른 뷰에 붙일 때는 View.pushBadge(variant:size:…) (L478)를 쓴다.
+// [2026-11-16] 근거: PushBadge.swift Variant .dot/.text/.maxCount, init, .size, .outlineBorder.
+// 단독 배지 스니펫. 다른 뷰에 붙일 때는 View.pushBadge(variant:size:…)를 쓴다.
 // Max Count는 Figma에서 99+ 고정(Text 속성 미연결) → 개수 변수 count로 표기.
 import figma from 'figma';
 

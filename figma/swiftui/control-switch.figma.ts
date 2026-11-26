@@ -2,7 +2,7 @@
 // source=https://github.com/wanteddev/montage-ios/blob/main/Sources/Montage/1%20Components/3%20Selection%20And%20Input/Switch.swift
 // component=Switch
 
-// [2026-11-16] Switch.swift L36-40(init checked:, 기본 size .small). Platform=Normal만 Montage Switch.
+// [2026-11-16] Switch.swift init checked:(기본 size .small). Platform=Normal만 Montage Switch.
 import figma from 'figma';
 
 import { iosIcon } from '../shared/icon-name';
