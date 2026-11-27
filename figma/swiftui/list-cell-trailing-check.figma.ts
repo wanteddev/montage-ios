@@ -7,4 +7,4 @@ import figma from 'figma';
 
 import { checkPart } from '../shared/d-list-cell';
 
-export default checkPart('ListCell.selected', 'ios');
+export default checkPart('ListCell.selected');

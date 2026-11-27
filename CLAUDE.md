@@ -167,6 +167,10 @@ Breaking change는 대상 메이저 버전 절(`## X.0`)에, 마이너에 들어
 
 대응 수단이 없어 사용처가 직접 골라야 하는 경우는 **대응 없음**으로 명시한다. 비슷한 걸 임의로 적어두면 사용처가 결과가 달라진 걸 모르고 넘어간다.
 
+### Code Connect 템플릿 동기화
+
+`public` 시그니처를 바꾸거나 deprecated 처리하면 `figma/swiftui`를 타입·메서드 이름으로 grep해(예: `grep -rn "Montage.Button\b" figma/swiftui`) 대응 템플릿을 같은 PR에서 고친다. 템플릿은 SwiftPM 빌드 대상이 아니라 빠뜨려도 컴파일 에러가 나지 않고, Figma Dev Mode 스니펫만 실제 API와 조용히 어긋난다. 고친 뒤 `figma/`에서 `npm ci && npm run typecheck && npm run parse`로 확인한다. 게시는 [figma/README.md](./figma/README.md)를 따른다.
+
 ## Git Workflow
 
 - 브랜치: `main`에서 분기하여 `main`으로 PR, 두 개 이상의 버전을 한 번에 작업할 때는 `release/x.x.x`에서 분기하여 `release/x.x.x`로 PR

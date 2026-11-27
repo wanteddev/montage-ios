@@ -1,7 +1,7 @@
 import figma from 'figma';
 
 type InstanceHandle = ReturnType<typeof figma.selectedInstance.findInstance>;
-export type IconRef = { ref: string; note?: string };
+export type IconRef = { ref: string };
 
 const safe = <T>(fn: () => T): T | undefined => {
   try {
@@ -11,7 +11,7 @@ const safe = <T>(fn: () => T): T | undefined => {
   }
 };
 
-/** 아이콘 인스턴스(또는 아이콘을 품은 Icons 래퍼)에서 플랫폼 아이콘 표기를 꺼낸다. */
+/** 아이콘 인스턴스(또는 아이콘을 품은 Icons 래퍼)에서 아이콘 표기를 꺼낸다. */
 export const iconFromInstance = (
   inst: InstanceHandle | undefined,
   convert: (name: string) => IconRef,
@@ -21,9 +21,9 @@ export const iconFromInstance = (
   // 1) 이 라벨의 Code Connect가 붙어 있으면(아이콘·래퍼) 그 결과를 쓴다.
   if (safe(() => inst.hasCodeConnect())) {
     const props = safe(() => inst.executeTemplate().metadata?.props) as
-      | { icon?: string; note?: string }
+      | { icon?: string }
       | undefined;
-    if (props?.icon) return { ref: props.icon, note: props.note };
+    if (props?.icon) return { ref: props.icon };
   }
 
   // 2) 아이콘 자체면 Name variant(문자열)로 변환한다.

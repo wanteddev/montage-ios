@@ -22,7 +22,7 @@ if (flag('Extra Caption')) lines.push(`.extraCaption("${text('┗ Text', '추가
 // Figma 슬롯 간격: Top·Bottom 6, Leading·Trailing 8.
 const slot = (show: string, layer: string, modifier: string, spacing: string) => {
   if (!flag(show)) return;
-  const items = wrapperContents(layer, 'ios');
+  const items = wrapperContents(layer);
   lines.push(`.${modifier} ${block(iosHStack(items, spacing))}`);
 };
 slot('Show Top Content', 'Top Content', 'topContent', '.spacing6');
