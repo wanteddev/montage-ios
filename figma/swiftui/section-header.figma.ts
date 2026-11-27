@@ -13,7 +13,7 @@ const lines = [`Montage.SectionHeader(title: "${text('Heading', '제목')}")`];
 const size = ({ XSmall: '.xsmall', Small: '.small', Large: '.large' } as Record<string, string>)[String(I.getPropertyValue('Size'))];
 if (size) lines.push(`.size(${size})`);
 if (flag('Show Heading Content')) lines.push(`.headingContent ${block(headerSlot('Heading Content'))}`);
-if (flag('Show Trailing Content')) lines.push(`.trailingContent ${block(headerSlot('Trailing Content', 'ios'))}`);
+if (flag('Show Trailing Content')) lines.push(`.trailingContent ${block(headerSlot('Trailing Content', true))}`);
 
 export default {
   id: 'SectionHeader',

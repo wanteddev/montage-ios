@@ -1,6 +1,6 @@
 // 그룹 b(내비게이션·선택 컨트롤) 공통 처리 (2026-11-16)
 // - Tab·Category·Segmented Control처럼 항목을 하위 인스턴스로 그리는 세트에서 항목 목록을 읽는다.
-// - 문자열 배열을 Swift/Kotlin 리터럴로 바꾼다.
+// - 문자열 배열을 Swift 리터럴로 바꾼다.
 import figma from 'figma';
 
 type Handle = ReturnType<typeof figma.selectedInstance.findInstance>;
@@ -36,9 +36,6 @@ export const readItemsByName = (pattern: RegExp, textProp: string): Item[] => {
   return layers.filter((l) => l && l.type === 'INSTANCE').map((l) => readItem(l, textProp));
 };
 
-/** 선택된 항목의 0부터 세는 인덱스(없으면 0). */
-export const activeIndex = (items: Item[]): number => Math.max(0, items.findIndex((i) => i.active));
-
 /** 비활성 항목 인덱스 목록. */
 export const disabledIndices = (items: Item[]): number[] =>
   items.map((i, n) => (i.disabled ? n : -1)).filter((n) => n >= 0);
@@ -47,11 +44,8 @@ const esc = (s: string): string => s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
 
 /** Swift 문자열 리터럴 */
 export const swiftStr = (s: string): string => `"${esc(s)}"`;
-/** Kotlin 문자열 리터럴 ($는 이스케이프) */
-export const kotlinStr = (s: string): string => `"${esc(s).replace(/\$/g, '\\$')}"`;
 
 export const swiftList = (xs: string[]): string => `[${xs.map(swiftStr).join(', ')}]`;
-export const kotlinList = (xs: string[]): string => `listOf(${xs.map(kotlinStr).join(', ')})`;
 
 /** Figma 텍스트 속성의 숫자(예: Total Page '10'). 숫자가 아니면 fallback. */
 export const intFrom = (s: string | undefined, fallback: number): number => {
