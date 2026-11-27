@@ -2,8 +2,6 @@
 // 슬롯(Top/Bottom/Leading/Trailing Content) 안의 Card/Resource/* 래퍼에는 Code Connect가 없어서,
 // 래퍼 안에 든 Montage 컴포넌트(배지·체크박스·아이콘)를 찾아 그 템플릿 결과를 쓴다.
 import {
-  androidIconOf,
-  composeIcon,
   findFirst,
   I,
   iosIconOf,
@@ -25,7 +23,7 @@ const INNER = [
 const ICONS = ['Icon/Normal/Chevron Right', 'Icon/Normal/Bookmark', 'Icon', 'Icons'];
 
 /** 래퍼 안 컴포넌트 코드 목록. 아무것도 못 찾으면 빈 배열. */
-export const wrapperContents = (layer: string, platform: 'ios' | 'android'): string[] => {
+export const wrapperContents = (layer: string): string[] => {
   const wrapper = findFirst(I, [layer]);
   if (!wrapper) return [];
   const out: string[] = [];
@@ -35,13 +33,7 @@ export const wrapperContents = (layer: string, platform: 'ios' | 'android'): str
   }
   if (out.length) return out;
   const icon = findFirst(wrapper, ICONS);
-  if (icon) {
-    out.push(
-      platform === 'ios'
-        ? `Image.icon(${iosIconOf(icon)})`
-        : composeIcon(androidIconOf(icon)),
-    );
-  }
+  if (icon) out.push(`Image.icon(${iosIconOf(icon)})`);
   return out;
 };
 

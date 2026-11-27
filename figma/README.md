@@ -11,7 +11,7 @@ Web(React)은 `wanteddev/montage-web`의 `figma/`, Android(Compose)는 `wantedde
 | `package.json`, `package-lock.json`, `tsconfig.json` | Code Connect CLI 버전 고정(`@figma/code-connect` 2.1.1, 하위 의존성은 lock)과 템플릿 타입 체크 설정 |
 | `swiftui/*.figma.ts` | 컴포넌트별 템플릿 (Figma variant → `Montage.*` 뷰 호출) |
 | `swiftui/icons.figma.batch.*` | 아이콘 일괄 매핑 |
-| `shared/` | 템플릿 공통 헬퍼. Compose 템플릿과 함께 쓰던 파일을 그대로 가져와 Compose용 코드도 일부 남아 있습니다 |
+| `shared/` | 템플릿 공통 헬퍼 |
 
 `.figma.ts`는 SwiftPM 빌드 대상이 아니므로 라이브러리 빌드에 영향이 없습니다.
 

@@ -34,7 +34,7 @@ if (flag('Thumbnail Overlay')) {
 
 const slot = (show: string, layer: string, modifier: string) => {
   if (!flag(show)) return;
-  const items = wrapperContents(layer, 'ios');
+  const items = wrapperContents(layer);
   lines.push(`.${modifier} ${block(iosHStack(items, '.spacing6'))}`);
 };
 // Figma 슬롯 간격: Top·Bottom 6.

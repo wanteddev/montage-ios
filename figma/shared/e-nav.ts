@@ -1,8 +1,6 @@
 // 그룹 e(Presentation·Top Navigation) 공통 처리 (2026-11-16)
 // Top Navigation·Modal Navigation의 Bar 인스턴스에서 제목·leading·trailing·검색·툴바를 읽어 온다.
 // 속성명은 Code Connect 런타임 기준(앞뒤 공백은 잘리고 제로폭 문자는 남는다).
-import figma from 'figma';
-
 import { iconFromInstance, type IconRef } from './resolve-icon';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,8 +46,6 @@ export const find = (h: H, ...names: string[]): H | undefined => {
   }
   return undefined;
 };
-
-export const sel = (...names: string[]): H | undefined => find(figma.selectedInstance, ...names);
 
 /** 큰따옴표 문자열 이스케이프 */
 export const q = (s: string | undefined): string =>
