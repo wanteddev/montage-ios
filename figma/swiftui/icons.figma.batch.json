@@ -247,6 +247,16 @@
         ]
       },
       {
+        "url": "<FIGMA_ICONS_BASE>?node-id=8-731",
+        "component": "IconBlankColor",
+        "variants": [
+          {
+            "name": "blank",
+            "component": "IconBlankColor"
+          }
+        ]
+      },
+      {
         "url": "<FIGMA_ICONS_BASE>?node-id=13090-23582",
         "component": "IconBold",
         "variants": [
@@ -1655,6 +1665,16 @@
         ]
       },
       {
+        "url": "<FIGMA_ICONS_BASE>?node-id=40167-141755",
+        "component": "IconLogoInstagramColor",
+        "variants": [
+          {
+            "name": "logoInstagram",
+            "component": "IconLogoInstagramColor"
+          }
+        ]
+      },
+      {
         "url": "<FIGMA_ICONS_BASE>?node-id=9258-18856",
         "component": "IconLogoKakao",
         "variants": [
@@ -2803,26 +2823,6 @@
           {
             "name": "zepFastFill",
             "component": "IconZepFastFill"
-          }
-        ]
-      },
-      {
-        "url": "<FIGMA_ICONS_BASE>?node-id=40167-141755",
-        "component": "IconLogoInstagramColor",
-        "variants": [
-          {
-            "name": "logoInstagram",
-            "component": "IconLogoInstagramColor"
-          }
-        ]
-      },
-      {
-        "url": "<FIGMA_ICONS_BASE>?node-id=8-731",
-        "component": "IconBlankColor",
-        "variants": [
-          {
-            "name": "blank",
-            "component": "IconBlankColor"
           }
         ]
       }

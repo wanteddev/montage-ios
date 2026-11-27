@@ -1,4 +1,5 @@
-// [2026-11-16] 아이콘 노드 → iOS `Icon` case. 노드 목록은 montage-web figma/icons/icons.figma.batch.json과 같다.
+// [2026-11-16] 아이콘 노드 → iOS `Icon` case.
+// 노드 목록(icons.figma.batch.json)은 scripts/icon_sync.js가 아이콘 동기화 때 다시 만든다. 손으로 고치지 않는다.
 import figma from 'figma';
 
 import { iosIcon, nameFromComponent } from '../shared/icon-name';

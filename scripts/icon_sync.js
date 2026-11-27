@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { BATCH_PATH, buildIconBatch, iconNamesInBatch, assertSameNames } = require('./icon_code_connect_batch');
 
 const outputDir = './output';
 const iconAssetsDir = './Sources/Montage/Asset/Icon.xcassets';
@@ -9,6 +10,20 @@ const main = async () => {
   const outputs = fs.readdirSync(outputDir);
 
   const icons = outputs.filter((filename) => filename.endsWith('.svg'));
+
+  // Code Connect 아이콘 batch는 파일을 건드리기 전에 만들고 검증한다.
+  // result.json이 없거나 SVG 목록과 어긋나면 여기서 멈춰 에셋·enum만 바뀐 커밋이 생기지 않게 한다.
+  const resultPath = path.join(outputDir, 'result.json');
+  if (!fs.existsSync(resultPath)) {
+    throw new Error(`${resultPath}가 없어 Code Connect 아이콘 batch를 만들 수 없습니다.`);
+  }
+  const iconBatch = buildIconBatch(JSON.parse(fs.readFileSync(resultPath, 'utf8')));
+  assertSameNames(
+    icons.map((filename) => filename.replace(/\.svg$/, '')),
+    iconNamesInBatch(iconBatch),
+    'SVG',
+    'result.json'
+  );
 
   // clean up start
   const iconAssets = fs
@@ -106,10 +121,17 @@ const main = async () => {
   fs.writeFileSync(swiftFilePath, swiftFileContent, 'utf-8');
   // swift file update end
 
+  // Code Connect 아이콘 batch 갱신 (figma/README.md 참고)
+  fs.writeFileSync(BATCH_PATH, iconBatch, 'utf-8');
+
   // remove output directory
   fs.rmSync(outputDir, { recursive: true, force: true });
 
   console.log('DONE!');
 };
 
-main();
+// 실패하면 exit code를 1로 남겨 워크플로가 커밋 단계로 넘어가지 않게 한다.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
