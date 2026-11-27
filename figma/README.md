@@ -8,7 +8,7 @@ Web(React)은 `wanteddev/montage-web`의 `figma/`, Android(Compose)는 `wantedde
 | 경로 | 내용 |
 |---|---|
 | `figma.config.json` | 라벨(`SwiftUI`), 대상 파일, Figma URL 치환표(`<FIGMA_BUTTON>` 등) |
-| `package.json`, `tsconfig.json` | Code Connect CLI 버전 고정(`@figma/code-connect` 2.1.1)과 템플릿 타입 체크 설정 |
+| `package.json`, `package-lock.json`, `tsconfig.json` | Code Connect CLI 버전 고정(`@figma/code-connect` 2.1.1, 하위 의존성은 lock)과 템플릿 타입 체크 설정 |
 | `swiftui/*.figma.ts` | 컴포넌트별 템플릿 (Figma variant → `Montage.*` 뷰 호출) |
 | `swiftui/icons.figma.batch.*` | 아이콘 일괄 매핑 |
 | `shared/` | 템플릿 공통 헬퍼. Compose 템플릿과 함께 쓰던 파일을 그대로 가져와 Compose용 코드도 일부 남아 있습니다 |
@@ -17,10 +17,10 @@ Web(React)은 `wanteddev/montage-web`의 `figma/`, Android(Compose)는 `wantedde
 
 ## 수정 → 확인 → 게시
 
-이 폴더에서 실행합니다. Node.js가 필요합니다. CLI는 `package.json`에 고정한 버전을 씁니다. `@latest`는 실행할 때마다 버전이 바뀔 수 있어 parse 결과를 비교하기 어렵습니다.
+이 폴더에서 실행합니다. Node.js가 필요합니다. CLI와 하위 의존성은 `package-lock.json`에 고정한 버전을 쓰므로 `npm ci`로 설치합니다. `npm install`은 lock을 다시 쓸 수 있고, `@latest`는 실행할 때마다 버전이 바뀌어 parse 결과를 비교하기 어렵습니다. 의존성을 올릴 때만 `npm install`로 lock을 갱신해 함께 커밋합니다.
 
 ```bash
-npm install
+npm ci
 
 # 1. 템플릿 타입 체크
 npm run typecheck
